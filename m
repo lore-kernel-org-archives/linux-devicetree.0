@@ -1,13 +1,12 @@
 From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: qcs404: remove unit name for
- thermal trip points
-Date: Tue, 30 Jul 2019 22:06:32 +0530
-Message-ID: <CAHLCerMLmZ1dWyCiJf=NZMq7i8=tT8fSr20SbnBTjASAZ0c1Mg@mail.gmail.com>
-References: <20190725135150.9972-1-vkoul@kernel.org> <20190725135150.9972-4-vkoul@kernel.org>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: pms405: remove reduandant properties
+Date: Tue, 30 Jul 2019 22:06:59 +0530
+Message-ID: <CAHLCerNCcLSsV2JKqM1FW86wgQhNimMYdc0_2KPqZzDgwSkt-Q@mail.gmail.com>
+References: <20190725135150.9972-1-vkoul@kernel.org> <20190725135150.9972-3-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725135150.9972-4-vkoul@kernel.org>
+In-Reply-To: <20190725135150.9972-3-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vkoul@kernel.org>
 Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
@@ -15,157 +14,32 @@ List-Id: devicetree@vger.kernel.org
 
 On Thu, Jul 25, 2019 at 7:23 PM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> The thermal trip points have unit name but no reg property, so we can
-> remove them
+> pms405@1 nodes specified unnecessary #address-cells/#size-cells but the
+> subnodes dont have "ranges" or "reg" so remove it
 >
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1080.31-1084.7: Warning (unit_address_vs_reg): /thermal-zones/aoss-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1095.33-1099.7: Warning (unit_address_vs_reg): /thermal-zones/q6-hvx-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1110.32-1114.7: Warning (unit_address_vs_reg): /thermal-zones/lpass-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1125.31-1129.7: Warning (unit_address_vs_reg): /thermal-zones/wlan-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1140.34-1144.7: Warning (unit_address_vs_reg): /thermal-zones/cluster-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1145.34-1149.7: Warning (unit_address_vs_reg): /thermal-zones/cluster-thermal/trips/trip-point@1: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1174.31-1178.7: Warning (unit_address_vs_reg): /thermal-zones/cpu0-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1179.31-1183.7: Warning (unit_address_vs_reg): /thermal-zones/cpu0-thermal/trips/trip-point@1: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1208.31-1212.7: Warning (unit_address_vs_reg): /thermal-zones/cpu1-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1213.31-1217.7: Warning (unit_address_vs_reg): /thermal-zones/cpu1-thermal/trips/trip-point@1: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1242.31-1246.7: Warning (unit_address_vs_reg): /thermal-zones/cpu2-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1247.31-1251.7: Warning (unit_address_vs_reg): /thermal-zones/cpu2-thermal/trips/trip-point@1: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1276.31-1280.7: Warning (unit_address_vs_reg): /thermal-zones/cpu3-thermal/trips/trip-point@0: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1281.31-1285.7: Warning (unit_address_vs_reg): /thermal-zones/cpu3-thermal/trips/trip-point@1: node has a unit name, but no reg property
-> arch/arm64/boot/dts/qcom/qcs404.dtsi:1310.30-1314.7: Warning (unit_address_vs_reg): /thermal-zones/gpu-thermal/trips/trip-point@0: node has a unit name, but no reg property
+> arch/arm64/boot/dts/qcom/pms405.dtsi:141.21-150.4: Warning (avoid_unnecessary_addr_size): /soc@0/spmi@200f000/pms405@1: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
 >
 > Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
 Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
 > ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 30 ++++++++++++++--------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
+>  arch/arm64/boot/dts/qcom/pms405.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index 3d0789775009..6d91dae5aee0 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -1077,7 +1077,7 @@
->                         thermal-sensors = <&tsens 0>;
+> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> index 3c10cf04d26e..32678f7ce90d 100644
+> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
+> @@ -141,8 +141,6 @@
+>         pms405_1: pms405@1 {
+>                 compatible = "qcom,spmi-pmic";
+>                 reg = <0x1 SPMI_USID>;
+> -               #address-cells = <1>;
+> -               #size-cells = <0>;
 >
->                         trips {
-> -                               aoss_alert0: trip-point@0 {
-> +                               aoss_alert0: trip-point0 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
-> @@ -1092,7 +1092,7 @@
->                         thermal-sensors = <&tsens 1>;
->
->                         trips {
-> -                               q6_hvx_alert0: trip-point@0 {
-> +                               q6_hvx_alert0: trip-point0 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
-> @@ -1107,7 +1107,7 @@
->                         thermal-sensors = <&tsens 2>;
->
->                         trips {
-> -                               lpass_alert0: trip-point@0 {
-> +                               lpass_alert0: trip-point0 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
-> @@ -1122,7 +1122,7 @@
->                         thermal-sensors = <&tsens 3>;
->
->                         trips {
-> -                               wlan_alert0: trip-point@0 {
-> +                               wlan_alert0: trip-point0 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
-> @@ -1137,12 +1137,12 @@
->                         thermal-sensors = <&tsens 4>;
->
->                         trips {
-> -                               cluster_alert0: trip-point@0 {
-> +                               cluster_alert0: trip-point0 {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
->                                 };
-> -                               cluster_alert1: trip-point@1 {
-> +                               cluster_alert1: trip-point1 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
-> @@ -1171,12 +1171,12 @@
->                         thermal-sensors = <&tsens 5>;
->
->                         trips {
-> -                               cpu0_alert0: trip-point@0 {
-> +                               cpu0_alert0: trip-point0 {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
->                                 };
-> -                               cpu0_alert1: trip-point@1 {
-> +                               cpu0_alert1: trip-point1 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
-> @@ -1205,12 +1205,12 @@
->                         thermal-sensors = <&tsens 6>;
->
->                         trips {
-> -                               cpu1_alert0: trip-point@0 {
-> +                               cpu1_alert0: trip-point0 {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
->                                 };
-> -                               cpu1_alert1: trip-point@1 {
-> +                               cpu1_alert1: trip-point1 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
-> @@ -1239,12 +1239,12 @@
->                         thermal-sensors = <&tsens 7>;
->
->                         trips {
-> -                               cpu2_alert0: trip-point@0 {
-> +                               cpu2_alert0: trip-point0 {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
->                                 };
-> -                               cpu2_alert1: trip-point@1 {
-> +                               cpu2_alert1: trip-point1 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
-> @@ -1273,12 +1273,12 @@
->                         thermal-sensors = <&tsens 8>;
->
->                         trips {
-> -                               cpu3_alert0: trip-point@0 {
-> +                               cpu3_alert0: trip-point0 {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
->                                 };
-> -                               cpu3_alert1: trip-point@1 {
-> +                               cpu3_alert1: trip-point1 {
->                                         temperature = <105000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
-> @@ -1307,7 +1307,7 @@
->                         thermal-sensors = <&tsens 9>;
->
->                         trips {
-> -                               gpu_alert0: trip-point@0 {
-> +                               gpu_alert0: trip-point0 {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "hot";
+>                 pms405_spmi_regulators: regulators {
+>                         compatible = "qcom,pms405-regulators";
 > --
 > 2.20.1
 >
