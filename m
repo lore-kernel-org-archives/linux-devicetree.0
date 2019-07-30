@@ -1,201 +1,108 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH 2/4] net: phy: Add mdio-aspeed
-Date: Tue, 30 Jul 2019 11:53:32 +0930
-Message-ID: <19074ccb-5356-469b-8d1e-8076be135a21@www.fastmail.com>
-References: <20190729043926.32679-1-andrew@aj.id.au>
- <20190729043926.32679-3-andrew@aj.id.au> <20190729133250.GB4110@lunn.ch>
+From: Anson.Huang@nxp.com
+Subject: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Tue, 30 Jul 2019 10:21:22 +0800
+Message-ID: <20190730022126.17883-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729133250.GB4110@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, Joel Stanley <joel@jms.id.au>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+From: Anson Huang <Anson.Huang@nxp.com>
 
+Some platforms like i.MX8MQ has clock control for this module,
+need to add clock operations to make sure the driver is working
+properly.
 
-On Mon, 29 Jul 2019, at 23:03, Andrew Lunn wrote:
-> On Mon, Jul 29, 2019 at 02:09:24PM +0930, Andrew Jeffery wrote:
-> > The AST2600 design separates the MDIO controllers from the MAC, which is
-> > where they were placed in the AST2400 and AST2500. Further, the register
-> > interface is reworked again, so now we have three possible different
-> > interface implementations, however this driver only supports the
-> > interface provided by the AST2600. The AST2400 and AST2500 will continue
-> > to be supported by the MDIO support embedded in the FTGMAC100 driver.
-> > 
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  drivers/net/phy/Kconfig       |  13 +++
-> >  drivers/net/phy/Makefile      |   1 +
-> >  drivers/net/phy/mdio-aspeed.c | 159 ++++++++++++++++++++++++++++++++++
-> >  3 files changed, 173 insertions(+)
-> >  create mode 100644 drivers/net/phy/mdio-aspeed.c
-> > 
-> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > index 20f14c5fbb7e..206d8650ee7f 100644
-> > --- a/drivers/net/phy/Kconfig
-> > +++ b/drivers/net/phy/Kconfig
-> > @@ -21,6 +21,19 @@ config MDIO_BUS
-> >  
-> >  if MDIO_BUS
-> >  
-> > +config MDIO_ASPEED
-> > +	tristate "ASPEED MDIO bus controller"
-> > +	depends on ARCH_ASPEED || COMPILE_TEST
-> > +	depends on OF_MDIO && HAS_IOMEM
-> > +	help
-> > +	  This module provides a driver for the independent MDIO bus
-> > +	  controllers found in the ASPEED AST2600 SoC. This is a driver for the
-> > +	  third revision of the ASPEED MDIO register interface - the first two
-> > +	  revisions are the "old" and "new" interfaces found in the AST2400 and
-> > +	  AST2500, embedded in the MAC. For legacy reasons, FTGMAC100 driver
-> > +	  continues to drive the embedded MDIO controller for the AST2400 and
-> > +	  AST2500 SoCs, so say N if AST2600 support is not required.
-> > +
-> >  config MDIO_BCM_IPROC
-> >  	tristate "Broadcom iProc MDIO bus controller"
-> >  	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> > diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> > index 839acb292c38..ba07c27e4208 100644
-> > --- a/drivers/net/phy/Makefile
-> > +++ b/drivers/net/phy/Makefile
-> > @@ -22,6 +22,7 @@ libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
-> >  obj-$(CONFIG_PHYLINK)		+= phylink.o
-> >  obj-$(CONFIG_PHYLIB)		+= libphy.o
-> >  
-> > +obj-$(CONFIG_MDIO_ASPEED)	+= mdio-aspeed.o
-> >  obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
-> >  obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
-> >  obj-$(CONFIG_MDIO_BITBANG)	+= mdio-bitbang.o
-> > diff --git a/drivers/net/phy/mdio-aspeed.c b/drivers/net/phy/mdio-aspeed.c
-> > new file mode 100644
-> > index 000000000000..71496a9ff54a
-> > --- /dev/null
-> > +++ b/drivers/net/phy/mdio-aspeed.c
-> > @@ -0,0 +1,159 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/* Copyright (C) 2019 IBM Corp. */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/mdio.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_mdio.h>
-> > +#include <linux/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define DRV_NAME "mdio-aspeed"
-> > +
-> > +#define ASPEED_MDIO_CTRL		0x0
-> > +#define   ASPEED_MDIO_CTRL_FIRE		BIT(31)
-> > +#define   ASPEED_MDIO_CTRL_ST		BIT(28)
-> > +#define     ASPEED_MDIO_CTRL_ST_C45	0
-> > +#define     ASPEED_MDIO_CTRL_ST_C22	1
-> > +#define   ASPEED_MDIO_CTRL_OP		GENMASK(27, 26)
-> > +#define     MDIO_C22_OP_WRITE		0b01
-> > +#define     MDIO_C22_OP_READ		0b10
-> > +#define   ASPEED_MDIO_CTRL_PHYAD	GENMASK(25, 21)
-> > +#define   ASPEED_MDIO_CTRL_REGAD	GENMASK(20, 16)
-> > +#define   ASPEED_MDIO_CTRL_MIIWDATA	GENMASK(15, 0)
-> > +
-> > +#define ASPEED_MDIO_DATA		0x4
-> > +#define   ASPEED_MDIO_DATA_MDC_THRES	GENMASK(31, 24)
-> > +#define   ASPEED_MDIO_DATA_MDIO_EDGE	BIT(23)
-> > +#define   ASPEED_MDIO_DATA_MDIO_LATCH	GENMASK(22, 20)
-> > +#define   ASPEED_MDIO_DATA_IDLE		BIT(16)
-> > +#define   ASPEED_MDIO_DATA_MIIRDATA	GENMASK(15, 0)
-> > +
-> > +#define ASPEED_MDIO_RETRIES		10
-> > +
-> > +struct aspeed_mdio {
-> > +	void __iomem *base;
-> > +};
-> > +
-> > +static int aspeed_mdio_read(struct mii_bus *bus, int addr, int regnum)
-> > +{
-> > +	struct aspeed_mdio *ctx = bus->priv;
-> > +	u32 ctrl;
-> > +	int i;
-> > +
-> > +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d\n", __func__, addr,
-> > +		regnum);
-> > +
-> > +	/* Just clause 22 for the moment */
-> > +	ctrl = ASPEED_MDIO_CTRL_FIRE
-> 
-> Hi Andrew
-> 
-> In the binding, you say C45 is supported. Here you don't. It would be
-> nice to be consistent.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+---
+Changes since V2:
+	- move this patch as first patch in the series;
+	- add clock disable handling in error path of probe.
+---
+ drivers/thermal/qoriq_thermal.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Right - but the bindings describe the hardware, and the hardware is capable.
-Just that the driver as it stands can't drive it that way.
-
-Having said that I do need to do more digging to understand how to cater to
-C45 PHYs wrt the read/write calls.
-
-> 
-> 
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_READ)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum);
-> > +
-> > +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
-> > +
-> > +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
-> > +		u32 data;
-> > +
-> > +		data = ioread32(ctx->base + ASPEED_MDIO_DATA);
-> > +		if (data & ASPEED_MDIO_DATA_IDLE)
-> > +			return FIELD_GET(ASPEED_MDIO_DATA_MIIRDATA, data);
-> > +
-> > +		udelay(100);
-> > +	}
-> 
-> One of the readx_poll_timeout functions could be used.
-
-Thanks, I'll take a look.
-
-> 
-> > +
-> > +	dev_err(&bus->dev, "MDIO read failed\n");
-> > +	return -EIO;
-> > +}
-> > +
-> > +static int aspeed_mdio_write(struct mii_bus *bus, int addr, int regnum, u16 val)
-> > +{
-> > +	struct aspeed_mdio *ctx = bus->priv;
-> > +	u32 ctrl;
-> > +	int i;
-> > +
-> > +	dev_dbg(&bus->dev, "%s: addr: %d, regnum: %d, val: 0x%x\n",
-> > +		__func__, addr, regnum, val);
-> > +
-> > +	/* Just clause 22 for the moment */
-> > +	ctrl = ASPEED_MDIO_CTRL_FIRE
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_ST, ASPEED_MDIO_CTRL_ST_C22)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_OP, MDIO_C22_OP_WRITE)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_PHYAD, addr)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_REGAD, regnum)
-> > +		| FIELD_PREP(ASPEED_MDIO_CTRL_MIIWDATA, val);
-> > +
-> > +	iowrite32(ctrl, ctx->base + ASPEED_MDIO_CTRL);
-> > +
-> > +	for (i = 0; i < ASPEED_MDIO_RETRIES; i++) {
-> > +		ctrl = ioread32(ctx->base + ASPEED_MDIO_CTRL);
-> > +		if (!(ctrl & ASPEED_MDIO_CTRL_FIRE))
-> > +			return 0;
-> > +
-> > +		udelay(100);
-> > +	}
-> 
-> readx_poll_timeout() here as well.
-> 
-> Otherwise this looks good.
-
-Thanks for the review!
-
-Andrew
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 7b36493..2893947 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -2,6 +2,7 @@
+ //
+ // Copyright 2016 Freescale Semiconductor, Inc.
+ 
++#include <linux/clk.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/err.h>
+@@ -72,6 +73,7 @@ struct qoriq_sensor {
+ 
+ struct qoriq_tmu_data {
+ 	struct qoriq_tmu_regs __iomem *regs;
++	struct clk *clk;
+ 	bool little_endian;
+ 	struct qoriq_sensor	*sensor[SITES_MAX];
+ };
+@@ -209,6 +211,16 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 		goto err_iomap;
+ 	}
+ 
++	data->clk = devm_clk_get_optional(&pdev->dev, NULL);
++	if (IS_ERR(data->clk))
++		return PTR_ERR(data->clk);
++
++	ret = clk_prepare_enable(data->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to enable clock\n");
++		return ret;
++	}
++
+ 	qoriq_tmu_init_device(data);	/* TMU initialization */
+ 
+ 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
+@@ -225,6 +237,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_tmu:
++	clk_disable_unprepare(data->clk);
+ 	iounmap(data->regs);
+ 
+ err_iomap:
+@@ -241,6 +254,9 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
+ 
+ 	iounmap(data->regs);
++
++	clk_disable_unprepare(data->clk);
++
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
+@@ -257,14 +273,21 @@ static int qoriq_tmu_suspend(struct device *dev)
+ 	tmr &= ~TMR_ME;
+ 	tmu_write(data, tmr, &data->regs->tmr);
+ 
++	clk_disable_unprepare(data->clk);
++
+ 	return 0;
+ }
+ 
+ static int qoriq_tmu_resume(struct device *dev)
+ {
+ 	u32 tmr;
++	int ret;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+ 
++	ret = clk_prepare_enable(data->clk);
++	if (ret)
++		return ret;
++
+ 	/* Enable monitoring */
+ 	tmr = tmu_read(data, &data->regs->tmr);
+ 	tmr |= TMR_ME;
+-- 
+2.7.4
