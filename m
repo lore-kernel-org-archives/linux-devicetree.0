@@ -1,44 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: Fix generated example files getting added to schemas
-Date: Tue, 30 Jul 2019 08:59:35 -0600
-Message-ID: <20190730145935.26248-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH] ARM: DTS: vybrid: Update qspi node description for VF610 BK4 board
+Date: Tue, 30 Jul 2019 17:05:52 +0200
+Message-ID: <20190730150552.24927-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Commit 837158b847a4 ("dt-bindings: Check the examples against the
-schemas") started generating YAML encoded DT files to validate the
-examples against the schema. When running 'make dt_binding_check' in
-tree after the 1st time, the generated example .dt.yaml files are
-mistakenly added to the list of schema files. Exclude *.example.dt.yaml
-files from the search for schema files.
+Before this change the device tree description of qspi node for
+second memory on BK4 board was wrong (applicable to old, in-house
+tunned fsl-quadspi.c driver).
 
-Fixes: 837158b847a4 ("dt-bindings: Check the examples against the schemas")
-Reported-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+As a result this memory was not recognized correctly when used
+with the new spi-fsl-qspi.c driver.
+
+>From the dt-bindings:
+
+"Required SPI slave node properties:
+  - reg: There are two buses (A and B) with two chip selects each.
+This encodes to which bus and CS the flash is connected:
+<0>: Bus A, CS 0
+<1>: Bus A, CS 1
+<2>: Bus B, CS 0
+<3>: Bus B, CS 1"
+
+According to above with new driver the second SPI-NOR memory shall
+have reg=<2> as it is connected to Bus B, CS 0.
+
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
- Documentation/devicetree/bindings/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/vf610-bk4.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 6b0dfd5c17ba..5138a2f6232a 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -19,7 +19,9 @@ quiet_cmd_mk_schema = SCHEMA  $@
+diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+index 3fa0cbe456db..0f3870d3b099 100644
+--- a/arch/arm/boot/dts/vf610-bk4.dts
++++ b/arch/arm/boot/dts/vf610-bk4.dts
+@@ -246,13 +246,13 @@
+ 		reg = <0>;
+ 	};
  
- DT_DOCS = $(shell \
- 	cd $(srctree)/$(src) && \
--	find * \( -name '*.yaml' ! -name $(DT_TMP_SCHEMA) \) \
-+	find * \( -name '*.yaml' ! \
-+		-name $(DT_TMP_SCHEMA) ! \
-+		-name '*.example.dt.yaml' \) \
- 	)
+-	n25q128a13_2: flash@1 {
++	n25q128a13_2: flash@2 {
+ 		compatible = "n25q128a13", "jedec,spi-nor";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		spi-max-frequency = <66000000>;
+ 		spi-rx-bus-width = <2>;
+-		reg = <1>;
++		reg = <2>;
+ 	};
+ };
  
- DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
 -- 
-2.20.1
+2.11.0
