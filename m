@@ -1,60 +1,103 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on
- diagnostic routine
-Date: Tue, 30 Jul 2019 16:50:27 +0100
-Message-ID: <20190730155027.GJ4264@sirena.org.uk>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730141935.GF4264@sirena.org.uk>
- <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] ARM: DTS: vybrid: Update qspi node description for
+ VF610 BK4 board
+Date: Tue, 30 Jul 2019 17:53:36 +0200
+Message-ID: <20190730175336.382d833c@jawa>
+References: <20190730150552.24927-1-lukma@denx.de>
+        <CAOMZO5AxPHHobQQhq30fjLVeSroLdvdT0+GqCWi8it1ejhDONA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DesjdUuHQDwS2t4N"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Hls2KDiiZhS_2XwqOwjo/0W"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
+In-Reply-To: <CAOMZO5AxPHHobQQhq30fjLVeSroLdvdT0+GqCWi8it1ejhDONA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Preston <thomas.preston@codethink.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Cheng-Yi Chiang <cychiang@chromium.org>, Marco Felsch <m.felsch@pengutronix.de>, Takashi Iwai <tiwai@suse.com>, Annaliese McDermond <nh6z@nh6z.net>, Liam Girdwood <lgirdwood@gmail.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---DesjdUuHQDwS2t4N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/Hls2KDiiZhS_2XwqOwjo/0W
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 30, 2019 at 04:25:56PM +0100, Thomas Preston wrote:
-> On 30/07/2019 15:19, Mark Brown wrote:
+Hi Fabio,
 
-> > It is unclear what this mutex usefully protects, it only gets taken when
-> > writing to the debugfs file to trigger this diagnostic mode but doesn't
-> > do anything to control interactions with any other code path in the
-> > driver.
+> Hi Lukasz,
+>=20
+> Subject line could be improved:
+>=20
+> ARM: dts: vf610-bk4: Fix qspi node description
+>=20
+> On Tue, Jul 30, 2019 at 12:06 PM Lukasz Majewski <lukma@denx.de>
+> wrote:
+> >
+> > Before this change the device tree description of qspi node for
+> > second memory on BK4 board was wrong (applicable to old, in-house
+> > tunned fsl-quadspi.c driver).
+> >
+> > As a result this memory was not recognized correctly when used
+> > with the new spi-fsl-qspi.c driver.
+> >
+> > From the dt-bindings:
+> >
+> > "Required SPI slave node properties:
+> >   - reg: There are two buses (A and B) with two chip selects each.
+> > This encodes to which bus and CS the flash is connected:
+> > <0>: Bus A, CS 0
+> > <1>: Bus A, CS 1
+> > <2>: Bus B, CS 0
+> > <3>: Bus B, CS 1"
+> >
+> > According to above with new driver the second SPI-NOR memory shall
+> > have reg=3D<2> as it is connected to Bus B, CS 0. =20
+>=20
+> I am glad you got it working!
+>=20
+> This looks very familiar with the suggestion I sent yesterday:
+> http://lists.infradead.org/pipermail/linux-mtd/2019-July/090655.html
+>=20
 
-> If another process reads the debugfs node "diagnostic" while the turn-on=
-=20
-> diagnostic mode is running, this mutex prevents the second process
-> restarting the diagnostics.
+Yes, indeed. Deepest apologizes for not adding credits. I will fix it
+in v2.
 
-> This is redundant if debugfs reads are atomic, but I don't think they are.
+> It is a good practice to give some credit to someone who has helped in
+> finding the solution of your problem.
+>=20
+> Adding a Suggested-by: Fabio Estevam <festevam@gmail.com> would be
+> nice here.
+>=20
+> This also needs a Fixes tag.
 
-Like I say it's not just debugfs though, there's the standard driver
-interface too.
+Shall I refer to the original commit (which added this DTS)? Or the
+original issue posted to linux-mtd [1] ?
 
---DesjdUuHQDwS2t4N
-Content-Type: application/pgp-signature; name="signature.asc"
+Note:
+
+[1] - https://www.spinics.net/lists/linux-mtd/msg08114.html
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/Hls2KDiiZhS_2XwqOwjo/0W
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1AZ0MACgkQJNaLcl1U
-h9A+KQgAgi4HkmsbIandzuTrFA6N2E9Zrc7WMisuFB9GE/OnLiU559yFfrABha81
-2AJ4vwv4WOwP6Cl48kFT7W90WgsJljB6F0d/SaiwvhNmwf2ifUVANo+tkNv8L2kn
-W/7p0/OQ1tuFhU9OI98e1YbqSI/TEcgQx3CEp0diUdcmv1C55X6cn1tjj5Mn0+hz
-Mf2IV9Q1KMJQBeHqm6PvdWjzxbnQ7iUEPQ6SoP6PwTjEvpWN/+Cv7q/wo1FCs1hb
-1nYLoWrVYhOaQyzAxxJ/S2bRl5TybnmgSJOpj1ZNMRcHdED93sk3GMNSqqAOD68L
-nQQV16tM/EvyPsbQE+AMJFrAKfZLdg==
-=H0id
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl1AaAAACgkQAR8vZIA0
+zr36MQgA4Oorheiqhn9obaiAQFJhr++QNaJEtm0Bs+T2h6ZblLVgYbPqys8+6biN
+oLxpS3COrCwo3B8xFK4MxWze3qqyDYKPuse2NqFEW02qIIPPjPKfMNiEY8YIy+p7
+5Yas3dvZar13iUmiyVuoTRk2kC7zFHRzv39YM0RHfYbIx+V+IcQTDnAbwkBj4iT/
+oSDBq54OR5R7q+CvR1xncl7HzfXP1QwYw8MhEEWsOhhMWQ6sEJp56oz1gnNW5KF/
+2Tah7fpuzhsUw+ysmqB3V7lXwvc3BQYIzQhtHWFFYLWjunrqN6kyUH+VXfv5cswV
+M5vvDYesZAOADYr1KfN/DCX7JwdLmg==
+=WzwS
 -----END PGP SIGNATURE-----
 
---DesjdUuHQDwS2t4N--
+--Sig_/Hls2KDiiZhS_2XwqOwjo/0W--
