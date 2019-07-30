@@ -1,135 +1,45 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: Re: [PATCH v3 00/11] clk: imx8: add new clock binding for better pm
- support
-Date: Tue, 30 Jul 2019 13:55:58 +0200
-Message-ID: <20190730115558.GA29350@optiplex>
-References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
- <CAA+hA=TkrwzWbJQu7Cc6njdQSP--u=Zf+=FcPg-wCZ=rRXoRuQ@mail.gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [alsa-devel] [PATCH v2 7/7] ASoC: dt-bindings: Introduce
+ compatible strings for 7ULP and 8MQ
+Date: Tue, 30 Jul 2019 15:02:30 +0300
+Message-ID: <CAEnQRZAUOzmP2yPb4utyDTnYUDNyqesXJPb5-Ms0tfPy8TMBig@mail.gmail.com>
+References: <20190728192429.1514-1-daniel.baluta@nxp.com> <20190728192429.1514-8-daniel.baluta@nxp.com>
+ <20190730080135.GB5892@Asurada>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0271793678755789137=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAA+hA=TkrwzWbJQu7Cc6njdQSP--u=Zf+=FcPg-wCZ=rRXoRuQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree <devicetree@vger.kernel.org>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730080135.GB5892@Asurada>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Timur Tabi <timur@kernel.org>, Rob Herring <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Takashi Iwai <tiwai@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, Fabio Estevam <festevam@gmail.com>, Mihai Serban <mihai.serban@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 30, 2019 at 11:02 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Sun, Jul 28, 2019 at 10:24:29PM +0300, Daniel Baluta wrote:
+> > For i.MX7ULP and i.MX8MQ register map is changed. Add two new compatbile
+> > strings to differentiate this.
+> >
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > index 2b38036a4883..b008e9cfedc1 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> > @@ -8,7 +8,8 @@ codec/DSP interfaces.
+> >  Required properties:
+> >
+> >    - compatible               : Compatible list, contains "fsl,vf610-sai",
+> > -                       "fsl,imx6sx-sai" or "fsl,imx6ul-sai"
+> > +                       "fsl,imx6sx-sai", "fsl,imx6ul-sai",
+> > +                       "fsl,imx7ulp-sai", "fsl,imx8mq-sai".
+>
+> A nit, could have that 'or' :)
 
---===============0271793678755789137==
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";
-	micalg=sha-256; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
+I removed the 'or' on purpose because I don't want to move it
+around each time we add a new compatible.
 
-
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 25/07/19, Dong Aisheng wrote:
-> Hi Rob & Stephen & Shawn,
->=20
-> Could you help review this patchset?
-> We're pretty stuck here for a long time and a lot continued work are bloc=
-ked.
-> We really need your kind help.
-
-I'am also interested in this work and could offer some testing as soon
-my imx8qm based board is booting.
-
-Best regards,
-
-Oliver
-
---pWyiEgJYm5f9v55/
-Content-Type: application/x-pkcs7-signature
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIINNwYJKoZIhvcNAQcCoIINKDCCDSQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0B
-BwGgggp8MIIE6DCCA9CgAwIBAgIOSBtqCRO9gCTKXSLwFPMwDQYJKoZIhvcNAQELBQAwTDEg
-MB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24x
-EzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAwWhcNMjQwNjE1MDAwMDAwWjBd
-MQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEzMDEGA1UEAxMqR2xv
-YmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEczMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAtpZok2X9LAHsYqMNVL+Ly6RDkaKar7GD8rVtb9nw6tzPFnvX
-GeOEA4X5xh9wjx9sScVpGR5wkTg1fgJIXTlrGESmaqXIdPRd9YQ+Yx9xRIIIPu3Jp/bpbiZB
-KYDJSbr/2Xago7sb9nnfSyjTSnucUcIPZVChn6hKneVGBI2DT9yyyD3PmCEJmEzA8Y96qT83
-JmVH2GaPSSbCw0C+Zj1s/zqtKUbwE5zh8uuZp4vC019QbaIOb8cGlzgvTqGORwK0gwDYpOO6
-QQdg5d03WvIHwTunnJdoLrfvqUg2vOlpqJmqR+nH9lHS+bEstsVJtZieU1Pa+3LzfA/4cT7X
-A/pnwwIDAQABo4IBtTCCAbEwDgYDVR0PAQH/BAQDAgEGMGoGA1UdJQRjMGEGCCsGAQUFBwMC
-BggrBgEFBQcDBAYIKwYBBQUHAwkGCisGAQQBgjcUAgIGCisGAQQBgjcKAwQGCSsGAQQBgjcV
-BgYKKwYBBAGCNwoDDAYIKwYBBQUHAwcGCCsGAQUFBwMRMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFGlygmIxZ5VEhXeRgMQENkmdewthMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q
-+mOai97i3Ru8MD4GCCsGAQUFBwEBBDIwMDAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmds
-b2JhbHNpZ24uY29tL3Jvb3RyMzA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2Jh
-bHNpZ24uY29tL3Jvb3QtcjMuY3JsMGcGA1UdIARgMF4wCwYJKwYBBAGgMgEoMAwGCisGAQQB
-oDIBKAowQQYJKwYBBAGgMgFfMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNp
-Z24uY29tL3JlcG9zaXRvcnkvMA0GCSqGSIb3DQEBCwUAA4IBAQConc0yzHxn4gtQ16VccKNm
-4iXv6rS2UzBuhxI3XDPiwihW45O9RZXzWNgVcUzz5IKJFL7+pcxHvesGVII+5r++9eqI9XnE
-KCILjHr2DgvjKq5Jmg6bwifybLYbVUoBthnhaFB0WLwSRRhPrt5eGxMw51UmNICi/hSKBKsH
-hGFSEaJQALZy4HL0EWduE6ILYAjX6BSXRDtHFeUPddb46f5Hf5rzITGLsn9BIpoOVrgS878O
-4JnfUWQi29yBfn75HajifFvPC+uqn+rcVnvrpLgsLOYG/64kWX/FRH8+mhVe+mcSX3xsUpcx
-K9q9vLTVtroU/yJUmEC4OcH5dQsbHBqjMIIFjDCCBHSgAwIBAgIMO12UXtvYfwfC8M6yMA0G
-CSqGSIb3DQEBCwUAMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNh
-MTMwMQYDVQQDEypHbG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2IC0gRzMw
-HhcNMTkwNDAxMTExNjI5WhcNMjIwNDAxMTExNjI5WjCBlTELMAkGA1UEBhMCREUxDzANBgNV
-BAgTBkJlcmxpbjEPMA0GA1UEBxMGQmVybGluMRwwGgYDVQQKExNLb0NvIENvbm5lY3RvciBH
-bWJIMRYwFAYDVQQDEw1PbGl2ZXIgR3JhdXRlMS4wLAYJKoZIhvcNAQkBFh9vbGl2ZXIuZ3Jh
-dXRlQGtvY29jb25uZWN0b3IuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-6tEB11ySFgf4wcRECw6gPEo6N4BJEkUlxp4L6byZO5YtXgJ2jdMudJsTWuu8w0Gk+7QklmOJ
-1qU4Ma066KQ+YgCxLuO1gX7FEl2zciiumyfEvC2rTIXX6c6bvxvMPvJhDm1eRMf4aj10/bgN
-Hxk9iuNdSVlqYLu0h5QMLW8HmA5PfN+QpfAn+CUhcJT0wec7vRh3FEiO38ySru6Od+AqfuJK
-dj45wOvTEBj42QvHqVYcnzcmXW2KkM+8cZBYabs1bLhO3WldwaOh8EZNRZvSvioKyCNKGgUU
-vFcDy3l/aGpEqr4zc0sGhVMpTPZpd67/wcTZgW4waDcDvT/kdFJN5QIDAQABo4ICETCCAg0w
-DgYDVR0PAQH/BAQDAgWgMIGeBggrBgEFBQcBAQSBkTCBjjBNBggrBgEFBQcwAoZBaHR0cDov
-L3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NwZXJzb25hbHNpZ24yc2hhMmczb2Nz
-cC5jcnQwPQYIKwYBBQUHMAGGMWh0dHA6Ly9vY3NwMi5nbG9iYWxzaWduLmNvbS9nc3BlcnNv
-bmFsc2lnbjJzaGEyZzMwTQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEW
-Jmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwRAYD
-VR0fBD0wOzA5oDegNYYzaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc3BlcnNvbmFsc2ln
-bjJzaGEyZzMuY3JsMFsGA1UdEQRUMFKBH29saXZlci5ncmF1dGVAa29jb2Nvbm5lY3Rvci5j
-b22gLwYKKwYBBAGCNxQCA6AhDB9vbGl2ZXIuZ3JhdXRlQGtvY29jb25uZWN0b3IuY29tMB0G
-A1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAdBgNVHQ4EFgQU3xRHUdawOpr7j3ksQbT5
-tYF66RMwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwDQYJKoZIhvcNAQELBQAD
-ggEBAB/DTqBqTFDUriAbT39gkhoa+uFPWO8NID6UrJ9FqXUpgPzIpkGKf/gv1PKCGVblKY4F
-ewgiU3e/ZIAQFIAmwIUPwilkjtBDwHDyBbT68AYLjoS85+8V4ELri7q9fW+w5ldBaCnJ6yiv
-B2VMe7Nuu2PO4eI921NG2czrvBggVtYInrQNTAGj+f+JU4nua+YsYq8HkC4FiH4tmHEULFvD
-CDQOBeeKqJdn7RsAysG7AwOWwVh8S8FmRGu69RwQbl/PyojiV1w6TUPHm45hj11H1qihrL4X
-I9GTHjYv6/Cc6cU1fGVdAmbGK6UrH04yJuJja4YwT3WxU53BWrM6dvdFMksxggJ/MIICewIB
-ATBtMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTMwMQYDVQQD
-EypHbG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2IC0gRzMCDDtdlF7b2H8H
-wvDOsjANBglghkgBZQMEAgEFAKCB5DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
-SIb3DQEJBTEPFw0xOTA3MzAxMTU1NThaMC8GCSqGSIb3DQEJBDEiBCAfIM+BNvtnPOzavc3M
-Yk3ZCU/IxiHV/BBXaft8DSCM0zB5BgkqhkiG9w0BCQ8xbDBqMAsGCWCGSAFlAwQBKjALBglg
-hkgBZQMEARYwCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggq
-hkiG9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQCQ
-lRf8YUFcJf0j6/ymZzvKImv22QJooX6foroUlBvQk4irYexFici9L9K9pMt2279kZIzSfQbQ
-+7dxVNmjTEacRAE5kvN+MSFf+HZDzBZROCqLAUJSo3hyCY6MADMngzPT46zympyTUS0xhHXO
-8ulQlDeenYTxNPHg2l/VSqJr1w6PELOnZyGhTgF3njRcqMLDVDyblMPyeR75USWIXEK2k4us
-em46E3XS/2mcVJ9oSkonq1OhyKEP0QqGBfHsw8pLU6GYIEkvcZfOuyGLp0cuL3fr9oGrG8iR
-6b/pteEXQDL6Y5m/Lysl/AlxWoQ3DuluFaiZff7ZhD2RU8DyA8wx
-
---pWyiEgJYm5f9v55/--
-
-
---===============0271793678755789137==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0271793678755789137==--
+Anyhow, I can put it back if this is the convention.
