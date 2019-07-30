@@ -1,106 +1,109 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
-Date: Tue, 30 Jul 2019 16:20:59 -0700
-Message-ID: <CAGETcx-2vKLkr1Mcs-ujLdgOmztK655X2ybOnFqhupXe2xu+xg@mail.gmail.com>
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
- <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [v6 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
+Date: Wed, 31 Jul 2019 09:28:49 +0930
+Message-ID: <f22b671a-2968-41cb-b158-372663fa6843@www.fastmail.com>
+References: <1564500268-2627-1-git-send-email-hongweiz@ami.com>
+ <1564500268-2627-2-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
+In-Reply-To: <1564500268-2627-2-git-send-email-hongweiz@ami.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Hongwei Zhang <hongweiz@ami.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 3:57 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> On Wed, Jul 3, 2019 at 6:40 AM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Not all devices quantify their performance points in terms of frequency.
-> > Devices like interconnects quantify their performance points in terms of
-> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > add support for parsing bandwidth OPPs from DT.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
-> >  drivers/opp/opp.h |  4 +++-
-> >  2 files changed, 35 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index c10c782d15aa..54fa70ed2adc 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> >
-> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> > +{
-> > +       int ret;
-> > +       u64 rate;
-> > +       u32 bw;
-> > +
-> > +       ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +       if (!ret) {
-> > +               /*
-> > +                * Rate is defined as an unsigned long in clk API, and so
-> > +                * casting explicitly to its type. Must be fixed once rate is 64
-> > +                * bit guaranteed in clk API.
-> > +                */
-> > +               new_opp->rate = (unsigned long)rate;
-> > +               return 0;
-> > +       }
-> > +
-> > +       ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> > +       if (ret)
-> > +               return ret;
-> > +       new_opp->rate = (unsigned long) &bw;
-> > +
-> > +       ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> > +       if (!ret)
-> > +               new_opp->avg_bw = (unsigned long) &bw;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  /**
-> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> >   * @opp_table: OPP table
-> > @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> >         if (!new_opp)
-> >                 return ERR_PTR(-ENOMEM);
-> >
-> > -       ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +       ret = _read_opp_key(new_opp, np);
-> >         if (ret < 0) {
-> >                 /* "opp-hz" is optional for devices like power domains. */
-> >                 if (!opp_table->is_genpd) {
-> > -                       dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > +                       dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
-> > +                               __func__);
-> >                         goto free_opp;
-> >                 }
-> >
-> > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> > index 569b3525aa67..ead2cdafe957 100644
-> > --- a/drivers/opp/opp.h
-> > +++ b/drivers/opp/opp.h
-> > @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
-> >   * @turbo:     true if turbo (boost) OPP
-> >   * @suspend:   true if suspend OPP
-> >   * @pstate: Device's power domain's performance state.
-> > - * @rate:      Frequency in hertz
-> > + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per second
->
-> rate is most often used for clk rates. Let us not overload this just
-> to save one struct member. IMO, you should introduce a peak_bw member
-> and then have an error check if the DT provides both rate and peak_bw
-> during parsing.
 
-This is not about saving space. It avoids having to rewrite a lot of
-helper functions. If you want, I can rename this to "key" but I'm not
-going to create a different field.
 
--Saravana
+On Wed, 31 Jul 2019, at 00:55, Hongwei Zhang wrote:
+> Add bindings to support SGPIO on AST2400 or AST2500.
+> 
+> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+> ---
+>  .../devicetree/bindings/gpio/sgpio-aspeed.txt      | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt 
+> b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> new file mode 100644
+> index 0000000..f9ed438
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+> @@ -0,0 +1,55 @@
+> +Aspeed SGPIO controller Device Tree Bindings
+> +-------------------------------------------
+> +
+> +This SGPIO controller is for ASPEED AST2500 SoC, it supports up to 80 
+> full 
+> +featured Serial GPIOs. Each of the Serial GPIO pins can be programmed 
+> to 
+> +support the following options:
+> +- Support interrupt option for each input port and various interrupt 
+> +  sensitivity option (level-high, level-low, edge-high, edge-low)
+> +- Support reset tolerance option for each output port
+> +- Directly connected to APB bus and its shift clock is from APB bus 
+> clock
+> +  divided by a programmable value.
+> +- Co-work with external signal-chained TTL components (74LV165/74LV595)
+> +
+> +
+> +Required properties:
+> +
+> +- compatible		: Either "aspeed,ast2400-sgpio" or "aspeed,ast2500-sgpio"
+> +
+> +- #gpio-cells 		: Should be two
+> +			  - First cell is the GPIO line number
+> +			  - Second cell is used to specify optional
+> +			    parameters (unused)
+> +
+> +- reg			: Address and length of the register set for the device
+> +- gpio-controller	: Marks the device node as a GPIO controller
+> +- interrupts		: Interrupt specifier (see interrupt bindings for
+> +			  details)
+> +
+> +- interrupt-controller	: Mark the GPIO controller as an 
+> interrupt-controller
+> +
+> +- ngpios		: number of GPIO pins to serialise. 
+> +			  (should be multiple of 8, up to 80 pins)
+> +
+> +- clocks                : A phandle to the APB clock for SGPM clock 
+> division
+> +
+> +- bus-frequency		: SGPM CLK frequency
+> +
+> +
+> +The sgpio and interrupt properties are further described in their 
+> respective bindings documentation:
+> +
+> +- Documentation/devicetree/bindings/sgpio/gpio.txt
+
+This isn't a file? This one is (s/sgpio/gpio/):
+
+ Documentation/devicetree/bindings/gpio/gpio.txt
+
+I assume this was the result of a stray search/replace?
+
+With that fixed you can add: Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+Andrew
+
+> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +  Example:
+> +	sgpio: sgpio@1e780200 {
+> +		#gpio-cells = <2>;
+> +		compatible = "aspeed,ast2500-sgpio";
+> +		gpio-controller;
+> +		interrupts = <40>;
+> +		reg = <0x1e780200 0x0100>;
+> +		clocks = <&syscon ASPEED_CLK_APB>;
+> +		interrupt-controller;
+> +		ngpios = <8>;
+> +		bus-frequency = <12000000>;
+> +	};
+> -- 
+> 2.7.4
+> 
+>
