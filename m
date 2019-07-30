@@ -1,31 +1,76 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 11/11] MIPS: jz4740: Drop dead code
-Date: Tue, 30 Jul 2019 17:44:17 +0000
-Message-ID: <MWHPR2201MB1277B22F5752232A50F9DF8DC1DC0@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190725220215.460-12-paul@crapouillou.net>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: A few fixes for veyron-{fievel,tiger}
+Date: Tue, 30 Jul 2019 11:01:42 -0700
+Message-ID: <CAD=FV=Wub9Wkc5t4iQRjBK8R_d_oh4PoHPwLHb4T5+Meij7sSg@mail.gmail.com>
+References: <20190730173444.56741-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725220215.460-12-paul@crapouillou.net>
-Content-Language: en-US
+In-Reply-To: <20190730173444.56741-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <pburton@wavecomp.com>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee.jones@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Sebastian Reichel <sre@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, "od@zcrc.me" <od@zcrc.me>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
-Paul Cercueil wrote:
-> Remove all the source files that are not used anywhere anymore.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+On Tue, Jul 30, 2019 at 10:34 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> @@ -130,12 +138,13 @@
+>                         regulator-max-microvolt = <1800000>;
+>                         regulator-name = "vdd18_lcdt";
+>                         regulator-state-mem {
+> -                               regulator-on-in-suspend;
+> +                               regulator-off-in-suspend;
+>                                 regulator-suspend-microvolt = <1800000>;
 
-Applied to mips-next.
+Please remove "regulator-suspend-microvolt = <1800000>;" which doesn't
+make sense once you have "regulator-off-in-suspend".
 
-Thanks,
-    Paul
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+>                         };
+>                 };
+>
+> -               /* This is not a pwren anymore, but the real power supply,
+> +               /*
+> +                * This is not a pwren anymore, but the real power supply,
+>                  * vdd10_lcd for HDMI_AVDD_1V0
+>                  */
+>                 vdd10_lcd: LDO_REG7 {
+> @@ -145,7 +154,7 @@
+>                         regulator-max-microvolt = <1000000>;
+>                         regulator-name = "vdd10_lcd";
+>                         regulator-state-mem {
+> -                               regulator-on-in-suspend;
+> +                               regulator-off-in-suspend;
+>                                 regulator-suspend-microvolt = <1000000>;
+
+Please remove "regulator-suspend-microvolt = <1000000>;" which doesn't
+make sense once you have "regulator-off-in-suspend".
+
+
+>                         };
+>
+> @@ -159,7 +168,7 @@
+>                         regulator-max-microvolt = <3300000>;
+>                         regulator-name = "vcc33_ccd";
+>                         regulator-state-mem {
+> -                               regulator-on-in-suspend;
+> +                               regulator-off-in-suspend;
+>                                 regulator-suspend-microvolt = <3300000>;
+
+Please remove "regulator-suspend-microvolt = <3300000>;" which doesn't
+make sense once you have "regulator-off-in-suspend".
+
+
+Other than those things, this patch looks good to me and feel free to
+add my Reviewed-by.  NOTE: when I tried applying this to my tree git
+complained and I had to apply manually.  Could you try sending this
+patch atop Heiko's for-next tree?  The yell I got:
+
+error: sha1 information is lacking or useless
+(arch/arm/boot/dts/rk3288-veyron-fievel.dts).
+error: could not build fake ancestor
+
+
+-Doug
