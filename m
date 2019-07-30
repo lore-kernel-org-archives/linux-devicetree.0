@@ -1,7 +1,7 @@
 From: Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v8 11/14] dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-Date: Tue, 30 Jul 2019 15:42:53 -0300
-Message-ID: <20190730184256.30338-12-helen.koike@collabora.com>
+Subject: [PATCH v8 12/14] arm64: dts: rockchip: add isp0 node for rk3399
+Date: Tue, 30 Jul 2019 15:42:54 -0300
+Message-ID: <20190730184256.30338-13-helen.koike@collabora.com>
 References: <20190730184256.30338-1-helen.koike@collabora.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,15 +9,15 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190730184256.30338-1-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Rob Herring <robh@kernel.org>, Helen Koike <helen.koike@collabora.com>
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Helen Koike <helen.koike@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+From: Shunqian Zheng <zhengsq@rock-chips.com>
 
-Add DT bindings documentation for Rockchip MIPI D-PHY RX
+rk3399 have two ISP, but we havn't test isp1, so just add isp0 at present.
 
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 [update for upstream]
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
@@ -25,55 +25,47 @@ Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 Changes in v8: None
 Changes in v7:
-- updated doc with new design and tested example
+- add phy properties
+- add ports
 
- .../bindings/media/rockchip-mipi-dphy.txt     | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-new file mode 100644
-index 000000000000..2305d44d92db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-@@ -0,0 +1,38 @@
-+Rockchip SoC MIPI RX D-PHY
-+-------------------------------------------------------------
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index cede1ad81be2..776d2bd48c06 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1698,6 +1698,31 @@
+ 		status = "disabled";
+ 	};
+ 
++	isp0: isp0@ff910000 {
++		compatible = "rockchip,rk3399-cif-isp";
++		reg = <0x0 0xff910000 0x0 0x4000>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru SCLK_ISP0>,
++			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
++			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
++		clock-names = "clk_isp",
++			      "aclk_isp", "aclk_isp_wrap",
++			      "hclk_isp", "hclk_isp_wrap";
++		power-domains = <&power RK3399_PD_ISP0>;
++		iommus = <&isp0_mmu>;
++		phys = <&mipi_dphy_rx0>;
++		phy-names = "dphy";
 +
-+Required properties:
-+- compatible: value should be one of the following
-+	"rockchip,rk3288-mipi-dphy"
-+	"rockchip,rk3399-mipi-dphy"
-+- clocks : list of clock specifiers, corresponding to entries in
-+	clock-names property;
-+- clock-names: required clock name.
-+- #phy-cells: Number of cells in a PHY specifier; Should be 0.
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+MIPI RX D-PHY use registers in "general register files", it
-+should be a child of the GRF.
-+
-+Optional properties:
-+- reg: offset and length of the register set for the device.
-+- rockchip,grf: MIPI TX1RX1 D-PHY not only has its own register but also
-+		the GRF, so it is only necessary for MIPI TX1RX1 D-PHY.
-+
-+Device node example
-+-------------------
-+
-+grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-+
-+...
-+
-+	dphy: mipi-dphy {
-+		compatible = "rockchip,rk3399-mipi-dphy";
-+		clocks = <&cru SCLK_MIPIDPHY_REF>,
-+			<&cru SCLK_DPHY_RX0_CFG>,
-+			<&cru PCLK_VIO_GRF>;
-+		clock-names = "dphy-ref", "dphy-cfg", "grf";
-+		power-domains = <&power RK3399_PD_VIO>;
-+		#phy-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++		};
 +	};
-+};
++
+ 	isp0_mmu: iommu@ff914000 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
 -- 
 2.22.0
