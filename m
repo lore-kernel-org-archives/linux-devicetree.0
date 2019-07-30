@@ -1,113 +1,77 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v3 2/6] OPP: Add support for bandwidth OPP tables
-Date: Tue, 30 Jul 2019 16:27:14 +0530
-Message-ID: <CAHLCerP81Eotae5s4-Qye77SSF6-BbqFhckvkTEQWBD9biwzbw@mail.gmail.com>
-References: <20190703011020.151615-1-saravanak@google.com> <20190703011020.151615-3-saravanak@google.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 2/7] drivers: Introduce device lookup variants by
+ of_node
+Date: Tue, 30 Jul 2019 13:03:15 +0200
+Message-ID: <20190730110315.GA31631@kroah.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
+ <20190723221838.12024-3-suzuki.poulose@arm.com>
+ <20190725135402.GL23883@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703011020.151615-3-saravanak@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, evgreen@chromium.org, kernel-team@android.com, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190725135402.GL23883@dell>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Thor Thayer <thor.thayer@linux.intel.com>, rafael@kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fpga@vger.kernel.org, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, "David S. Miller" <davem@davemloft.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rockchip@lists.infradead.org, Wolfram Sang <wsa@the-dreams.de>, David Airlie <airlied@linux.ie>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, Alan Tull <atull@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, Takashi Iwai <tiwai@suse.com>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.orgli
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:40 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Not all devices quantify their performance points in terms of frequency.
-> Devices like interconnects quantify their performance points in terms of
-> bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> add support for parsing bandwidth OPPs from DT.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/of.c  | 34 ++++++++++++++++++++++++++++++++--
->  drivers/opp/opp.h |  4 +++-
->  2 files changed, 35 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index c10c782d15aa..54fa70ed2adc 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -552,6 +552,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> +{
-> +       int ret;
-> +       u64 rate;
-> +       u32 bw;
-> +
-> +       ret = of_property_read_u64(np, "opp-hz", &rate);
-> +       if (!ret) {
-> +               /*
-> +                * Rate is defined as an unsigned long in clk API, and so
-> +                * casting explicitly to its type. Must be fixed once rate is 64
-> +                * bit guaranteed in clk API.
-> +                */
-> +               new_opp->rate = (unsigned long)rate;
-> +               return 0;
-> +       }
-> +
-> +       ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
-> +       if (ret)
-> +               return ret;
-> +       new_opp->rate = (unsigned long) &bw;
-> +
-> +       ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
-> +       if (!ret)
-> +               new_opp->avg_bw = (unsigned long) &bw;
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
->   * @opp_table: OPP table
-> @@ -589,11 +618,12 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->         if (!new_opp)
->                 return ERR_PTR(-ENOMEM);
->
-> -       ret = of_property_read_u64(np, "opp-hz", &rate);
-> +       ret = _read_opp_key(new_opp, np);
->         if (ret < 0) {
->                 /* "opp-hz" is optional for devices like power domains. */
->                 if (!opp_table->is_genpd) {
-> -                       dev_err(dev, "%s: opp-hz not found\n", __func__);
-> +                       dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
-> +                               __func__);
->                         goto free_opp;
->                 }
->
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 569b3525aa67..ead2cdafe957 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -59,7 +59,8 @@ extern struct list_head opp_tables;
->   * @turbo:     true if turbo (boost) OPP
->   * @suspend:   true if suspend OPP
->   * @pstate: Device's power domain's performance state.
-> - * @rate:      Frequency in hertz
-> + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per second
-
-rate is most often used for clk rates. Let us not overload this just
-to save one struct member. IMO, you should introduce a peak_bw member
-and then have an error check if the DT provides both rate and peak_bw
-during parsing.
-
-> + * @avg_bw:    Average bandwidth in kilobytes per second
->   * @level:     Performance level
->   * @supplies:  Power supplies voltage/current values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
-> @@ -81,6 +82,7 @@ struct dev_pm_opp {
->         bool suspend;
->         unsigned int pstate;
->         unsigned long rate;
-> +       unsigned long avg_bw;
->         unsigned int level;
->
->         struct dev_pm_opp_supply *supplies;
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+T24gVGh1LCBKdWwgMjUsIDIwMTkgYXQgMDI6NTQ6MDJQTSArMDEwMCwgTGVlIEpvbmVzIHdyb3Rl
+Ogo+IE9uIFR1ZSwgMjMgSnVsIDIwMTksIFN1enVraSBLIFBvdWxvc2Ugd3JvdGU6Cj4gCj4gPiBJ
+bnRyb2R1Y2Ugd3JhcHBlcnMgZm9yIHtidXMvZHJpdmVyL2NsYXNzfV9maW5kX2RldmljZSgpIHRv
+Cj4gPiBsb2NhdGUgZGV2aWNlcyBieSBpdHMgb2Zfbm9kZS4KPiA+IAo+ID4gQ2M6IE1hYXJ0ZW4g
+TGFua2hvcnN0IDxtYWFydGVuLmxhbmtob3JzdEBsaW51eC5pbnRlbC5jb20+Cj4gPiBDYzogTWF4
+aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4KPiA+IENjOiBkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4
+LmllPgo+ID4gQ2M6IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4KPiA+IENjOiBkZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZwo+ID4gQ2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVs
+bGlAZ21haWwuY29tPgo+ID4gQ2M6IEZyYW5rIFJvd2FuZCA8ZnJvd2FuZC5saXN0QGdtYWlsLmNv
+bT4KPiA+IENjOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+ID4gQ2M6IExpYW0g
+R2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+Cj4gPiBDYzogbGludXgtaTJjQHZnZXIua2Vy
+bmVsLm9yZwo+ID4gQ2M6IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+IENj
+OiBsaW51eC1zcGlAdmdlci5rZXJuZWwub3JnCj4gPiBDYzogTWF0aGlldSBQb2lyaWVyIDxtYXRo
+aWV1LnBvaXJpZXJAbGluYXJvLm9yZz4KPiA+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
+ZWwub3JnPgo+ID4gQ2M6IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5pdmFzLmthbmRhZ2F0bGFA
+bGluYXJvLm9yZz4KPiA+IENjOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuY29tPgo+ID4gQ2M6
+IFdvbGZyYW0gU2FuZyA8d3NhQHRoZS1kcmVhbXMuZGU+Cj4gPiBDYzogQWxhbiBUdWxsIDxhdHVs
+bEBrZXJuZWwub3JnPgo+ID4gQ2M6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPiA+
+IENjOiBsaW51eC1mcGdhQHZnZXIua2VybmVsLm9yZwo+ID4gQ2M6IFBldGVyIFJvc2luIDxwZWRh
+QGF4ZW50aWEuc2U+Cj4gPiBDYzogTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPgo+ID4g
+Q2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgo+ID4gQ2M6IEhlaW5l
+ciBLYWxsd2VpdCA8aGthbGx3ZWl0MUBnbWFpbC5jb20+Cj4gPiBDYzogIkRhdmlkIFMuIE1pbGxl
+ciIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+Cj4gPiBDYzogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5u
+LmNoPgo+ID4gQ2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+Cj4gPiBDYzog
+R3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KPiA+IENjOiAi
+UmFmYWVsIEouIFd5c29ja2kiIDxyYWZhZWxAa2VybmVsLm9yZz4KPiA+IENjOiBMZWUgSm9uZXMg
+PGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gQ2M6IFRob3IgVGhheWVyIDx0aG9yLnRoYXllckBs
+aW51eC5pbnRlbC5jb20+Cj4gPiBDYzogSmlyaSBTbGFieSA8anNsYWJ5QHN1c2UuY29tPgo+ID4g
+Q2M6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4KPiA+IENjOiBBbmRyZXcgTHVubiA8
+YW5kcmV3QGx1bm4uY2g+Cj4gPiBDYzogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4KPiA+
+IFNpZ25lZC1vZmYtYnk6IFN1enVraSBLIFBvdWxvc2UgPHN1enVraS5wb3Vsb3NlQGFybS5jb20+
+Cj4gPiAtLS0KPiA+ICAtIERyb3BwZWQgdGhlIHJldmlld2VkLWJ5IHRhZ3MgZnJvbSBUaG9yLCBN
+YXJrLCBBbmRyZXcgYW5kIFBldGVyIGFzIHRoZQo+ID4gICAgcGF0Y2hlcyBhcmUgbWVyZWdlZCwg
+dGhvdWdoIHRoZXJlIGFyZSBubyBmdW5jdGlvbmFsIGNoYW5nZXMuCj4gPiAtLS0KPiA+ICBkcml2
+ZXJzL2FtYmEvdGVncmEtYWhiLmMgICAgICAgICAgICAgIHwgMTEgKy0tLS0tLS0KPiA+ICBkcml2
+ZXJzL2ZwZ2EvZnBnYS1icmlkZ2UuYyAgICAgICAgICAgIHwgIDggKy0tLS0tCj4gPiAgZHJpdmVy
+cy9mcGdhL2ZwZ2EtbWdyLmMgICAgICAgICAgICAgICB8ICA4ICstLS0tLQo+ID4gIGRyaXZlcnMv
+Z3B1L2RybS9kcm1fbWlwaV9kc2kuYyAgICAgICAgfCAgNyArLS0tLQo+ID4gIGRyaXZlcnMvaTJj
+L2kyYy1jb3JlLW9mLmMgICAgICAgICAgICAgfCAgNyArLS0tLQo+ID4gIGRyaXZlcnMvbWZkL2Fs
+dGVyYS1zeXNtZ3IuYyAgICAgICAgICAgfCAxNCArKy0tLS0tLS0tCj4gCj4gRm9yIG15IG93biBy
+ZWZlcmVuY2U6Cj4gICBBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5h
+cm8ub3JnPgo+IAo+IFdoYXQncyB0aGUgbWVyZ2UgcGxhbiBmb3IgdGhpcyBwYXRjaD8KPiAKPiBJ
+cyBhbnlvbmUgcHJlcGFyZWQgdG8gY3JlYXRlIGFuIGltbXV0YWJsZSBicmFuY2ggZm9yIHVzIHRv
+IHB1bGwgZnJvbT8KPiBJJ20gaGFwcHkgdG8gZG8gaXQgaWYgbm8gb25lIGVsc2Ugc3RlcHMgdXAu
+CgpJJ2xsIHRha2UgaXQsIGFuZCBjcmVhdGUgYSBicmFuY2ggZm9yIGV2ZXJ5b25lIHRvIHB1bGwg
+ZnJvbS4KCnRoYW5rcywKCmdyZWcgay1oCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
