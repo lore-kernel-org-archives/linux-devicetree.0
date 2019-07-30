@@ -1,44 +1,55 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
-Date: Tue, 30 Jul 2019 10:28:10 -0500
-Message-ID: <58ef00df-4d99-f4f2-0eda-01db2afe5502@lechnology.com>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-3-david@lechnology.com>
- <20190730123523.cjtmr3tpttn6r3pt@pengutronix.de>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH] dt-bindings: Fix generated example files getting added
+ to schemas
+Date: Tue, 30 Jul 2019 17:42:21 +0200
+Message-ID: <20190730154221.GA379@bogon.m.sigxcpu.org>
+References: <20190730145935.26248-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730123523.cjtmr3tpttn6r3pt@pengutronix.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190730145935.26248-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/30/19 7:35 AM, Uwe Kleine-KÃ¶nig wrote:
-> On Mon, Jul 22, 2019 at 10:45:36AM -0500, David Lechner wrote:
->> This adds a new counter driver for the Texas Instruments Enhanced
->> Quadrature Encoder Pulse (eQEP) module.
->>
->> Only very basic functionality is currently implemented - only enough to
->> be able to read the position. The actual device has many more features
->> which can be added to the driver on an as-needed basis.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->> ---
->>   MAINTAINERS               |   6 +
->>   drivers/counter/Kconfig   |  12 ++
->>   drivers/counter/Makefile  |   1 +
->>   drivers/counter/ti-eqep.c | 381 ++++++++++++++++++++++++++++++++++++++
->>   drivers/pwm/Kconfig       |   2 +-
+Hi,
+On Tue, Jul 30, 2019 at 08:59:35AM -0600, Rob Herring wrote:
+> Commit 837158b847a4 ("dt-bindings: Check the examples against the
+> schemas") started generating YAML encoded DT files to validate the
+> examples against the schema. When running 'make dt_binding_check' in
+> tree after the 1st time, the generated example .dt.yaml files are
+> mistakenly added to the list of schema files. Exclude *.example.dt.yaml
+> files from the search for schema files.
 > 
-> It's not obvious why the change to drivers/pwm/Kconfig is needed. Can
-> you please motivate that in the change log?
+> Fixes: 837158b847a4 ("dt-bindings: Check the examples against the schemas")
+> Reported-by: Guido Günther <agx@sigxcpu.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/Makefile | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+> index 6b0dfd5c17ba..5138a2f6232a 100644
+> --- a/Documentation/devicetree/bindings/Makefile
+> +++ b/Documentation/devicetree/bindings/Makefile
+> @@ -19,7 +19,9 @@ quiet_cmd_mk_schema = SCHEMA  $@
+>  
+>  DT_DOCS = $(shell \
+>  	cd $(srctree)/$(src) && \
+> -	find * \( -name '*.yaml' ! -name $(DT_TMP_SCHEMA) \) \
+> +	find * \( -name '*.yaml' ! \
+> +		-name $(DT_TMP_SCHEMA) ! \
+> +		-name '*.example.dt.yaml' \) \
+>  	)
+>  
+>  DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
 
-Will do. The short version is that it is needed for power management.
 
-> 
-> Best regards
-> Uwe
-> 
+this fixes checking twice in a row for me. Thanks!
+
+Tested-by: Guido Günther <agx@sigxcpu.org>
+
+ -- Guido
