@@ -1,54 +1,41 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: DTS: vybrid: Update qspi node description for VF610
- BK4 board
-Date: Tue, 30 Jul 2019 12:19:57 -0300
-Message-ID: <CAOMZO5AxPHHobQQhq30fjLVeSroLdvdT0+GqCWi8it1ejhDONA@mail.gmail.com>
-References: <20190730150552.24927-1-lukma@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Thara Gopinath <thara.gopinath@linaro.org>
+Subject: [Patch v2 2/2] arm64: dts: qcom: Extend AOSS QMP node
+Date: Tue, 30 Jul 2019 11:24:43 -0400
+Message-ID: <1564500283-16038-3-git-send-email-thara.gopinath@linaro.org>
+References: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730150552.24927-1-lukma@denx.de>
+In-Reply-To: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: linux-arm-msm@vger.kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, vinod.koul@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+AOSS hosts resources that can be used to warm up the SoC.
+Add nodes for these resources.
 
-Subject line could be improved:
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-ARM: dts: vf610-bk4: Fix qspi node description
-
-On Tue, Jul 30, 2019 at 12:06 PM Lukasz Majewski <lukma@denx.de> wrote:
->
-> Before this change the device tree description of qspi node for
-> second memory on BK4 board was wrong (applicable to old, in-house
-> tunned fsl-quadspi.c driver).
->
-> As a result this memory was not recognized correctly when used
-> with the new spi-fsl-qspi.c driver.
->
-> From the dt-bindings:
->
-> "Required SPI slave node properties:
->   - reg: There are two buses (A and B) with two chip selects each.
-> This encodes to which bus and CS the flash is connected:
-> <0>: Bus A, CS 0
-> <1>: Bus A, CS 1
-> <2>: Bus B, CS 0
-> <3>: Bus B, CS 1"
->
-> According to above with new driver the second SPI-NOR memory shall
-> have reg=<2> as it is connected to Bus B, CS 0.
-
-I am glad you got it working!
-
-This looks very familiar with the suggestion I sent yesterday:
-http://lists.infradead.org/pipermail/linux-mtd/2019-July/090655.html
-
-It is a good practice to give some credit to someone who has helped in
-finding the solution of your problem.
-
-Adding a Suggested-by: Fabio Estevam <festevam@gmail.com> would be nice here.
-
-This also needs a Fixes tag.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 4babff5..d0c0d4f 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2411,6 +2411,14 @@
+ 
+ 			#clock-cells = <0>;
+ 			#power-domain-cells = <1>;
++
++			cx_cdev: cx {
++				#cooling-cells = <2>;
++			};
++
++			ebi_cdev: ebi {
++				#cooling-cells = <2>;
++			};
+ 		};
+ 
+ 		spmi_bus: spmi@c440000 {
+-- 
+2.1.4
