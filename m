@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V3 4/5] thermal: qoriq: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
-Date: Tue, 30 Jul 2019 10:21:25 +0800
-Message-ID: <20190730022126.17883-4-Anson.Huang@nxp.com>
+Subject: [PATCH V3 5/5] dt-bindings: thermal: qoriq: Add optional clocks property
+Date: Tue, 30 Jul 2019 10:21:26 +0800
+Message-ID: <20190730022126.17883-5-Anson.Huang@nxp.com>
 References: <20190730022126.17883-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190730022126.17883-1-Anson.Huang@nxp.com>
@@ -12,46 +12,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Use __maybe_unused for power management related functions
-instead of #if CONFIG_PM_SLEEP to simply the code.
+Some platforms like i.MX8M series SoCs have clock control for TMU,
+add optional clocks property to the binding doc.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-No changes.
+No changes, noted the i.MX8M series SoCs need this clock in commit log.
 ---
- drivers/thermal/qoriq_thermal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 8d19601..39542c6 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -256,8 +256,7 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+index 04cbb90..28f2cba 100644
+--- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
+@@ -23,6 +23,7 @@ Required properties:
+ Optional property:
+ - little-endian : If present, the TMU registers are little endian. If absent,
+ 	the default is big endian.
++- clocks : the clock for clocking the TMU silicon.
  
--#ifdef CONFIG_PM_SLEEP
--static int qoriq_tmu_suspend(struct device *dev)
-+static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
- {
- 	u32 tmr;
- 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-@@ -272,7 +271,7 @@ static int qoriq_tmu_suspend(struct device *dev)
- 	return 0;
- }
+ Example:
  
--static int qoriq_tmu_resume(struct device *dev)
-+static int __maybe_unused qoriq_tmu_resume(struct device *dev)
- {
- 	u32 tmr;
- 	int ret;
-@@ -289,7 +288,6 @@ static int qoriq_tmu_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif
- 
- static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
- 			 qoriq_tmu_suspend, qoriq_tmu_resume);
 -- 
 2.7.4
