@@ -1,7 +1,7 @@
 From: Philippe Schenker <dev@pschenker.ch>
-Subject: [PATCH 22/22] ARM: dts: imx6ull-colibri: Add touchscreens used with Eval Board
-Date: Tue, 30 Jul 2019 16:46:49 +0200
-Message-ID: <20190730144649.19022-23-dev@pschenker.ch>
+Subject: [PATCH 15/22] ARM: dts: apalis-imx6: Add some optional I2C devices
+Date: Tue, 30 Jul 2019 16:46:42 +0200
+Message-ID: <20190730144649.19022-16-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,67 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Philippe Schenker <philippe.schenker@toradex.com>
 
-This adds the common touchscreens that are used with Toradex's
-Eval Boards.
+This commit adds the mipi_csi node to Toradex's evalboard as found
+on the mezzanine connector
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-
 ---
 
- .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm/boot/dts/imx6q-apalis-eval.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-index d3c4809f140e..cd72d3decf6a 100644
---- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-@@ -112,6 +112,34 @@
- &i2c1 {
- 	status = "okay";
- 
-+	/*
-+	 * the PCAPs use SODIMM 28/30, also used for PWM<B>, PWM<C>, aka pwm5,
-+	 * pwm6. so if you enable one of the PCAP controllers disable the pwms
-+	 */
-+	atmel_mxt_ts: atmel_mxt_ts@4a {
-+		compatible = "atmel,maxtouch";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiotouch>;
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <16 IRQ_TYPE_EDGE_FALLING>; /* SODIMM 28 */
-+		reset-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* SODIMM 30 */
-+		status = "disabled";
-+	};
-+
-+	touch: touchrevf0710a@10 {
-+		compatible = "touchrevolution,fusion-f0710a";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpiotouch>;
-+		reg = <0x10>;
-+			/* SODIMM 28, Pen down interrupt */
-+		gpios = <&gpio4 16 GPIO_ACTIVE_HIGH
-+			/* SODIMM 30, Reset interrupt */
-+			 &gpio2 5 GPIO_ACTIVE_LOW
-+			>;
-+		status = "disabled";
-+	};
-+
- 	/* M41T0M6 real time clock on carrier board */
- 	m41t0m6: rtc@68 {
- 		compatible = "st,m41t0";
-@@ -188,3 +216,12 @@
- 	sd-uhs-sdr104;
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
+index 33193d6137c0..ea419b9a0386 100644
+--- a/arch/arm/boot/dts/imx6q-apalis-eval.dts
++++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
+@@ -166,6 +166,14 @@
+ 	};
  };
-+
-+&iomuxc {
-+	pinctrl_gpiotouch: touchgpios {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_DQS__GPIO4_IO16		0x74
-+			MX6UL_PAD_ENET1_TX_EN__GPIO2_IO05	0x14
-+		>;
-+	};
+ 
++&mipi_csi {
++	ipu_id = <0>;
++	csi_id = <1>;
++	v_channel = <0>;
++	lanes = <2>;
++	status = "okay";
 +};
++
+ &backlight {
+ 	brightness-levels = <0 127 191 223 239 247 251 255>;
+ 	default-brightness-level = <1>;
 -- 
 2.22.0
