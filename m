@@ -1,77 +1,36 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
-Date: Tue, 30 Jul 2019 22:13:34 +0530
-Message-ID: <a9ab8614-7626-c309-24cc-02ce08a80ce5@codeaurora.org>
-References: <20190726231558.175130-1-saravanak@google.com>
- <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
- <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
- <20190730024640.xk27jgdfl2j6ucx7@vireshk-i7>
- <361effba-4433-24d9-243c-201af39214cc@codeaurora.org>
- <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v4 0/4] enetc: Add mdio bus driver for the
+ PCIe MDIO endpoint
+Date: Tue, 30 Jul 2019 09:44:36 -0700 (PDT)
+Message-ID: <20190730.094436.855806617449032791.davem@davemloft.net>
+References: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kerne>
+To: claudiu.manoil@nxp.com
+Cc: andrew@lunn.ch, robh+dt@kernel.org, leoyang.li@nxp.com, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/30/19 11:23 AM, Saravana Kannan wrote:
-> On Mon, Jul 29, 2019 at 10:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->>
->> Hey Viresh,
->>
->> On 7/30/19 8:16 AM, Viresh Kumar wrote:
->>> On 29-07-19, 13:16, Saravana Kannan wrote:
->>>> Sibi might be working on doing that for the SDM845 CPUfreq driver.
->>>> Georgi could also change his GPU driver use case to use this BW OPP
->>>> table and required-opps.
->>>>
->>>> The problem is that people don't want to start using this until we
->>>> decide on the DT representation. So it's like a chicken and egg
->>>> situation.
->>>
->>> Yeah, I agree to that.
->>>
->>> @Georgi and @Sibi: This is your chance to speak up about the proposal
->>> from Saravana and if you find anything wrong with them. And specially
->>> that it is mostly about interconnects here, I would like to have an
->>> explicit Ack from Georgi on this.
->>>
->>> And if you guys are all okay about this then please at least commit
->>> that you will convert your stuff based on this in coming days.
->>
->> I've been using both Saravana's and Georgi's series for a while
->> now to scale DDR and L3 on SDM845. There is currently no consensus
->> as to where the votes are to be actuated from, hence couldn't post
->> anything out.
->>
->> DCVS based on Saravana's series + passive governor:
->> https://github.com/QuinAsura/linux/tree/lnext-072619-SK-series
-> 
-> Thanks Sibi! You might want to convert your patches so that until the
-> passive governor is ready, you just look up the required opps and vote
-> for BW directly from the cpufreq driver. Once devfreq governor is
-> ready, you can switch to it.
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+Date: Tue, 30 Jul 2019 12:45:15 +0300
 
-Sure I'll do that.
-
+> First patch fixes a sparse issue and cleans up accessors to avoid
+> casting to __iomem.
+> Second patch just registers the PCIe endpoint device containing
+> the MDIO registers as a standalone MDIO bus driver, to allow
+> an alternative way to control the MDIO bus.  The same code used
+> by the ENETC ports (eth controllers) to manage MDIO via local
+> registers applies and is reused.
 > 
-> -Saravana
+> Bindings are provided for the new MDIO node, similarly to ENETC
+> port nodes bindings.
 > 
->>
->> DCVS based on Georgi's series: (I had already posted this out)
->> https://github.com/QuinAsura/linux/tree/lnext-072619-GJ-series
->>
->> --
->> Qualcomm Innovation Center, Inc.
->> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
->> a Linux Foundation Collaborative Project
+> Last patch enables the ENETC port 1 and its RGMII PHY on the
+> LS1028A QDS board, where the MDIO muxing configuration relies
+> on the MDIO support provided in the first patch.
+ ...
 
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Series applied, thank you.
