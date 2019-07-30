@@ -1,274 +1,131 @@
-From: Oliver Graute <oliver.graute@kococonnector.com>
-Subject: [PATCHv3 1/1] arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
-Date: Tue, 30 Jul 2019 11:06:16 +0000
-Message-ID: <20190730110140.17247-2-oliver.graute@kococonnector.com>
-References: <20190730110140.17247-1-oliver.graute@kococonnector.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 0/7] drivers: Add generic device lookup helpers
+Date: Tue, 30 Jul 2019 13:56:43 +0200
+Message-ID: <20190730115643.GA21672@kroah.com>
+References: <20190723221838.12024-1-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730110140.17247-1-oliver.graute@kococonnector.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Oliver Graute <oliver.graute@kococonnector.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang <leoyang.li@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Vabhav Sharma <vabhav.sharma@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vg>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190723221838.12024-1-suzuki.poulose@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alexander Aring <alex.aring@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, rafael@kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-fpga@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, Elie Morisse <syniurge@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-i2c@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Shyam Sundar S K <shyam-sundar.s-k@amd.com>, Frank Rowand <frowand.list@gmail.com>, linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-acpi@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Lee Jones <lee.jo>
 List-Id: devicetree@vger.kernel.org
 
-Add basic dts support for a Advantech iMX8QM Qseven Board
-
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
----
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 228 ++++++++++++++++++
- 2 files changed, 229 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/f=
-reescale/Makefile
-index c5e39cd4fdaf..68dd30ade6df 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -26,4 +26,5 @@ dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-librem5-devkit.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-zii-ultra-zest.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8qm-mek.dtb
-+dtb-$(CONFIG_ARCH_MXC) +=3D imx8qm-rom7720-a1.dtb
- dtb-$(CONFIG_ARCH_MXC) +=3D imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts b/arch/arm=
-64/boot/dts/freescale/imx8qm-rom7720-a1.dts
-new file mode 100644
-index 000000000000..f79c2c7a7cda
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
-@@ -0,0 +1,228 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/dts-v1/;
-+
-+#include "imx8qm.dtsi"
-+
-+/ {
-+	model =3D "Advantech iMX8QM Qseven series";
-+	compatible =3D "fsl,imx8qm";
-+
-+	board {
-+		compatible =3D "proc-board";
-+		board-type =3D "ROM-7720_A1";
-+		board-cpu  =3D "iMX8QM";
-+	};
-+
-+	chosen {
-+		bootargs =3D "console=3DttyLP0,115200 earlycon=3Dlpuart32,0x5a060000,115=
-200";
-+		stdout-path =3D &lpuart0;
-+	};
-+
-+	cpus {
-+		/delete-node/ cpu-map;
-+		/delete-node/ cpu@100;
-+		/delete-node/ cpu@101;
-+	};
-+
-+	memory@80000000 {
-+		device_type =3D "memory";
-+		reg =3D <0x00000000 0x80000000 0 0x40000000>;
-+	};
-+
-+	reg_usdhc2_vmmc: usdhc2_vmmc {
-+		compatible =3D "regulator-fixed";
-+		regulator-name =3D "sw-3p3-sd1";
-+		regulator-min-microvolt =3D <3300000>;
-+		regulator-max-microvolt =3D <3300000>;
-+		gpio =3D <&lsio_gpio4 7 GPIO_ACTIVE_HIGH>;
-+		off-on-delay =3D <3000>;
-+		enable-active-high;
-+	};
-+};
-+
-+&lpuart0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_lpuart0>;
-+	status =3D "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_fec1>;
-+	phy-mode =3D "rgmii-txid";
-+	phy-handle =3D <&ethphy0>;
-+	fsl,magic-packet;
-+	fsl,rgmii_rxc_dly;
-+	status =3D "okay";
-+
-+	mdio {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible =3D "ethernet-phy-ieee802.3-c22";
-+			reg =3D <4>;
-+			at803x,eee-disabled;
-+			at803x,vddio-1p8v;
-+		};
-+	};
-+};
-+
-+&lsio_gpio4 {
-+        status =3D "okay";
-+};
-+&lsio_gpio5 {
-+        status =3D "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc1>;
-+	pinctrl-1 =3D <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 =3D <&pinctrl_usdhc1_200mhz>;
-+	bus-width =3D <8>;
-+	non-removable;
-+	status =3D "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 =3D <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width =3D <4>;
-+	cd-gpios =3D <&lsio_gpio5 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios =3D <&lsio_gpio5 21 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply =3D <&reg_usdhc2_vmmc>;
-+	status =3D "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_hog_1: hoggrp-1 {
-+		fsl,pins =3D <
-+			IMX8QM_USB_SS3_TC0_LSIO_GPIO4_IO03	  0x06000048
-+		>;
-+	};
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins =3D <
-+			IMX8QM_COMP_CTL_GPIO_1V8_3V3_ENET_ENETB_PAD	0x000014a0
-+			IMX8QM_ENET0_MDC_CONN_ENET0_MDC			0x06000020
-+			IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO		0x06000020
-+			IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x00000060
-+			IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2	0x00000060
-+			IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3	0x00000060
-+			IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC	0x00000060
-+			IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2	0x00000060
-+			IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3	0x00000060
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins =3D <
-+			IMX8QM_UART0_RX_DMA_UART0_RX		0x06000020
-+			IMX8QM_UART0_TX_DMA_UART0_TX		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins =3D <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000021
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000021
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000021
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000021
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000021
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000021
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000021
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000021
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000021
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000041
-+			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+		fsl,pins =3D <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
-+			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+		fsl,pins =3D <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK		0x06000040
-+				IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD		0x00000020
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0	0x00000020
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1	0x00000020
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2	0x00000020
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3	0x00000020
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4	0x00000020
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5	0x00000020
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6	0x00000020
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7	0x00000020
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE	0x00000040
-+			IMX8QM_EMMC0_RESET_B_CONN_EMMC0_RESET_B	0x00000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+		fsl,pins =3D <
-+			IMX8QM_USDHC1_DATA6_LSIO_GPIO5_IO21	0x00000021
-+			IMX8QM_USDHC1_DATA7_LSIO_GPIO5_IO22	0x00000021
-+			IMX8QM_USDHC1_RESET_B_LSIO_GPIO4_IO07	0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins =3D <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000041
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000021
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000021
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000021
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000021
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000021
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000021
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+		fsl,pins =3D <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+		fsl,pins =3D <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK	0x06000040
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD	0x00000020
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0	0x00000020
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1	0x00000020
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2	0x00000020
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3	0x00000020
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT	0x00000020
-+		>;
-+	};
-+};
---=20
-2.17.1
+T24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMTE6MTg6MzFQTSArMDEwMCwgU3V6dWtpIEsgUG91bG9z
+ZSB3cm90ZToKPiBXZSBoYXZlIGRldmljZSBpdGVyYXRvcnMgdG8gZmluZCBhIHBhcnRpY3VsYXIg
+ZGV2aWNlIG1hdGNoaW5nIGEgY3JpdGVyaWEKPiBmb3IgYSBnaXZlbiBidXMvY2xhc3MvZHJpdmVy
+LiBpLmUsIHtidXMsY2xhc3MsZHJpdmVyfV9maW5kX2RldmljZSgpCj4gQVBJcy4gVGhlIG1hdGNo
+aW5nIGNyaXRlcmlhIGlzIGEgZnVuY3Rpb24gcG9pbnRlciBmb3IgdGhlIEFQSXMuIE9mdGVuIHRo
+ZQo+IGxvb2t1cCBpcyBiYXNlZCBvbiBhIGdlbmVyaWMgcHJvcGVydHkgb2YgYSBkZXZpY2UgKGUu
+ZywgbmFtZSwgZndub2RlLCBvZiBub2RlCj4gcG9pbnRlciBvciBkZXZpY2UgdHlwZSkgcmF0aGVy
+IHRoYW4gYSBkcml2ZXIgc3BlY2lmaWMgaW5mb3JtYXRpb24uIEhvd2V2ZXIsIGVhY2gKPiBkcml2
+ZXIgd3JpdGVzIHVwIGl0cyBvd24gIm1hdGNoIiBmdW5jdGlvbiwgc3BpbGxpbmcgdGhlIHNpbWls
+YXIgbWF0Y2ggZnVuY3Rpb25zCj4gYWxsIG92ZXIgdGhlIGRyaXZlciBzdWJzeXN0ZW1zLgo+IAo+
+IFRoaXMgc2VyaWVzIGFkZHMgZGV2aWNlIG1hdGNoIGhlbHBlcnMgYnkgZ2VuZXJpYyBkZXZpY2Ug
+cHJvcGVydGllcyBvZiBhIGRldmljZS4KPiBVc2luZyB0aGVzZSBnZW5lcmljIG1hdGNoIGZ1bmN0
+aW9ucywgaW50cm9kdWNlIHdyYXBwZXJzIHRvIHRoZSBleGlzdGluZwo+ICAqX2ZpbmRfZGV2aWNl
+KCkgaGVscGVycyBhbmQgY29udmVydHMgdGhlIGV4aXN0aW5nIHVzZXJzIHRvIHVzZSB0aGUgbmV3
+IHdyYXBwZXJzLgo+ICBpLmUsCj4gCXtidXMvY2xhc3MvZHJpdmVyfV9maW5kX2RldmljZV9ieV9u
+YW1lKCkKPiAJe2J1cy9jbGFzcy9kcml2ZXJ9X2ZpbmRfZGV2aWNlX2J5X2Z3bm9kZSgpCj4gCXti
+dXMvY2xhc3MvZHJpdmVyfV9maW5kX2RldmljZV9ieV9kZXZ0KCkKPiAJe2J1cy9jbGFzcy9kcml2
+ZXJ9X2ZpbmRfZGV2aWNlX2J5X2FjcGlfZGV2KCkKPiAKPiBBbHNvIGFkZHMgYSB3cmFwcGVyIGZv
+ciBmaW5kaW5nIGEgcGxhdGZvcm0gZGV2aWNlIGJ5IGRyaXZlciwgdG8gYXZvaWQKPiBzcGlsbGlu
+ZyB0aGUgcGxhdGZvcm1fYnVzIGludGVybmFscyBpbiB0aGUgaW5kaXZpZHVhbCBkcml2ZXJzLiBB
+cHBsaWVzCj4gb24gNS4zLXJjMS4KPiAKPiAgICBbMF0gZ2l0Oi8vbGludXgtYXJtLm9yZy9saW51
+eC1za3AuZ2l0IGRyaXZlci1jbGVhbnVwL3YzCj4gUkZDWzFdIGh0dHBzOi8vbWFyYy5pbmZvLz9p
+PTE1NTk1NzcwMjMtNTU4LTEtZ2l0LXNlbmQtZW1haWwtc3V6dWtpLnBvdWxvc2VAYXJtLmNvbQo+
+IFYxIFsyXSBodHRwczovL21hcmMuaW5mby8/aT0xNTU5NzQ3NjMwLTI4MDY1LTEtZ2l0LXNlbmQt
+ZW1haWwtc3V6dWtpLnBvdWxvc2VAYXJtLmNvbQo+IFYyIFszXSBodHRwczovL21hcmMuaW5mby8/
+aT0xNTYwNTM0ODYzLTE1MTE1LTEtZ2l0LXNlbmQtZW1haWwtc3V6dWtpLnBvdWxvc2VAYXJtLmNv
+bQoKVGhlcmUgaXMgbm93IGEgcGVyc2lzdGVudCB0YWcvYnJhbmNoIGluIG15IGRyaXZlci1jb3Jl
+IHRyZWUgZm9yIGFueQpzdWJzeXN0ZW0gdGhhdCB3YW50cyB0byBwdWxsIHRoaXMgdHJlZSBpbiB0
+byBtYWtlIGl0IGVhc2llciBmb3IgbWVyZ2VzOgoKClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5j
+ZSBjb21taXQgNWY5ZTgzMmMxMzcwNzUwNDVkMTVjZDY4OTlhYjA1MDVjZmIyY2E0YjoKCiAgTGlu
+dXMgNS4zLXJjMSAoMjAxOS0wNy0yMSAxNDowNTozOCAtMDcwMCkKCmFyZSBhdmFpbGFibGUgaW4g
+dGhlIEdpdCByZXBvc2l0b3J5IGF0OgoKICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xp
+bnV4L2tlcm5lbC9naXQvZ3JlZ2toL2RyaXZlci1jb3JlLmdpdCB0YWdzL2dlbmVyaWNfbG9va3Vw
+X2hlbHBlcnMKCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byAzNmYzMzEzZDZiZmY5MWFi
+MmE5ZTQ3Njk4YzI3ZDE1MzYzNjQwYTRlOgoKICBwbGF0Zm9ybTogQWRkIHBsYXRmb3JtX2ZpbmRf
+ZGV2aWNlX2J5X2RyaXZlcigpIGhlbHBlciAoMjAxOS0wNy0zMCAxMzowNzo0MiArMDIwMCkKCi0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KR2VuZXJpYyBEZXZpY2UgTG9va3VwIEhlbHBlcnMKClBlcnNpc3RlbnQgdGFnIGZvciBv
+dGhlcnMgdG8gcHVsbCB0aGlzIGJyYW5jaCBmcm9tCgpCYXNlZCBvbiBwYXRjaCBzZXJpZXMgZnJv
+bSBTdXp1a2kgSyBQb3Vsb3NlIDxzdXp1a2kucG91bG9zZUBhcm0uY29tPgp3aXRoIFN1YmplY3Q6
+IFtQQVRDSCB2MyAwLzddIGRyaXZlcnM6IEFkZCBnZW5lcmljIGRldmljZSBsb29rdXAgaGVscGVy
+cwoKU2lnbmVkLW9mZi1ieTogR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0
+aW9uLm9yZz4KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0KU3V6dWtpIEsgUG91bG9zZSAoNyk6CiAgICAgIGRyaXZlcnM6IElu
+dHJvZHVjZSBkZXZpY2UgbG9va3VwIHZhcmlhbnRzIGJ5IG5hbWUKICAgICAgZHJpdmVyczogSW50
+cm9kdWNlIGRldmljZSBsb29rdXAgdmFyaWFudHMgYnkgb2Zfbm9kZQogICAgICBkcml2ZXJzOiBJ
+bnRyb2R1Y2UgZGV2aWNlIGxvb2t1cCB2YXJpYW50cyBieSBmd25vZGUKICAgICAgZHJpdmVyczog
+SW50cm9kdWNlIGRldmljZSBsb29rdXAgdmFyaWFudHMgYnkgZGV2aWNlIHR5cGUKICAgICAgZHJp
+dmVyczogSW50cm9kdWNlIGRldmljZSBsb29rdXAgdmFyaWFudHMgYnkgQUNQSV9DT01QQU5JT04g
+ZGV2aWNlCiAgICAgIGRyaXZlcnM6IEFkZCBnZW5lcmljIGhlbHBlciB0byBtYXRjaCBhbnkgZGV2
+aWNlCiAgICAgIHBsYXRmb3JtOiBBZGQgcGxhdGZvcm1fZmluZF9kZXZpY2VfYnlfZHJpdmVyKCkg
+aGVscGVyCgogZHJpdmVycy9hbWJhL3RlZ3JhLWFoYi5jICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMTEgKy0KIGRyaXZlcnMvYmFzZS9idXMuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDI0IC0tLQogZHJpdmVycy9iYXNlL2NvcmUuYyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgMzkgKysrLQogZHJpdmVycy9iYXNlL2RldmNvbi5jICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDggKy0KIGRyaXZlcnMvYmFzZS9wbGF0Zm9ybS5jICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDE0ICsrCiBkcml2ZXJzL2ZwZ2EvZnBnYS1icmlkZ2Uu
+YyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOCArLQogZHJpdmVycy9mcGdhL2ZwZ2EtbWdy
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKy0KIGRyaXZlcnMvZ3B1L2RybS9k
+cm1fbWlwaV9kc2kuYyAgICAgICAgICAgICAgICAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dwdS9k
+cm0vZXh5bm9zL2V4eW5vc19kcm1fZHJ2LmMgICAgICAgICAgICB8ICAgOSArLQogZHJpdmVycy9n
+cHUvZHJtL21jZGUvbWNkZV9kcnYuYyAgICAgICAgICAgICAgICAgICAgfCAgIDMgKy0KIGRyaXZl
+cnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMgICAgICAgIHwgICAzICstCiBk
+cml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYyAgICAgICAgICAgICAgICAgICAgICB8ICAgMyAr
+LQogZHJpdmVycy9od3RyYWNpbmcvY29yZXNpZ2h0L2NvcmVzaWdodC1wbGF0Zm9ybS5jICAgfCAg
+MTEgKy0KIGRyaXZlcnMvaHd0cmFjaW5nL2NvcmVzaWdodC9jb3Jlc2lnaHQtcHJpdi5oICAgICAg
+IHwgICAyIC0KIGRyaXZlcnMvaHd0cmFjaW5nL2NvcmVzaWdodC9jb3Jlc2lnaHQuYyAgICAgICAg
+ICAgIHwgICA0ICstCiBkcml2ZXJzL2h3dHJhY2luZy9pbnRlbF90aC9jb3JlLmMgICAgICAgICAg
+ICAgICAgICB8ICAxMCArLQogZHJpdmVycy9od3RyYWNpbmcvc3RtL2NvcmUuYyAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDkgKy0KIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtYW1kLW1wMi1wY2ku
+YyAgICAgICAgICAgICAgIHwgICA4ICstCiBkcml2ZXJzL2kyYy9pMmMtY29yZS1hY3BpLmMgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAxMSArLQogZHJpdmVycy9pMmMvaTJjLWNvcmUtb2YuYyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKy0KIGRyaXZlcnMvaW5maW5pYmFuZC9ody9o
+bnMvaG5zX3JvY2VfaHdfdjEuYyAgICAgICAgIHwgICA4ICstCiBkcml2ZXJzL2lvbW11L2FybS1z
+bW11LXYzLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArLQogZHJpdmVycy9pb21tdS9h
+cm0tc21tdS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKy0KIGRyaXZlcnMvbGVk
+cy9sZWQtY2xhc3MuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICstCiBkcml2ZXJz
+L21mZC9hbHRlcmEtc3lzbWdyLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAxNCArLQogZHJp
+dmVycy9taXNjL21laS9tYWluLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKy0K
+IGRyaXZlcnMvbXV4L2NvcmUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3
+ICstCiBkcml2ZXJzL25ldC9ldGhlcm5ldC9oaXNpbGljb24vaG5zL2huc19kc2FmX21pc2MuYyB8
+ICAgOCArLQogZHJpdmVycy9uZXQvcGh5L21kaW9fYnVzLmMgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDkgKy0KIGRyaXZlcnMvbnZtZW0vY29yZS5jICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICA3ICstCiBkcml2ZXJzL29mL29mX21kaW8uYyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgOCArLQogZHJpdmVycy9vZi9wbGF0Zm9ybS5jICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDcgKy0KIGRyaXZlcnMvcGNpL3Byb2JlLmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICA3ICstCiBkcml2ZXJzL3JlZ3VsYXRvci9vZl9yZWd1bGF0
+b3IuYyAgICAgICAgICAgICAgICAgICB8ICAgNyArLQogZHJpdmVycy9ydGMvaW50ZXJmYWNlLmMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTEgKy0KIGRyaXZlcnMvczM5MC9jaW8vY2N3
+Z3JvdXAuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE4ICstCiBkcml2ZXJzL3MzOTAvY2lv
+L2RldmljZS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxNSArLQogZHJpdmVycy9zMzkw
+L2NyeXB0by96Y3J5cHRfYXBpLmMgICAgICAgICAgICAgICAgICAgfCAgMjIgKy0KIGRyaXZlcnMv
+c2NzaS9zY3NpX3Byb2MuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICstCiBkcml2
+ZXJzL3NwaS9zcGkuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyOCArLS0K
+IGRyaXZlcnMvdHR5L3R0eV9pby5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4
+ICstCiBkcml2ZXJzL3VzYi9jb3JlL2RldmlvLmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgOCArLQogZHJpdmVycy91c2Ivcm9sZXMvY2xhc3MuYyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMTYgKy0KIGRyaXZlcnMvdXNiL3R5cGVjL2NsYXNzLmMgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDE2ICstCiBpbmNsdWRlL2xpbnV4L2RldmljZS5oICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDIzNyArKysrKysrKysrKysrKysrKysrKy0KIGluY2x1ZGUvbGludXgvcGxh
+dGZvcm1fZGV2aWNlLmggICAgICAgICAgICAgICAgICAgIHwgICAzICsKIG5ldC9pZWVlODAyMTU0
+L2NvcmUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICstCiBzb3VuZC9zb2Mv
+cm9ja2NoaXAvcmszMzk5X2dydV9zb3VuZC5jICAgICAgICAgICAgICB8ICAgOSArLQogNDggZmls
+ZXMgY2hhbmdlZCwgMzQxIGluc2VydGlvbnMoKyksIDM4MyBkZWxldGlvbnMoLSkKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
