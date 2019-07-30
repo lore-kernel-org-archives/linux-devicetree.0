@@ -1,296 +1,314 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [patch v4 1/5] AST2500 DMA UART driver
-Date: Tue, 30 Jul 2019 17:47:59 +0200
-Message-ID: <20190730154759.GA26425@kroah.com>
-References: <1564147640-30753-1-git-send-email-open.sudheer@gmail.com>
- <1564147640-30753-2-git-send-email-open.sudheer@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+Date: Tue, 30 Jul 2019 16:49:39 +0100
+Message-ID: <20190730154939.GA367@e121166-lin.cambridge.arm.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+ <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1564147640-30753-2-git-send-email-open.sudheer@gmail.com>
+In-Reply-To: <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "sudheer.v" <open.sudheer@gmail.com>
-Cc: jslaby@suse.com, joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org, mark.rutland@arm.com, shivahshankar.shankarnarayanrao@aspeedtech.com, sudheer.veliseti@aspeedtech.com, sudheer veliseti <sudheer.open@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 06:57:16PM +0530, sudheer.v wrote:
-> From: sudheer veliseti <sudheer.open@gmail.com>
-> 
-> UART driver for Aspeed's bmc chip AST2500
-> 
-> Design approch:
-> AST2500 has dedicated Uart DMA controller which has 12 sets of Tx and RX channels
-> connected to UART controller directly.
-> Since the DMA controller have dedicated buffers and registers,
-> there would be little benifit in adding DMA framework overhead.
-> So the software for DMA controller is included within the UART driver itself.
-> 
-> implementation details:
-> 'struct ast_uart_port' is populated and registered with uart_core.
-> code is organised into two layers UART-layer and DMA-Layer,both of them are
-> in the same file.UART-layer requests Rx and Tx dma channels
-> and registers callbacks with DMA controller software Layer
-> Interrupt service routine for DMA controller is the crucial one for Handling all
-> the tx and rx data. ISRs installed for individual uarts are just dummy,and are helpful 
-> only to report any spurious interrupts in hardware.
-> 
-> 
-> Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
-> ---
-> 
-> Changes from v3->v4:
-> - per port uart structures are registerd directly with uart core 
->   Instead of registering through 8250 Frame work,
->   ast_uart_port is registered using uart_add_one_port
-> -SDMA_RX_FIX macro replaced with CONFIG_AST_UART_DMA_RX_INTERRUPT
-> -ast_uart_sdma_isr : DMA interrupt handler code is improvised
-> -replaced pr_debug with ftrace wherever appropriate
-> -dev_err is used in all error return cases
-> -uart driver structure ast25xx_uart_reg is modified
-> -driver name changed to ast2500-uart-dma-drv
-> -rx_timer initialisation and callback fn modified
-> 
-> Changes from v2->v3:
-> -custom debug replaced by in kerenl dynamic debug: pr_debug 
-> -change-logs added 
-> 
-> 
-> .../tty/serial/8250/8250_ast2500_uart_dma.c   | 1901 +++++++++++++++++
->  1 file changed, 1901 insertions(+)
->  create mode 100644 drivers/tty/serial/8250/8250_ast2500_uart_dma.c
-> 
-> diff --git a/drivers/tty/serial/8250/8250_ast2500_uart_dma.c b/drivers/tty/serial/8250/8250_ast2500_uart_dma.c
-> new file mode 100644
-> index 000000000000..bc830d605372
-> --- /dev/null
-> +++ b/drivers/tty/serial/8250/8250_ast2500_uart_dma.c
-> @@ -0,0 +1,1901 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  DMA UART Driver for ASPEED BMC chip: AST2500
-> + *
-> + *  Copyright (C) 2019 sudheer Kumar veliseti, Aspeed technology Inc.
-> + *  <open.sudheer@gmail.com>
+On Tue, Jul 23, 2019 at 08:14:08PM +0530, Vidya Sagar wrote:
+> On 7/16/2019 4:52 PM, Lorenzo Pieralisi wrote:
+> > On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+> > 
+> > [...]
+> > 
+> > > > > > > +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+> > > > > > > +					  bool enable)
+> > > > > > > +{
+> > > > > > > +	struct mrq_uphy_response resp;
+> > > > > > > +	struct tegra_bpmp_message msg;
+> > > > > > > +	struct mrq_uphy_request req;
+> > > > > > > +	int err;
+> > > > > > > +
+> > > > > > > +	if (pcie->cid == 5)
+> > > > > > > +		return 0;
+> > > > > > 
+> > > > > > What's wrong with cid == 5 ? Explain please.
+> > > > > Controller with ID=5 doesn't need any programming to enable it which is
+> > > > > done here through calling firmware API.
+> > > > > 
+> > > > > > 
+> > > > > > > +	memset(&req, 0, sizeof(req));
+> > > > > > > +	memset(&resp, 0, sizeof(resp));
+> > > > > > > +
+> > > > > > > +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
+> > > > > > > +	req.controller_state.pcie_controller = pcie->cid;
+> > > > > > > +	req.controller_state.enable = enable;
+> > > > > > > +
+> > > > > > > +	memset(&msg, 0, sizeof(msg));
+> > > > > > > +	msg.mrq = MRQ_UPHY;
+> > > > > > > +	msg.tx.data = &req;
+> > > > > > > +	msg.tx.size = sizeof(req);
+> > > > > > > +	msg.rx.data = &resp;
+> > > > > > > +	msg.rx.size = sizeof(resp);
+> > > > > > > +
+> > > > > > > +	if (irqs_disabled())
+> > > > > > 
+> > > > > > Can you explain to me what this check is meant to achieve please ?
+> > > > > Firmware interface provides different APIs to be called when there are
+> > > > > no interrupts enabled in the system (noirq context) and otherwise
+> > > > > hence checking that situation here and calling appropriate API.
+> > > > 
+> > > > That's what I am questioning. Being called from {suspend/resume}_noirq()
+> > > > callbacks (if that's the code path this check caters for) does not mean
+> > > > irqs_disabled() == true.
+> > > Agree.
+> > > Actually, I got a hint of having this check from the following.
+> > > Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
+> > > called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
+> > > struct i2c_algorithm and the decision to call which one of these is made using the
+> > > following check in i2c-core.h file.
+> > > static inline bool i2c_in_atomic_xfer_mode(void)
+> > > {
+> > > 	return system_state > SYSTEM_RUNNING && irqs_disabled();
+> > > }
+> > > I think I should use this condition as is IIUC.
+> > > Please let me know if there are any concerns with this.
+> > 
+> > It is not a concern, it is just that I don't understand how this code
+> > can be called with IRQs disabled, if you can give me an execution path I
+> > am happy to leave the check there. On top of that, when called from
+> > suspend NOIRQ context, it is likely to use the blocking API (because
+> > IRQs aren't disabled at CPU level) behind which there is most certainly
+> > an IRQ required to wake the thread up and if the IRQ in question was
+> > disabled in the suspend NOIRQ phase this code is likely to deadlock.
+> > 
+> > I want to make sure we can justify adding this check, I do not
+> > want to add it because we think it can be needed when it may not
+> > be needed at all (and it gets copy and pasted over and over again
+> > in other drivers).
+> I had a discussion internally about this and the prescribed usage of these APIs
+> seem to be that
+> use tegra_bpmp_transfer() in .probe() and other paths where interrupts are
+> enabled as this API needs interrupts to be enabled for its working.
+> Use tegra_bpmp_transfer_atomic() surrounded by local_irq_save()/local_irq_restore()
+> in other paths where interrupt servicing is disabled.
 
-What was the copyright on the file you copied?  Please properly
-attribute that here.
+Why tegra_bpmp_transfer_atomic() needs IRQs to be disabled ? And why
+is it needed in this piece of code where IRQs are _never_ disabled
+at CPU level ?
 
+IRQs are enabled when you call a suspend_noirq() callback, so the
+blocking API can be used as long as the IRQ descriptor backing
+the IRQ that will wake-up the blocked call is marked as
+IRQF_NO_SUSPEND.
 
-> + *
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/tty.h>
-> +#include <linux/tty_flip.h>
-> +#include "8250.h"
-> +
-> +#define SERIAL8250_CONSOLE NULL
-> +#define TTY_AST_MAJOR 204
-> +#define TTY_AST_MINOR 68
+The problem is not IRQs enabled/disabled at CPU level, the problem is
+the IRQ descriptor of the IRQ required to handle the blocking BPMP call,
+mark it as IRQF_NO_SUSPEND and remove the tegra_bpmp_transfer_atomic()
+call from this code (or please give me a concrete example pinpointing
+why it is needed).
 
-Where did you get this minor number from?
+Thanks,
+Lorenzo
 
-> +
-> +#define DMA_BUFF_SIZE		0x1000
-> +#define SDMA_RX_BUFF_SIZE	0x10000
-> +#define PASS_LIMIT 256
-> +#define UART_DMA_NR CONFIG_AST_NR_DMA_UARTS
-> +#define AST_UART_SDMA_CH 12
-> +
-> +/* enum ast_uart_chan_op
-> + * operation codes passed to the DMA code by the user, and also used
-> + * to inform the current channel owner of any changes to the system state
-> + */
-> +enum ast_uart_chan_op {
-> +	AST_UART_DMAOP_TRIGGER,
-> +	AST_UART_DMAOP_STOP,
-> +	AST_UART_DMAOP_PAUSE,
-> +};
-> +
-> +/* ast_uart_dma_cbfn: buffer callback routinei type */
-> +typedef void (*ast_uart_dma_cbfn)(void *dev_id, u16 len);
-> +
-> +struct ast_sdma_info {
-> +	u8 ch_no;
-> +	u8 direction;
-> +	u8 enable;
-> +	void *priv;
-> +	char *sdma_virt_addr;
-> +	dma_addr_t dma_phy_addr;
-> +	/* cdriver callbacks */
-> +	ast_uart_dma_cbfn callback_fn; /* buffer done callback */
-> +};
-> +
-> +struct ast_sdma_ch {
-> +	struct ast_sdma_info tx_dma_info[AST_UART_SDMA_CH];
-> +	struct ast_sdma_info rx_dma_info[AST_UART_SDMA_CH];
-> +};
-> +
-> +struct ast_sdma {
-> +	void __iomem *reg_base;
-> +	int dma_irq;
-> +	struct ast_sdma_ch *dma_ch;
-> +	struct regmap *map;
-> +};
-> +
-> +#define UART_TX_SDMA_EN		0x00
-> +#define UART_RX_SDMA_EN		0x04
-> +#define UART_SDMA_CONF		0x08 /* Misc, Buffer size  */
-> +#define UART_SDMA_TIMER		0x0C
-> +#define UART_TX_SDMA_REST	0x20
-> +#define UART_RX_SDMA_REST	0x24
-> +#define UART_TX_SDMA_IER	0x30
-> +#define UART_TX_SDMA_ISR	0x34
-> +#define UART_RX_SDMA_IER	0x38
-> +#define UART_RX_SDMA_ISR	0x3C
-> +#define UART_TX_R_POINT(x)	(0x40 + ((x) * 0x20))
-> +#define UART_TX_W_POINT(x)	(0x44 + ((x) * 0x20))
-> +#define UART_TX_SDMA_ADDR(x)	(0x48 + ((x) * 0x20))
-> +#define UART_RX_R_POINT(x)	(0x50 + ((x) * 0x20))
-> +#define UART_RX_W_POINT(x)	(0x54 + ((x) * 0x20))
-> +#define UART_RX_SDMA_ADDR(x)	(0x58 + ((x) * 0x20))
-> +#define SDMA_CH_EN(x)		BIT(x)
-> +
-> +#define SDMA_TX_BUFF_SIZE_MASK	(0x3)
-> +#define SDMA_SET_TX_BUFF_SIZE(x)(x)
-> +#define SDMA_BUFF_SIZE_1KB	(0x0)
-> +#define SDMA_BUFF_SIZE_4KB	(0x1)
-> +#define SDMA_BUFF_SIZE_16KB	(0x2)
-> +#define SDMA_BUFF_SIZE_64KB	(0x3)
-> +#define SDMA_RX_BUFF_SIZE_MASK	(0x3 << 2)
-> +#define SDMA_SET_RX_BUFF_SIZE(x)((x) << 2)
-> +#define SDMA_TIMEOUT_DIS	BIT(4)
-> +
-> +#define UART_SDMA11_INT		BIT(11)
-> +#define UART_SDMA10_INT		BIT(10)
-> +#define UART_SDMA9_INT		BIT(9)
-> +#define UART_SDMA8_INT		BIT(8)
-> +#define UART_SDMA7_INT		BIT(7)
-> +#define UART_SDMA6_INT		BIT(6)
-> +#define UART_SDMA5_INT		BIT(5)
-> +#define UART_SDMA4_INT		BIT(4)
-> +#define UART_SDMA3_INT		BIT(3)
-> +#define UART_SDMA2_INT		BIT(2)
-> +#define UART_SDMA1_INT		BIT(1)
-> +#define UART_SDMA0_INT		BIT(0)
-> +
-> +/*
-> + * Configuration:
-> + *   share_irqs - whether we pass IRQF_SHARED to request_irq().
-> + *   This option is unsafe when used on edge-triggered interrupts.
-> + */
-> +static unsigned int share_irqs = SERIAL8250_SHARE_IRQS;
-> +
-> +static unsigned int nr_uarts = CONFIG_AST_RUNTIME_DMA_UARTS;
-> +
-> +struct ast_uart_port {
-> +	struct uart_port port;
-> +	unsigned short capabilities; /* port capabilities */
-> +	unsigned short bugs;         /* port bugs */
-> +	unsigned int tx_loadsz;      /* transmit fifo load size */
-> +	unsigned char acr;
-> +	unsigned char ier;
-> +	unsigned char lcr;
-> +	unsigned char mcr;
-> +	unsigned char mcr_mask;  /* mask of user bits */
-> +	unsigned char mcr_force; /* mask of forced bits */
-> +	struct circ_buf rx_dma_buf;
-> +	struct circ_buf tx_dma_buf;
-> +	unsigned char dma_channel;
-> +	dma_addr_t dma_rx_addr; /* Mapped ADMA descr. table */
-> +	dma_addr_t dma_tx_addr; /* Mapped ADMA descr. table */
-> +#ifdef CONFIG_AST_UART_DMA_RX_INTERRUPT
-> +	struct tasklet_struct rx_tasklet;
-> +#else
-> +	struct timer_list rx_timer;
-> +	unsigned int workaround;
-> +#endif
-> +	struct tasklet_struct tx_tasklet;
-> +	spinlock_t lock;
-> +	int tx_done;
-> +	int tx_count;
-> +	struct platform_device *ast_uart_pdev;
-> +/*
-> + * Some bits in registers are cleared on a read, so they must
-> + * be saved whenever the register is read but the bits will not
-> + * be immediately processed.
-> + */
-> +#define LSR_SAVE_FLAGS UART_LSR_BRK_ERROR_BITS
-> +	unsigned char lsr_saved_flags;
-> +#define MSR_SAVE_FLAGS UART_MSR_ANY_DELTA
-> +	unsigned char msr_saved_flags;
-> +
-> +	/*
-> +	 * We provide a per-port pm hook.
-> +	 */
-> +	void (*pm)(struct uart_port *port, unsigned int state,
-> +						 unsigned int old);
-> +};
-> +
-> +static struct ast_uart_port ast_uart_ports[UART_DMA_NR];
-> +
-> +#define GET_DEV(ast_uart_port_priv_ptr)\
-> +		(ast_uart_port_priv_ptr->ast_uart_pdev->dev)
-> +
-> +static inline struct ast_uart_port *
-> +to_ast_dma_uart_port(struct uart_port *uart) {
-> +	return container_of(uart, struct ast_uart_port, port);
-> +}
-> +
-> +struct irq_info {
-> +	spinlock_t lock;
-> +	struct ast_uart_port *up;
-> +};
-> +
-> +static struct irq_info ast_uart_irq[1];
-> +static DEFINE_MUTEX(ast_uart_mutex);
-> +
-> +/*
-> + * Here we define the default xmit fifo size used for each type of UART.
-> + */
-> +static const struct serial8250_config uart_config[] = {
-> +	[PORT_UNKNOWN] = {
-> +		.name		= "unknown",
-> +		.fifo_size	= 1,
-> +		.tx_loadsz	= 1,
-> +	},
-> +	[PORT_8250] = {
-> +		.name		= "8250",
-> +		.fifo_size	= 1,
-> +		.tx_loadsz	= 1,
-> +	},
-> +	[PORT_16450] = {
-> +		.name		= "16450",
-> +		.fifo_size	= 1,
-> +		.tx_loadsz	= 1,
-> +	},
-> +	[PORT_16550] = {
-> +		.name		= "16550",
-> +		.fifo_size	= 1,
-> +		.tx_loadsz	= 1,
-> +	},
-> +	[PORT_16550A] = {
-> +		.name		= "16550A",
-> +		.fifo_size	= 16,
-> +		.tx_loadsz	= 16,
-> +		.fcr		= UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10
-> +							| UART_FCR_DMA_SELECT,
-> +		.flags		= UART_CAP_FIFO,
-> +	},
-> +};
-
-I doubt you need all of these port types, right?  You only have one type
-of device, please strip out _ALL_ of the unneeded code in here.  You did
-a wholesale copy of the old driver, to get away with that you then need
-to customize it to work properly with your hardware _AND_ take away all
-code that is not needed for your hardware.
-
-Lots of this file can be removed, please do so.
-
-thanks,
-
-greg k-h
+> I'll go ahead and make next patch series with this if this looks fine to you.
+> 
+> > 
+> > > > Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
+> > > > even end up in a situation where that blocking call does not wake up
+> > > > because the IRQ in question was disabled in the NOIRQ suspend/resume
+> > > > phase.
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > +static int tegra_pcie_dw_probe(struct platform_device *pdev)
+> > > > > > > +{
+> > > > > > > +	const struct tegra_pcie_soc *data;
+> > > > > > > +	struct device *dev = &pdev->dev;
+> > > > > > > +	struct resource *atu_dma_res;
+> > > > > > > +	struct tegra_pcie_dw *pcie;
+> > > > > > > +	struct resource *dbi_res;
+> > > > > > > +	struct pcie_port *pp;
+> > > > > > > +	struct dw_pcie *pci;
+> > > > > > > +	struct phy **phys;
+> > > > > > > +	char *name;
+> > > > > > > +	int ret;
+> > > > > > > +	u32 i;
+> > > > > > > +
+> > > > > > > +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> > > > > > > +	if (!pcie)
+> > > > > > > +		return -ENOMEM;
+> > > > > > > +
+> > > > > > > +	pci = &pcie->pci;
+> > > > > > > +	pci->dev = &pdev->dev;
+> > > > > > > +	pci->ops = &tegra_dw_pcie_ops;
+> > > > > > > +	pp = &pci->pp;
+> > > > > > > +	pcie->dev = &pdev->dev;
+> > > > > > > +
+> > > > > > > +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
+> > > > > > > +	if (!data)
+> > > > > > > +		return -EINVAL;
+> > > > > > > +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
+> > > > > > > +
+> > > > > > > +	ret = tegra_pcie_dw_parse_dt(pcie);
+> > > > > > > +	if (ret < 0) {
+> > > > > > > +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
+> > > > > > > +		return ret;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+> > > > > > > +	if (IS_ERR(pcie->pex_ctl_supply)) {
+> > > > > > > +		dev_err(dev, "Failed to get regulator: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->pex_ctl_supply));
+> > > > > > > +		return PTR_ERR(pcie->pex_ctl_supply);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->core_clk = devm_clk_get(dev, "core");
+> > > > > > > +	if (IS_ERR(pcie->core_clk)) {
+> > > > > > > +		dev_err(dev, "Failed to get core clock: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->core_clk));
+> > > > > > > +		return PTR_ERR(pcie->core_clk);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > +						      "appl");
+> > > > > > > +	if (!pcie->appl_res) {
+> > > > > > > +		dev_err(dev, "Failed to find \"appl\" region\n");
+> > > > > > > +		return PTR_ERR(pcie->appl_res);
+> > > > > > > +	}
+> > > > > > > +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
+> > > > > > > +	if (IS_ERR(pcie->appl_base))
+> > > > > > > +		return PTR_ERR(pcie->appl_base);
+> > > > > > > +
+> > > > > > > +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
+> > > > > > > +	if (IS_ERR(pcie->core_apb_rst)) {
+> > > > > > > +		dev_err(dev, "Failed to get APB reset: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->core_apb_rst));
+> > > > > > > +		return PTR_ERR(pcie->core_apb_rst);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
+> > > > > > > +	if (!phys)
+> > > > > > > +		return PTR_ERR(phys);
+> > > > > > > +
+> > > > > > > +	for (i = 0; i < pcie->phy_count; i++) {
+> > > > > > > +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
+> > > > > > > +		if (!name) {
+> > > > > > > +			dev_err(dev, "Failed to create P2U string\n");
+> > > > > > > +			return -ENOMEM;
+> > > > > > > +		}
+> > > > > > > +		phys[i] = devm_phy_get(dev, name);
+> > > > > > > +		kfree(name);
+> > > > > > > +		if (IS_ERR(phys[i])) {
+> > > > > > > +			ret = PTR_ERR(phys[i]);
+> > > > > > > +			dev_err(dev, "Failed to get PHY: %d\n", ret);
+> > > > > > > +			return ret;
+> > > > > > > +		}
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->phys = phys;
+> > > > > > > +
+> > > > > > > +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> > > > > > > +	if (!dbi_res) {
+> > > > > > > +		dev_err(dev, "Failed to find \"dbi\" region\n");
+> > > > > > > +		return PTR_ERR(dbi_res);
+> > > > > > > +	}
+> > > > > > > +	pcie->dbi_res = dbi_res;
+> > > > > > > +
+> > > > > > > +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
+> > > > > > > +	if (IS_ERR(pci->dbi_base))
+> > > > > > > +		return PTR_ERR(pci->dbi_base);
+> > > > > > > +
+> > > > > > > +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
+> > > > > > > +	pci->dbi_base2 = pci->dbi_base + 0x1000;
+> > > > > > > +
+> > > > > > > +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > +						   "atu_dma");
+> > > > > > > +	if (!atu_dma_res) {
+> > > > > > > +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
+> > > > > > > +		return PTR_ERR(atu_dma_res);
+> > > > > > > +	}
+> > > > > > > +	pcie->atu_dma_res = atu_dma_res;
+> > > > > > > +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+> > > > > > > +	if (IS_ERR(pci->atu_base))
+> > > > > > > +		return PTR_ERR(pci->atu_base);
+> > > > > > > +
+> > > > > > > +	pcie->core_rst = devm_reset_control_get(dev, "core");
+> > > > > > > +	if (IS_ERR(pcie->core_rst)) {
+> > > > > > > +		dev_err(dev, "Failed to get core reset: %ld\n",
+> > > > > > > +			PTR_ERR(pcie->core_rst));
+> > > > > > > +		return PTR_ERR(pcie->core_rst);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pp->irq = platform_get_irq_byname(pdev, "intr");
+> > > > > > > +	if (!pp->irq) {
+> > > > > > > +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
+> > > > > > > +		return -ENODEV;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
+> > > > > > > +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
+> > > > > > > +	if (ret) {
+> > > > > > > +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
+> > > > > > > +		return ret;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	pcie->bpmp = tegra_bpmp_get(dev);
+> > > > > > > +	if (IS_ERR(pcie->bpmp))
+> > > > > > > +		return PTR_ERR(pcie->bpmp);
+> > > > > > > +
+> > > > > > > +	platform_set_drvdata(pdev, pcie);
+> > > > > > > +
+> > > > > > > +	if (pcie->mode == DW_PCIE_RC_TYPE) {
+> > > > > > > +		ret = tegra_pcie_config_rp(pcie);
+> > > > > > > +		if (ret && ret != -ENOMEDIUM)
+> > > > > > > +			goto fail;
+> > > > > > > +		else
+> > > > > > > +			return 0;
+> > > > > > 
+> > > > > > So if the link is not up we still go ahead and make probe
+> > > > > > succeed. What for ?
+> > > > > We may need root port to be available to support hot-plugging of
+> > > > > endpoint devices, so, we don't fail the probe.
+> > > > 
+> > > > We need it or we don't. If you do support hotplugging of endpoint
+> > > > devices point me at the code, otherwise link up failure means
+> > > > failure to probe.
+> > > Currently hotplugging of endpoint is not supported, but it is one of
+> > > the use cases that we may add support for in future.
+> > 
+> > You should elaborate on this, I do not understand what you mean,
+> > either the root port(s) supports hotplug or it does not.
+> > 
+> > > But, why should we fail probe if link up doesn't happen? As such,
+> > > nothing went wrong in terms of root port initialization right?  I
+> > > checked other DWC based implementations and following are not failing
+> > > the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+> > > pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+> > > pci-keystone.c, pci-layerscape.c
+> > > 
+> > > Although following do fail the probe if link is not up.  pcie-qcom.c,
+> > > pcie-uniphier.c, pci-meson.c
+> > > 
+> > > So, to me, it looks more like a choice we can make whether to fail the
+> > > probe or not and in this case we are choosing not to fail.
+> > 
+> > I disagree. I had an offline chat with Bjorn and whether link-up should
+> > fail the probe or not depends on whether the root port(s) is hotplug
+> > capable or not and this in turn relies on the root port "Slot
+> > implemented" bit in the PCI Express capabilities register.
+> > 
+> > It is a choice but it should be based on evidence.
+> > 
+> > Lorenzo
+> With Bjorn's latest comment on top of this, I think we are good not to fail
+> the probe here.
+> 
+> - Vidya Sagar
+> > 
+> 
