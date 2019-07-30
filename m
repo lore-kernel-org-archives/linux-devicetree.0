@@ -1,77 +1,37 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 2/7] drivers: Introduce device lookup variants by
- of_node
-Date: Tue, 30 Jul 2019 13:03:15 +0200
-Message-ID: <20190730110315.GA31631@kroah.com>
-References: <20190723221838.12024-1-suzuki.poulose@arm.com>
- <20190723221838.12024-3-suzuki.poulose@arm.com>
- <20190725135402.GL23883@dell>
+From: Oliver Graute <oliver.graute@kococonnector.com>
+Subject: [PATCHv3 0/1] arm64: dts: add basic DTS for imx8qm-rom7720 board
+Date: Tue, 30 Jul 2019 11:06:04 +0000
+Message-ID: <20190730110140.17247-1-oliver.graute@kococonnector.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190725135402.GL23883@dell>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Thor Thayer <thor.thayer@linux.intel.com>, rafael@kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fpga@vger.kernel.org, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, "David S. Miller" <davem@davemloft.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-i2c@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rockchip@lists.infradead.org, Wolfram Sang <wsa@the-dreams.de>, David Airlie <airlied@linux.ie>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org, Alan Tull <atull@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, Takashi Iwai <tiwai@suse.com>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.orgli
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Oliver Graute <oliver.graute@kococonnector.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdWwgMjUsIDIwMTkgYXQgMDI6NTQ6MDJQTSArMDEwMCwgTGVlIEpvbmVzIHdyb3Rl
-Ogo+IE9uIFR1ZSwgMjMgSnVsIDIwMTksIFN1enVraSBLIFBvdWxvc2Ugd3JvdGU6Cj4gCj4gPiBJ
-bnRyb2R1Y2Ugd3JhcHBlcnMgZm9yIHtidXMvZHJpdmVyL2NsYXNzfV9maW5kX2RldmljZSgpIHRv
-Cj4gPiBsb2NhdGUgZGV2aWNlcyBieSBpdHMgb2Zfbm9kZS4KPiA+IAo+ID4gQ2M6IE1hYXJ0ZW4g
-TGFua2hvcnN0IDxtYWFydGVuLmxhbmtob3JzdEBsaW51eC5pbnRlbC5jb20+Cj4gPiBDYzogTWF4
-aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBib290bGluLmNvbT4KPiA+IENjOiBkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4
-LmllPgo+ID4gQ2M6IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD4KPiA+IENjOiBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZwo+ID4gQ2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVs
-bGlAZ21haWwuY29tPgo+ID4gQ2M6IEZyYW5rIFJvd2FuZCA8ZnJvd2FuZC5saXN0QGdtYWlsLmNv
-bT4KPiA+IENjOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+ID4gQ2M6IExpYW0g
-R2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+Cj4gPiBDYzogbGludXgtaTJjQHZnZXIua2Vy
-bmVsLm9yZwo+ID4gQ2M6IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+IENj
-OiBsaW51eC1zcGlAdmdlci5rZXJuZWwub3JnCj4gPiBDYzogTWF0aGlldSBQb2lyaWVyIDxtYXRo
-aWV1LnBvaXJpZXJAbGluYXJvLm9yZz4KPiA+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
-ZWwub3JnPgo+ID4gQ2M6IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5pdmFzLmthbmRhZ2F0bGFA
-bGluYXJvLm9yZz4KPiA+IENjOiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuY29tPgo+ID4gQ2M6
-IFdvbGZyYW0gU2FuZyA8d3NhQHRoZS1kcmVhbXMuZGU+Cj4gPiBDYzogQWxhbiBUdWxsIDxhdHVs
-bEBrZXJuZWwub3JnPgo+ID4gQ2M6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4KPiA+
-IENjOiBsaW51eC1mcGdhQHZnZXIua2VybmVsLm9yZwo+ID4gQ2M6IFBldGVyIFJvc2luIDxwZWRh
-QGF4ZW50aWEuc2U+Cj4gPiBDYzogTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPgo+ID4g
-Q2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgo+ID4gQ2M6IEhlaW5l
-ciBLYWxsd2VpdCA8aGthbGx3ZWl0MUBnbWFpbC5jb20+Cj4gPiBDYzogIkRhdmlkIFMuIE1pbGxl
-ciIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+Cj4gPiBDYzogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5u
-LmNoPgo+ID4gQ2M6IExpYW0gR2lyZHdvb2QgPGxnaXJkd29vZEBnbWFpbC5jb20+Cj4gPiBDYzog
-R3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KPiA+IENjOiAi
-UmFmYWVsIEouIFd5c29ja2kiIDxyYWZhZWxAa2VybmVsLm9yZz4KPiA+IENjOiBMZWUgSm9uZXMg
-PGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gQ2M6IFRob3IgVGhheWVyIDx0aG9yLnRoYXllckBs
-aW51eC5pbnRlbC5jb20+Cj4gPiBDYzogSmlyaSBTbGFieSA8anNsYWJ5QHN1c2UuY29tPgo+ID4g
-Q2M6IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4KPiA+IENjOiBBbmRyZXcgTHVubiA8
-YW5kcmV3QGx1bm4uY2g+Cj4gPiBDYzogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4KPiA+
-IFNpZ25lZC1vZmYtYnk6IFN1enVraSBLIFBvdWxvc2UgPHN1enVraS5wb3Vsb3NlQGFybS5jb20+
-Cj4gPiAtLS0KPiA+ICAtIERyb3BwZWQgdGhlIHJldmlld2VkLWJ5IHRhZ3MgZnJvbSBUaG9yLCBN
-YXJrLCBBbmRyZXcgYW5kIFBldGVyIGFzIHRoZQo+ID4gICAgcGF0Y2hlcyBhcmUgbWVyZWdlZCwg
-dGhvdWdoIHRoZXJlIGFyZSBubyBmdW5jdGlvbmFsIGNoYW5nZXMuCj4gPiAtLS0KPiA+ICBkcml2
-ZXJzL2FtYmEvdGVncmEtYWhiLmMgICAgICAgICAgICAgIHwgMTEgKy0tLS0tLS0KPiA+ICBkcml2
-ZXJzL2ZwZ2EvZnBnYS1icmlkZ2UuYyAgICAgICAgICAgIHwgIDggKy0tLS0tCj4gPiAgZHJpdmVy
-cy9mcGdhL2ZwZ2EtbWdyLmMgICAgICAgICAgICAgICB8ICA4ICstLS0tLQo+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9kcm1fbWlwaV9kc2kuYyAgICAgICAgfCAgNyArLS0tLQo+ID4gIGRyaXZlcnMvaTJj
-L2kyYy1jb3JlLW9mLmMgICAgICAgICAgICAgfCAgNyArLS0tLQo+ID4gIGRyaXZlcnMvbWZkL2Fs
-dGVyYS1zeXNtZ3IuYyAgICAgICAgICAgfCAxNCArKy0tLS0tLS0tCj4gCj4gRm9yIG15IG93biBy
-ZWZlcmVuY2U6Cj4gICBBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5h
-cm8ub3JnPgo+IAo+IFdoYXQncyB0aGUgbWVyZ2UgcGxhbiBmb3IgdGhpcyBwYXRjaD8KPiAKPiBJ
-cyBhbnlvbmUgcHJlcGFyZWQgdG8gY3JlYXRlIGFuIGltbXV0YWJsZSBicmFuY2ggZm9yIHVzIHRv
-IHB1bGwgZnJvbT8KPiBJJ20gaGFwcHkgdG8gZG8gaXQgaWYgbm8gb25lIGVsc2Ugc3RlcHMgdXAu
-CgpJJ2xsIHRha2UgaXQsIGFuZCBjcmVhdGUgYSBicmFuY2ggZm9yIGV2ZXJ5b25lIHRvIHB1bGwg
-ZnJvbS4KCnRoYW5rcywKCmdyZWcgay1oCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+This patch is ontop of Aisheng Dongs clock driver and imx8 changes for the
+imx8qm
+
+https://patchwork.kernel.org/patch/11046313/
+https://patchwork.kernel.org/patch/11046343/
+
+This patch is based on next-20190716
+
+I need some hints and review why the imx8qm-rom-7720 just stops at "Startin=
+g
+kernel ..." with these changes. The device tree is similar to imx8qm-mek.dt=
+s.
+
+Oliver Graute (1):
+  arm64: dts: add basic DTS for imx8qm-rom7720-a1 board
+
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8qm-rom7720-a1.dts  | 228 ++++++++++++++++++
+ 2 files changed, 229 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-rom7720-a1.dts
+
+--=20
+2.17.1
