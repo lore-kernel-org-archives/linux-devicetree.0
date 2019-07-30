@@ -1,82 +1,41 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [PATCH v3] arm64: dts: ls1028a: Add esdhc node in dts
-Date: Tue, 30 Jul 2019 10:02:44 +0000
-Message-ID: <VI1PR04MB4158BFD0D6C44BB6817E1483E9DC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
-References: <20190515084925.30155-1-yinbo.zhu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Richard Tresidder <rtresidd@electromag.com.au>
+Subject: [RESEND v2 1/2] dt-binding docs: sbs_sbs-battery: Addition of force_load binding
+Date: Tue, 30 Jul 2019 18:10:03 +0800
+Message-ID: <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
+References: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190515084925.30155-1-yinbo.zhu@nxp.com>
-Content-Language: en-US
+In-Reply-To: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Xiaobo Xie <xiaobo.xie@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, Yinbo Zhu <yinbo.zhu@nxp.com>
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, tglx@linutronix.de, rfontana@redhat.com, allison@lohutok.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIA0KDQpJIGp1c3QgY2hlY2sgbW1jIHVwc3RyZWFtIGNvZGUsIHRoYXQgcGF0Y2ggc3RpbGwg
-bm90IHVwc3RyZWFtLg0KUGxlYXNlIGhlbHAgbWVyZ2UgaXQgdG8gdXBzdHJlYW0gdHJlZS4NCg0K
-VGhhbmtzDQpSZWdhcmRzLA0KWWluYm8gWmh1DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCj4gRnJvbTogWWluYm8gWmh1IFttYWlsdG86eWluYm8uemh1QG54cC5jb21dDQo+IFNlbnQ6
-IDIwMTnE6jXUwjE1yNUgMTY6NDkNCj4gVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9y
-Zz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgUm9iDQo+IEhlcnJpbmcgPHJvYmgrZHRA
-a2VybmVsLm9yZz4NCj4gQ2M6IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5jb20+OyBYaWFvYm8g
-WGllIDx4aWFvYm8ueGllQG54cC5jb20+OyBNYXJrDQo+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBh
-cm0uY29tPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGlu
-dXgtbW1jQHZnZXIua2VybmVsLm9yZzsgWS5iLiBMdSA8eWFuZ2JvLmx1QG54cC5jb20+OyBKaWFm
-ZWkgUGFuDQo+IDxqaWFmZWkucGFuQG54cC5jb20+OyBBc2hpc2ggS3VtYXIgPGFzaGlzaC5rdW1h
-ckBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFk
-ZCBlc2RoYyBub2RlIGluIGR0cw0KPiANCj4gRnJvbTogQXNoaXNoIEt1bWFyIDxBc2hpc2guS3Vt
-YXJAbnhwLmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggaXMgdG8gYWRkIGVzZGhjIG5vZGUgYW5kIGVu
-YWJsZSBTRCBVSFMtSSwgZU1NQyBIUzIwMCBmb3INCj4gbHMxMDI4YXJkYi9sczEwMjhhcWRzIGJv
-YXJkLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQXNoaXNoIEt1bWFyIDxBc2hpc2guS3VtYXJAbnhw
-LmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogWWFuZ2JvIEx1IDx5YW5nYm8ubHVAbnhwLmNvbT4NCj4g
-U2lnbmVkLW9mZi1ieTogWWluYm8gWmh1IDx5aW5iby56aHVAbnhwLmNvbT4NCj4gLS0tDQo+IENo
-YW5nZSBpbiB2MzoNCj4gCQlyZXBsYWNlICJlc2RoY0AiIHdpdGggIm1tY0AiDQo+IA0KPiAgYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cyB8ICAgIDggKysr
-KysrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRz
-IHwgICAxMyArKysrKysrKysrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDI4YS5kdHNpICAgIHwgICAyNw0KPiArKysrKysrKysrKysrKysrKysrKysNCj4gIDMgZmls
-ZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRz
-DQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cw0K
-PiBpbmRleCAxNGM3OWY0Li4xODBlNWQyIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gQEAgLTQyLDYgKzQyLDE0IEBA
-DQo+ICAJc3RhdHVzID0gIm9rYXkiOw0KPiAgfTsNCj4gDQo+ICsmZXNkaGMgew0KPiArCXN0YXR1
-cyA9ICJva2F5IjsNCj4gK307DQo+ICsNCj4gKyZlc2RoYzEgew0KPiArCXN0YXR1cyA9ICJva2F5
-IjsNCj4gK307DQo+ICsNCj4gICZpMmMwIHsNCj4gIAlzdGF0dXMgPSAib2theSI7DQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRi
-LmR0cw0KPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
-dHMNCj4gaW5kZXggZjg2YjA1NC4uMWJmYWY0MiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiArKysgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+IEBAIC0zMCw2ICszMCwx
-OSBAQA0KPiAgCX07DQo+ICB9Ow0KPiANCj4gKyZlc2RoYyB7DQo+ICsJc3RhdHVzID0gIm9rYXki
-Ow0KPiArCXNkLXVocy1zZHIxMDQ7DQo+ICsJc2QtdWhzLXNkcjUwOw0KPiArCXNkLXVocy1zZHIy
-NTsNCj4gKwlzZC11aHMtc2RyMTI7DQo+ICsJfTsNCj4gKw0KPiArJmVzZGhjMSB7DQo+ICsJc3Rh
-dHVzID0gIm9rYXkiOw0KPiArCW1tYy1oczIwMC0xXzh2Ow0KPiArCX07DQo+ICsNCj4gICZpMmMw
-IHsNCj4gIAlzdGF0dXMgPSAib2theSI7DQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiBiL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gaW5kZXggMjg5NmJiYy4uNDYyODMzYyAx
-MDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEu
-ZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5k
-dHNpDQo+IEBAIC0yNzQsNiArMjc0LDMzIEBADQo+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0K
-PiAgCQl9Ow0KPiANCj4gKwkJZXNkaGM6IG1tY0AyMTQwMDAwIHsNCj4gKwkJCWNvbXBhdGlibGUg
-PSAiZnNsLGxzMTAyOGEtZXNkaGMiLCAiZnNsLGVzZGhjIjsNCj4gKwkJCXJlZyA9IDwweDAgMHgy
-MTQwMDAwIDB4MCAweDEwMDAwPjsNCj4gKwkJCWludGVycnVwdHMgPSA8MCAyOCAweDQ+OyAvKiBM
-ZXZlbCBoaWdoIHR5cGUgKi8NCj4gKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwwPjsgLyogZml4ZWQg
-dXAgYnkgYm9vdGxvYWRlciAqLw0KPiArCQkJY2xvY2tzID0gPCZjbG9ja2dlbiAyIDE+Ow0KPiAr
-CQkJdm9sdGFnZS1yYW5nZXMgPSA8MTgwMCAxODAwIDMzMDAgMzMwMD47DQo+ICsJCQlzZGhjaSxh
-dXRvLWNtZDEyOw0KPiArCQkJbGl0dGxlLWVuZGlhbjsNCj4gKwkJCWJ1cy13aWR0aCA9IDw0PjsN
-Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsJCX07DQo+ICsNCj4gKwkJZXNkaGMxOiBt
-bWNAMjE1MDAwMCB7DQo+ICsJCQljb21wYXRpYmxlID0gImZzbCxsczEwMjhhLWVzZGhjIiwgImZz
-bCxlc2RoYyI7DQo+ICsJCQlyZWcgPSA8MHgwIDB4MjE1MDAwMCAweDAgMHgxMDAwMD47DQo+ICsJ
-CQlpbnRlcnJ1cHRzID0gPDAgNjMgMHg0PjsgLyogTGV2ZWwgaGlnaCB0eXBlICovDQo+ICsJCQlj
-bG9jay1mcmVxdWVuY3kgPSA8MD47IC8qIGZpeGVkIHVwIGJ5IGJvb3Rsb2FkZXIgKi8NCj4gKwkJ
-CWNsb2NrcyA9IDwmY2xvY2tnZW4gMiAxPjsNCj4gKwkJCXZvbHRhZ2UtcmFuZ2VzID0gPDE4MDAg
-MTgwMCAzMzAwIDMzMDA+Ow0KPiArCQkJc2RoY2ksYXV0by1jbWQxMjsNCj4gKwkJCWJyb2tlbi1j
-ZDsNCj4gKwkJCWxpdHRsZS1lbmRpYW47DQo+ICsJCQlidXMtd2lkdGggPSA8ND47DQo+ICsJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOw0KPiArCQl9Ow0KPiArDQo+ICAJCXNhdGE6IHNhdGFAMzIwMDAw
-MCB7DQo+ICAJCQljb21wYXRpYmxlID0gImZzbCxsczEwMjhhLWFoY2kiOw0KPiAgCQkJcmVnID0g
-PDB4MCAweDMyMDAwMDAgMHgwIDB4MTAwMDA+LA0KPiAtLQ0KPiAxLjcuMQ0KDQo=
+Add device tree binding documentation for addition of force_load boolean value
+to allow loading a battery during boot even if notpresent at that time.
+
+Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+---
+ Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+index 4e78e51..187d7bb 100644
+--- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+@@ -15,7 +15,8 @@ Optional properties :
+    after an external change notification.
+  - sbs,battery-detect-gpios : The gpio which signals battery detection and
+    a flag specifying its polarity.
+-
++ - sbs,force-load : Allow loading of a hot-pluggable battery when there is no
++   GPIO detect available and the module is statically built.
+ Example:
+ 
+ 	battery@b {
+@@ -24,4 +25,5 @@ Example:
+ 		sbs,i2c-retry-count = <2>;
+ 		sbs,poll-retry-count = <10>;
+ 		sbs,battery-detect-gpios = <&gpio-controller 122 1>;
++		sbs,force-load;
+ 	}
+-- 
+1.8.3.1
