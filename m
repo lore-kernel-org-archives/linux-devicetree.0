@@ -1,14 +1,14 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 1/5] nvmem: meson-efuse: Move data to a container struct
-Date: Tue, 30 Jul 2019 11:04:24 +0200
-Message-ID: <1jy30f28rr.fsf@starbuckisacylon.baylibre.com>
+Subject: Re: [PATCH 2/5] firmware: meson_sm: Mark chip struct as static const
+Date: Tue, 30 Jul 2019 11:05:10 +0200
+Message-ID: <1jv9vj28qh.fsf@starbuckisacylon.baylibre.com>
 References: <20190729183941.18164-1-ccaione@baylibre.com>
- <20190729183941.18164-2-ccaione@baylibre.com>
+ <20190729183941.18164-3-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190729183941.18164-2-ccaione@baylibre.com>
+In-Reply-To: <20190729183941.18164-3-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,112 +24,28 @@ List-Id: devicetree@vger.kernel.org
 
 On Mon 29 Jul 2019 at 19:39, Carlo Caione <ccaione@baylibre.com> wrote:
 
-> No functional changes, just a cleanup commit to tidy up a bit. Move the
-> nvmem_* and clk structures in a container struct.
+> No need to be a global struct.
 >
 > Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+
 > ---
->  drivers/nvmem/meson-efuse.c | 47 ++++++++++++++++++++-----------------
->  1 file changed, 26 insertions(+), 21 deletions(-)
+>  drivers/firmware/meson/meson_sm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-> index 39bd76306033..9924b98db772 100644
-> --- a/drivers/nvmem/meson-efuse.c
-> +++ b/drivers/nvmem/meson-efuse.c
-> @@ -14,6 +14,12 @@
+> diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
+> index 8d908a8e0d20..772ca6726e7b 100644
+> --- a/drivers/firmware/meson/meson_sm.c
+> +++ b/drivers/firmware/meson/meson_sm.c
+> @@ -35,7 +35,7 @@ struct meson_sm_chip {
+>  	struct meson_sm_cmd cmd[];
+>  };
 >  
->  #include <linux/firmware/meson/meson_sm.h>
->  
-> +struct meson_efuse {
-> +	struct nvmem_device *nvmem;
-> +	struct nvmem_config config;
-> +	struct clk *clk;
-
-since this driver uses devm_add_action_or_reset, I don't think you need
-to keep the clk pointer around, unless you plan to do something with it
-later on ?
-
-It is kind of the same the other structure members, do we need to keep
-them around ? We could just let devm deal with it ?
-
-If you have a plan, could you share it ?
-
-> +};
-> +
->  static int meson_efuse_read(void *context, unsigned int offset,
->  			    void *val, size_t bytes)
->  {
-> @@ -37,21 +43,23 @@ MODULE_DEVICE_TABLE(of, meson_efuse_match);
->  static int meson_efuse_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct nvmem_device *nvmem;
-> -	struct nvmem_config *econfig;
-> -	struct clk *clk;
-> +	struct meson_efuse *efuse;
->  	unsigned int size;
->  	int ret;
->  
-> -	clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(clk)) {
-> -		ret = PTR_ERR(clk);
-> +	efuse = devm_kzalloc(&pdev->dev, sizeof(*efuse), GFP_KERNEL);
-> +	if (!efuse)
-> +		return -ENOMEM;
-> +
-> +	efuse->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(efuse->clk)) {
-> +		ret = PTR_ERR(efuse->clk);
->  		if (ret != -EPROBE_DEFER)
->  			dev_err(dev, "failed to get efuse gate");
->  		return ret;
->  	}
->  
-> -	ret = clk_prepare_enable(clk);
-> +	ret = clk_prepare_enable(efuse->clk);
->  	if (ret) {
->  		dev_err(dev, "failed to enable gate");
->  		return ret;
-> @@ -59,7 +67,7 @@ static int meson_efuse_probe(struct platform_device *pdev)
->  
->  	ret = devm_add_action_or_reset(dev,
->  				       (void(*)(void *))clk_disable_unprepare,
-> -				       clk);
-> +				       efuse->clk);
->  	if (ret) {
->  		dev_err(dev, "failed to add disable callback");
->  		return ret;
-> @@ -70,21 +78,18 @@ static int meson_efuse_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> -	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
-> -	if (!econfig)
-> -		return -ENOMEM;
-> -
-> -	econfig->dev = dev;
-> -	econfig->name = dev_name(dev);
-> -	econfig->stride = 1;
-> -	econfig->word_size = 1;
-> -	econfig->reg_read = meson_efuse_read;
-> -	econfig->reg_write = meson_efuse_write;
-> -	econfig->size = size;
-> +	efuse->config.dev = dev;
-> +	efuse->config.name = dev_name(dev);
-> +	efuse->config.stride = 1;
-> +	efuse->config.word_size = 1;
-> +	efuse->config.reg_read = meson_efuse_read;
-> +	efuse->config.reg_write = meson_efuse_write;
-> +	efuse->config.size = size;
-> +	efuse->config.priv = efuse;
->  
-> -	nvmem = devm_nvmem_register(&pdev->dev, econfig);
-> +	efuse->nvmem = devm_nvmem_register(&pdev->dev, &efuse->config);
->  
-> -	return PTR_ERR_OR_ZERO(nvmem);
-> +	return PTR_ERR_OR_ZERO(efuse->nvmem);
->  }
->  
->  static struct platform_driver meson_efuse_driver = {
+> -struct meson_sm_chip gxbb_chip = {
+> +static const struct meson_sm_chip gxbb_chip = {
+>  	.shmem_size		= SZ_4K,
+>  	.cmd_shmem_in_base	= 0x82000020,
+>  	.cmd_shmem_out_base	= 0x82000021,
 > -- 
 > 2.20.1
