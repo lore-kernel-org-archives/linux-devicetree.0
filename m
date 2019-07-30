@@ -1,11 +1,10 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Date: Tue, 30 Jul 2019 10:21:22 +0800
-Message-ID: <20190730022126.17883-1-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH V3 4/5] thermal: qoriq: Use __maybe_unused instead of #if CONFIG_PM_SLEEP
+Date: Tue, 30 Jul 2019 10:21:25 +0800
+Message-ID: <20190730022126.17883-4-Anson.Huang@nxp.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730022126.17883-1-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Linux-imx@nxp.com
@@ -13,96 +12,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Some platforms like i.MX8MQ has clock control for this module,
-need to add clock operations to make sure the driver is working
-properly.
+Use __maybe_unused for power management related functions
+instead of #if CONFIG_PM_SLEEP to simply the code.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
 ---
-Changes since V2:
-	- move this patch as first patch in the series;
-	- add clock disable handling in error path of probe.
+No changes.
 ---
- drivers/thermal/qoriq_thermal.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/thermal/qoriq_thermal.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 7b36493..2893947 100644
+index 8d19601..39542c6 100644
 --- a/drivers/thermal/qoriq_thermal.c
 +++ b/drivers/thermal/qoriq_thermal.c
-@@ -2,6 +2,7 @@
- //
- // Copyright 2016 Freescale Semiconductor, Inc.
- 
-+#include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/err.h>
-@@ -72,6 +73,7 @@ struct qoriq_sensor {
- 
- struct qoriq_tmu_data {
- 	struct qoriq_tmu_regs __iomem *regs;
-+	struct clk *clk;
- 	bool little_endian;
- 	struct qoriq_sensor	*sensor[SITES_MAX];
- };
-@@ -209,6 +211,16 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 		goto err_iomap;
- 	}
- 
-+	data->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(data->clk))
-+		return PTR_ERR(data->clk);
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	qoriq_tmu_init_device(data);	/* TMU initialization */
- 
- 	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
-@@ -225,6 +237,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_tmu:
-+	clk_disable_unprepare(data->clk);
- 	iounmap(data->regs);
- 
- err_iomap:
-@@ -241,6 +254,9 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
- 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
- 
- 	iounmap(data->regs);
-+
-+	clk_disable_unprepare(data->clk);
-+
- 	platform_set_drvdata(pdev, NULL);
- 
- 	return 0;
-@@ -257,14 +273,21 @@ static int qoriq_tmu_suspend(struct device *dev)
- 	tmr &= ~TMR_ME;
- 	tmu_write(data, tmr, &data->regs->tmr);
- 
-+	clk_disable_unprepare(data->clk);
-+
+@@ -256,8 +256,7 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
  	return 0;
  }
  
- static int qoriq_tmu_resume(struct device *dev)
+-#ifdef CONFIG_PM_SLEEP
+-static int qoriq_tmu_suspend(struct device *dev)
++static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
  {
  	u32 tmr;
-+	int ret;
  	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+@@ -272,7 +271,7 @@ static int qoriq_tmu_suspend(struct device *dev)
+ 	return 0;
+ }
  
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret)
-+		return ret;
-+
- 	/* Enable monitoring */
- 	tmr = tmu_read(data, &data->regs->tmr);
- 	tmr |= TMR_ME;
+-static int qoriq_tmu_resume(struct device *dev)
++static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+ {
+ 	u32 tmr;
+ 	int ret;
+@@ -289,7 +288,6 @@ static int qoriq_tmu_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
+ 			 qoriq_tmu_suspend, qoriq_tmu_resume);
 -- 
 2.7.4
