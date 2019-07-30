@@ -1,76 +1,36 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] ARM: DTS: vybrid: Update qspi node description for
- VF610 BK4 board
-Date: Tue, 30 Jul 2019 18:04:51 +0200
-Message-ID: <20190730180451.38cad018@jawa>
-References: <20190730150552.24927-1-lukma@denx.de>
-        <CAOMZO5AxPHHobQQhq30fjLVeSroLdvdT0+GqCWi8it1ejhDONA@mail.gmail.com>
-        <20190730175336.382d833c@jawa>
-        <CAOMZO5AoSCDCMRKpkWQ=0PwiFG-O9doGaA31FRhDCGmNr7Xefg@mail.gmail.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: media: mtk-vcodec: Handle H264 error bitstreams
+Date: Tue, 30 Jul 2019 13:15:41 -0300
+Message-ID: <20190730131541.40ce5ead@coco.lan>
+References: <20190726085433.15612-1-gtk_ruiwang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/FFYaC=52dh2nz5Y2tmjEFGz"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AoSCDCMRKpkWQ=0PwiFG-O9doGaA31FRhDCGmNr7Xefg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190726085433.15612-1-gtk_ruiwang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gtk_ruiwang@mediatek.com
+Cc: devicetree@vger.kernel.org, Yunfei Dong <yunfei.dong@mediatek.com>, Longfei Wang <longfei.wang@mediatek.com>, linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Tiffany Lin <tiffany.lin@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/FFYaC=52dh2nz5Y2tmjEFGz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Em Fri, 26 Jul 2019 16:54:33 +0800
+<gtk_ruiwang@mediatek.com> escreveu:
 
-Hi Fabio,
+> From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
 
-> Hi Lukasz,
->=20
-> On Tue, Jul 30, 2019 at 12:53 PM Lukasz Majewski <lukma@denx.de>
-> wrote:
->=20
-> > Shall I refer to the original commit (which added this DTS)? Or the
-> > original issue posted to linux-mtd [1] ? =20
->=20
-> You can add a Fixes tag like this:
->=20
-> Fixes: a67d2c52a82f ("ARM: dts: Add support for Liebherr's BK4 device
-> (vf610 based)")
+...
 
-Yes, the above is correct (as indicated [1]), but I was not sure if I
-should also refer to the original post to linux-mtd ML.
+> Signed-off-by: gtk_ruiwang <gtk_ruiwang@mediatek.com>
 
-Now it is clear - thanks :-)
+Please use your real name on your SOB and at the From: line.
 
-Note:
-
-[1] -
-https://www.kernel.org/doc/html/v4.12/process/submitting-patches.html#revie=
-wer-s-statement-of-oversight
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/FFYaC=52dh2nz5Y2tmjEFGz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl1AaqMACgkQAR8vZIA0
-zr1ITwf+P4+TW29l+wXSF2r4SKuAIoARSdCU3NSfGUpLW7gBQbK3x4RXlNnYW2y5
-pLsjYgE4yPWa6xv+Eo0oZz23EgmQdXCEmflVB85+CxRJpOPTfL0f1oRNmYXm0Nfq
-uQBko26IzNP+LMzSHDqJnaViHdWqP8URYGpMKHxL4lEUbZRfMzpieYt1IgHbCcB0
-/H0cx/EFFO3P+txZw7OQwaZSvYhSrwqO9hc645rXXIqqzO+nJ/RtWw5FAgVZHK6g
-tGTZ8rMYvWfhh/RuZwZzM7QktcV5NPxlVBagXFLujay/OSs/ENNO7MyWSTjL4g9B
-F0ZoHf+Mp8liTvpd9aet/8v1UMB3BQ==
-=LT7H
------END PGP SIGNATURE-----
-
---Sig_/FFYaC=52dh2nz5Y2tmjEFGz--
+Thanks,
+Mauro
