@@ -1,7 +1,7 @@
 From: Philippe Schenker <dev@pschenker.ch>
-Subject: [PATCH 17/22] ARM: dts: imx6ull-colibri: reduce v_batt current in power off
-Date: Tue, 30 Jul 2019 16:46:44 +0200
-Message-ID: <20190730144649.19022-18-dev@pschenker.ch>
+Subject: [PATCH 16/22] ARM: dts: imx6ull-colibri: Add sleep mode to fec
+Date: Tue, 30 Jul 2019 16:46:43 +0200
+Message-ID: <20190730144649.19022-17-dev@pschenker.ch>
 References: <20190730144649.19022-1-dev@pschenker.ch>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,48 +12,53 @@ To: marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, stefan@agner.ch, 
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Reduce the current drawn from VCC_BATT when the main power on the 3V3
-pins to the module are switched off.
+Do not change the clock as the power for this phy is switched
+with that clock.
 
-This switches off SoC internal pull resistors which are provided on the
-module for TAMPER7 and TAMPER9 SoC pin and switches on a pull down
-instead of a pullup for the USBC_DET module pin (TAMPER2).
-
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-index 1019ce69a242..1f112ec55e5c 100644
+index d56728f03c35..1019ce69a242 100644
 --- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -533,19 +533,19 @@
+@@ -62,8 +62,9 @@
+ };
  
- 	pinctrl_snvs_ad7879_int: snvs-ad7879-int-grp { /* TOUCH Interrupt */
- 		fsl,pins = <
--			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x100b0
+ &fec2 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&pinctrl_enet2>;
++	pinctrl-1 = <&pinctrl_enet2_sleep>;
+ 	phy-mode = "rmii";
+ 	phy-handle = <&ethphy1>;
+ 	status = "okay";
+@@ -220,6 +221,21 @@
  		>;
  	};
  
- 	pinctrl_snvs_reg_sd: snvs-reg-sd-grp {
++	pinctrl_enet2_sleep: enet2sleepgrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
++			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
++			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
++			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
++			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
++			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
++			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
++			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
++			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
++			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
++		>;
++	};
++
+ 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
  		fsl,pins = <
--			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x4001b8b0
-+			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x400100b0
- 		>;
- 	};
- 
- 	pinctrl_snvs_usbc_det: snvs-usbc-det-grp {
- 		fsl,pins = <
--			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
- 		>;
- 	};
- 
+ 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
 -- 
 2.22.0
