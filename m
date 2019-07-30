@@ -1,53 +1,30 @@
-From: Thomas Preston <thomas.preston@codethink.co.uk>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on diagnostic
- routine
-Date: Tue, 30 Jul 2019 17:28:11 +0100
-Message-ID: <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730141935.GF4264@sirena.org.uk>
- <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
- <20190730155027.GJ4264@sirena.org.uk>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 2/2] ARM: dts: imx6ul-kontron-n6310: Add Kontron
+ i.MX6UL N6310 SoM and boards
+Date: Tue, 30 Jul 2019 13:33:30 -0300
+Message-ID: <CAOMZO5BzA7JfNhJtZjUCewGicWFy1Qemx3jV1=+27MjUnsq4kQ@mail.gmail.com>
+References: <20190729172007.3275-1-krzk@kernel.org> <20190729172007.3275-2-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730155027.GJ4264@sirena.org.uk>
-Content-Language: en-US
+In-Reply-To: <20190729172007.3275-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Liam Girdwood <lgirdwood@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>, Annaliese McDermond <nh6z@nh6z.net>, Takashi Iwai <tiwai@suse.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Schrempf Frieder <frieder.schrempf@kontron.de>
 List-Id: devicetree@vger.kernel.org
 
-On 30/07/2019 16:50, Mark Brown wrote:
-> On Tue, Jul 30, 2019 at 04:25:56PM +0100, Thomas Preston wrote:
->> On 30/07/2019 15:19, Mark Brown wrote:
-> 
->>> It is unclear what this mutex usefully protects, it only gets taken when
->>> writing to the debugfs file to trigger this diagnostic mode but doesn't
->>> do anything to control interactions with any other code path in the
->>> driver.
-> 
->> If another process reads the debugfs node "diagnostic" while the turn-on 
->> diagnostic mode is running, this mutex prevents the second process
->> restarting the diagnostics.
-> 
->> This is redundant if debugfs reads are atomic, but I don't think they are.
-> 
-> Like I say it's not just debugfs though, there's the standard driver
-> interface too.
-> 
+Hi Krzysztof,
 
-Ah right, I understand. So if we run the turn-on diagnostics routine, there's
-nothing stopping anyone from interacting with the device in other ways.
+On Mon, Jul 29, 2019 at 2:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-I guess there's no way to share that mutex with ALSA? In that case, it doesn't
-matter if this mutex is there or not - this feature is incompatible. How
-compatible do debugfs interfaces have to be? I was under the impression anything
-goes. I would argue that the debugfs is better off for having the mutex so
-that no one re-reads "diagnostic" within the 5s poll timeout.
+> --- a/Documentation/devicetree/bindings/eeprom/at25.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/at25.txt
+> @@ -3,6 +3,7 @@ EEPROMs (SPI) compatible with Atmel at25.
+>  Required properties:
+>  - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+>    Example "<vendor>,<type>" values:
+> +    "anvo,anv32e61w"
 
-Alternatively, this diagnostic feature could be handled with an external-handler
-kcontrol SOC_SINGLE_EXT? I'm not sure if this is an atomic interface either.
+This usually comes as a separate patch, but anyway:
 
-What would be acceptable?
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
