@@ -1,45 +1,77 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: pms405: remove reduandant properties
-Date: Tue, 30 Jul 2019 22:06:59 +0530
-Message-ID: <CAHLCerNCcLSsV2JKqM1FW86wgQhNimMYdc0_2KPqZzDgwSkt-Q@mail.gmail.com>
-References: <20190725135150.9972-1-vkoul@kernel.org> <20190725135150.9972-3-vkoul@kernel.org>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v4 0/3] Introduce Bandwidth OPPs for interconnects
+Date: Tue, 30 Jul 2019 22:13:34 +0530
+Message-ID: <a9ab8614-7626-c309-24cc-02ce08a80ce5@codeaurora.org>
+References: <20190726231558.175130-1-saravanak@google.com>
+ <20190729093545.kvnqxjkyx4nogddk@vireshk-i7>
+ <CAGETcx8OBFGgP1-hj717Sk-_N95-kacVsz0yb288n3pej12n1Q@mail.gmail.com>
+ <20190730024640.xk27jgdfl2j6ucx7@vireshk-i7>
+ <361effba-4433-24d9-243c-201af39214cc@codeaurora.org>
+ <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725135150.9972-3-vkoul@kernel.org>
+In-Reply-To: <CAGETcx_BpJswxA4AGARogZ1xRJPqm=_zTOZq1xJ2vgx+DUYsqQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kerne>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 7:23 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> pms405@1 nodes specified unnecessary #address-cells/#size-cells but the
-> subnodes dont have "ranges" or "reg" so remove it
->
-> arch/arm64/boot/dts/qcom/pms405.dtsi:141.21-150.4: Warning (avoid_unnecessary_addr_size): /soc@0/spmi@200f000/pms405@1: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+On 7/30/19 11:23 AM, Saravana Kannan wrote:
+> On Mon, Jul 29, 2019 at 10:28 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+>>
+>> Hey Viresh,
+>>
+>> On 7/30/19 8:16 AM, Viresh Kumar wrote:
+>>> On 29-07-19, 13:16, Saravana Kannan wrote:
+>>>> Sibi might be working on doing that for the SDM845 CPUfreq driver.
+>>>> Georgi could also change his GPU driver use case to use this BW OPP
+>>>> table and required-opps.
+>>>>
+>>>> The problem is that people don't want to start using this until we
+>>>> decide on the DT representation. So it's like a chicken and egg
+>>>> situation.
+>>>
+>>> Yeah, I agree to that.
+>>>
+>>> @Georgi and @Sibi: This is your chance to speak up about the proposal
+>>> from Saravana and if you find anything wrong with them. And specially
+>>> that it is mostly about interconnects here, I would like to have an
+>>> explicit Ack from Georgi on this.
+>>>
+>>> And if you guys are all okay about this then please at least commit
+>>> that you will convert your stuff based on this in coming days.
+>>
+>> I've been using both Saravana's and Georgi's series for a while
+>> now to scale DDR and L3 on SDM845. There is currently no consensus
+>> as to where the votes are to be actuated from, hence couldn't post
+>> anything out.
+>>
+>> DCVS based on Saravana's series + passive governor:
+>> https://github.com/QuinAsura/linux/tree/lnext-072619-SK-series
+> 
+> Thanks Sibi! You might want to convert your patches so that until the
+> passive governor is ready, you just look up the required opps and vote
+> for BW directly from the cpufreq driver. Once devfreq governor is
+> ready, you can switch to it.
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Sure I'll do that.
 
-> ---
->  arch/arm64/boot/dts/qcom/pms405.dtsi | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> index 3c10cf04d26e..32678f7ce90d 100644
-> --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> @@ -141,8 +141,6 @@
->         pms405_1: pms405@1 {
->                 compatible = "qcom,spmi-pmic";
->                 reg = <0x1 SPMI_USID>;
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
->
->                 pms405_spmi_regulators: regulators {
->                         compatible = "qcom,pms405-regulators";
-> --
-> 2.20.1
->
+> 
+> -Saravana
+> 
+>>
+>> DCVS based on Georgi's series: (I had already posted this out)
+>> https://github.com/QuinAsura/linux/tree/lnext-072619-GJ-series
+>>
+>> --
+>> Qualcomm Innovation Center, Inc.
+>> Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
