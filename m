@@ -1,205 +1,38 @@
-From: Thara Gopinath <thara.gopinath@linaro.org>
-Subject: [Patch v2 1/2] soc: qcom: Extend AOSS QMP driver to support resources that are used to wake up the SoC.
-Date: Tue, 30 Jul 2019 11:24:42 -0400
-Message-ID: <1564500283-16038-2-git-send-email-thara.gopinath@linaro.org>
-References: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
+From: Hongwei Zhang <hongweiz@ami.com>
+Subject: [v6 0/2] gpio: aspeed: Add SGPIO driver
+Date: Tue, 30 Jul 2019 11:24:26 -0400
+Message-ID: <1564500268-2627-1-git-send-email-hongweiz@ami.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564500283-16038-1-git-send-email-thara.gopinath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, vinod.koul@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The AOSS QMP driver is extended to communicate with the additional
-resources. These resources are then registered as cooling devices
-with the thermal framework.
+Hello,
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
-v1->v2:
-        Added back name variable in qmp_cooling_device to fix the 
-        compilation error.               
-        Other minor naming changes as mentioned in review on the list.
+This short series introduce dt-binding document and a driver for the 
+Aspeed AST2500 SGPIO controller. Please review.
 
- drivers/soc/qcom/qcom_aoss.c | 131 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+[v6]:	Changes between v5 and v6:
+	- fix a bug in aspeed_sgpio_dir_out()
+	- v5 feedback updates, some comments cleanup
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 5f88519..dc6201e 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -10,6 +10,8 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/thermal.h>
-+#include <linux/slab.h>
- 
- #define QMP_DESC_MAGIC			0x0
- #define QMP_DESC_VERSION		0x4
-@@ -40,6 +42,17 @@
- /* 64 bytes is enough to store the requests and provides padding to 4 bytes */
- #define QMP_MSG_LEN			64
- 
-+#define QMP_NUM_COOLING_RESOURCES	2
-+
-+static bool qmp_cdev_init_state = 1;
-+
-+struct qmp_cooling_device {
-+	struct thermal_cooling_device *cdev;
-+	struct qmp *qmp;
-+	char *name;
-+	bool state;
-+};
-+
- /**
-  * struct qmp - driver state for QMP implementation
-  * @msgram: iomem referencing the message RAM used for communication
-@@ -69,6 +82,7 @@ struct qmp {
- 
- 	struct clk_hw qdss_clk;
- 	struct genpd_onecell_data pd_data;
-+	struct qmp_cooling_device *cooling_devs;
- };
- 
- struct qmp_pd {
-@@ -385,6 +399,118 @@ static void qmp_pd_remove(struct qmp *qmp)
- 		pm_genpd_remove(data->domains[i]);
- }
- 
-+static int qmp_cdev_get_max_state(struct thermal_cooling_device *cdev,
-+				  unsigned long *state)
-+{
-+	*state = qmp_cdev_init_state;
-+	return 0;
-+}
-+
-+static int qmp_cdev_get_cur_state(struct thermal_cooling_device *cdev,
-+				  unsigned long *state)
-+{
-+	struct qmp_cooling_device *qmp_cdev = cdev->devdata;
-+
-+	*state = qmp_cdev->state;
-+	return 0;
-+}
-+
-+static int qmp_cdev_set_cur_state(struct thermal_cooling_device *cdev,
-+				  unsigned long state)
-+{
-+	struct qmp_cooling_device *qmp_cdev = cdev->devdata;
-+	char buf[QMP_MSG_LEN] = {};
-+	bool cdev_state;
-+	int ret;
-+
-+	/* Normalize state */
-+	cdev_state = !!state;
-+
-+	if (qmp_cdev->state == state)
-+		return 0;
-+
-+	snprintf(buf, sizeof(buf),
-+		 "{class: volt_flr, event:zero_temp, res:%s, value:%s}",
-+			qmp_cdev->name,
-+			cdev_state ? "off" : "on");
-+
-+	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf));
-+
-+	if (!ret)
-+		qmp_cdev->state = cdev_state;
-+
-+	return ret;
-+}
-+
-+static struct thermal_cooling_device_ops qmp_cooling_device_ops = {
-+	.get_max_state = qmp_cdev_get_max_state,
-+	.get_cur_state = qmp_cdev_get_cur_state,
-+	.set_cur_state = qmp_cdev_set_cur_state,
-+};
-+
-+static int qmp_cooling_device_add(struct qmp *qmp,
-+				  struct qmp_cooling_device *qmp_cdev,
-+				  struct device_node *node)
-+{
-+	char *cdev_name = (char *)node->name;
-+
-+	qmp_cdev->qmp = qmp;
-+	qmp_cdev->state = qmp_cdev_init_state;
-+	qmp_cdev->name = cdev_name;
-+	qmp_cdev->cdev = devm_thermal_of_cooling_device_register
-+				(qmp->dev, node,
-+				cdev_name,
-+				qmp_cdev, &qmp_cooling_device_ops);
-+
-+	if (IS_ERR(qmp_cdev->cdev))
-+		dev_err(qmp->dev, "unable to register %s cooling device\n",
-+			cdev_name);
-+
-+	return PTR_ERR_OR_ZERO(qmp_cdev->cdev);
-+}
-+
-+static int qmp_cooling_devices_register(struct qmp *qmp)
-+{
-+	struct device_node *np, *child;
-+	int count = QMP_NUM_COOLING_RESOURCES;
-+	int ret;
-+
-+	np = qmp->dev->of_node;
-+
-+	qmp->cooling_devs = devm_kcalloc(qmp->dev, count,
-+					 sizeof(*qmp->cooling_devs),
-+					 GFP_KERNEL);
-+
-+	if (!qmp->cooling_devs)
-+		return -ENOMEM;
-+
-+	for_each_available_child_of_node(np, child) {
-+		if (!of_find_property(child, "#cooling-cells", NULL))
-+			continue;
-+		ret = qmp_cooling_device_add(qmp, &qmp->cooling_devs[count++],
-+					     child);
-+		if (ret)
-+			goto uroll;
-+	}
-+
-+	return 0;
-+
-+uroll:
-+	while (--count >= 0)
-+		thermal_cooling_device_unregister
-+			(qmp->cooling_devs[count].cdev);
-+
-+	return ret;
-+}
-+
-+static void qmp_cooling_devices_remove(struct qmp *qmp)
-+{
-+	int i;
-+
-+	for (i = 0; i < QMP_NUM_COOLING_RESOURCES; i++)
-+		thermal_cooling_device_unregister(qmp->cooling_devs[i].cdev);
-+}
-+
- static int qmp_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -433,6 +559,10 @@ static int qmp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_remove_qdss_clk;
- 
-+	ret = qmp_cooling_devices_register(qmp);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to register aoss cooling devices\n");
-+
- 	platform_set_drvdata(pdev, qmp);
- 
- 	return 0;
-@@ -453,6 +583,7 @@ static int qmp_remove(struct platform_device *pdev)
- 
- 	qmp_qdss_clk_remove(qmp);
- 	qmp_pd_remove(qmp);
-+	qmp_cooling_devices_remove(qmp);
- 
- 	qmp_close(qmp);
- 	mbox_free_channel(qmp->mbox_chan);
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
+
+
+Hongwei Zhang (2):
+  dt-bindings: gpio: aspeed: Add SGPIO support
+  gpio: aspeed: Add SGPIO driver
+
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  55 +++
+ drivers/gpio/sgpio-aspeed.c                        | 521 +++++++++++++++++++++
+ 2 files changed, 576 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
+
 -- 
-2.1.4
+2.7.4
