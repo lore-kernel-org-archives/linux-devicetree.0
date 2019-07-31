@@ -1,8 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 02/19] phy: mvebu-cp110-comphy: Explicitly initialize the
- lane submode
-Date: Wed, 31 Jul 2019 14:21:09 +0200
-Message-ID: <20190731122126.3049-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 07/19] phy: mvebu-cp110-comphy: Allow non-Ethernet modes to
+ be configured
+Date: Wed, 31 Jul 2019 14:21:14 +0200
+Message-ID: <20190731122126.3049-8-miquel.raynal@bootlin.com>
 References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,24 +22,28 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Explicitly set the lane submode (enum) to a known invalid value.
+The COMPHY can configure the SERDES lanes in several non-Ethernet
+modes: SATA, USB3, PCIe. Drop the condition limiting the driver to
+Ethernet modes only before adding support for more.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index 83d173d298ed..6922dfe6a385 100644
+index 5263c2053359..fb14406fc406 100644
 --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -713,6 +713,7 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+@@ -671,9 +671,6 @@ static int mvebu_comphy_set_mode(struct phy *phy,
+ {
+ 	struct mvebu_comphy_lane *lane = phy_get_drvdata(phy);
  
- 		lane->priv = priv;
- 		lane->mode = PHY_MODE_INVALID;
-+		lane->submode = PHY_INTERFACE_MODE_NA;
- 		lane->id = val;
- 		lane->port = -1;
- 		phy_set_drvdata(phy, lane);
+-	if (mode != PHY_MODE_ETHERNET)
+-		return -EINVAL;
+-
+ 	if (submode == PHY_INTERFACE_MODE_1000BASEX)
+ 		submode = PHY_INTERFACE_MODE_SGMII;
+ 
 -- 
 2.20.1
