@@ -1,60 +1,67 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 01/20] ARM: dts: imx7-colibri: make sure module supplies
- are always on
-Date: Wed, 31 Jul 2019 12:38:01 +0000
-Message-ID: <20190731123750.25670-2-philippe.schenker@toradex.com>
+Subject: [PATCH v2 14/20] ARM: dts: imx6ull-colibri: Add sleep mode to fec
+Date: Wed, 31 Jul 2019 12:38:25 +0000
+Message-ID: <20190731123750.25670-15-philippe.schenker@toradex.com>
 References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Philippe Schenker <philippe.schenker@toradex.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Do not change the clock as the power for this phy is switched
+with that clock.
 
-Prevent regulators from being switched off.
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
 Changes in v2: None
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 895fbde4d433..f1c1971f2160 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -54,6 +54,7 @@
- 		regulator-name = "+V3.3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
+diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
+6ull-colibri.dtsi
+index d56728f03c35..1019ce69a242 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+@@ -62,8 +62,9 @@
+ };
+=20
+ &fec2 {
+-	pinctrl-names =3D "default";
++	pinctrl-names =3D "default", "sleep";
+ 	pinctrl-0 =3D <&pinctrl_enet2>;
++	pinctrl-1 =3D <&pinctrl_enet2_sleep>;
+ 	phy-mode =3D "rmii";
+ 	phy-handle =3D <&ethphy1>;
+ 	status =3D "okay";
+@@ -220,6 +221,21 @@
+ 		>;
  	};
- 
- 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
-@@ -61,6 +62,7 @@
- 		regulator-name = "+V3.3_AVDD_AUDIO";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
- 	};
- 
- 	sound {
--- 
+=20
++	pinctrl_enet2_sleep: enet2sleepgrp {
++		fsl,pins =3D <
++			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
++			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
++			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
++			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
++			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
++			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
++			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
++			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
++			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
++			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
++		>;
++	};
++
+ 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
+ 		fsl,pins =3D <
+ 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
+--=20
 2.22.0
