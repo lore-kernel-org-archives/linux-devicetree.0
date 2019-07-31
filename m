@@ -1,112 +1,45 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 03/20] ARM: dts: imx7-colibri: prepare module device tree
- for FlexCAN
-Date: Wed, 31 Jul 2019 12:38:05 +0000
-Message-ID: <20190731123750.25670-4-philippe.schenker@toradex.com>
+Subject: [PATCH v2 20/20] ARM: dts: imx6ull-colibri: Add touchscreen used with
+ Eval Board
+Date: Wed, 31 Jul 2019 12:38:35 +0000
+Message-ID: <20190731123750.25670-21-philippe.schenker@toradex.com>
 References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Philippe Schenker <philippe.schenker@toradex.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <D7D52C126B4AFE41A30C7E92EA22457B@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Prepare FlexCAN use on SODIMM 55/63 178/188. Those SODIMM pins are
-compatible for CAN bus use with several modules from the Colibri
-family.
-Add Better drivestrength and also add flexcan2.
-
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
-
-Changes in v2: None
-
- arch/arm/boot/dts/imx7-colibri.dtsi | 35 ++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index f7c9ce5bed47..52046085ce6f 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -117,6 +117,18 @@
- 	fsl,magic-packet;
- };
- 
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "disabled";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "disabled";
-+};
-+
- &gpmi {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_gpmi_nand>;
-@@ -330,12 +342,11 @@
- 
- &iomuxc {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4>;
-+	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4
-+		     &pinctrl_gpio7>;
- 
- 	pinctrl_gpio1: gpio1-grp {
- 		fsl,pins = <
--			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
--			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
- 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
- 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
- 			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
-@@ -416,6 +427,13 @@
- 		>;
- 	};
- 
-+	pinctrl_gpio7: gpio7-grp { /* Alternatively CAN1 */
-+		fsl,pins = <
-+			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x14 /* SODIMM 55 */
-+			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x14 /* SODIMM 63 */
-+		>;
-+	};
-+
- 	pinctrl_i2c1_int: i2c1-int-grp { /* PMIC / TOUCH */
- 		fsl,pins = <
- 			MX7D_PAD_GPIO1_IO13__GPIO1_IO13	0x79
-@@ -459,10 +477,17 @@
- 		>;
- 	};
- 
-+	pinctrl_flexcan1: flexcan1-grp {
-+		fsl,pins = <
-+			MX7D_PAD_ENET1_RGMII_RD3__FLEXCAN1_TX	0x79 /* SODIMM 55 */
-+			MX7D_PAD_ENET1_RGMII_RD2__FLEXCAN1_RX	0x79 /* SODIMM 63 */
-+		>;
-+	};
-+
- 	pinctrl_flexcan2: flexcan2-grp {
- 		fsl,pins = <
--			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
--			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x59
-+			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x79 /* SODIMM 188 */
-+			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x79 /* SODIMM 178 */
- 		>;
- 	};
- 
--- 
-2.22.0
+VGhpcyBhZGRzIHRoZSBjb21tb24gdG91Y2hzY3JlZW4gdGhhdCBpcyB1c2VkIHdpdGggVG9yYWRl
+eCdzDQpFdmFsIEJvYXJkcy4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBo
+aWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KDQotLS0NCg0KQ2hhbmdlcyBpbiB2MjoNCi0g
+UmVtb3ZlZCBmMDcxMGEsIHRoYXQgaXMgZG93bnN0cmVhbSBvbmx5DQotIENoYW5nZWQgdG8gZ2Vu
+ZXJpYyBub2RlIG5hbWUNCi0gQmV0dGVyIGNvbW1lbnQNCg0KIC4uLi9hcm0vYm9vdC9kdHMvaW14
+NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDI0ICsrKysrKysrKysrKysrKysrKysNCiAxIGZp
+bGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCmluZGV4IGQzYzQ4MDlmMTQwZS4uNzhlNzRiZmVj
+YTFiIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwt
+djMuZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMu
+ZHRzaQ0KQEAgLTExMiw2ICsxMTIsMjEgQEANCiAmaTJjMSB7DQogCXN0YXR1cyA9ICJva2F5IjsN
+CiANCisJLyoNCisJICogVG91Y2hzY3JlZW4gaXMgdXNpbmcgU09ESU1NIDI4LzMwLCBhbHNvIHVz
+ZWQgZm9yIFBXTTxCPiwgUFdNPEM+LA0KKwkgKiBha2EgcHdtMiwgcHdtMy4gc28gaWYgeW91IGVu
+YWJsZSB0b3VjaHNjcmVlbiwgZGlzYWJsZSB0aGUgcHdtcw0KKwkgKi8NCisJdG91Y2hzY3JlZW5A
+NGEgew0KKwkJY29tcGF0aWJsZSA9ICJhdG1lbCxtYXh0b3VjaCI7DQorCQlwaW5jdHJsLW5hbWVz
+ID0gImRlZmF1bHQiOw0KKwkJcGluY3RybC0wID0gPCZwaW5jdHJsX2dwaW90b3VjaD47DQorCQly
+ZWcgPSA8MHg0YT47DQorCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvND47DQorCQlpbnRlcnJ1
+cHRzID0gPDE2IElSUV9UWVBFX0VER0VfRkFMTElORz47CS8qIFNPRElNTSAyOCAqLw0KKwkJcmVz
+ZXQtZ3Bpb3MgPSA8JmdwaW8yIDUgR1BJT19BQ1RJVkVfSElHSD47CS8qIFNPRElNTSAzMCAqLw0K
+KwkJc3RhdHVzID0gImRpc2FibGVkIjsNCisJfTsNCisNCiAJLyogTTQxVDBNNiByZWFsIHRpbWUg
+Y2xvY2sgb24gY2FycmllciBib2FyZCAqLw0KIAltNDF0MG02OiBydGNANjggew0KIAkJY29tcGF0
+aWJsZSA9ICJzdCxtNDF0MCI7DQpAQCAtMTg4LDMgKzIwMywxMiBAQA0KIAlzZC11aHMtc2RyMTA0
+Ow0KIAlzdGF0dXMgPSAib2theSI7DQogfTsNCisNCismaW9tdXhjIHsNCisJcGluY3RybF9ncGlv
+dG91Y2g6IHRvdWNoZ3Bpb3Mgew0KKwkJZnNsLHBpbnMgPSA8DQorCQkJTVg2VUxfUEFEX05BTkRf
+RFFTX19HUElPNF9JTzE2CQkweDc0DQorCQkJTVg2VUxfUEFEX0VORVQxX1RYX0VOX19HUElPMl9J
+TzA1CTB4MTQNCisJCT47DQorCX07DQorfTsNCi0tIA0KMi4yMi4wDQoNCg==
