@@ -1,137 +1,43 @@
-From: Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
-Date: Wed, 31 Jul 2019 11:42:26 -0300
-Message-ID: <77968a89-eec0-bc2f-f996-ef3e21e9efd8@collabora.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
- <41e7e574-2708-eb4c-ea30-e6a1ac9c073e@collabora.com>
- <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
- <74bb0ba1-2859-39ff-d946-129a440ba150@xs4all.nl>
- <fb1327fb-0903-ce62-4eea-94b81f599b62@xs4all.nl>
- <13d89676-ae84-5904-7606-935501cb2d89@xs4all.nl>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 31 Jul 2019 11:43:47 -0300
+Message-ID: <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
+References: <cover.1563983037.git.agx@sigxcpu.org>
+ <3158f4f8c97c21f98c394e5631d74bc60d796522.1563983037.git.agx@sigxcpu.org>
+ <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
+ <20190731143532.GA1935@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <13d89676-ae84-5904-7606-935501cb2d89@xs4all.nl>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190731143532.GA1935@bogon.m.sigxcpu.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Pengutronix Kernel Team <kernel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Lee Jones <lee.jones@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, linux-kernel <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, Chris Healy <cphealy@gmail.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 7/31/19 1:55 AM, Hans Verkuil wrote:
-> On 7/31/19 6:33 AM, Hans Verkuil wrote:
->> On 7/31/19 6:29 AM, Hans Verkuil wrote:
->>> On 7/31/19 2:08 AM, Helen Koike wrote:
->>>>
->>>>
->>>> On 7/30/19 5:50 PM, Helen Koike wrote:
->>>>>
->>>>>
->>>>> On 7/30/19 5:15 PM, Hans Verkuil wrote:
->>>>>> On 7/30/19 8:42 PM, Helen Koike wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
->>>>>>> rk3399 SoC.
->>>>>>>
->>>>>>> I didn't change much from the last version, just applying the
->>>>>>> suggestions made in the previous one.
->>>>>>>
->>>>>>> This patchset is also available at:
->>>>>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
->>>>>>>
->>>>>>> Libcamera patched to work with this version:
->>>>>>> https://gitlab.collabora.com/koike/libcamera
->>>>>>> (also sent to the mailing list)
->>>>>>>
->>>>>>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
->>>>>>> Scarlet Chromebook.
->>>>>>>
->>>>>>> Known issues (same as in v7):
->>>>>>> -------------
->>>>>>> - Reloading the module doesn't work (there is some missing cleanup when
->>>>>>> unloading)
->>>>>>> - When capturing in bayer format, changing the size doesn't seem to
->>>>>>> affect the image.
->>>>>>> - crop needs more tests
->>>>>>> - v4l2-compliance error:
->>>>>>>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
->>>>>>> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
->>>>>>
->>>>>> Can you mail me the full v4l2-compliance output?
->>>>>
->>>>> Sure, please check here: http://ix.io/1Q5u
->>>>> I updated v4l-utils with the latest version and I re-ran bootstrap/configure/make,
->>>>> but for some reason the hash from the link above is not the latest commit, probably some
->>>>> old configuration somewhere. I'll resend this log as soon as I get v4l2-compliance
->>>>> properly updated.
->>>>
->>>> Please see the output of v4l2-compliance here with an updated v4l-utils: http://ix.io/1Q6A
->>>
->>> So this FAIL is for /dev/v4l-subdev0 (rkisp1-isp-subdev).
->>>
->>> What is weird that this subdev does not appear to have controls at all.
->>>
->>> What is the output of 'v4l2-ctl -d /dev/v4l-subdev0 -l'? And if it lists
->>> controls, then why?
-
-root@rockpi:~# v4l2-ctl -d /dev/v4l-subdev0 -l
-
-Image Processing Controls
-
-                     pixel_rate 0x009f0902 (int64)  : min=1 max=2147483647 step=1 default=1 value=1 flags=read-only
-
-root@rockpi:~# v4l2-ctl -d /dev/v4l-subdev1 -l
-
-Image Processing Controls
-
-                     pixel_rate 0x009f0902 (int64)  : min=1 max=2147483647 step=1 default=1 value=1 flags=read-only
-
-It seems that ISP heritage the control from the sensor driver. I believe it
-happens because isp_dev->ctrl_handler was assigned to the v4l2_dev object:
-
-dev.c:  v4l2_ctrl_handler_init(&isp_dev->ctrl_handler, 5);
-dev.c:  v4l2_dev->ctrl_handler = &isp_dev->ctrl_handler;
-
-
->>>
->>> If you run 'v4l2-compliance -u /dev/v4l-subdev0', do you get a fail as
->>> well?
-
-Yes, but if I remove the ctrl_handler field from the struct rkisp1_isp_subdev
-I don't get the error on /dev/v4l-subdev0 (ISP) anymore, I just get the error
-on /dev/v4l-subdev1 (the sensor).
-
-Here is the output of v4l2-compliance -m /dev/media0 without the
-ctrl_handler field: http://ix.io/1Q9N
-
->>
->> I see the same issue with v4l-subdev1, but I see no "Media Driver Info"
->> in the v4l2-compliance output for that subdev. That's strange. It would
->> be good to know why that's happening.
-> 
-> It looks to be some parenting issue: v4l2-compliance expects to find
-> a mediaX directory in /sys/dev/char/81\:Y/device/ where 81:Y is the major/minor
-> of /dev/v4l-subdev1.
-> 
-> Because is this mi_get_media_fd() cannot find the media device for the subdev
-> in v4l2-compliance.
-
-So from my understanding this seems to be an issue in the sensor driver that
-I'm using and not in the ISP (to be verified).
-I'll submit the next version without the ctrl_handler field in struct rkisp1_isp_subdev,
-is that ok?
-
-Thanks
-Helen
-
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
+SGkgR3VpZG8sCgpPbiBXZWQsIEp1bCAzMSwgMjAxOSBhdCAxMTozNSBBTSBHdWlkbyBHw7xudGhl
+ciA8YWd4QHNpZ3hjcHUub3JnPiB3cm90ZToKCj4gVGhlIGlkZWEgaXMgdG8gaGF2ZQo+Cj4gICAg
+ICIlc2FibGluZyBwbGF0Zm9ybSBjbG9ja3MiLCBlbmFibGUgPyAiZW4iIDogImRpcyIpOwo+Cj4g
+ZGVwZW5kaW5nIHdoZXRoZXIgY2xvY2tzIGFyZSBlbmFibGVkL2Rpc2FibGVkLgoKWWVzLCBJIHVu
+ZGVyc3Rvb2QgdGhlIGlkZWEsIGJ1dCB0aGlzIHdvdWxkIHByaW50OgoKZW5zYWJsaW5nIG9yIGRp
+c3NhYmxpbmcgOi0pCgo+ID4gU2FtZSBoZXJlLiBQbGVhc2UgcmV0dXJuICdpbnQnIGluc3RlYWQu
+Cj4KPiBUaGlzIGlzIGZyb20gZHJtX2JyaWRnZV9mdW5jcyBzbyB0aGUgcHJvdG90eXBlIGlzIGZp
+eGVkLiBJJ20gbm90IHN1cmUKPiBob3cgd2hhdCdzIHRoZSBiZXN0IHdheSB0byBidWJibGUgdXAg
+ZmF0YWwgZXJyb3JzIHRocm91Z2ggdGhlIGRybSBsYXllcj8KCk9rLCBzbyBsZXQncyBub3QgY2hh
+bmdlIHRoaXMgb25lLgoKPiBJIHdlbnQgZm9yIERSTV9ERVZfRVJST1IoKSBzaW5jZSB0aGF0IHdo
+YXQgaSB1c2VkIGluIHRoZSByZXN0IG9mIHRoZQo+IGRyaXZlciBhbmQgdGhlc2Ugb25lcyB3ZXJl
+IG9taXNzaW9uLiBIb3BlIHRoYXQncyBvLmsuCgpObyBzdHJvbmcgcHJlZmVyZW5jZXMgaGVyZS4g
+SSBqdXN0IHRoaW5rIGRldl9lcnIoKSBlYXNpZXIgdG8gdHlwZSBhbmQgc2hvcnRlci4KClRoYW5r
+cyBmb3IgdGhpcyB3b3JrIQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
