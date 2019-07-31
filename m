@@ -1,42 +1,51 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH v3 3/3] media: dt-bindings: imx7-csi: add i.MX6UL/L support
-Date: Wed, 31 Jul 2019 18:33:58 +0200
-Message-ID: <20190731163358.32622-1-sebastien.szymanski@armadeus.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 31 Jul 2019 18:40:03 +0200
+Message-ID: <13373313.BzCyiC4ED7@jernej-laptop>
+References: <cover.1563983037.git.agx@sigxcpu.org> <20190731143532.GA1935@bogon.m.sigxcpu.org> <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rui Miguel Silva <rmfrfs@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Lee Jones <lee.jones@linaro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <li>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgImZzbCxpbXg2dWwtY3NpIiBlbnRyeS4KClJldmlld2VkLWJ5OiBSb2IgSGVycmlu
-ZyA8cm9iaEBrZXJuZWwub3JnPgpTaWduZWQtb2ZmLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8
-c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+Ci0tLQoKQ2hhbmdlcyBmb3IgdjM6CiAt
-IG5vbmUKCkNoYW5nZXMgZm9yIHYyOgogLSBOZXcgcGF0Y2ggdG8gZG9jdW1lbnQgbmV3ICJmc2ws
-aW14NnVsLWNzaSIgZW50cnkuCgogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL2lteDctY3NpLnR4dCB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
-MSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tZWRpYS9pbXg3LWNzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvaW14Ny1jc2kudHh0CmluZGV4IDQ0M2FlZjA3MzU2ZS4uZDgwY2VlZmEwYzAwIDEw
-MDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaW14Ny1j
-c2kudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pbXg3
-LWNzaS50eHQKQEAgLTksNyArOSw3IEBAIHRvIGNvbm5lY3QgZGlyZWN0bHkgdG8gZXh0ZXJuYWwg
-Q01PUyBpbWFnZSBzZW5zb3JzLgogCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogCi0tIGNvbXBhdGli
-bGUgICAgOiAiZnNsLGlteDctY3NpIjsKKy0gY29tcGF0aWJsZSAgICA6ICJmc2wsaW14Ny1jc2ki
-IG9yICJmc2wsaW14NnVsLWNzaSI7CiAtIHJlZyAgICAgICAgICAgOiBiYXNlIGFkZHJlc3MgYW5k
-IGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IGZvciB0aGUgZGV2aWNlOwogLSBpbnRlcnJ1cHRz
-ICAgIDogc2hvdWxkIGNvbnRhaW4gQ1NJIGludGVycnVwdDsKIC0gY2xvY2tzICAgICAgICA6IGxp
-c3Qgb2YgY2xvY2sgc3BlY2lmaWVycywgc2VlCi0tIAoyLjIxLjAKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi!
+
+Dne sreda, 31. julij 2019 ob 16:43:47 CEST je Fabio Estevam napisal(a):
+> Hi Guido,
+> 
+> On Wed, Jul 31, 2019 at 11:35 AM Guido Günther <agx@sigxcpu.org> wrote:
+> > The idea is to have
+> > 
+> >     "%sabling platform clocks", enable ? "en" : "dis");
+> > 
+> > depending whether clocks are enabled/disabled.
+> 
+> Yes, I understood the idea, but this would print:
+> 
+> ensabling or dissabling :-)
+
+No, it wouldn't. That extra "s" is part of "%s", e.g. part of format specifier.
+
+Best regards,
+Jernej
+
+> 
+> > > Same here. Please return 'int' instead.
+> > 
+> > This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
+> > how what's the best way to bubble up fatal errors through the drm layer?
+> 
+> Ok, so let's not change this one.
+> 
+> > I went for DRM_DEV_ERROR() since that what i used in the rest of the
+> > driver and these ones were omission. Hope that's o.k.
+> 
+> No strong preferences here. I just think dev_err() easier to type and
+> shorter.
+> 
+> Thanks for this work!
