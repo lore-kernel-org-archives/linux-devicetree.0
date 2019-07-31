@@ -1,38 +1,27 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 5/8] arm64: use ZONE_DMA on DMA addressing limited devices
-Date: Wed, 31 Jul 2019 18:07:42 +0100
-Message-ID: <20190731170742.GC17773@arrakis.emea.arm.com>
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
- <20190731154752.16557-6-nsaenzjulienne@suse.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 31 Jul 2019 14:40:57 -0300
+Message-ID: <CAOMZO5Ak7QFzEM8Qt5XAZBa1CB602fygK+FBDK2iTvxWA4y+oA@mail.gmail.com>
+References: <cover.1563983037.git.agx@sigxcpu.org> <20190731143532.GA1935@bogon.m.sigxcpu.org>
+ <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com> <13373313.BzCyiC4ED7@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190731154752.16557-6-nsaenzjulienne@suse.de>
+In-Reply-To: <13373313.BzCyiC4ED7@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, Will Deacon <will@kernel.org>, phill@raspberryi.org, f.fainelli@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
+To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Lee Jones <lee.jones@linaro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linu>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 05:47:48PM +0200, Nicolas Saenz Julienne wrote:
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 1c4ffabbe1cb..f5279ef85756 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -50,6 +50,13 @@
->  s64 memstart_addr __ro_after_init = -1;
->  EXPORT_SYMBOL(memstart_addr);
->  
-> +/*
-> + * We might create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA is needed if there
-> + * are periferals unable to address the first naturally aligned 4GB of ram.
-> + * ZONE_DMA32 will be expanded to cover the rest of that memory. If such
-> + * limitations doesn't exist only ZONE_DMA32 is created.
-> + */
+On Wed, Jul 31, 2019 at 1:40 PM Jernej =C5=A0krabec <jernej.skrabec@siol.ne=
+t> wrote:
 
-Shouldn't we instead only create ZONE_DMA to cover the whole 32-bit
-range and leave ZONE_DMA32 empty? Can__GFP_DMA allocations fall back
-onto ZONE_DMA32?
+> > Yes, I understood the idea, but this would print:
+> >
+> > ensabling or dissabling :-)
+>
+> No, it wouldn't. That extra "s" is part of "%s", e.g. part of format spec=
+ifier.
 
--- 
-Catalin
+Ops, you are right. Sorry about that!
