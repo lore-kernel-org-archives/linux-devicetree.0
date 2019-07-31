@@ -1,8 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 14/19] dt-bindings: pci: add PHY properties to Armada 7K/8K
- controller bindings
-Date: Wed, 31 Jul 2019 14:21:21 +0200
-Message-ID: <20190731122126.3049-15-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 12/19] phy: mvebu-cp110-comphy: Update comment about
+ powering off all lanes at boot
+Date: Wed, 31 Jul 2019 14:21:19 +0200
+Message-ID: <20190731122126.3049-13-miquel.raynal@bootlin.com>
 References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,31 +22,35 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Armada CP110 PCIe controller can have from one to four PHYs for
-configuring SERDES lanes (PCIe x1, PCIe x2 or PCIe x4). Describe the
-phys and phy-names properties in the bindings.
+Now that all COMPHY modes are supported by the driver, update the
+comment stating that mvebu_comphy_power_off() should be called for
+each lane. This is still wrong because for compatibility reasons, it
+might break users running an old firmware (the driver only uses SMC
+calls for SATA, USB and PCIe configuration, there is no code in Linux
+to fallback on in these cases.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/pci/pci-armada8k.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-armada8k.txt b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-index 9e3fc15e1af8..7cf12162aa4e 100644
---- a/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-+++ b/Documentation/devicetree/bindings/pci/pci-armada8k.txt
-@@ -17,6 +17,12 @@ Required properties:
-    name must be "core" for the first clock and "reg" for the second
-    one
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index 076b2bfa8e7b..24fdec43a8e0 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -944,9 +944,11 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+ 		phy_set_drvdata(phy, lane);
  
-+Optional properties:
-+- phys: phandle(s) to PHY node(s) following the generic PHY bindings.
-+	Either 1, 2 or 4 PHYs might be needed depending on the number of
-+	PCIe lanes.
-+- phy-names: names of the PHYs.
-+
- Example:
+ 		/*
+-		 * Once all modes are supported in this driver we should call
++		 * All modes are supported in this driver so we could call
+ 		 * mvebu_comphy_power_off(phy) here to avoid relying on the
+-		 * bootloader/firmware configuration.
++		 * bootloader/firmware configuration, but for compatibility
++		 * reasons we cannot de-configure the COMPHY without being sure
++		 * that the firmware is up-to-date and fully-featured.
+ 		 */
+ 	}
  
- 	pcie@f2600000 {
 -- 
 2.20.1
