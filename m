@@ -1,86 +1,66 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
- restore
-Date: Wed, 31 Jul 2019 14:11:02 +0300
-Message-ID: <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH 11/22] ARM: dts: imx6: Add sleep state to can interfaces
+Date: Wed, 31 Jul 2019 11:13:04 +0000
+Message-ID: <ed7645a47983a2bd28a9611fe779b6ac0ade7fe6.camel@toradex.com>
+References: <20190730144649.19022-1-dev@pschenker.ch>
+         <20190730144649.19022-12-dev@pschenker.ch>
+         <86f1e50b-97d6-5bdb-7cc2-e7dc162d147a@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <86f1e50b-97d6-5bdb-7cc2-e7dc162d147a@ysoft.com>
 Content-Language: en-US
+Content-ID: <56A7282D5FEE4A4CA33B26753D1BE5EE@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-31.07.2019 3:20, Sowjanya Komatineni пишет:
-> This patch adds support for saving OSC clock frequency and the
-> drive-strength during OSC clock init and creates an API to restore
-> OSC control register value from the saved context.
-> 
-> This API is invoked by Tegra210 clock driver during system resume
-> to restore the  OSC clock settings.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
->  drivers/clk/tegra/clk.h             |  1 +
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
-> index 8d91b2b191cf..7c6c8abfcde6 100644
-> --- a/drivers/clk/tegra/clk-tegra-fixed.c
-> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
-> @@ -17,6 +17,10 @@
->  #define OSC_CTRL			0x50
->  #define OSC_CTRL_OSC_FREQ_SHIFT		28
->  #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
-> +#define OSC_CTRL_MASK			(0x3f2 |	\
-> +					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
-> +
-> +static u32 osc_ctrl_ctx;
->  
->  int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
->  			      unsigned long *input_freqs, unsigned int num,
-> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
->  	unsigned osc_idx;
->  
->  	val = readl_relaxed(clk_base + OSC_CTRL);
-> +	osc_ctrl_ctx = val & OSC_CTRL_MASK;
->  	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
->  
->  	if (osc_idx < num)
-> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
->  		*dt_clk = clk;
->  	}
->  }
-> +
-> +void tegra_clk_osc_resume(void __iomem *clk_base)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
-> +	val |= osc_ctrl_ctx;
-> +	writel_relaxed(val, clk_base + OSC_CTRL);
-
-Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored?
-
-> +	fence_udelay(2, clk_base);
-> +}
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index f1ef6ae8c979..abba6d8a04cd 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -842,6 +842,7 @@ u16 tegra_pll_get_fixed_mdiv(struct clk_hw *hw, unsigned long input_rate);
->  int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
->  int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
->  		 u8 frac_width, u8 flags);
-> +void tegra_clk_osc_resume(void __iomem *clk_base);
->  
->  
->  /* Combined read fence with delay */
-> 
+T24gV2VkLCAyMDE5LTA3LTMxIGF0IDA5OjE0ICswMjAwLCBNaWNoYWwgVm9rw6HEjSB3cm90ZToN
+Cj4gT24gMzAuIDA3LiAxOSAxNjo0NiwgUGhpbGlwcGUgU2NoZW5rZXIgd3JvdGU6DQo+ID4gRnJv
+bTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KPiA+
+IA0KPiA+IFRoaXMgcGF0Y2ggcHJlcGFyZXMgdGhlIGRldmljZXRyZWUgZm9yIHRoZSBuZXcgSXhv
+cmEgVjEuMiB3aGVyZSB3ZSBhcmUNCj4gPiBhYmxlIHRvIHR1cm4gb2ZmIHRoZSBzdXBwbHkgb2Yg
+dGhlIGNhbiB0cmFuc2NlaXZlci4gVGhpcyBpbXBsaWVzIHRvIHVzZQ0KPiA+IGEgc2xlZXAgc3Rh
+dGUgb24gdHJhbnNtaXNzaW9uIHBpbnMgaW4gb3JkZXIgdG8gcHJldmVudCBiYWNrZmVlZGluZy4N
+Cj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2No
+ZW5rZXJAdG9yYWRleC5jb20+DQo+ID4gLS0tDQo+IA0KPiBXaGF0IGFib3V0ICJBUk06IGR0czog
+aW14NnFkbC1hcGFsaXM6ICIgZm9yIHRoZSBzdWJqZWN0Pw0KPiBUbyBiZSBjbGVhciB0aGF0IHRo
+aXMgaXMgbm90IHJlbGF0ZWQgdG8gdGhlIGlteDYgU29DIGl0c2VsZi4NCg0KVGhhbmtzIGZvciB5
+b3VyIGNvbW1lbnRzIE1pY2hhbCEgV2lsbCB0YWt0ZSB0aG9zZSBpbnRvIGFjY291bnQgZm9yIHYy
+Lg0KDQo+IA0KPiA+ICAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaSB8IDI3
+ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDIxIGlu
+c2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZxZGwtYXBhbGlzLmR0c2kNCj4gPiBpbmRleCA3YzRhZDU0MWMzZjUuLjU5ZWQyZTRhMWZk
+MSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNp
+DQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQ0KPiA+IEBA
+IC0xNDgsMTQgKzE0OCwxNiBAQA0KPiA+ICAgfTsNCj4gPiAgIA0KPiA+ICAgJmNhbjEgew0KPiA+
+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAtCXBpbmN0cmwtMCA9IDwmcGluY3Ry
+bF9mbGV4Y2FuMT47DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic2xlZXAiOw0K
+PiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4xX2RlZmF1bHQ+Ow0KPiA+ICsJcGlu
+Y3RybC0xID0gPCZwaW5jdHJsX2ZsZXhjYW4xX3NsZWVwPjsNCj4gPiAgIAlzdGF0dXMgPSAiZGlz
+YWJsZWQiOw0KPiA+ICAgfTsNCj4gPiAgIA0KPiA+ICAgJmNhbjIgew0KPiA+IC0JcGluY3RybC1u
+YW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAtCXBpbmN0cmwtMCA9IDwmcGluY3RybF9mbGV4Y2FuMj47
+DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic2xlZXAiOw0KPiA+ICsJcGluY3Ry
+bC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4yX2RlZmF1bHQ+Ow0KPiA+ICsJcGluY3RybC0xID0gPCZw
+aW5jdHJsX2ZsZXhjYW4yX3NsZWVwPjsNCj4gPiAgIAlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+
+ICAgfTsNCj4gPiAgIA0KPiA+IEBAIC01OTksMTkgKzYwMSwzMiBAQA0KPiA+ICAgCQk+Ow0KPiA+
+ICAgCX07DQo+ID4gICANCj4gPiAtCXBpbmN0cmxfZmxleGNhbjE6IGZsZXhjYW4xZ3JwIHsNCj4g
+PiArCXBpbmN0cmxfZmxleGNhbjFfZGVmYXVsdDogZmxleGNhbjFkZWZncnAgew0KPiA+ICAgCQlm
+c2wscGlucyA9IDwNCj4gPiAgIAkJCU1YNlFETF9QQURfR1BJT183X19GTEVYQ0FOMV9UWCAweDFi
+MGIwDQo+ID4gICAJCQlNWDZRRExfUEFEX0dQSU9fOF9fRkxFWENBTjFfUlggMHgxYjBiMA0KPiA+
+ICAgCQk+Ow0KPiA+ICAgCX07DQo+ID4gICANCj4gPiAtCXBpbmN0cmxfZmxleGNhbjI6IGZsZXhj
+YW4yZ3JwIHsNCj4gPiArCXBpbmN0cmxfZmxleGNhbjFfc2xlZXA6IGZsZXhjYW4xc2xwZ3JwIHsN
+Cj4gPiArCQlmc2wscGlucyA9IDwNCj4gPiArCQkJTVg2UURMX1BBRF9HUElPXzdfX0dQSU8xX0lP
+MDcgMHgwDQo+ID4gKwkJCU1YNlFETF9QQURfR1BJT184X19HUElPMV9JTzA4IDB4MA0KPiA+ICsJ
+CT47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiArCXBpbmN0cmxfZmxleGNhbjJfZGVmYXVsdDogZmxl
+eGNhbjJkZWZncnAgew0KPiA+ICAgCQlmc2wscGlucyA9IDwNCj4gPiAgIAkJCU1YNlFETF9QQURf
+S0VZX0NPTDRfX0ZMRVhDQU4yX1RYIDB4MWIwYjANCj4gPiAgIAkJCU1YNlFETF9QQURfS0VZX1JP
+VzRfX0ZMRVhDQU4yX1JYIDB4MWIwYjANCj4gPiAgIAkJPjsNCj4gPiAgIAl9Ow0KPiA+ICsJcGlu
+Y3RybF9mbGV4Y2FuMl9zbGVlcDogZmxleGNhbjJzbHBncnAgew0KPiA+ICsJCWZzbCxwaW5zID0g
+PA0KPiA+ICsJCQlNWDZRRExfUEFEX0tFWV9DT0w0X19HUElPNF9JTzE0IDB4MA0KPiA+ICsJCQlN
+WDZRRExfUEFEX0tFWV9ST1c0X19HUElPNF9JTzE1IDB4MA0KPiA+ICsJCT47DQo+ID4gKwl9Ow0K
+PiA+ICAgDQo+ID4gICAJcGluY3RybF9ncGlvX2JsX29uOiBncGlvYmxvbiB7DQo+ID4gICAJCWZz
+bCxwaW5zID0gPA0KPiA+IA0K
