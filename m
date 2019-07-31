@@ -1,51 +1,127 @@
 From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 4/8] arm64: re-introduce max_zone_dma_phys()
-Date: Wed, 31 Jul 2019 17:47:47 +0200
-Message-ID: <20190731154752.16557-5-nsaenzjulienne@suse.de>
+Subject: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA addressable memory size
+Date: Wed, 31 Jul 2019 17:47:46 +0200
+Message-ID: <20190731154752.16557-4-nsaenzjulienne@suse.de>
 References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190731154752.16557-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, nsaenzjulienne@suse.de, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, linux-kernel@vger.kernel.org, eric@anholt.net, mbrugger@suse.com, nsaenzjulienne@suse.de, akpm@linux-foundation.org, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some devices might have multiple interconnects with different DMA
-addressing limitations. This function provides the higher physical
-address accessible by all peripherals on the SoC. If such limitation
-doesn't exist it'll return 0.
+Some SoCs might have multiple interconnects each with their own DMA
+addressing limitations. This function parses the 'dma-ranges' on each of
+them and tries to guess the maximum SoC wide DMA addressable memory
+size.
+
+This is specially useful for arch code in order to properly setup CMA
+and memory zones.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
- arch/arm64/mm/init.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/of/fdt.c       | 72 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  2 ++
+ 2 files changed, 74 insertions(+)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 8956c22634dd..1c4ffabbe1cb 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -174,6 +174,19 @@ static phys_addr_t __init max_zone_dma32_phys(void)
- 	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 9cdf14b9aaab..f2444c61a136 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -953,6 +953,78 @@ int __init early_init_dt_scan_chosen_stdout(void)
  }
+ #endif
  
-+static phys_addr_t __init max_zone_dma_phys(void)
-+
++/**
++ * early_init_dt_dma_zone_size - Look at all 'dma-ranges' and provide the
++ * maximum common dmable memory size.
++ *
++ * Some devices might have multiple interconnects each with their own DMA
++ * addressing limitations. For example the Raspberry Pi 4 has the following:
++ *
++ * soc {
++ *	dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
++ *	[...]
++ * }
++ *
++ * v3dbus {
++ *	dma-ranges = <0x00000000  0x0 0x00000000  0x3c000000>;
++ *	[...]
++ * }
++ *
++ * scb {
++ *	dma-ranges = <0x0 0x00000000  0x0 0x00000000  0xfc000000>;
++ *	[...]
++ * }
++ *
++ * Here the area addressable by all devices is [0x00000000-0x3bffffff]. Hence
++ * the function will write in 'data' a size of 0x3c000000.
++ *
++ * Note that the implementation assumes all interconnects have the same physical
++ * memory view and that the mapping always start at the beginning of RAM.
++ */
++int __init early_init_dt_dma_zone_size(unsigned long node, const char *uname,
++				       int depth, void *data)
 +{
-+	u64 memory_size = memblock_end_of_DRAM() - memblock_start_of_DRAM();
-+	u64 zone_dma_size;
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	u64 phys_addr, dma_addr, size;
++	u64 *dma_zone_size = data;
++	int dma_addr_cells;
++	const __be32 *reg;
++	const void *prop;
++	int len;
 +
-+	of_scan_flat_dt(early_init_dt_dma_zone_size, &zone_dma_size);
-+	if (zone_dma_size && zone_dma_size < min(memory_size, SZ_4G))
-+		return memblock_start_of_DRAM() + zone_dma_size;
++	if (depth == 0)
++		*dma_zone_size = 0;
++
++	/*
++	 * We avoid pci host controllers as they have their own way of using
++	 * 'dma-ranges'.
++	 */
++	if (type && !strcmp(type, "pci"))
++		return 0;
++
++	reg = of_get_flat_dt_prop(node, "dma-ranges", &len);
++	if (!reg)
++		return 0;
++
++	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
++	if (prop)
++		dma_addr_cells = be32_to_cpup(prop);
++	else
++		dma_addr_cells = 1; /* arm64's default addr_cell size */
++
++	if (len < (dma_addr_cells + dt_root_addr_cells + dt_root_size_cells))
++		return 0;
++
++	dma_addr = dt_mem_next_cell(dma_addr_cells, &reg);
++	phys_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
++	size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++	if (!*dma_zone_size || *dma_zone_size > size)
++		*dma_zone_size = size;
 +
 +	return 0;
 +}
 +
- #ifdef CONFIG_NUMA
+ /**
+  * early_init_dt_scan_root - fetch the top level address and size cells
+  */
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index acf820e88952..2ad36b7bd4fa 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -72,6 +72,8 @@ extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
+ 					     bool no_map);
+ extern u64 dt_mem_next_cell(int s, const __be32 **cellp);
  
- static void __init zone_sizes_init(unsigned long min, unsigned long max)
++extern int early_init_dt_dma_zone_size(unsigned long node, const char *uname,
++				       int depth, void *data);
+ /* Early flat tree scan hooks */
+ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ 				   int depth, void *data);
 -- 
 2.22.0
