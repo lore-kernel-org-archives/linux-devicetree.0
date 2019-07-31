@@ -1,7 +1,7 @@
 From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 8/8] mm: comment arm64's usage of 'enum zone_type'
-Date: Wed, 31 Jul 2019 17:47:51 +0200
-Message-ID: <20190731154752.16557-9-nsaenzjulienne@suse.de>
+Subject: [PATCH 7/8] arm64: update arch_zone_dma_bits to fine tune dma-direct min mask
+Date: Wed, 31 Jul 2019 17:47:50 +0200
+Message-ID: <20190731154752.16557-8-nsaenzjulienne@suse.de>
 References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,55 +12,44 @@ To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com,
 Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, nsaenzjulienne@suse.de, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-arm64 uses both ZONE_DMA and ZONE_DMA32 for the same reasons x86_64
-does: peripherals with different DMA addressing limitations. This
-updates both ZONE_DMAs comments to inform about the usage.
+With the introduction of ZONE_DMA in arm64 devices are not forced to
+support 32 bit DMA masks. We have to inform dma-direct of this
+limitation whenever it happens.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
 ---
 
- include/linux/mmzone.h | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/arm64/mm/init.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index d77d717c620c..8fa6bcf72e7c 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -365,23 +365,24 @@ enum zone_type {
- 	 *
- 	 * Some examples
- 	 *
--	 * Architecture		Limit
--	 * ---------------------------
--	 * parisc, ia64, sparc	<4G
--	 * s390, powerpc	<2G
--	 * arm			Various
--	 * alpha		Unlimited or 0-16MB.
-+	 * Architecture			Limit
-+	 * ----------------------------------
-+	 * parisc, ia64, sparc, arm64	<4G
-+	 * s390, powerpc		<2G
-+	 * arm				Various
-+	 * alpha			Unlimited or 0-16MB.
- 	 *
- 	 * i386, x86_64 and multiple other arches
--	 * 			<16M.
-+	 *				<16M.
- 	 */
- 	ZONE_DMA,
- #endif
- #ifdef CONFIG_ZONE_DMA32
- 	/*
--	 * x86_64 needs two ZONE_DMAs because it supports devices that are
--	 * only able to do DMA to the lower 16M but also 32 bit devices that
--	 * can only do DMA areas below 4G.
-+	 * x86_64 and arm64 need two ZONE_DMAs because they support devices
-+	 * that are only able to DMA a fraction of the 32 bit addressable
-+	 * memory area, but also devices that are limited to that whole 32 bit
-+	 * area.
- 	 */
- 	ZONE_DMA32,
- #endif
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f5279ef85756..b809f3259340 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_fdt.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dma-contiguous.h>
++#include <linux/dma-direct.h>
+ #include <linux/efi.h>
+ #include <linux/swiotlb.h>
+ #include <linux/vmalloc.h>
+@@ -439,10 +440,14 @@ void __init arm64_memblock_init(void)
+ 
+ 	early_init_fdt_scan_reserved_mem();
+ 
+-	if (IS_ENABLED(CONFIG_ZONE_DMA))
++	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+ 		arm64_dma_phys_limit = max_zone_dma_phys();
+-	else
++
++		if (arm64_dma_phys_limit)
++			arch_zone_dma_bits = ilog2(arm64_dma_phys_limit) + 1;
++	} else {
+ 		arm64_dma_phys_limit = 0;
++	}
+ 
+ 	/* 4GB maximum for 32-bit only capable devices */
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
 -- 
 2.22.0
