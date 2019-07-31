@@ -1,7 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 08/20] ARM: dts: imx7-colibri: Add touch controllers
-Date: Wed, 31 Jul 2019 12:38:14 +0000
-Message-ID: <20190731123750.25670-9-philippe.schenker@toradex.com>
+Subject: [PATCH v2 13/20] ARM: dts: imx6-colibri: Add missing pinmuxing to
+ Toradex eval board
+Date: Wed, 31 Jul 2019 12:38:23 +0000
+Message-ID: <20190731123750.25670-14-philippe.schenker@toradex.com>
 References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -14,60 +15,38 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add atmel mxt multitouch controller and TouchRevolution multitouch
-controller which are connected over an I2C bus.
+This patch adds some missing pinmuxing that is in the colibri
+standard to the dts.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
 ---
 
 Changes in v2:
-- Deleted touchrevolution downstream stuff
-- Use generic node name
-- Better comment
+- Commit title
 
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 24 +++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
-s/imx7-colibri-eval-v3.dtsi
-index d4dbc4fc1adf..576dec9ff81c 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -145,6 +145,21 @@
- &i2c4 {
- 	status =3D "okay";
-=20
-+	/*
-+	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-+	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-+	 */
-+	touchscreen@4a {
-+		compatible =3D "atmel,maxtouch";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiotouch>;
-+		reg =3D <0x4a>;
-+		interrupt-parent =3D <&gpio1>;
-+		interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;		/* SODIMM 28 */
-+		reset-gpios =3D <&gpio1 10 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
-+		status =3D "disabled";
-+	};
-+
- 	/* M41T0M6 real time clock on carrier board */
- 	rtc: m41t0m6@68 {
- 		compatible =3D "st,m41t0";
-@@ -200,3 +215,12 @@
- 	vmmc-supply =3D <&reg_3v3>;
- 	status =3D "okay";
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/d=
+ts/imx6dl-colibri-eval-v3.dts
+index 763fb5e90bd3..e7a2d8c3b2d4 100644
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -191,6 +191,14 @@
  };
+=20
+ &iomuxc {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <
++		&pinctrl_weim_gpio_1 &pinctrl_weim_gpio_2
++		&pinctrl_weim_gpio_3 &pinctrl_weim_gpio_4
++		&pinctrl_weim_gpio_5 &pinctrl_weim_gpio_6
++		&pinctrl_usbh_oc_1 &pinctrl_usbc_id_1
++	>;
 +
-+&iomuxc {
-+	pinctrl_gpiotouch: touchgpios {
-+		fsl,pins =3D <
-+			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
-+			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
-+		>;
-+	};
-+};
+ 	pinctrl_pcap_1: pcap-1 {
+ 		fsl,pins =3D <
+ 			MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x1b0b0 /* SODIMM 28 */
 --=20
 2.22.0
