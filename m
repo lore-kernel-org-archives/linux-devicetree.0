@@ -1,160 +1,217 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH v2 1/6] dt-bindings: irqchip: Add PRUSS interrupt controller bindings
-Date: Wed, 31 Jul 2019 17:41:44 -0500
-Message-ID: <20190731224149.11153-2-s-anna@ti.com>
-References: <20190731224149.11153-1-s-anna@ti.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
+ support
+Date: Wed, 31 Jul 2019 16:09:53 -0700
+Message-ID: <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+ <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
+ <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731224149.11153-1-s-anna@ti.com>
+In-Reply-To: <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Herring <robh+dt@kernel.org>, David Lechner <david@lechnology.com>, Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>, Rob Herring <robh@kernel.org>
+To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Programmable Real-Time Unit Subsystem (PRUSS) contains an interrupt
-controller (INTC) that can handle various system input events and post
-interrupts back to the device-level initiators. The INTC can support
-upto 64 input events on most SoCs with individual control configuration
-and hardware prioritization. These events are mapped onto 10 output
-interrupt lines through two levels of many-to-one mapping support.
-Different interrupt lines are routed to the individual PRU cores or
-to the host CPU or to other PRUSS instances.
 
-The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
-commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
-a higher number of host interrupts (20 vs 10) and can handle an increased
-number of input events (160 vs 64) from various SoC interrupt sources.
+On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
+> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> This patch implements save and restore context for peripheral fixed
+>>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+>>> peripheral clock ops.
+>>>
+>>> During system suspend, core power goes off and looses the settings
+>>> of the Tegra CAR controller registers.
+>>>
+>>> So during suspend entry clock and reset state of peripherals is saved
+>>> and on resume they are restored to have clocks back to same rate and
+>>> state as before suspend.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/clk/tegra/clk-periph-fixed.c | 33 +++++++++++++++++++++++++++=
++++++
+>>>   drivers/clk/tegra/clk-periph-gate.c  | 34 +++++++++++++++++++++++++++=
+++++++
+>>>   drivers/clk/tegra/clk-periph.c       | 37 +++++++++++++++++++++++++++=
++++++++++
+>>>   drivers/clk/tegra/clk-sdmmc-mux.c    | 28 +++++++++++++++++++++++++++
+>>>   drivers/clk/tegra/clk.h              |  6 ++++++
+>>>   5 files changed, 138 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c b/drivers/clk/tegra/c=
+lk-periph-fixed.c
+>>> index c088e7a280df..21b24530fa00 100644
+>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
+>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
+>>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct clk_hw *h=
+w,
+>>>   	return (unsigned long)rate;
+>>>   }
+>>>  =20
+>>> +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_fixed *fixed =3D to_tegra_clk_periph_fixed(hw=
+);
+>>> +	u32 mask =3D 1 << (fixed->num % 32);
+>>> +
+>>> +	fixed->enb_ctx =3D readl_relaxed(fixed->base + fixed->regs->enb_reg) =
+&
+>>> +			 mask;
+>>> +	fixed->rst_ctx =3D readl_relaxed(fixed->base + fixed->regs->rst_reg) =
+&
+>>> +			 mask;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_fixed *fixed =3D to_tegra_clk_periph_fixed(hw=
+);
+>>> +	u32 mask =3D 1 << (fixed->num % 32);
+>>> +
+>>> +	if (fixed->enb_ctx)
+>>> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
+>>> +	else
+>>> +		writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
+>>> +
+>>> +	udelay(2);
+>>> +
+>>> +	if (!fixed->rst_ctx) {
+>>> +		udelay(5); /* reset propogation delay */
+>>> +		writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
+>>> +	}
+>>> +}
+>>> +
+>>>   static const struct clk_ops tegra_clk_periph_fixed_ops =3D {
+>>>   	.is_enabled =3D tegra_clk_periph_fixed_is_enabled,
+>>>   	.enable =3D tegra_clk_periph_fixed_enable,
+>>>   	.disable =3D tegra_clk_periph_fixed_disable,
+>>>   	.recalc_rate =3D tegra_clk_periph_fixed_recalc_rate,
+>>> +	.save_context =3D tegra_clk_periph_fixed_save_context,
+>>> +	.restore_context =3D tegra_clk_periph_fixed_restore_context,
+>>>   };
+>>>  =20
+>>>   struct clk *tegra_clk_register_periph_fixed(const char *name,
+>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c b/drivers/clk/tegra/cl=
+k-periph-gate.c
+>>> index 4b31beefc9fc..6ba5b08e0787 100644
+>>> --- a/drivers/clk/tegra/clk-periph-gate.c
+>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
+>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
+>>>  =20
+>>>   #define read_rst(gate) \
+>>>   	readl_relaxed(gate->clk_base + (gate->regs->rst_reg))
+>>> +#define write_rst_set(val, gate) \
+>>> +	writel_relaxed(val, gate->clk_base + (gate->regs->rst_set_reg))
+>>>   #define write_rst_clr(val, gate) \
+>>>   	writel_relaxed(val, gate->clk_base + (gate->regs->rst_clr_reg))
+>>>  =20
+>>> @@ -110,10 +112,42 @@ static void clk_periph_disable(struct clk_hw *hw)
+>>>   	spin_unlock_irqrestore(&periph_ref_lock, flags);
+>>>   }
+>>>  =20
+>>> +static int clk_periph_gate_save_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_gate *gate =3D to_clk_periph_gate(hw);
+>>> +
+>>> +	gate->clk_state_ctx =3D read_enb(gate) & periph_clk_to_bit(gate);
+>>> +	gate->rst_state_ctx =3D read_rst(gate) & periph_clk_to_bit(gate);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph_gate *gate =3D to_clk_periph_gate(hw);
+>>> +
+>>> +	if (gate->clk_state_ctx)
+>>> +		write_enb_set(periph_clk_to_bit(gate), gate);
+>>> +	else
+>>> +		write_enb_clr(periph_clk_to_bit(gate), gate);
+>>> +
+>>> +	udelay(5);
+>>> +
+>>> +	if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
+>>> +	    !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
+>>> +		if (gate->rst_state_ctx)
+>>> +			write_rst_set(periph_clk_to_bit(gate), gate);
+>>> +		else
+>>> +			write_rst_clr(periph_clk_to_bit(gate), gate);
+>>> +	}
+>>> +}
+>>> +
+>>>   const struct clk_ops tegra_clk_periph_gate_ops =3D {
+>>>   	.is_enabled =3D clk_periph_is_enabled,
+>>>   	.enable =3D clk_periph_enable,
+>>>   	.disable =3D clk_periph_disable,
+>>> +	.save_context =3D clk_periph_gate_save_context,
+>>> +	.restore_context =3D clk_periph_gate_restore_context,
+>>>   };
+>>>  =20
+>>>   struct clk *tegra_clk_register_periph_gate(const char *name,
+>>> diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-per=
+iph.c
+>>> index 58437da25156..06fb62955768 100644
+>>> --- a/drivers/clk/tegra/clk-periph.c
+>>> +++ b/drivers/clk/tegra/clk-periph.c
+>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw *hw)
+>>>   	gate_ops->disable(gate_hw);
+>>>   }
+>>>  =20
+>>> +static int clk_periph_save_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph *periph =3D to_clk_periph(hw);
+>>> +	const struct clk_ops *gate_ops =3D periph->gate_ops;
+>>> +	struct clk_hw *gate_hw =3D &periph->gate.hw;
+>>> +
+>>> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
+>>> +		gate_ops->save_context(gate_hw);
+>>> +
+>>> +	periph->parent_ctx =3D clk_periph_get_parent(hw);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void clk_periph_restore_context(struct clk_hw *hw)
+>>> +{
+>>> +	struct tegra_clk_periph *periph =3D to_clk_periph(hw);
+>>> +	const struct clk_ops *gate_ops =3D periph->gate_ops;
+>>> +	struct clk_hw *gate_hw =3D &periph->gate.hw;
+>>> +	const struct clk_ops *div_ops =3D periph->div_ops;
+>>> +	struct clk_hw *div_hw =3D &periph->divider.hw;
+>>> +
+>>> +	clk_periph_set_parent(hw, periph->parent_ctx);
+>>> +
+>>> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
+>>> +		div_ops->restore_context(div_hw);
+>> Could you please point to where the divider's save_context() happens?
+>> Because I can't see it.
+> Ah, I now see that there is no need to save the dividers context because
+> clk itself has enough info that is needed for the context's restoring
+> (like I pointed in the review to v6).
+>
+> Looks like you could also implement a new clk_hw_get_parent_index()
+> generic helper to get the index instead of storing it manually.
 
-Add the bindings document for these interrupt controllers on all the
-applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
-and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
-architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
-and J721E SoCs.
+clk_periph_get_parent basically invokes existing clk_mux_ops=20
+get_parent() which is then saved in tegra_clk_periph.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Updated the interrupt-names from "hostX" to "host_intrX" and updated
-   example accordingly
- - Updated the description for interrupts property
- - Used generic interrupt controller in descriptions rather than GIC
- - Added some clarifications about interrupt names to PRUSS INTC output
-   interrupts
- - Picked up Rob's reviewed-by
-v1: https://patchwork.kernel.org/patch/11034567/
+All existing drivers are using directly get_parent() from clk_mux which=20
+actually gets index from the register read.
 
- .../interrupt-controller/ti,pruss-intc.txt    | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
+To have this more generic w.r.t save/restore context point of view,=20
+probably instead of implementing new get_parent_index helper, I think=20
+its better to implement save_context and restore_context to clk_mux_ops=20
+along with creating parent_index field into clk_mux to cache index=20
+during set_parent.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
-new file mode 100644
-index 000000000000..17c7b49a7f2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
-@@ -0,0 +1,98 @@
-+PRU ICSS INTC on TI SoCs
-+========================
-+
-+Each PRUSS has a single interrupt controller instance that is common to both
-+the PRU cores. Most interrupt controllers can route 64 input events which are
-+then mapped to 10 possible output interrupts through two levels of mapping.
-+The input events can be triggered by either the PRUs and/or various other PRUSS
-+internal and external peripherals. The first 2 output interrupts (0 & 1) are
-+fed exclusively to the internal PRU cores, with the remaining 8 (2 through 9)
-+connected to external interrupt controllers including the MPU and/or other
-+PRUSS instances, DSPs or devices.
-+
-+The K3 family of SoCs can handle 160 input events that can be mapped to 20
-+different possible output interrupts. The additional output interrupts (10
-+through 19) are connected to new sub-modules within the ICSSG instances.
-+
-+This interrupt-controller node should be defined as a child node of the
-+corresponding PRUSS node. The node should be named "interrupt-controller".
-+Please see the overall PRUSS bindings document for additional details
-+including a complete example,
-+    Documentation/devicetree/bindings/soc/ti/ti,pruss.txt
-+
-+Required Properties:
-+--------------------
-+- compatible           : should be one of the following,
-+                             "ti,pruss-intc" for OMAP-L13x/AM18x/DA850 SoCs,
-+                                                 AM335x family of SoCs,
-+                                                 AM437x family of SoCs,
-+                                                 AM57xx family of SoCs
-+                                                 66AK2G family of SoCs
-+                             "ti,icssg-intc" for K3 AM65x & J721E family of SoCs
-+- reg                  : base address and size for the PRUSS INTC sub-module
-+- interrupts           : all the interrupts generated towards the main host
-+                         processor in the SoC. The format depends on the
-+                         interrupt specifier for the particular SoC's Arm
-+                         parent interrupt controller. A shared interrupt can
-+                         be skipped if the desired destination and usage is by
-+                         a different processor/device.
-+- interrupt-names      : should use one of the following names for each valid
-+                         host event interrupt connected to Arm interrupt
-+                         controller, the name should match the corresponding
-+                         host event interrupt number,
-+                             "host_intr0", "host_intr1", "host_intr2",
-+                             "host_intr3", "host_intr4", "host_intr5",
-+                             "host_intr6" or "host_intr7"
-+- interrupt-controller : mark this node as an interrupt controller
-+- #interrupt-cells     : should be 1. Client users shall use the PRU System
-+                         event number (the interrupt source that the client
-+                         is interested in) as the value of the interrupts
-+                         property in their node
-+
-+Optional Properties:
-+--------------------
-+The following properties are _required_ only for some SoCs. If none of the below
-+properties are defined, it implies that all the PRUSS INTC output interrupts 2
-+through 9 (host_intr0 through host_intr7) are connected exclusively to the
-+Arm interrupt controller.
-+
-+- ti,irqs-reserved     : an array of 8-bit elements of host interrupts between
-+                         0 and 7 (corresponding to PRUSS INTC output interrupts
-+                         2 through 9) that are not connected to the Arm
-+                         interrupt controller.
-+                           Eg: AM437x and 66AK2G SoCs do not have "host_intr5"
-+                               interrupt connected to MPU
-+- ti,irqs-shared       : an array of 8-bit elements of host interrupts between
-+                         0 and 7 (corresponding to PRUSS INTC output interrupts
-+                         2 through 9) that are also connected to other devices
-+                         or processors in the SoC.
-+                           Eg: AM65x and J721E SoCs have "host_intr5",
-+                               "host_intr6" and "host_intr7" interrupts
-+                               connected to MPU, and other ICSSG instances
-+
-+
-+Example:
-+--------
-+
-+1.	/* AM33xx PRU-ICSS */
-+	pruss: pruss@0 {
-+		compatible = "ti,am3356-pruss";
-+		reg = <0x0 0x80000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		...
-+
-+		pruss_intc: interrupt-controller@20000 {
-+			compatible = "ti,pruss-intc";
-+			reg = <0x20000 0x2000>;
-+			interrupts = <20 21 22 23 24 25 26 27>;
-+			interrupt-names = "host_intr0", "host_intr1",
-+					  "host_intr2", "host_intr3",
-+					  "host_intr4", "host_intr5",
-+					  "host_intr6", "host_intr7";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			ti,irqs-shared = /bits/ 8 <0 6 7>;
-+		};
-+	};
--- 
-2.22.0
+So we just need to invoke mux_ops save_context and restore_context.
