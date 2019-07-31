@@ -1,139 +1,77 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH v7 00/20] SC7 entry and exit support for Tegra210
-Date: Wed, 31 Jul 2019 14:10:43 -0700
-Message-ID: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
+Date: Wed, 31 Jul 2019 18:27:29 -0300
+Message-ID: <20190731182729.01c98cd3@coco.lan>
+References: <cover.1564603513.git.mchehab+samsung@kernel.org>
+ <20190731141734.1fa9ce64@lwn.net>
+ <20190731202007.GI4369@sirena.org.uk>
+ <20190731172613.32d65ad8@coco.lan>
+ <20190731203712.GJ4369@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, skomatineni@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190731203712.GJ4369@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Dave Kleikamp <shaggy@kernel.org>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Evgeniy Polyakov <zbr@ioremap.net>, linux-cifs@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Evgeniy Dushistov <dushistov@mail.ru>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, samba-technical@lists.samba.org, Liam Girdwood <lgirdwood@gmail.com>linux
 List-Id: devicetree@vger.kernel.org
 
-This patch series includes Tegra210 deepsleep (SC7) support with RTC alarm
-wake event.
+Em Wed, 31 Jul 2019 21:37:12 +0100
+Mark Brown <broonie@kernel.org> escreveu:
 
-This series also includes save and restore of PLLs, clocks, OSC contexts
-for deepsleep exit to normal operation.
+> On Wed, Jul 31, 2019 at 05:26:13PM -0300, Mauro Carvalho Chehab wrote:
+> > Mark Brown <broonie@kernel.org> escreveu:  
+> 
+> > > There were outstanding questions about where it was going to get moved
+> > > to but if I read the diff correctly it looks like it didn't actually get
+> > > moved in the end?  
+> 
+> > Yeah, it doesn't have the move. My understanding from our discussions
+> > is that we didn't reach a conclusion.  
+> 
+> Yes, that was my understanding too which was why I was surprised to see
+> this going in.  This is OK then, I'd have acked it.
+> 
+> > In any case, I can send a separate patch with the move part once
+> > we reach an agreement about what's the best way to proceed (or you
+> > can do it directly, if you prefer so).  
+> 
+> I'm not likely to do anything without someone sending patches, I'm not
+> clear on the utility of the move with the current division of the
+> manuals.
 
-This patch series doesn't support 100% suspend/resume to allow fully
-functional state upon resume and we are working on some more drivers suspend
-and resume implementations.
+Same here: I do see value on having docs focused on their audience.
 
-[V7]: Changes between V6 & V7 are
-	- V6 feedback fixes
-	- Removed patch-0001 from V6 which keeps COP IRQ enabled. Looking
-	  more into ATF FW, it loads SC7 entry FW into IRAM and sets the
-	  COP reset vector to SC7 FW load address and resets COP. So, COP
-	  IRQ can be cleared during suspend.
+Yet, I'm not so sure how worth is to break some subsystem documentation 
+into books, as, on some cases, this would mean huge efforts.
 
-	Note:
-	  Below patch is also needed for SC7 support as GPIO restore need
-	  to happen prior to pinctrl.
-	  https://patchwork.kernel.org/patch/11012077/
+I'd prefer to see the big picture first, finishing the conversion and
+then looking at the resulting docs.
 
-[V6]: Changes between V5 & V6 are
-	- V5 feedback fixes
-	- DFLL suspend and resume moved to DFLL clock driver
-	- Add suspend and resume support for CPUFreq driver to explicitly
-	  switch source to safe source of PLLP and disable DFLL clock.
-	- Fix to super clock driver to enable PLLP branch to CPU before
-	  source switch to PLLP.
-	- Added save and restore support for super clock driver.
+Meanwhile, if someone needs something that it is at the wrong book, he
+can just use some search tool to seek what he needs, no matter on
+what book the relevant information is stored.
 
-[V5]: Changes between V4 & V5 are
-	- V4 feedback fixes
+> I don't know if it makes sense to have an embedded developer's
+> manual as well?
 
-[V4]: Changes between V3 & V4 are
-	- V3 feedback fixes
-	- Removed park bits clear for EMMC pads in pinctrl-tegra driver
-	  function tegra_pinctrl_clear_parked_bits as based on V3 feedback
-	  parked_bit is updated to parked_bitmask to use with DRV_PINGROUP
-	  as well and thierry posted patch series for this.
-	- Implemented all peripheral clocks save and restore through their
-	  corresponding clk_ops save_context and restore_context and removed
-	  all direct registers store and restore in clk-tegra210 driver.
-	- Created separate patch for fence_delay update during PLLU init based
-	  on V3 feedback.
-	- Added more comments in tegra210_clk_resume regarding dfll restore
-	  sequence and its dependency on peripheral clocks restore.
+Yeah, that's a good question. 
 
-[V3]: Changes between V2 & V3 are
-	- V2 feedback fixes
-	- GPIO restore should happen prior to Pinctrl restore to prevent
-	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
-	  gpio resume prior to pinctrl resume.
-	- Implemented save_context and restore_context callbacks for clock
-	  plls, pll outs and dividers in corresponding drivers.
-	  Note: Peripheral clocks and clock enable and reset need to be in
-	  Tegra210 clock suspend/resume as they need to be in proper sequence
-	  w.r.t DFLL resume for restoring CPU clock.
-	- Removed gpio-tegra changes for hierarchical support to have PMC as
-	  parent to GPIOs for GPIO wake event support. Thierry is working on
-	  gpiolib for some cleanup before adding hierarchical support. So
-	  holding on to GPIO wake support for now.
+Jon is planning todo a documentation track at LPC. One of the things
+that should be discussed, IMO, is how we'll organize the books.
 
-[V2] : V1 feedback fixes
-	Patch 0002: This version still using syscore. Thierry suggest not to
-	use syscore and waiting on suggestion from Linux Walleij for any better
-	way of storing current state of pins before suspend entry and restoring
-	them on resume at very early stage. So left this the same way as V1 and
-	will address once I get more feedback on this.
-	Also need to findout and implement proper way of forcing resume order
-	between pinctrl and gpio driver.
+I suspect that, once we finish the conversion of the remaining ~300
+files to ReST, the next logical step is to check what are the gaps
+and have a list of pending tasks.
 
-[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
-	using hierarchical IRQ with PMC as parent to GPIO.
-
-
-
-Sowjanya Komatineni (20):
-  pinctrl: tegra: Add suspend and resume support
-  pinctrl: tegra210: Add Tegra210 pinctrl pm ops
-  clk: tegra: divider: Save and restore divider rate
-  clk: tegra: pllout: Save and restore pllout context
-  clk: tegra: pll: Save and restore pll context
-  clk: tegra: Support for OSC context save and restore
-  clk: tegra: clk-periph: Add save and restore support
-  clk: tegra: clk-super: Fix to enable PLLP branches to CPU
-  clk: tegra: clk-super: Add save and restore support
-  clk: tegra: clk-dfll: Add suspend and resume support
-  cpufreq: tegra124: Add suspend and resume support
-  clk: tegra210: Use fence_udelay during PLLU init
-  clk: tegra210: Add suspend and resume support
-  soc/tegra: pmc: Allow to support more tegras wake
-  soc/tegra: pmc: Add pmc wake support for tegra210
-  arm64: tegra: Enable wake from deep sleep on RTC alarm
-  soc/tegra: pmc: Configure core power request polarity
-  soc/tegra: pmc: Configure deep sleep control settings
-  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
-  arm64: dts: tegra210-p3450: Jetson Nano SC7 timings
-
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |   7 ++
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |   7 ++
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   5 +-
- drivers/clk/tegra/clk-dfll.c                       |  56 +++++++++
- drivers/clk/tegra/clk-dfll.h                       |   2 +
- drivers/clk/tegra/clk-divider.c                    |  11 ++
- drivers/clk/tegra/clk-periph-fixed.c               |  33 ++++++
- drivers/clk/tegra/clk-periph-gate.c                |  34 ++++++
- drivers/clk/tegra/clk-periph.c                     |  37 ++++++
- drivers/clk/tegra/clk-pll-out.c                    |  26 +++++
- drivers/clk/tegra/clk-pll.c                        | 112 +++++++++++++-----
- drivers/clk/tegra/clk-sdmmc-mux.c                  |  28 +++++
- drivers/clk/tegra/clk-super.c                      |  53 +++++++++
- drivers/clk/tegra/clk-tegra-fixed.c                |  15 +++
- drivers/clk/tegra/clk-tegra-super-gen4.c           |   2 +-
- drivers/clk/tegra/clk-tegra124-dfll-fcpu.c         |   1 +
- drivers/clk/tegra/clk-tegra210.c                   |  86 ++++++++++++--
- drivers/clk/tegra/clk.c                            |  14 +++
- drivers/clk/tegra/clk.h                            |  26 +++++
- drivers/cpufreq/tegra124-cpufreq.c                 |  60 ++++++++++
- drivers/pinctrl/tegra/pinctrl-tegra.c              |  59 ++++++++++
- drivers/pinctrl/tegra/pinctrl-tegra.h              |   3 +
- drivers/pinctrl/tegra/pinctrl-tegra210.c           |   1 +
- drivers/soc/tegra/pmc.c                            | 129 ++++++++++++++++++++-
- 24 files changed, 759 insertions(+), 48 deletions(-)
-
--- 
-2.7.4
+Thanks,
+Mauro
