@@ -1,8 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 04/19] phy: mvebu-cp110-comphy: List already supported
- Ethernet modes
-Date: Wed, 31 Jul 2019 14:21:11 +0200
-Message-ID: <20190731122126.3049-5-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 02/19] phy: mvebu-cp110-comphy: Explicitly initialize the
+ lane submode
+Date: Wed, 31 Jul 2019 14:21:09 +0200
+Message-ID: <20190731122126.3049-3-miquel.raynal@bootlin.com>
 References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,27 +22,24 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the driver supports setting lanes to 1000BASEX, 2500BASEX,
-10GKR. Complete the COMPHY modes list by adding two (already
-supported) cases for lane 4.
+Explicitly set the lane submode (enum) to a known invalid value.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index a07449ec98c3..75808a900032 100644
+index 83d173d298ed..6922dfe6a385 100644
 --- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
 +++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -197,6 +197,8 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
- 	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
- 	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_XFI),
- 	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
-+	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
-+	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_XFI),
- 	/* lane 5 */
- 	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
- 	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+@@ -713,6 +713,7 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
+ 
+ 		lane->priv = priv;
+ 		lane->mode = PHY_MODE_INVALID;
++		lane->submode = PHY_INTERFACE_MODE_NA;
+ 		lane->id = val;
+ 		lane->port = -1;
+ 		phy_set_drvdata(phy, lane);
 -- 
 2.20.1
