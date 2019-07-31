@@ -1,66 +1,86 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH 3/3] arm64: dts: ls1088a: Revise gpio registers to little-endian
-Date: Wed, 31 Jul 2019 18:19:30 -0500
-Message-ID: <CADRPPNQhRjEx=0Rr-XkHXtLTaWGM_b5zsjrL7vhhzzmQc35j9A@mail.gmail.com>
-References: <20190529083254.39581-1-chuanhua.han@nxp.com> <20190529083254.39581-3-chuanhua.han@nxp.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+Date: Wed, 31 Jul 2019 23:26:41 +0000
+Message-ID: <VE1PR04MB66874A887C5BE6209A4AE90F8FDF0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
+ <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
+ <20190709200837.GA7806@bogus>
+ <VI1PR04MB4015B154965BA4BEF402890B95DD0@VI1PR04MB4015.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529083254.39581-3-chuanhua.han@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB4015B154965BA4BEF402890B95DD0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ashish Kumar <ashish.kumar@nxp.com>, Rob Herring <robh@kernel.org>, Han Xu <han.xu@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 3:32 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
->
-> Since fsl-ls1088a Soc GPIO registers are used as little endian,
-> the patch adds the little-endian attribute to each gpio node.
->
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 661137ffa319..3e6d20d065bd 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -272,6 +272,7 @@
->                         compatible = "fsl,qoriq-gpio";
->                         reg = <0x0 0x2300000 0x0 0x10000>;
->                         interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
-> +                       little-endian;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> @@ -282,6 +283,7 @@
->                         compatible = "fsl,qoriq-gpio";
->                         reg = <0x0 0x2310000 0x0 0x10000>;
->                         interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
-> +                       little-endian;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> @@ -292,6 +294,7 @@
->                         compatible = "fsl,qoriq-gpio";
->                         reg = <0x0 0x2320000 0x0 0x10000>;
->                         interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
-> +                       little-endian;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> @@ -302,6 +305,7 @@
->                         compatible = "fsl,qoriq-gpio";
->                         reg = <0x0 0x2330000 0x0 0x10000>;
->                         interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
-> +                       little-endian;
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> --
-> 2.17.1
->
+> -----Original Message-----
+> From: Ashish Kumar
+> Sent: Monday, July 29, 2019 4:11 AM
+> To: Rob Herring <robh@kernel.org>; Leo Li <leoyang.li@nxp.com>
+> Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org; broonie@kernel.org;
+> linux-arm-kernel@lists.infradead.org; linux-mtd@lists.infradead.org;
+> Kuldeep Singh <kuldeep.singh@nxp.com>
+> Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add ls2080a
+> compatibility string to bindings
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Wednesday, July 10, 2019 1:39 AM
+> > To: Ashish Kumar <ashish.kumar@nxp.com>
+> > Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org;
+> > broonie@kernel.org; linux-arm-kernel@lists.infradead.org;
+> > linux-mtd@lists.infradead.org; Ashish Kumar <ashish.kumar@nxp.com>;
+> > Kuldeep Singh <kuldeep.singh@nxp.com>; Ashish Kumar
+> > <ashish.kumar@nxp.com>
+> > Subject: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add
+> > ls2080a compatibility string to bindings
+> >
+> > Caution: EXT Email
+> >
+> > On Wed, 19 Jun 2019 16:41:53 +0530, Ashish Kumar wrote:
+> > > There are 2 version of QSPI-IP, according to which controller
+> > > registers sets can be big endian or little endian.There are some
+> > > other minor changes like RX fifo depth etc.
+> > >
+> > > The big endian version uses driver compatible "fsl,ls1021a-qspi" and
+> > > little endian version uses driver compatible "fsl,ls2080a-qspi"
+> > >
+> > > Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> > > Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> > > ---
+> > > v3:
+> > > Rebase to top
+> > > v2:
+> > > Convert to patch series and rebasing done on top of tree
+> > >
+> > >  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Hi Leo,
+> 
+> I think Rob, is waiting for you ack.
+
+Binding patches usually go through subsystem tree.  So I think this actually need ack from qspi maintainer Han Xu and be picked up by SPI maintainer.
+
+Regards,
+Leo
