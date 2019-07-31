@@ -1,61 +1,102 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
-Date: Wed, 31 Jul 2019 17:26:13 -0300
-Message-ID: <20190731172613.32d65ad8@coco.lan>
-References: <cover.1564603513.git.mchehab+samsung@kernel.org>
- <20190731141734.1fa9ce64@lwn.net>
- <20190731202007.GI4369@sirena.org.uk>
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v4 00/13] Support CPU frequency scaling on QCS404
+Date: Wed, 31 Jul 2019 22:29:16 +0200
+Message-ID: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731202007.GI4369@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Dave Kleikamp <shaggy@kernel.org>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Evgeniy Polyakov <zbr@ioremap.net>, linux-cifs@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Evgeniy Dushistov <dushistov@mail.ru>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, samba-technical@lists.samba.org, Liam Girdwood <lgirdwood@gmail.com>linux
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net
+Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 31 Jul 2019 21:20:07 +0100
-Mark Brown <broonie@kernel.org> escreveu:
+The following patchset enables CPU frequency scaling support on the
+QCS404 (with dynamic voltage scaling).
 
-> On Wed, Jul 31, 2019 at 02:17:34PM -0600, Jonathan Corbet wrote:
-> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:  
-> 
-> > > As promised, this is the rebased version of the patches that were not applied
-> > > from the /26 patch series because you had merge conflicts.
-> > > 
-> > > They're all based on your docs-next branch, so should apply fine.
-> > > 
-> > > The first one fixes all but one error with a broken reference.
-> > > 
-> > > The only broken reference right now is due to a DT patch with was not
-> > > accepted (no idea why), but whose driver is upstream.  
-> 
-> > All but 5/6 applied, thanks.  
-> 
-> Oh, I still hadn't reviewed this version of the SPI stuff :(
+It is important to notice that this functionality will be superseded
+by Core Power Reduction (CPR), a more accurate form of AVS found on
+certain Qualcomm SoCs.
 
-It is basically the one sent on that /26 patch series, just rebased
-on the top of docs-next.
+Some of the changes required to support CPR do conflict with the
+configuration required for CPUFreq.
 
-> There were outstanding questions about where it was going to get moved
-> to but if I read the diff correctly it looks like it didn't actually get
-> moved in the end?
+In particular, the following commit for CPR - already merged - will
+need to be reverted in order to enable CPUFreq.
 
-Yeah, it doesn't have the move. My understanding from our discussions
-is that we didn't reach a conclusion.
+   Author: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+   Date:   Thu Jul 25 12:41:36 2019 +0200
+       cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+    
+Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
+in this platform, this PLL provides the clock signal to a CPU
+core. But in others it might not.
 
-In any case, I can send a separate patch with the move part once
-we reach an agreement about what's the best way to proceed (or you
-can do it directly, if you prefer so).
+We opted for the minimal ammount of changes without affecting the
+default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
+framework and letting the firwmare chose whether to enable or disable
+the clock at boot. However maybe a DT property and marking the clock
+as critical would be more appropriate for this PLL. we'd appreciate the
+maintainer's input on this topic.
 
-Thanks,
-Mauro
+v2:
+   - dts: ms8916: apcs mux/divider: new bindings
+     (the driver can still support the old bindings)
+
+   - qcs404.dtsi
+     fix apcs-hfpll definition
+     fix cpu_opp_table definition
+
+   - GPLL0_AO_OUT operating frequency
+     define new alpha_pll_fixed_ops to limit the operating frequency
+
+v3:
+  - qcom-apcs-ipc-mailbox
+    replace goto to ease readability
+
+  - apcs-msm8916.c
+    rework patch to use of_clk_parent_fill
+
+  - hfpll.c
+    add relevant comments to the code
+
+  - qcs404.dtsi
+    add voltage scaling support
+
+v4:
+ - squash OPP definition and DVFS enablement in dts
+   (patches 10 and 13 in previous version)
+   
+ - qcom-apcs-ipc-mailbox
+   replace return condition for readability
+   
+ - answer one question on CLK_IGNORE_UNUSED in mailing list
+
+Jorge Ramirez-Ortiz, Niklas Cassel (13):
+  clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
+  mbox: qcom: add APCS child device for QCS404
+  mbox: qcom: replace integer with valid macro
+  dt-bindings: mailbox: qcom: Add clock-name optional property
+  clk: qcom: apcs-msm8916: get parent clock names from DT
+  clk: qcom: hfpll: get parent clock names from DT
+  clk: qcom: hfpll: register as clock provider
+  clk: qcom: hfpll: CLK_IGNORE_UNUSED
+  arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+  arm64: dts: qcom: qcs404: Add HFPLL node
+  arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
+  arm64: dts: qcom: qcs404: Add DVFS support
+  arm64: defconfig: Enable HFPLL
+
+ .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          | 43 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
+ drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
+ drivers/clk/qcom/clk-alpha-pll.h              |  1 +
+ drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
+ drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 11 +++--
+ 10 files changed, 128 insertions(+), 13 deletions(-)
+
+-- 
+2.22.0
