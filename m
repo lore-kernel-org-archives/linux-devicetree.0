@@ -1,45 +1,59 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 20/20] ARM: dts: imx6ull-colibri: Add touchscreen used with
- Eval Board
-Date: Wed, 31 Jul 2019 12:38:35 +0000
-Message-ID: <20190731123750.25670-21-philippe.schenker@toradex.com>
+Subject: [PATCH v2 16/20] ARM: dts: imx6ull-colibri: Add watchdog
+Date: Wed, 31 Jul 2019 12:38:28 +0000
+Message-ID: <20190731123750.25670-17-philippe.schenker@toradex.com>
 References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <D7D52C126B4AFE41A30C7E92EA22457B@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSBjb21tb24gdG91Y2hzY3JlZW4gdGhhdCBpcyB1c2VkIHdpdGggVG9yYWRl
-eCdzDQpFdmFsIEJvYXJkcy4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBo
-aWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KDQotLS0NCg0KQ2hhbmdlcyBpbiB2MjoNCi0g
-UmVtb3ZlZCBmMDcxMGEsIHRoYXQgaXMgZG93bnN0cmVhbSBvbmx5DQotIENoYW5nZWQgdG8gZ2Vu
-ZXJpYyBub2RlIG5hbWUNCi0gQmV0dGVyIGNvbW1lbnQNCg0KIC4uLi9hcm0vYm9vdC9kdHMvaW14
-NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDI0ICsrKysrKysrKysrKysrKysrKysNCiAxIGZp
-bGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCmluZGV4IGQzYzQ4MDlmMTQwZS4uNzhlNzRiZmVj
-YTFiIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwt
-djMuZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMu
-ZHRzaQ0KQEAgLTExMiw2ICsxMTIsMjEgQEANCiAmaTJjMSB7DQogCXN0YXR1cyA9ICJva2F5IjsN
-CiANCisJLyoNCisJICogVG91Y2hzY3JlZW4gaXMgdXNpbmcgU09ESU1NIDI4LzMwLCBhbHNvIHVz
-ZWQgZm9yIFBXTTxCPiwgUFdNPEM+LA0KKwkgKiBha2EgcHdtMiwgcHdtMy4gc28gaWYgeW91IGVu
-YWJsZSB0b3VjaHNjcmVlbiwgZGlzYWJsZSB0aGUgcHdtcw0KKwkgKi8NCisJdG91Y2hzY3JlZW5A
-NGEgew0KKwkJY29tcGF0aWJsZSA9ICJhdG1lbCxtYXh0b3VjaCI7DQorCQlwaW5jdHJsLW5hbWVz
-ID0gImRlZmF1bHQiOw0KKwkJcGluY3RybC0wID0gPCZwaW5jdHJsX2dwaW90b3VjaD47DQorCQly
-ZWcgPSA8MHg0YT47DQorCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvND47DQorCQlpbnRlcnJ1
-cHRzID0gPDE2IElSUV9UWVBFX0VER0VfRkFMTElORz47CS8qIFNPRElNTSAyOCAqLw0KKwkJcmVz
-ZXQtZ3Bpb3MgPSA8JmdwaW8yIDUgR1BJT19BQ1RJVkVfSElHSD47CS8qIFNPRElNTSAzMCAqLw0K
-KwkJc3RhdHVzID0gImRpc2FibGVkIjsNCisJfTsNCisNCiAJLyogTTQxVDBNNiByZWFsIHRpbWUg
-Y2xvY2sgb24gY2FycmllciBib2FyZCAqLw0KIAltNDF0MG02OiBydGNANjggew0KIAkJY29tcGF0
-aWJsZSA9ICJzdCxtNDF0MCI7DQpAQCAtMTg4LDMgKzIwMywxMiBAQA0KIAlzZC11aHMtc2RyMTA0
-Ow0KIAlzdGF0dXMgPSAib2theSI7DQogfTsNCisNCismaW9tdXhjIHsNCisJcGluY3RybF9ncGlv
-dG91Y2g6IHRvdWNoZ3Bpb3Mgew0KKwkJZnNsLHBpbnMgPSA8DQorCQkJTVg2VUxfUEFEX05BTkRf
-RFFTX19HUElPNF9JTzE2CQkweDc0DQorCQkJTVg2VUxfUEFEX0VORVQxX1RYX0VOX19HUElPMl9J
-TzA1CTB4MTQNCisJCT47DQorCX07DQorfTsNCi0tIA0KMi4yMi4wDQoNCg==
+This patch adds the watchdog to the imx6ull-colibri devicetree
+
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
+
+Changes in v2: None
+
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
+6ull-colibri.dtsi
+index 1f112ec55e5c..e3220298dd6f 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+@@ -199,6 +199,12 @@
+ 	assigned-clock-rates =3D <0>, <198000000>;
+ };
+=20
++&wdog1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
++
+ &iomuxc {
+ 	pinctrl_can_int: canint-grp {
+ 		fsl,pins =3D <
+@@ -506,6 +512,12 @@
+ 			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
+ 		>;
+ 	};
++
++	pinctrl_wdog: wdog-grp {
++		fsl,pins =3D <
++			MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
++		>;
++	};
+ };
+=20
+ &iomuxc_snvs {
+--=20
+2.22.0
