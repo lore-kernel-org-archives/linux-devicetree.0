@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH 1/6] dt-bindings: thermal: Add DT bindings documentation for Amlogic Thermal
-Date: Wed, 31 Jul 2019 14:14:04 +0200
-Message-ID: <20190731121409.17285-2-glaroque@baylibre.com>
+Subject: [PATCH 5/6] arm64: dts: amlogic: odroid-n2: add minimal thermal zone
+Date: Wed, 31 Jul 2019 14:14:08 +0200
+Message-ID: <20190731121409.17285-6-glaroque@baylibre.com>
 References: <20190731121409.17285-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190731121409.17285-1-glaroque@baylibre.com>
@@ -10,80 +10,36 @@ To: daniel.lezcano@linaro.org, khilman@baylibre.com
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the devicetree binding documentation for the Amlogic temperature
-sensor found in the Amlogic Meson G12 SoCs.
-the G12A  and G12B SoCs are supported.
+Add minimal thermal zone for DDR and CPU sensor
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- .../bindings/thermal/amlogic,thermal.yaml     | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+ .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-new file mode 100644
-index 000000000000..1e2fe84da13d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 81780ffcc7f0..4bd8d6d0c972 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -20,6 +20,19 @@
+ 		ethernet0 = &ethmac;
+ 	};
+ 
++	thermal-zones {
++		soc_thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <100>;
++			thermal-sensors = <&cpu_temp 0>;
++		};
++		ddr_thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <100>;
++			thermal-sensors = <&ddr_temp 1>;
++		};
++	};
 +
-+title: Amlogic Thermal Driver
-+
-+maintainers:
-+  - Guillaume La Roque <glaroque@baylibre.com>
-+
-+description: Amlogic Thermal driver
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - amlogic,g12-cpu-thermal
-+              - amlogic,g12-ddr-thermal
-+          - enum:
-+              - amlogic,g12-thermal
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  amlogic,ao-secure:
-+    description: phandle to the ao-secure syscon
-+    allOf:
-+     - $ref: /schemas/types.yaml#/definitions/uint32
-+
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - amlogic,ao-secure
-+
-+examples:
-+  - |
-+        cpu_temp: temperature-sensor@ff634800 {
-+                compatible = "amlogic,g12-cpu-thermal",
-+                             "amlogic,g12-thermal";
-+                reg = <0x0 0xff634800 0x0 0x50>;
-+                interrupts = <0x0 0x24 0x0>;
-+                clocks = <&clk 164>;
-+                status = "okay";
-+                #thermal-sensor-cells = <1>;
-+                amlogic,ao-secure = <&sec_AO>;
-+        };
-+...
-\ No newline at end of file
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 -- 
 2.17.1
