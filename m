@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 17/19] arm64: dts: marvell: Add 7k/8k PHYs in USB3 nodes
-Date: Wed, 31 Jul 2019 14:21:24 +0200
-Message-ID: <20190731122126.3049-18-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 18/19] arm64: dts: marvell: Add 7k/8k PHYs in PCIe nodes
+Date: Wed, 31 Jul 2019 14:21:25 +0200
+Message-ID: <20190731122126.3049-19-miquel.raynal@bootlin.com>
 References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,75 +21,104 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Fill-in the missing USB3 phys/phy-names DT properties of Armada 7k/8k
-based boards. Only update nodes actually enabling USB3 in the default
-(mainline) configuration. A few USB nodes are enabled but there is
-only USB2 working on them.
+Fill-in the missing PCIe phys/phy-names DT properties of Armada 7k/8k
+based boards.
+
+The MacchiatoBin is a bit particular as the Armada8k-PCI IP supports
+x4 link widths and in this case the PHY for each lane must be
+referenced.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-7040-db.dts             | 4 ++++
- arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 2 ++
- arch/arm64/boot/dts/marvell/armada-8040-db.dts             | 2 ++
- arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi         | 2 ++
- 4 files changed, 10 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-7040-db.dts         |  2 ++
+ .../boot/dts/marvell/armada-8040-clearfog-gt-8k.dts    |  2 ++
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts         | 10 ++++++++++
+ arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi     |  4 ++++
+ 4 files changed, 18 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-index 45eb4197e603..81bea91468f7 100644
+index 81bea91468f7..d1160edf57e0 100644
 --- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
 +++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
-@@ -228,11 +228,15 @@
+@@ -124,6 +124,8 @@
  
- &cp0_usb3_0 {
- 	usb-phy = <&cp0_usb3_0_phy>;
-+	phys = <&cp0_comphy1 0>;
-+	phy-names = "cp0-usb3h0-comphy";
+ &cp0_pcie2 {
  	status = "okay";
++	phys = <&cp0_comphy5 2>;
++	phy-names = "cp0-pcie2-x1-phy";
  };
  
- &cp0_usb3_1 {
- 	usb-phy = <&cp0_usb3_1_phy>;
-+	phys = <&cp0_comphy4 1>;
-+	phy-names = "cp0-usb3h1-comphy";
- 	status = "okay";
- };
- 
+ &cp0_i2c0 {
 diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-index 1527c82177ab..281209aa7f2c 100644
+index 281209aa7f2c..bcb0421c7ac0 100644
 --- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
 +++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-@@ -474,5 +474,7 @@
- 
- &cp1_usb3_0 {
- 	usb-phy = <&usb3h0_phy>;
-+	phys = <&cp1_comphy2 0>;
-+	phy-names = "cp1-usb3h0-comphy";
+@@ -243,6 +243,8 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cp0_pci0_reset_pins &cp0_wlan_disable_pins>;
+ 	reset-gpios = <&cp0_gpio2 0 GPIO_ACTIVE_LOW>;
++	phys = <&cp0_comphy0 0>;
++	phy-names = "cp0-pcie0-x1-phy";
  	status = "okay";
  };
+ 
 diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index 66afed6c6245..1086d53fd1b9 100644
+index 1086d53fd1b9..9746969e8da9 100644
 --- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
 +++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -163,6 +163,8 @@
- /* CON10 on CP0 expansion */
- &cp0_usb3_1 {
- 	usb-phy = <&cp0_usb3_1_phy>;
-+	phys = <&cp0_comphy4 1>;
-+	phy-names = "cp0-usb3h1-comphy";
+@@ -108,11 +108,15 @@
+ 
+ /* CON6 on CP0 expansion */
+ &cp0_pcie0 {
++	phys = <&cp0_comphy0 0>;
++	phy-names = "cp0-pcie0-x1-phy";
+ 	status = "okay";
+ };
+ 
+ /* CON5 on CP0 expansion */
+ &cp0_pcie2 {
++	phys = <&cp0_comphy5 2>;
++	phy-names = "cp0-pcie2-x1-phy";
+ 	status = "okay";
+ };
+ 
+@@ -198,16 +202,22 @@
+ 
+ /* CON6 on CP1 expansion */
+ &cp1_pcie0 {
++	phys = <&cp1_comphy0 0>;
++	phy-names = "cp1-pcie0-x1-phy";
+ 	status = "okay";
+ };
+ 
+ /* CON7 on CP1 expansion */
+ &cp1_pcie1 {
++	phys = <&cp1_comphy4 1>;
++	phy-names = "cp1-pcie1-x1-phy";
+ 	status = "okay";
+ };
+ 
+ /* CON5 on CP1 expansion */
+ &cp1_pcie2 {
++	phys = <&cp1_comphy5 2>;
++	phy-names = "cp1-pcie2-x1-phy";
  	status = "okay";
  };
  
 diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-index b8f28d62be5c..6b9941d92e20 100644
+index 6b9941d92e20..a2c099a12e55 100644
 --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
 +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
-@@ -359,5 +359,7 @@
- &cp1_usb3_0 {
- 	/* CPS Lane 2 - CON7 */
- 	usb-phy = <&usb3h0_phy>;
-+	phys = <&cp1_comphy2 0>;
-+	phy-names = "cp1-usb3h0-comphy";
+@@ -186,6 +186,10 @@
+ 	reset-gpios = <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
+ 	ranges = <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
+ 		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
++	phys = <&cp0_comphy0 0>, <&cp0_comphy1 0>,
++	       <&cp0_comphy2 0>, <&cp0_comphy3 0>;
++	phy-names = "cp0-pcie0-x4-lane0-phy", "cp0-pcie0-x4-lane1-phy",
++		    "cp0-pcie0-x4-lane2-phy", "cp0-pcie0-x4-lane3-phy";
  	status = "okay";
  };
+ 
 -- 
 2.20.1
