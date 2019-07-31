@@ -1,207 +1,73 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v9 1/7] driver core: Add support for linking devices during
- device addition
-Date: Wed, 31 Jul 2019 15:17:14 -0700
-Message-ID: <20190731221721.187713-2-saravanak@google.com>
-References: <20190731221721.187713-1-saravanak@google.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH v2 0/6] Add TI PRUSS Local Interrupt Controller IRQChip driver
+Date: Wed, 31 Jul 2019 17:41:43 -0500
+Message-ID: <20190731224149.11153-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731221721.187713-1-saravanak@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, David Lechner <david@lechnology.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-When devices are added, the bus might want to create device links to track
-functional dependencies between supplier and consumer devices. This
-tracking of supplier-consumer relationship allows optimizing device probe
-order and tracking whether all consumers of a supplier are active. The
-add_links bus callback is added to support this.
+Hi All,
 
-However, when consumer devices are added, they might not have a supplier
-device to link to despite needing mandatory resources/functionality from
-one or more suppliers. A waiting_for_suppliers list is created to track
-such consumers and retry linking them when new devices get added.
+The following is a v2 version of the series [1] that adds an IRQChip driver for
+the local interrupt controller present within a Programmable Real-Time Unit and
+Industrial Communication Subsystem (PRU-ICSS) present on a number of TI SoCs 
+including OMAP architecture based AM335x, AM437x, AM57xx SoCs, Keystone 2 
+architecture based 66AK2G SoCs, Davinci architecture based OMAP-L138/DA850 SoCs
+and the latest K3 architecture based AM65x and J721E SoCs. Please see the
+v1 cover-letter [1] for details about the features of this interrupt controller.
+More details can be found in any of the supported SoC TRMs.
+ Eg: Chapter 30.1.6 of AM5728 TRM [2]
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/core.c    | 83 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h | 14 +++++++
- 2 files changed, 97 insertions(+)
+Please see the individual patches for exact changes in each patch, following are
+the main changes from v1:
+ - Dropped the pruss_intc_trigger() API and patch and replaced it with a new
+   patch achieving the same through irq_set_irqchip_state() callback (patch 5)
+ - Added cleanup logic on INTC mapping fails and reset the mapping registers
+   during unmap (patch 4)
+ - Minor revisions to the bindings, no new properties introduced (patch 1)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 950e3bd0f45c..62d416e667bd 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -44,6 +44,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
- #endif
- 
- /* Device links support. */
-+static LIST_HEAD(wait_for_suppliers);
-+static DEFINE_MUTEX(wfs_lock);
- 
- #ifdef CONFIG_SRCU
- static DEFINE_MUTEX(device_links_lock);
-@@ -416,6 +418,51 @@ struct device_link *device_link_add(struct device *consumer,
- }
- EXPORT_SYMBOL_GPL(device_link_add);
- 
-+/**
-+ * device_link_wait_for_supplier - Mark device as waiting for supplier
-+ * @consumer: Consumer device
-+ *
-+ * Marks the consumer device as waiting for suppliers to become available. The
-+ * consumer device will never be probed until it's unmarked as waiting for
-+ * suppliers. The caller is responsible for adding the link to the supplier
-+ * once the supplier device is present.
-+ *
-+ * This function is NOT meant to be called from the probe function of the
-+ * consumer but rather from code that creates/adds the consumer device.
-+ */
-+static void device_link_wait_for_supplier(struct device *consumer)
-+{
-+	mutex_lock(&wfs_lock);
-+	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
-+	mutex_unlock(&wfs_lock);
-+}
-+
-+/**
-+ * device_link_check_waiting_consumers - Try to unmark waiting consumers
-+ *
-+ * Loops through all consumers waiting on suppliers and tries to add all their
-+ * supplier links. If that succeeds, the consumer device is unmarked as waiting
-+ * for suppliers. Otherwise, they are left marked as waiting on suppliers,
-+ *
-+ * The add_links bus callback is expected to return 0 if it has found and added
-+ * all the supplier links for the consumer device. It should return an error if
-+ * it isn't able to do so.
-+ *
-+ * The caller of device_link_wait_for_supplier() is expected to call this once
-+ * it's aware of potential suppliers becoming available.
-+ */
-+static void device_link_check_waiting_consumers(void)
-+{
-+	struct device *dev, *tmp;
-+
-+	mutex_lock(&wfs_lock);
-+	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
-+				 links.needs_suppliers)
-+		if (!dev->bus->add_links(dev))
-+			list_del_init(&dev->links.needs_suppliers);
-+	mutex_unlock(&wfs_lock);
-+}
-+
- static void device_link_free(struct device_link *link)
- {
- 	while (refcount_dec_not_one(&link->rpm_active))
-@@ -550,6 +597,19 @@ int device_links_check_suppliers(struct device *dev)
- 	struct device_link *link;
- 	int ret = 0;
- 
-+	/*
-+	 * If a device is waiting for one or more suppliers (in
-+	 * wait_for_suppliers list), it is not ready to probe yet. So just
-+	 * return -EPROBE_DEFER without having to check the links with existing
-+	 * suppliers.
-+	 */
-+	mutex_lock(&wfs_lock);
-+	if (!list_empty(&dev->links.needs_suppliers)) {
-+		mutex_unlock(&wfs_lock);
-+		return -EPROBE_DEFER;
-+	}
-+	mutex_unlock(&wfs_lock);
-+
- 	device_links_write_lock();
- 
- 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-@@ -834,6 +894,10 @@ static void device_links_purge(struct device *dev)
- {
- 	struct device_link *link, *ln;
- 
-+	mutex_lock(&wfs_lock);
-+	list_del(&dev->links.needs_suppliers);
-+	mutex_unlock(&wfs_lock);
-+
- 	/*
- 	 * Delete all of the remaining links from this device to any other
- 	 * devices (either consumers or suppliers).
-@@ -1698,6 +1762,7 @@ void device_initialize(struct device *dev)
- #endif
- 	INIT_LIST_HEAD(&dev->links.consumers);
- 	INIT_LIST_HEAD(&dev->links.suppliers);
-+	INIT_LIST_HEAD(&dev->links.needs_suppliers);
- 	dev->links.status = DL_DEV_NO_DRIVER;
- }
- EXPORT_SYMBOL_GPL(device_initialize);
-@@ -2133,6 +2198,24 @@ int device_add(struct device *dev)
- 					     BUS_NOTIFY_ADD_DEVICE, dev);
- 
- 	kobject_uevent(&dev->kobj, KOBJ_ADD);
-+
-+	/*
-+	 * Check if any of the other devices (consumers) have been waiting for
-+	 * this device (supplier) to be added so that they can create a device
-+	 * link to it.
-+	 *
-+	 * This needs to happen after device_pm_add() because device_link_add()
-+	 * requires the supplier be registered before it's called.
-+	 *
-+	 * But this also needs to happe before bus_probe_device() to make sure
-+	 * waiting consumers can link to it before the driver is bound to the
-+	 * device and the driver sync_state callback is called for this device.
-+	 */
-+	device_link_check_waiting_consumers();
-+
-+	if (dev->bus && dev->bus->add_links && dev->bus->add_links(dev))
-+		device_link_wait_for_supplier(dev);
-+
- 	bus_probe_device(dev);
- 	if (parent)
- 		klist_add_tail(&dev->p->knode_parent,
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 5093691f56e7..dbcf1de5e9fa 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -78,6 +78,17 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		-EPROBE_DEFER it will queue the device for deferred probing.
-  * @uevent:	Called when a device is added, removed, or a few other things
-  *		that generate uevents to add the environment variables.
-+ * @add_links:	Called, perhaps multiple times per device, after a device is
-+ *		added to this bus.  The function is expected to create device
-+ *		links to all the suppliers of the input device that are
-+ *		available at the time this function is called.  As in, the
-+ *		function should NOT stop at the first failed device link if
-+ *		other unlinked supplier devices are present in the system.
-+ *
-+ *		Return 0 if device links have been successfully created to all
-+ *		the suppliers of this device.  Return an error if some of the
-+ *		suppliers are not yet available and this function needs to be
-+ *		reattempted in the future.
-  * @probe:	Called when a new device or driver add to this bus, and callback
-  *		the specific driver's probe to initial the matched device.
-  * @remove:	Called when a device removed from this bus.
-@@ -122,6 +133,7 @@ struct bus_type {
- 
- 	int (*match)(struct device *dev, struct device_driver *drv);
- 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
-+	int (*add_links)(struct device *dev);
- 	int (*probe)(struct device *dev);
- 	int (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
-@@ -895,11 +907,13 @@ enum dl_dev_state {
-  * struct dev_links_info - Device data related to device links.
-  * @suppliers: List of links to supplier devices.
-  * @consumers: List of links to consumer devices.
-+ * @needs_suppliers: Hook to global list of devices waiting for suppliers.
-  * @status: Driver status information.
-  */
- struct dev_links_info {
- 	struct list_head suppliers;
- 	struct list_head consumers;
-+	struct list_head needs_suppliers;
- 	enum dl_dev_state status;
- };
- 
+regards
+Suman
+
+[1] https://patchwork.kernel.org/cover/11034561/
+[2] http://www.ti.com/lit/pdf/spruhz6
+
+Andrew F. Davis (1):
+  irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+    interrupts
+
+David Lechner (1):
+  irqchip/irq-pruss-intc: Implement irq_{get,set}_irqchip_state ops
+
+Suman Anna (4):
+  dt-bindings: irqchip: Add PRUSS interrupt controller bindings
+  irqchip/irq-pruss-intc: Add support for shared and invalid interrupts
+  irqchip/irq-pruss-intc: Add helper functions to configure internal
+    mapping
+  irqchip/irq-pruss-intc: Add support for ICSSG INTC on K3 SoCs
+
+ .../interrupt-controller/ti,pruss-intc.txt    |  98 +++
+ drivers/irqchip/Kconfig                       |  10 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-pruss-intc.c              | 764 ++++++++++++++++++
+ include/linux/irqchip/irq-pruss-intc.h        |  36 +
+ 5 files changed, 909 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.txt
+ create mode 100644 drivers/irqchip/irq-pruss-intc.c
+ create mode 100644 include/linux/irqchip/irq-pruss-intc.h
+
 -- 
-2.22.0.709.g102302147b-goog
+2.22.0
