@@ -1,114 +1,85 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v8 08/11] usb: roles: get usb-role-switch from parent
-Date: Wed, 31 Jul 2019 14:29:18 +0800
-Message-ID: <1564554558.5579.7.camel@mhfsdcap03>
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
- <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
- <20190729142500.GE28600@kuha.fi.intel.com>
+From: Atish Patra <Atish.Patra@wdc.com>
+Subject: Re: [PATCH v2 5/5] dt-bindings: Update the isa string description
+Date: Wed, 31 Jul 2019 06:43:21 +0000
+Message-ID: <5E8CC941-E519-4B4F-8F5E-253D0C797431@wdc.com>
+References: <20190731012418.24565-1-atish.patra@wdc.com>
+ <20190731012418.24565-6-atish.patra@wdc.com>
+ <alpine.DEB.2.21.9999.1907302124010.15340@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190729142500.GE28600@kuha.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1907302124010.15340@viisi.sifive.com>
+Content-Language: en-US
+Content-ID: <B5BD16E84442614AB8875400CDAB169A@namprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Alexios Zavras <alexios.zavras@intel.com>, Allison Randal <allison@lohutok.net>, Anup Patel <Anup.Patel@wdc.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enrico Weigelt <info@metux.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heikki,
-
-On Mon, 2019-07-29 at 17:25 +0300, Heikki Krogerus wrote:
-> On Wed, Jul 24, 2019 at 04:50:42PM +0800, Chunfeng Yun wrote:
-> > when the USB host controller is the parent of the connector,
-> > usually type-B, sometimes don't need the graph, so we should
-> > check whether it's parent registers usb-role-switch or not
-> > firstly, and get it if exists.
-> > 
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> I don't think I actually wrote the patch. I may have proposed the code
-> for you, but I never prepared a patch out out that. Please drop the
-> above Signed-off-by line if that is the case. I case I really did
-> write the patch, then you are missing the "From: Heikki..." first
-> line, but I really don't remember preparing the patch.
-> 
-> If the idea came from me, you can use for example the suggested-by
-> tag: "Suggested-by: Heikki Krogerus <heikki.krogerus...".
-Ok, thanks
-
-> 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v8: no changes
-> > v7:
-> >   add signed-off-by Chunfeng
-> > 
-> > v6:
-> >   new patch
-> > ---
-> >  drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
-> >  1 file changed, 21 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> > index 5b637aaf311f..87439a84c983 100644
-> > --- a/drivers/usb/roles/class.c
-> > +++ b/drivers/usb/roles/class.c
-> > @@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
-> >  	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-> >  }
-> >  
-> > +static struct usb_role_switch *
-> > +usb_role_switch_is_parent(struct fwnode_handle *fwnode)
-> > +{
-> > +	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
-> > +	struct device *dev;
-> > +
-> > +	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
-> > +		return NULL;
-> > +
-> > +	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
-> > +	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-> > +}
-> > +
-> >  /**
-> >   * usb_role_switch_get - Find USB role switch linked with the caller
-> >   * @dev: The caller device
-> > @@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
-> >  {
-> >  	struct usb_role_switch *sw;
-> >  
-> > -	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-> > -					  usb_role_switch_match);
-> > +	sw = usb_role_switch_is_parent(dev_fwnode(dev));
-> > +	if (!sw)
-> > +		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-> > +						  usb_role_switch_match);
-> >  
-> >  	if (!IS_ERR_OR_NULL(sw))
-> >  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-> > @@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
-> >  {
-> >  	struct usb_role_switch *sw;
-> >  
-> > -	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
-> > -					  usb_role_switch_match);
-> > +	sw = usb_role_switch_is_parent(fwnode);
-> > +	if (!sw)
-> > +		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
-> > +						  NULL, usb_role_switch_match);
-> >  	if (!IS_ERR_OR_NULL(sw))
-> >  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-> >  
-> > -- 
-> > 2.21.0
-> 
-> thanks,
-> 
+DQoNCu+7v09uIDcvMzAvMTksIDk6NTIgUE0sICJQYXVsIFdhbG1zbGV5IiA8cGF1bC53YWxtc2xl
+eUBzaWZpdmUuY29tPiB3cm90ZToNCg0KICAgIE9uIFR1ZSwgMzAgSnVsIDIwMTksIEF0aXNoIFBh
+dHJhIHdyb3RlOg0KICAgIA0KICAgID4gVGhlIHlhbWwgZG9jdW1lbnRhdGlvbiBkZXNjcmlwdGlv
+biBvZiBpc2Egc3RyaW5ncyBzZWN0aW9uIGRvZXNuJ3QNCiAgICA+IHNwZWNpZnkgYW55dGhpbmcg
+YWJvdXQgdGhlIGNhc2Ugc2Vuc2l0aXZlbmVzcyBvZiB0aGUgaXNhIHN0cmluZ3MuDQogICAgPiBU
+aGUgUklTQy1WIHNwZWNpZmljYXRpb24gY2xlYXJseSBzcGVjaWZpZXMgaXQgdG8gYmUgY2FzZSBp
+bnNlbnNpdGl2ZS4NCiAgICA+IEhvd2V2ZXIsIExpbnV4IGtlcm5lbCBzdXBwb3J0cyBvbmx5IGxv
+d2VyIGNhc2UgaXNhIHN0cmluZ3MuDQogICAgDQogICAgVGhlIERUIGJpbmRpbmcgZG9jdW1lbnRh
+dGlvbiBzcGVjaWZpZXMgYW4gaW50ZXJmYWNlLiAgQXMgc3VjaCB0aGUgYmluZGluZyANCiAgICBp
+c24ndCBkZXRlcm1pbmVkIGJ5IGFueSBwYXJ0aWN1bGFyIHBpZWNlIG9mIHNvZnR3YXJlLiAgU28g
+anVzdGlmeWluZyB0aGUgDQogICAgYmluZGluZyB1cGRhdGUgYnkgcmVmZXJyaW5nIHRvIHdoYXQg
+dGhlIExpbnV4IGtlcm5lbCBjdXJyZW50bHkgc3VwcG9ydHMgDQogICAgaXNuJ3QgdGhhdCByZWxl
+dmFudC4gIElmIHlvdSBzdGlsbCByZWFsbHkgYmVsaWV2ZSB0aGF0IHNvZnR3YXJlIHNob3VsZCBi
+ZSANCiAgICByZXF1aXJlZCB0byBoYW5kbGUgbWl4ZWQtY2FzZSBEVCBJU0Egc3RyaW5ncywgdGhl
+IHJpZ2h0IGFuc3dlciB3b3VsZCBiZSB0byANCiAgICBjaGFuZ2UgdGhlIHNvZnR3YXJlLCBhcyB5
+b3VyIG9yaWdpbmFsIHBhdGNoZXMgcHJvcG9zZWQuICBUaGUgd2F5IHlvdSd2ZSANCiAgICB3cml0
+dGVuIHRoaXMgcGF0Y2ggZGVzY3JpcHRpb24sIGl0IHNvdW5kcyBsaWtlIHlvdSBzdGlsbCBkb24n
+dCBhZ3JlZSB3aXRoIA0KICAgIHRoZSBjb25jbHVzaW9uIHRoYXQgYSBzdHJpY3RseSBsb3dlcmNh
+c2Ugc3RyaW5nIGlzIGEgZ29vZCBhcHByb2FjaC4NCiAgIA0KICAgIElmIEkndmUgbWlzdW5kZXJz
+dG9vZCB5b3VyIGludGVudCBoZXJlLCBhbmQgeW91IGRvIHRoaW5rIHRoYXQgc3BlY2lmeWluZyAN
+CiAgICBhbiBhbGwgbG93ZXJjYXNlIHN0cmluZyBpcyBzdWZmaWNpZW50LA0KDQpJIHRoaW5rIHRo
+YXQgc3BlY2lmeWluZyBhbiBhbGwgbG93ZXJjYXNlIHN0cmluZyBpcyBzdWZmaWNpZW50LiBJIGRp
+ZCBub3QgDQpyZWFsaXplIHRoYXQgY3VycmVudCBjb21taXQgdGV4dCBjb3VsZCBtZWFuIHNvbWV0
+aGluZyBlbHNlICguDQoNCiB0aGVuIGluc3RlYWQgb2YgdGhlIHBhdGNoIA0KICAgIGRlc2NyaXB0
+aW9uIGFib3ZlLCBob3cgYWJvdXQgc29tZXRoaW5nIGxpa2U6DQogICAgDQogICAgIlNpbmNlIHRo
+ZSBSSVNDLVYgc3BlY2lmaWNhdGlvbiBzdGF0ZXMgdGhhdCBJU0EgZGVzY3JpcHRpb24gc3RyaW5n
+cyBhcmUgDQogICAgY2FzZS1pbnNlbnNpdGl2ZSwgdGhlcmUncyBubyBmdW5jdGlvbmFsIGRpZmZl
+cmVuY2UgYmV0d2VlbiBtaXhlZC1jYXNlLCANCiAgICB1cHBlci1jYXNlLCBhbmQgbG93ZXItY2Fz
+ZSBJU0Egc3RyaW5ncy4gIFRodXMsIHRvIHNpbXBsaWZ5IHBhcnNpbmcsIA0KICAgIHNwZWNpZnkg
+dGhhdCB0aGUgbGV0dGVycyBwcmVzZW50IG9mIHJpc2N2LGlzYSBtdXN0IGJlIGFsbCBsb3dlcmNh
+c2UuIg0KICAgIA0KU291bmRzIGdvb2QgdG8gbWUuIEkgd2lsbCB1cGRhdGUgdGhlIHBhdGNoLiBU
+aGFua3MgZm9yIHVwZGF0ZWQgY29tbWl0IHRleHQuDQoNCiAgICBUaGF0IHdheSBpdCdzIGNsZWFy
+IHRoYXQsIHBlciB0aGUgUklTQy1WIHNwZWNpZmljYXRpb24sIHRoZXJlJ3Mgbm8gDQogICAgZnVu
+Y3Rpb25hbCBkaWZmZXJlbmNlIGFzc29jaWF0ZWQgd2l0aCBjYXNlLg0KICAgIA0KICAgIEhvd2V2
+ZXIsIGlmIHdoYXQgeW91J3JlIHNheWluZyBpcyB0aGF0IHlvdSBzdGlsbCBkb24ndCBsaWtlIHRo
+aXMgb3V0Y29tZSwgDQogICAgbGV0IG1lIGtub3cgYW5kIEknbGwgd3JpdGUgdGhlIHBhdGNoIG15
+c2VsZi4gIFRoYXQgd2F5IHlvdSBkb24ndCBoYXZlIHRvIA0KICAgIGhhdmUgeW91ciBuYW1lIGFz
+c29jaWF0ZWQgd2l0aCBhIGNoYW5nZSB0aGF0IHlvdSBkb24ndCBiZWxpZXZlIGluLg0KICAgIA0K
+ICAgID4gVXBkYXRlIHRoZSB5YW1sIGRvY3VtZW50YXRpb24gYWNjb3JkaW5nbHkgdG8gYXZvaWQg
+YW55IGNvbmZ1c2lvbi4NCiAgICA+IA0KICAgID4gU2lnbmVkLW9mZi1ieTogQXRpc2ggUGF0cmEg
+PGF0aXNoLnBhdHJhQHdkYy5jb20+DQogICAgPiAtLS0NCiAgICA+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmlzY3YvY3B1cy55YW1sIHwgNiArKysrKy0NCiAgICA+ICAxIGZp
+bGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQogICAgPiANCiAgICA+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmlzY3YvY3B1
+cy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jpc2N2L2NwdXMueWFt
+bA0KICAgID4gaW5kZXggYzg5OTExMWFhNWUzLi5lMjJhMmI3ZWJhZmEgMTAwNjQ0DQogICAgPiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmlzY3YvY3B1cy55YW1sDQog
+ICAgPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmlzY3YvY3B1cy55
+YW1sDQogICAgPiBAQCAtNDYsMTAgKzQ2LDE0IEBAIHByb3BlcnRpZXM6DQogICAgPiAgICAgICAg
+ICAgIC0gcnY2NGltYWZkYw0KICAgID4gICAgICBkZXNjcmlwdGlvbjoNCiAgICA+ICAgICAgICBJ
+ZGVudGlmaWVzIHRoZSBzcGVjaWZpYyBSSVNDLVYgaW5zdHJ1Y3Rpb24gc2V0IGFyY2hpdGVjdHVy
+ZQ0KICAgID4gLSAgICAgIHN1cHBvcnRlZCBieSB0aGUgaGFydC4gIFRoZXNlIGFyZSBkb2N1bWVu
+dGVkIGluIHRoZSBSSVNDLVYNCiAgICA+ICsgICAgICBzdXBwb3J0ZWQgYnkgdGhlIGhhcnQuIFRo
+ZXNlIGFyZSBkb2N1bWVudGVkIGluIHRoZSBSSVNDLVYNCiAgICA+ICAgICAgICBVc2VyLUxldmVs
+IElTQSBkb2N1bWVudCwgYXZhaWxhYmxlIGZyb20NCiAgICA+ICAgICAgICBodHRwczovL3Jpc2N2
+Lm9yZy9zcGVjaWZpY2F0aW9ucy8NCiAgICA+ICANCiAgICA+ICsgICAgICBMaW51eCBrZXJuZWwg
+b25seSBzdXBwb3J0cyBsb3dlciBjYXNlIGlzYSBzdHJpbmdzLiBUaHVzLA0KICAgIA0KICAgIElu
+IHRoZSBwYXN0LCB0aGUgRFQgbWFpbnRhaW5lcnMgaGF2ZSBwdXNoZWQgYmFjayBhZ2FpbnN0IGV4
+cGxpY2l0bHkgDQogICAgbWVudGlvbmluZyB0aGUgTGludXgga2VybmVsIGluIGJpbmRpbmcgZG9j
+dW1lbnRhdGlvbiwgc2luY2UgdGhlIERUIA0KICAgIGJpbmRpbmdzIGRlZmluZSBhbiBpbnRlcmZh
+Y2UgdGhhdCdzIGluZGVwZW5kZW50IG9mIHRoZSB1bmRlcmx5aW5nIHNvZnR3YXJlIA0KICAgIGlt
+cGxlbWVudGF0aW9uLiAgSG93IGFib3V0IGp1c3Qgc3RhdGluZyBzb21ldGhpbmcgbGlrZSAiTGV0
+dGVycyBpbiB0aGUgDQogICAgcmlzY3YsaXNhIHN0cmluZyBtdXN0IGJlIGFsbCBsb3dlcmNhc2Ui
+ID8NCiAgICANClN1cmUuDQoNClJlZ2FyZHMsDQpBdGlzaA0KDQogICAgPiArICAgICAgaXNhIHN0
+cmluZ3MgbXVzdCBiZSBzcGVjaWZpZWQgaW4gbG93ZXIgY2FzZSBpbiBkZXZpY2UgdHJlZQ0KICAg
+ID4gKyAgICAgIGFzIHdlbGwuDQogICAgPiArDQogICAgDQogICAgLSBQYXVsDQogICAgDQoNCg==
