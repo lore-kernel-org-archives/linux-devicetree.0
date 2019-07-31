@@ -1,102 +1,46 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 1/3] arm64: dts: qcom: pms405: add unit name adc nodes
-Date: Wed, 31 Jul 2019 13:45:18 +0530
-Message-ID: <20190731081518.GS12733@vkoul-mobl.Dlink>
-References: <20190725135150.9972-1-vkoul@kernel.org>
- <20190725135150.9972-2-vkoul@kernel.org>
- <CAHLCerNsAX4raauTjogOpwqAjEWfd+jpaZYsFnC10tcmvnD5cg@mail.gmail.com>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: [PATCH v2 1/4] firmware: meson_sm: Mark chip struct as static const
+Date: Wed, 31 Jul 2019 09:23:36 +0100
+Message-ID: <20190731082339.20163-2-ccaione@baylibre.com>
+References: <20190731082339.20163-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNsAX4raauTjogOpwqAjEWfd+jpaZYsFnC10tcmvnD5cg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190731082339.20163-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+No need to be a global struct.
 
-Thanks for the review Amit!
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+---
+ drivers/firmware/meson/meson_sm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 30-07-19, 22:05, Amit Kucheria wrote:
-> On Thu, Jul 25, 2019 at 7:23 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > The adc nodes have reg property but were missing the unit name, so add
-> > that to fix these warnings:
-> >
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:91.12-94.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/ref_gnd: node has a reg or ranges property, but no unit name
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:96.14-99.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vref_1p25: node has a reg or ranges property, but no unit name
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:101.19-104.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/vph_pwr: node has a reg or ranges property, but no unit name
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:106.13-109.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/die_temp: node has a reg or ranges property, but no unit name
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:111.27-116.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor1: node has a reg or ranges property, but no unit name
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:118.27-123.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/thermistor3: node has a reg or ranges property, but no unit name
-> > arch/arm64/boot/dts/qcom/pms405.dtsi:125.22-130.6: Warning (unit_address_vs_reg): /soc@0/spmi@200f000/pms405@0/adc@3100/xo_temp: node has a reg or ranges property, but no unit name
-> >
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/pms405.dtsi | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/pms405.dtsi b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> > index 14240fedd916..3c10cf04d26e 100644
-> > --- a/arch/arm64/boot/dts/qcom/pms405.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/pms405.dtsi
-> > @@ -88,41 +88,41 @@
-> >                         #size-cells = <0>;
-> >                         #io-channel-cells = <1>;
-> >
-> > -                       ref_gnd {
-> > +                       ref_gnd@0 {
-> >                                 reg = <ADC5_REF_GND>;
-> >                                 qcom,pre-scaling = <1 1>;
-> >                         };
-> >
-> > -                       vref_1p25 {
-> > +                       vref_1p25@1 {
-> >                                 reg = <ADC5_1P25VREF>;
-> >                                 qcom,pre-scaling = <1 1>;
-> >                         };
-> >
-> > -                       pon_1: vph_pwr {
-> > +                       pon_1: vph_pwr@131 {
-> >                                 reg = <ADC5_VPH_PWR>;
-> >                                 qcom,pre-scaling = <1 3>;
-> >                         };
-> >
-> > -                       die_temp {
-> > +                       die_temp@6 {
-> >                                 reg = <ADC5_DIE_TEMP>;
-> >                                 qcom,pre-scaling = <1 1>;
-> >                         };
-> >
-> > -                       pa_therm1: thermistor1 {
-> > +                       pa_therm1: thermistor1@115 {
-> 
-> s/115/77 ?
-> 
-> >                                 reg = <ADC5_AMUX_THM1_100K_PU>;
-> >                                 qcom,ratiometric;
-> >                                 qcom,hw-settle-time = <200>;
-> >                                 qcom,pre-scaling = <1 1>;
-> >                         };
-> >
-> > -                       pa_therm3: thermistor3 {
-> > +                       pa_therm3: thermistor3@117 {
-> 
-> s/117/79 ?
-> 
-> >                                 reg = <ADC5_AMUX_THM3_100K_PU>;
-> >                                 qcom,ratiometric;
-> >                                 qcom,hw-settle-time = <200>;
-> >                                 qcom,pre-scaling = <1 1>;
-> >                         };
-> >
-> > -                       xo_therm: xo_temp {
-> > +                       xo_therm: xo_temp@114 {
-> 
-> s/114/76 ?
-
-Thanks, will fix these and recheck others.
-
+diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
+index 8d908a8e0d20..772ca6726e7b 100644
+--- a/drivers/firmware/meson/meson_sm.c
++++ b/drivers/firmware/meson/meson_sm.c
+@@ -35,7 +35,7 @@ struct meson_sm_chip {
+ 	struct meson_sm_cmd cmd[];
+ };
+ 
+-struct meson_sm_chip gxbb_chip = {
++static const struct meson_sm_chip gxbb_chip = {
+ 	.shmem_size		= SZ_4K,
+ 	.cmd_shmem_in_base	= 0x82000020,
+ 	.cmd_shmem_out_base	= 0x82000021,
 -- 
-~Vinod
+2.20.1
