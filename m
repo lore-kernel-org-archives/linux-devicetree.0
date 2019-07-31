@@ -1,7 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 06/20] ARM: dts: imx7-colibri: add GPIO wakeup key
-Date: Wed, 31 Jul 2019 12:38:10 +0000
-Message-ID: <20190731123750.25670-7-philippe.schenker@toradex.com>
+Subject: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Wed, 31 Jul 2019 12:38:12 +0000
+Message-ID: <20190731123750.25670-8-philippe.schenker@toradex.com>
 References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -16,8 +16,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Stefan Agner <stefan.agner@toradex.com>
 
-Add wakeup GPIO key which is able to wake the system from sleep
-modes (e.g. Suspend-to-Memory).
+Add pinmuxing and do not specify voltage restrictions in the
+module level device tree.
 
 Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
@@ -25,59 +25,50 @@ Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
 Changes in v2: None
 
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/imx7-colibri.dtsi         |  7 ++++++-
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
-s/imx7-colibri-eval-v3.dtsi
-index 3f2746169181..d4dbc4fc1adf 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -52,6 +52,20 @@
- 		clock-frequency =3D <16000000>;
- 	};
-=20
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiokeys>;
-+
-+		power {
-+			label =3D "Wake-Up";
-+			gpios =3D <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+			linux,code =3D <KEY_WAKEUP>;
-+			debounce-interval =3D <10>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
- 	panel: panel {
- 		compatible =3D "edt,et057090dhu";
- 		backlight =3D <&bl>;
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
 olibri.dtsi
-index 2480623c92ff..16d1a1ed1aff 100644
+index 16d1a1ed1aff..67f5e0c87fdc 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -741,12 +741,17 @@
-=20
- 	pinctrl_gpio_lpsr: gpio1-grp {
- 		fsl,pins =3D <
--			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x59
- 			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x59
- 			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x59
+@@ -326,7 +326,6 @@
+ &usdhc1 {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+-	no-1-8-v;
+ 	cd-gpios =3D <&gpio1 0 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	vqmmc-supply =3D <&reg_LDO2>;
+@@ -671,6 +670,28 @@
  		>;
  	};
 =20
-+	pinctrl_gpiokeys: gpiokeysgrp {
++	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
 +		fsl,pins =3D <
-+			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x19
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5a
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1a
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5a
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5a
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5a
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5a
 +		>;
 +	};
 +
- 	pinctrl_i2c1: i2c1-grp {
++	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
++		fsl,pins =3D <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5b
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1b
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5b
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5b
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5b
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5b
++		>;
++	};
++
+ 	pinctrl_usdhc3: usdhc3grp {
  		fsl,pins =3D <
- 			MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA	0x4000007f
+ 			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
 --=20
 2.22.0
