@@ -1,783 +1,686 @@
-Return-Path: <SRS0=dsAE=VX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:59266 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfGZJYG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2019 05:24:06 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v5 6/7] remoteproc: qcom: wcss: Add non pas wcss Q6 support for QCS404
-Date: Fri, 26 Jul 2019 14:53:31 +0530
-Message-Id: <20190726092332.25202-7-govinds@codeaurora.org>
-In-Reply-To: <20190726092332.25202-1-govinds@codeaurora.org>
-References: <20190726092332.25202-1-govinds@codeaurora.org>
+Return-Path: <SRS0=P7Yg=V4=gmail.com=open.sudheer@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+References: <1564147640-30753-1-git-send-email-open.sudheer@gmail.com>
+ <1564147640-30753-2-git-send-email-open.sudheer@gmail.com> <20190730154759.GA26425@kroah.com>
+In-Reply-To: <20190730154759.GA26425@kroah.com>
+From: sudheer v <open.sudheer@gmail.com>
+Date: Wed, 31 Jul 2019 17:06:08 +0530
+Message-ID: <CAE-5=DQ8p9WAhjrmZ8ye8GjoHrcxkHkjJPRNRFtvgeF5SdqwVQ@mail.gmail.com>
+Subject: Re: [patch v4 1/5] AST2500 DMA UART driver
+Content-Type: multipart/alternative; boundary="000000000000acaa3c058ef888c9"
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ShivahShankar Shakarnarayan rao <shivahshankar.shankarnarayanrao@aspeedtech.com>, Sudheer V <sudheer.veliseti@aspeedtech.com>, sudheer veliseti <sudheer.open@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add non PAS WCSS remoteproc driver support for QCS404 SOC.
-Add WCSS q6 bootup and shutdown sequence handled from
-Application Processor SubSystem(APSS).
+--000000000000acaa3c058ef888c9
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 570 ++++++++++++++++++++++++++--
- 1 file changed, 532 insertions(+), 38 deletions(-)
+Hi  Greg,
+ After modifying [ patch v4 1/5 ] , should i submit whole patchset as  v5 ?
+ or replying  with this single patch modified will be enough?
+ how is this done in linux community ?.
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 84accf1755e9..c2e75f5b5737 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -4,14 +4,19 @@
-  * Copyright (C) 2014 Sony Mobile Communications AB
-  * Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-  */
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
-+#include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/soc/qcom/mdt_loader.h>
- #include "qcom_common.h"
-@@ -24,6 +29,9 @@
- #define Q6SS_GFMUX_CTL_REG		0x020
- #define Q6SS_PWR_CTL_REG		0x030
- #define Q6SS_MEM_PWR_CTL		0x0B0
-+#define Q6SS_STRAP_ACC			0x110
-+#define Q6SS_CGC_OVERRIDE		0x034
-+#define Q6SS_BCR_REG			0x6000
- 
- /* AXI Halt Register Offsets */
- #define AXI_HALTREQ_REG			0x0
-@@ -37,14 +45,19 @@
- #define Q6SS_CORE_ARES			BIT(1)
- #define Q6SS_BUS_ARES_ENABLE		BIT(2)
- 
-+/* Q6SS_BRC_RESET */
-+#define Q6SS_BRC_BLK_ARES		BIT(0)
-+
- /* Q6SS_GFMUX_CTL */
- #define Q6SS_CLK_ENABLE			BIT(1)
-+#define Q6SS_SWITCH_CLK_SRC		BIT(8)
- 
- /* Q6SS_PWR_CTL */
- #define Q6SS_L2DATA_STBY_N		BIT(18)
- #define Q6SS_SLP_RET_N			BIT(19)
- #define Q6SS_CLAMP_IO			BIT(20)
- #define QDSS_BHS_ON			BIT(21)
-+#define QDSS_Q6_MEMORIES		GENMASK(15, 0)
- 
- /* Q6SS parameters */
- #define Q6SS_LDO_BYP		BIT(25)
-@@ -53,6 +66,7 @@
- #define Q6SS_CLAMP_QMC_MEM		BIT(22)
- #define HALT_CHECK_MAX_LOOPS		200
- #define Q6SS_XO_CBCR		GENMASK(5, 3)
-+#define Q6SS_SLEEP_CBCR		GENMASK(5, 2)
- 
- /* Q6SS config/status registers */
- #define TCSR_GLOBAL_CFG0	0x0
-@@ -71,9 +85,23 @@
- #define TCSR_WCSS_CLK_MASK	0x1F
- #define TCSR_WCSS_CLK_ENABLE	0x14
- 
-+#define MAX_HALT_REG		3
-+enum {
-+	WCSS_IPQ8074,
-+	WCSS_QCS404,
-+};
-+
- struct wcss_data {
- 	const char *firmware_name;
- 	int crash_reason_smem;
-+	u32 version;
-+	bool aon_reset_required;
-+	bool wcss_q6_reset_required;
-+	const char *ssr_name;
-+	const char *sysmon_name;
-+	int ssctl_id;
-+	const struct rproc_ops *ops;
-+	bool requires_force_stop;
- };
- 
- struct q6v5_wcss {
-@@ -87,9 +115,29 @@ struct q6v5_wcss {
- 	u32 halt_wcss;
- 	u32 halt_nc;
- 
-+	struct clk *xo;
-+	struct clk *ahbfabric_cbcr_clk;
-+	struct clk *gcc_abhs_cbcr;
-+	struct clk *gcc_axim_cbcr;
-+	struct clk *lcc_csr_cbcr;
-+	struct clk *ahbs_cbcr;
-+	struct clk *tcm_slave_cbcr;
-+	struct clk *qdsp6ss_abhm_cbcr;
-+	struct clk *qdsp6ss_sleep_cbcr;
-+	struct clk *qdsp6ss_axim_cbcr;
-+	struct clk *qdsp6ss_xo_cbcr;
-+	struct clk *qdsp6ss_core_gfmux;
-+	struct clk *lcc_bcr_sleep;
-+	struct regulator *cx_supply;
-+
-+	struct qcom_rproc_glink glink_subdev;
-+	struct qcom_rproc_ssr ssr_subdev;
-+	struct qcom_sysmon *sysmon;
-+
- 	struct reset_control *wcss_aon_reset;
- 	struct reset_control *wcss_reset;
- 	struct reset_control *wcss_q6_reset;
-+	struct reset_control *wcss_q6_bcr_reset;
- 
- 	struct qcom_q6v5 q6v5;
- 
-@@ -99,6 +147,8 @@ struct q6v5_wcss {
- 	size_t mem_size;
- 
- 	int crash_reason_smem;
-+	u32 version;
-+	bool requires_force_stop;
- };
- 
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
-@@ -241,6 +291,207 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 	return ret;
- }
- 
-+static int q6v5_wcss_qcs404_power_on(struct q6v5_wcss *wcss)
-+{
-+	unsigned long val;
-+	int ret, idx;
-+
-+	/* Toggle the restart */
-+	reset_control_assert(wcss->wcss_reset);
-+	usleep_range(200, 300);
-+	reset_control_deassert(wcss->wcss_reset);
-+	usleep_range(200, 300);
-+
-+	/* Enable GCC_WDSP_Q6SS_AHBS_CBCR clock */
-+	ret = clk_prepare_enable(wcss->gcc_abhs_cbcr);
-+	if (ret)
-+		return ret;
-+
-+	/* Remove reset to the WCNSS QDSP6SS */
-+	reset_control_deassert(wcss->wcss_q6_bcr_reset);
-+
-+	/* Enable Q6SSTOP_AHBFABRIC_CBCR clock */
-+	ret = clk_prepare_enable(wcss->ahbfabric_cbcr_clk);
-+	if (ret)
-+		goto disable_gcc_abhs_cbcr_clk;
-+
-+	/* Enable the LCCCSR CBC clock, Q6SSTOP_Q6SSTOP_LCC_CSR_CBCR clock */
-+	ret = clk_prepare_enable(wcss->lcc_csr_cbcr);
-+	if (ret)
-+		goto disable_ahbfabric_cbcr_clk;
-+
-+	/* Enable the Q6AHBS CBC, Q6SSTOP_Q6SS_AHBS_CBCR clock */
-+	ret = clk_prepare_enable(wcss->ahbs_cbcr);
-+	if (ret)
-+		goto disable_csr_cbcr_clk;
-+
-+	/* Enable the TCM slave CBC, Q6SSTOP_Q6SS_TCM_SLAVE_CBCR clock */
-+	ret = clk_prepare_enable(wcss->tcm_slave_cbcr);
-+	if (ret)
-+		goto disable_ahbs_cbcr_clk;
-+
-+	/* Enable the Q6SS AHB master CBC, Q6SSTOP_Q6SS_AHBM_CBCR clock */
-+	ret = clk_prepare_enable(wcss->qdsp6ss_abhm_cbcr);
-+	if (ret)
-+		goto disable_tcm_slave_cbcr_clk;
-+
-+	/* Enable the Q6SS AXI master CBC, Q6SSTOP_Q6SS_AXIM_CBCR clock */
-+	ret = clk_prepare_enable(wcss->qdsp6ss_axim_cbcr);
-+	if (ret)
-+		goto disable_abhm_cbcr_clk;
-+
-+	/* Enable the Q6SS XO CBC */
-+	val = readl(wcss->reg_base + Q6SS_XO_CBCR);
-+	val |= BIT(0);
-+	writel(val, wcss->reg_base + Q6SS_XO_CBCR);
-+	/* Read CLKOFF bit to go low indicating CLK is enabled */
-+	ret = readl_poll_timeout(wcss->reg_base + Q6SS_XO_CBCR,
-+				 val, !(val & BIT(31)), 1,
-+				 HALT_CHECK_MAX_LOOPS);
-+	if (ret) {
-+		dev_err(wcss->dev,
-+			"xo cbcr enabling timed out (rc:%d)\n", ret);
-+		return ret;
-+	}
-+
-+	writel(0, wcss->reg_base + Q6SS_CGC_OVERRIDE);
-+
-+	/* Enable QDSP6 sleep clock clock */
-+	val = readl(wcss->reg_base + Q6SS_SLEEP_CBCR);
-+	val |= BIT(0);
-+	writel(val, wcss->reg_base + Q6SS_SLEEP_CBCR);
-+
-+	/* Enable the Enable the Q6 AXI clock, GCC_WDSP_Q6SS_AXIM_CBCR*/
-+	ret = clk_prepare_enable(wcss->gcc_axim_cbcr);
-+	if (ret)
-+		goto disable_sleep_cbcr_clk;
-+
-+	/* Assert resets, stop core */
-+	val = readl(wcss->reg_base + Q6SS_RESET_REG);
-+	val |= Q6SS_CORE_ARES | Q6SS_BUS_ARES_ENABLE | Q6SS_STOP_CORE;
-+	writel(val, wcss->reg_base + Q6SS_RESET_REG);
-+
-+	/* Program the QDSP6SS PWR_CTL register */
-+	writel(0x01700000, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	writel(0x03700000, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	writel(0x03300000, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	writel(0x033C0000, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	/*
-+	 * Enable memories by turning on the QDSP6 memory foot/head switch, one
-+	 * bank at a time to avoid in-rush current
-+	 */
-+	for (idx = 28; idx >= 0; idx--) {
-+		writel((readl(wcss->reg_base + Q6SS_MEM_PWR_CTL) |
-+			(1 << idx)), wcss->reg_base + Q6SS_MEM_PWR_CTL);
-+	}
-+
-+	writel(0x031C0000, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+	writel(0x030C0000, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	val = readl(wcss->reg_base + Q6SS_RESET_REG);
-+	val &= ~Q6SS_CORE_ARES;
-+	writel(val, wcss->reg_base + Q6SS_RESET_REG);
-+
-+	/* Enable the Q6 core clock at the GFM, Q6SSTOP_QDSP6SS_GFMUX_CTL */
-+	val = readl(wcss->reg_base + Q6SS_GFMUX_CTL_REG);
-+	val |= Q6SS_CLK_ENABLE | Q6SS_SWITCH_CLK_SRC;
-+	writel(val, wcss->reg_base + Q6SS_GFMUX_CTL_REG);
-+
-+	/* Enable sleep clock branch needed for BCR circuit */
-+	ret = clk_prepare_enable(wcss->lcc_bcr_sleep);
-+	if (ret)
-+		goto disable_core_gfmux_clk;
-+
-+	return 0;
-+
-+disable_core_gfmux_clk:
-+	val = readl(wcss->reg_base + Q6SS_GFMUX_CTL_REG);
-+	val &= ~(Q6SS_CLK_ENABLE | Q6SS_SWITCH_CLK_SRC);
-+	writel(val, wcss->reg_base + Q6SS_GFMUX_CTL_REG);
-+	clk_disable_unprepare(wcss->gcc_axim_cbcr);
-+disable_sleep_cbcr_clk:
-+	val = readl(wcss->reg_base + Q6SS_SLEEP_CBCR);
-+	val &= ~Q6SS_CLK_ENABLE;
-+	writel(val, wcss->reg_base + Q6SS_SLEEP_CBCR);
-+	val = readl(wcss->reg_base + Q6SS_XO_CBCR);
-+	val &= ~Q6SS_CLK_ENABLE;
-+	writel(val, wcss->reg_base + Q6SS_XO_CBCR);
-+	clk_disable_unprepare(wcss->qdsp6ss_axim_cbcr);
-+disable_abhm_cbcr_clk:
-+	clk_disable_unprepare(wcss->qdsp6ss_abhm_cbcr);
-+disable_tcm_slave_cbcr_clk:
-+	clk_disable_unprepare(wcss->tcm_slave_cbcr);
-+disable_ahbs_cbcr_clk:
-+	clk_disable_unprepare(wcss->ahbs_cbcr);
-+disable_csr_cbcr_clk:
-+	clk_disable_unprepare(wcss->lcc_csr_cbcr);
-+disable_ahbfabric_cbcr_clk:
-+	clk_disable_unprepare(wcss->ahbfabric_cbcr_clk);
-+disable_gcc_abhs_cbcr_clk:
-+	clk_disable_unprepare(wcss->gcc_abhs_cbcr);
-+
-+	return ret;
-+}
-+
-+static inline int q6v5_wcss_qcs404_reset(struct q6v5_wcss *wcss)
-+{
-+	unsigned long val;
-+
-+	writel(0x80800000, wcss->reg_base + Q6SS_STRAP_ACC);
-+
-+	/* Start core execution */
-+	val = readl(wcss->reg_base + Q6SS_RESET_REG);
-+	val &= ~Q6SS_STOP_CORE;
-+	writel(val, wcss->reg_base + Q6SS_RESET_REG);
-+
-+	return 0;
-+}
-+
-+static int q6v5_qcs404_wcss_start(struct rproc *rproc)
-+{
-+	struct q6v5_wcss *wcss = rproc->priv;
-+	int ret;
-+
-+	ret = clk_prepare_enable(wcss->xo);
-+	if (ret)
-+		return ret;
-+
-+	ret = regulator_enable(wcss->cx_supply);
-+	if (ret)
-+		goto disable_xo_clk;
-+
-+	qcom_q6v5_prepare(&wcss->q6v5);
-+
-+	ret = q6v5_wcss_qcs404_power_on(wcss);
-+	if (ret) {
-+		dev_err(wcss->dev, "wcss clk_enable failed\n");
-+		goto disable_cx_supply;
-+	}
-+
-+	writel(rproc->bootaddr >> 4, wcss->reg_base + Q6SS_RST_EVB);
-+
-+	q6v5_wcss_qcs404_reset(wcss);
-+
-+	ret = qcom_q6v5_wait_for_start(&wcss->q6v5, 5 * HZ);
-+	if (ret == -ETIMEDOUT) {
-+		dev_err(wcss->dev, "start timed out\n");
-+		goto disable_cx_supply;
-+	}
-+
-+	return 0;
-+
-+disable_cx_supply:
-+	regulator_disable(wcss->cx_supply);
-+disable_xo_clk:
-+	clk_disable_unprepare(wcss->xo);
-+
-+	return ret;
-+}
-+
- static void q6v5_wcss_halt_axi_port(struct q6v5_wcss *wcss,
- 				    struct regmap *halt_map,
- 				    u32 offset)
-@@ -275,6 +526,70 @@ static void q6v5_wcss_halt_axi_port(struct q6v5_wcss *wcss,
- 	regmap_write(halt_map, offset + AXI_HALTREQ_REG, 0);
- }
- 
-+static int q6v5_qcs404_wcss_shutdown(struct q6v5_wcss *wcss)
-+{
-+	unsigned long val;
-+	int ret;
-+
-+	q6v5_wcss_halt_axi_port(wcss, wcss->halt_map, wcss->halt_wcss);
-+
-+	/* assert clamps to avoid MX current inrush */
-+	val = readl(wcss->reg_base + Q6SS_PWR_CTL_REG);
-+	val |= (Q6SS_CLAMP_IO | Q6SS_CLAMP_WL | Q6SS_CLAMP_QMC_MEM);
-+	writel(val, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	/* Disable memories by turning off memory foot/headswitch */
-+	writel((readl(wcss->reg_base + Q6SS_MEM_PWR_CTL) &
-+		~QDSS_Q6_MEMORIES),
-+		wcss->reg_base + Q6SS_MEM_PWR_CTL);
-+
-+	/* Clear the BHS_ON bit */
-+	val = readl(wcss->reg_base + Q6SS_PWR_CTL_REG);
-+	val &= ~Q6SS_BHS_ON;
-+	writel(val, wcss->reg_base + Q6SS_PWR_CTL_REG);
-+
-+	clk_disable_unprepare(wcss->ahbfabric_cbcr_clk);
-+	clk_disable_unprepare(wcss->lcc_csr_cbcr);
-+	clk_disable_unprepare(wcss->tcm_slave_cbcr);
-+	clk_disable_unprepare(wcss->qdsp6ss_abhm_cbcr);
-+	clk_disable_unprepare(wcss->qdsp6ss_axim_cbcr);
-+
-+	val = readl(wcss->reg_base + Q6SS_SLEEP_CBCR);
-+	val &= ~BIT(0);
-+	writel(val, wcss->reg_base + Q6SS_SLEEP_CBCR);
-+
-+	val = readl(wcss->reg_base + Q6SS_XO_CBCR);
-+	val &= ~BIT(0);
-+	writel(val, wcss->reg_base + Q6SS_XO_CBCR);
-+
-+	clk_disable_unprepare(wcss->ahbs_cbcr);
-+	clk_disable_unprepare(wcss->lcc_bcr_sleep);
-+
-+	val = readl(wcss->reg_base + Q6SS_GFMUX_CTL_REG);
-+	val &= ~(Q6SS_CLK_ENABLE | Q6SS_SWITCH_CLK_SRC);
-+	writel(val, wcss->reg_base + Q6SS_GFMUX_CTL_REG);
-+
-+	clk_disable_unprepare(wcss->gcc_abhs_cbcr);
-+
-+	ret = reset_control_assert(wcss->wcss_reset);
-+	if (ret) {
-+		dev_err(wcss->dev, "wcss_reset failed\n");
-+		return ret;
-+	}
-+	usleep_range(200, 300);
-+
-+	ret = reset_control_deassert(wcss->wcss_reset);
-+	if (ret) {
-+		dev_err(wcss->dev, "wcss_reset failed\n");
-+		return ret;
-+	}
-+	usleep_range(200, 300);
-+
-+	clk_disable_unprepare(wcss->gcc_axim_cbcr);
-+
-+	return 0;
-+}
-+
- static int q6v5_wcss_powerdown(struct q6v5_wcss *wcss)
- {
- 	int ret;
-@@ -394,20 +709,28 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 	int ret;
- 
- 	/* WCSS powerdown */
--	ret = qcom_q6v5_request_stop(&wcss->q6v5);
--	if (ret == -ETIMEDOUT) {
--		dev_err(wcss->dev, "timed out on wait\n");
--		return ret;
-+	if (wcss->requires_force_stop) {
-+		ret = qcom_q6v5_request_stop(&wcss->q6v5);
-+		if (ret == -ETIMEDOUT) {
-+			dev_err(wcss->dev, "timed out on wait\n");
-+			return ret;
-+		}
- 	}
- 
--	ret = q6v5_wcss_powerdown(wcss);
--	if (ret)
--		return ret;
--
--	/* Q6 Power down */
--	ret = q6v5_q6_powerdown(wcss);
--	if (ret)
--		return ret;
-+	if (wcss->version == WCSS_QCS404) {
-+		ret = q6v5_qcs404_wcss_shutdown(wcss);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = q6v5_wcss_powerdown(wcss);
-+		if (ret)
-+			return ret;
-+
-+		/* Q6 Power down */
-+		ret = q6v5_q6_powerdown(wcss);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	qcom_q6v5_unprepare(&wcss->q6v5);
- 
-@@ -443,14 +766,26 @@ static const struct rproc_ops q6v5_wcss_ipq8074_ops = {
- 	.get_boot_addr = rproc_elf_get_boot_addr,
- };
- 
--static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss)
-+static const struct rproc_ops q6v5_wcss_qcs404_ops = {
-+	.start = q6v5_qcs404_wcss_start,
-+	.stop = q6v5_wcss_stop,
-+	.da_to_va = q6v5_wcss_da_to_va,
-+	.load = q6v5_wcss_load,
-+	.get_boot_addr = rproc_elf_get_boot_addr,
-+	.parse_fw = qcom_register_dump_segments,
-+};
-+
-+static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss,
-+				const struct wcss_data *desc)
- {
- 	struct device *dev = wcss->dev;
- 
--	wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");
--	if (IS_ERR(wcss->wcss_aon_reset)) {
--		dev_err(wcss->dev, "unable to acquire wcss_aon_reset\n");
--		return PTR_ERR(wcss->wcss_aon_reset);
-+	if (desc->aon_reset_required) {
-+		wcss->wcss_aon_reset = devm_reset_control_get(dev, "wcss_aon_reset");;
-+		if (IS_ERR(wcss->wcss_aon_reset)) {
-+			dev_err(wcss->dev, "fail to acquire wcss_aon_reset\n");
-+			return PTR_ERR(wcss->wcss_aon_reset);
-+		}
- 	}
- 
- 	wcss->wcss_reset = devm_reset_control_get(dev, "wcss_reset");
-@@ -459,10 +794,18 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss)
- 		return PTR_ERR(wcss->wcss_reset);
- 	}
- 
--	wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
--	if (IS_ERR(wcss->wcss_q6_reset)) {
--		dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
--		return PTR_ERR(wcss->wcss_q6_reset);
-+	if (desc->wcss_q6_reset_required) {
-+		wcss->wcss_q6_reset = devm_reset_control_get(dev, "wcss_q6_reset");
-+		if (IS_ERR(wcss->wcss_q6_reset)) {
-+			dev_err(wcss->dev, "unable to acquire wcss_q6_reset\n");
-+			return PTR_ERR(wcss->wcss_q6_reset);
-+		}
-+	}
-+
-+	wcss->wcss_q6_bcr_reset = devm_reset_control_get_exclusive(dev, "wcss_q6_bcr_reset");
-+	if (IS_ERR(wcss->wcss_q6_bcr_reset)) {
-+		dev_err(wcss->dev, "unable to acquire wcss_q6_bcr_reset\n");
-+		return PTR_ERR(wcss->wcss_q6_bcr_reset);
- 	}
- 
- 	return 0;
-@@ -471,35 +814,48 @@ static int q6v5_wcss_init_reset(struct q6v5_wcss *wcss)
- static int q6v5_wcss_init_mmio(struct q6v5_wcss *wcss,
- 			       struct platform_device *pdev)
- {
--	struct of_phandle_args args;
-+	unsigned int halt_reg[MAX_HALT_REG] = {0};
-+	struct device_node *syscon;
- 	struct resource *res;
- 	int ret;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "qdsp6");
--	wcss->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	wcss->reg_base = devm_ioremap(&pdev->dev, res->start,
-+				      resource_size(res));
- 	if (IS_ERR(wcss->reg_base))
- 		return PTR_ERR(wcss->reg_base);
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rmb");
--	wcss->rmb_base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(wcss->rmb_base))
--		return PTR_ERR(wcss->rmb_base);
-+	if (wcss->version == WCSS_IPQ8074) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rmb");
-+		wcss->rmb_base = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(wcss->rmb_base))
-+			return PTR_ERR(wcss->rmb_base);
-+	}
- 
--	ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
--					       "qcom,halt-regs", 3, 0, &args);
--	if (ret < 0) {
-+	syscon = of_parse_phandle(pdev->dev.of_node,
-+				  "qcom,halt-regs", 0);
-+	if (!syscon) {
- 		dev_err(&pdev->dev, "failed to parse qcom,halt-regs\n");
- 		return -EINVAL;
- 	}
- 
--	wcss->halt_map = syscon_node_to_regmap(args.np);
--	of_node_put(args.np);
-+	wcss->halt_map = syscon_node_to_regmap(syscon);
-+	of_node_put(syscon);
- 	if (IS_ERR(wcss->halt_map))
- 		return PTR_ERR(wcss->halt_map);
- 
--	wcss->halt_q6 = args.args[0];
--	wcss->halt_wcss = args.args[1];
--	wcss->halt_nc = args.args[2];
-+	ret = of_property_read_variable_u32_array(pdev->dev.of_node,
-+						  "qcom,halt-regs",
-+						  halt_reg, 0,
-+						  MAX_HALT_REG);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to parse qcom,halt-regs\n");
-+		return -EINVAL;
-+	}
-+
-+	wcss->halt_q6 = halt_reg[0];
-+	wcss->halt_wcss = halt_reg[1];
-+	wcss->halt_nc = halt_reg[2];
- 
- 	return 0;
- }
-@@ -533,6 +889,107 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
-+static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
-+{
-+	int ret;
-+
-+	wcss->xo = devm_clk_get(wcss->dev, "xo");
-+	if (IS_ERR(wcss->xo)) {
-+		ret = PTR_ERR(wcss->xo);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get xo clock");
-+		return ret;
-+	}
-+
-+	wcss->gcc_abhs_cbcr = devm_clk_get(wcss->dev, "gcc_abhs_cbcr");
-+	if (IS_ERR(wcss->gcc_abhs_cbcr)) {
-+		ret = PTR_ERR(wcss->gcc_abhs_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get gcc abhs clock");
-+		return PTR_ERR(wcss->gcc_abhs_cbcr);
-+	}
-+
-+	wcss->gcc_axim_cbcr = devm_clk_get(wcss->dev, "gcc_axim_cbcr");
-+	if (IS_ERR(wcss->gcc_axim_cbcr)) {
-+		ret = PTR_ERR(wcss->gcc_axim_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get gcc axim clock\n");
-+		return PTR_ERR(wcss->gcc_axim_cbcr);
-+	}
-+
-+	wcss->ahbfabric_cbcr_clk = devm_clk_get(wcss->dev,
-+						"lcc_ahbfabric_cbc");
-+	if (IS_ERR(wcss->ahbfabric_cbcr_clk)) {
-+		ret = PTR_ERR(wcss->ahbfabric_cbcr_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get ahbfabric clock\n");
-+		return PTR_ERR(wcss->ahbfabric_cbcr_clk);
-+	}
-+
-+	wcss->lcc_csr_cbcr = devm_clk_get(wcss->dev, "tcsr_lcc_cbc");
-+	if (IS_ERR(wcss->lcc_csr_cbcr)) {
-+		ret = PTR_ERR(wcss->lcc_csr_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get csr cbcr clk\n");
-+		return PTR_ERR(wcss->lcc_csr_cbcr);
-+	}
-+
-+	wcss->ahbs_cbcr = devm_clk_get(wcss->dev,
-+				       "lcc_abhs_cbc");
-+	if (IS_ERR(wcss->ahbs_cbcr)) {
-+		ret = PTR_ERR(wcss->ahbs_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get ahbs_cbcr clk\n");
-+		return PTR_ERR(wcss->ahbs_cbcr);
-+	}
-+
-+	wcss->tcm_slave_cbcr = devm_clk_get(wcss->dev,
-+					    "lcc_tcm_slave_cbc");
-+	if (IS_ERR(wcss->tcm_slave_cbcr)) {
-+		ret = PTR_ERR(wcss->tcm_slave_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get tcm cbcr clk\n");
-+		return PTR_ERR(wcss->tcm_slave_cbcr);
-+	}
-+
-+	wcss->qdsp6ss_abhm_cbcr = devm_clk_get(wcss->dev, "lcc_abhm_cbc");
-+	if (IS_ERR(wcss->qdsp6ss_abhm_cbcr)) {
-+		ret = PTR_ERR(wcss->qdsp6ss_abhm_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get abhm cbcr clk\n");
-+		return PTR_ERR(wcss->qdsp6ss_abhm_cbcr);
-+	}
-+
-+	wcss->qdsp6ss_axim_cbcr = devm_clk_get(wcss->dev, "lcc_axim_cbc");
-+	if (IS_ERR(wcss->qdsp6ss_axim_cbcr)) {
-+		ret = PTR_ERR(wcss->qdsp6ss_axim_cbcr);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get axim cbcr clk\n");
-+		return PTR_ERR(wcss->qdsp6ss_abhm_cbcr);
-+	}
-+
-+	wcss->lcc_bcr_sleep = devm_clk_get(wcss->dev, "lcc_bcr_sleep");
-+	if (IS_ERR(wcss->lcc_bcr_sleep)) {
-+		ret = PTR_ERR(wcss->lcc_bcr_sleep);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "failed to get bcr cbcr clk\n");
-+		return PTR_ERR(wcss->lcc_bcr_sleep);
-+	}
-+
-+	return 0;
-+}
-+
-+static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
-+{
-+	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
-+	if (IS_ERR(wcss->cx_supply))
-+		return PTR_ERR(wcss->cx_supply);
-+
-+	regulator_set_load(wcss->cx_supply, 100000);
-+
-+	return 0;
-+}
-+
- static int q6v5_wcss_probe(struct platform_device *pdev)
- {
- 	const struct wcss_data *desc;
-@@ -544,7 +1001,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (!desc)
- 		return -EINVAL;
- 
--	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ipq8074_ops,
-+	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
- 			    desc->firmware_name, sizeof(*wcss));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
-@@ -553,7 +1010,10 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 
- 	wcss = rproc->priv;
- 	wcss->dev = &pdev->dev;
--	wcss->crash_reason_smem = desc->crash_reason_smem;
-+	wcss->version = desc->version;
-+
-+	wcss->version = desc->version;
-+	wcss->requires_force_stop = desc->requires_force_stop;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
- 	if (ret)
-@@ -563,7 +1023,17 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = q6v5_wcss_init_reset(wcss);
-+	if (wcss->version == WCSS_QCS404) {
-+		ret = q6v5_wcss_init_clock(wcss);
-+		if (ret)
-+			goto free_rproc;
-+
-+		ret = q6v5_wcss_init_regulator(wcss);
-+		if (ret)
-+			goto free_rproc;
-+	}
-+
-+	ret = q6v5_wcss_init_reset(wcss, desc);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -572,6 +1042,12 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
-+	qcom_add_glink_subdev(rproc, &wcss->glink_subdev);
-+	qcom_add_ssr_subdev(rproc, &wcss->ssr_subdev, desc->ssr_name);
-+	wcss->sysmon = qcom_add_sysmon_subdev(rproc,
-+					      desc->sysmon_name,
-+					      desc->ssctl_id);
-+
- 	ret = rproc_add(rproc);
- 	if (ret)
- 		goto free_rproc;
-@@ -599,10 +1075,28 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- static const struct wcss_data wcss_ipq8074_res_init = {
- 	.firmware_name = "IPQ8074/q6_fw.mdt",
- 	.crash_reason_smem = WCSS_CRASH_REASON,
-+	.aon_reset_required = true,
-+	.wcss_q6_reset_required = true,
-+	.ops = &q6v5_wcss_ipq8074_ops,
-+	.requires_force_stop = true,
-+};
-+
-+static const struct wcss_data wcss_qcs404_res_init = {
-+	.crash_reason_smem = WCSS_CRASH_REASON,
-+	.firmware_name = "wcnss.mdt",
-+	.version = WCSS_QCS404,
-+	.aon_reset_required = false,
-+	.wcss_q6_reset_required = false,
-+	.ssr_name = "mpss",
-+	.sysmon_name = "wcnss",
-+	.ssctl_id = 0x12,
-+	.ops = &q6v5_wcss_qcs404_ops,
-+	.requires_force_stop = false,
- };
- 
- static const struct of_device_id q6v5_wcss_of_match[] = {
- 	{ .compatible = "qcom,ipq8074-wcss-pil", .data = &wcss_ipq8074_res_init },
-+	{ .compatible = "qcom,qcs404-wcss-pil", .data = &wcss_qcs404_res_init },
- 
- 	{ },
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards
+Sudheer
+
+On Tue, Jul 30, 2019 at 9:18 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+
+> On Fri, Jul 26, 2019 at 06:57:16PM +0530, sudheer.v wrote:
+> > From: sudheer veliseti <sudheer.open@gmail.com>
+> >
+> > UART driver for Aspeed's bmc chip AST2500
+> >
+> > Design approch:
+> > AST2500 has dedicated Uart DMA controller which has 12 sets of Tx and RX
+> channels
+> > connected to UART controller directly.
+> > Since the DMA controller have dedicated buffers and registers,
+> > there would be little benifit in adding DMA framework overhead.
+> > So the software for DMA controller is included within the UART driver
+> itself.
+> >
+> > implementation details:
+> > 'struct ast_uart_port' is populated and registered with uart_core.
+> > code is organised into two layers UART-layer and DMA-Layer,both of them
+> are
+> > in the same file.UART-layer requests Rx and Tx dma channels
+> > and registers callbacks with DMA controller software Layer
+> > Interrupt service routine for DMA controller is the crucial one for
+> Handling all
+> > the tx and rx data. ISRs installed for individual uarts are just
+> dummy,and are helpful
+> > only to report any spurious interrupts in hardware.
+> >
+> >
+> > Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
+> > ---
+> >
+> > Changes from v3->v4:
+> > - per port uart structures are registerd directly with uart core
+> >   Instead of registering through 8250 Frame work,
+> >   ast_uart_port is registered using uart_add_one_port
+> > -SDMA_RX_FIX macro replaced with CONFIG_AST_UART_DMA_RX_INTERRUPT
+> > -ast_uart_sdma_isr : DMA interrupt handler code is improvised
+> > -replaced pr_debug with ftrace wherever appropriate
+> > -dev_err is used in all error return cases
+> > -uart driver structure ast25xx_uart_reg is modified
+> > -driver name changed to ast2500-uart-dma-drv
+> > -rx_timer initialisation and callback fn modified
+> >
+> > Changes from v2->v3:
+> > -custom debug replaced by in kerenl dynamic debug: pr_debug
+> > -change-logs added
+> >
+> >
+> > .../tty/serial/8250/8250_ast2500_uart_dma.c   | 1901 +++++++++++++++++
+> >  1 file changed, 1901 insertions(+)
+> >  create mode 100644 drivers/tty/serial/8250/8250_ast2500_uart_dma.c
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_ast2500_uart_dma.c
+> b/drivers/tty/serial/8250/8250_ast2500_uart_dma.c
+> > new file mode 100644
+> > index 000000000000..bc830d605372
+> > --- /dev/null
+> > +++ b/drivers/tty/serial/8250/8250_ast2500_uart_dma.c
+> > @@ -0,0 +1,1901 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + *  DMA UART Driver for ASPEED BMC chip: AST2500
+> > + *
+> > + *  Copyright (C) 2019 sudheer Kumar veliseti, Aspeed technology Inc.
+> > + *  <open.sudheer@gmail.com>
+>
+> What was the copyright on the file you copied?  Please properly
+> attribute that here.
+>
+>
+> > + *
+> > + */
+> > +#include <linux/clk.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/tty.h>
+> > +#include <linux/tty_flip.h>
+> > +#include "8250.h"
+> > +
+> > +#define SERIAL8250_CONSOLE NULL
+> > +#define TTY_AST_MAJOR 204
+> > +#define TTY_AST_MINOR 68
+>
+> Where did you get this minor number from?
+>
+> > +
+> > +#define DMA_BUFF_SIZE                0x1000
+> > +#define SDMA_RX_BUFF_SIZE    0x10000
+> > +#define PASS_LIMIT 256
+> > +#define UART_DMA_NR CONFIG_AST_NR_DMA_UARTS
+> > +#define AST_UART_SDMA_CH 12
+> > +
+> > +/* enum ast_uart_chan_op
+> > + * operation codes passed to the DMA code by the user, and also used
+> > + * to inform the current channel owner of any changes to the system
+> state
+> > + */
+> > +enum ast_uart_chan_op {
+> > +     AST_UART_DMAOP_TRIGGER,
+> > +     AST_UART_DMAOP_STOP,
+> > +     AST_UART_DMAOP_PAUSE,
+> > +};
+> > +
+> > +/* ast_uart_dma_cbfn: buffer callback routinei type */
+> > +typedef void (*ast_uart_dma_cbfn)(void *dev_id, u16 len);
+> > +
+> > +struct ast_sdma_info {
+> > +     u8 ch_no;
+> > +     u8 direction;
+> > +     u8 enable;
+> > +     void *priv;
+> > +     char *sdma_virt_addr;
+> > +     dma_addr_t dma_phy_addr;
+> > +     /* cdriver callbacks */
+> > +     ast_uart_dma_cbfn callback_fn; /* buffer done callback */
+> > +};
+> > +
+> > +struct ast_sdma_ch {
+> > +     struct ast_sdma_info tx_dma_info[AST_UART_SDMA_CH];
+> > +     struct ast_sdma_info rx_dma_info[AST_UART_SDMA_CH];
+> > +};
+> > +
+> > +struct ast_sdma {
+> > +     void __iomem *reg_base;
+> > +     int dma_irq;
+> > +     struct ast_sdma_ch *dma_ch;
+> > +     struct regmap *map;
+> > +};
+> > +
+> > +#define UART_TX_SDMA_EN              0x00
+> > +#define UART_RX_SDMA_EN              0x04
+> > +#define UART_SDMA_CONF               0x08 /* Misc, Buffer size  */
+> > +#define UART_SDMA_TIMER              0x0C
+> > +#define UART_TX_SDMA_REST    0x20
+> > +#define UART_RX_SDMA_REST    0x24
+> > +#define UART_TX_SDMA_IER     0x30
+> > +#define UART_TX_SDMA_ISR     0x34
+> > +#define UART_RX_SDMA_IER     0x38
+> > +#define UART_RX_SDMA_ISR     0x3C
+> > +#define UART_TX_R_POINT(x)   (0x40 + ((x) * 0x20))
+> > +#define UART_TX_W_POINT(x)   (0x44 + ((x) * 0x20))
+> > +#define UART_TX_SDMA_ADDR(x) (0x48 + ((x) * 0x20))
+> > +#define UART_RX_R_POINT(x)   (0x50 + ((x) * 0x20))
+> > +#define UART_RX_W_POINT(x)   (0x54 + ((x) * 0x20))
+> > +#define UART_RX_SDMA_ADDR(x) (0x58 + ((x) * 0x20))
+> > +#define SDMA_CH_EN(x)                BIT(x)
+> > +
+> > +#define SDMA_TX_BUFF_SIZE_MASK       (0x3)
+> > +#define SDMA_SET_TX_BUFF_SIZE(x)(x)
+> > +#define SDMA_BUFF_SIZE_1KB   (0x0)
+> > +#define SDMA_BUFF_SIZE_4KB   (0x1)
+> > +#define SDMA_BUFF_SIZE_16KB  (0x2)
+> > +#define SDMA_BUFF_SIZE_64KB  (0x3)
+> > +#define SDMA_RX_BUFF_SIZE_MASK       (0x3 << 2)
+> > +#define SDMA_SET_RX_BUFF_SIZE(x)((x) << 2)
+> > +#define SDMA_TIMEOUT_DIS     BIT(4)
+> > +
+> > +#define UART_SDMA11_INT              BIT(11)
+> > +#define UART_SDMA10_INT              BIT(10)
+> > +#define UART_SDMA9_INT               BIT(9)
+> > +#define UART_SDMA8_INT               BIT(8)
+> > +#define UART_SDMA7_INT               BIT(7)
+> > +#define UART_SDMA6_INT               BIT(6)
+> > +#define UART_SDMA5_INT               BIT(5)
+> > +#define UART_SDMA4_INT               BIT(4)
+> > +#define UART_SDMA3_INT               BIT(3)
+> > +#define UART_SDMA2_INT               BIT(2)
+> > +#define UART_SDMA1_INT               BIT(1)
+> > +#define UART_SDMA0_INT               BIT(0)
+> > +
+> > +/*
+> > + * Configuration:
+> > + *   share_irqs - whether we pass IRQF_SHARED to request_irq().
+> > + *   This option is unsafe when used on edge-triggered interrupts.
+> > + */
+> > +static unsigned int share_irqs = SERIAL8250_SHARE_IRQS;
+> > +
+> > +static unsigned int nr_uarts = CONFIG_AST_RUNTIME_DMA_UARTS;
+> > +
+> > +struct ast_uart_port {
+> > +     struct uart_port port;
+> > +     unsigned short capabilities; /* port capabilities */
+> > +     unsigned short bugs;         /* port bugs */
+> > +     unsigned int tx_loadsz;      /* transmit fifo load size */
+> > +     unsigned char acr;
+> > +     unsigned char ier;
+> > +     unsigned char lcr;
+> > +     unsigned char mcr;
+> > +     unsigned char mcr_mask;  /* mask of user bits */
+> > +     unsigned char mcr_force; /* mask of forced bits */
+> > +     struct circ_buf rx_dma_buf;
+> > +     struct circ_buf tx_dma_buf;
+> > +     unsigned char dma_channel;
+> > +     dma_addr_t dma_rx_addr; /* Mapped ADMA descr. table */
+> > +     dma_addr_t dma_tx_addr; /* Mapped ADMA descr. table */
+> > +#ifdef CONFIG_AST_UART_DMA_RX_INTERRUPT
+> > +     struct tasklet_struct rx_tasklet;
+> > +#else
+> > +     struct timer_list rx_timer;
+> > +     unsigned int workaround;
+> > +#endif
+> > +     struct tasklet_struct tx_tasklet;
+> > +     spinlock_t lock;
+> > +     int tx_done;
+> > +     int tx_count;
+> > +     struct platform_device *ast_uart_pdev;
+> > +/*
+> > + * Some bits in registers are cleared on a read, so they must
+> > + * be saved whenever the register is read but the bits will not
+> > + * be immediately processed.
+> > + */
+> > +#define LSR_SAVE_FLAGS UART_LSR_BRK_ERROR_BITS
+> > +     unsigned char lsr_saved_flags;
+> > +#define MSR_SAVE_FLAGS UART_MSR_ANY_DELTA
+> > +     unsigned char msr_saved_flags;
+> > +
+> > +     /*
+> > +      * We provide a per-port pm hook.
+> > +      */
+> > +     void (*pm)(struct uart_port *port, unsigned int state,
+> > +                                              unsigned int old);
+> > +};
+> > +
+> > +static struct ast_uart_port ast_uart_ports[UART_DMA_NR];
+> > +
+> > +#define GET_DEV(ast_uart_port_priv_ptr)\
+> > +             (ast_uart_port_priv_ptr->ast_uart_pdev->dev)
+> > +
+> > +static inline struct ast_uart_port *
+> > +to_ast_dma_uart_port(struct uart_port *uart) {
+> > +     return container_of(uart, struct ast_uart_port, port);
+> > +}
+> > +
+> > +struct irq_info {
+> > +     spinlock_t lock;
+> > +     struct ast_uart_port *up;
+> > +};
+> > +
+> > +static struct irq_info ast_uart_irq[1];
+> > +static DEFINE_MUTEX(ast_uart_mutex);
+> > +
+> > +/*
+> > + * Here we define the default xmit fifo size used for each type of UART.
+> > + */
+> > +static const struct serial8250_config uart_config[] = {
+> > +     [PORT_UNKNOWN] = {
+> > +             .name           = "unknown",
+> > +             .fifo_size      = 1,
+> > +             .tx_loadsz      = 1,
+> > +     },
+> > +     [PORT_8250] = {
+> > +             .name           = "8250",
+> > +             .fifo_size      = 1,
+> > +             .tx_loadsz      = 1,
+> > +     },
+> > +     [PORT_16450] = {
+> > +             .name           = "16450",
+> > +             .fifo_size      = 1,
+> > +             .tx_loadsz      = 1,
+> > +     },
+> > +     [PORT_16550] = {
+> > +             .name           = "16550",
+> > +             .fifo_size      = 1,
+> > +             .tx_loadsz      = 1,
+> > +     },
+> > +     [PORT_16550A] = {
+> > +             .name           = "16550A",
+> > +             .fifo_size      = 16,
+> > +             .tx_loadsz      = 16,
+> > +             .fcr            = UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10
+> > +                                                     |
+> UART_FCR_DMA_SELECT,
+> > +             .flags          = UART_CAP_FIFO,
+> > +     },
+> > +};
+>
+> I doubt you need all of these port types, right?  You only have one type
+> of device, please strip out _ALL_ of the unneeded code in here.  You did
+> a wholesale copy of the old driver, to get away with that you then need
+> to customize it to work properly with your hardware _AND_ take away all
+> code that is not needed for your hardware.
+>
+> Lots of this file can be removed, please do so.
+>
+> thanks,
+>
+> greg k-h
+>
+
+--000000000000acaa3c058ef888c9
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi =C2=A0Greg,<br>=C2=A0After modifying [ patch v4 1/5 ] ,=
+ should i submit whole patchset as =C2=A0v5 ?<br>=C2=A0or replying =C2=A0wi=
+th this single patch modified will be enough?<br>=C2=A0how is this done in =
+linux community ?.<br><div><br></div><div>Regards</div><div>Sudheer</div></=
+div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On=
+ Tue, Jul 30, 2019 at 9:18 PM Greg KH &lt;<a href=3D"mailto:gregkh@linuxfou=
+ndation.org">gregkh@linuxfoundation.org</a>&gt; wrote:<br></div><blockquote=
+ class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px so=
+lid rgb(204,204,204);padding-left:1ex">On Fri, Jul 26, 2019 at 06:57:16PM +=
+0530, sudheer.v wrote:<br>
+&gt; From: sudheer veliseti &lt;<a href=3D"mailto:sudheer.open@gmail.com" t=
+arget=3D"_blank">sudheer.open@gmail.com</a>&gt;<br>
+&gt; <br>
+&gt; UART driver for Aspeed&#39;s bmc chip AST2500<br>
+&gt; <br>
+&gt; Design approch:<br>
+&gt; AST2500 has dedicated Uart DMA controller which has 12 sets of Tx and =
+RX channels<br>
+&gt; connected to UART controller directly.<br>
+&gt; Since the DMA controller have dedicated buffers and registers,<br>
+&gt; there would be little benifit in adding DMA framework overhead.<br>
+&gt; So the software for DMA controller is included within the UART driver =
+itself.<br>
+&gt; <br>
+&gt; implementation details:<br>
+&gt; &#39;struct ast_uart_port&#39; is populated and registered with uart_c=
+ore.<br>
+&gt; code is organised into two layers UART-layer and DMA-Layer,both of the=
+m are<br>
+&gt; in the same file.UART-layer requests Rx and Tx dma channels<br>
+&gt; and registers callbacks with DMA controller software Layer<br>
+&gt; Interrupt service routine for DMA controller is the crucial one for Ha=
+ndling all<br>
+&gt; the tx and rx data. ISRs installed for individual uarts are just dummy=
+,and are helpful <br>
+&gt; only to report any spurious interrupts in hardware.<br>
+&gt; <br>
+&gt; <br>
+&gt; Signed-off-by: sudheer veliseti &lt;<a href=3D"mailto:sudheer.open@gma=
+il.com" target=3D"_blank">sudheer.open@gmail.com</a>&gt;<br>
+&gt; ---<br>
+&gt; <br>
+&gt; Changes from v3-&gt;v4:<br>
+&gt; - per port uart structures are registerd directly with uart core <br>
+&gt;=C2=A0 =C2=A0Instead of registering through 8250 Frame work,<br>
+&gt;=C2=A0 =C2=A0ast_uart_port is registered using uart_add_one_port<br>
+&gt; -SDMA_RX_FIX macro replaced with CONFIG_AST_UART_DMA_RX_INTERRUPT<br>
+&gt; -ast_uart_sdma_isr : DMA interrupt handler code is improvised<br>
+&gt; -replaced pr_debug with ftrace wherever appropriate<br>
+&gt; -dev_err is used in all error return cases<br>
+&gt; -uart driver structure ast25xx_uart_reg is modified<br>
+&gt; -driver name changed to ast2500-uart-dma-drv<br>
+&gt; -rx_timer initialisation and callback fn modified<br>
+&gt; <br>
+&gt; Changes from v2-&gt;v3:<br>
+&gt; -custom debug replaced by in kerenl dynamic debug: pr_debug <br>
+&gt; -change-logs added <br>
+&gt; <br>
+&gt; <br>
+&gt; .../tty/serial/8250/8250_ast2500_uart_dma.c=C2=A0 =C2=A0| 1901 +++++++=
+++++++++++<br>
+&gt;=C2=A0 1 file changed, 1901 insertions(+)<br>
+&gt;=C2=A0 create mode 100644 drivers/tty/serial/8250/8250_ast2500_uart_dma=
+.c<br>
+&gt; <br>
+&gt; diff --git a/drivers/tty/serial/8250/8250_ast2500_uart_dma.c b/drivers=
+/tty/serial/8250/8250_ast2500_uart_dma.c<br>
+&gt; new file mode 100644<br>
+&gt; index 000000000000..bc830d605372<br>
+&gt; --- /dev/null<br>
+&gt; +++ b/drivers/tty/serial/8250/8250_ast2500_uart_dma.c<br>
+&gt; @@ -0,0 +1,1901 @@<br>
+&gt; +// SPDX-License-Identifier: GPL-2.0<br>
+&gt; +/*<br>
+&gt; + *=C2=A0 DMA UART Driver for ASPEED BMC chip: AST2500<br>
+&gt; + *<br>
+&gt; + *=C2=A0 Copyright (C) 2019 sudheer Kumar veliseti, Aspeed technology=
+ Inc.<br>
+&gt; + *=C2=A0 &lt;<a href=3D"mailto:open.sudheer@gmail.com" target=3D"_bla=
+nk">open.sudheer@gmail.com</a>&gt;<br>
+<br>
+What was the copyright on the file you copied?=C2=A0 Please properly<br>
+attribute that here.<br>
+<br>
+<br>
+&gt; + *<br>
+&gt; + */<br>
+&gt; +#include &lt;linux/clk.h&gt;<br>
+&gt; +#include &lt;linux/dma-mapping.h&gt;<br>
+&gt; +#include &lt;linux/module.h&gt;<br>
+&gt; +#include &lt;linux/of_address.h&gt;<br>
+&gt; +#include &lt;linux/of_irq.h&gt;<br>
+&gt; +#include &lt;linux/tty.h&gt;<br>
+&gt; +#include &lt;linux/tty_flip.h&gt;<br>
+&gt; +#include &quot;8250.h&quot;<br>
+&gt; +<br>
+&gt; +#define SERIAL8250_CONSOLE NULL<br>
+&gt; +#define TTY_AST_MAJOR 204<br>
+&gt; +#define TTY_AST_MINOR 68<br>
+<br>
+Where did you get this minor number from?<br>
+<br>
+&gt; +<br>
+&gt; +#define DMA_BUFF_SIZE=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 0x1000<br>
+&gt; +#define SDMA_RX_BUFF_SIZE=C2=A0 =C2=A0 0x10000<br>
+&gt; +#define PASS_LIMIT 256<br>
+&gt; +#define UART_DMA_NR CONFIG_AST_NR_DMA_UARTS<br>
+&gt; +#define AST_UART_SDMA_CH 12<br>
+&gt; +<br>
+&gt; +/* enum ast_uart_chan_op<br>
+&gt; + * operation codes passed to the DMA code by the user, and also used<=
+br>
+&gt; + * to inform the current channel owner of any changes to the system s=
+tate<br>
+&gt; + */<br>
+&gt; +enum ast_uart_chan_op {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0AST_UART_DMAOP_TRIGGER,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0AST_UART_DMAOP_STOP,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0AST_UART_DMAOP_PAUSE,<br>
+&gt; +};<br>
+&gt; +<br>
+&gt; +/* ast_uart_dma_cbfn: buffer callback routinei type */<br>
+&gt; +typedef void (*ast_uart_dma_cbfn)(void *dev_id, u16 len);<br>
+&gt; +<br>
+&gt; +struct ast_sdma_info {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0u8 ch_no;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0u8 direction;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0u8 enable;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0void *priv;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0char *sdma_virt_addr;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0dma_addr_t dma_phy_addr;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0/* cdriver callbacks */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0ast_uart_dma_cbfn callback_fn; /* buffer done cal=
+lback */<br>
+&gt; +};<br>
+&gt; +<br>
+&gt; +struct ast_sdma_ch {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct ast_sdma_info tx_dma_info[AST_UART_SDMA_CH=
+];<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct ast_sdma_info rx_dma_info[AST_UART_SDMA_CH=
+];<br>
+&gt; +};<br>
+&gt; +<br>
+&gt; +struct ast_sdma {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0void __iomem *reg_base;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0int dma_irq;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct ast_sdma_ch *dma_ch;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct regmap *map;<br>
+&gt; +};<br>
+&gt; +<br>
+&gt; +#define UART_TX_SDMA_EN=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 0x00<br>
+&gt; +#define UART_RX_SDMA_EN=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 0x04<br>
+&gt; +#define UART_SDMA_CONF=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A00x08 /* Misc, Buffer size=C2=A0 */<br>
+&gt; +#define UART_SDMA_TIMER=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 0x0C<br>
+&gt; +#define UART_TX_SDMA_REST=C2=A0 =C2=A0 0x20<br>
+&gt; +#define UART_RX_SDMA_REST=C2=A0 =C2=A0 0x24<br>
+&gt; +#define UART_TX_SDMA_IER=C2=A0 =C2=A0 =C2=A00x30<br>
+&gt; +#define UART_TX_SDMA_ISR=C2=A0 =C2=A0 =C2=A00x34<br>
+&gt; +#define UART_RX_SDMA_IER=C2=A0 =C2=A0 =C2=A00x38<br>
+&gt; +#define UART_RX_SDMA_ISR=C2=A0 =C2=A0 =C2=A00x3C<br>
+&gt; +#define UART_TX_R_POINT(x)=C2=A0 =C2=A0(0x40 + ((x) * 0x20))<br>
+&gt; +#define UART_TX_W_POINT(x)=C2=A0 =C2=A0(0x44 + ((x) * 0x20))<br>
+&gt; +#define UART_TX_SDMA_ADDR(x) (0x48 + ((x) * 0x20))<br>
+&gt; +#define UART_RX_R_POINT(x)=C2=A0 =C2=A0(0x50 + ((x) * 0x20))<br>
+&gt; +#define UART_RX_W_POINT(x)=C2=A0 =C2=A0(0x54 + ((x) * 0x20))<br>
+&gt; +#define UART_RX_SDMA_ADDR(x) (0x58 + ((x) * 0x20))<br>
+&gt; +#define SDMA_CH_EN(x)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 BIT(x)<br>
+&gt; +<br>
+&gt; +#define SDMA_TX_BUFF_SIZE_MASK=C2=A0 =C2=A0 =C2=A0 =C2=A0(0x3)<br>
+&gt; +#define SDMA_SET_TX_BUFF_SIZE(x)(x)<br>
+&gt; +#define SDMA_BUFF_SIZE_1KB=C2=A0 =C2=A0(0x0)<br>
+&gt; +#define SDMA_BUFF_SIZE_4KB=C2=A0 =C2=A0(0x1)<br>
+&gt; +#define SDMA_BUFF_SIZE_16KB=C2=A0 (0x2)<br>
+&gt; +#define SDMA_BUFF_SIZE_64KB=C2=A0 (0x3)<br>
+&gt; +#define SDMA_RX_BUFF_SIZE_MASK=C2=A0 =C2=A0 =C2=A0 =C2=A0(0x3 &lt;&lt=
+; 2)<br>
+&gt; +#define SDMA_SET_RX_BUFF_SIZE(x)((x) &lt;&lt; 2)<br>
+&gt; +#define SDMA_TIMEOUT_DIS=C2=A0 =C2=A0 =C2=A0BIT(4)<br>
+&gt; +<br>
+&gt; +#define UART_SDMA11_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 BIT(11)<br>
+&gt; +#define UART_SDMA10_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 BIT(10)<br>
+&gt; +#define UART_SDMA9_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(9)<br>
+&gt; +#define UART_SDMA8_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(8)<br>
+&gt; +#define UART_SDMA7_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(7)<br>
+&gt; +#define UART_SDMA6_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(6)<br>
+&gt; +#define UART_SDMA5_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(5)<br>
+&gt; +#define UART_SDMA4_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(4)<br>
+&gt; +#define UART_SDMA3_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(3)<br>
+&gt; +#define UART_SDMA2_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(2)<br>
+&gt; +#define UART_SDMA1_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(1)<br>
+&gt; +#define UART_SDMA0_INT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0BIT(0)<br>
+&gt; +<br>
+&gt; +/*<br>
+&gt; + * Configuration:<br>
+&gt; + *=C2=A0 =C2=A0share_irqs - whether we pass IRQF_SHARED to request_ir=
+q().<br>
+&gt; + *=C2=A0 =C2=A0This option is unsafe when used on edge-triggered inte=
+rrupts.<br>
+&gt; + */<br>
+&gt; +static unsigned int share_irqs =3D SERIAL8250_SHARE_IRQS;<br>
+&gt; +<br>
+&gt; +static unsigned int nr_uarts =3D CONFIG_AST_RUNTIME_DMA_UARTS;<br>
+&gt; +<br>
+&gt; +struct ast_uart_port {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct uart_port port;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned short capabilities; /* port capabilities=
+ */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned short bugs;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0/* port bugs */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned int tx_loadsz;=C2=A0 =C2=A0 =C2=A0 /* tr=
+ansmit fifo load size */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char acr;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char ier;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char lcr;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char mcr;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char mcr_mask;=C2=A0 /* mask of user bit=
+s */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char mcr_force; /* mask of forced bits *=
+/<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct circ_buf rx_dma_buf;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct circ_buf tx_dma_buf;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char dma_channel;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0dma_addr_t dma_rx_addr; /* Mapped ADMA descr. tab=
+le */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0dma_addr_t dma_tx_addr; /* Mapped ADMA descr. tab=
+le */<br>
+&gt; +#ifdef CONFIG_AST_UART_DMA_RX_INTERRUPT<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct tasklet_struct rx_tasklet;<br>
+&gt; +#else<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct timer_list rx_timer;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned int workaround;<br>
+&gt; +#endif<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct tasklet_struct tx_tasklet;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0spinlock_t lock;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0int tx_done;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0int tx_count;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct platform_device *ast_uart_pdev;<br>
+&gt; +/*<br>
+&gt; + * Some bits in registers are cleared on a read, so they must<br>
+&gt; + * be saved whenever the register is read but the bits will not<br>
+&gt; + * be immediately processed.<br>
+&gt; + */<br>
+&gt; +#define LSR_SAVE_FLAGS UART_LSR_BRK_ERROR_BITS<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char lsr_saved_flags;<br>
+&gt; +#define MSR_SAVE_FLAGS UART_MSR_ANY_DELTA<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0unsigned char msr_saved_flags;<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0/*<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 * We provide a per-port pm hook.<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0void (*pm)(struct uart_port *port, unsigned int s=
+tate,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 unsigned int old);<br>
+&gt; +};<br>
+&gt; +<br>
+&gt; +static struct ast_uart_port ast_uart_ports[UART_DMA_NR];<br>
+&gt; +<br>
+&gt; +#define GET_DEV(ast_uart_port_priv_ptr)\<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(ast_uart_port_priv_p=
+tr-&gt;ast_uart_pdev-&gt;dev)<br>
+&gt; +<br>
+&gt; +static inline struct ast_uart_port *<br>
+&gt; +to_ast_dma_uart_port(struct uart_port *uart) {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0return container_of(uart, struct ast_uart_port, p=
+ort);<br>
+&gt; +}<br>
+&gt; +<br>
+&gt; +struct irq_info {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0spinlock_t lock;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0struct ast_uart_port *up;<br>
+&gt; +};<br>
+&gt; +<br>
+&gt; +static struct irq_info ast_uart_irq[1];<br>
+&gt; +static DEFINE_MUTEX(ast_uart_mutex);<br>
+&gt; +<br>
+&gt; +/*<br>
+&gt; + * Here we define the default xmit fifo size used for each type of UA=
+RT.<br>
+&gt; + */<br>
+&gt; +static const struct serial8250_config uart_config[] =3D {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0[PORT_UNKNOWN] =3D {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;unknown&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.fifo_size=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.tx_loadsz=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0},<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0[PORT_8250] =3D {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;8250&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.fifo_size=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.tx_loadsz=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0},<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0[PORT_16450] =3D {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;16450&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.fifo_size=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.tx_loadsz=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0},<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0[PORT_16550] =3D {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;16550&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.fifo_size=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.tx_loadsz=C2=A0 =C2=
+=A0 =C2=A0 =3D 1,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0},<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0[PORT_16550A] =3D {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;16550A&quot;,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.fifo_size=C2=A0 =C2=
+=A0 =C2=A0 =3D 16,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.tx_loadsz=C2=A0 =C2=
+=A0 =C2=A0 =3D 16,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.fcr=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =3D UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| UART_FCR_DMA_SELECT,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.flags=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =3D UART_CAP_FIFO,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0},<br>
+&gt; +};<br>
+<br>
+I doubt you need all of these port types, right?=C2=A0 You only have one ty=
+pe<br>
+of device, please strip out _ALL_ of the unneeded code in here.=C2=A0 You d=
+id<br>
+a wholesale copy of the old driver, to get away with that you then need<br>
+to customize it to work properly with your hardware _AND_ take away all<br>
+code that is not needed for your hardware.<br>
+<br>
+Lots of this file can be removed, please do so.<br>
+<br>
+thanks,<br>
+<br>
+greg k-h<br>
+</blockquote></div>
+
+--000000000000acaa3c058ef888c9--
