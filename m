@@ -1,118 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: DTC check_duplicate_node_names (was: Re: [PATCH] arm64: dts: renesas:
- r8a77990: ebisu: Fix backlight regulator numbering)
-Date: Wed, 31 Jul 2019 09:56:33 +0200
-Message-ID: <CAMuHMdWajtaDGFFkd-GiyR_V8fnpRcn=Uuf8UQuJdcYSigivQQ@mail.gmail.com>
-References: <20190109140045.17449-1-marek.vasut@gmail.com>
- <CAMuHMdX3bP_WCYNRRMmVRPwV52e72NOZMtW8cf29Fo+E9_CvcQ@mail.gmail.com>
- <20190109165822.tmj7qbho46f7clvg@verge.net.au> <1690279.yngTTxF0vm@avalon>
- <0d08d3c1-94ec-dcbe-ad3d-b079ab2ad17e@gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on
+ diagnostic routine
+Date: Wed, 31 Jul 2019 09:03:31 +0100
+Message-ID: <20190731080331.GJ54126@ediswmail.ad.cirrus.com>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-4-thomas.preston@codethink.co.uk>
+ <20190730141935.GF4264@sirena.org.uk>
+ <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
+ <20190730155027.GJ4264@sirena.org.uk>
+ <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0d08d3c1-94ec-dcbe-ad3d-b079ab2ad17e@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Preston <thomas.preston@codethink.co.uk>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Liam Girdwood <lgirdwood@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>, Annaliese McDermond <nh6z@nh6z.net>, Takashi Iwai <tiwai@suse.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Tue, Jul 30, 2019 at 05:28:11PM +0100, Thomas Preston wrote:
+> On 30/07/2019 16:50, Mark Brown wrote:
+> > On Tue, Jul 30, 2019 at 04:25:56PM +0100, Thomas Preston wrote:
+> >> On 30/07/2019 15:19, Mark Brown wrote:
+> > 
+> >>> It is unclear what this mutex usefully protects, it only gets taken when
+> >>> writing to the debugfs file to trigger this diagnostic mode but doesn't
+> >>> do anything to control interactions with any other code path in the
+> >>> driver.
+> > 
+> >> If another process reads the debugfs node "diagnostic" while the turn-on 
+> >> diagnostic mode is running, this mutex prevents the second process
+> >> restarting the diagnostics.
+> > 
+> >> This is redundant if debugfs reads are atomic, but I don't think they are.
+> > 
+> > Like I say it's not just debugfs though, there's the standard driver
+> > interface too.
+> > 
+> 
+> Ah right, I understand. So if we run the turn-on diagnostics routine, there's
+> nothing stopping anyone from interacting with the device in other ways.
+> 
+> I guess there's no way to share that mutex with ALSA? In that case, it doesn't
+> matter if this mutex is there or not - this feature is incompatible. How
+> compatible do debugfs interfaces have to be? I was under the impression anything
+> goes. I would argue that the debugfs is better off for having the mutex so
+> that no one re-reads "diagnostic" within the 5s poll timeout.
+> 
+> Alternatively, this diagnostic feature could be handled with an external-handler
+> kcontrol SOC_SINGLE_EXT? I'm not sure if this is an atomic interface either.
+> 
+> What would be acceptable?
 
-Bringing this to the attention of the DTC people...
+You could take the DAPM mutex in your debugfs handler that would
+prevent any changes to the cards power state whilst your debug
+stuff is running.
 
-On Thu, Jan 10, 2019 at 3:38 PM Marek Vasut <marek.vasut@gmail.com> wrote:
-> On 1/10/19 1:59 PM, Laurent Pinchart wrote:
-> > On Wednesday, 9 January 2019 18:58:23 EET Simon Horman wrote:
-> >> On Wed, Jan 09, 2019 at 04:26:25PM +0100, Geert Uytterhoeven wrote:
-> >>> On Wed, Jan 9, 2019 at 3:01 PM <marek.vasut@gmail.com> wrote:
-> >>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
-> >>>>
-> >>>> There are two regulator1 nodes in the Ebisu DTS right now, one 3.3V for
-> >>>> the eMMC and one 12V for the backlight. This causes one to be
-> >>>> overwritten
-> >>>> by the other, ultimatelly resulting in inoperable eMMC, which depends on
-> >>>> the former. Fix this by renumbering the backlight regulator to
-> >>>> regulator2.
-> >>>>
-> >>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> >>>> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> >>>> Cc: Simon Horman <horms+renesas@verge.net.au>
-> >>>> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> >>>> Cc: linux-renesas-soc@vger.kernel.org
-> >>>> Reported-by: Simon Horman <horms+renesas@verge.net.au>
-> >>>> Fixes: 9d16c4a10e07 ("arm64: dts: renesas: r8a77990: ebisu: Add
-> >>>> backlight")
-> >>>
-> >>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>>
-> >>>> --- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-> >>>> +++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-> >>>> @@ -191,7 +191,7 @@
-> >>>>
-> >>>>                 clock-frequency = <24576000>;
-> >>>>
-> >>>>         };
-> >>>>
-> >>>> -       reg_12p0v: regulator1 {
-> >>>> +       reg_12p0v: regulator2 {
-> >>>>
-> >>>>                 compatible = "regulator-fixed";
-> >>>>                 regulator-name = "D12.0V";
-> >>>>                 regulator-min-microvolt = <12000000>;
-> >>>
-> >>> Perhaps the node name should get a more descriptive suffix
-> >>> (e.g. "regulator-12p0v"), like is already done for some of the other
-> >>> regulators?
-> >>
-> >> I think I would prefer that addressed in a follow-up patch.
-> >
-> > Agreed, but it would still be a very good idea. I think we need to standardize
-> > names for regulators, otherwise this is bound to happen again in the future.
-
-And so it did (patch sent for the same bug in r8a77995-draak.dts).
-
-> Isn't the YAML DT schema validator supposed to catch those problems ?
-> I'd even expect DTC to be able to catch such duplicate nodes and warn
-> about them.
-
-DTC indeed has check_duplicate_node_names.
-However, it only works for the base DTS, not for any later modifications in
-the board DTS.
-
-I.e. the original dup-nodename.dts in the DTC testsuite triggers an error,
-but the modified version below doesn't.
-
---- a/tests/dup-nodename.dts
-+++ b/tests/dup-nodename.dts
-@@ -1,8 +1,11 @@
- /dts-v1/;
-
-+/ {
-+};
-+
- / {
-        node {
-        };
-        node {
-        };
- };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Charles
