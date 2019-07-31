@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 15/20] ARM: dts: imx6ull-colibri: reduce v_batt current in
- power off
-Date: Wed, 31 Jul 2019 12:38:27 +0000
-Message-ID: <20190731123750.25670-16-philippe.schenker@toradex.com>
+Subject: [PATCH v2 19/20] ARM: dts: imx6/7-colibri: switch dr_mode to otg
+Date: Wed, 31 Jul 2019 12:38:33 +0000
+Message-ID: <20190731123750.25670-20-philippe.schenker@toradex.com>
 References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,51 +14,45 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
+In order for the otg ports, that these modules support, it is needed
+that dr_mode is on otg. Switch to use that feature.
 
-Reduce the current drawn from VCC_BATT when the main power on the 3V3
-pins to the module are switched off.
-
-This switches off SoC internal pull resistors which are provided on the
-module for TAMPER7 and TAMPER9 SoC pin and switches on a pull down
-instead of a pullup for the USBC_DET module pin (TAMPER2).
-
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi | 2 +-
+ arch/arm/boot/dts/imx7-colibri.dtsi    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index 1019ce69a242..1f112ec55e5c 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -533,19 +533,19 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx=
+6qdl-colibri.dtsi
+index 9a63debab0b5..6674198346d2 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -388,7 +388,7 @@
+ &usbotg {
+ 	pinctrl-names =3D "default";
+ 	disable-over-current;
+-	dr_mode =3D "peripheral";
++	dr_mode =3D "otg";
+ 	status =3D "disabled";
+ };
 =20
- 	pinctrl_snvs_ad7879_int: snvs-ad7879-int-grp { /* TOUCH Interrupt */
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x100b0
- 		>;
- 	};
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index 67f5e0c87fdc..42478f1aa146 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -320,7 +320,7 @@
+ };
 =20
- 	pinctrl_snvs_reg_sd: snvs-reg-sd-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x4001b8b0
-+			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x400100b0
- 		>;
- 	};
+ &usbotg1 {
+-	dr_mode =3D "host";
++	dr_mode =3D "otg";
+ };
 =20
- 	pinctrl_snvs_usbc_det: snvs-usbc-det-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
- 		>;
- 	};
-=20
+ &usdhc1 {
 --=20
 2.22.0
