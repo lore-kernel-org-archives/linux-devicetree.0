@@ -1,65 +1,20 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 4/6] dt-bindings: arm: amlogic: add support for the Khadas VIM3
-Date: Wed, 31 Jul 2019 14:39:58 +0200
-Message-ID: <20190731124000.22072-5-narmstrong@baylibre.com>
-References: <20190731124000.22072-1-narmstrong@baylibre.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 08/20] ARM: dts: imx7-colibri: Add touch controllers
+Date: Wed, 31 Jul 2019 09:42:40 -0300
+Message-ID: <CAOMZO5B3BcpjbnsXuE5abX8YsuLDrkkHU=RBt6w_SpwuRkTvXA@mail.gmail.com>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com> <20190731123750.25670-9-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731124000.22072-1-narmstrong@baylibre.com>
+In-Reply-To: <20190731123750.25670-9-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, devicetree@vger.kernel.org
-Cc: Christian Hewitt <christianshewitt@gmail.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+On Wed, Jul 31, 2019 at 9:38 AM Philippe Schenker
+<philippe.schenker@toradex.com> wrote:
+>
+> Add atmel mxt multitouch controller and TouchRevolution multitouch
 
-The Khadas VIM3 uses the Amlogic S922X or A311S SoC, both based on the
-Amlogic G12B SoC family, on a board with the same form factor as the
-VIM/VIM2 models. It ships in two variants; basic and
-pro which differ in RAM and eMMC size:
-
-- 2GB (basic) or 4GB (pro) LPDDR4 RAM
-- 16GB (basic) or 32GB (pro) eMMC 5.1 storage
-- 16MB SPI flash
-- 10/100/1000 Base-T Ethernet
-- AP6398S Wireless (802.11 a/b/g/n/ac, BT5.0)
-- HDMI 2.1 video
-- 1x USB 2.0 + 1x USB 3.0 ports
-- 1x USB-C (power) with USB 2.0 OTG
-- 3x LED's (1x red, 1x blue, 1x white)
-- 3x buttons (power, function, reset)
-- IR receiver
-- M2 socket with PCIe, USB, ADC & I2C
-- 40pin GPIO Header
-- 1x micro SD card slot
-
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/amlogic.yaml | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index efa032d12402..04a2b0ef34c6 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -137,6 +137,8 @@ properties:
- 
-       - description: Boards with the Amlogic Meson G12B A311D SoC
-         items:
-+          - enum:
-+              - khadas,vim3
-           - const: amlogic,a311d
-           - const: amlogic,g12b
- 
-@@ -144,6 +146,7 @@ properties:
-         items:
-           - enum:
-               - hardkernel,odroid-n2
-+              - khadas,vim3
-           - const: amlogic,s922x
-           - const: amlogic,g12b
- 
--- 
-2.22.0
+You missed to updated the commit log ;-)
