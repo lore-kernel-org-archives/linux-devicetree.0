@@ -1,126 +1,94 @@
+Return-Path: <SRS0=vtMX=V4=ysoft.com=michal.vokac@kernel.org>
+Subject: Re: [PATCH 11/22] ARM: dts: imx6: Add sleep state to can interfaces
+References: <20190730144649.19022-1-dev@pschenker.ch>
+ <20190730144649.19022-12-dev@pschenker.ch>
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Message-ID: <86f1e50b-97d6-5bdb-7cc2-e7dc162d147a@ysoft.com>
+Date: Wed, 31 Jul 2019 09:14:12 +0200
 MIME-Version: 1.0
-Date: Mon, 29 Jul 2019 19:20:35 -0600
-References: <20190729221101.228240-1-saravanak@google.com>
-In-Reply-To: <20190729221101.228240-1-saravanak@google.com>
-Message-ID: <CAL_JsqK4e9e9BE9s7J3dmKNosFZ31tqpi1=UoFyteZEFUNUJNw@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] Solve postboot supplier cleanup and optimize probe ordering
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Saravana Kannan <saravanak@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+In-Reply-To: <20190730144649.19022-12-dev@pschenker.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Philippe Schenker <dev@pschenker.ch>, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, stefan@agner.ch, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 29, 2019 at 4:11 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Add device-links to track functional dependencies between devices
-> after they are created (but before they are probed) by looking at
-> their common DT bindings like clocks, interconnects, etc.
->
-> Having functional dependencies automatically added before the devices
-> are probed, provides the following benefits:
->
-> - Optimizes device probe order and avoids the useless work of
->   attempting probes of devices that will not probe successfully
->   (because their suppliers aren't present or haven't probed yet).
->
->   For example, in a commonly available mobile SoC, registering just
->   one consumer device's driver at an initcall level earlier than the
->   supplier device's driver causes 11 failed probe attempts before the
->   consumer device probes successfully. This was with a kernel with all
->   the drivers statically compiled in. This problem gets a lot worse if
->   all the drivers are loaded as modules without direct symbol
->   dependencies.
->
-> - Supplier devices like clock providers, interconnect providers, etc
->   need to keep the resources they provide active and at a particular
->   state(s) during boot up even if their current set of consumers don't
->   request the resource to be active. This is because the rest of the
->   consumers might not have probed yet and turning off the resource
->   before all the consumers have probed could lead to a hang or
->   undesired user experience.
->
->   Some frameworks (Eg: regulator) handle this today by turning off
->   "unused" resources at late_initcall_sync and hoping all the devices
->   have probed by then. This is not a valid assumption for systems with
->   loadable modules. Other frameworks (Eg: clock) just don't handle
->   this due to the lack of a clear signal for when they can turn off
->   resources. This leads to downstream hacks to handle cases like this
->   that can easily be solved in the upstream kernel.
->
->   By linking devices before they are probed, we give suppliers a clear
->   count of the number of dependent consumers. Once all of the
->   consumers are active, the suppliers can turn off the unused
->   resources without making assumptions about the number of consumers.
->
-> By default we just add device-links to track "driver presence" (probe
-> succeeded) of the supplier device. If any other functionality provided
-> by device-links are needed, it is left to the consumer/supplier
-> devices to change the link when they probe.
->
-> v1 -> v2:
-> - Drop patch to speed up of_find_device_by_node()
-> - Drop depends-on property and use existing bindings
->
-> v2 -> v3:
-> - Refactor the code to have driver core initiate the linking of devs
-> - Have driver core link consumers to supplier before it's probed
-> - Add support for drivers to edit the device links before probing
->
-> v3 -> v4:
-> - Tested edit_links() on system with cyclic dependency. Works.
-> - Added some checks to make sure device link isn't attempted from
->   parent device node to child device node.
-> - Added way to pause/resume sync_state callbacks across
->   of_platform_populate().
-> - Recursively parse DT node to create device links from parent to
->   suppliers of parent and all child nodes.
->
-> v4 -> v5:
-> - Fixed copy-pasta bugs with linked list handling
-> - Walk up the phandle reference till I find an actual device (needed
->   for regulators to work)
-> - Added support for linking devices from regulator DT bindings
-> - Tested the whole series again to make sure cyclic dependencies are
->   broken with edit_links() and regulator links are created properly.
->
-> v5 -> v6:
-> - Split, squashed and reordered some of the patches.
-> - Refactored the device linking code to follow the same code pattern for
->   any property.
->
-> v6 -> v7:
-> - No functional changes.
-> - Renamed i to index
-> - Added comment to clarify not having to check property name for every
->   index
-> - Added "matched" variable to clarify code. No functional change.
-> - Added comments to include/linux/device.h for add_links()
->
-> v7 -> v8:
-> - Rebased on top of linux-next to handle device link changes in [1]
->
-> [1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
->
-> -Saravana
->
->
-> Saravana Kannan (7):
->   driver core: Add support for linking devices during device addition
->   driver core: Add edit_links() callback for drivers
->   of/platform: Add functional dependency link from DT bindings
->   driver core: Add sync_state driver/bus callback
->   of/platform: Pause/resume sync state during init and
->     of_platform_populate()
->   of/platform: Create device links for all child-supplier depencencies
->   of/platform: Don't create device links for default busses
->
->  .../admin-guide/kernel-parameters.txt         |   5 +
->  drivers/base/core.c                           | 168 ++++++++++++++++
->  drivers/base/dd.c                             |  29 +++
->  drivers/of/platform.c                         | 189 ++++++++++++++++++
->  include/linux/device.h                        |  55 +++++
->  5 files changed, 446 insertions(+)
->
-> --
-> 2.22.0.709.g102302147b-goog
->
+On 30. 07. 19 16:46, Philippe Schenker wrote:
+> From: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> This patch prepares the devicetree for the new Ixora V1.2 where we are
+> able to turn off the supply of the can transceiver. This implies to use
+> a sleep state on transmission pins in order to prevent backfeeding.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+
+What about "ARM: dts: imx6qdl-apalis: " for the subject?
+To be clear that this is not related to the imx6 SoC itself.
+
+> 
+>   arch/arm/boot/dts/imx6qdl-apalis.dtsi | 27 +++++++++++++++++++++------
+>   1 file changed, 21 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> index 7c4ad541c3f5..59ed2e4a1fd1 100644
+> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> @@ -148,14 +148,16 @@
+>   };
+>   
+>   &can1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_flexcan1>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&pinctrl_flexcan1_default>;
+> +	pinctrl-1 = <&pinctrl_flexcan1_sleep>;
+>   	status = "disabled";
+>   };
+>   
+>   &can2 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_flexcan2>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&pinctrl_flexcan2_default>;
+> +	pinctrl-1 = <&pinctrl_flexcan2_sleep>;
+>   	status = "disabled";
+>   };
+>   
+> @@ -599,19 +601,32 @@
+>   		>;
+>   	};
+>   
+> -	pinctrl_flexcan1: flexcan1grp {
+> +	pinctrl_flexcan1_default: flexcan1defgrp {
+>   		fsl,pins = <
+>   			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x1b0b0
+>   			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX 0x1b0b0
+>   		>;
+>   	};
+>   
+> -	pinctrl_flexcan2: flexcan2grp {
+> +	pinctrl_flexcan1_sleep: flexcan1slpgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_7__GPIO1_IO07 0x0
+> +			MX6QDL_PAD_GPIO_8__GPIO1_IO08 0x0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2_default: flexcan2defgrp {
+>   		fsl,pins = <
+>   			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b0b0
+>   			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b0b0
+>   		>;
+>   	};
+> +	pinctrl_flexcan2_sleep: flexcan2slpgrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL4__GPIO4_IO14 0x0
+> +			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x0
+> +		>;
+> +	};
+>   
+>   	pinctrl_gpio_bl_on: gpioblon {
+>   		fsl,pins = <
+> 
