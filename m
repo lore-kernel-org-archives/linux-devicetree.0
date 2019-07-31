@@ -1,89 +1,102 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2 5/5] dt-bindings: Update the isa string description
-Date: Tue, 30 Jul 2019 21:52:01 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1907302124010.15340@viisi.sifive.com>
-References: <20190731012418.24565-1-atish.patra@wdc.com>
- <20190731012418.24565-6-atish.patra@wdc.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
+Date: Wed, 31 Jul 2019 06:55:26 +0200
+Message-ID: <13d89676-ae84-5904-7606-935501cb2d89@xs4all.nl>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
+ <41e7e574-2708-eb4c-ea30-e6a1ac9c073e@collabora.com>
+ <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
+ <74bb0ba1-2859-39ff-d946-129a440ba150@xs4all.nl>
+ <fb1327fb-0903-ce62-4eea-94b81f599b62@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731012418.24565-6-atish.patra@wdc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anup Patel <anup.patel@wdc.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan@kernel.org>, Alexios Zavras <alexios.zavras@intel.com>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>, Allison Randal <allison@lohutok.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <fb1327fb-0903-ce62-4eea-94b81f599b62@xs4all.nl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Helen Koike <helen.koike@collabora.com>, linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, kernel@collabora.com, heiko@sntech.de, zhengsq@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, mchehab@kernel.org, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Jul 2019, Atish Patra wrote:
-
-> The yaml documentation description of isa strings section doesn't
-> specify anything about the case sensitiveness of the isa strings.
-> The RISC-V specification clearly specifies it to be case insensitive.
-> However, Linux kernel supports only lower case isa strings.
-
-The DT binding documentation specifies an interface.  As such the binding 
-isn't determined by any particular piece of software.  So justifying the 
-binding update by referring to what the Linux kernel currently supports 
-isn't that relevant.  If you still really believe that software should be 
-required to handle mixed-case DT ISA strings, the right answer would be to 
-change the software, as your original patches proposed.  The way you've 
-written this patch description, it sounds like you still don't agree with 
-the conclusion that a strictly lowercase string is a good approach.
-
-If I've misunderstood your intent here, and you do think that specifying 
-an all lowercase string is sufficient, then instead of the patch 
-description above, how about something like:
-
-"Since the RISC-V specification states that ISA description strings are 
-case-insensitive, there's no functional difference between mixed-case, 
-upper-case, and lower-case ISA strings.  Thus, to simplify parsing, 
-specify that the letters present of riscv,isa must be all lowercase."
-
-That way it's clear that, per the RISC-V specification, there's no 
-functional difference associated with case.
-
-However, if what you're saying is that you still don't like this outcome, 
-let me know and I'll write the patch myself.  That way you don't have to 
-have your name associated with a change that you don't believe in.
-
-> Update the yaml documentation accordingly to avoid any confusion.
+On 7/31/19 6:33 AM, Hans Verkuil wrote:
+> On 7/31/19 6:29 AM, Hans Verkuil wrote:
+>> On 7/31/19 2:08 AM, Helen Koike wrote:
+>>>
+>>>
+>>> On 7/30/19 5:50 PM, Helen Koike wrote:
+>>>>
+>>>>
+>>>> On 7/30/19 5:15 PM, Hans Verkuil wrote:
+>>>>> On 7/30/19 8:42 PM, Helen Koike wrote:
+>>>>>> Hello,
+>>>>>>
+>>>>>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
+>>>>>> rk3399 SoC.
+>>>>>>
+>>>>>> I didn't change much from the last version, just applying the
+>>>>>> suggestions made in the previous one.
+>>>>>>
+>>>>>> This patchset is also available at:
+>>>>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
+>>>>>>
+>>>>>> Libcamera patched to work with this version:
+>>>>>> https://gitlab.collabora.com/koike/libcamera
+>>>>>> (also sent to the mailing list)
+>>>>>>
+>>>>>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
+>>>>>> Scarlet Chromebook.
+>>>>>>
+>>>>>> Known issues (same as in v7):
+>>>>>> -------------
+>>>>>> - Reloading the module doesn't work (there is some missing cleanup when
+>>>>>> unloading)
+>>>>>> - When capturing in bayer format, changing the size doesn't seem to
+>>>>>> affect the image.
+>>>>>> - crop needs more tests
+>>>>>> - v4l2-compliance error:
+>>>>>>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
+>>>>>> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+>>>>>
+>>>>> Can you mail me the full v4l2-compliance output?
+>>>>
+>>>> Sure, please check here: http://ix.io/1Q5u
+>>>> I updated v4l-utils with the latest version and I re-ran bootstrap/configure/make,
+>>>> but for some reason the hash from the link above is not the latest commit, probably some
+>>>> old configuration somewhere. I'll resend this log as soon as I get v4l2-compliance
+>>>> properly updated.
+>>>
+>>> Please see the output of v4l2-compliance here with an updated v4l-utils: http://ix.io/1Q6A
+>>
+>> So this FAIL is for /dev/v4l-subdev0 (rkisp1-isp-subdev).
+>>
+>> What is weird that this subdev does not appear to have controls at all.
+>>
+>> What is the output of 'v4l2-ctl -d /dev/v4l-subdev0 -l'? And if it lists
+>> controls, then why?
+>>
+>> If you run 'v4l2-compliance -u /dev/v4l-subdev0', do you get a fail as
+>> well?
 > 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> index c899111aa5e3..e22a2b7ebafa 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -46,10 +46,14 @@ properties:
->            - rv64imafdc
->      description:
->        Identifies the specific RISC-V instruction set architecture
-> -      supported by the hart.  These are documented in the RISC-V
-> +      supported by the hart. These are documented in the RISC-V
->        User-Level ISA document, available from
->        https://riscv.org/specifications/
->  
-> +      Linux kernel only supports lower case isa strings. Thus,
+> I see the same issue with v4l-subdev1, but I see no "Media Driver Info"
+> in the v4l2-compliance output for that subdev. That's strange. It would
+> be good to know why that's happening.
 
-In the past, the DT maintainers have pushed back against explicitly 
-mentioning the Linux kernel in binding documentation, since the DT 
-bindings define an interface that's independent of the underlying software 
-implementation.  How about just stating something like "Letters in the 
-riscv,isa string must be all lowercase" ?
+It looks to be some parenting issue: v4l2-compliance expects to find
+a mediaX directory in /sys/dev/char/81\:Y/device/ where 81:Y is the major/minor
+of /dev/v4l-subdev1.
 
-> +      isa strings must be specified in lower case in device tree
-> +      as well.
-> +
+Because is this mi_get_media_fd() cannot find the media device for the subdev
+in v4l2-compliance.
 
-- Paul
+Regards,
+
+	Hans
