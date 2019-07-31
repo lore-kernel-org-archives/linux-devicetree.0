@@ -1,45 +1,118 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: arm: amlogic: add support for the Khadas VIM3
-Date: Wed, 31 Jul 2019 10:55:58 -0600
-Message-ID: <CAL_JsqJ=RtSxw8m687X_zWKY_V5X9zqt3xrq5gjF8WcEZspg-g@mail.gmail.com>
-References: <20190731124000.22072-1-narmstrong@baylibre.com> <20190731124000.22072-5-narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/6] dt-bindings: thermal: Add DT bindings documentation
+ for Amlogic Thermal
+Date: Wed, 31 Jul 2019 11:00:50 -0600
+Message-ID: <CAL_Jsq+Z1JvvtrDBtqbcuzdy_k5=OSSLQ7ezKvs9-oyvGi=-9A@mail.gmail.com>
+References: <20190731121409.17285-1-glaroque@baylibre.com> <20190731121409.17285-2-glaroque@baylibre.com>
+ <f0f0dfe5-0cd3-5275-53ff-cfc4bb44f7e6@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731124000.22072-5-narmstrong@baylibre.com>
+In-Reply-To: <f0f0dfe5-0cd3-5275-53ff-cfc4bb44f7e6@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, Christian Hewitt <christianshewitt@gmail.com>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, Guillaume La Roque <glaroque@baylibre.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 6:40 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Wed, Jul 31, 2019 at 6:44 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> From: Christian Hewitt <christianshewitt@gmail.com>
+> On 31/07/2019 14:14, Guillaume La Roque wrote:
+> > Adding the devicetree binding documentation for the Amlogic temperature
+> > sensor found in the Amlogic Meson G12 SoCs.
+> > the G12A  and G12B SoCs are supported.
+> >
+> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> > ---
+> >  .../bindings/thermal/amlogic,thermal.yaml     | 58 +++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> > new file mode 100644
+> > index 000000000000..1e2fe84da13d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> > @@ -0,0 +1,58 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Amlogic Thermal Driver
+> > +
+> > +maintainers:
+> > +  - Guillaume La Roque <glaroque@baylibre.com>
+> > +
+> > +description: Amlogic Thermal driver
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - amlogic,g12-cpu-thermal
+> > +              - amlogic,g12-ddr-thermal
+> > +          - enum:
+> > +              - amlogic,g12-thermal
 >
-> The Khadas VIM3 uses the Amlogic S922X or A311S SoC, both based on the
-> Amlogic G12B SoC family, on a board with the same form factor as the
-> VIM/VIM2 models. It ships in two variants; basic and
-> pro which differ in RAM and eMMC size:
+> Shouldn't be :
+>     compatible:
+>         items:
+>           - enum:
+>               - amlogic,g12-cpu-thermal
+>               - amlogic,g12-ddr-thermal
+>           - const:
+>               - amlogic,g12-thermal
 >
-> - 2GB (basic) or 4GB (pro) LPDDR4 RAM
-> - 16GB (basic) or 32GB (pro) eMMC 5.1 storage
-> - 16MB SPI flash
-> - 10/100/1000 Base-T Ethernet
-> - AP6398S Wireless (802.11 a/b/g/n/ac, BT5.0)
-> - HDMI 2.1 video
-> - 1x USB 2.0 + 1x USB 3.0 ports
-> - 1x USB-C (power) with USB 2.0 OTG
-> - 3x LED's (1x red, 1x blue, 1x white)
-> - 3x buttons (power, function, reset)
-> - IR receiver
-> - M2 socket with PCIe, USB, ADC & I2C
-> - 40pin GPIO Header
-> - 1x micro SD card slot
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+> instead ?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, except 'const' is a string, not list value.
+
+>
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  amlogic,ao-secure:
+> > +    description: phandle to the ao-secure syscon
+> > +    allOf:
+> > +     - $ref: /schemas/types.yaml#/definitions/uint32
+
+phandle, not uint32
+
+> > +
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - amlogic,ao-secure
+> > +
+> > +examples:
+> > +  - |
+> > +        cpu_temp: temperature-sensor@ff634800 {
+> > +                compatible = "amlogic,g12-cpu-thermal",
+> > +                             "amlogic,g12-thermal";
+> > +                reg = <0x0 0xff634800 0x0 0x50>;
+> > +                interrupts = <0x0 0x24 0x0>;
+> > +                clocks = <&clk 164>;
+> > +                status = "okay";
+> > +                #thermal-sensor-cells = <1>;
+> > +                amlogic,ao-secure = <&sec_AO>;
+> > +        };
+> > +...
+> > \ No newline at end of file
+
+Fix this.
+
+
+> >
+>
