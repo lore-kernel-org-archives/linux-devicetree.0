@@ -1,71 +1,82 @@
-From: <gtk_ruiwang@mediatek.com>
-Subject: [v2] media: mtk-vcodec: Handle H264 error bitstreams
-Date: Wed, 31 Jul 2019 12:29:39 +0800
-Message-ID: <20190731042939.5339-1-gtk_ruiwang@mediatek.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
+Date: Wed, 31 Jul 2019 06:29:59 +0200
+Message-ID: <74bb0ba1-2859-39ff-d946-129a440ba150@xs4all.nl>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <dbdfed3e-7bb6-bf1f-64b9-ab7298193e2d@xs4all.nl>
+ <41e7e574-2708-eb4c-ea30-e6a1ac9c073e@collabora.com>
+ <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8ce532de-6c26-f8db-8754-c8dd1eb0764b@collabora.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>, Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Longfei Wang <longfei.wang@mediatek.com>, Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Rui Wang <gtk_ruiwang@mediatek.com>
+To: Helen Koike <helen.koike@collabora.com>, linux-rockchip@lists.infradead.org
+Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rui Wang <gtk_ruiwang@mediatek.com>
+On 7/31/19 2:08 AM, Helen Koike wrote:
+> 
+> 
+> On 7/30/19 5:50 PM, Helen Koike wrote:
+>>
+>>
+>> On 7/30/19 5:15 PM, Hans Verkuil wrote:
+>>> On 7/30/19 8:42 PM, Helen Koike wrote:
+>>>> Hello,
+>>>>
+>>>> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
+>>>> rk3399 SoC.
+>>>>
+>>>> I didn't change much from the last version, just applying the
+>>>> suggestions made in the previous one.
+>>>>
+>>>> This patchset is also available at:
+>>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
+>>>>
+>>>> Libcamera patched to work with this version:
+>>>> https://gitlab.collabora.com/koike/libcamera
+>>>> (also sent to the mailing list)
+>>>>
+>>>> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
+>>>> Scarlet Chromebook.
+>>>>
+>>>> Known issues (same as in v7):
+>>>> -------------
+>>>> - Reloading the module doesn't work (there is some missing cleanup when
+>>>> unloading)
+>>>> - When capturing in bayer format, changing the size doesn't seem to
+>>>> affect the image.
+>>>> - crop needs more tests
+>>>> - v4l2-compliance error:
+>>>>         fail: v4l2-test-controls.cpp(824): subscribe event for control 'Image Processing Controls' failed
+>>>> test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+>>>
+>>> Can you mail me the full v4l2-compliance output?
+>>
+>> Sure, please check here: http://ix.io/1Q5u
+>> I updated v4l-utils with the latest version and I re-ran bootstrap/configure/make,
+>> but for some reason the hash from the link above is not the latest commit, probably some
+>> old configuration somewhere. I'll resend this log as soon as I get v4l2-compliance
+>> properly updated.
+> 
+> Please see the output of v4l2-compliance here with an updated v4l-utils: http://ix.io/1Q6A
 
-Error h264 bitstreams which picture info are out range of
-decoder hardware specification, and no nal start code at the
-beginning of the buffer, stop decoding and exit.
+So this FAIL is for /dev/v4l-subdev0 (rkisp1-isp-subdev).
 
-Signed-off-by: Rui Wang <gtk_ruiwang@mediatek.com>
----
-Change note:
-Updata commint message with Mauro's comment: use real name on SOB and From.
----
- .../platform/mtk-vcodec/vdec/vdec_h264_if.c      | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+What is weird that this subdev does not appear to have controls at all.
 
-diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-index c5f8f1fca44c..49aa85a9bb5a 100644
---- a/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-+++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
-@@ -29,6 +29,9 @@
- #define H264_MAX_FB_NUM				17
- #define HDR_PARSING_BUF_SZ			1024
- 
-+#define DEC_ERR_RET(ret)			((ret) >> 16)
-+#define H264_ERR_NOT_VALID			3
-+
- /**
-  * struct h264_fb - h264 decode frame buffer information
-  * @vdec_fb_va  : virtual address of struct vdec_fb
-@@ -357,8 +360,11 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
- 	buf = (unsigned char *)bs->va;
- 	buf_sz = bs->size;
- 	nal_start_idx = find_start_code(buf, buf_sz);
--	if (nal_start_idx < 0)
-+	if (nal_start_idx < 0) {
-+		mtk_vcodec_err(inst, "invalid nal start code");
-+		err = -EIO;
- 		goto err_free_fb_out;
-+	}
- 
- 	nal_start = buf[nal_start_idx];
- 	nal_type = NAL_TYPE(buf[nal_start_idx]);
-@@ -382,8 +388,14 @@ static int vdec_h264_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
- 	data[0] = buf_sz;
- 	data[1] = nal_start;
- 	err = vpu_dec_start(vpu, data, 2);
--	if (err)
-+	if (err) {
-+		if (err > 0 && (DEC_ERR_RET(err) == H264_ERR_NOT_VALID)) {
-+			mtk_vcodec_err(inst, "- error bitstream - err = %d -",
-+				       err);
-+			err = -EIO;
-+		}
- 		goto err_free_fb_out;
-+	}
- 
- 	*res_chg = inst->vsi->dec.resolution_changed;
- 	if (*res_chg) {
--- 
-2.18.0
+What is the output of 'v4l2-ctl -d /dev/v4l-subdev0 -l'? And if it lists
+controls, then why?
+
+If you run 'v4l2-compliance -u /dev/v4l-subdev0', do you get a fail as
+well?
+
+BTW, note that struct rkisp1_isp_subdev has a ctrl_handler field that
+isn't used at all.
+
+Regards,
+
+	Hans
