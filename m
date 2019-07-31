@@ -1,173 +1,53 @@
 From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH 2/3] dt-bindings: display/bridge: Add binding for IMX NWL
- mipi dsi host controller
-Date: Wed, 31 Jul 2019 16:37:05 +0200
-Message-ID: <20190731143705.GB1935@bogon.m.sigxcpu.org>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 31 Jul 2019 16:38:44 +0200
+Message-ID: <20190731143844.GC1935@bogon.m.sigxcpu.org>
 References: <cover.1563983037.git.agx@sigxcpu.org>
- <70a5c6617936a4a095e7608b96e3f9fae5ddfbb1.1563983037.git.agx@sigxcpu.org>
- <20190727015716.GA4902@pendragon.ideasonboard.com>
+ <3158f4f8c97c21f98c394e5631d74bc60d796522.1563983037.git.agx@sigxcpu.org>
+ <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
+ <20190727020444.GC4902@pendragon.ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190727015716.GA4902@pendragon.ideasonboard.com>
+In-Reply-To: <20190727020444.GC4902@pendragon.ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>
+Cc: Fabio Estevam <festevam@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infrade>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-thanks for having a look.
-
-On Sat, Jul 27, 2019 at 04:57:16AM +0300, Laurent Pinchart wrote:
-> Hi Guido,
+Hi,
+On Sat, Jul 27, 2019 at 05:04:44AM +0300, Laurent Pinchart wrote:
+> Hello,
 > 
-> Thank you for the patch.
-> 
-> On Wed, Jul 24, 2019 at 05:52:25PM +0200, Guido Günther wrote:
-> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> On Fri, Jul 26, 2019 at 05:01:52PM -0300, Fabio Estevam wrote:
+> > Hi Guido,
 > > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  .../bindings/display/bridge/imx-nwl-dsi.txt   | 89 +++++++++++++++++++
-> >  1 file changed, 89 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
+> > Thanks for your work on this driver!
 > > 
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-> > new file mode 100644
-> > index 000000000000..288fdb726d5a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/imx-nwl-dsi.txt
-> > @@ -0,0 +1,89 @@
-> > +Northwest Logic MIPI-DSI on imx SoCs
-> > +=====================================
+> > On Wed, Jul 24, 2019 at 12:52 PM Guido Günther <agx@sigxcpu.org> wrote:
+> > 
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/bridge/imx-nwl/Kconfig
+> > > @@ -0,0 +1,15 @@
+> > > +config DRM_IMX_NWL_DSI
+> > > +       tristate "Support for Northwest Logic MIPI DSI Host controller"
+> > > +       depends on DRM && (ARCH_MXC || ARCH_MULTIPLATFORM || COMPILE_TEST)
+> > 
+> > This IP could potentially be found on other SoCs, so no need to make
+> > it depend on ARCH_MXC.
 > 
-> There's one too many =.
-> 
-> > +
-> > +NWL MIPI-DSI host controller found on i.MX8 platforms. This is a
-> > +dsi bridge for the for the NWL MIPI-DSI host.
-> 
-> s/dsi/DSI/
-> s/for the for the /for the /
-> 
-> > +
-> > +Required properties:
-> > +- compatible: 		"fsl,<chip>-nwl-dsi"
-> > +	The following strings are expected:
-> > +			"fsl,imx8mq-nwl-dsi"
-> > +- reg: 			the register range of the MIPI-DSI controller
-> > +- interrupts: 		the interrupt number for this module
-> 
-> It's not just a number but a specifier (with flags).
-> 
-> > +- clock, clock-names: 	phandles to the MIPI-DSI clocks
-> 
-> That should be phandles and names.
-> 
-> > +	The following clocks are expected on all platforms:
-> 
-> Expected or required ?
-> 
-> s/ on all platforms// as you only support a single platform.
-> 
-> > +		"core"    - DSI core clock
-> > +		"tx_esc"  - TX_ESC clock (used in escape mode)
-> > +		"rx_esc"  - RX_ESC clock (used in escape mode)
-> > +		"phy_ref" - PHY_REF clock. Clock is managed by the phy. Only
-> > +                            used to read the clock rate.
-> > +- assigned-clocks:	phandles to clocks that require initial configuration
-> > +- assigned-clock-rates:	rates of the clocks that require initial configuration
-> > +	The following clocks need to have an initial configuration:
-> > +	"tx_esc" (20 MHz) and "rx_esc" (80 Mhz).
-> 
-> I think those two properties are out of scope for these bindings.
-> 
-> > +- phys: 		phandle to the phy module representing the DPHY
-> > +			inside the MIPI-DSI IP block
-> > +- phy-names: 		should be "dphy"
-> > +
-> > +Optional properties:
-> > +- power-domains 	phandle to the power domain
-> > +- src			phandle to the system reset controller (required on
-> > +			i.MX8MQ)
-> 
-> Should this use the standard resets property ?
-> 
-> > +- mux-sel		phandle to the MUX register set (required on i.MX8MQ)
-> > +- assigned-clock-parents phandles to parent clocks that needs to be assigned as
-> > +			parents to clocks defined in assigned-clocks
-> 
-> This property is also out of scope.
-> 
-> > +
-> > +Example:
-> > +	mipi_dsi: mipi_dsi@30a00000 {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		compatible = "fsl,imx8mq-nwl-dsi";
-> > +		reg = <0x30A00000 0x300>;
-> > +		clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> > +			 <&clk IMX8MQ_CLK_DSI_AHB>,
-> > +			 <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> > +			 <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-> > +		clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
-> > +		assigned-clocks = <&clk IMX8MQ_CLK_DSI_AHB>,
-> > +				  <&clk IMX8MQ_CLK_DSI_CORE>,
-> > +				  <&clk IMX8MQ_CLK_DSI_IPG_DIV>;
-> > +		assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_80M>,
-> > +					 <&clk IMX8MQ_SYS1_PLL_266M>;
-> > +		assigned-clock-rates = <80000000>,
-> > +				       <266000000>,
-> > +				       <20000000>;
-> > +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> > +		power-domains = <&pgc_mipi>;
-> > +		src = <&src>;
-> > +		mux-sel = <&iomuxc_gpr>;
-> > +		phys = <&dphy>;
-> > +		phy-names = "dphy";
-> > +		status = "okay";
-> > +
-> > +		panel@0 {
-> > +			compatible = "...";
-> > +			port {
-> > +			     panel_in: endpoint {
-> > +				       remote-endpoint = <&mipi_dsi_out>;
-> > +			     };
-> > +			};
-> > +		};
-> > +
-> > +		ports {
-> > +		      #address-cells = <1>;
-> > +		      #size-cells = <0>;
-> > +
-> > +		      port@0 {
-> > +			     reg = <0>;
-> > +			     mipi_dsi_in: endpoint {
-> > +					  remote-endpoint = <&dcss_disp0_mipi_dsi>;
-> > +			     };
-> > +		      };
-> > +		      port@1 {
-> > +			     reg = <1>;
-> > +			     mipi_dsi_out: endpoint {
-> > +					   remote-endpoint = <&panel_in>;
-> > +			     };
-> > +		      };
-> > +		};
-> 
-> The ports should be documented too. There are multiple example bindings
-> available.
+> I'd go even further and not use the prefix imx in the driver name or
+> anywhere in the code.
 
-I've followed you suggestions while moving the whole thing to YAML
-syntax for an upcoming v2.
-
-Thanks for having a look,
+My idea was to do that when another possible user comes up to see what
+can be shared but I can do that for v2.
 Cheers,
  -- Guido
 
-> > +	};
+> 
+> [snip]
 > 
 > -- 
 > Regards,
