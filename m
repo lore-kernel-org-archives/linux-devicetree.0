@@ -1,50 +1,41 @@
-From: Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] of/platform: Add missing const qualifier in of_link_property
-Date: Wed, 31 Jul 2019 11:17:34 -0700
-Message-ID: <20190731181733.60422-1-natechancellor@gmail.com>
-References: <20190729221101.228240-4-saravanak@google.com>
+From: Hongwei Zhang <hongweiz@ami.com>
+Subject: [v7 0/2] gpio: aspeed: Add SGPIO driver
+Date: Wed, 31 Jul 2019 16:01:35 -0400
+Message-ID: <1564603297-1391-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190729221101.228240-4-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: saravanak@google.com
-Cc: collinsd@codeaurora.org, corbet@lwn.net, devicetree@vger.kernel.org, frowand.list@gmail.com, gregkh@linuxfoundation.org, kernel-team@android.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, rafael@kernel.org, robh+dt@kernel.org, Nathan Chancellor <natechancellor@gmail.com>, kbuild test robot <lkp@intel.com>
+To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Clang errors:
+Hello,
 
-drivers/of/platform.c:632:28: error: initializing 'struct
-supplier_bindings *' with an expression of type 'const struct
-supplier_bindings [4]' discards qualifiers
-[-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-        struct supplier_bindings *s = bindings;
-                                  ^   ~~~~~~~~
-1 error generated.
+This short series introduce dt-binding document and a driver for the 
+Aspeed AST2500 SGPIO controller. Please review.
 
-Fixes: 05f812549f53 ("of/platform: Add functional dependency link from DT bindings")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+[v7]:   Changes between v6 and v7:
+        - fix missing variable 'reg' assign issue in aspeed_sgpio_set()
+        - v6 feedback updates
 
-Given this is still in the driver-core-testing branch, I am fine with
-this being squashed in if desired.
+[v6]:   Changes between v5 and v6:
+        - fix a bug in aspeed_sgpio_dir_out()
+        - v5 feedback updates, some comments cleanup
 
- drivers/of/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index e2da90e53edb..21838226d68a 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -629,7 +629,7 @@ static bool of_link_property(struct device *dev, struct device_node *con_np,
- 			     const char *prop)
- {
- 	struct device_node *phandle;
--	struct supplier_bindings *s = bindings;
-+	const struct supplier_bindings *s = bindings;
- 	unsigned int i = 0;
- 	bool done = true, matched = false;
- 
+Hongwei Zhang (2):
+  dt-bindings: gpio: aspeed: Add SGPIO support
+  gpio: aspeed: Add SGPIO driver
+
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  55 +++
+ drivers/gpio/sgpio-aspeed.c                        | 530 +++++++++++++++++++++
+ 2 files changed, 585 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
+
 -- 
-2.22.0
+2.7.4
