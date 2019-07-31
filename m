@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v4 10/13] arm64: dts: qcom: qcs404: Add HFPLL node
-Date: Wed, 31 Jul 2019 22:29:26 +0200
-Message-ID: <20190731202929.16443-11-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v4 09/13] arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+Date: Wed, 31 Jul 2019 22:29:25 +0200
+Message-ID: <20190731202929.16443-10-jorge.ramirez-ortiz@linaro.org>
 References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,36 +12,32 @@ To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, sboyd@kernel.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The high frequency pll functionality is required to enable CPU
-frequency scaling operation.
+Specify the clocks that feed the APCS mux/divider instead of using
+default hardcoded values in the source code.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+The driver still supports the previous bindings; however with this
+update it we allow the msm8916 to access the parent clock names
+required by the driver operation using the device tree node.
+
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 3d0789775009..3714099306b7 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -859,6 +859,15 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 5ea9fb8f2f87..96dc7a12aa94 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -429,7 +429,8 @@
+ 			compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+ 			reg = <0xb011000 0x1000>;
  			#mbox-cells = <1>;
+-			clocks = <&a53pll>;
++			clocks = <&gcc GPLL0_VOTE>, <&a53pll>;
++			clock-names = "aux", "pll";
+ 			#clock-cells = <0>;
  		};
  
-+		apcs_hfpll: clock-controller@b016000 {
-+			compatible = "qcom,hfpll";
-+			reg = <0x0b016000 0x30>;
-+			#clock-cells = <0>;
-+			clock-output-names = "apcs_hfpll";
-+			clocks = <&xo_board>;
-+			clock-names = "xo";
-+		};
-+
- 		timer@b120000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
 -- 
 2.22.0
