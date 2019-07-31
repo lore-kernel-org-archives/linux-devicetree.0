@@ -1,92 +1,114 @@
-From: Atish Patra <Atish.Patra@wdc.com>
-Subject: Re: [PATCH v2 2/5] RISC-V: Add riscv_isa reprensenting ISA features
- common across CPUs
-Date: Wed, 31 Jul 2019 06:27:53 +0000
-Message-ID: <99D22117-E146-44BE-93B5-5D25367931C7@wdc.com>
-References: <20190731012418.24565-1-atish.patra@wdc.com>
- <20190731012418.24565-3-atish.patra@wdc.com>
- <alpine.DEB.2.21.9999.1907302117420.15340@viisi.sifive.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v8 08/11] usb: roles: get usb-role-switch from parent
+Date: Wed, 31 Jul 2019 14:29:18 +0800
+Message-ID: <1564554558.5579.7.camel@mhfsdcap03>
+References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1563958245-6321-9-git-send-email-chunfeng.yun@mediatek.com>
+ <20190729142500.GE28600@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1907302117420.15340@viisi.sifive.com>
-Content-Language: en-US
-Content-ID: <D62938AF8F17DE40A7ECED87E25FFF3B@namprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>, Anup Patel <Anup.Patel@wdc.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Alexios Zavras <alexios.zavras@intel.com>, Allison Randal <allison@lohutok.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enrico Weigelt <info@metux.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190729142500.GE28600@kuha.fi.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, Badhri Jagan Sridharan <badhri@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCu+7v09uIDcvMzAvMTksIDk6MjMgUE0sICJQYXVsIFdhbG1zbGV5IiA8cGF1bC53YWxtc2xl
-eUBzaWZpdmUuY29tPiB3cm90ZToNCg0KICAgIE9uIFR1ZSwgMzAgSnVsIDIwMTksIEF0aXNoIFBh
-dHJhIHdyb3RlOg0KICAgIA0KICAgID4gRnJvbTogQW51cCBQYXRlbCA8YW51cC5wYXRlbEB3ZGMu
-Y29tPg0KICAgID4gDQogICAgPiBUaGlzIHBhdGNoIGFkZHMgcmlzY3ZfaXNhIGludGVnZXIgdG8g
-cmVwcmVzZW50IElTQSBmZWF0dXJlcyBjb21tb24NCiAgICA+IGFjcm9zcyBhbGwgQ1BVcy4gVGhl
-IHJpc2N2X2lzYSBpcyBub3Qgc2FtZSBhcyBlbGZfaHdjYXAgYmVjYXVzZQ0KICAgID4gZWxmX2h3
-Y2FwIHdpbGwgb25seSBoYXZlIElTQSBmZWF0dXJlcyByZWxldmFudCBmb3IgdXNlci1zcGFjZSBh
-cHBzDQogICAgPiB3aGVyZWFzIHJpc2N2X2lzYSB3aWxsIGhhdmUgSVNBIGZlYXR1cmVzIHJlbGV2
-YW50IHRvIGJvdGgga2VybmVsDQogICAgPiBhbmQgdXNlci1zcGFjZSBhcHBzLg0KICAgID4gDQog
-ICAgPiBPbmUgb2YgdGhlIHVzZSBjYXNlIGlzIEtWTSBoeXBlcnZpc29yIHdoZXJlIHJpc2N2X2lz
-YSB3aWxsIGJlIHVzZWQNCiAgICA+IHRvIGRvIGZvbGxvd2luZyBvcGVyYXRpb25zOg0KICAgID4g
-DQogICAgPiAxLiBDaGVjayB3aGV0aGVyIGh5cGVydmlzb3IgZXh0ZW5zaW9uIGlzIGF2YWlsYWJs
-ZQ0KICAgID4gMi4gRmluZCBJU0EgZmVhdHVyZXMgdGhhdCBuZWVkIHRvIGJlIHZpcnR1YWxpemVk
-IChlLmcuIGZsb2F0aW5nDQogICAgPiAgICBwb2ludCBzdXBwb3J0LCB2ZWN0b3IgZXh0ZW5zaW9u
-LCBldGMuKQ0KICAgID4gDQogICAgPiBTaWduZWQtb2ZmLWJ5OiBBbnVwIFBhdGVsIDxhbnVwLnBh
-dGVsQHdkYy5jb20+DQogICAgPiBTaWduZWQtb2ZmLWJ5OiBBdGlzaCBQYXRyYSA8YXRpc2gucGF0
-cmFAd2RjLmNvbT4NCiAgICA+IC0tLQ0KICAgID4gIGFyY2gvcmlzY3YvaW5jbHVkZS9hc20vaHdj
-YXAuaCB8IDI1ICsrKysrKysrKysrKysrKysrKysrKw0KICAgID4gIGFyY2gvcmlzY3Yva2VybmVs
-L2NwdWZlYXR1cmUuYyB8IDQxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0NCiAg
-ICA+ICAyIGZpbGVzIGNoYW5nZWQsIDYzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQog
-ICAgPiANCiAgICA+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2h3Y2FwLmgg
-Yi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2h3Y2FwLmgNCiAgICA+IGluZGV4IDdlY2I3YzZhNTdi
-MS4uZTA2OWY2MGFkNWQyIDEwMDY0NA0KICAgID4gLS0tIGEvYXJjaC9yaXNjdi9pbmNsdWRlL2Fz
-bS9od2NhcC5oDQogICAgPiArKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2h3Y2FwLmgNCiAg
-ICA+IEBAIC0yMiw1ICsyMiwzMCBAQCBlbnVtIHsNCiAgICA+ICB9Ow0KICAgID4gIA0KICAgID4g
-IGV4dGVybiB1bnNpZ25lZCBsb25nIGVsZl9od2NhcDsNCiAgICA+ICsNCiAgICA+ICsjZGVmaW5l
-IFJJU0NWX0lTQV9FWFRfQQkJKDFVTCA8PCAoJ0EnIC0gJ0EnKSkNCiAgICANCiAgICBBcmUgdGhl
-c2UgdXBwZXJjYXNlIHZhcmlhbnRzIHN0aWxsIG5lZWRlZCBpZiB3ZSBkZWZpbmUgdGhlIElTQSBz
-dHJpbmcgdG8gDQogICAgYmUgYWxsIGxvd2VyY2FzZSwgcGVyIG91ciByZWNlbnQgZGlzY3Vzc2lv
-bj8NCiAgICANCkFyZ2guIFNvcnJ5LiBXZSBoYXZlIGJlZW4gY2FycnlpbmcgdGhpcyBwYXRjaCBz
-byBsb25nIHRoYXQgSSBjb21wbGV0ZWx5IGZvcmdvdCBhYm91dCB0aGUNCmNhc2Ugc2Vuc2l0aXZl
-IHVzYWdlIGhlcmUuDQoNCiAgICA+ICsjZGVmaW5lIFJJU0NWX0lTQV9FWFRfYQkJUklTQ1ZfSVNB
-X0VYVF9BDQogICAgPiArI2RlZmluZSBSSVNDVl9JU0FfRVhUX0MJCSgxVUwgPDwgKCdDJyAtICdB
-JykpDQogICAgPiArI2RlZmluZSBSSVNDVl9JU0FfRVhUX2MJCVJJU0NWX0lTQV9FWFRfQw0KICAg
-ID4gKyNkZWZpbmUgUklTQ1ZfSVNBX0VYVF9ECQkoMVVMIDw8ICgnRCcgLSAnQScpKQ0KICAgID4g
-KyNkZWZpbmUgUklTQ1ZfSVNBX0VYVF9kCQlSSVNDVl9JU0FfRVhUX0QNCiAgICA+ICsjZGVmaW5l
-IFJJU0NWX0lTQV9FWFRfRgkJKDFVTCA8PCAoJ0YnIC0gJ0EnKSkNCiAgICA+ICsjZGVmaW5lIFJJ
-U0NWX0lTQV9FWFRfZgkJUklTQ1ZfSVNBX0VYVF9GDQogICAgPiArI2RlZmluZSBSSVNDVl9JU0Ff
-RVhUX0gJCSgxVUwgPDwgKCdIJyAtICdBJykpDQogICAgPiArI2RlZmluZSBSSVNDVl9JU0FfRVhU
-X2gJCVJJU0NWX0lTQV9FWFRfSA0KICAgID4gKyNkZWZpbmUgUklTQ1ZfSVNBX0VYVF9JCQkoMVVM
-IDw8ICgnSScgLSAnQScpKQ0KICAgID4gKyNkZWZpbmUgUklTQ1ZfSVNBX0VYVF9pCQlSSVNDVl9J
-U0FfRVhUX0kNCiAgICA+ICsjZGVmaW5lIFJJU0NWX0lTQV9FWFRfTQkJKDFVTCA8PCAoJ00nIC0g
-J0EnKSkNCiAgICA+ICsjZGVmaW5lIFJJU0NWX0lTQV9FWFRfbQkJUklTQ1ZfSVNBX0VYVF9NDQog
-ICAgPiArI2RlZmluZSBSSVNDVl9JU0FfRVhUX1MJCSgxVUwgPDwgKCdTJyAtICdBJykpDQogICAg
-PiArI2RlZmluZSBSSVNDVl9JU0FfRVhUX3MJCVJJU0NWX0lTQV9FWFRfUw0KICAgID4gKyNkZWZp
-bmUgUklTQ1ZfSVNBX0VYVF9VCQkoMVVMIDw8ICgnVScgLSAnQScpKQ0KICAgID4gKyNkZWZpbmUg
-UklTQ1ZfSVNBX0VYVF91CQlSSVNDVl9JU0FfRVhUX1UNCiAgICA+ICsNCiAgICA+ICtleHRlcm4g
-dW5zaWduZWQgbG9uZyByaXNjdl9pc2E7DQogICAgPiArDQogICAgPiArI2RlZmluZSByaXNjdl9p
-c2FfZXh0ZW5zaW9uX2F2YWlsYWJsZShleHRfY2hhcikJXA0KICAgID4gKwkJKHJpc2N2X2lzYSAm
-IFJJU0NWX0lTQV9FWFRfIyNleHRfY2hhcikNCiAgICA+ICsNCiAgICA+ICAjZW5kaWYNCiAgICA+
-ICAjZW5kaWYNCiAgICA+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2tlcm5lbC9jcHVmZWF0dXJl
-LmMgYi9hcmNoL3Jpc2N2L2tlcm5lbC9jcHVmZWF0dXJlLmMNCiAgICA+IGluZGV4IGIxYWRlOWE0
-OTM0Ny4uMTc3NTI5ZDQ4ZDg3IDEwMDY0NA0KICAgID4gLS0tIGEvYXJjaC9yaXNjdi9rZXJuZWwv
-Y3B1ZmVhdHVyZS5jDQogICAgPiArKysgYi9hcmNoL3Jpc2N2L2tlcm5lbC9jcHVmZWF0dXJlLmMN
-CiAgICANCiAgICBbIC4uLiBdDQogICAgDQogICAgPiBAQCAtNDMsOCArNDksMjIgQEAgdm9pZCBy
-aXNjdl9maWxsX2h3Y2FwKHZvaWQpDQogICAgPiAgCQkJY29udGludWU7DQogICAgPiAgCQl9DQog
-ICAgPiAgDQogICAgPiAtCQlmb3IgKGkgPSAwOyBpIDwgc3RybGVuKGlzYSk7ICsraSkNCiAgICA+
-ICsJCWkgPSAwOw0KICAgID4gKwkJaXNhX2xlbiA9IHN0cmxlbihpc2EpOw0KICAgID4gKyNpZiBk
-ZWZpbmVkKENPTkZJR18zMkJJVCkNCiAgICA+ICsJCWlmIChzdHJuY2FzZWNtcChpc2EsICJydjMy
-IiwgNCkgIT0gMCkNCiAgICANCiAgICBzdHJjbXAoKT8NCiAgICANCiAgICA+ICsJCQlpICs9IDQ7
-DQogICAgPiArI2VsaWYgZGVmaW5lZChDT05GSUdfNjRCSVQpDQogICAgPiArCQlpZiAoc3RybmNh
-c2VjbXAoaXNhLCAicnY2NCIsIDQpICE9IDApDQogICAgDQogICAgQW5kIGFnYWluIGhlcmU/DQog
-ICAgDQogICAgPiArCQkJaSArPSA0Ow0KICAgID4gKyNlbmRpZg0KICAgID4gKwkJZm9yICg7IGkg
-PCBpc2FfbGVuOyArK2kpIHsNCiAgICA+ICAJCQl0aGlzX2h3Y2FwIHw9IGlzYTJod2NhcFsodW5z
-aWduZWQgY2hhcikoaXNhW2ldKV07DQogICAgPiArCQkJaWYgKCdhJyA8PSBpc2FbaV0gJiYgaXNh
-W2ldIDw9ICd6JykNCiAgICA+ICsJCQkJdGhpc19pc2EgfD0gKDFVTCA8PCAoaXNhW2ldIC0gJ2En
-KSk7DQogICAgPiArCQkJaWYgKCdBJyA8PSBpc2FbaV0gJiYgaXNhW2ldIDw9ICdaJykNCiAgICA+
-ICsJCQkJdGhpc19pc2EgfD0gKDFVTCA8PCAoaXNhW2ldIC0gJ0EnKSk7DQogICAgDQogICAgQXJl
-IHRoZXNlIHVwcGVyY2FzZSB2YXJpYW50cyBzdGlsbCBuZWVkZWQ/DQogICAgDQpOb3BlLiBTYW1l
-IGFzIGFib3ZlIGNvbW1lbnQuIEFwb2xvZ2llcyBmb3IgZm9yZ2V0dGluZyBhYm91dCB0aGVzZSB1
-c2FnZXMuDQpJIHdpbGwgc2VuZCBhIHYzIHJlbW92aW5nIHRoZW0uDQogDQpSZWdhcmRzLA0KQXRp
-c2ggICANCiAgICAtIFBhdWwNCiAgICANCg0K
+Hi Heikki,
+
+On Mon, 2019-07-29 at 17:25 +0300, Heikki Krogerus wrote:
+> On Wed, Jul 24, 2019 at 04:50:42PM +0800, Chunfeng Yun wrote:
+> > when the USB host controller is the parent of the connector,
+> > usually type-B, sometimes don't need the graph, so we should
+> > check whether it's parent registers usb-role-switch or not
+> > firstly, and get it if exists.
+> > 
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> I don't think I actually wrote the patch. I may have proposed the code
+> for you, but I never prepared a patch out out that. Please drop the
+> above Signed-off-by line if that is the case. I case I really did
+> write the patch, then you are missing the "From: Heikki..." first
+> line, but I really don't remember preparing the patch.
+> 
+> If the idea came from me, you can use for example the suggested-by
+> tag: "Suggested-by: Heikki Krogerus <heikki.krogerus...".
+Ok, thanks
+
+> 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> > v8: no changes
+> > v7:
+> >   add signed-off-by Chunfeng
+> > 
+> > v6:
+> >   new patch
+> > ---
+> >  drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
+> >  1 file changed, 21 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> > index 5b637aaf311f..87439a84c983 100644
+> > --- a/drivers/usb/roles/class.c
+> > +++ b/drivers/usb/roles/class.c
+> > @@ -114,6 +114,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+> >  	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+> >  }
+> >  
+> > +static struct usb_role_switch *
+> > +usb_role_switch_is_parent(struct fwnode_handle *fwnode)
+> > +{
+> > +	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
+> > +	struct device *dev;
+> > +
+> > +	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
+> > +		return NULL;
+> > +
+> > +	dev = class_find_device(role_class, NULL, parent, switch_fwnode_match);
+> > +	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+> > +}
+> > +
+> >  /**
+> >   * usb_role_switch_get - Find USB role switch linked with the caller
+> >   * @dev: The caller device
+> > @@ -125,8 +138,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+> >  {
+> >  	struct usb_role_switch *sw;
+> >  
+> > -	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+> > -					  usb_role_switch_match);
+> > +	sw = usb_role_switch_is_parent(dev_fwnode(dev));
+> > +	if (!sw)
+> > +		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+> > +						  usb_role_switch_match);
+> >  
+> >  	if (!IS_ERR_OR_NULL(sw))
+> >  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> > @@ -146,8 +161,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+> >  {
+> >  	struct usb_role_switch *sw;
+> >  
+> > -	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
+> > -					  usb_role_switch_match);
+> > +	sw = usb_role_switch_is_parent(fwnode);
+> > +	if (!sw)
+> > +		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
+> > +						  NULL, usb_role_switch_match);
+> >  	if (!IS_ERR_OR_NULL(sw))
+> >  		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+> >  
+> > -- 
+> > 2.21.0
+> 
+> thanks,
+> 
