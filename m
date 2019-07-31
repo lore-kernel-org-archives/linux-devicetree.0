@@ -1,94 +1,67 @@
-Return-Path: <SRS0=vtMX=V4=ysoft.com=michal.vokac@kernel.org>
-Subject: Re: [PATCH 11/22] ARM: dts: imx6: Add sleep state to can interfaces
-References: <20190730144649.19022-1-dev@pschenker.ch>
- <20190730144649.19022-12-dev@pschenker.ch>
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <86f1e50b-97d6-5bdb-7cc2-e7dc162d147a@ysoft.com>
-Date: Wed, 31 Jul 2019 09:14:12 +0200
-MIME-Version: 1.0
-In-Reply-To: <20190730144649.19022-12-dev@pschenker.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Philippe Schenker <dev@pschenker.ch>, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, stefan@agner.ch, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
-List-ID: <devicetree@vger.kernel.org>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH] at91/dt: ariettag25: style cleanup
+Date: Thu,  1 Aug 2019 00:00:45 +0200
+Message-ID: <20190731220045.3992-1-uwe@kleine-koenig.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+List-Id: devicetree@vger.kernel.org
 
-On 30. 07. 19 16:46, Philippe Schenker wrote:
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> This patch prepares the devicetree for the new Ixora V1.2 where we are
-> able to turn off the supply of the can transceiver. This implies to use
-> a sleep state on transmission pins in order to prevent backfeeding.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
-
-What about "ARM: dts: imx6qdl-apalis: " for the subject?
-To be clear that this is not related to the imx6 SoC itself.
-
-> 
->   arch/arm/boot/dts/imx6qdl-apalis.dtsi | 27 +++++++++++++++++++++------
->   1 file changed, 21 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> index 7c4ad541c3f5..59ed2e4a1fd1 100644
-> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> @@ -148,14 +148,16 @@
->   };
->   
->   &can1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_flexcan1>;
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&pinctrl_flexcan1_default>;
-> +	pinctrl-1 = <&pinctrl_flexcan1_sleep>;
->   	status = "disabled";
->   };
->   
->   &can2 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_flexcan2>;
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&pinctrl_flexcan2_default>;
-> +	pinctrl-1 = <&pinctrl_flexcan2_sleep>;
->   	status = "disabled";
->   };
->   
-> @@ -599,19 +601,32 @@
->   		>;
->   	};
->   
-> -	pinctrl_flexcan1: flexcan1grp {
-> +	pinctrl_flexcan1_default: flexcan1defgrp {
->   		fsl,pins = <
->   			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x1b0b0
->   			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX 0x1b0b0
->   		>;
->   	};
->   
-> -	pinctrl_flexcan2: flexcan2grp {
-> +	pinctrl_flexcan1_sleep: flexcan1slpgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_GPIO_7__GPIO1_IO07 0x0
-> +			MX6QDL_PAD_GPIO_8__GPIO1_IO08 0x0
-> +		>;
-> +	};
-> +
-> +	pinctrl_flexcan2_default: flexcan2defgrp {
->   		fsl,pins = <
->   			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b0b0
->   			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b0b0
->   		>;
->   	};
-> +	pinctrl_flexcan2_sleep: flexcan2slpgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_KEY_COL4__GPIO4_IO14 0x0
-> +			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x0
-> +		>;
-> +	};
->   
->   	pinctrl_gpio_bl_on: gpioblon {
->   		fsl,pins = <
-> 
+LSBuZXdsaW5lIGJldHdlZW4gcHJvcGVydGllcyBhbmQgc3ViLW5vZGVzCi0gdXNlIHRhZ3MgZnJv
+bSBpbmNsdWRlZCBkdHNpIGluc3RlYWQgb2YgZHVwbGljYXRpbmcgdGhlIGhpZXJhcmNoeQotIHN0
+YXR1cyBzaG91bGQgYmUgdGhlIGxhc3QgcHJvcGVydHkKLSBkcm9wIGR1cGxpY2F0ZWQgYWxpYXMK
+ClRoZXJlIGFyZSBubyBkaWZmZXJlbmNlcyBpbiB0aGUgZ2VuZXJhdGVkIC5kdGIKClNpZ25lZC1v
+ZmYtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1d2VAa2xlaW5lLWtvZW5pZy5vcmc+Ci0tLQpIZWxs
+bywKCnRoZXNlIGFyZSB0aGUgc3R5bGUgcnVsZXMgSSB3YXMgdGVhY2hlZCB3aGVuIG1vZGlmeWlu
+ZyBpbXggZHRzIGZpbGVzLgpEbyB0aGV5IGFwcGx5IHRvIGF0OTEsIHRvbz8KCkJlc3QgcmVnYXJk
+cwpVd2UKCiBhcmNoL2FybS9ib290L2R0cy9hdDkxLWFyaWV0dGFnMjUuZHRzIHwgODcgKysrKysr
+KysrKysrKy0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKSwg
+NDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1hcmll
+dHRhZzI1LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtYXJpZXR0YWcyNS5kdHMKaW5kZXgg
+N2EzNGM0ZGMwNWQyLi44ZjlmNWEyMmNiZjYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2F0OTEtYXJpZXR0YWcyNS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1hcmlldHRh
+ZzI1LmR0cwpAQCAtNiwxNCArNiwxMSBAQAogICovCiAvZHRzLXYxLzsKICNpbmNsdWRlICJhdDkx
+c2FtOWcyNS5kdHNpIgorCiAvIHsKIAltb2RlbCA9ICJBY21lIFN5c3RlbXMgQXJpZXR0YSBHMjUi
+OwogCWNvbXBhdGlibGUgPSAiYWNtZSxhcmlldHRhZzI1IiwgImF0bWVsLGF0OTFzYW05eDUiLCAi
+YXRtZWwsYXQ5MXNhbTkiOwogCi0JYWxpYXNlcyB7Ci0JCXNlcmlhbDAgPSAmZGJndTsKLQl9Owot
+CiAJY2hvc2VuIHsKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7CiAJfTsKQEAg
+LTM0LDU1ICszMSwxNiBAQAogCiAJYWhiIHsKIAkJYXBiIHsKLQkJCW1tYzA6IG1tY0BmMDAwODAw
+MCB7Ci0JCQkJcGluY3RybC0wID0gPAotCQkJCSAgJnBpbmN0cmxfbW1jMF9zbG90MF9jbGtfY21k
+X2RhdDAKLQkJCQkgICZwaW5jdHJsX21tYzBfc2xvdDBfZGF0MV8zPjsKLQkJCQlzdGF0dXMgPSAi
+b2theSI7Ci0KLQkJCQlzbG90QDAgewotCQkJCQlyZWcgPSA8MD47Ci0JCQkJCWJ1cy13aWR0aCA9
+IDw0PjsKLQkJCQl9OwotCQkJfTsKLQotCQkJdGNiMDogdGltZXJAZjgwMDgwMDAgewotCQkJCXRp
+bWVyQDAgewotCQkJCQljb21wYXRpYmxlID0gImF0bWVsLHRjYi10aW1lciI7Ci0JCQkJCXJlZyA9
+IDwwPjsKLQkJCQl9OwotCi0JCQkJdGltZXJAMSB7Ci0JCQkJCWNvbXBhdGlibGUgPSAiYXRtZWws
+dGNiLXRpbWVyIjsKLQkJCQkJcmVnID0gPDE+OwotCQkJCX07Ci0JCQl9OwotCi0JCQl1c2IyOiBn
+YWRnZXRAZjgwM2MwMDAgewotCQkJCXN0YXR1cyA9ICJva2F5IjsKLQkJCX07Ci0KLQkJCWRiZ3U6
+IHNlcmlhbEBmZmZmZjIwMCB7Ci0JCQkJc3RhdHVzID0gIm9rYXkiOwotCQkJfTsKLQogCQkJcnRj
+QGZmZmZmZWIwIHsKIAkJCQlzdGF0dXMgPSAib2theSI7CiAJCQl9OwogCQl9OwogCi0JCXVzYjA6
+IG9oY2lANjAwMDAwIHsKLQkJCXN0YXR1cyA9ICJva2F5IjsKLQkJCW51bS1wb3J0cyA9IDwzPjsK
+LQkJfTsKLQotCQl1c2IxOiBlaGNpQDcwMDAwMCB7Ci0JCQlzdGF0dXMgPSAib2theSI7Ci0JCX07
+CiAJfTsKIAogCWxlZHMgewogCQljb21wYXRpYmxlID0gImdwaW8tbGVkcyI7CisKIAkJYXJpZXR0
+YV9sZWQgewogCQkJbGFiZWwgPSAiYXJpZXR0YV9sZWQiOwogCQkJZ3Bpb3MgPSA8JnBpb0IgOCBH
+UElPX0FDVElWRV9ISUdIPjsgLyogUEI4ICovCkBAIC05MCwzICs0OCw0NCBAQAogCQl9OwogCX07
+CiB9OworCismZGJndSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJm1tYzAgeworCXBpbmN0
+cmwtMCA9IDwKKwkJJnBpbmN0cmxfbW1jMF9zbG90MF9jbGtfY21kX2RhdDAKKwkJJnBpbmN0cmxf
+bW1jMF9zbG90MF9kYXQxXzM+OworCXN0YXR1cyA9ICJva2F5IjsKKworCXNsb3RAMCB7CisJCXJl
+ZyA9IDwwPjsKKwkJYnVzLXdpZHRoID0gPDQ+OworCX07Cit9OworCismdGNiMCB7CisJdGltZXJA
+MCB7CisJCWNvbXBhdGlibGUgPSAiYXRtZWwsdGNiLXRpbWVyIjsKKwkJcmVnID0gPDA+OworCX07
+CisKKwl0aW1lckAxIHsKKwkJY29tcGF0aWJsZSA9ICJhdG1lbCx0Y2ItdGltZXIiOworCQlyZWcg
+PSA8MT47CisJfTsKK307CisKKyZ1c2IwIHsKKwludW0tcG9ydHMgPSA8Mz47CisJc3RhdHVzID0g
+Im9rYXkiOworfTsKKworJnVzYjEgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZ1c2IyIHsK
+KwlzdGF0dXMgPSAib2theSI7Cit9OwotLSAKMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
