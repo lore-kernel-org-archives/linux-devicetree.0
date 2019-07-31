@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 01/19] phy: mvebu-cp110-comphy: Add clocks support
-Date: Wed, 31 Jul 2019 14:21:08 +0200
-Message-ID: <20190731122126.3049-2-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 16/19] arm64: dts: marvell: Add 7k/8k per-port PHYs in SATA
+ nodes
+Date: Wed, 31 Jul 2019 14:21:23 +0200
+Message-ID: <20190731122126.3049-17-miquel.raynal@bootlin.com>
 References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,173 +22,147 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There is no public clock tree that implies such dependencies between
-the MG/MG-core/AXI clocks and the COMPHY IP but accessing the COMPHY
-registers while one of the three clocks are disabled stalls the CPU.
-
-This happens if, for instance, the COMPHY driver probe is deferred
-(eg. the USB Vbus regulator driver is not yet visible). The MVPP2
-driver which also needs these clocks (among others) will
-prepare/enable the clocks, then be deferred, and disable/unprepare
-them. Next COMPHY lane to be configured would produce an infinite
-stall.
+Fill-in the missing SATA phys/phy-names DT properties of Armada 7k/8k
+based boards.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 94 ++++++++++++++++++--
- 1 file changed, 89 insertions(+), 5 deletions(-)
+ .../arm64/boot/dts/marvell/armada-7040-db.dts |  5 +++++
+ .../marvell/armada-8040-clearfog-gt-8k.dts    |  5 +++++
+ .../arm64/boot/dts/marvell/armada-8040-db.dts | 18 ++++++++++++++++++
+ .../boot/dts/marvell/armada-8040-mcbin.dtsi   | 19 +++++++++++++++++--
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 10 ++++++++++
+ 5 files changed, 55 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index d98e0451f6a1..83d173d298ed 100644
---- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -5,6 +5,7 @@
-  * Antoine Tenart <antoine.tenart@free-electrons.com>
-  */
+diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+index f34ee87a0f56..45eb4197e603 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+@@ -219,6 +219,11 @@
  
-+#include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/mfd/syscon.h>
-@@ -160,6 +161,9 @@ struct mvebu_comphy_priv {
- 	void __iomem *base;
- 	struct regmap *regmap;
- 	struct device *dev;
-+	struct clk *mg_domain_clk;
-+	struct clk *mg_core_clk;
-+	struct clk *axi_clk;
+ &cp0_sata0 {
+ 	status = "okay";
++
++	sata-port@1 {
++		phys = <&cp0_comphy3 1>;
++		phy-names = "cp0-sata0-1-phy";
++	};
  };
  
- struct mvebu_comphy_lane {
-@@ -585,12 +589,72 @@ static struct phy *mvebu_comphy_xlate(struct device *dev,
- 	return phy;
- }
+ &cp0_usb3_0 {
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index f275d9420d5b..1527c82177ab 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -348,6 +348,11 @@
+ &cp1_sata0 {
+ 	pinctrl-0 = <&cp0_pci1_reset_pins>;
+ 	status = "okay";
++
++	sata-port@1 {
++		phys = <&cp1_comphy0 1>;
++		phy-names = "cp1-sata0-1-phy";
++	};
+ };
  
-+static int mvebu_comphy_init_clks(struct mvebu_comphy_priv *priv)
-+{
-+	int ret;
+ &cp1_mdio {
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+index d6e9c014c2f9..66afed6c6245 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -143,6 +143,15 @@
+ /* CON4 on CP0 expansion */
+ &cp0_sata0 {
+ 	status = "okay";
 +
-+	priv->mg_domain_clk = devm_clk_get(priv->dev, "mg_clk");
-+	if (IS_ERR(priv->mg_domain_clk))
-+		return PTR_ERR(priv->mg_domain_clk);
-+
-+	ret = clk_prepare_enable(priv->mg_domain_clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	priv->mg_core_clk = devm_clk_get(priv->dev, "mg_core_clk");
-+	if (IS_ERR(priv->mg_core_clk)) {
-+		ret = PTR_ERR(priv->mg_core_clk);
-+		goto dis_mg_domain_clk;
-+	}
-+
-+	ret = clk_prepare_enable(priv->mg_core_clk);
-+	if (ret < 0)
-+		goto dis_mg_domain_clk;
-+
-+	priv->axi_clk = devm_clk_get(priv->dev, "axi_clk");
-+	if (IS_ERR(priv->axi_clk)) {
-+		ret = PTR_ERR(priv->axi_clk);
-+		goto dis_mg_core_clk;
-+	}
-+
-+	ret = clk_prepare_enable(priv->axi_clk);
-+	if (ret < 0)
-+		goto dis_mg_core_clk;
-+
-+	return 0;
-+
-+dis_mg_core_clk:
-+	clk_disable_unprepare(priv->mg_core_clk);
-+
-+dis_mg_domain_clk:
-+	clk_disable_unprepare(priv->mg_domain_clk);
-+
-+	priv->mg_domain_clk = NULL;
-+	priv->mg_core_clk = NULL;
-+	priv->axi_clk = NULL;
-+
-+	return ret;
-+};
-+
-+static void mvebu_comphy_disable_unprepare_clks(struct mvebu_comphy_priv *priv)
-+{
-+	if (priv->axi_clk)
-+		clk_disable_unprepare(priv->axi_clk);
-+
-+	if (priv->mg_core_clk)
-+		clk_disable_unprepare(priv->mg_core_clk);
-+
-+	if (priv->mg_domain_clk)
-+		clk_disable_unprepare(priv->mg_domain_clk);
-+}
-+
- static int mvebu_comphy_probe(struct platform_device *pdev)
- {
- 	struct mvebu_comphy_priv *priv;
- 	struct phy_provider *provider;
- 	struct device_node *child;
- 	struct resource *res;
-+	int ret;
++	sata-port@0 {
++		phys = <&cp0_comphy1 0>;
++		phy-names = "cp0-sata0-0-phy";
++	};
++	sata-port@1 {
++		phys = <&cp0_comphy3 1>;
++		phy-names = "cp0-sata0-1-phy";
++	};
+ };
  
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -607,10 +671,20 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
-+	/*
-+	 * Ignore error if clocks have not been initialized properly for DT
-+	 * compatibility reasons.
-+	 */
-+	ret = mvebu_comphy_init_clks(priv);
-+	if (ret) {
-+		if (ret == -EPROBE_DEFER)
-+			return ret;
-+		dev_warn(&pdev->dev, "cannot initialize clocks\n");
-+	}
+ /* CON9 on CP0 expansion */
+@@ -273,6 +282,15 @@
+ /* CON4 on CP1 expansion */
+ &cp1_sata0 {
+ 	status = "okay";
 +
- 	for_each_available_child_of_node(pdev->dev.of_node, child) {
- 		struct mvebu_comphy_lane *lane;
- 		struct phy *phy;
--		int ret;
- 		u32 val;
++	sata-port@0 {
++		phys = <&cp1_comphy1 0>;
++		phy-names = "cp1-sata0-0-phy";
++	};
++	sata-port@1 {
++		phys = <&cp1_comphy3 1>;
++		phy-names = "cp1-sata0-1-phy";
++	};
+ };
  
- 		ret = of_property_read_u32(child, "reg", &val);
-@@ -626,12 +700,16 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 		}
+ /* CON9 on CP1 expansion */
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+index 205071b45a32..b8f28d62be5c 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+@@ -239,8 +239,13 @@
+ };
  
- 		lane = devm_kzalloc(&pdev->dev, sizeof(*lane), GFP_KERNEL);
--		if (!lane)
--			return -ENOMEM;
-+		if (!lane) {
-+			ret = -ENOMEM;
-+			goto disable_clks;
-+		}
- 
- 		phy = devm_phy_create(&pdev->dev, child, &mvebu_comphy_ops);
--		if (IS_ERR(phy))
--			return PTR_ERR(phy);
-+		if (IS_ERR(phy)) {
-+			ret = PTR_ERR(phy);
-+			goto disable_clks;
-+		}
- 
- 		lane->priv = priv;
- 		lane->mode = PHY_MODE_INVALID;
-@@ -649,7 +727,13 @@ static int mvebu_comphy_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, priv);
- 	provider = devm_of_phy_provider_register(&pdev->dev,
- 						 mvebu_comphy_xlate);
+ &cp0_sata0 {
+-	/* CPM Lane 0 - U29 */
+ 	status = "okay";
 +
- 	return PTR_ERR_OR_ZERO(provider);
-+
-+disable_clks:
-+	mvebu_comphy_disable_unprepare_clks(priv);
-+
-+	return ret;
- }
++	/* CPM Lane 5 - U29 */
++	sata-port@1 {
++		phys = <&cp0_comphy5 1>;
++		phy-names = "cp0-sata0-1-phy";
++	};
+ };
  
- static const struct of_device_id mvebu_comphy_of_match_table[] = {
+ &cp0_sdhci0 {
+@@ -324,9 +329,19 @@
+ };
+ 
+ &cp1_sata0 {
++	status = "okay";
++
+ 	/* CPS Lane 1 - U32 */
++	sata-port@0 {
++		phys = <&cp1_comphy1 0>;
++		phy-names = "cp1-sata0-0-phy";
++	};
++
+ 	/* CPS Lane 3 - U31 */
+-	status = "okay";
++	sata-port@1 {
++		phys = <&cp1_comphy3 1>;
++		phy-names = "cp1-sata0-1-phy";
++	};
+ };
+ 
+ &cp1_spi1 {
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index 711f38029311..d81944902650 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -309,7 +309,17 @@
+ 			interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&CP110_LABEL(clk) 1 15>,
+ 				 <&CP110_LABEL(clk) 1 16>;
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			status = "disabled";
++
++			sata-port@0 {
++				reg = <0>;
++			};
++
++			sata-port@1 {
++				reg = <1>;
++			};
+ 		};
+ 
+ 		CP110_LABEL(xor0): xor@6a0000 {
 -- 
 2.20.1
