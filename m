@@ -1,55 +1,36 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 09/20] ARM: dts: imx6qdl-colibri: add phy to fec
-Date: Wed, 31 Jul 2019 12:38:16 +0000
-Message-ID: <20190731123750.25670-10-philippe.schenker@toradex.com>
-References: <20190731123750.25670-1-philippe.schenker@toradex.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/6] dt-bindings: arm: amlogic: add bindings for G12B based S922X SoC
+Date: Wed, 31 Jul 2019 14:39:56 +0200
+Message-ID: <20190731124000.22072-3-narmstrong@baylibre.com>
+References: <20190731124000.22072-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
-Content-Language: en-US
+In-Reply-To: <20190731124000.22072-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: khilman@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, christianshewitt@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add the phy-node and mdio bus to the fec-node, represented as is on
-hardware.
-This commit includes micrel,led-mode that is set to the default
-value, prepared for someone who wants to change this.
+Add a specific compatible for the Amlogic G12B family based S922X SoC
+to differentiate with the A311D SoC from the same family.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2: None
-
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx=
-6qdl-colibri.dtsi
-index 1beac22266ed..019dda6b88ad 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -140,7 +140,18 @@
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_enet>;
- 	phy-mode =3D "rmii";
-+	phy-handle =3D <&ethphy>;
- 	status =3D "okay";
-+
-+	mdio {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		ethphy: ethernet-phy@0 {
-+			reg =3D <0>;
-+			micrel,led-mode =3D <0>;
-+		};
-+	};
- };
-=20
- &hdmi {
---=20
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 325c6fd3566d..3c3bc806cd23 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -139,6 +139,7 @@ properties:
+         items:
+           - enum:
+               - hardkernel,odroid-n2
++          - const: amlogic,s922x
+           - const: amlogic,g12b
+ 
+ ...
+-- 
 2.22.0
