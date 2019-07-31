@@ -1,7 +1,7 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 1/5] phy: Add phy ports in attrs
-Date: Wed, 31 Jul 2019 15:49:51 +0530
-Message-ID: <1564568395-9980-2-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v2 2/5] dt-bindings: phy: Modify Stingray USB PHY #phy-cells
+Date: Wed, 31 Jul 2019 15:49:52 +0530
+Message-ID: <1564568395-9980-3-git-send-email-srinath.mannam@broadcom.com>
 References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
@@ -10,45 +10,52 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyma
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add phy ports bitmask to contain enabled PHY ports.
-set and get APIs added to set and get phy ports value.
+Increase #phy-cells from 1 to 2 to have bitmask of PHY enabled ports.
 
 Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- include/linux/phy/phy.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/phy/brcm,stingray-usb-phy.txt      | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 15032f14..b8bca1d 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -109,10 +109,12 @@ struct phy_ops {
- /**
-  * struct phy_attrs - represents phy attributes
-  * @bus_width: Data path width implemented by PHY
-+ * @phy_ports: Bitmask of enabled ports
-  * @mode: PHY mode
-  */
- struct phy_attrs {
- 	u32			bus_width;
-+	u32			phy_ports;
- 	enum phy_mode		mode;
- };
+diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+index 4ba2989..aeb0568 100644
+--- a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+@@ -6,9 +6,11 @@ Required properties:
+ 	- "brcm,sr-usb-hs-phy" is a single HS PHY.
+  - reg: offset and length of the PHY blocks registers
+  - #phy-cells:
+-   - Must be 1 for brcm,sr-usb-combo-phy as it expects one argument to indicate
+-     the PHY number of two PHYs. 0 for HS PHY and 1 for SS PHY.
+-   - Must be 0 for brcm,sr-usb-hs-phy.
++   - Must be 2 for brcm,sr-usb-combo-phy.
++     - Cell 1 - PHY Number, 0 for HS PHY and 1 for SS PHY.
++     - Cell 2 - Bitmask of enabled ports connected to USB Host controller.
++   - Must be 1 for brcm,sr-usb-hs-phy to indicate Bit mask of ports connected
++     to USB Host controller.
  
-@@ -225,6 +227,14 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
- {
- 	phy->attrs.bus_width = bus_width;
- }
-+static inline int phy_get_phy_ports(struct phy *phy)
-+{
-+	return phy->attrs.phy_ports;
-+}
-+static inline void phy_set_phy_ports(struct phy *phy, int phy_ports)
-+{
-+	phy->attrs.phy_ports |= phy_ports;
-+}
- struct phy *phy_get(struct device *dev, const char *string);
- struct phy *phy_optional_get(struct device *dev, const char *string);
- struct phy *devm_phy_get(struct device *dev, const char *string);
+ Refer to phy/phy-bindings.txt for the generic PHY binding properties
+ 
+@@ -16,17 +18,17 @@ Example:
+ 	usbphy0: usb-phy@0 {
+ 		compatible = "brcm,sr-usb-combo-phy";
+ 		reg = <0x00000000 0x100>;
+-		#phy-cells = <1>;
++		#phy-cells = <2>;
+ 	};
+ 
+ 	usbphy1: usb-phy@10000 {
+ 		compatible = "brcm,sr-usb-combo-phy";
+ 		reg = <0x00010000 0x100>,
+-		#phy-cells = <1>;
++		#phy-cells = <2>;
+ 	};
+ 
+ 	usbphy2: usb-phy@20000 {
+ 		compatible = "brcm,sr-usb-hs-phy";
+ 		reg = <0x00020000 0x100>,
+-		#phy-cells = <0>;
++		#phy-cells = <1>;
+ 	};
 -- 
 2.7.4
