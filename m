@@ -1,54 +1,39 @@
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v2 3/6] arm64: dts: amlogic: g12: add temperature sensor
-Date: Wed, 31 Jul 2019 17:35:26 +0200
-Message-ID: <20190731153529.30159-4-glaroque@baylibre.com>
-References: <20190731153529.30159-1-glaroque@baylibre.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH 1/8] arm64: mm: use arm64_dma_phys_limit instead of calling max_zone_dma_phys()
+Date: Wed, 31 Jul 2019 17:47:44 +0200
+Message-ID: <20190731154752.16557-2-nsaenzjulienne@suse.de>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731153529.30159-1-glaroque@baylibre.com>
+In-Reply-To: <20190731154752.16557-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, khilman@baylibre.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, nsaenzjulienne@suse.de, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add cpu and ddr temperature sensors for G12 Socs
+By the time we call zones_sizes_init() arm64_dma_phys_limit already
+contains the result of max_zone_dma_phys(). We use the variable instead
+of calling the function directly to save some precious cpu time.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../boot/dts/amlogic/meson-g12-common.dtsi    | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 06e186ca41e3..7f862a3490fb 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -1353,6 +1353,28 @@
- 				};
- 			};
+ arch/arm64/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f3c795278def..6112d6c90fa8 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -181,7 +181,7 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
  
-+			cpu_temp: temperature-sensor@34800 {
-+				compatible = "amlogic,g12-cpu-thermal",
-+					     "amlogic,g12-thermal";
-+				reg = <0x0 0x34800 0x0 0x50>;
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_TS>;
-+				status = "okay";
-+				#thermal-sensor-cells = <0>;
-+				amlogic,ao-secure = <&sec_AO>;
-+			};
-+
-+			ddr_temp: temperature-sensor@34c00 {
-+				compatible = "amlogic,g12-ddr-thermal",
-+					     "amlogic,g12-thermal";
-+				reg = <0x0 0x34c00 0x0 0x50>;
-+				interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_TS>;
-+				status = "okay";
-+				#thermal-sensor-cells = <0>;
-+				amlogic,ao-secure = <&sec_AO>;
-+			};
-+
- 			usb2_phy0: phy@36000 {
- 				compatible = "amlogic,g12a-usb2-phy";
- 				reg = <0x0 0x36000 0x0 0x2000>;
+ #ifdef CONFIG_ZONE_DMA32
+-	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(max_zone_dma_phys());
++	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(arm64_dma_phys_limit);
+ #endif
+ 	max_zone_pfns[ZONE_NORMAL] = max;
+ 
 -- 
-2.17.1
+2.22.0
