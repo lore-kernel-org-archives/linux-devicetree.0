@@ -1,70 +1,88 @@
-From: Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH] of/platform: Add missing const qualifier in
- of_link_property
-Date: Wed, 31 Jul 2019 13:37:14 -0700
-Message-ID: <20190731203714.GA41488@archlinux-threadripper>
-References: <20190729221101.228240-4-saravanak@google.com>
- <20190731181733.60422-1-natechancellor@gmail.com>
- <CAGETcx9LXP9b_W_1XQFmjODPJVrbnU+vH1RKer2i=jU7Q7EADg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
+Date: Wed, 31 Jul 2019 21:37:12 +0100
+Message-ID: <20190731203712.GJ4369@sirena.org.uk>
+References: <cover.1564603513.git.mchehab+samsung@kernel.org>
+ <20190731141734.1fa9ce64@lwn.net>
+ <20190731202007.GI4369@sirena.org.uk>
+ <20190731172613.32d65ad8@coco.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGETcx9LXP9b_W_1XQFmjODPJVrbnU+vH1RKer2i=jU7Q7EADg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: David Collins <collinsd@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, kbuild test robot <lkp@intel.com>
+Content-Type: multipart/mixed; boundary="===============3714740399510256660=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190731172613.32d65ad8@coco.lan>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Dave Kleikamp <shaggy@kernel.org>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Evgeniy Polyakov <zbr@ioremap.net>, linux-cifs@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Evgeniy Dushistov <dushistov@mail.ru>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, samba-technical@lists.samba.org, Liam Girdwood <lgirdwood@gmail.com>linux
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:33:40PM -0700, Saravana Kannan wrote:
-> On Wed, Jul 31, 2019 at 11:19 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Clang errors:
-> >
-> > drivers/of/platform.c:632:28: error: initializing 'struct
-> > supplier_bindings *' with an expression of type 'const struct
-> > supplier_bindings [4]' discards qualifiers
-> > [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-> >         struct supplier_bindings *s = bindings;
-> >                                   ^   ~~~~~~~~
-> > 1 error generated.
-> >
-> > Fixes: 05f812549f53 ("of/platform: Add functional dependency link from DT bindings")
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >
-> > Given this is still in the driver-core-testing branch, I am fine with
-> > this being squashed in if desired.
-> >
-> >  drivers/of/platform.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index e2da90e53edb..21838226d68a 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -629,7 +629,7 @@ static bool of_link_property(struct device *dev, struct device_node *con_np,
-> >                              const char *prop)
-> >  {
-> >         struct device_node *phandle;
-> > -       struct supplier_bindings *s = bindings;
-> > +       const struct supplier_bindings *s = bindings;
-> >         unsigned int i = 0;
-> >         bool done = true, matched = false;
-> 
-> Odd. I never got that email. Thanks for fixing this. I'll squash it
-> into my patch series since I have a bunch of other kbuild errors about
-> documentation.
-> 
-> -Saravana
 
-It was a clang only email (which currently just get sent to our
-clang-built-linux mailing list as there is a lot of overlap with GCC).
+--===============3714740399510256660==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XigHxYirkHk2Kxsx"
+Content-Disposition: inline
 
-Not sure why there was no GCC email about this but oh well. Thanks for
-picking it up!
 
-Cheers,
-Nathan
+--XigHxYirkHk2Kxsx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jul 31, 2019 at 05:26:13PM -0300, Mauro Carvalho Chehab wrote:
+> Mark Brown <broonie@kernel.org> escreveu:
+
+> > There were outstanding questions about where it was going to get moved
+> > to but if I read the diff correctly it looks like it didn't actually get
+> > moved in the end?
+
+> Yeah, it doesn't have the move. My understanding from our discussions
+> is that we didn't reach a conclusion.
+
+Yes, that was my understanding too which was why I was surprised to see
+this going in.  This is OK then, I'd have acked it.
+
+> In any case, I can send a separate patch with the move part once
+> we reach an agreement about what's the best way to proceed (or you
+> can do it directly, if you prefer so).
+
+I'm not likely to do anything without someone sending patches, I'm not
+clear on the utility of the move with the current division of the
+manuals.  I don't know if it makes sense to have an embedded developer's
+manual as well?
+
+--XigHxYirkHk2Kxsx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1B+/cACgkQJNaLcl1U
+h9Ccawf2NvrLW0ujC5HwkDxagYC2dfnUGm4OOyP/LcS7ufD9vxwdAh08IDJFyHJv
+4skkK8AdqWOxNms4e9NRiQE51vul7GMBtbp3YezYEiaaB3tMTrWe2rHSEp10OQmH
+5WnnpB7KKnUS3UBTwvFRzI1mGWz+klXpzy50z3hsX9UXUArVoqyDRtSY0YDF3+7k
+UNhXw0y2taeDMGRzZnOTDxQkejK13T42Oo79xbzylHww8x1vVqV2s4xLTqn2zaN4
+W0DIoJIGec2Ewe6JPUio9xvsURtWmWOet6jFLRZO9oiO6uJqrvQde50F6siwwFgY
+JMTn2OFfPMPUZVF4ugqAE7qxQaHM
+=etK7
+-----END PGP SIGNATURE-----
+
+--XigHxYirkHk2Kxsx--
+
+
+--===============3714740399510256660==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3714740399510256660==--
