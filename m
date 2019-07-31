@@ -1,15 +1,15 @@
 From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 03/20] clk: tegra: divider: Save and restore divider
- rate
-Date: Wed, 31 Jul 2019 13:49:04 +0300
-Message-ID: <36a7f0a2-89d3-4f7b-7521-eefc61cbfcef@gmail.com>
+Subject: Re: [PATCH v7 16/20] arm64: tegra: Enable wake from deep sleep on RTC
+ alarm
+Date: Wed, 31 Jul 2019 14:04:58 +0300
+Message-ID: <1233ad49-22eb-a90a-d7cf-5fe133ded177@gmail.com>
 References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-4-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564532424-10449-4-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1564532424-10449-17-git-send-email-skomatineni@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
@@ -17,44 +17,39 @@ Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vg
 List-Id: devicetree@vger.kernel.org
 
 31.07.2019 3:20, Sowjanya Komatineni пишет:
-> This patch implements context restore for clock divider.
-> 
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
-> 
-> So on resume, clock dividers are restored back for normal operation.
+> This patch updates device tree for RTC and PMC to allow system wake
+> from deep sleep on RTC alarm.
 > 
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/clk/tegra/clk-divider.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
-> index e76731fb7d69..ca0de5f11f84 100644
-> --- a/drivers/clk/tegra/clk-divider.c
-> +++ b/drivers/clk/tegra/clk-divider.c
-> @@ -109,10 +109,21 @@ static int clk_frac_div_set_rate(struct clk_hw *hw, unsigned long rate,
->  	return 0;
->  }
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> index 659753118e96..30a7c48385a2 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> @@ -768,7 +768,8 @@
+>  	rtc@7000e000 {
+>  		compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
+>  		reg = <0x0 0x7000e000 0x0 0x100>;
+> -		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-parent = <&pmc>;
+>  		clocks = <&tegra_car TEGRA210_CLK_RTC>;
+>  		clock-names = "rtc";
+>  	};
+> @@ -778,6 +779,8 @@
+>  		reg = <0x0 0x7000e400 0x0 0x400>;
+>  		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+>  		clock-names = "pclk", "clk32k_in";
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
 >  
-> +static void clk_divider_restore_context(struct clk_hw *hw)
-> +{
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	unsigned long parent_rate = clk_hw_get_rate(parent);
-> +	unsigned long rate = clk_hw_get_rate(hw);
-> +
-> +	if (clk_frac_div_set_rate(hw, rate, parent_rate) < 0)
-> +		WARN_ON(1);
-> +}
-> +
->  const struct clk_ops tegra_clk_frac_div_ops = {
->  	.recalc_rate = clk_frac_div_recalc_rate,
->  	.set_rate = clk_frac_div_set_rate,
->  	.round_rate = clk_frac_div_round_rate,
-> +	.restore_context = clk_divider_restore_context,
->  };
->  
->  struct clk *tegra_clk_register_divider(const char *name,
+>  		powergates {
+>  			pd_audio: aud {
 > 
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Is this a backwards-compatible change? Or it's not really worth to care
+about the compatibility with older kernel versions, I'm not sure about
+overall state of T210 in the upstream kernel.
