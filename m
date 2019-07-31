@@ -1,13 +1,11 @@
 From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH v2 1/4] firmware: meson_sm: Mark chip struct as static const
-Date: Wed, 31 Jul 2019 09:23:36 +0100
-Message-ID: <20190731082339.20163-2-ccaione@baylibre.com>
-References: <20190731082339.20163-1-ccaione@baylibre.com>
+Subject: [PATCH v2 0/4] Rework secure-monitor driver
+Date: Wed, 31 Jul 2019 09:23:35 +0100
+Message-ID: <20190731082339.20163-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731082339.20163-1-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,26 +19,35 @@ To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.co
 Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-No need to be a global struct.
+The secure-monitor driver is currently in really bad shape, not my 
+proudest piece of code (thanks Jerome for pointing that out ;). I tried 
+to rework it a bit to make it a bit more tolerable.
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Carlo Caione <ccaione@baylibre.com>
----
- drivers/firmware/meson/meson_sm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I needed to change a bit the APIs and consequently adapt the only user 
+we have, that is the nvmem/efuses driver. To not break bisectability I 
+added one single commit to change both the drivers.
 
-diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-index 8d908a8e0d20..772ca6726e7b 100644
---- a/drivers/firmware/meson/meson_sm.c
-+++ b/drivers/firmware/meson/meson_sm.c
-@@ -35,7 +35,7 @@ struct meson_sm_chip {
- 	struct meson_sm_cmd cmd[];
- };
- 
--struct meson_sm_chip gxbb_chip = {
-+static const struct meson_sm_chip gxbb_chip = {
- 	.shmem_size		= SZ_4K,
- 	.cmd_shmem_in_base	= 0x82000020,
- 	.cmd_shmem_out_base	= 0x82000021,
+The remaining commits are cosmetic and DTS/docs fixes.
+
+Changelog:
+- Changed patches order to not break bisect
+- Removed non-functional changes (PATCH 1/5) of the nvmem driver
+- Fix gxbb/gxl DTS
+
+Carlo Caione (4):
+  firmware: meson_sm: Mark chip struct as static const
+  nvmem: meson-efuse: bindings: Add secure-monitor phandle
+  arm64: dts: meson: Link nvmem and secure-monitor nodes
+  firmware: meson_sm: Rework driver as a proper platform driver
+
+ .../bindings/nvmem/amlogic-efuse.txt          |  6 ++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  1 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  1 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  1 +
+ drivers/firmware/meson/meson_sm.c             | 96 +++++++++++++------
+ drivers/nvmem/meson-efuse.c                   | 24 ++++-
+ include/linux/firmware/meson/meson_sm.h       | 15 +--
+ 7 files changed, 104 insertions(+), 40 deletions(-)
+
 -- 
 2.20.1
