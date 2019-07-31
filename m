@@ -1,15 +1,17 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 1/2] dts: add vendor prefix "acme" for "Acme Systems srl"
-Date: Wed, 31 Jul 2019 13:34:19 +0200
-Message-ID: <20190731113419.bz4qygnmnlf57yeo@M43218.corp.atmel.com>
-References: <20190728210403.2730-1-uwe@kleine-koenig.org>
- <20190728210403.2730-2-uwe@kleine-koenig.org>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH 14/22] ARM: dts: apalis-imx6: Add some example I2C devices
+Date: Wed, 31 Jul 2019 11:36:59 +0000
+Message-ID: <cd35b9553397f51153ccb5cea9205f91f659cfdf.camel@toradex.com>
+References: <20190730144649.19022-1-dev@pschenker.ch>
+ <20190730144649.19022-15-dev@pschenker.ch>
+ <CAOMZO5BtXFR7kDuiHedsDA0AaNZqsO_L2x9d3u9ZuULkovChoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190728210403.2730-2-uwe@kleine-koenig.org>
+In-Reply-To: <CAOMZO5BtXFR7kDuiHedsDA0AaNZqsO_L2x9d3u9ZuULkovChoQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <95B9859292AAB34A95A9803C3C1320F2@eurprd05.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,38 +21,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, info@acmesystems.it, linux-arm-kernel@lists.infradead.org
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, Max Krummenacher <max.krummenacher@toradex.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 28, 2019 at 11:04:02PM +0200, Uwe Kleine-K=F6nig wrote:
-> =
+On Tue, 2019-07-30 at 17:53 -0300, Fabio Estevam wrote:
+> On Tue, Jul 30, 2019 at 11:57 AM Philippe Schenker <dev@pschenker.ch> wrote:
+> 
+> >  &backlight {
+> > @@ -204,6 +228,77 @@
+> >   */
+> >  &i2c3 {
+> >         status = "okay";
+> > +
+> > +       adv7280: adv7280@21 {
+> > +               compatible = "adv7280";
+> > +               reg = <0x21>;
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_ipu1_csi0 &pinctrl_cam_mclk>;
+> > +               clocks = <&clks 200>;
+> 
+> Please replace this 200 with a proper clock label.
+> 
+> > +               clock-names = "csi_mclk";
+> > +               DOVDD-supply = <&reg_3p3v>;
+> > +               AVDD-supply = <&reg_3p3v>;
+> > +               DVDD-supply = <&reg_3p3v>;
+> > +               PVDD-supply = <&reg_3p3v>;
+> > +               csi_id = <0>;
+> 
+> This is not a valid property upstream.
+> 
+> It seems you just ported it from a downstream vendor kernel. Please
+> make sure you test with the dt-bindings from mainline.
+> 
+> > +               mclk = <24000000>;
+> > +               mclk_source = <1>;
+> > +               status = "okay";
+> > +       };
+> > +
+> > +       /* Video ADC on Analog Camera Module */
+> > +       adv7180: adv7180@21 {
+> > +               compatible = "adv,adv7180";
+> > +               reg = <0x21>;
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_ipu1_csi0 &pinctrl_cam_mclk>;
+> > +               clocks = <&clks 200>;
+> 
+> clock label, please.
+> 
+> > +               clock-names = "csi_mclk";
+> > +               DOVDD-supply = <&reg_3p3v>; /* 3.3v */
+> > +               AVDD-supply = <&reg_3p3v>;  /* 1.8v */
+> > +               DVDD-supply = <&reg_3p3v>;  /* 1.8v */
+> > +               PVDD-supply = <&reg_3p3v>;  /* 1.8v */
+> > +               csi_id = <0>;
+> 
+> Same here
+> 
+> > +               mclk = <24000000>;
+> > +               mclk_source = <1>;
+> > +               cvbs = <1>;
+> > +               status = "disabled";
+> > +       };
+> > +
+> > +       max9526: max9526@20 {
+> > +               compatible = "maxim,max9526";
+> 
+> This is not documented in mainline.
 
-> Signed-off-by: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
-
-As I can confirm it's not an April fool!
-Reviwed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
-umentation/devicetree/bindings/vendor-prefixes.yaml
-> index 6992bbbbffab..85965e3446bf 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -27,6 +27,8 @@ patternProperties:
->      description: Abilis Systems
->    "^abracon,.*":
->      description: Abracon Corporation
-> +  "^acme,.*":
-> +    description: Acme Systems srl
->    "^actions,.*":
->      description: Actions Semiconductor Co., Ltd.
->    "^active-semi,.*":
-> -- =
-
-> 2.20.1
-> =
+Yeah, too much downstream stuff in here. I will drop that patch for now...
