@@ -1,48 +1,54 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 0/4] Reset xHCI port PHY on disconnect
-Date: Wed, 31 Jul 2019 15:49:50 +0530
-Message-ID: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v2 1/5] phy: Add phy ports in attrs
+Date: Wed, 31 Jul 2019 15:49:51 +0530
+Message-ID: <1564568395-9980-2-git-send-email-srinath.mannam@broadcom.com>
+References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a quirk in xHCI driver to reset PHY of xHCI port on
-its disconnect event.
+Add phy ports bitmask to contain enabled PHY ports.
+set and get APIs added to set and get phy ports value.
 
-This patch set is based on Linux-5.2-rc4.
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+---
+ include/linux/phy/phy.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Changes from v1:
-  - Addressed Mathias's comments
-    - Modified mapping of HC ports and their corresponding PHYs
-  - Addressed Rob's comments
-    - Removed usb-phy-port-reset DT property.
-    - Added quirk in platform data using HCI compatible string.
-  - Add phy ports in phy attr structure to have enabled ports bitmask.
-  - Modified #phy-cells of sr-phy to pass phy ports bitmask.
-
-Srinath Mannam (4):
-  phy: Add phy ports in attrs
-  dt-bindings: phy: Modify Stingray USB PHY #phy-cells
-  phy: sr-usb: Set phy ports
-  dt-bindings: usb-xhci: Add platform specific compatible for Stingray
-    xHCI
-  drivers: xhci: Add quirk to reset xHCI port PHY
-
- .../devicetree/bindings/phy/brcm,stingray-usb-phy.txt | 14 ++++++++------
- Documentation/devicetree/bindings/usb/usb-xhci.txt    |  1 +
- drivers/phy/broadcom/phy-bcm-sr-usb.c                 |  9 ++++++++-
- drivers/usb/core/hcd.c                                |  6 ++++++
- drivers/usb/core/phy.c                                | 19 +++++++++++++++++++
- drivers/usb/core/phy.h                                |  1 +
- drivers/usb/host/xhci-plat.c                          | 10 ++++++++++
- drivers/usb/host/xhci-plat.h                          |  1 +
- drivers/usb/host/xhci-ring.c                          |  9 ++++++---
- drivers/usb/host/xhci.h                               |  1 +
- include/linux/phy/phy.h                               | 10 ++++++++++
- include/linux/usb/hcd.h                               |  1 +
- 12 files changed, 72 insertions(+), 10 deletions(-)
-
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 15032f14..b8bca1d 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -109,10 +109,12 @@ struct phy_ops {
+ /**
+  * struct phy_attrs - represents phy attributes
+  * @bus_width: Data path width implemented by PHY
++ * @phy_ports: Bitmask of enabled ports
+  * @mode: PHY mode
+  */
+ struct phy_attrs {
+ 	u32			bus_width;
++	u32			phy_ports;
+ 	enum phy_mode		mode;
+ };
+ 
+@@ -225,6 +227,14 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+ {
+ 	phy->attrs.bus_width = bus_width;
+ }
++static inline int phy_get_phy_ports(struct phy *phy)
++{
++	return phy->attrs.phy_ports;
++}
++static inline void phy_set_phy_ports(struct phy *phy, int phy_ports)
++{
++	phy->attrs.phy_ports |= phy_ports;
++}
+ struct phy *phy_get(struct device *dev, const char *string);
+ struct phy *phy_optional_get(struct device *dev, const char *string);
+ struct phy *devm_phy_get(struct device *dev, const char *string);
 -- 
 2.7.4
