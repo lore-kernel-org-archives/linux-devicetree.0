@@ -1,13 +1,11 @@
 From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH 2/2] reset: imx7: Fix IMX8MQ_RESET_MIPI_DSI_ defines
-Date: Wed, 31 Jul 2019 18:43:31 +0200
-Message-ID: <bd1504122f6797536a253a37f3604f5c46f02ab2.1564591352.git.agx@sigxcpu.org>
-References: <cover.1564591352.git.agx@sigxcpu.org>
+Subject: [PATCH 0/2] imx: Fix typo in iMQ8MQ reset names
+Date: Wed, 31 Jul 2019 18:43:29 +0200
+Message-ID: <cover.1564591352.git.agx@sigxcpu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1564591352.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -22,43 +20,13 @@ instead of
 
 Since they're DSI related this looks like a typo.
 
-I wasn't sure if this should be a single patch since it otherwise breaks
-bisectability. I couldn't find any device trees using this yet.
+Guido Günther (2):
+  dt-bindings: reset: Fix typo in imx8mq resets
+  reset: imx7: Fix IMX8MQ_RESET_MIPI_DSI_ defines
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/reset/reset-imx7.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/reset/reset-imx7.c               | 12 ++++++------
+ include/dt-bindings/reset/imx8mq-reset.h |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-index 3ecd770f910b..1443a55a0c29 100644
---- a/drivers/reset/reset-imx7.c
-+++ b/drivers/reset/reset-imx7.c
-@@ -169,9 +169,9 @@ static const struct imx7_src_signal imx8mq_src_signals[IMX8MQ_RESET_NUM] = {
- 	[IMX8MQ_RESET_OTG2_PHY_RESET]		= { SRC_USBOPHY2_RCR, BIT(0) },
- 	[IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N]	= { SRC_MIPIPHY_RCR, BIT(1) },
- 	[IMX8MQ_RESET_MIPI_DSI_RESET_N]		= { SRC_MIPIPHY_RCR, BIT(2) },
--	[IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(3) },
--	[IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(4) },
--	[IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(5) },
-+	[IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(3) },
-+	[IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(4) },
-+	[IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(5) },
- 	[IMX8MQ_RESET_PCIEPHY]			= { SRC_PCIEPHY_RCR,
- 						    BIT(2) | BIT(1) },
- 	[IMX8MQ_RESET_PCIEPHY_PERST]		= { SRC_PCIEPHY_RCR, BIT(3) },
-@@ -220,9 +220,9 @@ static int imx8mq_reset_set(struct reset_controller_dev *rcdev,
- 
- 	case IMX8MQ_RESET_PCIE_CTRL_APPS_EN:
- 	case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN:	/* fallthrough */
--	case IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N:	/* fallthrough */
--	case IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N:	/* fallthrough */
--	case IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N:	/* fallthrough */
- 	case IMX8MQ_RESET_MIPI_DSI_RESET_N:	/* fallthrough */
- 	case IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N:	/* fallthrough */
- 		value = assert ? 0 : bit;
 -- 
 2.20.1
