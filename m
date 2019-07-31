@@ -1,73 +1,82 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-Date: Wed, 31 Jul 2019 09:56:05 -0300
-Message-ID: <CAOMZO5B5HnqpLrDjyGtqSQpVXmcoZuGLvCzKVUhwLb-_ZO_Xog@mail.gmail.com>
-References: <20190731123750.25670-1-philippe.schenker@toradex.com> <20190731123750.25670-8-philippe.schenker@toradex.com>
+From: Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+Subject: Re: [RFC PATCH 01/11] devfreq: exynos-bus: Extract
+ exynos_bus_profile_init()
+Date: Wed, 31 Jul 2019 15:00:38 +0200
+Message-ID: <bda10bcc66aae96355e74c4739229d72bcc95b0d.camel@partner.samsung.com>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <CGME20190723122022eucas1p1266d90873d564894bd852c20140f8474@eucas1p1.samsung.com>
+        <20190723122016.30279-2-a.swigon@partner.samsung.com>
+        <20190724190741.GD14346@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731123750.25670-8-philippe.schenker@toradex.com>
+In-Reply-To: <20190724190741.GD14346@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com, =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 9:38 AM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> From: Stefan Agner <stefan.agner@toradex.com>
->
-> Add pinmuxing and do not specify voltage restrictions in the
-> module level device tree.
+Hi,
 
-It would be nice to explain the reason for doing this.
+On Wed, 2019-07-24 at 21:07 +0200, Krzysztof Kozlowski wrote:
+> On Tue, Jul 23, 2019 at 02:20:06PM +0200, Artur Świgoń wrote:
+> > This patch adds a new static function, exynos_bus_profile_init(), extracted
+> > from exynos_bus_probe().
+> > 
+> > Signed-off-by: Artur Świgoń <a.swigon@partner.samsung.com>
+> > ---
+> >  drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
+> >  1 file changed, 60 insertions(+), 46 deletions(-)
+> > 
+> > diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> > index d9f377912c10..d8f1efaf2d49 100644
+> > --- a/drivers/devfreq/exynos-bus.c
+> > +++ b/drivers/devfreq/exynos-bus.c
+> > @@ -372,12 +372,69 @@ static int exynos_bus_parse_of(struct device_node *np,
+> >  	return ret;
+> >  }
+> >  
+> > +static int exynos_bus_profile_init(struct exynos_bus *bus,
+> > +				   struct devfreq_dev_profile *profile)
+> > +{
+> > +	struct device *dev = bus->dev;
+> > +	struct devfreq_simple_ondemand_data *ondemand_data;
+> > +	int ret;
+> > +
+> > +	/* Initialize the struct profile and governor data for parent device */
+> > +	profile->polling_ms = 50;
+> > +	profile->target = exynos_bus_target;
+> > +	profile->get_dev_status = exynos_bus_get_dev_status;
+> > +	profile->exit = exynos_bus_exit;
+> > +
+> > +	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+> > +	if (!ondemand_data) {
+> > +		ret = -ENOMEM;
+> > +		goto err;
+> 
+> Just return proper error code. Less lines, obvious code since you do not
+> have any cleanup in error path.
 
-> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
->
-> Changes in v2: None
->
->  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index 16d1a1ed1aff..67f5e0c87fdc 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -326,7 +326,6 @@
->  &usdhc1 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
-> -       no-1-8-v;
->         cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
->         disable-wp;
->         vqmmc-supply = <&reg_LDO2>;
-> @@ -671,6 +670,28 @@
->                 >;
->         };
->
-> +       pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
-> +               fsl,pins = <
-> +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5a
-> +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1a
-> +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5a
-> +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5a
-> +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5a
-> +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5a
-> +               >;
-> +       };
-> +
-> +       pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
-> +               fsl,pins = <
-> +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5b
-> +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1b
-> +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5b
-> +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5b
-> +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5b
-> +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5b
-> +               >;
-> +       };
+I was advised to avoid modifying code being moved (in one patch). I do make
+changes in these places in patch 04/11, i.e. change the original label 'err' to
+'out'. What's your opinion on making the proposed changes to patches 01 and 02
+(s/goto err/return ret/) in patch 04 instead?
 
-You add the entries for 100MHz and 200MHz, but I don't see them being
-referenced anywhere.
+> > +
+> > +	/* Register opp_notifier to catch the change of OPP  */
+> > +	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "failed to register opp notifier\n");
+> > +		goto err;
+> 
+> The same - return err.
+> 
+> Best regards,
+> Krzysztof
+
+Best regards,
+-- 
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
