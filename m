@@ -1,14 +1,17 @@
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCH 1/2] dts: add vendor prefix "acme" for "Acme Systems srl"
-Date: Wed, 31 Jul 2019 23:48:31 +0200
-Message-ID: <442b7107-f4b1-2a91-af21-ea7f72bc09b1@kleine-koenig.org>
-References: <20190728210403.2730-1-uwe@kleine-koenig.org>
- <20190728210403.2730-2-uwe@kleine-koenig.org>
- <20190731113419.bz4qygnmnlf57yeo@M43218.corp.atmel.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 0/6] ReST conversion patches not applied yet
+Date: Wed, 31 Jul 2019 22:55:16 +0100
+Message-ID: <20190731215516.GM4369@sirena.org.uk>
+References: <cover.1564603513.git.mchehab+samsung@kernel.org>
+ <20190731141734.1fa9ce64@lwn.net>
+ <20190731202007.GI4369@sirena.org.uk>
+ <20190731172613.32d65ad8@coco.lan>
+ <20190731203712.GJ4369@sirena.org.uk>
+ <20190731182729.01c98cd3@coco.lan>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1492062297289626304=="
+Content-Type: multipart/mixed; boundary="===============1190156128647438466=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731113419.bz4qygnmnlf57yeo@M43218.corp.atmel.com>
+In-Reply-To: <20190731182729.01c98cd3@coco.lan>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,77 +21,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, info@acmesystems.it
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Dave Kleikamp <shaggy@kernel.org>, alsa-devel@alsa-project.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Evgeniy Polyakov <zbr@ioremap.net>, linux-cifs@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Evgeniy Dushistov <dushistov@mail.ru>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Mathieu Poirier <mathieu.poirier@linaro.org>, samba-technical@lists.samba.org, Liam Girdwood <lgirdwood@gmail.com>linux
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============1492062297289626304==
+
+--===============1190156128647438466==
 Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="cH4BqUBpag4tE2aMU0hpD3Sc3r1rGJZGd"
+	protocol="application/pgp-signature"; boundary="iKKZt69u2Wx/rspf"
+Content-Disposition: inline
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---cH4BqUBpag4tE2aMU0hpD3Sc3r1rGJZGd
-Content-Type: multipart/mixed; boundary="Gs5T56No68F6bl0Jg67000vKJ2AyYCfsp";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- info@acmesystems.it
-Message-ID: <442b7107-f4b1-2a91-af21-ea7f72bc09b1@kleine-koenig.org>
-Subject: Re: [PATCH 1/2] dts: add vendor prefix "acme" for "Acme Systems srl"
-References: <20190728210403.2730-1-uwe@kleine-koenig.org>
- <20190728210403.2730-2-uwe@kleine-koenig.org>
- <20190731113419.bz4qygnmnlf57yeo@M43218.corp.atmel.com>
-In-Reply-To: <20190731113419.bz4qygnmnlf57yeo@M43218.corp.atmel.com>
 
---Gs5T56No68F6bl0Jg67000vKJ2AyYCfsp
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+--iKKZt69u2Wx/rspf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 7/31/19 1:34 PM, Ludovic Desroches wrote:
-> On Sun, Jul 28, 2019 at 11:04:02PM +0200, Uwe Kleine-K=C3=B6nig wrote:
->>
->> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org>
->=20
-> As I can confirm it's not an April fool!
-> Reviwed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+On Wed, Jul 31, 2019 at 06:27:29PM -0300, Mauro Carvalho Chehab wrote:
 
-s/Reviwed/Reviewed/
+> Meanwhile, if someone needs something that it is at the wrong book, he
+> can just use some search tool to seek what he needs, no matter on
+> what book the relevant information is stored.
 
-Not sure who will pick this up and which automatisms are used. This
-might need manual fixup or attention to be picked up at all.
+OTOH it might be weird for the intended audience of the book.
 
-Best regards
-Uwe
+> Mark Brown <broonie@kernel.org> escreveu:
 
+> > I don't know if it makes sense to have an embedded developer's
+> > manual as well?
 
---Gs5T56No68F6bl0Jg67000vKJ2AyYCfsp--
+> Yeah, that's a good question.=20
 
---cH4BqUBpag4tE2aMU0hpD3Sc3r1rGJZGd
+> Jon is planning todo a documentation track at LPC. One of the things
+> that should be discussed, IMO, is how we'll organize the books.
+
+I'll be at Plumbers, not sure what the schedule's looking like yet
+though.
+
+--iKKZt69u2Wx/rspf
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl1CDK8ACgkQwfwUeK3K
-7AmqEAf/Ryv0/abniCQoVuSFJGOMBJake5bcaY6GLUx703CxC9WPaB0Z4p5RoknD
-+sczfkTq+BtCYzjkGVjgqaW4t3cgn3HHfMDHqUoullY4OC5XE6pd/f/J1WAPYlg7
-8yrDnA9nOrmbMGazcqy+Fd8/AH7FfbEMB7w+lpmvLKbDkZ1Gk929YsDwrPAdKMTF
-hTGahf5vgBZoL6IwDAbpPSA9k824+NOv8hohdF1hJQLmJYbVWeA1KO+REjRKfjKW
-YP347AKi5Ej30nwxxtEaTidR1uyU5gUiSWw9nvYqrfvXKMevAR4uOpSdYzUT9DvR
-FFzdsz7oDh0kmpo2zdw34iveFoyKXg==
-=Gldg
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1CDkQACgkQJNaLcl1U
+h9DmyQf8CbO6RT3vDVCTbWB0f/yKJ/A87r+D9XnXG94SH0Vqj3KAl/HFsPpl4gyU
+1t9Uo9ZtFC8lSFh29z5fxpIzNkfsanBjnTrJS1lxOvU+DgmoTfXV5+2xa3rel1E0
+oOzMumEUJLWQmAQIaSzObUMvLTHaHZXE9UwveI9WkjfE0k7lsrK4vKzotxGDUk1a
+6B/LdVb+NH3ME369z6GL2hpH6SkNc0jCRYj4PcGud8PTKBqHim7kBI3AeE51lFUV
+Dsr7zD6gH+cbj/GXdXApIDJvlR8bH6LLM/dakss84cM6CvJoD/pd4z9fn2kmUkVY
+5tMO7f2i3x9slM6yQ78bDwGSrn8XIg==
+=1tp/
 -----END PGP SIGNATURE-----
 
---cH4BqUBpag4tE2aMU0hpD3Sc3r1rGJZGd--
+--iKKZt69u2Wx/rspf--
 
 
---===============1492062297289626304==
+--===============1190156128647438466==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -99,4 +87,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1492062297289626304==--
+--===============1190156128647438466==--
