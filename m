@@ -1,58 +1,59 @@
 From: Biwen Li <biwen.li@nxp.com>
-Subject: [v2,1/3] arm64: dts: ls1028a: Add ftm_alarm0 DT node
-Date: Wed, 31 Jul 2019 17:38:24 +0800
-Message-ID: <20190731093826.49046-1-biwen.li@nxp.com>
+Subject: [v2,3/3] arm: dts: ls1021a: add ftm_alarm0 DT node
+Date: Wed, 31 Jul 2019 17:38:26 +0800
+Message-ID: <20190731093826.49046-3-biwen.li@nxp.com>
+References: <20190731093826.49046-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731093826.49046-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds ftm_alarm0 DT node for LS1028ARDB board
-FlexTimer1 module is used to wakeup the system
+The patch add ftm_alarm0 DT node
+	- add rcpm node
+	- add ftm_alarm0 node
+	- aliases ftm_alarm0 as rtc1
 
 Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
 Change in v2:
-	- None
+	- delete reg-name property
+	- correct fsl,rcpm-wakeup property
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/ls1021a.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..3c66d1e1d196 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -17,6 +17,10 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	aliases {
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 464df4290ffc..30bd6bc1f49a 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -66,6 +66,7 @@
+ 		serial4 = &lpuart4;
+ 		serial5 = &lpuart5;
+ 		sysclk = &sysclk;
 +		rtc1 = &ftm_alarm0;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -543,6 +547,19 @@
- 				little-endian;
- 			};
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls1028a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x1c>;
-+			#fsl,rcpm-wakeup-cells = <7>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1028a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		};
  	};
  
- 	malidp0: display@f080000 {
+ 	cpus {
+@@ -985,5 +986,18 @@
+ 			big-endian;
+ 		};
+ 
++		rcpm: rcpm@1ee2140 {
++			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1ee2140 0x0 0x8>;
++			#fsl,rcpm-wakeup-cells = <2>;
++		};
++
++		ftm_alarm0: timer0@29d0000 {
++			compatible = "fsl,ls1021a-ftm-alarm";
++			reg = <0x0 0x29d0000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			big-endian;
++		};
+ 	};
+ };
 -- 
 2.17.1
