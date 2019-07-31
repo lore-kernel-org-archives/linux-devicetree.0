@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 15/19] arm64: dts: marvell: Add CP110 COMPHY clocks
-Date: Wed, 31 Jul 2019 14:21:22 +0200
-Message-ID: <20190731122126.3049-16-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 17/19] arm64: dts: marvell: Add 7k/8k PHYs in USB3 nodes
+Date: Wed, 31 Jul 2019 14:21:24 +0200
+Message-ID: <20190731122126.3049-18-miquel.raynal@bootlin.com>
 References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,26 +21,75 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Declare the three clocks feeding the COMPHY block.
+Fill-in the missing USB3 phys/phy-names DT properties of Armada 7k/8k
+based boards. Only update nodes actually enabling USB3 in the default
+(mainline) configuration. A few USB nodes are enabled but there is
+only USB2 working on them.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-7040-db.dts             | 4 ++++
+ arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 2 ++
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts             | 2 ++
+ arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi         | 2 ++
+ 4 files changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index f71afb1de18f..711f38029311 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -133,6 +133,9 @@
- 			compatible = "marvell,comphy-cp110";
- 			reg = <0x120000 0x6000>;
- 			marvell,system-controller = <&CP110_LABEL(syscon0)>;
-+			clocks = <&CP110_LABEL(clk) 1 5>, <&CP110_LABEL(clk) 1 6>,
-+				 <&CP110_LABEL(clk) 1 18>;
-+			clock-names = "mg_clk", "mg_core_clk", "axi_clk";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+index 45eb4197e603..81bea91468f7 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+@@ -228,11 +228,15 @@
  
+ &cp0_usb3_0 {
+ 	usb-phy = <&cp0_usb3_0_phy>;
++	phys = <&cp0_comphy1 0>;
++	phy-names = "cp0-usb3h0-comphy";
+ 	status = "okay";
+ };
+ 
+ &cp0_usb3_1 {
+ 	usb-phy = <&cp0_usb3_1_phy>;
++	phys = <&cp0_comphy4 1>;
++	phy-names = "cp0-usb3h1-comphy";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+index 1527c82177ab..281209aa7f2c 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+@@ -474,5 +474,7 @@
+ 
+ &cp1_usb3_0 {
+ 	usb-phy = <&usb3h0_phy>;
++	phys = <&cp1_comphy2 0>;
++	phy-names = "cp1-usb3h0-comphy";
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+index 66afed6c6245..1086d53fd1b9 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -163,6 +163,8 @@
+ /* CON10 on CP0 expansion */
+ &cp0_usb3_1 {
+ 	usb-phy = <&cp0_usb3_1_phy>;
++	phys = <&cp0_comphy4 1>;
++	phy-names = "cp0-usb3h1-comphy";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+index b8f28d62be5c..6b9941d92e20 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+@@ -359,5 +359,7 @@
+ &cp1_usb3_0 {
+ 	/* CPS Lane 2 - CON7 */
+ 	usb-phy = <&usb3h0_phy>;
++	phys = <&cp1_comphy2 0>;
++	phy-names = "cp1-usb3h0-comphy";
+ 	status = "okay";
+ };
 -- 
 2.20.1
