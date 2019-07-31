@@ -1,11 +1,13 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 00/19] Enhance CP110 COMPHY support
-Date: Wed, 31 Jul 2019 14:21:07 +0200
-Message-ID: <20190731122126.3049-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 05/19] phy: mvebu-cp110-comphy: Add RXAUI support
+Date: Wed, 31 Jul 2019 14:21:12 +0200
+Message-ID: <20190731122126.3049-6-miquel.raynal@bootlin.com>
+References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,72 +21,66 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QXJtYWRhIENQMTEwIGhhdmUgYSBDT01QSFkgSVAgd2hpY2ggc3VwcG9ydHMgY29uZmlndXJpbmcg
-U0VSREVTIGxhbmVzCmluIG9uZSBtb2RlLCBlaXRoZXI6Ci0gU0FUQQotIFVTQjMgaG9zdAotIFBD
-SWUgKHNldmVyYWwgd2lkdGgpCi0gRXRoZXJuZXQgKHNldmVyYWwgbW9kZXMpCgpBcyBvZiB0b2Rh
-eSwgb25seSBhIGZldyBFdGhlcm5ldCBtb2RlcyBhcmUgc3VwcG9ydGVkIGFuZCB0aGUgY29kZSBp
-cwplbWJlZGRlZCBpbiB0aGUgTGludXggZHJpdmVyLiBBIG1vcmUgY29tcGxldGUgQ09NUEhZIGRy
-aXZlciB0aGF0IGNhbgpiZSB1c2VkIGJ5IGJvdGggTGludXggYW5kIFUtQm9vdCBpcyBlbWJlZGRl
-ZCBpbiB0aGUgZmlybXdhcmUgYW5kIGNhbgpiZSBydW4gdGhyb3VnaCBTTUMgY2FsbHMuCgpGaXJz
-dCB0aGUgY3VycmVudCBDT01QSFkgZHJpdmVyIGlzIHVwZGF0ZWQgdG8gdXNlIFNNQyBjYWxscyBi
-dXQKZmFsbGJhY2tzIHRvIHRoZSBhbHJlYWR5IGV4aXN0aW5nIGZ1bmN0aW9ucyBpZiB0aGUgZmly
-bXdhcmUgaXMgbm90CnVwLXRvLWRhdGUuIFRoZW4sIG1vcmUgRXRoZXJuZXQgbW9kZXMgYXJlIGFk
-ZGVkICh0aHJvdWdoIFNNQyBjYWxscwpvbmx5KS4gU0FUQSwgVVNCM0ggYW5kIFBDSWUgbW9kZXMg
-YXJlIGFsc28gc3VwcG9ydGVkIG9uZSBieSBvbmUuCgpUaGVyZSBpcyBvbmUgc3VidGxlIGRpZmZl
-cmVuY2Ugd2l0aCB0aGUgUENJZSBmdW5jdGlvbnM6IHdlIG11c3QgdGVsbAp0aGUgZmlybXdhcmUg
-dGhlIG51bWJlciBvZiBsYW5lcyB0byBjb25maWd1cmUgKHgxLCB4MiBvciB4NCkuIFRoaXMKcGFy
-YW1ldGVyIGRlcGVuZHMgb24gdGhlIG51bWJlciBvZiBlbnRyaWVzIGluIHRoZSAncGh5cycgcHJv
-cGVydHkKZGVzY3JpYmluZyB0aGUgUENJZSBQSFkuIFdlIHVzZSB0aGUgInN1Ym1vZGUiIHBhcmFt
-ZXRlciBvZiB0aGUgZ2VuZXJpYwpQSFkgQVBJIHRvIGNhcnJ5IHRoaXMgdmFsdWUuIFRoZSBBcm1h
-ZGEtOGsgUENJZSBkcml2ZXIgaGFzIGJlZW4KdXBkYXRlZCB0byBmb2xsb3cgdGhpcyBpZGVhIGFu
-ZCB0aGlzIGNoYW5nZSBoYXMgYmVlbiBtZXJnZWQgYWxyZWFkeToKaHR0cDovL3BhdGNod29yay5v
-emxhYnMub3JnL3BhdGNoLzEwNzI3NjMvCgpUaGFua3MsCk1pcXXDqGwKCgpDaGFuZ2VzIHNpbmNl
-IHYyOgotLS0tLS0tLS0tLS0tLS0tLQoqIEludmVydGVkIHR3byBhcmd1bWVudHMgaW4gYSB0cmFj
-ZS4KKiBBdm9pZCB3YXJuaW5nIHRoZSB1c2VyIHdoZW4gRVBST0JFX0RFRkVSIGlzIHJldHVybmVk
-IChjbG9ja3MgY2FzZSkuCiogQWRkZWQgTWF4aW1lIEMuIGFuZCBHcnplZ29yeiBKLiAncyBUZXN0
-ZWQtYnkgdGFncyAob25seSBvbiB0aGUKICAiaW50cm9kdWNpbmcgU01DIGNhbGxzIiBwYXRjaCwg
-YnV0IHRoZXkgdGVzdGVkIHRoZSB3aG9sZSBzZXJpZXMpLgoqIEFkZGVkIFJvYidzIFJldmlld2Vk
-LWJ5IG9uIHRoZSBiaW5kaW5ncy4KKiBBbHNvIHVwZGF0ZWQgdGhlIGJpbmRpbmdzIGFzIHN1Z2dl
-c3RlZCBieSBSb2IgdG8gcmVmbGVjdCB0aGF0IHRoZXJlCiAgY2FuIGJlIGZyb20gb25lIHRvIGZv
-dXIgUEhZcyBpbiB0aGUgUENJZSBub2RlcyAoaGVuY2UsIHRoZSBuZWVkIGZvcgogIHRoZSBwaHkt
-bmFtZXMgcHJvcGVydHkpLgoKQ2hhbmdlcyBzaW5jZSB2MToKLS0tLS0tLS0tLS0tLS0tLS0KKiBB
-bGwgbW9kZXMgcmVwb3J0IHRoZWlyIGVycm9ycyB0byB0aGUgdXNlci4KKiBJZiB0aGUgZmlybXdh
-cmUgaXMgdG9vIG9sZCwgYWR2aXNlIHRoZSB1c2VyIHRvIHVwZGF0ZSBpdC4KKiBDcmVkaXQgR3J6
-ZWdvcnogZm9yIGhpcyB3b3JrLgoqIEZpeCB3cm9uZyBzcGVlZCBpbiBFdGhlcm5ldCBtb2Rlcy4K
-KiBBZGQgQ09NUEhZIG5lY2Vzc2FyeSBjbG9ja3MuCiogVXBkYXRlIGJpbmRpbmdzLgoqIFRoZSBz
-ZWN1cml0eSBmbGF3IHJlbGF0ZWQgdG8gdGhlIGZhY3QgdGhhdCB3ZSBtdXN0IGdpdmUgdGhlIENQ
-CiAgYWRkcmVzcyB0byB0aGUgZmlybXdhcmUgaGFzIGJlZW4gbWl0aWdhdGVkIGJ5IHRoZSBhZGRp
-dGlvbiBvZiBleHRyYQogIGNoZWNrcyBpbiBBVEYgcmVjZW50bHkuCgoKR3J6ZWdvcnogSmFzemN6
-eWsgKDUpOgogIHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBBZGQgU01DIGNhbGwgc3VwcG9ydAog
-IHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBBZGQgUlhBVUkgc3VwcG9ydAogIHBoeTogbXZlYnUt
-Y3AxMTAtY29tcGh5OiBBZGQgVVNCMyBob3N0L2RldmljZSBzdXBwb3J0CiAgcGh5OiBtdmVidS1j
-cDExMC1jb21waHk6IEFkZCBTQVRBIHN1cHBvcnQKICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTog
-QWRkIFBDSWUgc3VwcG9ydAoKTWlxdWVsIFJheW5hbCAoMTQpOgogIHBoeTogbXZlYnUtY3AxMTAt
-Y29tcGh5OiBBZGQgY2xvY2tzIHN1cHBvcnQKICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogRXhw
-bGljaXRseSBpbml0aWFsaXplIHRoZSBsYW5lIHN1Ym1vZGUKICBwaHk6IG12ZWJ1LWNwMTEwLWNv
-bXBoeTogTGlzdCBhbHJlYWR5IHN1cHBvcnRlZCBFdGhlcm5ldCBtb2RlcwogIHBoeTogbXZlYnUt
-Y3AxMTAtY29tcGh5OiBSZW5hbWUgdGhlIG1hY3JvIGhhbmRsaW5nIG9ubHkgRXRoZXJuZXQgbW9k
-ZXMKICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQWxsb3cgbm9uLUV0aGVybmV0IG1vZGVzIHRv
-IGJlIGNvbmZpZ3VyZWQKICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQ29zbWV0aWMgY2hhbmdl
-IGluIGEgaGVscGVyCiAgcGh5OiBtdmVidS1jcDExMC1jb21waHk6IFVwZGF0ZSBjb21tZW50IGFi
-b3V0IHBvd2VyaW5nIG9mZiBhbGwgbGFuZXMKICAgIGF0IGJvb3QKICBkdC1iaW5kaW5nczogcGh5
-OiBBZGQgTWFydmVsbCBDT01QSFkgY2xvY2tzCiAgZHQtYmluZGluZ3M6IHBjaTogYWRkIFBIWSBw
-cm9wZXJ0aWVzIHRvIEFybWFkYSA3Sy84SyBjb250cm9sbGVyCiAgICBiaW5kaW5ncwogIGFybTY0
-OiBkdHM6IG1hcnZlbGw6IEFkZCBDUDExMCBDT01QSFkgY2xvY2tzCiAgYXJtNjQ6IGR0czogbWFy
-dmVsbDogQWRkIDdrLzhrIHBlci1wb3J0IFBIWXMgaW4gU0FUQSBub2RlcwogIGFybTY0OiBkdHM6
-IG1hcnZlbGw6IEFkZCA3ay84ayBQSFlzIGluIFVTQjMgbm9kZXMKICBhcm02NDogZHRzOiBtYXJ2
-ZWxsOiBBZGQgN2svOGsgUEhZcyBpbiBQQ0llIG5vZGVzCiAgYXJtNjQ6IGR0czogbWFydmVsbDog
-Q29udmVydCA3ay84ayB1c2ItcGh5IHByb3BlcnRpZXMgdG8gcGh5LXN1cHBseQoKIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3BjaS9wY2ktYXJtYWRhOGsudHh0ICB8ICAgNiArCiAuLi4vYmluZGlu
-Z3MvcGh5L3BoeS1tdmVidS1jb21waHkudHh0ICAgICAgICAgfCAgMTAgKwogLi4uL2FybTY0L2Jv
-b3QvZHRzL21hcnZlbGwvYXJtYWRhLTcwNDAtZGIuZHRzIHwgIDM3ICstCiAuLi4vbWFydmVsbC9h
-cm1hZGEtODA0MC1jbGVhcmZvZy1ndC04ay5kdHMgICAgfCAgMjIgKy0KIC4uLi9hcm02NC9ib290
-L2R0cy9tYXJ2ZWxsL2FybWFkYS04MDQwLWRiLmR0cyB8ICA0MyArLQogLi4uL2Jvb3QvZHRzL21h
-cnZlbGwvYXJtYWRhLTgwNDAtbWNiaW4uZHRzaSAgIHwgIDM4ICstCiBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL21hcnZlbGwvYXJtYWRhLWNwMTEwLmR0c2kgfCAgMTMgKwogZHJpdmVycy9waHkvbWFydmVs
-bC9waHktbXZlYnUtY3AxMTAtY29tcGh5LmMgIHwgNDEyICsrKysrKysrKysrKysrKy0tLQogOCBm
-aWxlcyBjaGFuZ2VkLCA0OTkgaW5zZXJ0aW9ucygrKSwgODIgZGVsZXRpb25zKC0pCgotLSAKMi4y
-MC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
+
+Add support for RXAUI mode by adding an entry in the COMPHY modes list.
+
+There is no user for this mode yet so we can enforce an up-to-date
+firmware and return an error otherwise without breaking anywone.
+
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+[miquel.raynal@bootlin.com: adapt the content to the mainline driver]
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/phy/marvell/phy-mvebu-cp110-comphy.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+index 75808a900032..125a09b0fd67 100644
+--- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
++++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
+@@ -157,6 +157,7 @@
+ 
+ #define COMPHY_FW_MODE_SGMII		0x2 /* SGMII 1G */
+ #define COMPHY_FW_MODE_HS_SGMII		0x3 /* SGMII 2.5G */
++#define COMPHY_FW_MODE_RXAUI		0x7
+ #define COMPHY_FW_MODE_XFI		0x8 /* SFI: 0x9 (is treated like XFI) */
+ 
+ struct mvebu_comphy_conf {
+@@ -188,18 +189,22 @@ static const struct mvebu_comphy_conf mvebu_comphy_cp110_modes[] = {
+ 	/* lane 2 */
+ 	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
++	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	MVEBU_COMPHY_CONF(2, 0, PHY_INTERFACE_MODE_10GKR, 0x1, COMPHY_FW_MODE_XFI),
+ 	/* lane 3 */
+ 	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
++	MVEBU_COMPHY_CONF(3, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	/* lane 4 */
+ 	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_SGMII, 0x2, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_2500BASEX, 0x2, COMPHY_FW_MODE_HS_SGMII),
+ 	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_10GKR, 0x2, COMPHY_FW_MODE_XFI),
++	MVEBU_COMPHY_CONF(4, 0, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_2500BASEX, -1, COMPHY_FW_MODE_HS_SGMII),
+ 	MVEBU_COMPHY_CONF(4, 1, PHY_INTERFACE_MODE_10GKR, -1, COMPHY_FW_MODE_XFI),
+ 	/* lane 5 */
++	MVEBU_COMPHY_CONF(5, 1, PHY_INTERFACE_MODE_RXAUI, -1, COMPHY_FW_MODE_RXAUI),
+ 	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_SGMII, 0x1, COMPHY_FW_MODE_SGMII),
+ 	MVEBU_COMPHY_CONF(5, 2, PHY_INTERFACE_MODE_2500BASEX, 0x1, COMPHY_FW_MODE_HS_SGMII),
+ };
+@@ -611,6 +616,11 @@ static int mvebu_comphy_power_on(struct phy *phy)
+ 	switch (lane->mode) {
+ 	case PHY_MODE_ETHERNET:
+ 		switch (lane->submode) {
++		case PHY_INTERFACE_MODE_RXAUI:
++			dev_dbg(priv->dev, "set lane %d to RXAUI mode\n",
++				lane->id);
++			fw_speed = 0;
++			break;
+ 		case PHY_INTERFACE_MODE_SGMII:
+ 			dev_dbg(priv->dev, "set lane %d to 1000BASE-X mode\n",
+ 				lane->id);
+-- 
+2.20.1
