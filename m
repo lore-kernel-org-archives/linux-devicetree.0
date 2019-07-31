@@ -1,44 +1,61 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: potentiometer: add max5432.yaml binding
-Date: Wed, 31 Jul 2019 10:50:36 -0600
-Message-ID: <CAL_JsqK9iuxQEh3s2_AgQhSa19Coq7kSFB497KUMQnjQNU+ELw@mail.gmail.com>
-References: <20190721175915.27192-1-martin@kaiser.cx> <20190731140706.2765-1-martin@kaiser.cx>
- <20190731140706.2765-2-martin@kaiser.cx>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 31 Jul 2019 18:54:00 +0200
+Message-ID: <20190731165400.GA30745@bogon.m.sigxcpu.org>
+References: <cover.1563983037.git.agx@sigxcpu.org>
+ <3158f4f8c97c21f98c394e5631d74bc60d796522.1563983037.git.agx@sigxcpu.org>
+ <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
+ <20190731143532.GA1935@bogon.m.sigxcpu.org>
+ <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731140706.2765-2-martin@kaiser.cx>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5Djoi7EuXapkg+dQ6HR2oZZHrw+vnjc837Gxee-Nh00Hw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 8:07 AM Martin Kaiser <martin@kaiser.cx> wrote:
->
-> Add a binding for the Maxim Integrated MAX5432-MAX5435 family of digital
-> potentiometers.
->
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
-> changes in v4
->  - fix the dt bindings
->    - replace ic20 with i2c
->    - document the reg property
->    - add additionalProperties and required
->
-> changes in v3
->  - split dt bindings and driver code into separate patches
->  - use yaml format for dt bindings
->  - fix formatting of parameter lists
->
-> changes in v2
->  - use MAX5432_ prefix for all defines
->  - fix indentation
->  - convert void * to unsigned long, not to u32
->    (warning from kbuild test robot)
->
->  .../bindings/iio/potentiometer/max5432.yaml        | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml
+Hi,
+On Wed, Jul 31, 2019 at 11:43:47AM -0300, Fabio Estevam wrote:
+> Hi Guido,
+> 
+> On Wed, Jul 31, 2019 at 11:35 AM Guido Günther <agx@sigxcpu.org> wrote:
+> 
+> > The idea is to have
+> >
+> >     "%sabling platform clocks", enable ? "en" : "dis");
+> >
+> > depending whether clocks are enabled/disabled.
+> 
+> Yes, I understood the idea, but this would print:
+> 
+> ensabling or dissabling :-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The 's' is from the '%s' format specifier:
+
+[ 2610.804174] imx-nwl-dsi 30a00000.mipi_dsi: [drm:imx_nwl_dsi_bridge_disable] disabling platform clocks
+[ 2710.996279] imx-nwl-dsi 30a00000.mipi_dsi: [drm:imx_nwl_dsi_bridge_pre_enable] enabling platform clocks
+
+I'll change that to use the full strings though since i also had to look
+twice to be sure there's no double 's'.
+
+> 
+> > > Same here. Please return 'int' instead.
+> >
+> > This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
+> > how what's the best way to bubble up fatal errors through the drm layer?
+> 
+> Ok, so let's not change this one.
+> 
+> > I went for DRM_DEV_ERROR() since that what i used in the rest of the
+> > driver and these ones were omission. Hope that's o.k.
+> 
+> No strong preferences here. I just think dev_err() easier to type and shorter.
+> 
+> Thanks for this work!
+
+Thanks again for having a look!
+ -- Guido
