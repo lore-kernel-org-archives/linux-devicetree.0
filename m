@@ -1,103 +1,615 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH v3 08/14] clk: qcom: hfpll: CLK_IGNORE_UNUSED
-Date: Wed, 31 Jul 2019 16:30:52 +0200
-Message-ID: <cd91801a-1be3-86fd-6e15-da7e82fddb53@linaro.org>
-References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
- <20190625164733.11091-9-jorge.ramirez-ortiz@linaro.org>
- <20190711151631.GI7234@tuxbook-pro>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH 3/3] drm/bridge: Add NWL MIPI DSI host controller support
+Date: Wed, 31 Jul 2019 16:35:32 +0200
+Message-ID: <20190731143532.GA1935@bogon.m.sigxcpu.org>
+References: <cover.1563983037.git.agx@sigxcpu.org>
+ <3158f4f8c97c21f98c394e5631d74bc60d796522.1563983037.git.agx@sigxcpu.org>
+ <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190711151631.GI7234@tuxbook-pro>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5BRbV_1du1b9eJqcBvvXSE2Mon3yxSPJxPpZgBqYNjBSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-On 7/11/19 17:16, Bjorn Andersson wrote:
-> On Tue 25 Jun 09:47 PDT 2019, Jorge Ramirez-Ortiz wrote:
+Hi Fabio,
+thanks for having a look! I followed most of your comments, there's some
+things i'm unsure, see below:
+
+On Fri, Jul 26, 2019 at 05:01:52PM -0300, Fabio Estevam wrote:
+> Hi Guido,
 > 
->> When COMMON_CLK_DISABLED_UNUSED is set, in an effort to save power and
->> to keep the software model of the clock in line with reality, the
->> framework transverses the clock tree and disables those clocks that
->> were enabled by the firmware but have not been enabled by any device
->> driver.
->>
->> If CPUFREQ is enabled, early during the system boot, it might attempt
->> to change the CPU frequency ("set_rate"). If the HFPLL is selected as
->> a provider, it will then change the rate for this clock.
->>
->> As boot continues, clk_disable_unused_subtree will run. Since it wont
->> find a valid counter (enable_count) for a clock that is actually
->> enabled it will attempt to disable it which will cause the CPU to
->> stop.
+> Thanks for your work on this driver!
 > 
-> But if CPUfreq has acquired the CPU clock and the hfpll is the currently
-> selected input, why does the clock framework not know about this clock
-> being used?
-
-right, see the comment right below - maybe I should have been more
-explicit at the time. sorry about it.
-
+> On Wed, Jul 24, 2019 at 12:52 PM Guido Günther <agx@sigxcpu.org> wrote:
 > 
->> Notice that in this driver, calls to check whether the clock is
->> enabled are routed via the is_enabled callback which queries the
->> hardware.
-
-calls to check whether the clock is enabled dont use the usage counter
-but a hardware read. IIRC the clock framework will check some counter to
-know if the clock is being used.
-
->>
->> The following commit, rather than marking the clock critical and
->> forcing the clock to be always enabled, addresses the above scenario
->> making sure the clock is not disabled but it continues to rely on the
->> firmware to enable the clock.
->>
->> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
->> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/imx-nwl/Kconfig
+> > @@ -0,0 +1,15 @@
+> > +config DRM_IMX_NWL_DSI
+> > +       tristate "Support for Northwest Logic MIPI DSI Host controller"
+> > +       depends on DRM && (ARCH_MXC || ARCH_MULTIPLATFORM || COMPILE_TEST)
 > 
 > 
-> I can see that we have a real issue in the case where CPUfreq is not
-> enabled and hence there are no clients, according to Linux. And that I
-> don't know another way to guard against.
+> This IP could potentially be found on other SoCs, so no need to make
+> it depend on ARCH_MXC.
 
-the issue is there when CPUfreq is enabled that is for sure (if we just
-remove this commit the system will not boot due to the situation I tried
-to describe above).
+Done.
+
+> > +#include <drm/drm_atomic_helper.h>
+> > +#include <drm/drm_of.h>
+> > +#include <drm/drm_panel.h>
+> > +#include <drm/drm_print.h>
+> > +#include <drm/drm_probe_helper.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/component.h>
+> > +#include <linux/gpio/consumer.h>
+> 
+> I did not find gpio AP used in this driver.
+
+Dropped the include.
 
 > 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > +static void imx_nwl_dsi_set_clocks(struct imx_nwl_dsi *dsi, bool enable)
 > 
-> Regards,
-> Bjorn
+> Better make it to return 'int' instead...
+
+Done, but see below.
+
 > 
->> ---
->>  drivers/clk/qcom/hfpll.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
->> index 0ffed0d41c50..d5fd27938e7b 100644
->> --- a/drivers/clk/qcom/hfpll.c
->> +++ b/drivers/clk/qcom/hfpll.c
->> @@ -58,6 +58,13 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
->>  		.parent_names = (const char *[]){ "xo" },
->>  		.num_parents = 1,
->>  		.ops = &clk_ops_hfpll,
->> +		/*
->> +		 * rather than marking the clock critical and forcing the clock
->> +		 * to be always enabled, we make sure that the clock is not
->> +		 * disabled: the firmware remains responsible of enabling this
->> +		 * clock (for more info check the commit log)
->> +		 */
->> +		.flags = CLK_IGNORE_UNUSED,
->>  	};
->>  
->>  	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
->> -- 
->> 2.21.0
->>
+> > +{
+> > +       struct device *dev = dsi->dev;
+> > +       const char *id;
+> > +       struct clk *clk;
+> > +       unsigned long new_rate, cur_rate;
+> > +       bool enabled;
+> > +       size_t i;
+> > +       int ret;
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "%sabling platform clocks",
 > 
+> Please remove the letter 's' from 'sabling'.
+
+The idea is to have
+
+    "%sabling platform clocks", enable ? "en" : "dis");
+
+depending whether clocks are enabled/disabled.
+
+> 
+> > +                            enable ? "en" : "dis");
+> > +                       ret = clk_prepare_enable(clk);
+> > +                       if (ret < 0) {
+> > +                               DRM_DEV_ERROR(dev, "Failed to enable clock %s",
+> > +                                             id);
+> 
+> and propagate the error in case of clk_prepare_enable() failure.
+
+done.
+
+> 
+> > +                       }
+> > +                       dsi->clk_config[i].enabled = true;
+> > +                       cur_rate = clk_get_rate(clk);
+> > +                       DRM_DEV_DEBUG_DRIVER(
+> > +                               dev, "Enabled %s clk (rate: req=%lu act=%lu)\n",
+> > +                               id, new_rate, cur_rate);
+> > +               } else if (enabled) {
+> > +                       clk_disable_unprepare(clk);
+> > +                       dsi->clk_config[i].enabled = false;
+> > +                       DRM_DEV_DEBUG_DRIVER(dev, "Disabled %s clk\n", id);
+> > +               }
+> > +       }
+> > +}
+> > +
+> > +static void imx_nwl_dsi_enable(struct imx_nwl_dsi *dsi)
+> 
+> Same here. Please return 'int' instead.
+
+This is from drm_bridge_funcs so the prototype is fixed. I'm not sure
+how what's the best way to bubble up fatal errors through the drm layer?
+
+> > +{
+> > +       struct device *dev = dsi->dev;
+> > +       int ret;
+> > +
+> > +       imx_nwl_dsi_set_clocks(dsi, true);
+> > +
+> > +       ret = dsi->pdata->poweron(dsi);
+> > +       if (ret < 0)
+> > +               DRM_DEV_ERROR(dev, "Failed to power on DSI (%d)\n", ret);
+> 
+> If the power domain failed to turn on, it is better to propagate the
+> error.
+
+If fixed the return type here as well but this will again get lost in
+`_pre_enable` which again is void in drm_bridge_funcs (see below).
+
+> 
+> > +       phy_ref_rate = clk_get_rate(dsi->phy_ref_clk);
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "PHY at ref rate: %lu\n", phy_ref_rate);
+> > +       if (ret < 0) {
+> 
+> This check looks wrong. At this point ret is always 0.
+
+Fixed.
+
+> 
+> > +               DRM_DEV_ERROR(dsi->dev,
+> > +                             "Cannot setup PHY for mode: %ux%u @%d Hz\n",
+> > +                             adjusted_mode->hdisplay, adjusted_mode->vdisplay,
+> > +                             adjusted_mode->clock);
+> > +               DRM_DEV_ERROR(dsi->dev, "PHY ref clk: %lu, bit clk: %lu\n",
+> > +                             phy_ref_rate, new_cfg.mipi_dphy.hs_clk_rate);
+> > +       } else {
+> > +               /* Save the new desired phy config */
+> > +               memcpy(&dsi->phy_cfg, &new_cfg, sizeof(new_cfg));
+> > +       }
+> > +
+> > +       /* LCDIF + NWL needs active high sync */
+> 
+> Would this still work if DCSS is used instead?
+
+I'll check once there's a DCSS driver that can drive this. The current
+vendor one is bound to imx-displays-subsystem and cant' drive a bridge.
+
+> 
+> > +       adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
+> > +       adjusted_mode->flags &= ~(DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
+> > +
+> > +       drm_display_mode_to_videomode(adjusted_mode, &dsi->vm);
+> > +       drm_mode_debug_printmodeline(adjusted_mode);
+> > +
+> > +       return ret == 0;
+> 
+> At this point ret is always 0.
+
+Right, there was some more logic in there that got removed. Changed to
+always signal success.
+
+> 
+> > +static void imx_nwl_dsi_bridge_pre_enable(struct drm_bridge *bridge)
+> > +{
+> > +       struct imx_nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +
+> > +       if (dsi->dpms_mode == DRM_MODE_DPMS_ON)
+> > +               return;
+> > +
+> > +       imx_nwl_select_input_source(dsi);
+> 
+> This function is i.MX8M specific, so better protect it to run only for
+> the i.MX8M variant.
+
+Moved into imx_nwl_platform_data.
+
+> 
+> > +       pm_runtime_get_sync(dsi->dev);
+> > +       imx_nwl_dsi_enable(dsi);
+> > +       nwl_dsi_enable(dsi);
+> 
+> Please check the error and propagate in the case of failure.
+
+This one is again hooked in from drm_bridge_funcs which is void.
+
+> 
+> > +       dsi->dpms_mode = DRM_MODE_DPMS_ON;
+> > +}
+> > +
+> 
+> > +       dsi->csr = syscon_regmap_lookup_by_phandle(np, "csr");
+> > +       if (IS_ERR(dsi->csr) && dsi->pdata->ext_regs & IMX_REG_CSR) {
+> > +               ret = PTR_ERR(dsi->csr);
+> > +               DRM_DEV_ERROR(dsi->dev, "Failed to get CSR regmap: %d\n",
+> 
+> In this function (and globally in the driver) there is a mix of
+> DRM_DEV_ERROR() and dev_err().
+> 
+> Can we just pick one of the two and use it consistently?
+> 
+> Not sure what is the norm in drm code, but IMHO dev_err() looks
+> prettier :-)
+
+I went for DRM_DEV_ERROR() since that what i used in the rest of the
+driver and these ones were omission. Hope that's o.k.
+
+> 
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       base = devm_ioremap_resource(dsi->dev, res);
+> 
+> Could use devm_platform_ioremap_resource(), which makes it simpler.
+
+Done.
+
+> 
+> > +err_cleanup:
+> > +       devm_free_irq(dev, dsi->irq, dsi);
+> 
+> No need to call devm_free_irq() here. The devm functions do not need
+> to be freed on probe.
+
+Removed.
+
+> 
+> > diff --git a/drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c b/drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c
+> > new file mode 100644
+> > index 000000000000..0e1463af162f
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/bridge/imx-nwl/nwl-dsi.c
+> > @@ -0,0 +1,745 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * NWL DSI host driver
+> > + *
+> > + * Copyright (C) 2017 NXP
+> > + * Copyright (C) 2019 Purism SPC
+> > + */
+> > +
+> > +#include <asm/unaligned.h>
+> 
+> Is this asm header required?
+
+I dropped it after removing get_unaligned_le32.
+
+> 
+> > +/*
+> > + * DSI Video mode
+> > + */
+> 
+> Single line comment would suffice.
+> 
+> > +#define VIDEO_MODE_BURST_MODE_WITH_SYNC_PULSES         0
+> > +#define VIDEO_MODE_NON_BURST_MODE_WITH_SYNC_EVENTS     BIT(0)
+> > +#define VIDEO_MODE_BURST_MODE                          BIT(1)
+> > +
+> > +/*
+> > + * DPI color coding
+> > + */
+> 
+> Ditto.
+> 
+> > +#define DPI_16_BIT_565_PACKED  0
+> > +#define DPI_16_BIT_565_ALIGNED 1
+> > +#define DPI_16_BIT_565_SHIFTED 2
+> > +#define DPI_18_BIT_PACKED      3
+> > +#define DPI_18_BIT_ALIGNED     4
+> > +#define DPI_24_BIT             5
+> > +
+> > +/*
+> > + * DPI Pixel format
+> > + */
+> 
+> Ditto.
+
+all fixed
+
+> 
+> > +#define PIXEL_FORMAT_16  0
+> > +#define PIXEL_FORMAT_18  BIT(0)
+> > +#define PIXEL_FORMAT_18L BIT(1)
+> > +#define PIXEL_FORMAT_24  (BIT(0) | BIT(1))
+> > +
+> > +enum transfer_direction { DSI_PACKET_SEND, DSI_PACKET_RECEIVE };
+> > +
+> > +struct mipi_dsi_transfer {
+> > +       const struct mipi_dsi_msg *msg;
+> > +       struct mipi_dsi_packet packet;
+> > +       struct completion completed;
+> > +
+> > +       int status; /* status of transmission */
+> > +       enum transfer_direction direction;
+> > +       bool need_bta;
+> > +       u8 cmd;
+> > +       u16 rx_word_count;
+> > +       size_t tx_len; /* bytes sent */
+> > +       size_t rx_len; /* bytes received */
+> > +};
+> 
+> The comments here are kind of obvious, so I would just remove them.
+
+I wanted to have the unit here so i changed to /* in bytes */
+
+> 
+> > +static inline int nwl_dsi_write(struct imx_nwl_dsi *dsi, unsigned int reg,
+> 
+> inline can be dropped.
+
+done.
+> 
+> > +                               u32 val)
+> > +{
+> > +       int ret;
+> > +
+> > +       ret = regmap_write(dsi->regmap, reg, val);
+> > +       if (ret < 0)
+> > +               DRM_DEV_ERROR(dsi->dev,
+> > +                             "Failed to write NWL DSI reg 0x%x: %d\n", reg,
+> > +                             ret);
+> > +       return ret;
+> > +}
+> > +
+> > +static inline u32 nwl_dsi_read(struct imx_nwl_dsi *dsi, u32 reg)
+> 
+> Same here.
+
+done.
+
+> > +{
+> > +       unsigned int val;
+> > +       int ret;
+> > +
+> > +       ret = regmap_read(dsi->regmap, reg, &val);
+> > +       if (ret < 0)
+> > +               DRM_DEV_ERROR(dsi->dev, "Failed to read NWL DSI reg 0x%x: %d\n",
+> > +                             reg, ret);
+> > +
+> > +       return val;
+> > +}
+> 
+> It seems that we could simply use regmap_read/write() directly instead
+> of these functions.
+
+I've checked some other drm drivers most of them seem to
+regmap_{read,write} without looking at errors. While we can't do
+anything sensible when writing fails it's seems at least useful to print
+an error. I've seen these happening and the messages were very useful
+for debugging so if possible i'd keep them.
+
+> > +int nwl_dsi_get_dphy_params(struct imx_nwl_dsi *dsi,
+> > +                           const struct drm_display_mode *mode,
+> > +                           union phy_configure_opts *phy_opts)
+> > +{
+> > +       unsigned long rate;
+> > +
+> > +       if (dsi->lanes < 1 || dsi->lanes > 4)
+> > +               return -EINVAL;
+> > +
+> > +       /*
+> > +        * So far the DPHY spec minimal timings work for both mixel
+> > +        * dphy and nwl dsi host
+> > +        */
+> > +       phy_mipi_dphy_get_default_config(
+> > +               mode->crtc_clock * 1000,
+> > +               mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes,
+> > +               &phy_opts->mipi_dphy);
+> > +       rate = clk_get_rate(dsi->tx_esc_clk);
+> > +       DRM_DEV_DEBUG_DRIVER(dsi->dev, "LP clk is @%lu Hz\n", rate);
+> > +       phy_opts->mipi_dphy.lp_clk_rate = rate;
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(nwl_dsi_get_dphy_params);
+> 
+> Does it really need to be exported? Why can't it be placed inside
+> nwl-drv.c and be made static?
+
+Moved.
+
+> 
+> > +/**
+> 
+> /* is enough
+
+Fixed.
+
+> 
+> 
+> > + * ui2bc - UI time periods to byte clock cycles
+> > + */
+> > +static u32 ui2bc(struct imx_nwl_dsi *dsi, unsigned long long ui)
+> > +{
+> > +       int bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+> > +
+> > +       return DIV_ROUND_UP(ui * dsi->lanes, dsi->vm.pixelclock * bpp);
+> > +}
+> > +
+> > +#define USEC_PER_SEC 1000000L
+> 
+> This definition already exists in include/linux/time64.h. No need to
+> redefine it.
+
+Dropped that define.
+
+> 
+> > +static int nwl_dsi_enable_tx_clock(struct imx_nwl_dsi *dsi)
+> > +{
+> > +       struct device *dev = dsi->dev;
+> > +       int ret;
+> > +
+> > +       ret = clk_prepare_enable(dsi->tx_esc_clk);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to enable tx_esc clk: %d\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "Enabled tx_esc clk @%lu Hz\n",
+> > +                            clk_get_rate(dsi->tx_esc_clk));
+> > +       return 0;
+> > +}
+> 
+> Do we really need this function? It looks like it would be simpler
+> just to call clk_prepare_enable() directly.
+
+Dropped since it's only used once, there were more users before.
+
+> 
+> > +
+> > +static int nwl_dsi_enable_rx_clock(struct imx_nwl_dsi *dsi)
+> > +{
+> > +       struct device *dev = dsi->dev;
+> > +       int ret;
+> > +
+> > +       ret = clk_prepare_enable(dsi->rx_esc_clk);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to enable rx_esc clk: %d\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "Enabled rx_esc clk @%lu Hz\n",
+> > +                            clk_get_rate(dsi->rx_esc_clk));
+> > +       return 0;
+> > +}
+> 
+> Same here.
+
+Dropped since it's only used once.
+
+> > +static ssize_t nwl_dsi_host_transfer(struct mipi_dsi_host *dsi_host,
+> > +                                    const struct mipi_dsi_msg *msg)
+> > +{
+> > +       struct imx_nwl_dsi *dsi =
+> > +               container_of(dsi_host, struct imx_nwl_dsi, dsi_host);
+> > +       struct mipi_dsi_transfer xfer;
+> > +       ssize_t ret = 0;
+> > +
+> > +       /* Create packet to be sent */
+> > +       dsi->xfer = &xfer;
+> > +       ret = mipi_dsi_create_packet(&xfer.packet, msg);
+> > +       if (ret < 0) {
+> > +               dsi->xfer = NULL;
+> > +               return ret;
+> > +       }
+> > +
+> > +       if ((msg->type & MIPI_DSI_GENERIC_READ_REQUEST_0_PARAM ||
+> > +            msg->type & MIPI_DSI_GENERIC_READ_REQUEST_1_PARAM ||
+> > +            msg->type & MIPI_DSI_GENERIC_READ_REQUEST_2_PARAM ||
+> > +            msg->type & MIPI_DSI_DCS_READ) &&
+> > +           msg->rx_len > 0 && msg->rx_buf != NULL)
+> > +               xfer.direction = DSI_PACKET_RECEIVE;
+> > +       else
+> > +               xfer.direction = DSI_PACKET_SEND;
+> > +
+> > +       xfer.need_bta = (xfer.direction == DSI_PACKET_RECEIVE);
+> > +       xfer.need_bta |= (msg->flags & MIPI_DSI_MSG_REQ_ACK) ? 1 : 0;
+> > +       xfer.msg = msg;
+> > +       xfer.status = -ETIMEDOUT;
+> > +       xfer.rx_word_count = 0;
+> > +       xfer.rx_len = 0;
+> > +       xfer.cmd = 0x00;
+> > +       if (msg->tx_len > 0)
+> > +               xfer.cmd = ((u8 *)(msg->tx_buf))[0];
+> > +       init_completion(&xfer.completed);
+> > +
+> > +       nwl_dsi_enable_rx_clock(dsi);
+> 
+> This may fail, so better check the error.
+> 
+> ret = clk_prepare_enable()
+> if (ret < 0)
+>    return ret;
+
+Done.
+
+> > +irqreturn_t nwl_dsi_irq_handler(int irq, void *data)
+> > +{
+> > +       u32 irq_status;
+> > +       struct imx_nwl_dsi *dsi = data;
+> > +
+> > +       irq_status = nwl_dsi_read(dsi, IRQ_STATUS);
+> > +
+> > +       if (irq_status & TX_PKT_DONE || irq_status & RX_PKT_HDR_RCVD ||
+> > +           irq_status & RX_PKT_PAYLOAD_DATA_RCVD)
+> > +               nwl_dsi_finish_transmission(dsi, irq_status);
+> > +
+> > +       return IRQ_HANDLED;
+> > +}
+> > +EXPORT_SYMBOL_GPL(nwl_dsi_irq_handler);
+> 
+> What about placing this function inside nwl-drv.c and make it static?
+
+Then nwl_dsi_finish_transmission would need to either be moved as well
+or we'd have another non-static function. I'd like to keeping the irq
+handling in one file and only have the registration over in imx-nwl-drv.
+I've dropped the EXPORT_SYMBOL_GPL though.
+
+> > +
+> > +int nwl_dsi_enable(struct imx_nwl_dsi *dsi)
+> > +{
+> > +       struct device *dev = dsi->dev;
+> > +       union phy_configure_opts *phy_cfg = &dsi->phy_cfg;
+> > +       int ret;
+> > +
+> > +       if (!dsi->lanes) {
+> > +               DRM_DEV_ERROR(dev, "Need DSI lanes: %d\n", dsi->lanes);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       ret = phy_init(dsi->phy);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to init DSI phy: %d\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = phy_configure(dsi->phy, phy_cfg);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to configure DSI phy: %d\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = nwl_dsi_enable_tx_clock(dsi);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to enable tx clock: %d\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = nwl_dsi_config_host(dsi);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to set up DSI: %d", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = nwl_dsi_config_dpi(dsi);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to set up DPI: %d", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       ret = phy_power_on(dsi->phy);
+> > +       if (ret < 0) {
+> > +               DRM_DEV_ERROR(dev, "Failed to power on DPHY (%d)\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       nwl_dsi_init_interrupts(dsi);
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(nwl_dsi_enable);
+> 
+> Same here.
+
+The idea was to keep the dsi related operations here. Dropped
+EXPORT_SYMBOL_GPL though.
+
+> 
+> > +
+> > +int nwl_dsi_disable(struct imx_nwl_dsi *dsi)
+> > +{
+> > +       struct device *dev = dsi->dev;
+> > +
+> > +       DRM_DEV_DEBUG_DRIVER(dev, "Disabling clocks and phy\n");
+> > +
+> > +       phy_power_off(dsi->phy);
+> > +       phy_exit(dsi->phy);
+> > +
+> > +       /* Disabling the clock before the phy breaks enabling dsi again */
+> > +       clk_disable_unprepare(dsi->tx_esc_clk);
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(nwl_dsi_disable);
+> 
+> Same here.
+
+Same as above. I can move things if wanted but then it might make sense
+to only use one large file which I avoided so we can have a split
+between DSI operations and probing / bridge chaining and platform
+specific functions.
+
+Thanks again for having a look,
+ -- Guido
