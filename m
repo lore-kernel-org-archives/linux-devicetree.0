@@ -1,84 +1,66 @@
 From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH 1/2] arm64: dts: ls1028a: Fix GPIO work fail.
-Date: Wed, 31 Jul 2019 18:17:09 -0500
-Message-ID: <CADRPPNT3A_1apr3FNjRbQhCHWLqvAQC0Oz8cGbOjNetAF8zghw@mail.gmail.com>
-References: <20190718094902.15562-1-hui.song_1@nxp.com>
+Subject: Re: [PATCH 3/3] arm64: dts: ls1088a: Revise gpio registers to little-endian
+Date: Wed, 31 Jul 2019 18:19:30 -0500
+Message-ID: <CADRPPNQhRjEx=0Rr-XkHXtLTaWGM_b5zsjrL7vhhzzmQc35j9A@mail.gmail.com>
+References: <20190529083254.39581-1-chuanhua.han@nxp.com> <20190529083254.39581-3-chuanhua.han@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190718094902.15562-1-hui.song_1@nxp.com>
+In-Reply-To: <20190529083254.39581-3-chuanhua.han@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hui Song <hui.song_1@nxp.com>
+To: Chuanhua Han <chuanhua.han@nxp.com>
 Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
+On Wed, May 29, 2019 at 3:32 AM Chuanhua Han <chuanhua.han@nxp.com> wrote:
 >
-
-Change the title to be something like:
-arm64: dts: ls1028a: fix gpio nodes
-
-> From: Song Hui <hui.song_1@nxp.com>
+> Since fsl-ls1088a Soc GPIO registers are used as little endian,
+> the patch adds the little-endian attribute to each gpio node.
 >
-> Add ls1028a device specify compatible.
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
 
-Please submit a separate patch to update the device tree binding too.
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-> Make gpio as little-endian deal.
-
-"Update the nodes to include little-endian property to be consistent
-with the hardware."
-
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 7975519..488602b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -277,33 +277,36 @@
->                 };
->
->                 gpio1: gpio@2300000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 661137ffa319..3e6d20d065bd 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -272,6 +272,7 @@
+>                         compatible = "fsl,qoriq-gpio";
 >                         reg = <0x0 0x2300000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+> +                       little-endian;
 >                         gpio-controller;
 >                         #gpio-cells = <2>;
 >                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 gpio2: gpio@2310000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> @@ -282,6 +283,7 @@
+>                         compatible = "fsl,qoriq-gpio";
 >                         reg = <0x0 0x2310000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+> +                       little-endian;
 >                         gpio-controller;
 >                         #gpio-cells = <2>;
 >                         interrupt-controller;
->                         #interrupt-cells = <2>;
-> +                       little-endian;
->                 };
->
->                 gpio3: gpio@2320000 {
-> -                       compatible = "fsl,qoriq-gpio";
-> +                       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+> @@ -292,6 +294,7 @@
+>                         compatible = "fsl,qoriq-gpio";
 >                         reg = <0x0 0x2320000 0x0 0x10000>;
->                         interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+> +                       little-endian;
 >                         gpio-controller;
 >                         #gpio-cells = <2>;
 >                         interrupt-controller;
->                         #interrupt-cells = <2>;
+> @@ -302,6 +305,7 @@
+>                         compatible = "fsl,qoriq-gpio";
+>                         reg = <0x0 0x2330000 0x0 0x10000>;
+>                         interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
 > +                       little-endian;
->                 };
->
->                 usb0: usb@3100000 {
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         interrupt-controller;
 > --
-> 2.9.5
+> 2.17.1
 >
