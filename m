@@ -1,8 +1,7 @@
 From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH v2 2/4] nvmem: meson-efuse: bindings: Add secure-monitor
- phandle
-Date: Wed, 31 Jul 2019 09:23:37 +0100
-Message-ID: <20190731082339.20163-3-ccaione@baylibre.com>
+Subject: [PATCH v2 3/4] arm64: dts: meson: Link nvmem and secure-monitor nodes
+Date: Wed, 31 Jul 2019 09:23:38 +0100
+Message-ID: <20190731082339.20163-4-ccaione@baylibre.com>
 References: <20190731082339.20163-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,45 +21,50 @@ To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.co
 Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new property to link the nvmem driver to the secure-monitor. The
-nvmem driver needs to access the secure-monitor to be able to access the
-fuses.
+The former is going to use the latter to retrieve the efuses data.
 
 Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 ---
- Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 1 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-index 2e0723ab3384..f7b3ed74db54 100644
---- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-+++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: should be "amlogic,meson-gxbb-efuse"
- - clocks: phandle to the efuse peripheral clock provided by the
- 	  clock controller.
-+- secure-monitor: phandle to the secure-monitor node
- 
- = Data cells =
- Are child nodes of eFuse, bindings of which as described in
-@@ -16,6 +17,7 @@ Example:
- 		clocks = <&clkc CLKID_EFUSE>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 6219337033a0..b8244efb85fa 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -117,6 +117,7 @@
  		#address-cells = <1>;
  		#size-cells = <1>;
+ 		read-only;
++		secure-monitor = <&sm>;
+ 	};
+ 
+ 	psci {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index f8d43e3dcf20..2b07752e034f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -100,6 +100,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		read-only;
++		secure-monitor = <&sm>;
+ 	};
+ 
+ 	psci {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 74d03fc706be..d244d9783718 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -161,6 +161,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		read-only;
 +		secure-monitor = <&sm>;
  
  		sn: sn@14 {
  			reg = <0x14 0x10>;
-@@ -30,6 +32,10 @@ Example:
- 		};
- 	};
- 
-+	sm: secure-monitor {
-+		compatible = "amlogic,meson-gxbb-sm";
-+	};
-+
- = Data consumers =
- Are device nodes which consume nvmem data cells.
- 
 -- 
 2.20.1
