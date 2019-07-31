@@ -1,7 +1,7 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 3/5] phy: sr-usb: Set phy ports
-Date: Wed, 31 Jul 2019 15:49:53 +0530
-Message-ID: <1564568395-9980-4-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v2 4/5] dt-bindings: usb-xhci: Add platform specific compatible for Stingray xHCI
+Date: Wed, 31 Jul 2019 15:49:54 +0530
+Message-ID: <1564568395-9980-5-git-send-email-srinath.mannam@broadcom.com>
 References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
@@ -10,35 +10,25 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyma
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-set phy ports value in xlate handler which is taken from second argument
-of PHY phandle.
+Add Platform specific compatible, because xHCI of this SoC has an issue
+with HS port which has to reset on disconnect event.
 
 Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- drivers/phy/broadcom/phy-bcm-sr-usb.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-index fe6c589..5274e45 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-@@ -278,9 +278,16 @@ static struct phy *bcm_usb_phy_xlate(struct device *dev,
- 		if (WARN_ON(phy_idx > 1))
- 			return ERR_PTR(-ENODEV);
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 97400e8..ee1f051 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -22,6 +22,7 @@ Required properties:
+       device
+     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 or RZ/G2 compatible
+       device
++    - "brcm,sr-xhci" for Stingray SoC
+     - "xhci-platform" (deprecated)
  
-+		if (args->args[1])
-+			phy_set_phy_ports(phy_cfg[phy_idx].phy, args->args[1]);
-+
- 		return phy_cfg[phy_idx].phy;
--	} else
-+	} else {
-+		if (args->args[0])
-+			phy_set_phy_ports(phy_cfg->phy, args->args[0]);
-+
- 		return phy_cfg->phy;
-+	}
- }
- 
- static int bcm_usb_phy_create(struct device *dev, struct device_node *node,
+     When compatible with the generic version, nodes must list the
 -- 
 2.7.4
