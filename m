@@ -1,53 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77995: draak: Fix backlight
- regulator name
-Date: Wed, 31 Jul 2019 10:40:22 -0600
-Message-ID: <CAL_Jsq+qfGrrfG68WKSsHF2MoLBNi5m9w9x68dT+ZAG9fcWEjg@mail.gmail.com>
-References: <20190731073744.13963-1-geert+renesas@glider.be>
- <20190731074801.5706-1-geert+renesas@glider.be>
- <20190731081209.GA5080@pendragon.ideasonboard.com>
- <CAMuHMdV9MEYP97_6RFhmbGGB8uY-Pi8S9q+m+XMmHzKHcibJwQ@mail.gmail.com>
- <CAL_JsqJWJ+o6t2Wb162h7Xz98L=WPSi4une-EC0HfoRiWLmKWA@mail.gmail.com>
- <20190731150909.GD4369@sirena.org.uk>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH 1/2] dt-bindings: reset: Fix typo in imx8mq resets
+Date: Wed, 31 Jul 2019 18:43:30 +0200
+Message-ID: <f4c58a4a1c7a115cb9756630535031d6e9777247.1564591352.git.agx@sigxcpu.org>
+References: <cover.1564591352.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731150909.GD4369@sirena.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1564591352.git.agx@sigxcpu.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 9:09 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, Jul 31, 2019 at 08:47:38AM -0600, Rob Herring wrote:
->
-> > As long as we have a consistent base name that we can match schema
-> > with, then I'm happy. But for regulators, we have a lot of node names
-> > like 'buck1', 'LDO2', etc.
->
-> Those are all types of regulator (LDOs and DCDCs are the main types of
-> voltage regulator, and buck is another term for DCDC).
+Some of the mipi dsi resets were called
 
-Yes, I know.
+  IMX8MQ_RESET_MIPI_DIS__
 
-> I'm still not clear what meaningful effect any of this node name stuff
-> has :(
+instead of
 
-It is primarily just what I said. Standard names or patterns allow for
-applying schemas. Otherwise, we only have schema checks when we have a
-device specific schema. Of course, we do have those too, but generic
-ones are useful when we don't. If there are errors in the DT causing
-the device specific schema to not match (say a typo in the compatible
-string), we still have some checking.
+  IMX8MQ_RESET_MIPI_DSI__
 
-Rob
+Since they're DSI related this looks like a typo.
+
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ include/dt-bindings/reset/imx8mq-reset.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
+index 57c592498aa0..bfa41b0e24f6 100644
+--- a/include/dt-bindings/reset/imx8mq-reset.h
++++ b/include/dt-bindings/reset/imx8mq-reset.h
+@@ -31,9 +31,9 @@
+ #define IMX8MQ_RESET_OTG2_PHY_RESET		20
+ #define IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N	21
+ #define IMX8MQ_RESET_MIPI_DSI_RESET_N		22
+-#define IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N	23
+-#define IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N	24
+-#define IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N	25
++#define IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N	23
++#define IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N	24
++#define IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N	25
+ #define IMX8MQ_RESET_PCIEPHY			26
+ #define IMX8MQ_RESET_PCIEPHY_PERST		27
+ #define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28
+-- 
+2.20.1
