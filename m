@@ -1,63 +1,53 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v2 00/20] Common patches from downstream development
-Date: Wed, 31 Jul 2019 12:37:59 +0000
-Message-ID: <20190731123750.25670-1-philippe.schenker@toradex.com>
+Subject: [PATCH v2 02/20] ARM: dts: imx7-colibri: disable HS400
+Date: Wed, 31 Jul 2019 12:38:03 +0000
+Message-ID: <20190731123750.25670-3-philippe.schenker@toradex.com>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731123750.25670-1-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <6CBC9BD2EFA2D04A86C2C30573DA87B8@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Stefan Agner <stefan.agner@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-DQpUaGlzIHBhdGNoc2V0IGhvbGRzIHNvbWUgY29tbW9uIGNoYW5nZXMgdGhhdCB3ZXJlIG5ldmVy
-IHVwc3RyZWFtZWQuDQpXaXRoIGxhdGVzdCBkb3duc3RyZWFtIGtlcm5lbCB1cGdyYWRlLCBJIHRv
-b2sgdGhlIGFwcm9hY2ggdG8gc2VsZWN0DQptYWlubGluZSBkZXZpY2V0cmVlcyBhbmQgYXRvbWlj
-YWxseSBhZGQgbWlzc2luZyBzdHVmZiBmb3IgZG93bnN0cmVhbS4NCg0KVGhlc2UgcGF0Y2hlcyBJ
-IHNlbmQgaGVyZSBhcmUgc2VwYXJhdGVkIG91dCB3aXRoIGNoYW5nZXMgdGhhdCBhbHNvDQpoYXZl
-IGEgYmVuZml0IGZvciBtYWlubGluZS4NCg0KUGhpbGlwcGUNCg0KQ2hhbmdlcyBpbiB2MjoNCi0g
-RGVsZXRlZCB0b3VjaHJldm9sdXRpb24gZG93bnN0cmVhbSBzdHVmZg0KLSBVc2UgZ2VuZXJpYyBu
-b2RlIG5hbWUNCi0gQmV0dGVyIGNvbW1lbnQNCi0gQ2hhbmdlZCBjb21taXQgdGl0bGUgdG8gJy4u
-LmlteDZxZGwtYXBhbGlzOi4uLicNCi0gRGVsZXRlZCB0b3VjaHJldm9sdXRpb24gZG93bnN0cmVh
-bSBzdHVmZg0KLSBVc2UgZ2VuZXJpYyBub2RlIG5hbWUNCi0gUHV0IGEgYmV0dGVyIGNvbW1lbnQg
-aW4gdGhlcmUNCi0gQ29tbWl0IHRpdGxlDQotIFJlbW92ZWQgZjA3MTBhLCB0aGF0IGlzIGRvd25z
-dHJlYW0gb25seQ0KLSBDaGFuZ2VkIHRvIGdlbmVyaWMgbm9kZSBuYW1lDQotIEJldHRlciBjb21t
-ZW50DQoNCk1hcmNlbCBaaXN3aWxlciAoMSk6DQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IG1h
-a2Ugc3VyZSBtb2R1bGUgc3VwcGxpZXMgYXJlIGFsd2F5cyBvbg0KDQpNYXggS3J1bW1lbmFjaGVy
-ICgyKToNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogcmVkdWNlIHZfYmF0dCBjdXJyZW50
-IGluIHBvd2VyIG9mZg0KICBBUk06IGR0czogaW14NnVsbDogaW1wcm92ZSBjYW4gdGVtcGxhdGVz
-DQoNCk9sZWtzYW5kciBTdXZvcm92ICgxKToNCiAgQVJNOiBkdHM6IGFkZCByZWNvdmVyeSBmb3Ig
-STJDIGZvciBpTVg3DQoNClBoaWxpcHBlIFNjaGVua2VyICgxMyk6DQogIEFSTTogZHRzOiBpbXg3
-LWNvbGlicmk6IHByZXBhcmUgbW9kdWxlIGRldmljZSB0cmVlIGZvciBGbGV4Q0FODQogIEFSTTog
-ZHRzOiBpbXg3LWNvbGlicmk6IEFkZCBzbGVlcCBtb2RlIHRvIGV0aGVybmV0DQogIEFSTTogZHRz
-OiBpbXg3LWNvbGlicmk6IEFkZCB0b3VjaCBjb250cm9sbGVycw0KICBBUk06IGR0czogaW14NnFk
-bC1jb2xpYnJpOiBhZGQgcGh5IHRvIGZlYw0KICBBUk06IGR0czogaW14NnFkbC1jb2xpYnJpOiBB
-ZGQgbWlzc2luZyBwaW4gZGVjbGFyYXRpb24gaW4gaW9tdXhjDQogIEFSTTogZHRzOiBpbXg2cWRs
-LWFwYWxpczogQWRkIHNsZWVwIHN0YXRlIHRvIGNhbiBpbnRlcmZhY2VzDQogIEFSTTogZHRzOiBp
-bXg2OiBBZGQgdG91Y2hzY3JlZW5zIHVzZWQgb24gVG9yYWRleCBldmFsIGJvYXJkcw0KICBBUk06
-IGR0czogaW14Ni1jb2xpYnJpOiBBZGQgbWlzc2luZyBwaW5tdXhpbmcgdG8gVG9yYWRleCBldmFs
-IGJvYXJkDQogIEFSTTogZHRzOiBpbXg2dWxsLWNvbGlicmk6IEFkZCBzbGVlcCBtb2RlIHRvIGZl
-Yw0KICBBUk06IGR0czogaW14NnVsbC1jb2xpYnJpOiBBZGQgd2F0Y2hkb2cNCiAgQVJNOiBkdHM6
-IGlteDZ1bGwtY29saWJyaTogQWRkIGdlbmVyYWwgd2FrZXVwIGtleSB1c2VkIG9uIENvbGlicmkN
-CiAgQVJNOiBkdHM6IGlteDYvNy1jb2xpYnJpOiBzd2l0Y2ggZHJfbW9kZSB0byBvdGcNCiAgQVJN
-OiBkdHM6IGlteDZ1bGwtY29saWJyaTogQWRkIHRvdWNoc2NyZWVuIHVzZWQgd2l0aCBFdmFsIEJv
-YXJkDQoNClN0ZWZhbiBBZ25lciAoMyk6DQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IGRpc2Fi
-bGUgSFM0MDANCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogYWRkIEdQSU8gd2FrZXVwIGtleQ0K
-ICBBUk06IGR0czogaW14Ny1jb2xpYnJpOiBmaXggMS44Vi9VSFMgc3VwcG9ydA0KDQogYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMgIHwgIDM5ICsrKysrKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0cyAgICAgICB8ICAxMyArKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS12MS4xLmR0cyB8ICAxMyArKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS5kdHMgICAgICB8ICAxMyArKw0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kgICAgICAgICB8ICAyNyArKysrLQ0K
-IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5kdHNpICAgICAgICB8ICAyNyArKysr
-LQ0KIC4uLi9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8ICA1MCAr
-KysrKysrKw0KIC4uLi9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLW5vbndpZmkuZHRzaSB8
-ICAgMiArLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13aWZpLmR0c2kgICB8
-ICAgMiArLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpICAgICAgICB8
-ICA1MiArKysrKysrLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0
-c2kgICB8ICAzOCArKysrKysNCiBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaSAg
-ICAgICAgICAgfCAxMTQgKysrKysrKysrKysrKysrKy0tDQogMTIgZmlsZXMgY2hhbmdlZCwgMzY0
-IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMjIuMA0KDQo=
+From: Stefan Agner <stefan.agner@toradex.com>
+
+Force HS200 by masking bit 63 of the SDHCI capability register.
+The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+that the stack checks bit 63 to descide whether HS400 is available.
+Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+HS200 as operating mode.
+
+This prevents rare communication errors with minimal effect on
+performance:
+	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+		status REF not lock!
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
+
+Changes in v2: None
+
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index f1c1971f2160..f7c9ce5bed47 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -325,6 +325,7 @@
+ 	vmmc-supply =3D <&reg_module_3v3>;
+ 	vqmmc-supply =3D <&reg_DCDC3>;
+ 	non-removable;
++	sdhci-caps-mask =3D <0x80000000 0x0>;
+ };
+=20
+ &iomuxc {
+--=20
+2.22.0
