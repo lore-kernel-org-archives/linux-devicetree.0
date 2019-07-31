@@ -1,89 +1,56 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v4 04/13] dt-bindings: mailbox: qcom: Add clock-name optional
- property
-Date: Wed, 31 Jul 2019 22:29:20 +0200
-Message-ID: <20190731202929.16443-5-jorge.ramirez-ortiz@linaro.org>
-References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH] of/platform: Add missing const qualifier in of_link_property
+Date: Wed, 31 Jul 2019 13:33:40 -0700
+Message-ID: <CAGETcx9LXP9b_W_1XQFmjODPJVrbnU+vH1RKer2i=jU7Q7EADg@mail.gmail.com>
+References: <20190729221101.228240-4-saravanak@google.com> <20190731181733.60422-1-natechancellor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-clk@vger.kernel.org, vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731181733.60422-1-natechancellor@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nathan Chancellor <natechancellor@gmail.com>
+Cc: David Collins <collinsd@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, kbuild test robot <lkp@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-When the APCS clock is registered (platform dependent), it retrieves
-its parent names from hardcoded values in the driver.
+On Wed, Jul 31, 2019 at 11:19 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang errors:
+>
+> drivers/of/platform.c:632:28: error: initializing 'struct
+> supplier_bindings *' with an expression of type 'const struct
+> supplier_bindings [4]' discards qualifiers
+> [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>         struct supplier_bindings *s = bindings;
+>                                   ^   ~~~~~~~~
+> 1 error generated.
+>
+> Fixes: 05f812549f53 ("of/platform: Add functional dependency link from DT bindings")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> Given this is still in the driver-core-testing branch, I am fine with
+> this being squashed in if desired.
+>
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index e2da90e53edb..21838226d68a 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -629,7 +629,7 @@ static bool of_link_property(struct device *dev, struct device_node *con_np,
+>                              const char *prop)
+>  {
+>         struct device_node *phandle;
+> -       struct supplier_bindings *s = bindings;
+> +       const struct supplier_bindings *s = bindings;
+>         unsigned int i = 0;
+>         bool done = true, matched = false;
 
-The following commit allows the DT node to provide such clock names to
-the platform data based clock driver therefore avoiding having to
-explicitly embed those names in the clock driver source code.
+Odd. I never got that email. Thanks for fixing this. I'll squash it
+into my patch series since I have a bunch of other kbuild errors about
+documentation.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-index 1232fc9fc709..b69310322b09 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-@@ -18,10 +18,11 @@ platforms.
- 	Usage: required
- 	Value type: <prop-encoded-array>
- 	Definition: must specify the base address and size of the global block
-+
- - clocks:
--	Usage: required if #clocks-cells property is present
--	Value type: <phandle>
--	Definition: phandle to the input PLL, which feeds the APCS mux/divider
-+	Usage: required if #clock-names property is present
-+	Value type: <phandle array>
-+	Definition: phandles to the two parent clocks of the clock driver.
- 
- - #mbox-cells:
- 	Usage: required
-@@ -33,6 +34,12 @@ platforms.
- 	Value type: <u32>
- 	Definition: as described in clock.txt, must be 0
- 
-+- clock-names:
-+	Usage: required if the platform data based clock driver needs to
-+	retrieve the parent clock names from device tree.
-+	This will requires two mandatory clocks to be defined.
-+	Value type: <string-array>
-+	Definition: must be "aux" and "pll"
- 
- = EXAMPLE
- The following example describes the APCS HMSS found in MSM8996 and part of the
-@@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
- 		clocks = <&a53pll>;
- 		#clock-cells = <0>;
- 	};
-+
-+Below is another example of the APCS binding on QCS404 platforms:
-+
-+	apcs_glb: mailbox@b011000 {
-+		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-+		reg = <0x0b011000 0x1000>;
-+		#mbox-cells = <1>;
-+		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+		clock-names = "aux", "pll";
-+		#clock-cells = <0>;
-+	};
--- 
-2.22.0
+-Saravana
