@@ -1,70 +1,44 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/2] reset: imx7: Fix IMX8MQ_RESET_MIPI_DSI_ defines
-Date: Wed, 31 Jul 2019 18:46:25 +0200
-Message-ID: <1564591585.7267.22.camel@pengutronix.de>
-References: <cover.1564591352.git.agx@sigxcpu.org>
-         <bd1504122f6797536a253a37f3604f5c46f02ab2.1564591352.git.agx@sigxcpu.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: potentiometer: add max5432.yaml binding
+Date: Wed, 31 Jul 2019 10:50:36 -0600
+Message-ID: <CAL_JsqK9iuxQEh3s2_AgQhSa19Coq7kSFB497KUMQnjQNU+ELw@mail.gmail.com>
+References: <20190721175915.27192-1-martin@kaiser.cx> <20190731140706.2765-1-martin@kaiser.cx>
+ <20190731140706.2765-2-martin@kaiser.cx>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bd1504122f6797536a253a37f3604f5c46f02ab2.1564591352.git.agx@sigxcpu.org>
+In-Reply-To: <20190731140706.2765-2-martin@kaiser.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 31.07.2019, 18:43 +0200 schrieb Guido Günther:
-> Some of the mipi dsi resets were called
-> 
->   IMX8MQ_RESET_MIPI_DIS_
-> 
-> instead of
-> 
->   IMX8MQ_RESET_MIPI_DSI_
-> 
-> Since they're DSI related this looks like a typo.
-> 
-> I wasn't sure if this should be a single patch since it otherwise breaks
-> bisectability. I couldn't find any device trees using this yet.
-
-Yes, I think this should be squashed into a single commit. Other than
-that, the change looks correct.
-
-Regards,
-Lucas
-
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+On Wed, Jul 31, 2019 at 8:07 AM Martin Kaiser <martin@kaiser.cx> wrote:
+>
+> Add a binding for the Maxim Integrated MAX5432-MAX5435 family of digital
+> potentiometers.
+>
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 > ---
->  drivers/reset/reset-imx7.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-> index 3ecd770f910b..1443a55a0c29 100644
-> --- a/drivers/reset/reset-imx7.c
-> +++ b/drivers/reset/reset-imx7.c
-> @@ -169,9 +169,9 @@ static const struct imx7_src_signal imx8mq_src_signals[IMX8MQ_RESET_NUM] = {
-> > >  	[IMX8MQ_RESET_OTG2_PHY_RESET]		= { SRC_USBOPHY2_RCR, BIT(0) },
-> > >  	[IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N]	= { SRC_MIPIPHY_RCR, BIT(1) },
-> > >  	[IMX8MQ_RESET_MIPI_DSI_RESET_N]		= { SRC_MIPIPHY_RCR, BIT(2) },
-> > > -	[IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(3) },
-> > > -	[IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(4) },
-> > > -	[IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(5) },
-> > > +	[IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(3) },
-> > > +	[IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(4) },
-> > > +	[IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(5) },
-> > >  	[IMX8MQ_RESET_PCIEPHY]			= { SRC_PCIEPHY_RCR,
-> >  						    BIT(2) | BIT(1) },
-> > >  	[IMX8MQ_RESET_PCIEPHY_PERST]		= { SRC_PCIEPHY_RCR, BIT(3) },
-> @@ -220,9 +220,9 @@ static int imx8mq_reset_set(struct reset_controller_dev *rcdev,
->  
-> >  	case IMX8MQ_RESET_PCIE_CTRL_APPS_EN:
-> > >  	case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN:	/* fallthrough */
-> > > -	case IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N:	/* fallthrough */
-> > > -	case IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N:	/* fallthrough */
-> > > -	case IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N:	/* fallthrough */
-> > > +	case IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N:	/* fallthrough */
-> > > +	case IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N:	/* fallthrough */
-> > > +	case IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N:	/* fallthrough */
-> > >  	case IMX8MQ_RESET_MIPI_DSI_RESET_N:	/* fallthrough */
-> > >  	case IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N:	/* fallthrough */
-> >  		value = assert ? 0 : bit;
+> changes in v4
+>  - fix the dt bindings
+>    - replace ic20 with i2c
+>    - document the reg property
+>    - add additionalProperties and required
+>
+> changes in v3
+>  - split dt bindings and driver code into separate patches
+>  - use yaml format for dt bindings
+>  - fix formatting of parameter lists
+>
+> changes in v2
+>  - use MAX5432_ prefix for all defines
+>  - fix indentation
+>  - convert void * to unsigned long, not to u32
+>    (warning from kbuild test robot)
+>
+>  .../bindings/iio/potentiometer/max5432.yaml        | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5432.yaml
+
+Reviewed-by: Rob Herring <robh@kernel.org>
