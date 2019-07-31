@@ -1,122 +1,50 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag "cfg->type"
-Date: Mon,  8 Jul 2019 18:07:43 +0900
-Message-Id: <1562576868-8124-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=ZLLA=V4=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20190731133936.18228-1-geert+renesas@glider.be> <TY1PR01MB156262DA5C9260BEE51472268ADF0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB156262DA5C9260BEE51472268ADF0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 31 Jul 2019 17:02:57 +0200
+Message-ID: <CAMuHMdV0xc=Ygmjk74-wsfNrODFMwDuzKmrskDx8FUAzzqOFPQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC] ARM: dts: rza2mevb: Fix numbering of Ethernet aliases
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The old commit c58d9c1b26e3 ("sh-pfc: Implement generic pinconf
-support") broke the cfg->type flag to PINMUX_TYPE_FUNCTION because
-sh_pfc_pinconf_set() didn't call sh_pfc_reconfig_pin().
-Now if we fix the cfg->type condition, it gets worse because:
- - Some drivers might be deferred so that .set_mux() will be called
-   multiple times.
- - In such the case, the sh-pfc driver returns -EBUSY even if
-   the group is the same, and then that driver fails to probe.
+Hi Chris,
 
-Since the pinctrl subsystem already has such conditions according
-to @set_mux and @gpio_request_enable, this patch just remove
-the incomplete flag from sh-pfc/pinctrl.c.
+On Wed, Jul 31, 2019 at 4:28 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Wed, Jul 31, 2019, Geert Uytterhoeven wrote:
+> > The two Ethernet ports on the RZA2MEVB development board are labeled
+> > "Ether1" and "Ether2".  Reflect this numbering in the ethernet aliases.
+>
+> However, the channels are labeled as ETHERC0 and ETHERC1 in the hardware
+> manual.
+>
+> So I guess my question is, in general, is the board specific Device Tree
+> supposed to describe what is on the SoC? Or on the board silk screen?
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/pinctrl/sh-pfc/pinctrl.c | 26 --------------------------
- 1 file changed, 26 deletions(-)
+AFAIK the aliases numbering is supposed to match the board or case labels.
 
-diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
-index 157b257..7e5aca2 100644
---- a/drivers/pinctrl/sh-pfc/pinctrl.c
-+++ b/drivers/pinctrl/sh-pfc/pinctrl.c
-@@ -26,7 +26,6 @@
- #include "../pinconf.h"
- 
- struct sh_pfc_pin_config {
--	u32 type;
- 	bool mux_set;
- 	bool gpio_enabled;
- };
-@@ -354,16 +353,6 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
- 	spin_lock_irqsave(&pfc->lock, flags);
- 
- 	for (i = 0; i < grp->nr_pins; ++i) {
--		int idx = sh_pfc_get_pin_index(pfc, grp->pins[i]);
--		struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
--
--		if (cfg->type != PINMUX_TYPE_NONE) {
--			ret = -EBUSY;
--			goto done;
--		}
--	}
--
--	for (i = 0; i < grp->nr_pins; ++i) {
- 		ret = sh_pfc_config_mux(pfc, grp->mux[i], PINMUX_TYPE_FUNCTION);
- 		if (ret < 0)
- 			goto done;
-@@ -395,14 +384,6 @@ static int sh_pfc_gpio_request_enable(struct pinctrl_dev *pctldev,
- 
- 	spin_lock_irqsave(&pfc->lock, flags);
- 
--	if (cfg->type != PINMUX_TYPE_NONE) {
--		dev_err(pfc->dev,
--			"Pin %u is busy, can't configure it as GPIO.\n",
--			offset);
--		ret = -EBUSY;
--		goto done;
--	}
--
- 	if (!pfc->gpio) {
- 		/* If GPIOs are handled externally the pin mux type need to be
- 		 * set to GPIO here.
-@@ -414,7 +395,6 @@ static int sh_pfc_gpio_request_enable(struct pinctrl_dev *pctldev,
- 			goto done;
- 	}
- 
--	cfg->type = PINMUX_TYPE_GPIO;
- 	cfg->gpio_enabled = true;
- 
- 	ret = 0;
-@@ -436,7 +416,6 @@ static void sh_pfc_gpio_disable_free(struct pinctrl_dev *pctldev,
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&pfc->lock, flags);
--	cfg->type = PINMUX_TYPE_NONE;
- 	cfg->gpio_enabled = false;
- 	spin_unlock_irqrestore(&pfc->lock, flags);
- }
-@@ -450,7 +429,6 @@ static int sh_pfc_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	int new_type = input ? PINMUX_TYPE_INPUT : PINMUX_TYPE_OUTPUT;
- 	int idx = sh_pfc_get_pin_index(pfc, offset);
- 	const struct sh_pfc_pin *pin = &pfc->info->pins[idx];
--	struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
- 	unsigned long flags;
- 	unsigned int dir;
- 	int ret;
-@@ -470,8 +448,6 @@ static int sh_pfc_gpio_set_direction(struct pinctrl_dev *pctldev,
- 	if (ret < 0)
- 		goto done;
- 
--	cfg->type = new_type;
--
- done:
- 	spin_unlock_irqrestore(&pfc->lock, flags);
- 	return ret;
-@@ -794,13 +770,11 @@ static int sh_pfc_map_pins(struct sh_pfc *pfc, struct sh_pfc_pinctrl *pmx)
- 
- 	for (i = 0; i < pfc->info->nr_pins; ++i) {
- 		const struct sh_pfc_pin *info = &pfc->info->pins[i];
--		struct sh_pfc_pin_config *cfg = &pmx->configs[i];
- 		struct pinctrl_pin_desc *pin = &pmx->pins[i];
- 
- 		/* If the pin number is equal to -1 all pins are considered */
- 		pin->number = info->pin != (u16)-1 ? info->pin : i;
- 		pin->name = info->name;
--		cfg->type = PINMUX_TYPE_NONE;
- 	}
- 
- 	return 0;
+> Maybe this is like "COM1" is labeled on PC motherboard and we expect it
+> to show up as /dev/ttyS0 regardless of what physical serial port it is
+> connected to.
+
+Those pesky FORTRAN programmers, counting from 1 ;-)
+
+On Koelsch (and Salvator-X(S)), they are called "debug0" and "debug1".
+
+These used to be /dev/ttySC6 and /dev/ttySC7, but got renamed in
+commit 1f75cdac773bc9c9 ("ARM: shmobile: koelsch: Rename SCIF[01] serial
+ports to ttySC[01]").
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
