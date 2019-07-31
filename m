@@ -1,243 +1,132 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2] ARM: dts: rockchip: A few fixes for veyron-{fievel,tiger}
-Date: Wed, 31 Jul 2019 08:15:27 -0700
-Message-ID: <20190731151527.122002-1-mka@chromium.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH] ARM: dts: stm32: remove useless pinctrl entries in stm32mp157-pinctrl
+Date: Wed, 31 Jul 2019 17:26:09 +0200
+Message-ID: <20190731152609.32197-1-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix/improve a few things for veyron fievel/tiger:
+This patch removes "ngpios" and "gpio-ranges" information from
+stm32mp157-pinctrl.dtsi file as it is now filled in stm32mp157 pinctrl
+package files.
 
-- move 'vccsys' regulator from tiger to fievel, both boards
-  have it (and tiger includes the fievel .dtsi)
-- move 'ext_gmac' node below regulators
-- fix GPIO ids of vcc5_host1 and vcc5_host2 regulators
-- remove reset configuration from 'gmac' node, this is already done
-  in rk3288.dtsi
-- fixed style issues of some multi-line comments
-- switch 'vcc18_lcdt', 'vdd10_lcd' and 'vcc33_ccd' regulators off
-  during suspend
-- no pull-up on the Bluetooth wake-up pin, there is an external
-  pull-up. The signal is active low, add the 'bt_host_wake_l'
-  pinctrl config
-- move BC 1.2 pins up in the pinctrl config to keep 'wake only' pins
-  separate
-- add BC 1.2 pins to sleep config
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-Fixes: 0067692b662e ("ARM: dts: rockchip: add veyron-fievel board")
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v2:
-- remove 'regulator-suspend-microvolt' property from regulators
-  that are off during suspend
-- added Doug's 'Reviewed-by' tag
----
- arch/arm/boot/dts/rk3288-veyron-fievel.dts | 58 +++++++++++++---------
- arch/arm/boot/dts/rk3288-veyron-tiger.dts  |  7 ---
- arch/arm/boot/dts/rk3288-veyron.dtsi       |  4 ++
- 3 files changed, 38 insertions(+), 31 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-veyron-fievel.dts b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-index 696566f72d30..65d029ccc907 100644
---- a/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-@@ -20,11 +20,11 @@
- 
- 	/delete-node/ bt-activity;
- 
--	ext_gmac: external-gmac-clock {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <125000000>;
--		clock-output-names = "ext_gmac";
-+	vccsys: vccsys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccsys";
-+		regulator-boot-on;
-+		regulator-always-on;
- 	};
- 
- 	/*
-@@ -41,7 +41,7 @@
- 	vcc5_host1: vcc5-host1-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio5 RK_PC1 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio5 RK_PC2 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&hub_usb1_pwr_en>;
- 		regulator-name = "vcc5_host1";
-@@ -52,7 +52,7 @@
- 	vcc5_host2: vcc5-host2-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio5 RK_PC2 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio5 RK_PB6 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&hub_usb2_pwr_en>;
- 		regulator-name = "vcc5_host2";
-@@ -70,6 +70,13 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 	};
-+
-+	ext_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
-+	};
- };
- 
- &gmac {
-@@ -83,13 +90,13 @@
- 	phy-supply = <&vcc33_lan>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmii_pins>, <&phy_rst>, <&phy_pmeb>, <&phy_int>;
--	resets = <&cru SRST_MAC>;
--	reset-names = "stmmaceth";
- 	rx_delay = <0x10>;
- 	tx_delay = <0x30>;
- 
--	/* Reset for the RTL8211 PHY which requires a 10-ms reset pulse (low)
--	 * with a 30ms settling time. */
-+	/*
-+	 * Reset for the RTL8211 PHY which requires a 10-ms reset pulse (low)
-+	 * with a 30ms settling time.
-+	 */
- 	snps,reset-gpio = <&gpio4 RK_PB0 0>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 30000>;
-@@ -120,7 +127,8 @@
- 	regulators {
- 		/delete-node/ LDO_REG1;
- 
--		/* According to the schematic, vcc18_lcdt is for
-+		/*
-+		 * According to the schematic, vcc18_lcdt is for
- 		 * HDMI_AVDD_1V8
- 		 */
- 		vcc18_lcdt: LDO_REG2 {
-@@ -130,12 +138,12 @@
- 			regulator-max-microvolt = <1800000>;
- 			regulator-name = "vdd18_lcdt";
- 			regulator-state-mem {
--				regulator-on-in-suspend;
--				regulator-suspend-microvolt = <1800000>;
-+				regulator-off-in-suspend;
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index df6470133574..3f6008aa28a4 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -24,8 +24,6 @@
+ 				reg = <0x0 0x400>;
+ 				clocks = <&rcc GPIOA>;
+ 				st,bank-name = "GPIOA";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 0 16>;
+ 				status = "disabled";
  			};
- 		};
  
--		/* This is not a pwren anymore, but the real power supply,
-+		/*
-+		 * This is not a pwren anymore, but the real power supply,
- 		 * vdd10_lcd for HDMI_AVDD_1V0
- 		 */
- 		vdd10_lcd: LDO_REG7 {
-@@ -145,8 +153,7 @@
- 			regulator-max-microvolt = <1000000>;
- 			regulator-name = "vdd10_lcd";
- 			regulator-state-mem {
--				regulator-on-in-suspend;
--				regulator-suspend-microvolt = <1000000>;
-+				regulator-off-in-suspend;
+@@ -37,8 +35,6 @@
+ 				reg = <0x1000 0x400>;
+ 				clocks = <&rcc GPIOB>;
+ 				st,bank-name = "GPIOB";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 16 16>;
+ 				status = "disabled";
  			};
- 		};
  
-@@ -158,8 +165,7 @@
- 			regulator-max-microvolt = <3300000>;
- 			regulator-name = "vcc33_ccd";
- 			regulator-state-mem {
--				regulator-on-in-suspend;
--				regulator-suspend-microvolt = <3300000>;
-+				regulator-off-in-suspend;
+@@ -50,8 +46,6 @@
+ 				reg = <0x2000 0x400>;
+ 				clocks = <&rcc GPIOC>;
+ 				st,bank-name = "GPIOC";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 32 16>;
+ 				status = "disabled";
  			};
- 		};
  
-@@ -180,7 +186,7 @@
- 		interrupts = <RK_PD7 IRQ_TYPE_LEVEL_LOW>;
- 		marvell,wakeup-pin = /bits/ 16 <13>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&bt_host_wake>;
-+		pinctrl-0 = <&bt_host_wake_l>;
- 	};
- };
+@@ -63,8 +57,6 @@
+ 				reg = <0x3000 0x400>;
+ 				clocks = <&rcc GPIOD>;
+ 				st,bank-name = "GPIOD";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 48 16>;
+ 				status = "disabled";
+ 			};
  
-@@ -206,13 +212,13 @@
- 		&ddrio_pwroff
- 		&global_pwroff
+@@ -76,8 +68,6 @@
+ 				reg = <0x4000 0x400>;
+ 				clocks = <&rcc GPIOE>;
+ 				st,bank-name = "GPIOE";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 64 16>;
+ 				status = "disabled";
+ 			};
  
--		/* Wake only */
--		&bt_dev_wake_awake
--		&pwr_led1_on
--
- 		/* For usb bc1.2 */
- 		&usb_otg_ilim_sel
- 		&usb_usb_ilim_sel
-+
-+		/* Wake only */
-+		&bt_dev_wake_awake
-+		&pwr_led1_on
- 	>;
+@@ -89,8 +79,6 @@
+ 				reg = <0x5000 0x400>;
+ 				clocks = <&rcc GPIOF>;
+ 				st,bank-name = "GPIOF";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 80 16>;
+ 				status = "disabled";
+ 			};
  
- 	pinctrl-1 = <
-@@ -221,6 +227,10 @@
- 		&ddrio_pwroff
- 		&global_pwroff
+@@ -102,8 +90,6 @@
+ 				reg = <0x6000 0x400>;
+ 				clocks = <&rcc GPIOG>;
+ 				st,bank-name = "GPIOG";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 96 16>;
+ 				status = "disabled";
+ 			};
  
-+		/* For usb bc1.2 */
-+		&usb_otg_ilim_sel
-+		&usb_usb_ilim_sel
-+
- 		/* Sleep only */
- 		&bt_dev_wake_sleep
- 		&pwr_led1_blink
-diff --git a/arch/arm/boot/dts/rk3288-veyron-tiger.dts b/arch/arm/boot/dts/rk3288-veyron-tiger.dts
-index fae26d530841..27557203ae33 100644
---- a/arch/arm/boot/dts/rk3288-veyron-tiger.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-tiger.dts
-@@ -19,13 +19,6 @@
- 		     "google,veyron", "rockchip,rk3288";
+@@ -115,8 +101,6 @@
+ 				reg = <0x7000 0x400>;
+ 				clocks = <&rcc GPIOH>;
+ 				st,bank-name = "GPIOH";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 112 16>;
+ 				status = "disabled";
+ 			};
  
- 	/delete-node/ vcc18-lcd;
--
--	vccsys: vccsys {
--		compatible = "regulator-fixed";
--		regulator-name = "vccsys";
--		regulator-boot-on;
--		regulator-always-on;
--	};
- };
+@@ -128,8 +112,6 @@
+ 				reg = <0x8000 0x400>;
+ 				clocks = <&rcc GPIOI>;
+ 				st,bank-name = "GPIOI";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 128 16>;
+ 				status = "disabled";
+ 			};
  
- &backlight {
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 8fc8eac699bf..7525e3dd1fc1 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -586,6 +586,10 @@
- 			rockchip,pins = <4 RK_PD7 RK_FUNC_GPIO &pcfg_pull_down>;
- 		};
+@@ -141,8 +123,6 @@
+ 				reg = <0x9000 0x400>;
+ 				clocks = <&rcc GPIOJ>;
+ 				st,bank-name = "GPIOJ";
+-				ngpios = <16>;
+-				gpio-ranges = <&pinctrl 0 144 16>;
+ 				status = "disabled";
+ 			};
  
-+		bt_host_wake_l: bt-host-wake-l {
-+			rockchip,pins = <4 RK_PD7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
- 		/*
- 		 * We run sdio0 at max speed; bump up drive strength.
- 		 * We also have external pulls, so disable the internal ones.
+@@ -154,8 +134,6 @@
+ 				reg = <0xa000 0x400>;
+ 				clocks = <&rcc GPIOK>;
+ 				st,bank-name = "GPIOK";
+-				ngpios = <8>;
+-				gpio-ranges = <&pinctrl 0 160 8>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -849,8 +827,6 @@
+ 				clocks = <&rcc GPIOZ>;
+ 				st,bank-name = "GPIOZ";
+ 				st,bank-ioport = <11>;
+-				ngpios = <8>;
+-				gpio-ranges = <&pinctrl_z 0 400 8>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
-2.22.0.709.g102302147b-goog
+2.17.1
