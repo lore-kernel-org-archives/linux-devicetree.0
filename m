@@ -1,84 +1,51 @@
 From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 0/8] Raspberry Pi 4 DMA addressing support
-Date: Wed, 31 Jul 2019 17:47:43 +0200
-Message-ID: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+Subject: [PATCH 4/8] arm64: re-introduce max_zone_dma_phys()
+Date: Wed, 31 Jul 2019 17:47:47 +0200
+Message-ID: <20190731154752.16557-5-nsaenzjulienne@suse.de>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731154752.16557-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org
-Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, nsaenzjulienne@suse.de, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, nsaenzjulienne@suse.de, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-this series attempts to address some issues we found while bringing up
-the new Raspberry Pi 4 in arm64 and it's intended to serve as a follow
-up of this discussion:
-https://lkml.org/lkml/2019/7/17/476
+Some devices might have multiple interconnects with different DMA
+addressing limitations. This function provides the higher physical
+address accessible by all peripherals on the SoC. If such limitation
+doesn't exist it'll return 0.
 
-The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
-only address the first GB: their DMA address range is
-0xc0000000-0xfc000000 which is aliased to the first GB of physical
-memory 0x00000000-0x3c000000. Note that only some peripherals have these
-limitations: the ARM cores, PCIe, V3D, GENET, and 40-bit DMA channels
-have a wider view of the address space.
-
-Part of this is solved in arm32 by setting up the machine specific
-'.dma_zone_size = SZ_1G', which takes care of the allocating the
-coherent memory area at the right spot. Yet no buffer bouncing (needed
-for dma streaming) is available at the moment, but that's a story for
-another series.
-
-Unfortunately there is no such thing as '.dma_zone_size' in arm64 also
-only ZONE_DMA32 is created which is interpreted by dma-direct and the
-arm64 code as if all peripherals where be able to address the first 4GB
-of memory.
-
-In the light of this, the series implements the following changes:
-
-- Add code that parses the device-tree in oder to find the SoC's common
-  DMA area.
-
-- Create a ZONE_DMA whenever that area is needed and add the rest of the
-  lower 4 GB of memory to ZONE_DMA32*.
-
-- Create the CMA area in a place suitable for all peripherals.
-
-- Inform dma-direct of the new runtime calculated min_mask*.
-
-That's all.
-
-Regards,
-Nicolas
-
-* These solutions where already discussed on the previous RFC (see link
-above).
-
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
-Nicolas Saenz Julienne (8):
-  arm64: mm: use arm64_dma_phys_limit instead of calling
-    max_zone_dma_phys()
-  arm64: rename variables used to calculate ZONE_DMA32's size
-  of/fdt: add function to get the SoC wide DMA addressable memory size
-  arm64: re-introduce max_zone_dma_phys()
-  arm64: use ZONE_DMA on DMA addressing limited devices
-  dma-direct: turn ARCH_ZONE_DMA_BITS into a variable
-  arm64: update arch_zone_dma_bits to fine tune dma-direct min mask
-  mm: comment arm64's usage of 'enum zone_type'
+ arch/arm64/mm/init.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- arch/arm64/Kconfig              |  4 ++
- arch/arm64/mm/init.c            | 78 ++++++++++++++++++++++++++-------
- arch/powerpc/include/asm/page.h |  9 ----
- arch/powerpc/mm/mem.c           | 14 +++++-
- arch/s390/include/asm/page.h    |  2 -
- arch/s390/mm/init.c             |  1 +
- drivers/of/fdt.c                | 72 ++++++++++++++++++++++++++++++
- include/linux/dma-direct.h      |  2 +
- include/linux/mmzone.h          | 21 ++++-----
- include/linux/of_fdt.h          |  2 +
- kernel/dma/direct.c             |  8 ++--
- 11 files changed, 168 insertions(+), 45 deletions(-)
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 8956c22634dd..1c4ffabbe1cb 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -174,6 +174,19 @@ static phys_addr_t __init max_zone_dma32_phys(void)
+ 	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
+ }
+ 
++static phys_addr_t __init max_zone_dma_phys(void)
++
++{
++	u64 memory_size = memblock_end_of_DRAM() - memblock_start_of_DRAM();
++	u64 zone_dma_size;
++
++	of_scan_flat_dt(early_init_dt_dma_zone_size, &zone_dma_size);
++	if (zone_dma_size && zone_dma_size < min(memory_size, SZ_4G))
++		return memblock_start_of_DRAM() + zone_dma_size;
++
++	return 0;
++}
++
+ #ifdef CONFIG_NUMA
+ 
+ static void __init zone_sizes_init(unsigned long min, unsigned long max)
 -- 
 2.22.0
