@@ -1,67 +1,77 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Subject: [PATCH] at91/dt: ariettag25: style cleanup
-Date: Thu,  1 Aug 2019 00:00:45 +0200
-Message-ID: <20190731220045.3992-1-uwe@kleine-koenig.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: [PATCH v9 5/7] of/platform: Pause/resume sync state during init and of_platform_populate()
+Date: Wed, 31 Jul 2019 15:17:18 -0700
+Message-ID: <20190731221721.187713-6-saravanak@google.com>
+References: <20190731221721.187713-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731221721.187713-1-saravanak@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-LSBuZXdsaW5lIGJldHdlZW4gcHJvcGVydGllcyBhbmQgc3ViLW5vZGVzCi0gdXNlIHRhZ3MgZnJv
-bSBpbmNsdWRlZCBkdHNpIGluc3RlYWQgb2YgZHVwbGljYXRpbmcgdGhlIGhpZXJhcmNoeQotIHN0
-YXR1cyBzaG91bGQgYmUgdGhlIGxhc3QgcHJvcGVydHkKLSBkcm9wIGR1cGxpY2F0ZWQgYWxpYXMK
-ClRoZXJlIGFyZSBubyBkaWZmZXJlbmNlcyBpbiB0aGUgZ2VuZXJhdGVkIC5kdGIKClNpZ25lZC1v
-ZmYtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1d2VAa2xlaW5lLWtvZW5pZy5vcmc+Ci0tLQpIZWxs
-bywKCnRoZXNlIGFyZSB0aGUgc3R5bGUgcnVsZXMgSSB3YXMgdGVhY2hlZCB3aGVuIG1vZGlmeWlu
-ZyBpbXggZHRzIGZpbGVzLgpEbyB0aGV5IGFwcGx5IHRvIGF0OTEsIHRvbz8KCkJlc3QgcmVnYXJk
-cwpVd2UKCiBhcmNoL2FybS9ib290L2R0cy9hdDkxLWFyaWV0dGFnMjUuZHRzIHwgODcgKysrKysr
-KysrKysrKy0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKSwg
-NDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1hcmll
-dHRhZzI1LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtYXJpZXR0YWcyNS5kdHMKaW5kZXgg
-N2EzNGM0ZGMwNWQyLi44ZjlmNWEyMmNiZjYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2F0OTEtYXJpZXR0YWcyNS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1hcmlldHRh
-ZzI1LmR0cwpAQCAtNiwxNCArNiwxMSBAQAogICovCiAvZHRzLXYxLzsKICNpbmNsdWRlICJhdDkx
-c2FtOWcyNS5kdHNpIgorCiAvIHsKIAltb2RlbCA9ICJBY21lIFN5c3RlbXMgQXJpZXR0YSBHMjUi
-OwogCWNvbXBhdGlibGUgPSAiYWNtZSxhcmlldHRhZzI1IiwgImF0bWVsLGF0OTFzYW05eDUiLCAi
-YXRtZWwsYXQ5MXNhbTkiOwogCi0JYWxpYXNlcyB7Ci0JCXNlcmlhbDAgPSAmZGJndTsKLQl9Owot
-CiAJY2hvc2VuIHsKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7CiAJfTsKQEAg
-LTM0LDU1ICszMSwxNiBAQAogCiAJYWhiIHsKIAkJYXBiIHsKLQkJCW1tYzA6IG1tY0BmMDAwODAw
-MCB7Ci0JCQkJcGluY3RybC0wID0gPAotCQkJCSAgJnBpbmN0cmxfbW1jMF9zbG90MF9jbGtfY21k
-X2RhdDAKLQkJCQkgICZwaW5jdHJsX21tYzBfc2xvdDBfZGF0MV8zPjsKLQkJCQlzdGF0dXMgPSAi
-b2theSI7Ci0KLQkJCQlzbG90QDAgewotCQkJCQlyZWcgPSA8MD47Ci0JCQkJCWJ1cy13aWR0aCA9
-IDw0PjsKLQkJCQl9OwotCQkJfTsKLQotCQkJdGNiMDogdGltZXJAZjgwMDgwMDAgewotCQkJCXRp
-bWVyQDAgewotCQkJCQljb21wYXRpYmxlID0gImF0bWVsLHRjYi10aW1lciI7Ci0JCQkJCXJlZyA9
-IDwwPjsKLQkJCQl9OwotCi0JCQkJdGltZXJAMSB7Ci0JCQkJCWNvbXBhdGlibGUgPSAiYXRtZWws
-dGNiLXRpbWVyIjsKLQkJCQkJcmVnID0gPDE+OwotCQkJCX07Ci0JCQl9OwotCi0JCQl1c2IyOiBn
-YWRnZXRAZjgwM2MwMDAgewotCQkJCXN0YXR1cyA9ICJva2F5IjsKLQkJCX07Ci0KLQkJCWRiZ3U6
-IHNlcmlhbEBmZmZmZjIwMCB7Ci0JCQkJc3RhdHVzID0gIm9rYXkiOwotCQkJfTsKLQogCQkJcnRj
-QGZmZmZmZWIwIHsKIAkJCQlzdGF0dXMgPSAib2theSI7CiAJCQl9OwogCQl9OwogCi0JCXVzYjA6
-IG9oY2lANjAwMDAwIHsKLQkJCXN0YXR1cyA9ICJva2F5IjsKLQkJCW51bS1wb3J0cyA9IDwzPjsK
-LQkJfTsKLQotCQl1c2IxOiBlaGNpQDcwMDAwMCB7Ci0JCQlzdGF0dXMgPSAib2theSI7Ci0JCX07
-CiAJfTsKIAogCWxlZHMgewogCQljb21wYXRpYmxlID0gImdwaW8tbGVkcyI7CisKIAkJYXJpZXR0
-YV9sZWQgewogCQkJbGFiZWwgPSAiYXJpZXR0YV9sZWQiOwogCQkJZ3Bpb3MgPSA8JnBpb0IgOCBH
-UElPX0FDVElWRV9ISUdIPjsgLyogUEI4ICovCkBAIC05MCwzICs0OCw0NCBAQAogCQl9OwogCX07
-CiB9OworCismZGJndSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKworJm1tYzAgeworCXBpbmN0
-cmwtMCA9IDwKKwkJJnBpbmN0cmxfbW1jMF9zbG90MF9jbGtfY21kX2RhdDAKKwkJJnBpbmN0cmxf
-bW1jMF9zbG90MF9kYXQxXzM+OworCXN0YXR1cyA9ICJva2F5IjsKKworCXNsb3RAMCB7CisJCXJl
-ZyA9IDwwPjsKKwkJYnVzLXdpZHRoID0gPDQ+OworCX07Cit9OworCismdGNiMCB7CisJdGltZXJA
-MCB7CisJCWNvbXBhdGlibGUgPSAiYXRtZWwsdGNiLXRpbWVyIjsKKwkJcmVnID0gPDA+OworCX07
-CisKKwl0aW1lckAxIHsKKwkJY29tcGF0aWJsZSA9ICJhdG1lbCx0Y2ItdGltZXIiOworCQlyZWcg
-PSA8MT47CisJfTsKK307CisKKyZ1c2IwIHsKKwludW0tcG9ydHMgPSA8Mz47CisJc3RhdHVzID0g
-Im9rYXkiOworfTsKKworJnVzYjEgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZ1c2IyIHsK
-KwlzdGF0dXMgPSAib2theSI7Cit9OwotLSAKMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+When all the top level devices are populated from DT during kernel
+init, the supplier devices could be added and probed before the
+consumer devices are added and linked to the suppliers. To avoid the
+sync_state() callback from being called prematurely, pause the
+sync_state() callbacks before populating the devices and resume them
+at late_initcall_sync().
+
+Similarly, when children devices are populated after kernel init using
+of_platform_populate(), there could be supplier-consumer dependencies
+between the children devices that are populated. To avoid the same
+problem with sync_state() being called prematurely, pause and resume
+sync_state() callbacks across of_platform_populate().
+
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/platform.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 64c4b91988f2..6c9c8dcee912 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -485,6 +485,7 @@ int of_platform_populate(struct device_node *root,
+ 	pr_debug("%s()\n", __func__);
+ 	pr_debug(" starting at: %pOF\n", root);
+ 
++	device_links_supplier_sync_state_pause();
+ 	for_each_child_of_node(root, child) {
+ 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
+ 		if (rc) {
+@@ -492,6 +493,8 @@ int of_platform_populate(struct device_node *root,
+ 			break;
+ 		}
+ 	}
++	device_links_supplier_sync_state_resume();
++
+ 	of_node_set_flag(root, OF_POPULATED_BUS);
+ 
+ 	of_node_put(root);
+@@ -688,6 +691,7 @@ static int __init of_platform_default_populate_init(void)
+ 		return -ENODEV;
+ 
+ 	platform_bus_type.add_links = of_link_to_suppliers;
++	device_links_supplier_sync_state_pause();
+ 	/*
+ 	 * Handle certain compatibles explicitly, since we don't want to create
+ 	 * platform_devices for every node in /reserved-memory with a
+@@ -708,6 +712,13 @@ static int __init of_platform_default_populate_init(void)
+ 	return 0;
+ }
+ arch_initcall_sync(of_platform_default_populate_init);
++
++static int __init of_platform_sync_state_init(void)
++{
++	device_links_supplier_sync_state_resume();
++	return 0;
++}
++late_initcall_sync(of_platform_sync_state_init);
+ #endif
+ 
+ int of_platform_device_destroy(struct device *dev, void *data)
+-- 
+2.22.0.709.g102302147b-goog
