@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH 5/6] arm64: dts: amlogic: odroid-n2: add minimal thermal zone
-Date: Wed, 31 Jul 2019 14:14:08 +0200
-Message-ID: <20190731121409.17285-6-glaroque@baylibre.com>
+Subject: [PATCH 6/6] MAINTAINERS: add entry for Amlogic Thermal driver
+Date: Wed, 31 Jul 2019 14:14:09 +0200
+Message-ID: <20190731121409.17285-7-glaroque@baylibre.com>
 References: <20190731121409.17285-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190731121409.17285-1-glaroque@baylibre.com>
@@ -10,36 +10,32 @@ To: daniel.lezcano@linaro.org, khilman@baylibre.com
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add minimal thermal zone for DDR and CPU sensor
+Add myself as maintainer for Amlogic Thermal driver.
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 81780ffcc7f0..4bd8d6d0c972 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -20,6 +20,19 @@
- 		ethernet0 = &ethmac;
- 	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fb2b12f75c37..299f27d11058 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15910,6 +15910,15 @@ F:	Documentation/driver-api/thermal/cpu-cooling-api.rst
+ F:	drivers/thermal/cpu_cooling.c
+ F:	include/linux/cpu_cooling.h
  
-+	thermal-zones {
-+		soc_thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <100>;
-+			thermal-sensors = <&cpu_temp 0>;
-+		};
-+		ddr_thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <100>;
-+			thermal-sensors = <&ddr_temp 1>;
-+		};
-+	};
++THERMAL DRIVER FOR AMLOGIC SOCS
++M:	Guillaume La Roque <glaroque@baylibre.com>
++L:	linux-pm@vger.kernel.org
++L:	linux-amlogic@lists.infradead.org
++W:	http://linux-meson.com/
++S:	Supported
++F:	drivers/thermal/amlogic_thermal.c
++F:	Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
 +
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+ THINKPAD ACPI EXTRAS DRIVER
+ M:	Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+ L:	ibm-acpi-devel@lists.sourceforge.net
 -- 
 2.17.1
