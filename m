@@ -1,61 +1,55 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: RE: [PATCH net-next v4 0/4] enetc: Add mdio bus driver for the PCIe
- MDIO endpoint
-Date: Wed, 31 Jul 2019 15:30:10 +0000
-Message-ID: <VI1PR04MB48808FF2BC4DBA4A6C32DB2D96DF0@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <1564479919-18835-1-git-send-email-claudiu.manoil@nxp.com>
-        <20190730.094436.855806617449032791.davem@davemloft.net>
- <20190730.095344.401137621326119500.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190730.095344.401137621326119500.davem@davemloft.net>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leo Li <leoyang.li@nxp.com>, Alexandru Marginean <alexandru.marginean@nxp.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: [PATCH v2 0/6] Add support of New Amlogic temperature sensor for G12 SoCs
+Date: Wed, 31 Jul 2019 17:35:23 +0200
+Message-ID: <20190731153529.30159-1-glaroque@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, khilman@baylibre.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->-----Original Message-----
->From: David Miller <davem@davemloft.net>
->Sent: Tuesday, July 30, 2019 7:54 PM
->To: Claudiu Manoil <claudiu.manoil@nxp.com>
->Cc: andrew@lunn.ch; robh+dt@kernel.org; Leo Li <leoyang.li@nxp.com>;
->Alexandru Marginean <alexandru.marginean@nxp.com>;
->netdev@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
->kernel@lists.infradead.org; linux-kernel@vger.kernel.org
->Subject: Re: [PATCH net-next v4 0/4] enetc: Add mdio bus driver for the PC=
-Ie
->MDIO endpoint
->
->From: David Miller <davem@davemloft.net>
->Date: Tue, 30 Jul 2019 09:44:36 -0700 (PDT)
->
->> From: Claudiu Manoil <claudiu.manoil@nxp.com>
->> Date: Tue, 30 Jul 2019 12:45:15 +0300
->>
->>> First patch fixes a sparse issue and cleans up accessors to avoid
->>> casting to __iomem.
->>> Second patch just registers the PCIe endpoint device containing
->>> the MDIO registers as a standalone MDIO bus driver, to allow
->>> an alternative way to control the MDIO bus.  The same code used
->>> by the ENETC ports (eth controllers) to manage MDIO via local
->>> registers applies and is reused.
->>>
->>> Bindings are provided for the new MDIO node, similarly to ENETC
->>> port nodes bindings.
->>>
->>> Last patch enables the ENETC port 1 and its RGMII PHY on the
->>> LS1028A QDS board, where the MDIO muxing configuration relies
->>> on the MDIO support provided in the first patch.
->>  ...
->>
->> Series applied, thank you.
->
->Actually this doesn't compile, I had to revert:
->
+This patchs series add support of New Amlogic temperature sensor and minimal
+thermal zone for SEI510 and ODROID-N2 boards.
 
-Sorry, I overlooked the module part.  Turns out I have to define a separate
-module for this driver (mdio), refactor common code between the mdio module
-and the enetc-pf module, clean up the Makefile...  and do more checks.
+First implementation was doing on IIO[1] but after comments i move on thermal framework.
+Formulas and calibration values come from amlogic.
+
+Changes since v1:
+  - fix enum vs const in documentation for compatible
+  - fix error with thermal-sensor-cells value set to 1 instead of 0
+  - add some dependencies needed to add cooling-maps
+
+Dependencies :
+- patch 3,4 & 5: depends on Neil's patch and series :
+              - missing dwc2 phy-names[1]
+              - patchsets to add DVFS on G12a[3] which have deps on [4] and [5]
+
+[1] https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@baylibre.com/
+[2] https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@baylibre.com/
+[3] https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@baylibre.com/
+[4] https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@baylibre.com/
+[5] https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@baylibre.com/
+
+Guillaume La Roque (6):
+  dt-bindings: thermal: Add DT bindings documentation for Amlogic
+    Thermal
+  thermal: amlogic: Add thermal driver to support G12 SoCs
+  arm64: dts: amlogic: g12: add temperature sensor
+  arm64: dts: meson: sei510: Add minimal thermal zone
+  arm64: dts: amlogic: odroid-n2: add minimal thermal zone
+  MAINTAINERS: add entry for Amlogic Thermal driver
+
+ .../bindings/thermal/amlogic,thermal.yaml     |  58 +++
+ MAINTAINERS                                   |   9 +
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  22 ++
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |  56 +++
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  60 ++++
+ drivers/thermal/Kconfig                       |  11 +
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/amlogic_thermal.c             | 332 ++++++++++++++++++
+ 8 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+ create mode 100644 drivers/thermal/amlogic_thermal.c
+
+-- 
+2.17.1
