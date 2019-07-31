@@ -1,92 +1,151 @@
-From: Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Date: Wed, 31 Jul 2019 15:01:44 +0200
-Message-ID: <a1fc0e2b5ef2d131f4e896c9c0aa7621bf4b79e2.camel@partner.samsung.com>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
-        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
-        <20190723122016.30279-10-a.swigon@partner.samsung.com>
-        <20190724183639.GA14346@kozik-lap>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: add support for Arietta G25
+Date: Wed, 31 Jul 2019 15:18:44 +0200
+Message-ID: <20190731131844.avi5zlwkgu7f2her@M43218.corp.atmel.com>
+References: <20190728210403.2730-1-uwe@kleine-koenig.org>
+ <20190728210403.2730-3-uwe@kleine-koenig.org>
+ <20190731113648.kyktpnk3exly57fw@M43218.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724183639.GA14346@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com, =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190731113648.kyktpnk3exly57fw@M43218.corp.atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, info@acmesystems.it
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-07-24 at 20:36 +0200, Krzysztof Kozlowski wrote:
-> On Tue, Jul 23, 2019 at 02:20:14PM +0200, Artur Świgoń wrote:
-> > This patch adds interconnect functionality to the exynos-bus devfreq
-> > driver.
-> > 
-> > The SoC topology is a graph (or, more specifically, a tree) and most of its
-> > edges are taken from the devfreq parent-child hierarchy (cf.
-> > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
-> > patch adds missing edges to the DT (under the name 'parent'). Due to
-> 
-> Do not refer to DT patches. They will come through different tree so
-> "previous" will not be correct anymore. You mentioned dependencies in
-> cover letter so it is sufficient.
+On Wed, Jul 31, 2019 at 01:36:49PM +0200, Ludovic Desroches wrote:
+> On Sun, Jul 28, 2019 at 11:04:03PM +0200, Uwe Kleine-K=F6nig wrote:
+> > =
 
-OK.
- 
-> >  /*
-> > @@ -61,6 +69,13 @@ exynos_bus_ops_edev(enable_edev);
-> >  exynos_bus_ops_edev(disable_edev);
-> >  exynos_bus_ops_edev(set_event);
-> >  
-> > +static int exynos_bus_next_id(void)
-> > +{
-> > +	static int exynos_bus_node_id;
+> > The Arietta G25 is a SBC powered by a AT91SAMG25 running at 400 MHz.
+> > See https://www.acmesystems.it/arietta for more details.
+> > =
+
+> > Signed-off-by: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
+> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+I should have double checked before, I had in mind that we support this
+board in our bootloader but it's also the case in the kernel:
+
+arch/arm/boot/dts/at91-ariettag25.dts
+
+Regards
+
+Ludovic
+
+> =
+
+> > ---
+> >  arch/arm/boot/dts/at91sam9g25-arietta.dts | 86 +++++++++++++++++++++++
+> >  1 file changed, 86 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/at91sam9g25-arietta.dts
+> > =
+
+> > diff --git a/arch/arm/boot/dts/at91sam9g25-arietta.dts b/arch/arm/boot/=
+dts/at91sam9g25-arietta.dts
+> > new file mode 100644
+> > index 000000000000..6c20e02f0ea9
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/at91sam9g25-arietta.dts
+> > @@ -0,0 +1,86 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Arietta - System On Module
+> > + * https://www.acmesystems.it/arietta
+> > + */
 > > +
-> > +	return exynos_bus_node_id++;
-> 
-> This does not look robust. Use IDR for IDs. 
-
-OK.
-
-> > +static int exynos_bus_icc_connect(struct exynos_bus *bus)
-> > +{
-> > +	struct device_node *np = bus->dev->of_node;
-> > +	struct devfreq *parent_devfreq;
-> > +	struct icc_node *parent_node = NULL;
-> > +	struct of_phandle_args args;
-> > +	int ret = 0;
+> > +/dts-v1/;
+> > +#include "at91sam9g25.dtsi"
 > > +
-> > +	parent_devfreq = devfreq_get_devfreq_by_phandle(bus->dev, 0);
-> > +	if (!IS_ERR(parent_devfreq)) {
-> > +		struct exynos_bus *parent_bus;
-> 
-> What if someone unbinds this parent devfreq? I guess everything in
-> devfreq starts exploding... however it's not the problem of this patch.
-> 
-> Do you also need suspend/resume order (device links)? I guess the other
-> side, e.g.  mixer, should resume before the bus?
+> > +/ {
+> > +	model =3D "Acme Systems Arietta G25";
+> > +	compatible =3D "acme,ariettag25", "atmel,at91sam9x5", "atmel,at91sam9=
+";
+> > +
+> > +	chosen {
+> > +		stdout-path =3D "serial0:115200n8";
+> > +	};
+> > +
+> > +	memory {
+> > +		reg =3D <0x20000000 0x8000000>;
+> > +	};
+> > +
+> > +	clocks {
+> > +		slow_xtal {
+> > +			clock-frequency =3D <32768>;
+> > +		};
+> > +
+> > +		main_xtal {
+> > +			clock-frequency =3D <12000000>;
+> > +		};
+> > +	};
+> > +
+> > +	ahb {
+> > +		apb {
+> > +			rtc@fffffeb0 {
+> > +				status =3D "okay";
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible =3D "gpio-leds";
+> > +
+> > +		arietta_led {
+> > +			label =3D "arietta_led";
+> > +			gpios =3D <&pioB 8 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger =3D "heartbeat";
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&dbgu {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&mmc0 {
+> > +	pinctrl-0 =3D <
+> > +		&pinctrl_mmc0_slot0_clk_cmd_dat0
+> > +		&pinctrl_mmc0_slot0_dat1_3>;
+> > +	status =3D "okay";
+> > +
+> > +	slot@0 {
+> > +		reg =3D <0>;
+> > +		bus-width =3D <4>;
+> > +	};
+> > +};
+> > +
+> > +&usart0 {
+> > +	status =3D"okay";
+> > +};
+> > +
+> > +&usart1 {
+> > +	status =3D"okay";
+> > +};
+> > +
+> > +&usb0 {
+> > +	status =3D "okay";
+> > +	num-ports =3D <3>;
+> > +};
+> > +
+> > +&usb1 {
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&usb2 {
+> > +	status =3D "okay";
+> > +};
+> > -- =
 
-Actually, I think that the bus (devfreq) should resume before mixer. However,
-suspend/resume order is another issue that applies to this driver regardless of
-using the interconnect framework, although device links could probably also be
-implemented in the interconnect framework itself.
-
-> > +		parent_bus = dev_get_drvdata(parent_devfreq->dev.parent);
-> > +		parent_node = parent_bus->node;
-> > +	} else {
-> > +		/* Look for parent in DT */
-> > +		int num = of_count_phandle_with_args(np, "parent",
-> > +						     "#interconnect-cells");
-> > +		if (num != 1)
-> 
-> You will return here 0 but isn't it an error?
-
-It is definitely not an error when 'parent' does not exist in DT (for buses that
-are parents themselves). I can extend the comment in the code to explicitly
-state that.
-
-Best regards,
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
+> > 2.20.1
+> > =
