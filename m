@@ -1,118 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: thermal: Add DT bindings documentation
- for Amlogic Thermal
-Date: Wed, 31 Jul 2019 11:00:50 -0600
-Message-ID: <CAL_Jsq+Z1JvvtrDBtqbcuzdy_k5=OSSLQ7ezKvs9-oyvGi=-9A@mail.gmail.com>
-References: <20190731121409.17285-1-glaroque@baylibre.com> <20190731121409.17285-2-glaroque@baylibre.com>
- <f0f0dfe5-0cd3-5275-53ff-cfc4bb44f7e6@baylibre.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 5/8] arm64: use ZONE_DMA on DMA addressing limited devices
+Date: Wed, 31 Jul 2019 18:07:42 +0100
+Message-ID: <20190731170742.GC17773@arrakis.emea.arm.com>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+ <20190731154752.16557-6-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f0f0dfe5-0cd3-5275-53ff-cfc4bb44f7e6@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190731154752.16557-6-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Guillaume La Roque <glaroque@baylibre.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, Will Deacon <will@kernel.org>, phill@raspberryi.org, f.fainelli@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, eric@anholt.net, mbrugger@suse.com, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 6:44 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 31/07/2019 14:14, Guillaume La Roque wrote:
-> > Adding the devicetree binding documentation for the Amlogic temperature
-> > sensor found in the Amlogic Meson G12 SoCs.
-> > the G12A  and G12B SoCs are supported.
-> >
-> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> > ---
-> >  .../bindings/thermal/amlogic,thermal.yaml     | 58 +++++++++++++++++++
-> >  1 file changed, 58 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-> > new file mode 100644
-> > index 000000000000..1e2fe84da13d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-> > @@ -0,0 +1,58 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Amlogic Thermal Driver
-> > +
-> > +maintainers:
-> > +  - Guillaume La Roque <glaroque@baylibre.com>
-> > +
-> > +description: Amlogic Thermal driver
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - amlogic,g12-cpu-thermal
-> > +              - amlogic,g12-ddr-thermal
-> > +          - enum:
-> > +              - amlogic,g12-thermal
->
-> Shouldn't be :
->     compatible:
->         items:
->           - enum:
->               - amlogic,g12-cpu-thermal
->               - amlogic,g12-ddr-thermal
->           - const:
->               - amlogic,g12-thermal
->
-> instead ?
+On Wed, Jul 31, 2019 at 05:47:48PM +0200, Nicolas Saenz Julienne wrote:
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 1c4ffabbe1cb..f5279ef85756 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -50,6 +50,13 @@
+>  s64 memstart_addr __ro_after_init = -1;
+>  EXPORT_SYMBOL(memstart_addr);
+>  
+> +/*
+> + * We might create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA is needed if there
+> + * are periferals unable to address the first naturally aligned 4GB of ram.
+> + * ZONE_DMA32 will be expanded to cover the rest of that memory. If such
+> + * limitations doesn't exist only ZONE_DMA32 is created.
+> + */
 
-Yes, except 'const' is a string, not list value.
+Shouldn't we instead only create ZONE_DMA to cover the whole 32-bit
+range and leave ZONE_DMA32 empty? Can__GFP_DMA allocations fall back
+onto ZONE_DMA32?
 
->
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  amlogic,ao-secure:
-> > +    description: phandle to the ao-secure syscon
-> > +    allOf:
-> > +     - $ref: /schemas/types.yaml#/definitions/uint32
-
-phandle, not uint32
-
-> > +
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - amlogic,ao-secure
-> > +
-> > +examples:
-> > +  - |
-> > +        cpu_temp: temperature-sensor@ff634800 {
-> > +                compatible = "amlogic,g12-cpu-thermal",
-> > +                             "amlogic,g12-thermal";
-> > +                reg = <0x0 0xff634800 0x0 0x50>;
-> > +                interrupts = <0x0 0x24 0x0>;
-> > +                clocks = <&clk 164>;
-> > +                status = "okay";
-> > +                #thermal-sensor-cells = <1>;
-> > +                amlogic,ao-secure = <&sec_AO>;
-> > +        };
-> > +...
-> > \ No newline at end of file
-
-Fix this.
-
-
-> >
->
+-- 
+Catalin
