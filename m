@@ -1,107 +1,67 @@
-From: Ashish Kumar <ashish.kumar@nxp.com>
-Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Date: Thu, 1 Aug 2019 07:09:30 +0000
-Message-ID: <VI1PR04MB40154034B5C29D80321E998295DE0@VI1PR04MB4015.eurprd04.prod.outlook.com>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
- <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
- <20190709200837.GA7806@bogus>
- <VI1PR04MB4015B154965BA4BEF402890B95DD0@VI1PR04MB4015.eurprd04.prod.outlook.com>
- <VE1PR04MB66874A887C5BE6209A4AE90F8FDF0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VE1PR04MB66874A887C5BE6209A4AE90F8FDF0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Han Xu <han.xu@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Avi Fishman <avifishman70@gmail.com>
+Subject: [PATCH v1 1/2] dt-binding: net: document NPCM7xx EMC 10/100 DT bindings
+Date: Thu,  1 Aug 2019 10:26:10 +0300
+Message-ID: <20190801072611.27935-2-avifishman70@gmail.com>
+References: <20190801072611.27935-1-avifishman70@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190801072611.27935-1-avifishman70@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: venture@google.com, yuenn@google.com, benjaminfair@google.com, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
+Cc: avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com, openbmc@lists.ozlabs.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Added device tree binding documentation for
+Nuvoton NPCM7xx Ethernet MAC Controller (EMC) 10/100 RMII
 
+Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+---
+ .../bindings/net/nuvoton,npcm7xx-emc.txt      | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
 
-> -----Original Message-----
-> From: Leo Li
-> Sent: Thursday, August 1, 2019 4:57 AM
-> To: Ashish Kumar <ashish.kumar@nxp.com>; Rob Herring
-> <robh@kernel.org>; Han Xu <han.xu@nxp.com>
-> Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org; broonie@kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-mtd@lists.infradead.org; Kuldeep
-> Singh <kuldeep.singh@nxp.com>
-> Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add ls2080a
-> compatibility string to bindings
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Ashish Kumar
-> > Sent: Monday, July 29, 2019 4:11 AM
-> > To: Rob Herring <robh@kernel.org>; Leo Li <leoyang.li@nxp.com>
-> > Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org;
-> > broonie@kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-mtd@lists.infradead.org; Kuldeep Singh <kuldeep.singh@nxp.com>
-> > Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi:
-> > Add ls2080a compatibility string to bindings
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: Rob Herring <robh@kernel.org>
-> > > Sent: Wednesday, July 10, 2019 1:39 AM
-> > > To: Ashish Kumar <ashish.kumar@nxp.com>
-> > > Cc: devicetree@vger.kernel.org; bbrezillon@kernel.org;
-> > > broonie@kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > linux-mtd@lists.infradead.org; Ashish Kumar <ashish.kumar@nxp.com>;
-> > > Kuldeep Singh <kuldeep.singh@nxp.com>; Ashish Kumar
-> > > <ashish.kumar@nxp.com>
-> > > Subject: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi:
-> > > Add ls2080a compatibility string to bindings
-> > >
-> > > Caution: EXT Email
-> > >
-> > > On Wed, 19 Jun 2019 16:41:53 +0530, Ashish Kumar wrote:
-> > > > There are 2 version of QSPI-IP, according to which controller
-> > > > registers sets can be big endian or little endian.There are some
-> > > > other minor changes like RX fifo depth etc.
-> > > >
-> > > > The big endian version uses driver compatible "fsl,ls1021a-qspi"
-> > > > and little endian version uses driver compatible "fsl,ls2080a-qspi"
-> > > >
-> > > > Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-> > > > Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
-> > > > ---
-> > > > v3:
-> > > > Rebase to top
-> > > > v2:
-> > > > Convert to patch series and rebasing done on top of tree
-> > > >
-> > > >  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 3 +--
-> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > >
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > Hi Leo,
-> >
-> > I think Rob, is waiting for you ack.
-> 
-> Binding patches usually go through subsystem tree.  So I think this actually
-> need ack from qspi maintainer Han Xu and be picked up by SPI maintainer.
-Hello Han Xu, 
-
-Could you please ack this few of my dts patches are dependent on this, waiting to be pushed from Shawn's tree.
-
-Regards 
-Ashish
-> 
-> Regards,
-> Leo
+diff --git a/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt b/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
+new file mode 100644
+index 000000000000..a7ac3ca66de9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
+@@ -0,0 +1,38 @@
++Nuvoton NPCM7XX 10/100 Ethernet MAC Controller (EMC)
++
++The NPCM7XX provides one or two Ethernet MAC RMII Controllers
++for WAN/LAN applications
++
++Required properties:
++- device_type     : Should be "network"
++- compatible      : "nuvoton,npcm750-emc" for Poleg NPCM7XX.
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the emc interrupts with flags for falling edge.
++                    first interrupt dedicated to Txirq
++                    second interrupt dedicated to Rxirq
++- phy-mode        : Should be "rmii" (see ethernet.txt in the same directory)
++- clocks          : phandle of emc reference clock.
++- resets          : phandle to the reset control for this device.
++- use-ncsi        : Use the NC-SI stack instead of an MDIO PHY
++
++Example:
++
++emc0: eth@f0825000 {
++	device_type = "network";
++	compatible = "nuvoton,npcm750-emc";
++	reg = <0xf0825000 0x1000>;
++	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++	             <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++	phy-mode = "rmii";
++	clocks = <&clk NPCM7XX_CLK_AHB>;
++
++	#use-ncsi; /* add this to support ncsi */
++
++	clock-names = "clk_emc";
++	resets = <&rstc 6>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&r1_pins
++	             &r1err_pins
++	             &r1md_pins>;
++	status = "okay";
++};
+-- 
+2.18.0
