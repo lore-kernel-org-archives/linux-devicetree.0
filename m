@@ -1,101 +1,70 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
- restore
-Date: Thu, 1 Aug 2019 21:42:39 +0300
-Message-ID: <c873d974-f594-d5eb-5c88-c487b8049e3d@gmail.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
- <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
- <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
- <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
- <cd9c5116-4235-758c-7a09-d7185d52b22b@nvidia.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH] drivers/amba: add reset control to primecell probe
+Date: Thu,  1 Aug 2019 13:43:46 -0500
+Message-ID: <20190801184346.7015-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cd9c5116-4235-758c-7a09-d7185d52b22b@nvidia.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: dinguyen@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, Dinh Nguyen <dinh.nguyen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-01.08.2019 21:06, Sowjanya Komatineni пишет:
-> 
-> On 8/1/19 3:53 AM, Dmitry Osipenko wrote:
->> 01.08.2019 0:04, Sowjanya Komatineni пишет:
->>> On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
->>>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>>>> This patch adds support for saving OSC clock frequency and the
->>>>> drive-strength during OSC clock init and creates an API to restore
->>>>> OSC control register value from the saved context.
->>>>>
->>>>> This API is invoked by Tegra210 clock driver during system resume
->>>>> to restore the  OSC clock settings.
->>>>>
->>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>> ---
->>>>>    drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
->>>>>    drivers/clk/tegra/clk.h             |  1 +
->>>>>    2 files changed, 16 insertions(+)
->>>>>
->>>>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> b/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> index 8d91b2b191cf..7c6c8abfcde6 100644
->>>>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
->>>>> @@ -17,6 +17,10 @@
->>>>>    #define OSC_CTRL            0x50
->>>>>    #define OSC_CTRL_OSC_FREQ_SHIFT        28
->>>>>    #define OSC_CTRL_PLL_REF_DIV_SHIFT    26
->>>>> +#define OSC_CTRL_MASK            (0x3f2 |    \
->>>>> +                    (0xf << OSC_CTRL_OSC_FREQ_SHIFT))
->>>>> +
->>>>> +static u32 osc_ctrl_ctx;
->>>>>      int __init tegra_osc_clk_init(void __iomem *clk_base, struct
->>>>> tegra_clk *clks,
->>>>>                      unsigned long *input_freqs, unsigned int num,
->>>>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem
->>>>> *clk_base, struct tegra_clk *clks,
->>>>>        unsigned osc_idx;
->>>>>          val = readl_relaxed(clk_base + OSC_CTRL);
->>>>> +    osc_ctrl_ctx = val & OSC_CTRL_MASK;
->>>>>        osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
->>>>>          if (osc_idx < num)
->>>>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk
->>>>> *tegra_clks)
->>>>>            *dt_clk = clk;
->>>>>        }
->>>>>    }
->>>>> +
->>>>> +void tegra_clk_osc_resume(void __iomem *clk_base)
->>>>> +{
->>>>> +    u32 val;
->>>>> +
->>>>> +    val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
->>>>> +    val |= osc_ctrl_ctx;
->>>>> +    writel_relaxed(val, clk_base + OSC_CTRL);
->>>> Why a full raw u32 OSC_CTRL value couldn't be simply saved and
->>>> restored?
->>> Storing and restoring only required fields to avoid accidental
->>> misconfiguration.
->>>
->>> OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by
->>> BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in
->>> use is not safe.
->> I'm looking at the clk-driver sources and see that none of the Tegra
->> drivers ever change the OSC_CTRL configuration, T30/114 even have
->> #defines for the OSC_CTRL that are unused.
->>
->> So, this leads to a question.. does any bootloader really ever change
->> the OSC_CTRL such that it differs after resume from suspend in
->> comparison to the value at the time of kernel's booting up?
-> 
-> For Tegra210, bootloader programs OSC_CTRL register for drivestrength
-> programming.
-> 
-> These settings need to be restored to the same on SC7 exit as they gets
-> reset during SC7 entry.
+From: Dinh Nguyen <dinh.nguyen@intel.com>
 
-Okay, thank you for the clarification.
+The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+default. Until recently, the DMA controller was brought out of reset by the
+bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+are not used are held in reset and are left to Linux to bring them out of
+reset.
+
+Add a mechanism for getting the reset property and de-assert the primecell
+module from reset if found. This is a not a hard fail if the reset property
+is not present in the device tree node, so the driver will continue to probe.
+
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ drivers/of/platform.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 7801e25e6895..d8945705313d 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -21,6 +21,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ const struct of_device_id of_default_bus_match_table[] = {
+ 	{ .compatible = "simple-bus", },
+@@ -229,6 +230,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 	struct amba_device *dev;
+ 	const void *prop;
+ 	int i, ret;
++	struct reset_control *rstc;
+ 
+ 	pr_debug("Creating amba device %pOF\n", node);
+ 
+@@ -270,6 +272,18 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 		goto err_free;
+ 	}
+ 
++	/*
++	 * reset control of the primecell block is optional
++	 * and will not fail if the reset property is not found.
++	 */
++	rstc = of_reset_control_get_exclusive(node, "dma");
++	if (!IS_ERR(rstc)) {
++		reset_control_deassert(rstc);
++		reset_control_put(rstc);
++	} else {
++		pr_debug("amba: reset control not found\n");
++	}
++
+ 	ret = amba_device_add(dev, &iomem_resource);
+ 	if (ret) {
+ 		pr_err("amba_device_add() failed (%d) for %pOF\n",
+-- 
+2.20.0
