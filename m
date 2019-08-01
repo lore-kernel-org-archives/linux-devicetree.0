@@ -1,251 +1,271 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: codec2codec: remove ephemeral variables" to the asoc tree
-Date: Thu,  1 Aug 2019 14:10:40 +0100 (BST)
-Message-ID: <20190801131040.6D0F12742D9A@ypsilon.sirena.org.uk>
-References: <20190725165949.29699-6-jbrunet@baylibre.com>
+From: Hanna Hawa <hhhawa@amazon.com>
+Subject: [PATCH v4 4/4] edac: Add support for Amazon's Annapurna Labs L2 EDAC
+Date: Thu, 1 Aug 2019 14:09:56 +0100
+Message-ID: <20190801130956.26388-5-hhhawa@amazon.com>
+References: <20190801130956.26388-1-hhhawa@amazon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725165949.29699-6-jbrunet@baylibre.com>
+In-Reply-To: <20190801130956.26388-1-hhhawa@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+report L2 errors.
 
-   ASoC: codec2codec: remove ephemeral variables
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From a72706ed8208ac3f72d1c3ebbc6509e368b0dcb0 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 25 Jul 2019 18:59:48 +0200
-Subject: [PATCH] ASoC: codec2codec: remove ephemeral variables
-
-Now that codec to codec links struct snd_soc_pcm_runtime have lasting pcm
-and substreams, let's use them. Alsa allocate and keep the
-struct snd_pcm_runtime as long as the link is powered.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190725165949.29699-6-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
 ---
- sound/soc/soc-dapm.c | 72 ++++++++++++++++++++++++++------------------
- 1 file changed, 42 insertions(+), 30 deletions(-)
+ MAINTAINERS               |   6 ++
+ drivers/edac/Kconfig      |   8 ++
+ drivers/edac/Makefile     |   1 +
+ drivers/edac/al_l2_edac.c | 189 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 204 insertions(+)
+ create mode 100644 drivers/edac/al_l2_edac.c
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 2d183e2d23de..1c953a1b46ce 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3775,6 +3775,7 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_pcm_hw_params *params = NULL;
- 	const struct snd_soc_pcm_stream *config = NULL;
-+	struct snd_pcm_runtime *runtime = NULL;
- 	unsigned int fmt;
- 	int ret = 0;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fd29ea62ba29..a6dcf3d8e12a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -749,6 +749,12 @@ S:	Maintained
+ F:	drivers/edac/al_l1_edac.c
+ F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
  
-@@ -3782,6 +3783,14 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
- 	if (!params)
- 		return -ENOMEM;
++AMAZON ANNAPURNA LABS L2 EDAC
++M:	Hanna Hawa <hhhawa@amazon.com>
++S:	Maintained
++F:	drivers/edac/al_l2_edac.c
++F:	Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
++
+ AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+ M:	Talel Shenhar <talel@amazon.com>
+ S:	Maintained
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 58b92bcb39ce..8bbb745b84ed 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -82,6 +82,14 @@ config EDAC_AL_L1
+ 	  for Amazon's Annapurna Labs SoCs.
+ 	  This driver detects errors of L1 caches.
  
-+	runtime = kzalloc(sizeof(*runtime), GFP_KERNEL);
-+	if (!runtime) {
-+		ret = -ENOMEM;
-+		goto out;
++config EDAC_AL_L2
++	bool "Amazon's Annapurna Labs L2 EDAC"
++	depends on ARCH_ALPINE
++	help
++	  Support for L2 error detection and correction
++	  for Amazon's Annapurna Labs SoCs.
++	  This driver detects errors of L2 caches.
++
+ config EDAC_AMD64
+ 	tristate "AMD64 (Opteron, Athlon64)"
+ 	depends on AMD_NB && EDAC_DECODE_MCE
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index caa2dc91e8a0..60a6b8bbe2f8 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -23,6 +23,7 @@ edac_mce_amd-y				:= mce_amd.o
+ obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+ 
+ obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
++obj-$(CONFIG_EDAC_AL_L2)		+= al_l2_edac.o
+ obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
+ obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
+ obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
+diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
+new file mode 100644
+index 000000000000..6c6d37cf82ab
+--- /dev/null
++++ b/drivers/edac/al_l2_edac.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++
++#include <asm/sysreg.h>
++#include <linux/bitfield.h>
++#include <linux/of.h>
++#include <linux/smp.h>
++
++#include "edac_device.h"
++#include "edac_module.h"
++
++#define DRV_NAME				"al_l2_edac"
++
++/* Same bit assignments of L2MERRSR_EL1 in ARM CA57/CA72 */
++#define ARM_CA57_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
++#define ARM_CA57_L2MERRSR_RAMID			GENMASK(30, 24)
++#define  ARM_CA57_L2_TAG_RAM			0x10
++#define  ARM_CA57_L2_DATA_RAM			0x11
++#define  ARM_CA57_L2_SNOOP_RAM			0x12
++#define  ARM_CA57_L2_DIRTY_RAM			0x14
++#define  ARM_CA57_L2_INC_PF_RAM			0x18
++#define ARM_CA57_L2MERRSR_VALID			BIT(31)
++#define ARM_CA57_L2MERRSR_REPEAT		GENMASK_ULL(39, 32)
++#define ARM_CA57_L2MERRSR_OTHER			GENMASK_ULL(47, 40)
++#define ARM_CA57_L2MERRSR_FATAL			BIT_ULL(63)
++
++#define AL_L2_EDAC_MSG_MAX			256
++
++struct al_l2_edac {
++	cpumask_t cluster_cpus;
++};
++
++static void al_l2_edac_l2merrsr(void *arg)
++{
++	struct edac_device_ctl_info *edac_dev = arg;
++	int cpu, i;
++	u32 ramid, repeat, other, fatal;
++	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
++	char msg[AL_L2_EDAC_MSG_MAX];
++	int space, count;
++	char *p;
++
++	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
++		return;
++
++	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
++
++	cpu = smp_processor_id();
++	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
++	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
++	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
++	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
++
++	space = sizeof(msg);
++	p = msg;
++	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
++			  (fatal) ? "Fatal " : "");
++	p += count;
++	space -= count;
++
++	switch (ramid) {
++	case ARM_CA57_L2_TAG_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
++		break;
++	case ARM_CA57_L2_DATA_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
++		break;
++	case ARM_CA57_L2_SNOOP_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Snoop RAM'");
++		break;
++	case ARM_CA57_L2_DIRTY_RAM:
++		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
++		break;
++	case ARM_CA57_L2_INC_PF_RAM:
++		count = scnprintf(p, space, " RAMID='L2 internal metadat'");
++		break;
++	default:
++		count = scnprintf(p, space, " RAMID='unknown'");
++		break;
 +	}
 +
-+	substream->runtime = runtime;
++	p += count;
++	space -= count;
 +
- 	substream->stream = SNDRV_PCM_STREAM_CAPTURE;
- 	snd_soc_dapm_widget_for_each_source_path(w, path) {
- 		source = path->source->priv;
-@@ -3808,6 +3817,8 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
- 		sink->active++;
- 	}
- 
-+	substream->hw_opened = 1;
++	count = scnprintf(p, space,
++			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
++			  repeat, other, val);
 +
- 	/*
- 	 * Note: getting the config after .startup() gives a chance to
- 	 * either party on the link to alter the configuration if
-@@ -3864,6 +3875,9 @@ snd_soc_dai_link_event_pre_pmu(struct snd_soc_dapm_widget *w,
- 	}
- 
- out:
-+	if (ret < 0)
-+		kfree(runtime);
++	for (i = 0; i < repeat; i++) {
++		if (fatal)
++			edac_device_handle_ue(edac_dev, 0, 0, msg);
++		else
++			edac_device_handle_ce(edac_dev, 0, 0, msg);
++	}
++}
 +
- 	kfree(params);
- 	return ret;
- }
-@@ -3873,29 +3887,16 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- {
- 	struct snd_soc_dapm_path *path;
- 	struct snd_soc_dai *source, *sink;
--	struct snd_soc_pcm_runtime *rtd = w->priv;
--	struct snd_pcm_substream substream;
--	struct snd_pcm_runtime *runtime = NULL;
--	int ret = 0;
-+	struct snd_pcm_substream *substream = w->priv;
-+	int ret = 0, saved_stream = substream->stream;
- 
- 	if (WARN_ON(list_empty(&w->edges[SND_SOC_DAPM_DIR_OUT]) ||
- 		    list_empty(&w->edges[SND_SOC_DAPM_DIR_IN])))
- 		return -EINVAL;
- 
--	memset(&substream, 0, sizeof(substream));
--
--	/* Allocate a dummy snd_pcm_runtime for startup() and other ops() */
--	runtime = kzalloc(sizeof(*runtime), GFP_KERNEL);
--	if (!runtime) {
--		ret = -ENOMEM;
--		goto out;
--	}
--	substream.runtime = runtime;
--	substream.private_data = rtd;
--
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
--		ret = snd_soc_dai_link_event_pre_pmu(w, &substream);
-+		ret = snd_soc_dai_link_event_pre_pmu(w, substream);
- 		if (ret < 0)
- 			goto out;
- 
-@@ -3926,40 +3927,45 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 			ret = 0;
- 		}
- 
--		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
-+		substream->stream = SNDRV_PCM_STREAM_CAPTURE;
- 		snd_soc_dapm_widget_for_each_source_path(w, path) {
- 			source = path->source->priv;
--			snd_soc_dai_hw_free(source, &substream);
-+			snd_soc_dai_hw_free(source, substream);
- 		}
- 
--		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
-+		substream->stream = SNDRV_PCM_STREAM_PLAYBACK;
- 		snd_soc_dapm_widget_for_each_sink_path(w, path) {
- 			sink = path->sink->priv;
--			snd_soc_dai_hw_free(sink, &substream);
-+			snd_soc_dai_hw_free(sink, substream);
- 		}
- 
--		substream.stream = SNDRV_PCM_STREAM_CAPTURE;
-+		substream->stream = SNDRV_PCM_STREAM_CAPTURE;
- 		snd_soc_dapm_widget_for_each_source_path(w, path) {
- 			source = path->source->priv;
- 			source->active--;
--			snd_soc_dai_shutdown(source, &substream);
-+			snd_soc_dai_shutdown(source, substream);
- 		}
- 
--		substream.stream = SNDRV_PCM_STREAM_PLAYBACK;
-+		substream->stream = SNDRV_PCM_STREAM_PLAYBACK;
- 		snd_soc_dapm_widget_for_each_sink_path(w, path) {
- 			sink = path->sink->priv;
- 			sink->active--;
--			snd_soc_dai_shutdown(sink, &substream);
-+			snd_soc_dai_shutdown(sink, substream);
- 		}
- 		break;
- 
-+	case SND_SOC_DAPM_POST_PMD:
-+		kfree(substream->runtime);
-+		break;
++static void al_l2_edac_check(struct edac_device_ctl_info *edac_dev)
++{
++	struct al_l2_edac *al_l2 = edac_dev->pvt_info;
 +
- 	default:
- 		WARN(1, "Unknown event %d\n", event);
- 		ret = -EINVAL;
- 	}
- 
- out:
--	kfree(runtime);
-+	/* Restore the substream direction */
-+	substream->stream = saved_stream;
- 	return ret;
- }
- 
-@@ -4082,9 +4088,11 @@ snd_soc_dapm_alloc_kcontrol(struct snd_soc_card *card,
- }
- 
- static struct snd_soc_dapm_widget *
--snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
-+snd_soc_dapm_new_dai(struct snd_soc_card *card,
-+		     struct snd_pcm_substream *substream,
- 		     char *id)
- {
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_soc_dapm_widget template;
- 	struct snd_soc_dapm_widget *w;
- 	const char **w_param_text;
-@@ -4103,7 +4111,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
- 	template.name = link_name;
- 	template.event = snd_soc_dai_link_event;
- 	template.event_flags = SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
--		SND_SOC_DAPM_PRE_PMD;
-+		SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD;
- 	template.kcontrol_news = NULL;
- 
- 	/* allocate memory for control, only in case of multiple configs */
-@@ -4138,7 +4146,7 @@ snd_soc_dapm_new_dai(struct snd_soc_card *card, struct snd_soc_pcm_runtime *rtd,
- 		goto outfree_kcontrol_news;
- 	}
- 
--	w->priv = rtd;
-+	w->priv = substream;
- 
- 	return w;
- 
-@@ -4260,6 +4268,8 @@ static void dapm_connect_dai_link_widgets(struct snd_soc_card *card,
- 	struct snd_soc_dai *codec_dai;
- 	struct snd_soc_dapm_widget *playback = NULL, *capture = NULL;
- 	struct snd_soc_dapm_widget *codec, *playback_cpu, *capture_cpu;
-+	struct snd_pcm_substream *substream;
-+	struct snd_pcm_str *streams = rtd->pcm->streams;
- 	int i;
- 
- 	if (rtd->dai_link->params) {
-@@ -4278,7 +4288,8 @@ static void dapm_connect_dai_link_widgets(struct snd_soc_card *card,
- 
- 		if (playback_cpu && codec) {
- 			if (!playback) {
--				playback = snd_soc_dapm_new_dai(card, rtd,
-+				substream = streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
-+				playback = snd_soc_dapm_new_dai(card, substream,
- 								"playback");
- 				if (IS_ERR(playback)) {
- 					dev_err(rtd->dev,
-@@ -4307,7 +4318,8 @@ static void dapm_connect_dai_link_widgets(struct snd_soc_card *card,
- 
- 		if (codec && capture_cpu) {
- 			if (!capture) {
--				capture = snd_soc_dapm_new_dai(card, rtd,
-+				substream = streams[SNDRV_PCM_STREAM_CAPTURE].substream;
-+				capture = snd_soc_dapm_new_dai(card, substream,
- 							       "capture");
- 				if (IS_ERR(capture)) {
- 					dev_err(rtd->dev,
++	smp_call_function_any(&al_l2->cluster_cpus, al_l2_edac_l2merrsr,
++			      edac_dev, 1);
++}
++
++static int al_l2_edac_probe(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *edac_dev;
++	struct al_l2_edac *al_l2;
++	struct device *dev = &pdev->dev;
++	int ret, i;
++
++	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
++					      (char *)dev_name(dev), 1, "L", 1,
++					      2, NULL, 0,
++					      edac_device_alloc_index());
++	if (IS_ERR_OR_NULL(edac_dev))
++		return -ENOMEM;
++
++	al_l2 = edac_dev->pvt_info;
++	edac_dev->edac_check = al_l2_edac_check;
++	edac_dev->dev = dev;
++	edac_dev->mod_name = DRV_NAME;
++	edac_dev->dev_name = dev_name(dev);
++	edac_dev->ctl_name = "L2 cache";
++	platform_set_drvdata(pdev, edac_dev);
++
++	for_each_online_cpu(i) {
++		struct device_node *cpu;
++		struct device_node *cpu_cache, *l2_cache;
++
++		cpu = of_get_cpu_node(i, NULL);
++		cpu_cache = of_find_next_cache_node(cpu);
++		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
++
++		if (cpu_cache == l2_cache)
++			cpumask_set_cpu(i, &al_l2->cluster_cpus);
++	}
++
++	if (cpumask_empty(&al_l2->cluster_cpus)) {
++		dev_err(dev, "CPU mask is empty for this L2 cache\n");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	ret = edac_device_add_device(edac_dev);
++	if (ret) {
++		dev_err(dev, "Failed to add L2 edac device\n");
++		goto err;
++	}
++
++	return 0;
++
++err:
++	edac_device_free_ctl_info(edac_dev);
++
++	return ret;
++}
++
++static int al_l2_edac_remove(struct platform_device *pdev)
++{
++	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
++
++	edac_device_del_device(edac_dev->dev);
++	edac_device_free_ctl_info(edac_dev);
++
++	return 0;
++}
++
++static const struct of_device_id al_l2_edac_of_match[] = {
++	{ .compatible = "amazon,al-l2-edac" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, al_l2_edac_of_match);
++
++static struct platform_driver al_l2_edac_driver = {
++	.probe = al_l2_edac_probe,
++	.remove = al_l2_edac_remove,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = al_l2_edac_of_match,
++	},
++};
++module_platform_driver(al_l2_edac_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
++MODULE_DESCRIPTION("Amazon's Annapurna Lab's L2 EDAC Driver");
 -- 
-2.20.1
+2.17.1
