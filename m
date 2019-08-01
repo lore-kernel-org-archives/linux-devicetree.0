@@ -1,230 +1,211 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl
- binding
-Date: Thu, 1 Aug 2019 07:37:45 -0700
-Message-ID: <20190801143745.GZ7234@tuxbook-pro>
-References: <20190801100717.23333-1-rnayak@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 3/9] dt-bindings: spi: meson: convert to yaml
+Date: Thu, 1 Aug 2019 08:42:23 -0600
+Message-ID: <CAL_JsqK9ODpXq_VkP4ztW7JAfPNOxpdP1W1duQwaUu0tYNh_Dw@mail.gmail.com>
+References: <20190801135644.12843-1-narmstrong@baylibre.com>
+ <20190801135644.12843-4-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190801100717.23333-1-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jitendra Sharma <shajit@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190801135644.12843-4-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 01 Aug 03:07 PDT 2019, Rajendra Nayak wrote:
-
-> From: Jitendra Sharma <shajit@codeaurora.org>
-> 
-> Add the binding for the TLMM pinctrl block found in the SC7180 platform
-> 
-> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> [rnayak: Fix some copy-paste issues, sort and fix functions]
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+On Thu, Aug 1, 2019 at 7:56 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../bindings/pinctrl/qcom,sc7180-pinctrl.txt  | 186 ++++++++++++++++++
->  1 file changed, 186 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+>  .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 74 +++++++++++++++++++
+>  .../bindings/spi/amlogic,meson6-spifc.yaml    | 57 ++++++++++++++
+>  .../devicetree/bindings/spi/spi-meson.txt     | 55 --------------
+>  3 files changed, 131 insertions(+), 55 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
+>
+> diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
 > new file mode 100644
-> index 000000000000..948cd56cfab7
+> index 000000000000..6e2c41c730b5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
-> @@ -0,0 +1,186 @@
-> +Qualcomm Technologies, Inc. SC7180 TLMM block
+> +++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +This binding describes the Top Level Mode Multiplexer block found in the
-> +SC7180 platform.
+> +title: Amlogic Meson SPI Communication Controller
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be "qcom,sc7180-pinctrl"
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
 > +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: the base address and size of the north, south and west
-> +		    TLMM tiles
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
 > +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Defintiion: names for the cells of reg, must contain "north", "south"
-> +		    and "west".
+> +description: |
+> +  The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
+> +  communications with dedicated 16 words RX/TX PIO FIFOs.
 > +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the TLMM summary IRQ.
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +     - description: SPICC controller on Amlogic GX and compatible SoCs
+> +       enum:
+> +       - amlogic,meson-gx-spicc
+> +     - description: SPICC controller on Amlogic AXG and compatible SoCs
+> +       enum:
+> +       - amlogic,meson-axg-spicc
+
+'oneOf' results in vague error messages and can be avoided here. Plus
+I don't think the descriptions add much as I could pretty much
+generate the desc "<block> controller on <vendor> <soc> and compatible
+SoCs" from <vendor>,<soc>-<block>.
+
+Though, if you want to keep the description, do it as a comment:
+
+enum:
+  - amlogic,meson-gx-spicc # SPICC controller on Amlogic GX and compatible SoCs
+  - amlogic,meson-axg-spicc # SPICC controller on Amlogic AXG and
+compatible SoCs
+
 > +
-> +- interrupt-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: identifies this node as an interrupt controller
+> +  interrupts:
+> +    maxItems: 1
 > +
-> +- #interrupt-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 2. Specifying the pin number and flags, as defined
-> +		    in <dt-bindings/interrupt-controller/irq.h>
+> +  reg:
+> +    maxItems: 1
 > +
-> +- gpio-controller:
-> +	Usage: required
-> +	Value type: <none>
-> +	Definition: identifies this node as a gpio controller
+> +  resets:
+> +    description: phandle of the internal reset line
+
+Standard property, don't need a description unless there's something
+special about this binding.
+
+> +    maxItems: 1
 > +
-> +- #gpio-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 2. Specifying the pin number and flags, as defined
-> +		    in <dt-bindings/gpio/gpio.h>
+> +  clocks:
+> +    maxItems: 1
 > +
-> +- gpio-ranges:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition:  see ../gpio/gpio.txt
+> +  clock-names:
+> +    description: input clock for the baud rate generator
+> +    items:
+> +      - const: core
 > +
-> +- gpio-reserved-ranges:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: see ../gpio/gpio.txt
+
+> +  "#address-cells":
+> +    const: 1
 > +
-> +Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-> +a general description of GPIO and interrupt bindings.
+> +  "#size-cells":
+> +    const: 0
+
+These 2 can be dropped as they are covered by spi-controller.yaml.
+
 > +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning of the
-> +phrase "pin configuration node".
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - "#address-cells"
+> +  - "#size-cells"
 > +
-> +The pin configuration nodes act as a container for an arbitrary number of
-> +subnodes. Each of these subnodes represents some desired configuration for a
-> +pin, a group, or a list of pins or groups. This configuration can include the
-> +mux function to select on those pin(s)/group(s), and various pin configuration
-> +parameters, such as pull-up, drive strength, etc.
+> +examples:
+> +  - |
+> +    spi@c1108d80 {
+> +          compatible = "amlogic,meson-gx-spicc";
+> +          reg = <0xc1108d80 0x80>;
+> +          interrupts = <112>;
+> +          clocks = <&clk81>;
+> +          clock-names = "core";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+
+Probably should add a slave node. Once I figure out how to always
+build the examples with W=12, the lack of a chlid node will throw a
+dtc warning.
+
+> +    };
 > +
+> diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+> new file mode 100644
+> index 000000000000..5f34aed1ad40
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+
+Some of the same comments apply to this one.
+
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/amlogic,meson6-spifc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +PIN CONFIGURATION NODES:
+> +title: Amlogic Meson SPI Flash Controller
 > +
-> +The name of each subnode is not important; all subnodes should be enumerated
-> +and processed purely based on their content.
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
 > +
-> +Each subnode only affects those parameters that are explicitly listed. In
-> +other words, a subnode that lists a mux function but no pin configuration
-> +parameters implies no information about any pin configuration parameters.
-> +Similarly, a pin subnode that describes a pullup parameter implies no
-> +information about e.g. the mux function.
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
 > +
+> +description: |
+> +  The Meson SPIFC is a controller optimized for communication with SPI
+> +  NOR memories, without DMA support and a 64-byte unified transmit /
+> +  receive buffer.
 > +
-> +The following generic properties as defined in pinctrl-bindings.txt are valid
-> +to specify in a pin configuration subnode:
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +     - enum:
+> +       - amlogic,meson6-spifc
+> +     - enum:
+> +       - amlogic,meson-gxbb-spifc
+
+Drop the oneOf. A single enum is sufficient.
+
 > +
-> +- pins:
-> +	Usage: required
-> +	Value type: <string-array>
-> +	Definition: List of gpio pins affected by the properties specified in
-> +		    this subnode.
+> +  reg:
+> +    maxItems: 1
 > +
-> +		    Valid pins are:
-> +		      gpio0-gpio118
-> +		        Supports mux, bias and drive-strength
+> +  clocks:
+> +    maxItems: 1
 > +
-> +		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
-> +		      sdc2_data sdc1_rclk
-> +		        Supports bias and drive-strength
+> +  "#address-cells":
+> +    const: 1
 > +
-> +		      ufs_reset
-> +			Supports bias and drive-strength
+> +  "#size-cells":
+> +    const: 0
 > +
-> +- function:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Specify the alternative function to be configured for the
-> +		    specified pins. Functions are only valid for gpio pins.
-> +		    Valid values are:
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
 > +
-> +		    adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
-> +		    atest_char1, atest_char2, atest_char3, atest_tsens,
-> +		    atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
-> +		    atest_usb12, atest_usb13, atest_usb2, atest_usb20,
-> +		    atest_usb21, atest_usb22, atest_usb23, audio_ref,
-> +		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
-> +		    cci_timer1, cci_timer2, cci_timer3, cci_timer4,
-> +		    cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> +		    ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1, gcc_gp2,
-> +		    gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
-> +		    jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
-> +		    mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0,
-> +		    mi2s_1, mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag,
-> +		    PLL_BIST, pll_bypassnl, pll_reset, prng_rosc, qdss,
-> +		    qdss_cti, qlink_enable, qlink_request, qspi_clk, qspi_cs,
-> +		    qspi_data, qup00, qup01, qup02, qup03, qup04, qup05,
-> +		    qup10, qup11, qup12, qup13, qup14, qup15, sdc1_tb,
-> +		    sdc2_tb, sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2,
-> +		    tgu_ch3, tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt,
-> +		    usb_phy, vfr_1, _V_GPIO, _V_PPS_IN, _V_PPS_OUT,
-> +		    vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0,
-> +		    wlan2_adc1,
+> +examples:
+> +  - |
+> +    spi@c1108c80 {
+> +          compatible = "amlogic,meson6-spifc";
+> +          reg = <0xc1108c80 0x80>;
+> +          clocks = <&clk81>;
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +    };
 > +
-> +- bias-disable:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as no pull.
-> +
-> +- bias-pull-down:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as pull down.
-> +
-> +- bias-pull-up:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configured as pull up.
-> +
-> +- output-high:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins are configured in output mode, driven
-> +		    high.
-> +		    Not valid for sdc pins.
-> +
-> +- output-low:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins are configured in output mode, driven
-> +		    low.
-> +		    Not valid for sdc pins.
-> +
-> +- drive-strength:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: Selects the drive strength for the specified pins, in mA.
-> +		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-> +
-> +Example:
-> +
-> +	tlmm: pinctrl@3000000 {
-> +		compatible = "qcom,sc7180-pinctrl";
-> +		reg = <0x3500000 0x300000>,
-> +		      <0x3900000 0x300000>,
-> +		      <0x3D00000 0x300000>;
-> +		reg-names = "west", "north", "south";
-> +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-ranges = <&tlmm 0 0 119>;
-> +		gpio-reserved-ranges = <0 4>, <106 4>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
