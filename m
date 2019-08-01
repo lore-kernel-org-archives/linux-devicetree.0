@@ -1,7 +1,7 @@
 From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH 6/8] ARM: dts: edb7211: native-mode is part of display-timings
-Date: Thu,  1 Aug 2019 17:46:26 +0200
-Message-ID: <20190801154628.1624-7-martin@kaiser.cx>
+Subject: [PATCH 7/8] ARM: dts: apf27dev: native-mode is part of display-timings
+Date: Thu,  1 Aug 2019 17:46:27 +0200
+Message-ID: <20190801154628.1624-8-martin@kaiser.cx>
 References: <20190801154628.1624-1-martin@kaiser.cx>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190801154628.1624-1-martin@kaiser.cx>
@@ -22,25 +22,24 @@ someone adds another display timing).
 
 Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
- arch/arm/boot/dts/ep7211-edb7211.dts | 2 +-
+ arch/arm/boot/dts/imx27-apf27dev.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ep7211-edb7211.dts b/arch/arm/boot/dts/ep7211-edb7211.dts
-index a0c270f63fee..da076479c8e2 100644
---- a/arch/arm/boot/dts/ep7211-edb7211.dts
-+++ b/arch/arm/boot/dts/ep7211-edb7211.dts
-@@ -25,11 +25,11 @@
+diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+index 087c6e237af0..6f1e8ce9e76e 100644
+--- a/arch/arm/boot/dts/imx27-apf27dev.dts
++++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+@@ -12,10 +12,10 @@
  
  	display: display {
- 		model = "320x240x4";
+ 		model = "Chimei-LW700AT9003";
 -		native-mode = <&timing0>;
- 		bits-per-pixel = <4>;
- 		ac-prescale = <17>;
- 
+ 		bits-per-pixel = <16>;  /* non-standard but required */
+ 		fsl,pcr = <0xfae80083>;	/* non-standard but required */
  		display-timings {
 +			native-mode = <&timing0>;
- 			timing0: 320x240 {
- 				hactive = <320>;
- 				hback-porch = <0>;
+ 			timing0: 800x480 {
+ 				clock-frequency = <33000033>;
+ 				hactive = <800>;
 -- 
 2.11.0
