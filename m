@@ -1,23 +1,64 @@
-Return-Path: <sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+Return-Path: <SRS0=VbvA=V5=bootlin.com=miquel.raynal@kernel.org>
+Date: Thu, 1 Aug 2019 09:13:10 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v6 2/2] dt-bindings: mtd: Document Macronix raw NAND
+ controller bindings
+Message-ID: <20190801091310.035bc824@xps13>
+In-Reply-To: <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw>
+References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>
+	<1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190710134346.30239-3-gregory.clement@bootlin.com>
-References: <20190710134346.30239-1-gregory.clement@bootlin.com> <20190710134346.30239-3-gregory.clement@bootlin.com>
-Subject: Re: [PATCH v7 2/6] clk: mvebu: add helper file for Armada AP and CP clocks
-From: Stephen Boyd <sboyd@kernel.org>
-Date: Thu, 08 Aug 2019 09:12:12 -0700
-Message-Id: <20190808161213.735072184E@mail.kernel.org>
-To: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Mason Yang <masonccyang@mxic.com.tw>
+Cc: marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com, lee.jones@linaro.org, anders.roxell@linaro.org, christophe.kerello@st.com, paul@crapouillou.net, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Gregory CLEMENT (2019-07-10 06:43:42)
-> Clock drivers for Armada AP and Armada CP use the same function to
-> generate unique clock name. A third drivers is coming with the same
-> need, so it's time to move this function in a common file.
->=20
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
+Hi Mason,
 
-Applied to clk-next
+Mason Yang <masonccyang@mxic.com.tw> wrote on Thu,  1 Aug 2019 11:55:10
++0800:
+
+> Document the bindings used by the Macronix raw NAND controller.
+>=20
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  Documentation/devicetree/bindings/mtd/mxic-nand.txt | 19 +++++++++++++++=
+++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Docume=
+ntation/devicetree/bindings/mtd/mxic-nand.txt
+> new file mode 100644
+> index 0000000..de37d60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
+> @@ -0,0 +1,19 @@
+> +Macronix Raw NAND Controller Device Tree Bindings
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible: should be "mxicy,multi-itfc-v009-nand-morph"
+> +- reg: should contain 1 entry for the registers
+> +- interrupts: interrupt line connected to this raw NAND controller
+> +- clock-names: should contain "ps", "send" and "send_dly"
+> +- clocks: should contain 3 phandles for the "ps", "send" and
+> +	 "send_dly" clocks
+> +
+> +Example:
+> +
+> +	nand: nand-controller@43c30000 {
+> +		compatible =3D "mxicy,multi-itfc-v009-nand-morph";
+
+"mxicy" looks strange to me, I know it has been used in the past and
+cannot be removed, but I don't think it is wise to continue using it
+while your use "mxic" in all your other contributions. I would update
+the prefix to mxic here and fill-in the relevant doc.
+
+Also, what is nand-morph? I thought we were okay for
+the "-nand-controller" suffix.
+
+
+Thanks,
+Miqu=C3=A8l
