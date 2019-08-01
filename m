@@ -1,56 +1,62 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Fix i2c master read more than 63 bytes
-Date: Thu, 1 Aug 2019 14:31:30 +0200
-Message-ID: <20190801123130.GE1659@ninjato>
-References: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH 3/3][V4] dt-bindings: iio: imu: add bindings for
+ ADIS16460
+Date: Thu, 1 Aug 2019 13:41:21 +0100
+Message-ID: <20190801134121.00003097@huawei.com>
+References: <20190723073641.27801-1-alexandru.ardelean@analog.com>
+        <20190723073641.27801-4-alexandru.ardelean@analog.com>
+        <20190727195623.42c8b4f3@archlinux>
+        <CAL_JsqLXTnrtCr4hVVc9HrOkkvwGWk02EibdutfUBm4JDnJO5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <CAL_JsqLXTnrtCr4hVVc9HrOkkvwGWk02EibdutfUBm4JDnJO5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Alexandru Ardelean <alexandru.ardelean@analog.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 29 Jul 2019 17:24:40 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
---2hMgfIw2X+zgXrFs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Sat, Jul 27, 2019 at 12:56 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Tue, 23 Jul 2019 10:36:40 +0300
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >  
+> > > This change adds device-tree bindings for the ADIS16460.
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> >
+> > Really trivial, but convention (as driven by what git am -s does if nothing
+> > else, is to add extra tags in chronological order.  So Rob would be after
+> > you.  I tweaked it which I don't always remember to do.  
+> 
+> I'd argue it is in chronological order as the submitter added my tag
+> and then sent it out. If you applied it and added my tag, then it
+> would be after (but before yours).
 
-On Wed, Jul 24, 2019 at 01:58:27PM +0530, Rayagonda Kokatanur wrote:
-> Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
-> FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
-> is not updated for read >=3D 64 bytes. This fixes the issue when trying to
-> read from the I2C slave more than 63 bytes.
->=20
-> Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
->=20
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Bike shedding to follow...
 
-Applied to for-current, thanks!
+Possibly but given you gave the Reviewed-by for v2, and it hasn't changed
+is Alex's the same Signed-off-by as seen on V2, or a new one reflecting the
+addition of your Reviewed-by? 
+
+:)
 
 
---2hMgfIw2X+zgXrFs
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > It's not consistent across the kernel but I'll fight for my little corner
+> > to be :)  
+> 
+> More consistency would be nice then there's less tribal knowledge
+> about maintainers for submitters to learn.
 
------BEGIN PGP SIGNATURE-----
+Agreed.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C26IACgkQFA3kzBSg
-Kba85w//WB/fT1rfNyJzzedg2jVwLmdiaCcBYk4Y+Sz9sKRE3/SAdPulfp/wRUcb
-Q0YUiC2cRjunfZK0voZ5EUSFU+pBvM8dIRuTIWon/qdi1+6tDDAFIuXcswulFf1d
-09hBq1/aSOad318mNt2k4qJmUNyLvDaeYFHDCLwic1K48FWFqTWzgLpFn0idKxYq
-wIqINQz9dl6Qg0t81emc4xX0MB202LoaDriix4ERwHFjLsQuseqr4IeDrbXtGvLN
-7msFGGu7cgru2AUNXKPYWpZP3NItfZexR7AVhYKvuvDECy/jk/f+3DSyxj7qvrnS
-1Am4aRNQI6BQRzpfVCZwOEdOTpsx9SCQTEKpWkj6P5sde01ghq/oQzp8ENb9qoj7
-cuqGUJ3jf02dSLLFXusgfqywUEmLktGX+1gUvicURBykEYEecUV2xgCjnB3e7cTf
-v3/IJxTqDRpeCIbMkD0W4MN3WVoFISnn/Vl50oH7GiwoxVJ4TnFdNOZ8TmWfV1TG
-EoQf9yQR3vcmz13HUwyF8W27wJwWJ8u0iWLyqxeCgDaKtHRrL5HG8bEPu3rdLafE
-6n5ksnQpABRPshtd18hRQyGVqWaqNDUjKLJgGJVhqK3kbnvgGg0Z8qrcQHOA7tl+
-HMquJaDbDdS3AMUD3N0JHWqTr236PF05THzOH1X4hXIfsRtnPF0=
-=L7tj
------END PGP SIGNATURE-----
+Jonathan
 
---2hMgfIw2X+zgXrFs--
+> 
+> Rob
