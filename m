@@ -1,7 +1,7 @@
 From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH 5/8] ARM: dts: imx27-phytec-phycore-rdk: native-mode is part of display-timings
-Date: Thu,  1 Aug 2019 17:46:25 +0200
-Message-ID: <20190801154628.1624-6-martin@kaiser.cx>
+Subject: [PATCH 8/8] ARM: dts: imx25: mbimxsd25: native-mode is part of display-timings
+Date: Thu,  1 Aug 2019 17:46:28 +0200
+Message-ID: <20190801154628.1624-9-martin@kaiser.cx>
 References: <20190801154628.1624-1-martin@kaiser.cx>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190801154628.1624-1-martin@kaiser.cx>
@@ -22,25 +22,22 @@ someone adds another display timing).
 
 Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
- arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts | 2 +-
+ arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-index 5606f417e9e8..bf883e45576a 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-@@ -14,11 +14,11 @@
- 
- 	display0: LQ035Q7 {
- 		model = "Sharp-LQ035Q7";
--		native-mode = <&timing0>;
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
+index d60d8f464ca9..24027a1fb46d 100644
+--- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-vga.dts
+@@ -14,8 +14,8 @@
  		bits-per-pixel = <16>;
- 		fsl,pcr = <0xf00080c0>;
- 
+ 		fsl,pcr = <0xfa208b80>;
+ 		bus-width = <18>;
+-		native-mode = <&dvi_vga_timings>;
  		display-timings {
-+			native-mode = <&timing0>;
- 			timing0: 240x320 {
- 				clock-frequency = <5500000>;
- 				hactive = <240>;
++			native-mode = <&dvi_vga_timings>;
+ 			dvi_vga_timings: 640x480 {
+ 				clock-frequency = <31250000>;
+ 				hactive = <640>;
 -- 
 2.11.0
