@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC 6/9] dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-Date: Thu,  1 Aug 2019 15:56:41 +0200
-Message-ID: <20190801135644.12843-7-narmstrong@baylibre.com>
+Subject: [RFC 9/9] dt-bindings: watchdog: meson-gxbb-wdt: convert to yaml
+Date: Thu,  1 Aug 2019 15:56:44 +0200
+Message-ID: <20190801135644.12843-10-narmstrong@baylibre.com>
 References: <20190801135644.12843-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,59 +18,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, kishon@ti.com, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 ------
- .../bindings/phy/meson-g12a-usb2-phy.yaml     | 67 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml
+ .../bindings/watchdog/meson-gxbb-wdt.txt      | 16 --------
+ .../bindings/watchdog/meson-gxbb-wdt.yaml     | 37 +++++++++++++++++++
+ 2 files changed, 37 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.yaml
 
-diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+diff --git a/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
 deleted file mode 100644
-index a6ebc3dea159..000000000000
---- a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+index c7fe36fa739c..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
 +++ /dev/null
-@@ -1,22 +0,0 @@
--* Amlogic G12A USB2 PHY binding
+@@ -1,16 +0,0 @@
+-Meson GXBB SoCs Watchdog timer
 -
 -Required properties:
--- compatible:	Should be "amlogic,meson-g12a-usb2-phy"
--- reg:		The base address and length of the registers
--- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
--- clocks:	a phandle to the clock of this PHY
--- clock-names:	must be "xtal"
--- resets:	a phandle to the reset line of this PHY
--- reset-names:	must be "phy"
--- phy-supply:	see phy-bindings.txt in this directory
+-
+-- compatible : should be "amlogic,meson-gxbb-wdt"
+-- reg : Specifies base physical address and size of the registers.
+-- clocks : Should be a phandle to the Watchdog clock source, for GXBB the xtal
+-	   is the default clock source.
 -
 -Example:
--	usb2_phy0: phy@36000 {
--		compatible = "amlogic,g12a-usb2-phy";
--		reg = <0x0 0x36000 0x0 0x2000>;
--		clocks = <&xtal>;
--		clock-names = "xtal";
--		resets = <&reset RESET_USB_PHY21>;
--		reset-names = "phy";
--		#phy-cells = <0>;
--	};
-diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml
+-
+-wdt: watchdog@98d0 {
+-	compatible = "amlogic,meson-gxbb-wdt";
+-	reg = <0 0x98d0 0x0 0x10>;
+-	clocks = <&xtal>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.yaml b/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.yaml
 new file mode 100644
-index 000000000000..4cd5ba97d469
+index 000000000000..111377bb9860
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml
-@@ -0,0 +1,67 @@
++++ b/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.yaml
+@@ -0,0 +1,37 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/phy/meson-g12a-usb2-phy.yaml#"
++$id: "http://devicetree.org/schemas/watchdog/meson-gxbb-wdt.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic G12A USB2 PHY
++title: Meson GXBB SoCs Watchdog timer
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
@@ -78,7 +72,7 @@ index 000000000000..4cd5ba97d469
 +properties:
 +  compatible:
 +    enum:
-+      - amlogic,meson-g12a-usb2-phy
++      - amlogic,meson-gxbb-wdt
 +
 +  reg:
 +    maxItems: 1
@@ -88,47 +82,17 @@ index 000000000000..4cd5ba97d469
 +    description:
 +      A phandle to the clock of this PHY
 +
-+  clock-names:
-+    items:
-+      - const: xtal
-+
-+  resets:
-+    maxItems: 1
-+    description:
-+      A phandle to the reset line of this PHY
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  phy-supply:
-+     maxItems: 1
-+     description:
-+       Phandle to a regulator that provides power to the PHY. This
-+       regulator will be managed during the PHY power on/off sequence.
-+
 +required:
 +  - compatible
 +  - reg
 +  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - "#phy-cells"
 +
 +examples:
 +  - |
-+    phy@36000 {
-+          compatible = "amlogic,meson-g12a-usb2-phy";
-+          reg = <0x36000 0x2000>;
++    watchdog@98d0 {
++          compatible = "amlogic,meson-gxbb-wdt";
++          reg = <0x98d0 0x10>;
 +          clocks = <&xtal>;
-+          clock-names = "xtal";
-+          resets = <&phy_reset>;
-+          reset-names = "phy";
-+          #phy-cells = <0>;
 +    };
 -- 
 2.22.0
