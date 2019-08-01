@@ -1,62 +1,78 @@
-From: LABBE Corentin <clabbe@baylibre.com>
-Subject: Re: [PATCH 2/4] crypto: amlogic: Add crypto accelerator for amlogic
- GXL
-Date: Thu, 1 Aug 2019 14:46:18 +0200
-Message-ID: <20190801124618.GA30316@Red>
-References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
- <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
- <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
+From: Hanna Hawa <hhhawa@amazon.com>
+Subject: [PATCH v4 0/4] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date: Thu, 1 Aug 2019 14:09:52 +0100
+Message-ID: <20190801130956.26388-1-hhhawa@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 02:17:38PM +0200, Martin Blumenstingl wrote:
-> Hi Corentin,
-> 
-> it's great to see you working on this :)
-> 
-> On Thu, Jul 25, 2019 at 9:45 PM Corentin Labbe <clabbe@baylibre.com> wrote:
-> >
-> > This patch adds support for the amlogic GXL cryptographic offloader present
-> > on GXL SoCs.
-> >
-> > This driver supports AES cipher in CBC/ECB mode.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> > ---
-> >  drivers/crypto/Kconfig                  |   2 +
-> >  drivers/crypto/Makefile                 |   1 +
-> >  drivers/crypto/amlogic/Kconfig          |  24 ++
-> >  drivers/crypto/amlogic/Makefile         |   2 +
-> >  drivers/crypto/amlogic/amlogic-cipher.c | 358 ++++++++++++++++++++++++
-> >  drivers/crypto/amlogic/amlogic-core.c   | 326 +++++++++++++++++++++
-> >  drivers/crypto/amlogic/amlogic.h        | 172 ++++++++++++
-> >  7 files changed, 885 insertions(+)
-> >  create mode 100644 drivers/crypto/amlogic/Kconfig
-> >  create mode 100644 drivers/crypto/amlogic/Makefile
-> >  create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
-> >  create mode 100644 drivers/crypto/amlogic/amlogic-core.c
-> >  create mode 100644 drivers/crypto/amlogic/amlogic.h
-> there are two different crypto IPs on Amlogic SoCs:
-> - GXL and newer use the "BLKMV" crypto IP
-> - GXBB, Meson8/Meson8b/Meson8m2 (and probably older SoCs) use the
-> "NDMA" crypto IP
-> 
+This series adds L1 and L2 caches support for error detection and
+correction for Amazon's Annapurna Labs SoCs.
+Alpine SoCs supports L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-I believed it was the opposite. (BLKMV the older, NDMA the newer)
-Anyway, on the datasheet I found (s905d), neither NDMA or BLKMV is mentioned, it is just called Crypto Engine.
-So I think GXL is the best choice.
+Changes since v3:
+-----------------
+- Added include for smp.h sysreg.h 
+- Use scnprintf instead of snprintf
+- Move write_sysreg_s after valid check to minimize the window between
+read/write.
+- Use IS_ERR_OR_NULL instead of IS_ERR, because
+edac_device_alloc_ctl_info may return NULL.
 
-> personally I think it makes sense to either have the IP name (blkmv)
-> or SoC name (GXL) in the file or directory names as well as being
-> consistent with that in the Kconfig option names
+Changes since v2:
+-----------------
+- Use BIT for single bit instead of GENMASK
+- Use BIT_ULL and GENMASK_ULL for 64bit vector
+- Fix the mod_name/ctrl_name.
 
-Ok I will rename files to amlogic-gxl-xxx
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
 
-Thanks
+
+*** BLURB HERE ***
+
+Hanna Hawa (4):
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
+
+ .../bindings/edac/amazon,al-l1-edac.txt       |  14 ++
+ .../bindings/edac/amazon,al-l2-edac.txt       |  20 ++
+ MAINTAINERS                                   |  12 ++
+ drivers/edac/Kconfig                          |  16 ++
+ drivers/edac/Makefile                         |   2 +
+ drivers/edac/al_l1_edac.c                     | 158 +++++++++++++++
+ drivers/edac/al_l2_edac.c                     | 189 ++++++++++++++++++
+ 7 files changed, 411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
+
+-- 
+2.17.1
