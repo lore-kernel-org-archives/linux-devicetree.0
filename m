@@ -1,62 +1,62 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH 3/3][V4] dt-bindings: iio: imu: add bindings for
- ADIS16460
-Date: Thu, 1 Aug 2019 13:41:21 +0100
-Message-ID: <20190801134121.00003097@huawei.com>
-References: <20190723073641.27801-1-alexandru.ardelean@analog.com>
-        <20190723073641.27801-4-alexandru.ardelean@analog.com>
-        <20190727195623.42c8b4f3@archlinux>
-        <CAL_JsqLXTnrtCr4hVVc9HrOkkvwGWk02EibdutfUBm4JDnJO5Q@mail.gmail.com>
+From: LABBE Corentin <clabbe@baylibre.com>
+Subject: Re: [PATCH 2/4] crypto: amlogic: Add crypto accelerator for amlogic
+ GXL
+Date: Thu, 1 Aug 2019 14:46:18 +0200
+Message-ID: <20190801124618.GA30316@Red>
+References: <1564083776-20540-1-git-send-email-clabbe@baylibre.com>
+ <1564083776-20540-3-git-send-email-clabbe@baylibre.com>
+ <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLXTnrtCr4hVVc9HrOkkvwGWk02EibdutfUBm4JDnJO5Q@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAFBinCD7pgUaBJgeGHTOu-uZRA9a6K2kxPsu+huKe23wcnKPoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Alexandru Ardelean <alexandru.ardelean@analog.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au, khilman@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Jul 2019 17:24:40 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
-
-> On Sat, Jul 27, 2019 at 12:56 PM Jonathan Cameron <jic23@kernel.org> wrote:
+On Sat, Jul 27, 2019 at 02:17:38PM +0200, Martin Blumenstingl wrote:
+> Hi Corentin,
+> 
+> it's great to see you working on this :)
+> 
+> On Thu, Jul 25, 2019 at 9:45 PM Corentin Labbe <clabbe@baylibre.com> wrote:
 > >
-> > On Tue, 23 Jul 2019 10:36:40 +0300
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >  
-> > > This change adds device-tree bindings for the ADIS16460.
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> > This patch adds support for the amlogic GXL cryptographic offloader present
+> > on GXL SoCs.
 > >
-> > Really trivial, but convention (as driven by what git am -s does if nothing
-> > else, is to add extra tags in chronological order.  So Rob would be after
-> > you.  I tweaked it which I don't always remember to do.  
+> > This driver supports AES cipher in CBC/ECB mode.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >  drivers/crypto/Kconfig                  |   2 +
+> >  drivers/crypto/Makefile                 |   1 +
+> >  drivers/crypto/amlogic/Kconfig          |  24 ++
+> >  drivers/crypto/amlogic/Makefile         |   2 +
+> >  drivers/crypto/amlogic/amlogic-cipher.c | 358 ++++++++++++++++++++++++
+> >  drivers/crypto/amlogic/amlogic-core.c   | 326 +++++++++++++++++++++
+> >  drivers/crypto/amlogic/amlogic.h        | 172 ++++++++++++
+> >  7 files changed, 885 insertions(+)
+> >  create mode 100644 drivers/crypto/amlogic/Kconfig
+> >  create mode 100644 drivers/crypto/amlogic/Makefile
+> >  create mode 100644 drivers/crypto/amlogic/amlogic-cipher.c
+> >  create mode 100644 drivers/crypto/amlogic/amlogic-core.c
+> >  create mode 100644 drivers/crypto/amlogic/amlogic.h
+> there are two different crypto IPs on Amlogic SoCs:
+> - GXL and newer use the "BLKMV" crypto IP
+> - GXBB, Meson8/Meson8b/Meson8m2 (and probably older SoCs) use the
+> "NDMA" crypto IP
 > 
-> I'd argue it is in chronological order as the submitter added my tag
-> and then sent it out. If you applied it and added my tag, then it
-> would be after (but before yours).
 
-Bike shedding to follow...
+I believed it was the opposite. (BLKMV the older, NDMA the newer)
+Anyway, on the datasheet I found (s905d), neither NDMA or BLKMV is mentioned, it is just called Crypto Engine.
+So I think GXL is the best choice.
 
-Possibly but given you gave the Reviewed-by for v2, and it hasn't changed
-is Alex's the same Signed-off-by as seen on V2, or a new one reflecting the
-addition of your Reviewed-by? 
+> personally I think it makes sense to either have the IP name (blkmv)
+> or SoC name (GXL) in the file or directory names as well as being
+> consistent with that in the Kconfig option names
 
-:)
+Ok I will rename files to amlogic-gxl-xxx
 
-
-> 
-> > It's not consistent across the kernel but I'll fight for my little corner
-> > to be :)  
-> 
-> More consistency would be nice then there's less tribal knowledge
-> about maintainers for submitters to learn.
-
-Agreed.
-
-Jonathan
-
-> 
-> Rob
+Thanks
