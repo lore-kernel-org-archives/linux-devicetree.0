@@ -1,105 +1,31 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 5/8] arm64: use ZONE_DMA on DMA addressing limited
- devices
-Date: Thu, 01 Aug 2019 18:40:50 +0200
-Message-ID: <4027201b6128b3f2b0ab941dc473ab143da64be2.camel@suse.de>
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
-         <20190731154752.16557-6-nsaenzjulienne@suse.de>
-         <20190731170742.GC17773@arrakis.emea.arm.com>
-         <d8b4a7cb9c06824ca88a0602a5bf38b6324b43c0.camel@suse.de>
-         <e35dd4a5-281b-d281-59c9-3fc7108eb8be@arm.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
+ support
+Date: Thu, 1 Aug 2019 20:10:38 +0300
+Message-ID: <31990250-e237-ddb9-ce71-29b7c2302fc3@gmail.com>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-11-git-send-email-skomatineni@nvidia.com>
+ <4400ffef-685f-b9e6-3b07-4790f851282c@gmail.com>
+ <501a9d0e-ce78-9b35-642d-dff7f9223926@gmail.com>
+ <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-qAJVJtco/gH4l0Ax6g8O"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e35dd4a5-281b-d281-59c9-3fc7108eb8be@arm.com>
+In-Reply-To: <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: phill@raspberryi.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux-mm@kvack.org, marc.zyngier@arm.com, Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, eric@anholt.net, iommu@lists.linux-foundation.org, robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org, mbrugger@suse.com, akpm@linux-foundation.org, m.szyprowski@samsung.com, frowand.list@gmail.com, hch@lst.de, linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jui Chang Kuo <jckuo@nvidia.com>, Joseph Lo <josephl@nvidia.com>, Timo Alho <talho@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, Sandipan Patra <spatra@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.>
 List-Id: devicetree@vger.kernel.org
 
+01.08.2019 19:10, Sowjanya Komatineni пишет:
+> I didn’t updated any patches. This is still same v7 just resent with
+> CPUFreq maintainers in CC as I missed to add them earlier.
 
---=-qAJVJtco/gH4l0Ax6g8O
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-08-01 at 17:07 +0100, Robin Murphy wrote:
-> On 2019-08-01 4:44 pm, Nicolas Saenz Julienne wrote:
-> > On Wed, 2019-07-31 at 18:07 +0100, Catalin Marinas wrote:
-> > > On Wed, Jul 31, 2019 at 05:47:48PM +0200, Nicolas Saenz Julienne wrot=
-e:
-> > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > > > index 1c4ffabbe1cb..f5279ef85756 100644
-> > > > --- a/arch/arm64/mm/init.c
-> > > > +++ b/arch/arm64/mm/init.c
-> > > > @@ -50,6 +50,13 @@
-> > > >   s64 memstart_addr __ro_after_init =3D -1;
-> > > >   EXPORT_SYMBOL(memstart_addr);
-> > > >  =20
-> > > > +/*
-> > > > + * We might create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA is nee=
-ded
-> > > > if
-> > > > there
-> > > > + * are periferals unable to address the first naturally aligned 4G=
-B of
-> > > > ram.
-> > > > + * ZONE_DMA32 will be expanded to cover the rest of that memory. I=
-f
-> > > > such
-> > > > + * limitations doesn't exist only ZONE_DMA32 is created.
-> > > > + */
-> > >=20
-> > > Shouldn't we instead only create ZONE_DMA to cover the whole 32-bit
-> > > range and leave ZONE_DMA32 empty? Can__GFP_DMA allocations fall back
-> > > onto ZONE_DMA32?
-> >=20
-> > Hi Catalin, thanks for the review.
-> >=20
-> > You're right, the GFP_DMA page allocation will fail with a nasty dmesg =
-error
-> > if
-> > ZONE_DMA is configured but empty. Unsurprisingly the opposite situation=
- is
-> > fine
-> > (GFP_DMA32 with an empty ZONE_DMA32).
->=20
-> Was that tested on something other than RPi4 with more than 4GB of RAM?=
-=20
-> (i.e. with a non-empty ZONE_NORMAL either way)
-
-No, all I did is play around with RPi4's memory size (1 GB vs 4 GB).
-
-I'll see If I can get access to a dts based board with more than 4 GB, If n=
-ot
-I'll try to fake it. It's not ideal but I can set the limit on 3 GB and hav=
-e
-the 3 areas created (with and witouth an empty ZONE_DMA32).
-
-On top of that, now that you ask, I realise I neglected all the ACPI based
-servers. I have access to some so I'll make sure I test everything on them =
-too
-for the next series.
-
-Regards,
-Nicolas
-
-
---=-qAJVJtco/gH4l0Ax6g8O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1DFhIACgkQlfZmHno8
-x/5YnAf/aih3gNCdpPnk9CDn+WHuChefMegomFiKPy7KLWGYmB9OrtzlXlYit3VU
-z2zffpz7+B+tFBZWLyxyQfJ8sT8uogFFJR+HNsvucEC2z4cDMksEkCgYQRHcv5iq
-4CDSPUrd5zuESxZjq3ne7sLGx0G41aVs7o+iKAaUls/WAhq7MbYiq8B/r9HPnS1/
-qAxsHlnX0PASFIN3BCnr+1VSy+xbwpFNSNVfqLYtWRQZvI8ww3Epx/AbWcTKy3YC
-3YbXITPMlA4Mf+0ROrmU4sf0dj/mdQkC6SYqPjTMqVYyzON4rJ/MvOChQDmEGPs6
-WiNr9ZnC1GXA4QfwFXcRrfK85+Y0vw==
-=e240
------END PGP SIGNATURE-----
-
---=-qAJVJtco/gH4l0Ax6g8O--
+There are now two different threads for the same patches, which is not
+very good. When I said that CPUFreq maintainers should be CC'ed, I
+didn't mean to resend it all, sorry for not being clear about it. You
+should've wait for more comments to the original patches and then make a
+v8. I suggest to do the same in the current situation as well, please
+address all the current comments and wait for 1-2 days, then make a v8.
