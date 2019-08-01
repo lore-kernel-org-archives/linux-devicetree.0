@@ -1,48 +1,61 @@
-Return-Path: <SRS0=XPdD=V6=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <20190724121559.19079-1-horms+renesas@verge.net.au> <20190801125750.GM1659@ninjato>
-In-Reply-To: <20190801125750.GM1659@ninjato>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 2 Aug 2019 11:27:19 +0200
-Message-ID: <CAMuHMdVBVFbcTDcXbBT18NfTnAxW-Gz6XnBgKO5REdHtw9zeaQ@mail.gmail.com>
+Return-Path: <SRS0=CtMQ=V5=the-dreams.de=wsa@kernel.org>
+Date: Thu, 1 Aug 2019 14:57:50 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
 Subject: Re: [PATCH 0/4] dt-bindings: i2c: renesas: Rename bindings
  documentation files
-Content-Type: text/plain; charset="UTF-8"
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Message-ID: <20190801125750.GM1659@ninjato>
+References: <20190724121559.19079-1-horms+renesas@verge.net.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="M2Pxvdb9QxnGd/3e"
+Content-Disposition: inline
+In-Reply-To: <20190724121559.19079-1-horms+renesas@verge.net.au>
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Wolfram,
 
-On Thu, Aug 1, 2019 at 3:16 PM Wolfram Sang <wsa@the-dreams.de> wrote:
-> On Wed, Jul 24, 2019 at 02:15:55PM +0200, Simon Horman wrote:
-> > Rename the bindings documentation file for Renesas I2C controllers.
-> >
-> > This is part of an ongoing effort to name bindings documentation files for
-> > Renesas IP blocks consistently, in line with the compat strings they
-> > document.
-> >
-> > Based on v5.3-rc1
-> >
-> > Simon Horman (4):
-> >   dt-bindings: i2c: sh_mobile: Rename bindings documentation file
-> >   dt-bindings: i2c: rcar: Rename bindings documentation file
-> >   dt-bindings: i2c: riic: Rename bindings documentation file
-> >   dt-bindings: i2c: riic: Rename bindings documentation file
->
-> Applied to for-next, thanks!
+--M2Pxvdb9QxnGd/3e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Without the wrong names fixed?
-And with an R-b I didn't give, probably due to the two last patches having
-the same oneline-summary?
+On Wed, Jul 24, 2019 at 02:15:55PM +0200, Simon Horman wrote:
+> Rename the bindings documentation file for Renesas I2C controllers.
+>=20
+> This is part of an ongoing effort to name bindings documentation files for
+> Renesas IP blocks consistently, in line with the compat strings they
+> document.
+>=20
+> Based on v5.3-rc1
+>=20
+> Simon Horman (4):
+>   dt-bindings: i2c: sh_mobile: Rename bindings documentation file
+>   dt-bindings: i2c: rcar: Rename bindings documentation file
+>   dt-bindings: i2c: riic: Rename bindings documentation file
+>   dt-bindings: i2c: riic: Rename bindings documentation file
 
-Gr{oetje,eeting}s,
+Applied to for-next, thanks!
 
-                        Geert
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--M2Pxvdb9QxnGd/3e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C4c0ACgkQFA3kzBSg
+KbamRA/9GpOM7rqnCrHHeVm2ymvAN0h9chZDp/OQeW+ZzsvTNji1kfiSih8XwZGd
+/fT81qsO/8/Tdr5lHeRpiue+90jwkEkesllOhiwxahlEM8JIi1mU9Z7eW0bmP73A
+fGUw26PKqqRMmGozuOeVrU9varCkCwOnVdOV5y9rKbO42IDxtE+i+XfG7jscGO+R
+TMdy7yVa0gv21ppwBykY7JfGfvoKdxmhRMPYSnzj1TcWRvO6vf7SXz8zU1PDJOCc
+7oU1hEEhSx1SqvK9ygBB15+kUDE+8bV8VdmYlvRczCE/u5Vt+IYYgxTbbgGrBwS4
+yuEGIcBPRfCIzcL9jWlmZZiW9D6HrylKumCnRRpOZA5s4zri389QD/QT4yh7i7AP
+BL9nqI65+o00cGoy++jrPWlIImHFZ46+cUuzBXIYFwE66hEV/WOoVn25lYfeKdc+
+YANf2kXbkBWy6LZvO+ugu+TfxwJcWYJmLBN2balOU82/biLsk8yZnn4PdiIUbI5U
+WFC217rXBQmo+4KB7KvoirUijfsQaVrUktzg473dht8knDFMKDUx0P9hc5ur9MY9
+/X9PxNTYQCwlGBxHSAacCRNvThfj2hm2lG4C7dri68XMVnxYT3AxCaekjeijKi4j
+agZvW7GxgtpR34VpD9yOdtIj0yZJOdR1L2lA0w1HAfB+tk/PvZ8=
+=MYiC
+-----END PGP SIGNATURE-----
+
+--M2Pxvdb9QxnGd/3e--
