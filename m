@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v4 3/4] net: phy: realtek: Add helpers for accessing RTL8211E extension pages
-Date: Thu,  1 Aug 2019 12:07:58 -0700
-Message-ID: <20190801190759.28201-4-mka@chromium.org>
+Subject: [PATCH v4 1/4] dt-bindings: net: phy: Add subnode for LED configuration
+Date: Thu,  1 Aug 2019 12:07:56 -0700
+Message-ID: <20190801190759.28201-2-mka@chromium.org>
 References: <20190801190759.28201-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,100 +12,88 @@ To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The RTL8211E has extension pages, which can be accessed after
-selecting a page through a custom method. Add a function to
-modify bits in a register of an extension page and a helper for
-selecting an ext page. Use rtl8211e_modify_ext_paged() in
-rtl8211e_config_init() instead of doing things 'manually'.
+The LED behavior of some Ethernet PHYs is configurable. Add an
+optional 'leds' subnode with a child node for each LED to be
+configured. The binding aims to be compatible with the common
+LED binding (see devicetree/bindings/leds/common.txt).
 
+A LED can be configured to be 'on' when a link with a certain speed
+is active, or to blink on RX/TX activity. For the configuration to
+be effective it needs to be supported by the hardware and the
+corresponding PHY driver.
+
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v4:
-- don't add constant RTL8211E_EXT_PAGE, it's only used once,
-  use a literal instead
-- pass 'oldpage' to phy_restore_page() in rtl8211e_select_ext_page(),
-  not 'page'
-- return 'oldpage' in rtl8211e_select_ext_page()
-- use __phy_modify() in rtl8211e_modify_ext_paged() instead of
-  reimplementing __phy_modify_changed()
-- in rtl8211e_modify_ext_paged() return directly when
-  rtl8211e_select_ext_page() fails
+- patch added to the series
 ---
- drivers/net/phy/realtek.c | 48 +++++++++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 14 deletions(-)
+ .../devicetree/bindings/net/ethernet-phy.yaml | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index a669945eb829..e09d3b0da2c7 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -53,6 +53,36 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
- 	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
- }
+diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+index f70f18ff821f..81c5aacc89a5 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+@@ -153,6 +153,38 @@ properties:
+       Delay after the reset was deasserted in microseconds. If
+       this property is missing the delay will be skipped.
  
-+static int rtl8211e_select_ext_page(struct phy_device *phydev, int page)
-+{
-+	int ret, oldpage;
++patternProperties:
++  "^leds$":
++    type: object
++    description:
++      Subnode with configuration of the PHY LEDs.
 +
-+	oldpage = phy_select_page(phydev, 7);
-+	if (oldpage < 0)
-+		return oldpage;
++    patternProperties:
++      "^led@[0-9]+$":
++        type: object
++        description:
++          Subnode with the configuration of a single PHY LED.
 +
-+	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, page);
-+	if (ret)
-+		return phy_restore_page(phydev, oldpage, ret);
++    properties:
++      reg:
++        description:
++          The ID number of the LED, typically corresponds to a hardware ID.
++        $ref: "/schemas/types.yaml#/definitions/uint32"
 +
-+	return oldpage;
-+}
++      linux,default-trigger:
++        description:
++          This parameter, if present, is a string specifying the trigger
++          assigned to the LED. Supported triggers are:
++            "phy_link_10m_active" - LED will be on when a 10Mb/s link is active
++            "phy_link_100m_active" - LED will be on when a 100Mb/s link is active
++            "phy_link_1g_active" - LED will be on when a 1Gb/s link is active
++            "phy_link_10g_active" - LED will be on when a 10Gb/s link is active
++            "phy_activity" - LED will blink when data is received or transmitted
++        $ref: "/schemas/types.yaml#/definitions/string"
 +
-+static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
-+				     u32 regnum, u16 mask, u16 set)
-+{
-+	int ret = 0;
-+	int oldpage;
++    required:
++      - reg
 +
-+	oldpage = rtl8211e_select_ext_page(phydev, page);
-+	if (oldpage < 0)
-+		return oldpage;
-+
-+	ret = __phy_modify(phydev, regnum, mask, set);
-+
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static int rtl8201_ack_interrupt(struct phy_device *phydev)
- {
- 	int err;
-@@ -184,7 +214,7 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ required:
+   - reg
  
- static int rtl8211e_config_init(struct phy_device *phydev)
- {
--	int ret = 0, oldpage;
-+	int ret;
- 	u16 val;
- 
- 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
-@@ -213,19 +243,9 @@ static int rtl8211e_config_init(struct phy_device *phydev)
- 	 * 2 = RX Delay, 1 = TX Delay, 0 = SELRGV (see original PHY datasheet
- 	 * for details).
- 	 */
--	oldpage = phy_select_page(phydev, 0x7);
--	if (oldpage < 0)
--		goto err_restore_page;
--
--	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
--	if (ret)
--		goto err_restore_page;
--
--	ret = __phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
--			   val);
--
--err_restore_page:
--	return phy_restore_page(phydev, oldpage, ret);
-+	return rtl8211e_modify_ext_paged(phydev, 0xa4, 0x1c,
-+					 RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-+					 val);
- }
- 
- static int rtl8211b_suspend(struct phy_device *phydev)
+@@ -173,5 +205,20 @@ examples:
+             reset-gpios = <&gpio1 4 1>;
+             reset-assert-us = <1000>;
+             reset-deassert-us = <2000>;
++
++            leds {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                led@0 {
++                    reg = <0>;
++                    linux,default-trigger = "phy_link_1g_active";
++                };
++
++                led@1 {
++                    reg = <1>;
++                    linux,default-trigger = "phy_activity";
++                };
++            };
+         };
+     };
 -- 
 2.22.0.770.g0f2c4a37fd-goog
