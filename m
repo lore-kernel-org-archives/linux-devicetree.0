@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC 2/9] dt-bindings: rng: amlogic,meson-rng: convert to yaml
-Date: Thu,  1 Aug 2019 15:56:37 +0200
-Message-ID: <20190801135644.12843-3-narmstrong@baylibre.com>
+Subject: [RFC 1/9] dt-bindings: mailbox: meson-mhu: convert to yaml
+Date: Thu,  1 Aug 2019 15:56:36 +0200
+Message-ID: <20190801135644.12843-2-narmstrong@baylibre.com>
 References: <20190801135644.12843-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,86 +18,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../bindings/rng/amlogic,meson-rng.txt        | 21 -----------
- .../bindings/rng/amlogic,meson-rng.yaml       | 37 +++++++++++++++++++
- 2 files changed, 37 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
- create mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
+ .../devicetree/bindings/mailbox/meson-mhu.txt | 34 ------------
+ .../bindings/mailbox/meson-mhu.yaml           | 53 +++++++++++++++++++
+ 2 files changed, 53 insertions(+), 34 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.yaml
 
-diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
 deleted file mode 100644
-index 4d403645ac9b..000000000000
---- a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+index a530310772b9..000000000000
+--- a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
 +++ /dev/null
-@@ -1,21 +0,0 @@
--Amlogic Meson Random number generator
--=====================================
+@@ -1,34 +0,0 @@
+-Amlogic Meson MHU Mailbox Driver
+-================================
+-
+-The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
+-that has 3 independent channels/links to communicate with remote processor(s).
+-MHU links are hardwired on a platform. A link raises interrupt for any
+-received data. However, there is no specified way of knowing if the sent
+-data has been read by the remote. This driver assumes the sender polls
+-STAT register and the remote clears it after having read the data.
+-
+-Mailbox Device Node:
+-====================
 -
 -Required properties:
--
--- compatible : should be "amlogic,meson-rng"
--- reg : Specifies base physical address and size of the registers.
--
--Optional properties:
--
--- clocks : phandle to the following named clocks
--- clock-names: Name of core clock, must be "core"
+---------------------
+-- compatible:		Shall be "amlogic,meson-gxbb-mhu"
+-- reg:			Contains the mailbox register address range (base
+-			address and length)
+-- #mbox-cells		Shall be 1 - the index of the channel needed.
+-- interrupts:		Contains the interrupt information corresponding to
+-			each of the 2 links of MHU.
 -
 -Example:
+---------
 -
--rng {
--	compatible = "amlogic,meson-rng";
--	reg = <0x0 0xc8834000 0x0 0x4>;
--	clocks = <&clkc CLKID_RNG0>;
--	clock-names = "core";
--};
-diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
+-	mailbox: mailbox@c883c404 {
+-		#mbox-cells = <1>;
+-		compatible = "amlogic,meson-gxbb-mhu";
+-		reg = <0 0xc883c404 0 0x4c>;
+-		interrupts = <0 208 IRQ_TYPE_EDGE_RISING>,
+-			     <0 209 IRQ_TYPE_EDGE_RISING>,
+-			     <0 210 IRQ_TYPE_EDGE_RISING>;
+-		#mbox-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.yaml b/Documentation/devicetree/bindings/mailbox/meson-mhu.yaml
 new file mode 100644
-index 000000000000..a9ff3cb35c5e
+index 000000000000..b84c4c05e176
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
-@@ -0,0 +1,37 @@
++++ b/Documentation/devicetree/bindings/mailbox/meson-mhu.yaml
+@@ -0,0 +1,53 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/rng/amlogic,meson-rng.yaml#"
++$id: "http://devicetree.org/schemas/mailbox/meson-mhu.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic Meson Random number generator
++title: Amlogic Meson Message-Handling-Unit Controller
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
 +
++description: |
++  The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
++  that has 3 independent channels/links to communicate with remote processor(s).
++  MHU links are hardwired on a platform. A link raises interrupt for any
++  received data. However, there is no specified way of knowing if the sent
++  data has been read by the remote. This driver assumes the sender polls
++  STAT register and the remote clears it after having read the data.
++
 +properties:
 +  compatible:
 +    enum:
-+      - amlogic,meson-rng
++      - amlogic,meson-gxbb-mhu
 +
 +  reg:
 +    maxItems: 1
 +
-+  clocks:
-+    maxItems: 1
++  interrupts:
++    minItems: 3
++    maxItems: 3
++    description:
++      Contains the interrupt information corresponding to each of the 3 links
++      of MHU.
 +
-+  clock-names:
-+    items:
-+      - const: core
++  "#mbox-cells":
++    const: 1
 +
 +required:
 +  - compatible
 +  - reg
++  - interrupts
++  - "#mbox-cells"
 +
 +examples:
 +  - |
-+    rng@c8834000 {
-+          compatible = "amlogic,meson-rng";
-+          reg = <0xc8834000 0x4>;
++    mailbox@c883c404 {
++          compatible = "amlogic,meson-gxbb-mhu";
++          reg = <0xc883c404 0x4c>;
++          interrupts = <208>, <209>, <210>;
++          #mbox-cells = <1>;
 +    };
++
 -- 
 2.22.0
