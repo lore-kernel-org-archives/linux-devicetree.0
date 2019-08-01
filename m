@@ -1,40 +1,36 @@
-From: Ran Bi <ran.bi@mediatek.com>
-Subject: [PATCH v2 3/4] arm64: dts: add RTC nodes for MT2712
-Date: Thu, 1 Aug 2019 19:01:21 +0800
-Message-ID: <20190801110122.26834-4-ran.bi@mediatek.com>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v9 11/15] dt-bindings: memory: Add binding for NVIDIA
+ Tegra30 External Memory Controller
+Date: Thu, 1 Aug 2019 14:05:12 +0300
+Message-ID: <7fa8dd9c-1298-9a52-2529-86285797ab0e@gmail.com>
+References: <20190730165618.10122-1-digetx@gmail.com>
+ <20190730165618.10122-12-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190801110122.26834-1-ran.bi@mediatek.com>
+In-Reply-To: <20190730165618.10122-12-digetx@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Ran Bi <ran.bi@media>
+To: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add device node for MT2712 RTC.
+30.07.2019 19:56, Dmitry Osipenko пишет:
+> Add device-tree binding for NVIDIA Tegra30 External Memory Controller.
+> The binding is based on the Tegra124 EMC binding since hardware is
+> similar, although there are couple significant differences.
+> 
+> Note that the memory timing description is given in a platform-specific
+> form because there is no detailed information on how to convert a
+> typical-common DDR timing into the register values. The timing format is
+> borrowed from downstream kernel, hence there is no hurdle in regards to
+> upstreaming of memory timings for the boards.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hello Rob,
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 43307bad3f0d..31166c17c39a 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -303,6 +303,12 @@
- 		status = "disabled";
- 	};
- 
-+	rtc: rtc@10011000 {
-+		compatible = "mediatek,mt2712-rtc";
-+		reg = <0 0x10011000 0 0x1000>;
-+		interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
- 	spis1: spi@10013000 {
- 		compatible = "mediatek,mt2712-spi-slave";
- 		reg = <0 0x10013000 0 0x100>;
--- 
-2.21.0
+Are the device-tree changes looking good to you?
