@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC 1/9] dt-bindings: mailbox: meson-mhu: convert to yaml
-Date: Thu,  1 Aug 2019 15:56:36 +0200
-Message-ID: <20190801135644.12843-2-narmstrong@baylibre.com>
+Subject: [RFC 3/9] dt-bindings: spi: meson: convert to yaml
+Date: Thu,  1 Aug 2019 15:56:38 +0200
+Message-ID: <20190801135644.12843-4-narmstrong@baylibre.com>
 References: <20190801135644.12843-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,115 +18,222 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../devicetree/bindings/mailbox/meson-mhu.txt | 34 ------------
- .../bindings/mailbox/meson-mhu.yaml           | 53 +++++++++++++++++++
- 2 files changed, 53 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.yaml
+ .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 74 +++++++++++++++++++
+ .../bindings/spi/amlogic,meson6-spifc.yaml    | 57 ++++++++++++++
+ .../devicetree/bindings/spi/spi-meson.txt     | 55 --------------
+ 3 files changed, 131 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+ create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
 
-diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
-deleted file mode 100644
-index a530310772b9..000000000000
---- a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
-+++ /dev/null
-@@ -1,34 +0,0 @@
--Amlogic Meson MHU Mailbox Driver
--================================
--
--The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
--that has 3 independent channels/links to communicate with remote processor(s).
--MHU links are hardwired on a platform. A link raises interrupt for any
--received data. However, there is no specified way of knowing if the sent
--data has been read by the remote. This driver assumes the sender polls
--STAT register and the remote clears it after having read the data.
--
--Mailbox Device Node:
--====================
--
--Required properties:
----------------------
--- compatible:		Shall be "amlogic,meson-gxbb-mhu"
--- reg:			Contains the mailbox register address range (base
--			address and length)
--- #mbox-cells		Shall be 1 - the index of the channel needed.
--- interrupts:		Contains the interrupt information corresponding to
--			each of the 2 links of MHU.
--
--Example:
----------
--
--	mailbox: mailbox@c883c404 {
--		#mbox-cells = <1>;
--		compatible = "amlogic,meson-gxbb-mhu";
--		reg = <0 0xc883c404 0 0x4c>;
--		interrupts = <0 208 IRQ_TYPE_EDGE_RISING>,
--			     <0 209 IRQ_TYPE_EDGE_RISING>,
--			     <0 210 IRQ_TYPE_EDGE_RISING>;
--		#mbox-cells = <1>;
--	};
-diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.yaml b/Documentation/devicetree/bindings/mailbox/meson-mhu.yaml
+diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
 new file mode 100644
-index 000000000000..b84c4c05e176
+index 000000000000..6e2c41c730b5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/meson-mhu.yaml
-@@ -0,0 +1,53 @@
++++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+@@ -0,0 +1,74 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/mailbox/meson-mhu.yaml#"
++$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic Meson Message-Handling-Unit Controller
++title: Amlogic Meson SPI Communication Controller
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
 +
++allOf:
++  - $ref: "spi-controller.yaml#"
++
 +description: |
-+  The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
-+  that has 3 independent channels/links to communicate with remote processor(s).
-+  MHU links are hardwired on a platform. A link raises interrupt for any
-+  received data. However, there is no specified way of knowing if the sent
-+  data has been read by the remote. This driver assumes the sender polls
-+  STAT register and the remote clears it after having read the data.
++  The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
++  communications with dedicated 16 words RX/TX PIO FIFOs.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - amlogic,meson-gxbb-mhu
++    oneOf:
++     - description: SPICC controller on Amlogic GX and compatible SoCs
++       enum:
++       - amlogic,meson-gx-spicc
++     - description: SPICC controller on Amlogic AXG and compatible SoCs
++       enum:
++       - amlogic,meson-axg-spicc
++
++  interrupts:
++    maxItems: 1
 +
 +  reg:
 +    maxItems: 1
 +
-+  interrupts:
-+    minItems: 3
-+    maxItems: 3
-+    description:
-+      Contains the interrupt information corresponding to each of the 3 links
-+      of MHU.
++  resets:
++    description: phandle of the internal reset line
++    maxItems: 1
 +
-+  "#mbox-cells":
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    description: input clock for the baud rate generator
++    items:
++      - const: core
++
++  "#address-cells":
 +    const: 1
++
++  "#size-cells":
++    const: 0
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - "#mbox-cells"
++  - clocks
++  - clock-names
++  - "#address-cells"
++  - "#size-cells"
 +
 +examples:
 +  - |
-+    mailbox@c883c404 {
-+          compatible = "amlogic,meson-gxbb-mhu";
-+          reg = <0xc883c404 0x4c>;
-+          interrupts = <208>, <209>, <210>;
-+          #mbox-cells = <1>;
++    spi@c1108d80 {
++          compatible = "amlogic,meson-gx-spicc";
++          reg = <0xc1108d80 0x80>;
++          interrupts = <112>;
++          clocks = <&clk81>;
++          clock-names = "core";
++          #address-cells = <1>;
++          #size-cells = <0>;
 +    };
 +
+diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+new file mode 100644
+index 000000000000..5f34aed1ad40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/spi/amlogic,meson6-spifc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson SPI Flash Controller
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++description: |
++  The Meson SPIFC is a controller optimized for communication with SPI
++  NOR memories, without DMA support and a 64-byte unified transmit /
++  receive buffer.
++
++properties:
++  compatible:
++    oneOf:
++     - enum:
++       - amlogic,meson6-spifc
++     - enum:
++       - amlogic,meson-gxbb-spifc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - "#address-cells"
++  - "#size-cells"
++
++examples:
++  - |
++    spi@c1108c80 {
++          compatible = "amlogic,meson6-spifc";
++          reg = <0xc1108c80 0x80>;
++          clocks = <&clk81>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++    };
++
+diff --git a/Documentation/devicetree/bindings/spi/spi-meson.txt b/Documentation/devicetree/bindings/spi/spi-meson.txt
+deleted file mode 100644
+index b7f5e86fed22..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-meson.txt
++++ /dev/null
+@@ -1,55 +0,0 @@
+-Amlogic Meson SPI controllers
+-
+-* SPIFC (SPI Flash Controller)
+-
+-The Meson SPIFC is a controller optimized for communication with SPI
+-NOR memories, without DMA support and a 64-byte unified transmit /
+-receive buffer.
+-
+-Required properties:
+- - compatible: should be "amlogic,meson6-spifc" or "amlogic,meson-gxbb-spifc"
+- - reg: physical base address and length of the controller registers
+- - clocks: phandle of the input clock for the baud rate generator
+- - #address-cells: should be 1
+- - #size-cells: should be 0
+-
+-	spi@c1108c80 {
+-		compatible = "amlogic,meson6-spifc";
+-		reg = <0xc1108c80 0x80>;
+-		clocks = <&clk81>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+-
+-* SPICC (SPI Communication Controller)
+-
+-The Meson SPICC is generic SPI controller for general purpose Full-Duplex
+-communications with dedicated 16 words RX/TX PIO FIFOs.
+-
+-Required properties:
+- - compatible: should be:
+-	"amlogic,meson-gx-spicc" on Amlogic GX and compatible SoCs.
+-	"amlogic,meson-axg-spicc" on Amlogic AXG and compatible SoCs
+- - reg: physical base address and length of the controller registers
+- - interrupts: The interrupt specifier
+- - clock-names: Must contain "core"
+- - clocks: phandle of the input clock for the baud rate generator
+- - #address-cells: should be 1
+- - #size-cells: should be 0
+-
+-Optional properties:
+- - resets: phandle of the internal reset line
+-
+-See ../spi/spi-bus.txt for more details on SPI bus master and slave devices
+-required and optional properties.
+-
+-Example :
+-	spi@c1108d80 {
+-		compatible = "amlogic,meson-gx-spicc";
+-		reg = <0xc1108d80 0x80>;
+-		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+-		clock-names = "core";
+-		clocks = <&clk81>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
 -- 
 2.22.0
