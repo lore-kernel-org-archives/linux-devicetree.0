@@ -1,83 +1,86 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
-Date: Thu, 1 Aug 2019 12:14:03 -0700
-Message-ID: <20190801191403.GA7234@tuxbook-pro>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Thu, 1 Aug 2019 12:28:13 -0700
+Message-ID: <5a1e785d-075e-19a0-7d3d-949e1b65d726@gmail.com>
+References: <20190731221721.187713-1-saravanak@google.com>
+ <20190801061209.GA3570@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <20190801061209.GA3570@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
+Hi Greg,
 
-> The current implementation does not allow two different devices to use
-> a common hwspinlock. This patch set proposes to have, as an option, some
-> hwspinlocks shared between several users.
+On 7/31/19 11:12 PM, Greg Kroah-Hartman wrote:
+> On Wed, Jul 31, 2019 at 03:17:13PM -0700, Saravana Kannan wrote:
+>> Add device-links to track functional dependencies between devices
+>> after they are created (but before they are probed) by looking at
+>> their common DT bindings like clocks, interconnects, etc.
+>>
+>> Having functional dependencies automatically added before the devices
+>> are probed, provides the following benefits:
+>>
+>> - Optimizes device probe order and avoids the useless work of
+>>   attempting probes of devices that will not probe successfully
+>>   (because their suppliers aren't present or haven't probed yet).
+>>
+>>   For example, in a commonly available mobile SoC, registering just
+>>   one consumer device's driver at an initcall level earlier than the
+>>   supplier device's driver causes 11 failed probe attempts before the
+>>   consumer device probes successfully. This was with a kernel with all
+>>   the drivers statically compiled in. This problem gets a lot worse if
+>>   all the drivers are loaded as modules without direct symbol
+>>   dependencies.
+>>
+>> - Supplier devices like clock providers, interconnect providers, etc
+>>   need to keep the resources they provide active and at a particular
+>>   state(s) during boot up even if their current set of consumers don't
+>>   request the resource to be active. This is because the rest of the
+>>   consumers might not have probed yet and turning off the resource
+>>   before all the consumers have probed could lead to a hang or
+>>   undesired user experience.
+>>
+>>   Some frameworks (Eg: regulator) handle this today by turning off
+>>   "unused" resources at late_initcall_sync and hoping all the devices
+>>   have probed by then. This is not a valid assumption for systems with
+>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>>   this due to the lack of a clear signal for when they can turn off
+>>   resources. This leads to downstream hacks to handle cases like this
+>>   that can easily be solved in the upstream kernel.
+>>
+>>   By linking devices before they are probed, we give suppliers a clear
+>>   count of the number of dependent consumers. Once all of the
+>>   consumers are active, the suppliers can turn off the unused
+>>   resources without making assumptions about the number of consumers.
+>>
+>> By default we just add device-links to track "driver presence" (probe
+>> succeeded) of the supplier device. If any other functionality provided
+>> by device-links are needed, it is left to the consumer/supplier
+>> devices to change the link when they probe.
 > 
-> Below is an example that explain the need for this:
-> 	exti: interrupt-controller@5000d000 {
-> 		compatible = "st,stm32mp1-exti", "syscon";
-> 		interrupt-controller;
-> 		#interrupt-cells = <2>;
-> 		reg = <0x5000d000 0x400>;
-> 		hwlocks = <&hsem 1>;
-> 	};
-> The two drivers (stm32mp1-exti and syscon) refer to the same hwlock.
-> With the current hwspinlock implementation, only the first driver succeeds
-> in requesting (hwspin_lock_request_specific) the hwlock. The second request
-> fails.
-> 
-> 
-> The proposed approach does not modify the API, but extends the DT 'hwlocks'
-> property with a second optional parameter (the first one identifies an
-> hwlock) that specifies whether an hwlock is requested for exclusive usage
-> (current behavior) or can be shared between several users.
-> Examples:
-> 	hwlocks = <&hsem 8>;	Ref to hwlock #8 for exclusive usage
-> 	hwlocks = <&hsem 8 0>;	Ref to hwlock #8 for exclusive (0) usage
-> 	hwlocks = <&hsem 8 1>;	Ref to hwlock #8 for shared (1) usage
-> 
-> As a constraint, the #hwlock-cells value must be 1 or 2.
-> In the current implementation, this can have theorically any value but:
-> - all of the exisiting drivers use the same value : 1.
-> - the framework supports only one value : 1 (see implementation of
->   of_hwspin_lock_simple_xlate())
-> Hence, it shall not be a problem to restrict this value to 1 or 2 since
-> it won't break any driver.
-> 
+> All now queued up in my driver-core-testing branch, and if 0-day is
+> happy with this, will move it to my "real" driver-core-next branch in a
+> day or so to get included in linux-next.
 
-Hi Fabien,
+I have been slow in getting my review out.
 
-Your series looks good, but it makes me wonder why the hardware locks
-should be an exclusive resource.
+This patch series is not yet ready for sending to Linus, so if putting
+this in linux-next implies that it will be in your next pull request
+to Linus, please do not put it in linux-next.
 
-How about just making all (specific) locks shared?
+Thanks,
 
-Regards,
-Bjorn
+Frank
 
-> Fabien Dessenne (6):
->   dt-bindings: hwlock: add support of shared locks
->   hwspinlock: allow sharing of hwspinlocks
->   dt-bindings: hwlock: update STM32 #hwlock-cells value
->   ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
->   ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
->   ARM: dts: stm32: hwlocks for GPIO for stm32mp157
 > 
->  .../devicetree/bindings/hwlock/hwlock.txt          | 27 +++++--
->  .../bindings/hwlock/st,stm32-hwspinlock.txt        |  6 +-
->  Documentation/hwspinlock.txt                       | 10 ++-
->  arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  2 +
->  arch/arm/boot/dts/stm32mp157c.dtsi                 | 10 +++
->  drivers/hwspinlock/hwspinlock_core.c               | 82 +++++++++++++++++-----
->  drivers/hwspinlock/hwspinlock_internal.h           |  2 +
->  7 files changed, 108 insertions(+), 31 deletions(-)
+> thanks for sticking with this!
 > 
-> -- 
-> 2.7.4
+> greg k-h
 > 
