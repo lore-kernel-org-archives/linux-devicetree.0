@@ -1,241 +1,209 @@
-From: Hanna Hawa <hhhawa@amazon.com>
-Subject: [PATCH v4 2/4] edac: Add support for Amazon's Annapurna Labs L1 EDAC
-Date: Thu, 1 Aug 2019 14:09:54 +0100
-Message-ID: <20190801130956.26388-3-hhhawa@amazon.com>
-References: <20190801130956.26388-1-hhhawa@amazon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: create pcm for codec2codec links as well" to the asoc tree
+Date: Thu,  1 Aug 2019 14:10:40 +0100 (BST)
+Message-ID: <20190801131040.A018F2742C48@ypsilon.sirena.org.uk>
+References: <20190725165949.29699-5-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190801130956.26388-1-hhhawa@amazon.com>
+In-Reply-To: <20190725165949.29699-5-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
-Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
-report L1 errors.
+The patch
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+   ASoC: create pcm for codec2codec links as well
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From a342031cdd0818cb0fbcb44798211c7a02c7ca27 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 25 Jul 2019 18:59:47 +0200
+Subject: [PATCH] ASoC: create pcm for codec2codec links as well
+
+At the moment, codec to codec links uses an ephemeral variable for
+the struct snd_pcm_substream. Also the struct snd_soc_pcm_runtime
+does not have real struct snd_pcm.
+
+This might a problem if the functions used by a codec on codec to
+codec link expect these structures to exist, and keep on existing
+during the life of the codec.
+
+For example, it is the case of the hdmi-codec, which uses
+snd_pcm_add_chmap_ctls(). For the controls to works, the pcm and
+substream must to exist.
+
+This change is first step, it create pcm (and substreams) for codec
+to codec links, in the same way as dpcm backend links.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20190725165949.29699-5-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- MAINTAINERS               |   6 ++
- drivers/edac/Kconfig      |   8 ++
- drivers/edac/Makefile     |   1 +
- drivers/edac/al_l1_edac.c | 158 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 173 insertions(+)
- create mode 100644 drivers/edac/al_l1_edac.c
+ sound/soc/soc-core.c | 42 ++++++++++++------------------------------
+ sound/soc/soc-pcm.c  | 35 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 44 insertions(+), 33 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 77eae44bf5de..fd29ea62ba29 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -743,6 +743,12 @@ F:	drivers/tty/serial/altera_jtaguart.c
- F:	include/linux/altera_uart.h
- F:	include/linux/altera_jtaguart.h
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 06697b2d96b1..da11e44b01aa 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -447,16 +447,6 @@ static void snd_soc_flush_all_delayed_work(struct snd_soc_card *card)
+ 		flush_delayed_work(&rtd->delayed_work);
+ }
  
-+AMAZON ANNAPURNA LABS L1 EDAC
-+M:	Hanna Hawa <hhhawa@amazon.com>
-+S:	Maintained
-+F:	drivers/edac/al_l1_edac.c
-+F:	Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-+
- AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
- M:	Talel Shenhar <talel@amazon.com>
- S:	Maintained
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 200c04ce5b0e..58b92bcb39ce 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -74,6 +74,14 @@ config EDAC_GHES
+-static void codec2codec_close_delayed_work(struct work_struct *work)
+-{
+-	/*
+-	 * Currently nothing to do for c2c links
+-	 * Since c2c links are internal nodes in the DAPM graph and
+-	 * don't interface with the outside world or application layer
+-	 * we don't have to do any special handling on close.
+-	 */
+-}
+-
+ #ifdef CONFIG_PM_SLEEP
+ /* powers down audio subsystem for suspend */
+ int snd_soc_suspend(struct device *dev)
+@@ -1555,27 +1545,19 @@ static int soc_probe_link_dais(struct snd_soc_card *card,
+ 		return ret;
+ 	}
  
- 	  In doubt, say 'Y'.
- 
-+config EDAC_AL_L1
-+	bool "Amazon's Annapurna Labs L1 EDAC"
-+	depends on ARCH_ALPINE
-+	help
-+	  Support for L1 error detection and correction
-+	  for Amazon's Annapurna Labs SoCs.
-+	  This driver detects errors of L1 caches.
-+
- config EDAC_AMD64
- 	tristate "AMD64 (Opteron, Athlon64)"
- 	depends on AMD_NB && EDAC_DECODE_MCE
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 165ca65e1a3a..caa2dc91e8a0 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
- edac_mce_amd-y				:= mce_amd.o
- obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
- 
-+obj-$(CONFIG_EDAC_AL_L1)		+= al_l1_edac.o
- obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
- obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
- obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
-diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
-new file mode 100644
-index 000000000000..9404a2fcaa58
---- /dev/null
-+++ b/drivers/edac/al_l1_edac.c
-@@ -0,0 +1,158 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ */
-+
-+#include <asm/sysreg.h>
-+#include <linux/bitfield.h>
-+#include <linux/smp.h>
-+
-+#include "edac_device.h"
-+#include "edac_module.h"
-+
-+#define DRV_NAME				"al_l1_edac"
-+
-+/* Same bit assignments of CPUMERRSR_EL1 in ARM CA57/CA72 */
-+#define ARM_CA57_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-+#define ARM_CA57_CPUMERRSR_RAM_ID		GENMASK(30, 24)
-+#define  ARM_CA57_L1_I_TAG_RAM			0x00
-+#define  ARM_CA57_L1_I_DATA_RAM			0x01
-+#define  ARM_CA57_L1_D_TAG_RAM			0x08
-+#define  ARM_CA57_L1_D_DATA_RAM			0x09
-+#define  ARM_CA57_L2_TLB_RAM			0x18
-+#define ARM_CA57_CPUMERRSR_VALID		BIT(31)
-+#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK_ULL(39, 32)
-+#define ARM_CA57_CPUMERRSR_OTHER		GENMASK_ULL(47, 40)
-+#define ARM_CA57_CPUMERRSR_FATAL		BIT_ULL(63)
-+
-+#define AL_L1_EDAC_MSG_MAX			256
-+
-+static void al_l1_edac_cpumerrsr(void *arg)
-+{
-+	struct edac_device_ctl_info *edac_dev = arg;
-+	int cpu, i;
-+	u32 ramid, repeat, other, fatal;
-+	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
-+	char msg[AL_L1_EDAC_MSG_MAX];
-+	int space, count;
-+	char *p;
-+
-+	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
-+		return;
-+
-+	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
-+
-+	cpu = smp_processor_id();
-+	ramid = FIELD_GET(ARM_CA57_CPUMERRSR_RAM_ID, val);
-+	repeat = FIELD_GET(ARM_CA57_CPUMERRSR_REPEAT, val);
-+	other = FIELD_GET(ARM_CA57_CPUMERRSR_OTHER, val);
-+	fatal = FIELD_GET(ARM_CA57_CPUMERRSR_FATAL, val);
-+
-+	space = sizeof(msg);
-+	p = msg;
-+	count = scnprintf(p, space, "CPU%d L1 %serror detected", cpu,
-+			  (fatal) ? "Fatal " : "");
-+	p += count;
-+	space -= count;
-+
-+	switch (ramid) {
-+	case ARM_CA57_L1_I_TAG_RAM:
-+		count = scnprintf(p, space, " RAMID='L1-I Tag RAM'");
-+		break;
-+	case ARM_CA57_L1_I_DATA_RAM:
-+		count = scnprintf(p, space, " RAMID='L1-I Data RAM'");
-+		break;
-+	case ARM_CA57_L1_D_TAG_RAM:
-+		count = scnprintf(p, space, " RAMID='L1-D Tag RAM'");
-+		break;
-+	case ARM_CA57_L1_D_DATA_RAM:
-+		count = scnprintf(p, space, " RAMID='L1-D Data RAM'");
-+		break;
-+	case ARM_CA57_L2_TLB_RAM:
-+		count = scnprintf(p, space, " RAMID='L2 TLB RAM'");
-+		break;
-+	default:
-+		count = scnprintf(p, space, " RAMID='unknown'");
-+		break;
-+	}
-+
-+	p += count;
-+	space -= count;
-+	count = scnprintf(p, space,
-+			  " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
-+			  repeat, other, val);
-+
-+	for (i = 0; i < repeat; i++) {
-+		if (fatal)
-+			edac_device_handle_ue(edac_dev, 0, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_dev, 0, 0, msg);
-+	}
-+}
-+
-+static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
-+{
-+	on_each_cpu(al_l1_edac_cpumerrsr, edac_dev, 1);
-+}
-+
-+static int al_l1_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_dev;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
-+					      1, 1, NULL, 0,
-+					      edac_device_alloc_index());
-+	if (IS_ERR_OR_NULL(edac_dev))
-+		return -ENOMEM;
-+
-+	edac_dev->edac_check = al_l1_edac_check;
-+	edac_dev->dev = dev;
-+	edac_dev->mod_name = DRV_NAME;
-+	edac_dev->dev_name = dev_name(dev);
-+	edac_dev->ctl_name = "L1 cache";
-+	platform_set_drvdata(pdev, edac_dev);
-+
-+	ret = edac_device_add_device(edac_dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to add L1 edac device\n");
-+		goto err;
-+	}
-+
-+	return 0;
-+err:
-+	edac_device_free_ctl_info(edac_dev);
-+
+-	if (!dai_link->params) {
+-		/* create the pcm */
+-		ret = soc_new_pcm(rtd, num);
+-		if (ret < 0) {
+-			dev_err(card->dev, "ASoC: can't create pcm %s :%d\n",
+-				dai_link->stream_name, ret);
+-			return ret;
+-		}
+-		ret = soc_link_dai_pcm_new(&cpu_dai, 1, rtd);
+-		if (ret < 0)
+-			return ret;
+-		ret = soc_link_dai_pcm_new(rtd->codec_dais,
+-					   rtd->num_codecs, rtd);
+-		if (ret < 0)
+-			return ret;
+-	} else {
+-		INIT_DELAYED_WORK(&rtd->delayed_work,
+-				  codec2codec_close_delayed_work);
++	/* create the pcm */
++	ret = soc_new_pcm(rtd, num);
++	if (ret < 0) {
++		dev_err(card->dev, "ASoC: can't create pcm %s :%d\n",
++			dai_link->stream_name, ret);
++		return ret;
+ 	}
+-
+-	return 0;
++	ret = soc_link_dai_pcm_new(&cpu_dai, 1, rtd);
++	if (ret < 0)
++		return ret;
++	ret = soc_link_dai_pcm_new(rtd->codec_dais,
++				   rtd->num_codecs, rtd);
 +	return ret;
-+}
-+
-+static int al_l1_edac_remove(struct platform_device *pdev)
+ }
+ 
+ static int soc_bind_aux_dev(struct snd_soc_card *card, int num)
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index fabeac164a6c..30264bc592f6 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -678,6 +678,16 @@ static void close_delayed_work(struct work_struct *work)
+ 	mutex_unlock(&rtd->pcm_mutex);
+ }
+ 
++static void codec2codec_close_delayed_work(struct work_struct *work)
 +{
-+	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(edac_dev->dev);
-+	edac_device_free_ctl_info(edac_dev);
-+
-+	return 0;
++	/*
++	 * Currently nothing to do for c2c links
++	 * Since c2c links are internal nodes in the DAPM graph and
++	 * don't interface with the outside world or application layer
++	 * we don't have to do any special handling on close.
++	 */
 +}
 +
-+static const struct of_device_id al_l1_edac_of_match[] = {
-+	{ .compatible = "amazon,al-l1-edac" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
+ /*
+  * Called by ALSA when a PCM substream is closed. Private data can be
+  * freed here. The cpu DAI, codec DAI, machine and components are also
+@@ -3011,6 +3021,12 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 		playback = rtd->dai_link->dpcm_playback;
+ 		capture = rtd->dai_link->dpcm_capture;
+ 	} else {
++		/* Adapt stream for codec2codec links */
++		struct snd_soc_pcm_stream *cpu_capture = rtd->dai_link->params ?
++			&cpu_dai->driver->playback : &cpu_dai->driver->capture;
++		struct snd_soc_pcm_stream *cpu_playback = rtd->dai_link->params ?
++			&cpu_dai->driver->capture : &cpu_dai->driver->playback;
 +
-+static struct platform_driver al_l1_edac_driver = {
-+	.probe = al_l1_edac_probe,
-+	.remove = al_l1_edac_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table = al_l1_edac_of_match,
-+	},
-+};
-+module_platform_driver(al_l1_edac_driver);
+ 		for_each_rtd_codec_dai(rtd, i, codec_dai) {
+ 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_PLAYBACK) &&
+ 			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
+@@ -3019,6 +3035,9 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
+ 				capture = 1;
+ 		}
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Hanna Hawa <hhhawa@amazon.com>");
-+MODULE_DESCRIPTION("Amazon's Annapurna Lab's L1 EDAC Driver");
++		capture = capture && cpu_capture->channels_min;
++		playback = playback && cpu_playback->channels_min;
+ 	}
+ 
+ 	if (rtd->dai_link->playback_only) {
+@@ -3032,7 +3051,13 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 	}
+ 
+ 	/* create the PCM */
+-	if (rtd->dai_link->no_pcm) {
++	if (rtd->dai_link->params) {
++		snprintf(new_name, sizeof(new_name), "codec2codec(%s)",
++			 rtd->dai_link->stream_name);
++
++		ret = snd_pcm_new_internal(rtd->card->snd_card, new_name, num,
++					   playback, capture, &pcm);
++	} else if (rtd->dai_link->no_pcm) {
+ 		snprintf(new_name, sizeof(new_name), "(%s)",
+ 			rtd->dai_link->stream_name);
+ 
+@@ -3059,13 +3084,17 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 	dev_dbg(rtd->card->dev, "ASoC: registered pcm #%d %s\n",num, new_name);
+ 
+ 	/* DAPM dai link stream work */
+-	INIT_DELAYED_WORK(&rtd->delayed_work, close_delayed_work);
++	if (rtd->dai_link->params)
++		INIT_DELAYED_WORK(&rtd->delayed_work,
++				  codec2codec_close_delayed_work);
++	else
++		INIT_DELAYED_WORK(&rtd->delayed_work, close_delayed_work);
+ 
+ 	pcm->nonatomic = rtd->dai_link->nonatomic;
+ 	rtd->pcm = pcm;
+ 	pcm->private_data = rtd;
+ 
+-	if (rtd->dai_link->no_pcm) {
++	if (rtd->dai_link->no_pcm || rtd->dai_link->params) {
+ 		if (playback)
+ 			pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream->private_data = rtd;
+ 		if (capture)
 -- 
-2.17.1
+2.20.1
