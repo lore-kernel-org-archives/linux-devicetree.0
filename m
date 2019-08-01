@@ -1,279 +1,95 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-Date: Thu, 1 Aug 2019 12:42:39 -0700
-Message-ID: <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
- <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
- <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
- <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
- <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
- <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Thu, 1 Aug 2019 12:59:25 -0700
+Message-ID: <6366cb2a-65ea-cb44-f765-f246f3fb3bf9@gmail.com>
+References: <20190731221721.187713-1-saravanak@google.com>
+ <20190801061209.GA3570@kroah.com>
+ <5a1e785d-075e-19a0-7d3d-949e1b65d726@gmail.com>
+ <20190801193248.GA24916@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
+In-Reply-To: <20190801193248.GA24916@kroah.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-
-On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
-> 01.08.2019 20:58, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
->>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
->>>> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> This patch implements save and restore context for peripheral fixed
->>>>>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
->>>>>> peripheral clock ops.
->>>>>>
->>>>>> During system suspend, core power goes off and looses the settings
->>>>>> of the Tegra CAR controller registers.
->>>>>>
->>>>>> So during suspend entry clock and reset state of peripherals is save=
-d
->>>>>> and on resume they are restored to have clocks back to same rate and
->>>>>> state as before suspend.
->>>>>>
->>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>> ---
->>>>>>  =C2=A0 drivers/clk/tegra/clk-periph-fixed.c | 33
->>>>>> ++++++++++++++++++++++++++++++++
->>>>>>  =C2=A0 drivers/clk/tegra/clk-periph-gate.c=C2=A0 | 34
->>>>>> +++++++++++++++++++++++++++++++++
->>>>>>  =C2=A0 drivers/clk/tegra/clk-periph.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 37
->>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>  =C2=A0 drivers/clk/tegra/clk-sdmmc-mux.c=C2=A0=C2=A0=C2=A0 | 28
->>>>>> +++++++++++++++++++++++++++
->>>>>>  =C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++++++
->>>>>>  =C2=A0 5 files changed, 138 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>> index c088e7a280df..21b24530fa00 100644
->>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct
->>>>>> clk_hw *hw,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return (unsigned long)rate;
->>>>>>  =C2=A0 }
->>>>>>  =C2=A0 +static int tegra_clk_periph_fixed_save_context(struct clk_h=
-w *hw)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *fixed =3D
->>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % 32);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 fixed->enb_ctx =3D readl_relaxed(fixed->base +
->>>>>> fixed->regs->enb_reg) &
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 mask;
->>>>>> +=C2=A0=C2=A0=C2=A0 fixed->rst_ctx =3D readl_relaxed(fixed->base +
->>>>>> fixed->regs->rst_reg) &
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 mask;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *h=
-w)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *fixed =3D
->>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % 32);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 if (fixed->enb_ctx)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(mask, fix=
-ed->base + fixed->regs->enb_set_reg);
->>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(mask, fix=
-ed->base + fixed->regs->enb_clr_reg);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 if (!fixed->rst_ctx) {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 udelay(5); /* reset prop=
-ogation delay */
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(mask, fix=
-ed->base + fixed->regs->rst_reg);
->>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>> +}
->>>>>> +
->>>>>>  =C2=A0 static const struct clk_ops tegra_clk_periph_fixed_ops =3D {
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .is_enabled =3D tegra_clk_periph_fix=
-ed_is_enabled,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .enable =3D tegra_clk_periph_fixed_e=
-nable,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable =3D tegra_clk_periph_fixed_=
-disable,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .recalc_rate =3D tegra_clk_periph_fi=
-xed_recalc_rate,
->>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D tegra_clk_periph_fixed_save_co=
-ntext,
->>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D tegra_clk_periph_fixed_rest=
-ore_context,
->>>>>>  =C2=A0 };
->>>>>>  =C2=A0 =C2=A0 struct clk *tegra_clk_register_periph_fixed(const cha=
-r *name,
->>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
->>>>>> b/drivers/clk/tegra/clk-periph-gate.c
->>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
->>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
->>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
->>>>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
->>>>>>  =C2=A0 =C2=A0 #define read_rst(gate) \
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 readl_relaxed(gate->clk_base + (gate=
-->regs->rst_reg))
->>>>>> +#define write_rst_set(val, gate) \
->>>>>> +=C2=A0=C2=A0=C2=A0 writel_relaxed(val, gate->clk_base + (gate->regs=
-->rst_set_reg))
->>>>>>  =C2=A0 #define write_rst_clr(val, gate) \
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_relaxed(val, gate->clk_base +=
- (gate->regs->rst_clr_reg))
->>>>>>  =C2=A0 @@ -110,10 +112,42 @@ static void clk_periph_disable(struct
->>>>>> clk_hw *hw)
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(&periph_ref_l=
-ock, flags);
->>>>>>  =C2=A0 }
->>>>>>  =C2=A0 +static int clk_periph_gate_save_context(struct clk_hw *hw)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *gate =3D to_clk_pe=
-riph_gate(hw);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 gate->clk_state_ctx =3D read_enb(gate) & periph_=
-clk_to_bit(gate);
->>>>>> +=C2=A0=C2=A0=C2=A0 gate->rst_state_ctx =3D read_rst(gate) & periph_=
-clk_to_bit(gate);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *gate =3D to_clk_pe=
-riph_gate(hw);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 if (gate->clk_state_ctx)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 write_enb_set(periph_clk=
-_to_bit(gate), gate);
->>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 write_enb_clr(periph_clk=
-_to_bit(gate), gate);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 udelay(5);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !(gate->flags & TEGRA_PE=
-RIPH_MANUAL_RESET)) {
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (gate->rst_state_ctx)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-write_rst_set(periph_clk_to_bit(gate), gate);
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-write_rst_clr(periph_clk_to_bit(gate), gate);
->>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>> +}
->>>>>> +
->>>>>>  =C2=A0 const struct clk_ops tegra_clk_periph_gate_ops =3D {
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .is_enabled =3D clk_periph_is_enable=
-d,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .enable =3D clk_periph_enable,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .disable =3D clk_periph_disable,
->>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D clk_periph_gate_save_context,
->>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D clk_periph_gate_restore_con=
-text,
->>>>>>  =C2=A0 };
->>>>>>  =C2=A0 =C2=A0 struct clk *tegra_clk_register_periph_gate(const char=
- *name,
->>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
->>>>>> b/drivers/clk/tegra/clk-periph.c
->>>>>> index 58437da25156..06fb62955768 100644
->>>>>> --- a/drivers/clk/tegra/clk-periph.c
->>>>>> +++ b/drivers/clk/tegra/clk-periph.c
->>>>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw *hw)
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gate_ops->disable(gate_hw);
->>>>>>  =C2=A0 }
->>>>>>  =C2=A0 +static int clk_periph_save_context(struct clk_hw *hw)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =3D to_clk_perip=
-h(hw);
->>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =3D periph->gate_=
-ops;
->>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &periph->gate.hw;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE)=
-)
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gate_ops->save_context(g=
-ate_hw);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 periph->parent_ctx =3D clk_periph_get_parent(hw)=
-;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static void clk_periph_restore_context(struct clk_hw *hw)
->>>>>> +{
->>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =3D to_clk_perip=
-h(hw);
->>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =3D periph->gate_=
-ops;
->>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &periph->gate.hw;
->>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *div_ops =3D periph->div_op=
-s;
->>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *div_hw =3D &periph->divider.hw;
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 clk_periph_set_parent(hw, periph->parent_ctx);
->>>>>> +
->>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 div_ops->restore_context=
-(div_hw);
->>>>> Could you please point to where the divider's save_context() happens?
->>>>> Because I can't see it.
->>>> Ah, I now see that there is no need to save the dividers context becau=
-se
->>>> clk itself has enough info that is needed for the context's restoring
->>>> (like I pointed in the review to v6).
+On 8/1/19 12:32 PM, Greg Kroah-Hartman wrote:
+> On Thu, Aug 01, 2019 at 12:28:13PM -0700, Frank Rowand wrote:
+>> Hi Greg,
+>>
+>> On 7/31/19 11:12 PM, Greg Kroah-Hartman wrote:
+>>> On Wed, Jul 31, 2019 at 03:17:13PM -0700, Saravana Kannan wrote:
+>>>> Add device-links to track functional dependencies between devices
+>>>> after they are created (but before they are probed) by looking at
+>>>> their common DT bindings like clocks, interconnects, etc.
 >>>>
->>>> Looks like you could also implement a new clk_hw_get_parent_index()
->>>> generic helper to get the index instead of storing it manually.
->>> clk_periph_get_parent basically invokes existing clk_mux_ops
->>> get_parent() which is then saved in tegra_clk_periph.
+>>>> Having functional dependencies automatically added before the devices
+>>>> are probed, provides the following benefits:
+>>>>
+>>>> - Optimizes device probe order and avoids the useless work of
+>>>>   attempting probes of devices that will not probe successfully
+>>>>   (because their suppliers aren't present or haven't probed yet).
+>>>>
+>>>>   For example, in a commonly available mobile SoC, registering just
+>>>>   one consumer device's driver at an initcall level earlier than the
+>>>>   supplier device's driver causes 11 failed probe attempts before the
+>>>>   consumer device probes successfully. This was with a kernel with all
+>>>>   the drivers statically compiled in. This problem gets a lot worse if
+>>>>   all the drivers are loaded as modules without direct symbol
+>>>>   dependencies.
+>>>>
+>>>> - Supplier devices like clock providers, interconnect providers, etc
+>>>>   need to keep the resources they provide active and at a particular
+>>>>   state(s) during boot up even if their current set of consumers don't
+>>>>   request the resource to be active. This is because the rest of the
+>>>>   consumers might not have probed yet and turning off the resource
+>>>>   before all the consumers have probed could lead to a hang or
+>>>>   undesired user experience.
+>>>>
+>>>>   Some frameworks (Eg: regulator) handle this today by turning off
+>>>>   "unused" resources at late_initcall_sync and hoping all the devices
+>>>>   have probed by then. This is not a valid assumption for systems with
+>>>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>>>>   this due to the lack of a clear signal for when they can turn off
+>>>>   resources. This leads to downstream hacks to handle cases like this
+>>>>   that can easily be solved in the upstream kernel.
+>>>>
+>>>>   By linking devices before they are probed, we give suppliers a clear
+>>>>   count of the number of dependent consumers. Once all of the
+>>>>   consumers are active, the suppliers can turn off the unused
+>>>>   resources without making assumptions about the number of consumers.
+>>>>
+>>>> By default we just add device-links to track "driver presence" (probe
+>>>> succeeded) of the supplier device. If any other functionality provided
+>>>> by device-links are needed, it is left to the consumer/supplier
+>>>> devices to change the link when they probe.
 >>>
->>> All existing drivers are using directly get_parent() from clk_mux
->>> which actually gets index from the register read.
->>>
->>> To have this more generic w.r.t save/restore context point of view,
->>> probably instead of implementing new get_parent_index helper, I think
->>> its better to implement save_context and restore_context to
->>> clk_mux_ops along with creating parent_index field into clk_mux to
->>> cache index during set_parent.
->>>
->>> So we just need to invoke mux_ops save_context and restore_context.
->>>
->> I hope its ok to add save/restore context to clk_mux_ops to be more
->> generic w.r.t save/restore context rather than get_parent_index API.
->> Please confirm if you agree.
-> Sounds like a good idea. I see that there is a 'restoring' helper for
-> the generic clk_gate, seems something similar could be done for the
-> clk_mux. And looks like anyway you'll need to associate the parent clock
-> with the hw index in order to restore the muxing.
+>>> All now queued up in my driver-core-testing branch, and if 0-day is
+>>> happy with this, will move it to my "real" driver-core-next branch in a
+>>> day or so to get included in linux-next.
+>>
+>> I have been slow in getting my review out.
+>>
+>> This patch series is not yet ready for sending to Linus, so if putting
+>> this in linux-next implies that it will be in your next pull request
+>> to Linus, please do not put it in linux-next.
+> 
+> It means that it will be in my pull request for 5.4-rc1, many many
+> waeeks away from now.
 
-by 'restoring' helper for generic clk_gate, are you referring to=20
-clk_gate_restore_context API?
+If you are willing to revert the series before the pull request _if_ I
+have significant review issues in the next couple of days, then I am happy
+to see the patches get exposure in linux-next.
 
-clk_gate_restore_context is API that's any clk drivers can use for=20
-clk_gate operation restore for custom gate clk_ops.
+-Frank
 
-But clk-periph is directly using generic clk_mux ops from clk_mux so I=20
-think we should add .restore_context to clk_mux_ops and then during=20
-clk-periph restore need to invoke mux_ops->restore_context.
+> 
+> thanks,
+> 
+> greg k-h
+> 
