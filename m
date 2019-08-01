@@ -1,14 +1,14 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 3/9] dt-bindings: spi: meson: convert to yaml
-Date: Thu, 1 Aug 2019 08:42:23 -0600
-Message-ID: <CAL_JsqK9ODpXq_VkP4ztW7JAfPNOxpdP1W1duQwaUu0tYNh_Dw@mail.gmail.com>
+Subject: Re: [RFC 6/9] dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
+Date: Thu, 1 Aug 2019 09:07:31 -0600
+Message-ID: <CAL_JsqJbt=rzDrD8+Py0EcGx8ZiaqEupv5Rq+tCMk1ZcxKaOcg@mail.gmail.com>
 References: <20190801135644.12843-1-narmstrong@baylibre.com>
- <20190801135644.12843-4-narmstrong@baylibre.com>
+ <20190801135644.12843-7-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190801135644.12843-4-narmstrong@baylibre.com>
+In-Reply-To: <20190801135644.12843-7-narmstrong@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,193 +19,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>
+Cc: linux-amlogic@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Aug 1, 2019 at 7:56 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 74 +++++++++++++++++++
->  .../bindings/spi/amlogic,meson6-spifc.yaml    | 57 ++++++++++++++
->  .../devicetree/bindings/spi/spi-meson.txt     | 55 --------------
->  3 files changed, 131 insertions(+), 55 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
->  create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
+>  .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 ------
+>  .../bindings/phy/meson-g12a-usb2-phy.yaml     | 67 +++++++++++++++++++
+>  2 files changed, 67 insertions(+), 22 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+> deleted file mode 100644
+> index a6ebc3dea159..000000000000
+> --- a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+> +++ /dev/null
+> @@ -1,22 +0,0 @@
+> -* Amlogic G12A USB2 PHY binding
+> -
+> -Required properties:
+> -- compatible:  Should be "amlogic,meson-g12a-usb2-phy"
+> -- reg:         The base address and length of the registers
+> -- #phys-cells: must be 0 (see phy-bindings.txt in this directory)
+> -- clocks:      a phandle to the clock of this PHY
+> -- clock-names: must be "xtal"
+> -- resets:      a phandle to the reset line of this PHY
+> -- reset-names: must be "phy"
+> -- phy-supply:  see phy-bindings.txt in this directory
+> -
+> -Example:
+> -       usb2_phy0: phy@36000 {
+> -               compatible = "amlogic,g12a-usb2-phy";
+> -               reg = <0x0 0x36000 0x0 0x2000>;
+> -               clocks = <&xtal>;
+> -               clock-names = "xtal";
+> -               resets = <&reset RESET_USB_PHY21>;
+> -               reset-names = "phy";
+> -               #phy-cells = <0>;
+> -       };
+> diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml
 > new file mode 100644
-> index 000000000000..6e2c41c730b5
+> index 000000000000..4cd5ba97d469
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-> @@ -0,0 +1,74 @@
+> +++ b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.yaml
+> @@ -0,0 +1,67 @@
 > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +# Copyright 2019 BayLibre, SAS
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
+> +$id: "http://devicetree.org/schemas/phy/meson-g12a-usb2-phy.yaml#"
+
+For this and the filename, use the compatible string (i.e. add 'amlogic,').
+
 > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: Amlogic Meson SPI Communication Controller
+> +title: Amlogic G12A USB2 PHY
 > +
 > +maintainers:
 > +  - Neil Armstrong <narmstrong@baylibre.com>
 > +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
-> +  communications with dedicated 16 words RX/TX PIO FIFOs.
-> +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +     - description: SPICC controller on Amlogic GX and compatible SoCs
-> +       enum:
-> +       - amlogic,meson-gx-spicc
-> +     - description: SPICC controller on Amlogic AXG and compatible SoCs
-> +       enum:
-> +       - amlogic,meson-axg-spicc
-
-'oneOf' results in vague error messages and can be avoided here. Plus
-I don't think the descriptions add much as I could pretty much
-generate the desc "<block> controller on <vendor> <soc> and compatible
-SoCs" from <vendor>,<soc>-<block>.
-
-Though, if you want to keep the description, do it as a comment:
-
-enum:
-  - amlogic,meson-gx-spicc # SPICC controller on Amlogic GX and compatible SoCs
-  - amlogic,meson-axg-spicc # SPICC controller on Amlogic AXG and
-compatible SoCs
-
-> +
-> +  interrupts:
-> +    maxItems: 1
+> +    enum:
+> +      - amlogic,meson-g12a-usb2-phy
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  resets:
-> +    description: phandle of the internal reset line
-
-Standard property, don't need a description unless there's something
-special about this binding.
-
-> +    maxItems: 1
-> +
 > +  clocks:
 > +    maxItems: 1
+> +    description:
+> +      A phandle to the clock of this PHY
+
+As mentioned elsewhere, this description can be dropped.
+
 > +
 > +  clock-names:
-> +    description: input clock for the baud rate generator
 > +    items:
-> +      - const: core
+> +      - const: xtal
 > +
-
-> +  "#address-cells":
-> +    const: 1
+> +  resets:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to the reset line of this PHY
 > +
-> +  "#size-cells":
+> +  reset-names:
+> +    items:
+> +      - const: phy
+> +
+> +  "#phy-cells":
 > +    const: 0
-
-These 2 can be dropped as they are covered by spi-controller.yaml.
-
+> +
+> +  phy-supply:
+> +     maxItems: 1
+> +     description:
+> +       Phandle to a regulator that provides power to the PHY. This
+> +       regulator will be managed during the PHY power on/off sequence.
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - interrupts
 > +  - clocks
 > +  - clock-names
-> +  - "#address-cells"
-> +  - "#size-cells"
+> +  - resets
+> +  - reset-names
+> +  - "#phy-cells"
+
+phy-supply was required in the old doc though the example disagrees.
+If dropping required is desired, just mention so in the commit
+message.
+
 > +
 > +examples:
 > +  - |
-> +    spi@c1108d80 {
-> +          compatible = "amlogic,meson-gx-spicc";
-> +          reg = <0xc1108d80 0x80>;
-> +          interrupts = <112>;
-> +          clocks = <&clk81>;
-> +          clock-names = "core";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-
-Probably should add a slave node. Once I figure out how to always
-build the examples with W=12, the lack of a chlid node will throw a
-dtc warning.
-
+> +    phy@36000 {
+> +          compatible = "amlogic,meson-g12a-usb2-phy";
+> +          reg = <0x36000 0x2000>;
+> +          clocks = <&xtal>;
+> +          clock-names = "xtal";
+> +          resets = <&phy_reset>;
+> +          reset-names = "phy";
+> +          #phy-cells = <0>;
 > +    };
-> +
-> diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
-> new file mode 100644
-> index 000000000000..5f34aed1ad40
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
-
-Some of the same comments apply to this one.
-
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/amlogic,meson6-spifc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson SPI Flash Controller
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  The Meson SPIFC is a controller optimized for communication with SPI
-> +  NOR memories, without DMA support and a 64-byte unified transmit /
-> +  receive buffer.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +     - enum:
-> +       - amlogic,meson6-spifc
-> +     - enum:
-> +       - amlogic,meson-gxbb-spifc
-
-Drop the oneOf. A single enum is sufficient.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    spi@c1108c80 {
-> +          compatible = "amlogic,meson6-spifc";
-> +          reg = <0xc1108c80 0x80>;
-> +          clocks = <&clk81>;
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +    };
-> +
+> --
+> 2.22.0
+>
