@@ -1,566 +1,311 @@
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: [PATCH v1 2/2] net: npcm: add NPCM7xx EMC 10/100 Ethernet driver
-Date: Thu, 1 Aug 2019 13:25:20 -0400
-Message-ID: <CA+FuTSd89gJBX-zaZTzgNxpqtR_MvVfMf=6hdRe5+1MPRszw8g@mail.gmail.com>
-References: <20190801072611.27935-1-avifishman70@gmail.com> <20190801072611.27935-3-avifishman70@gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 0/4] new driver for TI eQEP
+Date: Thu, 1 Aug 2019 12:37:56 -0500
+Message-ID: <1b913919-beb9-34e7-d915-6bcc40eeee1d@lechnology.com>
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190725124037.GA4802@icarus>
+ <4616508c-d753-586d-0d3b-5a003e86f582@lechnology.com>
+ <20190730044536.GA5063@icarus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190801072611.27935-3-avifishman70@gmail.com>
+In-Reply-To: <20190730044536.GA5063@icarus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Avi Fishman <avifishman70@gmail.com>
-Cc: Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, benjaminfair@google.com, David Miller <davem@davemloft.net>, robh+dt@kernel.org, mark.rutland@arm.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, tmaimon77@gmail.com, tali.perry1@gmail.com, openbmc@lists.ozlabs.org, Network Development <netdev@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, tglx@linutronix.de
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 3:28 AM Avi Fishman <avifishman70@gmail.com> wrote:
->
-> EMC Ethernet Media Access Controller supports 10/100 Mbps and
-> RMII.
-> This driver has been working on Nuvoton BMC NPCM7xx.
->
-> Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+On 7/29/19 11:45 PM, William Breathitt Gray wrote:
+> On Thu, Jul 25, 2019 at 05:52:21PM -0500, David Lechner wrote:
+>> On 7/25/19 7:40 AM, William Breathitt Gray wrote:
+>>> On Mon, Jul 22, 2019 at 10:45:34AM -0500, David Lechner wrote:
+>>>> This series adds device tree bindings and a new counter driver for the Texas
+>>>> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
+>>>>
+>>>> As mentioned in one of the commit messages, to start with, the driver only
+>>>> supports reading the current counter value and setting the min/max values.
+>>>> Other features can be added on an as-needed basis.
+>>>>
+>>>> The only other feature I am interested in is adding is getting time data in
+>>>> order to calculate the rotational speed of a motor. However, there probably
+>>>> needs to be a higher level discussion of how this can fit into the counter
+>>>> subsystem in general first.
+>>>
+>>> I believe exposing some sort of time data has merit. Quadrature counter
+>>> devices in particular are commonly used for position tracking of
+>>> automation systems, and such systems would benefit from velocity/speed
+>>> information. So let's try to introduce that sort of functionality in this
+>>> driver if possible.
+>>>
+>>> First, let's discuss your specific use case and requirements, and hopefully we
+>>> can generalize it enough to be of use for future drivers. From your description,
+>>> it sounds like you're attaching some sort of rotary encoder to the eQEP device.
+>>> Is that correct? What sort of time data are you hoping to use; does the eQEP
+>>> device provide a clock value, or would you be grabbing a timestamp from the
+>>> system?
+>>
+>> My use case is robotics using LEGO MINDSTORMS. More specifically, I am using
+>> motors that have a cheap optical rotary encoder (plastic wheel and infrared
+>> LED/detectors) that give 360 counts per 1 rotation of the motor shaft. One count
+>> is defined as the rising edge or falling edge of the A signal. We are looking at
+>> anywhere from 0 to around 2000 counts per second. We use the speed as feedback in
+>> a control algorithm to drive the motor at a constant speed. The control loop
+>> updates on the order of 1 to 10 ms.
+>>
+>> Because the encoder resolution and speeds are relatively low, we are currently
+>> logging a timestamp for each count. If no count occurs for 50ms, then we log the
+>> same count again with a new timestamp (otherwise we would never see 0 speed). To
+>> get the actual speed, we find the first timestamp > 20 ms before the current
+>> timestamp then compute the speed as the change in position divided by the change
+>> in time between these two samples. This give a fairly accurate speed across most
+>> of the range, but does get a bit noisy once we get below 100 counts per second.
+>> It also means that we need a ring buffer that holds about 50 samples.
+>>
+>> The timestamp itself comes from the eQEP, not the system. There are latching
+>> registers to ensure that the timestamp read is from exactly the moment when
+>> the count register was read.
+> 
+> So if I understand correctly, there are two registers you're reading: a
+> count register and a timestamp register. The count register is updated
+> by the rotation of the motor shaft, while the timestamp register is
+> updated by reading the count register (thus logging the time associated
+> with the read count value).
 
+That is correct.
 
+> 
+>>> I'm not sure yet if it would make sense to expose rotational speed directly as
+>>> an attribute. If we were to expose just the count value and timestamp since the
+>>> last read, that should be enough for a user to compute the delta and derive
+>>> speed. I'll think more about this since some devices may simplify that case if
+>>> the hardware is able to compute the speed for us.
+>>>
+>>
+>> I agree that it probably doesn't make sense to expect drivers to compute the
+>> speed. There isn't really a general way to do that works for an arbitrary
+>> speed. For example at high speeds, it is better to just look at the change
+>> in counts over a fixed interval rather than triggering a timestamp based on
+>> a certain number of counts.
+> 
+> This is a good point. Depending on the resolution the user cares about,
+> they may be more interested in the speed over a short time interval
+> versus a long time interval. It doesn't seem practical to have the driver
+> try to handle all possible speed calculations when the user can decide
+> themselves how best to use the data.
+> 
+>> I also don't think having a timestamp sysfs attribute would be very useful.
+>> To make it work at all, I think it would have to be implemented such that
+>> it returns the timestamp for the count that was most recently read via sysfs.
+>> And it would require 4 syscalls (2 seeks and 2 reads) to get a single count/
+>> timestamp pair in a control loop. On a 300MHz ARM9 processor, this is not
+>> a negligible amount of time.
+> 
+> This is a concern I've had as well. The sysfs interface is useful in
+> that it provides an intuitive and human-friendly way to expose data
+> about devices. But as you note, there is considerable overhead in the
+> amount of syscalls we have to make to interact with multiple attributes.
+> 
+> One solution that may work is providing a character device interface in
+> addition to the sysfs interface. I believe that should reduce the
+> syscall overhead since a user can pass in a data structure with a
+> configuration defining what data/actions they want, and receive back
+> all data in a single syscall.
 
-> +/* global setting for driver */
-> +#define RX_QUEUE_LEN   128
-> +#define TX_QUEUE_LEN   64
-> +#define MAX_RBUFF_SZ   0x600
-> +#define MAX_TBUFF_SZ   0x600
-> +#define TX_TIMEOUT     50
-> +#define DELAY          1000
-> +#define CAM0           0x0
-> +#define RX_POLL_SIZE    16
-> +
-> +#ifdef CONFIG_VLAN_8021Q
-> +#define IS_VLAN 1
-> +#else
-> +#define IS_VLAN 0
-> +#endif
-> +
-> +#define MAX_PACKET_SIZE           (1514 + (IS_VLAN * 4))
+Just toying with the idea here, but I've been thinking that it might
+work well to be able to mmap a char device to access a ring buffer.
+Then there should basically be no overhead at all from getting information
+from the kernel to userspace.
 
-1514 -> ETH_FRAME_LEN
+> 
+> I think concern over latency was one of the reasons the GPIO subsystem
+> gained a character device interface as well. It's an addition to the
+> Counter subsystem that is worth considering, but the possible downsides
+> to such an interface should also be investigated.
+>   
+>> I noticed that several of the other counter drivers also register an IIO
+>> device. So this got me thinking that perhaps the counter subsystem should
+>> just be for configuring a counter device an then the IIO subsystem should
+>> be used for triggers and ring buffers.
+>>
+>> For the general case a counter device could have two possible triggers.
+>> One that triggers an interrupt after X counts and another that triggers
+>> with a period of T nanoseconds (or microseconds). Both triggers would add
+>> a count/timestamp pair to an IIO ring buffer.
+>>
+>> To fully reproduce our current methodology the first trigger would actually
+>> need two configurable settings, the count X that triggers every X counts and
+>> a watchdog time setting (using terminology from eQEP docs) that will also
+>> trigger if and only if the count does not change before the time has elapsed.
+>> Note, this is different from the other proposed time based trigger which
+>> would cause a trigger interrupt at a fixed period regardless of whether
+>> the count changed or not.
+> 
+> The counter drivers in the kernel right now are registering IIO devices
+> in order to keep the preexisting (but now deprecated) IIO Counter
+> interface working for these devices -- some users may be using this
+> older interface so we don't want to remove it cold turkey. Regardless,
+> there's nothing the prevents incorporating the IIO interface with your
+> Counter drivers; in fact, in some circumstances it's better that you do
+> just that.
+> 
+> The key idea to recognize is how the Counter subsystem differs from the
+> IIO subsystem on a conceptual level: the IIO subsystem provides an
+> interface for your device by describing it on a hardware level, whereas
+> the Counter subsystem provides an interface for your device by
+> describing it on a more abstract level.
+> 
+> What I mean is that every interface interaction in the Counter subsystem
+> relates to the abstract concept of an ideal "counter device" (Counts,
+> Synapses, Signals); if a device functionality or data does not relate
+> directly to those ideal counter device components, then the Counter
+> subsystem isn't that right interface for it.
+> 
+> For example, it makes sense to have an "enable" attribute or "present"
+> attribute, because these functionalities/data are directly related to
+> the Count, Synapse, and Signal components conceptually. However, in the
+> Counter subsystem you will likely not see something like the IIO
+> "in_voltageY_supply_raw" attribute -- not because that data is not
+> useful to know about for the operation of the counter device hardware,
+> but because it is outside the scope of the Counter subsystem paradigm
+> (i.e. it does not directly related to Counts, Synapses, or Signals).
+> As such, this would be a case where the counter driver should register
+> both a Counter device and IIO device, one to handle the counter device
+> on an abstract level while the other provides an interface for control
+> of the more specific hardware details.
 
-4 -> VLAN_HLEN
+Makes sense. I that case, I don't see a need for an IIO device for the
+eQEP.
 
-Does this device support stacked VLAN?
+> 
+>> ---
+>>
+>> Thinking more generally though, I think what I would propose is adding a new
+>> component to the existing list of Count, Signal and Synapse. The new component
+>> could be called Event. Event would be more general than the trigger conditions
+>> I have just discussed. In addition to those two, it could be any event
+>> generated by the hardware, such as an error condition or a change in direction.
+>>
+>> Drivers could register an arbitrary number of events for each Count, so we
+>> would have /sys/bus/counter/devices/counterX/eventY/*. There should be a few
+>> standard attributes, like "name" and "enable". Configurable events would need
+>> ext attributes to allow configuration.
+>>
+>> However, I see that there are already preset and error_noise "events" for
+>> count objects, so maybe we don't do the eventY thing and keep it flatter (or
+>> is the counter subsystem still considered in "staging" where breaking ABI
+>> changes could be made?).
+> 
+> The components for handling events already exist in the Counter
+> interface paradigm: Signals and Synapses. Although, the Counter
+> subsystem is currently lacking the implementation (I still need to code
+> in support for interrupts and such), the paradigm itself supports the
+> concept of events and triggers.
+> 
+> Recall that the Counter subsystem represents hardware via the
+> abstraction of an idealized "counter device". This is important to
+> understand because it means that Signals are not necessarily limited to
+> the physical wires of the hardware. To summarize the Counter interface
+> paradigm:
+> 
+>      * A Signal is a stream of data to be evaluated.
+>      * A Synapse is a trigger condition based on the evaluation of the
+>        data streams (i.e. the Signals).
+>      * A Count is the accumulation of the effects of Synapses (i.e. the
+>        triggers).
+> 
+> As such, in order to represent an event, you would add in a Signal to
+> represent the stream of device events, and a Synapse defining the
+> specific event that will trigger the action. I'll give an example in
+> order to demonstrate what I mean.
+> 
+> A simple clock can be conceptualize as a proper counter device: an
+> oscillation is a Signal, a rising edge from that oscillation line can be
+> the Synapse, and the current clock value is the Count.
+> 
+>                  Count                Synapse          Signal
+>                  -----                -------          ------
+>          +---------------------+
+>          | Data: Clock ticks   |    Rising Edge     _____________
+>          | Function: Increase  |  <-------------   / Oscillation \
+>          |                     |                  _________________
+>          +---------------------+
+> 
+> Now, in order to represent your timestamping clock we need two Signals:
+> a simple clock and an event stream. The simple clock is the source of
+> the current clock ticks we will store, while the event stream provides
+> the rotation count register read notification that will trigger the
+> timestamp.
+> 
+>                     Count                       Synapse      Signal
+>                     -----                       -------      ------
+>          +-------------------------------+
+>          | Data: Timestamp               |       None        _______
+>          | Function: Current clock ticks |  <------------   / Clock \
+>          |                               |                 ___________
+>          |                               |
+>          |                               |    Read event     ________
+>          |                               |  <------------   / Events \
+>          |                               |                 ____________
+>          +-------------------------------+
+> 
+> Note that in this case both Signals either do not exist in or are not
+> exposed by the hardware (maybe the simple clock is exposed, but it's not
+> necessary to be) -- they are meant to be abstract representations of the
+> components of the timestamp clock as an idealized "counter device".
+> 
+> By organizing the timestamp clock in this way, we can control and
+> configure the components using the standard Counter interface: common
+> attributes such as "name", "preset", "enable", etc. can now be exposed
+> to users like every other counter device component.
 
-Is this really the device maximum?
+This way of looking at things makes very much sense. Thanks for the
+detailed explanation.
 
-> +#define MAX_PACKET_SIZE_W_CRC     (MAX_PACKET_SIZE + 4) /* 1518 */
+> 
+> In theory we can sleep on the timestamp count attribute read (or
+> character device equivalent if we go down that route), and be woken when
+> an event triggers updating the timestamp value. However, the current
+> Counter subsystem implementation is lacking the code for this so it
+> needs to be added to the core functionality first.
+> 
+>> When thinking about what events would actually do when enabled though, it
+>> seems like we should be using IIO events and triggers (we have found reading
+>> sysfs attributes to be insufficient performance-wise). It seems like unnecessary
+>> work to reproduce all of this in the counter subsystem. Which makes me wonder if
+>> it would be better to have counter devices just be a different device type (i.e.
+>> different struct device_type for dev->type) in the IIO subsystem instead of
+>> creating a completely new subsystem.
+> 
+> I plan on adding interrupt support for the 104-QUAD-8 counter driver
+> since this device has some useful interrupts on configured threshold
+> conditions and such, so having the ability to handle an event rather
+> than constantly read and loop is something I want to have in the Counter
+> subsystem.
+> 
+> It's possible that I can reuse some code from the IIO subsystem, as
+> Jonathan pointed out, but overall I believe these should be separate
+> subsystems. From the reasons described above, the IIO subsystem and
+> Counter subsystem have different goals and thus different
+> implementations. I don't think that's a bad thing, and we can share code
+> in the few cases where the two may overlap.
+> 
+> Regarding whether to use IIO events and triggers within the TI eQEP
+> counter driver, I think we should wait for a proper Counter subsystem
+> implementation to be added first. My fear is that we'll have a similar
+> situation as what happened with IIO_COUNT, where we'll have to keep a
+> IIO interface present with a newer Counter interface. If adding in event
+> support to the Counter subsystem will take too long, we can add this TI
+> eQEP driver as-is now and later add in the timestamp support.
 
-4 -> ETH_FCS_LEN
+I don't think we need triggers anymore since I now better understand
+what a synapse does.
 
-> +#if defined CONFIG_NPCM7XX_EMC_ETH_DEBUG || defined CONFIG_DEBUG_FS
-> +#define REG_PRINT(reg_name) {t = scnprintf(next, size, "%-10s = %08X\n", \
-> +       #reg_name, readl(ether->reg + (reg_name))); size -= t;  next += t; }
-> +#define DUMP_PRINT(f, x...) {t = scnprintf(next, size, f, ## x); size -= t; \
-> +       next += t; }
-> +
-> +static int npcm7xx_info_dump(char *buf, int count, struct net_device *netdev)
-> +{
-> +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +       struct npcm7xx_txbd *txbd;
-> +       struct npcm7xx_rxbd *rxbd;
-> +       unsigned long flags;
-> +       unsigned int i, cur, txd_offset, rxd_offset;
-> +       char *next = buf;
-> +       unsigned int size = count;
-> +       int t;
-> +       int is_locked = spin_is_locked(&ether->lock);
-> +
-> +       if (!is_locked)
-> +               spin_lock_irqsave(&ether->lock, flags);
-> +
-> +       /* ------basic driver information ---- */
-> +       DUMP_PRINT("NPCM7XX EMC %s driver version: %s\n", netdev->name,
-> +                  DRV_MODULE_VERSION);
-> +
-> +       REG_PRINT(REG_CAMCMR);
-> +       REG_PRINT(REG_CAMEN);
-> +       REG_PRINT(REG_CAMM_BASE);
-> +       REG_PRINT(REG_CAML_BASE);
-> +       REG_PRINT(REG_TXDLSA);
-> +       REG_PRINT(REG_RXDLSA);
-> +       REG_PRINT(REG_MCMDR);
-> +       REG_PRINT(REG_MIID);
-> +       REG_PRINT(REG_MIIDA);
-> +       REG_PRINT(REG_FFTCR);
-> +       REG_PRINT(REG_TSDR);
-> +       REG_PRINT(REG_RSDR);
-> +       REG_PRINT(REG_DMARFC);
-> +       REG_PRINT(REG_MIEN);
-> +       REG_PRINT(REG_MISTA);
-> +       REG_PRINT(REG_MGSTA);
-> +       REG_PRINT(REG_MPCNT);
-> +       writel(0x7FFF, (ether->reg + REG_MPCNT));
-> +       REG_PRINT(REG_MRPC);
-> +       REG_PRINT(REG_MRPCC);
-> +       REG_PRINT(REG_MREPC);
-> +       REG_PRINT(REG_DMARFS);
-> +       REG_PRINT(REG_CTXDSA);
-> +       REG_PRINT(REG_CTXBSA);
-> +       REG_PRINT(REG_CRXDSA);
-> +       REG_PRINT(REG_CRXBSA);
-> +       REG_PRINT(REG_RXFSM);
-> +       REG_PRINT(REG_TXFSM);
-> +       REG_PRINT(REG_FSM0);
-> +       REG_PRINT(REG_FSM1);
-> +       REG_PRINT(REG_DCR);
-> +       REG_PRINT(REG_DMMIR);
-> +       REG_PRINT(REG_BISTR);
-> +       DUMP_PRINT("\n");
-> +
-> +       DUMP_PRINT("netif_queue %s\n\n", netif_queue_stopped(netdev) ?
-> +                                       "Stopped" : "Running");
-> +       if (ether->rdesc)
-> +               DUMP_PRINT("napi is %s\n\n", test_bit(NAPI_STATE_SCHED,
-> +                                                     &ether->napi.state) ?
-> +                                                       "scheduled" :
-> +                                                       "not scheduled");
-> +
-> +       txd_offset = (readl((ether->reg + REG_CTXDSA)) -
-> +                     readl((ether->reg + REG_TXDLSA))) /
-> +               sizeof(struct npcm7xx_txbd);
-> +       DUMP_PRINT("TXD offset    %6d\n", txd_offset);
-> +       DUMP_PRINT("cur_tx        %6d\n", ether->cur_tx);
-> +       DUMP_PRINT("finish_tx     %6d\n", ether->finish_tx);
-> +       DUMP_PRINT("pending_tx    %6d\n", ether->pending_tx);
-> +       /* debug counters */
-> +       DUMP_PRINT("tx_tdu        %6d\n", ether->tx_tdu);
-> +       ether->tx_tdu = 0;
-> +       DUMP_PRINT("tx_tdu_i      %6d\n", ether->tx_tdu_i);
-> +       ether->tx_tdu_i = 0;
-> +       DUMP_PRINT("tx_cp_i       %6d\n", ether->tx_cp_i);
-> +        ether->tx_cp_i = 0;
-> +       DUMP_PRINT("tx_int_count  %6d\n", ether->tx_int_count);
-> +       ether->tx_int_count = 0;
-> +       DUMP_PRINT("count_xmit tx %6d\n", ether->count_xmit);
-> +       ether->count_xmit = 0;
-> +       DUMP_PRINT("count_finish  %6d\n", ether->count_finish);
-> +       ether->count_finish = 0;
-> +       DUMP_PRINT("\n");
-> +
-> +       rxd_offset = (readl((ether->reg + REG_CRXDSA)) -
-> +                     readl((ether->reg + REG_RXDLSA)))
-> +               / sizeof(struct npcm7xx_txbd);
-> +       DUMP_PRINT("RXD offset    %6d\n", rxd_offset);
-> +       DUMP_PRINT("cur_rx        %6d\n", ether->cur_rx);
-> +       DUMP_PRINT("rx_err        %6d\n", ether->rx_err);
-> +       ether->rx_err = 0;
-> +       DUMP_PRINT("rx_berr       %6d\n", ether->rx_berr);
-> +       ether->rx_berr = 0;
-> +       DUMP_PRINT("rx_stuck      %6d\n", ether->rx_stuck);
-> +       ether->rx_stuck = 0;
-> +       DUMP_PRINT("rdu           %6d\n", ether->rdu);
-> +       ether->rdu = 0;
-> +       DUMP_PRINT("rxov rx       %6d\n", ether->rxov);
-> +       ether->rxov = 0;
-> +       /* debug counters */
-> +       DUMP_PRINT("rx_int_count  %6d\n", ether->rx_int_count);
-> +       ether->rx_int_count = 0;
-> +       DUMP_PRINT("rx_err_count  %6d\n", ether->rx_err_count);
-> +       ether->rx_err_count = 0;
+---
 
-Basic counters like tx_packets and rx_errors are probably better
-exported regardless of debug level as net_device_stats. And then don't
-need to be copied in debug output.
-
-Less standard counters like tx interrupt count are probably better
-candidates for ethtool -S.
-
-> +#ifdef CONFIG_NPCM7XX_EMC_ETH_DEBUG
-> +static void npcm7xx_info_print(struct net_device *netdev)
-> +{
-> +       char *emc_dump_buf;
-> +       int count;
-> +       struct npcm7xx_ether *ether;
-> +       struct platform_device *pdev;
-> +       char c;
-> +       char *tmp_buf;
-> +       const size_t print_size = 5 * PAGE_SIZE;
-> +
-> +       ether = netdev_priv(netdev);
-> +       pdev = ether->pdev;
-> +
-> +       emc_dump_buf = kmalloc(print_size, GFP_KERNEL);
-> +       if (!emc_dump_buf)
-> +               return;
-> +
-> +       tmp_buf = emc_dump_buf;
-> +       count = npcm7xx_info_dump(emc_dump_buf, print_size, netdev);
-> +       while (count > 512) {
-> +               c = tmp_buf[512];
-> +               tmp_buf[512] = 0;
-> +               dev_info(&pdev->dev, "%s", tmp_buf);
-> +               tmp_buf += 512;
-> +               tmp_buf[0] = c;
-> +               count -= 512;
-
-Missing closing parenthesis.
-
-Also, why this buffering to printk?
-
-> +static void npcm7xx_write_cam(struct net_device *netdev,
-> +                             unsigned int x, unsigned char *pval)
-> +{
-> +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +       __le32 msw, lsw;
-> +
-> +       msw = (pval[0] << 24) | (pval[1] << 16) | (pval[2] << 8) | pval[3];
-> +
-> +       lsw = (pval[4] << 24) | (pval[5] << 16);
-
-Does __le32 plus this explicit shifting define host endianness? Better
-to keep independent?
-
-> +
-> +       writel(lsw, (ether->reg + REG_CAML_BASE) + x * CAM_ENTRY_SIZE);
-> +       writel(msw, (ether->reg + REG_CAMM_BASE) + x * CAM_ENTRY_SIZE);
-> +       dev_dbg(&ether->pdev->dev,
-> +               "REG_CAML_BASE = 0x%08X REG_CAMM_BASE = 0x%08X", lsw, msw);
-> +}
-> +
-> +static struct sk_buff *get_new_skb(struct net_device *netdev, u32 i)
-> +{
-> +       __le32 buffer;
-> +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +       struct sk_buff *skb = netdev_alloc_skb(netdev,
-> +               roundup(MAX_PACKET_SIZE_W_CRC, 4));
-> +
-> +       if (unlikely(!skb)) {
-> +               if (net_ratelimit())
-> +                       netdev_warn(netdev, "failed to allocate rx skb\n");
-
-can use net_warn_ratelimited (here and elsewhere)
-
-> +               buffer = ether->rx_scratch_dma;
-> +       } else {
-> +               /* Do not unmark the following skb_reserve() Receive Buffer
-> +                * Starting Address must be aligned to 4 bytes and the following
-> +                * line if unmarked will make it align to 2 and this likely will
-> +                * hult the RX and crash the linux
-
-halt?
-
-> +                * skb_reserve(skb, NET_IP_ALIGN);
-> +                */
-> +               skb->dev = netdev;
-> +               buffer = dma_map_single(&netdev->dev,
-> +                                       skb->data,
-> +                                       roundup(MAX_PACKET_SIZE_W_CRC, 4),
-> +                                       DMA_FROM_DEVICE);
-> +               if (unlikely(dma_mapping_error(&netdev->dev, buffer))) {
-> +                       if (net_ratelimit())
-> +                               netdev_err(netdev, "failed to map rx page\n");
-> +                       dev_kfree_skb_any(skb);
-> +                       buffer = ether->rx_scratch_dma;
-> +                       skb = NULL;
-> +               }
-> +       }
-> +       ether->rx_skb[i] = skb;
-> +       ether->rdesc[i].buffer = buffer;
-> +
-> +       return skb;
-> +}
-> +
-
-> +static int npcm7xx_ether_close(struct net_device *netdev)
-> +{
-> +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +
-> +       npcm7xx_return_default_idle(netdev);
-> +
-> +       if (ether->phy_dev)
-> +               phy_stop(ether->phy_dev);
-> +       else if (ether->use_ncsi)
-> +               ncsi_stop_dev(ether->ncsidev);
-> +
-> +       msleep(20);
-> +
-> +       free_irq(ether->txirq, netdev);
-> +       free_irq(ether->rxirq, netdev);
-> +
-> +       netif_stop_queue(netdev);
-> +       napi_disable(&ether->napi);
-
-Cleanup state in reverse of allocation.
-
-> +static int npcm7xx_ether_start_xmit(struct sk_buff *skb, struct net_device *netdev)
-> +{
-> +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +       struct npcm7xx_txbd *txbd;
-> +       unsigned long flags;
-> +
-> +       ether->count_xmit++;
-> +
-> +       /* Insert new buffer */
-> +       txbd = (ether->tdesc + ether->cur_tx);
-> +       txbd->buffer = dma_map_single(&netdev->dev, skb->data, skb->len,
-> +                                     DMA_TO_DEVICE);
-> +       ether->tx_skb[ether->cur_tx]  = skb;
-> +       if (skb->len > MAX_PACKET_SIZE)
-> +               dev_err(&ether->pdev->dev,
-> +                       "skb->len (= %d) > MAX_PACKET_SIZE (= %d)\n",
-> +                       skb->len, MAX_PACKET_SIZE);
-
-> +       txbd->sl = skb->len > MAX_PACKET_SIZE ? MAX_PACKET_SIZE : skb->len;
-
-Check for errors before mapping to device, and drop packet? Probably
-don't want to output truncated packets.
-
-Also rate limit such messages.
-
-> +       dma_wmb();
-> +
-> +       txbd->mode = TX_OWN_DMA | PADDINGMODE | CRCMODE;
-> +
-> +       /* make sure that data is in memory before we trigger TX */
-> +       wmb();
-> +
-> +       /* trigger TX */
-> +       writel(ENSTART, (ether->reg + REG_TSDR));
-> +
-> +       if (++ether->cur_tx >= TX_QUEUE_LEN)
-> +               ether->cur_tx = 0;
-> +
-> +       spin_lock_irqsave(&ether->lock, flags);
-> +       ether->pending_tx++;
-> +
-> +       /* sometimes we miss the tx interrupt due to HW issue, so NAPI will not
-> +        * clean the pending tx, so we clean it also here
-> +        */
-> +       npcm7xx_clean_tx(netdev, true);
-> +
-> +       if (ether->pending_tx >= TX_QUEUE_LEN - 1) {
-> +               __le32 reg_mien;
-> +               unsigned int index_to_wake = ether->cur_tx +
-> +                       ((TX_QUEUE_LEN * 3) / 4);
-> +
-> +               if (index_to_wake >= TX_QUEUE_LEN)
-> +                       index_to_wake -= TX_QUEUE_LEN;
-> +
-> +               txbd = (ether->tdesc + index_to_wake);
-> +               txbd->mode = TX_OWN_DMA | PADDINGMODE | CRCMODE | MACTXINTEN;
-> +
-> +               /* make sure that data is in memory before we trigger TX */
-> +               wmb();
-> +
-> +               /* Clear TDU interrupt */
-> +               writel(MISTA_TDU, (ether->reg + REG_MISTA));
-> +
-> +               /* due to HW issue somtimes, we miss the TX interrupt we just
-
-somtimes -> sometimes
-
-> +                * set (MACTXINTEN), so we also set TDU for Transmit
-> +                * Descriptor Unavailable interrupt
-> +                */
-> +               reg_mien = readl((ether->reg + REG_MIEN));
-> +               if (reg_mien != 0)
-> +                       /* Enable TDU interrupt */
-> +                       writel(reg_mien | ENTDU, (ether->reg + REG_MIEN));
-> +
-> +               ether->tx_tdu++;
-> +               netif_stop_queue(netdev);
-> +       }
-> +
-> +       spin_unlock_irqrestore(&ether->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static irqreturn_t npcm7xx_tx_interrupt(int irq, void *dev_id)
-> +{
-> +       struct npcm7xx_ether *ether;
-> +       struct platform_device *pdev;
-> +       struct net_device *netdev;
-> +       __le32 status;
-> +       unsigned long flags;
-> +
-> +       netdev = dev_id;
-> +       ether = netdev_priv(netdev);
-> +       pdev = ether->pdev;
-> +
-> +       npcm7xx_get_and_clear_int(netdev, &status, 0xFFFF0000);
-> +
-> +       ether->tx_int_count++;
-> +
-> +       if (status & MISTA_EXDEF)
-> +               dev_err(&pdev->dev, "emc defer exceed interrupt status=0x%08X\n"
-> +                       , status);
-> +       else if (status & MISTA_TXBERR) {
-> +               dev_err(&pdev->dev, "emc bus error interrupt status=0x%08X\n",
-> +                       status);
-> +#ifdef CONFIG_NPCM7XX_EMC_ETH_DEBUG
-> +               npcm7xx_info_print(netdev);
-> +#endif
-> +               spin_lock_irqsave(&ether->lock, flags);
-
-irqsave in hard interrupt context?
-
-> +               writel(0, (ether->reg + REG_MIEN)); /* disable any interrupt */
-> +               spin_unlock_irqrestore(&ether->lock, flags);
-> +               ether->need_reset = 1;
-> +       } else if (status & ~(MISTA_TXINTR | MISTA_TXCP | MISTA_TDU))
-> +               dev_err(&pdev->dev, "emc other error interrupt status=0x%08X\n",
-> +                       status);
-> +
-> +    /* if we got MISTA_TXCP | MISTA_TDU remove those interrupt and call napi */
-
-The goal of napi is to keep interrupts disabled until napi completes.
-
-> +       if (status & (MISTA_TXCP | MISTA_TDU) &
-> +           readl((ether->reg + REG_MIEN))) {
-> +               __le32 reg_mien;
-> +
-> +               spin_lock_irqsave(&ether->lock, flags);
-> +               reg_mien = readl((ether->reg + REG_MIEN));
-> +               if (reg_mien & ENTDU)
-> +                       /* Disable TDU interrupt */
-> +                       writel(reg_mien & (~ENTDU), (ether->reg + REG_MIEN));
-> +
-> +               spin_unlock_irqrestore(&ether->lock, flags);
-> +
-> +               if (status & MISTA_TXCP)
-> +                       ether->tx_cp_i++;
-> +               if (status & MISTA_TDU)
-> +                       ether->tx_tdu_i++;
-> +       } else {
-> +               dev_dbg(&pdev->dev, "status=0x%08X\n", status);
-> +       }
-> +
-> +       napi_schedule(&ether->napi);
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t npcm7xx_rx_interrupt(int irq, void *dev_id)
-> +{
-> +       struct net_device *netdev = (struct net_device *)dev_id;
-> +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +       struct platform_device *pdev = ether->pdev;
-> +       __le32 status;
-> +       unsigned long flags;
-> +       unsigned int any_err = 0;
-> +       __le32 rxfsm;
-> +
-> +       npcm7xx_get_and_clear_int(netdev, &status, 0xFFFF);
-
-Same here
-
-> +static int npcm7xx_poll(struct napi_struct *napi, int budget)
-> +{
-> +       struct npcm7xx_ether *ether =
-> +               container_of(napi, struct npcm7xx_ether, napi);
-> +       struct npcm7xx_rxbd *rxbd;
-> +       struct net_device *netdev = ether->netdev;
-> +       struct platform_device *pdev = ether->pdev;
-> +       struct sk_buff *s;
-> +       unsigned int length;
-> +       __le32 status;
-> +       unsigned long flags;
-> +       int rx_cnt = 0;
-> +       int complete = 0;
-> +       unsigned int rx_offset = (readl((ether->reg + REG_CRXDSA)) -
-> +                                 ether->start_rx_ptr) /
-> +                               sizeof(struct npcm7xx_txbd);
-> +       unsigned int local_count = (rx_offset >= ether->cur_rx) ?
-> +               rx_offset - ether->cur_rx : rx_offset +
-> +               RX_QUEUE_LEN - ether->cur_rx;
-> +
-> +       if (local_count > ether->max_waiting_rx)
-> +               ether->max_waiting_rx = local_count;
-> +
-> +       if (local_count > (4 * RX_POLL_SIZE))
-> +               /* we are porbably in a storm of short packets and we don't
-
-porbably - probably
-
-> +                * want to get into RDU since short packets in RDU cause
-> +                * many RXOV which may cause EMC halt, so we filter out all
-> +                * coming packets
-> +                */
-> +               writel(0, (ether->reg + REG_CAMCMR));
-> +
-> +       if (local_count <= budget)
-> +               /* we can restore accepting of packets */
-> +               writel(ether->camcmr, (ether->reg + REG_CAMCMR));
-> +
-> +       spin_lock_irqsave(&ether->lock, flags);
-> +       npcm7xx_clean_tx(netdev, false);
-> +       spin_unlock_irqrestore(&ether->lock, flags);
-> +
-> +       rxbd = (ether->rdesc + ether->cur_rx);
-> +
-> +       while (rx_cnt < budget) {
-> +               status = rxbd->sl;
-> +               if ((status & RX_OWN_DMA) == RX_OWN_DMA) {
-> +                       complete = 1;
-> +                       break;
-> +               }
-> +               /* for debug puposes we save the previous value */
-
-puposes -> purposes
-
-> +               rxbd->reserved = status;
-> +               s = ether->rx_skb[ether->cur_rx];
-> +               length = status & 0xFFFF;
-> +
-> +               /* If VLAN is not supporte RXDS_PTLE (packet too long) is also
-
-supporte -> supported (stopping pointing out typos after this).
-
-> +static const struct net_device_ops npcm7xx_ether_netdev_ops = {
-> +       .ndo_open               = npcm7xx_ether_open,
-> +       .ndo_stop               = npcm7xx_ether_close,
-> +       .ndo_start_xmit         = npcm7xx_ether_start_xmit,
-> +       .ndo_get_stats          = npcm7xx_ether_stats,
-> +       .ndo_set_rx_mode        = npcm7xx_ether_set_rx_mode,
-> +       .ndo_set_mac_address    = npcm7xx_set_mac_address,
-> +       .ndo_do_ioctl           = npcm7xx_ether_ioctl,
-> +       .ndo_validate_addr      = eth_validate_addr,
-> +       .ndo_change_mtu         = eth_change_mtu,
-
-This is marked as deprecated. Also in light of the hardcoded
-MAX_PACKET_SIZE, probably want to set dev->max_mtu.
-
-> +static int npcm7xx_ether_probe(struct platform_device *pdev)
-> +{
-> +       struct npcm7xx_ether *ether;
-> +       struct net_device *netdev;
-> +       int error;
-> +
-> +       struct clk *emc_clk = NULL;
-> +       struct device_node *np = pdev->dev.of_node;
-> +
-> +       pdev->id = of_alias_get_id(np, "ethernet");
-> +       if (pdev->id < 0)
-> +               pdev->id = 0;
-> +
-> +       emc_clk = devm_clk_get(&pdev->dev, NULL);
-> +
-> +       if (IS_ERR(emc_clk))
-> +               return PTR_ERR(emc_clk);
-> +
-> +       /* Enable Clock */
-> +       clk_prepare_enable(emc_clk);
-> +
-> +       error = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> +       if (error)
-> +               return -ENODEV;
-> +
-> +       netdev = alloc_etherdev(sizeof(struct npcm7xx_ether));
-> +       if (!netdev)
-> +               return -ENOMEM;
-> +
-> +       ether = netdev_priv(netdev);
-> +
-> +       ether->reset = devm_reset_control_get(&pdev->dev, NULL);
-> +       if (IS_ERR(ether->reset))
-> +               return PTR_ERR(ether->reset);
-
-Memory leak on error path
-
-Also missing netif_napi_del in npcm7xx_ether_remove?
+In summary, this has been a very helpful discussion. Back the the patch
+series I have submitted, I think it still makes sense to merge it now
+as-is (barring any serious issues) and the additional functionality we
+have been discussing can be added in the future as the framework for it
+is developed.
