@@ -1,55 +1,105 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v1 2/2] net: npcm: add NPCM7xx EMC 10/100 Ethernet
- driver
-Date: Thu, 01 Aug 2019 12:27:45 -0400 (EDT)
-Message-ID: <20190801.122745.9301893283319822.davem@davemloft.net>
-References: <20190801072611.27935-1-avifishman70@gmail.com>
-        <20190801072611.27935-3-avifishman70@gmail.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH 5/8] arm64: use ZONE_DMA on DMA addressing limited
+ devices
+Date: Thu, 01 Aug 2019 18:40:50 +0200
+Message-ID: <4027201b6128b3f2b0ab941dc473ab143da64be2.camel@suse.de>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
+         <20190731154752.16557-6-nsaenzjulienne@suse.de>
+         <20190731170742.GC17773@arrakis.emea.arm.com>
+         <d8b4a7cb9c06824ca88a0602a5bf38b6324b43c0.camel@suse.de>
+         <e35dd4a5-281b-d281-59c9-3fc7108eb8be@arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-qAJVJtco/gH4l0Ax6g8O"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190801072611.27935-3-avifishman70@gmail.com>
+In-Reply-To: <e35dd4a5-281b-d281-59c9-3fc7108eb8be@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: avifishman70@gmail.com
-Cc: venture@google.com, yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, tmaimon77@gmail.com, tali.perry1@gmail.com, openbmc@lists.ozlabs.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+To: Robin Murphy <robin.murphy@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: phill@raspberryi.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux-mm@kvack.org, marc.zyngier@arm.com, Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, eric@anholt.net, iommu@lists.linux-foundation.org, robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org, mbrugger@suse.com, akpm@linux-foundation.org, m.szyprowski@samsung.com, frowand.list@gmail.com, hch@lst.de, linux-arm-kernel@lists.infradead.org, wahrenst@gmx.net
 List-Id: devicetree@vger.kernel.org
 
-From: Avi Fishman <avifishman70@gmail.com>
-Date: Thu,  1 Aug 2019 10:26:11 +0300
 
-> +#Eternet 10/100 EMC
+--=-qAJVJtco/gH4l0Ax6g8O
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-"Ethernet"
+On Thu, 2019-08-01 at 17:07 +0100, Robin Murphy wrote:
+> On 2019-08-01 4:44 pm, Nicolas Saenz Julienne wrote:
+> > On Wed, 2019-07-31 at 18:07 +0100, Catalin Marinas wrote:
+> > > On Wed, Jul 31, 2019 at 05:47:48PM +0200, Nicolas Saenz Julienne wrot=
+e:
+> > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > > > index 1c4ffabbe1cb..f5279ef85756 100644
+> > > > --- a/arch/arm64/mm/init.c
+> > > > +++ b/arch/arm64/mm/init.c
+> > > > @@ -50,6 +50,13 @@
+> > > >   s64 memstart_addr __ro_after_init =3D -1;
+> > > >   EXPORT_SYMBOL(memstart_addr);
+> > > >  =20
+> > > > +/*
+> > > > + * We might create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA is nee=
+ded
+> > > > if
+> > > > there
+> > > > + * are periferals unable to address the first naturally aligned 4G=
+B of
+> > > > ram.
+> > > > + * ZONE_DMA32 will be expanded to cover the rest of that memory. I=
+f
+> > > > such
+> > > > + * limitations doesn't exist only ZONE_DMA32 is created.
+> > > > + */
+> > >=20
+> > > Shouldn't we instead only create ZONE_DMA to cover the whole 32-bit
+> > > range and leave ZONE_DMA32 empty? Can__GFP_DMA allocations fall back
+> > > onto ZONE_DMA32?
+> >=20
+> > Hi Catalin, thanks for the review.
+> >=20
+> > You're right, the GFP_DMA page allocation will fail with a nasty dmesg =
+error
+> > if
+> > ZONE_DMA is configured but empty. Unsurprisingly the opposite situation=
+ is
+> > fine
+> > (GFP_DMA32 with an empty ZONE_DMA32).
+>=20
+> Was that tested on something other than RPi4 with more than 4GB of RAM?=
+=20
+> (i.e. with a non-empty ZONE_NORMAL either way)
 
-> +#ifdef CONFIG_NPCM7XX_EMC_ETH_DEBUG
-> +#define DEBUG
-> +#endif
+No, all I did is play around with RPi4's memory size (1 GB vs 4 GB).
 
-Please don't control the DEBUG define in this way.
+I'll see If I can get access to a dts based board with more than 4 GB, If n=
+ot
+I'll try to fake it. It's not ideal but I can set the limit on 3 GB and hav=
+e
+the 3 areas created (with and witouth an empty ZONE_DMA32).
 
-> +#if defined CONFIG_NPCM7XX_EMC_ETH_DEBUG || defined CONFIG_DEBUG_FS
-> +#define REG_PRINT(reg_name) {t = scnprintf(next, size, "%-10s = %08X\n", \
-> +	#reg_name, readl(ether->reg + (reg_name))); size -= t;	next += t; }
-> +#define DUMP_PRINT(f, x...) {t = scnprintf(next, size, f, ## x); size -= t; \
-> +	next += t; }
+On top of that, now that you ask, I realise I neglected all the ACPI based
+servers. I have access to some so I'll make sure I test everything on them =
+too
+for the next series.
 
-Really, get rid of this custom debugging infrastructure and just use
-generic facilities the kernel has for this, as designed.
+Regards,
+Nicolas
 
-> +static int npcm7xx_info_dump(char *buf, int count, struct net_device *netdev)
-> +{
-> +	struct npcm7xx_ether *ether = netdev_priv(netdev);
-> +	struct npcm7xx_txbd *txbd;
-> +	struct npcm7xx_rxbd *rxbd;
-> +	unsigned long flags;
-> +	unsigned int i, cur, txd_offset, rxd_offset;
-> +	char *next = buf;
-> +	unsigned int size = count;
-> +	int t;
-> +	int is_locked = spin_is_locked(&ether->lock);
 
-Reverse christmas tree (longest to shortest) ordering for local variables
-please.
+--=-qAJVJtco/gH4l0Ax6g8O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Audit your entire submission for this problem.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1DFhIACgkQlfZmHno8
+x/5YnAf/aih3gNCdpPnk9CDn+WHuChefMegomFiKPy7KLWGYmB9OrtzlXlYit3VU
+z2zffpz7+B+tFBZWLyxyQfJ8sT8uogFFJR+HNsvucEC2z4cDMksEkCgYQRHcv5iq
+4CDSPUrd5zuESxZjq3ne7sLGx0G41aVs7o+iKAaUls/WAhq7MbYiq8B/r9HPnS1/
+qAxsHlnX0PASFIN3BCnr+1VSy+xbwpFNSNVfqLYtWRQZvI8ww3Epx/AbWcTKy3YC
+3YbXITPMlA4Mf+0ROrmU4sf0dj/mdQkC6SYqPjTMqVYyzON4rJ/MvOChQDmEGPs6
+WiNr9ZnC1GXA4QfwFXcRrfK85+Y0vw==
+=e240
+-----END PGP SIGNATURE-----
+
+--=-qAJVJtco/gH4l0Ax6g8O--
