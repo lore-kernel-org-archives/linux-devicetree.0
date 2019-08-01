@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v4 1/4] dt-bindings: net: phy: Add subnode for LED configuration
-Date: Thu,  1 Aug 2019 12:07:56 -0700
-Message-ID: <20190801190759.28201-2-mka@chromium.org>
+Subject: [PATCH v4 4/4] net: phy: realtek: configure RTL8211E LEDs
+Date: Thu,  1 Aug 2019 12:07:59 -0700
+Message-ID: <20190801190759.28201-5-mka@chromium.org>
 References: <20190801190759.28201-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,88 +12,181 @@ To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The LED behavior of some Ethernet PHYs is configurable. Add an
-optional 'leds' subnode with a child node for each LED to be
-configured. The binding aims to be compatible with the common
-LED binding (see devicetree/bindings/leds/common.txt).
+Configure the RTL8211E LEDs behavior when the device tree property
+'realtek,led-modes' is specified.
 
-A LED can be configured to be 'on' when a link with a certain speed
-is active, or to blink on RX/TX activity. For the configuration to
-be effective it needs to be supported by the hardware and the
-corresponding PHY driver.
-
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v4:
-- patch added to the series
+- use the generic PHY LED binding
+- keep default/current configuration if none is specified
+- added rtl8211e_disable_eee_led_mode()
+  - was previously in separate patch, however since we always want to
+    disable EEE LED mode when a LED configuration is specified it makes
+    sense to just add the function here.
+- don't call phy_restore_page() in rtl8211e_config_leds() if
+  selection of the extended page failed.
+- use phydev_warn() instead of phydev_err() if LED configuration
+  fails since we don't bail out
+- use hex number to specify page for consistency
+- add hex number to comment about ext page 44 to facilitate searching
 ---
- .../devicetree/bindings/net/ethernet-phy.yaml | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/net/phy/realtek.c | 121 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 120 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-index f70f18ff821f..81c5aacc89a5 100644
---- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-@@ -153,6 +153,38 @@ properties:
-       Delay after the reset was deasserted in microseconds. If
-       this property is missing the delay will be skipped.
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index e09d3b0da2c7..46e3d77d41b6 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -9,8 +9,11 @@
+  * Copyright (c) 2004 Freescale Semiconductor, Inc.
+  */
+ #include <linux/bitops.h>
+-#include <linux/phy.h>
++#include <linux/bits.h>
+ #include <linux/module.h>
++#include <linux/phy.h>
++
++#define RTL821x_NUM_LEDS			3
  
-+patternProperties:
-+  "^leds$":
-+    type: object
-+    description:
-+      Subnode with configuration of the PHY LEDs.
-+
-+    patternProperties:
-+      "^led@[0-9]+$":
-+        type: object
-+        description:
-+          Subnode with the configuration of a single PHY LED.
-+
-+    properties:
-+      reg:
-+        description:
-+          The ID number of the LED, typically corresponds to a hardware ID.
-+        $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+      linux,default-trigger:
-+        description:
-+          This parameter, if present, is a string specifying the trigger
-+          assigned to the LED. Supported triggers are:
-+            "phy_link_10m_active" - LED will be on when a 10Mb/s link is active
-+            "phy_link_100m_active" - LED will be on when a 100Mb/s link is active
-+            "phy_link_1g_active" - LED will be on when a 1Gb/s link is active
-+            "phy_link_10g_active" - LED will be on when a 10Gb/s link is active
-+            "phy_activity" - LED will blink when data is received or transmitted
-+        $ref: "/schemas/types.yaml#/definitions/string"
-+
-+    required:
-+      - reg
-+
- required:
-   - reg
+ #define RTL821x_PHYSR				0x11
+ #define RTL821x_PHYSR_DUPLEX			BIT(13)
+@@ -26,6 +29,19 @@
+ #define RTL821x_EXT_PAGE_SELECT			0x1e
+ #define RTL821x_PAGE_SELECT			0x1f
  
-@@ -173,5 +205,20 @@ examples:
-             reset-gpios = <&gpio1 4 1>;
-             reset-assert-us = <1000>;
-             reset-deassert-us = <2000>;
++/* RTL8211E page 5 */
++#define RTL8211E_EEE_LED_MODE1			0x05
++#define RTL8211E_EEE_LED_MODE2			0x06
 +
-+            leds {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
++/* RTL8211E extension page 44 (0x2c) */
++#define RTL8211E_LACR				0x1a
++#define RLT8211E_LACR_LEDACTCTRL_SHIFT		4
++#define RLT8211E_LACR_LEDACTCTRL_MASK		GENMASK(6, 4)
++#define RTL8211E_LCR				0x1c
++#define RTL8211E_LCR_LEDCTRL_MASK		(GENMASK(2, 0) | \
++						 GENMASK(6, 4) | \
++						 GENMASK(10, 8))
 +
-+                led@0 {
-+                    reg = <0>;
-+                    linux,default-trigger = "phy_link_1g_active";
-+                };
+ #define RTL8211F_INSR				0x1d
+ 
+ #define RTL8211F_TX_DELAY			BIT(8)
+@@ -83,6 +99,105 @@ static int rtl8211e_modify_ext_paged(struct phy_device *phydev, int page,
+ 	return phy_restore_page(phydev, oldpage, ret);
+ }
+ 
++static void rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
++{
++	int oldpage;
++	int err = 0;
 +
-+                led@1 {
-+                    reg = <1>;
-+                    linux,default-trigger = "phy_activity";
-+                };
-+            };
-         };
-     };
++	oldpage = phy_select_page(phydev, 5);
++	if (oldpage < 0)
++		goto out;
++
++	/* write magic values to disable EEE LED mode */
++	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
++	if (err)
++		goto out;
++
++	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
++
++out:
++	phy_restore_page(phydev, oldpage, err);
++}
++
++static int rtl8211e_config_leds(struct phy_device *phydev)
++{
++	int i, oldpage, ret;
++	u16 lacr_bits = 0, lcr_bits = 0;
++	u16 lacr_mask = RLT8211E_LACR_LEDACTCTRL_MASK;
++	u16 lcr_mask = RTL8211E_LCR_LEDCTRL_MASK;
++	bool eed_led_mode_disabled = false;
++
++	for (i = 0; i < RTL821x_NUM_LEDS; i++) {
++		struct phy_led_config cfg;
++
++		ret = of_get_phy_led_cfg(phydev, i, &cfg);
++		if (ret) {
++			lacr_mask &= ~BIT(4 + i);
++			lcr_mask &= ~GENMASK((i * 4) + 2, i * 4);
++			continue;
++		}
++
++		if (!eed_led_mode_disabled) {
++			rtl8211e_disable_eee_led_mode(phydev);
++			eed_led_mode_disabled = true;
++		}
++
++		switch (cfg.trigger) {
++		case PHY_LED_LINK_10M:
++			lcr_bits |= 1 << (i * 4);
++			break;
++
++		case PHY_LED_LINK_100M:
++			lcr_bits |= 2 << (i * 4);
++			break;
++
++		case PHY_LED_LINK_1G:
++			lcr_bits |= 4 << (i * 4);
++			break;
++
++		case PHY_LED_ACTIVITY:
++			lacr_bits |= BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + i);
++			break;
++
++		default:
++			phydev_warn(phydev,
++				    "unknown trigger for LED%d: %d\n",
++				    i, cfg.trigger);
++		}
++	}
++
++	oldpage = rtl8211e_select_ext_page(phydev, 0x2c);
++	if (oldpage < 0) {
++		phydev_err(phydev, "failed to select extended page: %d\n", oldpage);
++		return oldpage;
++	}
++
++	if (lacr_mask == 0)
++		goto skip_lacr;
++
++	ret = __phy_modify(phydev, RTL8211E_LACR,
++			   lacr_mask, lacr_bits);
++	if (ret) {
++		phydev_err(phydev, "failed to write LACR reg: %d\n",
++			   ret);
++		goto err;
++	}
++
++skip_lacr:
++	if (lcr_mask == 0)
++		goto skip_lcr;
++
++	ret = __phy_modify(phydev, RTL8211E_LCR,
++			   lcr_mask, lcr_bits);
++	if (ret)
++		phydev_err(phydev, "failed to write LCR reg: %d\n",
++			   ret);
++
++skip_lcr:
++err:
++	return phy_restore_page(phydev, oldpage, ret);
++}
++
+ static int rtl8201_ack_interrupt(struct phy_device *phydev)
+ {
+ 	int err;
+@@ -217,6 +332,10 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+ 	int ret;
+ 	u16 val;
+ 
++	ret = rtl8211e_config_leds(phydev);
++	if (ret)
++		phydev_warn(phydev, "LED configuration failed: %d\n", ret);
++
+ 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
+ 	switch (phydev->interface) {
+ 	case PHY_INTERFACE_MODE_RGMII:
 -- 
 2.22.0.770.g0f2c4a37fd-goog
