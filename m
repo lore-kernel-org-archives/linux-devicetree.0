@@ -1,79 +1,104 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH] ARM: dts: stm32: add DFSDM pins to stm32mp157c
-Date: Thu, 1 Aug 2019 09:46:07 +0200
-Message-ID: <1564645567-13156-1-git-send-email-olivier.moysan@st.com>
+From: Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
+Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+Date: Thu, 01 Aug 2019 09:59:42 +0200
+Message-ID: <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
+        <20190723122016.30279-10-a.swigon@partner.samsung.com>
+        <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-stm32@st-md-mailman.stormreply.com, alexandre.torgue@st.com, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DFSDM pins to stm32mp157c.
+Hi Georgi,
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 39 +++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+On Fri, 2019-07-26 at 11:05 +0300, Georgi Djakov wrote:
+> Hi Artur,
+> 
+> On 7/23/19 15:20, Artur Świgoń wrote:
+> > This patch adds interconnect functionality to the exynos-bus devfreq
+> > driver.
+> > 
+> > The SoC topology is a graph (or, more specifically, a tree) and most of its
+> > edges are taken from the devfreq parent-child hierarchy (cf.
+> > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
+> > patch adds missing edges to the DT (under the name 'parent'). Due to
+> > unspecified relative probing order, -EPROBE_DEFER may be propagated to
+> > guarantee that a child is probed before its parent.
+> > 
+> > Each bus is now an interconnect provider and an interconnect node as well
+> > (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
+> > itself as a node. Node IDs are not hardcoded but rather assigned at
+> > runtime, in probing order (subject to the above-mentioned exception
+> > regarding relative order). This approach allows for using this driver with
+> > various Exynos SoCs.
+> 
+> I am not familiar with the Exynos bus topology, but it seems to me that it's not
+> represented correctly. An interconnect provider with just a single node (port)
+> is odd. I would expect that each provider consists of multiple master and slave
+> nodes. This data would be used by a framework to understand what are the links
+> and how the traffic flows between the IP blocks and through which buses.
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index 9eaec9bf8cb8..f96a928cbc49 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -230,6 +230,45 @@
- 				};
- 			};
- 
-+			dfsdm_clkout_pins_a: dfsdm-clkout-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('B', 13, AF3)>; /* DFSDM_CKOUT */
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <0>;
-+				};
-+			};
-+
-+			dfsdm_clkout_sleep_pins_a: dfsdm-clkout-sleep-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('B', 13, ANALOG)>; /* DFSDM_CKOUT */
-+				};
-+			};
-+
-+			dfsdm_data1_pins_a: dfsdm-data1-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('C', 3, AF3)>; /* DFSDM_DATA1 */
-+				};
-+			};
-+
-+			dfsdm_data1_sleep_pins_a: dfsdm-data1-sleep-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('C', 3, ANALOG)>; /* DFSDM_DATA1 */
-+				};
-+			};
-+
-+			dfsdm_data3_pins_a: dfsdm-data3-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('F', 13, AF6)>; /* DFSDM_DATA3 */
-+				};
-+			};
-+
-+			dfsdm_data3_sleep_pins_a: dfsdm-data3-sleep-pins-0 {
-+				pins {
-+					pinmux = <STM32_PINMUX('F', 13, ANALOG)>; /* DFSDM_DATA3 */
-+				};
-+			};
-+
- 			ethernet0_rgmii_pins_a: rgmii-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('G', 5, AF11)>, /* ETH_RGMII_CLK125 */
+To summarize the exynos-bus topology[1] used by the devfreq driver: There are
+many data buses for data transfer in Samsung Exynos SoC. Every bus has its own
+clock. Buses often share power lines, in which case one of the buses on the
+power line is referred to as 'parent' (or as 'devfreq' in the DT). In the
+particular case of Exynos4412[1][2], the topology can be expressed as follows:
+
+bus_dmc
+-- bus_acp
+-- bus_c2c
+
+bus_leftbus
+-- bus_rightbus
+-- bus_display
+-- bus_fsys
+-- bus_peri
+-- bus_mfc
+
+Where bus_dmc and bus_leftbus probably could be referred to as masters, and the
+following indented nodes as slaves. Patch 08/11 of this RFC additionally adds
+the following to the DT:
+
+bus_dmc
+-- bus_leftbus
+
+Which makes the topology a valid tree.
+
+The exynos-bus concept in devfreq[3] is designed in such a way that every bus is
+probed separately as a platform device, and is a largely independent entity.
+This RFC proposes an extension to the existing devfreq driver that basically
+provides a simple QoS to ensure minimum clock frequency for selected buses
+(possibly overriding devfreq governor calculations) using the interconnect
+framework.
+
+The hierarchy is modelled in such a way that every bus is an interconnect node.
+On the other hand, what is considered an interconnect provider here is quite
+arbitrary, but for the reasons mentioned in the above paragraph, this RFC
+assumes that every bus is a provider of itself as a node. Using an alternative
+singleton provider approach was deemed more complicated since the 'dev' field in
+'struct icc_provider' has to be set to something meaningful and we are tied to
+the 'samsung,exynos-bus' compatible string in the driver (and multiple instances
+of exynos-bus probed in indeterminate relative order).
+
+I'm looking forward to hearing any additional thoughts you may have on this
+topic.
+
+Best regards,
 -- 
-2.7.4
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
+
+[1] Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+[2]
+arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+[3] drivers/devfreq/exynos-bus.c
+(subject of this patch)
