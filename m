@@ -1,72 +1,32 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 5/8] arm64: use ZONE_DMA on DMA addressing limited devices
-Date: Thu, 1 Aug 2019 17:07:54 +0100
-Message-ID: <e35dd4a5-281b-d281-59c9-3fc7108eb8be@arm.com>
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
- <20190731154752.16557-6-nsaenzjulienne@suse.de>
- <20190731170742.GC17773@arrakis.emea.arm.com>
- <d8b4a7cb9c06824ca88a0602a5bf38b6324b43c0.camel@suse.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 2/3] media: imx7-media-csi: add i.MX6UL support
+Date: Thu, 1 Aug 2019 13:14:52 -0300
+Message-ID: <CAOMZO5Aq5WEGZ0uR5VS0A+UO_3LpGMxp9Y_agQSx1dTshATVEQ@mail.gmail.com>
+References: <20190731163330.32532-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d8b4a7cb9c06824ca88a0602a5bf38b6324b43c0.camel@suse.de>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: phill@raspberryi.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, f.fainelli@gmail.com, frowand.list@gmail.com, eric@anholt.net, marc.zyngier@arm.com, Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, wahrenst@gmx.net, mbrugger@suse.com, akpm@linux-foundation.org, hch@lst.de, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190731163330.32532-1-sebastien.szymanski@armadeus.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?S=C3=A9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rui Miguel Silva <rmfrfs@gmail.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-08-01 4:44 pm, Nicolas Saenz Julienne wrote:
-> On Wed, 2019-07-31 at 18:07 +0100, Catalin Marinas wrote:
->> On Wed, Jul 31, 2019 at 05:47:48PM +0200, Nicolas Saenz Julienne wrote:
->>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>> index 1c4ffabbe1cb..f5279ef85756 100644
->>> --- a/arch/arm64/mm/init.c
->>> +++ b/arch/arm64/mm/init.c
->>> @@ -50,6 +50,13 @@
->>>   s64 memstart_addr __ro_after_init = -1;
->>>   EXPORT_SYMBOL(memstart_addr);
->>>   
->>> +/*
->>> + * We might create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA is needed if
->>> there
->>> + * are periferals unable to address the first naturally aligned 4GB of ram.
->>> + * ZONE_DMA32 will be expanded to cover the rest of that memory. If such
->>> + * limitations doesn't exist only ZONE_DMA32 is created.
->>> + */
->>
->> Shouldn't we instead only create ZONE_DMA to cover the whole 32-bit
->> range and leave ZONE_DMA32 empty? Can__GFP_DMA allocations fall back
->> onto ZONE_DMA32?
-> 
-> Hi Catalin, thanks for the review.
-> 
-> You're right, the GFP_DMA page allocation will fail with a nasty dmesg error if
-> ZONE_DMA is configured but empty. Unsurprisingly the opposite situation is fine
-> (GFP_DMA32 with an empty ZONE_DMA32).
-
-Was that tested on something other than RPi4 with more than 4GB of RAM? 
-(i.e. with a non-empty ZONE_NORMAL either way)
-
-Robin.
-
-> I switched to the scheme you're suggesting for the next version of the series.
-> The comment will be something the likes of this:
-> 
-> /*
->   * We create both a ZONE_DMA and ZONE_DMA32. ZONE_DMA's size is decided based
->   * on whether the SoC's peripherals are able to address the first naturally
->   * aligned 4 GB of ram.
->   *
->   * If limited, ZONE_DMA covers that area and ZONE_DMA32 the rest of that 32 bit
->   * addressable memory.
->   *
->   * If not ZONE_DMA is expanded to cover the whole 32 bit addressable memory and
->   * ZONE_DMA32 is left empty.
->   */
-> 
->   Regards,
->   Nicolas
-> 
-> 
+T24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMTozMyBQTSBTw6liYXN0aWVuIFN6eW1hbnNraQo8c2Vi
+YXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+IHdyb3RlOgo+Cj4gaS5NWDcgYW5kIGkuTVg2
+VUwvTCBoYXZlIHRoZSBzYW1lIENTSSBjb250cm9sbGVyLiBTbyBhZGQgaS5NWDZVTC9MIHN1cHBv
+cnQKPiB0byBpbXg3LW1lZGlhLWNzaSBkcml2ZXIuCj4KPiBTaWduZWQtb2ZmLWJ5OiBTw6liYXN0
+aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+CgpSZXZpZXdl
+ZC1ieTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
