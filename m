@@ -1,47 +1,66 @@
-Return-Path: <SRS0=skGX=WE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbfHHPJC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 8 Aug 2019 11:09:02 -0400
-Content-Type: text/plain; charset="utf-8"
+Return-Path: <SRS0=I2AB=V5=verge.net.au=horms@kernel.org>
+Date: Thu, 1 Aug 2019 11:14:22 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] dt-bindings: usb: renesas_gen3: Rename bindings
+ documentation file
+Message-ID: <20190801091421.4gf3xggg3eko6wql@verge.net.au>
+References: <20190703083514.32385-1-horms+renesas@verge.net.au>
+ <20190703083514.32385-3-horms+renesas@verge.net.au>
+ <CAMuHMdVgx9N0yeeei5qcg1yz2WEdDf0gQ6GcwUOAz7u09S_D4A@mail.gmail.com>
+ <20190711080302.qeotxueyvlr7pvhe@verge.net.au>
+ <20190725090946.GA3311@kroah.com>
+ <TYAPR01MB4544F226C06730C5611EB025D8C00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <20190729081440.ftgchumfoszlht4q@verge.net.au>
+ <TYAPR01MB4544A8358DE51BFB1193287CD8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190726092332.25202-5-govinds@codeaurora.org>
-References: <20190726092332.25202-1-govinds@codeaurora.org> <20190726092332.25202-5-govinds@codeaurora.org>
-Subject: Re: [PATCH v5 4/7] clk: qcom: Add Q6SSTOP clock controller for QCS404
-From: Stephen Boyd <sboyd@kernel.org>
-Date: Thu, 08 Aug 2019 08:09:00 -0700
-Message-Id: <20190808150901.D6C932184E@mail.kernel.org>
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org
-Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB4544A8358DE51BFB1193287CD8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Govind Singh (2019-07-26 02:23:29)
-> diff --git a/drivers/clk/qcom/q6sstop-qcs404.c b/drivers/clk/qcom/q6sstop=
--qcs404.c
-> new file mode 100644
-> index 000000000000..b6281986b077
-> --- /dev/null
-> +++ b/drivers/clk/qcom/q6sstop-qcs404.c
-> @@ -0,0 +1,223 @@
-[...]
-> +};
-> +
-> +static struct platform_driver q6sstopcc_qcs404_driver =3D {
-> +       .probe          =3D q6sstopcc_qcs404_probe,
-> +       .remove         =3D q6sstopcc_qcs404_remove,
-> +       .driver         =3D {
-> +               .name   =3D "qcs404-q6sstopcc",
-> +               .of_match_table =3D q6sstopcc_qcs404_match_table,
-> +       .pm =3D &q6sstopcc_pm_ops,
+On Mon, Jul 29, 2019 at 08:25:24AM +0000, Yoshihiro Shimoda wrote:
+> Hi Simon-san,
+> 
+> > From: Simon Horman, Sent: Monday, July 29, 2019 5:15 PM
+> <snip>
+> > > > > > Unfortunately the previous version has already made it into usb-next
+> > > > > > 23c46801d14cb647 dt-bindings: usb: renesas_gen3: Rename bindings
+> > > > > > documentation file
+> > > > >
+> > > > > Ok, I guess we should go with that version.
+> > > >
+> > > > So can you resend this series based on 5.3-rc1 so I know what to apply?
+> > >
+> > > Since your usb-testing branch already has it which is merged from Felipe's usb-next branch,
+> > > I don't think Simon has to resend this series.
+> > >
+> > > https://www.spinics.net/lists/linux-usb/msg182103.html
+> > 
+> > Thanks and sorry for the confusion.
+> > 
+> > In v5.2-rc1 we had:
+> > 
+> >   devicetree/bindings/usb/renesas_usb3.txt
+> >   devicetree/bindings/usb/renesas_usbhs.txt
+> > 
+> > 
+> > In v5.3-rc1 we have:
+> > 
+> >   devicetree/bindings/usb/renesas,usb3.txt
+> >   devicetree/bindings/usb/renesas,usbhs.txt
+> > 
+> > Which reflects v1 of this patchset. And I think this is an improvement.
+> > 
+> > Shimoda-san, can you let me know if you would like me to rebase v2
+> > on v5.3-rc1? That would would give us:
+> > 
+> >   devicetree/bindings/usb/renesas,usb3-peri.txt
+> >   devicetree/bindings/usb/renesas,usbhs.txt		[unchanged]
+> 
+> Thank you for the detail. I would like you to rebase v2 like that, if possible.
 
-This got some weird indent.
+Thanks, I have posted this as:
 
-> +       },
-> +};
-> +
-> +module_platform_driver(q6sstopcc_qcs404_driver);
-> +
-> +MODULE_DESCRIPTION("QTI QCS404 Q6SSTOP Clock Controller Driver");
-> +MODULE_LICENSE("GPL v2");
+[PATCH] dt-bindings: usb: renesas_gen3: Rename bindings documentation file to reflect IP block
