@@ -1,104 +1,160 @@
-From: Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Date: Thu, 01 Aug 2019 09:59:42 +0200
-Message-ID: <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
-        <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
-        <20190723122016.30279-10-a.swigon@partner.samsung.com>
-        <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+From: "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [PATCH v3 2/4] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+Date: Thu, 1 Aug 2019 11:20:26 +0300
+Message-ID: <59075138-f819-a59c-a72a-663062c78c86@amazon.com>
+References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
+ <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+ <a2dc6760-50e2-6e98-5b61-002836d92dd2@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+In-Reply-To: <a2dc6760-50e2-6e98-5b61-002836d92dd2@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, =?UTF-8?Q?Bart=C5=82omiej_?= =?UTF-8?Q?=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>
+To: James Morse <james.morse@arm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
 
-On Fri, 2019-07-26 at 11:05 +0300, Georgi Djakov wrote:
-> Hi Artur,
+On 7/26/2019 7:49 PM, James Morse wrote:
+> Hi Hanna,
 > 
-> On 7/23/19 15:20, Artur Świgoń wrote:
-> > This patch adds interconnect functionality to the exynos-bus devfreq
-> > driver.
-> > 
-> > The SoC topology is a graph (or, more specifically, a tree) and most of its
-> > edges are taken from the devfreq parent-child hierarchy (cf.
-> > Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
-> > patch adds missing edges to the DT (under the name 'parent'). Due to
-> > unspecified relative probing order, -EPROBE_DEFER may be propagated to
-> > guarantee that a child is probed before its parent.
-> > 
-> > Each bus is now an interconnect provider and an interconnect node as well
-> > (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
-> > itself as a node. Node IDs are not hardcoded but rather assigned at
-> > runtime, in probing order (subject to the above-mentioned exception
-> > regarding relative order). This approach allows for using this driver with
-> > various Exynos SoCs.
+> On 15/07/2019 14:24, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+>> report L1 errors.
 > 
-> I am not familiar with the Exynos bus topology, but it seems to me that it's not
-> represented correctly. An interconnect provider with just a single node (port)
-> is odd. I would expect that each provider consists of multiple master and slave
-> nodes. This data would be used by a framework to understand what are the links
-> and how the traffic flows between the IP blocks and through which buses.
+>> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+>> new file mode 100644
+>> index 0000000..70510ea
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l1_edac.c
+>> @@ -0,0 +1,156 @@
+> 
+>> +#include <linux/bitfield.h>
+> 
+> You need <linux/smp.h> for on-each_cpu().
+> 
+>> +#include "edac_device.h"
+>> +#include "edac_module.h"
+> 
+> You need <asm/sysreg.h> for the sys_reg() macro. The ARCH_ALPINE dependency doesn't stop
+> this from being built on 32bit arm, where this sys_reg() won't work/exist.
 
-To summarize the exynos-bus topology[1] used by the devfreq driver: There are
-many data buses for data transfer in Samsung Exynos SoC. Every bus has its own
-clock. Buses often share power lines, in which case one of the buses on the
-power line is referred to as 'parent' (or as 'devfreq' in the DT). In the
-particular case of Exynos4412[1][2], the topology can be expressed as follows:
+Will fix.
 
-bus_dmc
--- bus_acp
--- bus_c2c
+> 
+> [...]
+> 
+>> +static void al_l1_edac_cpumerrsr(void *arg)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev = arg;
+>> +	int cpu, i;
+>> +	u32 ramid, repeat, other, fatal;
+>> +	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
+>> +	char msg[AL_L1_EDAC_MSG_MAX];
+>> +	int space, count;
+>> +	char *p;
+>> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
+>> +		return;
+>> +	space = sizeof(msg);
+>> +	p = msg;
+>> +	count = snprintf(p, space, "CPU%d L1 %serror detected", cpu,
+>> +			 (fatal) ? "Fatal " : "");
+>> +	p += count;
+>> +	space -= count;
+> 
+> snprintf() will return the number of characters it would have generated, even if that is
+> more than space. If this happen, space becomes negative, p points outside msg[] and msg[]
+> isn't NULL terminated...
+> 
+> It looks like you want scnprintf(), which returns the number of characters written to buf
+> instead. (I don't see how 256 characters would be printed by this code)
 
-bus_leftbus
--- bus_rightbus
--- bus_display
--- bus_fsys
--- bus_peri
--- bus_mfc
+Will use scnprintf() instead.
 
-Where bus_dmc and bus_leftbus probably could be referred to as masters, and the
-following indented nodes as slaves. Patch 08/11 of this RFC additionally adds
-the following to the DT:
+> 
+> 
+>> +	switch (ramid) {
+>> +	case ARM_CA57_L1_I_TAG_RAM:
+>> +		count = snprintf(p, space, " RAMID='L1-I Tag RAM'");
+>> +		break;
+>> +	case ARM_CA57_L1_I_DATA_RAM:
+>> +		count = snprintf(p, space, " RAMID='L1-I Data RAM'");
+>> +		break;
+>> +	case ARM_CA57_L1_D_TAG_RAM:
+>> +		count = snprintf(p, space, " RAMID='L1-D Tag RAM'");
+>> +		break;
+>> +	case ARM_CA57_L1_D_DATA_RAM:
+>> +		count = snprintf(p, space, " RAMID='L1-D Data RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_TLB_RAM:
+>> +		count = snprintf(p, space, " RAMID='L2 TLB RAM'");
+>> +		break;
+>> +	default:
+>> +		count = snprintf(p, space, " RAMID='unknown'");
+>> +		break;
+>> +	}
+>> +
+>> +	p += count;
+>> +	space -= count;
+>> +	count = snprintf(p, space,
+>> +			 " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
+>> +			 repeat, other, val);
+>> +
+>> +	for (i = 0; i < repeat; i++) {
+>> +		if (fatal)
+>> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+>> +		else
+>> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+>> +	}
+>> +
+>> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
+> 
+> Writing 0 just after you've read the value would minimise the window where repeat could
+> have increased behind your back, or another error was counted as other, when it could have
+> been reported more accurately.
 
-bus_dmc
--- bus_leftbus
+Good point, I will move the write after checking the valid bit.
 
-Which makes the topology a valid tree.
+> 
+> 
+>> +}
+> 
+> 
+>> +static int al_l1_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
+>> +					      1, 1, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (IS_ERR(edac_dev))
+> 
+> edac_device_alloc_ctl_info() returns NULL, or dev_ctl, which comes from kzalloc(). I think
+> you need to check for NULL here, IS_ERR() only catches the -errno range. (there is an
+> IS_ERR_OR_NULL() if you really needed both)
 
-The exynos-bus concept in devfreq[3] is designed in such a way that every bus is
-probed separately as a platform device, and is a largely independent entity.
-This RFC proposes an extension to the existing devfreq driver that basically
-provides a simple QoS to ensure minimum clock frequency for selected buses
-(possibly overriding devfreq governor calculations) using the interconnect
-framework.
+Will fix.
 
-The hierarchy is modelled in such a way that every bus is an interconnect node.
-On the other hand, what is considered an interconnect provider here is quite
-arbitrary, but for the reasons mentioned in the above paragraph, this RFC
-assumes that every bus is a provider of itself as a node. Using an alternative
-singleton provider approach was deemed more complicated since the 'dev' field in
-'struct icc_provider' has to be set to something meaningful and we are tied to
-the 'samsung,exynos-bus' compatible string in the driver (and multiple instances
-of exynos-bus probed in indeterminate relative order).
+> 
+> 
+>> +		return -ENOMEM;
+> 
+> 
+> With the header-includes and edac_device_alloc_ctl_info() NULL check:
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-I'm looking forward to hearing any additional thoughts you may have on this
-topic.
+Thanks James.
 
-Best regards,
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
-
-[1] Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-[2]
-arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-[3] drivers/devfreq/exynos-bus.c
-(subject of this patch)
+Thanks,
+Hanna
+> 
+> 
+> Thanks,
+> 
+> James
+> 
