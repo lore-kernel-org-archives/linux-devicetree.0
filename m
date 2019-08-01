@@ -1,26 +1,63 @@
 From: Atish Patra <Atish.Patra@wdc.com>
-Subject: Re: [PATCH v3 4/5] RISC-V: Export few kernel symbols
-Date: Thu, 1 Aug 2019 23:04:23 +0000
-Message-ID: <ebeee86fa72f16e9adf6fbec9907a3559a5cb31c.camel@wdc.com>
+Subject: Re: [PATCH v3 5/5] dt-bindings: Update the riscv,isa string
+ description
+Date: Thu, 1 Aug 2019 23:07:36 +0000
+Message-ID: <40ec671a2ef7204ad890b2ca43ec92d6981d6344.camel@wdc.com>
 References: <20190801005843.10343-1-atish.patra@wdc.com>
-         <20190801005843.10343-5-atish.patra@wdc.com>
-         <20190801155633.GA366@infradead.org>
+         <20190801005843.10343-6-atish.patra@wdc.com>
+         <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190801155633.GA366@infradead.org>
+In-Reply-To: <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <5BB21D4A3293A14F80769E546E78DFB2@namprd04.prod.outlook.com>
+Content-ID: <A06B902F88D8304FB2DF845FCCEB3719@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "hch@infradead.org" <hch@infradead.org>
-Cc: "info@metux.net" <info@metux.net>, "palmer@sifive.com" <palmer@sifive.com>, "allison@lohutok.net" <allison@lohutok.net>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Anup Patel <Anup.Patel@wdc.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "johan@kernel.org" <johan@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>, "gary@garyguo.net" <gary@garyguo.net>, linux-riscv
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "info@metux.net" <info@metux.net>, "palmer@sifive.com" <palmer@sifive.com>, "allison@lohutok.net" <allison@lohutok.net>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Anup Patel <Anup.Patel@wdc.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "johan@kernel.org" <johan@kernel.org>, "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTAxIGF0IDA4OjU2IC0wNzAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMDU6NTg6NDJQTSAtMDcwMCwgQXRpc2ggUGF0
-cmEgd3JvdGU6DQo+ID4gRXhwb3J0IGZldyBzeW1ib2xzIHVzZWQgYnkga3ZtIG1vZHVsZS4gV2l0
-aG91dCB0aGlzLCBrdm0gY2FuIG5vdA0KPiA+IGJlIGNvbXBpbGVkIGFzIGEgbW9kdWxlLg0KPiAN
-Cj4gUGxlYXNlIGFkZCB0aGlzIHRvIHRoZSBrdm0gc2VyaWVzIGluc3RlYWQgYXMgd2UgZG9uJ3Qg
-bWVyZ2UgZXhwb3J0cw0KPiB3aXRob3V0IHRoZWlyIHVzZXJzIGluIHRoZSBzYW1lIHNlcmllcy4N
-Cg0KU3VyZS4NCg0KUmVnYXJkcywNCkF0aXNoDQo=
+T24gVGh1LCAyMDE5LTA4LTAxIGF0IDA5OjUwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgNjo1OCBQTSBBdGlzaCBQYXRyYSA8YXRpc2gucGF0cmFA
+d2RjLmNvbT4NCj4gd3JvdGU6DQo+ID4gU2luY2UgdGhlIFJJU0MtViBzcGVjaWZpY2F0aW9uIHN0
+YXRlcyB0aGF0IElTQSBkZXNjcmlwdGlvbiBzdHJpbmdzDQo+ID4gYXJlDQo+ID4gY2FzZS1pbnNl
+bnNpdGl2ZSwgdGhlcmUncyBubyBmdW5jdGlvbmFsIGRpZmZlcmVuY2UgYmV0d2VlbiBtaXhlZC0N
+Cj4gPiBjYXNlLA0KPiA+IHVwcGVyLWNhc2UsIGFuZCBsb3dlci1jYXNlIElTQSBzdHJpbmdzLiBU
+aHVzLCB0byBzaW1wbGlmeSBwYXJzaW5nLA0KPiA+IHNwZWNpZnkgdGhhdCB0aGUgbGV0dGVycyBw
+cmVzZW50IGluICJyaXNjdixpc2EiIG11c3QgYmUgYWxsDQo+ID4gbG93ZXJjYXNlLg0KPiA+IA0K
+PiA+IFN1Z2dlc3RlZC1ieTogUGF1bCBXYWxtc2xleSA8cGF1bC53YWxtc2xleUBzaWZpdmUuY29t
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmlzY3YvY3B1
+cy55YW1sIHwgNCArKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDEg
+ZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Jpc2N2L2NwdXMueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Jpc2N2L2NwdXMueWFtbA0KPiA+IGluZGV4IGM4OTkxMTFhYTVlMy4uNGYw
+YWNiMDAxODVhIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9yaXNjdi9jcHVzLnlhbWwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcmlzY3YvY3B1cy55YW1sDQo+ID4gQEAgLTQ2LDEwICs0NiwxMiBAQCBwcm9wZXJ0
+aWVzOg0KPiA+ICAgICAgICAgICAgLSBydjY0aW1hZmRjDQo+ID4gICAgICBkZXNjcmlwdGlvbjoN
+Cj4gPiAgICAgICAgSWRlbnRpZmllcyB0aGUgc3BlY2lmaWMgUklTQy1WIGluc3RydWN0aW9uIHNl
+dCBhcmNoaXRlY3R1cmUNCj4gPiAtICAgICAgc3VwcG9ydGVkIGJ5IHRoZSBoYXJ0LiAgVGhlc2Ug
+YXJlIGRvY3VtZW50ZWQgaW4gdGhlIFJJU0MtVg0KPiA+ICsgICAgICBzdXBwb3J0ZWQgYnkgdGhl
+IGhhcnQuIFRoZXNlIGFyZSBkb2N1bWVudGVkIGluIHRoZSBSSVNDLVYNCj4gPiAgICAgICAgVXNl
+ci1MZXZlbCBJU0EgZG9jdW1lbnQsIGF2YWlsYWJsZSBmcm9tDQo+ID4gICAgICAgIGh0dHBzOi8v
+cmlzY3Yub3JnL3NwZWNpZmljYXRpb25zLw0KPiA+IA0KPiA+ICsgICAgICBMZXR0ZXJzIGluIHRo
+ZSByaXNjdixpc2Egc3RyaW5nIG11c3QgYmUgYWxsIGxvd2VyY2FzZS4NCj4gPiArDQo+IA0KPiBU
+aGUgc2NoZW1hcyBhcmUgY2FzZSBzZW5zaXRpdmUgdGhpcyBsb29rcyBwcmV0dHkgcG9pbnRsZXNz
+IHdpdGhvdXQNCj4gdGhlDQo+IGNvbnRleHQgb2YgdGhlIGNvbW1pdCBtc2cuIENhbiB5b3UgcHJl
+Zml4IHdpdGggJ1doaWxlIHRoZQ0KPiBzcGVjaWZpY2F0aW9uIGlzIGNhc2UgaW5zZW5zaXRpdmUs
+ICINCj4gDQoNClN1cmUuIEhvdyBhYm91dCB0aGlzID8NCg0KIldoaWxlIHRoZSBhYm92ZSBpc2Eg
+c3RyaW5ncyBpbiBJU0Egc3BlY2lmaWNhdGlvbiBhcmUgY2FzZSBpbnNlbnNpdGl2ZSwNCmxldHRl
+cnMgaW4gdGhlIHJpc2N2LGlzYSBzdHJpbmcgbXVzdCBiZSBhbGwgbG93ZXJjYXNlIHRvIHNpbXBs
+aWZ5DQpwYXJzaW5nLiINCg0KDQo+IEZvciBzb21lIGJhY2tncm91bmQsIEZEVCBnZW5lcmFsbHkg
+YWx3YXlzIGhhcyBiZWVuIGNhc2Ugc2Vuc2l0aXZlIHRvbw0KPiAoZHRjIHdvbid0IG1lcmdlL292
+ZXJyaWRlIG5vZGVzL3Byb3BlcnRpZXMgd2l0aCBkaWZmZXJpbmcgY2FzZSkuIEl0J3MNCj4gcmVh
+bGx5IG9ubHkgc29tZSBvbGRlciB0cnVlIE9GIHN5c3RlbXMgdGhhdCB3ZXJlIGNhc2UgaW5zZW5z
+aXRpdmUuDQo+IFRoZQ0KPiBrZXJuZWwgaGFkIGEgbWl4dHVyZSBvZiBjYXNlIHNlbnNpdGl2ZSBh
+bmQgaW5zZW5zaXRpdmUgY29tcGFyaXNvbnMNCj4gc29tZXdoYXQgZGVwZW5kaW5nIG9uIHRoZSBh
+cmNoIGFuZCB3aGV0aGVyIG9mX3Byb3BfY21wL29mX25vZGVfY21wIG9yDQo+IHN0cipjbXAgZnVu
+Y3Rpb25zIHdlcmUgdXNlZC4gVGhlcmUncyBiZWVuIGEgbG90IG9mIGNsZWFuLXVwIGFuZCBub3cN
+Cj4gbW9zdCBjb21wYXJpc29ucyBhcmUgY2FzZSBzZW5zaXRpdmUgd2l0aCBvbmx5IFNwYXJjIGhh
+dmluZyBzb21lDQo+IGRldmlhdGlvbi4NCj4gDQo+IFJvYg0KDQotLSANClJlZ2FyZHMsDQpBdGlz
+aA0K
