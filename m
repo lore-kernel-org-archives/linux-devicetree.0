@@ -1,47 +1,32 @@
-From: Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v6 2/2] dt-bindings: mtd: Document Macronix raw NAND controller bindings
-Date: Thu,  1 Aug 2019 11:55:10 +0800
-Message-ID: <1564631710-30276-3-git-send-email-masonccyang@mxic.com.tw>
-References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 2/4] net: phy: Add mdio-aspeed
+Date: Thu, 1 Aug 2019 05:53:15 +0200
+Message-ID: <20190801035315.GG2713@lunn.ch>
+References: <20190731053959.16293-1-andrew@aj.id.au>
+ <20190731053959.16293-3-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>
+Content-Disposition: inline
+In-Reply-To: <20190731053959.16293-3-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: miquel.raynal@bootlin.com, marek.vasut@gmail.com, bbrezillon@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, vigneshr@ti.com, richard@nod.at, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, juliensu@mxic.com.tw, paul.burton@mips.com, liang.yang@amlogic.com, lee.jones@linaro.org, masonccyang@mxic.com.tw, anders.roxell@linaro.org, christophe.kerello@st.com, paul@crapouillou.net, devicetree@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, f.fainelli@gmail.com, hkallweit1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings used by the Macronix raw NAND controller.
+On Wed, Jul 31, 2019 at 03:09:57PM +0930, Andrew Jeffery wrote:
+> The AST2600 design separates the MDIO controllers from the MAC, which is
+> where they were placed in the AST2400 and AST2500. Further, the register
+> interface is reworked again, so now we have three possible different
+> interface implementations, however this driver only supports the
+> interface provided by the AST2600. The AST2400 and AST2500 will continue
+> to be supported by the MDIO support embedded in the FTGMAC100 driver.
+> 
+> The hardware supports both C22 and C45 mode, but for the moment only C22
+> support is implemented.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- Documentation/devicetree/bindings/mtd/mxic-nand.txt | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-new file mode 100644
-index 0000000..de37d60
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-@@ -0,0 +1,19 @@
-+Macronix Raw NAND Controller Device Tree Bindings
-+-------------------------------------------------
-+
-+Required properties:
-+- compatible: should be "mxicy,multi-itfc-v009-nand-morph"
-+- reg: should contain 1 entry for the registers
-+- interrupts: interrupt line connected to this raw NAND controller
-+- clock-names: should contain "ps", "send" and "send_dly"
-+- clocks: should contain 3 phandles for the "ps", "send" and
-+	 "send_dly" clocks
-+
-+Example:
-+
-+	nand: nand-controller@43c30000 {
-+		compatible = "mxicy,multi-itfc-v009-nand-morph";
-+		reg = <0x43c30000 0x10000>;
-+		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-+		clock-names = "send", "send_dly", "ps";
-+	};
--- 
-1.9.1
+    Andrew
