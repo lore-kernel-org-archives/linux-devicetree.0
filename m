@@ -1,59 +1,91 @@
 From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v5 0/5] enetc: Add mdio bus driver for the PCIe MDIO endpoint
-Date: Thu,  1 Aug 2019 14:52:48 +0300
-Message-ID: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
+Subject: [PATCH net-next v5 4/5] dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe endpoint
+Date: Thu,  1 Aug 2019 14:52:52 +0300
+Message-ID: <1564660373-4607-5-git-send-email-claudiu.manoil@nxp.com>
+References: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "David S . Miller" <davem@davemloft.net>
 Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-First patch fixes a sparse issue and cleans up accessors to avoid
-casting to __iomem.  The second one cleans up the Makefile, to make
-it easier to add new entries.
+The on-chip PCIe root complex that integrates the ENETC ethernet
+controllers also integrates a PCIe endpoint for the MDIO controller
+providing for centralized control of the ENETC mdio bus.
+Add bindings for this "central" MDIO Integrated PCIe Endpoint.
 
-Third patch just registers the PCIe endpoint device containing
-the MDIO registers as a standalone MDIO bus driver, to provide
-an alternative way to control the MDIO bus.  The same code used
-by the ENETC ports (eth controllers) to manage MDIO via local
-registers applies and is reused.
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+v1 - none
+v2 - none
+v3 - fixed spelling (commit message mostly)
+v4 - none
+v4 - none
 
-Bindings are provided for the new MDIO node, similarly to ENETC
-port nodes bindings.
+ .../devicetree/bindings/net/fsl-enetc.txt     | 42 +++++++++++++++++--
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-Last patch enables the ENETC port 1 and its RGMII PHY on the
-LS1028A QDS board, where the MDIO muxing configuration relies
-on the MDIO support provided in the first patch.
-
-Changes since v0:
-v1 - fixed mdio bus allocation
-v2 - cleaned up accessors to avoid casting
-v3 - fixed spelling (mostly commit message)
-v4 - fixed err path check blunder
-v5 - fixed loadble module build, provided separate kbuild module
-     for the driver
-
-
-Claudiu Manoil (5):
-  enetc: Clean up local mdio bus allocation
-  enetc: Clean up makefile
-  enetc: Add mdio bus driver for the PCIe MDIO endpoint
-  dt-bindings: net: fsl: enetc: Add bindings for the central MDIO PCIe
-    endpoint
-  arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-
- .../devicetree/bindings/net/fsl-enetc.txt     |  42 +++++++-
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  40 +++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 ++
- drivers/net/ethernet/freescale/enetc/Kconfig  |   9 ++
- drivers/net/ethernet/freescale/enetc/Makefile |  19 ++--
- .../net/ethernet/freescale/enetc/enetc_mdio.c |  97 ++++++++---------
- .../net/ethernet/freescale/enetc/enetc_mdio.h |  12 +++
- .../ethernet/freescale/enetc/enetc_pci_mdio.c | 101 ++++++++++++++++++
- .../net/ethernet/freescale/enetc/enetc_pf.c   |   5 +-
- 9 files changed, 264 insertions(+), 67 deletions(-)
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_mdio.h
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-
+diff --git a/Documentation/devicetree/bindings/net/fsl-enetc.txt b/Documentation/devicetree/bindings/net/fsl-enetc.txt
+index 25fc687419db..b7034ccbc1bd 100644
+--- a/Documentation/devicetree/bindings/net/fsl-enetc.txt
++++ b/Documentation/devicetree/bindings/net/fsl-enetc.txt
+@@ -11,7 +11,9 @@ Required properties:
+ 		  to parent node bindings.
+ - compatible	: Should be "fsl,enetc".
+ 
+-1) The ENETC external port is connected to a MDIO configurable phy:
++1. The ENETC external port is connected to a MDIO configurable phy
++
++1.1. Using the local ENETC Port MDIO interface
+ 
+ In this case, the ENETC node should include a "mdio" sub-node
+ that in turn should contain the "ethernet-phy" node describing the
+@@ -47,8 +49,42 @@ Example:
+ 		};
+ 	};
+ 
+-2) The ENETC port is an internal port or has a fixed-link external
+-connection:
++1.2. Using the central MDIO PCIe endpoint device
++
++In this case, the mdio node should be defined as another PCIe
++endpoint node, at the same level with the ENETC port nodes.
++
++Required properties:
++
++- reg		: Specifies PCIe Device Number and Function
++		  Number of the ENETC endpoint device, according
++		  to parent node bindings.
++- compatible	: Should be "fsl,enetc-mdio".
++
++The remaining required mdio bus properties are standard, their bindings
++already defined in Documentation/devicetree/bindings/net/mdio.txt.
++
++Example:
++
++	ethernet@0,0 {
++		compatible = "fsl,enetc";
++		reg = <0x000000 0 0 0 0>;
++		phy-handle = <&sgmii_phy0>;
++		phy-connection-type = "sgmii";
++	};
++
++	mdio@0,3 {
++		compatible = "fsl,enetc-mdio";
++		reg = <0x000300 0 0 0 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		sgmii_phy0: ethernet-phy@2 {
++			reg = <0x2>;
++		};
++	};
++
++2. The ENETC port is an internal port or has a fixed-link external
++connection
+ 
+ In this case, the ENETC port node defines a fixed link connection,
+ as specified by Documentation/devicetree/bindings/net/fixed-link.txt.
 -- 
 2.17.1
