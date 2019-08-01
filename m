@@ -1,113 +1,56 @@
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: [PATCH net-next v5 5/5] arm64: dts: fsl: ls1028a: Enable eth port1 on the ls1028a QDS board
-Date: Thu,  1 Aug 2019 14:52:53 +0300
-Message-ID: <1564660373-4607-6-git-send-email-claudiu.manoil@nxp.com>
-References: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Fix i2c master read more than 63 bytes
+Date: Thu, 1 Aug 2019 14:31:30 +0200
+Message-ID: <20190801123130.GE1659@ninjato>
+References: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2hMgfIw2X+zgXrFs"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564660373-4607-1-git-send-email-claudiu.manoil@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <1563956907-21255-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S . Miller" <davem@davemloft.net>
-Cc: andrew@lunn.ch, Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>, alexandru.marginean@nxp.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-LS1028a has one Ethernet management interface. On the QDS board, the
-MDIO signals are multiplexed to either on-board AR8035 PHY device or
-to 4 PCIe slots allowing for SGMII cards.
-To enable the Ethernet ENETC Port 1, which can only be connected to a
-RGMII PHY, the multiplexer needs to be configured to route the MDIO to
-the AR8035 PHY.  The MDIO/MDC routing is controlled by bits 7:4 of FPGA
-board config register 0x54, and value 0 selects the on-board RGMII PHY.
-The FPGA board config registers are accessible on the i2c bus, at address
-0x66.
 
-The PF3 MDIO PCIe integrated endpoint device allows for centralized access
-to the MDIO bus.  Add the corresponding devicetree node and set it to be
-the MDIO bus parent.
+--2hMgfIw2X+zgXrFs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
-v1-v5 - none
+On Wed, Jul 24, 2019 at 01:58:27PM +0530, Rayagonda Kokatanur wrote:
+> Use SMBUS_MASTER_DATA_READ.MASTER_RD_STATUS bit to check for RX
+> FIFO empty condition because SMBUS_MASTER_FIFO_CONTROL.MASTER_RX_PKT_COUNT
+> is not updated for read >=3D 64 bytes. This fixes the issue when trying to
+> read from the I2C slave more than 63 bytes.
+>=20
+> Fixes: c24b8d574b7c ("i2c: iproc: Extend I2C read up to 255 bytes")
+>=20
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
- .../boot/dts/freescale/fsl-ls1028a-qds.dts    | 40 +++++++++++++++++++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
- 2 files changed, 46 insertions(+)
+Applied to for-current, thanks!
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..663c4b728c07 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -85,6 +85,26 @@
- 			system-clock-frequency = <25000000>;
- 		};
- 	};
-+
-+	mdio-mux {
-+		compatible = "mdio-mux-multiplexer";
-+		mux-controls = <&mux 0>;
-+		mdio-parent-bus = <&enetc_mdio_pf3>;
-+		#address-cells=<1>;
-+		#size-cells = <0>;
-+
-+		/* on-board RGMII PHY */
-+		mdio@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			qds_phy1: ethernet-phy@5 {
-+				/* Atheros 8035 */
-+				reg = <5>;
-+			};
-+		};
-+	};
- };
- 
- &duart0 {
-@@ -164,6 +184,26 @@
- 			};
- 		};
- 	};
-+
-+	fpga@66 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c",
-+			     "simple-mfd";
-+		reg = <0x66>;
-+
-+		mux: mux-controller {
-+			compatible = "reg-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-+		};
-+	};
-+
-+};
-+
-+&enetc_port1 {
-+	phy-handle = <&qds_phy1>;
-+	phy-connection-type = "rgmii-id";
- };
- 
- &sai1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..de71153fda00 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -536,6 +536,12 @@
- 				compatible = "fsl,enetc";
- 				reg = <0x000100 0 0 0 0>;
- 			};
-+			enetc_mdio_pf3: mdio@0,3 {
-+				compatible = "fsl,enetc-mdio";
-+				reg = <0x000300 0 0 0 0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 			ethernet@0,4 {
- 				compatible = "fsl,enetc-ptp";
- 				reg = <0x000400 0 0 0 0>;
--- 
-2.17.1
+
+--2hMgfIw2X+zgXrFs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C26IACgkQFA3kzBSg
+Kba85w//WB/fT1rfNyJzzedg2jVwLmdiaCcBYk4Y+Sz9sKRE3/SAdPulfp/wRUcb
+Q0YUiC2cRjunfZK0voZ5EUSFU+pBvM8dIRuTIWon/qdi1+6tDDAFIuXcswulFf1d
+09hBq1/aSOad318mNt2k4qJmUNyLvDaeYFHDCLwic1K48FWFqTWzgLpFn0idKxYq
+wIqINQz9dl6Qg0t81emc4xX0MB202LoaDriix4ERwHFjLsQuseqr4IeDrbXtGvLN
+7msFGGu7cgru2AUNXKPYWpZP3NItfZexR7AVhYKvuvDECy/jk/f+3DSyxj7qvrnS
+1Am4aRNQI6BQRzpfVCZwOEdOTpsx9SCQTEKpWkj6P5sde01ghq/oQzp8ENb9qoj7
+cuqGUJ3jf02dSLLFXusgfqywUEmLktGX+1gUvicURBykEYEecUV2xgCjnB3e7cTf
+v3/IJxTqDRpeCIbMkD0W4MN3WVoFISnn/Vl50oH7GiwoxVJ4TnFdNOZ8TmWfV1TG
+EoQf9yQR3vcmz13HUwyF8W27wJwWJ8u0iWLyqxeCgDaKtHRrL5HG8bEPu3rdLafE
+6n5ksnQpABRPshtd18hRQyGVqWaqNDUjKLJgGJVhqK3kbnvgGg0Z8qrcQHOA7tl+
+HMquJaDbDdS3AMUD3N0JHWqTr236PF05THzOH1X4hXIfsRtnPF0=
+=L7tj
+-----END PGP SIGNATURE-----
+
+--2hMgfIw2X+zgXrFs--
