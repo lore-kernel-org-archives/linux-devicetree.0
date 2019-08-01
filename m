@@ -1,97 +1,57 @@
-From: Rui Miguel Silva <rmfrfs@gmail.com>
-Subject: Re: [PATCH v3 2/3] media: imx7-media-csi: add i.MX6UL support
-Date: Thu, 01 Aug 2019 16:50:22 +0100
-Message-ID: <m31ry4c2bl.fsf@gmail.com>
-References: <20190731163330.32532-1-sebastien.szymanski@armadeus.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 5/5] dt-bindings: Update the riscv,isa string description
+Date: Thu, 1 Aug 2019 09:50:37 -0600
+Message-ID: <CAL_JsqLqxN1+fvrdD24Ho6s7gB+pGy-0sZaL-jJqkYZ2yC4JEA@mail.gmail.com>
+References: <20190801005843.10343-1-atish.patra@wdc.com> <20190801005843.10343-6-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20190731163330.32532-1-sebastien.szymanski@armadeus.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, devel@driverdev.osuosl.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190801005843.10343-6-atish.patra@wdc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Allison Randal <allison@lohutok.net>, Anup Patel <anup.patel@wdc.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>, Gary Guo <gary@garyguo.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2ViYXN0aWVuLApUaGFua3MgZm9yIHRoZSBwYXRjaC4KCk9uIFdlZCAzMSBKdWwgMjAxOSBh
-dCAxNzozMywgU8OpYmFzdGllbiBTenltYW5za2kgd3JvdGU6Cj4gaS5NWDcgYW5kIGkuTVg2VUwv
-TCBoYXZlIHRoZSBzYW1lIENTSSBjb250cm9sbGVyLiBTbyBhZGQgaS5NWDZVTC9MIHN1cHBvcnQK
-PiB0byBpbXg3LW1lZGlhLWNzaSBkcml2ZXIuCj4KPiBTaWduZWQtb2ZmLWJ5OiBTw6liYXN0aWVu
-IFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+Cj4KCkxHVE0uIFRo
-YW5rcyBmb3IgYWRkaW5nIHRoZSBzdXBwb3J0IHRvIHRoaXMgaW14NnVsL2wgc29jLgoKUmV2aWV3
-ZWQtYnk6IFJ1aSBNaWd1ZWwgU2lsdmEgPHJtZnJmc0BnbWFpbC5jb20+CgotLS0KQ2hlZXJzLAoJ
-UnVpCgo+IC0tLQo+Cj4gQ2hhbmdlcyBmb3IgdjM6Cj4gLSByZWJhc2Ugb24gTGludXggdjUuMy1y
-YzIKPiAtIHJlbW92ZSBjc2lfc29jX2lkIHZhciBhcyBpdCdzIG5vdCBuZWVkZWQgYW55bW9yZSB0
-aGFua3MgdG8gY29tbWl0Cj4gICBlMGM3NmE3ZDM0MjggKCJtZWRpYTogaW14Ny1tZWRpYS1jc2k6
-IGdldCBjc2kgdXBzdHJlYW0gZW5kcG9pbnQiKQo+Cj4gQ2hhbmdlcyBmb3IgdjI6Cj4gIC0gcmVi
-YXNlIG9uIHRvcCBvZiBsaW51eHR2L21hc3Rlcgo+ICAtIG1lbnRpb24gaS5NWDZVTC9MIGluIGhl
-YWRlciBhbmQgS2NvbmZpZyBoZWxwIHRleHQKPiAgLSByZW5hbWUgY3NpX3R5cGUgdG8gY3NpX3Nv
-Y19pZAo+Cj4gIGRyaXZlcnMvc3RhZ2luZy9tZWRpYS9pbXgvS2NvbmZpZyAgICAgICAgICB8ICA0
-ICstLQo+ICBkcml2ZXJzL3N0YWdpbmcvbWVkaWEvaW14L2lteDctbWVkaWEtY3NpLmMgfCAzMCAr
-KysrKysrKysrKysrKystLS0tLS0tCj4gIDIgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygr
-KSwgMTEgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL21lZGlh
-L2lteC9LY29uZmlnIGIvZHJpdmVycy9zdGFnaW5nL21lZGlhL2lteC9LY29uZmlnCj4gaW5kZXgg
-NGM3MjYzNDVkYzI1Li5mNTE0NzYyNDMwMTYgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9zdGFnaW5n
-L21lZGlhL2lteC9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9zdGFnaW5nL21lZGlhL2lteC9LY29u
-ZmlnCj4gQEAgLTIyLDExICsyMiwxMSBAQCBjb25maWcgVklERU9fSU1YX0NTSQo+ICAJICBBIHZp
-ZGVvNGxpbnV4IGNhbWVyYSBzZW5zb3IgaW50ZXJmYWNlIGRyaXZlciBmb3IgaS5NWDUvNi4KPgo+
-ICBjb25maWcgVklERU9fSU1YN19DU0kKPiAtCXRyaXN0YXRlICJpLk1YNyBDYW1lcmEgU2Vuc29y
-IEludGVyZmFjZSBkcml2ZXIiCj4gKwl0cmlzdGF0ZSAiaS5NWDZVTC9MIC8gaS5NWDcgQ2FtZXJh
-IFNlbnNvciBJbnRlcmZhY2UgZHJpdmVyIgo+ICAJZGVwZW5kcyBvbiBWSURFT19JTVhfTUVESUEg
-JiYgVklERU9fREVWICYmIEkyQwo+ICAJZGVmYXVsdCB5Cj4gIAloZWxwCj4gIAkgIEVuYWJsZSBz
-dXBwb3J0IGZvciB2aWRlbzRsaW51eCBjYW1lcmEgc2Vuc29yIGludGVyZmFjZSBkcml2ZXIgZm9y
-Cj4gLQkgIGkuTVg3Lgo+ICsJICBpLk1YNlVML0wgb3IgaS5NWDcuCj4gIGVuZG1lbnUKPiAgZW5k
-aWYKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL21lZGlhL2lteC9pbXg3LW1lZGlhLWNz
-aS5jIGIvZHJpdmVycy9zdGFnaW5nL21lZGlhL2lteC9pbXg3LW1lZGlhLWNzaS5jCj4gaW5kZXgg
-NTAwYjRjMDhkOTY3Li40Y2E3OWZmNGM5YjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9zdGFnaW5n
-L21lZGlhL2lteC9pbXg3LW1lZGlhLWNzaS5jCj4gKysrIGIvZHJpdmVycy9zdGFnaW5nL21lZGlh
-L2lteC9pbXg3LW1lZGlhLWNzaS5jCj4gQEAgLTEsNiArMSw2IEBACj4gIC8vIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gIC8qCj4gLSAqIFY0TDIgQ2FwdHVyZSBDU0kgU3ViZGV2
-IGZvciBGcmVlc2NhbGUgaS5NWDcgU09DCj4gKyAqIFY0TDIgQ2FwdHVyZSBDU0kgU3ViZGV2IGZv
-ciBGcmVlc2NhbGUgaS5NWDZVTC9MIC8gaS5NWDcgU09DCj4gICAqCj4gICAqIENvcHlyaWdodCAo
-YykgMjAxOSBMaW5hcm8gTHRkCj4gICAqCj4gQEAgLTc2NSw2ICs3NjUsNyBAQCBzdGF0aWMgaW50
-IGlteDdfY3NpX2NvbmZpZ3VyZShzdHJ1Y3QgaW14N19jc2kgKmNzaSkKPiAgCXN0cnVjdCB2NGwy
-X3BpeF9mb3JtYXQgKm91dF9waXggPSAmdmRldi0+Zm10LmZtdC5waXg7Cj4gIAlfX3UzMiBpbl9j
-b2RlID0gY3NpLT5mb3JtYXRfbWJ1c1tJTVg3X0NTSV9QQURfU0lOS10uY29kZTsKPiAgCXUzMiBj
-cjEsIGNyMTg7Cj4gKwlpbnQgd2lkdGggPSBvdXRfcGl4LT53aWR0aDsKPgo+ICAJaWYgKG91dF9w
-aXgtPmZpZWxkID09IFY0TDJfRklFTERfSU5URVJMQUNFRCkgewo+ICAJCWlteDdfY3NpX2RlaW50
-ZXJsYWNlX2VuYWJsZShjc2ksIHRydWUpOwo+IEBAIC03NzQsMTUgKzc3NSwyNyBAQCBzdGF0aWMg
-aW50IGlteDdfY3NpX2NvbmZpZ3VyZShzdHJ1Y3QgaW14N19jc2kgKmNzaSkKPiAgCQlpbXg3X2Nz
-aV9idWZfc3RyaWRlX3NldChjc2ksIDApOwo+ICAJfQo+Cj4gLQlpbXg3X2NzaV9zZXRfaW1hZ3Bh
-cmEoY3NpLCBvdXRfcGl4LT53aWR0aCwgb3V0X3BpeC0+aGVpZ2h0KTsKPiArCWNyMTggPSBpbXg3
-X2NzaV9yZWdfcmVhZChjc2ksIENTSV9DU0lDUjE4KTsKPiArCj4gKwlpZiAoIWNzaS0+aXNfY3Np
-Mikgewo+ICsJCWlmIChvdXRfcGl4LT5waXhlbGZvcm1hdCA9PSBWNEwyX1BJWF9GTVRfVVlWWSB8
-fAo+ICsJCSAgICBvdXRfcGl4LT5waXhlbGZvcm1hdCA9PSBWNEwyX1BJWF9GTVRfWVVZVikKPiAr
-CQkJd2lkdGggKj0gMjsKPiArCj4gKwkJaW14N19jc2lfc2V0X2ltYWdwYXJhKGNzaSwgd2lkdGgs
-IG91dF9waXgtPmhlaWdodCk7Cj4gKwo+ICsJCWNyMTggfD0gKEJJVF9CQVNFQUREUl9TV0lUQ0hf
-RU4gfCBCSVRfQkFTRUFERFJfU1dJVENIX1NFTCB8Cj4gKwkJCUJJVF9CQVNFQUREUl9DSEdfRVJS
-X0VOKTsKPiArCQlpbXg3X2NzaV9yZWdfd3JpdGUoY3NpLCBjcjE4LCBDU0lfQ1NJQ1IxOCk7Cj4K
-PiAtCWlmICghY3NpLT5pc19jc2kyKQo+ICAJCXJldHVybiAwOwo+ICsJfQo+ICsKPiArCWlteDdf
-Y3NpX3NldF9pbWFncGFyYShjc2ksIHdpZHRoLCBvdXRfcGl4LT5oZWlnaHQpOwo+Cj4gIAljcjEg
-PSBpbXg3X2NzaV9yZWdfcmVhZChjc2ksIENTSV9DU0lDUjEpOwo+ICAJY3IxICY9IH5CSVRfR0NM
-S19NT0RFOwo+Cj4gLQljcjE4ID0gaW14N19jc2lfcmVnX3JlYWQoY3NpLCBDU0lfQ1NJQ1IxOCk7
-Cj4gIAljcjE4ICY9IEJJVF9NSVBJX0RBVEFfRk9STUFUX01BU0s7Cj4gIAljcjE4IHw9IEJJVF9E
-QVRBX0ZST01fTUlQSTsKPgo+IEBAIC04MTcsMTEgKzgzMCw5IEBAIHN0YXRpYyB2b2lkIGlteDdf
-Y3NpX2VuYWJsZShzdHJ1Y3QgaW14N19jc2kgKmNzaSkKPiAgewo+ICAJaW14N19jc2lfc3dfcmVz
-ZXQoY3NpKTsKPgo+IC0JaWYgKGNzaS0+aXNfY3NpMikgewo+IC0JCWlteDdfY3NpX2RtYXJlcV9y
-ZmZfZW5hYmxlKGNzaSk7Cj4gLQkJaW14N19jc2lfaHdfZW5hYmxlX2lycShjc2kpOwo+IC0JCWlt
-eDdfY3NpX2h3X2VuYWJsZShjc2kpOwo+IC0JfQo+ICsJaW14N19jc2lfZG1hcmVxX3JmZl9lbmFi
-bGUoY3NpKTsKPiArCWlteDdfY3NpX2h3X2VuYWJsZV9pcnEoY3NpKTsKPiArCWlteDdfY3NpX2h3
-X2VuYWJsZShjc2kpOwo+ICB9Cj4KPiAgc3RhdGljIHZvaWQgaW14N19jc2lfZGlzYWJsZShzdHJ1
-Y3QgaW14N19jc2kgKmNzaSkKPiBAQCAtMTMwMiw2ICsxMzEzLDcgQEAgc3RhdGljIGludCBpbXg3
-X2NzaV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPgo+ICBzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBpbXg3X2NzaV9vZl9tYXRjaFtdID0gewo+ICAJeyAuY29t
-cGF0aWJsZSA9ICJmc2wsaW14Ny1jc2kiIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg2
-dWwtY3NpIiB9LAo+ICAJeyB9LAo+ICB9Owo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBpbXg3
-X2NzaV9vZl9tYXRjaCk7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, Jul 31, 2019 at 6:58 PM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> Since the RISC-V specification states that ISA description strings are
+> case-insensitive, there's no functional difference between mixed-case,
+> upper-case, and lower-case ISA strings. Thus, to simplify parsing,
+> specify that the letters present in "riscv,isa" must be all lowercase.
+>
+> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  Documentation/devicetree/bindings/riscv/cpus.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> index c899111aa5e3..4f0acb00185a 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> @@ -46,10 +46,12 @@ properties:
+>            - rv64imafdc
+>      description:
+>        Identifies the specific RISC-V instruction set architecture
+> -      supported by the hart.  These are documented in the RISC-V
+> +      supported by the hart. These are documented in the RISC-V
+>        User-Level ISA document, available from
+>        https://riscv.org/specifications/
+>
+> +      Letters in the riscv,isa string must be all lowercase.
+> +
+
+The schemas are case sensitive this looks pretty pointless without the
+context of the commit msg. Can you prefix with 'While the
+specification is case insensitive, "
+
+For some background, FDT generally always has been case sensitive too
+(dtc won't merge/override nodes/properties with differing case). It's
+really only some older true OF systems that were case insensitive. The
+kernel had a mixture of case sensitive and insensitive comparisons
+somewhat depending on the arch and whether of_prop_cmp/of_node_cmp or
+str*cmp functions were used. There's been a lot of clean-up and now
+most comparisons are case sensitive with only Sparc having some
+deviation.
+
+Rob
