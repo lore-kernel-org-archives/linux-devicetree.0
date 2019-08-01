@@ -1,90 +1,45 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 06/20] clk: tegra: Support for OSC context save and
- restore
-Date: Thu, 1 Aug 2019 13:53:53 +0300
-Message-ID: <3b55a112-42a6-212b-beea-10b64d5341d9@gmail.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <1564532424-10449-7-git-send-email-skomatineni@nvidia.com>
- <16cca6aa-1034-f38a-49d1-d87b37fb6bbb@gmail.com>
- <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
+From: Ran Bi <ran.bi@mediatek.com>
+Subject: [PATCH v2 1/4] bindings: rtc: add bindings for MT2712 RTC
+Date: Thu, 1 Aug 2019 19:01:19 +0800
+Message-ID: <20190801110122.26834-2-ran.bi@mediatek.com>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b5a58bfc-c777-886f-d902-f499ec38e2ae@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190801110122.26834-1-ran.bi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Ran Bi <ran.bi@media>
 List-Id: devicetree@vger.kernel.org
 
-01.08.2019 0:04, Sowjanya Komatineni пишет:
-> 
-> On 7/31/19 4:11 AM, Dmitry Osipenko wrote:
->> 31.07.2019 3:20, Sowjanya Komatineni пишет:
->>> This patch adds support for saving OSC clock frequency and the
->>> drive-strength during OSC clock init and creates an API to restore
->>> OSC control register value from the saved context.
->>>
->>> This API is invoked by Tegra210 clock driver during system resume
->>> to restore the  OSC clock settings.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/clk/tegra/clk-tegra-fixed.c | 15 +++++++++++++++
->>>   drivers/clk/tegra/clk.h             |  1 +
->>>   2 files changed, 16 insertions(+)
->>>
->>> diff --git a/drivers/clk/tegra/clk-tegra-fixed.c
->>> b/drivers/clk/tegra/clk-tegra-fixed.c
->>> index 8d91b2b191cf..7c6c8abfcde6 100644
->>> --- a/drivers/clk/tegra/clk-tegra-fixed.c
->>> +++ b/drivers/clk/tegra/clk-tegra-fixed.c
->>> @@ -17,6 +17,10 @@
->>>   #define OSC_CTRL            0x50
->>>   #define OSC_CTRL_OSC_FREQ_SHIFT        28
->>>   #define OSC_CTRL_PLL_REF_DIV_SHIFT    26
->>> +#define OSC_CTRL_MASK            (0x3f2 |    \
->>> +                    (0xf << OSC_CTRL_OSC_FREQ_SHIFT))
->>> +
->>> +static u32 osc_ctrl_ctx;
->>>     int __init tegra_osc_clk_init(void __iomem *clk_base, struct
->>> tegra_clk *clks,
->>>                     unsigned long *input_freqs, unsigned int num,
->>> @@ -29,6 +33,7 @@ int __init tegra_osc_clk_init(void __iomem
->>> *clk_base, struct tegra_clk *clks,
->>>       unsigned osc_idx;
->>>         val = readl_relaxed(clk_base + OSC_CTRL);
->>> +    osc_ctrl_ctx = val & OSC_CTRL_MASK;
->>>       osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
->>>         if (osc_idx < num)
->>> @@ -96,3 +101,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk
->>> *tegra_clks)
->>>           *dt_clk = clk;
->>>       }
->>>   }
->>> +
->>> +void tegra_clk_osc_resume(void __iomem *clk_base)
->>> +{
->>> +    u32 val;
->>> +
->>> +    val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
->>> +    val |= osc_ctrl_ctx;
->>> +    writel_relaxed(val, clk_base + OSC_CTRL);
->> Why a full raw u32 OSC_CTRL value couldn't be simply saved and restored?
-> 
-> Storing and restoring only required fields to avoid accidental
-> misconfiguration.
-> 
-> OSC_CTRL register has other bits (PLL_REF_DIV) which are configured by
-> BR depending on OSC_FREQ and also setting PLL_REF_DIV while PLLS are in
-> use is not safe.
+Document the binding for MT2712 RTC implemented by rtc-mt2712.
 
-I'm looking at the clk-driver sources and see that none of the Tegra
-drivers ever change the OSC_CTRL configuration, T30/114 even have
-#defines for the OSC_CTRL that are unused.
+Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/rtc/rtc-mt2712.txt         | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
 
-So, this leads to a question.. does any bootloader really ever change
-the OSC_CTRL such that it differs after resume from suspend in
-comparison to the value at the time of kernel's booting up?
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt2712.txt b/Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
+new file mode 100644
+index 000000000000..c33d87e5e753
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
+@@ -0,0 +1,14 @@
++Device-Tree bindings for MediaTek SoC based RTC
++
++Required properties:
++- compatible	    : Should be "mediatek,mt2712-rtc" : for MT2712 SoC
++- reg 		    : Specifies base physical address and size of the registers;
++- interrupts	    : Should contain the interrupt for RTC alarm;
++
++Example:
++
++rtc: rtc@10011000 {
++	compatible = "mediatek,mt2712-rtc";
++	reg = <0 0x10011000 0 0x1000>;
++	interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
++};
+-- 
+2.21.0
