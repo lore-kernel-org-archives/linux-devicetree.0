@@ -1,7 +1,7 @@
 From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH 1/8] ARM: dts: imx27 phyCARD-S: native-mode is part of display-timings
-Date: Thu,  1 Aug 2019 17:46:21 +0200
-Message-ID: <20190801154628.1624-2-martin@kaiser.cx>
+Subject: [PATCH 2/8] ARM: dts: imx25: mbimxsd25: native-mode is part of display-timings
+Date: Thu,  1 Aug 2019 17:46:22 +0200
+Message-ID: <20190801154628.1624-3-martin@kaiser.cx>
 References: <20190801154628.1624-1-martin@kaiser.cx>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190801154628.1624-1-martin@kaiser.cx>
@@ -22,24 +22,22 @@ someone adds another display timing).
 
 Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts | 2 +-
+ arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-index 5e5e282ed30e..0cd75dadf292 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
-@@ -15,10 +15,10 @@
- 
- 	display: display {
- 		model = "Primeview-PD050VL1";
--		native-mode = <&timing0>;
- 		bits-per-pixel = <16>;  /* non-standard but required */
- 		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
+diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
+index ad2f7e879831..80a7f96de4c6 100644
+--- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
++++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-dvi-svga.dts
+@@ -14,8 +14,8 @@
+ 		bits-per-pixel = <16>;
+ 		fsl,pcr = <0xfa208b80>;
+ 		bus-width = <18>;
+-		native-mode = <&dvi_svga_timings>;
  		display-timings {
-+			native-mode = <&timing0>;
- 			timing0: 640x480 {
- 				hactive = <640>;
- 				vactive = <480>;
++			native-mode = <&dvi_svga_timings>;
+ 			dvi_svga_timings: 800x600 {
+ 				clock-frequency = <40000000>;
+ 				hactive = <800>;
 -- 
 2.11.0
