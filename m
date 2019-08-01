@@ -1,7 +1,7 @@
 From: Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v3 4/5] RISC-V: Export few kernel symbols
-Date: Wed, 31 Jul 2019 17:58:42 -0700
-Message-ID: <20190801005843.10343-5-atish.patra@wdc.com>
+Subject: [PATCH v3 5/5] dt-bindings: Update the riscv,isa string description
+Date: Wed, 31 Jul 2019 17:58:43 -0700
+Message-ID: <20190801005843.10343-6-atish.patra@wdc.com>
 References: <20190801005843.10343-1-atish.patra@wdc.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,36 +21,34 @@ To: linux-kernel@vger.kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Yangtao Li <tiny.windzz@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Anup Patel <anup.patel@wdc.com>, Johan Hovold <johan@kernel.org>, Atish Patra <atish.patra@wdc.com>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@sifive.com>, Gary Guo <gary@garyguo.net>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>, Allison Randal <allison@lohutok.net>
 List-Id: devicetree@vger.kernel.org
 
-Export few symbols used by kvm module. Without this, kvm can not
-be compiled as a module.
+Since the RISC-V specification states that ISA description strings are
+case-insensitive, there's no functional difference between mixed-case,
+upper-case, and lower-case ISA strings. Thus, to simplify parsing,
+specify that the letters present in "riscv,isa" must be all lowercase.
 
+Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/kernel/smp.c  | 2 +-
- arch/riscv/kernel/time.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index 5a9834503a2f..402979f575de 100644
---- a/arch/riscv/kernel/smp.c
-+++ b/arch/riscv/kernel/smp.c
-@@ -193,4 +193,4 @@ void smp_send_reschedule(int cpu)
- {
- 	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
- }
--
-+EXPORT_SYMBOL_GPL(smp_send_reschedule);
-diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-index 541a2b885814..9dd1f2e64db1 100644
---- a/arch/riscv/kernel/time.c
-+++ b/arch/riscv/kernel/time.c
-@@ -9,6 +9,7 @@
- #include <asm/sbi.h>
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index c899111aa5e3..4f0acb00185a 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -46,10 +46,12 @@ properties:
+           - rv64imafdc
+     description:
+       Identifies the specific RISC-V instruction set architecture
+-      supported by the hart.  These are documented in the RISC-V
++      supported by the hart. These are documented in the RISC-V
+       User-Level ISA document, available from
+       https://riscv.org/specifications/
  
- unsigned long riscv_timebase;
-+EXPORT_SYMBOL_GPL(riscv_timebase);
- 
- void __init time_init(void)
- {
++      Letters in the riscv,isa string must be all lowercase.
++
+   timebase-frequency:
+     type: integer
+     minimum: 1
 -- 
 2.21.0
