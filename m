@@ -1,184 +1,226 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream like
- logger
-Date: Thu, 1 Aug 2019 11:59:57 -0700
-Message-ID: <CAFd5g473iFfvBnJs2pcwuJYgY+DpgD6RLzyDFL1otUuScgKUag@mail.gmail.com>
-References: <20190716175021.9CA412173C@mail.kernel.org>
- <CAFd5g453vXeSUCZenCk_CzJ-8a1ym9RaPo0NVF=FujF9ac-5Ag@mail.gmail.com>
- <20190718175024.C3EC421019@mail.kernel.org>
- <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com> <20190722200347.261D3218C9@mail.kernel.org>
- <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org>
- <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
- <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
- <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz>
- <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
+ support
+Date: Thu, 1 Aug 2019 22:00:55 +0300
+Message-ID: <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
+References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
+ <1564532424-10449-8-git-send-email-skomatineni@nvidia.com>
+ <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
+ <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
+ <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
+ <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Timothy Bird <Tim.Bird-7U/KSKJipcs@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 11:55 AM Brendan Higgins
-<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->
-> On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org> wrote:
-> >
-> > On Thu 2019-07-25 13:21:12, Brendan Higgins wrote:
-> > > On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org> wrote:
-> > > >
-> > > > On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
-> > > > > Quoting Brendan Higgins (2019-07-22 15:30:49)
-> > > > > > On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > > > > >
-> > > > > > >
-> > > > > > > What's the calling context of the assertions and expectations? I still
-> > > > > > > don't like the fact that string stream needs to allocate buffers and
-> > > > > > > throw them into a list somewhere because the calling context matters
-> > > > > > > there.
-> > > > > >
-> > > > > > The calling context is the same as before, which is anywhere.
-> > > > >
-> > > > > Ok. That's concerning then.
-> > > > >
-> > > > > >
-> > > > > > > I'd prefer we just wrote directly to the console/log via printk
-> > > > > > > instead. That way things are simple because we use the existing
-> > > > > > > buffering path of printk, but maybe there's some benefit to the string
-> > > > > > > stream that I don't see? Right now it looks like it builds a string and
-> > > > > > > then dumps it to printk so I'm sort of lost what the benefit is over
-> > > > > > > just writing directly with printk.
-> > > > > >
-> > > > > > It's just buffering it so the whole string gets printed uninterrupted.
-> > > > > > If we were to print out piecemeal to printk, couldn't we have another
-> > > > > > call to printk come in causing it to garble the KUnit message we are
-> > > > > > in the middle of printing?
-> > > > >
-> > > > > Yes, printing piecemeal by calling printk many times could lead to
-> > > > > interleaving of messages if something else comes in such as an interrupt
-> > > > > printing something. Printk has some support to hold "records" but I'm
-> > > > > not sure how that would work here because KERN_CONT talks about only
-> > > > > being used early on in boot code. I haven't looked at printk in detail
-> > > > > though so maybe I'm all wrong and KERN_CONT just works?
-> > > >
-> > > > KERN_CONT does not guarantee that the message will get printed
-> > > > together. The pieces get interleaved with messages printed in
-> > > > parallel.
-> > > >
-> > > > Note that KERN_CONT was originally really meant to be used only during
-> > > > boot. It was later used more widely and ended in the best effort category.
-> > > >
-> > > > There were several attempts to make it more reliable. But it was
-> > > > always either too complicated or error prone or both.
-> > > >
-> > > > You need to use your own buffering if you rely want perfect output.
-> > > > The question is if it is really worth the complexity. Also note that
-> > > > any buffering reduces the chance that the messages will reach
-> > > > the console.
-> > >
-> > > Seems like that settles it then. Thanks!
-> > >
-> > > > BTW: There is a work in progress on a lockless printk ring buffer.
-> > > > It will make printk() more secure regarding deadlocks. But it might
-> > > > make transparent handling of continuous lines even more tricky.
-> > > >
-> > > > I guess that local buffering, before calling printk(), will be
-> > > > even more important then. Well, it might really force us to create
-> > > > an API for it.
-> > >
-> > > Cool! Can you CC me on that discussion?
-> >
-> > Adding John Oggness into CC.
-> >
-> > John, please CC Brendan Higgins on the patchsets eventually switching
-> > printk() into the lockless buffer. The test framework is going to
-> > do its own buffering to keep the related messages together.
-> >
-> > The lockless ringbuffer might make handling of related (partial)
-> > lines worse or better. It might justify KUnit's extra buffering
-> > or it might allow to get rid of it.
->
-> Thanks for CC'ing me on the printk ringbuffer thread. It looks like it
-> actually probably won't affect my needs for KUnit logging. The biggest
-> reason I need some sort of buffering system is to be able to compose
-> messages piece meal into a single message that will be printed out to
-> the user as a single message with no messages from other printk
-> callers printed out in the middle of mine.
->
-> The prb does look interesting; however, it appears that to get the
-> semantics that I need, I would have to put my entire message in a
-> single data block and would consequently need to know the size of my
-> message a priori, which is problematic. Consequently, it seems as
-> though I will probably need to compose my entire message using my own
-> buffering system.
->
-> > > > Note that stroring the messages into the printk log is basically safe in any
-> > > > context. It uses temporary per-CPU buffers for recursive messages and
-> > > > in NMI. The only problem is panic() when some CPU gets stuck with the
-> > > > lock taken. This will get solved by the lockless ringbuffer. Also
-> > > > the temporary buffers will not be necessary any longer.
-> > >
-> > > Sure, I think Stephen's concern is all the supporting code that is
-> > > involved. Not printk specifically. It just means a lot more of KUnit
-> > > has to be IRQ safe.
-> >
-> > I see.
-> >
-> > BTW: I wonder if KUnit could reuse the existing seq_buf implementation
-> > for buffering messages.
-> >
-> > I am sorry if it has already been proposed and rejected for some
-> > reason. I might have missed it. Feel free to just point me to
-> > same older mail.
->
-> Yeah, we discussed it briefly here:
->
-> https://lkml.org/lkml/2019/5/17/497
->
-> Looks like I forgot to include my reasoning in the commit text, sorry
-> about that.
->
-> > > > Much bigger problems are with consoles. There are many of them. It
-> > > > means a lot of code and more locks involved, including scheduler
-> > > > locks. Note that console lock is a semaphore.
-> > >
-> > > That shouldn't affect us though, right? As long as we continue to use
-> > > the printk interface?
-> >
-> > I guess that it should not affect KUnit.
-> >
-> > The only problem might be if the testing framework calls printk()
-> > inside scheduler or console code. And only when the tested code
-> > uses the same locks that will be used by the called printk().
->
-> Yeah, well printk will not be our only problem in those instances.
->
-> > To be honest I do not fully understand KUnit design. I am not
-> > completely sure how the tested code is isolated from the running
-> > system. Namely, I do not know if the tested code shares
-> > the same locks with the system running the test.
->
-> No worries, I don't expect printk to be the hang up in those cases. It
-> sounds like KUnit has a long way to evolve before printk is going to
-> be a limitation.
+01.08.2019 20:58, Sowjanya Komatineni пишет:
+> 
+> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
+>>
+>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
+>>> 31.07.2019 12:50, Dmitry Osipenko пишет:
+>>>> 31.07.2019 3:20, Sowjanya Komatineni пишет:
+>>>>> This patch implements save and restore context for peripheral fixed
+>>>>> clock ops, peripheral gate clock ops, sdmmc mux clock ops, and
+>>>>> peripheral clock ops.
+>>>>>
+>>>>> During system suspend, core power goes off and looses the settings
+>>>>> of the Tegra CAR controller registers.
+>>>>>
+>>>>> So during suspend entry clock and reset state of peripherals is saved
+>>>>> and on resume they are restored to have clocks back to same rate and
+>>>>> state as before suspend.
+>>>>>
+>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>   drivers/clk/tegra/clk-periph-fixed.c | 33
+>>>>> ++++++++++++++++++++++++++++++++
+>>>>>   drivers/clk/tegra/clk-periph-gate.c  | 34
+>>>>> +++++++++++++++++++++++++++++++++
+>>>>>   drivers/clk/tegra/clk-periph.c       | 37
+>>>>> ++++++++++++++++++++++++++++++++++++
+>>>>>   drivers/clk/tegra/clk-sdmmc-mux.c    | 28
+>>>>> +++++++++++++++++++++++++++
+>>>>>   drivers/clk/tegra/clk.h              |  6 ++++++
+>>>>>   5 files changed, 138 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
+>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
+>>>>> index c088e7a280df..21b24530fa00 100644
+>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
+>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
+>>>>> @@ -60,11 +60,44 @@ tegra_clk_periph_fixed_recalc_rate(struct
+>>>>> clk_hw *hw,
+>>>>>       return (unsigned long)rate;
+>>>>>   }
+>>>>>   +static int tegra_clk_periph_fixed_save_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_periph_fixed *fixed =
+>>>>> to_tegra_clk_periph_fixed(hw);
+>>>>> +    u32 mask = 1 << (fixed->num % 32);
+>>>>> +
+>>>>> +    fixed->enb_ctx = readl_relaxed(fixed->base +
+>>>>> fixed->regs->enb_reg) &
+>>>>> +             mask;
+>>>>> +    fixed->rst_ctx = readl_relaxed(fixed->base +
+>>>>> fixed->regs->rst_reg) &
+>>>>> +             mask;
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void tegra_clk_periph_fixed_restore_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_periph_fixed *fixed =
+>>>>> to_tegra_clk_periph_fixed(hw);
+>>>>> +    u32 mask = 1 << (fixed->num % 32);
+>>>>> +
+>>>>> +    if (fixed->enb_ctx)
+>>>>> +        writel_relaxed(mask, fixed->base + fixed->regs->enb_set_reg);
+>>>>> +    else
+>>>>> +        writel_relaxed(mask, fixed->base + fixed->regs->enb_clr_reg);
+>>>>> +
+>>>>> +    udelay(2);
+>>>>> +
+>>>>> +    if (!fixed->rst_ctx) {
+>>>>> +        udelay(5); /* reset propogation delay */
+>>>>> +        writel_relaxed(mask, fixed->base + fixed->regs->rst_reg);
+>>>>> +    }
+>>>>> +}
+>>>>> +
+>>>>>   static const struct clk_ops tegra_clk_periph_fixed_ops = {
+>>>>>       .is_enabled = tegra_clk_periph_fixed_is_enabled,
+>>>>>       .enable = tegra_clk_periph_fixed_enable,
+>>>>>       .disable = tegra_clk_periph_fixed_disable,
+>>>>>       .recalc_rate = tegra_clk_periph_fixed_recalc_rate,
+>>>>> +    .save_context = tegra_clk_periph_fixed_save_context,
+>>>>> +    .restore_context = tegra_clk_periph_fixed_restore_context,
+>>>>>   };
+>>>>>     struct clk *tegra_clk_register_periph_fixed(const char *name,
+>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
+>>>>> b/drivers/clk/tegra/clk-periph-gate.c
+>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
+>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
+>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
+>>>>> @@ -25,6 +25,8 @@ static DEFINE_SPINLOCK(periph_ref_lock);
+>>>>>     #define read_rst(gate) \
+>>>>>       readl_relaxed(gate->clk_base + (gate->regs->rst_reg))
+>>>>> +#define write_rst_set(val, gate) \
+>>>>> +    writel_relaxed(val, gate->clk_base + (gate->regs->rst_set_reg))
+>>>>>   #define write_rst_clr(val, gate) \
+>>>>>       writel_relaxed(val, gate->clk_base + (gate->regs->rst_clr_reg))
+>>>>>   @@ -110,10 +112,42 @@ static void clk_periph_disable(struct
+>>>>> clk_hw *hw)
+>>>>>       spin_unlock_irqrestore(&periph_ref_lock, flags);
+>>>>>   }
+>>>>>   +static int clk_periph_gate_save_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
+>>>>> +
+>>>>> +    gate->clk_state_ctx = read_enb(gate) & periph_clk_to_bit(gate);
+>>>>> +    gate->rst_state_ctx = read_rst(gate) & periph_clk_to_bit(gate);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void clk_periph_gate_restore_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_periph_gate *gate = to_clk_periph_gate(hw);
+>>>>> +
+>>>>> +    if (gate->clk_state_ctx)
+>>>>> +        write_enb_set(periph_clk_to_bit(gate), gate);
+>>>>> +    else
+>>>>> +        write_enb_clr(periph_clk_to_bit(gate), gate);
+>>>>> +
+>>>>> +    udelay(5);
+>>>>> +
+>>>>> +    if (!(gate->flags & TEGRA_PERIPH_NO_RESET) &&
+>>>>> +        !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
+>>>>> +        if (gate->rst_state_ctx)
+>>>>> +            write_rst_set(periph_clk_to_bit(gate), gate);
+>>>>> +        else
+>>>>> +            write_rst_clr(periph_clk_to_bit(gate), gate);
+>>>>> +    }
+>>>>> +}
+>>>>> +
+>>>>>   const struct clk_ops tegra_clk_periph_gate_ops = {
+>>>>>       .is_enabled = clk_periph_is_enabled,
+>>>>>       .enable = clk_periph_enable,
+>>>>>       .disable = clk_periph_disable,
+>>>>> +    .save_context = clk_periph_gate_save_context,
+>>>>> +    .restore_context = clk_periph_gate_restore_context,
+>>>>>   };
+>>>>>     struct clk *tegra_clk_register_periph_gate(const char *name,
+>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
+>>>>> b/drivers/clk/tegra/clk-periph.c
+>>>>> index 58437da25156..06fb62955768 100644
+>>>>> --- a/drivers/clk/tegra/clk-periph.c
+>>>>> +++ b/drivers/clk/tegra/clk-periph.c
+>>>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struct clk_hw *hw)
+>>>>>       gate_ops->disable(gate_hw);
+>>>>>   }
+>>>>>   +static int clk_periph_save_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_periph *periph = to_clk_periph(hw);
+>>>>> +    const struct clk_ops *gate_ops = periph->gate_ops;
+>>>>> +    struct clk_hw *gate_hw = &periph->gate.hw;
+>>>>> +
+>>>>> +    if (!(periph->gate.flags & TEGRA_PERIPH_NO_GATE))
+>>>>> +        gate_ops->save_context(gate_hw);
+>>>>> +
+>>>>> +    periph->parent_ctx = clk_periph_get_parent(hw);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void clk_periph_restore_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_periph *periph = to_clk_periph(hw);
+>>>>> +    const struct clk_ops *gate_ops = periph->gate_ops;
+>>>>> +    struct clk_hw *gate_hw = &periph->gate.hw;
+>>>>> +    const struct clk_ops *div_ops = periph->div_ops;
+>>>>> +    struct clk_hw *div_hw = &periph->divider.hw;
+>>>>> +
+>>>>> +    clk_periph_set_parent(hw, periph->parent_ctx);
+>>>>> +
+>>>>> +    if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
+>>>>> +        div_ops->restore_context(div_hw);
+>>>> Could you please point to where the divider's save_context() happens?
+>>>> Because I can't see it.
+>>> Ah, I now see that there is no need to save the dividers context because
+>>> clk itself has enough info that is needed for the context's restoring
+>>> (like I pointed in the review to v6).
+>>>
+>>> Looks like you could also implement a new clk_hw_get_parent_index()
+>>> generic helper to get the index instead of storing it manually.
+>>
+>> clk_periph_get_parent basically invokes existing clk_mux_ops
+>> get_parent() which is then saved in tegra_clk_periph.
+>>
+>> All existing drivers are using directly get_parent() from clk_mux
+>> which actually gets index from the register read.
+>>
+>> To have this more generic w.r.t save/restore context point of view,
+>> probably instead of implementing new get_parent_index helper, I think
+>> its better to implement save_context and restore_context to
+>> clk_mux_ops along with creating parent_index field into clk_mux to
+>> cache index during set_parent.
+>>
+>> So we just need to invoke mux_ops save_context and restore_context.
+>>
+> I hope its ok to add save/restore context to clk_mux_ops to be more
+> generic w.r.t save/restore context rather than get_parent_index API.
+> Please confirm if you agree.
 
-So Stephen, what do you think?
-
-Do you want me to go forward with the new kunit_assert API wrapping
-the string_stream as I have it now? Would you prefer to punt this to a
-later patch? Or would you prefer something else?
-
-Cheers
+Sounds like a good idea. I see that there is a 'restoring' helper for
+the generic clk_gate, seems something similar could be done for the
+clk_mux. And looks like anyway you'll need to associate the parent clock
+with the hw index in order to restore the muxing.
