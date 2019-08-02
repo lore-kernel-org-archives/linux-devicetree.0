@@ -1,14 +1,14 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 63/76] ARM: dts: bcm: bcm47094: add missing #cells
- for mdio-bus-mux
-Date: Fri,  2 Aug 2019 09:19:37 -0400
-Message-ID: <20190802131951.11600-63-sashal@kernel.org>
-References: <20190802131951.11600-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 33/42] ARM: dts: bcm: bcm47094: add missing
+ #cells for mdio-bus-mux
+Date: Fri,  2 Aug 2019 09:22:53 -0400
+Message-ID: <20190802132302.13537-33-sashal@kernel.org>
+References: <20190802132302.13537-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
+In-Reply-To: <20190802132302.13537-1-sashal@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -48,10 +48,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-index 5fd47eec4407e..1679959a3654d 100644
+index 36efe410dcd71..9e33c41f54112 100644
 --- a/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
 +++ b/arch/arm/boot/dts/bcm47094-linksys-panamera.dts
-@@ -126,6 +126,9 @@
+@@ -125,6 +125,9 @@
  	};
  
  	mdio-bus-mux {
