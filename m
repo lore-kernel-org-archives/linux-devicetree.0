@@ -1,101 +1,65 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] drivers/amba: add reset control to primecell probe
-Date: Fri, 2 Aug 2019 09:29:50 -0600
-Message-ID: <CAL_Jsq+XfAO5BFnmhekUv1gKSOeVn03k7KtWWp2DgomxFL+UMQ@mail.gmail.com>
-References: <20190801184346.7015-1-dinguyen@kernel.org> <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
- <92009928-3df1-1573-7d67-40e79d77c77e@kernel.org>
+Subject: Re: [RFC 5/9] dt-bindings: arm: amlogic: amlogic, meson-gx-ao-secure:
+ convert to yaml
+Date: Fri, 2 Aug 2019 09:32:36 -0600
+Message-ID: <CAL_Jsq+gtauOzrRRtTqbowUSOMi5Rs_GQVt7e7gYHa7TtjOhOA@mail.gmail.com>
+References: <20190801135644.12843-1-narmstrong@baylibre.com>
+ <20190801135644.12843-6-narmstrong@baylibre.com>
+ <90dbcb33-74a2-68de-eb1a-ce84040298b8@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <92009928-3df1-1573-7d67-40e79d77c77e@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Dinh Nguyen <dinh.nguyen@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <90dbcb33-74a2-68de-eb1a-ce84040298b8@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 8:42 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
+On Fri, Aug 2, 2019 at 8:37 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
+> Hi Rob,
 >
+> Thanks for reviews.
 >
-> On 8/2/19 9:37 AM, Rob Herring wrote:
-> > On Thu, Aug 1, 2019 at 12:44 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
-> >>
-> >> From: Dinh Nguyen <dinh.nguyen@intel.com>
-> >>
-> >> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-> >> default. Until recently, the DMA controller was brought out of reset by the
-> >> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
-> >> are not used are held in reset and are left to Linux to bring them out of
-> >> reset.
+> On 01/08/2019 15:56, Neil Armstrong wrote:
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > ---
+> >  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 -------------
+> >  .../amlogic/amlogic,meson-gx-ao-secure.yaml   | 42 +++++++++++++++++++
+> >  2 files changed, 42 insertions(+), 28 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
 > >
-> > You can fix this in the kernel, but any versions before this change
-> > will remain broken. IMO, the u-boot change should be reverted because
-> > it is breaking an ABI (though not a good one).
-> >
+> > diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> > deleted file mode 100644
+> > index c67d9f48fb91..000000000000
+> > --- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> > +++ /dev/null
+> > @@ -1,28 +0,0 @@
+> > -Amlogic Meson Firmware registers Interface
+> > -------------------------------------------
+> > -
+> > -The Meson SoCs have a register bank with status and data shared with the
+> > -secure firmware.
+> > -
+> > -Required properties:
+> > - - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
 >
-> Right, there exists in U-Boot to support legacy platforms before this
-> recent change. This would be for future versions.
+> I have a hard time find how to define "syscon" here, if I put syscon in the compatible
+> it gets matched on other bindings and I get lot of warnings.
 >
-> >> Add a mechanism for getting the reset property and de-assert the primecell
-> >> module from reset if found. This is a not a hard fail if the reset property
-> >> is not present in the device tree node, so the driver will continue to probe.
-> >
-> > I think this belongs in the AMBA bus code, not the DT code, as that is
-> > where we already have clock control code for similar reasons.
-> >
->
-> Ok.
->
-> >>
-> >> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> >> ---
-> >>  drivers/of/platform.c | 14 ++++++++++++++
-> >>  1 file changed, 14 insertions(+)
-> >>
-> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >> index 7801e25e6895..d8945705313d 100644
-> >> --- a/drivers/of/platform.c
-> >> +++ b/drivers/of/platform.c
-> >> @@ -21,6 +21,7 @@
-> >>  #include <linux/of_irq.h>
-> >>  #include <linux/of_platform.h>
-> >>  #include <linux/platform_device.h>
-> >> +#include <linux/reset.h>
-> >>
-> >>  const struct of_device_id of_default_bus_match_table[] = {
-> >>         { .compatible = "simple-bus", },
-> >> @@ -229,6 +230,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
-> >>         struct amba_device *dev;
-> >>         const void *prop;
-> >>         int i, ret;
-> >> +       struct reset_control *rstc;
-> >>
-> >>         pr_debug("Creating amba device %pOF\n", node);
-> >>
-> >> @@ -270,6 +272,18 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
-> >>                 goto err_free;
-> >>         }
-> >>
-> >> +       /*
-> >> +        * reset control of the primecell block is optional
-> >> +        * and will not fail if the reset property is not found.
-> >> +        */
-> >> +       rstc = of_reset_control_get_exclusive(node, "dma");
-> >
-> > 'dma' doesn't sound very generic.
-> >
->
-> how about 'primecell' ?
+> How should I model it ?
 
-It should be based on what is in the TRMs. Unlike pclk, there doesn't
-appear to be a standard name or number of resets:
-
-pl011: PRESETn and nUARTRST
-pl330: ARESETn
-
-Can't you just retrieve all of them and deassert them all and ignore the name?
-
-Also, you might need to use the shared variant as the core code has to
-work for either dedicated or shared resets.
+You have to add a custom 'select' key that doesn't include 'syscon'.
+There should be a few examples in the tree.
 
 Rob
