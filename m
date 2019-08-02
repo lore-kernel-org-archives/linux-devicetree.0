@@ -1,35 +1,110 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 4/4] net: phy: realtek: configure RTL8211E LEDs
-Date: Fri, 2 Aug 2019 20:18:40 +0200
-Message-ID: <20190802181840.GP2099@lunn.ch>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add subnode for LED
+ configuration
+Date: Fri, 2 Aug 2019 11:27:37 -0700
+Message-ID: <20190802182737.GL250418@google.com>
 References: <20190801190759.28201-1-mka@chromium.org>
- <20190801190759.28201-5-mka@chromium.org>
+ <20190801190759.28201-2-mka@chromium.org>
+ <20190802165755.GM2099@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190801190759.28201-5-mka@chromium.org>
+In-Reply-To: <20190802165755.GM2099@lunn.ch>
 Sender: netdev-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
+To: Andrew Lunn <andrew@lunn.ch>
 Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:07:59PM -0700, Matthias Kaehlcke wrote:
-> Configure the RTL8211E LEDs behavior when the device tree property
-> 'realtek,led-modes' is specified.
+On Fri, Aug 02, 2019 at 06:57:55PM +0200, Andrew Lunn wrote:
+> On Thu, Aug 01, 2019 at 12:07:56PM -0700, Matthias Kaehlcke wrote:
+> > The LED behavior of some Ethernet PHYs is configurable. Add an
+> > optional 'leds' subnode with a child node for each LED to be
+> > configured. The binding aims to be compatible with the common
+> > LED binding (see devicetree/bindings/leds/common.txt).
+> > 
+> > A LED can be configured to be 'on' when a link with a certain speed
+> > is active, or to blink on RX/TX activity. For the configuration to
+> > be effective it needs to be supported by the hardware and the
+> > corresponding PHY driver.
+> > 
+> > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v4:
+> > - patch added to the series
+> > ---
+> >  .../devicetree/bindings/net/ethernet-phy.yaml | 47 +++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> > index f70f18ff821f..81c5aacc89a5 100644
+> > --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> > +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+> > @@ -153,6 +153,38 @@ properties:
+> >        Delay after the reset was deasserted in microseconds. If
+> >        this property is missing the delay will be skipped.
+> >  
+> > +patternProperties:
+> > +  "^leds$":
+> > +    type: object
+> > +    description:
+> > +      Subnode with configuration of the PHY LEDs.
+> > +
+> > +    patternProperties:
+> > +      "^led@[0-9]+$":
+> > +        type: object
+> > +        description:
+> > +          Subnode with the configuration of a single PHY LED.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description:
+> > +          The ID number of the LED, typically corresponds to a hardware ID.
+> > +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> > +
+> > +      linux,default-trigger:
+> > +        description:
+> > +          This parameter, if present, is a string specifying the trigger
+> > +          assigned to the LED. Supported triggers are:
+> > +            "phy_link_10m_active" - LED will be on when a 10Mb/s link is active
+> > +            "phy_link_100m_active" - LED will be on when a 100Mb/s link is active
+> > +            "phy_link_1g_active" - LED will be on when a 1Gb/s link is active
+> > +            "phy_link_10g_active" - LED will be on when a 10Gb/s link is active
+> > +            "phy_activity" - LED will blink when data is received or transmitted
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Matthias
+> 
+> We should think a bit more about these names.
+> 
+> I can see in future needing 1G link, but it blinks off when there is
+> active traffic? So phy_link_1g_active could be confusing, and very similar to
+> phy_link_1g_activity?
 
-Hi Matthias
+agreed, the 'active' vs' 'activity' can be confusing, let's avoid that.
 
-I was more thinking of adding a new driver call to the PHY driver API,
-to configure an LED. Something like
+> So maybe 
 
-rtl8211e_config_leds(phydev, int led, struct phy_led_config cfg);
+> > +            "phy_link_10m" - LED will be solid on when a 10Mb/s link is active
+> > +            "phy_link_100m" - LED will be solid on when a 100Mb/s link is active
+> > +            "phy_link_1g" - LED will be solid on when a 1Gb/s link is active
+> 
+> etc.
+>
+> And then in the future we can have
+> 
+>                "phy_link_1g_activity' - LED will be on when 1Gbp/s
+>                                         link is active and blink off
+>                                         with activity.
 
-It would be called by the phylib core after config_init(). But also,
-thinking ahead to generic linux LED support, it could be called later
-to reconfigure the LEDs to use a different trigger. The standard LED
-sysfs interface would be used.
+sounds good to me
 
-      Andrew
+> What other use cases do we have? I don't want to support everything,
+> but we should be able to represent the most common modes without the
+> names getting too confusing.
+
+Initially I planned to support to configure a LED to be solid for
+multiple link speeds, however that could become a bit messy with the
+string based triggers, unless we limit the possible combinations. My
+expertise in network land is limited, so I'm not sure if that's an
+important/realistic use case.
