@@ -1,42 +1,54 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: A few fixes for veyron-{fievel,tiger}
-Date: Sat, 03 Aug 2019 00:36:10 +0200
-Message-ID: <3131503.0ZxQz3Vuye@phil>
-References: <20190731151527.122002-1-mka@chromium.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: arm: fsl: Add the S32V234-EVB board
+Date: Fri, 2 Aug 2019 16:38:16 -0600
+Message-ID: <CAL_JsqL++GZBxczxePni9ysNq06kObB4EzJEi1e4M=PurPZFgQ@mail.gmail.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com> <20190802194702.30249-2-stefan-gabriel.mirea@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731151527.122002-1-mka@chromium.org>
+In-Reply-To: <20190802194702.30249-2-stefan-gabriel.mirea@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Eddy Petrisor <eddy.petrisor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 31. Juli 2019, 17:15:27 CEST schrieb Matthias Kaehlcke:
-> Fix/improve a few things for veyron fievel/tiger:
-> 
-> - move 'vccsys' regulator from tiger to fievel, both boards
->   have it (and tiger includes the fievel .dtsi)
-> - move 'ext_gmac' node below regulators
-> - fix GPIO ids of vcc5_host1 and vcc5_host2 regulators
-> - remove reset configuration from 'gmac' node, this is already done
->   in rk3288.dtsi
-> - fixed style issues of some multi-line comments
-> - switch 'vcc18_lcdt', 'vdd10_lcd' and 'vcc33_ccd' regulators off
->   during suspend
-> - no pull-up on the Bluetooth wake-up pin, there is an external
->   pull-up. The signal is active low, add the 'bt_host_wake_l'
->   pinctrl config
-> - move BC 1.2 pins up in the pinctrl config to keep 'wake only' pins
->   separate
-> - add BC 1.2 pins to sleep config
-> 
-> Fixes: 0067692b662e ("ARM: dts: rockchip: add veyron-fievel board")
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Fri, Aug 2, 2019 at 1:47 PM Stefan-gabriel Mirea
+<stefan-gabriel.mirea@nxp.com> wrote:
+>
+> From: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
+>
+> Add entry for the NXP S32V234 Customer Evaluation Board to the board/SoC
+> bindings.
+>
+> Signed-off-by: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
+> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentati=
+on/devicetree/bindings/arm/fsl.yaml
+> index 7294ac36f4c0..104d60a11177 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -309,4 +309,10 @@ properties:
+>                - fsl,ls2088a-rdb
+>            - const: fsl,ls2088a
+>
+> +      - description: S32V234 Customer Evaluation Board
 
-applied for 5.4
+Most of the entries in this file are for all the boards for an SoC.
 
-Thanks
-Heiko
+> +        items:
+> +          - enum:
+> +              - fsl,s32v234-evb
+
+If that's not going to be the case here, you can use 'const' here.
+
+> +          - const: fsl,s32v234
+> +
+>  ...
+> --
+> 2.22.0
+>
