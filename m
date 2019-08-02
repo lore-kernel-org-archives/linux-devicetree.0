@@ -1,65 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 5/9] dt-bindings: arm: amlogic: amlogic, meson-gx-ao-secure:
- convert to yaml
-Date: Fri, 2 Aug 2019 09:32:36 -0600
-Message-ID: <CAL_Jsq+gtauOzrRRtTqbowUSOMi5Rs_GQVt7e7gYHa7TtjOhOA@mail.gmail.com>
-References: <20190801135644.12843-1-narmstrong@baylibre.com>
- <20190801135644.12843-6-narmstrong@baylibre.com>
- <90dbcb33-74a2-68de-eb1a-ce84040298b8@baylibre.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
+Date: Fri, 2 Aug 2019 11:09:13 -0500
+Message-ID: <f45ec1f4-6463-12d9-9459-35fe7b46671a@lechnology.com>
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-3-david@lechnology.com> <20190802092727.GB30522@icarus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <90dbcb33-74a2-68de-eb1a-ce84040298b8@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190802092727.GB30522@icarus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 8:37 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi Rob,
->
-> Thanks for reviews.
->
-> On 01/08/2019 15:56, Neil Armstrong wrote:
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > ---
-> >  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 -------------
-> >  .../amlogic/amlogic,meson-gx-ao-secure.yaml   | 42 +++++++++++++++++++
-> >  2 files changed, 42 insertions(+), 28 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> > deleted file mode 100644
-> > index c67d9f48fb91..000000000000
-> > --- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> > +++ /dev/null
-> > @@ -1,28 +0,0 @@
-> > -Amlogic Meson Firmware registers Interface
-> > -------------------------------------------
-> > -
-> > -The Meson SoCs have a register bank with status and data shared with the
-> > -secure firmware.
-> > -
-> > -Required properties:
-> > - - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
->
-> I have a hard time find how to define "syscon" here, if I put syscon in the compatible
-> it gets matched on other bindings and I get lot of warnings.
->
-> How should I model it ?
+On 8/2/19 4:27 AM, William Breathitt Gray wrote:
+>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> index a7e57516959e..ddcbb8573894 100644
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -499,7 +499,7 @@ config  PWM_TIEHRPWM
+>>   
+>>   config  PWM_TIPWMSS
+>>   	bool
+>> -	default y if (ARCH_OMAP2PLUS) && (PWM_TIECAP || PWM_TIEHRPWM)
+>> +	default y if (ARCH_OMAP2PLUS) && (PWM_TIECAP || PWM_TIEHRPWM || TI_EQEP)
+>>   	help
+>>   	  PWM Subsystem driver support for AM33xx SOC.
+> I was surprised to see this pwm Kconfig change in this patch. Is
+> PWM_TIPWMSS required for TI_EQEP to work? If not required, then this
+> could be a separate patch; otherwise, put in a mention about why in the
+> commit message so that the purpose of this change is clearer.
+> 
 
-You have to add a custom 'select' key that doesn't include 'syscon'.
-There should be a few examples in the tree.
-
-Rob
+This enables the parent bus for power management. Since this is the second
+comment about this, I wonder if it would make sense to move this out of the
+PWM subsystem and into drivers/bus/ since it is no longer exclusive to PWM
+devices.
