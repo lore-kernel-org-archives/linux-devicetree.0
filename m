@@ -1,73 +1,58 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: counter: new bindings for TI eQEP
-Date: Fri, 2 Aug 2019 16:25:13 +0900
-Message-ID: <20190802072513.GA30522@icarus>
-References: <20190722154538.5314-1-david@lechnology.com>
- <20190722154538.5314-2-david@lechnology.com>
- <20190727204836.1514265d@archlinux>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH/RFC 00/12] Add dual-LVDS panel support to EK874
+Date: Fri,  2 Aug 2019 08:33:57 +0100
+Message-ID: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190727204836.1514265d@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: David Lechner <david@lechnology.com>, linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@jic23.retrosnub.co.uk>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-kernel@vger.kernel.org, ebiharaml@si-linux.co.jp
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 27, 2019 at 08:48:36PM +0100, Jonathan Cameron wrote:
-> On Mon, 22 Jul 2019 10:45:35 -0500
-> David Lechner <david@lechnology.com> wrote:
-> 
-> > This documents device tree binding for the Texas Instruments Enhanced
-> > Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
-> > 
-> > Signed-off-by: David Lechner <david@lechnology.com>
-> 
-> Up to William given it is a counter binding, (unless Rob overrules)
-> but new bindings are generally preferred as yaml.
-> 
-> Content looks fine to me.
-> 
-> Thanks,
-> 
-> Jonathan
+Dear All,
 
-Rob,
+this series adds support for dual-LVDS panel IDK-2121WR
+from Advantech:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+Dual link support is very recent for R-Car Gen3, and I couldn't
+find much on dual link panels in the kernel either, therefore
+comments are very welcome to get this right.
 
-Would you prefer these bindings as yaml, or shall I accept them as they
-are now?
+The panel doesn't come with the EK874 kit, but it's advertised as
+supported, therefore this series adds a new dts file to support
+the configuration of the EK874 + IDK-2121WR.
 
-William Breathitt Gray
+Finally, this series depends on a fix that's still pending:
+https://patchwork.kernel.org/patch/11054755/
 
-> 
-> > ---
-> >  .../devicetree/bindings/counter/ti-eqep.txt    | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.txt b/Documentation/devicetree/bindings/counter/ti-eqep.txt
-> > new file mode 100644
-> > index 000000000000..fbcebc2c2cc2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/counter/ti-eqep.txt
-> > @@ -0,0 +1,18 @@
-> > +Texas Instruments Enhanced Quadrature Encoder Pulse (eQEP) Module
-> > +
-> > +Required properties:
-> > +- compatible:		Must be "ti,am3352-eqep".
-> > +- reg:			Physical base address and size of the registers map.
-> > +- clocks:		Handle to the PWM's functional clock.
-> > +- clock-names:		Must be "fck".
-> > +- interrupts:		Handle to the eQEP event interrupt
-> > +
-> > +Example:
-> > +
-> > +	eqep0: eqep@180 {
-> > +		compatible = "ti,am3352-eqep";
-> > +		reg = <0x180 0x80>;
-> > +		clocks = <&l4ls_gclk>;
-> > +		clock-names = "fck";
-> > +		interrupts = <79>;
-> > +	};
-> 
+Thanks,
+Fab
+
+Fabrizio Castro (12):
+  dt-bindings: display: renesas: lvds: RZ/G2E needs renesas,companion
+    too
+  dt-bindings: display: renesas: lvds: Document renesas,swap-data
+  dt-bindings: panel: lvds: Add dual-link LVDS display support
+  dt-bindings: display: Add bindings for Advantech IDK-2121WR
+  drm: rcar-du: lvds: Add data swap support
+  drm: rcar-du: lvds: Do not look at ports for identifying bridges
+  drm: rcar-du: lvds: Add support for dual link panels
+  drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
+  drm: rcar-du: lvds: Fix companion's mode
+  arm64: dts: renesas: r8a774c0: Point LVDS0 to its companion LVDS1
+  arm64: dts: renesas: cat874: Add definition for 12V regulator
+  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+
+ .../bindings/display/bridge/renesas,lvds.txt       |  11 +-
+ .../display/panel/advantech,idk-2121wr.txt         |  62 ++++++++++++
+ .../bindings/display/panel/panel-lvds.txt          |  91 ++++++++++++-----
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts    |   9 ++
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 112 +++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi          |   2 +
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                |  65 ++++++------
+ 8 files changed, 291 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+
+-- 
+2.7.4
