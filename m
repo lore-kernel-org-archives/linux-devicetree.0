@@ -1,131 +1,77 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFC 5/9] dt-bindings: arm: amlogic: amlogic, meson-gx-ao-secure:
- convert to yaml
-Date: Fri, 2 Aug 2019 16:37:25 +0200
-Message-ID: <90dbcb33-74a2-68de-eb1a-ce84040298b8@baylibre.com>
-References: <20190801135644.12843-1-narmstrong@baylibre.com>
- <20190801135644.12843-6-narmstrong@baylibre.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
+ Tegra30
+Date: Fri, 2 Aug 2019 17:39:23 +0300
+Message-ID: <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
+References: <20190725151832.9802-1-digetx@gmail.com>
+ <20190725151832.9802-4-digetx@gmail.com>
+ <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190801135644.12843-6-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for reviews.
-
-On 01/08/2019 15:56, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 -------------
->  .../amlogic/amlogic,meson-gx-ao-secure.yaml   | 42 +++++++++++++++++++
->  2 files changed, 42 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+02.08.2019 17:05, Peter De Schrijver пишет:
+> On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
+>> Add regulators coupler for Tegra30 SoCs that performs voltage balancing
+>> of a coupled regulators and thus provides voltage scaling functionality.
+>>
+>> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
+>> coupled regulator voltages shall be in a range of 300mV from each other
+>> and CORE voltage shall be higher than the CPU by N mV, where N depends
+>> on the CPU voltage.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/soc/tegra/Kconfig              |   4 +
+>>  drivers/soc/tegra/Makefile             |   1 +
+>>  drivers/soc/tegra/regulators-tegra30.c | 316 +++++++++++++++++++++++++
+>>  3 files changed, 321 insertions(+)
+>>  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+>>
+> ...
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> deleted file mode 100644
-> index c67d9f48fb91..000000000000
-> --- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> +++ /dev/null
-> @@ -1,28 +0,0 @@
-> -Amlogic Meson Firmware registers Interface
-> -------------------------------------------
-> -
-> -The Meson SoCs have a register bank with status and data shared with the
-> -secure firmware.
-> -
-> -Required properties:
-> - - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+>> +
+>> +static int tegra30_core_cpu_limit(int cpu_uV)
+>> +{
+>> +	if (cpu_uV < 800000)
+>> +		return 950000;
+>> +
+>> +	if (cpu_uV < 900000)
+>> +		return 1000000;
+>> +
+>> +	if (cpu_uV < 1000000)
+>> +		return 1100000;
+>> +
+>> +	if (cpu_uV < 1100000)
+>> +		return 1200000;
+>> +
+>> +	if (cpu_uV < 1250000) {
+>> +		switch (tegra_sku_info.cpu_speedo_id) {
+>> +		case 0 ... 1:
+> Aren't we supposed to add /* fall through */ here now?
 
-I have a hard time find how to define "syscon" here, if I put syscon in the compatible
-it gets matched on other bindings and I get lot of warnings.
+There is no compiler warning if there is nothing in-between of the
+case-switches, so annotation isn't really necessary here. Of course it
+is possible to add an explicit annotation just to make clear the
+fall-through intention.
 
-How should I model it ?
-
-Thanks,
-Neil
-
-> -
-> -Properties should indentify components of this register interface :
-> -
-> -Meson GX SoC Information
-> -------------------------
-> -A firmware register encodes the SoC type, package and revision information on
-> -the Meson GX SoCs.
-> -If present, the following property should be added :
-> -
-> -Optional properties:
-> -  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
-> -
-> -Example
-> --------
-> -
-> -ao-secure@140 {
-> -	compatible = "amlogic,meson-gx-ao-secure", "syscon";
-> -	reg = <0x0 0x140 0x0 0x140>;
-> -	amlogic,has-chip-id;
-> -};
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-> new file mode 100644
-> index 000000000000..cf79287498f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/arm/amlogic/amlogic,meson-gx-ao-secure.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Firmware registers Interface
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +description: |
-> +  The Meson SoCs have a register bank with status and data shared with the
-> +  secure firmware.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-gx-ao-secure
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  amlogic,has-chip-id:
-> +    description: |
-> +      A firmware register encodes the SoC type, package and revision
-> +      information on the Meson GX SoCs. If present, the interface gives
-> +      the current SoC version.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    ao-secure@140 {
-> +          compatible = "amlogic,meson-gx-ao-secure", "syscon";
-> +          reg = <0x140 0x140>;
-> +          amlogic,has-chip-id;
-> +    };
+>> +		case 4:
+>> +		case 7 ... 8:
+>> +			return 1200000;
+>> +
+>> +		default:
+>> +			return 1300000;
+>> +		}
+>> +	}
+>> +
 > 
+> Other than that, this looks ok to me.
+
+Awesome, thank you very much! Explicit ACK will be appreciated as well.
