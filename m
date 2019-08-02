@@ -1,32 +1,65 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2] arm64: zynqmp: Add ZynqMP SDHCI compatible string
-Date: Fri, 2 Aug 2019 07:23:52 +0200
-Message-ID: <51225f83-ea4e-74d7-840f-35a44659d0e2@xilinx.com>
-References: <1561959452-22915-1-git-send-email-manish.narani@xilinx.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+Date: Fri, 2 Aug 2019 05:25:43 +0000
+Message-ID: <CACPK8Xc-vjJJ_kbe_KGss+RDMdhRVw-YDj9Cdux8iERSvE0_GQ@mail.gmail.com>
+References: <20190802041010.1234178-1-taoren@fb.com> <CACPK8XcuwNE3aBrsgn-paTZt-EtF6pc6WwYBQef5xc7157bk2g@mail.gmail.com>
+ <606273F4-E021-4AAF-9F59-F363E4FFF92A@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1561959452-22915-1-git-send-email-manish.narani@xilinx.com>
-Content-Language: en-US
+In-Reply-To: <606273F4-E021-4AAF-9F59-F363E4FFF92A@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com, sudeep.holla@arm.com, rrichter@cavium.com, gregory.clement@bootlin.com, amit.kucheria@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Tao Ren <taoren@fb.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01. 07. 19 7:37, Manish Narani wrote:
-> Add the new compatible string for ZynqMP SD Host Controller for its use
-> in the Arasan SDHCI driver for some of the ZynqMP specific operations.
-> Add required properties for the same.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
-> This patch depends on the below series of patches:
-> https://lkml.org/lkml/2019/7/1/25
-> 
-> Changes in v2:
-> 	- Added clock-names for SD card clocks for getting clocks in the driver
+On Fri, 2 Aug 2019 at 05:20, Tao Ren <taoren@fb.com> wrote:
+>
+> On 8/1/19, 9:21 PM, "Joel Stanley" <joel@jms.id.au> wrote:
+>
+> >  On Fri, 2 Aug 2019 at 04:10, Tao Ren <taoren@fb.com> wrote:
+> >>
+> >> Add initial version of device tree for Facebook Wedge100 AST2400 BMC
+> >> platform.
+> >>
+> >> Signed-off-by: Tao Ren <taoren@fb.com>
+> >> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> >> ---
+> >>  Changes in v2:
+> >>  - remove "debug" from bootargs.
+> >
+> > Thanks. I applied wedge40 and then this one fails to apply due to
+> > conflicts in the Makefile. Next time you have two patches, send them
+> > as a series they apply one atop the other.
+>
+> I thought about asking you if I should send them as a series although they are logically independent patches..
+> Sorry about that and I will do so for future patches.
+>
+> >  The naming of these two files suggests they come from a family. I
+> >  noticed there's very minor differences, a pca9548 switch and the use
+> >  of a watchdog.
+> >
+> >  Are these device trees complete? If yes, do you think it's worthwhile
+> >  to have a common wedge description in eg.
+> >  aspeed-bmc-facebook-wedge.dtsi, and put the unique description in
+> >  respective dts board files?
+> >
+> >  The upside of this is reduced duplication.
+> >
+> >  If you have a reason not to, then that is okay and we can leave it as
+> >  you submitted them.
+>
+> Thank you for the suggestion. I'm also considering moving common stuff into "dtsi" file, but let me take care of it in a separate patch, mainly because:
+>   1) I have one more BMC platform (galaxy100) which is also similar to wedge.
+>       I haven't started the platform, but once I have galaxy100 device tree ready, it would be easier for me to extract common part.
+>   2) the device tree is not complete yet.
+>       For example, all the i2c devices are still created from userspace.
+>       I'm trying to move the logic from userspace to device tree but I haven't decided what to do with those cpld/fpga devices.
 
-Just for a record. I am waiting till binding is Acked.
+Okay, thanks.
 
-M
+I've applied both of these to the aspeed tree for 5.4.
+
+Cheers,
+
+Joel
