@@ -1,86 +1,75 @@
-Return-Path: <SRS0=pysA=V5=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=RUCv=V6=the-dreams.de=wsa@kernel.org>
+Date: Fri, 2 Aug 2019 12:02:51 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 0/4] dt-bindings: i2c: renesas: Rename bindings
+ documentation files
+Message-ID: <20190802100251.GA20977@kunai>
+References: <20190724121559.19079-1-horms+renesas@verge.net.au>
+ <20190801125750.GM1659@ninjato>
+ <CAMuHMdVBVFbcTDcXbBT18NfTnAxW-Gz6XnBgKO5REdHtw9zeaQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190731123741.13947-1-geert+renesas@glider.be> <342e5e38-f980-c849-c061-8dad42bc0850@gmail.com>
-In-Reply-To: <342e5e38-f980-c849-c061-8dad42bc0850@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 1 Aug 2019 14:13:50 +0200
-Message-ID: <CAMuHMdWPvD_pSyJGp=kC0XmAChCK8R2X+exmpHT5eywJ5kQetA@mail.gmail.com>
-Subject: Re: [PATCH] scripts/dtc: dtx_diff - add color output support
-Content-Type: text/plain; charset="UTF-8"
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVBVFbcTDcXbBT18NfTnAxW-Gz6XnBgKO5REdHtw9zeaQ@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Frank,
 
-On Wed, Jul 31, 2019 at 10:30 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> On 7/31/19 5:37 AM, Geert Uytterhoeven wrote:
-> > Add new -c/--color options, to enhance the diff output with color, and
-> > improve the user's experience.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 02, 2019 at 11:27:19AM +0200, Geert Uytterhoeven wrote:
+> Hi Wolfram,
+>=20
+> On Thu, Aug 1, 2019 at 3:16 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > On Wed, Jul 24, 2019 at 02:15:55PM +0200, Simon Horman wrote:
+> > > Rename the bindings documentation file for Renesas I2C controllers.
+> > >
+> > > This is part of an ongoing effort to name bindings documentation file=
+s for
+> > > Renesas IP blocks consistently, in line with the compat strings they
+> > > document.
+> > >
+> > > Based on v5.3-rc1
+> > >
+> > > Simon Horman (4):
+> > >   dt-bindings: i2c: sh_mobile: Rename bindings documentation file
+> > >   dt-bindings: i2c: rcar: Rename bindings documentation file
+> > >   dt-bindings: i2c: riic: Rename bindings documentation file
+> > >   dt-bindings: i2c: riic: Rename bindings documentation file
 > >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  scripts/dtc/dtx_diff | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-> > index e9ad7834a22d9459..4e2c8617f69a333e 100755
-> > --- a/scripts/dtc/dtx_diff
-> > +++ b/scripts/dtc/dtx_diff
-> > @@ -20,6 +20,8 @@ Usage:
-> >
-> >
-> >        --annotate    synonym for -T
-> > +      --color       synonym for -c
-> > +       -c           enable colored output
-> >         -f           print full dts in diff (--unified=99999)
-> >         -h           synonym for --help
-> >         -help        synonym for --help
+> > Applied to for-next, thanks!
+>=20
+> Without the wrong names fixed?
+> And with an R-b I didn't give, probably due to the two last patches having
+> the same oneline-summary?
 
-> I like the idea, but...
->
-> I have various linux distro releases across my many systems, but only one is
-> new enough to have the diff command that supports --color.
+Geez, seems I was somehow distracted yesterday. Did quite some mistakes.
+Simon, please resend this series, with comments from Geert addressed.
 
-Seems to have been added in diffutils release 3.4 (2016-08-08).
-I almost can't believe it was that recent, but then I remembered using a
-wrapper before (colordiff; other wrappers may exist).
 
-> Can you enhance this patch to test whether --color is supported?  Maybe
-> something like (untested):
->
->         -c | --color )
->                 if `diff --color <(echo a) <(echo a) 2>/dev/null` ; then
->                         diff_color="--color=always"
->                 fi
->                 shift
->                 ;;
->
-> Then add some text to the usage for -c and --color saying that they will
-> be silently ignored if diff does not support --color.
->
-> I first wrote up a suggested version that printed an error message and
-> exited, but I think silently ignoring is more robust, even though it
-> may be more confusing to someone who is wondering why --color does not
-> work.
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Given this is an optional feature, to be enabled explicitly by the user,
-I'm not so fond of going through hoops to auto-detect the availability.
+-----BEGIN PGP SIGNATURE-----
 
-So what about just documenting this in the help text instead?
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1ECkcACgkQFA3kzBSg
+KbYJNw/+P1UOHgYp1ZDdkVmz1A0OOOYJFI3fhgu+E+LUwz8BqNS963hviIxZ/59e
+b8W0I1gjCuVsAZ34l6XohZKD0Av70HUoqPvqCoX7EBxhiJ0Ru8dDX+v4sKK9o+RT
+yCYbJbVI5Wivy2yekznv3uo7WBSb2ZTgR3B/tMbicEY89OoW9D+DSD5GXdXZmktj
+5CneKwDIYlxGWrXQL2MFVhw0DcdnB1mFReNEqjFBXNouY+hn7l01bKopi+QKCt8M
+iN5kPzMrRe4CWu6HJdvNZ1/wXLLSQhDHu4om1u94cN8r4P6IllMf14QSgovKiJHU
+mD/hku/kgeO0Ng7VT+PxVPJaME0fCPSYW+may7b439xrF5MqlRhXgyHdZ+ntwf7A
+AXzr+r4MNxUpL++ef58GT92mOK7LpqXWehynzOWBRMapEdR/k3ZsYBKRUze/a6Pv
+kciLpjca+vobAvy7aBHpfIwfRgF832faivYaL7SE6nMro2m5QESuIVG9c/Mc5Wmd
++YZBTwqhN67AQoIHJgHDXhMay7gfS0TnI+s2XLzIYf+SRQc/n8iZuYvMPpGnmzrP
+htjRtstK7PErJsAHbRHwFtJxOWwHLhHjjNv2/uZteO8BwyqThtgxQ7EktBREhtTq
+orCXwTe+dz7ENxOAnR0W8Ivp/SYrth8fKBcqIBUd2d3Nu6jzmBU=
+=kh+P
+-----END PGP SIGNATURE-----
 
--      -c           enable colored output
-+      -c           enable colored output (requires diff with --color support)
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--pWyiEgJYm5f9v55/--
