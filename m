@@ -1,58 +1,100 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add DFSDM pins to stm32mp157c
-Date: Fri, 2 Aug 2019 08:49:48 +0000
-Message-ID: <0e9689a6-0636-b1f2-22f7-009180709891@st.com>
-References: <1564645567-13156-1-git-send-email-olivier.moysan@st.com>
- <a95e5d74-c8e3-42f9-cabf-f42623aee255@st.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Fri, 02 Aug 2019 10:51:25 +0200
+Message-ID: <de6bec64012876c07267024cd4b2d2d5@agner.ch>
+References: <20190731123750.25670-1-philippe.schenker@toradex.com>
+ <20190731123750.25670-8-philippe.schenker@toradex.com>
+ <CAOMZO5B5HnqpLrDjyGtqSQpVXmcoZuGLvCzKVUhwLb-_ZO_Xog@mail.gmail.com>
+ <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a95e5d74-c8e3-42f9-cabf-f42623aee255@st.com>
-Content-Language: en-US
-Content-ID: <9043CAB016B58A46BA78A79224654C44@st.com>
+In-Reply-To: <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: festevam@gmail.com, s.hauer@pengutronix.de, Marcel Ziswiler <marcel.ziswiler@toradex.com>, kernel@pengutronix.de, Max Krummenacher <max.krummenacher@toradex.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, michal.vokac@ysoft.com, shawnguo@kernel.org, Stefan Agner <stefan.agner@toradex.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQUxleCwNCg0KT24gOC8yLzE5IDEwOjA5IEFNLCBBbGV4YW5kcmUgVG9yZ3VlIHdyb3RlOg0K
-PiBIaSBPbGl2aWVyDQo+IA0KPiBPbiA4LzEvMTkgOTo0NiBBTSwgT2xpdmllciBNb3lzYW4gd3Jv
-dGU6DQo+PiBBZGQgREZTRE0gcGlucyB0byBzdG0zMm1wMTU3Yy4NCj4+DQo+PiBTaWduZWQtb2Zm
-LWJ5OiBPbGl2aWVyIE1veXNhbiA8b2xpdmllci5tb3lzYW5Ac3QuY29tPg0KPj4gLS0tDQo+PiAg
-ICBhcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3LXBpbmN0cmwuZHRzaSB8IDM5ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAzOSBpbnNlcnRp
-b25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTct
-cGluY3RybC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1Ny1waW5jdHJsLmR0c2kN
-Cj4+IGluZGV4IDllYWVjOWJmOGNiOC4uZjk2YTkyOGNiYzQ5IDEwMDY0NA0KPj4gLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1Ny1waW5jdHJsLmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N0bTMybXAxNTctcGluY3RybC5kdHNpDQo+PiBAQCAtMjMwLDYgKzIzMCw0NSBA
-QA0KPj4gICAgCQkJCX07DQo+PiAgICAJCQl9Ow0KPj4gICAgDQo+IA0KPiBJIHVzZSB0byBvbmx5
-IHRha2UgcGluY29uZmlnIHdoaWNoIGFyZSB1c2VkIGluIGJvYXJkLiBTbyBwbGVhc2UgcmVzZW5k
-DQo+IHdpdGggdGhlICJib2FyZCBwYXRjaCIuDQo+IA0KDQpUaGUgREZTRE0gaXMgb25lIG9mIHRo
-ZSBpbnRlcmZhY2UgdXNlZCBpbiB0aGUgU1RNMzJNUDE1IHNvdW5kY2FyZC4NClRoaXMgc291bmRj
-YXJkIGFsc28gdXNlcyB0aGUgV29sZnNvbiB3bTg5OTQgYXVkaW8gY29kZWMuDQpUaGUgd204OTk0
-IGNvZGVjIGRyaXZlciByZXF1aXJlcyBhZGFwdGF0aW9ucywgYW5kIHRoZSB1cHN0cmVhbSBvZg0K
-dGhlc2UgY2hhbmdlcyBpcyBub3QgcGxhbm5lZCB0b2RheS4NClNvLCB0aGUgcmVsYXRlZCBib2Fy
-ZCBwYXRjaGVzIGNhbm5vdCBiZSBzZW50Lg0KDQpCUnMNCk9saXZpZXINCg0KPiByZWdhcmRzDQo+
-IEFsZXgNCj4gDQo+IA0KPj4gKwkJCWRmc2RtX2Nsa291dF9waW5zX2E6IGRmc2RtLWNsa291dC1w
-aW5zLTAgew0KPj4gKwkJCQlwaW5zIHsNCj4+ICsJCQkJCXBpbm11eCA9IDxTVE0zMl9QSU5NVVgo
-J0InLCAxMywgQUYzKT47IC8qIERGU0RNX0NLT1VUICovDQo+PiArCQkJCQliaWFzLWRpc2FibGU7
-DQo+PiArCQkJCQlkcml2ZS1wdXNoLXB1bGw7DQo+PiArCQkJCQlzbGV3LXJhdGUgPSA8MD47DQo+
-PiArCQkJCX07DQo+PiArCQkJfTsNCj4+ICsNCj4+ICsJCQlkZnNkbV9jbGtvdXRfc2xlZXBfcGlu
-c19hOiBkZnNkbS1jbGtvdXQtc2xlZXAtcGlucy0wIHsNCj4+ICsJCQkJcGlucyB7DQo+PiArCQkJ
-CQlwaW5tdXggPSA8U1RNMzJfUElOTVVYKCdCJywgMTMsIEFOQUxPRyk+OyAvKiBERlNETV9DS09V
-VCAqLw0KPj4gKwkJCQl9Ow0KPj4gKwkJCX07DQo+PiArDQo+PiArCQkJZGZzZG1fZGF0YTFfcGlu
-c19hOiBkZnNkbS1kYXRhMS1waW5zLTAgew0KPj4gKwkJCQlwaW5zIHsNCj4+ICsJCQkJCXBpbm11
-eCA9IDxTVE0zMl9QSU5NVVgoJ0MnLCAzLCBBRjMpPjsgLyogREZTRE1fREFUQTEgKi8NCj4+ICsJ
-CQkJfTsNCj4+ICsJCQl9Ow0KPj4gKw0KPj4gKwkJCWRmc2RtX2RhdGExX3NsZWVwX3BpbnNfYTog
-ZGZzZG0tZGF0YTEtc2xlZXAtcGlucy0wIHsNCj4+ICsJCQkJcGlucyB7DQo+PiArCQkJCQlwaW5t
-dXggPSA8U1RNMzJfUElOTVVYKCdDJywgMywgQU5BTE9HKT47IC8qIERGU0RNX0RBVEExICovDQo+
-PiArCQkJCX07DQo+PiArCQkJfTsNCj4+ICsNCj4+ICsJCQlkZnNkbV9kYXRhM19waW5zX2E6IGRm
-c2RtLWRhdGEzLXBpbnMtMCB7DQo+PiArCQkJCXBpbnMgew0KPj4gKwkJCQkJcGlubXV4ID0gPFNU
-TTMyX1BJTk1VWCgnRicsIDEzLCBBRjYpPjsgLyogREZTRE1fREFUQTMgKi8NCj4+ICsJCQkJfTsN
-Cj4+ICsJCQl9Ow0KPj4gKw0KPj4gKwkJCWRmc2RtX2RhdGEzX3NsZWVwX3BpbnNfYTogZGZzZG0t
-ZGF0YTMtc2xlZXAtcGlucy0wIHsNCj4+ICsJCQkJcGlucyB7DQo+PiArCQkJCQlwaW5tdXggPSA8
-U1RNMzJfUElOTVVYKCdGJywgMTMsIEFOQUxPRyk+OyAvKiBERlNETV9EQVRBMyAqLw0KPj4gKwkJ
-CQl9Ow0KPj4gKwkJCX07DQo+PiArDQo+PiAgICAJCQlldGhlcm5ldDBfcmdtaWlfcGluc19hOiBy
-Z21paS0wIHsNCj4+ICAgIAkJCQlwaW5zMSB7DQo+PiAgICAJCQkJCXBpbm11eCA9IDxTVE0zMl9Q
-SU5NVVgoJ0cnLCA1LCBBRjExKT4sIC8qIEVUSF9SR01JSV9DTEsxMjUgKi8NCj4+
+On 2019-07-31 16:52, Philippe Schenker wrote:
+> On Wed, 2019-07-31 at 09:56 -0300, Fabio Estevam wrote:
+>> On Wed, Jul 31, 2019 at 9:38 AM Philippe Schenker
+>> <philippe.schenker@toradex.com> wrote:
+>> > From: Stefan Agner <stefan.agner@toradex.com>
+>> >
+>> > Add pinmuxing and do not specify voltage restrictions in the
+>> > module level device tree.
+>>
+>> It would be nice to explain the reason for doing this.
+> 
+> This commit is in preparation of another patch that didn't made into this
+> patchset (downstream stuff in there). But I will do another patch on top that
+> will use this patch here. That should anyway be in mainline.
+
+I guess what Fabio meant here is explain this patch.
+
+The commit message really could be improved, e.g.:
+
+Add pinmuxing and do not specify voltage restrictions for the usdhc
+instance
+available on the modules edge connector. This allows to use SD-cards
+with
+higher transfer modes if supported by the carrier board.
+
+--
+Stefan
+
+> 
+> Philippe
+> 
+>>
+>> > Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+>> > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+>> > ---
+>> >
+>> > Changes in v2: None
+>> >
+>> >  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+>> >  1 file changed, 22 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-
+>> > colibri.dtsi
+>> > index 16d1a1ed1aff..67f5e0c87fdc 100644
+>> > --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+>> > +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+>> > @@ -326,7 +326,6 @@
+>> >  &usdhc1 {
+>> >         pinctrl-names = "default";
+>> >         pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+>> > -       no-1-8-v;
+>> >         cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+>> >         disable-wp;
+>> >         vqmmc-supply = <&reg_LDO2>;
+>> > @@ -671,6 +670,28 @@
+>> >                 >;
+>> >         };
+>> >
+>> > +       pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
+>> > +               fsl,pins = <
+>> > +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5a
+>> > +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1a
+>> > +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5a
+>> > +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5a
+>> > +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5a
+>> > +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5a
+>> > +               >;
+>> > +       };
+>> > +
+>> > +       pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
+>> > +               fsl,pins = <
+>> > +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5b
+>> > +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1b
+>> > +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5b
+>> > +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5b
+>> > +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5b
+>> > +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5b
+>> > +               >;
+>> > +       };
+>>
+>> You add the entries for 100MHz and 200MHz, but I don't see them being
+>> referenced anywhere.
