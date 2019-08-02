@@ -1,70 +1,60 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 2/4] net: phy: Add function to retrieve LED
- configuration from the DT
-Date: Fri, 2 Aug 2019 18:38:10 +0200
-Message-ID: <20190802163810.GL2099@lunn.ch>
-References: <20190801190759.28201-1-mka@chromium.org>
- <20190801190759.28201-3-mka@chromium.org>
+From: William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: Re: [PATCH 2/4] counter: new TI eQEP driver
+Date: Sat, 3 Aug 2019 01:40:45 +0900
+Message-ID: <20190802163926.GA29963@icarus>
+References: <20190722154538.5314-1-david@lechnology.com>
+ <20190722154538.5314-3-david@lechnology.com>
+ <20190802092727.GB30522@icarus>
+ <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190801190759.28201-3-mka@chromium.org>
+In-Reply-To: <680ed555-c5db-6640-8fd3-121422077eff@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: David Lechner <david@lechnology.com>
+Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:07:57PM -0700, Matthias Kaehlcke wrote:
-> Add a phylib function for retrieving PHY LED configuration that
-> is specified in the device tree using the generic binding. LEDs
-> can be configured to be 'on' for a certain link speed or to blink
-> when there is TX/RX activity.
+On Fri, Aug 02, 2019 at 11:17:11AM -0500, David Lechner wrote:
+> On 8/2/19 4:27 AM, William Breathitt Gray wrote:
+> >> +static const struct counter_ops ti_eqep_counter_ops = {
+> >> +	.count_read	= ti_eqep_count_read,
+> >> +	.count_write	= ti_eqep_count_write,
+> >> +	.function_get	= ti_eqep_function_get,
+> >> +	.function_set	= ti_eqep_function_set,
+> >> +};
+> > Are you able to provide a signal_read function, or are the Signals not
+> > exposed to the user by this device? Sometimes quadrature encoder devices
+> > provide an instanteous read of the signal lines to tell whether they are
+> > high or low, so I figured I'd ask.
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v4:
-> - patch added to the series
-> ---
->  drivers/net/phy/phy_device.c | 50 ++++++++++++++++++++++++++++++++++++
->  include/linux/phy.h          | 15 +++++++++++
->  2 files changed, 65 insertions(+)
+> No, it does not look like these signals can be read directly.
+
+All right, in that case you can ignore signal_read.
+
+> > 
+> > You should define an action_get function as well along with Synapses
+> > corresponding to each Signal. This will allow users to know whether the
+> > Synapse fires on a rising edge, falling edge, no edge, or both edges.
+> > 
+> > For example, consider the drivers/counter/104-quad-8.c file. Each count
+> > register has three associated signal lines: Quadrature A, Quadrature B,
+> > and Index.
+> > 
+> > Quadrature A and B are your typical quadrature encoder lines and
+> > depending on the function mode selected (quadrature x4, pulse-direction,
+> > etc.) could have a Synapse action mode of none, rising edge, falling
+> > edge, or both edges; see the quad8_synapse_actions_list array.
+> > 
+> > In contrast, the Index signal line only has two Synapse action modes:
+> > rising edge (in the case preset functionality is enabled) or none.
 > 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 6b5cb87f3866..b4b48de45712 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -2188,6 +2188,56 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
->  	return phydrv->config_intr && phydrv->ack_interrupt;
->  }
->  
-> +int of_get_phy_led_cfg(struct phy_device *phydev, int led,
-> +		       struct phy_led_config *cfg)
-> +{
-> +	struct device_node *np, *child;
-> +	const char *trigger;
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_MDIO))
-> +		return -ENOENT;
-> +
-> +	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		u32 val;
-> +
-> +		if (!of_property_read_u32(child, "reg", &val)) {
-> +			if (val == (u32)led)
-> +				break;
-> +		}
-> +	}
+> The encoders I have don't use the index or strobe signals, so I was
+> thinking maybe I should omit those two signals from the driver for the
+> time being since I don't have a way of testing.
 
-Hi Matthias
+That should be fine for now. We can add them in a later patch down the
+road and keep this introduction patch simple.
 
-This is leaking references to np and child. In the past we have not
-cared about this too much, but we are now getting patches adding the
-missing releases. So it would be good to fix this.
-
-	Andrew
+William Breathitt Gray
