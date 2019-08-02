@@ -1,77 +1,92 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
- Tegra30
-Date: Fri, 2 Aug 2019 17:39:23 +0300
-Message-ID: <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
-References: <20190725151832.9802-1-digetx@gmail.com>
- <20190725151832.9802-4-digetx@gmail.com>
- <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] drivers/amba: add reset control to primecell probe
+Date: Fri, 2 Aug 2019 09:42:24 -0500
+Message-ID: <92009928-3df1-1573-7d67-40e79d77c77e@kernel.org>
+References: <20190801184346.7015-1-dinguyen@kernel.org>
+ <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
+In-Reply-To: <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Dinh Nguyen <dinh.nguyen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-02.08.2019 17:05, Peter De Schrijver пишет:
-> On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
->> Add regulators coupler for Tegra30 SoCs that performs voltage balancing
->> of a coupled regulators and thus provides voltage scaling functionality.
+
+
+On 8/2/19 9:37 AM, Rob Herring wrote:
+> On Thu, Aug 1, 2019 at 12:44 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
 >>
->> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
->> coupled regulator voltages shall be in a range of 300mV from each other
->> and CORE voltage shall be higher than the CPU by N mV, where N depends
->> on the CPU voltage.
+>> From: Dinh Nguyen <dinh.nguyen@intel.com>
 >>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+>> default. Until recently, the DMA controller was brought out of reset by the
+>> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+>> are not used are held in reset and are left to Linux to bring them out of
+>> reset.
+> 
+> You can fix this in the kernel, but any versions before this change
+> will remain broken. IMO, the u-boot change should be reverted because
+> it is breaking an ABI (though not a good one).
+> 
+
+Right, there exists in U-Boot to support legacy platforms before this
+recent change. This would be for future versions.
+
+>> Add a mechanism for getting the reset property and de-assert the primecell
+>> module from reset if found. This is a not a hard fail if the reset property
+>> is not present in the device tree node, so the driver will continue to probe.
+> 
+> I think this belongs in the AMBA bus code, not the DT code, as that is
+> where we already have clock control code for similar reasons.
+> 
+
+Ok.
+
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 >> ---
->>  drivers/soc/tegra/Kconfig              |   4 +
->>  drivers/soc/tegra/Makefile             |   1 +
->>  drivers/soc/tegra/regulators-tegra30.c | 316 +++++++++++++++++++++++++
->>  3 files changed, 321 insertions(+)
->>  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+>>  drivers/of/platform.c | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
 >>
-> ...
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 7801e25e6895..d8945705313d 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -21,6 +21,7 @@
+>>  #include <linux/of_irq.h>
+>>  #include <linux/of_platform.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/reset.h>
+>>
+>>  const struct of_device_id of_default_bus_match_table[] = {
+>>         { .compatible = "simple-bus", },
+>> @@ -229,6 +230,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>>         struct amba_device *dev;
+>>         const void *prop;
+>>         int i, ret;
+>> +       struct reset_control *rstc;
+>>
+>>         pr_debug("Creating amba device %pOF\n", node);
+>>
+>> @@ -270,6 +272,18 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>>                 goto err_free;
+>>         }
+>>
+>> +       /*
+>> +        * reset control of the primecell block is optional
+>> +        * and will not fail if the reset property is not found.
+>> +        */
+>> +       rstc = of_reset_control_get_exclusive(node, "dma");
 > 
->> +
->> +static int tegra30_core_cpu_limit(int cpu_uV)
->> +{
->> +	if (cpu_uV < 800000)
->> +		return 950000;
->> +
->> +	if (cpu_uV < 900000)
->> +		return 1000000;
->> +
->> +	if (cpu_uV < 1000000)
->> +		return 1100000;
->> +
->> +	if (cpu_uV < 1100000)
->> +		return 1200000;
->> +
->> +	if (cpu_uV < 1250000) {
->> +		switch (tegra_sku_info.cpu_speedo_id) {
->> +		case 0 ... 1:
-> Aren't we supposed to add /* fall through */ here now?
+> 'dma' doesn't sound very generic.
+>
 
-There is no compiler warning if there is nothing in-between of the
-case-switches, so annotation isn't really necessary here. Of course it
-is possible to add an explicit annotation just to make clear the
-fall-through intention.
+how about 'primecell' ?
 
->> +		case 4:
->> +		case 7 ... 8:
->> +			return 1200000;
->> +
->> +		default:
->> +			return 1300000;
->> +		}
->> +	}
->> +
-> 
-> Other than that, this looks ok to me.
+Thanks for the review!
 
-Awesome, thank you very much! Explicit ACK will be appreciated as well.
+Dinh
