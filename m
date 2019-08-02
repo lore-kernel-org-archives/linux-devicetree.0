@@ -1,158 +1,183 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
- MPR121
-Date: Thu, 1 Aug 2019 16:49:54 -0700
-Message-ID: <20190801234954.GA178933@dtor-ws>
-References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
- <20190521053705.GI183429@dtor-ws>
- <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
- <20190725085753.GA26665@penguin>
- <ac436c3c-fa89-f777-85b2-f38adf842e10@ysoft.com>
- <20190725144009.GA27432@penguin>
- <dcee1139-c53f-5ea0-f387-a3aa5a9bf39f@ysoft.com>
- <20190727073156.GA795@penguin>
- <f06a913e-09aa-3225-a495-bb290ee2bb6f@ysoft.com>
+From: Tao Ren <taoren@fb.com>
+Subject: [PATCH] ARM: dts: aspeed: Add Facebook Wedge40 BMC
+Date: Thu, 1 Aug 2019 17:54:27 -0700
+Message-ID: <20190802005427.467841-1-taoren@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f06a913e-09aa-3225-a495-bb290ee2bb6f@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc: Tao Ren <taoren@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 11:25:49AM +0200, Michal Vokáč wrote:
-> On 27. 07. 19 9:31, Dmitry Torokhov wrote:
-> > On Fri, Jul 26, 2019 at 01:31:31PM +0200, Michal Vokáč wrote:
-> > > On 25. 07. 19 16:40, Dmitry Torokhov wrote:
-> > > > On Thu, Jul 25, 2019 at 02:58:02PM +0200, Michal Vokáč wrote:
-> > > > > On 25. 07. 19 10:57, Dmitry Torokhov wrote:
-> > > > > > Hi Michal,
-> > > > > > 
-> > > > > > On Tue, May 21, 2019 at 08:51:17AM +0200, Michal Vokáč wrote:
-> > > > > > > On 21. 05. 19 7:37, Dmitry Torokhov wrote:
-> > > > > > > > Hi Michal,
-> > > > > > > > 
-> > > > > > > > On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
-> > > > > > > > > Hi,
-> > > > > > > > > 
-> > > > > > > > > I have to deal with a situation where we have a custom i.MX6 based
-> > > > > > > > > platform in production that uses the MPR121 touchkey controller.
-> > > > > > > > > Unfortunately the chip is connected using only the I2C interface.
-> > > > > > > > > The interrupt line is not used. Back in 2015 (Linux v3.14), my
-> > > > > > > > > colleague modded the existing mpr121_touchkey.c driver to use polling
-> > > > > > > > > instead of interrupt.
-> > > > > > > > > 
-> > > > > > > > > For quite some time yet I am in a process of updating the product from
-> > > > > > > > > the ancient Freescale v3.14 kernel to the latest mainline and pushing
-> > > > > > > > > any needed changes upstream. The DT files for our imx6dl-yapp4 platform
-> > > > > > > > > already made it into v5.1-rc.
-> > > > > > > > > 
-> > > > > > > > > I rebased and updated our mpr121 patch to the latest mainline.
-> > > > > > > > > It is created as a separate driver, similarly to gpio_keys_polled.
-> > > > > > > > > 
-> > > > > > > > > The I2C device is quite susceptible to ESD. An ESD test quite often
-> > > > > > > > > causes reset of the chip or some register randomly changes its value.
-> > > > > > > > > The [PATCH 3/4] adds a write-through register cache. With the cache
-> > > > > > > > > this state can be detected and the device can be re-initialied.
-> > > > > > > > > 
-> > > > > > > > > The main question is: Is there any chance that such a polled driver
-> > > > > > > > > could be accepted? Is it correct to implement it as a separate driver
-> > > > > > > > > or should it be done as an option in the existing driver? I can not
-> > > > > > > > > really imagine how I would do that though..
-> > > > > > > > > 
-> > > > > > > > > There are also certain worries that the MPR121 chip may no longer be
-> > > > > > > > > available in nonspecifically distant future. In case of EOL I will need
-> > > > > > > > > to add a polled driver for an other touchkey chip. May it be already
-> > > > > > > > > in mainline or a completely new one.
-> > > > > > > > 
-> > > > > > > > I think that my addition of input_polled_dev was ultimately a wrong
-> > > > > > > > thing to do. I am looking into enabling polling mode for regular input
-> > > > > > > > devices as we then can enable polling mode in existing drivers.
-> > > > > > > 
-> > > > > > > OK, that sounds good. Especially when one needs to switch from one chip
-> > > > > > > to another that is already in tree, the need for a whole new polling
-> > > > > > > driver is eliminated.
-> > > > > > 
-> > > > > > Could you please try the patch below and see if it works for your use
-> > > > > > case? Note that I have not tried running it, but it compiles so it must
-> > > > > > be good ;)
-> > > > > 
-> > > > > Hi Dmitry,
-> > > > > Thank you very much for the patch!
-> > > > > I gave it a shot and it seems you forgot to add the input-poller.h file
-> > > > > to the patch.. it does not compile on my side :(
-> > > > 
-> > > > Oops ;) Please see the updated patch below.
-> > > 
-> > > Thank you, now it is (almost) good as you said :D
-> > > 
-> > > > > 
-> > > > > > Input: add support for polling to input devices
-> > > > > > 
-> > > > > > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > > > 
-> > > > > > Separating "normal" and "polled" input devices was a mistake, as often we want
-> > > > > > to allow the very same device work on both interrupt-driven and polled mode,
-> > > > > > depending on the board on which the device is used.
-> > > > > > 
-> > > > > > This introduces new APIs:
-> > > > > > 
-> > > > > > - input_setup_polling
-> > > > > > - input_set_poll_interval
-> > > > > > - input_set_min_poll_interval
-> > > > > > - input_set_max_poll_interval
-> > > > > > 
-> > > > > > These new APIs allow switching an input device into polled mode with sysfs
-> > > > > > attributes matching drivers using input_polled_dev APIs that will be eventually
-> > > > > > removed.
-> > > > > 
-> > > > > After reading this I am not really sure what else needs to be done
-> > > > > to test/use the poller. I suspect I need to modify the input device
-> > > > > driver (mpr121_touchkey.c in my case) like this:
-> > > > > 
-> > > > > If the interrupt gpio is not provided in DT, the device driver probe
-> > > > > function should:
-> > > > >    - not request the threaded interrupt
-> > > > >    - call input_setup_polling and provide it with poll_fn
-> > > > >      Can the mpr_touchkey_interrupt function be used as is for this
-> > > > >      purpose? The only problem I see is it returns IRQ_HANDLED.
-> > > > 
-> > > > I'd factor out code suitable for polling from mpr_touchkey_interrupt()
-> > > > and then do
-> > > > 
-> > > > static irqreturn_t mpr_touchkey_interrupt(...)
-> > > > {
-> > > > 	mpr_touchkey_report(...);
-> > > > 	return IRQ_HANDLED;
-> > > > }
-> > > > 
-> > > 
-> > > Probably a trivial problem for experienced kernel hacker but I can not
-> > > wrap my head around this - the interrupt handler takes the mpr121
-> > > device id as an argument while the poller poll_fn takes struct input_dev.
-> > > 
-> > > I fail to figure out how to get the device id from the input device.
-> > > 
-> Thanks for the hints Dmitry. I am trying my best but still have some
-> issues with the input_set/get_drvdata.
-> 
-> The kernel Oopses on NULL pointer dereference in mpr_touchkey_report.
-> Here is the backtrace:
-> 
-> [    2.916960] 8<--- cut here ---
-> [    2.920022] Unable to handle kernel NULL pointer dereference at virtual address 000001d0
-> [    2.928138] pgd = (ptrval)
+Add initial version of device tree for Facebook Wedge40 AST2400 BMC
+platform.
 
-Ah, that's my fault I believe. Can you please try sticking
+Signed-off-by: Tao Ren <taoren@fb.com>
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 141 ++++++++++++++++++
+ 2 files changed, 142 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
 
-	poller->input = dev;
-
-into input_setup_polling()?
-
-Thanks.
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 39a05a10a2a2..dfc1011eb3f2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-facebook-cmm.dtb \
+ 	aspeed-bmc-facebook-minipack.dtb \
+ 	aspeed-bmc-facebook-tiogapass.dtb \
++	aspeed-bmc-facebook-wedge40.dtb \
+ 	aspeed-bmc-facebook-yamp.dtb \
+ 	aspeed-bmc-intel-s2600wf.dtb \
+ 	aspeed-bmc-inspur-fp5280g2.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+new file mode 100644
+index 000000000000..764633964ac1
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright (c) 2018 Facebook Inc.
++/dts-v1/;
++
++#include "aspeed-g4.dtsi"
++
++/ {
++	model = "Facebook Wedge 40 BMC";
++	compatible = "facebook,wedge40-bmc", "aspeed,ast2400";
++
++	aliases {
++		/*
++		 * Override the default uart aliases to avoid breaking
++		 * the legacy applications.
++		 */
++		serial0 = &uart5;
++		serial1 = &uart1;
++		serial2 = &uart3;
++		serial3 = &uart4;
++	};
++
++	chosen {
++		stdout-path = &uart3;
++		bootargs = "debug console=ttyS2,9600n8 root=/dev/ram rw";
++	};
++
++	memory@40000000 {
++		reg = <0x40000000 0x20000000>;
++	};
++};
++
++&wdt1 {
++	status = "okay";
++	aspeed,reset-type = "system";
++};
++
++&wdt2 {
++	status = "disabled";
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "fmc0";
++#include "facebook-bmc-flash-layout.dtsi"
++	};
++};
++
++&uart1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++		     &pinctrl_rxd1_default>;
++};
++
++&uart3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd3_default
++		     &pinctrl_rxd3_default>;
++};
++
++&uart4 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd4_default
++		     &pinctrl_rxd4_default>;
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&mac1 {
++	status = "okay";
++	no-hw-checksum;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&i2c6 {
++	status = "okay";
++};
++
++&i2c7 {
++	status = "okay";
++};
++
++&i2c8 {
++	status = "okay";
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++};
++
++&i2c12 {
++	status = "okay";
++};
++
++&i2c13 {
++	status = "okay";
++};
++
++&vhub {
++	status = "okay";
++};
 -- 
-Dmitry
+2.17.1
