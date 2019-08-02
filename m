@@ -1,96 +1,192 @@
-From: Thomas Preston <thomas.preston@codethink.co.uk>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on diagnostic
- routine
-Date: Fri, 2 Aug 2019 15:51:09 +0100
-Message-ID: <ab0a2d14-90c0-6c28-2c80-351fccd85e68@codethink.co.uk>
-References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
- <20190730120937.16271-4-thomas.preston@codethink.co.uk>
- <20190730141935.GF4264@sirena.org.uk>
- <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
- <20190730155027.GJ4264@sirena.org.uk>
- <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
- <20190801234241.GG5488@sirena.org.uk>
- <472cc4ee-2e80-8b08-d842-79c65df572f3@codethink.co.uk>
- <20190802111036.GB5387@sirena.org.uk>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v4 4/4] edac: Add support for Amazon's Annapurna Labs L2
+ EDAC
+Date: Fri, 2 Aug 2019 16:11:53 +0100
+Message-ID: <a060cbce-14f3-0592-4998-0a900d3fe6e4@arm.com>
+References: <20190801130956.26388-1-hhhawa@amazon.com>
+ <20190801130956.26388-5-hhhawa@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802111036.GB5387@sirena.org.uk>
-Content-Language: en-US
+In-Reply-To: <20190801130956.26388-5-hhhawa@amazon.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Liam Girdwood <lgirdwood@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>, Annaliese McDermond <nh6z@nh6z.net>, Takashi Iwai <tiwai@suse.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>
+To: Hanna Hawa <hhhawa@amazon.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2019 12:10, Mark Brown wrote:
-> On Fri, Aug 02, 2019 at 09:32:17AM +0100, Thomas Preston wrote:
->> On 02/08/2019 00:42, Mark Brown wrote:
-> 
->>> Yes, that's definitely doable - we've got some other drivers with
->>> similar things like calibration triggers exposed that way.
-> 
->> One problem with using a kcontrol as a trigger for the turn-on diagnostic
->> is that the diagnostic routine has a "return value".
-> 
-> You can use a read only control for the readback, or just have it be
-> triggered by overwriting the readback value.  You can cache the result.
-> 
+Hi Hanna,
 
-Keeping the trigger and result together like that would be better I think,
-although the routine isn't supposed to run mid way through playback. If
-we're mid playback the debugfs routine has to turn off AMP_ON, take the
-device back to a known state, run diagnostics, then restore. Which causes
-a gap in the audible sound.
+On 01/08/2019 14:09, Hanna Hawa wrote:
+> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+> report L2 errors.
+> diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
+> new file mode 100644
+> index 000000000000..6c6d37cf82ab
+> --- /dev/null
+> +++ b/drivers/edac/al_l2_edac.c
+> @@ -0,0 +1,189 @@
 
->> Hm, maybe a better idea is to have the turn on diagnostic only run on
->> device probe (as its name suggests!), and print something to dmesg:
-> 
->> 	modprobe tda7802 turn_on_diagnostic=1
-> 
->> 	tda7802-codec i2c-TDA7802:00: Turn on diagnostic 04 04 04 04
-> 
->> Kirill Marinushkin mentioned this in the first review [0], it just didn't
->> really sink in until now!
-> 
-> You could do that too, yeah.  Depends on what this is diagnosing and if
-> that'd be useful.
-> 
+> +#include <asm/sysreg.h>
+> +#include <linux/bitfield.h>
 
-The diagnostic status bits describe situations such as:
-- open load (no speaker connected)
-- short to GND
-- short to VCC
-- etc
+#include <linux/cpumask.h> ?
 
-The intention is to test if all the speakers are connected. So, one might 
-have a self test which runs the diagnostic and verifies it outputs:
+> +#include <linux/of.h>
+> +#include <linux/smp.h>
 
-	00 00 00 00
+[...]
 
-For example, on my test rig there is only one speaker connected. So it
-reads:
+> +static void al_l2_edac_l2merrsr(void *arg)
+> +{
+> +	struct edac_device_ctl_info *edac_dev = arg;
+> +	int cpu, i;
+> +	u32 ramid, repeat, other, fatal;
+> +	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
+> +	char msg[AL_L2_EDAC_MSG_MAX];
+> +	int space, count;
+> +	char *p;
+> +
+> +	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
+> +		return;
+> +
+> +	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
+> +
+> +	cpu = smp_processor_id();
+> +	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
+> +	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
+> +	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
+> +	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
+> +
+> +	space = sizeof(msg);
+> +	p = msg;
+> +	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
+> +			  (fatal) ? "Fatal " : "");
+> +	p += count;
+> +	space -= count;
+> +
+> +	switch (ramid) {
+> +	case ARM_CA57_L2_TAG_RAM:
+> +		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
+> +		break;
+> +	case ARM_CA57_L2_DATA_RAM:
+> +		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
+> +		break;
+> +	case ARM_CA57_L2_SNOOP_RAM:
+> +		count = scnprintf(p, space, " RAMID='L2 Snoop RAM'");
 
-	04 04 00 04
+Nit: The TRMs both call this 'L2 Snoop Tag RAM'. Could we include 'tag' in the
+description. 'tag' implies its some kind of metadata, so an uncorrected error here affect
+a now unknown location, its more series than a 'data RAM' error. v8.2 would term this kind
+of error 'uncontained'.
 
-Where the second bit is "open load". So this would fail the test.
 
-So in the kcontrol case the test would be something like:
+> +		break;
+> +	case ARM_CA57_L2_DIRTY_RAM:
+> +		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
+> +		break;
+> +	case ARM_CA57_L2_INC_PF_RAM:
+> +		count = scnprintf(p, space, " RAMID='L2 internal metadat'");
 
-	amixer sset "AMP1 turn on diagnostic" on
-	amixer sget "AMP1 diagnostic"
+Nit: metadata
 
-And the module parameter case:
+> +		break;
+> +	default:
+> +		count = scnprintf(p, space, " RAMID='unknown'");
+> +		break;
+> +	}
+> +
+> +	p += count;
+> +	space -= count;
+> +
+> +	count = scnprintf(p, space,
+> +			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
+> +			  repeat, other, val);
+> +
+> +	for (i = 0; i < repeat; i++) {
+> +		if (fatal)
+> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+> +		else
+> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+> +	}
+> +}
 
-	rmmod tda7802
-	modprobe tda7802 turn_on_diagnostic=1
-	dmesg | grep "Turn on diagnostic 04 04 04 04"
-	rmmod tda7802
-	modprobe tda7802
+[...]
 
-I think the module parameter method is more appropriate for a
-"Turn-on diagnostic", even though I don't really like grepping dmesg
-for the result. I'll go ahead and implement that unless anyone has a
-particular preference for the kcontrol-trigger.
+> +static int al_l2_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct edac_device_ctl_info *edac_dev;
+> +	struct al_l2_edac *al_l2;
+> +	struct device *dev = &pdev->dev;
+> +	int ret, i;
+> +
+> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
+> +					      (char *)dev_name(dev), 1, "L", 1,
+> +					      2, NULL, 0,
+> +					      edac_device_alloc_index());
+> +	if (IS_ERR_OR_NULL(edac_dev))
+> +		return -ENOMEM;
+> +
+> +	al_l2 = edac_dev->pvt_info;
+> +	edac_dev->edac_check = al_l2_edac_check;
+> +	edac_dev->dev = dev;
+> +	edac_dev->mod_name = DRV_NAME;
+> +	edac_dev->dev_name = dev_name(dev);
+> +	edac_dev->ctl_name = "L2 cache";
+> +	platform_set_drvdata(pdev, edac_dev);
 
-Thanks
+> +	for_each_online_cpu(i) {
+
+for_each_possible_cpu()?
+
+If you boot with maxcpus= the driver's behaviour changes.
+But you are only parsing information from the DT, so you don't really need the CPUs to be
+online.
+
+
+> +		struct device_node *cpu;
+> +		struct device_node *cpu_cache, *l2_cache;
+> +
+> +		cpu = of_get_cpu_node(i, NULL);
+
+(of_get_cpu_node() can return NULL, but I don't think it can ever happen like this)
+
+> +		cpu_cache = of_find_next_cache_node(cpu);
+> +		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
+> +
+> +		if (cpu_cache == l2_cache)
+> +			cpumask_set_cpu(i, &al_l2->cluster_cpus);
+
+You need to of_node_put() these device_node pointers once you're done with them.
+
+
+> +	}
+> +
+> +	if (cpumask_empty(&al_l2->cluster_cpus)) {
+> +		dev_err(dev, "CPU mask is empty for this L2 cache\n");
+> +		ret = -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	ret = edac_device_add_device(edac_dev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to add L2 edac device\n");
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	edac_device_free_ctl_info(edac_dev);
+> +
+> +	return ret;
+> +}
+
+With the of_node_put()ing:
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
