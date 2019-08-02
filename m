@@ -1,116 +1,84 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 04/12] dt-bindings: display: Add bindings for
- Advantech IDK-2121WR
-Date: Fri, 2 Aug 2019 11:03:32 +0300
-Message-ID: <20190802080332.GE5008@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add DFSDM pins to stm32mp157c
+Date: Fri, 2 Aug 2019 10:09:46 +0200
+Message-ID: <a95e5d74-c8e3-42f9-cabf-f42623aee255@st.com>
+References: <1564645567-13156-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1564645567-13156-1-git-send-email-olivier.moysan@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Olivier Moysan <olivier.moysan@st.com>, linux-stm32@st-md-mailman.stormreply.com, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+Hi Olivier
 
-Thank you for the patch.
-
-On Fri, Aug 02, 2019 at 08:34:01AM +0100, Fabrizio Castro wrote:
-> This panel is handled through the generic lvds-panel bindings,
-> so only needs its additional compatible specified.
+On 8/1/19 9:46 AM, Olivier Moysan wrote:
+> Add DFSDM pins to stm32mp157c.
 > 
-> Some panel specific documentation can be found here:
-
-s/panel specific/panel-specific/
-
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 > ---
->  .../display/panel/advantech,idk-2121wr.txt         | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 39 +++++++++++++++++++++++++++++++
+>   1 file changed, 39 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> new file mode 100644
-> index 0000000..70b15b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> @@ -0,0 +1,62 @@
-> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
-> +===============================================
-> +
-> +Required properties:
-> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
-> +
-> +This binding is compatible with the lvds-panel binding, which is specified
-> +in panel-lvds.txt in this directory.
+> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> index 9eaec9bf8cb8..f96a928cbc49 100644
+> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+> @@ -230,6 +230,45 @@
+>   				};
+>   			};
+>   
 
-How about adding "The panel operates in dual-link mode and thus requires
-two port nodes." ?
+I use to only take pinconfig which are used in board. So please resend 
+with the "board patch".
 
-> +
-> +Example
-> +-------
-> +
-> +	panel {
-> +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +		width-mm = <476>;
-> +		height-mm = <268>;
-> +
-> +		data-mapping = "vesa-24";
-> +
-> +		panel-timing {
-> +			clock-frequency = <148500000>;
-> +			hactive = <1920>;
-> +			vactive = <1080>;
-> +			hsync-len = <44>;
-> +			hfront-porch = <88>;
-> +			hback-porch = <148>;
-> +			vfront-porch = <4>;
-> +			vback-porch = <36>;
-> +			vsync-len = <5>;
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds0_panel_in: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
+regards
+Alex
+
+
+> +			dfsdm_clkout_pins_a: dfsdm-clkout-pins-0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('B', 13, AF3)>; /* DFSDM_CKOUT */
+> +					bias-disable;
+> +					drive-push-pull;
+> +					slew-rate = <0>;
 > +				};
 > +			};
 > +
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds1_panel_in: endpoint {
-> +					remote-endpoint = <&lvds1_out>;
+> +			dfsdm_clkout_sleep_pins_a: dfsdm-clkout-sleep-pins-0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('B', 13, ANALOG)>; /* DFSDM_CKOUT */
 > +				};
 > +			};
-> +		};
-> +	};
 > +
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm5 0 50000>;
+> +			dfsdm_data1_pins_a: dfsdm-data1-pins-0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('C', 3, AF3)>; /* DFSDM_DATA1 */
+> +				};
+> +			};
 > +
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <6>;
+> +			dfsdm_data1_sleep_pins_a: dfsdm-data1-sleep-pins-0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('C', 3, ANALOG)>; /* DFSDM_DATA1 */
+> +				};
+> +			};
 > +
-> +		power-supply = <&reg_12p0v>;
-> +		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> +	};
-
-I think you can drop the backlight here, it's a bit out of scope.
-
--- 
-Regards,
-
-Laurent Pinchart
+> +			dfsdm_data3_pins_a: dfsdm-data3-pins-0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('F', 13, AF6)>; /* DFSDM_DATA3 */
+> +				};
+> +			};
+> +
+> +			dfsdm_data3_sleep_pins_a: dfsdm-data3-sleep-pins-0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('F', 13, ANALOG)>; /* DFSDM_DATA3 */
+> +				};
+> +			};
+> +
+>   			ethernet0_rgmii_pins_a: rgmii-0 {
+>   				pins1 {
+>   					pinmux = <STM32_PINMUX('G', 5, AF11)>, /* ETH_RGMII_CLK125 */
+> 
