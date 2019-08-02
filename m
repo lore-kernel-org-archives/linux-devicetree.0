@@ -1,112 +1,120 @@
-Return-Path: <SRS0=7ifg=WB=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH/RFC 12/12] arm64: dts: renesas: Add EK874 board with
- idk-2121wr display support
-Date: Mon, 5 Aug 2019 09:37:29 +0000
-Message-ID: 
- <TY1PR01MB177040DF4ADCF460CDA0D8AEC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-13-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802083424.GM5008@pendragon.ideasonboard.com>
-In-Reply-To: <20190802083424.GM5008@pendragon.ideasonboard.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=XPdD=V6=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com> <1564731249-22671-13-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1564731249-22671-13-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 Aug 2019 11:11:15 +0200
+Message-ID: <CAMuHMdVRg_N3S1OPVyy_Wj13XUHnTdWPY3iaOTuogah5oZCUWw@mail.gmail.com>
+Subject: Re: [PATCH/RFC 12/12] arm64: dts: renesas: Add EK874 board with
+ idk-2121wr display support
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgTGF1cmVudCwNCg0KPiBGcm9tOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0
-QGlkZWFzb25ib2FyZC5jb20+DQo+IFNlbnQ6IDAyIEF1Z3VzdCAyMDE5IDA5OjM0DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0gvUkZDIDEyLzEyXSBhcm02NDogZHRzOiByZW5lc2FzOiBBZGQgRUs4NzQg
-Ym9hcmQgd2l0aCBpZGstMjEyMXdyIGRpc3BsYXkgc3VwcG9ydA0KPiANCj4gSGkgRmFicml6aW8s
-DQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4NCj4gDQo+IE9uIEZyaSwgQXVnIDAyLCAy
-MDE5IGF0IDA4OjM0OjA5QU0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToNCj4gPiBUaGUg
-RUs4NzQgaXMgYWR2ZXJ0aXNlZCBhcyBjb21wYXRpYmxlIHdpdGggcGFuZWwgSURLLTIxMjFXUiBm
-cm9tDQo+ID4gQWR2YW50ZWNoLCBob3dldmVyIHRoZSBwYW5lbCBpc24ndCBzb2xkIGFsb25nc2lk
-ZSB0aGUgYm9hcmQuDQo+ID4gQSBuZXcgZHRzLCBhZGRpbmcgZXZlcnl0aGluZyB0aGF0J3MgcmVx
-dWlyZWQgdG8gZ2V0IHRoZSBwYW5lbCB0bw0KPiA+IHRvIHdvcmsgd2l0aCB0aGUgRUs4NzQsIGlz
-IHRoZSBtb3N0IGNvbnZlbmllbnQgd2F5IHRvIHN1cHBvcnQgdGhlDQo+ID4gRUs4NzQgd2hlbiBp
-dCdzIGNvbm5lY3RlZCB0byB0aGUgSURLLTIxMjFXUi4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiA+IC0t
-LQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvTWFrZWZpbGUgICAgICAgICAgICAg
-ICB8ICAgMyArLQ0KPiA+ICAuLi4vYm9vdC9kdHMvcmVuZXNhcy9yOGE3NzRjMC1lazg3NC1pZGst
-MjEyMXdyLmR0cyB8IDExMiArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMiBmaWxlcyBjaGFu
-Z2VkLCAxMTQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGMwLWVrODc0LWlkay0yMTIx
-d3IuZHRzDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2Fz
-L01ha2VmaWxlIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL01ha2VmaWxlDQo+ID4gaW5k
-ZXggNDJiNzRjMi4uY2U0ODQ3OCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3JlbmVzYXMvTWFrZWZpbGUNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
-TWFrZWZpbGUNCj4gPiBAQCAtMSw3ICsxLDggQEANCj4gPiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRp
-ZmllcjogR1BMLTIuMA0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9SOEE3NzRBMSkgKz0gcjhhNzc0
-YTEtaGlob3BlLXJ6ZzJtLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9SOEE3NzRBMSkgKz0g
-cjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LmR0Yg0KPiA+IC1kdGItJChDT05GSUdfQVJDSF9SOEE3
-NzRDMCkgKz0gcjhhNzc0YzAtY2F0ODc0LmR0YiByOGE3NzRjMC1lazg3NC5kdGINCj4gPiArZHRi
-LSQoQ09ORklHX0FSQ0hfUjhBNzc0QzApICs9IHI4YTc3NGMwLWNhdDg3NC5kdGIgcjhhNzc0YzAt
-ZWs4NzQuZHRiIFwNCj4gPiArCQkJICAgICAgIHI4YTc3NGMwLWVrODc0LWlkay0yMTIxd3IuZHRi
-DQo+ID4gIGR0Yi0kKENPTkZJR19BUkNIX1I4QTc3OTUpICs9IHI4YTc3OTUtc2FsdmF0b3IteC5k
-dGIgcjhhNzc5NS1oM3VsY2IuZHRiDQo+ID4gIGR0Yi0kKENPTkZJR19BUkNIX1I4QTc3OTUpICs9
-IHI4YTc3OTUtaDN1bGNiLWtmLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9SOEE3Nzk1KSAr
-PSByOGE3Nzk1LXNhbHZhdG9yLXhzLmR0Yg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL3JlbmVzYXMvcjhhNzc0YzAtZWs4NzQtaWRrLTIxMjF3ci5kdHMgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YzAtZWs4NzQtaWRrLQ0KPiAyMTIxd3IuZHRzDQo+ID4g
-bmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5kOTg5OTk4DQo+ID4gLS0t
-IC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3NzRj
-MC1lazg3NC1pZGstMjEyMXdyLmR0cw0KPiA+IEBAIC0wLDAgKzEsMTEyIEBADQo+ID4gKy8vIFNQ
-RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ID4gKy8qDQo+ID4gKyAqIERldmljZSBU
-cmVlIFNvdXJjZSBmb3IgdGhlIFNpbGljb24gTGludXggUlovRzJFIGV2YWx1YXRpb24ga2l0IChF
-Szg3NCksDQo+ID4gKyAqIGNvbm5lY3RlZCB0byBhbiBBZHZhbnRlY2ggSURLLTIxMjFXUiAyMS41
-IiBMVkRTIHBhbmVsDQo+ID4gKyAqDQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOSBSZW5lc2Fz
-IEVsZWN0cm9uaWNzIENvcnAuDQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgInI4YTc3
-NGMwLWVrODc0LmR0cyINCj4gPiArDQo+ID4gKy8gew0KPiA+ICsJYmFja2xpZ2h0OiBiYWNrbGln
-aHQgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAicHdtLWJhY2tsaWdodCI7DQo+ID4gKwkJcHdtcyA9
-IDwmcHdtNSAwIDUwMDAwPjsNCj4gPiArDQo+ID4gKwkJYnJpZ2h0bmVzcy1sZXZlbHMgPSA8MCA0
-IDggMTYgMzIgNjQgMTI4IDI1NT47DQo+ID4gKwkJZGVmYXVsdC1icmlnaHRuZXNzLWxldmVsID0g
-PDY+Ow0KPiA+ICsNCj4gPiArCQlwb3dlci1zdXBwbHkgPSA8JnJlZ18xMnAwdj47DQo+ID4gKwkJ
-ZW5hYmxlLWdwaW9zID0gPCZncGlvNiAxMiBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiArCX07DQo+
-ID4gKw0KPiA+ICsJcGFuZWwtbHZkcyB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJhZHZhbnRlY2gs
-aWRrLTIxMjF3ciIsICJwYW5lbC1sdmRzIjsNCj4gPiArDQo+ID4gKwkJd2lkdGgtbW0gPSA8NDc2
-PjsNCj4gPiArCQloZWlnaHQtbW0gPSA8MjY4PjsNCj4gPiArDQo+ID4gKwkJZGF0YS1tYXBwaW5n
-ID0gInZlc2EtMjQiOw0KPiA+ICsNCj4gPiArCQlwYW5lbC10aW1pbmcgew0KPiA+ICsJCQljbG9j
-ay1mcmVxdWVuY3kgPSA8MTQ4NTAwMDAwPjsNCj4gPiArCQkJaGFjdGl2ZSA9IDwxOTIwPjsNCj4g
-PiArCQkJdmFjdGl2ZSA9IDwxMDgwPjsNCj4gPiArCQkJaHN5bmMtbGVuID0gPDQ0PjsNCj4gPiAr
-CQkJaGZyb250LXBvcmNoID0gPDg4PjsNCj4gPiArCQkJaGJhY2stcG9yY2ggPSA8MTQ4PjsNCj4g
-PiArCQkJdmZyb250LXBvcmNoID0gPDQ+Ow0KPiA+ICsJCQl2YmFjay1wb3JjaCA9IDwzNj47DQo+
-ID4gKwkJCXZzeW5jLWxlbiA9IDw1PjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlwb3J0cyB7
-DQo+ID4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCQkjc2l6ZS1jZWxscyA9IDww
-PjsNCj4gPiArDQo+ID4gKwkJCXBvcnRAMCB7DQo+ID4gKwkJCQlyZWcgPSA8MD47DQo+ID4gKwkJ
-CQlsdmRzMF9wYW5lbF9pbjogZW5kcG9pbnQgew0KPiA+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmbHZkczBfb3V0PjsNCj4gPiArCQkJCX07DQo+ID4gKwkJCX07DQo+ID4gKw0KPiA+ICsJCQlw
-b3J0QDEgew0KPiA+ICsJCQkJcmVnID0gPDE+Ow0KPiA+ICsJCQkJbHZkczFfcGFuZWxfaW46IGVu
-ZHBvaW50IHsNCj4gPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHMxX291dD47DQo+ID4g
-KwkJCQl9Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsN
-Cj4gPiArJmdwaW8wIHsNCj4gPiArCWx2ZHMtY29ubmVjdG9yLWVuLWdwaW97DQo+ID4gKwkJZ3Bp
-by1ob2c7DQo+ID4gKwkJZ3Bpb3MgPSA8MTcgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKwkJb3V0
-cHV0LWxvdzsNCj4gPiArCQlsaW5lLW5hbWUgPSAibHZkcy1jb25uZWN0b3ItZW4tZ3BpbyI7DQo+
-ID4gKwl9Ow0KPiANCj4gQW55IGNoYW5jZSB0byBzcGVjaWZ5IHRoaXMgYXMgdGhlIHBhbmVsJ3Mg
-ZW5hYmxlIHNpZ25hbCBpbiB0aGUgcGFuZWwgRFQNCj4gbm9kZSA/DQoNCkkgYW0gbm90IHRvbyBz
-dXJlLCBhcyB0aGlzIGlzIG5vdCBleGFjdGx5IGFuIGVuYWJsZSBzaWduYWwuIFdoZW4gR1AwXzE3
-IGlzIGxvdw0KdGhlbiBMVkRTWzAxXSBhcmUgY29ubmVjdGVkIHRvIHRoZSBMVkRTIGNvbm5lY3Rv
-ciwgd2hlbiBHUDBfMTcgaXMgaGlnaA0KdGhlbiBMVkRTWzAxXSBhcmUgY29ubmVjdGVkIHRvIHRo
-ZSBMVDg5MThMLg0KUGVyaGFwcyB3ZSBzaG91bGQgbGVhdmUgdGhpcyBmaXhlZCB0byBsb3cgdG8g
-YXZvaWQgY29uZnVzaW9uPw0KDQpUaGFua3MsDQpGYWINCg0KPiANCj4gPiArfTsNCj4gPiArDQo+
-ID4gKyZsdmRzMCB7DQo+ID4gKwlyZW5lc2FzLHN3YXAtZGF0YTsNCj4gDQo+IExldCdzIGRpc2N1
-c3MgdGhpcyBwcm9wZXJ0eSBpbiByZXBseSB0byB0aGUgRFQgYmluZGluZ3MgcGF0Y2guDQo+IA0K
-PiA+ICsNCj4gPiArCXBvcnRzIHsNCj4gPiArCQlwb3J0QDEgew0KPiA+ICsJCQlsdmRzMF9vdXQ6
-IGVuZHBvaW50IHsNCj4gPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczBfcGFuZWxfaW4+
-Ow0KPiA+ICsJCQl9Ow0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAr
-Jmx2ZHMxIHsNCj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArDQo+ID4gKwljbG9ja3MgPSA8
-JmNwZyBDUEdfTU9EIDcyNz4sIDwmeDEzX2Nsaz4sIDwmZXh0YWxfY2xrPjsNCj4gPiArCWNsb2Nr
-LW5hbWVzID0gImZjayIsICJkY2xraW4uMCIsICJleHRhbCI7DQo+ID4gKw0KPiA+ICsJcG9ydHMg
-ew0KPiA+ICsJCXBvcnRAMSB7DQo+ID4gKwkJCWx2ZHMxX291dDogZW5kcG9pbnQgew0KPiA+ICsJ
-CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzMV9wYW5lbF9pbj47DQo+ID4gKwkJCX07DQo+ID4g
-KwkJfTsNCj4gPiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmcGZjIHsNCj4gPiArCXB3bTVf
-cGluczogcHdtNSB7DQo+ID4gKwkJZ3JvdXBzID0gInB3bTVfYSI7DQo+ID4gKwkJZnVuY3Rpb24g
-PSAicHdtNSI7DQo+ID4gKwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnB3bTUgew0KPiA+ICsJ
-cGluY3RybC0wID0gPCZwd201X3BpbnM+Ow0KPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0
-IjsNCj4gPiArDQo+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+IA0KPiBJIGhhdmVu
-J3QgcmV2aWV3ZWQgcGlub3V0cyBpbiBkZXRhaWwsIGJ1dCB0aGUgcGF0Y2ggb3RoZXJ3aXNlIGxv
-b2tzIHNhbmUNCj4gdG8gbWUuIEFub3RoZXIgY2FuZGlkYXRlIGZvciBEVCBvdmVybGF5cyB0aG91
-Z2ggOy0pDQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiANCj4gTGF1cmVudCBQaW5jaGFydA0K
+Hi Fabrizio,
+
+On Fri, Aug 2, 2019 at 9:35 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> The EK874 is advertised as compatible with panel IDK-2121WR from
+> Advantech, however the panel isn't sold alongside the board.
+> A new dts, adding everything that's required to get the panel to
+> to work with the EK874, is the most convenient way to support the
+> EK874 when it's connected to the IDK-2121WR.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+> @@ -0,0 +1,112 @@
+
+[...]
+
+> +       panel-lvds {
+> +               compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +               width-mm = <476>;
+> +               height-mm = <268>;
+> +
+> +               data-mapping = "vesa-24";
+> +
+> +               panel-timing {
+> +                       clock-frequency = <148500000>;
+> +                       hactive = <1920>;
+> +                       vactive = <1080>;
+> +                       hsync-len = <44>;
+> +                       hfront-porch = <88>;
+> +                       hback-porch = <148>;
+> +                       vfront-porch = <4>;
+> +                       vback-porch = <36>;
+> +                       vsync-len = <5>;
+> +               };
+> +
+> +               ports {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       port@0 {
+> +                               reg = <0>;
+> +                               lvds0_panel_in: endpoint {
+> +                                       remote-endpoint = <&lvds0_out>;
+> +                               };
+> +                       };
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               lvds1_panel_in: endpoint {
+> +                                       remote-endpoint = <&lvds1_out>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+
+[...]
+
+> +&lvds0 {
+> +       renesas,swap-data;
+> +
+> +       ports {
+> +               port@1 {
+> +                       lvds0_out: endpoint {
+> +                               remote-endpoint = <&lvds0_panel_in>;
+> +                       };
+> +               };
+> +       };
+> +};
+> +
+> +&lvds1 {
+> +       status = "okay";
+> +
+> +       clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
+> +       clock-names = "fck", "dclkin.0", "extal";
+> +
+> +       ports {
+> +               port@1 {
+> +                       lvds1_out: endpoint {
+> +                               remote-endpoint = <&lvds1_panel_in>;
+> +                       };
+> +               };
+> +       };
+> +};
+
+Shouldn't the actual panel definition, and the lvds remote-endpoint setup,
+be extracted into a separate .dtsi, to be included here?
+
+Cfr. arch/arm/boot/dts/r8a77xx-aa104xd12-panel.dtsi and
+arch/arm/boot/dts/r8a77xx-aa121td01-panel.dtsi.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
