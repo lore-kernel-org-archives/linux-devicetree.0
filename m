@@ -1,55 +1,151 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 01/12] dt-bindings: display: renesas: lvds: RZ/G2E
- needs renesas,companion too
-Date: Fri, 2 Aug 2019 10:48:01 +0300
-Message-ID: <20190802074801.GC5008@pendragon.ideasonboard.com>
+Subject: Re: [PATCH/RFC 03/12] dt-bindings: panel: lvds: Add dual-link LVDS
+ display support
+Date: Fri, 2 Aug 2019 11:00:14 +0300
+Message-ID: <20190802080014.GD5008@pendragon.ideasonboard.com>
 References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1564731249-22671-2-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1564731249-22671-4-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZyaSwgQXVnIDAy
-LCAyMDE5IGF0IDA4OjMzOjU4QU0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToKPiBEb2N1
-bWVudCBSWi9HMkUgc3VwcG9ydCBmb3IgcHJvcGVydHkgcmVuZXNhcyxjb21wYW5pb24uCj4gCj4g
-U2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNh
-cy5jb20+CgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
-ZGVhc29uYm9hcmQuY29tPgoKYW5kIHRha2VuIGluIG15IHRyZWUuCgo+IC0tLQo+ICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4
-dCB8IDYgKysrLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRp
-b25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiBpbmRleCBjNmEx
-OTZkLi5kZWNlNzllIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiBA
-QCAtNDksOSArNDksOSBAQCBFYWNoIHBvcnQgc2hhbGwgaGF2ZSBhIHNpbmdsZSBlbmRwb2ludC4K
-PiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgCj4gIC0gcmVuZXNhcyxjb21wYW5pb24gOiBwaGFu
-ZGxlIHRvIHRoZSBjb21wYW5pb24gTFZEUyBlbmNvZGVyLiBUaGlzIHByb3BlcnR5IGlzCj4gLSAg
-bWFuZGF0b3J5IGZvciB0aGUgZmlyc3QgTFZEUyBlbmNvZGVyIG9uIEQzIGFuZCBFMyBTb0NzLCBh
-bmQgc2hhbGwgcG9pbnQgdG8KPiAtICB0aGUgc2Vjb25kIGVuY29kZXIgdG8gYmUgdXNlZCBhcyBh
-IGNvbXBhbmlvbiBpbiBkdWFsLWxpbmsgbW9kZS4gSXQgc2hhbGwgbm90Cj4gLSAgYmUgc2V0IGZv
-ciBhbnkgb3RoZXIgTFZEUyBlbmNvZGVyLgo+ICsgIG1hbmRhdG9yeSBmb3IgdGhlIGZpcnN0IExW
-RFMgZW5jb2RlciBvbiBSLUNhciBEMywgUi1DYXIgRTMsIGFuZCBSWi9HMkUgU29DcywKPiArICBh
-bmQgc2hhbGwgcG9pbnQgdG8gdGhlIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQgYXMgYSBjb21w
-YW5pb24gaW4gZHVhbC1saW5rCj4gKyAgbW9kZS4gSXQgc2hhbGwgbm90IGJlIHNldCBmb3IgYW55
-IG90aGVyIExWRFMgZW5jb2Rlci4KPiAgCj4gIAo+ICBFeGFtcGxlOgoKLS0gClJlZ2FyZHMsCgpM
-YXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbA==
+Hi Fabrizio,
+
+Thank you for the patch.
+
+On Fri, Aug 02, 2019 at 08:34:00AM +0100, Fabrizio Castro wrote:
+> Dual-link LVDS displays have two ports, therefore document this
+> with the bindings.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  .../bindings/display/panel/panel-lvds.txt          | 91 ++++++++++++++++------
+>  1 file changed, 67 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+> index 250850a..07795441 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+> @@ -41,7 +41,8 @@ Required nodes:
+>  
+>  - panel-timing: See panel-common.txt.
+>  - ports: See panel-common.txt. These bindings require a single port subnode
+> -  corresponding to the panel LVDS input.
+> +  (for a single link display) or two port subnodes (for a dual link display)
+> +  corresponding to the panel LVDS input(s).
+
+I think you should expand this a bit to explain what the ports
+correspond to in the dual link mode.
+
+>  LVDS data mappings are defined as follows.
+> @@ -92,30 +93,72 @@ CTL3: 0
+>  Example
+>  -------
+>  
+> -panel {
+> -	compatible = "mitsubishi,aa121td01", "panel-lvds";
+> -
+> -	width-mm = <261>;
+> -	height-mm = <163>;
+> -
+> -	data-mapping = "jeida-24";
+> -
+> -	panel-timing {
+> -		/* 1280x800 @60Hz */
+> -		clock-frequency = <71000000>;
+> -		hactive = <1280>;
+> -		vactive = <800>;
+> -		hsync-len = <70>;
+> -		hfront-porch = <20>;
+> -		hback-porch = <70>;
+> -		vsync-len = <5>;
+> -		vfront-porch = <3>;
+> -		vback-porch = <15>;
+> +Single port:
+> +	panel {
+> +		compatible = "mitsubishi,aa121td01", "panel-lvds";
+> +
+> +		width-mm = <261>;
+> +		height-mm = <163>;
+> +
+> +		data-mapping = "jeida-24";
+> +
+> +		panel-timing {
+> +			/* 1280x800 @60Hz */
+> +			clock-frequency = <71000000>;
+> +			hactive = <1280>;
+> +			vactive = <800>;
+> +			hsync-len = <70>;
+> +			hfront-porch = <20>;
+> +			hback-porch = <70>;
+> +			vsync-len = <5>;
+> +			vfront-porch = <3>;
+> +			vback-porch = <15>;
+> +		};
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&lvds_encoder>;
+> +			};
+> +		};
+>  	};
+>  
+> -	port {
+> -		panel_in: endpoint {
+> -			remote-endpoint = <&lvds_encoder>;
+> +Two ports:
+> +	panel {
+> +		compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +		width-mm = <476>;
+> +		height-mm = <268>;
+> +
+> +		data-mapping = "vesa-24";
+> +
+> +		panel-timing {
+> +			clock-frequency = <148500000>;
+> +			hactive = <1920>;
+> +			vactive = <1080>;
+> +			hsync-len = <44>;
+> +			hfront-porch = <88>;
+> +			hback-porch = <148>;
+> +			vfront-porch = <4>;
+> +			vback-porch = <36>;
+> +			vsync-len = <5>;
+> +		};
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				lvds0_panel_in: endpoint {
+
+I would name the label panel_in0 and panel_in1 below to have a common
+prefix showing that both refer to the same panel.
+
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				lvds1_panel_in: endpoint {
+> +					remote-endpoint = <&lvds1_out>;
+> +				};
+> +			};
+>  		};
+>  	};
+> -};
+
+-- 
+Regards,
+
+Laurent Pinchart
