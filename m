@@ -1,152 +1,70 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Date: Fri, 2 Aug 2019 11:59:38 +0100
-Message-ID: <20190802105938.GG23424@e107155-lin>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: TDA7802: Add turn-on
+ diagnostic routine
+Date: Fri, 2 Aug 2019 12:10:36 +0100
+Message-ID: <20190802111036.GB5387@sirena.org.uk>
+References: <20190730120937.16271-1-thomas.preston@codethink.co.uk>
+ <20190730120937.16271-4-thomas.preston@codethink.co.uk>
+ <20190730141935.GF4264@sirena.org.uk>
+ <45156592-a90f-b4f8-4d30-9631c03f1280@codethink.co.uk>
+ <20190730155027.GJ4264@sirena.org.uk>
+ <9b47a360-3b62-b968-b8d5-8639dc4b468d@codethink.co.uk>
+ <20190801234241.GG5488@sirena.org.uk>
+ <472cc4ee-2e80-8b08-d842-79c65df572f3@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+In-Reply-To: <472cc4ee-2e80-8b08-d842-79c65df572f3@codethink.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, tushar.2nov@gmail.com, morten_bp@live.dk, nd@arm.com, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+To: Thomas Preston <thomas.preston@codethink.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Kirill Marinushkin <kmarinushkin@birdec.tech>, Liam Girdwood <lgirdwood@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>, Annaliese McDermond <nh6z@nh6z.net>, Takashi Iwai <tiwai@suse.com>, Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 04:58:04PM -0500, Jassi Brar wrote:
-> On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
-> <tushar.khandelwal@arm.com> wrote:
->
-> > diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> > new file mode 100644
-> > index 000000000000..3a05593414bc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> > @@ -0,0 +1,108 @@
-> > +Arm MHUv2 Mailbox Driver
-> > +========================
-> > +
-> > +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
-> > +between 1 and 124 channel windows to provide unidirectional communication with
-> > +remote processor(s).
-> > +
-> > +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
-> > +written to or read from. If a pair of MHU devices is implemented between two
-> > +processing elements to provide bidirectional communication, these must be
-> > +specified as two separate mailboxes.
-> > +
-> > +A device tree node for an Arm MHUv2 device must specify either a receiver frame
-> > +or a sender frame, indicating which end of the unidirectional MHU device which
-> > +the device node entry describes.
-> > +
-> > +An MHU device must be specified with a transport protocol. The transport
-> > +protocol of an MHU device determines the method of data transmission as well as
-> > +the number of provided mailboxes.
-> > +Following are the possible transport protocol types:
-> > +- Single-word: An MHU device implements as many mailboxes as it
-> > +               provides channel windows. Data is transmitted through
-> > +               the MHU registers.
-> > +- Multi-word:  An MHU device implements a single mailbox. All channel windows
-> > +               will be used during transmission. Data is transmitted through
-> > +               the MHU registers.
-> > +- Doorbell:    An MHU device implements as many mailboxes as there are flag
-> > +               bits available in its channel windows. Optionally, data may
-> > +               be transmitted through a shared memory region, wherein the MHU
-> > +               is used strictly as an interrupt generation mechanism.
-> > +
-> > +Mailbox Device Node:
-> > +====================
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
-> > +- reg:         Contains the mailbox register address range (base
-> > +               address and length)
-> > +- #mbox-cells  Shall be 1 - the index of the channel needed.
-> > +- mhu-frame    Frame type of the device.
-> > +               Shall be either "sender" or "receiver"
-> > +- mhu-protocol Transport protocol of the device. Shall be one of the
-> > +               following: "single-word", "multi-word", "doorbell"
-> > +
-> > +Required properties (receiver frame):
-> > +-------------------------------------
-> > +- interrupts:  Contains the interrupt information corresponding to the
-> > +               combined interrupt of the receiver frame
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +       mbox_mw_tx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x10000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               mhu-protocol = "multi-word";
-> > +               mhu-frame = "sender";
-> > +       };
-> > +
-> > +       mbox_sw_tx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x11000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               mhu-protocol = "single-word";
-> > +               mhu-frame = "sender";
-> > +       };
-> > +
-> > +       mbox_db_rx: mhu@10000000 {
-> > +               compatible = "arm,mhuv2","arm,primecell";
-> > +               reg = <0x12000000 0x1000>;
-> > +               clocks = <&refclk100mhz>;
-> > +               clock-names = "apb_pclk";
-> > +               #mbox-cells = <1>;
-> > +               interrupts = <0 45 4>;
-> > +               interrupt-names = "mhu_rx";
-> > +               mhu-protocol = "doorbell";
-> > +               mhu-frame = "receiver";
-> > +       };
-> > +
-> > +       mhu_client: scb@2e000000 {
-> > +       compatible = "fujitsu,mb86s70-scb-1.0";
-> > +       reg = <0 0x2e000000 0x4000>;
-> > +       mboxes =
-> > +               // For multi-word frames, client may only instantiate a single
-> > +               // mailbox for a mailbox controller
-> > +               <&mbox_mw_tx 0>,
-> > +
-> > +               // For single-word frames, client may instantiate as many
-> > +               // mailboxes as there are channel windows in the MHU
-> > +                <&mbox_sw_tx 0>,
-> > +                <&mbox_sw_tx 1>,
-> > +                <&mbox_sw_tx 2>,
-> > +                <&mbox_sw_tx 3>,
-> > +
-> > +               // For doorbell frames, client may instantiate as many mailboxes
-> > +               // as there are bits available in the combined number of channel
-> > +               // windows ((channel windows * 32) mailboxes)
-> > +                <mbox_db_rx 0>,
-> > +                <mbox_db_rx 1>,
-> > +                ...
-> > +                <mbox_db_rx 17>;
-> > +       };
->
-> If the mhuv2 instance implements, say, 3 channel windows between
-> sender (linux) and receiver (firmware), and Linux runs two protocols
-> each requiring 1 and 2-word sized messages respectively. The hardware
-> supports that by assigning windows [0] and [1,2] to each protocol.
-> However, I don't think the driver can support that. Or does it?
->
 
-FWIW, the IP is designed to cover wide range of usecase from IoT to servers
-with variable window length. I don't see the need to complicate the driver
-supporting mix-n-match at the cost of latency. Each platform choose one
-transport protocol for all it's use.
+--eJnRUKwClWJh1Khz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-Regards,
-Sudeep
+On Fri, Aug 02, 2019 at 09:32:17AM +0100, Thomas Preston wrote:
+> On 02/08/2019 00:42, Mark Brown wrote:
+
+> > Yes, that's definitely doable - we've got some other drivers with
+> > similar things like calibration triggers exposed that way.
+
+> One problem with using a kcontrol as a trigger for the turn-on diagnostic
+> is that the diagnostic routine has a "return value".
+
+You can use a read only control for the readback, or just have it be
+triggered by overwriting the readback value.  You can cache the result.
+
+> Hm, maybe a better idea is to have the turn on diagnostic only run on
+> device probe (as its name suggests!), and print something to dmesg:
+
+> 	modprobe tda7802 turn_on_diagnostic=1
+
+> 	tda7802-codec i2c-TDA7802:00: Turn on diagnostic 04 04 04 04
+
+> Kirill Marinushkin mentioned this in the first review [0], it just didn't
+> really sink in until now!
+
+You could do that too, yeah.  Depends on what this is diagnosing and if
+that'd be useful.
+
+--eJnRUKwClWJh1Khz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1EGiwACgkQJNaLcl1U
+h9Bs6Qf9FgalB0i5dzB7naDLU8yYdeZfY+teIQZhSWv5GUBav5I3hs3vkMQRCu3b
+B85CYaqrGqhe/TTBEPeZq6hlAzt91By0DWQ8oYiz9t3Vf9rqAxCe5M9OzKrN/GfS
+veomBXXDd4B79HHPW9mGDHsNoflXkdJbyWsx9P6ZvCRs8mc6JtrRssDje474uNqs
+fC3oWklOove1G7CStDQ/8QfK8XblO2FZlBzL0H0YbSuUy74Xz8Ioimd2WX1Yvm3L
+DPdOR4I6s0MvP1lhgIpTYSXki4plZ3EdwSatWi4VmVmBMVGK1rDmiXhWzBkWheJf
+915A2FSIMuUS5Z+2sIRaANFl7lHKVw==
+=GrVc
+-----END PGP SIGNATURE-----
+
+--eJnRUKwClWJh1Khz--
