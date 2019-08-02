@@ -1,46 +1,86 @@
-From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-Subject: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1 board
-Date: Fri, 2 Aug 2019 16:08:51 +0200
-Message-ID: <1564754931-13861-1-git-send-email-yannick.fertre@st.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] drivers/amba: add reset control to primecell probe
+Date: Fri, 2 Aug 2019 08:37:02 -0600
+Message-ID: <CAL_Jsq+PRKGwdozr3VECpk2ugrOuWd4CYnRSR7ChyPOKgheYkw@mail.gmail.com>
+References: <20190801184346.7015-1-dinguyen@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190801184346.7015-1-dinguyen@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Dinh Nguyen <dinh.nguyen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The ltdc pinctrl must be in the display controller node and
-not in the peripheral node (hdmi bridge).
+On Thu, Aug 1, 2019 at 12:44 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
+>
+> From: Dinh Nguyen <dinh.nguyen@intel.com>
+>
+> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+> default. Until recently, the DMA controller was brought out of reset by the
+> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+> are not used are held in reset and are left to Linux to bring them out of
+> reset.
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+You can fix this in the kernel, but any versions before this change
+will remain broken. IMO, the u-boot change should be reverted because
+it is breaking an ABI (though not a good one).
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index f3f0e37..1285cfc 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -99,9 +99,6 @@
- 		reset-gpios = <&gpioa 10 GPIO_ACTIVE_LOW>;
- 		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
- 		interrupt-parent = <&gpiog>;
--		pinctrl-names = "default", "sleep";
--		pinctrl-0 = <&ltdc_pins_a>;
--		pinctrl-1 = <&ltdc_pins_sleep_a>;
- 		status = "okay";
- 
- 		ports {
-@@ -276,6 +273,9 @@
- };
- 
- &ltdc {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&ltdc_pins_a>;
-+	pinctrl-1 = <&ltdc_pins_sleep_a>;
- 	status = "okay";
- 
- 	port {
--- 
-2.7.4
+> Add a mechanism for getting the reset property and de-assert the primecell
+> module from reset if found. This is a not a hard fail if the reset property
+> is not present in the device tree node, so the driver will continue to probe.
+
+I think this belongs in the AMBA bus code, not the DT code, as that is
+where we already have clock control code for similar reasons.
+
+>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+>  drivers/of/platform.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 7801e25e6895..d8945705313d 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset.h>
+>
+>  const struct of_device_id of_default_bus_match_table[] = {
+>         { .compatible = "simple-bus", },
+> @@ -229,6 +230,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>         struct amba_device *dev;
+>         const void *prop;
+>         int i, ret;
+> +       struct reset_control *rstc;
+>
+>         pr_debug("Creating amba device %pOF\n", node);
+>
+> @@ -270,6 +272,18 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>                 goto err_free;
+>         }
+>
+> +       /*
+> +        * reset control of the primecell block is optional
+> +        * and will not fail if the reset property is not found.
+> +        */
+> +       rstc = of_reset_control_get_exclusive(node, "dma");
+
+'dma' doesn't sound very generic.
+
+> +       if (!IS_ERR(rstc)) {
+> +               reset_control_deassert(rstc);
+> +               reset_control_put(rstc);
+> +       } else {
+> +               pr_debug("amba: reset control not found\n");
+> +       }
+> +
+>         ret = amba_device_add(dev, &iomem_resource);
+>         if (ret) {
+>                 pr_err("amba_device_add() failed (%d) for %pOF\n",
+> --
+> 2.20.0
+>
