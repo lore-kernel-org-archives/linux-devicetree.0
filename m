@@ -1,525 +1,181 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-Date: Fri, 2 Aug 2019 14:18:51 -0700
-Message-ID: <5bddc7dd-b819-6978-4d0b-8880f85fbb87@nvidia.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <f90cf34d-c294-b23d-38e3-6de9a8fca7d6@gmail.com>
- <e796e26e-830c-b1be-e368-c7ff177a61dd@gmail.com>
- <67cf6c13-688d-0305-61e2-c63c8e8b4729@nvidia.com>
- <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
- <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
- <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
- <ef9e865f-359b-0873-a414-3d548bd4e590@gmail.com>
- <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
- <62a5c6ed-21b1-8403-6fac-9c5d99b5a255@gmail.com>
- <85cd5100-467e-d08e-0ae5-ae57a6de5312@nvidia.com>
- <61652889-2e77-8f1e-9ed4-b7e525a40b10@nvidia.com>
- <9f6fc791-5c76-76d5-98fb-fd8facfd75d7@nvidia.com>
- <8bca50b2-a78c-c6b1-6547-4cec98a3e9cb@gmail.com>
- <314b5572-4113-d5c5-5956-1a55555a573c@nvidia.com>
- <a64472fd-46b7-5ff9-3140-11f71d5f88ff@gmail.com>
- <90268663-e5a7-4715-bd1a-31644c2fe9ab@gmail.com>
- <c6e1d744-3a7a-fe1b-2c86-a3d49f022232@nvidia.com>
- <73cd521b-782c-7fb2-d904-ae8b07927d47@gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
+ configure internal mapping
+Date: Fri, 2 Aug 2019 16:26:42 -0500
+Message-ID: <6c17875e-496d-1277-278f-239d3a9d8ca2@ti.com>
+References: <20190731224149.11153-1-s-anna@ti.com>
+ <20190731224149.11153-5-s-anna@ti.com>
+ <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
+ <89abc27f-5d02-a8ce-df0e-b185c2a647cd@ti.com>
+ <1ac233f6-f3a3-6cec-9ad2-49e985fdfaca@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <73cd521b-782c-7fb2-d904-ae8b07927d47@gmail.com>
+In-Reply-To: <1ac233f6-f3a3-6cec-9ad2-49e985fdfaca@lechnology.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi David,
 
-On 8/2/19 2:15 PM, Dmitry Osipenko wrote:
-> 02.08.2019 23:32, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 8/2/19 1:17 PM, Dmitry Osipenko wrote:
->>> 02.08.2019 23:13, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> 02.08.2019 21:33, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 8/2/19 5:38 AM, Dmitry Osipenko wrote:
->>>>>> 02.08.2019 2:49, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> On 8/1/19 4:19 PM, Sowjanya Komatineni wrote:
->>>>>>>> On 8/1/19 2:30 PM, Sowjanya Komatineni wrote:
->>>>>>>>> On 8/1/19 1:54 PM, Dmitry Osipenko wrote:
->>>>>>>>>> 01.08.2019 23:31, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>> On 8/1/19 1:17 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>> 01.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
->>>>>>>>>>>>> On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>> 01.08.2019 20:58, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>>>>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=
-=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>> This patch implements save and restore context for
->>>>>>>>>>>>>>>>>>> peripheral
->>>>>>>>>>>>>>>>>>> fixed
->>>>>>>>>>>>>>>>>>> clock ops, peripheral gate clock ops, sdmmc mux clock
->>>>>>>>>>>>>>>>>>> ops, and
->>>>>>>>>>>>>>>>>>> peripheral clock ops.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> During system suspend, core power goes off and looses t=
-he
->>>>>>>>>>>>>>>>>>> settings
->>>>>>>>>>>>>>>>>>> of the Tegra CAR controller registers.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> So during suspend entry clock and reset state of
->>>>>>>>>>>>>>>>>>> peripherals is
->>>>>>>>>>>>>>>>>>> saved
->>>>>>>>>>>>>>>>>>> and on resume they are restored to have clocks back to
->>>>>>>>>>>>>>>>>>> same
->>>>>>>>>>>>>>>>>>> rate and
->>>>>>>>>>>>>>>>>>> state as before suspend.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>>>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni
->>>>>>>>>>>>>>>>>>> <skomatineni@nvidia.com>
->>>>>>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra=
-/clk-periph-fixed.c | 33
->>>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra=
-/clk-periph-gate.c=C2=A0 | 34
->>>>>>>>>>>>>>>>>>> +++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra=
-/clk-periph.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 37
->>>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra=
-/clk-sdmmc-mux.c=C2=A0=C2=A0=C2=A0 | 28
->>>>>>>>>>>>>>>>>>> +++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/clk/tegra=
-/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 6 ++++++
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5 files changed, =
-138 insertions(+)
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>> index c088e7a280df..21b24530fa00 100644
->>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>> @@ -60,11 +60,44 @@
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate(struct
->>>>>>>>>>>>>>>>>>> clk_hw *hw,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return (unsigned long)rate;
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +static int
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_save_context(struct
->>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *fixe=
-d =3D
->>>>>>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % 32)=
-;
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->enb_ctx =3D readl_relaxed(fi=
-xed->base +
->>>>>>>>>>>>>>>>>>> fixed->regs->enb_reg) &
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 mask;
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->rst_ctx =3D readl_relaxed(fi=
-xed->base +
->>>>>>>>>>>>>>>>>>> fixed->regs->rst_reg) &
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 mask;
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +static void
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context(struct
->>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *fixe=
-d =3D
->>>>>>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % 32)=
-;
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (fixed->enb_ctx)
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_rela=
-xed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>> fixed->regs->enb_set_reg);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_rela=
-xed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>> fixed->regs->enb_clr_reg);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!fixed->rst_ctx) {
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 udelay(5); =
-/* reset propogation delay */
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel_rela=
-xed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>> fixed->regs->rst_reg);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 static const stru=
-ct clk_ops
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_ops
->>>>>>>>>>>>>>>>>>> =3D {
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .is_enabled =3D
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_is_enabled,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .enable =3D tegra_clk_periph_fixed_enable,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .disable =3D tegra_clk_periph_fixed_disable,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .recalc_rate =3D
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate,
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D tegra_clk_periph_=
-fixed_save_context,
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D
->>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 struct clk
->>>>>>>>>>>>>>>>>>> *tegra_clk_register_periph_fixed(const
->>>>>>>>>>>>>>>>>>> char
->>>>>>>>>>>>>>>>>>> *name,
->>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
->>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>> @@ -25,6 +25,8 @@ static
->>>>>>>>>>>>>>>>>>> DEFINE_SPINLOCK(periph_ref_lock);
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 #define re=
-ad_rst(gate) \
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 readl_relaxed(gate->clk_base +
->>>>>>>>>>>>>>>>>>> (gate->regs->rst_reg))
->>>>>>>>>>>>>>>>>>> +#define write_rst_set(val, gate) \
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 writel_relaxed(val, gate->clk_base =
-+
->>>>>>>>>>>>>>>>>>> (gate->regs->rst_set_reg))
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #define write_rst=
-_clr(val, gate) \
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 writel_relaxed(val, gate->clk_base +
->>>>>>>>>>>>>>>>>>> (gate->regs->rst_clr_reg))
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 @@ -110,10 +112,4=
-2 @@ static void
->>>>>>>>>>>>>>>>>>> clk_periph_disable(struct
->>>>>>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>>>>>> spin_unlock_irqrestore(&periph_ref_lock, flags);
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +static int clk_p=
-eriph_gate_save_context(struct
->>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *gate =
-=3D
->>>>>>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->clk_state_ctx =3D read_enb(ga=
-te) &
->>>>>>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 gate->rst_state_ctx =3D read_rst(ga=
-te) &
->>>>>>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +static void clk_periph_gate_restore_context(struct
->>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *gate =
-=3D
->>>>>>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (gate->clk_state_ctx)
->>>>>>>>>>>>>>>>>>> + write_enb_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>> + write_enb_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(5);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(gate->flags & TEGRA_PERIPH_NO=
-_RESET) &&
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 !(gate->fla=
-gs & TEGRA_PERIPH_MANUAL_RESET)) {
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (gate->r=
-st_state_ctx)
->>>>>>>>>>>>>>>>>>> + write_rst_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>> + write_rst_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct clk_=
-ops tegra_clk_periph_gate_ops =3D {
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .is_enabled =3D clk_periph_is_enabled,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .enable =3D clk_periph_enable,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 .disable =3D clk_periph_disable,
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D clk_periph_gate_s=
-ave_context,
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D clk_periph_gat=
-e_restore_context,
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0 struct clk=
- *tegra_clk_register_periph_gate(const
->>>>>>>>>>>>>>>>>>> char *name,
->>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>> index 58437da25156..06fb62955768 100644
->>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>> @@ -99,6 +99,37 @@ static void clk_periph_disable(struc=
-t
->>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 gate_ops->disable(gate_hw);
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +static int clk_p=
-eriph_save_context(struct
->>>>>>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =3D=
- to_clk_periph(hw);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =3D =
-periph->gate_ops;
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &periph-=
->gate.hw;
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags & TEGRA_PE=
-RIPH_NO_GATE))
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gate_ops->s=
-ave_context(gate_hw);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 periph->parent_ctx =3D clk_periph_g=
-et_parent(hw);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +static void clk_periph_restore_context(struct clk_hw
->>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =3D=
- to_clk_periph(hw);
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =3D =
-periph->gate_ops;
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &periph-=
->gate.hw;
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *div_ops =3D p=
-eriph->div_ops;
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *div_hw =3D &periph->=
-divider.hw;
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 clk_periph_set_parent(hw, periph->p=
-arent_ctx);
->>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags & TEGRA_PE=
-RIPH_NO_DIV))
->>>>>>>>>>>>>>>>>>> + div_ops->restore_context(div_hw);
->>>>>>>>>>>>>>>>>> Could you please point to where the divider's
->>>>>>>>>>>>>>>>>> save_context()
->>>>>>>>>>>>>>>>>> happens?
->>>>>>>>>>>>>>>>>> Because I can't see it.
->>>>>>>>>>>>>>>>> Ah, I now see that there is no need to save the dividers
->>>>>>>>>>>>>>>>> context
->>>>>>>>>>>>>>>>> because
->>>>>>>>>>>>>>>>> clk itself has enough info that is needed for the context=
-'s
->>>>>>>>>>>>>>>>> restoring
->>>>>>>>>>>>>>>>> (like I pointed in the review to v6).
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> Looks like you could also implement a new
->>>>>>>>>>>>>>>>> clk_hw_get_parent_index()
->>>>>>>>>>>>>>>>> generic helper to get the index instead of storing it
->>>>>>>>>>>>>>>>> manually.
->>>>>>>>>>>>>>>> clk_periph_get_parent basically invokes existing clk_mux_o=
-ps
->>>>>>>>>>>>>>>> get_parent() which is then saved in tegra_clk_periph.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> All existing drivers are using directly get_parent() from
->>>>>>>>>>>>>>>> clk_mux
->>>>>>>>>>>>>>>> which actually gets index from the register read.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> To have this more generic w.r.t save/restore context
->>>>>>>>>>>>>>>> point of
->>>>>>>>>>>>>>>> view,
->>>>>>>>>>>>>>>> probably instead of implementing new get_parent_index
->>>>>>>>>>>>>>>> helper,
->>>>>>>>>>>>>>>> I think
->>>>>>>>>>>>>>>> its better to implement save_context and restore_context t=
-o
->>>>>>>>>>>>>>>> clk_mux_ops along with creating parent_index field into
->>>>>>>>>>>>>>>> clk_mux to
->>>>>>>>>>>>>>>> cache index during set_parent.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> So we just need to invoke mux_ops save_context and
->>>>>>>>>>>>>>>> restore_context.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> I hope its ok to add save/restore context to clk_mux_ops
->>>>>>>>>>>>>>> to be
->>>>>>>>>>>>>>> more
->>>>>>>>>>>>>>> generic w.r.t save/restore context rather than
->>>>>>>>>>>>>>> get_parent_index
->>>>>>>>>>>>>>> API.
->>>>>>>>>>>>>>> Please confirm if you agree.
->>>>>>>>>>>>>> Sounds like a good idea. I see that there is a 'restoring'
->>>>>>>>>>>>>> helper for
->>>>>>>>>>>>>> the generic clk_gate, seems something similar could be done
->>>>>>>>>>>>>> for the
->>>>>>>>>>>>>> clk_mux. And looks like anyway you'll need to associate the
->>>>>>>>>>>>>> parent
->>>>>>>>>>>>>> clock
->>>>>>>>>>>>>> with the hw index in order to restore the muxing.
->>>>>>>>>>>>> by 'restoring' helper for generic clk_gate, are you
->>>>>>>>>>>>> referring to
->>>>>>>>>>>>> clk_gate_restore_context API?
->>>>>>>>>>>> Yes.
->>>>>>>>>>>>
->>>>>>>>>>>>> clk_gate_restore_context is API that's any clk drivers can
->>>>>>>>>>>>> use for
->>>>>>>>>>>>> clk_gate operation restore for custom gate clk_ops.
->>>>>>>>>>>>>
->>>>>>>>>>>>> But clk-periph is directly using generic clk_mux ops from
->>>>>>>>>>>>> clk_mux
->>>>>>>>>>>>> so I
->>>>>>>>>>>>> think we should add .restore_context to clk_mux_ops and then
->>>>>>>>>>>>> during
->>>>>>>>>>>>> clk-periph restore need to invoke mux_ops->restore_context.
->>>>>>>>>>>> I'm not sure whether it will be good for every driver that use=
-s
->>>>>>>>>>>> generic
->>>>>>>>>>>> clk_mux ops. Should be more flexible to have a generic helper
->>>>>>>>>>>> function
->>>>>>>>>>>> that any driver could use in order to restore the clock's
->>>>>>>>>>>> parent.
->>>>>>>>>>>>
->>>>>>>>>>>> The clk-periph restoring also includes case of combining divid=
-er
->>>>>>>>>>>> and
->>>>>>>>>>>> parent restoring, so generic helper could be useful in that ca=
-se
->>>>>>>>>>>> as well.
->>>>>>>>>>>>
->>>>>>>>>>>> It also looks like you could actually use the
->>>>>>>>>>>> clk_gate_restore_context()
->>>>>>>>>>>> instead of manually saving the clock's enable-state, couldn't
->>>>>>>>>>>> you?
->>>>>>>>>>> ok for clk_mux, can add generic clk_mux_restore_context API
->>>>>>>>>>> rather
->>>>>>>>>>> than
->>>>>>>>>>> using restore_context in clk_ops and will invoke that during
->>>>>>>>>>> clk_periph
->>>>>>>>>>> restore.
->>>>>>>>>>>
->>>>>>> digging thru looks like for clk_periph source restore instead of
->>>>>>> clk_mux_restore_context, i can directly do clk_hw_get_parent and
->>>>>>> clk_set_parent with mux_hw as they invoke mux_ops get/set parent
->>>>>>> anyway.
->>>>>>> Will do this for periph clk mux
->>>>>>>>>>> Reg clk_gate, looks like we cant use generic
->>>>>>>>>>> clk_gate_restore_context
->>>>>>>>>>> for clk-periph as it calls enable/disable callbacks and
->>>>>>>>>>> clk_periph_enable/disable in clk-periph-gate also updated
->>>>>>>>>>> refcnt and
->>>>>>>>>>> depending on that actual enable/disable is set.
->>>>>>>>>>>
->>>>>>>>>>> During suspend, peripherals that are already enabled have their
->>>>>>>>>>> refcnt >
->>>>>>>>>>> 1, so they dont go thru enable/disable on restore if we use sam=
-e
->>>>>>>>>>> enable/disable callback.
->>>>>>>>>> Looks like you could just decrement the gate's enable_refcnt on
->>>>>>>>>> save_context, wouldn't that work?
->>>>>>>>>>
->>>>>>>> gate->enable_refcnt is within clk-periph-gate which gets updated
->>>>>>>> when
->>>>>>>> enable/disable callbacks get execute thru clk_core_enable/disable.
->>>>>>>> But actual enable_count used in clk_gate_restore_context is the on=
-e
->>>>>>>> which gets updated with in the clk core enable/disable functions
->>>>>>>> which
->>>>>>>> invokes these callbacks. Depending on this enable_count in clk
->>>>>>>> core it
->>>>>>>> invokes enable/disable.
->>>>>>>>
->>>>>>>> So, this will cause mismatch if we handle refcnt during save/resto=
-re
->>>>>>>> of tegra_clk_periph_gate_ops and also enable/disable thru this
->>>>>>>> clk_gate_restore_context is based on enable_count from clk core.
->>>>>>>>
->>>>>>>>>>> Also to align exact reset state along with CLK (like for case
->>>>>>>>>>> where
->>>>>>>>>>> CLK
->>>>>>>>>>> is enabled but peripheral might be in reset state), implemented
->>>>>>>>>>> save/restore in tegra specific tegra_clk_periph_gate_ops
->>>>>>>>>> I'm wondering whether instead of saving/restoring reset-state of
->>>>>>>>>> every
->>>>>>>>>> clock, you could simply save/restore the whole RST_DEV_x_SET
->>>>>>>>>> register.
->>>>>>>>>> Couldn't you?
->>>>>>>>> Thats what I was doing in first version of patch. But later as we
->>>>>>>>> moved to use clk_save_context and clk_restore_context, peripheral
->>>>>>>>> clk_hw RST & CLK enables happen thru its corresponding save/resto=
-re
->>>>>>>>> after source restore
->>>>>>>> Also, to align both CLK & RST to the exact state of register, doin=
-g
->>>>>>>> save/restore in tegra_clk_periph_gate_ops and invoking this after
->>>>>>>> source restore for peripheral clock, seems cleaner to avoid any
->>>>>>>> misconfiguration b/w rst & clk settings.
->>>>>>>>
->>>>>> It looks to me that it is very wasteful to store/restore each
->>>>>> individual
->>>>>> gate and reset state, also given that some of them are shared. I thi=
-nk
->>>>>> that the gates and resets should be restored separately for the
->>>>>> peripherals by a custom tegra_clk_save/restore_periph_gates/resets()=
-.
->>>>> clk_periph_fixed_disable just disables clock only without deasserting
->>>>> the corresponding peripheral.
->>>>>
->>>>> corresponding peripheral drivers can also issue reset assert/deassert
->>>>> thru reset_control_assert/deassert.
->>>>>
->>>>> So, we will not get the actual state of clk and rst unless we read an=
-d
->>>>> save state of reset and clock separately during save_context.
->>>>>
->>>>> Currently patch is already using custom
->>>>> tegra_clk_periph_fixed_save/restore_context for corresponding clk_ops=
-.
->>>>> Are you suggesting to do save and restore of complete CLK_ENB/RST_DEV
->>>>> register settings instead of individual peripheral bits?
->>>> Yes, I'm suggesting to do a complete ungate/reset handling of the
->>>> devices in a separate function. All enabling/deassertion will be done =
-in
->>>> a single hop, hence using 7us delay and four u32 words, which is much
->>>> nicer IMHO.
->>> Actually six words, three for CLKs and three for RSTs.
->> OK, So with separate function doing complete register save/restore for
->> clk & rst, we can't do this thru clk_ops save/restore as clk_ops
->> save_restore happens per peripheral wise. So if we decide to do this,
->> then this should be invoked in clk-tegra210 driver suspend/resume.
-> Yes, per-clock save/restore should be used for setting rate and parent.
-> The ungating and resetting could be done separately to keep things cleane=
-r.
->
-OK, Will move back to register wise save/restore for clk_enb/rst_dev in=20
-next version.
+On 8/1/19 1:31 PM, David Lechner wrote:
+> On 8/1/19 12:10 PM, Suman Anna wrote:
+>> Hi Marc,
+>> 
+>> On 8/1/19 3:45 AM, Marc Zyngier wrote:
+>>> On 31/07/2019 23:41, Suman Anna wrote:
+>>>> The PRUSS INTC receives a number of system input interrupt
+>>>> source events and supports individual control configuration and
+>>>> hardware prioritization. These input events can be mapped to
+>>>> some output interrupt lines through 2 levels of many-to-one
+>>>> mapping i.e. events to channel mapping and channels to output
+>>>> interrupts.
+>>>> 
+>>>> This mapping information is provided through the PRU firmware
+>>>> that is loaded onto a PRU core/s or through the device tree
+>>>> node of the PRU application. The mapping is configured by the
+>>>> PRU remoteproc driver, and is setup before the PRU core is
+>>>> started and cleaned up after the PRU core is stopped. This
+>>>> event mapping configuration logic programs the Channel Map
+>>>> Registers (CMRx) and Host-Interrupt Map Registers (HMRx) only 
+>>>> when a new program is being loaded/started and the same events
+>>>> and interrupt channels are reset to zero when stopping a PRU.
+>>>> 
+>>>> Add two helper functions: pruss_intc_configure() & 
+>>>> pruss_intc_unconfigure() that the PRU remoteproc driver can use
+>>>> to configure the PRUSS INTC.
+>>> 
+>>> So let me see if I correctly understand this: this adds yet
+>>> another firmware description parser, with a private interface to
+>>> another (undisclosed?) driver, bypassing the standard irqchip
+>>> configuration mechanism. It sounds great, doesn't it?
+>>> 
+>>> What I cannot really infer from this message (-ETOOMUCHJARGON) is
+>>> what interrupts this affects:
+>>> 
+>>> - Interrupts from random devices to the PRUSS? - Interrupts from
+>>> the PRUSS to the host? - Something else?
+>> 
+>> The interrupt sources (called system events) can be from internal
+>> PRUSS peripherals, SoC-level peripherals or just software
+>> triggering (limited to some events).
+>> 
+>> So, the PRUSS INTC behaves as a funnel and is both an interrupt
+>> router and multiplexer. The INTC itself is part of the PRUSS, and
+>> all PRU application related interrupts/events that need to trigger
+>> an interrupt to either the PRU cores or other host processors (like
+>> DSP, ARM) have to go through this INTC, and routed out to a limited
+>> number of output interrupts that are then connected to different
+>> processors.
+>> 
+>> The split of interrupt handling between a PRU and its peer host 
+>> processor will be a application design choice (We can implement
+>> soft IPs like UARTs, ADCs, I2Cs etc using PRUs). Some of the input
+>> events themselves are multiplexed and controlled by a single MMR
+>> (outside of INTC) that feeds different sets of events into the
+>> INTC. The MMR configuration is outside of scope of this driver and
+>> will depend on the application/client driver being run.
+>> 
+>>> 
+>>> When does this happen? Under control of what? It isn't even clear
+>>> why this is part of this irqchip driver.
+>> 
+>> The mapping configuration is per PRU application and firmware, and
+>> is done in line with acquiring and release a PRU which is treated
+>> as an exclusive resource. We establish the mapping for all events
+>> through this driver including the events that are to be routed to
+>> PRUs. This is done to save the tiny/limited Instruction RAM space
+>> that PRUs have.
+>> 
+>> We have designed this as an irqchip driver (instead of some custom
+>> SoC driver exporting custom functions) to use standard Linux
+>> semantics/irq API and better integrate with Linux DT, but we need
+>> some semantics for establishing the routing at runtime depending on
+>> the PRU client driver we are running. The exported functions will
+>> be called only by the PRU remoteproc driver during a
+>> pru_rproc_get()/pru_rproc_put(), and are transparent to PRU client
+>> drivers.
+>> 
+>> Please also see the discussion from v1 [1] on why we can't use an 
+>> extended number of interrupt-cells infrastructure for achieving
+>> this.
+>> 
+>> [1] https://patchwork.kernel.org/patch/11034563/
+>> 
+>> 
+>>> Depending what this does, there may be ways to fit it into the
+>>> standard interrupt configuration framework. After all, we already
+>>> have standard interfaces to route interrupts to virtual CPUs,
+>>> effectively passing full control of an interrupt to another
+>>> entity. If you squint hard enough, your PRUSS can fit that
+>>> description.
+>> 
+>> Yeah, I am open to suggestions if there is a better way of doing
+>> this.
+> 
+
+> Hi Suman,
+> 
+> Can you explain more about the use case where one PRU system event
+> is mapped to multiple host events?
+
+On AM335x, for example, we have 64 events out of which events 16 to 31
+are not sourced by any peripherals and are used for general purpose
+signaling between a PRU0/PRU1 core and any external host processor (like
+an ARM). So, different applications/drivers implementing a different
+soft IP like a Soft UART, Soft I2C, ADC etc will need to be using among
+these generic set to achieve their various interrupts / signaling logic
+between the corresponding ARM driver and the PRU firmware implementing
+the soft IP.
+
+Following are some existing usage examples on AM335x within TI SDKs
+(tuples of <system_event intr_channel output_interrupt>
+1. A Soft UART implementing 3 ports per PRU:
+PRU0: <21, 2, 2>, <22, 3, 3>, <23, 4, 4>
+PRU1: <24, 5, 5>, <25, 6, 6>, <26, 7, 7>;
+
+2. A Dual-EMAC PRU Ethernet usecase using one PRU per ethernet port
+utilizing the MDIO, MII_TI sub-modules within PRUSS:
+PRU0: {42, 0, 0}, {20, 2, 2}, {22, 4, 4}, {26, 6, 6}, {41, 7, 8},
+PRU1: {54, 1, 1}, {21, 3, 3}, {23, 5, 5}, {53, 8, 9}, {27, 9, 7},
+
+Some of the above PRU Ethernet ones are generic events while the others
+are tied to specific MII_RT interrupt events. A different mapping is
+used when both the ethernet ports and PRUs are being used to achieve a
+Switch functionality.
+
+Point is different applications might use mapping differently as per
+their firmware and driver/application design and their split across one
+or more PRUs (design by contract). And we need to set this up at runtime
+when the application driver is getting run. We will have either the Soft
+UART or the Ethernet running at a time depending on the end goal desired
+
+> I have an idea that we can use multiple struct irq_domains to make
+> this work in the existing IRQ framework, but it would be helpful to
+> know more about the bigger picture first.
+
+Yeah, would be great if there is a way this can be solved without having
+to introduce additional API.
+
+regards
+Suman
+
+> 
+>> 
+>> regards Suman
+>> 
+>>> 
+>>> If that doesn't work, then we need to make the IRQ framework grok
+>>> that kind of requirement (hence my request for clarification).
+>>> But I'm strongly opposed to inventing a SoC-private way of
+>>> configuring interrupts behind the kernel's back.
+>>> 
+>>> Thanks,
+>>> 
+>>> M.
+>>> 
+>> 
+> 
