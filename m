@@ -1,75 +1,110 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH V6 01/21] irqchip: tegra: Do not disable COP IRQ during
- suspend
-Date: Fri, 2 Aug 2019 16:05:37 +0300
-Message-ID: <20190802130537.GB3883@pdeschrijver-desktop.Nvidia.com>
-References: <1563738060-30213-1-git-send-email-skomatineni@nvidia.com>
- <1563738060-30213-2-git-send-email-skomatineni@nvidia.com>
- <f6582e43-168e-1b7e-9db8-3d263bc3ba0d@gmail.com>
- <20190725095502.GM12715@pdeschrijver-desktop.Nvidia.com>
- <dd01be5d-bab9-1329-c7ac-c3c893d49dd1@gmail.com>
- <20190725103348.GN12715@pdeschrijver-desktop.Nvidia.com>
- <20190725103813.GO12715@pdeschrijver-desktop.Nvidia.com>
- <de1723df-8580-32fb-eb9d-e4c02f2b4306@gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 33/76] ARM: dts: imx6ul: fix clock frequency property name of I2C buses
+Date: Fri,  2 Aug 2019 09:19:07 -0400
+Message-ID: <20190802131951.11600-33-sashal@kernel.org>
+References: <20190802131951.11600-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <de1723df-8580-32fb-eb9d-e4c02f2b4306@gmail.com>
+In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 01:59:09PM +0300, Dmitry Osipenko wrote:
-> 25.07.2019 13:38, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Thu, Jul 25, 2019 at 01:33:48PM +0300, Peter De Schrijver wrote:
-> >> On Thu, Jul 25, 2019 at 01:05:13PM +0300, Dmitry Osipenko wrote:
-> >>> 25.07.2019 12:55, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>> On Mon, Jul 22, 2019 at 12:54:51PM +0300, Dmitry Osipenko wrote:
-> >>>>>
-> >>>>> All Tegra SoCs support SC7, hence the 'supports_sc7' and the commen=
-t
-> >>>>> doesn't sound correct to me. Something like 'firmware_sc7' should s=
-uit
-> >>>>> better here.
-> >>>>>
-> >>>>>> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-> >>>>>
-> >>>>> Secondly, I'm also not sure why COP interrupts need to be disabled =
-for
-> >>>>> pre-T210 at all, since COP is unused. This looks to me like it was
-> >>>>> cut-n-pasted from downstream kernel without a good reason and could=
- be
-> >>>>> simply removed.
-> >>>>
-> >>>> I don't think we can rely on the fact that COP is unused. People can
-> >>>> write their own code to run on COP.
-> >>>
-> >>> 1. Not upstream - doesn't matter.
-> >>>
-> >>
-> >> The code is not part of the kernel, so obviously it's not upstream?
-> >>
-> >>> 2. That's not very good if something unknown is running on COP and th=
-en
-> >>> kernel suddenly intervenes, don't you think so?
-> >>
-> >> Unless the code was written with this in mind.
-> >>
->=20
-> In that case, please see 1. ;)
->=20
+From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-In general the kernel should not touch the COP interrupts I think.
+[ Upstream commit 2ca99396333999b9b5c5b91b36cbccacfe571aaf ]
 
-> >=20
-> > Looking at this again, I don't think we need to enable the IRQ at all.
->=20
-> Could you please clarify? The code only saves/restores COP's interrupts
-> context across suspend-resume.
+A few boards set clock frequency of their I2C buses with
+"clock_frequency" property. The right property is "clock-frequency".
 
-The sc7 entry firmware doesn't use interrupts.
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi  | 2 +-
+ arch/arm/boot/dts/imx6ul-geam.dts        | 2 +-
+ arch/arm/boot/dts/imx6ul-isiot.dtsi      | 2 +-
+ arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 2 +-
+ arch/arm/boot/dts/imx6ul-pico-pi.dts     | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-Peter.
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 9207d5d071f11..d556f7c541ce6 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -112,7 +112,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
+index bc77f26a2f1de..6157a058feec9 100644
+--- a/arch/arm/boot/dts/imx6ul-geam.dts
++++ b/arch/arm/boot/dts/imx6ul-geam.dts
+@@ -156,7 +156,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index 213e802bf35c5..23e6e2e7ace9d 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -148,7 +148,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+index 39eeeddac39e3..09f7ffa9ad8c4 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+@@ -43,7 +43,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-pico-pi.dts b/arch/arm/boot/dts/imx6ul-pico-pi.dts
+index de07357b27fc2..6cd7d5877d20c 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-pi.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-pi.dts
+@@ -43,7 +43,7 @@
+ };
+ 
+ &i2c2 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+@@ -58,7 +58,7 @@
+ };
+ 
+ &i2c3 {
+-	clock_frequency = <100000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
+-- 
+2.20.1
