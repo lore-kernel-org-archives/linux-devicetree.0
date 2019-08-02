@@ -1,406 +1,327 @@
-From: Martyn Welch <martyn.welch@collabora.com>
-Subject: [PATCH v4 2/2] iio: light: noa1305: Add support for NOA1305
-Date: Fri,  2 Aug 2019 12:42:28 +0100
-Message-ID: <20190802114228.1278-2-martyn.welch@collabora.com>
-References: <20190802114228.1278-1-martyn.welch@collabora.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH V13 12/12] PCI: tegra: Add Tegra194 PCIe support
+Date: Fri, 2 Aug 2019 17:36:43 +0530
+Message-ID: <f09c79fc-c724-5290-d630-cac3fdd7a996@nvidia.com>
+References: <20190710062212.1745-1-vidyas@nvidia.com>
+ <20190710062212.1745-13-vidyas@nvidia.com>
+ <20190711125433.GB26088@e121166-lin.cambridge.arm.com>
+ <986d0b1a-666a-7b05-a9f3-e761518bdc92@nvidia.com>
+ <20190712160754.GA24285@e121166-lin.cambridge.arm.com>
+ <a5f8689b-1358-dd2d-4f54-7e68a6ab158b@nvidia.com>
+ <20190716112225.GA24335@e121166-lin.cambridge.arm.com>
+ <be6367bc-08a0-762a-aae8-b3f0376d0e9a@nvidia.com>
+ <20190730154939.GA367@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802114228.1278-1-martyn.welch@collabora.com>
+In-Reply-To: <20190730154939.GA367@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@lists.collabora.co.uk, devicetree@vger.kernel.org, Martyn Welch <martyn.welch@collabora.com>, Sergei M <fizik1@yandex.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This driver adds the initial support for the ON Semiconductor
-NOA1305 Ambient Light Sensor.
+On 7/30/2019 9:19 PM, Lorenzo Pieralisi wrote:
+> On Tue, Jul 23, 2019 at 08:14:08PM +0530, Vidya Sagar wrote:
+>> On 7/16/2019 4:52 PM, Lorenzo Pieralisi wrote:
+>>> On Sat, Jul 13, 2019 at 12:34:34PM +0530, Vidya Sagar wrote:
+>>>
+>>> [...]
+>>>
+>>>>>>>> +static int tegra_pcie_bpmp_set_ctrl_state(struct tegra_pcie_dw *pcie,
+>>>>>>>> +					  bool enable)
+>>>>>>>> +{
+>>>>>>>> +	struct mrq_uphy_response resp;
+>>>>>>>> +	struct tegra_bpmp_message msg;
+>>>>>>>> +	struct mrq_uphy_request req;
+>>>>>>>> +	int err;
+>>>>>>>> +
+>>>>>>>> +	if (pcie->cid == 5)
+>>>>>>>> +		return 0;
+>>>>>>>
+>>>>>>> What's wrong with cid == 5 ? Explain please.
+>>>>>> Controller with ID=5 doesn't need any programming to enable it which is
+>>>>>> done here through calling firmware API.
+>>>>>>
+>>>>>>>
+>>>>>>>> +	memset(&req, 0, sizeof(req));
+>>>>>>>> +	memset(&resp, 0, sizeof(resp));
+>>>>>>>> +
+>>>>>>>> +	req.cmd = CMD_UPHY_PCIE_CONTROLLER_STATE;
+>>>>>>>> +	req.controller_state.pcie_controller = pcie->cid;
+>>>>>>>> +	req.controller_state.enable = enable;
+>>>>>>>> +
+>>>>>>>> +	memset(&msg, 0, sizeof(msg));
+>>>>>>>> +	msg.mrq = MRQ_UPHY;
+>>>>>>>> +	msg.tx.data = &req;
+>>>>>>>> +	msg.tx.size = sizeof(req);
+>>>>>>>> +	msg.rx.data = &resp;
+>>>>>>>> +	msg.rx.size = sizeof(resp);
+>>>>>>>> +
+>>>>>>>> +	if (irqs_disabled())
+>>>>>>>
+>>>>>>> Can you explain to me what this check is meant to achieve please ?
+>>>>>> Firmware interface provides different APIs to be called when there are
+>>>>>> no interrupts enabled in the system (noirq context) and otherwise
+>>>>>> hence checking that situation here and calling appropriate API.
+>>>>>
+>>>>> That's what I am questioning. Being called from {suspend/resume}_noirq()
+>>>>> callbacks (if that's the code path this check caters for) does not mean
+>>>>> irqs_disabled() == true.
+>>>> Agree.
+>>>> Actually, I got a hint of having this check from the following.
+>>>> Both tegra_bpmp_transfer_atomic() and tegra_bpmp_transfer() are indirectly
+>>>> called by APIs registered with .master_xfer() and .master_xfer_atomic() hooks of
+>>>> struct i2c_algorithm and the decision to call which one of these is made using the
+>>>> following check in i2c-core.h file.
+>>>> static inline bool i2c_in_atomic_xfer_mode(void)
+>>>> {
+>>>> 	return system_state > SYSTEM_RUNNING && irqs_disabled();
+>>>> }
+>>>> I think I should use this condition as is IIUC.
+>>>> Please let me know if there are any concerns with this.
+>>>
+>>> It is not a concern, it is just that I don't understand how this code
+>>> can be called with IRQs disabled, if you can give me an execution path I
+>>> am happy to leave the check there. On top of that, when called from
+>>> suspend NOIRQ context, it is likely to use the blocking API (because
+>>> IRQs aren't disabled at CPU level) behind which there is most certainly
+>>> an IRQ required to wake the thread up and if the IRQ in question was
+>>> disabled in the suspend NOIRQ phase this code is likely to deadlock.
+>>>
+>>> I want to make sure we can justify adding this check, I do not
+>>> want to add it because we think it can be needed when it may not
+>>> be needed at all (and it gets copy and pasted over and over again
+>>> in other drivers).
+>> I had a discussion internally about this and the prescribed usage of these APIs
+>> seem to be that
+>> use tegra_bpmp_transfer() in .probe() and other paths where interrupts are
+>> enabled as this API needs interrupts to be enabled for its working.
+>> Use tegra_bpmp_transfer_atomic() surrounded by local_irq_save()/local_irq_restore()
+>> in other paths where interrupt servicing is disabled.
+> 
+> Why tegra_bpmp_transfer_atomic() needs IRQs to be disabled ? And why
+> is it needed in this piece of code where IRQs are _never_ disabled
+> at CPU level ?
+> 
+> IRQs are enabled when you call a suspend_noirq() callback, so the
+> blocking API can be used as long as the IRQ descriptor backing
+> the IRQ that will wake-up the blocked call is marked as
+> IRQF_NO_SUSPEND.
+> 
+> The problem is not IRQs enabled/disabled at CPU level, the problem is
+> the IRQ descriptor of the IRQ required to handle the blocking BPMP call,
+> mark it as IRQF_NO_SUSPEND and remove the tegra_bpmp_transfer_atomic()
+> call from this code (or please give me a concrete example pinpointing
+> why it is needed).
+Ideally, using tegra_bpmp_transfer() alone in all paths (.probe() as well as .resume_noirq())
+should have worked as the corresponding IRQ is already flagged as IRQF_NO_SUSPEND, but,
+because of the way BPMP-FW driver in kernel making its interface available through .resume_early(),
+tegra_bpmp_transfer() wasn't working as expected and I pushed a patch (CC'ing you) at
+http://patchwork.ozlabs.org/patch/1140973/ to make it .resume_noirq() from .resume_early().
+With that in place, we can just use tegra_bpmp_trasnfer().
+I'll push a new patch with this change once my BPMP-FW driver patch is approved.
 
-Originally written by Sergei Miroshnichenko. Found here:
-  https://github.com/EmcraftSystems/linux-upstream/commit/196d6cf897e632d2cb82d45484bd7a1bfdd5b6d9
-
-Signed-off-by: Sergei M <fizik1@yandex.com>
-Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
----
-
-Changes:
-v2:
- - Correcting authorship and SOB.
-v3:
- - Improve register define naming.
- - Follow IIO convention of interleaving register bit definitions with
-   register defintions.
- - Use proper endian swapping.
- - Process raw sensor count into Lux.
- - Avoid setting variables to zero when not needed.
- - Check return value of i2c writes.
- - Implement disabling of regulator as a devm action.
- - Remove excessive white spacing.
-v4:
- - Clean up returns
- - Remove redundant noa1305_remove()
- - Remove redundant interrupt configuration/disabling
- - Return raw value and scaling
-
-Note: Scaling added for all possible interation times to ensure the
-      mechanism utilised would allow this, though chip currently
-      statically configured to 800mS.
-
- drivers/iio/light/Kconfig   |  10 ++
- drivers/iio/light/Makefile  |   1 +
- drivers/iio/light/noa1305.c | 312 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 323 insertions(+)
- create mode 100644 drivers/iio/light/noa1305.c
-
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 954c958cfc43..d1db0ec0d0f5 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -309,6 +309,16 @@ config MAX44009
- 	 To compile this driver as a module, choose M here:
- 	 the module will be called max44009.
- 
-+config NOA1305
-+	tristate "ON Semiconductor NOA1305 ambient light sensor"
-+	depends on I2C
-+	help
-+	 Say Y here if you want to build support for the ON Semiconductor
-+	 NOA1305 ambient light sensor.
-+
-+	 To compile this driver as a module, choose M here:
-+	 The module will be called noa1305.
-+
- config OPT3001
- 	tristate "Texas Instruments OPT3001 Light Sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index e40794fbb435..00d1f9b98f39 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_LTR501)		+= ltr501.o
- obj-$(CONFIG_LV0104CS)		+= lv0104cs.o
- obj-$(CONFIG_MAX44000)		+= max44000.o
- obj-$(CONFIG_MAX44009)		+= max44009.o
-+obj-$(CONFIG_NOA1305)		+= noa1305.o
- obj-$(CONFIG_OPT3001)		+= opt3001.o
- obj-$(CONFIG_PA12203001)	+= pa12203001.o
- obj-$(CONFIG_RPR0521)		+= rpr0521.o
-diff --git a/drivers/iio/light/noa1305.c b/drivers/iio/light/noa1305.c
-new file mode 100644
-index 000000000000..b8758aa7b32a
---- /dev/null
-+++ b/drivers/iio/light/noa1305.c
-@@ -0,0 +1,312 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Support for ON Semiconductor NOA1305 ambient light sensor
-+ *
-+ * Copyright (C) 2016 Emcraft Systems
-+ * Copyright (C) 2019 Collabora Ltd.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+
-+#define NOA1305_REG_POWER_CONTROL	0x0
-+#define   NOA1305_POWER_CONTROL_DOWN	0x00
-+#define   NOA1305_POWER_CONTROL_ON	0x08
-+#define NOA1305_REG_RESET		0x1
-+#define   NOA1305_RESET_RESET		0x10
-+#define NOA1305_REG_INTEGRATION_TIME	0x2
-+#define   NOA1305_INTEGR_TIME_800MS	0x00
-+#define   NOA1305_INTEGR_TIME_400MS	0x01
-+#define   NOA1305_INTEGR_TIME_200MS	0x02
-+#define   NOA1305_INTEGR_TIME_100MS	0x03
-+#define   NOA1305_INTEGR_TIME_50MS	0x04
-+#define   NOA1305_INTEGR_TIME_25MS	0x05
-+#define   NOA1305_INTEGR_TIME_12_5MS	0x06
-+#define   NOA1305_INTEGR_TIME_6_25MS	0x07
-+#define NOA1305_REG_INT_SELECT		0x3
-+#define   NOA1305_INT_SEL_ACTIVE_HIGH	0x01
-+#define   NOA1305_INT_SEL_ACTIVE_LOW	0x02
-+#define   NOA1305_INT_SEL_INACTIVE	0x03
-+#define NOA1305_REG_INT_THRESH_LSB	0x4
-+#define NOA1305_REG_INT_THRESH_MSB	0x5
-+#define NOA1305_REG_ALS_DATA_LSB	0x6
-+#define NOA1305_REG_ALS_DATA_MSB	0x7
-+#define NOA1305_REG_DEVICE_ID_LSB	0x8
-+#define NOA1305_REG_DEVICE_ID_MSB	0x9
-+
-+#define NOA1305_DEVICE_ID	0x0519
-+#define NOA1305_DRIVER_NAME	"noa1305"
-+
-+struct noa1305_priv {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	struct regulator *vin_reg;
-+};
-+
-+static int noa1305_measure(struct noa1305_priv *priv)
-+{
-+	__le16 data;
-+	int ret;
-+
-+	ret = regmap_bulk_read(priv->regmap, NOA1305_REG_ALS_DATA_LSB, &data,
-+			       2);
-+	if (ret < 0)
-+		return ret;
-+
-+	return le16_to_cpu(data);
-+}
-+
-+static int noa1305_scale(struct noa1305_priv *priv, int *val, int *val2)
-+{
-+	int data;
-+	int ret;
-+
-+	ret = regmap_read(priv->regmap, NOA1305_REG_INTEGRATION_TIME, &data);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Lux = count / (<Integration Constant> * <Integration Time>)
-+	 *
-+	 * Integration Constant = 7.7
-+	 * Integration Time in Seconds
-+	 */
-+	switch (data) {
-+	case NOA1305_INTEGR_TIME_800MS:
-+		*val = 100;
-+		*val2 = 77 * 8;
-+		break;
-+	case NOA1305_INTEGR_TIME_400MS:
-+		*val = 100;
-+		*val2 = 77 * 4;
-+	case NOA1305_INTEGR_TIME_200MS:
-+		*val = 100;
-+		*val2 = 77 * 2;
-+		break;
-+	case NOA1305_INTEGR_TIME_100MS:
-+		*val = 100;
-+		*val2 = 77;
-+		break;
-+	case NOA1305_INTEGR_TIME_50MS:
-+		*val = 1000;
-+		*val2 = 77 * 5;
-+		break;
-+	case NOA1305_INTEGR_TIME_25MS:
-+		*val = 10000;
-+		*val2 = 77 * 25;
-+		break;
-+	case NOA1305_INTEGR_TIME_12_5MS:
-+		*val = 100000;
-+		*val2 = 77 * 125;
-+		break;
-+	case NOA1305_INTEGR_TIME_6_25MS:
-+		*val = 1000000;
-+		*val2 = 77 * 625;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return IIO_VAL_FRACTIONAL;
-+}
-+
-+static const struct iio_chan_spec noa1305_channels[] = {
-+	{
-+		.type = IIO_LIGHT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-+	}
-+};
-+
-+static int noa1305_read_raw(struct iio_dev *indio_dev,
-+				struct iio_chan_spec const *chan,
-+				int *val, int *val2, long mask)
-+{
-+	int ret = -EINVAL;
-+	struct noa1305_priv *priv = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		switch (chan->type) {
-+		case IIO_LIGHT:
-+			ret = noa1305_measure(priv);
-+			if (ret < 0)
-+				return ret;
-+			*val = ret;
-+			return IIO_VAL_INT;
-+		default:
-+			break;
-+		}
-+		break;
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->type) {
-+		case IIO_LIGHT:
-+			return noa1305_scale(priv, val, val2);
-+		default:
-+			break;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct iio_info noa1305_info = {
-+	.read_raw = noa1305_read_raw,
-+};
-+
-+static bool noa1305_writable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case NOA1305_REG_POWER_CONTROL:
-+	case NOA1305_REG_RESET:
-+	case NOA1305_REG_INTEGRATION_TIME:
-+	case NOA1305_REG_INT_SELECT:
-+	case NOA1305_REG_INT_THRESH_LSB:
-+	case NOA1305_REG_INT_THRESH_MSB:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config noa1305_regmap_config = {
-+	.name = NOA1305_DRIVER_NAME,
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = NOA1305_REG_DEVICE_ID_MSB,
-+	.writeable_reg = noa1305_writable_reg,
-+};
-+
-+static void noa1305_reg_remove(void *data)
-+{
-+	struct noa1305_priv *priv = data;
-+
-+	regulator_disable(priv->vin_reg);
-+}
-+
-+static int noa1305_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct noa1305_priv *priv;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	__le16 data;
-+	unsigned int dev_id;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*priv));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	regmap = devm_regmap_init_i2c(client, &noa1305_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "Regmap initialization failed.\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	priv = iio_priv(indio_dev);
-+
-+	priv->vin_reg = devm_regulator_get(&client->dev, "vin");
-+	if (IS_ERR(priv->vin_reg)) {
-+		dev_err(&client->dev, "get regulator vin failed\n");
-+		return PTR_ERR(priv->vin_reg);
-+	}
-+
-+	ret = regulator_enable(priv->vin_reg);
-+	if (ret) {
-+		dev_err(&client->dev, "enable regulator vin failed\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(&client->dev, noa1305_reg_remove, priv);
-+	if (ret) {
-+		dev_err(&client->dev, "addition of devm action failed\n");
-+		return ret;
-+	}
-+
-+	i2c_set_clientdata(client, indio_dev);
-+	priv->client = client;
-+	priv->regmap = regmap;
-+
-+	ret = regmap_bulk_read(regmap, NOA1305_REG_DEVICE_ID_LSB, &data, 2);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "ID reading failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dev_id = le16_to_cpu(data);
-+	if (dev_id != NOA1305_DEVICE_ID) {
-+		dev_err(&client->dev, "Unknown device ID: 0x%x\n", dev_id);
-+		return -ENODEV;
-+	}
-+
-+	ret = regmap_write(regmap, NOA1305_REG_POWER_CONTROL,
-+			   NOA1305_POWER_CONTROL_ON);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Enabling power control failed\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_write(regmap, NOA1305_REG_RESET, NOA1305_RESET_RESET);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Device reset failed\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_write(regmap, NOA1305_REG_INTEGRATION_TIME,
-+			   NOA1305_INTEGR_TIME_800MS);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Setting integration time failed\n");
-+		return ret;
-+	}
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &noa1305_info;
-+	indio_dev->channels = noa1305_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(noa1305_channels);
-+	indio_dev->name = NOA1305_DRIVER_NAME;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = devm_iio_device_register(&client->dev, indio_dev);
-+	if (ret)
-+		dev_err(&client->dev, "registering device failed\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id noa1305_of_match[] = {
-+	{ .compatible = "onnn,noa1305" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, noa1305_of_match);
-+
-+static const struct i2c_device_id noa1305_ids[] = {
-+	{ "noa1305", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, noa1305_id);
-+
-+static struct i2c_driver noa1305_driver = {
-+	.driver = {
-+		.name		= NOA1305_DRIVER_NAME,
-+		.of_match_table	= noa1305_of_match,
-+	},
-+	.probe		= noa1305_probe,
-+	.id_table	= noa1305_ids,
-+};
-+
-+module_i2c_driver(noa1305_driver);
-+
-+MODULE_AUTHOR("Sergei Miroshnichenko <sergeimir@emcraft.com>");
-+MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.com");
-+MODULE_DESCRIPTION("ON Semiconductor NOA1305 ambient light sensor");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
+Thanks,
+Vidya Sagar
+> 
+> Thanks,
+> Lorenzo
+> 
+>> I'll go ahead and make next patch series with this if this looks fine to you.
+>>
+>>>
+>>>>> Actually, if tegra_bpmp_transfer() requires IRQs to be enabled you may
+>>>>> even end up in a situation where that blocking call does not wake up
+>>>>> because the IRQ in question was disabled in the NOIRQ suspend/resume
+>>>>> phase.
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>>>> +static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>>>>>>>> +{
+>>>>>>>> +	const struct tegra_pcie_soc *data;
+>>>>>>>> +	struct device *dev = &pdev->dev;
+>>>>>>>> +	struct resource *atu_dma_res;
+>>>>>>>> +	struct tegra_pcie_dw *pcie;
+>>>>>>>> +	struct resource *dbi_res;
+>>>>>>>> +	struct pcie_port *pp;
+>>>>>>>> +	struct dw_pcie *pci;
+>>>>>>>> +	struct phy **phys;
+>>>>>>>> +	char *name;
+>>>>>>>> +	int ret;
+>>>>>>>> +	u32 i;
+>>>>>>>> +
+>>>>>>>> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>>>>>>>> +	if (!pcie)
+>>>>>>>> +		return -ENOMEM;
+>>>>>>>> +
+>>>>>>>> +	pci = &pcie->pci;
+>>>>>>>> +	pci->dev = &pdev->dev;
+>>>>>>>> +	pci->ops = &tegra_dw_pcie_ops;
+>>>>>>>> +	pp = &pci->pp;
+>>>>>>>> +	pcie->dev = &pdev->dev;
+>>>>>>>> +
+>>>>>>>> +	data = (struct tegra_pcie_soc *)of_device_get_match_data(dev);
+>>>>>>>> +	if (!data)
+>>>>>>>> +		return -EINVAL;
+>>>>>>>> +	pcie->mode = (enum dw_pcie_device_mode)data->mode;
+>>>>>>>> +
+>>>>>>>> +	ret = tegra_pcie_dw_parse_dt(pcie);
+>>>>>>>> +	if (ret < 0) {
+>>>>>>>> +		dev_err(dev, "Failed to parse device tree: %d\n", ret);
+>>>>>>>> +		return ret;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+>>>>>>>> +	if (IS_ERR(pcie->pex_ctl_supply)) {
+>>>>>>>> +		dev_err(dev, "Failed to get regulator: %ld\n",
+>>>>>>>> +			PTR_ERR(pcie->pex_ctl_supply));
+>>>>>>>> +		return PTR_ERR(pcie->pex_ctl_supply);
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	pcie->core_clk = devm_clk_get(dev, "core");
+>>>>>>>> +	if (IS_ERR(pcie->core_clk)) {
+>>>>>>>> +		dev_err(dev, "Failed to get core clock: %ld\n",
+>>>>>>>> +			PTR_ERR(pcie->core_clk));
+>>>>>>>> +		return PTR_ERR(pcie->core_clk);
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	pcie->appl_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>>>>>> +						      "appl");
+>>>>>>>> +	if (!pcie->appl_res) {
+>>>>>>>> +		dev_err(dev, "Failed to find \"appl\" region\n");
+>>>>>>>> +		return PTR_ERR(pcie->appl_res);
+>>>>>>>> +	}
+>>>>>>>> +	pcie->appl_base = devm_ioremap_resource(dev, pcie->appl_res);
+>>>>>>>> +	if (IS_ERR(pcie->appl_base))
+>>>>>>>> +		return PTR_ERR(pcie->appl_base);
+>>>>>>>> +
+>>>>>>>> +	pcie->core_apb_rst = devm_reset_control_get(dev, "apb");
+>>>>>>>> +	if (IS_ERR(pcie->core_apb_rst)) {
+>>>>>>>> +		dev_err(dev, "Failed to get APB reset: %ld\n",
+>>>>>>>> +			PTR_ERR(pcie->core_apb_rst));
+>>>>>>>> +		return PTR_ERR(pcie->core_apb_rst);
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	phys = devm_kcalloc(dev, pcie->phy_count, sizeof(*phys), GFP_KERNEL);
+>>>>>>>> +	if (!phys)
+>>>>>>>> +		return PTR_ERR(phys);
+>>>>>>>> +
+>>>>>>>> +	for (i = 0; i < pcie->phy_count; i++) {
+>>>>>>>> +		name = kasprintf(GFP_KERNEL, "p2u-%u", i);
+>>>>>>>> +		if (!name) {
+>>>>>>>> +			dev_err(dev, "Failed to create P2U string\n");
+>>>>>>>> +			return -ENOMEM;
+>>>>>>>> +		}
+>>>>>>>> +		phys[i] = devm_phy_get(dev, name);
+>>>>>>>> +		kfree(name);
+>>>>>>>> +		if (IS_ERR(phys[i])) {
+>>>>>>>> +			ret = PTR_ERR(phys[i]);
+>>>>>>>> +			dev_err(dev, "Failed to get PHY: %d\n", ret);
+>>>>>>>> +			return ret;
+>>>>>>>> +		}
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	pcie->phys = phys;
+>>>>>>>> +
+>>>>>>>> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+>>>>>>>> +	if (!dbi_res) {
+>>>>>>>> +		dev_err(dev, "Failed to find \"dbi\" region\n");
+>>>>>>>> +		return PTR_ERR(dbi_res);
+>>>>>>>> +	}
+>>>>>>>> +	pcie->dbi_res = dbi_res;
+>>>>>>>> +
+>>>>>>>> +	pci->dbi_base = devm_ioremap_resource(dev, dbi_res);
+>>>>>>>> +	if (IS_ERR(pci->dbi_base))
+>>>>>>>> +		return PTR_ERR(pci->dbi_base);
+>>>>>>>> +
+>>>>>>>> +	/* Tegra HW locates DBI2 at a fixed offset from DBI */
+>>>>>>>> +	pci->dbi_base2 = pci->dbi_base + 0x1000;
+>>>>>>>> +
+>>>>>>>> +	atu_dma_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>>>>>>>> +						   "atu_dma");
+>>>>>>>> +	if (!atu_dma_res) {
+>>>>>>>> +		dev_err(dev, "Failed to find \"atu_dma\" region\n");
+>>>>>>>> +		return PTR_ERR(atu_dma_res);
+>>>>>>>> +	}
+>>>>>>>> +	pcie->atu_dma_res = atu_dma_res;
+>>>>>>>> +	pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+>>>>>>>> +	if (IS_ERR(pci->atu_base))
+>>>>>>>> +		return PTR_ERR(pci->atu_base);
+>>>>>>>> +
+>>>>>>>> +	pcie->core_rst = devm_reset_control_get(dev, "core");
+>>>>>>>> +	if (IS_ERR(pcie->core_rst)) {
+>>>>>>>> +		dev_err(dev, "Failed to get core reset: %ld\n",
+>>>>>>>> +			PTR_ERR(pcie->core_rst));
+>>>>>>>> +		return PTR_ERR(pcie->core_rst);
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	pp->irq = platform_get_irq_byname(pdev, "intr");
+>>>>>>>> +	if (!pp->irq) {
+>>>>>>>> +		dev_err(dev, "Failed to get \"intr\" interrupt\n");
+>>>>>>>> +		return -ENODEV;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	ret = devm_request_irq(dev, pp->irq, tegra_pcie_irq_handler,
+>>>>>>>> +			       IRQF_SHARED, "tegra-pcie-intr", pcie);
+>>>>>>>> +	if (ret) {
+>>>>>>>> +		dev_err(dev, "Failed to request IRQ %d: %d\n", pp->irq, ret);
+>>>>>>>> +		return ret;
+>>>>>>>> +	}
+>>>>>>>> +
+>>>>>>>> +	pcie->bpmp = tegra_bpmp_get(dev);
+>>>>>>>> +	if (IS_ERR(pcie->bpmp))
+>>>>>>>> +		return PTR_ERR(pcie->bpmp);
+>>>>>>>> +
+>>>>>>>> +	platform_set_drvdata(pdev, pcie);
+>>>>>>>> +
+>>>>>>>> +	if (pcie->mode == DW_PCIE_RC_TYPE) {
+>>>>>>>> +		ret = tegra_pcie_config_rp(pcie);
+>>>>>>>> +		if (ret && ret != -ENOMEDIUM)
+>>>>>>>> +			goto fail;
+>>>>>>>> +		else
+>>>>>>>> +			return 0;
+>>>>>>>
+>>>>>>> So if the link is not up we still go ahead and make probe
+>>>>>>> succeed. What for ?
+>>>>>> We may need root port to be available to support hot-plugging of
+>>>>>> endpoint devices, so, we don't fail the probe.
+>>>>>
+>>>>> We need it or we don't. If you do support hotplugging of endpoint
+>>>>> devices point me at the code, otherwise link up failure means
+>>>>> failure to probe.
+>>>> Currently hotplugging of endpoint is not supported, but it is one of
+>>>> the use cases that we may add support for in future.
+>>>
+>>> You should elaborate on this, I do not understand what you mean,
+>>> either the root port(s) supports hotplug or it does not.
+>>>
+>>>> But, why should we fail probe if link up doesn't happen? As such,
+>>>> nothing went wrong in terms of root port initialization right?  I
+>>>> checked other DWC based implementations and following are not failing
+>>>> the probe pci-dra7xx.c, pcie-armada8k.c, pcie-artpec6.c, pcie-histb.c,
+>>>> pcie-kirin.c, pcie-spear13xx.c, pci-exynos.c, pci-imx6.c,
+>>>> pci-keystone.c, pci-layerscape.c
+>>>>
+>>>> Although following do fail the probe if link is not up.  pcie-qcom.c,
+>>>> pcie-uniphier.c, pci-meson.c
+>>>>
+>>>> So, to me, it looks more like a choice we can make whether to fail the
+>>>> probe or not and in this case we are choosing not to fail.
+>>>
+>>> I disagree. I had an offline chat with Bjorn and whether link-up should
+>>> fail the probe or not depends on whether the root port(s) is hotplug
+>>> capable or not and this in turn relies on the root port "Slot
+>>> implemented" bit in the PCI Express capabilities register.
+>>>
+>>> It is a choice but it should be based on evidence.
+>>>
+>>> Lorenzo
+>> With Bjorn's latest comment on top of this, I think we are good not to fail
+>> the probe here.
+>>
+>> - Vidya Sagar
+>>>
+>>
