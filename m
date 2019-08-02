@@ -1,98 +1,144 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add subnode for LED
- configuration
-Date: Fri, 2 Aug 2019 18:57:55 +0200
-Message-ID: <20190802165755.GM2099@lunn.ch>
-References: <20190801190759.28201-1-mka@chromium.org>
- <20190801190759.28201-2-mka@chromium.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA
+ addressable memory size
+Date: Fri, 2 Aug 2019 11:17:26 -0600
+Message-ID: <CAL_JsqKF5nh3hcdLTG5+6RU3_TnFrNX08vD6qZ8wawoA3WSRpA@mail.gmail.com>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de> <20190731154752.16557-4-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190801190759.28201-2-mka@chromium.org>
+In-Reply-To: <20190731154752.16557-4-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net, Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <robin.murphy@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux IOMMU <iommu@lists.linux-foundation.org>, linux-mm@kvack.org, Frank Rowand <frowand.list@gmail.com>, phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Matthias Brugger <mbrugger@suse.com>, Andrew Morton <akpm@linux-foundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 12:07:56PM -0700, Matthias Kaehlcke wrote:
-> The LED behavior of some Ethernet PHYs is configurable. Add an
-> optional 'leds' subnode with a child node for each LED to be
-> configured. The binding aims to be compatible with the common
-> LED binding (see devicetree/bindings/leds/common.txt).
-> 
-> A LED can be configured to be 'on' when a link with a certain speed
-> is active, or to blink on RX/TX activity. For the configuration to
-> be effective it needs to be supported by the hardware and the
-> corresponding PHY driver.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Wed, Jul 31, 2019 at 9:48 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Some SoCs might have multiple interconnects each with their own DMA
+> addressing limitations. This function parses the 'dma-ranges' on each of
+> them and tries to guess the maximum SoC wide DMA addressable memory
+> size.
+>
+> This is specially useful for arch code in order to properly setup CMA
+> and memory zones.
+
+We already have a way to setup CMA in reserved-memory, so why is this
+needed for that?
+
+I have doubts this can really be generic...
+
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 > ---
-> Changes in v4:
-> - patch added to the series
-> ---
->  .../devicetree/bindings/net/ethernet-phy.yaml | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index f70f18ff821f..81c5aacc89a5 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -153,6 +153,38 @@ properties:
->        Delay after the reset was deasserted in microseconds. If
->        this property is missing the delay will be skipped.
->  
-> +patternProperties:
-> +  "^leds$":
-> +    type: object
-> +    description:
-> +      Subnode with configuration of the PHY LEDs.
+>
+>  drivers/of/fdt.c       | 72 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |  2 ++
+>  2 files changed, 74 insertions(+)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 9cdf14b9aaab..f2444c61a136 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -953,6 +953,78 @@ int __init early_init_dt_scan_chosen_stdout(void)
+>  }
+>  #endif
+>
+> +/**
+> + * early_init_dt_dma_zone_size - Look at all 'dma-ranges' and provide the
+> + * maximum common dmable memory size.
+> + *
+> + * Some devices might have multiple interconnects each with their own DMA
+> + * addressing limitations. For example the Raspberry Pi 4 has the following:
+> + *
+> + * soc {
+> + *     dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
+> + *     [...]
+> + * }
+> + *
+> + * v3dbus {
+> + *     dma-ranges = <0x00000000  0x0 0x00000000  0x3c000000>;
+> + *     [...]
+> + * }
+> + *
+> + * scb {
+> + *     dma-ranges = <0x0 0x00000000  0x0 0x00000000  0xfc000000>;
+> + *     [...]
+> + * }
+> + *
+> + * Here the area addressable by all devices is [0x00000000-0x3bffffff]. Hence
+> + * the function will write in 'data' a size of 0x3c000000.
+> + *
+> + * Note that the implementation assumes all interconnects have the same physical
+> + * memory view and that the mapping always start at the beginning of RAM.
+
+Not really a valid assumption for general code.
+
+> + */
+> +int __init early_init_dt_dma_zone_size(unsigned long node, const char *uname,
+> +                                      int depth, void *data)
+
+Don't use the old fdt scanning interface with depth/data. It's not
+really needed now because you can just use libfdt calls.
+
+> +{
+> +       const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+> +       u64 phys_addr, dma_addr, size;
+> +       u64 *dma_zone_size = data;
+> +       int dma_addr_cells;
+> +       const __be32 *reg;
+> +       const void *prop;
+> +       int len;
 > +
-> +    patternProperties:
-> +      "^led@[0-9]+$":
-> +        type: object
-> +        description:
-> +          Subnode with the configuration of a single PHY LED.
+> +       if (depth == 0)
+> +               *dma_zone_size = 0;
 > +
-> +    properties:
-> +      reg:
-> +        description:
-> +          The ID number of the LED, typically corresponds to a hardware ID.
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +       /*
+> +        * We avoid pci host controllers as they have their own way of using
+> +        * 'dma-ranges'.
+> +        */
+> +       if (type && !strcmp(type, "pci"))
+> +               return 0;
 > +
-> +      linux,default-trigger:
-> +        description:
-> +          This parameter, if present, is a string specifying the trigger
-> +          assigned to the LED. Supported triggers are:
-> +            "phy_link_10m_active" - LED will be on when a 10Mb/s link is active
-> +            "phy_link_100m_active" - LED will be on when a 100Mb/s link is active
-> +            "phy_link_1g_active" - LED will be on when a 1Gb/s link is active
-> +            "phy_link_10g_active" - LED will be on when a 10Gb/s link is active
-> +            "phy_activity" - LED will blink when data is received or transmitted
+> +       reg = of_get_flat_dt_prop(node, "dma-ranges", &len);
+> +       if (!reg)
+> +               return 0;
+> +
+> +       prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
+> +       if (prop)
+> +               dma_addr_cells = be32_to_cpup(prop);
+> +       else
+> +               dma_addr_cells = 1; /* arm64's default addr_cell size */
 
-Matthias
+Relying on the defaults has been a dtc error longer than arm64 has
+existed. If they are missing, just bail.
 
-We should think a bit more about these names.
+> +
+> +       if (len < (dma_addr_cells + dt_root_addr_cells + dt_root_size_cells))
+> +               return 0;
+> +
+> +       dma_addr = dt_mem_next_cell(dma_addr_cells, &reg);
+> +       phys_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +       size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +       if (!*dma_zone_size || *dma_zone_size > size)
+> +               *dma_zone_size = size;
+> +
+> +       return 0;
+> +}
 
-I can see in future needing 1G link, but it blinks off when there is
-active traffic? So phy_link_1g_active could be confusing, and very similar to
-phy_link_1g_activity? So maybe 
+It's possible to have multiple levels of nodes and dma-ranges. You
+need to handle that case too.
 
-> +            "phy_link_10m" - LED will be solid on when a 10Mb/s link is active
-> +            "phy_link_100m" - LED will be solid on when a 100Mb/s link is active
-> +            "phy_link_1g" - LED will be solid on when a 1Gb/s link is active
+Doing that and handling differing address translations will be
+complicated. IMO, I'd just do:
 
-etc.
+if (of_fdt_machine_is_compatible(blob, "brcm,bcm2711"))
+    dma_zone_size = XX;
 
-And then in the future we can have
+2 lines of code is much easier to maintain than 10s of incomplete code
+and is clearer who needs this. Maybe if we have dozens of SoCs with
+this problem we should start parsing dma-ranges.
 
-               "phy_link_1g_activity' - LED will be on when 1Gbp/s
-                                        link is active and blink off
-                                        with activity.
-
-What other use cases do we have? I don't want to support everything,
-but we should be able to represent the most common modes without the
-names getting too confusing.
-
-      Andrew
+Rob
