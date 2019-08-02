@@ -1,47 +1,116 @@
-From: Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add phy-dsi-supply property on
- stm32mp157c-ev1
-Date: Fri, 2 Aug 2019 08:01:40 +0000
-Message-ID: <4e53ec28-0368-7ad8-1397-4d3d3172f02e@st.com>
-References: <1564410548-20436-1-git-send-email-yannick.fertre@st.com>
- <346d04ad-17ed-40c8-f10a-b13a2ea79d92@st.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 04/12] dt-bindings: display: Add bindings for
+ Advantech IDK-2121WR
+Date: Fri, 2 Aug 2019 11:03:32 +0300
+Message-ID: <20190802080332.GE5008@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <346d04ad-17ed-40c8-f10a-b13a2ea79d92@st.com>
-Content-Language: en-US
-Content-ID: <DDDF93E406C16842AF9F6D3FE37A2808@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Philippe CORNU <philippe.cornu@st.com>, Fabrice GASNIER <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-TWFueSB0aGFua3MgQWxleC4NCg0KT24gOC8yLzE5IDk6MzYgQU0sIEFsZXhhbmRyZSBUb3JndWUg
-d3JvdGU6DQo+IEhpIFlhbm5pY2sNCj4NCj4gT24gNy8yOS8xOSA0OjI5IFBNLCBZYW5uaWNrIEZl
-cnRyw6kgd3JvdGU6DQo+PiBUaGUgZHNpIHBoeXNpY2FsIGxheWVyIGlzIHBvd2VyZWQgYnkgdGhl
-IDF2OCBwb3dlciBjb250cm9sbGVyIHN1cHBseS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBZYW5u
-aWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4+IC0tLQ0KPj4gwqAgYXJjaC9h
-cm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MtZXYxLmR0cyB8IDEgKw0KPj4gwqAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N0bTMybXAxNTdjLWV2MS5kdHMgDQo+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdj
-LWV2MS5kdHMNCj4+IGluZGV4IGZlYjhmNzcuLjE5ZDY5ZDAgMTAwNjQ0DQo+PiAtLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1ldjEuZHRzDQo+PiArKysgYi9hcmNoL2FybS9ib290
-L2R0cy9zdG0zMm1wMTU3Yy1ldjEuZHRzDQo+PiBAQCAtMTAxLDYgKzEwMSw3IEBADQo+PiDCoCAm
-ZHNpIHsNCj4+IMKgwqDCoMKgwqAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiDCoMKgwqDCoMKg
-ICNzaXplLWNlbGxzID0gPDA+Ow0KPj4gK8KgwqDCoCBwaHktZHNpLXN1cHBseSA9IDwmcmVnMTg+
-Ow0KPj4gwqDCoMKgwqDCoCBzdGF0dXMgPSAib2theSI7DQo+PiDCoCDCoMKgwqDCoMKgIHBvcnRz
-IHsNCj4+DQo+DQo+IEFwcGxpZWQgb24gc3RtMzItbmV4dC4NCj4NCj4gVGhhbmtzLg0KPiBBbGV4
-DQotLSANCllhbm5pY2sgRmVydHLDqSB8IFRJTkE6IDE2NiA3MTUyIHwgVGVsOiArMzMgMjQ0MDI3
-MTUyIHwgTW9iaWxlOiArMzMgNjIwNjAwMjcwDQpNaWNyb2NvbnRyb2xsZXJzIGFuZCBEaWdpdGFs
-IElDcyBHcm91cCB8IE1pY3JvY29udHJvbGxldXJzIERpdmlzaW9uCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Fabrizio,
+
+Thank you for the patch.
+
+On Fri, Aug 02, 2019 at 08:34:01AM +0100, Fabrizio Castro wrote:
+> This panel is handled through the generic lvds-panel bindings,
+> so only needs its additional compatible specified.
+> 
+> Some panel specific documentation can be found here:
+
+s/panel specific/panel-specific/
+
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  .../display/panel/advantech,idk-2121wr.txt         | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> new file mode 100644
+> index 0000000..70b15b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> @@ -0,0 +1,62 @@
+> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
+> +===============================================
+> +
+> +Required properties:
+> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
+> +
+> +This binding is compatible with the lvds-panel binding, which is specified
+> +in panel-lvds.txt in this directory.
+
+How about adding "The panel operates in dual-link mode and thus requires
+two port nodes." ?
+
+> +
+> +Example
+> +-------
+> +
+> +	panel {
+> +		compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +		width-mm = <476>;
+> +		height-mm = <268>;
+> +
+> +		data-mapping = "vesa-24";
+> +
+> +		panel-timing {
+> +			clock-frequency = <148500000>;
+> +			hactive = <1920>;
+> +			vactive = <1080>;
+> +			hsync-len = <44>;
+> +			hfront-porch = <88>;
+> +			hback-porch = <148>;
+> +			vfront-porch = <4>;
+> +			vback-porch = <36>;
+> +			vsync-len = <5>;
+> +		};
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				lvds0_panel_in: endpoint {
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				lvds1_panel_in: endpoint {
+> +					remote-endpoint = <&lvds1_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm5 0 50000>;
+> +
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +
+> +		power-supply = <&reg_12p0v>;
+> +		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> +	};
+
+I think you can drop the backlight here, it's a bit out of scope.
+
+-- 
+Regards,
+
+Laurent Pinchart
