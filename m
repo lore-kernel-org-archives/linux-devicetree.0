@@ -1,68 +1,46 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
- Tegra30
-Date: Fri, 2 Aug 2019 17:05:12 +0300
-Message-ID: <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
-References: <20190725151832.9802-1-digetx@gmail.com>
- <20190725151832.9802-4-digetx@gmail.com>
+From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+Subject: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1 board
+Date: Fri, 2 Aug 2019 16:08:51 +0200
+Message-ID: <1564754931-13861-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190725151832.9802-4-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
-> Add regulators coupler for Tegra30 SoCs that performs voltage balancing
-> of a coupled regulators and thus provides voltage scaling functionality.
-> 
-> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. The
-> coupled regulator voltages shall be in a range of 300mV from each other
-> and CORE voltage shall be higher than the CPU by N mV, where N depends
-> on the CPU voltage.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/soc/tegra/Kconfig              |   4 +
->  drivers/soc/tegra/Makefile             |   1 +
->  drivers/soc/tegra/regulators-tegra30.c | 316 +++++++++++++++++++++++++
->  3 files changed, 321 insertions(+)
->  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
-> 
-...
+The ltdc pinctrl must be in the display controller node and
+not in the peripheral node (hdmi bridge).
 
-> +
-> +static int tegra30_core_cpu_limit(int cpu_uV)
-> +{
-> +	if (cpu_uV < 800000)
-> +		return 950000;
-> +
-> +	if (cpu_uV < 900000)
-> +		return 1000000;
-> +
-> +	if (cpu_uV < 1000000)
-> +		return 1100000;
-> +
-> +	if (cpu_uV < 1100000)
-> +		return 1200000;
-> +
-> +	if (cpu_uV < 1250000) {
-> +		switch (tegra_sku_info.cpu_speedo_id) {
-> +		case 0 ... 1:
-Aren't we supposed to add /* fall through */ here now?
-> +		case 4:
-> +		case 7 ... 8:
-> +			return 1200000;
-> +
-> +		default:
-> +			return 1300000;
-> +		}
-> +	}
-> +
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Other than that, this looks ok to me.
-
-Peter.
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index f3f0e37..1285cfc 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -99,9 +99,6 @@
+ 		reset-gpios = <&gpioa 10 GPIO_ACTIVE_LOW>;
+ 		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+ 		interrupt-parent = <&gpiog>;
+-		pinctrl-names = "default", "sleep";
+-		pinctrl-0 = <&ltdc_pins_a>;
+-		pinctrl-1 = <&ltdc_pins_sleep_a>;
+ 		status = "okay";
+ 
+ 		ports {
+@@ -276,6 +273,9 @@
+ };
+ 
+ &ltdc {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&ltdc_pins_a>;
++	pinctrl-1 = <&ltdc_pins_sleep_a>;
+ 	status = "okay";
+ 
+ 	port {
+-- 
+2.7.4
