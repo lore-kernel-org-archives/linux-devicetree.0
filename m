@@ -1,25 +1,16 @@
 From: Tao Ren <taoren@fb.com>
-Subject: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge40 BMC
-Date: Thu, 1 Aug 2019 21:06:50 -0700
-Message-ID: <20190802040650.1224903-1-taoren@fb.com>
+Subject: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
+Date: Thu, 1 Aug 2019 21:10:10 -0700
+Message-ID: <20190802041010.1234178-1-taoren@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 Cc: Tao Ren <taoren@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial version of device tree for Facebook Wedge40 AST2400 BMC
+Add initial version of device tree for Facebook Wedge100 AST2400 BMC
 platform.
 
 Signed-off-by: Tao Ren <taoren@fb.com>
@@ -29,28 +20,28 @@ Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
  - remove "debug" from bootargs.
 
  arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 141 ++++++++++++++++++
- 2 files changed, 142 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+ .../boot/dts/aspeed-bmc-facebook-wedge100.dts | 149 ++++++++++++++++++
+ 2 files changed, 150 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 39a05a10a2a2..dfc1011eb3f2 100644
+index 39a05a10a2a2..d71504ed82d3 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
 @@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
  	aspeed-bmc-facebook-cmm.dtb \
  	aspeed-bmc-facebook-minipack.dtb \
  	aspeed-bmc-facebook-tiogapass.dtb \
-+	aspeed-bmc-facebook-wedge40.dtb \
++	aspeed-bmc-facebook-wedge100.dtb \
  	aspeed-bmc-facebook-yamp.dtb \
  	aspeed-bmc-intel-s2600wf.dtb \
  	aspeed-bmc-inspur-fp5280g2.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
 new file mode 100644
-index 000000000000..aaa77a597d1a
+index 000000000000..b1e10f0c85c9
 --- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
-@@ -0,0 +1,141 @@
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+@@ -0,0 +1,149 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +// Copyright (c) 2018 Facebook Inc.
 +/dts-v1/;
@@ -58,8 +49,8 @@ index 000000000000..aaa77a597d1a
 +#include "aspeed-g4.dtsi"
 +
 +/ {
-+	model = "Facebook Wedge 40 BMC";
-+	compatible = "facebook,wedge40-bmc", "aspeed,ast2400";
++	model = "Facebook Wedge 100 BMC";
++	compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
 +
 +	aliases {
 +		/*
@@ -88,7 +79,8 @@ index 000000000000..aaa77a597d1a
 +};
 +
 +&wdt2 {
-+	status = "disabled";
++	status = "okay";
++	aspeed,reset-type = "system";
 +};
 +
 +&fmc {
@@ -163,6 +155,13 @@ index 000000000000..aaa77a597d1a
 +
 +&i2c7 {
 +	status = "okay";
++
++	i2c-switch@70 {
++		compatible = "nxp,pca9548";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++	};
 +};
 +
 +&i2c8 {
