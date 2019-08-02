@@ -1,110 +1,55 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 33/76] ARM: dts: imx6ul: fix clock frequency property name of I2C buses
-Date: Fri,  2 Aug 2019 09:19:07 -0400
-Message-ID: <20190802131951.11600-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 44/76] arm64: dts: imx8mm: Correct SAI3 RXC/TXFS pin's mux option #1
+Date: Fri,  2 Aug 2019 09:19:18 -0400
+Message-ID: <20190802131951.11600-44-sashal@kernel.org>
 References: <20190802131951.11600-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 2ca99396333999b9b5c5b91b36cbccacfe571aaf ]
+[ Upstream commit 52d09014bb104a9157c0f5530700291052d2955c ]
 
-A few boards set clock frequency of their I2C buses with
-"clock_frequency" property. The right property is "clock-frequency".
+According to i.MX8MM reference manual Rev.1, 03/2019:
 
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+SAI3_RXC pin's mux option #1 should be GPT1_CLK, NOT GPT1_CAPTURE2;
+SAI3_TXFS pin's mux option #1 should be GPT1_CAPTURE2, NOT GPT1_CLK.
+
+Fixes: c1c9d41319c3 ("dt-bindings: imx: Add pinctrl binding doc for imx8mm")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul-geam.dts        | 2 +-
- arch/arm/boot/dts/imx6ul-isiot.dtsi      | 2 +-
- arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 2 +-
- arch/arm/boot/dts/imx6ul-pico-pi.dts     | 4 ++--
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 9207d5d071f11..d556f7c541ce6 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -112,7 +112,7 @@
- };
- 
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index bc77f26a2f1de..6157a058feec9 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -156,7 +156,7 @@
- };
- 
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 213e802bf35c5..23e6e2e7ace9d 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -148,7 +148,7 @@
- };
- 
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-index 39eeeddac39e3..09f7ffa9ad8c4 100644
---- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
-@@ -43,7 +43,7 @@
- };
- 
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6ul-pico-pi.dts b/arch/arm/boot/dts/imx6ul-pico-pi.dts
-index de07357b27fc2..6cd7d5877d20c 100644
---- a/arch/arm/boot/dts/imx6ul-pico-pi.dts
-+++ b/arch/arm/boot/dts/imx6ul-pico-pi.dts
-@@ -43,7 +43,7 @@
- };
- 
- &i2c2 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-@@ -58,7 +58,7 @@
- };
- 
- &i2c3 {
--	clock_frequency = <100000>;
-+	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+index e25f7fcd79975..cffa8991880d1 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
++++ b/arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h
+@@ -462,7 +462,7 @@
+ #define MX8MM_IOMUXC_SAI3_RXFS_GPIO4_IO28                                   0x1CC 0x434 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXFS_TPSMP_HTRANS0                                0x1CC 0x434 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI3_RX_BCLK                                  0x1D0 0x438 0x000 0x0 0x0
+-#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CAPTURE2                                 0x1D0 0x438 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI3_RXC_GPT1_CLK                                      0x1D0 0x438 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_SAI5_RX_BCLK                                  0x1D0 0x438 0x4D0 0x2 0x2
+ #define MX8MM_IOMUXC_SAI3_RXC_GPIO4_IO29                                    0x1D0 0x438 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXC_TPSMP_HTRANS1                                 0x1D0 0x438 0x000 0x7 0x0
+@@ -472,7 +472,7 @@
+ #define MX8MM_IOMUXC_SAI3_RXD_GPIO4_IO30                                    0x1D4 0x43C 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_RXD_TPSMP_HDATA0                                  0x1D4 0x43C 0x000 0x7 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC                                 0x1D8 0x440 0x000 0x0 0x0
+-#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CLK                                     0x1D8 0x440 0x000 0x1 0x0
++#define MX8MM_IOMUXC_SAI3_TXFS_GPT1_CAPTURE2                                0x1D8 0x440 0x000 0x1 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_SAI5_RX_DATA1                                0x1D8 0x440 0x4D8 0x2 0x2
+ #define MX8MM_IOMUXC_SAI3_TXFS_GPIO4_IO31                                   0x1D8 0x440 0x000 0x5 0x0
+ #define MX8MM_IOMUXC_SAI3_TXFS_TPSMP_HDATA1                                 0x1D8 0x440 0x000 0x7 0x0
 -- 
 2.20.1
