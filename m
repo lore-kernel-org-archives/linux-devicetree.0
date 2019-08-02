@@ -1,195 +1,221 @@
-From: Tao Ren <taoren@fb.com>
-Subject: [PATCH v2] ARM: dts: aspeed: Add Facebook Wedge100 BMC
-Date: Thu, 1 Aug 2019 21:10:10 -0700
-Message-ID: <20190802041010.1234178-1-taoren@fb.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl binding
+Date: Fri,  2 Aug 2019 09:45:06 +0530
+Message-ID: <20190802041507.12365-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: Tao Ren <taoren@fb.com>
+To: linus.walleij@linaro.org, bjorn.andersson@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, agross@kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jitendra Sharma <shajit@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add initial version of device tree for Facebook Wedge100 AST2400 BMC
-platform.
+From: Jitendra Sharma <shajit@codeaurora.org>
 
-Signed-off-by: Tao Ren <taoren@fb.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Add the binding for the TLMM pinctrl block found in the SC7180 platform
+
+Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+[rnayak: Fix some copy-paste issues, sort and fix functions]
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- Changes in v2:
- - remove "debug" from bootargs.
+ .../bindings/pinctrl/qcom,sc7180-pinctrl.txt  | 186 ++++++++++++++++++
+ 1 file changed, 186 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
 
- arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/aspeed-bmc-facebook-wedge100.dts | 149 ++++++++++++++++++
- 2 files changed, 150 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 39a05a10a2a2..d71504ed82d3 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1273,6 +1273,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-facebook-cmm.dtb \
- 	aspeed-bmc-facebook-minipack.dtb \
- 	aspeed-bmc-facebook-tiogapass.dtb \
-+	aspeed-bmc-facebook-wedge100.dtb \
- 	aspeed-bmc-facebook-yamp.dtb \
- 	aspeed-bmc-intel-s2600wf.dtb \
- 	aspeed-bmc-inspur-fp5280g2.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
 new file mode 100644
-index 000000000000..b1e10f0c85c9
+index 000000000000..948cd56cfab7
 --- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge100.dts
-@@ -0,0 +1,149 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+@@ -0,0 +1,186 @@
++Qualcomm Technologies, Inc. SC7180 TLMM block
 +
-+#include "aspeed-g4.dtsi"
++This binding describes the Top Level Mode Multiplexer block found in the
++SC7180 platform.
 +
-+/ {
-+	model = "Facebook Wedge 100 BMC";
-+	compatible = "facebook,wedge100-bmc", "aspeed,ast2400";
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,sc7180-pinctrl"
 +
-+	aliases {
-+		/*
-+		 * Override the default uart aliases to avoid breaking
-+		 * the legacy applications.
-+		 */
-+		serial0 = &uart5;
-+		serial1 = &uart1;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the north, south and west
++		    TLMM tiles
++
++- reg-names:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Defintiion: names for the cells of reg, must contain "north", "south"
++		    and "west".
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the TLMM summary IRQ.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as an interrupt controller
++
++- #interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/interrupt-controller/irq.h>
++
++- gpio-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as a gpio controller
++
++- #gpio-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/gpio/gpio.h>
++
++- gpio-ranges:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition:  see ../gpio/gpio.txt
++
++- gpio-reserved-ranges:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: see ../gpio/gpio.txt
++
++Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
++a general description of GPIO and interrupt bindings.
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++The pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, drive strength, etc.
++
++
++PIN CONFIGURATION NODES:
++
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
++
++Each subnode only affects those parameters that are explicitly listed. In
++other words, a subnode that lists a mux function but no pin configuration
++parameters implies no information about any pin configuration parameters.
++Similarly, a pin subnode that describes a pullup parameter implies no
++information about e.g. the mux function.
++
++
++The following generic properties as defined in pinctrl-bindings.txt are valid
++to specify in a pin configuration subnode:
++
++- pins:
++	Usage: required
++	Value type: <string-array>
++	Definition: List of gpio pins affected by the properties specified in
++		    this subnode.
++
++		    Valid pins are:
++		      gpio0-gpio118
++		        Supports mux, bias and drive-strength
++
++		      sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd,
++		      sdc2_data sdc1_rclk
++		        Supports bias and drive-strength
++
++		      ufs_reset
++			Supports bias and drive-strength
++
++- function:
++	Usage: required
++	Value type: <string>
++	Definition: Specify the alternative function to be configured for the
++		    specified pins. Functions are only valid for gpio pins.
++		    Valid values are:
++
++		    adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
++		    atest_char1, atest_char2, atest_char3, atest_tsens,
++		    atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
++		    atest_usb12, atest_usb13, atest_usb2, atest_usb20,
++		    atest_usb21, atest_usb22, atest_usb23, audio_ref,
++		    btfm_slimbus, cam_mclk, cci_async, cci_i2c, cci_timer0,
++		    cci_timer1, cci_timer2, cci_timer3, cci_timer4,
++		    cri_trng, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
++		    ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1, gcc_gp2,
++		    gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
++		    jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
++		    mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0,
++		    mi2s_1, mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag,
++		    PLL_BIST, pll_bypassnl, pll_reset, prng_rosc, qdss,
++		    qdss_cti, qlink_enable, qlink_request, qspi_clk, qspi_cs,
++		    qspi_data, qup00, qup01, qup02, qup03, qup04, qup05,
++		    qup10, qup11, qup12, qup13, qup14, qup15, sdc1_tb,
++		    sdc2_tb, sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2,
++		    tgu_ch3, tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt,
++		    usb_phy, vfr_1, _V_GPIO, _V_PPS_IN, _V_PPS_OUT,
++		    vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0,
++		    wlan2_adc1,
++
++- bias-disable:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configured as no pull.
++
++- bias-pull-down:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configured as pull down.
++
++- bias-pull-up:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configured as pull up.
++
++- output-high:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    high.
++		    Not valid for sdc pins.
++
++- output-low:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    low.
++		    Not valid for sdc pins.
++
++- drive-strength:
++	Usage: optional
++	Value type: <u32>
++	Definition: Selects the drive strength for the specified pins, in mA.
++		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
++
++Example:
++
++	tlmm: pinctrl@3000000 {
++		compatible = "qcom,sc7180-pinctrl";
++		reg = <0x3500000 0x300000>,
++		      <0x3900000 0x300000>,
++		      <0x3D00000 0x300000>;
++		reg-names = "west", "north", "south";
++		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-ranges = <&tlmm 0 0 119>;
++		gpio-reserved-ranges = <0 4>, <106 4>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
 +	};
-+
-+	chosen {
-+		stdout-path = &uart3;
-+		bootargs = "console=ttyS2,9600n8 root=/dev/ram rw";
-+	};
-+
-+	memory@40000000 {
-+		reg = <0x40000000 0x20000000>;
-+	};
-+};
-+
-+&wdt1 {
-+	status = "okay";
-+	aspeed,reset-type = "system";
-+};
-+
-+&wdt2 {
-+	status = "okay";
-+	aspeed,reset-type = "system";
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "fmc0";
-+#include "facebook-bmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd3_default
-+		     &pinctrl_rxd3_default>;
-+};
-+
-+&uart4 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd4_default
-+		     &pinctrl_rxd4_default>;
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&mac1 {
-+	status = "okay";
-+	no-hw-checksum;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+
-+	i2c-switch@70 {
-+		compatible = "nxp,pca9548";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+	};
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+};
-+
-+&i2c13 {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
