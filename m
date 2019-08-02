@@ -1,151 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 03/12] dt-bindings: panel: lvds: Add dual-link LVDS
- display support
-Date: Fri, 2 Aug 2019 11:00:14 +0300
-Message-ID: <20190802080014.GD5008@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-4-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add phy-dsi-supply property on
+ stm32mp157c-ev1
+Date: Fri, 2 Aug 2019 08:01:40 +0000
+Message-ID: <4e53ec28-0368-7ad8-1397-4d3d3172f02e@st.com>
+References: <1564410548-20436-1-git-send-email-yannick.fertre@st.com>
+ <346d04ad-17ed-40c8-f10a-b13a2ea79d92@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1564731249-22671-4-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <346d04ad-17ed-40c8-f10a-b13a2ea79d92@st.com>
+Content-Language: en-US
+Content-ID: <DDDF93E406C16842AF9F6D3FE37A2808@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Philippe CORNU <philippe.cornu@st.com>, Fabrice GASNIER <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Fri, Aug 02, 2019 at 08:34:00AM +0100, Fabrizio Castro wrote:
-> Dual-link LVDS displays have two ports, therefore document this
-> with the bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  .../bindings/display/panel/panel-lvds.txt          | 91 ++++++++++++++++------
->  1 file changed, 67 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> index 250850a..07795441 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> @@ -41,7 +41,8 @@ Required nodes:
->  
->  - panel-timing: See panel-common.txt.
->  - ports: See panel-common.txt. These bindings require a single port subnode
-> -  corresponding to the panel LVDS input.
-> +  (for a single link display) or two port subnodes (for a dual link display)
-> +  corresponding to the panel LVDS input(s).
-
-I think you should expand this a bit to explain what the ports
-correspond to in the dual link mode.
-
->  LVDS data mappings are defined as follows.
-> @@ -92,30 +93,72 @@ CTL3: 0
->  Example
->  -------
->  
-> -panel {
-> -	compatible = "mitsubishi,aa121td01", "panel-lvds";
-> -
-> -	width-mm = <261>;
-> -	height-mm = <163>;
-> -
-> -	data-mapping = "jeida-24";
-> -
-> -	panel-timing {
-> -		/* 1280x800 @60Hz */
-> -		clock-frequency = <71000000>;
-> -		hactive = <1280>;
-> -		vactive = <800>;
-> -		hsync-len = <70>;
-> -		hfront-porch = <20>;
-> -		hback-porch = <70>;
-> -		vsync-len = <5>;
-> -		vfront-porch = <3>;
-> -		vback-porch = <15>;
-> +Single port:
-> +	panel {
-> +		compatible = "mitsubishi,aa121td01", "panel-lvds";
-> +
-> +		width-mm = <261>;
-> +		height-mm = <163>;
-> +
-> +		data-mapping = "jeida-24";
-> +
-> +		panel-timing {
-> +			/* 1280x800 @60Hz */
-> +			clock-frequency = <71000000>;
-> +			hactive = <1280>;
-> +			vactive = <800>;
-> +			hsync-len = <70>;
-> +			hfront-porch = <20>;
-> +			hback-porch = <70>;
-> +			vsync-len = <5>;
-> +			vfront-porch = <3>;
-> +			vback-porch = <15>;
-> +		};
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds_encoder>;
-> +			};
-> +		};
->  	};
->  
-> -	port {
-> -		panel_in: endpoint {
-> -			remote-endpoint = <&lvds_encoder>;
-> +Two ports:
-> +	panel {
-> +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +		width-mm = <476>;
-> +		height-mm = <268>;
-> +
-> +		data-mapping = "vesa-24";
-> +
-> +		panel-timing {
-> +			clock-frequency = <148500000>;
-> +			hactive = <1920>;
-> +			vactive = <1080>;
-> +			hsync-len = <44>;
-> +			hfront-porch = <88>;
-> +			hback-porch = <148>;
-> +			vfront-porch = <4>;
-> +			vback-porch = <36>;
-> +			vsync-len = <5>;
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds0_panel_in: endpoint {
-
-I would name the label panel_in0 and panel_in1 below to have a common
-prefix showing that both refer to the same panel.
-
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds1_panel_in: endpoint {
-> +					remote-endpoint = <&lvds1_out>;
-> +				};
-> +			};
->  		};
->  	};
-> -};
-
--- 
-Regards,
-
-Laurent Pinchart
+TWFueSB0aGFua3MgQWxleC4NCg0KT24gOC8yLzE5IDk6MzYgQU0sIEFsZXhhbmRyZSBUb3JndWUg
+d3JvdGU6DQo+IEhpIFlhbm5pY2sNCj4NCj4gT24gNy8yOS8xOSA0OjI5IFBNLCBZYW5uaWNrIEZl
+cnRyw6kgd3JvdGU6DQo+PiBUaGUgZHNpIHBoeXNpY2FsIGxheWVyIGlzIHBvd2VyZWQgYnkgdGhl
+IDF2OCBwb3dlciBjb250cm9sbGVyIHN1cHBseS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBZYW5u
+aWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4+IC0tLQ0KPj4gwqAgYXJjaC9h
+cm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MtZXYxLmR0cyB8IDEgKw0KPj4gwqAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L3N0bTMybXAxNTdjLWV2MS5kdHMgDQo+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdj
+LWV2MS5kdHMNCj4+IGluZGV4IGZlYjhmNzcuLjE5ZDY5ZDAgMTAwNjQ0DQo+PiAtLS0gYS9hcmNo
+L2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy1ldjEuZHRzDQo+PiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9zdG0zMm1wMTU3Yy1ldjEuZHRzDQo+PiBAQCAtMTAxLDYgKzEwMSw3IEBADQo+PiDCoCAm
+ZHNpIHsNCj4+IMKgwqDCoMKgwqAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiDCoMKgwqDCoMKg
+ICNzaXplLWNlbGxzID0gPDA+Ow0KPj4gK8KgwqDCoCBwaHktZHNpLXN1cHBseSA9IDwmcmVnMTg+
+Ow0KPj4gwqDCoMKgwqDCoCBzdGF0dXMgPSAib2theSI7DQo+PiDCoCDCoMKgwqDCoMKgIHBvcnRz
+IHsNCj4+DQo+DQo+IEFwcGxpZWQgb24gc3RtMzItbmV4dC4NCj4NCj4gVGhhbmtzLg0KPiBBbGV4
+DQotLSANCllhbm5pY2sgRmVydHLDqSB8IFRJTkE6IDE2NiA3MTUyIHwgVGVsOiArMzMgMjQ0MDI3
+MTUyIHwgTW9iaWxlOiArMzMgNjIwNjAwMjcwDQpNaWNyb2NvbnRyb2xsZXJzIGFuZCBEaWdpdGFs
+IElDcyBHcm91cCB8IE1pY3JvY29udHJvbGxldXJzIERpdmlzaW9uCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
