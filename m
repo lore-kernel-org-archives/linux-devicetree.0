@@ -1,100 +1,46 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-Date: Fri, 02 Aug 2019 10:51:25 +0200
-Message-ID: <de6bec64012876c07267024cd4b2d2d5@agner.ch>
-References: <20190731123750.25670-1-philippe.schenker@toradex.com>
- <20190731123750.25670-8-philippe.schenker@toradex.com>
- <CAOMZO5B5HnqpLrDjyGtqSQpVXmcoZuGLvCzKVUhwLb-_ZO_Xog@mail.gmail.com>
- <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v2 3/5] ARM: dts: stm32: add phy-dsi-supply property on
+ stm32mp157c
+Date: Fri, 2 Aug 2019 09:01:32 +0000
+Message-ID: <e381b766-c576-828b-49a5-f13990b9d49f@st.com>
+References: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
+ <1557498023-10766-4-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: festevam@gmail.com, s.hauer@pengutronix.de, Marcel Ziswiler <marcel.ziswiler@toradex.com>, kernel@pengutronix.de, Max Krummenacher <max.krummenacher@toradex.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, michal.vokac@ysoft.com, shawnguo@kernel.org, Stefan Agner <stefan.agner@toradex.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1557498023-10766-4-git-send-email-yannick.fertre@st.com>
+Content-Language: en-US
+Content-ID: <F7623D89E5834A4A9837C0DAEEC4B353@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, David
+ Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-07-31 16:52, Philippe Schenker wrote:
-> On Wed, 2019-07-31 at 09:56 -0300, Fabio Estevam wrote:
->> On Wed, Jul 31, 2019 at 9:38 AM Philippe Schenker
->> <philippe.schenker@toradex.com> wrote:
->> > From: Stefan Agner <stefan.agner@toradex.com>
->> >
->> > Add pinmuxing and do not specify voltage restrictions in the
->> > module level device tree.
->>
->> It would be nice to explain the reason for doing this.
-> 
-> This commit is in preparation of another patch that didn't made into this
-> patchset (downstream stuff in there). But I will do another patch on top that
-> will use this patch here. That should anyway be in mainline.
-
-I guess what Fabio meant here is explain this patch.
-
-The commit message really could be improved, e.g.:
-
-Add pinmuxing and do not specify voltage restrictions for the usdhc
-instance
-available on the modules edge connector. This allows to use SD-cards
-with
-higher transfer modes if supported by the carrier board.
-
---
-Stefan
-
-> 
-> Philippe
-> 
->>
->> > Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
->> > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
->> > ---
->> >
->> > Changes in v2: None
->> >
->> >  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
->> >  1 file changed, 22 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-
->> > colibri.dtsi
->> > index 16d1a1ed1aff..67f5e0c87fdc 100644
->> > --- a/arch/arm/boot/dts/imx7-colibri.dtsi
->> > +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
->> > @@ -326,7 +326,6 @@
->> >  &usdhc1 {
->> >         pinctrl-names = "default";
->> >         pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
->> > -       no-1-8-v;
->> >         cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
->> >         disable-wp;
->> >         vqmmc-supply = <&reg_LDO2>;
->> > @@ -671,6 +670,28 @@
->> >                 >;
->> >         };
->> >
->> > +       pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
->> > +               fsl,pins = <
->> > +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5a
->> > +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1a
->> > +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5a
->> > +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5a
->> > +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5a
->> > +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5a
->> > +               >;
->> > +       };
->> > +
->> > +       pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
->> > +               fsl,pins = <
->> > +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5b
->> > +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1b
->> > +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5b
->> > +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5b
->> > +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5b
->> > +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5b
->> > +               >;
->> > +       };
->>
->> You add the entries for 100MHz and 200MHz, but I don't see them being
->> referenced anywhere.
+SGkgQWxleGFuZHJlLA0KDQp0aGlzIHBhdGNoIGNhbiBiZSBhYmFuZG9uZWQuDQoNCkJSDQoNCi0t
+IA0KWWFubmljayBGZXJ0csOpIHwgVElOQTogMTY2IDcxNTIgfCBUZWw6ICszMyAyNDQwMjcxNTIg
+fCBNb2JpbGU6ICszMyA2MjA2MDAyNzANCk1pY3JvY29udHJvbGxlcnMgYW5kIERpZ2l0YWwgSUNz
+IEdyb3VwIHwgTWljcm9jb250cm9sbGV1cnMgRGl2aXNpb24NCg0KDQpPbiA1LzEwLzE5IDQ6MjAg
+UE0sIFlhbm5pY2sgRmVydHLDqSB3cm90ZToNCg0KPiBUaGUgZHNpIHBoeXNpY2FsIGxheWVyIGlz
+IHBvd2VyZWQgYnkgdGhlIDF2OCBwb3dlciBjb250cm9sbGVyIHN1cHBseS4NCj4NCj4gU2lnbmVk
+LW9mZi1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQo+IC0tLQ0K
+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLmR0c2kgfCAxICsNCj4gICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3N0bTMybXAxNTdjLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy5kdHNp
+DQo+IGluZGV4IDJhZmVlZTYuLjZiMTRmMWUgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3N0bTMybXAxNTdjLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1
+N2MuZHRzaQ0KPiBAQCAtMTE1Niw2ICsxMTU2LDcgQEANCj4gICAJCQljbG9jay1uYW1lcyA9ICJw
+Y2xrIiwgInJlZiIsICJweF9jbGsiOw0KPiAgIAkJCXJlc2V0cyA9IDwmcmNjIERTSV9SPjsNCj4g
+ICAJCQlyZXNldC1uYW1lcyA9ICJhcGIiOw0KPiArCQkJcGh5LWRzaS1zdXBwbHkgPSA8JnJlZzE4
+PjsNCj4gICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiAgIAkJfTsNCj4gICANCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
