@@ -1,28 +1,49 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v2 0/4] net: phy: Add AST2600 MDIO support
-Date: Fri, 02 Aug 2019 17:33:02 -0700 (PDT)
-Message-ID: <20190802.173302.1282952894728020522.davem@davemloft.net>
-References: <20190731053959.16293-1-andrew@aj.id.au>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: [PATCH v4 0/4] Miscellaneous fixes
+Date: Fri,  2 Aug 2019 21:27:19 -0700
+Message-ID: <20190803042723.7163-1-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731053959.16293-1-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@aj.id.au
-Cc: netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Atish Patra <atish.patra@wdc.com>, Alan Kao <alankao@andestech.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup.patel@wdc.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
-Date: Wed, 31 Jul 2019 15:09:55 +0930
+This patch series have some unrelated fixes related
+to clocksource, dt-bindings and isa strings.
 
-> v2 of the ASPEED MDIO series addresses comments from Rob on the devicetree
-> bindings and Andrew on the driver itself.
-> 
-> v1 of the series can be found here:
-> 
-> http://patchwork.ozlabs.org/cover/1138140/
-> 
-> Please review!
+I combined them into series as most of them are
+prerequisite for kvm patch series.
 
-Series applied, thank you.
+Changes from v3->v4:
+1. Removed export module patch.
+2. Updated dt binding description.
+
+Changes from v2->v3:
+1. Updated commit text of dt binding patch.
+2. Removed couple of remaining uppercase usage.
+
+Changes from v1->v2:
+
+1. Dropped the case-insensitive support patch and added a dt-bindings
+   update patch.
+2. Added a export symbol patch.
+
+Anup Patel (1):
+RISC-V: Add riscv_isa reprensenting ISA features common across CPUs
+
+Atish Patra (3):
+RISC-V: Remove per cpu clocksource
+RISC-V: Fix unsupported isa string info.
+dt-bindings: Update the riscv,isa string description
+
+.../devicetree/bindings/riscv/cpus.yaml       |  4 ++
+arch/riscv/include/asm/hwcap.h                | 16 +++++++
+arch/riscv/kernel/cpu.c                       | 47 +++++++++++++++----
+arch/riscv/kernel/cpufeature.c                | 39 +++++++++++++--
+drivers/clocksource/timer-riscv.c             |  6 +--
+5 files changed, 95 insertions(+), 17 deletions(-)
+
+--
+2.21.0
