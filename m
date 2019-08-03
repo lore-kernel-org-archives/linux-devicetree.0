@@ -1,16 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: ls1088a: Revise gpio registers to
- little-endian
-Date: Sat, 3 Aug 2019 09:11:34 +0200
-Message-ID: <20190803071132.GA5797@X250>
-References: <20190529083254.39581-1-chuanhua.han@nxp.com>
- <20190529083254.39581-3-chuanhua.han@nxp.com>
+Subject: Re: [PATCH] dt-bindings: clock: imx8mn: Fix tab indentation for yaml
+ file
+Date: Sat, 3 Aug 2019 09:25:17 +0200
+Message-ID: <20190803072516.GA7597@X250>
+References: <20190725020551.27034-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190529083254.39581-3-chuanhua.han@nxp.com>
+In-Reply-To: <20190725020551.27034-1-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,14 +19,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, bgolaszewski@baylibre.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Anson.Huang@nxp.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2019 at 04:32:54PM +0800, Chuanhua Han wrote:
-> Since fsl-ls1088a Soc GPIO registers are used as little endian,
-> the patch adds the little-endian attribute to each gpio node.
+On Thu, Jul 25, 2019 at 10:05:51AM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> YAML file can NOT contain tab as indentation, fix it.
+> 
+> Fixes: 6d6062553e3d ("dt-bindings: imx: Add clock binding doc for i.MX8MN")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied, thanks.
+I squashed it into the original commit.
+
+Shawn
