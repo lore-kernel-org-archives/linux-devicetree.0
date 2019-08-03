@@ -1,163 +1,135 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v4 2/4] RISC-V: Add riscv_isa reprensenting ISA features
- common across CPUs
-Date: Fri,  2 Aug 2019 21:27:21 -0700
-Message-ID: <20190803042723.7163-3-atish.patra@wdc.com>
-References: <20190803042723.7163-1-atish.patra@wdc.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: ls1028a: Add esdhc node in dts
+Date: Sat, 3 Aug 2019 09:00:34 +0200
+Message-ID: <20190803070033.GA5627@X250>
+References: <20190515084925.30155-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190803042723.7163-1-atish.patra@wdc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Alan Kao <alankao@andestech.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Anup Patel <anup.patel@wdc.com>, Johan Hovold <johan@kernel.org>, Atish Patra <atish.patra@wdc.com>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190515084925.30155-1-yinbo.zhu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, xiaobo.xie@nxp.com, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, yangbo.lu@nxp.com, jiafei.pan@nxp.com, Ashish Kumar <Ashish.Kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Anup Patel <anup.patel@wdc.com>
+On Wed, May 15, 2019 at 04:49:25PM +0800, Yinbo Zhu wrote:
+> From: Ashish Kumar <Ashish.Kumar@nxp.com>
+> 
+> This patch is to add esdhc node and enable SD UHS-I,
+> eMMC HS200 for ls1028ardb/ls1028aqds board.
+> 
+> Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+> Change in v3:
+> 		replace "esdhc@" with "mmc@"
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    8 ++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   13 ++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   27 +++++++++++++++++++++
+>  3 files changed, 48 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 14c79f4..180e5d2 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -42,6 +42,14 @@
+>  	status = "okay";
+>  };
+>  
+> +&esdhc {
+> +	status = "okay";
+> +};
+> +
+> +&esdhc1 {
+> +	status = "okay";
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index f86b054..1bfaf42 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -30,6 +30,19 @@
+>  	};
+>  };
+>  
+> +&esdhc {
+> +	status = "okay";
 
-This patch adds riscv_isa integer to represent ISA features common
-across all CPUs. The riscv_isa is not same as elf_hwcap because
-elf_hwcap will only have ISA features relevant for user-space apps
-whereas riscv_isa will have ISA features relevant to both kernel
-and user-space apps.
+We usually put 'status' at end of property list.
 
-One of the use case is KVM hypervisor where riscv_isa will be used
-to do following operations:
+> +	sd-uhs-sdr104;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr12;
+> +	};
 
-1. Check whether hypervisor extension is available
-2. Find ISA features that need to be virtualized (e.g. floating
-   point support, vector extension, etc.)
+Please follow the indent style of closing parentheses in the file.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/hwcap.h | 16 ++++++++++++++
- arch/riscv/kernel/cpufeature.c | 39 +++++++++++++++++++++++++++++++---
- 2 files changed, 52 insertions(+), 3 deletions(-)
+> +
+> +&esdhc1 {
+> +	status = "okay";
+> +	mmc-hs200-1_8v;
+> +	};
 
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index 7ecb7c6a57b1..717306780add 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -22,5 +22,21 @@ enum {
- };
- 
- extern unsigned long elf_hwcap;
-+
-+#define RISCV_ISA_EXT_a		(1UL << ('a' - 'a'))
-+#define RISCV_ISA_EXT_c		(1UL << ('c' - 'a'))
-+#define RISCV_ISA_EXT_d		(1UL << ('d' - 'a'))
-+#define RISCV_ISA_EXT_f		(1UL << ('f' - 'a'))
-+#define RISCV_ISA_EXT_h		(1UL << ('h' - 'a'))
-+#define RISCV_ISA_EXT_i		(1UL << ('i' - 'a'))
-+#define RISCV_ISA_EXT_m		(1UL << ('m' - 'a'))
-+#define RISCV_ISA_EXT_s		(1UL << ('s' - 'a'))
-+#define RISCV_ISA_EXT_u		(1UL << ('u' - 'a'))
-+
-+extern unsigned long riscv_isa;
-+
-+#define riscv_isa_extension_available(ext_char)	\
-+		(riscv_isa & RISCV_ISA_EXT_##ext_char)
-+
- #endif
- #endif
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index b1ade9a49347..becc99272341 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -12,6 +12,9 @@
- #include <asm/smp.h>
- 
- unsigned long elf_hwcap __read_mostly;
-+unsigned long riscv_isa __read_mostly;
-+EXPORT_SYMBOL_GPL(riscv_isa);
-+
- #ifdef CONFIG_FPU
- bool has_fpu __read_mostly;
- #endif
-@@ -20,7 +23,8 @@ void riscv_fill_hwcap(void)
- {
- 	struct device_node *node;
- 	const char *isa;
--	size_t i;
-+	char print_str[BITS_PER_LONG+1];
-+	size_t i, j, isa_len;
- 	static unsigned long isa2hwcap[256] = {0};
- 
- 	isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
-@@ -31,9 +35,11 @@ void riscv_fill_hwcap(void)
- 	isa2hwcap['c'] = isa2hwcap['C'] = COMPAT_HWCAP_ISA_C;
- 
- 	elf_hwcap = 0;
-+	riscv_isa = 0;
- 
- 	for_each_of_cpu_node(node) {
- 		unsigned long this_hwcap = 0;
-+		unsigned long this_isa = 0;
- 
- 		if (riscv_of_processor_hartid(node) < 0)
- 			continue;
-@@ -43,8 +49,20 @@ void riscv_fill_hwcap(void)
- 			continue;
- 		}
- 
--		for (i = 0; i < strlen(isa); ++i)
-+		i = 0;
-+		isa_len = strlen(isa);
-+#if defined(CONFIG_32BIT)
-+		if (!strncmp(isa, "rv32", 4))
-+			i += 4;
-+#elif defined(CONFIG_64BIT)
-+		if (!strncmp(isa, "rv64", 4))
-+			i += 4;
-+#endif
-+		for (; i < isa_len; ++i) {
- 			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
-+			if ('a' <= isa[i] && isa[i] <= 'z')
-+				this_isa |= (1UL << (isa[i] - 'a'));
-+		}
- 
- 		/*
- 		 * All "okay" hart should have same isa. Set HWCAP based on
-@@ -55,6 +73,11 @@ void riscv_fill_hwcap(void)
- 			elf_hwcap &= this_hwcap;
- 		else
- 			elf_hwcap = this_hwcap;
-+
-+		if (riscv_isa)
-+			riscv_isa &= this_isa;
-+		else
-+			riscv_isa = this_isa;
- 	}
- 
- 	/* We don't support systems with F but without D, so mask those out
-@@ -64,7 +87,17 @@ void riscv_fill_hwcap(void)
- 		elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
- 	}
- 
--	pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
-+	memset(print_str, 0, sizeof(print_str));
-+	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-+		if (riscv_isa & (1UL << i))
-+			print_str[j++] = (char)('a' + i);
-+	pr_info("riscv: ISA extensions %s\n", print_str);
-+
-+	memset(print_str, 0, sizeof(print_str));
-+	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-+		if (elf_hwcap & (1UL << i))
-+			print_str[j++] = (char)('a' + i);
-+	pr_info("riscv: ELF capabilities %s\n", print_str);
- 
- #ifdef CONFIG_FPU
- 	if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
--- 
-2.21.0
+Ditto
+
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbc..462833c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -274,6 +274,33 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		esdhc: mmc@2140000 {
+
+Please sort the nodes in unit-address.  From what I see, it should go
+before device serial@21c0500.
+
+> +			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+> +			reg = <0x0 0x2140000 0x0 0x10000>;
+> +			interrupts = <0 28 0x4>; /* Level high type */
+
+Use IRQ_TYPE_LEVEL_HIGH, then you can drop the comment.
+
+Shawn
+
+> +			clock-frequency = <0>; /* fixed up by bootloader */
+> +			clocks = <&clockgen 2 1>;
+> +			voltage-ranges = <1800 1800 3300 3300>;
+> +			sdhci,auto-cmd12;
+> +			little-endian;
+> +			bus-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+> +		esdhc1: mmc@2150000 {
+> +			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
+> +			reg = <0x0 0x2150000 0x0 0x10000>;
+> +			interrupts = <0 63 0x4>; /* Level high type */
+> +			clock-frequency = <0>; /* fixed up by bootloader */
+> +			clocks = <&clockgen 2 1>;
+> +			voltage-ranges = <1800 1800 3300 3300>;
+> +			sdhci,auto-cmd12;
+> +			broken-cd;
+> +			little-endian;
+> +			bus-width = <4>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sata: sata@3200000 {
+>  			compatible = "fsl,ls1028a-ahci";
+>  			reg = <0x0 0x3200000 0x0 0x10000>,
+> -- 
+> 1.7.1
+> 
