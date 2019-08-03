@@ -1,53 +1,54 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] bus: imx-weim: optionally enable burst clock mode
-Date: Sat, 3 Aug 2019 10:19:25 +0200
-Message-ID: <20190803081924.GE8870@X250.getinternet.no>
-References: <20190712204316.16783-1-TheSven73@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 6/6] ARM: dts: mmp2: add OLPC XO 1.75 machine
+Date: Sat, 3 Aug 2019 10:58:24 +0200
+Message-ID: <20190803085824.GB8224@amd>
+References: <20190802103326.531250-1-lkundrak@v3.sk>
+ <20190802103326.531250-7-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190712204316.16783-1-TheSven73@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190802103326.531250-7-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 04:43:15PM -0400, Sven Van Asbroeck wrote:
-> To enable burst clock mode, add the fsl,burst-clk-enable
-> property to the weim bus's devicetree node.
-> 
-> Example:
-> weim: weim@21b8000 {
-> 	compatible = "fsl,imx6q-weim";
-> 	reg = <0x021b8000 0x4000>;
-> 	clocks = <&clks 196>;
-> 	#address-cells = <2>;
-> 	#size-cells = <1>;
-> 	ranges = <0 0 0x08000000 0x08000000>;
-> 	fsl,weim-cs-gpr = <&gpr>;
-> 	fsl,burst-clk-enable;
-> 
-> 	client-device@0,0 {
-> 		compatible = "something";
-> 		reg = <0 0 0x02000000>;
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 		bank-width = <2>;
-> 		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
-> 				0x0000c000 0x1404a38e 0x00000000>;
-> 	};
-> };
-> 
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 
-Applied both, thanks.
+--bCsyhTFzCvuiizWE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri 2019-08-02 12:33:26, Lubomir Rintel wrote:
+> This is a fairly complete description of an OLPC XO 1.75 laptop.
+> What's missing for now is the GPU, LCD controller, DCON, the panel and
+> audio.
+
+Ok, but I need GPU/LCD/panel... that's my only output. Is video
+expected to work in 5.2? Does the firmware pass right device tree,
+including the GPU/LCD/DCON?
+
+Is there config somewhere I could use?
+
+Thanks a lot,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bCsyhTFzCvuiizWE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1FTLAACgkQMOfwapXb+vKvhwCfRiwZa8E3fNBqMi6b0KGpOPIQ
+EL0AnjUujlV3bPaUb0uSNTtgJ13k53kC
+=DqjA
+-----END PGP SIGNATURE-----
+
+--bCsyhTFzCvuiizWE--
