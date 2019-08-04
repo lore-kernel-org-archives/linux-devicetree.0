@@ -1,518 +1,456 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v7 07/20] clk: tegra: clk-periph: Add save and restore
- support
-Date: Sat, 3 Aug 2019 16:44:19 -0700
-Message-ID: <4dec8efb-bc3b-0275-8dea-7600a8f9e478@nvidia.com>
-References: <1564532424-10449-1-git-send-email-skomatineni@nvidia.com>
- <550de191-f982-4544-6fbc-bf16dfeae2c6@nvidia.com>
- <c85ba067-af68-0b4a-d347-501ed7ed0ef9@gmail.com>
- <a81b85a2-5634-cfa2-77c5-94c23c4847bd@nvidia.com>
- <ef9e865f-359b-0873-a414-3d548bd4e590@gmail.com>
- <50bad1d3-df41-d1e5-a7c7-4be9c661ed14@nvidia.com>
- <62a5c6ed-21b1-8403-6fac-9c5d99b5a255@gmail.com>
- <85cd5100-467e-d08e-0ae5-ae57a6de5312@nvidia.com>
- <61652889-2e77-8f1e-9ed4-b7e525a40b10@nvidia.com>
- <9f6fc791-5c76-76d5-98fb-fd8facfd75d7@nvidia.com>
- <8bca50b2-a78c-c6b1-6547-4cec98a3e9cb@gmail.com>
- <314b5572-4113-d5c5-5956-1a55555a573c@nvidia.com>
- <a64472fd-46b7-5ff9-3140-11f71d5f88ff@gmail.com>
- <90268663-e5a7-4715-bd1a-31644c2fe9ab@gmail.com>
- <c6e1d744-3a7a-fe1b-2c86-a3d49f022232@nvidia.com>
- <73cd521b-782c-7fb2-d904-ae8b07927d47@gmail.com>
- <d82de63a-02a3-8fb0-57e7-7fe00d6b86ab@nvidia.com>
- <8d30f325-1c63-3802-7c21-f313115f8e55@gmail.com>
- <274e67b1-16b8-2475-d026-68bd89b090ec@nvidia.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add dts for Leez RK3399 P710 SBC
+Date: Sun, 04 Aug 2019 02:34:26 +0200
+Message-ID: <22687582.BTWJvYJJdG@phil>
+References: <20190803114612.4830-1-andyshrk@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <274e67b1-16b8-2475-d026-68bd89b090ec@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190803114612.4830-1-andyshrk@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Andy Yan <andyshrk@gmail.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Andy,
 
-On 8/3/19 10:01 AM, Sowjanya Komatineni wrote:
->
-> On 8/3/19 3:33 AM, Dmitry Osipenko wrote:
->> 03.08.2019 2:51, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 8/2/19 2:15 PM, Dmitry Osipenko wrote:
->>>> 02.08.2019 23:32, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> On 8/2/19 1:17 PM, Dmitry Osipenko wrote:
->>>>>> 02.08.2019 23:13, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> 02.08.2019 21:33, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> On 8/2/19 5:38 AM, Dmitry Osipenko wrote:
->>>>>>>>> 02.08.2019 2:49, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>>> On 8/1/19 4:19 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>> On 8/1/19 2:30 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>> On 8/1/19 1:54 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>> 01.08.2019 23:31, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>> On 8/1/19 1:17 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>> 01.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=
-=B5=D1=82:
->>>>>>>>>>>>>>>> On 8/1/19 12:00 PM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>> 01.08.2019 20:58, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=
-=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>> On 7/31/19 4:09 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>>>>> On 7/31/19 3:44 AM, Dmitry Osipenko wrote:
->>>>>>>>>>>>>>>>>>>> 31.07.2019 12:50, Dmitry Osipenko =D0=BF=D0=B8=D1=88=
-=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>> 31.07.2019 3:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=
-=88=D0=B5=D1=82:
->>>>>>>>>>>>>>>>>>>>>> This patch implements save and restore context for
->>>>>>>>>>>>>>>>>>>>>> peripheral
->>>>>>>>>>>>>>>>>>>>>> fixed
->>>>>>>>>>>>>>>>>>>>>> clock ops, peripheral gate clock ops, sdmmc mux=20
->>>>>>>>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>>>>>>>> ops, and
->>>>>>>>>>>>>>>>>>>>>> peripheral clock ops.
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> During system suspend, core power goes off and
->>>>>>>>>>>>>>>>>>>>>> looses the
->>>>>>>>>>>>>>>>>>>>>> settings
->>>>>>>>>>>>>>>>>>>>>> of the Tegra CAR controller registers.
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> So during suspend entry clock and reset state of
->>>>>>>>>>>>>>>>>>>>>> peripherals is
->>>>>>>>>>>>>>>>>>>>>> saved
->>>>>>>>>>>>>>>>>>>>>> and on resume they are restored to have clocks=20
->>>>>>>>>>>>>>>>>>>>>> back to
->>>>>>>>>>>>>>>>>>>>>> same
->>>>>>>>>>>>>>>>>>>>>> rate and
->>>>>>>>>>>>>>>>>>>>>> state as before suspend.
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>>>>>>>>>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni
->>>>>>>>>>>>>>>>>>>>>> <skomatineni@nvidia.com>
->>>>>>>>>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-periph-fixed.c | 33
->>>>>>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-periph-gate.c | 34
->>>>>>>>>>>>>>>>>>>>>> +++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-periph.c | 37
->>>>>>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk-sdmmc-mux.c | 28
->>>>>>>>>>>>>>>>>>>>>> +++++++++++++++++++++++++++
->>>>>>>>>>>>>>>>>>>>>> drivers/clk/tegra/clk.h | 6 ++++++
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5 f=
-iles changed, 138 insertions(+)
->>>>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> index c088e7a280df..21b24530fa00 100644
->>>>>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-fixed.c
->>>>>>>>>>>>>>>>>>>>>> @@ -60,11 +60,44 @@
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw *hw,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 return (unsigned long)rate;
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +st=
-atic int
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_save_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *f=
-ixed =3D
->>>>>>>>>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % =
-32);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->enb_ctx =3D readl_relaxed=
-(fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->enb_reg) &
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 mask;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 fixed->rst_ctx =3D readl_relaxed=
-(fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->rst_reg) &
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 mask;
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +static void
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_fixed *f=
-ixed =3D
->>>>>>>>>>>>>>>>>>>>>> to_tegra_clk_periph_fixed(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 mask =3D 1 << (fixed->num % =
-32);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (fixed->enb_ctx)
->>>>>>>>>>>>>>>>>>>>>> + writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->enb_set_reg);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>>>>> + writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->enb_clr_reg);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!fixed->rst_ctx) {
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 udelay(5=
-); /* reset propogation delay */
->>>>>>>>>>>>>>>>>>>>>> + writel_relaxed(mask, fixed->base +
->>>>>>>>>>>>>>>>>>>>>> fixed->regs->rst_reg);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sta=
-tic const struct clk_ops
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_ops
->>>>>>>>>>>>>>>>>>>>>> =3D {
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .is_enabled =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_is_enabled,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .enable =3D=20
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_enable,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .disable =3D=20
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_disable,
->>>>>>>>>>>>>>>>>>>>>> .recalc_rate =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_recalc_rate,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_save_context,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_fixed_restore_context,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
-=A0 struct clk
->>>>>>>>>>>>>>>>>>>>>> *tegra_clk_register_periph_fixed(const
->>>>>>>>>>>>>>>>>>>>>> char
->>>>>>>>>>>>>>>>>>>>>> *name,
->>>>>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> index 4b31beefc9fc..6ba5b08e0787 100644
->>>>>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph-gate.c
->>>>>>>>>>>>>>>>>>>>>> @@ -25,6 +25,8 @@ static
->>>>>>>>>>>>>>>>>>>>>> DEFINE_SPINLOCK(periph_ref_lock);
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
-=A0 #define read_rst(gate) \
->>>>>>>>>>>>>>>>>>>>>> readl_relaxed(gate->clk_base +
->>>>>>>>>>>>>>>>>>>>>> (gate->regs->rst_reg))
->>>>>>>>>>>>>>>>>>>>>> +#define write_rst_set(val, gate) \
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 writel_relaxed(val, gate->clk_ba=
-se +
->>>>>>>>>>>>>>>>>>>>>> (gate->regs->rst_set_reg))
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #de=
-fine write_rst_clr(val, gate) \
->>>>>>>>>>>>>>>>>>>>>> writel_relaxed(val, gate->clk_base +
->>>>>>>>>>>>>>>>>>>>>> (gate->regs->rst_clr_reg))
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 @@ =
--110,10 +112,42 @@ static void
->>>>>>>>>>>>>>>>>>>>>> clk_periph_disable(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>>>>>>>>> spin_unlock_irqrestore(&periph_ref_lock, flags);
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +st=
-atic int=20
->>>>>>>>>>>>>>>>>>>>>> clk_periph_gate_save_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *ga=
-te =3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> + gate->clk_state_ctx =3D read_enb(gate) &
->>>>>>>>>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>>>>>>>>> + gate->rst_state_ctx =3D read_rst(gate) &
->>>>>>>>>>>>>>>>>>>>>> periph_clk_to_bit(gate);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +static void clk_periph_gate_restore_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph_gate *ga=
-te =3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph_gate(hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (gate->clk_state_ctx)
->>>>>>>>>>>>>>>>>>>>>> + write_enb_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>>>>> + write_enb_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(5);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(gate->flags & TEGRA_PERIPH=
-_NO_RESET) &&
->>>>>>>>>>>>>>>>>>>>>> + !(gate->flags & TEGRA_PERIPH_MANUAL_RESET)) {
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (gate=
-->rst_state_ctx)
->>>>>>>>>>>>>>>>>>>>>> + write_rst_set(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>>>>>>>>>>>>>>>>>>> + write_rst_clr(periph_clk_to_bit(gate), gate);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 con=
-st struct clk_ops
->>>>>>>>>>>>>>>>>>>>>> tegra_clk_periph_gate_ops =3D {
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .is_enabled =3D clk_periph_is_enabled,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .enable =3D clk_periph_enable,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .disable =3D clk_periph_disable,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .save_context =3D clk_periph_gat=
-e_save_context,
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 .restore_context =3D
->>>>>>>>>>>>>>>>>>>>>> clk_periph_gate_restore_context,
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=
-=A0 struct clk
->>>>>>>>>>>>>>>>>>>>>> *tegra_clk_register_periph_gate(const
->>>>>>>>>>>>>>>>>>>>>> char *name,
->>>>>>>>>>>>>>>>>>>>>> diff --git a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> index 58437da25156..06fb62955768 100644
->>>>>>>>>>>>>>>>>>>>>> --- a/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> +++ b/drivers/clk/tegra/clk-periph.c
->>>>>>>>>>>>>>>>>>>>>> @@ -99,6 +99,37 @@ static void
->>>>>>>>>>>>>>>>>>>>>> clk_periph_disable(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> gate_ops->disable(gate_hw);
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +st=
-atic int clk_periph_save_context(struct
->>>>>>>>>>>>>>>>>>>>>> clk_hw *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =
-=3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =
-=3D=20
->>>>>>>>>>>>>>>>>>>>>> periph->gate_ops;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &peri=
-ph->gate.hw;
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags &=20
->>>>>>>>>>>>>>>>>>>>>> TEGRA_PERIPH_NO_GATE))
->>>>>>>>>>>>>>>>>>>>>> + gate_ops->save_context(gate_hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> + periph->parent_ctx =3D clk_periph_get_parent(hw);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>>>>>>>>>>> +}
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +static void clk_periph_restore_context(struct=20
->>>>>>>>>>>>>>>>>>>>>> clk_hw
->>>>>>>>>>>>>>>>>>>>>> *hw)
->>>>>>>>>>>>>>>>>>>>>> +{
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_clk_periph *periph =
-=3D
->>>>>>>>>>>>>>>>>>>>>> to_clk_periph(hw);
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *gate_ops =
-=3D=20
->>>>>>>>>>>>>>>>>>>>>> periph->gate_ops;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *gate_hw =3D &peri=
-ph->gate.hw;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct clk_ops *div_ops =
-=3D=20
->>>>>>>>>>>>>>>>>>>>>> periph->div_ops;
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw *div_hw =3D &perip=
-h->divider.hw;
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> + clk_periph_set_parent(hw, periph->parent_ctx);
->>>>>>>>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!(periph->gate.flags &=20
->>>>>>>>>>>>>>>>>>>>>> TEGRA_PERIPH_NO_DIV))
->>>>>>>>>>>>>>>>>>>>>> + div_ops->restore_context(div_hw);
->>>>>>>>>>>>>>>>>>>>> Could you please point to where the divider's
->>>>>>>>>>>>>>>>>>>>> save_context()
->>>>>>>>>>>>>>>>>>>>> happens?
->>>>>>>>>>>>>>>>>>>>> Because I can't see it.
->>>>>>>>>>>>>>>>>>>> Ah, I now see that there is no need to save the=20
->>>>>>>>>>>>>>>>>>>> dividers
->>>>>>>>>>>>>>>>>>>> context
->>>>>>>>>>>>>>>>>>>> because
->>>>>>>>>>>>>>>>>>>> clk itself has enough info that is needed for the
->>>>>>>>>>>>>>>>>>>> context's
->>>>>>>>>>>>>>>>>>>> restoring
->>>>>>>>>>>>>>>>>>>> (like I pointed in the review to v6).
->>>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>> Looks like you could also implement a new
->>>>>>>>>>>>>>>>>>>> clk_hw_get_parent_index()
->>>>>>>>>>>>>>>>>>>> generic helper to get the index instead of storing it
->>>>>>>>>>>>>>>>>>>> manually.
->>>>>>>>>>>>>>>>>>> clk_periph_get_parent basically invokes existing
->>>>>>>>>>>>>>>>>>> clk_mux_ops
->>>>>>>>>>>>>>>>>>> get_parent() which is then saved in tegra_clk_periph.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> All existing drivers are using directly get_parent()=20
->>>>>>>>>>>>>>>>>>> from
->>>>>>>>>>>>>>>>>>> clk_mux
->>>>>>>>>>>>>>>>>>> which actually gets index from the register read.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> To have this more generic w.r.t save/restore context
->>>>>>>>>>>>>>>>>>> point of
->>>>>>>>>>>>>>>>>>> view,
->>>>>>>>>>>>>>>>>>> probably instead of implementing new get_parent_index
->>>>>>>>>>>>>>>>>>> helper,
->>>>>>>>>>>>>>>>>>> I think
->>>>>>>>>>>>>>>>>>> its better to implement save_context and
->>>>>>>>>>>>>>>>>>> restore_context to
->>>>>>>>>>>>>>>>>>> clk_mux_ops along with creating parent_index field into
->>>>>>>>>>>>>>>>>>> clk_mux to
->>>>>>>>>>>>>>>>>>> cache index during set_parent.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> So we just need to invoke mux_ops save_context and
->>>>>>>>>>>>>>>>>>> restore_context.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> I hope its ok to add save/restore context to clk_mux_ops
->>>>>>>>>>>>>>>>>> to be
->>>>>>>>>>>>>>>>>> more
->>>>>>>>>>>>>>>>>> generic w.r.t save/restore context rather than
->>>>>>>>>>>>>>>>>> get_parent_index
->>>>>>>>>>>>>>>>>> API.
->>>>>>>>>>>>>>>>>> Please confirm if you agree.
->>>>>>>>>>>>>>>>> Sounds like a good idea. I see that there is a=20
->>>>>>>>>>>>>>>>> 'restoring'
->>>>>>>>>>>>>>>>> helper for
->>>>>>>>>>>>>>>>> the generic clk_gate, seems something similar could be=20
->>>>>>>>>>>>>>>>> done
->>>>>>>>>>>>>>>>> for the
->>>>>>>>>>>>>>>>> clk_mux. And looks like anyway you'll need to=20
->>>>>>>>>>>>>>>>> associate the
->>>>>>>>>>>>>>>>> parent
->>>>>>>>>>>>>>>>> clock
->>>>>>>>>>>>>>>>> with the hw index in order to restore the muxing.
->>>>>>>>>>>>>>>> by 'restoring' helper for generic clk_gate, are you
->>>>>>>>>>>>>>>> referring to
->>>>>>>>>>>>>>>> clk_gate_restore_context API?
->>>>>>>>>>>>>>> Yes.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> clk_gate_restore_context is API that's any clk drivers can
->>>>>>>>>>>>>>>> use for
->>>>>>>>>>>>>>>> clk_gate operation restore for custom gate clk_ops.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> But clk-periph is directly using generic clk_mux ops from
->>>>>>>>>>>>>>>> clk_mux
->>>>>>>>>>>>>>>> so I
->>>>>>>>>>>>>>>> think we should add .restore_context to clk_mux_ops and=20
->>>>>>>>>>>>>>>> then
->>>>>>>>>>>>>>>> during
->>>>>>>>>>>>>>>> clk-periph restore need to invoke=20
->>>>>>>>>>>>>>>> mux_ops->restore_context.
->>>>>>>>>>>>>>> I'm not sure whether it will be good for every driver that
->>>>>>>>>>>>>>> uses
->>>>>>>>>>>>>>> generic
->>>>>>>>>>>>>>> clk_mux ops. Should be more flexible to have a generic=20
->>>>>>>>>>>>>>> helper
->>>>>>>>>>>>>>> function
->>>>>>>>>>>>>>> that any driver could use in order to restore the clock's
->>>>>>>>>>>>>>> parent.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> The clk-periph restoring also includes case of combining
->>>>>>>>>>>>>>> divider
->>>>>>>>>>>>>>> and
->>>>>>>>>>>>>>> parent restoring, so generic helper could be useful in that
->>>>>>>>>>>>>>> case
->>>>>>>>>>>>>>> as well.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> It also looks like you could actually use the
->>>>>>>>>>>>>>> clk_gate_restore_context()
->>>>>>>>>>>>>>> instead of manually saving the clock's enable-state,=20
->>>>>>>>>>>>>>> couldn't
->>>>>>>>>>>>>>> you?
->>>>>>>>>>>>>> ok for clk_mux, can add generic clk_mux_restore_context API
->>>>>>>>>>>>>> rather
->>>>>>>>>>>>>> than
->>>>>>>>>>>>>> using restore_context in clk_ops and will invoke that during
->>>>>>>>>>>>>> clk_periph
->>>>>>>>>>>>>> restore.
->>>>>>>>>>>>>>
->>>>>>>>>> digging thru looks like for clk_periph source restore instead of
->>>>>>>>>> clk_mux_restore_context, i can directly do clk_hw_get_parent and
->>>>>>>>>> clk_set_parent with mux_hw as they invoke mux_ops get/set parent
->>>>>>>>>> anyway.
->>>>>>>>>> Will do this for periph clk mux
->>> Just to be clear, clk_mux don't have cached parent. get_parent is by
->>> register read. So, cant directly use get_parent and then set during
->>> restore.
->>>
->>> So will create both clk_mux_save/restore_context in generic clk driver
->>> and will invoke them during tegra peripheral clock suspend/resume.
->> Why MUX clock doesn't have a cached parent? What MUX clock you're
->> talking about?
->>
->> [snip]
->
-> Please ignore got it.
->
-> Will send next version after giving few more days for feedback.
->
-Couple of issues:
+Am Samstag, 3. August 2019, 13:46:12 CEST schrieb Andy Yan:
+> Leez P710 is a RK3399 based SBC, designed by Leez team
+> from lenovo [0].
+> 
+> Specification
+> - Rockchip RK3399
+> - 4/2GB LPDDR4
+> - TF sd scard slot
+> - eMMC
+> - M.2 B-Key for 4G LTE
+> - AP6256 for WiFi + BT
+> - Gigabit ethernet
+> - HDMI out
+> - 40 pin header
+> - TYPE-C Power supply
+> 
+> [0] https://leez.lenovo.com
+> 
+> Signed-off-by: Andy Yan <andyshrk@gmail.com>
+> ---
+>  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-leez-p710.dts    | 635 ++++++++++++++++++
+>  3 files changed, 641 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> index 34865042f4e4..da9cd947abfa 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> @@ -329,6 +329,11 @@ properties:
+>                - khadas,edge-v
+>            - const: rockchip,rk3399
+>  
+> +      - description: Leez RK3399 P710
+> +        items:
+> +          - const: leez,p710
 
-1.) I see clk-tegra-periph driver periph_clks init_data entries for some=20
-peripherals are not correct for Tegra 114 and later chips.
+Is "leez" really the vendor?
+Part of me would assume something like
+	lenovo,leez-p710
 
-Eg I2C TEGRA_INIT_DATA_TABLE entries in clk-tegra-periph are used for=20
-all Tegra chipsets currently in the driver.
+So please clarify :-)
+And also please make sure the decided vendor is part of the vendor-prefixes
+binding in Documentation/devicestree/bindings/vendor-prefixes.yaml
 
-These entries are using MUX shift of 30 and MUX mask only for 2 bits=20
-which is correct for T30 and prior.
-But for later Tegra chips, it should be MUX shift 29 and MASK(3).
+> +          - const: rockchip,rk3399
+> +
+>        - description: mqmaker MiQi
+>          items:
+>            - const: mqmaker,miqi
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index daa2c78e22c3..1f18a9392d15 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -20,6 +20,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-hugsun-x99.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge-captain.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge-v.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-leez-p710.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+> new file mode 100644
+> index 000000000000..b342f5e8692b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-leez-p710.dts
+> @@ -0,0 +1,635 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Andy Yan <andy.yan@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/linux-event-codes.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3399.dtsi"
+> +#include "rk3399-opp.dtsi"
+> +
+> +/ {
+> +	model = "Leez RK3399 P710";
+> +	compatible = "leez,p710", "rockchip,rk3399";
 
-Also, I2C parent idx entries in mux_pllp_clkm_idx are different from=20
-Tegra114 onwards.
-
-As we are using only PLLP and CLKM sources only for I2C, their=20
-corresponding mux values from register spec by using upper 2 bits for=20
-T114 onwards match actual 2 bits of MUX value on T30 and prior.
-
-Not sure if this something known pending to port actual clock MUX table=20
-changes for Tegra114 onwards?
-
-Or
-
-Are we purposely using upper 2 bits only for clock source for T114 and=20
-later as the upper 2 bit values of the limited clock source we are using=20
-match with previous Tegra peripheral clock source mux values?
-
-Peter/Thierry, Can you please help comment on this?
+same comment as above, so maybe:
+	model = "Lenovo Leez RK3399 P710";
+	compatible = "lenovo,leez-p710", "rockchip,rk3399";
 
 
-2.) Other issue is regarding using clk_set_parent directly during=20
-clk_peripheral restore is clk_core_set_parent checks new parent with=20
-current parent and if its same, it just returns as success which is good=20
-in normal operation.
 
-But during restore, we can't use clk_set_parent as new parent is from=20
-clk_get_parent on restore and this is same as cached parent.
+> +
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	clkin_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "clkin_gmac";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		clocks = <&rk808 1>;
+> +		clock-names = "ext_clock";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wifi_enable_h>;
+> +		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	dc5v_adp: dc-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dc5v_adapter";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	vcc5v0_sys: vcc-sys {
 
-So clk_set_parent returns 0 but acutal register value for clk source is=20
-different as it gets reset on SC7 entry/exit and to restore need to=20
-invoke mux_ops set_parent with parent_index.
+vcc5v0_sys: vcc5v0-sys ?
 
-So this need parent index for cached parent and without using context=20
-variable to store this, need an API like you were originally suggesting=20
-for get_parent_index to get parent index for the specified parent clk_hw.
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		vin-supply = <&dc5v_adp>;
+> +	};
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc5v0_host: vcc5v0-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vcc5v0_host_en>;
+> +		regulator-name = "vcc5v0_host";
+> +		regulator-always-on;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc_lan: vcc3v3-phy-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_lan";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
 
-As we decided not to use save/restore for clk_mux ops as its generic for=20
-other drivers, looks like we need get_parent_index API to use for=20
-restoring peripheral source and use this with clk_mux_ops set_parent.
+In general, please model an actual regulator-tree and do not copy the
+unspecific Rockchip vendor tree. These unconnected regulators are a very
+good indicator that the real power-tree got ignored (missing vin-supply here)
 
-clk core driver already has clk_fetch_parent_index but is it OK to=20
-export this?
+I found schematics on https://github.com/leezsbc/resources/wiki/Leez-P710:
+链接: https://pan.baidu.com/s/1NPWbuI5csT4zftKUCnRs7g
+提取码: rvrh
 
-Otherwise, will create separate API in clk driver which returns parent=20
-index from parent clk_hw by using this existing clk_fetch_parent_index=20
-so this API can be used by other drivers.
+and there the power-tree is described in a complete way.
+
+regulator/regulator_summaray in the kernels debugfs should
+show a nice tree structure starting from the dc-adapter input.
+
+Also please use names matching the supply names from the schematics.
+
+Same for pinctrl names, please use names as used in the board schematics.
+
+
+> +	vdd_log: vdd-log {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm2 0 25000 1>;
+> +		regulator-name = "vdd_log";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +};
+> +
+> +&cpu_l0 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_b0 {
+> +	cpu-supply = <&vdd_cpu_b>;
+> +};
+> +
+> +&cpu_b1 {
+> +	cpu-supply = <&vdd_cpu_b>;
+> +};
+> +
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&gmac {
+> +	assigned-clocks = <&cru SCLK_RMII_SRC>;
+> +	assigned-clock-parents = <&clkin_gmac>;
+> +	clock_in_out = "input";
+> +	phy-supply = <&vcc_lan>;
+> +	phy-mode = "rgmii";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rgmii_pins>;
+> +	snps,reset-gpio = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>;
+> +	snps,reset-active-low;
+> +	snps,reset-delays-us = <0 10000 50000>;
+> +	tx_delay = <0x28>;
+> +	rx_delay = <0x11>;
+> +	status = "okay";
+> +};
+> +
+> +&gpu {
+> +	mali-supply = <&vdd_gpu>;
+> +	status = "okay";
+> +};
+> +
+> +&hdmi {
+> +	ddc-i2c-bus = <&i2c3>;
+
+can this also use the internal i2c inside the dw-hdmi?
+
+
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&hdmi_cec>;
+> +	status = "okay";
+> +};
+> +
+> +&hdmi_sound {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	clock-frequency = <400000>;
+> +	i2c-scl-rising-time-ns = <168>;
+> +	i2c-scl-falling-time-ns = <4>;
+> +	status = "okay";
+> +
+> +	rk808: pmic@1b {
+> +		compatible = "rockchip,rk808";
+> +		reg = <0x1b>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk808-clkout2";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +
+> +		vcc1-supply = <&vcc5v0_sys>;
+> +		vcc2-supply = <&vcc5v0_sys>;
+> +		vcc3-supply = <&vcc5v0_sys>;
+> +		vcc4-supply = <&vcc5v0_sys>;
+> +		vcc6-supply = <&vcc5v0_sys>;
+> +		vcc7-supply = <&vcc5v0_sys>;
+> +		vcc8-supply = <&vcc3v3_sys>;
+> +		vcc9-supply = <&vcc5v0_sys>;
+> +		vcc10-supply = <&vcc5v0_sys>;
+> +		vcc11-supply = <&vcc5v0_sys>;
+> +		vcc12-supply = <&vcc3v3_sys>;
+> +		vddio-supply = <&vcc_1v8>;
+> +
+> +		regulators {
+> +			vdd_center: DCDC_REG1 {
+> +				regulator-name = "vdd_center";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_cpu_l: DCDC_REG2 {
+> +				regulator-name = "vdd_cpu_l";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-name = "vcc_ddr";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v8: DCDC_REG4 {
+> +				regulator-name = "vcc_1v8";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc1v8_dvp: LDO_REG1 {
+> +				regulator-name = "vcc1v8_dvp";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc1v8_hdmi: LDO_REG2 {
+> +				regulator-name = "vcc1v8_hdmi";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcca_1v8: LDO_REG3 {
+> +				regulator-name = "vcca_1v8";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vccio_sd: LDO_REG4 {
+> +				regulator-name = "vccio_sd";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3000000>;
+> +				};
+> +			};
+> +
+> +			vcca3v0_codec: LDO_REG5 {
+> +				regulator-name = "vcca3v0_codec";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v5: LDO_REG6 {
+> +				regulator-name = "vcc_1v5";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1500000>;
+> +				};
+> +			};
+> +
+> +			vcc0v9_hdmi: LDO_REG7 {
+> +				regulator-name = "vcc0v9_hdmi";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_3v0: LDO_REG8 {
+> +				regulator-name = "vcc_3v0";
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3000000>;
+> +				};
+> +			};
+> +
+
+unneeded blank line
+
+> +		};
+> +	};
+> +
+
+
+Heiko
