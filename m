@@ -1,164 +1,116 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
-Date: Mon, 5 Aug 2019 10:46:59 -0700
-Message-ID: <20190805174659.GA23928@tuxbook-pro>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <20190801191403.GA7234@tuxbook-pro>
- <1a057176-81ab-e302-4375-2717ceef6924@st.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+Date: Mon, 5 Aug 2019 11:06:02 -0700
+Message-ID: <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+ <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1a057176-81ab-e302-4375-2717ceef6924@st.com>
+In-Reply-To: <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 05 Aug 01:48 PDT 2019, Fabien DESSENNE wrote:
 
-> 
-> On 01/08/2019 9:14 PM, Bjorn Andersson wrote:
-> > On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
-> >
-> >> The current implementation does not allow two different devices to use
-> >> a common hwspinlock. This patch set proposes to have, as an option, some
-> >> hwspinlocks shared between several users.
-> >>
-> >> Below is an example that explain the need for this:
-> >> 	exti: interrupt-controller@5000d000 {
-> >> 		compatible = "st,stm32mp1-exti", "syscon";
-> >> 		interrupt-controller;
-> >> 		#interrupt-cells = <2>;
-> >> 		reg = <0x5000d000 0x400>;
-> >> 		hwlocks = <&hsem 1>;
-> >> 	};
-> >> The two drivers (stm32mp1-exti and syscon) refer to the same hwlock.
-> >> With the current hwspinlock implementation, only the first driver succeeds
-> >> in requesting (hwspin_lock_request_specific) the hwlock. The second request
-> >> fails.
-> >>
-> >>
-> >> The proposed approach does not modify the API, but extends the DT 'hwlocks'
-> >> property with a second optional parameter (the first one identifies an
-> >> hwlock) that specifies whether an hwlock is requested for exclusive usage
-> >> (current behavior) or can be shared between several users.
-> >> Examples:
-> >> 	hwlocks = <&hsem 8>;	Ref to hwlock #8 for exclusive usage
-> >> 	hwlocks = <&hsem 8 0>;	Ref to hwlock #8 for exclusive (0) usage
-> >> 	hwlocks = <&hsem 8 1>;	Ref to hwlock #8 for shared (1) usage
-> >>
-> >> As a constraint, the #hwlock-cells value must be 1 or 2.
-> >> In the current implementation, this can have theorically any value but:
-> >> - all of the exisiting drivers use the same value : 1.
-> >> - the framework supports only one value : 1 (see implementation of
-> >>    of_hwspin_lock_simple_xlate())
-> >> Hence, it shall not be a problem to restrict this value to 1 or 2 since
-> >> it won't break any driver.
-> >>
-> > Hi Fabien,
-> >
-> > Your series looks good, but it makes me wonder why the hardware locks
-> > should be an exclusive resource.
-> >
-> > How about just making all (specific) locks shared?
-> 
-> Hi Bjorn,
-> 
-> Making all locks shared is a possible implementation (my first 
-> implementation
-> was going this way) but there are some drawbacks we must be aware of:
-> 
-> A/ This theoretically break the legacy behavior (the legacy works with
-> exclusive (UNUSED radix tag) usage). As a consequence, an existing driver
-> that is currently failing to request a lock (already claimed by another
-> user) would now work fine. Not sure that there are such drivers, so this
-> point is probably not a real issue.
-> 
+On 8/5/19 3:50 AM, Dmitry Osipenko wrote:
+> 01.08.2019 0:10, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>
+>> During suspend, context of all pinctrl registers are stored and
+>> on resume they are all restored to have all the pinmux and pad
+>> configuration for normal operation.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++++++=
+++++++++
+>>   drivers/pinctrl/tegra/pinctrl-tegra.h |  3 ++
+>>   2 files changed, 62 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/teg=
+ra/pinctrl-tegra.c
+>> index 186ef98e7b2b..e3a237534281 100644
+>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>> @@ -631,6 +631,58 @@ static void tegra_pinctrl_clear_parked_bits(struct =
+tegra_pmx *pmx)
+>>   	}
+>>   }
+>>  =20
+>> +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
+>> +					  unsigned int bank_id)
+>> +{
+>> +	struct platform_device *pdev =3D to_platform_device(dev);
+>> +	struct resource *res;
+>> +
+>> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
+>> +
+>> +	return resource_size(res) / 4;
+>> +}
+>> +
+>> +static int tegra_pinctrl_suspend(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
+>> +	u32 *backup_regs =3D pmx->backup_regs;
+>> +	u32 *regs;
+>> +	size_t bank_size;
+>> +	unsigned int i, k;
+>> +
+>> +	for (i =3D 0; i < pmx->nbanks; i++) {
+>> +		bank_size =3D tegra_pinctrl_get_bank_size(dev, i);
+>> +		regs =3D pmx->regs[i];
+>> +		for (k =3D 0; k < bank_size; k++)
+>> +			*backup_regs++ =3D readl_relaxed(regs++);
+>> +	}
+>> +
+>> +	return pinctrl_force_sleep(pmx->pctl);
+>> +}
+>> +
+>> +static int tegra_pinctrl_resume(struct device *dev)
+>> +{
+>> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
+>> +	u32 *backup_regs =3D pmx->backup_regs;
+>> +	u32 *regs;
+>> +	size_t bank_size;
+>> +	unsigned int i, k;
+>> +
+>> +	for (i =3D 0; i < pmx->nbanks; i++) {
+>> +		bank_size =3D tegra_pinctrl_get_bank_size(dev, i);
+>> +		regs =3D pmx->regs[i];
+>> +		for (k =3D 0; k < bank_size; k++)
+>> +			writel_relaxed(*backup_regs++, regs++);
+>> +	}
+> I'm now curious whether any kind of barrier is needed after the
+> writings. The pmx_writel() doesn't insert a barrier after the write and
+> seems it just misuses writel, which actually should be writel_relaxed()
+> + barrier, IIUC.
 
-Right, it's possible that a previously misconfigured system now
-successfully probes more than one device that uses a particular
-spinlock. But such system would be suffering from issues related to e.g.
-probe ordering.
+pmx_writel uses writel and it has wmb before raw_write which complete=20
+all writes initiated prior to this.
 
-So I think we should ignore this issue.
+By misusing writel, you mean to have barrier after register write?
 
-> B/ This would introduce some inconsistency between the two 'request' API
-> which are hwspin_lock_request() and hwspin_lock_request_specific().
-> hwspin_lock_request() looks for an unused lock, so requests for an exclusive
-> usage. On the other side, request_specific() would request shared locks.
-> Worst the following sequence can transform an exclusive usage into a shared
-> 
+> It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
+> thus maybe read-back + rmb() is needed in order ensure that writes are
+> actually completed.
+I believe adding write barrier wmb after writel_relaxed should be good=20
+rather than doing readback + rmb
+>
+> The last thing which is not obvious is when the new configuration
+> actually takes into effect, does it happen immediately or maybe some
+> delay is needed?
+>
+> [snip]
 
-There is already an inconsistency in between these; as with above any
-system that uses both request() and request_specific() will be suffering
-from intermittent failures due to probe ordering.
+Based on internal design there is no internal delay and it all depends=20
+on APB rate that it takes to write to register.
 
-> one:
->    -hwspin_lock_request() -> returns Id#0 (exclusive)
->    -hwspin_lock_request() -> returns Id#1 (exclusive)
->    -hwspin_lock_request_specific(0) -> returns Id#0 and makes Id#0 shared
-> Honestly I am not sure that this is a real issue, but it's better to have it
-> in mind before we take ay decision
-
-The case where I can see a
-problem with this would be if the two clients somehow would nest their
-locking regions.
-
-But generally I think this could consider this an improvement, because
-the request_specific() would now be able to acquire its hwlock, with
-some additional contention due to the multiple use.
-
-> I could not find any driver using the hwspin_lock_request() API, we
-> may decide to remove (or to make deprecated) this API, having
-> everything 'shared without any conditions'.
-> 
-
-It would be nice to have an upstream user of this API.
-
-> 
-> I can see three options:
-> 1- Keep my initial proposition
-> 2- Have hwspin_lock_request_specific() using shared locks and
->     hwspin_lock_request() using unused (so 'initially' exclusive) locks.
-> 3- Have hwspin_lock_request_specific() using shared locks and
->     remove/make deprecated hwspin_lock_request().
-> 
-> Just let me know what is your preference.
-> 
-
-I think we should start with #2 and would like input from e.g. Suman
-regarding #3.
-
-Regards,
-Bjorn
-
-> BR
-> 
-> Fabien
-> 
-> >
-> > Regards,
-> > Bjorn
-> >
-> >> Fabien Dessenne (6):
-> >>    dt-bindings: hwlock: add support of shared locks
-> >>    hwspinlock: allow sharing of hwspinlocks
-> >>    dt-bindings: hwlock: update STM32 #hwlock-cells value
-> >>    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
-> >>    ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
-> >>    ARM: dts: stm32: hwlocks for GPIO for stm32mp157
-> >>
-> >>   .../devicetree/bindings/hwlock/hwlock.txt          | 27 +++++--
-> >>   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  6 +-
-> >>   Documentation/hwspinlock.txt                       | 10 ++-
-> >>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  2 +
-> >>   arch/arm/boot/dts/stm32mp157c.dtsi                 | 10 +++
-> >>   drivers/hwspinlock/hwspinlock_core.c               | 82 +++++++++++++++++-----
-> >>   drivers/hwspinlock/hwspinlock_internal.h           |  2 +
-> >>   7 files changed, 108 insertions(+), 31 deletions(-)
-> >>
-> >> -- 
-> >> 2.7.4
-> >>
+Pinmux value change to reflect internally might take couple of clock=20
+cycles which is much faster than SW can read.
