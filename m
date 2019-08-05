@@ -1,56 +1,25 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 1/1] arm64: dts: sdm845: Add device node for Last level
- cache controller
-Date: Mon, 5 Aug 2019 12:05:49 +0530
-Message-ID: <CAFp+6iGF50aoGUumGFPuNTDsV-F5c1y_qSvqqcLuzapRzH7HVA@mail.gmail.com>
-References: <20190710112924.17724-1-vivek.gautam@codeaurora.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V3 2/5] thermal: qoriq: Fix error path of calling
+ qoriq_tmu_register_tmu_zone fail
+Date: Mon, 5 Aug 2019 07:01:16 +0000
+Message-ID: <AM0PR04MB4211DB8BE9466954147295BA80DA0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+ <20190730022126.17883-2-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710112924.17724-1-vivek.gautam@codeaurora.org>
+In-Reply-To: <20190730022126.17883-2-Anson.Huang@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, robh+dt <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To: Anson Huang <anson.huang@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On Wed, Jul 10, 2019 at 5:09 PM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->
-> Last level cache (aka. system cache) controller provides control
-> over the last level cache present on SDM845. This cache lies after
-> the memory noc, right before the DDR.
->
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 4babff5f19b5..314241a99290 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1275,6 +1275,13 @@
->                         };
->                 };
->
-> +               cache-controller@1100000 {
-> +                       compatible = "qcom,sdm845-llcc";
-> +                       reg = <0 0x1100000 0 0x200000>, <0 0x1300000 0 0x50000>;
-> +                       reg-names = "llcc_base", "llcc_broadcast_base";
-> +                       interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-
-Gentle ping. Are you planning to pick this?
-
-Thanks
-Vivek
-[snip]
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
+OiBUdWVzZGF5LCBKdWx5IDMwLCAyMDE5IDEwOjIxIEFNDQo+IA0KPiBXaGVuIHJlZ2lzdGVyaW5n
+IHRtdSB6b25lIGZhaWxlZCwgdGhlIGVycm9yIHBhdGggc2hvdWxkIGJlIGVycl90bXUgaW5zdGVh
+ZCBvZg0KPiBlcnJfaW9tYXAsIGFzIGlvdW5tYXAoKSBuZWVkcyB0byBiZSBjYWxsZWQuDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0KUmV2
+aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQoNClJlZ2FyZHMN
+CkFpc2hlbmcNCg==
