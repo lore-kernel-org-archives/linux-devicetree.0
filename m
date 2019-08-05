@@ -1,116 +1,57 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-Date: Mon, 5 Aug 2019 11:06:02 -0700
-Message-ID: <b45ca99a-188a-c695-3f3d-48d273808f9c@nvidia.com>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
- <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [RESEND PATCH v5 3/4] dt-bindings: mailbox: imx-mu: add imx7ulp
+ MU support
+Date: Mon, 5 Aug 2019 22:20:21 +0300
+Message-ID: <CAEnQRZBHBzXGCAihRVpAT4LoUzrXbUWh53zzwM_7pNCesx55+g@mail.gmail.com>
+References: <1564980742-19124-1-git-send-email-hongxing.zhu@nxp.com>
+ <1564980742-19124-4-git-send-email-hongxing.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1564980742-19124-4-git-send-email-hongxing.zhu@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, jassisinghbrar@gmail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
++ Rob
 
-On 8/5/19 3:50 AM, Dmitry Osipenko wrote:
-> 01.08.2019 0:10, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch adds support for Tegra pinctrl driver suspend and resume.
->>
->> During suspend, context of all pinctrl registers are stored and
->> on resume they are all restored to have all the pinmux and pad
->> configuration for normal operation.
->>
->> Acked-by: Thierry Reding <treding@nvidia.com>
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++++++=
-++++++++
->>   drivers/pinctrl/tegra/pinctrl-tegra.h |  3 ++
->>   2 files changed, 62 insertions(+)
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/teg=
-ra/pinctrl-tegra.c
->> index 186ef98e7b2b..e3a237534281 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -631,6 +631,58 @@ static void tegra_pinctrl_clear_parked_bits(struct =
-tegra_pmx *pmx)
->>   	}
->>   }
->>  =20
->> +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
->> +					  unsigned int bank_id)
->> +{
->> +	struct platform_device *pdev =3D to_platform_device(dev);
->> +	struct resource *res;
->> +
->> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
->> +
->> +	return resource_size(res) / 4;
->> +}
->> +
->> +static int tegra_pinctrl_suspend(struct device *dev)
->> +{
->> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->> +	u32 *backup_regs =3D pmx->backup_regs;
->> +	u32 *regs;
->> +	size_t bank_size;
->> +	unsigned int i, k;
->> +
->> +	for (i =3D 0; i < pmx->nbanks; i++) {
->> +		bank_size =3D tegra_pinctrl_get_bank_size(dev, i);
->> +		regs =3D pmx->regs[i];
->> +		for (k =3D 0; k < bank_size; k++)
->> +			*backup_regs++ =3D readl_relaxed(regs++);
->> +	}
->> +
->> +	return pinctrl_force_sleep(pmx->pctl);
->> +}
->> +
->> +static int tegra_pinctrl_resume(struct device *dev)
->> +{
->> +	struct tegra_pmx *pmx =3D dev_get_drvdata(dev);
->> +	u32 *backup_regs =3D pmx->backup_regs;
->> +	u32 *regs;
->> +	size_t bank_size;
->> +	unsigned int i, k;
->> +
->> +	for (i =3D 0; i < pmx->nbanks; i++) {
->> +		bank_size =3D tegra_pinctrl_get_bank_size(dev, i);
->> +		regs =3D pmx->regs[i];
->> +		for (k =3D 0; k < bank_size; k++)
->> +			writel_relaxed(*backup_regs++, regs++);
->> +	}
-> I'm now curious whether any kind of barrier is needed after the
-> writings. The pmx_writel() doesn't insert a barrier after the write and
-> seems it just misuses writel, which actually should be writel_relaxed()
-> + barrier, IIUC.
-
-pmx_writel uses writel and it has wmb before raw_write which complete=20
-all writes initiated prior to this.
-
-By misusing writel, you mean to have barrier after register write?
-
-> It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
-> thus maybe read-back + rmb() is needed in order ensure that writes are
-> actually completed.
-I believe adding write barrier wmb after writel_relaxed should be good=20
-rather than doing readback + rmb
+On Mon, Aug 5, 2019 at 8:18 AM Richard Zhu <hongxing.zhu@nxp.com> wrote:
 >
-> The last thing which is not obvious is when the new configuration
-> actually takes into effect, does it happen immediately or maybe some
-> delay is needed?
+> There is a version 1.0 MU on imx7ulp, use "fsl,imx7ulp-mu" compatible
+> to support it.
 >
-> [snip]
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Based on internal design there is no internal delay and it all depends=20
-on APB rate that it takes to write to register.
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-Pinmux value change to reflect internally might take couple of clock=20
-cycles which is much faster than SW can read.
+> ---
+>  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> index f3cf77e..9c43357 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -21,6 +21,8 @@ Required properties:
+>                 imx6sx, imx7s, imx8qxp, imx8qm.
+>                 The "fsl,imx6sx-mu" compatible is seen as generic and should
+>                 be included together with SoC specific compatible.
+> +               There is a version 1.0 MU on imx7ulp, use "fsl,imx7ulp-mu"
+> +               compatible to support it.
+>  - reg :                Should contain the registers location and length
+>  - interrupts : Interrupt number. The interrupt specifier format depends
+>                 on the interrupt controller parent.
+> --
+> 2.7.4
+>
