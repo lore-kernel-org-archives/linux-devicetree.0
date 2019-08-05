@@ -1,34 +1,88 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Add compatible for H6 RTC
-Date: Mon, 5 Aug 2019 18:16:48 +0800
-Message-ID: <CAGb2v65d=yXPEiyTv0X3m25mzd2J5DnrWvyxz0zjLiq997BbZg@mail.gmail.com>
-References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-2-megous@megous.com>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 3/3] pinctrl: mvebu: add additional variant for standalone
+ CP115
+Date: Mon,  5 Aug 2019 12:16:07 +0200
+Message-ID: <20190805101607.29811-4-miquel.raynal@bootlin.com>
+References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBIEEUDVAKGQEYTC7WVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190412120730.473-2-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-<linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
->
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->
-> RTC on H6 is similar to the one on H5 SoC, but incompatible in small
-> details. See the driver for description of differences. For example
-> H6 RTC needs to enable the external low speed oscillator. Add new
-> compatible for this RTC.
->
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+With CP115 standalone modules, all MPP configuration are
+possible. Handle this new possibility thanks to the new
+"marvell,cp115-standalone-pinctrl" compatible property.
+
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+[<miquel.raynal@bootlin.com>: mention the new compatible in the
+commit log]
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-cp110.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c b/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
+index 85ade9761885..17491b27e487 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
+@@ -32,6 +32,7 @@ enum {
+ 	V_ARMADA_7K = BIT(0),
+ 	V_ARMADA_8K_CPM = BIT(1),
+ 	V_ARMADA_8K_CPS = BIT(2),
++	V_CP115_STANDALONE = BIT(3),
+ 	V_ARMADA_7K_8K_CPM = (V_ARMADA_7K | V_ARMADA_8K_CPM),
+ 	V_ARMADA_7K_8K_CPS = (V_ARMADA_7K | V_ARMADA_8K_CPS),
+ };
+@@ -614,6 +615,10 @@ static const struct of_device_id armada_cp110_pinctrl_of_match[] = {
+ 		.compatible	= "marvell,armada-8k-cps-pinctrl",
+ 		.data		= (void *) V_ARMADA_8K_CPS,
+ 	},
++	{
++		.compatible	= "marvell,cp115-standalone-pinctrl",
++		.data		= (void *) V_CP115_STANDALONE,
++	},
+ 	{ },
+ };
+ 
+@@ -655,16 +660,20 @@ static int armada_cp110_pinctrl_probe(struct platform_device *pdev)
+ 
+ 		switch (i) {
+ 		case 0 ... 31:
+-			mvebu_pinctrl_assign_variant(m, V_ARMADA_7K_8K_CPS);
++			mvebu_pinctrl_assign_variant(m, (V_ARMADA_7K_8K_CPS |
++							 V_CP115_STANDALONE));
+ 			break;
+ 		case 32 ... 38:
+-			mvebu_pinctrl_assign_variant(m, V_ARMADA_7K_8K_CPM);
++			mvebu_pinctrl_assign_variant(m, (V_ARMADA_7K_8K_CPM |
++							 V_CP115_STANDALONE));
+ 			break;
+ 		case 39 ... 43:
+-			mvebu_pinctrl_assign_variant(m, V_ARMADA_8K_CPM);
++			mvebu_pinctrl_assign_variant(m, (V_ARMADA_8K_CPM |
++							 V_CP115_STANDALONE));
+ 			break;
+ 		case 44 ... 62:
+-			mvebu_pinctrl_assign_variant(m, V_ARMADA_7K_8K_CPM);
++			mvebu_pinctrl_assign_variant(m, (V_ARMADA_7K_8K_CPM |
++							 V_CP115_STANDALONE));
+ 			break;
+ 		}
+ 	}
+-- 
+2.20.1
