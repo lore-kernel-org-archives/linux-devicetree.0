@@ -1,116 +1,151 @@
-From: masonccyang@mxic.com.tw
-Subject: Re: [PATCH v16 1/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-Date: Mon, 5 Aug 2019 10:00:57 +0800
-Message-ID: <OFEFAD46C0.5BE85077-ON4825844D.000AB143-4825844D.000B12C8@mxic.com.tw>
-References: <1564539258-16313-1-git-send-email-masonccyang@mxic.com.tw> <1564539258-16313-2-git-send-email-masonccyang@mxic.com.tw> <3d01957a-7318-274f-f3d5-6cd00850511b@cogentembedded.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH v3 1/2] dt-bindings: mmc: Document Aspeed SD controller
+Date: Mon, 05 Aug 2019 11:40:17 +0930
+Message-ID: <35aaa5a4-1e0d-4f64-8985-36e2c01ccc05@www.fastmail.com>
+References: <20190730062316.32037-1-andrew@aj.id.au>
+ <20190730062316.32037-2-andrew@aj.id.au>
+ <CAL_Jsq+oZRREV=VjYUxT3WphOa5tBaF1pvS_JKSphBY=3XB5MA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3d01957a-7318-274f-f3d5-6cd00850511b@cogentembedded.com>
+In-Reply-To: <CAL_Jsq+oZRREV=VjYUxT3WphOa5tBaF1pvS_JKSphBY=3XB5MA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: broonie@kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, mark.rutland@arm.com, miquel.raynal@bootlin.com, robh+dt@kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Sergei, 
 
-> > Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> [...]
-> > diff --git a/drivers/spi/spi-renesas-rpc.c 
-b/drivers/spi/spi-renesas-rpc.c
+On Fri, 2 Aug 2019, at 08:29, Rob Herring wrote:
+> On Tue, Jul 30, 2019 at 12:23 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the
+> > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
+> > data bus if only a single slot is enabled.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> >
+> > ---
+> > v3:
+> > * Fix compatible enums
+> > * Add AST2600 compatibles
+> > * Describe #address-cells / #size-cells
+> > ---
+> >  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 100 ++++++++++++++++++
+> >  1 file changed, 100 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
 > > new file mode 100644
-> > index 0000000..648d14e
+> > index 000000000000..dd2a00c59641
 > > --- /dev/null
-> > +++ b/drivers/spi/spi-renesas-rpc.c
-> > @@ -0,0 +1,754 @@
-> [...]
-> > +static void rpc_spi_hw_init(struct rpc_spi *rpc)
-> > +{
-> > +   //
-> > +   // NOTE: The 0x260 are undocumented bits, but they must be set.
-> > +   //    RPC_PHYCNT_STRTIM is strobe timing adjustment bit,
-> > +   //    0x0 : the delay is biggest,
-> > +   //    0x1 : the delay is 2nd biggest,
-> > +   //    On H3 ES1.x, the value should be 0, while on others,
-> > +   //    the value should be 6.
-> > +   //
-> > +   regmap_write(rpc->regmap, RPC_PHYCNT, RPC_PHYCNT_CAL |
-> > +              RPC_PHYCNT_STRTIM(6) | 0x260);
+> > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> > @@ -0,0 +1,100 @@
+> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +   //
-> > +   // NOTE: The 0x1511144 are undocumented bits, but they must be set
-> > +   //       for RPC_PHYOFFSET1.
-> > +   //    The 0x31 are undocumented bits, but they must be set
-> > +   //    for RPC_PHYOFFSET2.
-> > +   //
-> > +   regmap_write(rpc->regmap, RPC_PHYOFFSET1, RPC_PHYOFFSET1_DDRTMG(3) 
-|
-> > +           0x1511144);
-> > +   regmap_write(rpc->regmap, RPC_PHYOFFSET2, 0x31 |
-> > +           RPC_PHYOFFSET2_OCTTMG(4));
-> > +   regmap_write(rpc->regmap, RPC_SSLDR, RPC_SSLDR_SPNDL(7) |
-> > +           RPC_SSLDR_SLNDL(7) | RPC_SSLDR_SCKDL(7));
-> > +   regmap_write(rpc->regmap, RPC_CMNCR, RPC_CMNCR_MD | RPC_CMNCR_SFDE 
-|
-> > +           RPC_CMNCR_MOIIO_HIZ | RPC_CMNCR_IOFV_HIZ |
-> > +           RPC_CMNCR_BSZ(0));
-> > +}
-> [...]
-> > +static int rpc_spi_io_xfer(struct rpc_spi *rpc,
-> > +            const void *tx_buf, void *rx_buf)
-> > +{
-> [...]
-> > +err_out:
-> > +   return reset_control_reset(rpc->rstc);
+> > +title: ASPEED SD/SDIO/eMMC Controller
+> > +
+> > +maintainers:
+> > +  - Andrew Jeffery <andrew@aj.id.au>
+> > +  - Ryan Chen <ryanchen.aspeed@gmail.com>
+> > +
+> > +description: |+
+> > +  The ASPEED SD/SDIO/eMMC controller exposes two slots implementing the SDIO
+> > +  Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit data bus if
+> > +  only a single slot is enabled.
+> > +
+> > +  The two slots are supported by a common configuration area. As the SDHCIs for
+> > +  the slots are dependent on the common configuration area, they are described
+> > +  as child nodes.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - aspeed,ast2400-sd-controller
+> > +      - aspeed,ast2500-sd-controller
+> > +      - aspeed,ast2600-sd-controller
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: Common configuration registers
+> > +  "#address-cells":
+> > +    const: 1
+> > +  "#size-cells":
+> > +    const: 1
+> > +  ranges: true
+> > +  clocks:
+> > +    maxItems: 1
+> > +    description: The SD/SDIO controller clock gate
+> > +
+> > +patternProperties:
+> > +  "^sdhci@[0-9a-f]+$":
 > 
->    Don't toy need to call rpc_spi_hw_init(( here? The reset would spoil
-> the PHY/etc register setup otherwise...
+> This should probably have:
+> 
+> allOf:
+>   - $ref: mmc-controller.yaml
+> 
+> Another new thing in 5.3. :)
 
-ummm, will fix to
--------------------------------------->
-ret = reset_control_reset(rpc->rstc);
-rpc_spi_hw_init(rpc);
-return ret;
---------------------------------------<
-thanks for your review.
+Ack.
 
 > 
-> [...]
+> > +    type: object
+> > +    properties:
+> > +      compatible:
+> > +        enum:
+> > +          - aspeed,ast2400-sdhci
+> > +          - aspeed,ast2500-sdhci
+> > +          - aspeed,ast2600-sdhci
+> > +      reg:
+> > +        maxItems: 1
+> > +        description: The SDHCI registers
+> > +      clocks:
+> > +        maxItems: 1
+> > +        description: The SD bus clock
+> > +      interrupts:
+> > +        maxItems: 1
+> > +        description: The SD interrupt shared between both slots
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +      - clocks
+> > +      - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +  - ranges
+> > +  - clocks
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/aspeed-clock.h>
+> > +    sdc@1e740000 {
+> > +            compatible = "aspeed,ast2500-sd-controller";
+> > +            reg = <0x1e740000 0x100>;
+> > +            #address-cells = <1>;
+> > +            #size-cells = <1>;
+> > +            ranges = <0 0x1e740000 0x10000>;
+> > +            clocks = <&syscon ASPEED_CLK_GATE_SDCLK>;
+> > +
+> > +            sdhci0: sdhci@100 {
+> > +                    compatible = "aspeed,ast2500-sdhci";
+> > +                    reg = <0x100 0x100>;
+> > +                    interrupts = <26>;
+> > +                    sdhci,auto-cmd12;
 > 
-> MBR, Sergei
+> Not documented. Maybe should be common, but there's only a few users.
 
-best regards,
-Mason
+I'll document it locally for the moment.
 
-CONFIDENTIALITY NOTE:
+Cheers,
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+Andrew
