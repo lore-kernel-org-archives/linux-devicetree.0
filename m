@@ -1,180 +1,42 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFCv2 3/9] dt-bindings: spi: meson: convert to yaml
-Date: Mon, 5 Aug 2019 15:45:48 -0600
-Message-ID: <CAL_Jsq+WQ6KAE+d2_Pu03s6cSbu4PUErUWrGj81cAivTBNWBxQ@mail.gmail.com>
-References: <20190805120320.32282-1-narmstrong@baylibre.com>
- <20190805120320.32282-4-narmstrong@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/6] dt-bindings: arm: amlogic: add bindings for G12B based S922X SoC
+Date: Mon, 05 Aug 2019 14:46:28 -0700
+Message-ID: <7hblx3gua3.fsf@baylibre.com>
+References: <20190731124000.22072-1-narmstrong@baylibre.com> <20190731124000.22072-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190805120320.32282-4-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731124000.22072-3-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, christianshewitt@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 6:03 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Amlogic SPI controllers over to two separate YAML schemas.
+Neil Armstrong <narmstrong@baylibre.com> writes:
+
+> Add a specific compatible for the Amlogic G12B family based S922X SoC
+> to differentiate with the A311D SoC from the same family.
 >
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 67 +++++++++++++++++++
->  .../bindings/spi/amlogic,meson6-spifc.yaml    | 53 +++++++++++++++
->  .../devicetree/bindings/spi/spi-meson.txt     | 55 ---------------
->  3 files changed, 120 insertions(+), 55 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
->  create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-> new file mode 100644
-> index 000000000000..49b617c98ae7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson SPI Communication Controller
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
-> +  communications with dedicated 16 words RX/TX PIO FIFOs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-gx-spicc # SPICC controller on Amlogic GX and compatible SoCs
-> +      - amlogic,meson-axg-spicc # SPICC controller on Amlogic AXG and compatible SoCs
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description: input clock for the baud rate generator
-> +    items:
-> +      - const: core
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    spi@c1108d80 {
-> +          compatible = "amlogic,meson-gx-spicc";
-> +          reg = <0xc1108d80 0x80>;
-> +          interrupts = <112>;
-> +          clocks = <&clk81>;
-> +          clock-names = "core";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          ethernet-switch@0 {
-> +              compatible = "micrel,ks8995m";
-> +              spi-max-frequency = <1000000>;
-> +              reg = <0>;
-> +          };
-> +    };
-> +
-> diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
-> new file mode 100644
-> index 000000000000..67dcedc81a5e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/amlogic,meson6-spifc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson SPI Flash Controller
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  The Meson SPIFC is a controller optimized for communication with SPI
-> +  NOR memories, without DMA support and a 64-byte unified transmit /
-> +  receive buffer.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson6-spifc # SPI Flash Controller on Meson6 and compatible SoCs
-> +      - amlogic,meson-gxbb-spifc # SPI Flash Controller on GXBB and compatible SoCs
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +
-> +examples:
-> +  - |
-> +    spi@c1108c80 {
-> +          compatible = "amlogic,meson6-spifc";
-> +          reg = <0xc1108c80 0x80>;
-> +          clocks = <&clk81>;
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          flash: m25p80@0 {
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+> index 325c6fd3566d..3c3bc806cd23 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+> @@ -139,6 +139,7 @@ properties:
+>          items:
+>            - enum:
+>                - hardkernel,odroid-n2
+> +          - const: amlogic,s922x
+>            - const: amlogic,g12b
 
-flash@0
+nit: in previous binding docs, we were trying to keep these sorted
+alphabetically.  I'll reorder the new "s922x" after "g12b" when
+applying.
 
-I need to write a schema for this or I'll never stop giving this comment...
+Thanks,
 
-Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +              compatible = "spansion,m25p80", "jedec,spi-nor";
-> +              reg = <0>;
-> +              spi-max-frequency = <40000000>;
-> +          };
-> +    };
-> +
+Kevin
