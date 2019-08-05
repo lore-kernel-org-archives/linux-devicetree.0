@@ -1,44 +1,122 @@
-Return-Path: <SRS0=S1SN=WC=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V5 1/5] clocksource: imx-sysctr: Add internal clock
- divider handle
-Date: Tue, 6 Aug 2019 01:55:32 +0000
-Message-ID: 
- <DB3PR0402MB3916B06E8907604A71169063F5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190710063056.35689-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190710063056.35689-1-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52765 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfHEKD0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2019 06:03:26 -0400
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 6/8] clk: mvebu: ap806: add AP-DCLK (hclk) to system controller driver
+Date: Mon,  5 Aug 2019 12:03:08 +0200
+Message-Id: <20190805100310.29048-7-miquel.raynal@bootlin.com>
+In-Reply-To: <20190805100310.29048-1-miquel.raynal@bootlin.com>
+References: <20190805100310.29048-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-To: "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Marcin Wojtas <mw@semihalf.com>, Stefan Chulski <stefanc@marvell.com>, Yan Markman <ymarkman@marvell.com>, Omri Itach <omrii@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-R2VudGxlIHBpbmcuLi4NCg0KPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNv
-bT4NCj4gDQo+IFRoZSBzeXN0ZW0gY291bnRlciBibG9jayBndWlkZSBzdGF0ZXMgdGhhdCB0aGUg
-YmFzZSBjbG9jayBpcyBpbnRlcm5hbGx5IGRpdmlkZWQNCj4gYnkgMyBiZWZvcmUgdXNlLCB0aGF0
-IG1lYW5zIHRoZSBjbG9jayBpbnB1dCBvZiBzeXN0ZW0gY291bnRlciBkZWZpbmVkIGluIERUDQo+
-IHNob3VsZCBiZSBiYXNlIGNsb2NrIHdoaWNoIGlzIG5vcm1hbGx5IGZyb20gT1NDLCBhbmQgdGhl
-biBpbnRlcm5hbGx5IGRpdmlkZWQNCj4gYnkgMyBiZWZvcmUgdXNlLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2Vz
-IHNpbmNlIFY0Og0KPiAJLSB0byBzb2x2ZSB0aGUgY2xvY2sgZHJpdmVyIHByb2JlZCBhZnRlciBz
-eXN0ZW0gY291bnRlciBkcml2ZXIgaXNzdWUsDQo+IG5vdyB3ZSBjYW4gZWFzaWx5IHN3aXRjaCB0
-bw0KPiAJICB1c2UgZml4ZWQgY2xvY2sgZGVmaW5lZCBpbiBEVCBhbmQgZ2V0IGl0cyByYXRlLCB0
-aGVuIGRpdmlkZWQgYnkgMyB0bw0KPiBnZXQgcmVhbCBjbG9jayByYXRlIGZvcg0KPiAJICBzeXN0
-ZW0gY291bnRlciBkcml2ZXIsIG5vIG5lZWQgdG8gYWRkICJjbG9jay1mcmVxdWVuY3kiIHByb3Bl
-cnR5IGluDQo+IERULg0KPiAtLS0NCj4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItaW14LXN5
-c2N0ci5jIHwgNSArKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItaW14LXN5c2N0ci5jDQo+
-IGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtc3lzY3RyLmMNCj4gaW5kZXggZmQ3ZDY4
-MC4uYjdjODBhMyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgt
-c3lzY3RyLmMNCj4gKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1pbXgtc3lzY3RyLmMN
-Cj4gQEAgLTIwLDYgKzIwLDggQEANCj4gICNkZWZpbmUgU1lTX0NUUl9FTgkJMHgxDQo+ICAjZGVm
-aW5lIFNZU19DVFJfSVJRX01BU0sJMHgyDQo+IA0KPiArI2RlZmluZSBTWVNfQ1RSX0NMS19ESVYJ
-CTB4Mw0KPiArDQo+ICBzdGF0aWMgdm9pZCBfX2lvbWVtICpzeXNfY3RyX2Jhc2U7DQo+ICBzdGF0
-aWMgdTMyIGNtcGNyOw0KPiANCj4gQEAgLTEzNCw2ICsxMzYsOSBAQCBzdGF0aWMgaW50IF9faW5p
-dCBzeXNjdHJfdGltZXJfaW5pdChzdHJ1Y3QgZGV2aWNlX25vZGUNCj4gKm5wKQ0KPiAgCWlmIChy
-ZXQpDQo+ICAJCXJldHVybiByZXQ7DQo+IA0KPiArCS8qIHN5c3RlbSBjb3VudGVyIGNsb2NrIGlz
-IGRpdmlkZWQgYnkgMyBpbnRlcm5hbGx5ICovDQo+ICsJdG9fc3lzY3RyLm9mX2Nsay5yYXRlIC89
-IFNZU19DVFJfQ0xLX0RJVjsNCj4gKw0KPiAgCXN5c19jdHJfYmFzZSA9IHRpbWVyX29mX2Jhc2Uo
-JnRvX3N5c2N0cik7DQo+ICAJY21wY3IgPSByZWFkbChzeXNfY3RyX2Jhc2UgKyBDTVBDUik7DQo+
-ICAJY21wY3IgJj0gflNZU19DVFJfRU47DQo+IC0tDQo+IDIuNy40DQoNCg==
+From: Omri Itach <omrii@marvell.com>
+
+Add dynamic AP-DCLK clock (hclk) to system controller driver. AP-DCLK
+is half the rate of DDR clock, so its derrived from Sample At Reset
+configuration. The clock frequency is required for AP806 AXI monitor
+profiling feature.
+
+Signed-off-by: Omri Itach <omrii@marvell.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/clk/mvebu/ap806-system-controller.c | 48 ++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
+index 2cf874f01394..bc43adff02e0 100644
+--- a/drivers/clk/mvebu/ap806-system-controller.c
++++ b/drivers/clk/mvebu/ap806-system-controller.c
+@@ -21,7 +21,7 @@
+ #define AP806_SAR_REG			0x400
+ #define AP806_SAR_CLKFREQ_MODE_MASK	0x1f
+ 
+-#define AP806_CLK_NUM			5
++#define AP806_CLK_NUM			6
+ 
+ static struct clk *ap806_clks[AP806_CLK_NUM];
+ 
+@@ -33,7 +33,7 @@ static struct clk_onecell_data ap806_clk_data = {
+ static int ap806_syscon_common_probe(struct platform_device *pdev,
+ 				     struct device_node *syscon_node)
+ {
+-	unsigned int freq_mode, cpuclk_freq;
++	unsigned int freq_mode, cpuclk_freq, dclk_freq;
+ 	const char *name, *fixedclk_name;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+@@ -93,8 +93,42 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
+ 		return -EINVAL;
+ 	}
+ 
++	/* Get DCLK frequency (DCLK = DDR_CLK / 2) */
++	switch (freq_mode) {
++	case 0x0:
++	case 0x6:
++		/* DDR_CLK = 1200Mhz */
++		dclk_freq = 600;
++		break;
++	case 0x1:
++	case 0x7:
++	case 0xD:
++		/* DDR_CLK = 1050Mhz */
++		dclk_freq = 525;
++		break;
++	case 0x13:
++	case 0x17:
++		/* DDR_CLK = 650Mhz */
++		dclk_freq = 325;
++		break;
++	case 0x4:
++	case 0x14:
++	case 0x19:
++	case 0x1A:
++	case 0x1B:
++	case 0x1C:
++	case 0x1D:
++		/* DDR_CLK = 800Mhz */
++		dclk_freq = 400;
++		break;
++	default:
++		dclk_freq = 0;
++		dev_err(dev, "invalid Sample at Reset value\n");
++	}
++
+ 	/* Convert to hertz */
+ 	cpuclk_freq *= 1000 * 1000;
++	dclk_freq *= 1000 * 1000;
+ 
+ 	/* CPU clocks depend on the Sample At Reset configuration */
+ 	name = ap_cp_unique_name(dev, syscon_node, "pll-cluster-0");
+@@ -141,6 +175,14 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
+ 		goto fail4;
+ 	}
+ 
++	/* AP-DCLK(HCLK) Clock is DDR clock divided by 2 */
++	name = ap_cp_unique_name(dev, syscon_node, "ap-dclk");
++	ap806_clks[5] = clk_register_fixed_rate(dev, name, NULL, 0, dclk_freq);
++	if (IS_ERR(ap806_clks[5])) {
++		ret = PTR_ERR(ap806_clks[5]);
++		goto fail5;
++	}
++
+ 	ret = of_clk_add_provider(np, of_clk_src_onecell_get, &ap806_clk_data);
+ 	if (ret)
+ 		goto fail_clk_add;
+@@ -148,6 +190,8 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
+ 	return 0;
+ 
+ fail_clk_add:
++	clk_unregister_fixed_factor(ap806_clks[5]);
++fail5:
+ 	clk_unregister_fixed_factor(ap806_clks[4]);
+ fail4:
+ 	clk_unregister_fixed_factor(ap806_clks[3]);
+-- 
+2.20.1
