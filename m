@@ -1,34 +1,170 @@
-Return-Path: <SRS0=oaLE=W2=pengutronix.de=bst@kernel.org>
-From: Bastian Krause <bst@pengutronix.de>
-Subject: [PATCH] dt-bindings: rtc: add missing rx8130 compatible
-Date: Fri, 30 Aug 2019 15:47:55 +0200
-Message-Id: <20190830134755.1121-1-bst@pengutronix.de>
+Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbfHEOX7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:23:59 -0400
+Date: Mon, 5 Aug 2019 15:23:53 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to ISM330DHCX
+Message-ID: <20190805152353.17b4a0eb@archlinux>
+In-Reply-To: <a3391b8b4734c483286f1352520dd1d6f8b96d4e.1564999807.git.lorenzo@kernel.org>
+References: <cover.1564999807.git.lorenzo@kernel.org>
+        <a3391b8b4734c483286f1352520dd1d6f8b96d4e.1564999807.git.lorenzo@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-rtc@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, Bastian Krause <bst@pengutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: lorenzo.bianconi@redhat.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The required OF entries were added with 47dd47292828
-("rtc: ds1307: add OF and ACPI entries for Epson RX8130").
+On Mon,  5 Aug 2019 12:18:43 +0200
+Lorenzo Bianconi <lorenzo@kernel.org> wrote:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Bastian Krause <bst@pengutronix.de>
----
- Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 1 +
- 1 file changed, 1 insertion(+)
+> Add support to STM ISM330DHCX 6-axis (acc + gyro) Mems sensor
+> https://www.st.com/resource/en/datasheet/ism330dhcx.pdf
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-index eaee19b60960..66f0a31ae9ce 100644
---- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-@@ -19,6 +19,7 @@ Required properties:
- 	"pericom,pt7c4338",
- 	"epson,rx8025",
- 	"isil,isl12057"
-+	"epson,rx8130"
- - reg: I2C bus address of the device
- 
- Optional properties:
--- 
-2.23.0
+Given these are exceptionally straight forward and I'm
+hoovering up the outstanding patches on this driver today,
+I'll be cheeky and not let them sit on the mailing list 
+before applying.
+
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to do their usual sanity check.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/st_lsm6dsx/Kconfig             | 3 ++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 2 ++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 7 ++++---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 5 ++++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    | 5 +++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    | 5 +++++
+>  6 files changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> index 6cbf65a7e11e..939058b27746 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
+> +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
+> @@ -11,7 +11,8 @@ config IIO_ST_LSM6DSX
+>  	help
+>  	  Say yes here to build support for STMicroelectronics LSM6DSx imu
+>  	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
+> -	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c
+> +	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
+> +	  ism330dhcx
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called st_lsm6dsx.
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index 5090f1b3525a..4d47ba36de84 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -23,6 +23,7 @@
+>  #define ST_LSM6DSOX_DEV_NAME	"lsm6dsox"
+>  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
+>  #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
+> +#define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
+>  
+>  enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DS3_ID,
+> @@ -35,6 +36,7 @@ enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DSOX_ID,
+>  	ST_LSM6DSR_ID,
+>  	ST_LSM6DS3TRC_ID,
+> +	ST_ISM330DHCX_ID,
+>  	ST_LSM6DSX_MAX_ID,
+>  };
+>  
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index 1be1cec2ab23..2c03a5b80f80 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> @@ -14,9 +14,10 @@
+>   * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
+>   * value of the decimation factor and ODR set for each FIFO data set.
+>   *
+> - * LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR: The FIFO buffer can be configured to
+> - * store data from gyroscope and accelerometer. Each sample is queued with
+> - * a tag (1B) indicating data source (gyroscope, accelerometer, hw timer).
+> + * LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR/ISM330DHCX: The FIFO buffer can be
+> + * configured to store data from gyroscope and accelerometer. Each sample
+> + * is queued with a tag (1B) indicating data source (gyroscope, accelerometer,
+> + * hw timer).
+>   *
+>   * FIFO supported modes:
+>   *  - BYPASS: FIFO disabled
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index fc4d18b58c97..85824d6739ee 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -24,7 +24,7 @@
+>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+>   *   - FIFO size: 4KB
+>   *
+> - * - LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR
+> + * - LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR/ISM330DHCX:
+>   *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
+>   *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
+>   *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
+> @@ -645,6 +645,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  			{
+>  				.hw_id = ST_LSM6DSR_ID,
+>  				.name = ST_LSM6DSR_DEV_NAME,
+> +			}, {
+> +				.hw_id = ST_ISM330DHCX_ID,
+> +				.name = ST_ISM330DHCX_DEV_NAME,
+>  			},
+>  		},
+>  		.channels = {
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> index 28581eb0532c..15c6aa5b6caa 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
+> @@ -79,6 +79,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
+>  		.compatible = "st,lsm6ds3tr-c",
+>  		.data = (void *)ST_LSM6DS3TRC_ID,
+>  	},
+> +	{
+> +		.compatible = "st,ism330dhcx",
+> +		.data = (void *)ST_ISM330DHCX_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
+> @@ -94,6 +98,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
+>  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
+>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
+>  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
+> +	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> index 0371e8b94a3e..a8430ee11310 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
+> @@ -79,6 +79,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
+>  		.compatible = "st,lsm6ds3tr-c",
+>  		.data = (void *)ST_LSM6DS3TRC_ID,
+>  	},
+> +	{
+> +		.compatible = "st,ism330dhcx",
+> +		.data = (void *)ST_ISM330DHCX_ID,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
+> @@ -94,6 +98,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
+>  	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
+>  	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
+>  	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
+> +	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
