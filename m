@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 16/16] dt-bindings: net: add bindings for ADIN PHY driver
-Date: Mon, 5 Aug 2019 19:54:53 +0300
-Message-ID: <20190805165453.3989-17-alexandru.ardelean@analog.com>
+Subject: [PATCH 14/16] net: phy: adin: make sure down-speed auto-neg is enabled
+Date: Mon, 5 Aug 2019 19:54:51 +0300
+Message-ID: <20190805165453.3989-15-alexandru.ardelean@analog.com>
 References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,161 +13,65 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This change adds bindings for the Analog Devices ADIN PHY driver, detailing
-all the properties implemented by the driver.
+Down-speed auto-negotiation may not always be enabled, in which case the
+PHY won't down-shift to 100 or 10 during auto-negotiation.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- .../devicetree/bindings/net/adi,adin.yaml     | 93 +++++++++++++++++++
- MAINTAINERS                                   |  2 +
- include/dt-bindings/net/adin.h                | 26 ++++++
- 3 files changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
- create mode 100644 include/dt-bindings/net/adin.h
+ drivers/net/phy/adin.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-new file mode 100644
-index 000000000000..fcf884bb86f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/adi,adin.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADIN1200/ADIN1300 PHY
-+
-+maintainers:
-+  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-+
-+description: |
-+  Bindings for Analog Devices Industrial Ethernet PHYs
-+
-+properties:
-+  compatible:
-+    description: |
-+      Compatible list, may contain "ethernet-phy-ieee802.3-c45" in which case
-+      Clause 45 will be used to access device management registers. If
-+      unspecified, Clause 22 will be used. Use this only when MDIO supports
-+      Clause 45 access, but there is no other way to determine this.
-+    enum:
-+      - ethernet-phy-ieee802.3-c45
-+
-+  adi,phy-mode-internal:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: |
-+      The internal mode of the PHY. This assumes that there is a PHY converter
-+      in-between the MAC & PHY.
-+    enum: [ "rgmii", "rgmii-id", "rgmii-txid", "rgmii-rxid", "rmii", "mii" ]
-+
-+  adi,rx-internal-delay:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      RGMII RX Clock Delay used only when PHY operates in RGMII mode (phy-mode
-+      is "rgmii-id", "rgmii-rxid", "rgmii-txid") see `dt-bindings/net/adin.h`
-+      default value is 0 (which represents 2 ns)
-+    enum: [ 0, 1, 2, 6, 7 ]
-+
-+  adi,tx-internal-delay:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      RGMII TX Clock Delay used only when PHY operates in RGMII mode (phy-mode
-+      is "rgmii-id", "rgmii-rxid", "rgmii-txid") see `dt-bindings/net/adin.h`
-+      default value is 0 (which represents 2 ns)
-+    enum: [ 0, 1, 2, 6, 7 ]
-+
-+  adi,fifo-depth:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      When operating in RMII mode, this option configures the FIFO depth.
-+      See `dt-bindings/net/adin.h`.
-+    enum: [ 0, 1, 2, 3, 4, 5 ]
-+
-+  adi,eee-enabled:
-+    description: |
-+      Advertise EEE capabilities on power-up/init (default disabled)
-+    type: boolean
-+
-+  adi,disable-energy-detect:
-+    description: |
-+      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
-+      is enabled if this property is unspecified)
-+    type: boolean
-+
-+  reset-gpios:
-+    description: |
-+      GPIO to reset the PHY
-+      see Documentation/devicetree/bindings/gpio/gpio.txt.
-+
-+examples:
-+  - |
-+    ethernet-phy@0 {
-+        compatible = "ethernet-phy-ieee802.3-c45";
-+        reg = <0>;
-+    };
-+  - |
-+    #include <dt-bindings/net/adin.h>
-+    ethernet-phy@1 {
-+        reg = <1>;
-+        adi,phy-mode-internal = "rgmii-id";
-+
-+        adi,rx-internal-delay = <ADIN1300_RGMII_1_80_NS>;
-+        adi,tx-internal-delay = <ADIN1300_RGMII_2_20_NS>;
-+    };
-+  - |
-+    #include <dt-bindings/net/adin.h>
-+    ethernet-phy@2 {
-+        reg = <2>;
-+        phy-mode = "rmii";
-+
-+        adi,fifo-depth = <ADIN1300_RMII_16_BITS>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index faf5723610c8..6ffbb266dee4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -944,6 +944,8 @@ L:	netdev@vger.kernel.org
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/net/phy/adin.c
-+F:	include/dt-bindings/net/adin.h
-+F:	Documentation/devicetree/bindings/net/adi,adin.yaml
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index 86848444bd98..a1f3456a8504 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -32,6 +32,13 @@
+ #define   ADIN1300_NRG_PD_TX_EN			BIT(2)
+ #define   ADIN1300_NRG_PD_STATUS		BIT(1)
  
- ANALOG DEVICES INC ADIS DRIVER LIBRARY
- M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
-diff --git a/include/dt-bindings/net/adin.h b/include/dt-bindings/net/adin.h
-new file mode 100644
-index 000000000000..4c3afa550c59
---- /dev/null
-+++ b/include/dt-bindings/net/adin.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/**
-+ * Device Tree constants for Analog Devices Industrial Ethernet PHYs
-+ *
-+ * Copyright 2019 Analog Devices Inc.
-+ */
++#define ADIN1300_PHY_CTRL2			0x0016
++#define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
++#define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
++#define   ADIN1300_GROUP_MDIO_EN		BIT(6)
++#define   ADIN1300_DOWNSPEEDS_EN	\
++	(ADIN1300_DOWNSPEED_AN_100_EN | ADIN1300_DOWNSPEED_AN_10_EN)
 +
-+#ifndef _DT_BINDINGS_ADIN_H
-+#define _DT_BINDINGS_ADIN_H
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -425,6 +432,22 @@ static int adin_config_mdix(struct phy_device *phydev)
+ 	return phy_write(phydev, ADIN1300_PHY_CTRL1, reg);
+ }
+ 
++static int adin_config_downspeeds(struct phy_device *phydev)
++{
++	int reg;
 +
-+/* RGMII internal delay settings for rx and tx for ADIN1300 */
-+#define ADIN1300_RGMII_1_60_NS		0x1
-+#define ADIN1300_RGMII_1_80_NS		0x2
-+#define	ADIN1300_RGMII_2_00_NS		0x0
-+#define	ADIN1300_RGMII_2_20_NS		0x6
-+#define	ADIN1300_RGMII_2_40_NS		0x7
++	reg = phy_read(phydev, ADIN1300_PHY_CTRL2);
++	if (reg < 0)
++		return reg;
 +
-+/* RMII fifo depth values */
-+#define ADIN1300_RMII_4_BITS		0x0
-+#define ADIN1300_RMII_8_BITS		0x1
-+#define ADIN1300_RMII_12_BITS		0x2
-+#define ADIN1300_RMII_16_BITS		0x3
-+#define ADIN1300_RMII_20_BITS		0x4
-+#define ADIN1300_RMII_24_BITS		0x5
++	if ((reg & ADIN1300_DOWNSPEEDS_EN) == ADIN1300_DOWNSPEEDS_EN)
++		return 0;
 +
-+#endif
++	reg |= ADIN1300_DOWNSPEEDS_EN;
++
++	return phy_write(phydev, ADIN1300_PHY_CTRL2, reg);
++}
++
+ static int adin_config_aneg(struct phy_device *phydev)
+ {
+ 	int ret;
+@@ -433,6 +456,10 @@ static int adin_config_aneg(struct phy_device *phydev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = adin_config_downspeeds(phydev);
++	if (ret < 0)
++		return ret;
++
+ 	return genphy_config_aneg(phydev);
+ }
+ 
 -- 
 2.20.1
