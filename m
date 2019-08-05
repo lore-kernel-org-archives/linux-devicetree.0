@@ -1,181 +1,103 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
-Date: Mon, 5 Aug 2019 19:54:52 +0300
-Message-ID: <20190805165453.3989-16-alexandru.ardelean@analog.com>
+Subject: [PATCH 12/16] net: phy: adin: read EEE setting from device-tree
+Date: Mon, 5 Aug 2019 19:54:49 +0300
+Message-ID: <20190805165453.3989-13-alexandru.ardelean@analog.com>
 References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190805165453.3989-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This change implements retrieving all the error counters from the PHY.
-The PHY supports several error counters/stats. The `Mean Square Errors`
-status values are only valie when a link is established, and shouldn't be
-incremented. These values characterize the quality of a signal.
+By default, EEE is not advertised on system init. This change allows the
+user to specify a device property to enable EEE advertisements when the PHY
+initializes.
 
-The rest of the error counters are self-clearing on read.
-Most of them are reports from the Frame Checker engine that the PHY has.
-
-Not retrieving the `LPI Wake Error Count Register` here, since that is used
-by the PHY framework to check for any EEE errors. And that register is
-self-clearing when read (as per IEEE spec).
+Also, before resetting the PHY, the EEE settings are read, so that after
+the reset is complete, they are written back into the EEE advertisement
+register.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 108 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ drivers/net/phy/adin.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index a1f3456a8504..04896547dac8 100644
+index 476a81ce9341..cf99ccacfeeb 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -103,6 +103,32 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
- 	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
- };
- 
-+struct adin_hw_stat {
-+	const char *string;
-+	u16 reg1;
-+	u16 reg2;
-+	bool do_not_inc;
-+};
-+
-+/* Named just like in the datasheet */
-+static struct adin_hw_stat adin_hw_stats[] = {
-+	{ "RxErrCnt",		0x0014,	},
-+	{ "MseA",		0x8402,	0,	true },
-+	{ "MseB",		0x8403,	0,	true },
-+	{ "MseC",		0x8404,	0,	true },
-+	{ "MseD",		0x8405,	0,	true },
-+	{ "FcFrmCnt",		0x940A, 0x940B }, /* FcFrmCntH + FcFrmCntL */
-+	{ "FcLenErrCnt",	0x940C },
-+	{ "FcAlgnErrCnt",	0x940D },
-+	{ "FcSymbErrCnt",	0x940E },
-+	{ "FcOszCnt",		0x940F },
-+	{ "FcUszCnt",		0x9410 },
-+	{ "FcOddCnt",		0x9411 },
-+	{ "FcOddPreCnt",	0x9412 },
-+	{ "FcDribbleBitsCnt",	0x9413 },
-+	{ "FcFalseCarrierCnt",	0x9414 },
-+};
-+
+@@ -94,9 +94,11 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
  /**
   * struct adin_priv - ADIN PHY driver private data
   * gpiod_reset		optional reset GPIO, to be used in soft_reset() cb
-@@ -113,6 +139,7 @@ struct adin_priv {
++ * eee_modes		EEE modes to advertise after reset
+  */
+ struct adin_priv {
  	struct gpio_desc	*gpiod_reset;
- 	u8			eee_modes;
- 	bool			edpd_enabled;
-+	u64			stats[ARRAY_SIZE(adin_hw_stats)];
++	u8			eee_modes;
  };
  
  static int adin_get_phy_internal_mode(struct phy_device *phydev)
-@@ -568,6 +595,81 @@ static int adin_reset(struct phy_device *phydev)
- 	return adin_subsytem_soft_reset(phydev);
+@@ -216,6 +218,23 @@ static int adin_config_rmii_mode(struct phy_device *phydev,
+ 			     ADIN1300_GE_RMII_CFG_REG, reg);
  }
  
-+static int adin_get_sset_count(struct phy_device *phydev)
++static int adin_config_init_eee(struct phy_device *phydev)
 +{
-+	return ARRAY_SIZE(adin_hw_stats);
-+}
-+
-+static void adin_get_strings(struct phy_device *phydev, u8 *data)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
-+		memcpy(data + i * ETH_GSTRING_LEN,
-+		       adin_hw_stats[i].string, ETH_GSTRING_LEN);
-+	}
-+}
-+
-+static int adin_read_mmd_stat_regs(struct phy_device *phydev,
-+				   struct adin_hw_stat *stat,
-+				   u32 *val)
-+{
-+	int ret;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = (ret & 0xffff);
-+
-+	if (stat->reg2 == 0)
-+		return 0;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val <<= 16;
-+	*val |= (ret & 0xffff);
-+
-+	return 0;
-+}
-+
-+static u64 adin_get_stat(struct phy_device *phydev, int i)
-+{
-+	struct adin_hw_stat *stat = &adin_hw_stats[i];
 +	struct adin_priv *priv = phydev->priv;
-+	u32 val;
-+	int ret;
++	int reg;
 +
-+	if (stat->reg1 > 0x1f) {
-+		ret = adin_read_mmd_stat_regs(phydev, stat, &val);
-+		if (ret < 0)
-+			return (u64)(~0);
-+	} else {
-+		ret = phy_read(phydev, stat->reg1);
-+		if (ret < 0)
-+			return (u64)(~0);
-+		val = (ret & 0xffff);
-+	}
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_EEE_ADV_REG);
++	if (reg < 0)
++		return reg;
 +
-+	if (stat->do_not_inc)
-+		priv->stats[i] = val;
++	if (priv->eee_modes)
++		reg |= priv->eee_modes;
 +	else
-+		priv->stats[i] += val;
++		reg &= ~(MDIO_EEE_100TX | MDIO_EEE_1000T);
 +
-+	return priv->stats[i];
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_EEE_ADV_REG, reg);
 +}
 +
-+static void adin_get_stats(struct phy_device *phydev,
-+			   struct ethtool_stats *stats, u64 *data)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++)
-+		data[i] = adin_get_stat(phydev, i);
-+}
-+
- static int adin_probe(struct phy_device *phydev)
+ static int adin_config_init(struct phy_device *phydev)
  {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -607,6 +709,9 @@ static struct phy_driver adin_driver[] = {
- 		.read_status	= adin_read_status,
- 		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
-@@ -624,6 +729,9 @@ static struct phy_driver adin_driver[] = {
- 		.read_status	= adin_read_status,
- 		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
+ 	phy_interface_t interface, rc;
+@@ -238,6 +257,10 @@ static int adin_config_init(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 
++	rc = adin_config_init_eee(phydev);
++	if (rc < 0)
++		return rc;
++
+ 	if (phydev->interface == interface)
+ 		dev_info(&phydev->mdio.dev, "PHY is using mode '%s'\n",
+ 			 phy_modes(phydev->interface));
+@@ -473,6 +496,12 @@ static int adin_reset(struct phy_device *phydev)
+ 	struct adin_priv *priv = phydev->priv;
+ 	int ret;
+ 
++	/* Update EEE settings before resetting, in case ethtool changed them */
++	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_EEE_ADV_REG);
++	if (ret < 0)
++		return ret;
++	priv->eee_modes = (ret & (MDIO_EEE_100TX | MDIO_EEE_1000T));
++
+ 	if (priv->gpiod_reset) {
+ 		/* GPIO reset requires min 10 uS low,
+ 		 * 5 msecs max before we know that the interface is up again
+@@ -504,6 +533,8 @@ static int adin_probe(struct phy_device *phydev)
+ 		gpiod_reset = NULL;
+ 
+ 	priv->gpiod_reset = gpiod_reset;
++	if (device_property_read_bool(dev, "adi,eee-enabled"))
++		priv->eee_modes = (MDIO_EEE_100TX | MDIO_EEE_1000T);
+ 	phydev->priv = priv;
+ 
+ 	return adin_reset(phydev);
 -- 
 2.20.1
