@@ -1,316 +1,116 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] dt-bindings: display: amlogic,meson-vpu: convert to yaml
-Date: Mon,  5 Aug 2019 15:43:18 +0200
-Message-ID: <20190805134319.737-3-narmstrong@baylibre.com>
-References: <20190805134319.737-1-narmstrong@baylibre.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 4/5] iio: imu: st_lsm6dsx: add support for accel/gyro
+ unit of lsm9sd1
+Date: Mon, 5 Aug 2019 14:44:38 +0100
+Message-ID: <20190805144438.133867b2@archlinux>
+References: <20190725053132.9589-1-martin.kepplinger@puri.sm>
+        <20190725053132.9589-5-martin.kepplinger@puri.sm>
+        <20190727184844.307255a2@archlinux>
+        <a2f6d5fe-04c6-f5d8-ad38-56b8fa033295@puri.sm>
+        <20190728093414.5d3ca94d@archlinux>
+        <20190728175234.GA7652@lore-desk-wlan.lan>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805134319.737-1-narmstrong@baylibre.com>
+In-Reply-To: <20190728175234.GA7652@lore-desk-wlan.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Martin Kepplinger <martin.kepplinger@puri.sm>, lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic Display Controller over to YAML schemas.
+On Sun, 28 Jul 2019 19:52:34 +0200
+Lorenzo Bianconi <lorenzo@kernel.org> wrote:
 
-The original example has a leftover "dmc" memory cell, that has been
-removed in the yaml rewrite.
+> > On Sun, 28 Jul 2019 08:04:51 +0200
+> > Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+> >   
+> > > On 27.07.19 19:48, Jonathan Cameron wrote:  
+> > > > On Thu, 25 Jul 2019 07:31:31 +0200
+> > > > Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+> > > >     
+> > > >> The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
+> > > >> supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
+> > > >> on the bus.
+> > > >>
+> > > >> For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
+> > > >>
+> > > >> Treat it just like the LSM6* devices and, despite it's name, hook it up
+> > > >> to the st_lsm6dsx driver, using it's basic functionality.
+> > > >>
+> > > >> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>    
+> > > > I'm a little confused on this hardware.
+> > > > 
+> > > > How does buffered output work if these are independently clocked?
+> > > > 
+> > > > I took a quick look at the datasheet, and 'suspect' the answer is that
+> > > > it runs at the gyro frequencies if both are enable. Is that right?
+> > > >     
+> > > 
+> > > Thanks for reviewing, Jonathan,
+> > > 
+> > > Correct. It says so in chapter 7.12. But that's a "problem" with all
+> > > these imu devices, not specific to this addition right?  
+> > It's not a problem as such, but there is a related difference in this
+> > device to the others supported by this driver.
+> > 
+> > The other parts seem to allow for independent data rate setting, with
+> > streaming to the buffer that isn't in 'lock step'.  I.e you can get
+> > 
+> > Ax_1, Ay_1, Az_1, Gx_1, Gy_1, Gz_1, Gx_2, Gy_2, Gz_2, Ax_2, Ay_2, Az_2, Gy_3...  
+> 
+> correct
+> 
+> > 
+> > That required us to split them up into two devices and means that, to fuse
+> > data from these two source, userspace has to do the harder job of
+> > aligning the two datasets.
+> > 
+> > For this device, things are simpler in that you always a 'scan' that goes
+> > across both accelerometer and gyroscope channels.  That allows us to
+> > represent it as a single IIO device with a single buffer.
+> > 
+> > I'm not seeing any reference in the lsm9ds1 to the pattern registers
+> > that are used to handle difference in frequency for the other
+> > parts by letting us know what is actually present in each data set
+> > in the fifo.
+> > 
+> > Now, that doesn't meant we can't still handle them separately given
+> > we already do that for other parts.  
+> 
+> what about reusing st_lsm6dsx_read_fifo() for lsm6ds0/lsm9ds1 but setting hw->sip to:
+> - hw->sip = 1 (acc_sip = 1, gyro_sip = 0) when just the acc is enabled
+> - hw->sip = 2 (acc_sip = 1, gyro_sip = 1) when both devices are enabled
+> 
+> I guess it is just a matter of adding a 'bool fixed_pattern' in
+> st_lsm6dsx_settings. What do you think?
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/display/amlogic,meson-vpu.txt    | 121 --------------
- .../bindings/display/amlogic,meson-vpu.yaml   | 153 ++++++++++++++++++
- 2 files changed, 153 insertions(+), 121 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
- create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+If I understand this, the intent is still to split it to two separate
+IIO devices?  I don't really mind if that's the case and it seems like something
+similar to what you describe should work for that.
 
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
-deleted file mode 100644
-index be40a780501c..000000000000
---- a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
-+++ /dev/null
-@@ -1,121 +0,0 @@
--Amlogic Meson Display Controller
--================================
--
--The Amlogic Meson Display controller is composed of several components
--that are going to be documented below:
--
--DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
--   | vd1   _______     _____________    _________________     |               |
--D  |-------|      |----|            |   |                |    |   HDMI PLL    |
--D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
--R  |-------|      |----| Processing |   |                |    |               |
--   | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
--R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
--A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
--M  |-------|______|----|____________|   |________________|    |               |
--___|__________________________________________________________|_______________|
--
--
--VIU: Video Input Unit
-----------------------
--
--The Video Input Unit is in charge of the pixel scanout from the DDR memory.
--It fetches the frames addresses, stride and parameters from the "Canvas" memory.
--This part is also in charge of the CSC (Colorspace Conversion).
--It can handle 2 OSD Planes and 2 Video Planes.
--
--VPP: Video Post Processing
----------------------------
--
--The Video Post Processing is in charge of the scaling and blending of the
--various planes into a single pixel stream.
--There is a special "pre-blending" used by the video planes with a dedicated
--scaler and a "post-blending" to merge with the OSD Planes.
--The OSD planes also have a dedicated scaler for one of the OSD.
--
--VENC: Video Encoders
----------------------
--
--The VENC is composed of the multiple pixel encoders :
-- - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
-- - ENCP : Progressive Video Encoder for HDMI
-- - ENCL : LCD LVDS Encoder
--The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
--tree and provides the scanout clock to the VPP and VIU.
--The ENCI is connected to a single VDAC for Composite Output.
--The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
--
--Device Tree Bindings:
-----------------------
--
--VPU: Video Processing Unit
----------------------------
--
--Required properties:
--- compatible: value should be different for each SoC family as :
--	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
--	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
--	- GXM (S912) : "amlogic,meson-gxm-vpu"
--	followed by the common "amlogic,meson-gx-vpu"
--	- G12A (S905X2, S905Y2, S905D2) : "amlogic,meson-g12a-vpu"
--- reg: base address and size of he following memory-mapped regions :
--	- vpu
--	- hhi
--- reg-names: should contain the names of the previous memory regions
--- interrupts: should contain the VENC Vsync interrupt number
--- amlogic,canvas: phandle to canvas provider node as described in the file
--	../soc/amlogic/amlogic,canvas.txt
--
--Optional properties:
--- power-domains: Optional phandle to associated power domain as described in
--	the file ../power/power_domain.txt
--
--Required nodes:
--
--The connections to the VPU output video ports are modeled using the OF graph
--bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--The following table lists for each supported model the port number
--corresponding to each VPU output.
--
--		Port 0		Port 1
-------------------------------------------
-- S905 (GXBB)	CVBS VDAC	HDMI-TX
-- S905X (GXL)	CVBS VDAC	HDMI-TX
-- S905D (GXL)	CVBS VDAC	HDMI-TX
-- S912 (GXM)	CVBS VDAC	HDMI-TX
-- S905X2 (G12A)	CVBS VDAC	HDMI-TX
-- S905Y2 (G12A)	CVBS VDAC	HDMI-TX
-- S905D2 (G12A)	CVBS VDAC	HDMI-TX
--
--Example:
--
--tv-connector {
--	compatible = "composite-video-connector";
--
--	port {
--		tv_connector_in: endpoint {
--			remote-endpoint = <&cvbs_vdac_out>;
--		};
--	};
--};
--
--vpu: vpu@d0100000 {
--	compatible = "amlogic,meson-gxbb-vpu";
--	reg = <0x0 0xd0100000 0x0 0x100000>,
--	      <0x0 0xc883c000 0x0 0x1000>,
--	      <0x0 0xc8838000 0x0 0x1000>;
--	reg-names = "vpu", "hhi", "dmc";
--	interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	/* CVBS VDAC output port */
--	port@0 {
--		reg = <0>;
--
--		cvbs_vdac_out: endpoint {
--			remote-endpoint = <&tv_connector_in>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-new file mode 100644
-index 000000000000..9eba13031998
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/amlogic,meson-vpu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson Display Controller
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+
-+description: |
-+  The Amlogic Meson Display controller is composed of several components
-+  that are going to be documented below
-+
-+  DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
-+     | vd1   _______     _____________    _________________     |               |
-+  D  |-------|      |----|            |   |                |    |   HDMI PLL    |
-+  D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
-+  R  |-------|      |----| Processing |   |                |    |               |
-+     | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
-+  R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
-+  A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
-+  M  |-------|______|----|____________|   |________________|    |               |
-+  ___|__________________________________________________________|_______________|
-+
-+
-+  VIU: Video Input Unit
-+  ---------------------
-+
-+  The Video Input Unit is in charge of the pixel scanout from the DDR memory.
-+  It fetches the frames addresses, stride and parameters from the "Canvas" memory.
-+  This part is also in charge of the CSC (Colorspace Conversion).
-+  It can handle 2 OSD Planes and 2 Video Planes.
-+
-+  VPP: Video Post Processing
-+  --------------------------
-+
-+  The Video Post Processing is in charge of the scaling and blending of the
-+  various planes into a single pixel stream.
-+  There is a special "pre-blending" used by the video planes with a dedicated
-+  scaler and a "post-blending" to merge with the OSD Planes.
-+  The OSD planes also have a dedicated scaler for one of the OSD.
-+
-+  VENC: Video Encoders
-+  --------------------
-+
-+  The VENC is composed of the multiple pixel encoders
-+   - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
-+   - ENCP : Progressive Video Encoder for HDMI
-+   - ENCL : LCD LVDS Encoder
-+  The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
-+  tree and provides the scanout clock to the VPP and VIU.
-+  The ENCI is connected to a single VDAC for Composite Output.
-+  The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
-+
-+  The following table lists for each supported model the port number
-+  corresponding to each VPU output.
-+
-+                  Port 0       Port 1
-+  -----------------------------------------
-+   S905 (GXBB)	  CVBS VDAC	   HDMI-TX
-+   S905X (GXL)	  CVBS VDAC	   HDMI-TX
-+   S905D (GXL)	  CVBS VDAC	   HDMI-TX
-+   S912 (GXM)	    CVBS VDAC	   HDMI-TX
-+   S905X2 (G12A)	CVBS VDAC	   HDMI-TX
-+   S905Y2 (G12A)	CVBS VDAC	   HDMI-TX
-+   S905D2 (G12A)	CVBS VDAC	   HDMI-TX
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - amlogic,meson-gxbb-vpu # GXBB (S905)
-+              - amlogic,meson-gxl-vpu # GXL (S905X, S905D)
-+              - amlogic,meson-gxm-vpu # GXM (S912)
-+          - const: amlogic,meson-gx-vpu
-+      - enum:
-+          - amlogic,meson-g12a-vpu # G12A (S905X2, S905Y2, S905D2)
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+   items:
-+     - const: vpu
-+     - const: hhi
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    description: phandle to the associated power domain
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  port@0:
-+    type: object
-+    description:
-+      A port node modeled using the OF graph
-+      bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+  port@1:
-+    type: object
-+    description:
-+      A port node modeled using the OF graph
-+      bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - port@0
-+  - port@1
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    vpu: vpu@d0100000 {
-+        compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
-+        reg = <0xd0100000 0x100000>, <0xc883c000 0x1000>;
-+        reg-names = "vpu", "hhi";
-+        interrupts = <3>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* CVBS VDAC output port */
-+        port@0 {
-+            reg = <0>;
-+
-+            cvbs_vdac_out: endpoint {
-+                remote-endpoint = <&tv_connector_in>;
-+            };
-+        };
-+
-+        /* HDMI TX output port */
-+        port@1 {
-+            reg = <1>;
-+
-+            hdmi_tx_out: endpoint {
-+                remote-endpoint = <&hdmi_tx_in>;
-+            };
-+        };
-+    };
--- 
-2.22.0
+If we go this way, some comments should be added to explain that whilst
+we could have handled this as a single IIO device, we have split it to
+be more consistent with the other more flexible devices.
+
+Thanks,
+
+Jonathan
+
+> 
+> Regards,
+> Lorenzo
+> 
+> > 
+> > Anyhow, is my understanding correct?
+> > 
+> > Jonathan
+> >   
+> > > 
+> > > Sidenote: I thought about renaming things to "lsm6ds0" here just because
+> > > of the name and because the registers are (almost) the same as for my
+> > > lsm9ds1. But I'm not a fan of blindly doing that without being able to
+> > > test. When the current patchset looks good to you, let's keep it that way.
+> > > 
+> > >                             martin  
+> >   
