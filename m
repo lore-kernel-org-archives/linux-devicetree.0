@@ -1,192 +1,92 @@
-Return-Path: <SRS0=GVOp=WB=ideasonboard.com=laurent.pinchart@kernel.org>
-Date: Mon, 5 Aug 2019 13:36:11 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 12/12] arm64: dts: renesas: Add EK874 board with
+Return-Path: <SRS0=7ifg=WB=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH/RFC 12/12] arm64: dts: renesas: Add EK874 board with
  idk-2121wr display support
-Message-ID: <20190805103611.GE29747@pendragon.ideasonboard.com>
+Date: Mon, 5 Aug 2019 09:44:28 +0000
+Message-ID: 
+ <TY1PR01MB177038CF1D966CB84534A9CDC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1564731249-22671-13-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802083424.GM5008@pendragon.ideasonboard.com>
- <TY1PR01MB177040DF4ADCF460CDA0D8AEC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <CAMuHMdVRg_N3S1OPVyy_Wj13XUHnTdWPY3iaOTuogah5oZCUWw@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdVRg_N3S1OPVyy_Wj13XUHnTdWPY3iaOTuogah5oZCUWw@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB177040DF4ADCF460CDA0D8AEC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Fabrizio,
-
-On Mon, Aug 05, 2019 at 09:37:29AM +0000, Fabrizio Castro wrote:
-> On 02 August 2019 09:34 Laurent Pinchart wrote:
-> > On Fri, Aug 02, 2019 at 08:34:09AM +0100, Fabrizio Castro wrote:
-> > > The EK874 is advertised as compatible with panel IDK-2121WR from
-> > > Advantech, however the panel isn't sold alongside the board.
-> > > A new dts, adding everything that's required to get the panel to
-> > > to work with the EK874, is the most convenient way to support the
-> > > EK874 when it's connected to the IDK-2121WR.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > ---
-> > >  arch/arm64/boot/dts/renesas/Makefile               |   3 +-
-> > >  .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 112 +++++++++++++++++++++
-> > >  2 files changed, 114 insertions(+), 1 deletion(-)
-> > >  create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-> > >
-> > > diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-> > > index 42b74c2..ce48478 100644
-> > > --- a/arch/arm64/boot/dts/renesas/Makefile
-> > > +++ b/arch/arm64/boot/dts/renesas/Makefile
-> > > @@ -1,7 +1,8 @@
-> > >  # SPDX-License-Identifier: GPL-2.0
-> > >  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
-> > >  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
-> > > -dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
-> > > +dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
-> > > +			       r8a774c0-ek874-idk-2121wr.dtb
-> > >  dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
-> > >  dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
-> > >  dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
-> > > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-
-> > 2121wr.dts
-> > > new file mode 100644
-> > > index 0000000..d989998
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-> > > @@ -0,0 +1,112 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
-> > > + * connected to an Advantech IDK-2121WR 21.5" LVDS panel
-> > > + *
-> > > + * Copyright (C) 2019 Renesas Electronics Corp.
-> > > + */
-> > > +
-> > > +#include "r8a774c0-ek874.dts"
-> > > +
-> > > +/ {
-> > > +	backlight: backlight {
-> > > +		compatible = "pwm-backlight";
-> > > +		pwms = <&pwm5 0 50000>;
-> > > +
-> > > +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> > > +		default-brightness-level = <6>;
-> > > +
-> > > +		power-supply = <&reg_12p0v>;
-> > > +		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> > > +	};
-> > > +
-> > > +	panel-lvds {
-> > > +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> > > +
-> > > +		width-mm = <476>;
-> > > +		height-mm = <268>;
-> > > +
-> > > +		data-mapping = "vesa-24";
-> > > +
-> > > +		panel-timing {
-> > > +			clock-frequency = <148500000>;
-> > > +			hactive = <1920>;
-> > > +			vactive = <1080>;
-> > > +			hsync-len = <44>;
-> > > +			hfront-porch = <88>;
-> > > +			hback-porch = <148>;
-> > > +			vfront-porch = <4>;
-> > > +			vback-porch = <36>;
-> > > +			vsync-len = <5>;
-> > > +		};
-> > > +
-> > > +		ports {
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <0>;
-> > > +
-> > > +			port@0 {
-> > > +				reg = <0>;
-> > > +				lvds0_panel_in: endpoint {
-> > > +					remote-endpoint = <&lvds0_out>;
-> > > +				};
-> > > +			};
-> > > +
-> > > +			port@1 {
-> > > +				reg = <1>;
-> > > +				lvds1_panel_in: endpoint {
-> > > +					remote-endpoint = <&lvds1_out>;
-> > > +				};
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +};
-> > > +
-> > > +&gpio0 {
-> > > +	lvds-connector-en-gpio{
-> > > +		gpio-hog;
-> > > +		gpios = <17 GPIO_ACTIVE_HIGH>;
-> > > +		output-low;
-> > > +		line-name = "lvds-connector-en-gpio";
-> > > +	};
-> > 
-> > Any chance to specify this as the panel's enable signal in the panel DT
-> > node ?
-> 
-> I am not too sure, as this is not exactly an enable signal. When GP0_17 is low
-> then LVDS[01] are connected to the LVDS connector, when GP0_17 is high
-> then LVDS[01] are connected to the LT8918L.
-> Perhaps we should leave this fixed to low to avoid confusion?
-
-The line-name was confusing me. A GPIO hog is thus indeed the best
-option. A comment that explains what the signal is for could help.
-
-> > > +};
-> > > +
-> > > +&lvds0 {
-> > > +	renesas,swap-data;
-> > 
-> > Let's discuss this property in reply to the DT bindings patch.
-> > 
-> > > +
-> > > +	ports {
-> > > +		port@1 {
-> > > +			lvds0_out: endpoint {
-> > > +				remote-endpoint = <&lvds0_panel_in>;
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +};
-> > > +
-> > > +&lvds1 {
-> > > +	status = "okay";
-> > > +
-> > > +	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
-> > > +	clock-names = "fck", "dclkin.0", "extal";
-> > > +
-> > > +	ports {
-> > > +		port@1 {
-> > > +			lvds1_out: endpoint {
-> > > +				remote-endpoint = <&lvds1_panel_in>;
-> > > +			};
-> > > +		};
-> > > +	};
-> > > +};
-> > > +
-> > > +&pfc {
-> > > +	pwm5_pins: pwm5 {
-> > > +		groups = "pwm5_a";
-> > > +		function = "pwm5";
-> > > +	};
-> > > +};
-> > > +
-> > > +&pwm5 {
-> > > +	pinctrl-0 = <&pwm5_pins>;
-> > > +	pinctrl-names = "default";
-> > > +
-> > > +	status = "okay";
-> > > +};
-> > 
-> > I haven't reviewed pinouts in detail, but the patch otherwise looks sane
-> > to me. Another candidate for DT overlays though ;-)
-
--- 
-Regards,
-
-Laurent Pinchart
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBHZWVy
+dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAwMiBBdWd1c3Qg
+MjAxOSAxMDoxMQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIL1JGQyAxMi8xMl0gYXJtNjQ6IGR0czog
+cmVuZXNhczogQWRkIEVLODc0IGJvYXJkIHdpdGggaWRrLTIxMjF3ciBkaXNwbGF5IHN1cHBvcnQN
+Cj4gDQo+IEhpIEZhYnJpemlvLA0KPiANCj4gT24gRnJpLCBBdWcgMiwgMjAxOSBhdCA5OjM1IEFN
+IEZhYnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90
+ZToNCj4gPiBUaGUgRUs4NzQgaXMgYWR2ZXJ0aXNlZCBhcyBjb21wYXRpYmxlIHdpdGggcGFuZWwg
+SURLLTIxMjFXUiBmcm9tDQo+ID4gQWR2YW50ZWNoLCBob3dldmVyIHRoZSBwYW5lbCBpc24ndCBz
+b2xkIGFsb25nc2lkZSB0aGUgYm9hcmQuDQo+ID4gQSBuZXcgZHRzLCBhZGRpbmcgZXZlcnl0aGlu
+ZyB0aGF0J3MgcmVxdWlyZWQgdG8gZ2V0IHRoZSBwYW5lbCB0bw0KPiA+IHRvIHdvcmsgd2l0aCB0
+aGUgRUs4NzQsIGlzIHRoZSBtb3N0IGNvbnZlbmllbnQgd2F5IHRvIHN1cHBvcnQgdGhlDQo+ID4g
+RUs4NzQgd2hlbiBpdCdzIGNvbm5lY3RlZCB0byB0aGUgSURLLTIxMjFXUi4NCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
+Y29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPiANCj4gPiAtLS0gL2Rldi9udWxs
+DQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGMwLWVrODc0LWlk
+ay0yMTIxd3IuZHRzDQo+ID4gQEAgLTAsMCArMSwxMTIgQEANCj4gDQo+IFsuLi5dDQo+IA0KPiA+
+ICsgICAgICAgcGFuZWwtbHZkcyB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+YWR2YW50ZWNoLGlkay0yMTIxd3IiLCAicGFuZWwtbHZkcyI7DQo+ID4gKw0KPiA+ICsgICAgICAg
+ICAgICAgICB3aWR0aC1tbSA9IDw0NzY+Ow0KPiA+ICsgICAgICAgICAgICAgICBoZWlnaHQtbW0g
+PSA8MjY4PjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIGRhdGEtbWFwcGluZyA9ICJ2ZXNh
+LTI0IjsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHBhbmVsLXRpbWluZyB7DQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDE0ODUwMDAwMD47DQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgaGFjdGl2ZSA9IDwxOTIwPjsNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICB2YWN0aXZlID0gPDEwODA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIGhzeW5jLWxlbiA9IDw0ND47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaGZyb250
+LXBvcmNoID0gPDg4PjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBoYmFjay1wb3JjaCA9
+IDwxNDg+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHZmcm9udC1wb3JjaCA9IDw0PjsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICB2YmFjay1wb3JjaCA9IDwzNj47DQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgdnN5bmMtbGVuID0gPDU+Ow0KPiA+ICsgICAgICAgICAgICAg
+ICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgcG9ydHMgew0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICBwb3J0QDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbHZkczBfcGFuZWxfaW46
+IGVuZHBvaW50IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzMF9vdXQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDEgew0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVnID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgbHZkczFfcGFuZWxfaW46IGVuZHBvaW50IHsNCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzMV9vdXQ+Ow0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgfTsNCj4gPiAr
+fTsNCj4gDQo+IFsuLi5dDQo+IA0KPiA+ICsmbHZkczAgew0KPiA+ICsgICAgICAgcmVuZXNhcyxz
+d2FwLWRhdGE7DQo+ID4gKw0KPiA+ICsgICAgICAgcG9ydHMgew0KPiA+ICsgICAgICAgICAgICAg
+ICBwb3J0QDEgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGx2ZHMwX291dDogZW5kcG9p
+bnQgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50
+ID0gPCZsdmRzMF9wYW5lbF9pbj47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4g
+PiArICAgICAgICAgICAgICAgfTsNCj4gPiArICAgICAgIH07DQo+ID4gK307DQo+ID4gKw0KPiA+
+ICsmbHZkczEgew0KPiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ICsNCj4gPiArICAg
+ICAgIGNsb2NrcyA9IDwmY3BnIENQR19NT0QgNzI3PiwgPCZ4MTNfY2xrPiwgPCZleHRhbF9jbGs+
+Ow0KPiA+ICsgICAgICAgY2xvY2stbmFtZXMgPSAiZmNrIiwgImRjbGtpbi4wIiwgImV4dGFsIjsN
+Cj4gPiArDQo+ID4gKyAgICAgICBwb3J0cyB7DQo+ID4gKyAgICAgICAgICAgICAgIHBvcnRAMSB7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbHZkczFfb3V0OiBlbmRwb2ludCB7DQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHMx
+X3BhbmVsX2luPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAg
+ICAgICAgICB9Ow0KPiA+ICsgICAgICAgfTsNCj4gPiArfTsNCj4gDQo+IFNob3VsZG4ndCB0aGUg
+YWN0dWFsIHBhbmVsIGRlZmluaXRpb24sIGFuZCB0aGUgbHZkcyByZW1vdGUtZW5kcG9pbnQgc2V0
+dXAsDQo+IGJlIGV4dHJhY3RlZCBpbnRvIGEgc2VwYXJhdGUgLmR0c2ksIHRvIGJlIGluY2x1ZGVk
+IGhlcmU/DQo+IA0KPiBDZnIuIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3eHgtYWExMDR4ZDEyLXBh
+bmVsLmR0c2kgYW5kDQo+IGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3eHgtYWExMjF0ZDAxLXBhbmVs
+LmR0c2kuDQoNCkl0IGxvb2tzIGxpa2UgdGhvc2UgZGlzcGxheXMgYXJlIGNvbW1vbmx5IHVzZWQg
+d2l0aCBNYXJ6ZW4sIExhZ2VyLCBhbmQgS29lbHNjaA0KYm9hcmRzLCBJIGFtIG5vdCBhd2FyZSBv
+ZiBhbnkgcGxhbnMgZm9yIHJldXNpbmcgdGhpcyBwYXJ0aWN1bGFyIHBhbmVsLg0KUGVyaGFwcyB3
+ZSBzaG91bGQgc3RpbGwgbWFrZSB0aGlzIG1vcmUgZ2VuZXJpYyBhbmQgY3JlYXRlIGEgLmR0c2k/
+DQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4g
+LS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsu
+b3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3Bs
+ZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91
+cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4N
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
