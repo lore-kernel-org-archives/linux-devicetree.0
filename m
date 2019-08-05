@@ -1,61 +1,41 @@
-Return-Path: <SRS0=gbiX=WO=hellion.org.uk=ijc@kernel.org>
-Message-ID: <0403ebf34d5d13c604e7109d8fb3e4bb6ab3c8a2.camel@hellion.org.uk>
-Subject: Re: devicetree-rebasing.git updates pausing for a couple of months
-From: Ian Campbell <ijc@hellion.org.uk>
-Date: Sun, 18 Aug 2019 19:11:57 +0800
-In-Reply-To: <20190709215403.GA26049@bogus>
-References: <3bc28d409a6e09046c001611972cc3c33b1695e3.camel@hellion.org.uk>
-	 <20190709215403.GA26049@bogus>
-Content-Type: text/plain; charset="ISO-8859-1"
+Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from anchovy2.45ru.net.au ([203.30.46.146]:58474 "EHLO
+        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfHEIeG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2019 04:34:06 -0400
+Subject: Re: [PATCH v2 0/2] clk: clk-cdce925: Add regulator support
+References: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
+From: Phil Reid <preid@electromag.com.au>
+Message-ID: <116f2971-c311-81b8-b0b9-0bb6a74b75e4@electromag.com.au>
+Date: Mon, 5 Aug 2019 16:26:41 +0800
 MIME-Version: 1.0
+In-Reply-To: <1561691950-42154-1-git-send-email-preid@electromag.com.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
 Content-Transfer-Encoding: 7bit
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Andre Przywara <andre.przywara@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Sender: devicetree-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-(replying to the two subthreads in one go)
-
-On Tue, 2019-07-09 at 15:54 -0600, Rob Herring wrote:
-> On Fri, Jun 21, 2019 at 01:01:27PM +0100, Ian Campbell wrote:
-> > Hi all,
-> > 
-> > I've no idea if anyone actually uses it any more, but the split out
-> > devicetree only git repo [0] is not going to receive any new updates
-> > for a little while (likely 1-2 months) while I relocate to another
-> > country.
+On 28/06/2019 11:19, Phil Reid wrote:
+> The cdce925 power supplies could be controllable on some platforms.
+> Enable them before communicating with the cdce925.
 > 
-> Can you sync your move to the kernel release schedule? JK
-
-:-)
-
-I'm back online and have pushed the backlog[0] up to v5.3-rc4-dts.
-
-> Seriously, I've been wondering if we could turn this into a Gitlab CI 
-> job instead. Then it's not solely up to you to run it.
-
-That would work for the bulk of the work (daily run of git filter-
-branch), the only manual bit is merging the tags of each release (so
-approx weekly). I currently sign the tags with my own PGP key so isn't
-really suitable for pushing to a CI system (I think that's true no
-matter which key we are using?)
-
-On Tue, 2019-06-25 at 09:05 +0200, Sascha Hauer wrote:
-> On Tue, Jun 25, 2019 at 09:02:40AM +0200, Sascha Hauer wrote:
-> > I am still using it for barebox, so I'd appreciate devicetree-rebasing
-> > coming back once you are relocated. Anyway, barebox can live without a
-> > dts update for a while, so take your time ;)
+> Changes from V1
+> - Add devicetree updates
 > 
-> BTW thanks for keeping devicetree-rebasing up to date for all the time.
-> If the repository is of no personal use for you anymore, we at
-> Pengutronix could offer to take over the repository.
+> 
+> Phil Reid (2):
+>    dt-bindings: clock: cdce925: Add regulator documentation
+>    clk: clk-cdce925: Add regulator support
+> 
+>   .../devicetree/bindings/clock/ti,cdce925.txt       |  4 +++
+>   drivers/clk/clk-cdce925.c                          | 34 ++++++++++++++++++++++
+>   2 files changed, 38 insertions(+)
+> 
 
-Thanks, it's approximately no actual effort so I don't mind to keep
-running it for the time being. So far the real actual work has been
-hacking on git filter-branch, which has been a 2-3 events per decade
-type thing...
+Any more feedback on this series?
 
-Cheers,
-Ian.
-
-[0]
-v5.2-rc7-dts v5.2-dts v5.3-rc1-dts v5.3-rc2-dts v5.3-rc3-dts v5.3-rc4-dts
+-- 
+Regards
+Phil Reid
