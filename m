@@ -1,98 +1,173 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 13/16] net: phy: adin: implement Energy Detect Powerdown mode
-Date: Mon, 5 Aug 2019 19:54:50 +0300
-Message-ID: <20190805165453.3989-14-alexandru.ardelean@analog.com>
+Subject: [PATCH 16/16] dt-bindings: net: add bindings for ADIN PHY driver
+Date: Mon, 5 Aug 2019 19:54:53 +0300
+Message-ID: <20190805165453.3989-17-alexandru.ardelean@analog.com>
 References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190805165453.3989-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN PHYs support Energy Detect Powerdown mode, which puts the PHY into
-a low power mode when there is no signal on the wire (typically cable
-unplugged).
-This behavior is enabled by default, but can be disabled via device
-property.
+This change adds bindings for the Analog Devices ADIN PHY driver, detailing
+all the properties implemented by the driver.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../devicetree/bindings/net/adi,adin.yaml     | 93 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +
+ include/dt-bindings/net/adin.h                | 26 ++++++
+ 3 files changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
+ create mode 100644 include/dt-bindings/net/adin.h
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index cf99ccacfeeb..86848444bd98 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -27,6 +27,11 @@
- #define   ADIN1300_AUTO_MDI_EN			BIT(10)
- #define   ADIN1300_MAN_MDIX_EN			BIT(9)
- 
-+#define ADIN1300_PHY_CTRL_STATUS2		0x0015
-+#define   ADIN1300_NRG_PD_EN			BIT(3)
-+#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
-+#define   ADIN1300_NRG_PD_STATUS		BIT(1)
+diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+new file mode 100644
+index 000000000000..fcf884bb86f7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/adi,adin.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- #define ADIN1300_INT_MASK_REG			0x0018
- #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
- #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-@@ -95,10 +100,12 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
-  * struct adin_priv - ADIN PHY driver private data
-  * gpiod_reset		optional reset GPIO, to be used in soft_reset() cb
-  * eee_modes		EEE modes to advertise after reset
-+ * edpd_enabled		true if Energy Detect Powerdown mode is enabled
-  */
- struct adin_priv {
- 	struct gpio_desc	*gpiod_reset;
- 	u8			eee_modes;
-+	bool			edpd_enabled;
- };
- 
- static int adin_get_phy_internal_mode(struct phy_device *phydev)
-@@ -235,6 +242,18 @@ static int adin_config_init_eee(struct phy_device *phydev)
- 	return phy_write_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_EEE_ADV_REG, reg);
- }
- 
-+static int adin_config_init_edpd(struct phy_device *phydev)
-+{
-+	struct adin_priv *priv = phydev->priv;
++title: Analog Devices ADIN1200/ADIN1300 PHY
 +
-+	if (priv->edpd_enabled)
-+		return phy_set_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
++maintainers:
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
 +
-+	return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+			(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
-+}
++description: |
++  Bindings for Analog Devices Industrial Ethernet PHYs
 +
- static int adin_config_init(struct phy_device *phydev)
- {
- 	phy_interface_t interface, rc;
-@@ -261,6 +280,10 @@ static int adin_config_init(struct phy_device *phydev)
- 	if (rc < 0)
- 		return rc;
++properties:
++  compatible:
++    description: |
++      Compatible list, may contain "ethernet-phy-ieee802.3-c45" in which case
++      Clause 45 will be used to access device management registers. If
++      unspecified, Clause 22 will be used. Use this only when MDIO supports
++      Clause 45 access, but there is no other way to determine this.
++    enum:
++      - ethernet-phy-ieee802.3-c45
++
++  adi,phy-mode-internal:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: |
++      The internal mode of the PHY. This assumes that there is a PHY converter
++      in-between the MAC & PHY.
++    enum: [ "rgmii", "rgmii-id", "rgmii-txid", "rgmii-rxid", "rmii", "mii" ]
++
++  adi,rx-internal-delay:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      RGMII RX Clock Delay used only when PHY operates in RGMII mode (phy-mode
++      is "rgmii-id", "rgmii-rxid", "rgmii-txid") see `dt-bindings/net/adin.h`
++      default value is 0 (which represents 2 ns)
++    enum: [ 0, 1, 2, 6, 7 ]
++
++  adi,tx-internal-delay:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      RGMII TX Clock Delay used only when PHY operates in RGMII mode (phy-mode
++      is "rgmii-id", "rgmii-rxid", "rgmii-txid") see `dt-bindings/net/adin.h`
++      default value is 0 (which represents 2 ns)
++    enum: [ 0, 1, 2, 6, 7 ]
++
++  adi,fifo-depth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      When operating in RMII mode, this option configures the FIFO depth.
++      See `dt-bindings/net/adin.h`.
++    enum: [ 0, 1, 2, 3, 4, 5 ]
++
++  adi,eee-enabled:
++    description: |
++      Advertise EEE capabilities on power-up/init (default disabled)
++    type: boolean
++
++  adi,disable-energy-detect:
++    description: |
++      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
++      is enabled if this property is unspecified)
++    type: boolean
++
++  reset-gpios:
++    description: |
++      GPIO to reset the PHY
++      see Documentation/devicetree/bindings/gpio/gpio.txt.
++
++examples:
++  - |
++    ethernet-phy@0 {
++        compatible = "ethernet-phy-ieee802.3-c45";
++        reg = <0>;
++    };
++  - |
++    #include <dt-bindings/net/adin.h>
++    ethernet-phy@1 {
++        reg = <1>;
++        adi,phy-mode-internal = "rgmii-id";
++
++        adi,rx-internal-delay = <ADIN1300_RGMII_1_80_NS>;
++        adi,tx-internal-delay = <ADIN1300_RGMII_2_20_NS>;
++    };
++  - |
++    #include <dt-bindings/net/adin.h>
++    ethernet-phy@2 {
++        reg = <2>;
++        phy-mode = "rmii";
++
++        adi,fifo-depth = <ADIN1300_RMII_16_BITS>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index faf5723610c8..6ffbb266dee4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -944,6 +944,8 @@ L:	netdev@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/net/phy/adin.c
++F:	include/dt-bindings/net/adin.h
++F:	Documentation/devicetree/bindings/net/adi,adin.yaml
  
-+	rc = adin_config_init_edpd(phydev);
-+	if (rc < 0)
-+		return rc;
+ ANALOG DEVICES INC ADIS DRIVER LIBRARY
+ M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
+diff --git a/include/dt-bindings/net/adin.h b/include/dt-bindings/net/adin.h
+new file mode 100644
+index 000000000000..4c3afa550c59
+--- /dev/null
++++ b/include/dt-bindings/net/adin.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/**
++ * Device Tree constants for Analog Devices Industrial Ethernet PHYs
++ *
++ * Copyright 2019 Analog Devices Inc.
++ */
 +
- 	if (phydev->interface == interface)
- 		dev_info(&phydev->mdio.dev, "PHY is using mode '%s'\n",
- 			 phy_modes(phydev->interface));
-@@ -535,6 +558,10 @@ static int adin_probe(struct phy_device *phydev)
- 	priv->gpiod_reset = gpiod_reset;
- 	if (device_property_read_bool(dev, "adi,eee-enabled"))
- 		priv->eee_modes = (MDIO_EEE_100TX | MDIO_EEE_1000T);
-+	if (device_property_read_bool(dev, "adi,disable-energy-detect"))
-+		priv->edpd_enabled = false;
-+	else
-+		priv->edpd_enabled = true;
- 	phydev->priv = priv;
- 
- 	return adin_reset(phydev);
++#ifndef _DT_BINDINGS_ADIN_H
++#define _DT_BINDINGS_ADIN_H
++
++/* RGMII internal delay settings for rx and tx for ADIN1300 */
++#define ADIN1300_RGMII_1_60_NS		0x1
++#define ADIN1300_RGMII_1_80_NS		0x2
++#define	ADIN1300_RGMII_2_00_NS		0x0
++#define	ADIN1300_RGMII_2_20_NS		0x6
++#define	ADIN1300_RGMII_2_40_NS		0x7
++
++/* RMII fifo depth values */
++#define ADIN1300_RMII_4_BITS		0x0
++#define ADIN1300_RMII_8_BITS		0x1
++#define ADIN1300_RMII_12_BITS		0x2
++#define ADIN1300_RMII_16_BITS		0x3
++#define ADIN1300_RMII_20_BITS		0x4
++#define ADIN1300_RMII_24_BITS		0x5
++
++#endif
 -- 
 2.20.1
