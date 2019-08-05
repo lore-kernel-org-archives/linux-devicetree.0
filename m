@@ -1,102 +1,192 @@
-Return-Path: <SRS0=0iez=WD=gmail.com=andyshrk@kernel.org>
+Return-Path: <SRS0=GVOp=WB=ideasonboard.com=laurent.pinchart@kernel.org>
+Date: Mon, 5 Aug 2019 13:36:11 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 12/12] arm64: dts: renesas: Add EK874 board with
+ idk-2121wr display support
+Message-ID: <20190805103611.GE29747@pendragon.ideasonboard.com>
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-13-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190802083424.GM5008@pendragon.ideasonboard.com>
+ <TY1PR01MB177040DF4ADCF460CDA0D8AEC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190805124037.10597-1-andyshrk@gmail.com> <CAL_JsqJ6_J1pR-MYK5kmUN5Q+tX32UNFqLW81tmBf=pYxtAmjg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ6_J1pR-MYK5kmUN5Q+tX32UNFqLW81tmBf=pYxtAmjg@mail.gmail.com>
-From: Andy Yan <andyshrk@gmail.com>
-Date: Wed, 7 Aug 2019 14:14:09 +0800
-Message-ID: <CANbgqATvVSo_D-n_mW2hK2KEK_8cs3374ddB6C8GcZZwjMSoRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add dts for Leez RK3399 P710 SBC
-Content-Type: multipart/alternative; boundary="00000000000007f2c5058f80da65"
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "heiko@sntech.de" <heiko@sntech.de>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB177040DF4ADCF460CDA0D8AEC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
 List-ID: <devicetree@vger.kernel.org>
 
---00000000000007f2c5058f80da65
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Fabrizio,
 
-Hi Rob:
+On Mon, Aug 05, 2019 at 09:37:29AM +0000, Fabrizio Castro wrote:
+> On 02 August 2019 09:34 Laurent Pinchart wrote:
+> > On Fri, Aug 02, 2019 at 08:34:09AM +0100, Fabrizio Castro wrote:
+> > > The EK874 is advertised as compatible with panel IDK-2121WR from
+> > > Advantech, however the panel isn't sold alongside the board.
+> > > A new dts, adding everything that's required to get the panel to
+> > > to work with the EK874, is the most convenient way to support the
+> > > EK874 when it's connected to the IDK-2121WR.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > ---
+> > >  arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+> > >  .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 112 +++++++++++++++++++++
+> > >  2 files changed, 114 insertions(+), 1 deletion(-)
+> > >  create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+> > >
+> > > diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+> > > index 42b74c2..ce48478 100644
+> > > --- a/arch/arm64/boot/dts/renesas/Makefile
+> > > +++ b/arch/arm64/boot/dts/renesas/Makefile
+> > > @@ -1,7 +1,8 @@
+> > >  # SPDX-License-Identifier: GPL-2.0
+> > >  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+> > >  dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
+> > > -dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
+> > > +dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+> > > +			       r8a774c0-ek874-idk-2121wr.dtb
+> > >  dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+> > >  dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
+> > >  dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
+> > > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-
+> > 2121wr.dts
+> > > new file mode 100644
+> > > index 0000000..d989998
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+> > > @@ -0,0 +1,112 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
+> > > + * connected to an Advantech IDK-2121WR 21.5" LVDS panel
+> > > + *
+> > > + * Copyright (C) 2019 Renesas Electronics Corp.
+> > > + */
+> > > +
+> > > +#include "r8a774c0-ek874.dts"
+> > > +
+> > > +/ {
+> > > +	backlight: backlight {
+> > > +		compatible = "pwm-backlight";
+> > > +		pwms = <&pwm5 0 50000>;
+> > > +
+> > > +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> > > +		default-brightness-level = <6>;
+> > > +
+> > > +		power-supply = <&reg_12p0v>;
+> > > +		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > > +	};
+> > > +
+> > > +	panel-lvds {
+> > > +		compatible = "advantech,idk-2121wr", "panel-lvds";
+> > > +
+> > > +		width-mm = <476>;
+> > > +		height-mm = <268>;
+> > > +
+> > > +		data-mapping = "vesa-24";
+> > > +
+> > > +		panel-timing {
+> > > +			clock-frequency = <148500000>;
+> > > +			hactive = <1920>;
+> > > +			vactive = <1080>;
+> > > +			hsync-len = <44>;
+> > > +			hfront-porch = <88>;
+> > > +			hback-porch = <148>;
+> > > +			vfront-porch = <4>;
+> > > +			vback-porch = <36>;
+> > > +			vsync-len = <5>;
+> > > +		};
+> > > +
+> > > +		ports {
+> > > +			#address-cells = <1>;
+> > > +			#size-cells = <0>;
+> > > +
+> > > +			port@0 {
+> > > +				reg = <0>;
+> > > +				lvds0_panel_in: endpoint {
+> > > +					remote-endpoint = <&lvds0_out>;
+> > > +				};
+> > > +			};
+> > > +
+> > > +			port@1 {
+> > > +				reg = <1>;
+> > > +				lvds1_panel_in: endpoint {
+> > > +					remote-endpoint = <&lvds1_out>;
+> > > +				};
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&gpio0 {
+> > > +	lvds-connector-en-gpio{
+> > > +		gpio-hog;
+> > > +		gpios = <17 GPIO_ACTIVE_HIGH>;
+> > > +		output-low;
+> > > +		line-name = "lvds-connector-en-gpio";
+> > > +	};
+> > 
+> > Any chance to specify this as the panel's enable signal in the panel DT
+> > node ?
+> 
+> I am not too sure, as this is not exactly an enable signal. When GP0_17 is low
+> then LVDS[01] are connected to the LVDS connector, when GP0_17 is high
+> then LVDS[01] are connected to the LT8918L.
+> Perhaps we should leave this fixed to low to avoid confusion?
 
-Rob Herring <robh+dt@kernel.org> =E4=BA=8E2019=E5=B9=B48=E6=9C=886=E6=97=A5=
-=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8810:48=E5=86=99=E9=81=93=EF=BC=9A
+The line-name was confusing me. A GPIO hog is thus indeed the best
+option. A comment that explains what the signal is for could help.
 
-> On Mon, Aug 5, 2019 at 6:40 AM Andy Yan <andyshrk@gmail.com> wrote:
-> >
-> > P710 is a RK3399 based SBC, designed by Leez [0].
-> >
-> > Specification
-> > - Rockchip RK3399
-> > - 4/2GB LPDDR4
-> > - TF sd scard slot
-> > - eMMC
-> > - M.2 B-Key for 4G LTE
-> > - AP6256 for WiFi + BT
-> > - Gigabit ethernet
-> > - HDMI out
-> > - 40 pin header
-> > - USB 2.0 x 2
-> > - USB 3.0 x 1
-> > - USB 3.0 Type-C x 1
-> > - TYPE-C Power supply
-> >
-> > [0]https://leez.lenovo.com
->
-> I'm not really convinced Leez is a vendor. Looks like branding to me.
-> We have enough with company names changing, we don't need changing
-> brands too. Use 'lenovo'.
->
->
-I had checked with Leez people before V1, they said Leez will run as an
-independent company, so they don't want to
-give a lenovo label for this board.
+> > > +};
+> > > +
+> > > +&lvds0 {
+> > > +	renesas,swap-data;
+> > 
+> > Let's discuss this property in reply to the DT bindings patch.
+> > 
+> > > +
+> > > +	ports {
+> > > +		port@1 {
+> > > +			lvds0_out: endpoint {
+> > > +				remote-endpoint = <&lvds0_panel_in>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&lvds1 {
+> > > +	status = "okay";
+> > > +
+> > > +	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
+> > > +	clock-names = "fck", "dclkin.0", "extal";
+> > > +
+> > > +	ports {
+> > > +		port@1 {
+> > > +			lvds1_out: endpoint {
+> > > +				remote-endpoint = <&lvds1_panel_in>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&pfc {
+> > > +	pwm5_pins: pwm5 {
+> > > +		groups = "pwm5_a";
+> > > +		function = "pwm5";
+> > > +	};
+> > > +};
+> > > +
+> > > +&pwm5 {
+> > > +	pinctrl-0 = <&pwm5_pins>;
+> > > +	pinctrl-names = "default";
+> > > +
+> > > +	status = "okay";
+> > > +};
+> > 
+> > I haven't reviewed pinouts in detail, but the patch otherwise looks sane
+> > to me. Another candidate for DT overlays though ;-)
 
+-- 
+Regards,
 
-Rob
->
-
---00000000000007f2c5058f80da65
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr">Hi Rob:</div><br><div class=3D"gmail_quot=
-e"><div dir=3D"ltr" class=3D"gmail_attr">Rob Herring &lt;<a href=3D"mailto:=
-robh%2Bdt@kernel.org">robh+dt@kernel.org</a>&gt; =E4=BA=8E2019=E5=B9=B48=E6=
-=9C=886=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8810:48=E5=86=99=E9=81=
-=93=EF=BC=9A<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px=
- 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On =
-Mon, Aug 5, 2019 at 6:40 AM Andy Yan &lt;<a href=3D"mailto:andyshrk@gmail.c=
-om" target=3D"_blank">andyshrk@gmail.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; P710 is a RK3399 based SBC, designed by Leez [0].<br>
-&gt;<br>
-&gt; Specification<br>
-&gt; - Rockchip RK3399<br>
-&gt; - 4/2GB LPDDR4<br>
-&gt; - TF sd scard slot<br>
-&gt; - eMMC<br>
-&gt; - M.2 B-Key for 4G LTE<br>
-&gt; - AP6256 for WiFi + BT<br>
-&gt; - Gigabit ethernet<br>
-&gt; - HDMI out<br>
-&gt; - 40 pin header<br>
-&gt; - USB 2.0 x 2<br>
-&gt; - USB 3.0 x 1<br>
-&gt; - USB 3.0 Type-C x 1<br>
-&gt; - TYPE-C Power supply<br>
-&gt;<br>
-&gt; [0]<a href=3D"https://leez.lenovo.com" rel=3D"noreferrer" target=3D"_b=
-lank">https://leez.lenovo.com</a><br>
-<br>
-I&#39;m not really convinced Leez is a vendor. Looks like branding to me.<b=
-r>
-We have enough with company names changing, we don&#39;t need changing<br>
-brands too. Use &#39;lenovo&#39;.<br>
-<br></blockquote><div><br></div><div>I had checked with Leez people before =
-V1, they said Leez will run as an independent company, so they don&#39;t wa=
-nt to</div><div>give a lenovo label for this board.</div><div><br></div><di=
-v><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0=
-.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-Rob<br>
-</blockquote></div></div>
-
---00000000000007f2c5058f80da65--
+Laurent Pinchart
