@@ -1,54 +1,31 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
-Date: Mon, 5 Aug 2019 17:30:58 +0200
-Message-ID: <20190805153058.GU24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-16-alexandru.ardelean@analog.com>
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Date: Mon, 5 Aug 2019 17:31:14 +0200
+Message-ID: <20190805153114.GA16836@kroah.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-16-alexandru.ardelean@analog.com>
+In-Reply-To: <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, Larisa Ileana Grigore <larisa.grigore@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:54:52PM +0300, Alexandru Ardelean wrote:
-> This change implements retrieving all the error counters from the PHY.
-> The PHY supports several error counters/stats. The `Mean Square Errors`
-> status values are only valie when a link is established, and shouldn't be
-> incremented. These values characterize the quality of a signal.
-
-I think you mean accumulated, not incremented?
-
-> 
-> The rest of the error counters are self-clearing on read.
-> Most of them are reports from the Frame Checker engine that the PHY has.
-> 
-> Not retrieving the `LPI Wake Error Count Register` here, since that is used
-> by the PHY framework to check for any EEE errors. And that register is
-> self-clearing when read (as per IEEE spec).
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 108 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 108 insertions(+)
-> 
-> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-> index a1f3456a8504..04896547dac8 100644
-> --- a/drivers/net/phy/adin.c
-> +++ b/drivers/net/phy/adin.c
-> @@ -103,6 +103,32 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
->  	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
->  };
+On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
+> --- a/include/uapi/linux/serial_core.h
+> +++ b/include/uapi/linux/serial_core.h
+> @@ -293,4 +293,7 @@
+>  /* SiFive UART */
+>  #define PORT_SIFIVE_V0	120
 >  
-> +struct adin_hw_stat {
-> +	const char *string;
-> +	u16 reg1;
-> +	u16 reg2;
-> +	bool do_not_inc;
+> +/* Freescale Linflex UART */
+> +#define PORT_LINFLEXUART	121
 
-do_not_accumulate? or reverse its meaning, clear_on_read?
+Do you really need this modified?
 
-   Andrew
+thanks,
+
+greg k-h
