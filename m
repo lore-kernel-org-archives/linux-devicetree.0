@@ -1,66 +1,72 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv2] drivers/amba: add reset control to primecell probe
-Date: Mon,  5 Aug 2019 09:52:11 -0500
-Message-ID: <20190805145211.23161-1-dinguyen@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 3/5] MIPS: lantiq: add an irq_domain and irq_chip for EBU
+Date: Mon, 5 Aug 2019 16:03:10 +0100
+Message-ID: <f779fc72-ec40-214b-eb81-d21d6b15d5b3@kernel.org>
+References: <20190727175315.28834-1-martin.blumenstingl@googlemail.com>
+ <20190727175315.28834-4-martin.blumenstingl@googlemail.com>
+ <86y30imq9p.wl-marc.zyngier@arm.com>
+ <CAFBinCCb4aTfuxaSrUp8xbUjjefi_qHOUJLjzH+acUTLY+6Geg@mail.gmail.com>
+ <86o916mx2m.wl-maz@kernel.org>
+ <CAFBinCDRBmG39Pa4XBa2Bu8K6GH7iz_YyKoJ795XKTnEz2b4VQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCDRBmG39Pa4XBa2Bu8K6GH7iz_YyKoJ795XKTnEz2b4VQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: dinguyen@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, john@phrozen.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
-default. Until recently, the DMA controller was brought out of reset by the
-bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
-are not used are held in reset and are left to Linux to bring them out of
-reset.
+On 03/08/2019 18:33, Martin Blumenstingl wrote:
+> Hi Marc,
+> 
+> On Sat, Aug 3, 2019 at 11:12 AM Marc Zyngier <maz@kernel.org> wrote:
+>>
+>> Hi Martin,
+>>
+>> On Thu, 01 Aug 2019 18:42:42 +0100,
+>> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+>>
+>> [...]
+>>
+>>>>> +static void ltq_ebu_irq_handler(struct irq_desc *desc)
+>>>>> +{
+>>>>> +     struct irq_domain *domain = irq_desc_get_handler_data(desc);
+>>>>> +     struct irq_chip *irqchip = irq_desc_get_chip(desc);
+>>>>> +
+>>>>> +     chained_irq_enter(irqchip, desc);
+>>>>> +
+>>>>> +     generic_handle_irq(irq_find_mapping(domain, 0));
+>>>>
+>>>> Having an irqdomain for a single interrupt is a bit over the top... Is
+>>>> that for the convenience of the DT infrastructure?
+>>> yes, I did it to get DT support
+>>> please let me know if there's a "better" way (preferably with another
+>>> driver as example)
+>>
+>> To be honest, the chained handler is what troubles me the most. You
+>> normally would use such a construct if you had a multiplexer. In your
+>> case, you have a 1:1 relationship between input and output. It is just
+>> that this irqchip allows the trigger to be adapted, which normally
+>> calls for a hierarchical implementation.
+>>
+>> In your case, with only a single interrupt, it doesn't matter much
+>> though.
+> I see, thank you for the explanation
+> 
+> can you name a driver for a hierarchical irqchip driver that you
+> consider "clean" which I could use as reference?
 
-Add a mechanism for getting the reset property and de-assert the primecell
-module from reset if found. This is a not a hard fail if the reset property
-is not present in the device tree node, so the driver will continue to probe.
+Finding a "clean" driver is a challenge, as the world of IRQ controllers
+is where both HW and SW engineers (me included) love to "innovate" ;-).
 
-Because there are different variants of the controller that may have multiple
-reset signals, the code will find all reset(s) specified and de-assert them.
+I'd recommend you have a look at drivers/irqchip/irq-mtk-cirq.c, which
+is almost as simple as it gets.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2: move reset control to bus code
-    find all reset properties and de-assert them
----
- drivers/amba/bus.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Thanks,
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 100e798a5c82..75e18b9e4808 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -18,6 +18,7 @@
- #include <linux/limits.h>
- #include <linux/clk/clk-conf.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- 
- #include <asm/irq.h>
- 
-@@ -401,6 +402,18 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
- 	ret = amba_get_enable_pclk(dev);
- 	if (ret == 0) {
- 		u32 pid, cid;
-+		int count;
-+		struct reset_control *rstc;
-+
-+		/*
-+		 * Find reset control(s) of the amba bus and de-assert them.
-+		 */
-+		count = reset_control_get_count(&dev->dev);
-+		while (count > 0) {
-+			rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
-+			reset_control_deassert(rstc);
-+			count--;
-+		}
- 
- 		/*
- 		 * Read pid and cid based on size of resource
+	M.
 -- 
-2.20.0
+Jazz is not dead, it just smells funny...
