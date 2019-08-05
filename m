@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFCv2 6/9] dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-Date: Mon,  5 Aug 2019 14:03:17 +0200
-Message-ID: <20190805120320.32282-7-narmstrong@baylibre.com>
+Subject: [RFCv2 4/9] dt-bindings: reset: amlogic,meson-reset: convert to yaml
+Date: Mon,  5 Aug 2019 14:03:15 +0200
+Message-ID: <20190805120320.32282-5-narmstrong@baylibre.com>
 References: <20190805120320.32282-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,38 +18,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, kishon@ti.com, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic G12A USB2 PHY over to a YAML schemas.
-
-While the original phy bindings specifies phy-supply as required,
-the examples and implementations makes it optional, thus phy-supply
-is not in the required list of attributes.
+bindings for the Amlogic Reset controller over to a YAML schemas.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../phy/amlogic,meson-g12a-usb2-phy.yaml      | 63 +++++++++++++++++++
- .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 -------
- 2 files changed, 63 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+ .../bindings/reset/amlogic,meson-reset.txt    | 19 ----------
+ .../bindings/reset/amlogic,meson-reset.yaml   | 37 +++++++++++++++++++
+ 2 files changed, 37 insertions(+), 19 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+deleted file mode 100644
+index 28ef6c295c76..000000000000
+--- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-Amlogic Meson SoC Reset Controller
+-=======================================
+-
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
+-
+-Required properties:
+-- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
+-	"amlogic,meson-axg-reset".
+-- reg: should contain the register address base
+-- #reset-cells: 1, see below
+-
+-example:
+-
+-reset: reset-controller {
+-	compatible = "amlogic,meson-gxbb-reset";
+-	reg = <0x0 0x04404 0x0 0x20>;
+-	#reset-cells = <1>;
+-};
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
 new file mode 100644
-index 000000000000..51254b4e65dd
+index 000000000000..00917d868d58
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+@@ -0,0 +1,37 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/phy/amlogic,meson-g12a-usb2-phy.yaml#"
++$id: "http://devicetree.org/schemas/reset/amlogic,meson-reset.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic G12A USB2 PHY
++title: Amlogic Meson SoC Reset Controller
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
@@ -57,81 +78,27 @@ index 000000000000..51254b4e65dd
 +properties:
 +  compatible:
 +    enum:
-+      - amlogic,meson-g12a-usb2-phy
++      - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
++      - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
++      - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
 +
 +  reg:
 +    maxItems: 1
 +
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: xtal
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  phy-supply:
-+     maxItems: 1
-+     description:
-+       Phandle to a regulator that provides power to the PHY. This
-+       regulator will be managed during the PHY power on/off sequence.
++  "#reset-cells":
++    const: 1
 +
 +required:
 +  - compatible
 +  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - "#phy-cells"
++  - "#reset-cells"
 +
 +examples:
 +  - |
-+    phy@36000 {
-+          compatible = "amlogic,meson-g12a-usb2-phy";
-+          reg = <0x36000 0x2000>;
-+          clocks = <&xtal>;
-+          clock-names = "xtal";
-+          resets = <&phy_reset>;
-+          reset-names = "phy";
-+          #phy-cells = <0>;
++    reset-controller@c884404 {
++          compatible = "amlogic,meson-gxbb-reset";
++          reg = <0xc884404 0x20>;
++          #reset-cells = <1>;
 +    };
-diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
-deleted file mode 100644
-index a6ebc3dea159..000000000000
---- a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--* Amlogic G12A USB2 PHY binding
--
--Required properties:
--- compatible:	Should be "amlogic,meson-g12a-usb2-phy"
--- reg:		The base address and length of the registers
--- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
--- clocks:	a phandle to the clock of this PHY
--- clock-names:	must be "xtal"
--- resets:	a phandle to the reset line of this PHY
--- reset-names:	must be "phy"
--- phy-supply:	see phy-bindings.txt in this directory
--
--Example:
--	usb2_phy0: phy@36000 {
--		compatible = "amlogic,g12a-usb2-phy";
--		reg = <0x0 0x36000 0x0 0x2000>;
--		clocks = <&xtal>;
--		clock-names = "xtal";
--		resets = <&reset RESET_USB_PHY21>;
--		reset-names = "phy";
--		#phy-cells = <0>;
--	};
 -- 
 2.22.0
