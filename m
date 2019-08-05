@@ -1,35 +1,39 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH 03/11] dt-bindings: irq: mtk,sysirq: add support for mt6779
-Date: Mon, 5 Aug 2019 17:11:52 +0800
-Message-ID: <1564996320-10897-4-git-send-email-mars.cheng@mediatek.com>
-References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+Date: Mon, 5 Aug 2019 11:20:56 +0200
+Message-ID: <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com> <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
+In-Reply-To: <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation of mediatek,sysirq for mt6779 SoC.
+On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
 
-Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
----
- .../interrupt-controller/mediatek,sysirq.txt       |    1 +
- 1 file changed, 1 insertion(+)
+> This patch adds support for Tegra pinctrl driver suspend and resume.
+>
+> During suspend, context of all pinctrl registers are stored and
+> on resume they are all restored to have all the pinmux and pad
+> configuration for normal operation.
+>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-index 0e312fe..84ced3f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-@@ -15,6 +15,7 @@ Required properties:
- 	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
- 	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
- 	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
-+	"mediatek,mt6779-sysirq", "mediatek,mt6577-sysirq": for MT6779
- 	"mediatek,mt6765-sysirq", "mediatek,mt6577-sysirq": for MT6765
- 	"mediatek,mt6755-sysirq", "mediatek,mt6577-sysirq": for MT6755
- 	"mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq": for MT6592
--- 
-1.7.9.5
+Patch applied to the pinctrl tree.
+
+This patch seems finished.
+
+Also if the rest don't get merged for v5.4 then at least this is so
+your patch stack gets more shallow.
+
+I hope it's fine to merge this separately, else tell me and I'll
+pull it out.
+
+Yours,
+Linus Walleij
