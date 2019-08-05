@@ -1,25 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/11] dt-bindings: mediatek: add support for mt6779
- reference board
-Date: Mon, 5 Aug 2019 09:28:39 -0600
-Message-ID: <CAL_Jsq+5jydeN83BU+Ne+6muv7KWjceJrAApaOXYevLmUJh6qw@mail.gmail.com>
-References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com> <1564996320-10897-2-git-send-email-mars.cheng@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
+Date: Mon, 5 Aug 2019 17:30:58 +0200
+Message-ID: <20190805153058.GU24275@lunn.ch>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-16-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564996320-10897-2-git-send-email-mars.cheng@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20190805165453.3989-16-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org, wsd_upstream <wsd_upstream@mediatek.com>, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 3:13 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
->
-> Update binding document for mt6779 reference board
->
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> ---
->  .../devicetree/bindings/arm/mediatek.yaml          |    4 ++++
->  1 file changed, 4 insertions(+)
+On Mon, Aug 05, 2019 at 07:54:52PM +0300, Alexandru Ardelean wrote:
+> This change implements retrieving all the error counters from the PHY.
+> The PHY supports several error counters/stats. The `Mean Square Errors`
+> status values are only valie when a link is established, and shouldn't be
+> incremented. These values characterize the quality of a signal.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I think you mean accumulated, not incremented?
+
+> 
+> The rest of the error counters are self-clearing on read.
+> Most of them are reports from the Frame Checker engine that the PHY has.
+> 
+> Not retrieving the `LPI Wake Error Count Register` here, since that is used
+> by the PHY framework to check for any EEE errors. And that register is
+> self-clearing when read (as per IEEE spec).
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/net/phy/adin.c | 108 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+> 
+> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+> index a1f3456a8504..04896547dac8 100644
+> --- a/drivers/net/phy/adin.c
+> +++ b/drivers/net/phy/adin.c
+> @@ -103,6 +103,32 @@ static struct clause22_mmd_map clause22_mmd_map[] = {
+>  	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
+>  };
+>  
+> +struct adin_hw_stat {
+> +	const char *string;
+> +	u16 reg1;
+> +	u16 reg2;
+> +	bool do_not_inc;
+
+do_not_accumulate? or reverse its meaning, clear_on_read?
+
+   Andrew
