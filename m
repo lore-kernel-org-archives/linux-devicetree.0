@@ -1,50 +1,66 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 1/3] pinctrl: mvebu: Add CP110 missing pin functionality
-Date: Mon,  5 Aug 2019 12:16:05 +0200
-Message-ID: <20190805101607.29811-2-miquel.raynal@bootlin.com>
-References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
+Date: Mon, 5 Aug 2019 18:16:14 +0800
+Message-ID: <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
+References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-3-megous@megous.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190805101607.29811-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Konstantin Porotchkin <kostap@marvell.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBAEEUDVAKGQE5B5PQMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190412120730.473-3-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Konstantin Porotchkin <kostap@marvell.com>
+On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
+<linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+>
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> RTC on H6 is mostly the same as on H5 and H3. It has slight differences
+> mostly in features that are not yet supported by this driver.
+>
+> Some differences are already stated in the comments in existing code.
+> One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
+> EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
+>
+> It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
+> external low speed oscillator is working correctly.
+>
+> This patch adds support for enabling LOSC when necessary:
+>
+> - during reparenting
+> - when probing the clock
+>
+> H6 also has capacbility to automatically reparent RTC clock from
+> external crystal oscillator, to internal RC oscillator, if external
+> oscillator fails. This is enabled by default. Disable it during
+> probe.
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index 11f56de52179..7375a530c565 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -41,9 +41,11 @@
+>  /* Control register */
+>  #define SUN6I_LOSC_CTRL                                0x0000
+>  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
+> +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
 
-Add missing definition for function 0xe on CP-110 MPP-62.
-The pin function is Data Strobe for SDIO interface.
+Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
 
-Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/pinctrl/mvebu/pinctrl-armada-cp110.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The rest looks ok.
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c b/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
-index 584952b2ba47..85ade9761885 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
-@@ -597,7 +597,8 @@ static struct mvebu_mpp_mode armada_cp110_mpp_modes[] = {
- 		 MPP_FUNCTION(7,	"uart0",	"rxd"),
- 		 MPP_FUNCTION(8,	"uart2",	"rxd"),
- 		 MPP_FUNCTION(9,	"sata0",	"present_act"),
--		 MPP_FUNCTION(10,	"ge",		"mdc")),
-+		 MPP_FUNCTION(10,	"ge",		"mdc"),
-+		 MPP_FUNCTION(14,	"sdio",		"ds")),
- };
- 
- static const struct of_device_id armada_cp110_pinctrl_of_match[] = {
--- 
-2.20.1
+ChenYu
