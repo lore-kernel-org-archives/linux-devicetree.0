@@ -1,72 +1,48 @@
-Return-Path: <SRS0=uMCE=WV=onstation.org=masneyb@kernel.org>
-Date: Sun, 25 Aug 2019 16:41:55 -0400
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v5 4/5] interconnect: qcom: Add QCS404 interconnect
- provider driver
-Message-ID: <20190825204155.GA6879@onstation.org>
-References: <20190723142339.27772-1-georgi.djakov@linaro.org>
- <20190723142339.27772-5-georgi.djakov@linaro.org>
+Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:54550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbfHEOYg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Aug 2019 10:24:36 -0400
+Date: Mon, 5 Aug 2019 15:24:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: imu: st_lsm6dsx: add ism330dhcx
+ device bindings
+Message-ID: <20190805152431.5a7f1a20@archlinux>
+In-Reply-To: <0a970fdcd934c940be1af82ecf1fe2a746abcd2a.1564999807.git.lorenzo@kernel.org>
+References: <cover.1564999807.git.lorenzo@kernel.org>
+        <0a970fdcd934c940be1af82ecf1fe2a746abcd2a.1564999807.git.lorenzo@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723142339.27772-5-georgi.djakov@linaro.org>
-To: Georgi Djakov <georgi.djakov@linaro.org>, bjorn.andersson@linaro.org
-Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: lorenzo.bianconi@redhat.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Georgi and Bjorn,
+On Mon,  5 Aug 2019 12:18:44 +0200
+Lorenzo Bianconi <lorenzo@kernel.org> wrote:
 
-I'm finishing up a msm8974 interconnect driver and I used qcs404 as a
-starting point. I have a question below.
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-On Tue, Jul 23, 2019 at 05:23:38PM +0300, Georgi Djakov wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Add driver for the interconnect buses found in Qualcomm QCS404-based
-> platforms. The topology consists of three NoCs that are controlled by
-> a remote processor. This remote processor collects the aggregated
-> bandwidth for each master-slave pairs.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-
-[snip]
-
-> +enum {
-> +       QCS404_MASTER_AMPSS_M0 = 1,
-
-[snip]
-
-> +#define DEFINE_QNODE(_name, _id, _buswidth, _mas_rpm_id, _slv_rpm_id,	\
-> +		     ...)						\
-> +		static struct qcom_icc_node _name = {			\
-> +		.name = #_name,						\
-> +		.id = _id,						\
-> +		.buswidth = _buswidth,					\
-> +		.mas_rpm_id = _mas_rpm_id,				\
-> +		.slv_rpm_id = _slv_rpm_id,				\
-> +		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-> +		.links = { __VA_ARGS__ },				\
-> +	}
-> +
-> +DEFINE_QNODE(mas_apps_proc, QCS404_MASTER_AMPSS_M0, 8, 0, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
-
-[snip]
-
-> +static struct qcom_icc_node *qcs404_bimc_nodes[] = {
-> +	[MASTER_AMPSS_M0] = &mas_apps_proc,
-
-Should the id in DEFINE_QNODE() above be MASTER_AMPSS_M0 instead of
-QCS404_MASTER_AMPSS_M0?
-
-of_icc_xlate_onecell() looks up the id by the array index
-MASTER_AMPSS_M0 (1), however qnoc_probe() passes the id that's
-in struct qcom_icc_node to icc_node_create(), which is
-QCS404_MASTER_AMPSS_M0 (0). They have different values and I'm unsure
-why we can't just use the ids that are in qcom,qcs404.h and drop the
-enum above.
+Applied,
 
 Thanks,
 
-Brian
+Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+> index 92b48f242356..87407d110bb7 100644
+> --- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+> +++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>    "st,lsm6dsox"
+>    "st,lsm6dsr"
+>    "st,lsm6ds3tr-c"
+> +  "st,ism330dhcx"
+>  - reg: i2c address of the sensor / spi cs line
+>  
+>  Optional properties:
