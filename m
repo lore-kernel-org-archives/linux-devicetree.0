@@ -1,73 +1,59 @@
-From: guillaume La Roque <glaroque@baylibre.com>
-Subject: Re: [PATCH v2 3/6] arm64: dts: amlogic: g12: add temperature sensor
-Date: Mon, 5 Aug 2019 11:41:39 +0200
-Message-ID: <d702eb8b-f0b7-0b3b-9a17-1d158d7c072f@baylibre.com>
-References: <20190731153529.30159-1-glaroque@baylibre.com>
- <20190731153529.30159-4-glaroque@baylibre.com>
- <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
+From: Alexander Stein <alexander.stein@systec-electronic.com>
+Subject: Re: [PATCH v1] gpio: mpc8xxx: Add new platforms GPIO DT node
+ description
+Date: Mon, 05 Aug 2019 11:47:26 +0200
+Message-ID: <2908964.pz7DIX2Qck@ws-140106>
+References: <20190805091432.9656-1-hui.song_1@nxp.com>
+ <20190805091432.9656-2-hui.song_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190805091432.9656-2-hui.song_1@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hui Song <hui.song_1@nxp.com>
+Cc: linux-devel@linux.nxdi.nxp.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-hi Martin,
+On Monday, August 5, 2019, 11:14:32 AM CEST Hui Song wrote:
+> From: Song Hui <hui.song_1@nxp.com>
+> 
+> Update the NXP GPIO node dt-binding file for QorIQ and
+> Layerscape platforms, and add one more example with
+> ls1028a GPIO node.
+> 
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> index 69d4616..fbe6d75 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+> @@ -28,7 +28,7 @@ gpio0: gpio@1100 {
+>  Example of gpio-controller node for a ls2080a SoC:
 
+   ^^^^^^^                               ^^^^^^^
+This is an example for ls2080a...
 
-thanks for comments i will fix in v3.
+>  gpio0: gpio@2300000 {
+> -	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
+> +	compatible = "fsl,ls1028a-gpio","fsl,ls2080a-gpio", "fsl,qoriq-gpio";
 
+so I doubt there should be a ls1028a compatible here though.
 
-guillaume
+>  	reg = <0x0 0x2300000 0x0 0x10000>;
+>  	interrupts = <0 36 0x4>; /* Level high type */
+>  	gpio-controller;
 
-On 8/3/19 7:52 PM, Martin Blumenstingl wrote:
-> Hi Guillaume,
->
-> On Wed, Jul 31, 2019 at 5:36 PM Guillaume La Roque
-> <glaroque@baylibre.com> wrote:
->> Add cpu and ddr temperature sensors for G12 Socs
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> with the nit-pick below addressed:
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
->> ---
->>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 22 +++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
->> index 06e186ca41e3..7f862a3490fb 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
->> @@ -1353,6 +1353,28 @@
->>                                 };
->>                         };
->>
->> +                       cpu_temp: temperature-sensor@34800 {
->> +                               compatible = "amlogic,g12-cpu-thermal",
->> +                                            "amlogic,g12-thermal";
->> +                               reg = <0x0 0x34800 0x0 0x50>;
->> +                               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
->> +                               clocks = <&clkc CLKID_TS>;
->> +                               status = "okay";
-> I believe nodes are enabled automatically if they don't have a status property
->
->> +                               #thermal-sensor-cells = <0>;
->> +                               amlogic,ao-secure = <&sec_AO>;
->> +                       };
->> +
->> +                       ddr_temp: temperature-sensor@34c00 {
->> +                               compatible = "amlogic,g12-ddr-thermal",
->> +                                            "amlogic,g12-thermal";
->> +                               reg = <0x0 0x34c00 0x0 0x50>;
->> +                               interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
->> +                               clocks = <&clkc CLKID_TS>;
->> +                               status = "okay";
-> same here
->
->
-> Martin
+Best regards,
+Alexander
