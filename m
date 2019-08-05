@@ -1,95 +1,83 @@
-From: Ashish Kumar <ashish.kumar@nxp.com>
-Subject: RE: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Date: Mon, 5 Aug 2019 09:08:17 +0000
-Message-ID: <VI1PR04MB4015C2C9407598EFEEB4CB2D95DA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
-References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
- <1560942714-13330-2-git-send-email-Ashish.Kumar@nxp.com>
- <20190709200837.GA7806@bogus>
- <CA+EcR23hhD2=abMtNGDoW1LtXSE4qfjTy1uzU7sgrbi7W=KSbw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 2/2] ARM: dts: imx6ul-kontron-n6310: Add Kontron
+ i.MX6UL N6310 SoM and boards
+Date: Mon, 5 Aug 2019 11:11:31 +0200
+Message-ID: <CAJKOXPc347ffPmwjtNWBwurEOip+0-8xoxoAJS6cw6JP4b4w-w@mail.gmail.com>
+References: <20190729172007.3275-1-krzk@kernel.org> <20190729172007.3275-2-krzk@kernel.org>
+ <20190803154724.GS8870@X250.getinternet.no>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CA+EcR23hhD2=abMtNGDoW1LtXSE4qfjTy1uzU7sgrbi7W=KSbw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "broonie@kernel.org" <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Han Xu <xhnjupt@gmail.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Herring <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190803154724.GS8870@X250.getinternet.no>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Schrempf Frieder <frieder.schrempf@kontron.de>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Han Xu <xhnjupt@gmail.com>
-> Sent: Thursday, August 1, 2019 8:53 PM
-> To: Rob Herring <robh@kernel.org>
-> Cc: Ashish Kumar <ashish.kumar@nxp.com>; devicetree@vger.kernel.org;
-> bbrezillon@kernel.org; Kuldeep Singh <kuldeep.singh@nxp.com>;
-> broonie@kernel.org; linux-mtd@lists.infradead.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: [EXT] Re: [Patch v3 1/2] dt-bindings: spi: spi-fsl-qspi: Add ls2080a
-> compatibility string to bindings
-> 
-> Caution: EXT Email
-> 
-> On Tue, Jul 9, 2019 at 3:09 PM Rob Herring <robh@kernel.org> wrote:
+On Sat, 3 Aug 2019 at 17:47, Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Mon, Jul 29, 2019 at 07:20:07PM +0200, Krzysztof Kozlowski wrote:
+> > Add support for i.MX6UL modules from Kontron Electronics GmbH (before
+> > acquisition: Exceet Electronics) and evalkit boards based on it:
 > >
-> > On Wed, 19 Jun 2019 16:41:53 +0530, Ashish Kumar wrote:
-> > > There are 2 version of QSPI-IP, according to which controller
-> > > registers sets can be big endian or little endian.There are some
-> > > other minor changes like RX fifo depth etc.
-> > >
-> > > The big endian version uses driver compatible "fsl,ls1021a-qspi" and
-> > > little endian version uses driver compatible "fsl,ls2080a-qspi"
-> > >
-> > > Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-> > > Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
-> > > ---
-> > > v3:
-> > > Rebase to top
-> > > v2:
-> > > Convert to patch series and rebasing done on top of tree
-> > >
-> > >  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
+> > 1. N6310 SOM: i.MX6 UL System-on-Module, a 25x25 mm solderable module
+> >    (LGA pads and pin castellations) with 256 MB RAM, 1 MB NOR-Flash,
+> >    256 MB NAND and other interfaces,
+> > 2. N6310 S: evalkit, w/wo eMMC, without display,
+> > 3. N6310 S 43: evalkit with 4.3" display,
+> > 4. N6310 S 50: evalkit with 5.0" display.
 > >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Acked-by: Han Xu <han.xu@nxp.com>
-
-Hello Mark,
-
-Could you please send this patch[1] from your spi tree, It applies seamlessly on
-https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/
-
-[1]: http://patchwork.ozlabs.org/patch/1118636/
-
-Regards 
-Ashish
-> 
+> > This includes device nodes for unsupported displays (Admatec
+> > T043C004800272T2A and T070P133T0S301).
+>
+> Do not include unsupported devices.
+>
 > >
-> > ______________________________________________________
-> > Linux MTD discussion mailing list
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
-> > .infradead.org%2Fmailman%2Flistinfo%2Flinux-
-> mtd%2F&amp;data=02%7C01%7C
+> > The work is based on Exceet/Kontron source code (GPLv2) with numerous
+> > changes:
+> > 1. Reorganize files,
+> > 2. Rename Exceet -> Kontron,
+> > 3. Rename models/compatibles to match newest Kontron product naming,
+> > 4. Fix coding style errors and adjust to device tree coding guidelines,
+> > 5. Fix DTC warnings,
+> > 6. Extend compatibles so eval boards inherit the SoM compatible,
+> > 7. Use defines instead of GPIO and interrupt flag values,
+> > 8. Use proper vendor compatible for Macronix SPI NOR,
+> > 9. Sort nodes alphabetically.
 > >
-> Ashish.Kumar%40nxp.com%7Ca172f045af714e408d0a08d716942751%7C686
-> ea1d3bc
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > >
-> 2b4c6fa92cd99c5c301635%7C0%7C1%7C637002697881500159&amp;sdata=f
-> 8i1y4aa
-> > k3gPnuXM3fD1xFPp4RB7GEWZ45%2BeWPOoNSA%3D&amp;reserved=0
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> > ---
+> >
+> > Changes since v2, after Fabio's review:
+> > 1. Add "imx6ul" compatible to board name (that's what I understood from
+> >    review),
+> > 2. Add vendor/device prefix to eeprom and document the compatible,
+> > 3. Use "admatecde" as vendor compatible to avoid confusion with Admatec
+> >    AG in Switzerland (also making LCD panels),
+> > 4. Use generic names for nodes,
+> > 5. Use IRQ_TYPE_LEVEL_LOW,
+> > 6. Move iomux to the end of files,
+> > 7. Remove regulators node (include regulators in top level),
+> > 8. Remove cpu clock-frequency,
+> > 9. Other minor fixes pointed by Fabio.
+> >
+> > Changes since v1, after Frieder's review:
+> > 1. Remove unneeded license notes,
+> > 2. Add Kontron copyright (2018),
+> > 3. Rename the files/models/compatibles to new naming - N6310,
+> > 4. Remove unneeded CPU operating points override,
+> > 5. Switch regulator nodes into simple children nodes without addresses
+> >    (so not simple bus),
+> > 6. Use proper vendor compatible for Macronix SPI NOR.
+> > ---
+> >  .../devicetree/bindings/arm/fsl.yaml          |   4 +
+> >  .../devicetree/bindings/eeprom/at25.txt       |   1 +
+>
+> Please make them two separate patches.
+
+You mean split at25 change to separate patch? or split both - at25 and
+fsl bindings - to separate patches?
+
+Best regards,
+Krzysztof
