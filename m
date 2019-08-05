@@ -1,58 +1,162 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 05/10] rtc: mt6397: add compatible for mt6323
-Date: Mon, 5 Aug 2019 15:50:44 +0200
-Message-ID: <20190805135044.GH3600@piout.net>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-6-frank-w@public-files.de>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 01/16] net: phy: adin: add support for Analog Devices PHYs
+Date: Mon, 5 Aug 2019 19:54:38 +0300
+Message-ID: <20190805165453.3989-2-alexandru.ardelean@analog.com>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190729174154.4335-6-frank-w@public-files.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/07/2019 19:41:49+0200, Frank Wunderlich wrote:
-> From: Josef Friedl <josef.friedl@speed.at>
-> 
-> use mt6397 rtc driver also for mt6323
-> compatible needed because of different rtc-base/size see part 7
+This change adds support for Analog Devices Industrial Ethernet PHYs.
+Particularly the PHYs this driver adds support for:
+ * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+ * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+   Ethernet PHY
 
-I still don't think this is a good reason so I would remove that
-sentence. Also, it refers to part 7 which is an info that will not be
-available when looking at the git history.
+The 2 chips are pin & register compatible with one another. The main
+difference being that ADIN1200 doesn't operate in gigabit mode.
 
-> 
-> changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
-> 
+The chips can be operated by the Generic PHY driver as well via the
+standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+kernel as well. This assumes that configuration of the PHY has been done
+required.
 
-Changelog after the --- marker please.
+Configuration can also be done via registers, which will be implemented by
+the driver in the next changes.
 
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  drivers/rtc/rtc-mt6397.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index 9370b7fc9f81..21cd9cc8b4c7 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
-> 
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6323-rtc", },
->  	{ .compatible = "mediatek,mt6397-rtc", },
->  	{ }
->  };
-> --
-> 2.17.1
-> 
+Datasheets:
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
 
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ MAINTAINERS              |  7 +++++
+ drivers/net/phy/Kconfig  |  9 ++++++
+ drivers/net/phy/Makefile |  1 +
+ drivers/net/phy/adin.c   | 59 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 76 insertions(+)
+ create mode 100644 drivers/net/phy/adin.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ee663e0e2f2e..faf5723610c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -938,6 +938,13 @@ S:	Supported
+ F:	drivers/mux/adgs1408.c
+ F:	Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+ 
++ANALOG DEVICES INC ADIN DRIVER
++M:	Alexandru Ardelean <alexaundru.ardelean@analog.com>
++L:	netdev@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	drivers/net/phy/adin.c
++
+ ANALOG DEVICES INC ADIS DRIVER LIBRARY
+ M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
+ S:	Supported
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 206d8650ee7f..5966d3413676 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -257,6 +257,15 @@ config SFP
+ 	depends on HWMON || HWMON=n
+ 	select MDIO_I2C
+ 
++config ADIN_PHY
++	tristate "Analog Devices Industrial Ethernet PHYs"
++	help
++	  Adds support for the Analog Devices Industrial Ethernet PHYs.
++	  Currently supports the:
++	  - ADIN1200 - Robust,Industrial, Low Power 10/100 Ethernet PHY
++	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
++	    Ethernet PHY
++
+ config AMD_PHY
+ 	tristate "AMD PHYs"
+ 	---help---
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index ba07c27e4208..a03437e091f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
+ sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+ obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+ 
++obj-$(CONFIG_ADIN_PHY)		+= adin.o
+ obj-$(CONFIG_AMD_PHY)		+= amd.o
+ aquantia-objs			+= aquantia_main.o
+ ifdef CONFIG_HWMON
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+new file mode 100644
+index 000000000000..6a610d4563c3
+--- /dev/null
++++ b/drivers/net/phy/adin.c
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: GPL-2.0+
++/**
++ *  Driver for Analog Devices Industrial Ethernet PHYs
++ *
++ * Copyright 2019 Analog Devices Inc.
++ */
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/mii.h>
++#include <linux/phy.h>
++
++#define PHY_ID_ADIN1200				0x0283bc20
++#define PHY_ID_ADIN1300				0x0283bc30
++
++static int adin_config_init(struct phy_device *phydev)
++{
++	int rc;
++
++	rc = genphy_config_init(phydev);
++	if (rc < 0)
++		return rc;
++
++	return 0;
++}
++
++static struct phy_driver adin_driver[] = {
++	{
++		.phy_id		= PHY_ID_ADIN1200,
++		.name		= "ADIN1200",
++		.phy_id_mask	= 0xfffffff0,
++		.features	= PHY_BASIC_FEATURES,
++		.config_init	= adin_config_init,
++		.config_aneg	= genphy_config_aneg,
++		.read_status	= genphy_read_status,
++	},
++	{
++		.phy_id		= PHY_ID_ADIN1300,
++		.name		= "ADIN1300",
++		.phy_id_mask	= 0xfffffff0,
++		.features	= PHY_GBIT_FEATURES,
++		.config_init	= adin_config_init,
++		.config_aneg	= genphy_config_aneg,
++		.read_status	= genphy_read_status,
++	},
++};
++
++module_phy_driver(adin_driver);
++
++static struct mdio_device_id __maybe_unused adin_tbl[] = {
++	{ PHY_ID_ADIN1200, 0xfffffff0 },
++	{ PHY_ID_ADIN1300, 0xfffffff0 },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(mdio, adin_tbl);
++MODULE_DESCRIPTION("Analog Devices Industrial Ethernet PHY driver");
++MODULE_LICENSE("GPL");
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
