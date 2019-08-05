@@ -1,218 +1,660 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-Date: Mon, 5 Aug 2019 19:21:55 +0800
-Message-ID: <CAGb2v65vEK0k3grQyXzzJ0mTXNZZQxg1FPAES6x2z8ZhyhNftA@mail.gmail.com>
-References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-3-megous@megous.com>
- <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
- <20190805104529.z3mex3m2tss7lzlr@core.my.home> <CAGb2v67pcxdxjdRX_HN4133A32eA566DDtUJUKV7pqzxDtOaeg@mail.gmail.com>
- <20190805111037.76vmanzcurffpbdf@core.my.home>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: rockchip: Add support for TB-96AI
+ board
+Date: Mon, 5 Aug 2019 16:58:10 +0530
+Message-ID: <20190805112810.GA19736@mani>
+References: <20190805015755.26017-1-zhangzj@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBY5CUDVAKGQESDXKRYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190805111037.76vmanzcurffpbdf-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190805015755.26017-1-zhangzj@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Elon Zhang <zhangzj@rock-chips.com>
+Cc: heiko@sntech.de, mark.rutland@arm.com, robh+dt@kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 7:10 PM Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote=
-:
->
-> On Mon, Aug 05, 2019 at 06:54:17PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Aug 5, 2019 at 6:45 PM Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> w=
-rote:
-> > >
-> > > On Mon, Aug 05, 2019 at 06:16:14PM +0800, Chen-Yu Tsai wrote:
-> > > > On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-> > > > <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
-> > > > >
-> > > > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > > > >
-> > > > > RTC on H6 is mostly the same as on H5 and H3. It has slight diffe=
-rences
-> > > > > mostly in features that are not yet supported by this driver.
-> > > > >
-> > > > > Some differences are already stated in the comments in existing c=
-ode.
-> > > > > One other difference is that H6 has extra bit in LOSC_CTRL_REG, c=
-alled
-> > > > > EXT_LOSC_EN to enable/disable external low speed crystal oscillat=
-or.
-> > > > >
-> > > > > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check w=
-hether
-> > > > > external low speed oscillator is working correctly.
-> > > > >
-> > > > > This patch adds support for enabling LOSC when necessary:
-> > > > >
-> > > > > - during reparenting
-> > > > > - when probing the clock
-> > > > >
-> > > > > H6 also has capacbility to automatically reparent RTC clock from
-> > > > > external crystal oscillator, to internal RC oscillator, if extern=
-al
-> > > > > oscillator fails. This is enabled by default. Disable it during
-> > > > > probe.
-> > > > >
-> > > > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > > > > ---
-> > > > >  drivers/rtc/rtc-sun6i.c | 40 +++++++++++++++++++++++++++++++++++=
-+++--
-> > > > >  1 file changed, 38 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > > > > index 11f56de52179..7375a530c565 100644
-> > > > > --- a/drivers/rtc/rtc-sun6i.c
-> > > > > +++ b/drivers/rtc/rtc-sun6i.c
-> > > > > @@ -41,9 +41,11 @@
-> > > > >  /* Control register */
-> > > > >  #define SUN6I_LOSC_CTRL                                0x0000
-> > > > >  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
-> > > > > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
-> > > >
-> > > > Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
-> > > >
-> > > > The rest looks ok.
-> > >
-> > > To give you more information. This is a new thing in H6 BSP, compared
-> > > to BSPs for previous SoCs (H5/H3).
-> > >
-> > >  20 #define REG_CLK32K_AUTO_SWT_EN                  BIT(14)
-> > >  21 #define REG_CLK32K_AUTO_SWT_BYPASS              BIT(15)
-> > >
-> > > Init sequence changed in H6 BSP to:
-> > >
-> > > 646         /*
-> > > 647          * Step1: select RTC clock source
-> > > 648          */
-> > > 649         tmp_data =3D readl(chip->base + SUNXI_LOSC_CTRL);
-> > > 650         tmp_data &=3D (~REG_CLK32K_AUTO_SWT_EN);
-> > > 651
-> > > 652         /* Disable auto switch function */
-> > > 653         tmp_data |=3D REG_CLK32K_AUTO_SWT_BYPASS;
-> > > 654         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-> > > 655
-> > > 656         tmp_data =3D readl(chip->base + SUNXI_LOSC_CTRL);
-> > > 657         tmp_data |=3D (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-> > > 658         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-> > > 659
-> > > 660         /* We need to set GSM after change clock source */
-> > > 661         udelay(10);
-> > > 662         tmp_data =3D readl(chip->base + SUNXI_LOSC_CTRL);
-> > > 663         tmp_data |=3D (EXT_LOSC_GSM | REG_LOSCCTRL_MAGIC);
-> > > 664         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
-> > > 665
-> >
-> > I don't have this in my H6 BSPs. One is H6 Lichee v1.1 downloaded from =
-Pine64.
-> > The link was from linux-sunxi wiki's H6 page.
-> >
-> > The other is a 4.9 kernel tree, which I believe is from Allwinner's git=
-hub:
-> >
-> >     https://github.com/Allwinner-Homlet/H6-BSP4.9-linux
->
-> Interesting. :) I have the BSP I was using saved here:
->
-> https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dh6-4.9-bsp#=
-n649
->
-> It's based of 4.9.119
->
-> https://megous.com/git/linux/log/?h=3Dh6-4.9-bsp
->
-> I don't remember where I found it. But I imported it fairly recently, and
-> the code you pointed to looks like an older version that I can found in s=
-ome
-> beta H6 BSP, that I imported way earlier and is based on 4.9.56:
->
-> https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dlinux-h6
-> https://megous.com/git/linux/log/?h=3Dlinux-h6
->
-> Hmm, archeology. :)
+Hi Elon,
 
-That's good enough for me. I suppose if we do have any more doubts we could
-ask them directly.
+Thanks for the v2. Still the DT needs to be cleaned up a bit. I have tested this
+patch on TB96-AI SOM/Carrier board and found that the USB ports are not working
+at all! Do we need to change any switch settings?
 
+Comments are inline.
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Mon, Aug 05, 2019 at 09:57:55AM +0800, Elon Zhang wrote:
+> Add devicetree support for RK3399Pro TB-96AI board, one of
+> the 96Boards family.
+> 
+> The TB-96AI board is a 96Boards Compute SOM design, launched
+> by Linaro, Rockchip and Beiqicloud.
+> 
+> More information can be obtained from the following websites:
+> 1.https://www.96boards.org/product/tb-96ai/
+> 2.http://t.rock-chips.com/
+> 3.http://www.beiqicloud.com/
+> 
+> This patch add basic node for the board and support booting up
+> to Fedora.
+> 
+> Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
+> ---
+> changes since v1:
+> - remove needless node
+> - using a standard LED formats for 96Boards
+> 
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399pro-tb-96ai.dts   | 560 ++++++++++++++++++
+>  2 files changed, 561 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 5f2687acbf94..3d6c8d4363b5 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -27,3 +27,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-tb-96ai.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
+> new file mode 100644
+> index 000000000000..767b37b854ba
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
+> @@ -0,0 +1,560 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399pro.dtsi"
+> +#include "rk3399-opp.dtsi"
+> +
+> +/ {
+> +	compatible = "beiqi,rk3399pro-tb-96ai", "rockchip,rk3399pro";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	xin32k: xin32k {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "xin32k";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	vcc5v0_sys: vccsys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	leds {
 
-> > > For older BSPs, the init sequence looked like this:
-> > >
-> > > 482         /*
-> > > 483          * Step1: select RTC clock source
-> > > 484          */
-> > > 485         tmp_data =3D sunxi_rtc_read(SUNXI_LOSC_CTRL_REG);
-> > > 486         tmp_data &=3D (~REG_CLK32K_AUTO_SWT_EN);
-> > > 487         tmp_data |=3D (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
-> > > 488         tmp_data |=3D (EXT_LOSC_GSM);
-> > > 489         sunxi_rtc_write(tmp_data, SUNXI_LOSC_CTRL_REG);
-> > > 490
-> > >
-> > > EXT_LOSC_GSM has values 4 values from low to high, and I guess it con=
-figures
-> > > gain for the oscillator's amplifier in the feedback loop of the circu=
-it.
-> > >
-> > > So the new code, for some reason changed from single write to sequenc=
-e
-> > > of individual writes/config steps:
-> > >
-> > > 1) disable auto-switch and enable auto-switch bypass
-> > > 2) select RTC clock source (to LOSC)
-> > >   (wait)
-> >
-> > Maybe it's possible to glitch if these two are combined?
->
-> That's what I thought too. Or the programmer thought so, and was just
-> programming defensively, and there's no real problem in the practice.
->
-> But that specific delay() seems like someone trying to solve a real issue=
-. Of
-> course there's no knowing if it was on H6 or on some other SoC.
+Still the LEDs are not defined as per the format I shared before...
 
-It's probably for the clock waveform to stabilize. Why they do it _after_
-switching to the clock is weird though.
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&work_led1>,<&work_led2>,<&work_led3>;
+> +
+> +		work_led1 {
+> +			gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+> +			label = "system_work_led1";
+> +			retain-state-suspended;
+> +		};
+> +
+> +		work_led2 {
+> +			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
+> +			label = "system_work_led2";
+> +			retain-state-suspended;
+> +		};
+> +
+> +		work_led3 {
+> +			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> +			label = "system_work_led3";
+> +			retain-state-suspended;
+> +		};
+> +	};
+> +};
+> +
+> +&cpu_l0 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_l>;
+> +};
+> +
+> +&cpu_b0 {
+> +	cpu-supply = <&vdd_cpu_b>;
+> +};
+> +
+> +&cpu_b1 {
+> +	cpu-supply = <&vdd_cpu_b>;
+> +};
+> +
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	i2c-scl-rising-time-ns = <180>;
+> +	i2c-scl-falling-time-ns = <30>;
+> +	clock-frequency = <400000>;
+> +
+> +	rk809: pmic@20 {
+> +		compatible = "rockchip,rk809";
+> +		reg = <0x20>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <RK_PC2 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names = "default", "pmic-sleep",
+> +				"pmic-power-off", "pmic-reset";
 
-> regards,
->         o.
->
-> >
-> > > 3) configure gain on the LOSC
-> > >
-> > > regards,
-> > >         o.
-> > >
-> > > > ChenYu
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Gr=
-oups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, sen=
-d an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> > > To view this discussion on the web, visit https://groups.google.com/d=
-/msgid/linux-sunxi/20190805104529.z3mex3m2tss7lzlr%40core.my.home.
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> To view this discussion on the web, visit https://groups.google.com/d/msg=
-id/linux-sunxi/20190805111037.76vmanzcurffpbdf%40core.my.home.
+Does these pinctrl configs useful other than default?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/CAGb2v65vEK0k3grQyXzzJ0mTXNZZQxg1FPAES6x2z8ZhyhNftA%40mail.gma=
-il.com.
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		pinctrl-1 = <&soc_slppin_slp>, <&rk809_slppin_slp>;
+> +		pinctrl-2 = <&soc_slppin_gpio>, <&rk809_slppin_pwrdn>;
+> +		pinctrl-3 = <&soc_slppin_gpio>,<&rk809_slppin_null>;
+> +		rockchip,system-power-controller;
+> +		pmic-reset-func = <1>;
+> +		wakeup-source;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "rk808-clkout1", "rk808-clkout2";
+> +
+> +		vcc1-supply = <&vcc5v0_sys>;
+> +		vcc2-supply = <&vcc5v0_sys>;
+> +		vcc3-supply = <&vcc5v0_sys>;
+> +		vcc4-supply = <&vcc5v0_sys>;
+> +		vcc5-supply = <&vcc_buck5>;
+> +		vcc6-supply = <&vcc_buck5>;
+> +		vcc7-supply = <&vcc3v3_sys>;
+> +		vcc8-supply = <&vcc3v3_sys>;
+> +		vcc9-supply = <&vcc5v0_sys>;
+> +
+> +		pwrkey {
+> +			status = "okay";
+
+No compatible needed?
+
+> +		};
+> +
+> +		rtc {
+> +			status = "okay";
+
+No compatible needed?
+
+> +		};
+> +
+> +		pinctrl_rk8xx: pinctrl_rk8xx {
+
+Mainline MFD driver has no pinctrl support for RK809.
+
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +
+> +			rk809_slppin_null: rk809_slppin_null {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun0";
+> +			};
+> +
+> +			rk809_slppin_slp: rk809_slppin_slp {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun1";
+> +			};
+> +
+> +			rk809_slppin_pwrdn: rk809_slppin_pwrdn {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun2";
+> +			};
+> +
+> +			rk809_slppin_rst: rk809_slppin_rst {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun3";
+> +			};
+> +		};
+> +
+> +		regulators {
+> +			vdd_center: DCDC_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-name = "vdd_center";
+
+Please match the regulator names with schematic.
+
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <900000>;
+> +				};
+> +			};
+> +
+> +			vdd_cpu_l: DCDC_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-name = "vdd_cpu_l";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc_ddr";
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc3v3_sys: DCDC_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-name = "vcc3v3_sys";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_buck5: DCDC_REG5 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <2200000>;
+> +				regulator-max-microvolt = <2200000>;
+> +				regulator-name = "vcc_buck5";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <2200000>;
+> +				};
+> +			};
+> +
+> +			vcca_0v9: LDO_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-name = "vcca_0v9";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v8: LDO_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-name = "vcc_1v8";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc0v9_soc: LDO_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +
+> +				regulator-name = "vcc0v9_soc";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <900000>;
+> +				};
+> +			};
+> +
+> +			vcca_1v8: LDO_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-name = "vcca_1v8";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd1v5_dvp: LDO_REG5 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +
+> +				regulator-name = "vdd1v5_dvp";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v5: LDO_REG6 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +
+> +				regulator-name = "vcc_1v5";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_3v0: LDO_REG7 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +
+> +				regulator-name = "vcc_3v0";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vccio_sd: LDO_REG8 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +
+> +				regulator-name = "vccio_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_sd: LDO_REG9 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +
+> +				regulator-name = "vcc_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc5v0_usb: SWITCH_REG1 {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5000000>;
+> +
+> +				regulator-name = "vcc5v0_usb";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vccio_3v3: SWITCH_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +
+> +				regulator-name = "vccio_3v3";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vdd_cpu_b: regulator@1c {
+> +		compatible = "fcs,fan53555";
+> +		reg = <0x1c>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +		pinctrl-0 = <&vsel1_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+> +		regulator-name = "vdd_cpu_b";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <2300>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-initial-state = <3>;
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator@10 {
+> +		compatible = "fcs,fan53555";
+> +		status = "okay";
+> +		reg = <0x10>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +		pinctrl-0 = <&vsel2_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <735000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-ramp-delay = <2300>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c8 {
+> +	status = "okay";
+> +	i2c-scl-rising-time-ns = <345>;
+> +	i2c-scl-falling-time-ns = <11>;
+> +	clock-frequency = <100000>;
+> +};
+> +
+> +&io_domains {
+> +	status = "okay";
+> +	bt656-supply = <&vcca_1v8>; /* APIO2_VDD */
+> +	audio-supply = <&vcca_1v8>; /* APIO5_VDD */
+> +	sdmmc-supply = <&vccio_sd>; /* SDMMC0_VDD */
+> +	gpio1830-supply = <&vcc_1v8>; /* APIO4_VDD */
+> +};
+> +
+> +&pinctrl {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&npu_ref_clk>;
+> +
+> +	leds {
+> +		work_led1: work_led1 {
+> +			rockchip,pins =
+> +				<2 5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		work_led2: work_led2 {
+> +			rockchip,pins =
+> +				<2 4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		work_led3: work_led3 {
+> +			rockchip,pins =
+> +				<2 3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	npu_clk {
+> +		npu_ref_clk: npu-ref-clk {
+> +			rockchip,pins =
+> +				<0 RK_PA2 1 &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	pmic {
+> +		pmic_int_l: pmic-int-l {
+> +			rockchip,pins =
+> +				<1 RK_PC2 0 &pcfg_pull_up>;
+> +		};
+> +
+> +		soc_slppin_gpio: soc-slppin-gpio {
+> +			rockchip,pins =
+> +				<1 RK_PA5 0 &pcfg_output_low>;
+> +		};
+> +
+> +		soc_slppin_slp: soc-slppin-slp {
+> +			rockchip,pins =
+> +				<1 RK_PA5 1 &pcfg_pull_down>;
+> +		};
+> +
+> +		vsel1_gpio: vsel1-gpio {
+> +			rockchip,pins =
+> +				<1 RK_PC1 0 &pcfg_pull_down>;
+> +		};
+> +
+> +		vsel2_gpio: vsel2-gpio {
+> +			rockchip,pins =
+> +				<1 RK_PB6 0 &pcfg_pull_down>;
+> +		};
+> +	};
+> +
+> +	usb3 {
+> +		usb3_host_en: usb3-host-en {
+> +			rockchip,pins =
+> +				<2 RK_PA2 RK_FUNC_GPIO &pcfg_output_high>;
+> +		};
+> +	};
+> +};
+> +
+> +&pmu_io_domains {
+> +	status = "okay";
+> +	pmu1830-supply = <&vcc_1v8>;
+> +};
+> +
+> +&pwm0 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	status = "okay";
+> +};
+> +
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vcc_1v8>;
+> +};
+> +
+> +&sdhci {
+> +	bus-width = <8>;
+> +	mmc-hs400-1_8v;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	mmc-hs400-enhanced-strobe;
+> +	status = "okay";
+> +};
+> +
+> +&tcphy1 {
+
+No tcphy0? I can see this used in schematics.
+
+> +	status = "okay";
+> +};
+> +
+> +&tsadc {
+> +	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+> +	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+> +	status = "okay";
+> +};
+> +
+> +&u2phy1 {
+
+No u2phy0?
+
+> +	status = "okay";
+> +
+> +	u2phy1_otg: otg-port {
+> +		status = "okay";
+> +	};
+> +
+> +	u2phy1_host: host-port {
+> +		phy-supply = <&vcc5v0_usb>;
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_xfer &uart0_cts>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd3_1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&usb3_host_en>;
+> +};
+> +
+> +&usbdrd_dwc3_0 {
+
+No usbdrd3_0?
+
+Thanks,
+Mani
+
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd_dwc3_1 {
+> +	snps,dis-u3-autosuspend-quirk;
+> +	status = "okay";
+> +};
+> +
+> -- 
+> 2.17.1
+> 
+> 
+> 
