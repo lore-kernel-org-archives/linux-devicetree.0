@@ -1,11 +1,13 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFCv2 0/9] dt-bindings: first tentative of conversion to yaml format
-Date: Mon,  5 Aug 2019 14:03:11 +0200
-Message-ID: <20190805120320.32282-1-narmstrong@baylibre.com>
+Subject: [RFCv2 1/9] dt-bindings: mailbox: meson-mhu: convert to yaml
+Date: Mon,  5 Aug 2019 14:03:12 +0200
+Message-ID: <20190805120320.32282-2-narmstrong@baylibre.com>
+References: <20190805120320.32282-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190805120320.32282-1-narmstrong@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,74 +18,118 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, jassisinghbrar@gmail.com, linux-spi@vger.kernel.org, linux-crypto@vger.kernel.org, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, kishon@ti.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a first tentative to convert some of the simplest Amlogic
-dt-bindings to the yaml format.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic MHU controller over to a YAML schemas.
 
-All have been tested using :
-$ make ARCH=arm64 dtbs_check
-
-Issues with the amlogic arm64 DTs has already been identified thanks
-to the validation scripts. The DT fixes will be pushed once these yaml
-bindings are acked.
-
-Changes since rfc v1:
-- Fixed bindings according to Rob's comments
-- Added commit log
-- renamed yaml files using amlogic prefix
-
-Neil Armstrong (9):
-  dt-bindings: mailbox: meson-mhu: convert to yaml
-  dt-bindings: rng: amlogic,meson-rng: convert to yaml
-  dt-bindings: spi: meson: convert to yaml
-  dt-bindings: reset: amlogic,meson-reset: convert to yaml
-  dt-bindings: arm: amlogic: amlogic,meson-gx-ao-secure: convert to yaml
-  dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-  dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to yaml
-  dt-bindings: serial: meson-uart: convert to yaml
-  dt-bindings: watchdog: meson-gxbb-wdt: convert to yaml
-
- .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 -------
- .../amlogic/amlogic,meson-gx-ao-secure.yaml   | 52 +++++++++++++
- .../mailbox/amlogic,meson-gxbb-mhu.yaml       | 53 ++++++++++++++
- .../devicetree/bindings/mailbox/meson-mhu.txt | 34 ---------
- .../phy/amlogic,meson-g12a-usb2-phy.yaml      | 63 ++++++++++++++++
- .../phy/amlogic,meson-g12a-usb3-pcie-phy.yaml | 57 +++++++++++++++
- .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 ------
- .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 ------
- .../bindings/reset/amlogic,meson-reset.txt    | 19 -----
- .../bindings/reset/amlogic,meson-reset.yaml   | 37 ++++++++++
- .../bindings/rng/amlogic,meson-rng.txt        | 21 ------
- .../bindings/rng/amlogic,meson-rng.yaml       | 37 ++++++++++
- .../bindings/serial/amlogic,meson-uart.txt    | 38 ----------
- .../bindings/serial/amlogic,meson-uart.yaml   | 73 +++++++++++++++++++
- .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 67 +++++++++++++++++
- .../bindings/spi/amlogic,meson6-spifc.yaml    | 53 ++++++++++++++
- .../devicetree/bindings/spi/spi-meson.txt     | 55 --------------
- .../watchdog/amlogic,meson-gxbb-wdt.yaml      | 37 ++++++++++
- .../bindings/watchdog/meson-gxbb-wdt.txt      | 16 ----
- 19 files changed, 529 insertions(+), 255 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../mailbox/amlogic,meson-gxbb-mhu.yaml       | 53 +++++++++++++++++++
+ .../devicetree/bindings/mailbox/meson-mhu.txt | 34 ------------
+ 2 files changed, 53 insertions(+), 34 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
  delete mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
- create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
- delete mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
- create mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
 
+diff --git a/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml b/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+new file mode 100644
+index 000000000000..2536a0082cff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/amlogic,meson-gxbb-mhu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson Message-Handling-Unit Controller
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |
++  The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
++  that has 3 independent channels/links to communicate with remote processor(s).
++  MHU links are hardwired on a platform. A link raises interrupt for any
++  received data. However, there is no specified way of knowing if the sent
++  data has been read by the remote. This driver assumes the sender polls
++  STAT register and the remote clears it after having read the data.
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson-gxbb-mhu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 3
++    maxItems: 3
++    description:
++      Contains the interrupt information corresponding to each of the 3 links
++      of MHU.
++
++  "#mbox-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++
++examples:
++  - |
++    mailbox@c883c404 {
++          compatible = "amlogic,meson-gxbb-mhu";
++          reg = <0xc883c404 0x4c>;
++          interrupts = <208>, <209>, <210>;
++          #mbox-cells = <1>;
++    };
++
+diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
+deleted file mode 100644
+index a530310772b9..000000000000
+--- a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
++++ /dev/null
+@@ -1,34 +0,0 @@
+-Amlogic Meson MHU Mailbox Driver
+-================================
+-
+-The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
+-that has 3 independent channels/links to communicate with remote processor(s).
+-MHU links are hardwired on a platform. A link raises interrupt for any
+-received data. However, there is no specified way of knowing if the sent
+-data has been read by the remote. This driver assumes the sender polls
+-STAT register and the remote clears it after having read the data.
+-
+-Mailbox Device Node:
+-====================
+-
+-Required properties:
+---------------------
+-- compatible:		Shall be "amlogic,meson-gxbb-mhu"
+-- reg:			Contains the mailbox register address range (base
+-			address and length)
+-- #mbox-cells		Shall be 1 - the index of the channel needed.
+-- interrupts:		Contains the interrupt information corresponding to
+-			each of the 2 links of MHU.
+-
+-Example:
+---------
+-
+-	mailbox: mailbox@c883c404 {
+-		#mbox-cells = <1>;
+-		compatible = "amlogic,meson-gxbb-mhu";
+-		reg = <0 0xc883c404 0 0x4c>;
+-		interrupts = <0 208 IRQ_TYPE_EDGE_RISING>,
+-			     <0 209 IRQ_TYPE_EDGE_RISING>,
+-			     <0 210 IRQ_TYPE_EDGE_RISING>;
+-		#mbox-cells = <1>;
+-	};
 -- 
 2.22.0
