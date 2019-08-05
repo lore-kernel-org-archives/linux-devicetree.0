@@ -1,84 +1,36 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v2 07/20] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-Date: Mon, 5 Aug 2019 07:18:59 +0000
-Message-ID: <90509acd1da1aa85699952e012fa1034255f1a06.camel@toradex.com>
-References: <20190731123750.25670-1-philippe.schenker@toradex.com>
-         <20190731123750.25670-8-philippe.schenker@toradex.com>
-         <CAOMZO5B5HnqpLrDjyGtqSQpVXmcoZuGLvCzKVUhwLb-_ZO_Xog@mail.gmail.com>
-         <723f191c5893984c8fbe711163524dc7ebf09a5b.camel@toradex.com>
-         <de6bec64012876c07267024cd4b2d2d5@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Hui Song <hui.song_1@nxp.com>
+Subject: [PATCH v1] gpio: mpc8xxx: Add new platforms GPIO DT node description
+Date: Mon,  5 Aug 2019 15:10:24 +0800
+Message-ID: <20190805071024.7992-1-hui.song_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <de6bec64012876c07267024cd4b2d2d5@agner.ch>
-Content-Language: en-US
-Content-ID: <1D6770331469E54389A2882CE1F4A824@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "stefan@agner.ch" <stefan@agner.ch>
-Cc: Max Krummenacher <max.krummenacher@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stefan Agner <stefan.agner@toradex.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTAyIGF0IDEwOjUxICswMjAwLCBTdGVmYW4gQWduZXIgd3JvdGU6DQo+
-IE9uIDIwMTktMDctMzEgMTY6NTIsIFBoaWxpcHBlIFNjaGVua2VyIHdyb3RlOg0KPiA+IE9uIFdl
-ZCwgMjAxOS0wNy0zMSBhdCAwOTo1NiAtMDMwMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4gPiA+
-IE9uIFdlZCwgSnVsIDMxLCAyMDE5IGF0IDk6MzggQU0gUGhpbGlwcGUgU2NoZW5rZXINCj4gPiA+
-IDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4gd3JvdGU6DQo+ID4gPiA+IEZyb206IFN0
-ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFkZXguY29tPg0KPiA+ID4gPiANCj4gPiA+ID4g
-QWRkIHBpbm11eGluZyBhbmQgZG8gbm90IHNwZWNpZnkgdm9sdGFnZSByZXN0cmljdGlvbnMgaW4g
-dGhlDQo+ID4gPiA+IG1vZHVsZSBsZXZlbCBkZXZpY2UgdHJlZS4NCj4gPiA+IA0KPiA+ID4gSXQg
-d291bGQgYmUgbmljZSB0byBleHBsYWluIHRoZSByZWFzb24gZm9yIGRvaW5nIHRoaXMuDQo+ID4g
-DQo+ID4gVGhpcyBjb21taXQgaXMgaW4gcHJlcGFyYXRpb24gb2YgYW5vdGhlciBwYXRjaCB0aGF0
-IGRpZG4ndCBtYWRlIGludG8gdGhpcw0KPiA+IHBhdGNoc2V0IChkb3duc3RyZWFtIHN0dWZmIGlu
-IHRoZXJlKS4gQnV0IEkgd2lsbCBkbyBhbm90aGVyIHBhdGNoIG9uIHRvcA0KPiA+IHRoYXQNCj4g
-PiB3aWxsIHVzZSB0aGlzIHBhdGNoIGhlcmUuIFRoYXQgc2hvdWxkIGFueXdheSBiZSBpbiBtYWlu
-bGluZS4NCj4gDQo+IEkgZ3Vlc3Mgd2hhdCBGYWJpbyBtZWFudCBoZXJlIGlzIGV4cGxhaW4gdGhp
-cyBwYXRjaC4NCj4gDQo+IFRoZSBjb21taXQgbWVzc2FnZSByZWFsbHkgY291bGQgYmUgaW1wcm92
-ZWQsIGUuZy46DQo+IA0KPiBBZGQgcGlubXV4aW5nIGFuZCBkbyBub3Qgc3BlY2lmeSB2b2x0YWdl
-IHJlc3RyaWN0aW9ucyBmb3IgdGhlIHVzZGhjDQo+IGluc3RhbmNlDQo+IGF2YWlsYWJsZSBvbiB0
-aGUgbW9kdWxlcyBlZGdlIGNvbm5lY3Rvci4gVGhpcyBhbGxvd3MgdG8gdXNlIFNELWNhcmRzDQo+
-IHdpdGgNCj4gaGlnaGVyIHRyYW5zZmVyIG1vZGVzIGlmIHN1cHBvcnRlZCBieSB0aGUgY2Fycmll
-ciBib2FyZC4NCj4gDQo+IC0tDQo+IFN0ZWZhbg0KDQpBaCwgc29ycnkgRmFiaW8uIEkgaW5kZWVk
-IHVuZGVyc3Rvb2QgeW91IHdyb25nIGFuZCB0aGFua3MgU3RlZmFuIGZvciBjbGFyaWZ5aW5nLg0K
-SSBoYXZlIHRoZSBuZXcgbWVzc2FnZSBpbiBmb3IgdjMuDQoNClBoaWxpcHBlDQoNCj4gDQo+ID4g
-UGhpbGlwcGUNCj4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVyIDxzdGVm
-YW4uYWduZXJAdG9yYWRleC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNj
-aGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4g
-PiA+IA0KPiA+ID4gPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+ID4gPiA+IA0KPiA+ID4gPiAgYXJj
-aC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kgfCAyMyArKysrKysrKysrKysrKysrKysr
-KysrLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkNCj4gPiA+ID4gDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg3LWNvbGlicmkuZHRzaQ0KPiA+ID4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctDQo+ID4g
-PiA+IGNvbGlicmkuZHRzaQ0KPiA+ID4gPiBpbmRleCAxNmQxYTFlZDFhZmYuLjY3ZjVlMGM4N2Zk
-YyAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0
-c2kNCj4gPiA+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCj4g
-PiA+ID4gQEAgLTMyNiw3ICszMjYsNiBAQA0KPiA+ID4gPiAgJnVzZGhjMSB7DQo+ID4gPiA+ICAg
-ICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiA+ID4gICAgICAgICBwaW5jdHJs
-LTAgPSA8JnBpbmN0cmxfdXNkaGMxICZwaW5jdHJsX2NkX3VzZGhjMT47DQo+ID4gPiA+IC0gICAg
-ICAgbm8tMS04LXY7DQo+ID4gPiA+ICAgICAgICAgY2QtZ3Bpb3MgPSA8JmdwaW8xIDAgR1BJT19B
-Q1RJVkVfTE9XPjsNCj4gPiA+ID4gICAgICAgICBkaXNhYmxlLXdwOw0KPiA+ID4gPiAgICAgICAg
-IHZxbW1jLXN1cHBseSA9IDwmcmVnX0xETzI+Ow0KPiA+ID4gPiBAQCAtNjcxLDYgKzY3MCwyOCBA
-QA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgPjsNCj4gPiA+ID4gICAgICAgICB9Ow0KPiA+ID4g
-PiANCj4gPiA+ID4gKyAgICAgICBwaW5jdHJsX3VzZGhjMV8xMDBtaHo6IHVzZGhjMWdycF8xMDBt
-aHogew0KPiA+ID4gPiArICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ID4gPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIE1YN0RfUEFEX1NEMV9DTURfX1NEMV9DTUQgICAgICAgMHg1YQ0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xL
-ICAgICAgIDB4MWENCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0Qx
-X0RBVEEwX19TRDFfREFUQTAgICAweDVhDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IE1YN0RfUEFEX1NEMV9EQVRBMV9fU0QxX0RBVEExICAgMHg1YQ0KPiA+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfREFUQTJfX1NEMV9EQVRBMiAgIDB4NWENCj4gPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0QxX0RBVEEzX19TRDFfREFUQTMg
-ICAweDVhDQo+ID4gPiA+ICsgICAgICAgICAgICAgICA+Ow0KPiA+ID4gPiArICAgICAgIH07DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBwaW5jdHJsX3VzZGhjMV8yMDBtaHo6IHVzZGhjMWdy
-cF8yMDBtaHogew0KPiA+ID4gPiArICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ID4gPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIE1YN0RfUEFEX1NEMV9DTURfX1NEMV9DTUQgICAgICAg
-MHg1Yg0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ0xLX19T
-RDFfQ0xLICAgICAgIDB4MWINCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9Q
-QURfU0QxX0RBVEEwX19TRDFfREFUQTAgICAweDViDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIE1YN0RfUEFEX1NEMV9EQVRBMV9fU0QxX0RBVEExICAgMHg1Yg0KPiA+ID4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfREFUQTJfX1NEMV9EQVRBMiAgIDB4NWIN
-Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0QxX0RBVEEzX19TRDFf
-REFUQTMgICAweDViDQo+ID4gPiA+ICsgICAgICAgICAgICAgICA+Ow0KPiA+ID4gPiArICAgICAg
-IH07DQo+ID4gPiANCj4gPiA+IFlvdSBhZGQgdGhlIGVudHJpZXMgZm9yIDEwME1IeiBhbmQgMjAw
-TUh6LCBidXQgSSBkb24ndCBzZWUgdGhlbSBiZWluZw0KPiA+ID4gcmVmZXJlbmNlZCBhbnl3aGVy
-ZS4NCg==
+From: Song Hui <hui.song_1@nxp.com>
+
+Update the NXP GPIO node dt-binding file for QorIQ and
+Layerscape platforms, and add one more example with
+ls1028a GPIO node.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+index 69d4616..fbe6d75 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+@@ -28,7 +28,7 @@ gpio0: gpio@1100 {
+ Example of gpio-controller node for a ls2080a SoC:
+ 
+ gpio0: gpio@2300000 {
+-	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
++	compatible = "fsl,ls1028a-gpio","fsl,ls2080a-gpio", "fsl,qoriq-gpio";
+ 	reg = <0x0 0x2300000 0x0 0x10000>;
+ 	interrupts = <0 36 0x4>; /* Level high type */
+ 	gpio-controller;
+-- 
+2.9.5
