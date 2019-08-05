@@ -1,62 +1,36 @@
-Return-Path: <SRS0=kszM=WE=ragnatech.se=niklas.soderlund+renesas@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v3] dt-bindings: rcar-{csi2,vin}: Rename bindings documentation files
-Date: Thu,  8 Aug 2019 03:03:30 +0200
-Message-Id: <20190808010330.19515-1-niklas.soderlund+renesas@ragnatech.se>
+Return-Path: <SRS0=xLqw=WB=bootlin.com=miquel.raynal@kernel.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5/8] clk: mvebu: ap806: be more explicit on what SaR is
+Date: Mon,  5 Aug 2019 12:03:07 +0200
+Message-Id: <20190805100310.29048-6-miquel.raynal@bootlin.com>
+In-Reply-To: <20190805100310.29048-1-miquel.raynal@bootlin.com>
+References: <20190805100310.29048-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Geert Uytterhoeven <geert+renesas@glider.be>, Ulrich Hecht <uli+renesas@fpond.eu>, Simon Horman <horms+renesas@verge.net.au>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Marcin Wojtas <mw@semihalf.com>, Stefan Chulski <stefanc@marvell.com>, Yan Markman <ymarkman@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Renesas media binding documentation files uses a naming schema of
-'renesas,<module>.txt'. Rename VIN and CSI-2 files to match this
-pattern.
+"SaR" means Sample at Reset. DIP switches can be changed on the board,
+their states at reset time is available through a register read.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- .../media/{renesas,rcar-csi2.txt => renesas,csi2.txt}         | 0
- .../bindings/media/{rcar_vin.txt => renesas,vin.txt}          | 0
- MAINTAINERS                                                   | 4 ++--
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/media/{renesas,rcar-csi2.txt => renesas,csi2.txt} (100%)
- rename Documentation/devicetree/bindings/media/{rcar_vin.txt => renesas,vin.txt} (100%)
+ drivers/clk/mvebu/ap806-system-controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
----
-
-Hi Geert,
-
-Would you be willing to take this patch in your renesas tree? There 
-seems to be a lack of interest in it :-(
-
-// Niklas
-
-diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,csi2.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-rename to Documentation/devicetree/bindings/media/renesas,csi2.txt
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/renesas,vin.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/media/rcar_vin.txt
-rename to Documentation/devicetree/bindings/media/renesas,vin.txt
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3012e33e59465f4c..60bd9b419ee1f635 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9801,8 +9801,8 @@ L:	linux-media@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Supported
--F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
--F:	Documentation/devicetree/bindings/media/rcar_vin.txt
-+F:	Documentation/devicetree/bindings/media/renesas,csi2.txt
-+F:	Documentation/devicetree/bindings/media/renesas,vin.txt
- F:	drivers/media/platform/rcar-vin/
+diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
+index 73ba8fd7860f..2cf874f01394 100644
+--- a/drivers/clk/mvebu/ap806-system-controller.c
++++ b/drivers/clk/mvebu/ap806-system-controller.c
+@@ -89,7 +89,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
+ 		cpuclk_freq = 600;
+ 		break;
+ 	default:
+-		dev_err(dev, "invalid SAR value\n");
++		dev_err(dev, "invalid Sample at Reset value\n");
+ 		return -EINVAL;
+ 	}
  
- MEDIA DRIVERS FOR RENESAS - VSP1
 -- 
-2.22.0
+2.20.1
