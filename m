@@ -1,76 +1,94 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH/RFC 04/12] dt-bindings: display: Add bindings for
- Advantech IDK-2121WR
-Date: Mon, 5 Aug 2019 09:04:13 +0000
-Message-ID: <TY1PR01MB17704B1C61D4746CA9C58367C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-5-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802080332.GE5008@pendragon.ideasonboard.com>
+From: Ashish Kumar <ashish.kumar@nxp.com>
+Subject: RE: [EXT] Re: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add
+ bindings of ls1088a and ls1012a
+Date: Mon, 5 Aug 2019 09:07:47 +0000
+Message-ID: <VI1PR04MB401579932CF0E7D4AE80E0C995DA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+References: <1560942714-13330-1-git-send-email-Ashish.Kumar@nxp.com>
+ <1560942714-13330-3-git-send-email-Ashish.Kumar@nxp.com>
+ <20190709200857.GA8477@bogus>
+ <CA+EcR20ui8Liot+PtzdU6CJb5WzLDHS0Xc7VR7qGAOpD5=ArNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802080332.GE5008@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CA+EcR20ui8Liot+PtzdU6CJb5WzLDHS0Xc7VR7qGAOpD5=ArNQ@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "broonie@kernel.org" <broonie@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Han Xu <xhnjupt@gmail.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Rob Herring <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
-dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
-dDogMDIgQXVndXN0IDIwMTkgMDk6MDQNCj4gU3ViamVjdDogUmU6IFtQQVRDSC9SRkMgMDQvMTJd
-IGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBBZGQgYmluZGluZ3MgZm9yIEFkdmFudGVjaCBJREstMjEy
-MVdSDQo+IA0KPiBIaSBGYWJyaXppbywNCj4gDQo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLg0K
-PiANCj4gT24gRnJpLCBBdWcgMDIsIDIwMTkgYXQgMDg6MzQ6MDFBTSArMDEwMCwgRmFicml6aW8g
-Q2FzdHJvIHdyb3RlOg0KPiA+IFRoaXMgcGFuZWwgaXMgaGFuZGxlZCB0aHJvdWdoIHRoZSBnZW5l
-cmljIGx2ZHMtcGFuZWwgYmluZGluZ3MsDQo+ID4gc28gb25seSBuZWVkcyBpdHMgYWRkaXRpb25h
-bCBjb21wYXRpYmxlIHNwZWNpZmllZC4NCj4gPg0KPiA+IFNvbWUgcGFuZWwgc3BlY2lmaWMgZG9j
-dW1lbnRhdGlvbiBjYW4gYmUgZm91bmQgaGVyZToNCj4gDQo+IHMvcGFuZWwgc3BlY2lmaWMvcGFu
-ZWwtc3BlY2lmaWMvDQoNCldpbGwgY2hhbmdlDQoNCj4gDQo+ID4gaHR0cHM6Ly9idXkuYWR2YW50
-ZWNoLmV1L0Rpc3BsYXlzL0VtYmVkZGVkLUxDRC1LaXRzLUhpZ2gtQnJpZ2h0bmVzcy9tb2RlbC1J
-REstMjEyMVdSLUsyRkhBMkUuaHRtDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBD
-YXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4u
-L2Rpc3BsYXkvcGFuZWwvYWR2YW50ZWNoLGlkay0yMTIxd3IudHh0ICAgICAgICAgfCA2MiArKysr
-KysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCsp
-DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9wYW5lbC9hZHZhbnRlY2gsaWRrLTIxMjF3ci50eHQNCj4gPg0KPiA+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9h
-ZHZhbnRlY2gsaWRrLTIxMjF3ci50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9hZHZhbnRlY2gsaWRrLTIxMjF3ci50eHQNCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjcwYjE1YjYNCj4gPiAtLS0gL2Rldi9u
-dWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvYWR2YW50ZWNoLGlkay0yMTIxd3IudHh0DQo+ID4gQEAgLTAsMCArMSw2MiBAQA0KPiA+
-ICtBZHZhbnRlY2ggQ28uLCBMdGQuIElESy0yMTIxV1IgMjEuNSIgTFZEUyBwYW5lbA0KPiA+ICs9
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+ICsNCj4g
-PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImFk
-dmFudGVjaCxpZGstMjEyMXdyIiBmb2xsb3dlZCBieSAicGFuZWwtbHZkcyINCj4gPiArDQo+ID4g
-K1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIGx2ZHMtcGFuZWwgYmluZGluZywg
-d2hpY2ggaXMgc3BlY2lmaWVkDQo+ID4gK2luIHBhbmVsLWx2ZHMudHh0IGluIHRoaXMgZGlyZWN0
-b3J5Lg0KPiANCj4gSG93IGFib3V0IGFkZGluZyAiVGhlIHBhbmVsIG9wZXJhdGVzIGluIGR1YWwt
-bGluayBtb2RlIGFuZCB0aHVzIHJlcXVpcmVzDQo+IHR3byBwb3J0IG5vZGVzLiIgPw0KDQpZb3Ug
-YXJlIHJpZ2h0LCB3aWxsIGFkZC4NCg0KPiANCj4gPiArDQo+ID4gK0V4YW1wbGUNCj4gPiArLS0t
-LS0tLQ0KPiA+ICsNCj4gPiArCXBhbmVsIHsNCj4gPiArCQljb21wYXRpYmxlID0gImFkdmFudGVj
-aCxpZGstMjEyMXdyIiwgInBhbmVsLWx2ZHMiOw0KPiA+ICsNCj4gPiArCQl3aWR0aC1tbSA9IDw0
-NzY+Ow0KPiA+ICsJCWhlaWdodC1tbSA9IDwyNjg+Ow0KPiA+ICsNCj4gPiArCQlkYXRhLW1hcHBp
-bmcgPSAidmVzYS0yNCI7DQo+ID4gKw0KPiA+ICsJCXBhbmVsLXRpbWluZyB7DQo+ID4gKwkJCWNs
-b2NrLWZyZXF1ZW5jeSA9IDwxNDg1MDAwMDA+Ow0KPiA+ICsJCQloYWN0aXZlID0gPDE5MjA+Ow0K
-PiA+ICsJCQl2YWN0aXZlID0gPDEwODA+Ow0KPiA+ICsJCQloc3luYy1sZW4gPSA8NDQ+Ow0KPiA+
-ICsJCQloZnJvbnQtcG9yY2ggPSA8ODg+Ow0KPiA+ICsJCQloYmFjay1wb3JjaCA9IDwxNDg+Ow0K
-PiA+ICsJCQl2ZnJvbnQtcG9yY2ggPSA8ND47DQo+ID4gKwkJCXZiYWNrLXBvcmNoID0gPDM2PjsN
-Cj4gPiArCQkJdnN5bmMtbGVuID0gPDU+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXBvcnRz
-IHsNCj4gPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKwkJCSNzaXplLWNlbGxzID0g
-PDA+Ow0KPiA+ICsNCj4gPiArCQkJcG9ydEAwIHsNCj4gPiArCQkJCXJlZyA9IDwwPjsNCj4gPiAr
-CQkJCWx2ZHMwX3BhbmVsX2luOiBlbmRwb2ludCB7DQo+ID4gKwkJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZsdmRzMF9vdXQ+Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4gKwkJ
-CXBvcnRAMSB7DQo+ID4gKwkJCQlyZWcgPSA8MT47DQo+ID4gKwkJCQlsdmRzMV9wYW5lbF9pbjog
-ZW5kcG9pbnQgew0KPiA+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczFfb3V0PjsNCj4g
-PiArCQkJCX07DQo+ID4gKwkJCX07DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJ
-YmFja2xpZ2h0OiBiYWNrbGlnaHQgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAicHdtLWJhY2tsaWdo
-dCI7DQo+ID4gKwkJcHdtcyA9IDwmcHdtNSAwIDUwMDAwPjsNCj4gPiArDQo+ID4gKwkJYnJpZ2h0
-bmVzcy1sZXZlbHMgPSA8MCA0IDggMTYgMzIgNjQgMTI4IDI1NT47DQo+ID4gKwkJZGVmYXVsdC1i
-cmlnaHRuZXNzLWxldmVsID0gPDY+Ow0KPiA+ICsNCj4gPiArCQlwb3dlci1zdXBwbHkgPSA8JnJl
-Z18xMnAwdj47DQo+ID4gKwkJZW5hYmxlLWdwaW9zID0gPCZncGlvNiAxMiBHUElPX0FDVElWRV9I
-SUdIPjsNCj4gPiArCX07DQo+IA0KPiBJIHRoaW5rIHlvdSBjYW4gZHJvcCB0aGUgYmFja2xpZ2h0
-IGhlcmUsIGl0J3MgYSBiaXQgb3V0IG9mIHNjb3BlLg0KDQpBZ3JlZWQuDQoNClRoYW5rcywNCkZh
-Yg0KDQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiANCj4gTGF1cmVudCBQaW5jaGFydA0K
+
+
+> -----Original Message-----
+> From: Han Xu <xhnjupt@gmail.com>
+> Sent: Thursday, August 1, 2019 8:54 PM
+> To: Rob Herring <robh@kernel.org>
+> Cc: Ashish Kumar <ashish.kumar@nxp.com>; devicetree@vger.kernel.org;
+> bbrezillon@kernel.org; Kuldeep Singh <kuldeep.singh@nxp.com>;
+> broonie@kernel.org; linux-mtd@lists.infradead.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: [EXT] Re: [Patch v3 2/2] dt-bindings: spi: spi-fsl-qspi: Add bindings of
+> ls1088a and ls1012a
+> 
+> Caution: EXT Email
+> 
+> On Tue, Jul 9, 2019 at 3:09 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, 19 Jun 2019 16:41:54 +0530, Ashish Kumar wrote:
+> > > Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+> > > Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+> > > ---
+> > > v3:
+> > > Rebase to top
+> > > v2:
+> > > Convert to patch series and rebasing done on top of tree
+> > >
+> > >  Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Acked-by: Han Xu <han.xu@nxp.com>
+
+Hello Mark,
+
+Could you please send this patch[1] from your spi tree, It applies seamlessly on
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/
+
+[1]: http://patchwork.ozlabs.org/patch/1118637/
+
+Regards 
+Ashish 
+
+
+> 
+> >
+> > ______________________________________________________
+> > Linux MTD discussion mailing list
+> >
+> https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists.inf
+> radead.org%2Fmailman%2Flistinfo%2Flinux-
+> mtd%2F&amp;data=02%7C01%7CAshish.Kumar%40nxp.com%7C243dc21894
+> ad4c2a651808d716945016%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7
+> C1%7C637002698562132108&amp;sdata=6YZyZ6D6DywgLYlp%2BWZfkvyaDr
+> TKvR56JkOxy0XSD9k%3D&amp;reserved=0
+> 
+> 
+> 
+> --
+> Sincerely,
+> 
+> Han XU
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
