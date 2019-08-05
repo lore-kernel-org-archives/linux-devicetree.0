@@ -1,145 +1,82 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 05/16] net: phy: adin: configure RGMII/RMII/MII modes on
- config
-Date: Mon, 5 Aug 2019 16:39:35 +0200
-Message-ID: <20190805143935.GM24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-6-alexandru.ardelean@analog.com>
+From: Hanna Hawa <hhhawa@amazon.com>
+Subject: [PATCH v5 0/4] Add support for Amazon's Annapurna Labs EDAC for L1/L2
+Date: Mon, 5 Aug 2019 15:39:07 +0100
+Message-ID: <20190805143911.12185-1-hhhawa@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-6-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Cc: dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, hhhawa@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:54:42PM +0300, Alexandru Ardelean wrote:
-> The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
-> unconfigured) is RGMII.
-> This change adds support for configuring these modes via the device
-> registers.
-> 
-> For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
+This series adds L1 and L2 caches support for error detection and
+correction for Amazon's Annapurna Labs SoCs.
+Alpine SoCs supports L1 and L2 single bit correction and two bits detection
+capability based on ARM implementation.
 
-It would be nice to add the missing space.
+Changes since v4:
+-----------------
+- Added include for cpumask.h in al_l2_edac.c
+- Fix RAMID error print according to ARM TRM
+- Use for_each_possible_cpu() to parse information for DT.
+- Add missing of_node_put() call.
 
-> the default delay is 2 ns. This can be configurable and will be done in
-> a subsequent change.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 78 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-> index 3dd9fe50f4c8..dbdb8f60741c 100644
-> --- a/drivers/net/phy/adin.c
-> +++ b/drivers/net/phy/adin.c
-> @@ -33,14 +33,91 @@
->  	 ADIN1300_INT_HW_IRQ_EN)
->  #define ADIN1300_INT_STATUS_REG			0x0019
->  
-> +#define ADIN1300_GE_RGMII_CFG_REG		0xff23
-> +#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
-> +#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
-> +#define   ADIN1300_GE_RGMII_EN			BIT(0)
-> +
-> +#define ADIN1300_GE_RMII_CFG_REG		0xff24
-> +#define   ADIN1300_GE_RMII_EN			BIT(0)
-> +
-> +static int adin_config_rgmii_mode(struct phy_device *phydev,
-> +				  phy_interface_t intf)
-> +{
-> +	int reg;
-> +
-> +	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
-> +	if (reg < 0)
-> +		return reg;
-> +
-> +	if (!phy_interface_mode_is_rgmii(intf)) {
-> +		reg &= ~ADIN1300_GE_RGMII_EN;
-> +		goto write;
-> +	}
-> +
-> +	reg |= ADIN1300_GE_RGMII_EN;
-> +
-> +	if (intf == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    intf == PHY_INTERFACE_MODE_RGMII_RXID) {
-> +		reg |= ADIN1300_GE_RGMII_RXID_EN;
-> +	} else {
-> +		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
-> +	}
-> +
-> +	if (intf == PHY_INTERFACE_MODE_RGMII_ID ||
-> +	    intf == PHY_INTERFACE_MODE_RGMII_TXID) {
-> +		reg |= ADIN1300_GE_RGMII_TXID_EN;
-> +	} else {
-> +		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
-> +	}
+Changes since v3:
+-----------------
+- Added include for smp.h sysreg.h 
+- Use scnprintf instead of snprintf
+- Move write_sysreg_s after valid check to minimize the window between
+read/write.
+- Use IS_ERR_OR_NULL instead of IS_ERR, because
+edac_device_alloc_ctl_info may return NULL.
 
-Nice. Often driver writers forget to clear the delay, they only set
-it. Not so here.
+Changes since v2:
+-----------------
+- Use BIT for single bit instead of GENMASK
+- Use BIT_ULL and GENMASK_ULL for 64bit vector
+- Fix the mod_name/ctrl_name.
 
-However, is checkpatch happy with this? Each half of the if/else is a
-single statement, so the {} are not needed.
+Changes since v1:
+-----------------
+- Split into two drivers
+- Get cpu-mask according to l2-cache handler from devicetree
+- Remove parameter casting
+- Use GENMASK() in bit mask
+- Use FIELD_GET()
+- Update define description PLRU_RAM -> PF_RAM
+- Use sys_reg() and read_sysreg_s()
+- Remove all write/read wrappers
+- Check fatal field to set if the error correctable or not
+- Remove un-relevant information from error prints.
+- Update smp_call_function_single() call function to wait
+- remove usage of get_online_cpus/put_online_cpus
+- Use on_each_cpu() and smp_call_function_any() instead of loop with for_each_cpu.
+- use buffer for error prints and pass to edac API
+- Remove edac_op_state set
+- Add for loop to report on repeated errors of the same type
+- Fix error name of the TLB to be L2_TLB as written in ARM TRM
+- Minor change in Kconfig
+- Minor changes in commit message
 
-> +
-> +write:
-> +	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-> +			     ADIN1300_GE_RGMII_CFG_REG, reg);
-> +}
-> +
-> +static int adin_config_rmii_mode(struct phy_device *phydev,
-> +				 phy_interface_t intf)
-> +{
-> +	int reg;
-> +
-> +	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
-> +	if (reg < 0)
-> +		return reg;
-> +
-> +	if (intf != PHY_INTERFACE_MODE_RMII) {
-> +		reg &= ~ADIN1300_GE_RMII_EN;
-> +		goto write;
+Hanna Hawa (4):
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
+  edac: Add support for Amazon's Annapurna Labs L1 EDAC
+  dt-bindings: EDAC: Add Amazon's Annapurna Labs L2 EDAC
+  edac: Add support for Amazon's Annapurna Labs L2 EDAC
 
-goto? Really?
+ .../bindings/edac/amazon,al-l1-edac.txt       |  14 ++
+ .../bindings/edac/amazon,al-l2-edac.txt       |  20 ++
+ MAINTAINERS                                   |  12 ++
+ drivers/edac/Kconfig                          |  16 ++
+ drivers/edac/Makefile                         |   2 +
+ drivers/edac/al_l1_edac.c                     | 158 ++++++++++++++
+ drivers/edac/al_l2_edac.c                     | 192 ++++++++++++++++++
+ 7 files changed, 414 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l2-edac.txt
+ create mode 100644 drivers/edac/al_l1_edac.c
+ create mode 100644 drivers/edac/al_l2_edac.c
 
-> +	}
-> +
-> +	reg |= ADIN1300_GE_RMII_EN;
-> +
-> +write:
-> +	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-> +			     ADIN1300_GE_RMII_CFG_REG, reg);
-> +}
-> +
->  static int adin_config_init(struct phy_device *phydev)
->  {
-> -	int rc;
-> +	phy_interface_t interface, rc;
-
-genphy_config_init() does not return a phy_interface_t!
-
->  
->  	rc = genphy_config_init(phydev);
->  	if (rc < 0)
->  		return rc;
->  
-> +	interface = phydev->interface;
-> +
-> +	rc = adin_config_rgmii_mode(phydev, interface);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = adin_config_rmii_mode(phydev, interface);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	dev_info(&phydev->mdio.dev, "PHY is using mode '%s'\n",
-> +		 phy_modes(phydev->interface));
-
-phydev_dbg(), or not at all.
-
-	      Andrew
+-- 
+2.17.1
