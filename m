@@ -1,82 +1,73 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 02/12] dt-bindings: display: renesas: lvds: Document
- renesas,swap-data
-Date: Mon, 5 Aug 2019 12:35:43 +0300
-Message-ID: <20190805093543.GB29747@pendragon.ideasonboard.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1564731249-22671-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190802074428.GB5008@pendragon.ideasonboard.com>
- <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: guillaume La Roque <glaroque@baylibre.com>
+Subject: Re: [PATCH v2 3/6] arm64: dts: amlogic: g12: add temperature sensor
+Date: Mon, 5 Aug 2019 11:41:39 +0200
+Message-ID: <d702eb8b-f0b7-0b3b-9a17-1d158d7c072f@baylibre.com>
+References: <20190731153529.30159-1-glaroque@baylibre.com>
+ <20190731153529.30159-4-glaroque@baylibre.com>
+ <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB17706A4FF4C26CD4BDA1A5DAC0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCBYPiLgmTNk+7Db3EPSPePwbnAshCbomYPXWdse8i0oJw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sCgpPbiBNb24sIEF1ZyAwNSwgMjAxOSBhdCAwODo1OTo1MUFNICswMDAwLCBG
-YWJyaXppbyBDYXN0cm8gd3JvdGU6Cj4gPiBGcm9tOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50
-LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gPiBTZW50OiAwMiBBdWd1c3QgMjAxOSAwODo0
-NAo+ID4gU3ViamVjdDogUmU6IFtQQVRDSC9SRkMgMDIvMTJdIGR0LWJpbmRpbmdzOiBkaXNwbGF5
-OiByZW5lc2FzOiBsdmRzOiBEb2N1bWVudCByZW5lc2FzLHN3YXAtZGF0YQo+ID4gCj4gPiBIaSBG
-YWJyaXppbywKPiA+IAo+ID4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gPiAKPiA+IE9uIEZy
-aSwgQXVnIDAyLCAyMDE5IGF0IDA4OjMzOjU5QU0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90
-ZToKPiA+ID4gUi1DYXIgRDMsIFItQ2FyIEUzLCBhbmQgUlovRzJFIHN1cHBvcnQgZHVhbC1saW5r
-IG1vZGUuCj4gPiA+IEluIHN1Y2ggYSBtb2RlLCB0aGUgZmlyc3QgTFZEUyBlbmNvZGVyIGVtaXRz
-IGV2ZW4gZGF0YSwgYW5kIHRoZQo+ID4gPiBzZWNvbmQgTFZEUyBlbmNvZGVyIGVtaXRzIG9kZCBk
-YXRhLiBUaGlzIHBhdGNoIGRvY3VtZW50cyBwcm9wZXJ0eQo+ID4gPiByZW5lc2FzLHN3YXAtZGF0
-YSwgdXNlZCB0byBzd2FwIGV2ZW4gYW5kIG9kZCBkYXRhIGFyb3VuZC4KPiA+ID4KPiA+ID4gU2ln
-bmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5j
-b20+Cj4gPiA+IC0tLQo+ID4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgfCA1ICsrKysrCj4gPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgNSBpbnNlcnRpb25zKCspCj4gPiA+Cj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo+
-ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVu
-ZXNhcyxsdmRzLnR4dAo+ID4gPiBpbmRleCBkZWNlNzllLi44OTgwMTc5IDEwMDY0NAo+ID4gPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVu
-ZXNhcyxsdmRzLnR4dAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo+ID4gPiBAQCAtNTIsNiArNTIsMTEg
-QEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ID4gICAgbWFuZGF0b3J5IGZvciB0aGUgZmlyc3Qg
-TFZEUyBlbmNvZGVyIG9uIFItQ2FyIEQzLCBSLUNhciBFMywgYW5kIFJaL0cyRSBTb0NzLAo+ID4g
-PiAgICBhbmQgc2hhbGwgcG9pbnQgdG8gdGhlIHNlY29uZCBlbmNvZGVyIHRvIGJlIHVzZWQgYXMg
-YSBjb21wYW5pb24gaW4gZHVhbC1saW5rCj4gPiA+ICAgIG1vZGUuIEl0IHNoYWxsIG5vdCBiZSBz
-ZXQgZm9yIGFueSBvdGhlciBMVkRTIGVuY29kZXIuCj4gPiA+ICstIHJlbmVzYXMsc3dhcC1kYXRh
-IDogd2hlbiBpbiBkdWFsLWxpbmsgbW9kZSwgdGhlIGZpcnN0IExWRFMgZW5jb2RlciBub3JtYWxs
-eQo+ID4gPiArICBlbWl0cyBldmVuIGRhdGEsIGFuZCB0aGUgc2Vjb25kIExWRFMgZW5jb2RlciBl
-bWl0cyBvZGQgZGF0YS4gV2hlbiBwcm9wZXJ0eQo+ID4gPiArICByZW5lc2FzLHN3YXAtZGF0YSBp
-cyBzcGVjaWZpZWQsIHRoZSBkYXRhIGVtaXR0ZWQgYnkgdGhlIHR3byBlbmNvZGVycyB3aWxsIGJl
-Cj4gPiA+ICsgIHN3YXBwZWQgYXJvdW5kLiBUaGlzIHByb3BlcnR5IGNhbiBvbmx5IGJlIHVzZWQg
-aW4gY29uanVuY3Rpb24gd2l0aCBwcm9wZXJ0eQo+ID4gPiArICByZW5lc2FzLGNvbXBhbmlvbi4K
-PiA+IAo+ID4gRnJvbSBhbiBMVkRTIGVuY29kZXIgcG9pbnQgb2YgdmlldyB0aGlzIGlzIG1vcmUg
-YSBjb25maWd1cmF0aW9uIG9wdGlvbgo+ID4gdGhhbiBhIGRlc2NyaXB0aW9uIG9mIHRoZSBoYXJk
-d2FyZS4gV291bGRuJ3QgaXQgYmUgYmV0dGVyIGZvciB0aGUgTFZEUwo+ID4gc2luayB0byByZXBv
-cnQgd2hpY2ggb2YgdGhlIG9kZCBvciBldmVuIHBpeGVscyBpdCBleHBlY3RzIG9uIGVhY2ggb2Yg
-aXRzCj4gPiBlbmRwb2ludHMgPwo+IAo+IFllcywgdGhhdCB3b3VsZCBiZSBteSBwcmVmZXJlbmNl
-IHRvbywgYW5kIGl0IHdvdWxkIGJlIGJldHRlciwgSSBhbSBqdXN0IG5vdCBlbnRpcmVseQo+IHdo
-YXQncyB0aGUgYmVzdCBwbGFjZSBmb3IgdGhpcyBpbmZvcm1hdGlvbiB0aG91Z2gKPiAKPiA+IFRo
-ZSBMVkRTIGVuY29kZXIgZHJpdmVyIGNvdWxkIHRoZW4gcXVlcnkgdGhhdCBhdCBydW50aW1lIGFu
-ZAo+ID4gY29uZmlndXJlIGl0c2VsZiBhY2NvcmRpbmdseS4gSWRlYWxseSB0aGlzIHNob3VsZCBi
-ZSBxdWVyaWVkIHRocm91Z2ggdGhlCj4gPiBkcm1fYnJpZGdlX3RpbWluZ3Mgc3RydWN0dXJlIChv
-ciB0aHJvdWdoIGEgc2ltaWxhciBtZWFuKSwgbm90IHRocm91Z2gKPiA+IERULiBBbiBMVkRTIHNp
-bmsgdGhhdCBoYXMgYSBmaXhlZCBtYXBwaW5nIG9mIG9kZC9ldmVuIHBpeGVscyB0bwo+ID4gZW5k
-cG9pbnRzIHdvdWxkbid0IG5lZWQgdGhlIGluZm9ybWF0aW9uIHRvIGJlIHNwZWNpZmllZCBpbiBE
-VCBhdCBhbGwuCj4gCj4gSXNuJ3QgZHJtX2JyaWRnZV90aW1pbmdzIHNwZWNpZmljIGZvciBicmlk
-Z2VzPwoKSXRzIG5hbWUgbWFrZXMgaXQgc3BlY2lmaWMgdG8gYnJpZGdlcywgYnV0IHRoZSBpbmZv
-cm1hdGlvbiBpdCBjb250YWlucwpjb3VsZCBlcXVhbGx5IGFwcGx5IHRvIHBhbmVscy4gSSB3b3Vs
-ZCB0aHVzIHVzZSBpdCBmb3IgYm90aCwgcG9zc2libHkKYWZ0ZXIgcmVuYW1pbmcgaXQuCgotLSAK
-UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVs
+hi Martin,
+
+
+thanks for comments i will fix in v3.
+
+
+guillaume
+
+On 8/3/19 7:52 PM, Martin Blumenstingl wrote:
+> Hi Guillaume,
+>
+> On Wed, Jul 31, 2019 at 5:36 PM Guillaume La Roque
+> <glaroque@baylibre.com> wrote:
+>> Add cpu and ddr temperature sensors for G12 Socs
+>>
+>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> with the nit-pick below addressed:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>
+>> ---
+>>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 22 +++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+>> index 06e186ca41e3..7f862a3490fb 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+>> @@ -1353,6 +1353,28 @@
+>>                                 };
+>>                         };
+>>
+>> +                       cpu_temp: temperature-sensor@34800 {
+>> +                               compatible = "amlogic,g12-cpu-thermal",
+>> +                                            "amlogic,g12-thermal";
+>> +                               reg = <0x0 0x34800 0x0 0x50>;
+>> +                               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
+>> +                               clocks = <&clkc CLKID_TS>;
+>> +                               status = "okay";
+> I believe nodes are enabled automatically if they don't have a status property
+>
+>> +                               #thermal-sensor-cells = <0>;
+>> +                               amlogic,ao-secure = <&sec_AO>;
+>> +                       };
+>> +
+>> +                       ddr_temp: temperature-sensor@34c00 {
+>> +                               compatible = "amlogic,g12-ddr-thermal",
+>> +                                            "amlogic,g12-thermal";
+>> +                               reg = <0x0 0x34c00 0x0 0x50>;
+>> +                               interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
+>> +                               clocks = <&clkc CLKID_TS>;
+>> +                               status = "okay";
+> same here
+>
+>
+> Martin
