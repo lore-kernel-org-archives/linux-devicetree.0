@@ -1,7 +1,7 @@
 From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH 11/11] arm64: dts: add dts nodes for MT6779
-Date: Mon, 5 Aug 2019 17:12:00 +0800
-Message-ID: <1564996320-10897-12-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH 05/11] pinctrl: mediatek: avoid virtual gpio trying to set reg
+Date: Mon, 5 Aug 2019 17:11:54 +0800
+Message-ID: <1564996320-10897-6-git-send-email-mars.cheng@mediatek.com>
 References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,369 +12,77 @@ To: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-this adds initial MT6779 dts settings fo board support,
-including cpu, gic, timer, ccf, pinctrl, uart...etc.
+for virtual gpios, they should not do reg setting and
+should behave as expected for eint function.
 
 Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/Makefile        |    1 +
- arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi |   99 +++++++++++
- arch/arm64/boot/dts/mediatek/mt6779.dts      |  229 ++++++++++++++++++++++++++
- 3 files changed, 329 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dts
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |   20 ++++++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |    1 +
+ drivers/pinctrl/mediatek/pinctrl-paris.c         |    3 +++
+ 3 files changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 458bbc4..53f1c61 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi b/arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
-new file mode 100644
-index 0000000..aca1e2b
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ * Author: Mars.C <mars.cheng@mediatek.com>
-+ *
-+ */
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 20e1c89..04948a6 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -226,6 +226,23 @@ static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
+ 	return EINT_NA;
+ }
+ 
++bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
++{
++	const struct mtk_pin_desc *desc;
++	bool virt_gpio = false;
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++	if (gpio_n >= hw->soc->npins)
++		return virt_gpio;
 +
-+/ {
-+	compatible = "mediatek,mt6779";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
++	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
 +
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
++	if (desc->funcs &&
++	    desc->funcs[desc->eint.eint_m].name == 0)
++		virt_gpio = true;
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	return virt_gpio;
++}
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x000>;
-+		};
-+	};
+ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
+ 			     unsigned int *gpio_n,
+ 			     struct gpio_chip **gpio_chip)
+@@ -278,6 +295,9 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
+ 	if (err)
+ 		return err;
+ 
++	if (mtk_is_virt_gpio(hw, gpio_n))
++		return 0;
 +
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
+ 
+ 	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+index 1b7da42..cda1c7a0 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+@@ -299,4 +299,5 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
+ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+ 			      const struct mtk_pin_desc *desc, u32 *val);
+ 
++bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n);
+ #endif /* __PINCTRL_MTK_COMMON_V2_H */
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 923264d..ef479ea 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+ 	const struct mtk_pin_desc *desc;
+ 	int value, err;
+ 
++	if (mtk_is_virt_gpio(hw, gpio))
++		return 1;
 +
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13
-+			      (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			      (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			      (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			      (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		gic: interrupt-controller@0c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			#redistributor-regions = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0x0c000000 0 0x40000>, // distributor
-+			      <0 0x0c040000 0 0x200000>; // redistributor
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		sysirq: intpol-controller@0c53a650 {
-+			compatible = "mediatek,mt6779-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x0c53a650 0 0x50>;
-+		};
-+
-+		uart0: serial@11002000 {
-+			compatible = "mediatek,mt6779-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11002000 0 0x400>;
-+			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11003000 {
-+			compatible = "mediatek,mt6779-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11003000 0 0x400>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dts b/arch/arm64/boot/dts/mediatek/mt6779.dts
-new file mode 100644
-index 0000000..daa25b7
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt6779.dts
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ * Author: Mars.C <mars.cheng@mediatek.com>
-+ *
-+ */
-+
-+#include <dt-bindings/clock/mt6779-clk.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt6779";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x100>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x200>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x300>;
-+		};
-+
-+		cpu4: cpu@4 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x400>;
-+		};
-+
-+		cpu5: cpu@5 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			enable-method = "psci";
-+			reg = <0x500>;
-+		};
-+
-+		cpu6: cpu@6 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a75";
-+			enable-method = "psci";
-+			reg = <0x600>;
-+		};
-+
-+		cpu7: cpu@7 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a75";
-+			enable-method = "psci";
-+			reg = <0x700>;
-+		};
-+	};
-+
-+	clk26m: oscillator@0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "clk26m";
-+	};
-+
-+	clk32k: oscillator@1 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "clk32k";
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		gic: interrupt-controller@0c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			#redistributor-regions = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
-+			      <0 0x0c040000 0 0x200000>, /* GICR */
-+			      <0 0x0c400000 0 0x2000>,   /* GICC */
-+			      <0 0x0c410000 0 0x1000>,   /* GICH */
-+			      <0 0x0c420000 0 0x2000>;   /* GICV */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		sysirq: intpol-controller@0c53a650 {
-+			compatible = "mediatek,mt6779-sysirq",
-+				     "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x0c53a650 0 0x50>;
-+		};
-+
-+		topckgen: clock-controller@10000000 {
-+			compatible = "mediatek,mt6779-topckgen", "syscon";
-+			reg = <0 0x10000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		infracfg_ao: clock-controller@10001000 {
-+			compatible = "mediatek,mt6779-infracfg_ao", "syscon";
-+			reg = <0 0x10001000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		apmixed: clock-controller@1000c000 {
-+			compatible = "mediatek,mt6779-apmixed", "syscon";
-+			reg = <0 0x1000c000 0 0xe00>;
-+			#clock-cells = <1>;
-+		};
-+
-+		uart0: serial@11002000 {
-+			compatible = "mediatek,mt6779-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11002000 0 0x400>;
-+			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@11003000 {
-+			compatible = "mediatek,mt6779-uart",
-+				     "mediatek,mt6577-uart";
-+			reg = <0 0x11003000 0 0x400>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+			status = "disabled";
-+		};
-+
-+		audio: clock-controller@11210000 {
-+			compatible = "mediatek,mt6779-audio", "syscon";
-+			reg = <0 0x11210000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		mfgcfg: clock-controller@13fbf000 {
-+			compatible = "mediatek,mt6779-mfgcfg", "syscon";
-+			reg = <0 0x13fbf000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		mmsys: clock-controller@14000000 {
-+			compatible = "mediatek,mt6779-mmsys", "syscon";
-+			reg = <0 0x14000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		imgsys: clock-controller@15020000 {
-+			compatible = "mediatek,mt6779-imgsys", "syscon";
-+			reg = <0 0x15020000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		vdecsys: clock-controller@16000000 {
-+			compatible = "mediatek,mt6779-vdecsys", "syscon";
-+			reg = <0 0x16000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		vencsys: clock-controller@17000000 {
-+			compatible = "mediatek,mt6779-vencsys", "syscon";
-+			reg = <0 0x17000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		camsys: clock-controller@1a000000 {
-+			compatible = "mediatek,mt6779-camsys", "syscon";
-+			reg = <0 0x1a000000 0 0x10000>;
-+			#clock-cells = <1>;
-+		};
-+
-+		ipesys: clock-controller@1b000000 {
-+			compatible = "mediatek,mt6779-ipesys", "syscon";
-+			reg = <0 0x1b000000 0 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
-+	};
-+};
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
 -- 
 1.7.9.5
