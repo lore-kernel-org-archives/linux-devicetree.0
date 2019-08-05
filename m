@@ -1,7 +1,7 @@
 From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH 07/11] pinctrl: mediatek: add mt6779 eint support
-Date: Mon, 5 Aug 2019 17:11:56 +0800
-Message-ID: <1564996320-10897-8-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH 03/11] dt-bindings: irq: mtk,sysirq: add support for mt6779
+Date: Mon, 5 Aug 2019 17:11:52 +0800
+Message-ID: <1564996320-10897-4-git-send-email-mars.cheng@mediatek.com>
 References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,24 @@ To: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-add driver setting to support mt6779 eint
+Add binding documentation of mediatek,sysirq for mt6779 SoC.
 
 Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 ---
- drivers/pinctrl/mediatek/pinctrl-mt6779.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6779.c b/drivers/pinctrl/mediatek/pinctrl-mt6779.c
-index 145bf22..49ff3cc 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt6779.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt6779.c
-@@ -731,11 +731,19 @@
- 	"iocfg_rt", "iocfg_lt", "iocfg_tl",
- };
- 
-+static const struct mtk_eint_hw mt6779_eint_hw = {
-+	.port_mask = 7,
-+	.ports     = 6,
-+	.ap_num    = 209,
-+	.db_cnt    = 16,
-+};
-+
- static const struct mtk_pin_soc mt6779_data = {
- 	.reg_cal = mt6779_reg_cals,
- 	.pins = mtk_pins_mt6779,
- 	.npins = ARRAY_SIZE(mtk_pins_mt6779),
- 	.ngrps = ARRAY_SIZE(mtk_pins_mt6779),
-+	.eint_hw = &mt6779_eint_hw,
- 	.gpio_m = 0,
- 	.ies_present = true,
- 	.base_names = mt6779_pinctrl_register_base_names,
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+index 0e312fe..84ced3f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+@@ -15,6 +15,7 @@ Required properties:
+ 	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
+ 	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
+ 	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
++	"mediatek,mt6779-sysirq", "mediatek,mt6577-sysirq": for MT6779
+ 	"mediatek,mt6765-sysirq", "mediatek,mt6577-sysirq": for MT6765
+ 	"mediatek,mt6755-sysirq", "mediatek,mt6577-sysirq": for MT6755
+ 	"mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq": for MT6592
 -- 
 1.7.9.5
