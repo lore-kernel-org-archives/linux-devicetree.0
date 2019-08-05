@@ -1,143 +1,37 @@
-Return-Path: <SRS0=vdDf=WF=gmail.com=dmitry.torokhov@kernel.org>
-Date: Fri, 9 Aug 2019 09:42:00 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 4/4] Input: ads7846 - add support for general touchscreen
- bindings
-Message-ID: <20190809164200.GJ178933@dtor-ws>
-References: <20190327133927.1340-1-m.felsch@pengutronix.de>
- <20190327133927.1340-5-m.felsch@pengutronix.de>
+Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:51252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726454AbfHEKSz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Aug 2019 06:18:55 -0400
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH 0/2] add support to STM ISM330DHCX 6-axis Mems sensor
+Date: Mon,  5 Aug 2019 12:18:42 +0200
+Message-Id: <cover.1564999807.git.lorenzo@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327133927.1340-5-m.felsch@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: robh+dt@kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: lorenzo.bianconi@redhat.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Mar 27, 2019 at 02:39:27PM +0100, Marco Felsch wrote:
-> A few vendor specific bindings are now covered by common bindings.
-> 
-> Let the driver parse the common bindings to make use of common
-> inverting and swapping mechnism. Aslo make use of
-> touchscreen_report_pos() to ensure the correct inverting-swapping
-> order.
-> 
-> The vendor specific properties are used as default (backward
-> compatibility) and gets overwritten by common bindings.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Add support to STM ISM330DHCX 6-axis sensor
+https://www.st.com/resource/en/datasheet/ism330dhcx.pdf
 
-Applied, thank you.
+This series is based on '[v2,0/4] st_lsm6dsx: move {odr,fs}_table in'
+https://patchwork.kernel.org/cover/11064381/
 
-> ---
->  drivers/input/touchscreen/ads7846.c | 38 +++++++++++++++++++++++------
->  1 file changed, 30 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-> index 5a7a8425d619..2fe3b91f1db8 100644
-> --- a/drivers/input/touchscreen/ads7846.c
-> +++ b/drivers/input/touchscreen/ads7846.c
-> @@ -23,6 +23,7 @@
->  #include <linux/sched.h>
->  #include <linux/delay.h>
->  #include <linux/input.h>
-> +#include <linux/input/touchscreen.h>
->  #include <linux/interrupt.h>
->  #include <linux/slab.h>
->  #include <linux/pm.h>
-> @@ -132,6 +133,8 @@ struct ads7846 {
->  
->  	u16			penirq_recheck_delay_usecs;
->  
-> +	struct touchscreen_properties core_prop;
-> +
->  	struct mutex		lock;
->  	bool			stopped;	/* P: lock */
->  	bool			disabled;	/* P: lock */
-> @@ -826,17 +829,13 @@ static void ads7846_report_state(struct ads7846 *ts)
->  	if (Rt) {
->  		struct input_dev *input = ts->input;
->  
-> -		if (ts->swap_xy)
-> -			swap(x, y);
-> -
->  		if (!ts->pendown) {
->  			input_report_key(input, BTN_TOUCH, 1);
->  			ts->pendown = true;
->  			dev_vdbg(&ts->spi->dev, "DOWN\n");
->  		}
->  
-> -		input_report_abs(input, ABS_X, x);
-> -		input_report_abs(input, ABS_Y, y);
-> +		touchscreen_report_pos(input, &ts->core_prop, x, y, false);
->  		input_report_abs(input, ABS_PRESSURE, ts->pressure_max - Rt);
->  
->  		input_sync(input);
-> @@ -1188,6 +1187,7 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
->  	struct ads7846_platform_data *pdata;
->  	struct device_node *node = dev->of_node;
->  	const struct of_device_id *match;
-> +	u32 value;
->  
->  	if (!node) {
->  		dev_err(dev, "Device does not have associated DT data\n");
-> @@ -1226,10 +1226,18 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
->  	of_property_read_u16(node, "ti,x-max", &pdata->x_max);
->  	of_property_read_u16(node, "ti,y-max", &pdata->y_max);
->  
-> +	/*
-> +	 * touchscreen-max-pressure gets parsed during
-> +	 * touchscreen_parse_properties()
-> +	 */
->  	of_property_read_u16(node, "ti,pressure-min", &pdata->pressure_min);
-> +	if (!of_property_read_u32(node, "touchscreen-min-pressure", &value))
-> +		pdata->pressure_min = (u16) value;
->  	of_property_read_u16(node, "ti,pressure-max", &pdata->pressure_max);
->  
->  	of_property_read_u16(node, "ti,debounce-max", &pdata->debounce_max);
-> +	if (!of_property_read_u32(node, "touchscreen-average-samples", &value))
-> +		pdata->debounce_max = (u16) value;
->  	of_property_read_u16(node, "ti,debounce-tol", &pdata->debounce_tol);
->  	of_property_read_u16(node, "ti,debounce-rep", &pdata->debounce_rep);
->  
-> @@ -1314,10 +1322,7 @@ static int ads7846_probe(struct spi_device *spi)
->  	ts->model = pdata->model ? : 7846;
->  	ts->vref_delay_usecs = pdata->vref_delay_usecs ? : 100;
->  	ts->x_plate_ohms = pdata->x_plate_ohms ? : 400;
-> -	ts->pressure_max = pdata->pressure_max ? : ~0;
-> -
->  	ts->vref_mv = pdata->vref_mv;
-> -	ts->swap_xy = pdata->swap_xy;
->  
->  	if (pdata->filter != NULL) {
->  		if (pdata->filter_init != NULL) {
-> @@ -1368,6 +1373,23 @@ static int ads7846_probe(struct spi_device *spi)
->  	input_set_abs_params(input_dev, ABS_PRESSURE,
->  			pdata->pressure_min, pdata->pressure_max, 0, 0);
->  
-> +	/*
-> +	 * Parse common framework properties. Must be done here to ensure the
-> +	 * correct behaviour in case of using the legacy vendor bindings. The
-> +	 * general binding value overrides the vendor specific one.
-> +	 */
-> +	touchscreen_parse_properties(ts->input, false, &ts->core_prop);
-> +	ts->pressure_max = input_abs_get_max(input_dev, ABS_PRESSURE) ? : ~0;
-> +
-> +	/*
-> +	 * Check if legacy ti,swap-xy binding is used instead of
-> +	 * touchscreen-swapped-x-y
-> +	 */
-> +	if (!ts->core_prop.swap_x_y && pdata->swap_xy) {
-> +		swap(input_dev->absinfo[ABS_X], input_dev->absinfo[ABS_Y]);
-> +		ts->core_prop.swap_x_y = true;
-> +	}
-> +
->  	ads7846_setup_spi_msg(ts, pdata);
->  
->  	ts->reg = regulator_get(&spi->dev, "vcc");
-> -- 
-> 2.20.1
-> 
+Lorenzo Bianconi (2):
+  iio: imu: st_lsm6dsx: add support to ISM330DHCX
+  dt-bindings: iio: imu: st_lsm6dsx: add ism330dhcx device bindings
+
+ Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+ drivers/iio/imu/st_lsm6dsx/Kconfig                       | 3 ++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h                  | 2 ++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c           | 7 ++++---
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c             | 5 ++++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c              | 5 +++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c              | 5 +++++
+ 7 files changed, 23 insertions(+), 5 deletions(-)
 
 -- 
-Dmitry
+2.21.0
