@@ -1,33 +1,40 @@
-From: Elon Zhang <zhangzj@rock-chips.com>
-Subject: [PATCH v1 1/1] dt-bindings: Add Vendor prefix for Beiqi
-Date: Mon,  5 Aug 2019 10:39:53 +0800
-Message-ID: <20190805023953.11231-1-zhangzj@rock-chips.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v4 0/2] mmc: Add support for the ASPEED SD controller
+Date: Mon,  5 Aug 2019 12:21:53 +0930
+Message-ID: <20190805025155.9020-1-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, luowz@beiqicloud.com, Elon Zhang <zhangzj@rock-chips.com>
+To: linux-mmc@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, adrian.hunter@intel.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, ryanchen.aspeed@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree vendor prefix for Beiqi.
-http://www.beiqicloud.com/
+Hello,
 
-Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+v4 of the ASPEED SDHCI driver addresses Rob's comments on the binding, making
+it utilise the new mmc-controller schema and describing the sdhci,auto-cmd12
+property.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 1acf806b62bf..1092360d8868 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -135,6 +135,8 @@ patternProperties:
-     description: Shenzhen AZW Technology Co., Ltd.
-   "^bananapi,.*":
-     description: BIPAI KEJI LIMITED
-+  "^beiqi,.*":
-+    description: Xiamen Beiqi Technology Co., Ltd.
-   "^bhf,.*":
-     description: Beckhoff Automation GmbH & Co. KG
-   "^bitmain,.*":
+v3 can be found here:
+
+http://patchwork.ozlabs.org/cover/1138793/
+
+Please review!
+
+Andrew
+
+Andrew Jeffery (2):
+  dt-bindings: mmc: Document Aspeed SD controller
+  mmc: Add support for the ASPEED SD controller
+
+ .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 105 ++++++
+ drivers/mmc/host/Kconfig                      |  12 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-aspeed.c            | 328 ++++++++++++++++++
+ 4 files changed, 446 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
+
 -- 
-2.17.1
+2.20.1
