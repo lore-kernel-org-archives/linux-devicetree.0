@@ -1,7 +1,7 @@
 From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v4 09/10] rtc: mt6397: fix alarm register overwrite
-Date: Mon, 5 Aug 2019 13:21:57 +0800
-Message-ID: <1564982518-32163-10-git-send-email-hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v4 03/10] mfd: mt6397: modify suspend/resume behavior
+Date: Mon, 5 Aug 2019 13:21:51 +0800
+Message-ID: <1564982518-32163-4-git-send-email-hsin-hsiung.wang@mediatek.com>
 References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,101 +9,262 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com, Ran Bi <ran.bi@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ran Bi <ran.bi@mediatek.com>
+Some pmics don't need backup interrupt settings, so we change to use
+pm notifier for the pmics which are necessary to store settings.
 
-Alarm registers high byte was reserved for other functions.
-This add mask in alarm registers operation functions.
-This also fix error condition in interrupt handler.
-
-Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
-
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 ---
- drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ drivers/mfd/mt6397-core.c       | 89 +++++++++++++++++------------------------
+ drivers/mfd/mt6397-irq.c        | 33 +++++++++++++++
+ include/linux/mfd/mt6397/core.h |  3 ++
+ 3 files changed, 73 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index b46ed4d..828def7 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -47,6 +47,14 @@
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 93c8881..8f94187 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -4,7 +4,6 @@
+  * Author: Flora Fu, MediaTek
+  */
  
- #define RTC_AL_SEC		0x0018
+-#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+@@ -82,40 +81,27 @@ static const struct mfd_cell mt6397_devs[] = {
+ 	}
+ };
  
-+#define RTC_AL_SEC_MASK		0x003f
-+#define RTC_AL_MIN_MASK		0x003f
-+#define RTC_AL_HOU_MASK		0x001f
-+#define RTC_AL_DOM_MASK		0x001f
-+#define RTC_AL_DOW_MASK		0x0007
-+#define RTC_AL_MTH_MASK		0x000f
-+#define RTC_AL_YEA_MASK		0x007f
-+
- #define RTC_PDN2		0x002e
- #define RTC_PDN2_PWRON_ALARM	BIT(4)
- 
-@@ -103,7 +111,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
- 		irqen = irqsta & ~RTC_IRQ_EN_AL;
- 		mutex_lock(&rtc->lock);
- 		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
--				 irqen) < 0)
-+				 irqen) == 0)
- 			mtk_rtc_write_trigger(rtc);
- 		mutex_unlock(&rtc->lock);
- 
-@@ -225,12 +233,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
- 	mutex_unlock(&rtc->lock);
- 
--	tm->tm_sec = data[RTC_OFFSET_SEC];
--	tm->tm_min = data[RTC_OFFSET_MIN];
--	tm->tm_hour = data[RTC_OFFSET_HOUR];
--	tm->tm_mday = data[RTC_OFFSET_DOM];
--	tm->tm_mon = data[RTC_OFFSET_MTH];
--	tm->tm_year = data[RTC_OFFSET_YEAR];
-+	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-+	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-+	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-+	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-+	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-+	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
- 
- 	tm->tm_year += RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon--;
-@@ -251,14 +259,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon++;
- 
--	data[RTC_OFFSET_SEC] = tm->tm_sec;
--	data[RTC_OFFSET_MIN] = tm->tm_min;
--	data[RTC_OFFSET_HOUR] = tm->tm_hour;
--	data[RTC_OFFSET_DOM] = tm->tm_mday;
--	data[RTC_OFFSET_MTH] = tm->tm_mon;
--	data[RTC_OFFSET_YEAR] = tm->tm_year;
+-#ifdef CONFIG_PM_SLEEP
+-static int mt6397_irq_suspend(struct device *dev)
+-{
+-	struct mt6397_chip *chip = dev_get_drvdata(dev);
 -
- 	mutex_lock(&rtc->lock);
-+	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-+			       data, RTC_OFFSET_COUNT);
-+	if (ret < 0)
-+		goto exit;
+-	regmap_write(chip->regmap, chip->int_con[0], chip->wake_mask[0]);
+-	regmap_write(chip->regmap, chip->int_con[1], chip->wake_mask[1]);
+-
+-	enable_irq_wake(chip->irq);
+-
+-	return 0;
+-}
+-
+-static int mt6397_irq_resume(struct device *dev)
+-{
+-	struct mt6397_chip *chip = dev_get_drvdata(dev);
+-
+-	regmap_write(chip->regmap, chip->int_con[0], chip->irq_masks_cur[0]);
+-	regmap_write(chip->regmap, chip->int_con[1], chip->irq_masks_cur[1]);
+-
+-	disable_irq_wake(chip->irq);
++struct chip_data {
++	u32 cid_addr;
++	u32 cid_shift;
++};
+ 
+-	return 0;
+-}
+-#endif
++static const struct chip_data mt6323_core = {
++	.cid_addr = MT6323_CID,
++	.cid_shift = 0,
++};
+ 
+-static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_irq_suspend,
+-			mt6397_irq_resume);
++static const struct chip_data mt6397_core = {
++	.cid_addr = MT6397_CID,
++	.cid_shift = 0,
++};
+ 
+ static int mt6397_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+ 	unsigned int id;
+ 	struct mt6397_chip *pmic;
++	const struct chip_data *pmic_core;
+ 
+ 	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+ 	if (!pmic)
+@@ -131,28 +117,30 @@ static int mt6397_probe(struct platform_device *pdev)
+ 	if (!pmic->regmap)
+ 		return -ENODEV;
+ 
+-	platform_set_drvdata(pdev, pmic);
++	pmic_core = of_device_get_match_data(&pdev->dev);
++	if (!pmic_core)
++		return -ENODEV;
+ 
+-	ret = regmap_read(pmic->regmap, MT6397_CID, &id);
++	ret = regmap_read(pmic->regmap, pmic_core->cid_addr, &id);
+ 	if (ret) {
+-		dev_err(pmic->dev, "Failed to read chip id: %d\n", ret);
++		dev_err(&pdev->dev, "Failed to read chip id: %d\n", ret);
+ 		return ret;
+ 	}
+ 
++	pmic->chip_id = (id >> pmic_core->cid_shift) & 0xff;
 +
-+	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-+				(tm->tm_sec & RTC_AL_SEC_MASK));
-+	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-+				(tm->tm_min & RTC_AL_MIN_MASK));
-+	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-+				(tm->tm_hour & RTC_AL_HOU_MASK));
-+	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-+				(tm->tm_mday & RTC_AL_DOM_MASK));
-+	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-+				(tm->tm_mon & RTC_AL_MTH_MASK));
-+	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-+				(tm->tm_year & RTC_AL_YEA_MASK));
++	platform_set_drvdata(pdev, pmic);
 +
- 	if (alm->enabled) {
- 		ret = regmap_bulk_write(rtc->regmap,
- 					rtc->addr_base + RTC_AL_SEC,
+ 	pmic->irq = platform_get_irq(pdev, 0);
+ 	if (pmic->irq <= 0)
+ 		return pmic->irq;
+ 
+-	switch (id & 0xff) {
+-	case MT6323_CHIP_ID:
+-		pmic->int_con[0] = MT6323_INT_CON0;
+-		pmic->int_con[1] = MT6323_INT_CON1;
+-		pmic->int_status[0] = MT6323_INT_STATUS0;
+-		pmic->int_status[1] = MT6323_INT_STATUS1;
+-		ret = mt6397_irq_init(pmic);
+-		if (ret)
+-			return ret;
++	ret = mt6397_irq_init(pmic);
++	if (ret)
++		return ret;
+ 
++	switch (pmic->chip_id) {
++	case MT6323_CHIP_ID:
+ 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
+ 					   ARRAY_SIZE(mt6323_devs), NULL,
+ 					   0, pmic->irq_domain);
+@@ -160,21 +148,13 @@ static int mt6397_probe(struct platform_device *pdev)
+ 
+ 	case MT6391_CHIP_ID:
+ 	case MT6397_CHIP_ID:
+-		pmic->int_con[0] = MT6397_INT_CON0;
+-		pmic->int_con[1] = MT6397_INT_CON1;
+-		pmic->int_status[0] = MT6397_INT_STATUS0;
+-		pmic->int_status[1] = MT6397_INT_STATUS1;
+-		ret = mt6397_irq_init(pmic);
+-		if (ret)
+-			return ret;
+-
+ 		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+ 					   ARRAY_SIZE(mt6397_devs), NULL,
+ 					   0, pmic->irq_domain);
+ 		break;
+ 
+ 	default:
+-		dev_err(&pdev->dev, "unsupported chip: %d\n", id);
++		dev_err(&pdev->dev, "unsupported chip: %d\n", pmic->chip_id);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -187,9 +167,15 @@ static int mt6397_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id mt6397_of_match[] = {
+-	{ .compatible = "mediatek,mt6397" },
+-	{ .compatible = "mediatek,mt6323" },
+-	{ }
++	{
++		.compatible = "mediatek,mt6323",
++		.data = &mt6323_core,
++	}, {
++		.compatible = "mediatek,mt6397",
++		.data = &mt6397_core,
++	}, {
++		/* sentinel */
++	}
+ };
+ MODULE_DEVICE_TABLE(of, mt6397_of_match);
+ 
+@@ -204,7 +190,6 @@ static struct platform_driver mt6397_driver = {
+ 	.driver = {
+ 		.name = "mt6397",
+ 		.of_match_table = of_match_ptr(mt6397_of_match),
+-		.pm = &mt6397_pm_ops,
+ 	},
+ 	.id_table = mt6397_id,
+ };
+diff --git a/drivers/mfd/mt6397-irq.c b/drivers/mfd/mt6397-irq.c
+index b2d3ce1..669e93d 100644
+--- a/drivers/mfd/mt6397-irq.c
++++ b/drivers/mfd/mt6397-irq.c
+@@ -9,6 +9,7 @@
+ #include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
++#include <linux/suspend.h>
+ #include <linux/mfd/mt6323/core.h>
+ #include <linux/mfd/mt6323/registers.h>
+ #include <linux/mfd/mt6397/core.h>
+@@ -128,6 +129,36 @@ static const struct irq_domain_ops mt6397_irq_domain_ops = {
+ 	.map = mt6397_irq_domain_map,
+ };
+ 
++static int mt6397_irq_pm_notifier(struct notifier_block *notifier,
++				  unsigned long pm_event, void *unused)
++{
++	struct mt6397_chip *chip =
++		container_of(notifier, struct mt6397_chip, pm_nb);
++
++	switch (pm_event) {
++	case PM_SUSPEND_PREPARE:
++		regmap_write(chip->regmap,
++			     chip->int_con[0], chip->wake_mask[0]);
++		regmap_write(chip->regmap,
++			     chip->int_con[1], chip->wake_mask[1]);
++		enable_irq_wake(chip->irq);
++		break;
++
++	case PM_POST_SUSPEND:
++		regmap_write(chip->regmap,
++			     chip->int_con[0], chip->irq_masks_cur[0]);
++		regmap_write(chip->regmap,
++			     chip->int_con[1], chip->irq_masks_cur[1]);
++		disable_irq_wake(chip->irq);
++		break;
++
++	default:
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ int mt6397_irq_init(struct mt6397_chip *chip)
+ {
+ 	int ret;
+@@ -159,6 +190,7 @@ int mt6397_irq_init(struct mt6397_chip *chip)
+ 	regmap_write(chip->regmap, chip->int_con[0], 0x0);
+ 	regmap_write(chip->regmap, chip->int_con[1], 0x0);
+ 
++	chip->pm_nb.notifier_call = mt6397_irq_pm_notifier;
+ 	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+ 						 MT6397_IRQ_NR,
+ 						 &mt6397_irq_domain_ops,
+@@ -177,5 +209,6 @@ int mt6397_irq_init(struct mt6397_chip *chip)
+ 		return ret;
+ 	}
+ 
++	register_pm_notifier(&chip->pm_nb);
+ 	return 0;
+ }
+diff --git a/include/linux/mfd/mt6397/core.h b/include/linux/mfd/mt6397/core.h
+index 9320c2a..23e21da 100644
+--- a/include/linux/mfd/mt6397/core.h
++++ b/include/linux/mfd/mt6397/core.h
+@@ -7,6 +7,8 @@
+ #ifndef __MFD_MT6397_CORE_H__
+ #define __MFD_MT6397_CORE_H__
+ 
++#include <linux/notifier.h>
++
+ enum chip_id {
+ 	MT6323_CHIP_ID = 0x23,
+ 	MT6391_CHIP_ID = 0x91,
+@@ -52,6 +54,7 @@ enum mt6397_irq_numbers {
+ struct mt6397_chip {
+ 	struct device *dev;
+ 	struct regmap *regmap;
++	struct notifier_block pm_nb;
+ 	int irq;
+ 	struct irq_domain *irq_domain;
+ 	struct mutex irqlock;
 -- 
 2.6.4
