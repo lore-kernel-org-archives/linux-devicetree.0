@@ -1,73 +1,112 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
-Date: Mon, 5 Aug 2019 12:20:01 +0200
-Message-ID: <20190805102001.guo7e52bl5agp2w4@core.my.home>
-References: <20190412120730.473-1-megous@megous.com>
- <20190412120730.473-3-megous@megous.com>
- <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH v4] arm64: dts: ls1028a: Add esdhc node in dts
+Date: Mon,  5 Aug 2019 18:26:41 +0800
+Message-ID: <20190805102641.3732-1-yinbo.zhu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc: yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, yangbo.lu@nxp.com, Ashish Kumar <Ashish.Kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 06:16:14PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-> <linux-sunxi@googlegroups.com> wrote:
-> >
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > RTC on H6 is mostly the same as on H5 and H3. It has slight differences
-> > mostly in features that are not yet supported by this driver.
-> >
-> > Some differences are already stated in the comments in existing code.
-> > One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
-> > EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
-> >
-> > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
-> > external low speed oscillator is working correctly.
-> >
-> > This patch adds support for enabling LOSC when necessary:
-> >
-> > - during reparenting
-> > - when probing the clock
-> >
-> > H6 also has capacbility to automatically reparent RTC clock from
-> > external crystal oscillator, to internal RC oscillator, if external
-> > oscillator fails. This is enabled by default. Disable it during
-> > probe.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 38 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > index 11f56de52179..7375a530c565 100644
-> > --- a/drivers/rtc/rtc-sun6i.c
-> > +++ b/drivers/rtc/rtc-sun6i.c
-> > @@ -41,9 +41,11 @@
-> >  /* Control register */
-> >  #define SUN6I_LOSC_CTRL                                0x0000
-> >  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
-> > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
-> 
-> Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
-> 
-> The rest looks ok.
+From: Ashish Kumar <Ashish.Kumar@nxp.com>
 
-Yes, see H6 BSP:
+This patch is to add esdhc node and enable SD UHS-I,
+eMMC HS200 for ls1028ardb/ls1028aqds board.
 
-drivers/rtc/rtc-sunxi.h
+Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+---
+Change in v4:
+		put esdhc 'status' at end of property list.
+		sort the nodes in unit-address
+		Use IRQ_TYPE_LEVEL_HIGH represent 0x4 in "interrupts = <0 28 0x4>"
 
- 20 #define REG_CLK32K_AUTO_SWT_EN                  BIT(14)
- 21 #define REG_CLK32K_AUTO_SWT_BYPASS              BIT(15)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |  8 +++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 13 +++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    | 27 +++++++++++++++++++++++
+ 3 files changed, 48 insertions(+)
 
-regards,
-	Ondrej
-
-> ChenYu
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index de6ef39..5e14e5a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -95,6 +95,14 @@
+ 	status = "okay";
+ };
+ 
++&esdhc {
++	status = "okay";
++};
++
++&esdhc1 {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index 9fb9113..12c9cd3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -83,6 +83,19 @@
+ 	};
+ };
+ 
++&esdhc {
++	sd-uhs-sdr104;
++	sd-uhs-sdr50;
++	sd-uhs-sdr25;
++	sd-uhs-sdr12;
++	status = "okay";
++	};
++
++&esdhc1 {
++	mmc-hs200-1_8v;
++	status = "okay";
++	};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 7975519..f299075 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -245,6 +245,33 @@
+ 			status = "disabled";
+ 		};
+ 
++		esdhc: mmc@2140000 {
++			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2140000 0x0 0x10000>;
++			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>; /* fixed up by bootloader */
++			clocks = <&clockgen 2 1>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			little-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
++		esdhc1: mmc@2150000 {
++			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2150000 0x0 0x10000>;
++			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <0>; /* fixed up by bootloader */
++			clocks = <&clockgen 2 1>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			broken-cd;
++			little-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
+ 		duart0: serial@21c0500 {
+ 			compatible = "fsl,ns16550", "ns16550a";
+ 			reg = <0x00 0x21c0500 0x0 0x100>;
+-- 
+2.9.5
