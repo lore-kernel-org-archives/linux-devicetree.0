@@ -1,45 +1,66 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 06/16] net: phy: adin: support PHY mode converters
-Date: Mon, 5 Aug 2019 16:51:05 +0200
-Message-ID: <20190805145105.GN24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-7-alexandru.ardelean@analog.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv2] drivers/amba: add reset control to primecell probe
+Date: Mon,  5 Aug 2019 09:52:11 -0500
+Message-ID: <20190805145211.23161-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-7-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: devicetree@vger.kernel.org
+Cc: dinguyen@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 07:54:43PM +0300, Alexandru Ardelean wrote:
-> Sometimes, the connection between a MAC and PHY is done via a
-> mode/interface converter. An example is a GMII-to-RGMII converter, which
-> would mean that the MAC operates in GMII mode while the PHY operates in
-> RGMII. In this case there is a discrepancy between what the MAC expects &
-> what the PHY expects and both need to be configured in their respective
-> modes.
-> 
-> Sometimes, this converter is specified via a board/system configuration (in
-> the device-tree for example). But, other times it can be left unspecified.
-> The use of these converters is common in boards that have FPGA on them.
-> 
-> This patch also adds support for a `adi,phy-mode-internal` property that
-> can be used in these (implicit convert) cases. The internal PHY mode will
-> be used to specify the correct register settings for the PHY.
-> 
-> `fwnode_handle` is used, since this property may be specified via ACPI as
-> well in other setups, but testing has been done in DT context.
+The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+default. Until recently, the DMA controller was brought out of reset by the
+bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+are not used are held in reset and are left to Linux to bring them out of
+reset.
 
-Looking at the patch, you seems to assume phy-mode is what the MAC is
-using? That seems rather odd, given the name. It seems like a better
-solution would be to add a mac-mode, which the MAC uses to configure
-its side of the link. The MAC driver would then implement this
-property.
+Add a mechanism for getting the reset property and de-assert the primecell
+module from reset if found. This is a not a hard fail if the reset property
+is not present in the device tree node, so the driver will continue to probe.
 
-I don't see a need for this. phy-mode indicates what the PHY should
-use. End of story.
+Because there are different variants of the controller that may have multiple
+reset signals, the code will find all reset(s) specified and de-assert them.
 
-     Andrew
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v2: move reset control to bus code
+    find all reset properties and de-assert them
+---
+ drivers/amba/bus.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 100e798a5c82..75e18b9e4808 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -18,6 +18,7 @@
+ #include <linux/limits.h>
+ #include <linux/clk/clk-conf.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -401,6 +402,18 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 	ret = amba_get_enable_pclk(dev);
+ 	if (ret == 0) {
+ 		u32 pid, cid;
++		int count;
++		struct reset_control *rstc;
++
++		/*
++		 * Find reset control(s) of the amba bus and de-assert them.
++		 */
++		count = reset_control_get_count(&dev->dev);
++		while (count > 0) {
++			rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
++			reset_control_deassert(rstc);
++			count--;
++		}
+ 
+ 		/*
+ 		 * Read pid and cid based on size of resource
+-- 
+2.20.0
