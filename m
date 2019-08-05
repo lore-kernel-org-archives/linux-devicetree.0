@@ -1,35 +1,88 @@
 From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH 02/11] dt-bindings: mtk-uart: add mt6779 uart bindings
-Date: Mon, 5 Aug 2019 17:11:51 +0800
-Message-ID: <1564996320-10897-3-git-send-email-mars.cheng@mediatek.com>
-References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH 00/11] Add basic SoC Support for Mediatek MT6779 SoC
+Date: Mon, 5 Aug 2019 17:11:49 +0800
+Message-ID: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for mt6779 uart dt-bindings
+This patchset is based on v5.3-rc1. Basic SoC support for the new Mediatek
+SoC, MT6779, which targets for smartphone.
 
-Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
----
- .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
- 1 file changed, 1 insertion(+)
+It provides ccf, pinctrl, uart, timer, gic...etc. We will also upstream
+other parts of this SoC very soon.
 
-diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-index 6fdffb7..3a3b570 100644
---- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-@@ -9,6 +9,7 @@ Required properties:
-   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
-   * "mediatek,mt6755-uart" for MT6755 compatible UARTS
-   * "mediatek,mt6765-uart" for MT6765 compatible UARTS
-+  * "mediatek,mt6779-uart" for MT6779 compatible UARTS
-   * "mediatek,mt6795-uart" for MT6795 compatible UARTS
-   * "mediatek,mt6797-uart" for MT6797 compatible UARTS
-   * "mediatek,mt7622-uart" for MT7622 compatible UARTS
--- 
-1.7.9.5
+
+Mars Cheng (8):
+  dt-bindings: mediatek: add support for mt6779 reference board
+  dt-bindings: mtk-uart: add mt6779 uart bindings
+  dt-bindings: irq: mtk,sysirq: add support for mt6779
+  pinctrl: mediatek: update pinmux defintions for mt6779
+  pinctrl: mediatek: avoid virtual gpio trying to set reg
+  pinctrl: mediatek: add pinctrl support for MT6779 SoC
+  pinctrl: mediatek: add mt6779 eint support
+  arm64: dts: add dts nodes for MT6779
+
+mtk01761 (3):
+  dt-bindings: mediatek: bindings for MT6779 clk
+  clk: mediatek: Add dt-bindings for MT6779 clocks
+  clk: mediatek: Add MT6779 clock support
+
+ .../devicetree/bindings/arm/mediatek.yaml     |    4 +
+ .../arm/mediatek/mediatek,apmixedsys.txt      |    1 +
+ .../bindings/arm/mediatek/mediatek,audsys.txt |    1 +
+ .../bindings/arm/mediatek/mediatek,camsys.txt |    1 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt |    1 +
+ .../arm/mediatek/mediatek,infracfg.txt        |    1 +
+ .../bindings/arm/mediatek/mediatek,ipesys.txt |   22 +
+ .../bindings/arm/mediatek/mediatek,mfgcfg.txt |    1 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt  |    1 +
+ .../arm/mediatek/mediatek,topckgen.txt        |    1 +
+ .../arm/mediatek/mediatek,vdecsys.txt         |    1 +
+ .../arm/mediatek/mediatek,vencsys.txt         |    1 +
+ .../interrupt-controller/mediatek,sysirq.txt  |    1 +
+ .../devicetree/bindings/serial/mtk-uart.txt   |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi  |   99 +
+ arch/arm64/boot/dts/mediatek/mt6779.dts       |  229 ++
+ drivers/clk/mediatek/Kconfig                  |   56 +
+ drivers/clk/mediatek/Makefile                 |    9 +
+ drivers/clk/mediatek/clk-mt6779-aud.c         |  125 +
+ drivers/clk/mediatek/clk-mt6779-cam.c         |   66 +
+ drivers/clk/mediatek/clk-mt6779-img.c         |   58 +
+ drivers/clk/mediatek/clk-mt6779-ipe.c         |   60 +
+ drivers/clk/mediatek/clk-mt6779-mfg.c         |   55 +
+ drivers/clk/mediatek/clk-mt6779-mm.c          |  113 +
+ drivers/clk/mediatek/clk-mt6779-vdec.c        |   68 +
+ drivers/clk/mediatek/clk-mt6779-venc.c        |   58 +
+ drivers/clk/mediatek/clk-mt6779.c             | 1553 ++++++++++++
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6779.c     |  783 +++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  |   20 +
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h | 2085 +++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |    3 +
+ include/dt-bindings/clock/mt6779-clk.h        |  436 ++++
+ include/dt-bindings/pinctrl/mt6779-pinfunc.h  | 1242 ++++++++++
+ 37 files changed, 7166 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ipesys.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dts
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-aud.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-cam.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-img.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-ipe.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-mfg.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-mm.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-vdec.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779-venc.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6779.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6779.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h
+ create mode 100644 include/dt-bindings/clock/mt6779-clk.h
+ create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
