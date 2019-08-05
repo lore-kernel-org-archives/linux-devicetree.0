@@ -1,25 +1,66 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 5/5] dt-bindings: thermal: qoriq: Add optional clocks
- property
-Date: Mon, 5 Aug 2019 07:02:31 +0000
-Message-ID: <AM0PR04MB42117687C2604556C2559B4E80DA0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
- <20190730022126.17883-5-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Hui Song <hui.song_1@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: fix gpio nodes
+Date: Mon,  5 Aug 2019 14:57:00 +0800
+Message-ID: <20190805065700.7601-1-hui.song_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730022126.17883-5-Anson.Huang@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbi5IdWFuZ0BueHAuY29tIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBTZW50
-OiBUdWVzZGF5LCBKdWx5IDMwLCAyMDE5IDEwOjIxIEFNDQo+IA0KPiBTb21lIHBsYXRmb3JtcyBs
-aWtlIGkuTVg4TSBzZXJpZXMgU29DcyBoYXZlIGNsb2NrIGNvbnRyb2wgZm9yIFRNVSwgYWRkDQo+
-IG9wdGlvbmFsIGNsb2NrcyBwcm9wZXJ0eSB0byB0aGUgYmluZGluZyBkb2MuDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gUmV2aWV3ZWQt
-Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQoNClJldmlld2VkLWJ5OiBEb25nIEFp
-c2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpBaXNoZW5nDQo=
+From: Song Hui <hui.song_1@nxp.com>
+
+Update the nodes to include little-endian
+property to be consistent with the hardware.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index aef5b06..7ccbbfc 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -277,33 +277,36 @@
+ 		};
+ 
+ 		gpio1: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio2: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio3: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		usb0: usb@3100000 {
+-- 
+2.9.5
