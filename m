@@ -1,62 +1,25 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
-Date: Mon, 5 Aug 2019 17:28:32 +0200
-Message-ID: <20190805152832.GT24275@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-16-alexandru.ardelean@analog.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 01/11] dt-bindings: mediatek: add support for mt6779
+ reference board
+Date: Mon, 5 Aug 2019 09:28:39 -0600
+Message-ID: <CAL_Jsq+5jydeN83BU+Ne+6muv7KWjceJrAApaOXYevLmUJh6qw@mail.gmail.com>
+References: <1564996320-10897-1-git-send-email-mars.cheng@mediatek.com> <1564996320-10897-2-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190805165453.3989-16-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1564996320-10897-2-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mars Cheng <mars.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org, wsd_upstream <wsd_upstream@mediatek.com>, Wendell Lin <wendell.lin@mediatek.com>, Ivan Tseng <ivan.tseng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-> +struct adin_hw_stat {
-> +	const char *string;
+On Mon, Aug 5, 2019 at 3:13 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
+>
+> Update binding document for mt6779 reference board
+>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> ---
+>  .../devicetree/bindings/arm/mediatek.yaml          |    4 ++++
+>  1 file changed, 4 insertions(+)
 
-> +static void adin_get_strings(struct phy_device *phydev, u8 *data)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
-> +		memcpy(data + i * ETH_GSTRING_LEN,
-> +		       adin_hw_stats[i].string, ETH_GSTRING_LEN);
-
-You define string as a char *. So it will be only as long as it should
-be. However memcpy always copies ETH_GSTRING_LEN bytes, doing off the
-end of the string and into whatever follows.
-
-
-> +	}
-> +}
-> +
-> +static int adin_read_mmd_stat_regs(struct phy_device *phydev,
-> +				   struct adin_hw_stat *stat,
-> +				   u32 *val)
-> +{
-> +	int ret;
-> +
-> +	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = (ret & 0xffff);
-> +
-> +	if (stat->reg2 == 0)
-> +		return 0;
-> +
-> +	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val <<= 16;
-> +	*val |= (ret & 0xffff);
-
-Does the hardware have a snapshot feature? Is there a danger that
-between the two reads stat->reg1 rolls over and you end up with too
-big a value?
-
-    Andrew
+Reviewed-by: Rob Herring <robh@kernel.org>
