@@ -1,79 +1,53 @@
-Return-Path: <SRS0=uCLo=WE=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V6 1/8] phy: tegra: xusb: Add XUSB dual mode support on Tegra210
-Date: Thu, 8 Aug 2019 15:07:19 +0530
-Message-ID: <1565257046-9890-2-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
-References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:59735 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727230AbfHEKDQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2019 06:03:16 -0400
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 0/8] AP807 clocks support
+Date: Mon,  5 Aug 2019 12:03:02 +0200
+Message-Id: <20190805100310.29048-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Marcin Wojtas <mw@semihalf.com>, Stefan Chulski <stefanc@marvell.com>, Yan Markman <ymarkman@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Configure the port capabilities based on usb_dr_mode settings.
+Hello,
 
-Based on work by JC Kuo <jckuo@nvidia.com>.
+This is the first batch of changes (out of three) to support the brand
+new Marvell CN9130 SoCs which are made of one AP807 and one CP115.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
- drivers/phy/tegra/xusb-tegra210.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+This clock series applies on top of Gregory's "AP806 CPU clocks" [1].
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 0c0df68..0351c4a 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -39,7 +39,10 @@
- #define XUSB_PADCTL_USB2_PAD_MUX_USB2_BIAS_PAD_XUSB 0x1
- 
- #define XUSB_PADCTL_USB2_PORT_CAP 0x008
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(x) (0x0 << ((x) * 4))
- #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(x) (0x1 << ((x) * 4))
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(x) (0x2 << ((x) * 4))
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(x) (0x3 << ((x) * 4))
- #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(x) (0x3 << ((x) * 4))
- 
- #define XUSB_PADCTL_SS_PORT_MAP 0x014
-@@ -64,6 +67,7 @@
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
-+#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
- #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
- 
- #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
-@@ -957,7 +961,14 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
- 	value &= ~XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(index);
--	value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
-+	if (port->mode == USB_DR_MODE_UNKNOWN)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(index);
-+	else if (port->mode == USB_DR_MODE_PERIPHERAL)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(index);
-+	else if (port->mode == USB_DR_MODE_HOST)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
-+	else if (port->mode == USB_DR_MODE_OTG)
-+		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(index);
- 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-@@ -989,7 +1000,12 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
- 	value &= ~(XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK <<
- 		   XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT);
--	value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
-+	if (port->mode == USB_DR_MODE_HOST)
-+		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
-+	else
-+		value |=
-+		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL <<
-+		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT;
- 	padctl_writel(padctl, value,
- 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
- 
+[1] https://patchwork.kernel.org/cover/11038577/
+
+Thanks,
+Miquèl
+
+
+Ben Peled (3):
+  clk: mvebu: ap80x-cpu: add AP807 CPU clock support
+  clk: mvebu: ap806: Prepare the introduction of AP807 clock support
+  clk: mvebu: ap80x: add AP807 clock support
+
+Christine Gharzuzi (1):
+  clk: mvebu: ap806-cpu: prepare mapping of AP807 CPU clock
+
+Miquel Raynal (3):
+  dt-bindings: ap80x: Document AP807 CPU clock compatible
+  dt-bindings: ap806: Document AP807 clock compatible
+  clk: mvebu: ap806: be more explicit on what SaR is
+
+Omri Itach (1):
+  clk: mvebu: ap806: add AP-DCLK (hclk) to system controller driver
+
+ .../arm/marvell/ap806-system-controller.txt   |  17 +-
+ drivers/clk/mvebu/ap-cpu-clk.c                | 139 ++++++++++++---
+ drivers/clk/mvebu/ap806-system-controller.c   | 162 ++++++++++++++----
+ 3 files changed, 253 insertions(+), 65 deletions(-)
+
 -- 
-2.7.4
+2.20.1
