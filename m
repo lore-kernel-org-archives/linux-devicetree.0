@@ -1,7 +1,8 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFCv2 3/9] dt-bindings: spi: meson: convert to yaml
-Date: Mon,  5 Aug 2019 14:03:14 +0200
-Message-ID: <20190805120320.32282-4-narmstrong@baylibre.com>
+Subject: [RFCv2 7/9] dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to
+ yaml
+Date: Mon,  5 Aug 2019 14:03:18 +0200
+Message-ID: <20190805120320.32282-8-narmstrong@baylibre.com>
 References: <20190805120320.32282-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,214 +19,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, kishon@ti.com, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic SPI controllers over to two separate YAML schemas.
+bindings for the Amlogic G12A USB3 + PCIE Combo PHY over to a YAML schemas.
+
+While the original phy bindings specifies phy-supply as required,
+the examples and implementations makes it optional, thus phy-supply
+is not present in the properties and required lists.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 67 +++++++++++++++++++
- .../bindings/spi/amlogic,meson6-spifc.yaml    | 53 +++++++++++++++
- .../devicetree/bindings/spi/spi-meson.txt     | 55 ---------------
- 3 files changed, 120 insertions(+), 55 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
+ .../phy/amlogic,meson-g12a-usb3-pcie-phy.yaml | 57 +++++++++++++++++++
+ .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 -------
+ 2 files changed, 57 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
 new file mode 100644
-index 000000000000..49b617c98ae7
+index 000000000000..346f9c35427c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-@@ -0,0 +1,67 @@
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
+@@ -0,0 +1,57 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
++$id: "http://devicetree.org/schemas/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic Meson SPI Communication Controller
++title: Amlogic G12A USB3 + PCIE Combo PHY
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
 +
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+description: |
-+  The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
-+  communications with dedicated 16 words RX/TX PIO FIFOs.
-+
 +properties:
 +  compatible:
 +    enum:
-+      - amlogic,meson-gx-spicc # SPICC controller on Amlogic GX and compatible SoCs
-+      - amlogic,meson-axg-spicc # SPICC controller on Amlogic AXG and compatible SoCs
-+
-+  interrupts:
-+    maxItems: 1
++      - amlogic,meson-g12a-usb3-pcie-phy
 +
 +  reg:
-+    maxItems: 1
-+
-+  resets:
 +    maxItems: 1
 +
 +  clocks:
 +    maxItems: 1
 +
 +  clock-names:
-+    description: input clock for the baud rate generator
 +    items:
-+      - const: core
++      - const: ref_clk
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: phy
++
++  "#phy-cells":
++    const: 1
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
 +  - clocks
 +  - clock-names
++  - resets
++  - reset-names
++  - "#phy-cells"
 +
 +examples:
 +  - |
-+    spi@c1108d80 {
-+          compatible = "amlogic,meson-gx-spicc";
-+          reg = <0xc1108d80 0x80>;
-+          interrupts = <112>;
-+          clocks = <&clk81>;
-+          clock-names = "core";
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          ethernet-switch@0 {
-+              compatible = "micrel,ks8995m";
-+              spi-max-frequency = <1000000>;
-+              reg = <0>;
-+          };
++    phy@46000 {
++          compatible = "amlogic,meson-g12a-usb3-pcie-phy";
++          reg = <0x46000 0x2000>;
++          clocks = <&ref_clk>;
++          clock-names = "ref_clk";
++          resets = <&phy_reset>;
++          reset-names = "phy";
++          #phy-cells = <1>;
 +    };
-+
-diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
-new file mode 100644
-index 000000000000..67dcedc81a5e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/spi/amlogic,meson6-spifc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson SPI Flash Controller
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+description: |
-+  The Meson SPIFC is a controller optimized for communication with SPI
-+  NOR memories, without DMA support and a 64-byte unified transmit /
-+  receive buffer.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson6-spifc # SPI Flash Controller on Meson6 and compatible SoCs
-+      - amlogic,meson-gxbb-spifc # SPI Flash Controller on GXBB and compatible SoCs
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+examples:
-+  - |
-+    spi@c1108c80 {
-+          compatible = "amlogic,meson6-spifc";
-+          reg = <0xc1108c80 0x80>;
-+          clocks = <&clk81>;
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          flash: m25p80@0 {
-+              compatible = "spansion,m25p80", "jedec,spi-nor";
-+              reg = <0>;
-+              spi-max-frequency = <40000000>;
-+          };
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/spi/spi-meson.txt b/Documentation/devicetree/bindings/spi/spi-meson.txt
+diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 deleted file mode 100644
-index b7f5e86fed22..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-meson.txt
+index 7cfc17e2df31..000000000000
+--- a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 +++ /dev/null
-@@ -1,55 +0,0 @@
--Amlogic Meson SPI controllers
--
--* SPIFC (SPI Flash Controller)
--
--The Meson SPIFC is a controller optimized for communication with SPI
--NOR memories, without DMA support and a 64-byte unified transmit /
--receive buffer.
+@@ -1,22 +0,0 @@
+-* Amlogic G12A USB3 + PCIE Combo PHY binding
 -
 -Required properties:
-- - compatible: should be "amlogic,meson6-spifc" or "amlogic,meson-gxbb-spifc"
-- - reg: physical base address and length of the controller registers
-- - clocks: phandle of the input clock for the baud rate generator
-- - #address-cells: should be 1
-- - #size-cells: should be 0
+-- compatible:	Should be "amlogic,meson-g12a-usb3-pcie-phy"
+-- #phys-cells:	must be 1. The cell number is used to select the phy mode
+-  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
+-- reg:		The base address and length of the registers
+-- clocks:	a phandle to the 100MHz reference clock of this PHY
+-- clock-names:	must be "ref_clk"
+-- resets:	phandle to the reset lines for the PHY control
+-- reset-names:	must be "phy"
 -
--	spi@c1108c80 {
--		compatible = "amlogic,meson6-spifc";
--		reg = <0xc1108c80 0x80>;
--		clocks = <&clk81>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--	};
--
--* SPICC (SPI Communication Controller)
--
--The Meson SPICC is generic SPI controller for general purpose Full-Duplex
--communications with dedicated 16 words RX/TX PIO FIFOs.
--
--Required properties:
-- - compatible: should be:
--	"amlogic,meson-gx-spicc" on Amlogic GX and compatible SoCs.
--	"amlogic,meson-axg-spicc" on Amlogic AXG and compatible SoCs
-- - reg: physical base address and length of the controller registers
-- - interrupts: The interrupt specifier
-- - clock-names: Must contain "core"
-- - clocks: phandle of the input clock for the baud rate generator
-- - #address-cells: should be 1
-- - #size-cells: should be 0
--
--Optional properties:
-- - resets: phandle of the internal reset line
--
--See ../spi/spi-bus.txt for more details on SPI bus master and slave devices
--required and optional properties.
--
--Example :
--	spi@c1108d80 {
--		compatible = "amlogic,meson-gx-spicc";
--		reg = <0xc1108d80 0x80>;
--		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
--		clock-names = "core";
--		clocks = <&clk81>;
--		#address-cells = <1>;
--		#size-cells = <0>;
+-Example:
+-	usb3_pcie_phy: phy@46000 {
+-		compatible = "amlogic,g12a-usb3-pcie-phy";
+-		reg = <0x0 0x46000 0x0 0x2000>;
+-		clocks = <&clkc CLKID_PCIE_PLL>;
+-		clock-names = "ref_clk";
+-		resets = <&reset RESET_PCIE_PHY>;
+-		reset-names = "phy";
+-		#phy-cells = <1>;
 -	};
 -- 
 2.22.0
