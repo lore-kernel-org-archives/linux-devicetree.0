@@ -1,54 +1,34 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 2/3] dt-bindings: cp110: document the new CP115 pinctrl
- compatible
-Date: Mon,  5 Aug 2019 12:16:06 +0200
-Message-ID: <20190805101607.29811-3-miquel.raynal@bootlin.com>
-References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add compatible for H6 RTC
+Date: Mon, 5 Aug 2019 18:16:48 +0800
+Message-ID: <CAGb2v65d=yXPEiyTv0X3m25mzd2J5DnrWvyxz0zjLiq997BbZg@mail.gmail.com>
+References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-2-megous@megous.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190805101607.29811-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBIEEUDVAKGQEYTC7WVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190412120730.473-2-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
+On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
+<linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+>
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> RTC on H6 is similar to the one on H5 SoC, but incompatible in small
+> details. See the driver for description of differences. For example
+> H6 RTC needs to enable the external low speed oscillator. Add new
+> compatible for this RTC.
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-A new compatible is going to be used for Armada CP115 pinctrl block,
-document it.
-
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-[<miquel.raynal@bootlin.com>: split the documentation out of the
-driver commit]
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- .../bindings/arm/marvell/cp110-system-controller.txt          | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
-index 4db4119a6d19..f982a8ed9396 100644
---- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt
-@@ -78,8 +78,8 @@ Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt.
- 
- Required properties:
- 
--- compatible: "marvell,armada-7k-pinctrl",
--  "marvell,armada-8k-cpm-pinctrl" or "marvell,armada-8k-cps-pinctrl"
-+- compatible: "marvell,armada-7k-pinctrl", "marvell,armada-8k-cpm-pinctrl",
-+  "marvell,armada-8k-cps-pinctrl" or "marvell,cp115-standalone-pinctrl"
-   depending on the specific variant of the SoC being used.
- 
- Available mpp pins/groups and functions:
--- 
-2.20.1
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
