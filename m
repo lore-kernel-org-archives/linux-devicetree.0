@@ -1,141 +1,47 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: display: amlogic,meson-vpu: convert to yaml
-Date: Mon, 5 Aug 2019 16:19:10 -0600
-Message-ID: <CAL_JsqLMS2y5ZR4SH6TVwnaTDhnGwk2_C_81DTz9J=ypDdBd4w@mail.gmail.com>
-References: <20190805134319.737-1-narmstrong@baylibre.com> <20190805134319.737-3-narmstrong@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: arm: amlogic: add bindings for G12B
+ based S922X SoC
+Date: Mon, 5 Aug 2019 16:21:05 -0600
+Message-ID: <CAL_JsqL_L2qHe334sB57hR_coRhawKiqXYjKAQDJt_DHfBamBQ@mail.gmail.com>
+References: <20190731124000.22072-1-narmstrong@baylibre.com>
+ <20190731124000.22072-3-narmstrong@baylibre.com> <7hblx3gua3.fsf@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805134319.737-3-narmstrong@baylibre.com>
+In-Reply-To: <7hblx3gua3.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 7:43 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Mon, Aug 5, 2019 at 3:46 PM Kevin Hilman <khilman@baylibre.com> wrote:
 >
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Amlogic Display Controller over to YAML schemas.
+> Neil Armstrong <narmstrong@baylibre.com> writes:
 >
-> The original example has a leftover "dmc" memory cell, that has been
-> removed in the yaml rewrite.
+> > Add a specific compatible for the Amlogic G12B family based S922X SoC
+> > to differentiate with the A311D SoC from the same family.
+> >
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+> > index 325c6fd3566d..3c3bc806cd23 100644
+> > --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+> > @@ -139,6 +139,7 @@ properties:
+> >          items:
+> >            - enum:
+> >                - hardkernel,odroid-n2
+> > +          - const: amlogic,s922x
+> >            - const: amlogic,g12b
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/display/amlogic,meson-vpu.txt    | 121 --------------
->  .../bindings/display/amlogic,meson-vpu.yaml   | 153 ++++++++++++++++++
->  2 files changed, 153 insertions(+), 121 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
->  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+> nit: in previous binding docs, we were trying to keep these sorted
+> alphabetically.  I'll reorder the new "s922x" after "g12b" when
+> applying.
 
-
-> diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-> new file mode 100644
-> index 000000000000..9eba13031998
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-> @@ -0,0 +1,153 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/amlogic,meson-vpu.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Display Controller
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +description: |
-> +  The Amlogic Meson Display controller is composed of several components
-> +  that are going to be documented below
-> +
-> +  DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
-> +     | vd1   _______     _____________    _________________     |               |
-> +  D  |-------|      |----|            |   |                |    |   HDMI PLL    |
-> +  D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
-> +  R  |-------|      |----| Processing |   |                |    |               |
-> +     | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
-> +  R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
-> +  A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
-> +  M  |-------|______|----|____________|   |________________|    |               |
-> +  ___|__________________________________________________________|_______________|
-> +
-> +
-> +  VIU: Video Input Unit
-> +  ---------------------
-> +
-> +  The Video Input Unit is in charge of the pixel scanout from the DDR memory.
-> +  It fetches the frames addresses, stride and parameters from the "Canvas" memory.
-> +  This part is also in charge of the CSC (Colorspace Conversion).
-> +  It can handle 2 OSD Planes and 2 Video Planes.
-> +
-> +  VPP: Video Post Processing
-> +  --------------------------
-> +
-> +  The Video Post Processing is in charge of the scaling and blending of the
-> +  various planes into a single pixel stream.
-> +  There is a special "pre-blending" used by the video planes with a dedicated
-> +  scaler and a "post-blending" to merge with the OSD Planes.
-> +  The OSD planes also have a dedicated scaler for one of the OSD.
-> +
-> +  VENC: Video Encoders
-> +  --------------------
-> +
-> +  The VENC is composed of the multiple pixel encoders
-> +   - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
-> +   - ENCP : Progressive Video Encoder for HDMI
-> +   - ENCL : LCD LVDS Encoder
-> +  The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
-> +  tree and provides the scanout clock to the VPP and VIU.
-> +  The ENCI is connected to a single VDAC for Composite Output.
-> +  The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
-> +
-> +  The following table lists for each supported model the port number
-> +  corresponding to each VPU output.
-> +
-> +                  Port 0       Port 1
-> +  -----------------------------------------
-> +   S905 (GXBB)   CVBS VDAC        HDMI-TX
-> +   S905X (GXL)   CVBS VDAC        HDMI-TX
-> +   S905D (GXL)   CVBS VDAC        HDMI-TX
-> +   S912 (GXM)      CVBS VDAC      HDMI-TX
-> +   S905X2 (G12A)       CVBS VDAC          HDMI-TX
-> +   S905Y2 (G12A)       CVBS VDAC          HDMI-TX
-> +   S905D2 (G12A)       CVBS VDAC          HDMI-TX
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - amlogic,meson-gxbb-vpu # GXBB (S905)
-> +              - amlogic,meson-gxl-vpu # GXL (S905X, S905D)
-> +              - amlogic,meson-gxm-vpu # GXM (S912)
-> +          - const: amlogic,meson-gx-vpu
-> +      - enum:
-> +          - amlogic,meson-g12a-vpu # G12A (S905X2, S905Y2, S905D2)
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +   items:
-> +     - const: vpu
-> +     - const: hhi
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    description: phandle to the associated power domain
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/phandle
-
-Common properties don't need a type definition. As this can be an
-array, you just need 'maxItems: 1'.
-
-Same comments on patch 1 apply here too.
+No, this is not documentation ordering. It's the order compatible
+strings must be in.
 
 Rob
