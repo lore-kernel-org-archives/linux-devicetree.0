@@ -1,118 +1,221 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 07/10] regulator: mt6358: Add support for MT6358
- regulator
-Date: Mon, 5 Aug 2019 14:10:30 +0100
-Message-ID: <20190805131030.GE6432@sirena.org.uk>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1564982518-32163-8-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: "Hawa, Hanna" <hhhawa@amazon.com>
+Subject: Re: [PATCH v4 4/4] edac: Add support for Amazon's Annapurna Labs L2
+ EDAC
+Date: Mon, 5 Aug 2019 16:14:45 +0300
+Message-ID: <907e9e91-0830-7643-a329-8587541635da@amazon.com>
+References: <20190801130956.26388-1-hhhawa@amazon.com>
+ <20190801130956.26388-5-hhhawa@amazon.com>
+ <a060cbce-14f3-0592-4998-0a900d3fe6e4@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9031348581794275148=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1564982518-32163-8-git-send-email-hsin-hsiung.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Allison Randal <allison@lohutok.net>, linux-rtc@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a060cbce-14f3-0592-4998-0a900d3fe6e4@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Morse <james.morse@arm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============9031348581794275148==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xJK8B5Wah2CMJs8h"
-Content-Disposition: inline
 
+On 8/2/2019 6:11 PM, James Morse wrote:
+> Hi Hanna,
+> 
+> On 01/08/2019 14:09, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+>> report L2 errors.
+>> diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
+>> new file mode 100644
+>> index 000000000000..6c6d37cf82ab
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l2_edac.c
+>> @@ -0,0 +1,189 @@
+> 
+>> +#include <asm/sysreg.h>
+>> +#include <linux/bitfield.h>
+> 
+> #include <linux/cpumask.h> ?
 
---xJK8B5Wah2CMJs8h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Will be added.
 
-On Mon, Aug 05, 2019 at 01:21:55PM +0800, Hsin-Hsiung Wang wrote:
+> 
+>> +#include <linux/of.h>
+>> +#include <linux/smp.h>
+> 
+> [...]
+> 
+>> +static void al_l2_edac_l2merrsr(void *arg)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev = arg;
+>> +	int cpu, i;
+>> +	u32 ramid, repeat, other, fatal;
+>> +	u64 val = read_sysreg_s(ARM_CA57_L2MERRSR_EL1);
+>> +	char msg[AL_L2_EDAC_MSG_MAX];
+>> +	int space, count;
+>> +	char *p;
+>> +
+>> +	if (!(FIELD_GET(ARM_CA57_L2MERRSR_VALID, val)))
+>> +		return;
+>> +
+>> +	write_sysreg_s(0, ARM_CA57_L2MERRSR_EL1);
+>> +
+>> +	cpu = smp_processor_id();
+>> +	ramid = FIELD_GET(ARM_CA57_L2MERRSR_RAMID, val);
+>> +	repeat = FIELD_GET(ARM_CA57_L2MERRSR_REPEAT, val);
+>> +	other = FIELD_GET(ARM_CA57_L2MERRSR_OTHER, val);
+>> +	fatal = FIELD_GET(ARM_CA57_L2MERRSR_FATAL, val);
+>> +
+>> +	space = sizeof(msg);
+>> +	p = msg;
+>> +	count = scnprintf(p, space, "CPU%d L2 %serror detected", cpu,
+>> +			  (fatal) ? "Fatal " : "");
+>> +	p += count;
+>> +	space -= count;
+>> +
+>> +	switch (ramid) {
+>> +	case ARM_CA57_L2_TAG_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Tag RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_DATA_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Data RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_SNOOP_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Snoop RAM'");
+> 
+> Nit: The TRMs both call this 'L2 Snoop Tag RAM'. Could we include 'tag' in the
+> description. 'tag' implies its some kind of metadata, so an uncorrected error here affect
+> a now unknown location, its more series than a 'data RAM' error. v8.2 would term this kind
+> of error 'uncontained'.
 
-> +static const u32 vmch_voltages[] = {
-> +	2900000, 3000000, 3300000,
-> +};
+Ack, will be fixed.
 
-> +static const u32 vemc_voltages[] = {
-> +	2900000, 3000000, 3300000,
-> +};
+> 
+> 
+>> +		break;
+>> +	case ARM_CA57_L2_DIRTY_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 Dirty RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_INC_PF_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 internal metadat'");
+> 
+> Nit: metadata
 
-Several of these tables appear to be identical.
+Ack, will be fixed.
 
-> +static inline unsigned int mt6358_map_mode(unsigned int mode)
-> +{
-> +	return mode == MT6358_BUCK_MODE_AUTO ?
-> +		REGULATOR_MODE_NORMAL : REGULATOR_MODE_FAST;
-> +}
+> 
+>> +		break;
+>> +	default:
+>> +		count = scnprintf(p, space, " RAMID='unknown'");
+>> +		break;
+>> +	}
+>> +
+>> +	p += count;
+>> +	space -= count;
+>> +
+>> +	count = scnprintf(p, space,
+>> +			  " repeat=%d, other=%d (L2MERRSR_EL1=0x%llx)",
+>> +			  repeat, other, val);
+>> +
+>> +	for (i = 0; i < repeat; i++) {
+>> +		if (fatal)
+>> +			edac_device_handle_ue(edac_dev, 0, 0, msg);
+>> +		else
+>> +			edac_device_handle_ce(edac_dev, 0, 0, msg);
+>> +	}
+>> +}
+> 
+> [...]
+> 
+>> +static int al_l2_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct al_l2_edac *al_l2;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret, i;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*al_l2),
+>> +					      (char *)dev_name(dev), 1, "L", 1,
+>> +					      2, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (IS_ERR_OR_NULL(edac_dev))
+>> +		return -ENOMEM;
+>> +
+>> +	al_l2 = edac_dev->pvt_info;
+>> +	edac_dev->edac_check = al_l2_edac_check;
+>> +	edac_dev->dev = dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(dev);
+>> +	edac_dev->ctl_name = "L2 cache";
+>> +	platform_set_drvdata(pdev, edac_dev);
+> 
+>> +	for_each_online_cpu(i) {
+> 
+> for_each_possible_cpu()?
+> 
+> If you boot with maxcpus= the driver's behaviour changes.
+> But you are only parsing information from the DT, so you don't really need the CPUs to be
+> online.
+Agree, for dt parsing no need the online CPUs, if 
+for_each_possible_cpu() used then smp_call_function_any() will run only 
+on the online CPUs in the mask.
 
-There is no need for this to be an inline and please write normal
-conditional statements to improve legibility.  There's other examples in
-the driver.
+Will change to for_each_possible_cpu().
 
-> +static int mt6358_get_buck_voltage_sel(struct regulator_dev *rdev)
-> +{
-> +	int ret, regval;
-> +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
-> +
-> +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
-> +	if (ret != 0) {
-> +		dev_info(&rdev->dev,
-> +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
-> +			 info->desc.name, ret);
+> 
+> 
+>> +		struct device_node *cpu;
+>> +		struct device_node *cpu_cache, *l2_cache;
+>> +
+>> +		cpu = of_get_cpu_node(i, NULL);
+> 
+> (of_get_cpu_node() can return NULL, but I don't think it can ever happen like this)
+> 
+>> +		cpu_cache = of_find_next_cache_node(cpu);
+>> +		l2_cache = of_parse_phandle(dev->of_node, "l2-cache", 0);
+>> +
+>> +		if (cpu_cache == l2_cache)
+>> +			cpumask_set_cpu(i, &al_l2->cluster_cpus);
+> 
+> You need to of_node_put() these device_node pointers once you're done with them.
 
-dev_err() for errors here and throughout the driver.
+Will be added.
 
-> +		return ret;
-> +	}
-> +
-> +	ret = (regval >> info->da_vsel_shift) & info->da_vsel_mask;
-> +
-> +	return ret;
-> +}
+> 
+> 
+>> +	}
+>> +
+>> +	if (cpumask_empty(&al_l2->cluster_cpus)) {
+>> +		dev_err(dev, "CPU mask is empty for this L2 cache\n");
+>> +		ret = -EINVAL;
+>> +		goto err;
+>> +	}
+>> +
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to add L2 edac device\n");
+>> +		goto err;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
+> 
+> With the of_node_put()ing:
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-This looks like a standard get_voltage_sel_regmap()?
+Thanks for review, will publish v5 with the above fixes.
 
-> +err_mode:
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	return 0;
+Thanks,
+Hanna
 
-Or just return ret unconditionally?
-
---xJK8B5Wah2CMJs8h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1IKsYACgkQJNaLcl1U
-h9AMIggAg397SgwCnQsqUm0bErtFXMF3frCb8lQZCc/BOEjOShATbn9igZbM6ZTU
-QxQabCCpti0hAUqGHB6ye8q+OlI13w8ShOMg6+VJxOhec2ihBGLtkbhJguoZtfVI
-v+cqPZf3DxmDs1QCqMQTHdKK47Zjf2GN7XMEubNifpcWlkAHTcrQ8NGTC+8vGcCj
-5Ss9eBuRyAO0c5Z08Nsxh70MhK6FnHzwXDzlaOPDXbQWfxouTBvNLHN2LtGeNLDO
-St8mmX2B4jwvOLjItqqhsATzbH+DwoBGSOUtRNFbwIh+/UeZfwpwQJJk5U0FsgwC
-4K6rYZLMhm8RQGlTWwS3xPlqirZbvg==
-=1DeU
------END PGP SIGNATURE-----
-
---xJK8B5Wah2CMJs8h--
-
-
---===============9031348581794275148==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============9031348581794275148==--
+> 
+> 
+> Thanks,
+> 
+> James
+> 
