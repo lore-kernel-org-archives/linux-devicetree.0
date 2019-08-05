@@ -1,154 +1,55 @@
-Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfHEKS5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:18:57 -0400
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH 1/2] iio: imu: st_lsm6dsx: add support to ISM330DHCX
-Date: Mon,  5 Aug 2019 12:18:43 +0200
-Message-Id: <a3391b8b4734c483286f1352520dd1d6f8b96d4e.1564999807.git.lorenzo@kernel.org>
-In-Reply-To: <cover.1564999807.git.lorenzo@kernel.org>
-References: <cover.1564999807.git.lorenzo@kernel.org>
+Return-Path: <SRS0=SJQI=WB=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: lorenzo.bianconi@redhat.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1564731249-22671-12-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190802082952.GL5008@pendragon.ideasonboard.com> <TY1PR01MB17702E7517D3EE5E48337DA8C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB17702E7517D3EE5E48337DA8C0DA0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 5 Aug 2019 17:30:38 +0200
+Message-ID: <CAMuHMdX9JghQgTksYQfT=Mt5LkyR9aX3BXtZD449y3ZTQAczsg@mail.gmail.com>
+Subject: Re: [PATCH/RFC 11/12] arm64: dts: renesas: cat874: Add definition for
+ 12V regulator
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support to STM ISM330DHCX 6-axis (acc + gyro) Mems sensor
-https://www.st.com/resource/en/datasheet/ism330dhcx.pdf
+Hi Fabrizio,
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/iio/imu/st_lsm6dsx/Kconfig             | 3 ++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 2 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 7 ++++---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 5 ++++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    | 5 +++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    | 5 +++++
- 6 files changed, 22 insertions(+), 5 deletions(-)
+On Mon, Aug 5, 2019 at 11:17 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Sent: 02 August 2019 09:30
+> > Subject: Re: [PATCH/RFC 11/12] arm64: dts: renesas: cat874: Add definition for 12V regulator
+> >
+> > Hi Fabrizio,
+> >
+> > Thank you for the patch.
+> >
+> > On Fri, Aug 02, 2019 at 08:34:08AM +0100, Fabrizio Castro wrote:
+> > > Power rail "D12.0V" comes straight from the power barrel connector,
+> > > and it's used in both main board and sub board.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > I don't plan to take this in my tree without patch 12/12, so if you
+> > think the rest of the series won't be ready in time for v5.4, feel free
+> > to get this patch merged through Simon or Geert already.
+>
+> Geert, would you be happy to take this patch?
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-index 6cbf65a7e11e..939058b27746 100644
---- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-+++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-@@ -11,7 +11,8 @@ config IIO_ST_LSM6DSX
- 	help
- 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
- 	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
--	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c
-+	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
-+	  ism330dhcx
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called st_lsm6dsx.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index 5090f1b3525a..4d47ba36de84 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -23,6 +23,7 @@
- #define ST_LSM6DSOX_DEV_NAME	"lsm6dsox"
- #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
- #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
-+#define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
- 
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
-@@ -35,6 +36,7 @@ enum st_lsm6dsx_hw_id {
- 	ST_LSM6DSOX_ID,
- 	ST_LSM6DSR_ID,
- 	ST_LSM6DS3TRC_ID,
-+	ST_ISM330DHCX_ID,
- 	ST_LSM6DSX_MAX_ID,
- };
- 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-index 1be1cec2ab23..2c03a5b80f80 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -14,9 +14,10 @@
-  * (e.g. Gx, Gy, Gz, Ax, Ay, Az), then data are repeated depending on the
-  * value of the decimation factor and ODR set for each FIFO data set.
-  *
-- * LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR: The FIFO buffer can be configured to
-- * store data from gyroscope and accelerometer. Each sample is queued with
-- * a tag (1B) indicating data source (gyroscope, accelerometer, hw timer).
-+ * LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR/ISM330DHCX: The FIFO buffer can be
-+ * configured to store data from gyroscope and accelerometer. Each sample
-+ * is queued with a tag (1B) indicating data source (gyroscope, accelerometer,
-+ * hw timer).
-  *
-  * FIFO supported modes:
-  *  - BYPASS: FIFO disabled
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index fc4d18b58c97..85824d6739ee 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -24,7 +24,7 @@
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-  *   - FIFO size: 4KB
-  *
-- * - LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR
-+ * - LSM6DSO/LSM6DSOX/ASM330LHH/LSM6DSR/ISM330DHCX:
-  *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
-  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-@@ -645,6 +645,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 			{
- 				.hw_id = ST_LSM6DSR_ID,
- 				.name = ST_LSM6DSR_DEV_NAME,
-+			}, {
-+				.hw_id = ST_ISM330DHCX_ID,
-+				.name = ST_ISM330DHCX_DEV_NAME,
- 			},
- 		},
- 		.channels = {
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-index 28581eb0532c..15c6aa5b6caa 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-@@ -79,6 +79,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
- 		.compatible = "st,lsm6ds3tr-c",
- 		.data = (void *)ST_LSM6DS3TRC_ID,
- 	},
-+	{
-+		.compatible = "st,ism330dhcx",
-+		.data = (void *)ST_ISM330DHCX_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-@@ -94,6 +98,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
- 	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
- 	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
- 	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
-+	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-index 0371e8b94a3e..a8430ee11310 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-@@ -79,6 +79,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
- 		.compatible = "st,lsm6ds3tr-c",
- 		.data = (void *)ST_LSM6DS3TRC_ID,
- 	},
-+	{
-+		.compatible = "st,ism330dhcx",
-+		.data = (void *)ST_ISM330DHCX_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-@@ -94,6 +98,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
- 	{ ST_LSM6DSOX_DEV_NAME, ST_LSM6DSOX_ID },
- 	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
- 	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
-+	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.4.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.21.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
