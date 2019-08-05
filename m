@@ -1,7 +1,7 @@
 From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v4 05/10] regulator: Add document for MT6358 regulator
-Date: Mon, 5 Aug 2019 13:21:53 +0800
-Message-ID: <1564982518-32163-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+Subject: [PATCH v4 08/10] arm64: dts: mt6358: add PMIC MT6358 related nodes
+Date: Mon, 5 Aug 2019 13:21:56 +0800
+Message-ID: <1564982518-32163-9-git-send-email-hsin-hsiung.wang@mediatek.com>
 References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,45 +12,36 @@ To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias
 Cc: Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-add dt-binding document for MediaTek MT6358 PMIC
+add PMIC MT6358 related nodes which is for MT8183 platform
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 ---
- .../bindings/regulator/mt6358-regulator.txt        | 358 +++++++++++++++++++++
- 1 file changed, 358 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+ arch/arm64/boot/dts/mediatek/mt6358.dtsi | 362 +++++++++++++++++++++++++++++++
+ 1 file changed, 362 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6358.dtsi
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
+diff --git a/arch/arm64/boot/dts/mediatek/mt6358.dtsi b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
 new file mode 100644
-index 0000000..9a90a92
+index 0000000..a7e655c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6358-regulator.txt
-@@ -0,0 +1,358 @@
-+MediaTek MT6358 Regulator
++++ b/arch/arm64/boot/dts/mediatek/mt6358.dtsi
+@@ -0,0 +1,362 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
 +
-+All voltage regulators provided by the MT6358 PMIC are described as the
-+subnodes of the MT6358 regulators node. Each regulator is named according
-+to its regulator type, buck_<name> and ldo_<name>. The definition for each
-+of these nodes is defined using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are::
-+BUCK:
-+  buck_vdram1, buck_vcore, buck_vpa, buck_vproc11, buck_vproc12, buck_vgpu,
-+  buck_vs2, buck_vmodem, buck_vs1
-+LDO:
-+  ldo_vdram2, ldo_vsim1, ldo_vibr, ldo_vrf12, ldo_vio18, ldo_vusb, ldo_vcamio,
-+  ldo_vcamd, ldo_vcn18, ldo_vfe28, ldo_vsram_proc11, ldo_vcn28, ldo_vsram_others,
-+  ldo_vsram_gpu, ldo_vxo22, ldo_vefuse, ldo_vaux18, ldo_vmch, ldo_vbif28,
-+  ldo_vsram_proc12, ldo_vcama1, ldo_vemc, ldo_vio28, ldo_va12, ldo_vrf18,
-+  ldo_vcn33_bt, ldo_vcn33_wifi, ldo_vcama2, ldo_vmc, ldo_vldo28, ldo_vaud28,
-+  ldo_vsim2
-+
-+Example:
-+
-+	pmic {
++&pwrap {
++	pmic: mt6358 {
 +		compatible = "mediatek,mt6358";
++		interrupt-controller;
++		interrupt-parent = <&pio>;
++		interrupts = <182 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <2>;
++
++		mt6358codec: mt6358codec {
++			compatible = "mediatek,mt6358-sound";
++		};
 +
 +		mt6358regulator: mt6358regulator {
 +			compatible = "mediatek,mt6358-regulator";
@@ -63,6 +54,7 @@ index 0000000..9a90a92
 +				regulator-ramp-delay = <12500>;
 +				regulator-enable-ramp-delay = <0>;
 +				regulator-always-on;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vcore_reg: buck_vcore {
@@ -72,6 +64,7 @@ index 0000000..9a90a92
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
 +				regulator-always-on;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vpa_reg: buck_vpa {
@@ -80,6 +73,7 @@ index 0000000..9a90a92
 +				regulator-max-microvolt = <3650000>;
 +				regulator-ramp-delay = <50000>;
 +				regulator-enable-ramp-delay = <250>;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vproc11_reg: buck_vproc11 {
@@ -89,6 +83,7 @@ index 0000000..9a90a92
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
 +				regulator-always-on;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vproc12_reg: buck_vproc12 {
@@ -98,6 +93,7 @@ index 0000000..9a90a92
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
 +				regulator-always-on;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vgpu_reg: buck_vgpu {
@@ -106,6 +102,7 @@ index 0000000..9a90a92
 +				regulator-max-microvolt = <1293750>;
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <200>;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vs2_reg: buck_vs2 {
@@ -124,6 +121,7 @@ index 0000000..9a90a92
 +				regulator-ramp-delay = <6250>;
 +				regulator-enable-ramp-delay = <900>;
 +				regulator-always-on;
++				regulator-allowed-modes = <0 1>;
 +			};
 +
 +			mt6358_vs1_reg: buck_vs1 {
@@ -384,6 +382,11 @@ index 0000000..9a90a92
 +				regulator-enable-ramp-delay = <540>;
 +			};
 +		};
++
++		mt6358rtc: mt6358rtc {
++			compatible = "mediatek,mt6358-rtc";
++		};
 +	};
++};
 -- 
 2.6.4
