@@ -1,33 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 10/11] usb: common: add USB GPIO based connection
- detection driver
-Date: Mon, 5 Aug 2019 12:10:40 +0200
-Message-ID: <CACRpkdbq1rEpTm3Lqqb11WrKumV7bjUancuu-u2Ow0PQsCoLsg@mail.gmail.com>
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com> <1563958245-6321-11-git-send-email-chunfeng.yun@mediatek.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 1/3] pinctrl: mvebu: Add CP110 missing pin functionality
+Date: Mon,  5 Aug 2019 12:16:05 +0200
+Message-ID: <20190805101607.29811-2-miquel.raynal@bootlin.com>
+References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563958245-6321-11-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, moderated list:ARM/Mediatek So
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190805101607.29811-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Konstantin Porotchkin <kostap@marvell.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+From: Konstantin Porotchkin <kostap@marvell.com>
 
-> Due to the requirement of usb-connector.txt binding, the old way
-> using extcon to support USB Dual-Role switch is now deprecated
-> when use Type-B connector.
-> This patch introduces a driver of Type-B connector which typically
-> uses an input GPIO to detect USB ID pin, and try to replace the
-> function provided by extcon-usb-gpio driver
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Tested-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
-> v8 changes:
+Add missing definition for function 0xe on CP-110 MPP-62.
+The pin function is Data Strobe for SDIO interface.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-cp110.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c b/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
+index 584952b2ba47..85ade9761885 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
+@@ -597,7 +597,8 @@ static struct mvebu_mpp_mode armada_cp110_mpp_modes[] = {
+ 		 MPP_FUNCTION(7,	"uart0",	"rxd"),
+ 		 MPP_FUNCTION(8,	"uart2",	"rxd"),
+ 		 MPP_FUNCTION(9,	"sata0",	"present_act"),
+-		 MPP_FUNCTION(10,	"ge",		"mdc")),
++		 MPP_FUNCTION(10,	"ge",		"mdc"),
++		 MPP_FUNCTION(14,	"sdio",		"ds")),
+ };
+ 
+ static const struct of_device_id armada_cp110_pinctrl_of_match[] = {
+-- 
+2.20.1
