@@ -1,42 +1,59 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/6] dt-bindings: arm: amlogic: add bindings for G12B based S922X SoC
-Date: Mon, 05 Aug 2019 14:46:28 -0700
-Message-ID: <7hblx3gua3.fsf@baylibre.com>
-References: <20190731124000.22072-1-narmstrong@baylibre.com> <20190731124000.22072-3-narmstrong@baylibre.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFCv2 0/9] dt-bindings: first tentative of conversion to yaml
+ format
+Date: Mon, 5 Aug 2019 15:51:36 -0600
+Message-ID: <CAL_JsqJzwtSXX0nrS7RBP8u-e=16SiWOBjLrvy8Amc08PfpXag@mail.gmail.com>
+References: <20190805120320.32282-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731124000.22072-3-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, christianshewitt@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190805120320.32282-1-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, linux-spi <linux-spi@vger.kernel.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-amlogic@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> Add a specific compatible for the Amlogic G12B family based S922X SoC
-> to differentiate with the A311D SoC from the same family.
+On Mon, Aug 5, 2019 at 6:03 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> This is a first tentative to convert some of the simplest Amlogic
+> dt-bindings to the yaml format.
 >
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-> index 325c6fd3566d..3c3bc806cd23 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-> @@ -139,6 +139,7 @@ properties:
->          items:
->            - enum:
->                - hardkernel,odroid-n2
-> +          - const: amlogic,s922x
->            - const: amlogic,g12b
+> All have been tested using :
+> $ make ARCH=arm64 dtbs_check
+>
+> Issues with the amlogic arm64 DTs has already been identified thanks
+> to the validation scripts. The DT fixes will be pushed once these yaml
+> bindings are acked.
+>
+> Changes since rfc v1:
+> - Fixed bindings according to Rob's comments
+> - Added commit log
+> - renamed yaml files using amlogic prefix
+>
+> Neil Armstrong (9):
+>   dt-bindings: mailbox: meson-mhu: convert to yaml
+>   dt-bindings: rng: amlogic,meson-rng: convert to yaml
+>   dt-bindings: spi: meson: convert to yaml
+>   dt-bindings: reset: amlogic,meson-reset: convert to yaml
+>   dt-bindings: arm: amlogic: amlogic,meson-gx-ao-secure: convert to yaml
+>   dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
+>   dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to yaml
+>   dt-bindings: serial: meson-uart: convert to yaml
+>   dt-bindings: watchdog: meson-gxbb-wdt: convert to yaml
 
-nit: in previous binding docs, we were trying to keep these sorted
-alphabetically.  I'll reorder the new "s922x" after "g12b" when
-applying.
+For the series,
 
-Thanks,
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Kevin
+What's your merge plan? Do you want me to take the whole series?
+
+Rob
