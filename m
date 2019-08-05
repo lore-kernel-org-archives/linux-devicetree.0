@@ -1,98 +1,133 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-Date: Mon, 5 Aug 2019 13:50:06 +0300
-Message-ID: <6b1482f6-0578-f602-d8d1-541d86303ce2@gmail.com>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH 2/3] rtc: sun6i: Add support for H6 RTC
+Date: Mon, 5 Aug 2019 18:54:17 +0800
+Message-ID: <CAGb2v67pcxdxjdRX_HN4133A32eA566DDtUJUKV7pqzxDtOaeg@mail.gmail.com>
+References: <20190412120730.473-1-megous@megous.com> <20190412120730.473-3-megous@megous.com>
+ <CAGb2v675j-aCLMgPJOzr9yx1XxsUvHRr_K7VnL=p8mSdwpu2jw@mail.gmail.com> <20190805104529.z3mex3m2tss7lzlr@core.my.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190805104529.z3mex3m2tss7lzlr@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-01.08.2019 0:10, Sowjanya Komatineni пишет:
-> This patch adds support for Tegra pinctrl driver suspend and resume.
-> 
-> During suspend, context of all pinctrl registers are stored and
-> on resume they are all restored to have all the pinmux and pad
-> configuration for normal operation.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++++++++++++++
->  drivers/pinctrl/tegra/pinctrl-tegra.h |  3 ++
->  2 files changed, 62 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> index 186ef98e7b2b..e3a237534281 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -631,6 +631,58 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->  	}
->  }
->  
-> +static size_t tegra_pinctrl_get_bank_size(struct device *dev,
-> +					  unsigned int bank_id)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, bank_id);
-> +
-> +	return resource_size(res) / 4;
-> +}
-> +
-> +static int tegra_pinctrl_suspend(struct device *dev)
-> +{
-> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-> +	u32 *backup_regs = pmx->backup_regs;
-> +	u32 *regs;
-> +	size_t bank_size;
-> +	unsigned int i, k;
-> +
-> +	for (i = 0; i < pmx->nbanks; i++) {
-> +		bank_size = tegra_pinctrl_get_bank_size(dev, i);
-> +		regs = pmx->regs[i];
-> +		for (k = 0; k < bank_size; k++)
-> +			*backup_regs++ = readl_relaxed(regs++);
-> +	}
-> +
-> +	return pinctrl_force_sleep(pmx->pctl);
-> +}
-> +
-> +static int tegra_pinctrl_resume(struct device *dev)
-> +{
-> +	struct tegra_pmx *pmx = dev_get_drvdata(dev);
-> +	u32 *backup_regs = pmx->backup_regs;
-> +	u32 *regs;
-> +	size_t bank_size;
-> +	unsigned int i, k;
-> +
-> +	for (i = 0; i < pmx->nbanks; i++) {
-> +		bank_size = tegra_pinctrl_get_bank_size(dev, i);
-> +		regs = pmx->regs[i];
-> +		for (k = 0; k < bank_size; k++)
-> +			writel_relaxed(*backup_regs++, regs++);
-> +	}
+On Mon, Aug 5, 2019 at 6:45 PM Ondřej Jirman <megous@megous.com> wrote:
+>
+> On Mon, Aug 05, 2019 at 06:16:14PM +0800, Chen-Yu Tsai wrote:
+> > On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
+> > <linux-sunxi@googlegroups.com> wrote:
+> > >
+> > > From: Ondrej Jirman <megous@megous.com>
+> > >
+> > > RTC on H6 is mostly the same as on H5 and H3. It has slight differences
+> > > mostly in features that are not yet supported by this driver.
+> > >
+> > > Some differences are already stated in the comments in existing code.
+> > > One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
+> > > EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
+> > >
+> > > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
+> > > external low speed oscillator is working correctly.
+> > >
+> > > This patch adds support for enabling LOSC when necessary:
+> > >
+> > > - during reparenting
+> > > - when probing the clock
+> > >
+> > > H6 also has capacbility to automatically reparent RTC clock from
+> > > external crystal oscillator, to internal RC oscillator, if external
+> > > oscillator fails. This is enabled by default. Disable it during
+> > > probe.
+> > >
+> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > > ---
+> > >  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
+> > >  1 file changed, 38 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> > > index 11f56de52179..7375a530c565 100644
+> > > --- a/drivers/rtc/rtc-sun6i.c
+> > > +++ b/drivers/rtc/rtc-sun6i.c
+> > > @@ -41,9 +41,11 @@
+> > >  /* Control register */
+> > >  #define SUN6I_LOSC_CTRL                                0x0000
+> > >  #define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
+> > > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS                BIT(15)
+> >
+> > Manual says bit 14? Or is this different from LOSC_AUTO_SWT_EN?
+> >
+> > The rest looks ok.
+>
+> To give you more information. This is a new thing in H6 BSP, compared
+> to BSPs for previous SoCs (H5/H3).
+>
+>  20 #define REG_CLK32K_AUTO_SWT_EN                  BIT(14)
+>  21 #define REG_CLK32K_AUTO_SWT_BYPASS              BIT(15)
+>
+> Init sequence changed in H6 BSP to:
+>
+> 646         /*
+> 647          * Step1: select RTC clock source
+> 648          */
+> 649         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
+> 650         tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);
+> 651
+> 652         /* Disable auto switch function */
+> 653         tmp_data |= REG_CLK32K_AUTO_SWT_BYPASS;
+> 654         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
+> 655
+> 656         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
+> 657         tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
+> 658         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
+> 659
+> 660         /* We need to set GSM after change clock source */
+> 661         udelay(10);
+> 662         tmp_data = readl(chip->base + SUNXI_LOSC_CTRL);
+> 663         tmp_data |= (EXT_LOSC_GSM | REG_LOSCCTRL_MAGIC);
+> 664         writel(tmp_data, chip->base + SUNXI_LOSC_CTRL);
+> 665
 
-I'm now curious whether any kind of barrier is needed after the
-writings. The pmx_writel() doesn't insert a barrier after the write and
-seems it just misuses writel, which actually should be writel_relaxed()
-+ barrier, IIUC.
+I don't have this in my H6 BSPs. One is H6 Lichee v1.1 downloaded from Pine64.
+The link was from linux-sunxi wiki's H6 page.
 
-It's also not obvious whether PINCTRL HW has any kind of write-FIFO and
-thus maybe read-back + rmb() is needed in order ensure that writes are
-actually completed.
+The other is a 4.9 kernel tree, which I believe is from Allwinner's github:
 
-The last thing which is not obvious is when the new configuration
-actually takes into effect, does it happen immediately or maybe some
-delay is needed?
+    https://github.com/Allwinner-Homlet/H6-BSP4.9-linux
 
-[snip]
+> For older BSPs, the init sequence looked like this:
+>
+> 482         /*
+> 483          * Step1: select RTC clock source
+> 484          */
+> 485         tmp_data = sunxi_rtc_read(SUNXI_LOSC_CTRL_REG);
+> 486         tmp_data &= (~REG_CLK32K_AUTO_SWT_EN);
+> 487         tmp_data |= (RTC_SOURCE_EXTERNAL | REG_LOSCCTRL_MAGIC);
+> 488         tmp_data |= (EXT_LOSC_GSM);
+> 489         sunxi_rtc_write(tmp_data, SUNXI_LOSC_CTRL_REG);
+> 490
+>
+> EXT_LOSC_GSM has values 4 values from low to high, and I guess it configures
+> gain for the oscillator's amplifier in the feedback loop of the circuit.
+>
+> So the new code, for some reason changed from single write to sequence
+> of individual writes/config steps:
+>
+> 1) disable auto-switch and enable auto-switch bypass
+> 2) select RTC clock source (to LOSC)
+>   (wait)
+
+Maybe it's possible to glitch if these two are combined?
+
+> 3) configure gain on the LOSC
+>
+> regards,
+>         o.
+>
+> > ChenYu
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190805104529.z3mex3m2tss7lzlr%40core.my.home.
