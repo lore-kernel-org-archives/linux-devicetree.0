@@ -1,59 +1,54 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH v1] gpio: mpc8xxx: Add new platforms GPIO DT node
- description
-Date: Mon, 05 Aug 2019 11:47:26 +0200
-Message-ID: <2908964.pz7DIX2Qck@ws-140106>
-References: <20190805091432.9656-1-hui.song_1@nxp.com>
- <20190805091432.9656-2-hui.song_1@nxp.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v2 6/6] ARM: dts: mmp2: add OLPC XO 1.75 machine
+Date: Mon, 5 Aug 2019 11:56:00 +0200 (CEST)
+Message-ID: <1387772868.4330.1564998960018.JavaMail.zimbra@v3.sk>
+References: <20190802103326.531250-1-lkundrak@v3.sk> <20190802103326.531250-7-lkundrak@v3.sk> <20190803085824.GB8224@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190805091432.9656-2-hui.song_1@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hui Song <hui.song_1@nxp.com>
-Cc: linux-devel@linux.nxdi.nxp.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190803085824.GB8224@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 5, 2019, 11:14:32 AM CEST Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
+----- On Aug 3, 2019, at 10:58 AM, Pavel Machek pavel@ucw.cz wrote:
+
+> On Fri 2019-08-02 12:33:26, Lubomir Rintel wrote:
+>> This is a fairly complete description of an OLPC XO 1.75 laptop.
+>> What's missing for now is the GPU, LCD controller, DCON, the panel and
+>> audio.
 > 
-> Update the NXP GPIO node dt-binding file for QorIQ and
-> Layerscape platforms, and add one more example with
-> ls1028a GPIO node.
+> Ok, but I need GPU/LCD/panel... that's my only output. Is video
+> expected to work in 5.2? Does the firmware pass right device tree,
+> including the GPU/LCD/DCON?
+
+The firmware (and the dts) uses a simple-framebuffer. You won't get
+any nifty features, but you'll get a framebuffer.
+
+Hopefully we'll get a proper DRM video soon. The status is roughly
+as follows:
+
+LCDC: potentially supported by the Armada DRM driver. Patches sent to
+Russell King some months ago, not there yet. I'd prefer not to nag him.
+
+DCON: Russell dislikes the idea of a DRM bridge, DRM maintainers prefer
+if the driver was not a DRM encoder driver. This seems to require
+quite some work to fix [1].
+
+[1] https://www.spinics.net/lists/dri-devel/msg201927.html
+
+GPU: supported by the etnaviv driver, good enough for 2D acceleration
+to work with xorg-x11-video-armada driver. 3D (weston and mutter alike)
+is broken. To add this to the device tree, the clock and power needs
+to be figured out.
+
+> Is there config somewhere I could use?
 > 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> index 69d4616..fbe6d75 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-> @@ -28,7 +28,7 @@ gpio0: gpio@1100 {
->  Example of gpio-controller node for a ls2080a SoC:
-
-   ^^^^^^^                               ^^^^^^^
-This is an example for ls2080a...
-
->  gpio0: gpio@2300000 {
-> -	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-> +	compatible = "fsl,ls1028a-gpio","fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-
-so I doubt there should be a ls1028a compatible here though.
-
->  	reg = <0x0 0x2300000 0x0 0x10000>;
->  	interrupts = <0 36 0x4>; /* Level high type */
->  	gpio-controller;
-
-Best regards,
-Alexander
+> Thanks a lot,
+>								Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures)
+> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
