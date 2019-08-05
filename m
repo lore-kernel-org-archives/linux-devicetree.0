@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFCv2 8/9] dt-bindings: serial: meson-uart: convert to yaml
-Date: Mon,  5 Aug 2019 14:03:19 +0200
-Message-ID: <20190805120320.32282-9-narmstrong@baylibre.com>
+Subject: [RFCv2 3/9] dt-bindings: spi: meson: convert to yaml
+Date: Mon,  5 Aug 2019 14:03:14 +0200
+Message-ID: <20190805120320.32282-4-narmstrong@baylibre.com>
 References: <20190805120320.32282-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,126 +18,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic UART Serial controller over to a YAML schemas.
+bindings for the Amlogic SPI controllers over to two separate YAML schemas.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../bindings/serial/amlogic,meson-uart.txt    | 38 ----------
- .../bindings/serial/amlogic,meson-uart.yaml   | 73 +++++++++++++++++++
- 2 files changed, 73 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
+ .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 67 +++++++++++++++++++
+ .../bindings/spi/amlogic,meson6-spifc.yaml    | 53 +++++++++++++++
+ .../devicetree/bindings/spi/spi-meson.txt     | 55 ---------------
+ 3 files changed, 120 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+ create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-deleted file mode 100644
-index c06c045126fc..000000000000
---- a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--Amlogic Meson SoC UART Serial Interface
--=======================================
--
--The Amlogic Meson SoC UART Serial Interface is present on a large range
--of SoCs, and can be present either in the "Always-On" power domain or the
--"Everything-Else" power domain.
--
--The particularity of the "Always-On" Serial Interface is that the hardware
--is active since power-on and does not need any clock gating and is usable
--as very early serial console.
--
--Required properties:
--- compatible : compatible: value should be different for each SoC family as :
--	- Meson6 : "amlogic,meson6-uart"
--	- Meson8 : "amlogic,meson8-uart"
--	- Meson8b : "amlogic,meson8b-uart"
--	- GX (GXBB, GXL, GXM) : "amlogic,meson-gx-uart"
--	eventually followed by : "amlogic,meson-ao-uart" if this UART interface
--	is in the "Always-On" power domain.
--- reg : offset and length of the register set for the device.
--- interrupts : identifier to the device interrupt
--- clocks : a list of phandle + clock-specifier pairs, one for each
--	   entry in clock names.
--- clock-names :
--   * "xtal" for external xtal clock identifier
--   * "pclk" for the bus core clock, either the clk81 clock or the gate clock
--   * "baud" for the source of the baudrate generator, can be either the xtal
--	or the pclk.
--
--e.g.
--uart_A: serial@84c0 {
--	compatible = "amlogic,meson-gx-uart";
--	reg = <0x0 0x84c0 0x0 0x14>;
--	interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
--	/* Use xtal as baud rate clock source */
--	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
--	clock-names = "xtal", "pclk", "baud";
--};
-diff --git a/Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
+diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
 new file mode 100644
-index 000000000000..5d48a8c04aa9
+index 000000000000..49b617c98ae7
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
-@@ -0,0 +1,73 @@
++++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
+@@ -0,0 +1,67 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/serial/amlogic,meson-uart.yaml#"
++$id: "http://devicetree.org/schemas/spi/amlogic,meson-gx-spicc.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic Meson SoC UART Serial Interface
++title: Amlogic Meson SPI Communication Controller
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
 +
-+description: |
-+  The Amlogic Meson SoC UART Serial Interface is present on a large range
-+  of SoCs, and can be present either in the "Always-On" power domain or the
-+  "Everything-Else" power domain.
++allOf:
++  - $ref: "spi-controller.yaml#"
 +
-+  The particularity of the "Always-On" Serial Interface is that the hardware
-+  is active since power-on and does not need any clock gating and is usable
-+  as very early serial console.
++description: |
++  The Meson SPICC is a generic SPI controller for general purpose Full-Duplex
++  communications with dedicated 16 words RX/TX PIO FIFOs.
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - description: Allways-on power domain UART controller
-+        items:
-+        - enum:
-+          - amlogic,meson6-uart
-+          - amlogic,meson8-uart
-+          - amlogic,meson8b-uart
-+          - amlogic,meson-gx-uart
-+        - const: amlogic,meson-ao-uart
-+      - description: Everything-Else power domain UART controller
-+        enum:
-+        - amlogic,meson6-uart
-+        - amlogic,meson8-uart
-+        - amlogic,meson8b-uart
-+        - amlogic,meson-gx-uart
-+
-+  reg:
-+    maxItems: 1
++    enum:
++      - amlogic,meson-gx-spicc # SPICC controller on Amlogic GX and compatible SoCs
++      - amlogic,meson-axg-spicc # SPICC controller on Amlogic AXG and compatible SoCs
 +
 +  interrupts:
 +    maxItems: 1
 +
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
 +  clocks:
-+    items:
-+      - description: external xtal clock identifier
-+      - description: the bus core clock, either the clk81 clock or the gate clock
-+      - description: the source of the baudrate generator, can be either the xtal or the pclk
++    maxItems: 1
 +
 +  clock-names:
++    description: input clock for the baud rate generator
 +    items:
-+      - const: xtal
-+      - const: pclk
-+      - const: baud
++      - const: core
 +
 +required:
 +  - compatible
@@ -148,12 +91,141 @@ index 000000000000..5d48a8c04aa9
 +
 +examples:
 +  - |
-+    serial@84c0 {
-+          compatible = "amlogic,meson-gx-uart";
-+          reg = <0x84c0 0x14>;
-+          interrupts = <26>;
-+          clocks = <&xtal>, <&pclk>, <&xtal>;
-+          clock-names = "xtal", "pclk", "baud";
++    spi@c1108d80 {
++          compatible = "amlogic,meson-gx-spicc";
++          reg = <0xc1108d80 0x80>;
++          interrupts = <112>;
++          clocks = <&clk81>;
++          clock-names = "core";
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          ethernet-switch@0 {
++              compatible = "micrel,ks8995m";
++              spi-max-frequency = <1000000>;
++              reg = <0>;
++          };
 +    };
++
+diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+new file mode 100644
+index 000000000000..67dcedc81a5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/spi/amlogic,meson6-spifc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson SPI Flash Controller
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++description: |
++  The Meson SPIFC is a controller optimized for communication with SPI
++  NOR memories, without DMA support and a 64-byte unified transmit /
++  receive buffer.
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson6-spifc # SPI Flash Controller on Meson6 and compatible SoCs
++      - amlogic,meson-gxbb-spifc # SPI Flash Controller on GXBB and compatible SoCs
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++examples:
++  - |
++    spi@c1108c80 {
++          compatible = "amlogic,meson6-spifc";
++          reg = <0xc1108c80 0x80>;
++          clocks = <&clk81>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          flash: m25p80@0 {
++              compatible = "spansion,m25p80", "jedec,spi-nor";
++              reg = <0>;
++              spi-max-frequency = <40000000>;
++          };
++    };
++
+diff --git a/Documentation/devicetree/bindings/spi/spi-meson.txt b/Documentation/devicetree/bindings/spi/spi-meson.txt
+deleted file mode 100644
+index b7f5e86fed22..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-meson.txt
++++ /dev/null
+@@ -1,55 +0,0 @@
+-Amlogic Meson SPI controllers
+-
+-* SPIFC (SPI Flash Controller)
+-
+-The Meson SPIFC is a controller optimized for communication with SPI
+-NOR memories, without DMA support and a 64-byte unified transmit /
+-receive buffer.
+-
+-Required properties:
+- - compatible: should be "amlogic,meson6-spifc" or "amlogic,meson-gxbb-spifc"
+- - reg: physical base address and length of the controller registers
+- - clocks: phandle of the input clock for the baud rate generator
+- - #address-cells: should be 1
+- - #size-cells: should be 0
+-
+-	spi@c1108c80 {
+-		compatible = "amlogic,meson6-spifc";
+-		reg = <0xc1108c80 0x80>;
+-		clocks = <&clk81>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+-
+-* SPICC (SPI Communication Controller)
+-
+-The Meson SPICC is generic SPI controller for general purpose Full-Duplex
+-communications with dedicated 16 words RX/TX PIO FIFOs.
+-
+-Required properties:
+- - compatible: should be:
+-	"amlogic,meson-gx-spicc" on Amlogic GX and compatible SoCs.
+-	"amlogic,meson-axg-spicc" on Amlogic AXG and compatible SoCs
+- - reg: physical base address and length of the controller registers
+- - interrupts: The interrupt specifier
+- - clock-names: Must contain "core"
+- - clocks: phandle of the input clock for the baud rate generator
+- - #address-cells: should be 1
+- - #size-cells: should be 0
+-
+-Optional properties:
+- - resets: phandle of the internal reset line
+-
+-See ../spi/spi-bus.txt for more details on SPI bus master and slave devices
+-required and optional properties.
+-
+-Example :
+-	spi@c1108d80 {
+-		compatible = "amlogic,meson-gx-spicc";
+-		reg = <0xc1108d80 0x80>;
+-		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+-		clock-names = "core";
+-		clocks = <&clk81>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
 -- 
 2.22.0
