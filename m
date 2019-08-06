@@ -1,77 +1,65 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v4 00/10] implement poweroff for mt6323 / bpi-r2
-Date: Tue,  6 Aug 2019 18:27:35 +0200
-Message-ID: <20190806162745.8414-1-frank-w@public-files.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v4 05/10] mfd: mt6323: some improvements of mt6397-core
+Date: Tue,  6 Aug 2019 18:27:40 +0200
+Message-ID: <20190806162745.8414-6-frank-w@public-files.de>
+References: <20190806162745.8414-1-frank-w@public-files.de>
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190806162745.8414-1-frank-w@public-files.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@r>
-Cc: Frank Wunderlich <frank-w@public-files.de>
+Cc: Josef Friedl <josef.friedl@speed.at>, Frank Wunderlich <frank-w@public-files.de>
 List-Id: devicetree@vger.kernel.org
 
-mainline-driver does not support mt6323
+From: Josef Friedl <josef.friedl@speed.at>
 
-this series makes some cleanup to mt6397-rtc-driver, adds mt6323 and
-implement power-controller on it.
+simplyfications (resource definitions my DEFINE_RES_* macros)
 
-tested on bananapi-r2
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+=2D--
+changes since v3: moved part 6 forward to let compatible and driver be tog=
+ether
+changes since v2: splitted v2 part 4 into 6+7
 
-Original Patch from Josef Friedl
+ drivers/mfd/mt6397-core.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-changes since v3:
-	- moved SOB in 2/10 and 9/10
-	- moved part 5 to 6 to be near driver-change
-	- changehistory of patches below ---
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index 337bcccdb914..5f7070267c9a 100644
+=2D-- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -1,10 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2014 MediaTek Inc.
++ * Copyright (c) 2014-2018 MediaTek Inc.
+  * Author: Flora Fu, MediaTek
+  */
 
-changes since v2:
-	- Splitted some parts and rebased on 5.3-rc2:
+ #include <linux/interrupt.h>
++#include <linux/ioport.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+@@ -23,16 +24,8 @@
+ #define MT6397_CID_CODE		0x97
 
-	v2.1 dt-bindings: add powercontroller =E2=80=93 try to make better subjec=
-t
-	v2.2 separate rtc-mt6397.txt (suggested by Alexandre Belloni)
-		add missing commit-message (suggested by Matthias Brugger)
-	v2.3 fix alloc after IRQ (suggested by Alexandre Belloni)
-		new compatible (splitting suggested by Alexandre Belloni)
-		needed due to different rtc-base/size see #7
-	v2.4 simplifications (Define-res-macros)
-		add mt6323 rtc+pwrc
-	v2.5 add poweroff-driver (no change)
-	v2.6 MAINTAINERS (no change)
-	v2.7 DTS-Changes (no change)
+ static const struct resource mt6397_rtc_resources[] =3D {
+-	{
+-		.start =3D MT6397_RTC_BASE,
+-		.end   =3D MT6397_RTC_BASE + MT6397_RTC_SIZE,
+-		.flags =3D IORESOURCE_MEM,
+-	},
+-	{
+-		.start =3D MT6397_IRQ_RTC,
+-		.end   =3D MT6397_IRQ_RTC,
+-		.flags =3D IORESOURCE_IRQ,
+-	},
++	DEFINE_RES_MEM(MT6397_RTC_BASE, MT6397_RTC_SIZE),
++	DEFINE_RES_IRQ(MT6397_IRQ_RTC),
+ };
 
-
-Josef Friedl (10):
-  dt-bindings: add powercontroller
-  dt-bindings: add missing mt6397 rtc
-  rtc: mt6397: move some common definitions into rtc.h
-  rtc: mt6397: improvements of rtc driver
-  mfd: mt6323: some improvements of mt6397-core
-  rtc: mt6397: add compatible for mt6323
-  mfd: mt6323: add mt6323 rtc+pwrc
-  power: reset: add driver for mt6323 poweroff
-  MAINTAINERS: add Mediatek shutdown drivers
-  arm: dts: mt6323: add keys, power-controller, rtc and codec
-
- .../devicetree/bindings/mfd/mt6397.txt        |  10 +-
- .../bindings/power/reset/mt6323-poweroff.txt  |  20 ++++
- .../devicetree/bindings/rtc/rtc-mt6397.txt    |  29 +++++
- MAINTAINERS                                   |   7 ++
- arch/arm/boot/dts/mt6323.dtsi                 |  27 +++++
- drivers/mfd/mt6397-core.c                     |  40 +++++--
- drivers/power/reset/Kconfig                   |  10 ++
- drivers/power/reset/Makefile                  |   1 +
- drivers/power/reset/mt6323-poweroff.c         |  97 ++++++++++++++++
- drivers/rtc/rtc-mt6397.c                      | 107 ++++--------------
- include/linux/mfd/mt6397/core.h               |   2 +
- include/linux/mfd/mt6397/rtc.h                |  71 ++++++++++++
- 12 files changed, 323 insertions(+), 98 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-p=
-oweroff.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
- create mode 100644 drivers/power/reset/mt6323-poweroff.c
- create mode 100644 include/linux/mfd/mt6397/rtc.h
-
+ static const struct resource mt6323_keys_resources[] =3D {
 =2D-
 2.17.1
