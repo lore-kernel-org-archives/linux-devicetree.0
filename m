@@ -1,94 +1,179 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
-Date: Tue, 6 Aug 2019 11:21:28 -0700
-Message-ID: <20190806182128.GD26807@tuxbook-pro>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <20190801191403.GA7234@tuxbook-pro>
- <1a057176-81ab-e302-4375-2717ceef6924@st.com>
- <20190805174659.GA23928@tuxbook-pro>
- <dcd1aeea-cffe-d5fb-af5a-e52efcc2e046@ti.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+Date: Tue, 6 Aug 2019 20:30:45 +0200
+Message-ID: <20190806183045.edhm3qzpegscf2z7@core.my.home>
+References: <20190412120730.473-1-megous@megous.com>
+ <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBVUOU7VAKGQERHH5IGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <dcd1aeea-cffe-d5fb-af5a-e52efcc2e046@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Fabien DESSENNE <fabien.dessenne@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+In-Reply-To: <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 06 Aug 10:38 PDT 2019, Suman Anna wrote:
-
-> Hi Fabien,
+On Mon, Apr 15, 2019 at 04:18:12PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
+> <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
+> >
+> > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> >
+> > I went through the datasheets for H6 and H5, and compared the differences.
+> > RTCs are largely similar, but not entirely compatible. Incompatibilities
+> > are in details not yet implemented by the rtc driver though.
+> >
+> > I also corrected the clock tree in H6 DTSI.
 > 
-> On 8/5/19 12:46 PM, Bjorn Andersson wrote:
-> > On Mon 05 Aug 01:48 PDT 2019, Fabien DESSENNE wrote:
-> > 
-> >>
-> >> On 01/08/2019 9:14 PM, Bjorn Andersson wrote:
-> >>> On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
-[..]
-> >> B/ This would introduce some inconsistency between the two 'request' API
-> >> which are hwspin_lock_request() and hwspin_lock_request_specific().
-> >> hwspin_lock_request() looks for an unused lock, so requests for an exclusive
-> >> usage. On the other side, request_specific() would request shared locks.
-> >> Worst the following sequence can transform an exclusive usage into a shared
-> >>
-> > 
-> > There is already an inconsistency in between these; as with above any
-> > system that uses both request() and request_specific() will be suffering
-> > from intermittent failures due to probe ordering.
-> > 
-> >> one:
-> >>    -hwspin_lock_request() -> returns Id#0 (exclusive)
-> >>    -hwspin_lock_request() -> returns Id#1 (exclusive)
-> >>    -hwspin_lock_request_specific(0) -> returns Id#0 and makes Id#0 shared
-> >> Honestly I am not sure that this is a real issue, but it's better to have it
-> >> in mind before we take ay decision
+> Please also add DCXO clock input/output and XO clock input to the bindings
+> and DT, and also fix up the clock tree. You can skip them in the driver for
+> now, but please add a TODO. As long as you don't change the clock-output-name
+> of osc24M, everything should work as before.
 > 
-> Wouldn't it be actually simpler to just introduce a new specific API
-> variant for this, similar to the reset core for example (it uses a
-> separate exclusive API), without having to modify the bindings at all.
-> It is just a case of your driver using the right API, and the core can
-> be modified to use the additional tag semantics based on the API. It
-> should avoid any confusion with say using a different second cell value
-> for the same lock in two different nodes.
+> We just want the DT to describe what is actually there. For the XO input,
+> you could just directly reference the external crystal node. The gate for
+> it is likely somewhere in the PRCM block, which we don't have docs for.
+
+So I was thinking about this for a while, and came up with this:
+
+----------------- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi -----------------
+index 64c39f663d22..ac99ddbebe5c 100644
+@@ -627,14 +635,15 @@
+
+ 		rtc: rtc@7000000 {
+ 			compatible = "allwinner,sun50i-h6-rtc";
+ 			reg = <0x07000000 0x400>;
+ 			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+-			clock-output-names = "osc32k", "osc32k-out", "iosc";
+-			clocks = <&ext_osc32k>;
++			clock-output-names = "osc32k", "osc32k-out", "iosc", "hosc";
++			clock-names = "losc", "dcxo";
++			clocks = <&ext_osc32k>, <&osc24M>;
+ 			#clock-cells = <1>;
+ 		};
+
+ 		r_ccu: clock@7010000 {
+ 			compatible = "allwinner,sun50i-h6-r-ccu";
+ 			reg = <0x07010000 0x400>;
+
+I'm not completely sure how (or why?) to describe in DTSI which oscillator the
+designer used (XO vs DCXO). This information is signalled by the pad voltage and
+can be determined at runtime from DCXO_CTRL_REG's OSC_CLK_SRC_SEL (bit 3). It's
+not possible to change at runtime.
+
+HOSC source selection is only material to the CPUS (ARISC) firmware when it
+wants to turn off all PLLs and the main crystal oscillator so that it knows
+which one to turn off. I don't see any other use for it. It's just
+informational. I don't think (future) crust firmware has space to be reading
+DTBs, so the detection will be using OSC_CLK_SRC_SEL anyway.
+
+Maybe whether XO or DCXO is used also matters if you want to do some fine
+tunning of DCXO (control register has pletny of options), but that's probably
+better done in u-boot. And there's still no need to read HOSC source from DT.
+The driver can just check compatible, and if it is H6 and OSC_CLK_SRC_SEL is 1,
+it can do it's DCXO tunning, or whatever. But neither OS nor bootloader will
+be using this info to gate/disable the osciallator.
+
+If we really want this in DT, maybe we can model it by having just two input
+clocks to RTC described in DTSI, and the DTSI for H6 would have this by default:
+
+	clock-names = "losc", "dcxo";
+	clocks = <&ext_osc32k>, <&osc24M>;
+
+And the board designer could change it from a board file, like this:
+
+&rtc {
+	clock-names = "losc", "xo";
+	clocks = <&ext_osc32k>, <&osc24M>;
+};
+
+The driver could decide which oscillator is used by the presence of either
+dcxo or xo input clock.
+
+But in any case, the driver can also get this info from DCXO_CTRL_REG's
+OSC_CLK_SRC_SEL, so it doesn't need to read this from DT at all. So it's a bit
+pointless.
+
+So I see two options:
+
+1) skip adding dcxo/xo to input clocks of RTC completely
+2) the above
+
+What do you think?
+
+regards,
+	o.
+
+
+> > There's a small detail here, that's not described absolutely correctly in
+> > DTSI, but the difference is not really that material. ext_osc32k is
+> > originally modelled as a fixed clock that feeds into RTC module, but in
+> > reality it's the RTC module that implements via its registers enabling and
+> > disabling of this oscillator/clock.
+> >
+> > Though:
+> > - there's no other possible user of ext_osc32k than RTC module
+> > - there's no other possible external configuration for the crystal
+> >   circuit that would need to be handled in the dts per board
+> >
+> > So I guess, while the description is not perfect, this patch series still
+> > improves the current situation. Or maybe I'm misunderstanding something,
+> > and &ext_osc32k node just describes a fact that there's a crystal on
+> > the board. Then, everything is perhaps fine. :)
 > 
-
-But this implies that there is an actual need to hold these locks
-exclusively. Given that they are (except for the raw case) all wrapped
-by Linux locking primitives there shouldn't be a problem sharing a lock
-(except possibly for the raw case).
-
-
-I agree that we shouldn't specify this property in DT - if anything it
-should be a variant of the API.
-
-> If you are sharing a hwlock on the Linux side, surely your driver should
-> be aware that it is a shared lock. The tag can be set during the first
-> request API, and you look through both tags when giving out a handle.
+> Correct. The external clock nodes are modeling the crystal, not the internal
+> clock gate / distributor.
 > 
-
-Why would the driver need to know about it?
-
-> Obviously, the hwspin_lock_request() API usage semantics always had the
-> implied additional need for communicating the lock id to the other peer
-> entity, so a realistic usage is most always the specific API variant. I
-> doubt this API would be of much use for the shared driver usage. This
-> also implies that the client user does not care about specifying a lock
-> in DT.
+> Were the vendor to not include the crystal (for whatever reasons), the DT
+> should be able to describe it via the absence of the clock input, and the
+> driver should correctly use the internal (inaccurate) oscillator. I realize
+> the clocks property is required, and the driver doesn't handle this case
+> either, so we might have to fix that if it were to appear in the wild.
 > 
-
-Afaict if the lock are shared then there shouldn't be a problem with
-some clients using the request API and others request_specific(). As any
-collisions would simply mean that there are more contention on the lock.
-
-With the current exclusive model that is not possible and the success of
-the request_specific will depend on probe order.
-
-But perhaps it should be explicitly prohibited to use both APIs on the
-same hwspinlock instance?
-
-Regards,
-Bjorn
+> > For now, the enable bit for this oscillator is toggled by the re-parenting
+> > code automatically, as needed.
+> 
+> That's fine. No need to increase the clock tree depth.
+> 
+> ChenYu
+> 
+> > This patchset is necessary for implementing the WiFi/Bluetooth support
+> > on boards using H6 SoC.
+> >
+> > Please take a look.
+> >
+> > Thank you and regards,
+> >   Ondrej Jirman
+> >
+> > Ondrej Jirman (3):
+> >   dt-bindings: Add compatible for H6 RTC
+> >   rtc: sun6i: Add support for H6 RTC
+> >   arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
+> >
+> >  .../devicetree/bindings/rtc/sun6i-rtc.txt     |  1 +
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 30 +++++++-------
+> >  drivers/rtc/rtc-sun6i.c                       | 40 ++++++++++++++++++-
+> >  3 files changed, 55 insertions(+), 16 deletions(-)
+> >
+> > --
+> > 2.21.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> > For more options, visit https://groups.google.com/d/optout.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
