@@ -1,13 +1,14 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH v3] arm64: dts: ls1028a: Add temperature sensor node
-Date: Tue, 6 Aug 2019 05:41:21 +0000
-Message-ID: <VI1PR04MB43336E0A72DA69E6BA07EE77F3D50@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20190806053004.36956-1-andy.tang@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 1/4] dt-bindings: arm: imx: Add the soc binding for
+ i.MX8MN
+Date: Tue, 6 Aug 2019 05:42:05 +0000
+Message-ID: <DB3PR0402MB39162CCE914A9C250CC203BFF5D50__4544.99284257821$1565070142$gmane$org@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190619022145.42398-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190806053004.36956-1-andy.tang@nxp.com>
+In-Reply-To: <20190619022145.42398-1-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,61 +19,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Tang <andy.tang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "j.neuschaefer@gmx.net" <j.neuschaefer@gmx.net>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, Leo Li <leoyang.li@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, devicetree
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-UGxlYXNlIGlnbm9yZSB0aGlzIGVtYWlsLiBTb3JyeSBmb3Igc2VuZGluZyB0aGUgd3JvbmcgcGF0
-Y2guDQoNCkJSLA0KQW5keQ0KDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBG
-cm9tOiBZdWFudGlhbiBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqONTC
-NsjVIDEzOjMwDQo+IFRvOiBzaGF3bmd1b0BrZXJuZWwub3JnDQo+IENjOiBMZW8gTGkgPGxlb3lh
-bmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5j
-b207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEFuZHkgVGFuZw0K
-PiA8YW5keS50YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSCB2M10gYXJtNjQ6IGR0czog
-bHMxMDI4YTogQWRkIHRlbXBlcmF0dXJlIHNlbnNvciBub2RlDQo+IA0KPiBBZGQgbnhwIHNhNTYw
-MDQgY2hpcCBub2RlIGZvciB0ZW1wZXJhdHVyZSBtb25pdG9yLg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogWXVhbnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IC0tLQ0KPiB2MzoNCj4gCS0g
-c29ydCB0aGUgbm9kZSBpbiBpMmMgYWRkcmVzcw0KPiB2MjoNCj4gCS0gY2hhbmdlIHRoZSBub2Rl
-IG5hbWUgYW5kIGFkZCB2Y2Mtc3VwcGx5DQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
-ZS9mc2wtbHMxMDI4YS1xZHMuZHRzIHwgICAxNQ0KPiArKysrKysrKysrKysrKysNCj4gIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5kdHMgfCAgIDE1DQo+ICsr
-KysrKysrKysrKysrKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAwIGRl
-bGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
-ZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+IGluZGV4IGIzNTkwNjguLjk2MGRhZjIgMTAwNjQ0DQo+
-IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMN
-Cj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0
-cw0KPiBAQCAtNDcsNiArNDcsMTUgQEANCj4gIAkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gIAl9
-Ow0KPiANCj4gKwlzYl8zdjM6IHJlZ3VsYXRvci1zYjN2MyB7DQo+ICsJCWNvbXBhdGlibGUgPSAi
-cmVndWxhdG9yLWZpeGVkIjsNCj4gKwkJcmVndWxhdG9yLW5hbWUgPSAiM3YzX3ZidXMiOw0KPiAr
-CQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gKwkJcmVndWxhdG9yLW1h
-eC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsJCXJlZ3VsYXRvci1ib290LW9uOw0KPiArCQly
-ZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArCX07DQo+ICsNCj4gIAlzb3VuZCB7DQo+ICAJCWNvbXBh
-dGlibGUgPSAic2ltcGxlLWF1ZGlvLWNhcmQiOw0KPiAgCQlzaW1wbGUtYXVkaW8tY2FyZCxmb3Jt
-YXQgPSAiaTJzIjsNCj4gQEAgLTExNyw2ICsxMjYsMTIgQEANCj4gIAkJCSNzaXplLWNlbGxzID0g
-PDA+Ow0KPiAgCQkJcmVnID0gPDB4Mz47DQo+IA0KPiArCQkJdGVtcGVyYXR1cmUtc2Vuc29yQDRj
-IHsNCj4gKwkJCQljb21wYXRpYmxlID0gIm54cCxzYTU2MDA0IjsNCj4gKwkJCQlyZWcgPSA8MHg0
-Yz47DQo+ICsJCQkJdmNjLXN1cHBseSA9IDwmc2JfM3YzPjsNCj4gKwkJCX07DQo+ICsNCj4gIAkJ
-CXJ0Y0A1MSB7DQo+ICAJCQkJY29tcGF0aWJsZSA9ICJueHAscGNmMjEyOSI7DQo+ICAJCQkJcmVn
-ID0gPDB4NTE+Ow0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
-bC1sczEwMjhhLXJkYi5kdHMNCj4gaW5kZXggZjljMjcyZi4uNmEyMjQyMyAxMDA2NDQNCj4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiAr
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzDQo+
-IEBAIC00Myw2ICs0MywxNSBAQA0KPiAgCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiAgCX07DQo+
-IA0KPiArCXNiXzN2MzogcmVndWxhdG9yLXNiM3YzIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJyZWd1
-bGF0b3ItZml4ZWQiOw0KPiArCQlyZWd1bGF0b3ItbmFtZSA9ICIzdjNfdmJ1cyI7DQo+ICsJCXJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KPiArCQlyZWd1bGF0b3ItbWF4LW1p
-Y3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gKwkJcmVndWxhdG9yLWJvb3Qtb247DQo+ICsJCXJlZ3Vs
-YXRvci1hbHdheXMtb247DQo+ICsJfTsNCj4gKw0KPiAgCXNvdW5kIHsNCj4gIAkJY29tcGF0aWJs
-ZSA9ICJzaW1wbGUtYXVkaW8tY2FyZCI7DQo+ICAJCXNpbXBsZS1hdWRpby1jYXJkLGZvcm1hdCA9
-ICJpMnMiOw0KPiBAQCAtMTE1LDYgKzEyNCwxMiBAQA0KPiAgCQkJI3NpemUtY2VsbHMgPSA8MD47
-DQo+ICAJCQlyZWcgPSA8MHgzPjsNCj4gDQo+ICsJCQl0ZW1wZXJhdHVyZS1zZW5zb3JANGMgew0K
-PiArCQkJCWNvbXBhdGlibGUgPSAibnhwLHNhNTYwMDQiOw0KPiArCQkJCXJlZyA9IDwweDRjPjsN
-Cj4gKwkJCQl2Y2Mtc3VwcGx5ID0gPCZzYl8zdjM+Ow0KPiArCQkJfTsNCj4gKw0KPiAgCQkJcnRj
-QDUxIHsNCj4gIAkJCQljb21wYXRpYmxlID0gIm54cCxwY2YyMTI5IjsNCj4gIAkJCQlyZWcgPSA8
-MHg1MT47DQo+IC0tDQo+IDEuNy4xDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Ping for this patch series...
+
+> From: Anson Huang <Anson.Huang@nxp.com>
+> 
+> This patch adds the soc & board binding for i.MX8MN.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> No change.
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml
+> b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 407138e..b35abb1 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -177,6 +177,12 @@ properties:
+>                - fsl,imx8mm-evk            # i.MX8MM EVK Board
+>            - const: fsl,imx8mm
+> 
+> +      - description: i.MX8MN based Boards
+> +        items:
+> +          - enum:
+> +              - fsl,imx8mn-ddr4-evk            # i.MX8MN DDR4 EVK Board
+> +          - const: fsl,imx8mn
+> +
+>        - description: i.MX8QXP based Boards
+>          items:
+>            - enum:
+> --
+> 2.7.4
