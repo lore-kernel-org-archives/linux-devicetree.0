@@ -1,206 +1,55 @@
-From: Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: RE: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
-Date: Tue, 6 Aug 2019 07:43:37 +0000
-Message-ID: <543ee96699164a3cb95fe6a9aab54eae@SFHDAG5NODE3.st.com>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <20190801191403.GA7234@tuxbook-pro>
- <1a057176-81ab-e302-4375-2717ceef6924@st.com>
- <20190805174659.GA23928@tuxbook-pro>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v8 00/11] add USB GPIO based connection detection driver
+Date: Tue, 6 Aug 2019 15:48:30 +0800
+Message-ID: <1565077710.23705.21.camel@mhfsdcap03>
+References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
+         <CACRpkdaBT24JPH_VsKtgp6fjWtVuqM50rXkDVYKmLHgR5hdJzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805174659.GA23928@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <CACRpkdaBT24JPH_VsKtgp6fjWtVuqM50rXkDVYKmLHgR5hdJzA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "s-anna@ti.com" <s-anna@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, moderated list:ARM/Mediate
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+On Mon, 2019-08-05 at 12:06 +0200, Linus Walleij wrote:
+> On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> 
+> > Because the USB Connector is introduced and the requirement of
+> > usb-connector.txt binding, the old way using extcon to support
+> > USB Dual-Role switch is now deprecated, meanwhile there is no
+> > available common driver when use Type-B connector, typically
+> > using an input GPIO to detect USB ID pin.
+> 
+> However while this was going on,
+> drivers/extcon/extcon-fsa9480.c was merged and that detects
+> not only GPIO on the USB port but multiplexed usecases such
+> as UART over the USB micro PHY (and no that UART is not
+> a USB UART, but an actual RX/TX over D-/D+).
+> 
+> That driver also measure a whole slew of funny resistance
+> values on the ID pin, that is how it does its job.
+I look into the spec of fsa9480, it indeed detect many USB accessories.
+But this driver is used for simplest cases that only uses micro
+receptacle with id-pin/vbus-pin
 
-Could you please let us know your thoughts or comments?
+> 
+> But for just "hey I'm plugged in" we can surely keep this
+> ID on GPIO detection in the USB subsystem.
+Sorry, you mean provide a common API? could you please describe more
+clearer about your suggestion?
 
-BR
 
-Fabien
+Introducing a single driver using usb_role_switch will help to keep
+transparent for USB controller driver, no matter it uses type-c or micro
 
+Thanks a lot
+> 
+> I just get a bit insecure about how we should ideally
+> handle these "funny-PHY's".
 
-> -----Original Message-----
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Sent: lundi 5 ao=FBt 2019 19:47
-> To: Fabien DESSENNE <fabien.dessenne@st.com>
-> Cc: Ohad Ben-Cohen <ohad@wizery.com>; Rob Herring <robh+dt@kernel.org>;
-> Mark Rutland <mark.rutland@arm.com>; Maxime Coquelin
-> <mcoquelin.stm32@gmail.com>; Alexandre TORGUE
-> <alexandre.torgue@st.com>; Jonathan Corbet <corbet@lwn.net>; linux-
-> remoteproc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-stm32@st-md-mailman.stormreply.com; linux-a=
-rm-
-> kernel@lists.infradead.org; linux-doc@vger.kernel.org; Benjamin GAIGNARD
-> <benjamin.gaignard@st.com>
-> Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
->=20
-> On Mon 05 Aug 01:48 PDT 2019, Fabien DESSENNE wrote:
->=20
-> >
-> > On 01/08/2019 9:14 PM, Bjorn Andersson wrote:
-> > > On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
-> > >
-> > >> The current implementation does not allow two different devices to
-> > >> use a common hwspinlock. This patch set proposes to have, as an
-> > >> option, some hwspinlocks shared between several users.
-> > >>
-> > >> Below is an example that explain the need for this:
-> > >> 	exti: interrupt-controller@5000d000 {
-> > >> 		compatible =3D "st,stm32mp1-exti", "syscon";
-> > >> 		interrupt-controller;
-> > >> 		#interrupt-cells =3D <2>;
-> > >> 		reg =3D <0x5000d000 0x400>;
-> > >> 		hwlocks =3D <&hsem 1>;
-> > >> 	};
-> > >> The two drivers (stm32mp1-exti and syscon) refer to the same hwlock.
-> > >> With the current hwspinlock implementation, only the first driver
-> > >> succeeds in requesting (hwspin_lock_request_specific) the hwlock.
-> > >> The second request fails.
-> > >>
-> > >>
-> > >> The proposed approach does not modify the API, but extends the DT
-> 'hwlocks'
-> > >> property with a second optional parameter (the first one identifies
-> > >> an
-> > >> hwlock) that specifies whether an hwlock is requested for exclusive
-> > >> usage (current behavior) or can be shared between several users.
-> > >> Examples:
-> > >> 	hwlocks =3D <&hsem 8>;	Ref to hwlock #8 for exclusive usage
-> > >> 	hwlocks =3D <&hsem 8 0>;	Ref to hwlock #8 for exclusive (0) usage
-> > >> 	hwlocks =3D <&hsem 8 1>;	Ref to hwlock #8 for shared (1) usage
-> > >>
-> > >> As a constraint, the #hwlock-cells value must be 1 or 2.
-> > >> In the current implementation, this can have theorically any value b=
-ut:
-> > >> - all of the exisiting drivers use the same value : 1.
-> > >> - the framework supports only one value : 1 (see implementation of
-> > >>    of_hwspin_lock_simple_xlate())
-> > >> Hence, it shall not be a problem to restrict this value to 1 or 2
-> > >> since it won't break any driver.
-> > >>
-> > > Hi Fabien,
-> > >
-> > > Your series looks good, but it makes me wonder why the hardware
-> > > locks should be an exclusive resource.
-> > >
-> > > How about just making all (specific) locks shared?
-> >
-> > Hi Bjorn,
-> >
-> > Making all locks shared is a possible implementation (my first
-> > implementation was going this way) but there are some drawbacks we
-> > must be aware of:
-> >
-> > A/ This theoretically break the legacy behavior (the legacy works with
-> > exclusive (UNUSED radix tag) usage). As a consequence, an existing
-> > driver that is currently failing to request a lock (already claimed by
-> > another
-> > user) would now work fine. Not sure that there are such drivers, so
-> > this point is probably not a real issue.
-> >
->=20
-> Right, it's possible that a previously misconfigured system now successfu=
-lly
-> probes more than one device that uses a particular spinlock. But such sys=
-tem
-> would be suffering from issues related to e.g.
-> probe ordering.
->=20
-> So I think we should ignore this issue.
->=20
-> > B/ This would introduce some inconsistency between the two 'request'
-> > API which are hwspin_lock_request() and hwspin_lock_request_specific().
-> > hwspin_lock_request() looks for an unused lock, so requests for an
-> > exclusive usage. On the other side, request_specific() would request sh=
-ared
-> locks.
-> > Worst the following sequence can transform an exclusive usage into a
-> > shared
-> >
->=20
-> There is already an inconsistency in between these; as with above any sys=
-tem
-> that uses both request() and request_specific() will be suffering from in=
-termittent
-> failures due to probe ordering.
->=20
-> > one:
-> >  =A0 -hwspin_lock_request() -> returns Id#0 (exclusive)
-> >  =A0 -hwspin_lock_request() -> returns Id#1 (exclusive)
-> >  =A0 -hwspin_lock_request_specific(0) -> returns Id#0 and makes Id#0
-> > shared Honestly I am not sure that this is a real issue, but it's
-> > better to have it in mind before we take ay decision
->=20
-> The case where I can see a
-> problem with this would be if the two clients somehow would nest their lo=
-cking
-> regions.
->=20
-> But generally I think this could consider this an improvement, because th=
-e
-> request_specific() would now be able to acquire its hwlock, with some add=
-itional
-> contention due to the multiple use.
->=20
-> > I could not find any driver using the hwspin_lock_request() API, we
-> > may decide to remove (or to make deprecated) this API, having
-> > everything 'shared without any conditions'.
-> >
->=20
-> It would be nice to have an upstream user of this API.
->=20
-> >
-> > I can see three options:
-> > 1- Keep my initial proposition
-> > 2- Have hwspin_lock_request_specific() using shared locks and
-> >  =A0=A0 hwspin_lock_request() using unused (so 'initially' exclusive) l=
-ocks.
-> > 3- Have hwspin_lock_request_specific() using shared locks and
-> >  =A0=A0 remove/make deprecated hwspin_lock_request().
-> >
-> > Just let me know what is your preference.
-> >
->=20
-> I think we should start with #2 and would like input from e.g. Suman rega=
-rding #3.
->=20
-> Regards,
-> Bjorn
->=20
-> > BR
-> >
-> > Fabien
-> >
-> > >
-> > > Regards,
-> > > Bjorn
-> > >
-> > >> Fabien Dessenne (6):
-> > >>    dt-bindings: hwlock: add support of shared locks
-> > >>    hwspinlock: allow sharing of hwspinlocks
-> > >>    dt-bindings: hwlock: update STM32 #hwlock-cells value
-> > >>    ARM: dts: stm32: Add hwspinlock node for stm32mp157 SoC
-> > >>    ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
-> > >>    ARM: dts: stm32: hwlocks for GPIO for stm32mp157
-> > >>
-> > >>   .../devicetree/bindings/hwlock/hwlock.txt          | 27 +++++--
-> > >>   .../bindings/hwlock/st,stm32-hwspinlock.txt        |  6 +-
-> > >>   Documentation/hwspinlock.txt                       | 10 ++-
-> > >>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi          |  2 +
-> > >>   arch/arm/boot/dts/stm32mp157c.dtsi                 | 10 +++
-> > >>   drivers/hwspinlock/hwspinlock_core.c               | 82 ++++++++++=
-+++++++-
-> ----
-> > >>   drivers/hwspinlock/hwspinlock_internal.h           |  2 +
-> > >>   7 files changed, 108 insertions(+), 31 deletions(-)
-> > >>
-> > >> --
-> > >> 2.7.4
-> > >>
+> 
+> Yours,
+> Linus Walleij
