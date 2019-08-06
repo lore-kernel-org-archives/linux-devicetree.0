@@ -1,68 +1,77 @@
-Return-Path: <SRS0=LAFF=WC=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=nhew=WC=linaro.org=daniel.lezcano@kernel.org>
+Subject: Re: [PATCH V5 1/5] clocksource: imx-sysctr: Add internal clock
+ divider handle
+References: <20190710063056.35689-1-Anson.Huang@nxp.com>
+ <DB3PR0402MB3916B06E8907604A71169063F5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <7edad4d7-5ba2-d710-eb8d-b3ff97051a41@linaro.org>
+Date: Tue, 6 Aug 2019 12:27:51 +0200
 MIME-Version: 1.0
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1562576868-8124-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 6 Aug 2019 11:21:38 +0200
-Message-ID: <CAMuHMdWSKAeiF4e9ZtyJq0Tejre35Ajok5Uf-ToDO4n+A6j6BQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/7] dt-bindings: pwm: rcar: Add specific gpios
- property to output duty zero
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+In-Reply-To: <DB3PR0402MB3916B06E8907604A71169063F5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Anson Huang <anson.huang@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+On 06/08/2019 03:55, Anson Huang wrote:
+> Gentle ping...
 
-On Mon, Jul 8, 2019 at 11:08 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> The R-Car SoCs PWM Timer cannot output duty zero. So, this patch
-> adds a specific gpio property to output it.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Coming back from vacation. It is in the pipe ... :)
 
-Thanks for your patch!
+>> From: Anson Huang <Anson.Huang@nxp.com>
+>>
+>> The system counter block guide states that the base clock is internally divided
+>> by 3 before use, that means the clock input of system counter defined in DT
+>> should be base clock which is normally from OSC, and then internally divided
+>> by 3 before use.
+>>
+>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>> ---
+>> Changes since V4:
+>> 	- to solve the clock driver probed after system counter driver issue,
+>> now we can easily switch to
+>> 	  use fixed clock defined in DT and get its rate, then divided by 3 to
+>> get real clock rate for
+>> 	  system counter driver, no need to add "clock-frequency" property in
+>> DT.
+>> ---
+>>  drivers/clocksource/timer-imx-sysctr.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/clocksource/timer-imx-sysctr.c
+>> b/drivers/clocksource/timer-imx-sysctr.c
+>> index fd7d680..b7c80a3 100644
+>> --- a/drivers/clocksource/timer-imx-sysctr.c
+>> +++ b/drivers/clocksource/timer-imx-sysctr.c
+>> @@ -20,6 +20,8 @@
+>>  #define SYS_CTR_EN		0x1
+>>  #define SYS_CTR_IRQ_MASK	0x2
+>>
+>> +#define SYS_CTR_CLK_DIV		0x3
+>> +
+>>  static void __iomem *sys_ctr_base;
+>>  static u32 cmpcr;
+>>
+>> @@ -134,6 +136,9 @@ static int __init sysctr_timer_init(struct device_node
+>> *np)
+>>  	if (ret)
+>>  		return ret;
+>>
+>> +	/* system counter clock is divided by 3 internally */
+>> +	to_sysctr.of_clk.rate /= SYS_CTR_CLK_DIV;
+>> +
+>>  	sys_ctr_base = timer_of_base(&to_sysctr);
+>>  	cmpcr = readl(sys_ctr_base + CMPCR);
+>>  	cmpcr &= ~SYS_CTR_EN;
+>> --
+>> 2.7.4
+> 
 
-> --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-> @@ -26,6 +26,9 @@ Required Properties:
->  - pinctrl-0: phandle, referring to a default pin configuration node.
->  - pinctrl-names: Set to "default".
->
-> +Optional properties:
-> +- renesas,duty-zero-gpios: Specify GPIO for outputting duty zero.
-> +
->  Example: R8A7743 (RZ/G1M) PWM Timer node
->
->         pwm0: pwm@e6e30000 {
-
-I'm not so fond of adding a property to specify this explicitly: the PFC
-driver already knows the mapping from the PWM output pin to the GPIO
-number. However, I agree it is not easy to obtain this in a generic way.
-
-For a PWM block with a single pin, it's easy: the pin you want to switch
-between GPIO and pin function is the single pin in the single pin
-control group specified in the board DT.
-
-For blocks with multiple pins (e.g. SPI, UART), it is more complex, and
-depends on the granularity of the pin control groups.
-E.g. for UART, Renesas SoCs typically use 3 pin control groups ("data"
-for RXD/TXD, "ctrl" for RTS/CTS, and "clk" for clock), and the pin
-control driver (at least for sh-pfc) does not know which pin corresponds
-to which GPIO inside each group.  Perhaps this information should be
-added, with an API to retrieve it?
-
-Anyone who has a good suggestion?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
