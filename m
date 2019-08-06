@@ -1,50 +1,92 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
-Date: Tue, 6 Aug 2019 07:18:13 +0000
-Message-ID: <19cfaeab46460333d22a4174eca25e7dd903bd0b.camel@analog.com>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
-         <20190805165453.3989-16-alexandru.ardelean@analog.com>
-         <20190805153058.GU24275@lunn.ch>
+From: Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: Re: [PATCH v4 07/10] regulator: mt6358: Add support for MT6358
+ regulator
+Date: Tue, 6 Aug 2019 15:28:47 +0800
+Message-ID: <1565076527.23984.5.camel@mtksdaap41>
+References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1564982518-32163-8-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <20190805131030.GE6432@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805153058.GU24275@lunn.ch>
-Content-Language: en-US
-Content-ID: <9679A834A7BAB741AFB1C344B4648DE0@analog.com>
+In-Reply-To: <20190805131030.GE6432@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Allison Randal <allison@lohutok.net>, linux-rtc@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTA1IGF0IDE3OjMwICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gT24gTW9uLCBBdWcgMDUsIDIwMTkgYXQgMDc6NTQ6NTJQTSArMDMw
-MCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoaXMgY2hhbmdlIGltcGxlbWVudHMg
-cmV0cmlldmluZyBhbGwgdGhlIGVycm9yIGNvdW50ZXJzIGZyb20gdGhlIFBIWS4NCj4gPiBUaGUg
-UEhZIHN1cHBvcnRzIHNldmVyYWwgZXJyb3IgY291bnRlcnMvc3RhdHMuIFRoZSBgTWVhbiBTcXVh
-cmUgRXJyb3JzYA0KPiA+IHN0YXR1cyB2YWx1ZXMgYXJlIG9ubHkgdmFsaWUgd2hlbiBhIGxpbmsg
-aXMgZXN0YWJsaXNoZWQsIGFuZCBzaG91bGRuJ3QgYmUNCj4gPiBpbmNyZW1lbnRlZC4gVGhlc2Ug
-dmFsdWVzIGNoYXJhY3Rlcml6ZSB0aGUgcXVhbGl0eSBvZiBhIHNpZ25hbC4NCj4gDQo+IEkgdGhp
-bmsgeW91IG1lYW4gYWNjdW11bGF0ZWQsIG5vdCBpbmNyZW1lbnRlZD8NCg0KYWNjdW11bGF0ZWQg
-c291bmRzIGJldHRlcjsNCg0KDQo+ID4gVGhlIHJlc3Qgb2YgdGhlIGVycm9yIGNvdW50ZXJzIGFy
-ZSBzZWxmLWNsZWFyaW5nIG9uIHJlYWQuDQo+ID4gTW9zdCBvZiB0aGVtIGFyZSByZXBvcnRzIGZy
-b20gdGhlIEZyYW1lIENoZWNrZXIgZW5naW5lIHRoYXQgdGhlIFBIWSBoYXMuDQo+ID4gDQo+ID4g
-Tm90IHJldHJpZXZpbmcgdGhlIGBMUEkgV2FrZSBFcnJvciBDb3VudCBSZWdpc3RlcmAgaGVyZSwg
-c2luY2UgdGhhdCBpcyB1c2VkDQo+ID4gYnkgdGhlIFBIWSBmcmFtZXdvcmsgdG8gY2hlY2sgZm9y
-IGFueSBFRUUgZXJyb3JzLiBBbmQgdGhhdCByZWdpc3RlciBpcw0KPiA+IHNlbGYtY2xlYXJpbmcg
-d2hlbiByZWFkIChhcyBwZXIgSUVFRSBzcGVjKS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+IC0t
-LQ0KPiA+ICBkcml2ZXJzL25ldC9waHkvYWRpbi5jIHwgMTA4ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMDggaW5zZXJ0aW9u
-cygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9waHkvYWRpbi5jIGIvZHJp
-dmVycy9uZXQvcGh5L2FkaW4uYw0KPiA+IGluZGV4IGExZjM0NTZhODUwNC4uMDQ4OTY1NDdkYWM4
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbmV0L3BoeS9hZGluLmMNCj4gPiArKysgYi9kcml2
-ZXJzL25ldC9waHkvYWRpbi5jDQo+ID4gQEAgLTEwMyw2ICsxMDMsMzIgQEAgc3RhdGljIHN0cnVj
-dCBjbGF1c2UyMl9tbWRfbWFwIGNsYXVzZTIyX21tZF9tYXBbXSA9IHsNCj4gPiAgCXsgTURJT19N
-TURfUENTLCBNRElPX1BDU19FRUVfV0tfRVJSLAlBRElOMTMwMF9MUElfV0FLRV9FUlJfQ05UX1JF
-RyB9LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiArc3RydWN0IGFkaW5faHdfc3RhdCB7DQo+ID4gKwlj
-b25zdCBjaGFyICpzdHJpbmc7DQo+ID4gKwl1MTYgcmVnMTsNCj4gPiArCXUxNiByZWcyOw0KPiA+
-ICsJYm9vbCBkb19ub3RfaW5jOw0KPiANCj4gZG9fbm90X2FjY3VtdWxhdGU/IG9yIHJldmVyc2Ug
-aXRzIG1lYW5pbmcsIGNsZWFyX29uX3JlYWQ/DQoNCmRvX25vdF9hY2N1bXVsYXRlIHdvcmtzOw0K
-dGhlcmUgYXJlIG9ubHkgNCByZWdzIHRoYXQgbmVlZCB0aGlzIHByb3BlcnR5IHNldCB0byB0cnVl
-DQoNCj4gDQo+ICAgIEFuZHJldw0K
+Hi Mark,
+
+On Mon, 2019-08-05 at 14:10 +0100, Mark Brown wrote:
+> On Mon, Aug 05, 2019 at 01:21:55PM +0800, Hsin-Hsiung Wang wrote:
+> 
+> > +static const u32 vmch_voltages[] = {
+> > +	2900000, 3000000, 3300000,
+> > +};
+> 
+> > +static const u32 vemc_voltages[] = {
+> > +	2900000, 3000000, 3300000,
+> > +};
+> 
+> Several of these tables appear to be identical.
+> 
+I will use the same voltage table in the next patch.
+
+> > +static inline unsigned int mt6358_map_mode(unsigned int mode)
+> > +{
+> > +	return mode == MT6358_BUCK_MODE_AUTO ?
+> > +		REGULATOR_MODE_NORMAL : REGULATOR_MODE_FAST;
+> > +}
+> 
+> There is no need for this to be an inline and please write normal
+> conditional statements to improve legibility.  There's other examples in
+> the driver.
+> 
+will fix it in the next patch.
+
+> > +static int mt6358_get_buck_voltage_sel(struct regulator_dev *rdev)
+> > +{
+> > +	int ret, regval;
+> > +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
+> > +
+> > +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
+> > +	if (ret != 0) {
+> > +		dev_info(&rdev->dev,
+> > +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
+> > +			 info->desc.name, ret);
+> 
+> dev_err() for errors here and throughout the driver.
+> 
+will fix it in the next patch.
+
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = (regval >> info->da_vsel_shift) & info->da_vsel_mask;
+> > +
+> > +	return ret;
+> > +}
+> 
+> This looks like a standard get_voltage_sel_regmap()?
+> 
+MT6358 has buck voltage status registers to show the actual output
+voltage and the registers are different from the voltage setting
+registers.
+We want to get the actual voltage output, so we use the da_vsel status
+registers here.
+
+> > +err_mode:
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	return 0;
+> 
+> Or just return ret unconditionally?
+will modify it to return ret unconditionally in the next patch.
+
+Thanks a lot.
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
