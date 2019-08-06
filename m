@@ -1,50 +1,53 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Date: Tue, 6 Aug 2019 13:41:31 +0000
-Message-ID: <VI1PR04MB5055BED59960B4F4147479AEEED50@VI1PR04MB5055.eurprd04.prod.outlook.com>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
- <20190723122016.30279-10-a.swigon@partner.samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/4 v3] drm/panel: simple: Add TI nspire panel bindings
+Date: Tue,  6 Aug 2019 15:54:37 +0200
+Message-ID: <20190806135437.7451-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "krzk@kernel.org" <krzk@kernel.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, "georgi.djakov@linaro.org" <georgi.djakov@linaro.org>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.07.2019 15:21, Artur =A6wigo=F1 wrote:=0A=
-=0A=
-> +static int exynos_bus_icc_aggregate(struct icc_node *node, u32 avg_bw,=
-=0A=
-> +				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)=0A=
-> +{=0A=
-> +	*agg_peak =3D *agg_avg =3D peak_bw;=0A=
-> +=0A=
-> +	return 0;=0A=
-> +}=0A=
-=0A=
-The only current provider aggregates "avg" with "sum" and "peak" with =0A=
-"max", any particular reason to do something different? This function =0A=
-doesn't even really do aggregation, if there is a second request for "0" =
-=0A=
-then the first request is lost.=0A=
-=0A=
-I didn't find any docs but my interpretation of avg/peak is that "avg" =0A=
-is for constant traffic like a display or VPU pushing pixels and "peak" =0A=
-is for variable traffic like networking. I assume devices which make =0A=
-"peak" requests are aggregated with max because they're not expected to =0A=
-all max-out together.=0A=
-=0A=
-In PATCH 11 you're making a bandwidth request based on resolution, that =0A=
-traffic is constant and guaranteed to happend while the display is on so =
-=0A=
-it would make sense to request it as an "avg" and aggregate it with "sum".=
-=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+QWRkIGJpbmRpbmdzIGZvciB0aGUgVEkgTlNQSVJFIHNpbXBsZSBkaXNwbGF5IHBhbmVscy4KCkNj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlq
+IDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ci0tLQpDaGFuZWdMb2cgdjItPnYzOgotIFN3aXRj
+aCB0byBHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlIGxpY2Vuc2UKLSBVc2UgYSBzaW1wbGUg
+ZW51bSBmb3IgdGhlIGNvbXBhdGlibGUKLSBVc2UgdGhlIG5ldyBuaWZ0eSBwYW5lbC1jb21tb24u
+eWFtbCwgdGVzdGVkIG9uCiAgbGludXgtbmV4dApDaGFuZ2VMb2cgdjEtPnYyOgotIE5ldyBwYXRj
+aCBhcyBiaW5kaW5ncyBhcmUgcmVxdWlyZWQKLSBMZXQncyB1c2UgWUFNTAotLS0KIC4uLi9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL3RpLG5zcGlyZS55YW1sICAgICB8IDM2ICsrKysrKysrKysrKysr
+KysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGksbnNw
+aXJlLnlhbWwKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC90aSxuc3BpcmUueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpLG5zcGlyZS55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0
+CmluZGV4IDAwMDAwMDAwMDAwMC4uNWM1YTNiNTE5ZTMxCi0tLSAvZGV2L251bGwKKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGksbnNwaXJlLnlh
+bWwKQEAgLTAsMCArMSwzNiBAQAorIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAt
+b25seSBPUiBCU0QtMi1DbGF1c2UpCislWUFNTCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2aWNl
+dHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L3BhbmVsL3RpLG5zcGlyZS55YW1sIworJHNjaGVtYTog
+aHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjCisKK3RpdGxlOiBU
+ZXhhcyBJbnN0cnVtZW50cyBOU1BJUkUgRGlzcGxheSBQYW5lbHMKKworbWFpbnRhaW5lcnM6Cisg
+IC0gTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgorCithbGxPZjoKKyAg
+LSAkcmVmOiBwYW5lbC1jb21tb24ueWFtbCMKKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToK
+KyAgICBlbnVtOgorICAgICAgLSB0aSxuc3BpcmUtY3gtbGNkLXBhbmVsCisgICAgICAtIHRpLG5z
+cGlyZS1jbGFzc2ljLWxjZC1wYW5lbAorICBwb3J0OiB0cnVlCisKK3JlcXVpcmVkOgorICAtIGNv
+bXBhdGlibGUKKworYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlCisKK2V4YW1wbGVzOgorICAt
+IHwKKyAgICBwYW5lbCB7CisgICAgICAgIGNvbXBhdGlibGUgPSAidGksbnNwaXJlLWN4LWxjZC1w
+YW5lbCI7CisgICAgICAgIHBvcnQgeworICAgICAgICAgICAgcGFuZWxfaW46IGVuZHBvaW50IHsK
+KyAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhZHM+OworICAgICAgICAgICAg
+fTsKKyAgICAgICAgfTsKKyAgICB9OwotLSAKMi4yMS4wCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
