@@ -1,39 +1,97 @@
-Return-Path: <SRS0=LAFF=WC=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=Ydm7=WC=denx.de=marex@kernel.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 1/2] media: dt-bindings: Add Intersil ISL7998x DT bindings
+References: <20190520201812.7937-1-marex@denx.de>
+ <20190701080457.acucsi6p3mlmbg75@paasikivi.fi.intel.com>
+Message-ID: <02ec97ea-fd7d-cb89-c413-2c1bc847bd9c@denx.de>
+Date: Tue, 6 Aug 2019 15:35:54 +0200
 MIME-Version: 1.0
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1562576868-8124-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 6 Aug 2019 11:05:30 +0200
-Message-ID: <CAMuHMdWw1Gh_CxgiO5gd+MY0vUvWX_ACDj+L3_Wcomkaf5Oo4Q@mail.gmail.com>
-Subject: Re: [PATCH RFC 5/7] pwm: rcar: remove a redundant condition in rcar_pwm_apply()
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+In-Reply-To: <20190701080457.acucsi6p3mlmbg75@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+On 7/1/19 10:04 AM, Sakari Ailus wrote:
+> Hi Marek,
+> 
+> On Mon, May 20, 2019 at 10:18:11PM +0200, Marek Vasut wrote:
+>> Add bindings for the Intersil ISL7998x BT656-to-MIPI-CSI2 decoder.
+>>
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> To: linux-media@vger.kernel.org
+>> ---
+>>  .../bindings/media/i2c/isl7998x.txt           | 37 +++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/isl7998x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/isl7998x.txt b/Documentation/devicetree/bindings/media/i2c/isl7998x.txt
+>> new file mode 100644
+>> index 000000000000..c21703983360
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/isl7998x.txt
+>> @@ -0,0 +1,37 @@
+>> +Intersil ISL7998x BT656-to-MIPI-CSI2 decoder
+>> +
+>> +The Intersil ISL7998x is a BT656-to-MIPI-CSI decoder which, capable of
+>> +receiving up to four analog stream and multiplexing them into up to four
+>> +MIPI CSI2 virtual channels, using one MIPI clock lane and 1/2 data lanes.
+>> +
+>> +Required Properties:
+>> +- compatible: value should be "isil,isl79987"
+>> +- pd-gpios: a GPIO spec for the Power Down pin (active high)
+>> +
+>> +Option Properties:
+>> +- isil,num-inputs: Number of connected inputs (1, 2 or 4)
+> 
+> The presence of ports describing connected Bt.656 inputs tells this.
+> 
+>> +
+>> +For further reading on port node refer to
+>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> 
+> Which endpoint properties are relevant for the endpoint(s) in the CSI-2 port?
 
-On Mon, Jul 8, 2019 at 11:08 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Since the rcar_pwm_apply() has already check whehter state->enabled
-> is not set or not, this patch removes a redundant condition.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+clock-lanes, data-lanes and the remote-endpoint .
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> How about the ports describing the Bt.656 interfaces? You should have
+> those, too...
 
-This is completely independent from the rest of the series, and can be applied
-immediately, right?
+So who would be connected to these analog "input" endpoint ? What would
+be their "remote-endpoint" ?
 
-Gr{oetje,eeting}s,
+>> +
+>> +Example:
+>> +
+>> +	i2c_master {
+>> +		isl7998x_mipi@44 {
+>> +			compatible = "isil,isl79987";
+>> +			reg = <0x44>;
+>> +			isil,num-inputs = <4>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&pinctrl_videoadc>;
+>> +			pd-gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>;
+>> +			status = "okay";
+>> +
+>> +			port {
+>> +				isl79987_to_mipi_csi2: endpoint {
+>> +					remote-endpoint = <&mipi_csi2_in>;
+>> +					clock-lanes = <0>;
+>> +					data-lanes = <1 2>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>>
+> 
 
-                        Geert
 
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Best regards,
+Marek Vasut
