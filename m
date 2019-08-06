@@ -1,38 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 00/11] add USB GPIO based connection detection driver
-Date: Tue, 6 Aug 2019 15:26:50 +0200
-Message-ID: <CACRpkdZ8LjG22QCA0tB+vMi7fPJNBiX-sL1+t0yZqcfRjMJF7Q@mail.gmail.com>
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
- <CACRpkdaBT24JPH_VsKtgp6fjWtVuqM50rXkDVYKmLHgR5hdJzA@mail.gmail.com> <1565077710.23705.21.camel@mhfsdcap03>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RESEND V2 1/2] dt-bindings: Document the DesignWare IP reset
+ bindings
+Date: Tue, 06 Aug 2019 15:33:19 +0200
+Message-ID: <1565098399.2359.0.camel@pengutronix.de>
+References: <1563895048-30038-1-git-send-email-luis.oliveira@synopsys.com>
+         <1563895048-30038-2-git-send-email-luis.oliveira@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565077710.23705.21.camel@mhfsdcap03>
+In-Reply-To: <1563895048-30038-2-git-send-email-luis.oliveira@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, moderated list:ARM/Mediatek So
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Joao.Pinto@synopsys.com, Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 9:48 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> On Mon, 2019-08-05 at 12:06 +0200, Linus Walleij wrote:
-> > On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+Hi Luis,
 
-> > But for just "hey I'm plugged in" we can surely keep this
-> > ID on GPIO detection in the USB subsystem.
->
-> Sorry, you mean provide a common API? could you please describe more
-> clearer about your suggestion?
+On Tue, 2019-07-23 at 17:17 +0200, Luis Oliveira wrote:
+> This adds documentation of device tree bindings for the
+> DesignWare IP reset controller.
+> 
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Luis Oliveira <luis.oliveira@synopsys.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Sorry I am not suggesting anything, this code is fine.
+Thank you, both applied to reset/next.
 
-But:
-
-> > I just get a bit insecure about how we should ideally
-> > handle these "funny-PHY's".
-
-I am more thinking about which subsystem these things really
-belong in. But let's keep it like this for the simple GPIO case.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+regards
+Philipp
