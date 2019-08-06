@@ -1,55 +1,57 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v8 00/11] add USB GPIO based connection detection driver
-Date: Tue, 6 Aug 2019 15:48:30 +0800
-Message-ID: <1565077710.23705.21.camel@mhfsdcap03>
-References: <1563958245-6321-1-git-send-email-chunfeng.yun@mediatek.com>
-         <CACRpkdaBT24JPH_VsKtgp6fjWtVuqM50rXkDVYKmLHgR5hdJzA@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] dt-bindings: arm: amlogic: fix x96-max/sei510 section in amlogic.yaml
+Date: Tue,  6 Aug 2019 09:55:20 +0200
+Message-ID: <20190806075520.14652-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaBT24JPH_VsKtgp6fjWtVuqM50rXkDVYKmLHgR5hdJzA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, moderated list:ARM/Mediate
+To: khilman@baylibre.com
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-08-05 at 12:06 +0200, Linus Walleij wrote:
-> On Wed, Jul 24, 2019 at 10:51 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> 
-> > Because the USB Connector is introduced and the requirement of
-> > usb-connector.txt binding, the old way using extcon to support
-> > USB Dual-Role switch is now deprecated, meanwhile there is no
-> > available common driver when use Type-B connector, typically
-> > using an input GPIO to detect USB ID pin.
-> 
-> However while this was going on,
-> drivers/extcon/extcon-fsa9480.c was merged and that detects
-> not only GPIO on the USB port but multiplexed usecases such
-> as UART over the USB micro PHY (and no that UART is not
-> a USB UART, but an actual RX/TX over D-/D+).
-> 
-> That driver also measure a whole slew of funny resistance
-> values on the ID pin, that is how it does its job.
-I look into the spec of fsa9480, it indeed detect many USB accessories.
-But this driver is used for simplest cases that only uses micro
-receptacle with id-pin/vbus-pin
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-> 
-> But for just "hey I'm plugged in" we can surely keep this
-> ID on GPIO detection in the USB subsystem.
-Sorry, you mean provide a common API? could you please describe more
-clearer about your suggestion?
+Move amediatech,x96-max and seirobotics,sei510 to the S905D2 section and
+update the S905D2 description to S905D2/X2/Y2.
 
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Introducing a single driver using usb_role_switch will help to keep
-transparent for USB controller driver, no matter it uses type-c or micro
-
-Thanks a lot
-> 
-> I just get a bit insecure about how we should ideally
-> handle these "funny-PHY's".
-
-> 
-> Yours,
-> Linus Walleij
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 325c6fd3566d..4668064dd7e5 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -91,13 +91,11 @@ properties:
+       - description: Boards with the Amlogic Meson GXL S905X SoC
+         items:
+           - enum:
+-              - amediatech,x96-max
+               - amlogic,p212
+               - hwacom,amazetv
+               - khadas,vim
+               - libretech,cc
+               - nexbox,a95x
+-              - seirobotics,sei510
+           - const: amlogic,s905x
+           - const: amlogic,meson-gxl
+ 
+@@ -129,10 +127,12 @@ properties:
+           - const: amlogic,a113d
+           - const: amlogic,meson-axg
+ 
+-      - description: Boards with the Amlogic Meson G12A S905D2 SoC
++      - description: Boards with the Amlogic Meson G12A S905D2/X2/Y2 SoC
+         items:
+           - enum:
++              - amediatech,x96-max
+               - amlogic,u200
++              - seirobotics,sei510
+           - const: amlogic,g12a
+ 
+       - description: Boards with the Amlogic Meson G12B S922X SoC
+-- 
+2.22.0
