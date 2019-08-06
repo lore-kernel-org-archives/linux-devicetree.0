@@ -1,243 +1,167 @@
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: [PATCH v1 2/2] net: npcm: add NPCM7xx EMC 10/100 Ethernet driver
-Date: Tue, 6 Aug 2019 18:51:38 -0400
-Message-ID: <CAF=yD-KD1TNTMp1Dhex766MmZUyX6rt7Oo=FoCdkc19B6Z_07g@mail.gmail.com>
-References: <20190801072611.27935-1-avifishman70@gmail.com>
- <20190801072611.27935-3-avifishman70@gmail.com> <CA+FuTSd89gJBX-zaZTzgNxpqtR_MvVfMf=6hdRe5+1MPRszw8g@mail.gmail.com>
- <CAKKbWA6hjxupFQNnTUOfeKLXd2wtZ9+g7uUpe34CeErn5kBAaA@mail.gmail.com>
+From: Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
+Date: Tue, 6 Aug 2019 16:27:30 -0700 (PDT)
+Message-ID: <alpine.DEB.2.21.9999.1908061625190.13971@viisi.sifive.com>
+References: <20190801005843.10343-1-atish.patra@wdc.com>
+ <20190801005843.10343-4-atish.patra@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKKbWA6hjxupFQNnTUOfeKLXd2wtZ9+g7uUpe34CeErn5kBAaA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Avi Fishman <avifishman70@gmail.com>
-Cc: Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Network Development <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190801005843.10343-4-atish.patra@wdc.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anup Patel <anup.patel@wdc.com>, Yangtao Li <tiny.windzz@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, Gary Guo <gary@garyguo.net>, linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>, Allison Randal <allison@lohutok.net>
 List-Id: devicetree@vger.kernel.org
 
-> > Does this device support stacked VLAN?
-> I am not familiar with stacked VLAN.
-> Our HW for sure there is no support. can the SW stack handle it for me?
-> Does it mean that  the packets can be larger?
+On Wed, 31 Jul 2019, Atish Patra wrote:
 
-If the device does not support it, I believe it's fine to leave it to S/W.
+> Currently, kernel prints a info warning if any of the extensions
+> from "mafdcsu" is missing in device tree. This is not entirely
+> correct as Linux can boot with "f or d" extensions if kernel is
+> configured accordingly. Moreover, it will continue to print the
+> info string for future extensions such as hypervisor as well which
+> is misleading. /proc/cpuinfo also doesn't print any other extensions
+> except "mafdcsu".
+> 
+> Make sure that info log is only printed only if kernel is configured
+> to have any mandatory extensions but device tree doesn't describe it.
+> All the extensions present in device tree and follow the order
+> described in the RISC-V specification (except 'S') are printed via
+> /proc/cpuinfo always.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-> > Is this really the device maximum?
->
-> The device can support upto 64KB, but of course I will not allocate
-> for each RX data such a big buffer.
-> Can I know what is the maximum value the network stack may request? I
-> saw many driver allocating 1536 for each packet.
+I tested this patch after dropping the CONFIG_ISA_RISCV_C test (see 
+below).  Running "cat /proc/cpuinfo" generated the following kernel 
+warnings:
+          
+[   73.412626] unsupported ISA extensions "su" in device tree for cpu [0]
+[   73.418417] unsupported ISA extensions "su" in device tree for cpu [1]
+[   73.424912] unsupported ISA extensions "su" in device tree for cpu [2]
+[   73.431425] unsupported ISA extensions "su" in device tree for cpu [3]
 
-The maximum is the minimum of the link layer and device h/w limits,
-but you indeed don't want to allocate for worst case if that is highly
-unlikely.
+Seems like the "su" should be dropped from mandatory_ext.  What do you 
+think?
 
-Your choice of 1500 is fine for this initial commit, really. More on
-MTU below with ndo_change_mtu
+> ---
+>  arch/riscv/kernel/cpu.c | 47 ++++++++++++++++++++++++++++++++---------
+>  1 file changed, 37 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+> index 7da3c6a93abd..9b1d4550fbe6 100644
+> --- a/arch/riscv/kernel/cpu.c
+> +++ b/arch/riscv/kernel/cpu.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/of.h>
+>  #include <asm/smp.h>
+> +#include <asm/hwcap.h>
+>  
+>  /*
+>   * Returns the hart ID of the given device tree node, or -ENODEV if the node
+> @@ -46,11 +47,14 @@ int riscv_of_processor_hartid(struct device_node *node)
+>  
+>  #ifdef CONFIG_PROC_FS
+>  
+> -static void print_isa(struct seq_file *f, const char *orig_isa)
+> +static void print_isa(struct seq_file *f, const char *orig_isa,
+> +		      unsigned long cpuid)
+>  {
+> -	static const char *ext = "mafdcsu";
+> +	static const char *mandatory_ext = "mafdcsu";
+>  	const char *isa = orig_isa;
+>  	const char *e;
+> +	char unsupported_isa[26] = {0};
+> +	int index = 0;
+>  
+>  	/*
+>  	 * Linux doesn't support rv32e or rv128i, and we only support booting
+> @@ -70,27 +74,50 @@ static void print_isa(struct seq_file *f, const char *orig_isa)
+>  	isa += 5;
+>  
+>  	/*
+> -	 * Check the rest of the ISA string for valid extensions, printing those
+> -	 * we find.  RISC-V ISA strings define an order, so we only print the
+> +	 * RISC-V ISA strings define an order, so we only print all the
+>  	 * extension bits when they're in order. Hide the supervisor (S)
+>  	 * extension from userspace as it's not accessible from there.
+> +	 * Throw a warning only if any mandatory extensions are not available
+> +	 * and kernel is configured to have that mandatory extensions.
+>  	 */
+> -	for (e = ext; *e != '\0'; ++e) {
+> -		if (isa[0] == e[0]) {
+> +	for (e = mandatory_ext; *e != '\0'; ++e) {
+> +		if (isa[0] != e[0]) {
+> +#if defined(CONFIG_ISA_RISCV_C)
 
-> > > +       rxd_offset = (readl((ether->reg + REG_CRXDSA)) -
-> > > +                     readl((ether->reg + REG_RXDLSA)))
-> > > +               / sizeof(struct npcm7xx_txbd);
-> > > +       DUMP_PRINT("RXD offset    %6d\n", rxd_offset);
-> > > +       DUMP_PRINT("cur_rx        %6d\n", ether->cur_rx);
-> > > +       DUMP_PRINT("rx_err        %6d\n", ether->rx_err);
-> > > +       ether->rx_err = 0;
-> > > +       DUMP_PRINT("rx_berr       %6d\n", ether->rx_berr);
-> > > +       ether->rx_berr = 0;
-> > > +       DUMP_PRINT("rx_stuck      %6d\n", ether->rx_stuck);
-> > > +       ether->rx_stuck = 0;
-> > > +       DUMP_PRINT("rdu           %6d\n", ether->rdu);
-> > > +       ether->rdu = 0;
-> > > +       DUMP_PRINT("rxov rx       %6d\n", ether->rxov);
-> > > +       ether->rxov = 0;
-> > > +       /* debug counters */
-> > > +       DUMP_PRINT("rx_int_count  %6d\n", ether->rx_int_count);
-> > > +       ether->rx_int_count = 0;
-> > > +       DUMP_PRINT("rx_err_count  %6d\n", ether->rx_err_count);
-> > > +       ether->rx_err_count = 0;
-> >
-> > Basic counters like tx_packets and rx_errors are probably better
-> > exported regardless of debug level as net_device_stats. And then don't
-> > need to be copied in debug output.
->
-> They are also exported there, see below ether->stats.tx_packets++; and
-> ether->stats.rx_errors++;
-> those are different counters for debug since we had HW issues that we
-> needed to workaround and might need them for future use.
-> Currently the driver is stable on millions of parts in the field.
->
-> >
-> > Less standard counters like tx interrupt count are probably better
-> > candidates for ethtool -S.
->
-> I don't have support for ethtool.
-> is it a must? it is quite some work and this driver is already in the
-> field for quite some years.
+There's no Kconfig option by this name, and we're requiring compressed 
+instruction support as part of the RISC-V Linux baseline.  Could you share 
+the rationale behind this?  Looks to me like this should be dropped.
 
-Your driver includes a struct ethtool_ops. Implementing its callback
-.get_ethtool_stats seems straightforward?
 
-David also requested using standard infrastructure over this custom
-debug logic. Ethool stats appear the most logical choice to me. But
-there may be others.
+> +			if (isa[0] == 'c')
+> +				continue;
+> +#endif
+> +#if defined(CONFIG_FP)
+> +			if ((isa[0] == 'f') || (isa[0] == 'd'))
+> +				continue;
+> +#endif
+> +			unsupported_isa[index] = e[0];
+> +			index++;
+> +		}
+> +		/* Only write if part of isa string */
+> +		if (isa[0] != '\0') {
+>  			if (isa[0] != 's')
+>  				seq_write(f, isa, 1);
+> -
+>  			isa++;
+>  		}
+>  	}
+> +	if (isa[0] != '\0') {
+> +		/* Add remainging isa strings */
+> +		for (e = isa; *e != '\0'; ++e) {
+> +#if !defined(CONFIG_VIRTUALIZATION)
+> +			if (e[0] != 'h')
+> +#endif
+> +				seq_write(f, e, 1);
+> +		}
+> +	}
+>  	seq_puts(f, "\n");
+>  
+>  	/*
+>  	 * If we were given an unsupported ISA in the device tree then print
+>  	 * a bit of info describing what went wrong.
+>  	 */
+> -	if (isa[0] != '\0')
+> -		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
+> +	if (unsupported_isa[0])
+> +		pr_info("unsupported ISA extensions \"%s\" in device tree for cpu [%ld]\n",
+> +			unsupported_isa, cpuid);
+>  }
+>  
+>  static void print_mmu(struct seq_file *f, const char *mmu_type)
+> @@ -134,7 +161,7 @@ static int c_show(struct seq_file *m, void *v)
+>  	seq_printf(m, "processor\t: %lu\n", cpu_id);
+>  	seq_printf(m, "hart\t\t: %lu\n", cpuid_to_hartid_map(cpu_id));
+>  	if (!of_property_read_string(node, "riscv,isa", &isa))
+> -		print_isa(m, isa);
+> +		print_isa(m, isa, cpu_id);
+>  	if (!of_property_read_string(node, "mmu-type", &mmu))
+>  		print_mmu(m, mmu);
+>  	if (!of_property_read_string(node, "compatible", &compat)
+> -- 
+> 2.21.0
+> 
+> 
 
-> > > +static struct sk_buff *get_new_skb(struct net_device *netdev, u32 i)
-> > > +{
-> > > +       __le32 buffer;
-> > > +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> > > +       struct sk_buff *skb = netdev_alloc_skb(netdev,
-> > > +               roundup(MAX_PACKET_SIZE_W_CRC, 4));
-> > > +
-> > > +       if (unlikely(!skb)) {
-> > > +               if (net_ratelimit())
-> > > +                       netdev_warn(netdev, "failed to allocate rx skb\n");
-> >
-> > can use net_warn_ratelimited (here and elsewhere)
->
-> should I replace every netdev_warn/err/info with net_warn/err/inf_ratelimited?
-> I saw in drivers that are using net_warn_ratelimited, that many time
-> uses also netdev_warn/err/info
 
-They probably use the second in non-ratelimited cases?
-
-> > > +static irqreturn_t npcm7xx_tx_interrupt(int irq, void *dev_id)
-> > > +{
-> > > +       struct npcm7xx_ether *ether;
-> > > +       struct platform_device *pdev;
-> > > +       struct net_device *netdev;
-> > > +       __le32 status;
-> > > +       unsigned long flags;
-> > > +
-> > > +       netdev = dev_id;
-> > > +       ether = netdev_priv(netdev);
-> > > +       pdev = ether->pdev;
-> > > +
-> > > +       npcm7xx_get_and_clear_int(netdev, &status, 0xFFFF0000);
-> > > +
-> > > +       ether->tx_int_count++;
-> > > +
-> > > +       if (status & MISTA_EXDEF)
-> > > +               dev_err(&pdev->dev, "emc defer exceed interrupt status=0x%08X\n"
-> > > +                       , status);
-> > > +       else if (status & MISTA_TXBERR) {
-> > > +               dev_err(&pdev->dev, "emc bus error interrupt status=0x%08X\n",
-> > > +                       status);
-> > > +#ifdef CONFIG_NPCM7XX_EMC_ETH_DEBUG
-> > > +               npcm7xx_info_print(netdev);
-> > > +#endif
-> > > +               spin_lock_irqsave(&ether->lock, flags);
-> >
-> > irqsave in hard interrupt context?
->
-> I need to protect my REG_MIEN register that is changed in other places.
-> I think that spin_lock_irqsave() is relevant when working in SMP,
-> since other CPU may still be running.
-> Isn't it?
-
-This is an interesting case. The hardware interrupt handler will not
-interrupt itself. But it is architecture dependent whether all
-interrupts are disabled when a particular interrupt handler is running
-(as per the unreliable guide to locking).
-
-So even in absence of SMP, this would indeed need spin_lock_irqsave if
-there are multiple hardware interrupt handlers potentially accessing
-the same data. That sounds unlikely in general, but does happen here
-for REG_MIEN, in npcm7xx_tx_interrupt and npcm7xx_rx_interrupt. So I
-was mistaken, this is not only the most conservative locking method,
-it is indeed required.
-
->
-> >
-> > > +               writel(0, (ether->reg + REG_MIEN)); /* disable any interrupt */
-> > > +               spin_unlock_irqrestore(&ether->lock, flags);
-> > > +               ether->need_reset = 1;
-> > > +       } else if (status & ~(MISTA_TXINTR | MISTA_TXCP | MISTA_TDU))
-> > > +               dev_err(&pdev->dev, "emc other error interrupt status=0x%08X\n",
-> > > +                       status);
-> > > +
-> > > +    /* if we got MISTA_TXCP | MISTA_TDU remove those interrupt and call napi */
-> >
-> > The goal of napi is to keep interrupts disabled until napi completes.
->
-> We have a HW issue that because of it I still enabled TX complete interrupt,
-> I will see if I can disable all interrupts and only leave the error interrupts
-
-Please do. I'm not sure what happens when trying to schedule napi
-while it is already scheduled or running. Even in the best case
-(nothing), these spurious interrupts are inefficient.
-
-> >
-> > > +       if (status & (MISTA_TXCP | MISTA_TDU) &
-> > > +           readl((ether->reg + REG_MIEN))) {
-> > > +               __le32 reg_mien;
-> > > +
-> > > +               spin_lock_irqsave(&ether->lock, flags);
-> > > +               reg_mien = readl((ether->reg + REG_MIEN));
-> > > +               if (reg_mien & ENTDU)
-> > > +                       /* Disable TDU interrupt */
-> > > +                       writel(reg_mien & (~ENTDU), (ether->reg + REG_MIEN));
-> > > +
-> > > +               spin_unlock_irqrestore(&ether->lock, flags);
-> > > +
-> > > +               if (status & MISTA_TXCP)
-> > > +                       ether->tx_cp_i++;
-> > > +               if (status & MISTA_TDU)
-> > > +                       ether->tx_tdu_i++;
-> > > +       } else {
-> > > +               dev_dbg(&pdev->dev, "status=0x%08X\n", status);
-> > > +       }
-> > > +
-> > > +       napi_schedule(&ether->napi);
-> > > +
-> > > +       return IRQ_HANDLED;
-> > > +}
-> > > +
-> > > +static irqreturn_t npcm7xx_rx_interrupt(int irq, void *dev_id)
-> > > +{
-> > > +       struct net_device *netdev = (struct net_device *)dev_id;
-> > > +       struct npcm7xx_ether *ether = netdev_priv(netdev);
-> > > +       struct platform_device *pdev = ether->pdev;
-> > > +       __le32 status;
-> > > +       unsigned long flags;
-> > > +       unsigned int any_err = 0;
-> > > +       __le32 rxfsm;
-> > > +
-> > > +       npcm7xx_get_and_clear_int(netdev, &status, 0xFFFF);
-> >
-> > Same here
->
-> in non error case I do leave only the error interrupts and schedule napi.
-
-Oh, so the Rx interrupt remains suppressed. Then that's fine.
-
-> > > +static const struct net_device_ops npcm7xx_ether_netdev_ops = {
-> > > +       .ndo_open               = npcm7xx_ether_open,
-> > > +       .ndo_stop               = npcm7xx_ether_close,
-> > > +       .ndo_start_xmit         = npcm7xx_ether_start_xmit,
-> > > +       .ndo_get_stats          = npcm7xx_ether_stats,
-> > > +       .ndo_set_rx_mode        = npcm7xx_ether_set_rx_mode,
-> > > +       .ndo_set_mac_address    = npcm7xx_set_mac_address,
-> > > +       .ndo_do_ioctl           = npcm7xx_ether_ioctl,
-> > > +       .ndo_validate_addr      = eth_validate_addr,
-> > > +       .ndo_change_mtu         = eth_change_mtu,
-> >
-> > This is marked as deprecated. Also in light of the hardcoded
-> > MAX_PACKET_SIZE, probably want to set dev->max_mtu.
->
-> can I just not set .ndo_change_mtu? or I must add my own implementation?
-> setting of dev->max_mtu, can be done in probe, yes?
-
-It's fine to just not have it. The patchset that introduced max_mtu
-(61e84623ace3, a52ad514fdf3) removed many.
-
-One reason to have a callback function is to bring the device down/up
-with different sized rx buffers.
-
-But handling that might be too much extra complexity for the initial
-patch. It's fine to keep the fixed rx alloc size as is.
-
-> BTW, I see that currently the mtu is 1500 but I do get transactions
-> with len of 1514 (I didn't compile with VLAN)
-
-That is to be expected, as MTU excludes link layer header (and FCS,
-and perhaps also vlan?)
+- Paul
