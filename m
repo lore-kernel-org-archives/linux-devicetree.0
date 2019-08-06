@@ -1,13 +1,17 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4 v3] drm/panel: simple: Add TI nspire panel bindings
-Date: Tue, 6 Aug 2019 09:17:14 -0600
-Message-ID: <CAL_JsqKhQwqtU_bdTymEM_b035f2rcPgYRWP7L-_G2F=DO1VWQ@mail.gmail.com>
-References: <20190806135437.7451-1-linus.walleij@linaro.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: amlogic,meson-vpu: convert
+ to yaml
+Date: Tue, 6 Aug 2019 17:20:21 +0200
+Message-ID: <2c83379c-0857-86da-6f4d-ade728fd5b10@baylibre.com>
+References: <20190806124416.15561-1-narmstrong@baylibre.com>
+ <20190806124416.15561-3-narmstrong@baylibre.com>
+ <CAL_JsqKS7KeUBhEn1kxT0HZddOZ6oDaZDStUppSdL2vXfAuccg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190806135437.7451-1-linus.walleij@linaro.org>
+In-Reply-To: <CAL_JsqKS7KeUBhEn1kxT0HZddOZ6oDaZDStUppSdL2vXfAuccg@mail.gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,23 +21,31 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sean Paul <sean@poorly.run>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgNiwgMjAxOSBhdCA3OjU1IEFNIExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxl
-aWpAbGluYXJvLm9yZz4gd3JvdGU6Cj4KPiBBZGQgYmluZGluZ3MgZm9yIHRoZSBUSSBOU1BJUkUg
-c2ltcGxlIGRpc3BsYXkgcGFuZWxzLgo+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-Cj4gU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
-Pgo+IC0tLQo+IENoYW5lZ0xvZyB2Mi0+djM6Cj4gLSBTd2l0Y2ggdG8gR1BMLTIuMC1vbmx5IE9S
-IEJTRC0yLUNsYXVzZSBsaWNlbnNlCj4gLSBVc2UgYSBzaW1wbGUgZW51bSBmb3IgdGhlIGNvbXBh
-dGlibGUKPiAtIFVzZSB0aGUgbmV3IG5pZnR5IHBhbmVsLWNvbW1vbi55YW1sLCB0ZXN0ZWQgb24K
-PiAgIGxpbnV4LW5leHQKPiBDaGFuZ2VMb2cgdjEtPnYyOgo+IC0gTmV3IHBhdGNoIGFzIGJpbmRp
-bmdzIGFyZSByZXF1aXJlZAo+IC0gTGV0J3MgdXNlIFlBTUwKPiAtLS0KPiAgLi4uL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvdGksbnNwaXJlLnlhbWwgICAgIHwgMzYgKysrKysrKysrKysrKysrKysr
-Kwo+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGksbnNw
-aXJlLnlhbWwKClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+SGkgUm9iLAoKT24gMDYvMDgvMjAxOSAxNzowOCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVl
+LCBBdWcgNiwgMjAxOSBhdCA2OjQ0IEFNIE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxp
+YnJlLmNvbT4gd3JvdGU6Cj4+Cj4+IE5vdyB0aGF0IHdlIGhhdmUgdGhlIERUIHZhbGlkYXRpb24g
+aW4gcGxhY2UsIGxldCdzIGNvbnZlcnQgdGhlIGRldmljZSB0cmVlCj4+IGJpbmRpbmdzIGZvciB0
+aGUgQW1sb2dpYyBEaXNwbGF5IENvbnRyb2xsZXIgb3ZlciB0byBZQU1MIHNjaGVtYXMuCj4+Cj4+
+IFRoZSBvcmlnaW5hbCBleGFtcGxlIGhhcyBhIGxlZnRvdmVyICJkbWMiIG1lbW9yeSBjZWxsLCB0
+aGF0IGhhcyBiZWVuCj4+IHJlbW92ZWQgaW4gdGhlIHlhbWwgcmV3cml0ZS4KPj4KPj4gVGhlIHBv
+cnQgY29ubmVjdGlvbiB0YWJsZSBoYXMgYmVlbiBkcm9wcGVkIGluIGZhdm9yIG9mIGEgZGVzY3Jp
+cHRpb24KPj4gb2YgZWFjaCBwb3J0Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9u
+ZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+Cj4+IC0tLQo+PiAgLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvYW1sb2dpYyxtZXNvbi12cHUudHh0ICAgIHwgMTIxIC0tLS0tLS0tLS0tLS0tLQo+PiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi12cHUueWFtbCAgIHwgMTM4ICsrKysrKysr
+KysrKysrKysrKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxMzggaW5zZXJ0aW9ucygrKSwgMTIxIGRl
+bGV0aW9ucygtKQo+PiAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tdnB1LnR4dAo+PiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMs
+bWVzb24tdnB1LnlhbWwKPiAKPj4gKyAgcG93ZXItZG9tYWluczoKPj4gKyAgICBkZXNjcmlwdGlv
+bjogcGhhbmRsZSB0byB0aGUgYXNzb2NpYXRlZCBwb3dlciBkb21haW4KPj4gKyAgICBhbGxPZjoK
+Pj4gKyAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvcGhhbmRs
+ZQo+IAo+IFlvdSBtaXNzZWQgdGhpcyBvbmUuCj4gCgpJbmRlZWQsIHRoYW5rcyBmb3Igc3BvdHRp
+bmcsIEknbGwgcmVzZW5kIHdpdGhvdXQgaXQuCgpOZWlsCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
