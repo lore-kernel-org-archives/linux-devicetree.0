@@ -1,52 +1,57 @@
-From: Ran Bi <ran.bi@mediatek.com>
-Subject: Re: [PATCH v4 10/10] rtc: Add support for the MediaTek MT6358 RTC
-Date: Tue, 6 Aug 2019 19:41:32 +0800
-Message-ID: <1565091692.24748.3.camel@mhfsdcap03>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1564982518-32163-11-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20190805072338.GB3600@piout.net>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 16/16] dt-bindings: net: add bindings for ADIN PHY driver
+Date: Tue, 6 Aug 2019 11:47:52 +0000
+Message-ID: <264c84e1c8fc25594472c24b7fbba6502de1e3c9.camel@analog.com>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+         <20190805165453.3989-17-alexandru.ardelean@analog.com>
+         <20190805141100.GG24275@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805072338.GB3600@piout.net>
+In-Reply-To: <20190805141100.GG24275@lunn.ch>
+Content-Language: en-US
+Content-ID: <5FB240558E3F0746A8B700871D56B416@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Belloni,
-
-On Mon, 2019-08-05 at 09:23 +0200, Alexandre Belloni wrote:
-> Hi,
-> 
-> The subject should be:
-> 
-> "rtc: mt6397: Add support for the MediaTek MT6358 RTC"
-
-Will be changed at next patch.
-
-> > +struct mtk_rtc_compatible {
-> 
-> I would name that struct mtk_rtc_data
-> 
-> > +	u32			wrtgr_addr;
-> 
-> and this member should be wrtgr_offset or simply wrtgr.
-> 
-
-Will be changed at next patch.
-
-> >  
-> > +	of_id = of_match_device(mt6397_rtc_of_match, &pdev->dev);
-> > +	if (!of_id) {
-> > +		dev_err(&pdev->dev, "Failed to probe of_node\n");
-> > +		return -EINVAL;
-> 
-> This will never happen because probe would not be called if there is no
-> match. You could also use of_device_get_match_data to avoid having to
-> move the of_device_id table.
-> 
-
-Will use of_device_get_match_data() function instead of
-of_match_device() function.
+T24gTW9uLCAyMDE5LTA4LTA1IGF0IDE2OjExICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gPiArICBhZGkscngtaW50ZXJuYWwtZGVsYXk6DQo+ID4gKyAgICAk
+cmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4gPiArICAgIGRl
+c2NyaXB0aW9uOiB8DQo+ID4gKyAgICAgIFJHTUlJIFJYIENsb2NrIERlbGF5IHVzZWQgb25seSB3
+aGVuIFBIWSBvcGVyYXRlcyBpbiBSR01JSSBtb2RlIChwaHktbW9kZQ0KPiA+ICsgICAgICBpcyAi
+cmdtaWktaWQiLCAicmdtaWktcnhpZCIsICJyZ21paS10eGlkIikgc2VlIGBkdC1iaW5kaW5ncy9u
+ZXQvYWRpbi5oYA0KPiA+ICsgICAgICBkZWZhdWx0IHZhbHVlIGlzIDAgKHdoaWNoIHJlcHJlc2Vu
+dHMgMiBucykNCj4gPiArICAgIGVudW06IFsgMCwgMSwgMiwgNiwgNyBdDQo+IA0KPiBXZSB3YW50
+IHRoZXNlIG51bWJlcnMgdG8gYmUgaW4gbnMuIFNvIHRoZSBkZWZhdWx0IHZhbHVlIHdvdWxkIGFj
+dHVhbGx5DQo+IGJlIDIuIFRoZSBkcml2ZXIgbmVlZHMgdG8gY29udmVydCB0aGUgbnVtYmVyIGlu
+IERUIHRvIGEgdmFsdWUgdG8gcG9rZQ0KPiBpbnRvIGEgUEhZIHJlZ2lzdGVyLiBQbGVhc2UgcmVu
+YW1lIHRoZSBwcm9wZXJ0eSBhZGkscngtaW50ZXJuYWwtZGVsYXktbnMuDQo+IA0KDQpJIGp1c3Qg
+cmVhbGl6ZWQ6IHRoaXMgd2lsbCBwcm9iYWJseSBoYXZlIHRvIGJlIHBpY28tc2Vjb25kcy4NClNv
+bWUgZGVsYXlzIGFyZSAxLjYwIG5zLCB3aGljaCBhcmUgbm90IGVhc3kgdG8gcmVwcmVzZW50IGlu
+IGluIG5zIGluIERULg0KDQpUaGUgdmFsdWVzIGhlcmUgYXJlIGFjdHVhbGx5IHRoZSByZWdpc3Rl
+ciB2YWx1ZXMgY29ycmVzcG9uZGluZyB0byB0aGUgZGVsYXlzLg0KDQo+ID4gKw0KPiA+ICsgIGFk
+aSx0eC1pbnRlcm5hbC1kZWxheToNCj4gPiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwj
+L2RlZmluaXRpb25zL3VpbnQzMg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAg
+UkdNSUkgVFggQ2xvY2sgRGVsYXkgdXNlZCBvbmx5IHdoZW4gUEhZIG9wZXJhdGVzIGluIFJHTUlJ
+IG1vZGUgKHBoeS1tb2RlDQo+ID4gKyAgICAgIGlzICJyZ21paS1pZCIsICJyZ21paS1yeGlkIiwg
+InJnbWlpLXR4aWQiKSBzZWUgYGR0LWJpbmRpbmdzL25ldC9hZGluLmhgDQo+ID4gKyAgICAgIGRl
+ZmF1bHQgdmFsdWUgaXMgMCAod2hpY2ggcmVwcmVzZW50cyAyIG5zKQ0KPiA+ICsgICAgZW51bTog
+WyAwLCAxLCAyLCA2LCA3IF0NCj4gDQo+IFNhbWUgaGVyZS4NCj4gDQo+ID4gKw0KPiA+ICsgIGFk
+aSxmaWZvLWRlcHRoOg0KPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5p
+dGlvbnMvdWludDMyDQo+ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBXaGVuIG9w
+ZXJhdGluZyBpbiBSTUlJIG1vZGUsIHRoaXMgb3B0aW9uIGNvbmZpZ3VyZXMgdGhlIEZJRk8gZGVw
+dGguDQo+ID4gKyAgICAgIFNlZSBgZHQtYmluZGluZ3MvbmV0L2FkaW4uaGAuDQo+ID4gKyAgICBl
+bnVtOiBbIDAsIDEsIDIsIDMsIDQsIDUgXQ0KPiANCj4gVW5pdHM/IFlvdSBzaG91bGQgcHJvYmFi
+bHkgcmVuYW1lIHRoaXMgYWRpLGZpZm8tZGVwdGgtYml0cyBhbmQgbGlzdA0KPiB0aGUgdmFsaWQg
+dmFsdWVzIGluIGJpdHMuDQo+IA0KPiA+ICsNCj4gPiArICBhZGksZWVlLWVuYWJsZWQ6DQo+ID4g
+KyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICBBZHZlcnRpc2UgRUVFIGNhcGFiaWxpdGll
+cyBvbiBwb3dlci11cC9pbml0IChkZWZhdWx0IGRpc2FibGVkKQ0KPiA+ICsgICAgdHlwZTogYm9v
+bGVhbg0KPiANCj4gSXQgaXMgbm90IHRoZSBQSFkgd2hpY2ggZGVjaWRlcyB0aGlzLiBUaGUgTUFD
+IGluZGljYXRlcyBpZiBpdCBpcyBFRUUNCj4gY2FwYWJsZSB0byBwaHlsaWIuIHBoeWxpYiBsb29r
+cyBpbnRvIHRoZSBQSFkgcmVnaXN0ZXJzIHRvIGRldGVybWluZSBpZg0KPiB0aGUgUEhZIHN1cHBv
+cnRzIEVFRS4gcGh5bGliIHdpbGwgdGhlbiBlbmFibGUgRUVFDQo+IGFkdmVydGlzZW1lbnQuIFBs
+ZWFzZSByZW1vdmUgdGhpcywgYW5kIGVuc3VyZSBFRUUgaXMgZGlzYWJsZWQgYnkNCj4gZGVmYXVs
+dC4NCj4gDQo+IAlBbmRyZXcNCg==
