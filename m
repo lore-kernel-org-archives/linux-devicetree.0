@@ -1,41 +1,35 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH 1/2] mfd: madera: Update DT binding document to support clock supplies
-Date: Tue, 6 Aug 2019 16:13:20 +0100
-Message-ID: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: net: meson-dwmac: convert to yaml
+Date: Tue, 6 Aug 2019 09:15:45 -0600
+Message-ID: <CAL_JsqKnzNMittFbvmz+ELu9UVMkmPmFoVT8ydWOYtCST+MwVA@mail.gmail.com>
+References: <20190806125041.16105-1-narmstrong@baylibre.com> <20190806125041.16105-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190806125041.16105-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the 3 input clock sources for the chip into the device tree binding
-document.
+On Tue, Aug 6, 2019 at 6:50 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Synopsys DWMAC Glue for Amlogic SoCs over to a YAML schemas.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/net/amlogic,meson-dwmac.yaml     | 113 ++++++++++++++++++
+>  .../devicetree/bindings/net/meson-dwmac.txt   |  71 -----------
+>  .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +
+>  3 files changed, 118 insertions(+), 71 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I don't love the compatible schema with 'additionalItems: true' and
+contains, but I guess it is what it is. I'm hopeful schemas help limit
+how many variations we end up with.
 
-diff --git a/Documentation/devicetree/bindings/mfd/madera.txt b/Documentation/devicetree/bindings/mfd/madera.txt
-index cad0f28005027..47e2b8bc60519 100644
---- a/Documentation/devicetree/bindings/mfd/madera.txt
-+++ b/Documentation/devicetree/bindings/mfd/madera.txt
-@@ -67,6 +67,14 @@ Optional properties:
-     As defined in bindings/gpio.txt.
-     Although optional, it is strongly recommended to use a hardware reset
- 
-+  - clocks: Should reference the clocks supplied on MCLK1, MCLK2 and MCLK3
-+  - clock-names: May contain up to three strings:
-+      "mclk1" for the clock supplied on MCLK1, recommended to be a high
-+      quality audio reference clock
-+      "mclk2" for the clock supplied on MCLK2, required to be an always on
-+      32k clock
-+      "mclk3" for the clock supplied on MCLK3
-+
-   - MICBIASx : Initial data for the MICBIAS regulators, as covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt.
-     One for each MICBIAS generator (MICBIAS1, MICBIAS2, ...)
--- 
-2.11.0
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob
