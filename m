@@ -1,198 +1,94 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 3/8] of/fdt: add function to get the SoC wide DMA
- addressable memory size
-Date: Tue, 06 Aug 2019 20:12:10 +0200
-Message-ID: <12eb3aba207c552e5eb727535e7c4f08673c4c80.camel@suse.de>
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
-         <20190731154752.16557-4-nsaenzjulienne@suse.de>
-         <CAL_JsqKF5nh3hcdLTG5+6RU3_TnFrNX08vD6qZ8wawoA3WSRpA@mail.gmail.com>
-         <2050374ac07e0330e505c4a1637256428adb10c4.camel@suse.de>
-         <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 0/6] hwspinlock: allow sharing of hwspinlocks
+Date: Tue, 6 Aug 2019 11:21:28 -0700
+Message-ID: <20190806182128.GD26807@tuxbook-pro>
+References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
+ <20190801191403.GA7234@tuxbook-pro>
+ <1a057176-81ab-e302-4375-2717ceef6924@st.com>
+ <20190805174659.GA23928@tuxbook-pro>
+ <dcd1aeea-cffe-d5fb-af5a-e52efcc2e046@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-BWDWLSX5DbZPpBq0FAfV"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+LjsRmFg-xaLgpVx3miXN3hid3aD+mgTW__j0SbEFYjQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <dcd1aeea-cffe-d5fb-af5a-e52efcc2e046@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>, wahrenst@gmx.net, Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <robin.murphy@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Linux IOMMU <iommu@lists.linux-foundation.org>, linux-mm@kvack.org, Frank Rowand <frowand.list@gmail.com>, phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Matthias Brugger <mbrugger@suse.com>, Andrew Morton <akpm@linux-foundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rp>
+To: Suman Anna <s-anna@ti.com>
+Cc: Fabien DESSENNE <fabien.dessenne@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue 06 Aug 10:38 PDT 2019, Suman Anna wrote:
 
---=-BWDWLSX5DbZPpBq0FAfV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Hi Fabien,
+> 
+> On 8/5/19 12:46 PM, Bjorn Andersson wrote:
+> > On Mon 05 Aug 01:48 PDT 2019, Fabien DESSENNE wrote:
+> > 
+> >>
+> >> On 01/08/2019 9:14 PM, Bjorn Andersson wrote:
+> >>> On Wed 13 Mar 08:50 PDT 2019, Fabien Dessenne wrote:
+[..]
+> >> B/ This would introduce some inconsistency between the two 'request' API
+> >> which are hwspin_lock_request() and hwspin_lock_request_specific().
+> >> hwspin_lock_request() looks for an unused lock, so requests for an exclusive
+> >> usage. On the other side, request_specific() would request shared locks.
+> >> Worst the following sequence can transform an exclusive usage into a shared
+> >>
+> > 
+> > There is already an inconsistency in between these; as with above any
+> > system that uses both request() and request_specific() will be suffering
+> > from intermittent failures due to probe ordering.
+> > 
+> >> one:
+> >>    -hwspin_lock_request() -> returns Id#0 (exclusive)
+> >>    -hwspin_lock_request() -> returns Id#1 (exclusive)
+> >>    -hwspin_lock_request_specific(0) -> returns Id#0 and makes Id#0 shared
+> >> Honestly I am not sure that this is a real issue, but it's better to have it
+> >> in mind before we take ay decision
+> 
+> Wouldn't it be actually simpler to just introduce a new specific API
+> variant for this, similar to the reset core for example (it uses a
+> separate exclusive API), without having to modify the bindings at all.
+> It is just a case of your driver using the right API, and the core can
+> be modified to use the additional tag semantics based on the API. It
+> should avoid any confusion with say using a different second cell value
+> for the same lock in two different nodes.
+> 
 
-Hi Rob,
+But this implies that there is an actual need to hold these locks
+exclusively. Given that they are (except for the raw case) all wrapped
+by Linux locking primitives there shouldn't be a problem sharing a lock
+(except possibly for the raw case).
 
-On Mon, 2019-08-05 at 13:23 -0600, Rob Herring wrote:
-> On Mon, Aug 5, 2019 at 10:03 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Hi Rob,
-> > Thanks for the review!
-> >=20
-> > On Fri, 2019-08-02 at 11:17 -0600, Rob Herring wrote:
-> > > On Wed, Jul 31, 2019 at 9:48 AM Nicolas Saenz Julienne
-> > > <nsaenzjulienne@suse.de> wrote:
-> > > > Some SoCs might have multiple interconnects each with their own DMA
-> > > > addressing limitations. This function parses the 'dma-ranges' on ea=
-ch of
-> > > > them and tries to guess the maximum SoC wide DMA addressable memory
-> > > > size.
-> > > >=20
-> > > > This is specially useful for arch code in order to properly setup C=
-MA
-> > > > and memory zones.
-> > >=20
-> > > We already have a way to setup CMA in reserved-memory, so why is this
-> > > needed for that?
-> >=20
-> > Correct me if I'm wrong but I got the feeling you got the point of the =
-patch
-> > later on.
->=20
-> No, for CMA I don't. Can't we already pass a size and location for CMA
-> region under /reserved-memory. The only advantage here is perhaps the
-> CMA range could be anywhere in the DMA zone vs. a fixed location.
 
-Now I get it, sorry I wasn't aware of that interface.
+I agree that we shouldn't specify this property in DT - if anything it
+should be a variant of the API.
 
-Still, I'm not convinced it matches RPi's use case as this would hard-code
-CMA's size. Most people won't care, but for the ones that do, it's nicer to
-change the value from the kernel command line than editing the dtb. I get t=
-hat
-if you need to, for example, reserve some memory for the video to work, it'=
-s
-silly not to hard-code it. Yet due to the board's nature and users base I s=
-ay
-it's important to favor flexibility. It would also break compatibility with
-earlier versions of the board and diverge from the downstream kernel behavi=
-our.
-Which is a bigger issue than it seems as most users don't always understand
-which kernel they are running and unknowingly copy configuration options fr=
-om
-forums.
+> If you are sharing a hwlock on the Linux side, surely your driver should
+> be aware that it is a shared lock. The tag can be set during the first
+> request API, and you look through both tags when giving out a handle.
+> 
 
-As I also need to know the DMA addressing limitations to properly configure
-memory zones and dma-direct. Setting up the proper CMA constraints during t=
-he
-arch's init will be trivial anyway.
+Why would the driver need to know about it?
 
-> > > IMO, I'd just do:
-> > >=20
-> > > if (of_fdt_machine_is_compatible(blob, "brcm,bcm2711"))
-> > >     dma_zone_size =3D XX;
-> > >=20
-> > > 2 lines of code is much easier to maintain than 10s of incomplete cod=
-e
-> > > and is clearer who needs this. Maybe if we have dozens of SoCs with
-> > > this problem we should start parsing dma-ranges.
-> >=20
-> > FYI that's what arm32 is doing at the moment and was my first instinct.=
- But
-> > it
-> > seems that arm64 has been able to survive so far without any machine
-> > specific
-> > code and I have the feeling Catalin and Will will not be happy about th=
-is
-> > solution. Am I wrong?
->=20
-> No doubt. I'm fine if the 2 lines live in drivers/of/.
->=20
-> Note that I'm trying to reduce the number of early_init_dt_scan_*
-> calls from arch code into the DT code so there's more commonality
-> across architectures in the early DT scans. So ideally, this can all
-> be handled under early_init_dt_scan() call.
+> Obviously, the hwspin_lock_request() API usage semantics always had the
+> implied additional need for communicating the lock id to the other peer
+> entity, so a realistic usage is most always the specific API variant. I
+> doubt this API would be of much use for the shared driver usage. This
+> also implies that the client user does not care about specifying a lock
+> in DT.
+> 
 
-How does this look? (I'll split it in two patches and add a comment explain=
-ing
-why dt_dma_zone_size is needed)
+Afaict if the lock are shared then there shouldn't be a problem with
+some clients using the request API and others request_specific(). As any
+collisions would simply mean that there are more contention on the lock.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index f2444c61a136..1395be40b722 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -30,6 +30,8 @@
-=20
- #include "of_private.h"
-=20
-+u64 dt_dma_zone_size __ro_after_init;
-+
- /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-@@ -802,6 +805,11 @@ const char * __init of_flat_dt_get_machine_name(void)
-        return name;
- }
-=20
-+static const int __init of_fdt_machine_is_compatible(char *name)
-+{
-+       return of_compat_cmp(of_flat_dt_get_machine_name(), name, strlen(na=
-me));
-+}
-+
- /**
-  * of_flat_dt_match_machine - Iterate match tables to find matching machin=
-e.
-  *
-@@ -1260,6 +1268,14 @@ void __init early_init_dt_scan_nodes(void)
-        of_scan_flat_dt(early_init_dt_scan_memory, NULL);
- }
-=20
-+void __init early_init_dt_get_dma_zone_size(void)
-+{
-+       dt_dma_zone_size =3D 0;
-+
-+       if (of_fdt_machine_is_compatible("brcm,bcm2711"))
-+               dt_dma_zone_size =3D 0x3c000000;
-+}
-+
- bool __init early_init_dt_scan(void *params)
- {
-        bool status;
-@@ -1269,6 +1285,7 @@ bool __init early_init_dt_scan(void *params)
-                return false;
-=20
-        early_init_dt_scan_nodes();
-+       early_init_dt_get_dma_zone_size();
-        return true;
- }
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 2ad36b7bd4fa..b5a9f685de14 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -27,6 +27,8 @@ extern void *of_fdt_unflatten_tree(const unsigned long *b=
-lob,
-                                   struct device_node *dad,
-                                   struct device_node **mynodes);
-=20
-+extern u64 dt_dma_zone_size __ro_after_init;
-+
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
- extern int __initdata dt_root_size_cells;
+With the current exclusive model that is not possible and the success of
+the request_specific will depend on probe order.
 
-=20
+But perhaps it should be explicitly prohibited to use both APIs on the
+same hwspinlock instance?
+
 Regards,
-Nicolas
-
-
-
---=-BWDWLSX5DbZPpBq0FAfV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1JwvoACgkQlfZmHno8
-x/5f/QgAsruOFQ8PvpoSHvG6DlzmdqSfRJK2v/9MyF59tpuvGoJUQggc4SObGIz8
-/Nk2Md0j7gXdLjr+t1elpo6xBmJxLWhZPw7HfIx1ejSHv2QK+gJopm/BJ54gV8cl
-oUh+Ed8eD1FBlYszwI3YRaKY/HXcQaZn97el4/AaCbztxkkAg1xEH/1L6XPwf2FC
-j9/TMxpFyE6aWdQ5GtOzxL1RVmzOEYgpvsr+mKxOFHX9V5+8UXNnLDRDjR36Ms78
-NVgFECrTr4rxiU2UJalTgyyPtch73aj8xMNKwHkOyiagITz9PhesPdVYy9sLWTM+
-KTFFdX5XzhKpZAHyjtBWPWEKO34aqg==
-=JTdS
------END PGP SIGNATURE-----
-
---=-BWDWLSX5DbZPpBq0FAfV--
+Bjorn
