@@ -1,60 +1,90 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv2 3/3] PCI: layerscape: Add LS1028a support
-Date: Tue, 6 Aug 2019 04:39:38 +0000
-Message-ID: <DB8PR04MB6747A3AE99090E6B49AAE3D984D50@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190805040453.48009-1-xiaowei.bao@nxp.com>
- <20190805040453.48009-3-xiaowei.bao@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1028a: Add temperature sensor node
+Date: Tue,  6 Aug 2019 13:30:04 +0800
+Message-ID: <20190806053004.36956-1-andy.tang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805040453.48009-3-xiaowei.bao@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBYaWFv
-d2VpIEJhbyBbbWFpbHRvOnhpYW93ZWkuYmFvQG54cC5jb21dDQo+IFNlbnQ6IDIwMTnE6jjUwjXI
-1SAxMjowNQ0KPiBUbzogYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95
-YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOw0KPiBsb3JlbnpvLnBpZXJhbGlzaUBhcm0u
-Y29tOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gTS5oLiBM
-aWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5j
-b20+Ow0KPiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+OyBSb3kgWmFuZyA8cm95Lnph
-bmdAbnhwLmNvbT47DQo+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IHBvbWJyZWRhbm5l
-QG5leGIuY29tOw0KPiBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IGxpbnV4LXBjaUB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxp
-bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IENjOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIdjIgMy8zXSBQQ0k6IGxheWVyc2NhcGU6IEFk
-ZCBMUzEwMjhhIHN1cHBvcnQNCj4gDQo+IEFkZCBzdXBwb3J0IGZvciB0aGUgTFMxMDI4YSBQQ0ll
-IGNvbnRyb2xsZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCj4gLS0tDQo+IHYyOg0KPiAgLSBubyBjaGFuZ2UuDQo+IA0KPiAgZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUuYyB8IDkgKysrKysrKysrDQo+ICAx
-IGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUuYw0KPiBiL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gaW5kZXggM2E1ZmEyNi4uOGM1NTZlMSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUu
-Yw0KPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+
-IEBAIC0yMzYsNiArMjM2LDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbHNfcGNpZV9kcnZkYXRh
-IGxzMTA0M19kcnZkYXRhID0NCj4gew0KPiAgCS5kd19wY2llX29wcyA9ICZkd19sc19wY2llX29w
-cywNCj4gIH07DQo+IA0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBsc19wY2llX2RydmRhdGEgbHMx
-MDI4YV9kcnZkYXRhID0gew0KPiArCS5sdXRfb2Zmc2V0ID0gMHg4MDAwMCwNCj4gKwkubHRzc21f
-c2hpZnQgPSAwLA0KPiArCS5sdXRfZGJnID0gMHg0MDdmYywNCj4gKwkub3BzID0gJmxzX3BjaWVf
-aG9zdF9vcHMsDQo+ICsJLmR3X3BjaWVfb3BzID0gJmR3X2xzX3BjaWVfb3BzLA0KPiArfTsNCj4g
-Kw0KDQpSZXVzZSB0aGUgZHJpdmVyIGRhdGEgc3RydWN0dXJlIG9mIExTMjA4OCBpbnN0ZWFkIGFk
-ZCBhIG5ldyBvbmUuDQoNCi0gWmhpcWlhbmcNCg0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBsc19w
-Y2llX2RydmRhdGEgbHMxMDQ2X2RydmRhdGEgPSB7DQo+ICAJLmx1dF9vZmZzZXQgPSAweDgwMDAw
-LA0KPiAgCS5sdHNzbV9zaGlmdCA9IDI0LA0KPiBAQCAtMjYzLDYgKzI3MSw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgbHNfcGNpZV9kcnZkYXRhIGxzMjA4OF9kcnZkYXRhID0NCj4geyAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbHNfcGNpZV9vZl9tYXRjaFtdID0gew0KPiAgCXsg
-LmNvbXBhdGlibGUgPSAiZnNsLGxzMTAxMmEtcGNpZSIsIC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRh
-IH0sDQo+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1wY2llIiwgLmRhdGEgPSAmbHMx
-MDIxX2RydmRhdGEgfSwNCj4gKwl7IC5jb21wYXRpYmxlID0gImZzbCxsczEwMjhhLXBjaWUiLCAu
-ZGF0YSA9ICZsczEwMjhhX2RydmRhdGEgfSwNCj4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxsczEw
-NDNhLXBjaWUiLCAuZGF0YSA9ICZsczEwNDNfZHJ2ZGF0YSB9LA0KPiAgCXsgLmNvbXBhdGlibGUg
-PSAiZnNsLGxzMTA0NmEtcGNpZSIsIC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRhIH0sDQo+ICAJeyAu
-Y29tcGF0aWJsZSA9ICJmc2wsbHMyMDgwYS1wY2llIiwgLmRhdGEgPSAmbHMyMDgwX2RydmRhdGEg
-fSwNCj4gLS0NCj4gMi45LjUNCg0K
+Add nxp sa56004 chip node for temperature monitor.
+
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+v3:
+	- sort the node in i2c address
+v2:
+	- change the node name and add vcc-supply
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   15 +++++++++++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index b359068..960daf2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -47,6 +47,15 @@
+ 		regulator-always-on;
+ 	};
+ 
++	sb_3v3: regulator-sb3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3v3_vbus";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,format = "i2s";
+@@ -117,6 +126,12 @@
+ 			#size-cells = <0>;
+ 			reg = <0x3>;
+ 
++			temperature-sensor@4c {
++				compatible = "nxp,sa56004";
++				reg = <0x4c>;
++				vcc-supply = <&sb_3v3>;
++			};
++
+ 			rtc@51 {
+ 				compatible = "nxp,pcf2129";
+ 				reg = <0x51>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index f9c272f..6a22423 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -43,6 +43,15 @@
+ 		regulator-always-on;
+ 	};
+ 
++	sb_3v3: regulator-sb3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3v3_vbus";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,format = "i2s";
+@@ -115,6 +124,12 @@
+ 			#size-cells = <0>;
+ 			reg = <0x3>;
+ 
++			temperature-sensor@4c {
++				compatible = "nxp,sa56004";
++				reg = <0x4c>;
++				vcc-supply = <&sb_3v3>;
++			};
++
+ 			rtc@51 {
+ 				compatible = "nxp,pcf2129";
+ 				reg = <0x51>;
+-- 
+1.7.1
