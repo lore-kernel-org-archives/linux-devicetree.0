@@ -1,101 +1,115 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
- Tegra30
-Date: Tue, 6 Aug 2019 10:30:21 +0300
-Message-ID: <20190806073021.GF3883@pdeschrijver-desktop.Nvidia.com>
-References: <20190725151832.9802-1-digetx@gmail.com>
- <20190725151832.9802-4-digetx@gmail.com>
- <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
- <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
- <20190805083325.GE3883@pdeschrijver-desktop.Nvidia.com>
- <1a9464b3-6e0e-00ff-64d8-b3abf7982dfb@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFCv2 4/9] dt-bindings: reset: amlogic,meson-reset: convert to
+ yaml
+Date: Tue, 06 Aug 2019 09:41:04 +0200
+Message-ID: <1565077264.4951.4.camel@pengutronix.de>
+References: <20190805120320.32282-1-narmstrong@baylibre.com>
+ <20190805120320.32282-5-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1a9464b3-6e0e-00ff-64d8-b3abf7982dfb@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190805120320.32282-5-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 02:03:29PM +0300, Dmitry Osipenko wrote:
-> 05.08.2019 11:33, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Fri, Aug 02, 2019 at 05:39:23PM +0300, Dmitry Osipenko wrote:
-> >> 02.08.2019 17:05, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
-> >>>> Add regulators coupler for Tegra30 SoCs that performs voltage balanc=
-ing
-> >>>> of a coupled regulators and thus provides voltage scaling functional=
-ity.
-> >>>>
-> >>>> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. Th=
-e
-> >>>> coupled regulator voltages shall be in a range of 300mV from each ot=
-her
-> >>>> and CORE voltage shall be higher than the CPU by N mV, where N depen=
-ds
-> >>>> on the CPU voltage.
-> >>>>
-> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >>>> ---
-> >>>>  drivers/soc/tegra/Kconfig              |   4 +
-> >>>>  drivers/soc/tegra/Makefile             |   1 +
-> >>>>  drivers/soc/tegra/regulators-tegra30.c | 316 ++++++++++++++++++++++=
-+++
-> >>>>  3 files changed, 321 insertions(+)
-> >>>>  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
-> >>>>
-> >>> ...
-> >>>
-> >>>> +
-> >>>> +static int tegra30_core_cpu_limit(int cpu_uV)
-> >>>> +{
-> >>>> +	if (cpu_uV < 800000)
-> >>>> +		return 950000;
-> >>>> +
-> >>>> +	if (cpu_uV < 900000)
-> >>>> +		return 1000000;
-> >>>> +
-> >>>> +	if (cpu_uV < 1000000)
-> >>>> +		return 1100000;
-> >>>> +
-> >>>> +	if (cpu_uV < 1100000)
-> >>>> +		return 1200000;
-> >>>> +
-> >>>> +	if (cpu_uV < 1250000) {
-> >>>> +		switch (tegra_sku_info.cpu_speedo_id) {
-> >>>> +		case 0 ... 1:
-> >>> Aren't we supposed to add /* fall through */ here now?
-> >>
-> >> There is no compiler warning if there is nothing in-between of the
-> >> case-switches, so annotation isn't really necessary here. Of course it
-> >> is possible to add an explicit annotation just to make clear the
-> >> fall-through intention.
-> >>
-> >=20
-> > Ah. Ok. Whatever you want then :)
->=20
-> I'll add the comments if there will be a need to re-spin this series.
->=20
-> >>>> +		case 4:
-> >>>> +		case 7 ... 8:
-> >>>> +			return 1200000;
-> >>>> +
-> >>>> +		default:
-> >>>> +			return 1300000;
-> >>>> +		}
-> >>>> +	}
-> >>>> +
-> >>>
-> >>> Other than that, this looks ok to me.
-> >>
-> >> Awesome, thank you very much! Explicit ACK will be appreciated as well=
-.
-> >=20
-> > Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+On Mon, 2019-08-05 at 14:03 +0200, Neil Armstrong wrote:
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic Reset controller over to a YAML schemas.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-All of them.
+Let me know if you want me to pick up this patch, otherwise
 
-Peter.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+to merge with the rest of the series.
+
+regards
+Philipp
+
+> ---
+>  .../bindings/reset/amlogic,meson-reset.txt    | 19 ----------
+>  .../bindings/reset/amlogic,meson-reset.yaml   | 37 +++++++++++++++++++
+>  2 files changed, 37 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+>  create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+> deleted file mode 100644
+> index 28ef6c295c76..000000000000
+> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -Amlogic Meson SoC Reset Controller
+> -=======================================
+> -
+> -Please also refer to reset.txt in this directory for common reset
+> -controller binding usage.
+> -
+> -Required properties:
+> -- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
+> -	"amlogic,meson-axg-reset".
+> -- reg: should contain the register address base
+> -- #reset-cells: 1, see below
+> -
+> -example:
+> -
+> -reset: reset-controller {
+> -	compatible = "amlogic,meson-gxbb-reset";
+> -	reg = <0x0 0x04404 0x0 0x20>;
+> -	#reset-cells = <1>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> new file mode 100644
+> index 000000000000..00917d868d58
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/reset/amlogic,meson-reset.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Amlogic Meson SoC Reset Controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
+> +      - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
+> +      - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#reset-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#reset-cells"
+> +
+> +examples:
+> +  - |
+> +    reset-controller@c884404 {
+> +          compatible = "amlogic,meson-gxbb-reset";
+> +          reg = <0xc884404 0x20>;
+> +          #reset-cells = <1>;
+> +    };
