@@ -1,150 +1,115 @@
-From: megous@megous.com
-Subject: [PATCH v8 3/4] drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
-Date: Tue,  6 Aug 2019 17:57:42 +0200
-Message-ID: <20190806155744.10263-4-megous@megous.com>
-References: <20190806155744.10263-1-megous@megous.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
+Date: Tue, 6 Aug 2019 17:24:39 +0100
+Message-ID: <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
+References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+ <20190628073425.25165-3-jianjun.wang@mediatek.com>
+ <1564385918.17211.6.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806155744.10263-1-megous@megous.com>
+Content-Disposition: inline
+In-Reply-To: <1564385918.17211.6.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc: Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>
+To: Jianjun Wang <jianjun.wang@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+[trim the CC list please to keep only required maintainers]
 
-Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-for the DDC bus to be usable.
+On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
+> On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
+> > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
+> > 
+> > The HW default value of its Device ID is invalid, fix its Device ID to
+> > match the hardware implementation.
+> > 
+> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
+> >  include/linux/pci_ids.h                |  1 +
+> >  2 files changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > index 80601e1b939e..e5e6740b635d 100644
+> > --- a/drivers/pci/controller/pcie-mediatek.c
+> > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > @@ -73,6 +73,7 @@
+> >  #define PCIE_MSI_VECTOR		0x0c0
+> >  
+> >  #define PCIE_CONF_VEND_ID	0x100
+> > +#define PCIE_CONF_DEVICE_ID	0x102
+> >  #define PCIE_CONF_CLASS_ID	0x106
+> >  
+> >  #define PCIE_INT_MASK		0x420
+> > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
+> >  /**
+> >   * struct mtk_pcie_soc - differentiate between host generations
+> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+> > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
+> > + * @device_id: Device ID which this host need to be fixed
+> >   * @ops: pointer to configuration access functions
+> >   * @startup: pointer to controller setting functions
+> >   * @setup_irq: pointer to initialize IRQ functions
+> >   */
+> >  struct mtk_pcie_soc {
+> >  	bool need_fix_class_id;
+> > +	bool need_fix_device_id;
+> > +	unsigned int device_id;
+> >  	struct pci_ops *ops;
+> >  	int (*startup)(struct mtk_pcie_port *port);
+> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+> > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+> >  	}
+> >  
+> > +	if (soc->need_fix_device_id)
+> > +		writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
+> > +
+> >  	/* 100ms timeout value should be enough for Gen1/2 training */
+> >  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+> >  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
+> >  	.setup_irq = mtk_pcie_setup_irq,
+> >  };
+> >  
+> > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
+> > +	.need_fix_class_id = true,
+> > +	.need_fix_device_id = true,
+> > +	.device_id = PCI_DEVICE_ID_MEDIATEK_7629,
+> > +	.ops = &mtk_pcie_ops_v2,
+> > +	.startup = mtk_pcie_startup_port_v2,
+> > +	.setup_irq = mtk_pcie_setup_irq,
+> > +};
+> > +
+> >  static const struct of_device_id mtk_pcie_ids[] = {
+> >  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+> >  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+> >  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
+> >  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
+> > +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
+> >  	{},
+> >  };
+> >  
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 70e86148cb1e..aa32962759b2 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -2131,6 +2131,7 @@
+> >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
+> >  
+> >  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
+> > +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
+> >  
+> >  #define PCI_VENDOR_ID_TITAN		0x14D2
+> >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
+> 
+> Hi Bjorn & Lorenzo,
+> 
+> Is this patch ok or is there anything I need to fixed?
 
-Add support for hdmi-connector node's optional ddc-en-gpios property to
-support this use case.
+The commit log need to be fixed and I will do it, the code if
+Bjorn is OK with it I can merge it.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 54 +++++++++++++++++++++++++--
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
- 2 files changed, 52 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 8ca5af0c912f..a44dca4b0219 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -97,10 +97,34 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
- 	return crtcs;
- }
- 
-+static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-+					     struct platform_device **pdev_out)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *remote;
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-+	if (!remote)
-+		return -ENODEV;
-+
-+	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-+		of_node_put(remote);
-+		return -ENODEV;
-+	}
-+
-+	pdev = of_find_device_by_node(remote);
-+	of_node_put(remote);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	*pdev_out = pdev;
-+	return 0;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
--	struct platform_device *pdev = to_platform_device(dev);
-+	struct platform_device *pdev = to_platform_device(dev), *connector_pdev;
- 	struct dw_hdmi_plat_data *plat_data;
- 	struct drm_device *drm = data;
- 	struct device_node *phy_node;
-@@ -150,16 +174,30 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
- 
-+	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &connector_pdev);
-+	if (!ret) {
-+		hdmi->ddc_en = gpiod_get_optional(&connector_pdev->dev,
-+						  "ddc-en", GPIOD_OUT_HIGH);
-+		platform_device_put(connector_pdev);
-+
-+		if (IS_ERR(hdmi->ddc_en)) {
-+			dev_err(dev, "Couldn't get ddc-en gpio\n");
-+			return PTR_ERR(hdmi->ddc_en);
-+		}
-+	}
-+
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
--		return ret;
-+		goto err_unref_ddc_en;
- 	}
- 
-+	gpiod_set_value(hdmi->ddc_en, 1);
-+
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_en;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -212,8 +250,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
--err_disable_regulator:
-+err_disable_ddc_en:
-+	gpiod_set_value(hdmi->ddc_en, 0);
- 	regulator_disable(hdmi->regulator);
-+err_unref_ddc_en:
-+	if (hdmi->ddc_en)
-+		gpiod_put(hdmi->ddc_en);
- 
- 	return ret;
- }
-@@ -227,7 +269,11 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	sun8i_hdmi_phy_remove(hdmi);
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
-+	gpiod_set_value(hdmi->ddc_en, 0);
- 	regulator_disable(hdmi->regulator);
-+
-+	if (hdmi->ddc_en)
-+		gpiod_put(hdmi->ddc_en);
- }
- 
- static const struct component_ops sun8i_dw_hdmi_ops = {
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..d707c9171824 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -9,6 +9,7 @@
- #include <drm/bridge/dw_hdmi.h>
- #include <drm/drm_encoder.h>
- #include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
-@@ -190,6 +191,7 @@ struct sun8i_dw_hdmi {
- 	struct regulator		*regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
-+	struct gpio_desc		*ddc_en;
- };
- 
- static inline struct sun8i_dw_hdmi *
--- 
-2.22.0
+Lorenzo
