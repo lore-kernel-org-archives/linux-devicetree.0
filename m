@@ -1,52 +1,37 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SC7180 pinctrl
- binding
-Date: Tue, 6 Aug 2019 11:39:19 +0530
-Message-ID: <d227c2b1-50df-b3e0-ea44-595c5e32fc61@codeaurora.org>
-References: <20190801100717.23333-1-rnayak@codeaurora.org>
- <CACRpkdYLb-WWSEL8yG3yy8Qq7bOKP9JjUGV51mY6=aEwrQAJvg@mail.gmail.com>
- <CACRpkdaoOuyUmysb3OmErbLJ6zZuHGGt7RRzG9wULDkg=hLCAw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv3 1/3] dt-bindings: pci: layerscape-pci: add compatible strings "fsl,ls1028a-pcie"
+Date: Tue,  6 Aug 2019 14:15:51 +0800
+Message-ID: <20190806061553.19934-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaoOuyUmysb3OmErbLJ6zZuHGGt7RRzG9wULDkg=hLCAw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, MSM <linux-arm-msm@vger.kernel.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jitendra Sharma <shajit@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, zhiqiang.hou@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the PCIe compatible string for LS1028A
 
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+v2:
+ - no change.
+v3:
+ - no change.
 
-On 8/5/2019 5:05 PM, Linus Walleij wrote:
-> On Mon, Aug 5, 2019 at 1:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Thu, Aug 1, 2019 at 12:07 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->>
->>> From: Jitendra Sharma <shajit@codeaurora.org>
->>>
->>> Add the binding for the TLMM pinctrl block found in the SC7180 platform
->>>
->>> Signed-off-by: Jitendra Sharma <shajit@codeaurora.org>
->>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->>> [rnayak: Fix some copy-paste issues, sort and fix functions]
->>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>
->> Patch applied with Bjorn's ACK.
-> 
-> Ooops there is v2 and even v3 coming, OK I wait for v3 and
-> backed this out.
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hi Linus, I just posted the v3 out with all the ACKs added.
-They should be good to pick up now.
-thanks,
-Rajendra
-
-> 
-> Yours,
-> Linus Walleij
-> 
-
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaa..99a386e 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -21,6 +21,7 @@ Required properties:
+         "fsl,ls1046a-pcie"
+         "fsl,ls1043a-pcie"
+         "fsl,ls1012a-pcie"
++        "fsl,ls1028a-pcie"
+   EP mode:
+ 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.9.5
