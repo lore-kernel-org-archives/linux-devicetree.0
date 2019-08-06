@@ -1,40 +1,83 @@
-From: Harini Katakam <harinik@xilinx.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: net: macb: Add new property for PS
- SGMII only
-Date: Tue, 6 Aug 2019 11:17:11 +0530
-Message-ID: <CAFcVECKp0N-82WX-mtT_J_jZ0u8C221bwLRrrSELZ1jgMKs-wA@mail.gmail.com>
-References: <1564566033-676-1-git-send-email-harini.katakam@xilinx.com>
- <1564566033-676-2-git-send-email-harini.katakam@xilinx.com>
- <20190804145633.GB6800@lunn.ch> <CAFcVECL6cvCjeo+fn1NDyMDZyZXDrWyhD9djvcVXiLVLiLgGeA@mail.gmail.com>
- <20190805132045.GC24275@lunn.ch> <CAFcVECLUNYRC-iZbKvvq2_XMLfXg7E10yAU5J_8GaEB3ExWRxg@mail.gmail.com>
- <CAFcVECLVHY5X=wctxVqRqDTDyG7Zavkt5ui4RtFBLP8g8MW1SA@mail.gmail.com> <20190805171639.GV24275@lunn.ch>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 14/16] net: phy: adin: make sure down-speed auto-neg is
+ enabled
+Date: Tue, 6 Aug 2019 07:52:48 +0200
+Message-ID: <baac3842-bd9c-75af-83e3-9e89def1c429@gmail.com>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+ <20190805165453.3989-15-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190805171639.GV24275@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Harini Katakam <harini.katakam@xilinx.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, David Miller <davem@davemloft.net>, Claudiu Beznea <claudiu.beznea@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190805165453.3989-15-alexandru.ardelean@analog.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On 05.08.2019 18:54, Alexandru Ardelean wrote:
+> Down-speed auto-negotiation may not always be enabled, in which case the
+> PHY won't down-shift to 100 or 10 during auto-negotiation.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/net/phy/adin.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+> index 86848444bd98..a1f3456a8504 100644
+> --- a/drivers/net/phy/adin.c
+> +++ b/drivers/net/phy/adin.c
+> @@ -32,6 +32,13 @@
+>  #define   ADIN1300_NRG_PD_TX_EN			BIT(2)
+>  #define   ADIN1300_NRG_PD_STATUS		BIT(1)
+>  
+> +#define ADIN1300_PHY_CTRL2			0x0016
+> +#define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
+> +#define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
+> +#define   ADIN1300_GROUP_MDIO_EN		BIT(6)
+> +#define   ADIN1300_DOWNSPEEDS_EN	\
+> +	(ADIN1300_DOWNSPEED_AN_100_EN | ADIN1300_DOWNSPEED_AN_10_EN)
+> +
+>  #define ADIN1300_INT_MASK_REG			0x0018
+>  #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+>  #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+> @@ -425,6 +432,22 @@ static int adin_config_mdix(struct phy_device *phydev)
+>  	return phy_write(phydev, ADIN1300_PHY_CTRL1, reg);
+>  }
+>  
+> +static int adin_config_downspeeds(struct phy_device *phydev)
+> +{
+> +	int reg;
+> +
+> +	reg = phy_read(phydev, ADIN1300_PHY_CTRL2);
+> +	if (reg < 0)
+> +		return reg;
+> +
+> +	if ((reg & ADIN1300_DOWNSPEEDS_EN) == ADIN1300_DOWNSPEEDS_EN)
+> +		return 0;
+> +
+> +	reg |= ADIN1300_DOWNSPEEDS_EN;
+> +
+> +	return phy_write(phydev, ADIN1300_PHY_CTRL2, reg);
 
-On Mon, Aug 5, 2019 at 10:47 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > Even with the use of this interrupt, the link status actions (link print and
-> > netif ops) will still be required. And also the need for macb_open to
-> > proceed without phydev. Could you please let me know if that is acceptable
-> > to patch or if there's a cleaner way to
-> > report this link status?
->
-> It sounds like you need to convert to phylink, so you get full sfp
-> support. phylib does not handle hotplug of PHYs.
->
-> Please look at the comments Russell gave the last time this was
-> attempted.
+Using phy_set_bits() would be easier.
 
-Yes, I looked at the comments from Russell and wasn't sure if this
-case qualified for phylink.
-
-Regards,
-Harini
+> +}
+> +
+>  static int adin_config_aneg(struct phy_device *phydev)
+>  {
+>  	int ret;
+> @@ -433,6 +456,10 @@ static int adin_config_aneg(struct phy_device *phydev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = adin_config_downspeeds(phydev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return genphy_config_aneg(phydev);
+>  }
+>  
+> 
