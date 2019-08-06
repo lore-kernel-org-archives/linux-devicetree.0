@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 08/20] arm64: dts: marvell: Add AP806-dual cache description
-Date: Tue,  6 Aug 2019 16:54:48 +0200
-Message-ID: <20190806145500.24109-9-miquel.raynal@bootlin.com>
+Subject: [PATCH 09/20] arm64: dts: marvell: Add AP806-quad cache description
+Date: Tue,  6 Aug 2019 16:54:49 +0200
+Message-ID: <20190806145500.24109-10-miquel.raynal@bootlin.com>
 References: <20190806145500.24109-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -29,13 +29,13 @@ to show up in sysfs under: /sys/devices/system/cpu/cpuX/cache/.
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- .../boot/dts/marvell/armada-ap806-dual.dtsi   | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
-index 62ae016ee6aa..09849558a776 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+index 2f1a968b1b6b..2984bd9cf6ae 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
 @@ -22,6 +22,13 @@
  			enable-method = "psci";
  			#cooling-cells = <2>;
@@ -46,11 +46,11 @@ index 62ae016ee6aa..09849558a776 100644
 +			d-cache-size = <0x8000>;
 +			d-cache-line-size = <64>;
 +			d-cache-sets = <256>;
-+			next-level-cache = <&l2>;
++			next-level-cache = <&l2_0>;
  		};
  		cpu1: cpu@1 {
  			device_type = "cpu";
-@@ -30,6 +37,20 @@
+@@ -30,6 +37,13 @@
  			enable-method = "psci";
  			#cooling-cells = <2>;
  			clocks = <&cpu_clk 0>;
@@ -60,16 +60,51 @@ index 62ae016ee6aa..09849558a776 100644
 +			d-cache-size = <0x8000>;
 +			d-cache-line-size = <64>;
 +			d-cache-sets = <256>;
-+			next-level-cache = <&l2>;
++			next-level-cache = <&l2_0>;
+ 		};
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+@@ -38,6 +52,13 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 			clocks = <&cpu_clk 1>;
++			i-cache-size = <0xc000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <256>;
++			next-level-cache = <&l2_1>;
+ 		};
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+@@ -46,6 +67,27 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 			clocks = <&cpu_clk 1>;
++			i-cache-size = <0xc000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <256>;
++			next-level-cache = <&l2_1>;
 +		};
 +
-+		l2: l2-cache {
++		l2_0: l2-cache0 {
++			compatible = "cache";
++			cache-size = <0x80000>;
++			cache-line-size = <64>;
++			cache-sets = <512>;
++		};
++
++		l2_1: l2-cache1 {
 +			compatible = "cache";
 +			cache-size = <0x80000>;
 +			cache-line-size = <64>;
 +			cache-sets = <512>;
  		};
  	};
- };
+ 
 -- 
 2.20.1
