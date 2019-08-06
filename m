@@ -1,7 +1,7 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v4 05/10] mfd: mt6323: some improvements of mt6397-core
-Date: Tue,  6 Aug 2019 18:27:40 +0200
-Message-ID: <20190806162745.8414-6-frank-w@public-files.de>
+Subject: [PATCH v4 06/10] rtc: mt6397: add compatible for mt6323
+Date: Tue,  6 Aug 2019 18:27:41 +0200
+Message-ID: <20190806162745.8414-7-frank-w@public-files.de>
 References: <20190806162745.8414-1-frank-w@public-files.de>
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -13,53 +13,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-simplyfications (resource definitions my DEFINE_RES_* macros)
+use mt6397 rtc driver also for mt6323 but with different
+base/size see "mfd: mt6323: add mt6323 rtc+pwrc"
 
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 =2D--
-changes since v3: moved part 6 forward to let compatible and driver be tog=
-ether
-changes since v2: splitted v2 part 4 into 6+7
+changes since v3: moved (was part 5)
+changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
 
- drivers/mfd/mt6397-core.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ drivers/rtc/rtc-mt6397.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-index 337bcccdb914..5f7070267c9a 100644
-=2D-- a/drivers/mfd/mt6397-core.c
-+++ b/drivers/mfd/mt6397-core.c
-@@ -1,10 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2014 MediaTek Inc.
-+ * Copyright (c) 2014-2018 MediaTek Inc.
-  * Author: Flora Fu, MediaTek
-  */
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index 9370b7fc9f81..21cd9cc8b4c7 100644
+=2D-- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_sus=
+pend,
+ 			mt6397_rtc_resume);
 
- #include <linux/interrupt.h>
-+#include <linux/ioport.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
-@@ -23,16 +24,8 @@
- #define MT6397_CID_CODE		0x97
-
- static const struct resource mt6397_rtc_resources[] =3D {
--	{
--		.start =3D MT6397_RTC_BASE,
--		.end   =3D MT6397_RTC_BASE + MT6397_RTC_SIZE,
--		.flags =3D IORESOURCE_MEM,
--	},
--	{
--		.start =3D MT6397_IRQ_RTC,
--		.end   =3D MT6397_IRQ_RTC,
--		.flags =3D IORESOURCE_IRQ,
--	},
-+	DEFINE_RES_MEM(MT6397_RTC_BASE, MT6397_RTC_SIZE),
-+	DEFINE_RES_IRQ(MT6397_IRQ_RTC),
+ static const struct of_device_id mt6397_rtc_of_match[] =3D {
++	{ .compatible =3D "mediatek,mt6323-rtc", },
+ 	{ .compatible =3D "mediatek,mt6397-rtc", },
+ 	{ }
  };
-
- static const struct resource mt6323_keys_resources[] =3D {
 =2D-
 2.17.1
