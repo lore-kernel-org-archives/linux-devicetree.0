@@ -1,33 +1,62 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 3/4] arm64: dts: meson: Link nvmem and secure-monitor
- nodes
-Date: Tue, 06 Aug 2019 10:26:06 +0200
-Message-ID: <1j5znawvhd.fsf@starbuckisacylon.baylibre.com>
-References: <20190731082339.20163-1-ccaione@baylibre.com>
- <20190731082339.20163-4-ccaione@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731082339.20163-4-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Carlo Caione <ccaione@baylibre.com>
+From: Chuanhua Han <chuanhua.han@nxp.com>
+Subject: [PATCH 1/4] arm64: dts: ls1088a: Fix incorrect I2C clock divider
+Date: Tue,  6 Aug 2019 16:42:20 +0800
+Message-ID: <20190806084223.23543-1-chuanhua.han@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chuanhua Han <chuanhua.han@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 31 Jul 2019 at 09:23, Carlo Caione <ccaione@baylibre.com> wrote:
+Ls1088a platform, the i2c input clock is actually platform pll CLK / 8
+(this is the hardware connection), other clock divider can not get the
+correct i2c clock, resulting in the output of SCL pin clock is not
+accurate.
 
-> The former is going to use the latter to retrieve the efuses data.
->
+Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 20f5ebd..30b760e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -324,7 +324,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2000000 0x0 0x10000>;
+ 			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -334,7 +334,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2010000 0x0 0x10000>;
+ 			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -344,7 +344,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2020000 0x0 0x10000>;
+ 			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -354,7 +354,7 @@
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x2030000 0x0 0x10000>;
+ 			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clockgen 4 3>;
++			clocks = <&clockgen 4 7>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.9.5
