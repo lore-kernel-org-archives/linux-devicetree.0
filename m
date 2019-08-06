@@ -1,119 +1,112 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [v2,2/2] PCI: mediatek: Add controller support for MT7629
-Date: Tue, 6 Aug 2019 14:50:20 -0500
-Message-ID: <CAErSpo5AVXekj8hWxDbf+zTwv9WmQessdBppNrVtOWOkuTREtA@mail.gmail.com>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
- <20190628073425.25165-3-jianjun.wang@mediatek.com> <1564385918.17211.6.camel@mhfsdcap03>
- <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/6] thermal: amlogic: Add thermal driver to support
+ G12 SoCs
+Date: Tue, 6 Aug 2019 21:52:32 +0200
+Message-ID: <CAFBinCB3ZBPVEJKV2Rfh_w-zWrhoToYdoYE6Wox+JeB-YH+Khw@mail.gmail.com>
+References: <20190731153529.30159-1-glaroque@baylibre.com> <20190731153529.30159-3-glaroque@baylibre.com>
+ <CAFBinCDGSJABnS1L1ULueyeXZaV38qrxEA0a12gB-uyRC_TvPQ@mail.gmail.com> <14e14cd9-46bd-0d43-654c-6db64397f5c7@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806162432.GA15498@e121166-lin.cambridge.arm.com>
+In-Reply-To: <14e14cd9-46bd-0d43-654c-6db64397f5c7@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Jianjun Wang <jianjun.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Linux PCI <linux-pci@vger.kernel.org>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, youlin.pei@mediatek.com
+To: guillaume La Roque <glaroque@baylibre.com>
+Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 11:24 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> [trim the CC list please to keep only required maintainers]
->
-> On Mon, Jul 29, 2019 at 03:38:38PM +0800, Jianjun Wang wrote:
-> > On Fri, 2019-06-28 at 15:34 +0800, Jianjun Wang wrote:
-> > > MT7629 is an ARM platform SoC which has the same PCIe IP with MT7622.
-> > >
-> > > The HW default value of its Device ID is invalid, fix its Device ID to
-> > > match the hardware implementation.
-> > >
-> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-mediatek.c | 18 ++++++++++++++++++
-> > >  include/linux/pci_ids.h                |  1 +
-> > >  2 files changed, 19 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > > index 80601e1b939e..e5e6740b635d 100644
-> > > --- a/drivers/pci/controller/pcie-mediatek.c
-> > > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > > @@ -73,6 +73,7 @@
-> > >  #define PCIE_MSI_VECTOR            0x0c0
-> > >
-> > >  #define PCIE_CONF_VEND_ID  0x100
-> > > +#define PCIE_CONF_DEVICE_ID        0x102
-> > >  #define PCIE_CONF_CLASS_ID 0x106
-> > >
-> > >  #define PCIE_INT_MASK              0x420
-> > > @@ -141,12 +142,16 @@ struct mtk_pcie_port;
-> > >  /**
-> > >   * struct mtk_pcie_soc - differentiate between host generations
-> > >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> > > + * @need_fix_device_id: whether this host's Device ID needed to be fixed or not
-> > > + * @device_id: Device ID which this host need to be fixed
-> > >   * @ops: pointer to configuration access functions
-> > >   * @startup: pointer to controller setting functions
-> > >   * @setup_irq: pointer to initialize IRQ functions
-> > >   */
-> > >  struct mtk_pcie_soc {
-> > >     bool need_fix_class_id;
-> > > +   bool need_fix_device_id;
-> > > +   unsigned int device_id;
-> > >     struct pci_ops *ops;
-> > >     int (*startup)(struct mtk_pcie_port *port);
-> > >     int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> > > @@ -696,6 +701,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> > >             writew(val, port->base + PCIE_CONF_CLASS_ID);
-> > >     }
-> > >
-> > > +   if (soc->need_fix_device_id)
-> > > +           writew(soc->device_id, port->base + PCIE_CONF_DEVICE_ID);
-> > > +
-> > >     /* 100ms timeout value should be enough for Gen1/2 training */
-> > >     err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-> > >                              !!(val & PCIE_PORT_LINKUP_V2), 20,
-> > > @@ -1216,11 +1224,21 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
-> > >     .setup_irq = mtk_pcie_setup_irq,
-> > >  };
-> > >
-> > > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> > > +   .need_fix_class_id = true,
-> > > +   .need_fix_device_id = true,
-> > > +   .device_id = PCI_DEVICE_ID_MEDIATEK_7629,
-> > > +   .ops = &mtk_pcie_ops_v2,
-> > > +   .startup = mtk_pcie_startup_port_v2,
-> > > +   .setup_irq = mtk_pcie_setup_irq,
-> > > +};
-> > > +
-> > >  static const struct of_device_id mtk_pcie_ids[] = {
-> > >     { .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
-> > >     { .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
-> > >     { .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
-> > >     { .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> > > +   { .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
-> > >     {},
-> > >  };
-> > >
-> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > > index 70e86148cb1e..aa32962759b2 100644
-> > > --- a/include/linux/pci_ids.h
-> > > +++ b/include/linux/pci_ids.h
-> > > @@ -2131,6 +2131,7 @@
-> > >  #define PCI_VENDOR_ID_MYRICOM              0x14c1
-> > >
-> > >  #define PCI_VENDOR_ID_MEDIATEK             0x14c3
-> > > +#define PCI_DEVICE_ID_MEDIATEK_7629        0x7629
-> > >
-> > >  #define PCI_VENDOR_ID_TITAN                0x14D2
-> > >  #define PCI_DEVICE_ID_TITAN_010L   0x8001
-> >
-> > Hi Bjorn & Lorenzo,
-> >
-> > Is this patch ok or is there anything I need to fixed?
->
-> The commit log need to be fixed and I will do it, the code if
-> Bjorn is OK with it I can merge it.
+Hi Guillaume,
 
-Sure, I'm fine with this.  I don't think there's a need to add
-PCI_DEVICE_ID_MEDIATEK_7629, since it's only used in one place, but
-I'm fine with the code.
+On Mon, Aug 5, 2019 at 2:48 PM guillaume La Roque <glaroque@baylibre.com> wrote:
+>
+> Hi Martin,
+>
+> again thanks for your review.
+you're welcome - thank you for working on the driver :-)
+
+[...]
+> > The IP block has more functionality, which may be added to this driver
+> > in the future:
+> > - reading up to 16 stored temperature samples
+>
+> it's not working, you can verify it if you check the regmap define in the driver. in fact temp is only write in one register, it's confirmed by amlogic.
+I missed that - so please skip this part
+
+[...]
+> >> +config AMLOGIC_THERMAL
+> > we typically use "MESON" in the Kconfig symbols:
+> > $ grep -c AMLOGIC .config
+> > 1
+> > $ grep -c MESON .config
+> > 33
+> >
+> > I also wonder if we should add G12 or G12A so we don't conflict with
+> > upcoming thermal sensors with a different design (assuming that this
+> > will be a thing).
+> > for example we already have three different USB2 PHY drivers
+> >
+> > [...]
+>
+> i check with Neil and for new family it's better to use Amlogic instead of meson.
+can you please share the considerations behind this decision?
+if new drivers should use AMLOGIC_* Kconfig symbols instead of MESON_*
+then we all should know about it
+
+> i don't add G12 because we already know it's same sensors for SM1 SoC family [0].
+my idea behind this was to avoid conflicts in the future
+in case of the thermal driver we may be fine with using a generic name
+assuming that Amlogic will not switch to a new IP block in the next
+years
+I'm not saying you have to change the name - I'm bringing this up so
+you can decide for yourself based on examples from the past
+
+here are a few examples:
+- when Kevin upstreamed the MMC driver for GX he decided to use
+MMC_MESON_GX for the Kconfig symbol name. it turns out that this is
+smart because there are at least two other MMC controller IPs on the
+32-bit SoCs. due to him including GX in the name the drivers are easy
+to differentiate (MMC_MESON_MX_SDIO and MMC_MESON_MX_SDHC being the
+other ones, while the latter is not upstream yet)
+- when Carlo upstreamed the eFuse driver he decided to use MESON_EFUSE
+for the Kconfig symbol name. I found out much later that the 32-bit
+SoCs use a different IP (or at least direct register access instead of
+going through Secure Monitor). the driver for the 32-bit SoCs now uses
+MESON_MX_EFUSE. if you don't know which driver applies where then it's
+easy to mix up MESON_EFUSE and MESON_MX_EFUSE
+- when Jerome upstreamed the ALSA driver for AXG (which is also used
+on G12A and G12B) he decided to use the SND_MESON_AXG_* prefix for the
+Kconfig symbol names. in my opinion this was a good choice because GXM
+and everything earlier (including the 32-bit SoCs) use a different
+audio IP block. we won't have a Kconfig symbol name clash when a
+driver for the "older" SoCs is upstreamed
+- (there are more examples, Meson8b USB PHY driver, Meson8b DWMAC
+glue, ... - just like there's many examples where the IP block is
+mostly compatible with older generations: SAR ADC, RNG, SPI, ...)
+
+I'm not sure what driver naming rules other mainline SoC teams use
+to me it seems that the rule for Allwinner driver names is to use the
+"code-name of the first SoC the IP block appeared in"
+
+[...]
+> >> +static int amlogic_thermal_get_temp(void *data, int *temp)
+> >> +{
+> >> +       unsigned int tvalue;
+> >> +       struct amlogic_thermal *pdata = data;
+> >> +
+> >> +       if (!data)
+> >> +               return -EINVAL;
+> >> +
+> >> +       regmap_read(pdata->regmap, TSENSOR_STAT0, &tvalue);
+> >> +       *temp = code_to_temp(pdata,
+> >> +                            tvalue & TSENSOR_READ_TEMP_MASK);
+> > maybe simply move the implementation from code_to_temp here?
+>
+> for the optional function it could be a problem if i move all in code_to_temp.
+>
+> i prefer to have a function which are just do the conversion.
+I didn't consider this before but you are right
+if the other temperature registers (like IRQ thresholds) also use a
+"temperature code" then it should be a dedicated function (so it'll be
+easier to add more functionality to the driver)
+
+
+Martin
