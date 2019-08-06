@@ -1,92 +1,101 @@
-From: Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: Re: [PATCH v4 07/10] regulator: mt6358: Add support for MT6358
- regulator
-Date: Tue, 6 Aug 2019 15:28:47 +0800
-Message-ID: <1565076527.23984.5.camel@mtksdaap41>
-References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1564982518-32163-8-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20190805131030.GE6432@sirena.org.uk>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v2 3/3] soc/tegra: regulators: Add regulators coupler for
+ Tegra30
+Date: Tue, 6 Aug 2019 10:30:21 +0300
+Message-ID: <20190806073021.GF3883@pdeschrijver-desktop.Nvidia.com>
+References: <20190725151832.9802-1-digetx@gmail.com>
+ <20190725151832.9802-4-digetx@gmail.com>
+ <20190802140512.GD3883@pdeschrijver-desktop.Nvidia.com>
+ <c537fbea-5884-03db-305f-6ab3d553f7ab@gmail.com>
+ <20190805083325.GE3883@pdeschrijver-desktop.Nvidia.com>
+ <1a9464b3-6e0e-00ff-64d8-b3abf7982dfb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805131030.GE6432@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <1a9464b3-6e0e-00ff-64d8-b3abf7982dfb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Allison Randal <allison@lohutok.net>, linux-rtc@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Aug 05, 2019 at 02:03:29PM +0300, Dmitry Osipenko wrote:
+> 05.08.2019 11:33, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Fri, Aug 02, 2019 at 05:39:23PM +0300, Dmitry Osipenko wrote:
+> >> 02.08.2019 17:05, Peter De Schrijver =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> On Thu, Jul 25, 2019 at 06:18:32PM +0300, Dmitry Osipenko wrote:
+> >>>> Add regulators coupler for Tegra30 SoCs that performs voltage balanc=
+ing
+> >>>> of a coupled regulators and thus provides voltage scaling functional=
+ity.
+> >>>>
+> >>>> There are 2 coupled regulators on all Tegra30 SoCs: CORE and CPU. Th=
+e
+> >>>> coupled regulator voltages shall be in a range of 300mV from each ot=
+her
+> >>>> and CORE voltage shall be higher than the CPU by N mV, where N depen=
+ds
+> >>>> on the CPU voltage.
+> >>>>
+> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>>> ---
+> >>>>  drivers/soc/tegra/Kconfig              |   4 +
+> >>>>  drivers/soc/tegra/Makefile             |   1 +
+> >>>>  drivers/soc/tegra/regulators-tegra30.c | 316 ++++++++++++++++++++++=
++++
+> >>>>  3 files changed, 321 insertions(+)
+> >>>>  create mode 100644 drivers/soc/tegra/regulators-tegra30.c
+> >>>>
+> >>> ...
+> >>>
+> >>>> +
+> >>>> +static int tegra30_core_cpu_limit(int cpu_uV)
+> >>>> +{
+> >>>> +	if (cpu_uV < 800000)
+> >>>> +		return 950000;
+> >>>> +
+> >>>> +	if (cpu_uV < 900000)
+> >>>> +		return 1000000;
+> >>>> +
+> >>>> +	if (cpu_uV < 1000000)
+> >>>> +		return 1100000;
+> >>>> +
+> >>>> +	if (cpu_uV < 1100000)
+> >>>> +		return 1200000;
+> >>>> +
+> >>>> +	if (cpu_uV < 1250000) {
+> >>>> +		switch (tegra_sku_info.cpu_speedo_id) {
+> >>>> +		case 0 ... 1:
+> >>> Aren't we supposed to add /* fall through */ here now?
+> >>
+> >> There is no compiler warning if there is nothing in-between of the
+> >> case-switches, so annotation isn't really necessary here. Of course it
+> >> is possible to add an explicit annotation just to make clear the
+> >> fall-through intention.
+> >>
+> >=20
+> > Ah. Ok. Whatever you want then :)
+>=20
+> I'll add the comments if there will be a need to re-spin this series.
+>=20
+> >>>> +		case 4:
+> >>>> +		case 7 ... 8:
+> >>>> +			return 1200000;
+> >>>> +
+> >>>> +		default:
+> >>>> +			return 1300000;
+> >>>> +		}
+> >>>> +	}
+> >>>> +
+> >>>
+> >>> Other than that, this looks ok to me.
+> >>
+> >> Awesome, thank you very much! Explicit ACK will be appreciated as well=
+.
+> >=20
+> > Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
 
-On Mon, 2019-08-05 at 14:10 +0100, Mark Brown wrote:
-> On Mon, Aug 05, 2019 at 01:21:55PM +0800, Hsin-Hsiung Wang wrote:
-> 
-> > +static const u32 vmch_voltages[] = {
-> > +	2900000, 3000000, 3300000,
-> > +};
-> 
-> > +static const u32 vemc_voltages[] = {
-> > +	2900000, 3000000, 3300000,
-> > +};
-> 
-> Several of these tables appear to be identical.
-> 
-I will use the same voltage table in the next patch.
+All of them.
 
-> > +static inline unsigned int mt6358_map_mode(unsigned int mode)
-> > +{
-> > +	return mode == MT6358_BUCK_MODE_AUTO ?
-> > +		REGULATOR_MODE_NORMAL : REGULATOR_MODE_FAST;
-> > +}
-> 
-> There is no need for this to be an inline and please write normal
-> conditional statements to improve legibility.  There's other examples in
-> the driver.
-> 
-will fix it in the next patch.
-
-> > +static int mt6358_get_buck_voltage_sel(struct regulator_dev *rdev)
-> > +{
-> > +	int ret, regval;
-> > +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
-> > +
-> > +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
-> > +	if (ret != 0) {
-> > +		dev_info(&rdev->dev,
-> > +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
-> > +			 info->desc.name, ret);
-> 
-> dev_err() for errors here and throughout the driver.
-> 
-will fix it in the next patch.
-
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = (regval >> info->da_vsel_shift) & info->da_vsel_mask;
-> > +
-> > +	return ret;
-> > +}
-> 
-> This looks like a standard get_voltage_sel_regmap()?
-> 
-MT6358 has buck voltage status registers to show the actual output
-voltage and the registers are different from the voltage setting
-registers.
-We want to get the actual voltage output, so we use the da_vsel status
-registers here.
-
-> > +err_mode:
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	return 0;
-> 
-> Or just return ret unconditionally?
-will modify it to return ret unconditionally in the next patch.
-
-Thanks a lot.
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Peter.
