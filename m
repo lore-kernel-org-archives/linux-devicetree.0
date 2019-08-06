@@ -1,39 +1,54 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: Update the riscv,isa string
- description
-Date: Tue, 6 Aug 2019 14:43:25 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1908061443140.13971@viisi.sifive.com>
-References: <20190803042723.7163-1-atish.patra@wdc.com>
- <20190803042723.7163-5-atish.patra@wdc.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+Date: Tue, 6 Aug 2019 14:51:23 -0700
+Message-ID: <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+ <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190803042723.7163-5-atish.patra@wdc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Anup Patel <anup.patel@wdc.com>, Alan Kao <alankao@andestech.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2 Aug 2019, Atish Patra wrote:
 
-> Since the RISC-V specification states that ISA description strings are
-> case-insensitive, there's no functional difference between mixed-case,
-> upper-case, and lower-case ISA strings. Thus, to simplify parsing,
-> specify that the letters present in "riscv,isa" must be all lowercase.
-> 
-> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+On 8/5/19 2:20 AM, Linus Walleij wrote:
+> On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
+> <skomatineni@nvidia.com> wrote:
+>
+>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>
+>> During suspend, context of all pinctrl registers are stored and
+>> on resume they are all restored to have all the pinmux and pad
+>> configuration for normal operation.
+>>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
+>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Patch applied to the pinctrl tree.
+>
+> This patch seems finished.
+>
+> Also if the rest don't get merged for v5.4 then at least this is so
+> your patch stack gets more shallow.
+>
+> I hope it's fine to merge this separately, else tell me and I'll
+> pull it out.
+>
+> Yours,
+> Linus Walleij
 
-Thanks, queued for v5.3-rc4.
+Yes, this patch can be merged separately. But, there's latest feedback 
+from Dmitry to add barrier after writes to make sure pinmux register 
+writes happen.
 
+So will update this patch to add barrier in v8. So, need to wait for v8.
 
-- Paul
+Thanks
+
+Sowjanya
