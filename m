@@ -1,15 +1,15 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 0/4] Rework secure-monitor driver
-Date: Tue, 6 Aug 2019 09:25:11 +0100
-Message-ID: <12d38512-605c-3544-a525-2c3599559391@linaro.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 2/4] nvmem: meson-efuse: bindings: Add secure-monitor
+ phandle
+Date: Tue, 06 Aug 2019 10:25:20 +0200
+Message-ID: <1j8ss6wvin.fsf@starbuckisacylon.baylibre.com>
 References: <20190731082339.20163-1-ccaione@baylibre.com>
- <7hftmfguug.fsf@baylibre.com>
+ <20190731082339.20163-3-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7hftmfguug.fsf@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <20190731082339.20163-3-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,34 +19,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <ccaione@baylibre.com>
-Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+To: srinivas.kandagatla@linaro.org, khilman@baylibre.com, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+On Wed 31 Jul 2019 at 09:23, Carlo Caione <ccaione@baylibre.com> wrote:
 
-On 05/08/2019 22:34, Kevin Hilman wrote:
-> Srinivas,
-> 
-> Carlo Caione <ccaione@baylibre.com> writes:
-> 
->> The secure-monitor driver is currently in really bad shape, not my
->> proudest piece of code (thanks Jerome for pointing that out ;). I tried
->> to rework it a bit to make it a bit more tolerable.
->>
->> I needed to change a bit the APIs and consequently adapt the only user
->> we have, that is the nvmem/efuses driver. To not break bisectability I
->> added one single commit to change both the drivers.
-> 
-> With your ack on the nvmem bindings and nvmem part of patch 4/4, I can
-> take the series take the rest of this series through my tree for Amlogic
-> SoCs.
-Sounds good for me!
+> Add a new property to link the nvmem driver to the secure-monitor. The
+> nvmem driver needs to access the secure-monitor to be able to access the
+> fuses.
+>
 
-I have Acked the driver changes, bindings need ack from DT guys.
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Thanks,
-srini
-> 
-> Kevin
-> 
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
