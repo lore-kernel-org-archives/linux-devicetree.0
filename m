@@ -1,57 +1,52 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/7] ASoC: fsl_sai: Add registers
- definition for multiple datalines
-Date: Tue, 6 Aug 2019 14:15:03 +0300
-Message-ID: <CAEnQRZBpQPoi5OH--c=ubKYc6B3rspmVnb846UTFW7P5SE62ww@mail.gmail.com>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com> <20190728192429.1514-2-daniel.baluta@nxp.com>
- <20190729194214.GA20594@Asurada-Nvidia.nvidia.com> <CAEnQRZDmnAmgUkRGv3V5S7b5EnYTd2BO5NFuME2CfGb1=nAHzQ@mail.gmail.com>
- <20190729202001.GC4787@sirena.org.uk> <20190730075934.GA5892@Asurada>
+From: Ran Bi <ran.bi@mediatek.com>
+Subject: Re: [PATCH v4 10/10] rtc: Add support for the MediaTek MT6358 RTC
+Date: Tue, 6 Aug 2019 19:41:32 +0800
+Message-ID: <1565091692.24748.3.camel@mhfsdcap03>
+References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1564982518-32163-11-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <20190805072338.GB3600@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190730075934.GA5892@Asurada>
+In-Reply-To: <20190805072338.GB3600@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Timur Tabi <timur@kernel.org>, Rob Herring <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Takashi Iwai <tiwai@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, Fabio Estevam <festevam@gmail.com>, Mihai Serban <mihai.serban@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 10:59 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Mon, Jul 29, 2019 at 09:20:01PM +0100, Mark Brown wrote:
-> > On Mon, Jul 29, 2019 at 10:57:43PM +0300, Daniel Baluta wrote:
-> > > On Mon, Jul 29, 2019 at 10:42 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> > > > On Sun, Jul 28, 2019 at 10:24:23PM +0300, Daniel Baluta wrote:
-> >
-> > > > > @@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
-> > > > >       case FSL_SAI_TCR3:
-> > > > >       case FSL_SAI_TCR4:
-> > > > >       case FSL_SAI_TCR5:
-> > > > > -     case FSL_SAI_TFR:
-> > > > > +     case FSL_SAI_TFR0:
-> >
-> > > > A tricky thing here is that those SAI instances on older SoC don't
-> > > > support multi data lines physically, while seemly having registers
-> > > > pre-defined. So your change doesn't sound doing anything wrong to
-> > > > them at all, I am still wondering if it is necessary to apply them
-> > > > to newer compatible only though, as for older compatibles of SAI,
-> > > > these registers would be useless and confusing if being exposed.
-> >
-> > > > What do you think?
-> >
-> > > Yes, I thought about this too. But, I tried to keep the code as short
-> > > as possible and technically it is not wrong. When 1 data line is supported
-> > > for example application will only care about TDR0, TFR0, etc.
-> >
-> > So long as it's safe to read the registers (you don't get a bus error or
-> > anything) I'd say it's more trouble than it's worth to have separate
-> > regmap configuations just for this.  The main reasons for restricting
-> > readability are where there's physical problems with doing the reads or
-> > to keep the size of the debugfs files under control for usability and
-> > performance reasons.
->
-> Thanks for the input, Mark.
->
-> Daniel, did you get a chance to test it on older SoCs? At least
-> nothing breaks like bus errors?
+Hi Belloni,
 
-Tested on imx6sx-sdb, everything looks good. No bus errors.
+On Mon, 2019-08-05 at 09:23 +0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> The subject should be:
+> 
+> "rtc: mt6397: Add support for the MediaTek MT6358 RTC"
+
+Will be changed at next patch.
+
+> > +struct mtk_rtc_compatible {
+> 
+> I would name that struct mtk_rtc_data
+> 
+> > +	u32			wrtgr_addr;
+> 
+> and this member should be wrtgr_offset or simply wrtgr.
+> 
+
+Will be changed at next patch.
+
+> >  
+> > +	of_id = of_match_device(mt6397_rtc_of_match, &pdev->dev);
+> > +	if (!of_id) {
+> > +		dev_err(&pdev->dev, "Failed to probe of_node\n");
+> > +		return -EINVAL;
+> 
+> This will never happen because probe would not be called if there is no
+> match. You could also use of_device_get_match_data to avoid having to
+> move the of_device_id table.
+> 
+
+Will use of_device_get_match_data() function instead of
+of_match_device() function.
