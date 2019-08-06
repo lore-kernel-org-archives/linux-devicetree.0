@@ -1,13 +1,11 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v4 02/10] dt-bindings: add missing mt6397 rtc
-Date: Tue,  6 Aug 2019 18:27:37 +0200
-Message-ID: <20190806162745.8414-3-frank-w@public-files.de>
-References: <20190806162745.8414-1-frank-w@public-files.de>
+Subject: [PATCH v4 09/10] MAINTAINERS: add Mediatek shutdown drivers
+Date: Tue,  6 Aug 2019 18:30:25 +0200
+Message-ID: <20190806163026.8530-1-frank-w@public-files.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190806162745.8414-1-frank-w@public-files.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,54 +21,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-add missing devicetree-binding document for mt6397 rtc
-in later patch driver is extended with mt6323 chip
+add Section in MAINTAINERS file for poweroff driver
 
-Suggested-By: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
 changes since v3: moved SOB
-changes since v2: splitted rtc-mt6397.txt from first patch
+changes since v2: none (=v2 part 6)
 
- .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-new file mode 100644
-index 000000000000..ebd1cf80dcc8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-@@ -0,0 +1,29 @@
-+Device-Tree bindings for MediaTek PMIC based RTC
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6426db5198f0..4172a3177633 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10128,6 +10128,13 @@ S:	Maintained
+ F:	drivers/net/dsa/mt7530.*
+ F:	net/dsa/tag_mtk.c
+ 
++MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
++F:	drivers/power/reset/mt6323-poweroff.c
 +
-+MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
-+as a type of multi-function device (MFD). The RTC can be configured and set up
-+with PMIC wrapper bus which is a common resource shared with the other
-+functions found on the same PMIC.
-+
-+For MediaTek PMIC MFD bindings, see:
-+Documentation/devicetree/bindings/mfd/mt6397.txt
-+
-+For MediaTek PMIC wrapper bus bindings, see:
-+Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-+
-+Required properties:
-+- compatible: Should be one of follows
-+       "mediatek,mt6323-rtc": for MT6323 PMIC
-+       "mediatek,mt6397-rtc": for MT6397 PMIC
-+
-+Example:
-+
-+       pmic {
-+               compatible = "mediatek,mt6323";
-+
-+               ...
-+
-+               rtc {
-+                       compatible = "mediatek,mt6323-rtc";
-+               };
-+       };
---
+ MEDIATEK JPEG DRIVER
+ M:	Rick Chang <rick.chang@mediatek.com>
+ M:	Bin Liu <bin.liu@mediatek.com>
+-- 
 2.17.1
