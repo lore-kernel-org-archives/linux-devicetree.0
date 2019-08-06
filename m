@@ -1,39 +1,31 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv3 3/3] PCI: layerscape: Add LS1028a support
-Date: Tue,  6 Aug 2019 14:15:53 +0800
-Message-ID: <20190806061553.19934-3-xiaowei.bao@nxp.com>
-References: <20190806061553.19934-1-xiaowei.bao@nxp.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 01/16] net: phy: adin: add support for Analog Devices
+ PHYs
+Date: Tue, 6 Aug 2019 06:32:18 +0000
+Message-ID: <b462efb8ba2f730017ccf168d7e3aba062e1227c.camel@analog.com>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+         <20190805165453.3989-2-alexandru.ardelean@analog.com>
+         <20190805141644.GH24275@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806061553.19934-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190805141644.GH24275@lunn.ch>
+Content-Language: en-US
+Content-ID: <B2013465D1F409479581CD5F90F029C4@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, zhiqiang.hou@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the LS1028a PCIe controller.
-
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
-v2:
- - no change.
-v3:
- - Reuse the ls2088 driver data structurt.
-
- drivers/pci/controller/dwc/pci-layerscape.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index 3a5fa26..f24f79a 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
- static const struct of_device_id ls_pcie_of_match[] = {
- 	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
- 	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-+	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
- 	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
- 	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
- 	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
--- 
-2.9.5
+T24gTW9uLCAyMDE5LTA4LTA1IGF0IDE2OjE2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gPiArc3RhdGljIGludCBhZGluX2NvbmZpZ19pbml0KHN0cnVjdCBw
+aHlfZGV2aWNlICpwaHlkZXYpDQo+ID4gK3sNCj4gPiArCWludCByYzsNCj4gPiArDQo+ID4gKwly
+YyA9IGdlbnBoeV9jb25maWdfaW5pdChwaHlkZXYpOw0KPiA+ICsJaWYgKHJjIDwgMCkNCj4gPiAr
+CQlyZXR1cm4gcmM7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gDQo+IFdoeSBu
+b3QganVzdA0KPiANCj4gICAgIHJldHVybiBnZW5waHlfY29uZmlnX2luaXQocGh5ZGV2KTsNCg0K
+QmVjYXVzZSBzdHVmZiB3aWxsIGdldCBhZGRlZCBhZnRlciB0aGlzIHJldHVybiBzdGF0ZW1lbnQg
+aW4gdGhlIG5leHQgcGF0Y2hlcy4NCkkgdGhvdWdodCBtYXliZSB0aGlzIHdvdWxkIGJlIGEgZ29v
+ZCBpZGVhIHRvIGtlZXAgdGhlIGdpdCBjaGFuZ2VzIG1pbmltYWwsIGJ1dCBJIGNhbiBkbyBhIGRp
+cmVjdCByZXR1cm4gYW5kIHVwZGF0ZSBpdCBpbg0KdGhlIG5leHQgcGF0Y2hlcyB3aGVuIG5lZWRl
+ZC4NCg0KPiANCj4gICAgIEFuZHJldw0KPiANCg==
