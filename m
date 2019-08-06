@@ -1,29 +1,60 @@
 From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
 Subject: Re: [PATCH 14/16] net: phy: adin: make sure down-speed auto-neg is
  enabled
-Date: Tue, 6 Aug 2019 06:53:00 +0000
-Message-ID: <d664ec07de0ab1f84e2f2b680c39257fcbeaceeb.camel@analog.com>
+Date: Tue, 6 Aug 2019 06:53:24 +0000
+Message-ID: <5d3486c5575724f4d12bc58c9374fa95cb59ea3e.camel@analog.com>
 References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
          <20190805165453.3989-15-alexandru.ardelean@analog.com>
-         <20190805152214.GS24275@lunn.ch>
+         <baac3842-bd9c-75af-83e3-9e89def1c429@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190805152214.GS24275@lunn.ch>
+In-Reply-To: <baac3842-bd9c-75af-83e3-9e89def1c429@gmail.com>
 Content-Language: en-US
-Content-ID: <7F354B85D7EC014F861666E3E1570ACB@analog.com>
+Content-ID: <4B26F9490A75D441ABA7BA96E25662D1@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTA1IGF0IDE3OjIyICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gT24gTW9uLCBBdWcgMDUsIDIwMTkgYXQgMDc6NTQ6NTFQTSArMDMw
-MCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IERvd24tc3BlZWQgYXV0by1uZWdvdGlh
-dGlvbiBtYXkgbm90IGFsd2F5cyBiZSBlbmFibGVkLCBpbiB3aGljaCBjYXNlIHRoZQ0KPiA+IFBI
-WSB3b24ndCBkb3duLXNoaWZ0IHRvIDEwMCBvciAxMCBkdXJpbmcgYXV0by1uZWdvdGlhdGlvbi4N
-Cj4gDQo+IFBsZWFzZSBsb29rIGF0IGhvdyB0aGUgbWFydmVsbCBkcml2ZXIgZW5hYmxlcyBhbmQg
-Y29uZmlndXJlcyB0aGlzDQo+IGZlYXR1cmUuIElkZWFsbHkgd2Ugd2FudCBhbGwgUEhZIGRyaXZl
-cnMgdG8gdXNlIHRoZSBzYW1lIGNvbmZpZ3VyYXRpb24NCj4gQVBJIGZvciBmZWF0dXJlcyBsaWtl
-IHRoaXMuDQoNCmFjaw0KDQo+IA0KPiAgICAgQW5kcmV3DQo=
+T24gVHVlLCAyMDE5LTA4LTA2IGF0IDA3OjUyICswMjAwLCBIZWluZXIgS2FsbHdlaXQgd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDA1LjA4LjIwMTkgMTg6NTQsIEFsZXhhbmRydSBBcmRl
+bGVhbiB3cm90ZToNCj4gPiBEb3duLXNwZWVkIGF1dG8tbmVnb3RpYXRpb24gbWF5IG5vdCBhbHdh
+eXMgYmUgZW5hYmxlZCwgaW4gd2hpY2ggY2FzZSB0aGUNCj4gPiBQSFkgd29uJ3QgZG93bi1zaGlm
+dCB0byAxMDAgb3IgMTAgZHVyaW5nIGF1dG8tbmVnb3RpYXRpb24uDQo+ID4gDQo+ID4gU2lnbmVk
+LW9mZi1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNv
+bT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9uZXQvcGh5L2FkaW4uYyB8IDI3ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQ0K
+PiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9waHkvYWRpbi5jIGIvZHJpdmVycy9u
+ZXQvcGh5L2FkaW4uYw0KPiA+IGluZGV4IDg2ODQ4NDQ0YmQ5OC4uYTFmMzQ1NmE4NTA0IDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvbmV0L3BoeS9hZGluLmMNCj4gPiArKysgYi9kcml2ZXJzL25l
+dC9waHkvYWRpbi5jDQo+ID4gQEAgLTMyLDYgKzMyLDEzIEBADQo+ID4gICNkZWZpbmUgICBBRElO
+MTMwMF9OUkdfUERfVFhfRU4JCQlCSVQoMikNCj4gPiAgI2RlZmluZSAgIEFESU4xMzAwX05SR19Q
+RF9TVEFUVVMJCUJJVCgxKQ0KPiA+ICANCj4gPiArI2RlZmluZSBBRElOMTMwMF9QSFlfQ1RSTDIJ
+CQkweDAwMTYNCj4gPiArI2RlZmluZSAgIEFESU4xMzAwX0RPV05TUEVFRF9BTl8xMDBfRU4JCUJJ
+VCgxMSkNCj4gPiArI2RlZmluZSAgIEFESU4xMzAwX0RPV05TUEVFRF9BTl8xMF9FTgkJQklUKDEw
+KQ0KPiA+ICsjZGVmaW5lICAgQURJTjEzMDBfR1JPVVBfTURJT19FTgkJQklUKDYpDQo+ID4gKyNk
+ZWZpbmUgICBBRElOMTMwMF9ET1dOU1BFRURTX0VOCVwNCj4gPiArCShBRElOMTMwMF9ET1dOU1BF
+RURfQU5fMTAwX0VOIHwgQURJTjEzMDBfRE9XTlNQRUVEX0FOXzEwX0VOKQ0KPiA+ICsNCj4gPiAg
+I2RlZmluZSBBRElOMTMwMF9JTlRfTUFTS19SRUcJCQkweDAwMTgNCj4gPiAgI2RlZmluZSAgIEFE
+SU4xMzAwX0lOVF9NRElPX1NZTkNfRU4JCUJJVCg5KQ0KPiA+ICAjZGVmaW5lICAgQURJTjEzMDBf
+SU5UX0FORUdfU1RBVF9DSE5HX0VOCUJJVCg4KQ0KPiA+IEBAIC00MjUsNiArNDMyLDIyIEBAIHN0
+YXRpYyBpbnQgYWRpbl9jb25maWdfbWRpeChzdHJ1Y3QgcGh5X2RldmljZSAqcGh5ZGV2KQ0KPiA+
+ICAJcmV0dXJuIHBoeV93cml0ZShwaHlkZXYsIEFESU4xMzAwX1BIWV9DVFJMMSwgcmVnKTsNCj4g
+PiAgfQ0KPiA+ICANCj4gPiArc3RhdGljIGludCBhZGluX2NvbmZpZ19kb3duc3BlZWRzKHN0cnVj
+dCBwaHlfZGV2aWNlICpwaHlkZXYpDQo+ID4gK3sNCj4gPiArCWludCByZWc7DQo+ID4gKw0KPiA+
+ICsJcmVnID0gcGh5X3JlYWQocGh5ZGV2LCBBRElOMTMwMF9QSFlfQ1RSTDIpOw0KPiA+ICsJaWYg
+KHJlZyA8IDApDQo+ID4gKwkJcmV0dXJuIHJlZzsNCj4gPiArDQo+ID4gKwlpZiAoKHJlZyAmIEFE
+SU4xMzAwX0RPV05TUEVFRFNfRU4pID09IEFESU4xMzAwX0RPV05TUEVFRFNfRU4pDQo+ID4gKwkJ
+cmV0dXJuIDA7DQo+ID4gKw0KPiA+ICsJcmVnIHw9IEFESU4xMzAwX0RPV05TUEVFRFNfRU47DQo+
+ID4gKw0KPiA+ICsJcmV0dXJuIHBoeV93cml0ZShwaHlkZXYsIEFESU4xMzAwX1BIWV9DVFJMMiwg
+cmVnKTsNCj4gDQo+IFVzaW5nIHBoeV9zZXRfYml0cygpIHdvdWxkIGJlIGVhc2llci4NCg0KYWNr
+Ow0KbWlzc2VkIHRoaXM7DQoNCnRoYW5rcw0KDQo+IA0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0
+aWMgaW50IGFkaW5fY29uZmlnX2FuZWcoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikNCj4gPiAg
+ew0KPiA+ICAJaW50IHJldDsNCj4gPiBAQCAtNDMzLDYgKzQ1NiwxMCBAQCBzdGF0aWMgaW50IGFk
+aW5fY29uZmlnX2FuZWcoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikNCj4gPiAgCWlmIChyZXQp
+DQo+ID4gIAkJcmV0dXJuIHJldDsNCj4gPiAgDQo+ID4gKwlyZXQgPSBhZGluX2NvbmZpZ19kb3du
+c3BlZWRzKHBoeWRldik7DQo+ID4gKwlpZiAocmV0IDwgMCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0K
+PiA+ICsNCj4gPiAgCXJldHVybiBnZW5waHlfY29uZmlnX2FuZWcocGh5ZGV2KTsNCj4gPiAgfQ0K
+PiA+ICANCj4gPiANCg==
