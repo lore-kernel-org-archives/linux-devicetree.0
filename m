@@ -1,59 +1,68 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v5 0/7] qcom: add OCMEM support
-Date: Mon,  5 Aug 2019 20:22:22 -0400
-Message-ID: <20190806002229.8304-1-masneyb@onstation.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, jcrouse@codeaurora.org
+From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Subject: [PATCH v5 2/7] dt-bindings: display: msm: gmu: add
+ optional ocmem property
+Date: Mon,  5 Aug 2019 20:22:24 -0400
+Message-ID: <20190806002229.8304-3-masneyb@onstation.org>
+References: <20190806002229.8304-1-masneyb@onstation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190806002229.8304-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
-that is needed in order to support some a3xx and a4xx-based GPUs
-upstream. This is based on Rob Clark's patch series that he submitted
-in October 2015 and I am resubmitting updated patches with his
-permission. See the individual patches for the changelog.
-
-This was tested with the GPU on a LG Nexus 5 (hammerhead) phone and
-this will work on other msm8974-based systems. For a summary of what
-currently works upstream on the Nexus 5, see my status page at
-https://masneyb.github.io/nexus-5-upstream/.
-
-Brian Masney (5):
-  dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
-  dt-bindings: display: msm: gmu: add optional ocmem property
-  soc: qcom: add OCMEM driver
-  drm/msm/gpu: add ocmem init/cleanup functions
-  ARM: qcom_defconfig: add ocmem support
-
-Rob Clark (2):
-  firmware: qcom: scm: add OCMEM lock/unlock interface
-  firmware: qcom: scm: add support to restore secure config to
-    qcm_scm-32
-
- .../devicetree/bindings/display/msm/gmu.txt   |  50 ++
- .../devicetree/bindings/sram/qcom,ocmem.yaml  |  96 ++++
- arch/arm/configs/qcom_defconfig               |   1 +
- drivers/firmware/qcom_scm-32.c                |  52 ++-
- drivers/firmware/qcom_scm-64.c                |  12 +
- drivers/firmware/qcom_scm.c                   |  53 +++
- drivers/firmware/qcom_scm.h                   |   9 +
- drivers/gpu/drm/msm/Kconfig                   |   1 +
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |  28 +-
- drivers/gpu/drm/msm/adreno/a3xx_gpu.h         |   3 +-
- drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |  25 +-
- drivers/gpu/drm/msm/adreno/a4xx_gpu.h         |   3 +-
- drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  40 ++
- drivers/gpu/drm/msm/adreno/adreno_gpu.h       |  10 +
- drivers/soc/qcom/Kconfig                      |  10 +
- drivers/soc/qcom/Makefile                     |   1 +
- drivers/soc/qcom/ocmem.c                      | 433 ++++++++++++++++++
- include/linux/qcom_scm.h                      |  26 ++
- include/soc/qcom/ocmem.h                      |  62 +++
- 19 files changed, 870 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
- create mode 100644 drivers/soc/qcom/ocmem.c
- create mode 100644 include/soc/qcom/ocmem.h
-
--- 
-2.21.0
+U29tZSBBM3h4IGFuZCBBNHh4IEFkcmVubyBHUFVzIGRvIG5vdCBoYXZlIEdNRU0gaW5zaWRlIHRo
+ZSBHUFUgY29yZSBhbmQKbXVzdCB1c2UgdGhlIE9uIENoaXAgTUVNb3J5IChPQ01FTSkgaW4gb3Jk
+ZXIgdG8gYmUgZnVuY3Rpb25hbC4gQWRkIHRoZQpvcHRpb25hbCBvY21lbSBwcm9wZXJ0eSB0byB0
+aGUgQWRyZW5vIEdyYXBoaWNzIE1hbmFnZW1lbnQgVW5pdCBiaW5kaW5ncy4KClNpZ25lZC1vZmYt
+Ynk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0YXRpb24ub3JnPgotLS0KQ2hhbmdlcyBzaW5j
+ZSB2NDoKLSBOb25lCgpDaGFuZ2VzIHNpbmNlIHYzOgotIGNvcnJlY3QgbGluayB0byBxY29tLG9j
+bWVtLnlhbWwKCkNoYW5nZXMgc2luY2UgdjI6Ci0gQWRkIGEzeHggZXhhbXBsZSB3aXRoIE9DTUVN
+CgpDaGFuZ2VzIHNpbmNlIHYxOgotIE5vbmUKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21zbS9nbXUudHh0ICAgfCA1MCArKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgNTAgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKaW5kZXggOTBhZjViMGE1NmE5Li42NzJkNTU3
+Y2FiYTQgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L21zbS9nbXUudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L21zbS9nbXUudHh0CkBAIC0zMSw2ICszMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
+OgogLSBpb21tdXM6IHBoYW5kbGUgdG8gdGhlIGFkcmVubyBpb21tdQogLSBvcGVyYXRpbmctcG9p
+bnRzLXYyOiBwaGFuZGxlIHRvIHRoZSBPUFAgb3BlcmF0aW5nIHBvaW50cwogCitPcHRpb25hbCBw
+cm9wZXJ0aWVzOgorLSBvY21lbTogcGhhbmRsZSB0byB0aGUgT24gQ2hpcCBNZW1vcnkgKE9DTUVN
+KSB0aGF0J3MgcHJlc2VudCBvbiBzb21lIFNuYXBkcmFnb24KKyAgICAgICAgIFNvQ3MuIFNlZSBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3JhbS9xY29tLG9jbWVtLnlhbWwuCisK
+IEV4YW1wbGU6CiAKIC8gewpAQCAtNjMsMyArNjcsNDkgQEAgRXhhbXBsZToKIAkJb3BlcmF0aW5n
+LXBvaW50cy12MiA9IDwmZ211X29wcF90YWJsZT47CiAJfTsKIH07CisKK2EzeHggZXhhbXBsZSB3
+aXRoIE9DTUVNIHN1cHBvcnQ6CisKKy8geworCS4uLgorCisJZ3B1OiBhZHJlbm9AZmRiMDAwMDAg
+eworCQljb21wYXRpYmxlID0gInFjb20sYWRyZW5vLTMzMC4yIiwKKwkJICAgICAgICAgICAgICJx
+Y29tLGFkcmVubyI7CisJCXJlZyA9IDwweGZkYjAwMDAwIDB4MTAwMDA+OworCQlyZWctbmFtZXMg
+PSAia2dzbF8zZDBfcmVnX21lbW9yeSI7CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSAzMyBJUlFf
+VFlQRV9MRVZFTF9ISUdIPjsKKwkJaW50ZXJydXB0LW5hbWVzID0gImtnc2xfM2QwX2lycSI7CisJ
+CWNsb2NrLW5hbWVzID0gImNvcmUiLAorCQkgICAgICAgICAgICAgICJpZmFjZSIsCisJCSAgICAg
+ICAgICAgICAgIm1lbV9pZmFjZSI7CisJCWNsb2NrcyA9IDwmbW1jYyBPWElMSV9HRlgzRF9DTEs+
+LAorCQkgICAgICAgICA8Jm1tY2MgT1hJTElDWF9BSEJfQ0xLPiwKKwkJICAgICAgICAgPCZtbWNj
+IE9YSUxJQ1hfQVhJX0NMSz47CisJCW9jbWVtID0gPCZvY21lbT47CisJCXBvd2VyLWRvbWFpbnMg
+PSA8Jm1tY2MgT1hJTElDWF9HRFNDPjsKKwkJb3BlcmF0aW5nLXBvaW50cy12MiA9IDwmZ3B1X29w
+cF90YWJsZT47CisJCWlvbW11cyA9IDwmZ3B1X2lvbW11IDA+OworCX07CisKKwlvY21lbTogb2Nt
+ZW1AZmRkMDAwMDAgeworCQljb21wYXRpYmxlID0gInFjb20sbXNtODk3NC1vY21lbSI7CisKKwkJ
+cmVnID0gPDB4ZmRkMDAwMDAgMHgyMDAwPiwKKwkJICAgICAgPDB4ZmVjMDAwMDAgMHgxODAwMDA+
+OworCQlyZWctbmFtZXMgPSAiY3RybCIsCisJCSAgICAgICAgICAgICAibWVtIjsKKworCQljbG9j
+a3MgPSA8JnJwbWNjIFJQTV9TTURfT0NNRU1HWF9DTEs+LAorCQkgICAgICAgICA8Jm1tY2MgT0NN
+RU1DWF9PQ01FTU5PQ19DTEs+OworCQljbG9jay1uYW1lcyA9ICJjb3JlIiwKKwkJICAgICAgICAg
+ICAgICAiaWZhY2UiOworCisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9
+IDwxPjsKKworCQlnbXUtc3JhbUAwIHsKKwkJCXJlZyA9IDwweDAgMHgxMDAwMDA+OworCQl9Owor
+CX07Cit9OwotLSAKMi4yMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9m
+cmVlZHJlbm8=
