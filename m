@@ -1,13 +1,11 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 20/20] arm64: dts: marvell: Add support for Marvell CN9132-DB
-Date: Tue,  6 Aug 2019 16:55:00 +0200
-Message-ID: <20190806145500.24109-21-miquel.raynal@bootlin.com>
-References: <20190806145500.24109-1-miquel.raynal@bootlin.com>
+Subject: [PATCH 00/20] Add new Marvell CN9130 SoC support
+Date: Tue,  6 Aug 2019 16:54:40 +0200
+Message-ID: <20190806145500.24109-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190806145500.24109-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,266 +19,82 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-
-Extend the support of the CN9131 with yet another additional CP115.
-
-The last number indicates how many external CP115 are used.
-
-New available interfaces:
-* CP2 CRYPTO-0 (disabled)
-* CP2 ETH-0 (SFI, problem with the SFP cage, disabled)
-* CP2 GPIO-1
-* CP2 GPIO-2
-* CP2 I2C-0
-* CP2 PCIe-0 x2
-* CP2 PCIe-2 x1 (disabled)
-* CP2 SDHCI-0
-* CP2 USB3-1 (High-speed)
-
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/Makefile      |   1 +
- arch/arm64/boot/dts/marvell/cn9132-db.dts | 221 ++++++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/cn9132-db.dts
-
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index 92767d5be069..2af91b78d645 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -11,3 +11,4 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-mcbin-singleshot.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8080-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += cn9130-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += cn9131-db.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += cn9132-db.dtb
-diff --git a/arch/arm64/boot/dts/marvell/cn9132-db.dts b/arch/arm64/boot/dts/marvell/cn9132-db.dts
-new file mode 100644
-index 000000000000..4ef0df3097ca
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/cn9132-db.dts
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2019 Marvell International Ltd.
-+ *
-+ * Device tree for the CN9132-DB board.
-+ */
-+
-+#include "cn9131-db.dts"
-+
-+/ {
-+	model = "Marvell Armada CN9132-DB";
-+	compatible = "marvell,cn9132", "marvell,cn9131", "marvell,cn9130",
-+		     "marvell,armada-ap807-quad", "marvell,armada-ap807";
-+
-+	aliases {
-+		gpio5 = &cp2_gpio1;
-+		gpio6 = &cp2_gpio2;
-+		ethernet5 = &cp2_eth0;
-+	};
-+
-+	cp2_reg_usb3_vbus0: cp2_usb3_vbus@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cp2-xhci0-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&cp2_gpio1 2 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	cp2_usb3_0_phy0: cp2_usb3_phy0 {
-+		compatible = "usb-nop-xceiv";
-+		vcc-supply = <&cp2_reg_usb3_vbus0>;
-+	};
-+
-+	cp2_reg_usb3_vbus1: cp2_usb3_vbus@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cp2-xhci1-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&cp2_gpio1 3 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	cp2_usb3_0_phy1: cp2_usb3_phy1 {
-+		compatible = "usb-nop-xceiv";
-+		vcc-supply = <&cp2_reg_usb3_vbus1>;
-+	};
-+
-+	cp2_reg_sd_vccq: cp2_sd_vccq@0 {
-+		compatible = "regulator-gpio";
-+		regulator-name = "cp2_sd_vcc";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&cp2_gpio2 17 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0x1 3300000 0x0>;
-+	};
-+
-+	cp2_sfp_eth0: sfp-eth0 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&cp2_sfpp0_i2c>;
-+		los-gpio = <&cp2_module_expander1 11 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpio = <&cp2_module_expander1 10 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpio = <&cp2_module_expander1 9 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpio = <&cp2_module_expander1 8 GPIO_ACTIVE_HIGH>;
-+		/*
-+		 * SFP cages are unconnected on early PCBs because of an the I2C
-+		 * lanes not being connected. Prevent the port for being
-+		 * unusable by disabling the SFP node.
-+		 */
-+		status = "disabled";
-+	};
-+};
-+
-+/*
-+ * Instantiate the second slave CP115
-+ */
-+
-+#define CP11X_NAME		cp2
-+#define CP11X_BASE		f6000000
-+#define CP11X_PCIEx_MEM_BASE(iface) (0xe5000000 + (iface * 0x1000000))
-+#define CP11X_PCIEx_MEM_SIZE(iface) 0xf00000
-+#define CP11X_PCIE0_BASE	f6600000
-+#define CP11X_PCIE1_BASE	f6620000
-+#define CP11X_PCIE2_BASE	f6640000
-+
-+#include "armada-cp115.dtsi"
-+
-+#undef CP11X_NAME
-+#undef CP11X_BASE
-+#undef CP11X_PCIEx_MEM_BASE
-+#undef CP11X_PCIEx_MEM_SIZE
-+#undef CP11X_PCIE0_BASE
-+#undef CP11X_PCIE1_BASE
-+#undef CP11X_PCIE2_BASE
-+
-+&cp2_crypto {
-+	status = "disabled";
-+};
-+
-+&cp2_ethernet {
-+	status = "okay";
-+};
-+
-+/* SLM-1521-V2, CON9 */
-+&cp2_eth0 {
-+	status = "disabled";
-+	phy-mode = "10gbase-kr";
-+	/* Generic PHY, providing serdes lanes */
-+	phys = <&cp2_comphy4 0>;
-+	managed = "in-band-status";
-+	sfp = <&cp2_sfp_eth0>;
-+};
-+
-+&cp2_gpio1 {
-+	status = "okay";
-+};
-+
-+&cp2_gpio2 {
-+	status = "okay";
-+};
-+
-+&cp2_i2c0 {
-+	clock-frequency = <100000>;
-+
-+	/* SLM-1521-V2 - U3 */
-+	i2c-mux@72 {
-+		compatible = "nxp,pca9544";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x72>;
-+		cp2_sfpp0_i2c: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+			/* U12 */
-+			cp2_module_expander1: pca9555@21 {
-+				compatible = "nxp,pca9555";
-+				pinctrl-names = "default";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x21>;
-+			};
-+		};
-+	};
-+};
-+
-+/* SLM-1521-V2, CON6 */
-+&cp2_pcie0 {
-+	status = "okay";
-+	num-lanes = <2>;
-+	num-viewport = <8>;
-+	/* Generic PHY, providing serdes lanes */
-+	phys = <&cp2_comphy0 0
-+		&cp2_comphy1 0>;
-+};
-+
-+/* SLM-1521-V2, CON8 */
-+&cp2_pcie2 {
-+	status = "okay";
-+	num-lanes = <1>;
-+	num-viewport = <8>;
-+	/* Generic PHY, providing serdes lanes */
-+	phys = <&cp2_comphy5 2>;
-+};
-+
-+&cp2_sata0 {
-+	status = "okay";
-+
-+	/* SLM-1521-V2, CON4 */
-+	sata-port@0 {
-+		/* Generic PHY, providing serdes lanes */
-+		phys = <&cp2_comphy2 0>;
-+	};
-+};
-+
-+/* CON 2 on SLM-1683 - microSD */
-+&cp2_sdhci0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&cp2_sdhci_pins>;
-+	bus-width = <4>;
-+	cd-gpios = <&cp2_gpio2 23 GPIO_ACTIVE_LOW>;
-+	vqmmc-supply = <&cp2_reg_sd_vccq>;
-+};
-+
-+&cp2_syscon0 {
-+	cp2_pinctrl: pinctrl {
-+		compatible = "marvell,cp115-standalone-pinctrl";
-+
-+		cp2_i2c0_pins: cp2-i2c-pins-0 {
-+			marvell,pins = "mpp37", "mpp38";
-+			marvell,function = "i2c0";
-+		};
-+		cp2_sdhci_pins: cp2-sdhi-pins-0 {
-+			marvell,pins = "mpp56", "mpp57", "mpp58",
-+				       "mpp59", "mpp60", "mpp61";
-+			marvell,function = "sdio";
-+		};
-+	};
-+};
-+
-+&cp2_usb3_0 {
-+	status = "okay";
-+	usb-phy = <&cp2_usb3_0_phy0>;
-+	phy-names = "usb";
-+};
-+
-+/* SLM-1521-V2, CON11 */
-+&cp2_usb3_1 {
-+	status = "okay";
-+	usb-phy = <&cp2_usb3_0_phy1>;
-+	phy-names = "usb";
-+	/* Generic PHY, providing serdes lanes */
-+	phys = <&cp2_comphy3 1>;
-+};
--- 
-2.20.1
+SGVsbG8sCgpUaGlzIGlzIHRoZSB0aGlyZCBhbmQgbGFzdCBiYXRjaCBvZiBjaGFuZ2VzIHRvIHN1
+cHBvcnQgbmV3Ck1hcnZlbGwgQ045MTMwIFNvQ3MuIFRoZSBDTjkxMzAgaXMgbWFkZSBvZiBvbmUg
+QVA4MDcgYW5kIG9uZSBpbnRlcm5hbApDUDExNS4gVGhlcmUgYXJlIHRocmVlIGRldmVsb3BtZW50
+IGJvYXJkcyB0aGF0IGFyZSBtYWRlIG9mIHRoaXMgU29DOgoqIENOOTEzMC1EQgoqIENOOTEzMS1E
+QiAod2l0aCBvbmUgYWRkaXRpb25hbCBtb2R1bGFyIENQMTE1IGNvbXBhcmVkIHRvIENOOTEzMC1E
+QikKKiBDTjkxMzItREIgKHdpdGggdHdvIGFkZGl0aW9uYWwgbW9kdWxhciBDUDExNSBjb21wYXJl
+ZCB0byBDTjkxMzAtREIpCgpUaGlzIHNlcmllcyBhcHBsaWVzIG9uIHRvcCBvZiB0aGUgQVA4MDYg
+YW5kIEFQODA3IGNsb2NrIHNlcmllcyAoc2VlCmJlbG93KSBhbmQgd2lsbCB3b3JrIG9ubHkgaWYg
+YXBwbGllZCBvbiB0b3Agb2Y6CiogQ1AxMTAgQ09NUEhZOgpodHRwczovL3BhdGNod29yay5rZXJu
+ZWwub3JnL2NvdmVyLzExMDY3NjQ3LwoqIEFQODA2IENQVSBjbG9ja3M6Cmh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvY292ZXIvMTEwMzg1NzcvCiogQVA4MDcgY2xvY2tzOgpodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL2NvdmVyLzExMDc2NDM1LwoqIENQMTE1IHBpbmN0cmw6Cmh0dHA6
+Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9jb3Zlci8xMTQyMTA3LwoKQXMgQ1AxMTAgYW5kIENQMTE1
+IChhbHRlcm5hdGl2ZWx5LCBBUDgwNiBhbmQgQVA4MDcpIGFyZSB2ZXJ5IHNpbWlsYXIsCndlIGZp
+cnN0IHJlb3JnYW5pemUgRFQgZmlsZXMgdG8gY3JlYXRlIENQMTF4IChhbmQgQVA4MHgpIGdlbmVy
+aWMKZmlsZXMsIGJlZm9yZSBpbmNsdWRpbmcgdGhlbSBmcm9tIHRoZSBuZXcgc3BlY2lmaWMgQ1Ax
+MTAvQ1AxMTUKKEFQODA2L0FQODA3KSBvbmVzLgoKQSBmZXcgc21hbGwgaW1wcm92ZW1lbnRzL2Zp
+eGVzIGluIHRoZXNlIGZpbGVzIGFyZSBhbHNvIGNhcnJpZWQuCgpUaGFua3MsCk1pcXXDqGwKCgpC
+ZW4gUGVsZWQgKDEpOgogIGR0LWJpbmRpbmdzOiBhcDgweDogcmVwbGFjZSBBUDgwNiB3aXRoIEFQ
+ODB4CgpHcnplZ29yeiBKYXN6Y3p5ayAoNyk6CiAgYXJtNjQ6IGR0czogbWFydmVsbDogQWRkIEFQ
+ODA2LWR1YWwgY2FjaGUgZGVzY3JpcHRpb24KICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgQVA4
+MDYtcXVhZCBjYWNoZSBkZXNjcmlwdGlvbgogIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCBBUDgw
+Ny1xdWFkIGNhY2hlIGRlc2NyaXB0aW9uCiAgZHQtYmluZGluZ3M6IG1hcnZlbGw6IERlY2xhcmUg
+dGhlIENOOTEzeCBTb0MgY29tcGF0aWJsZXMKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgc3Vw
+cG9ydCBmb3IgTWFydmVsbCBDTjkxMzAtREIKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgc3Vw
+cG9ydCBmb3IgTWFydmVsbCBDTjkxMzEtREIKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgc3Vw
+cG9ydCBmb3IgTWFydmVsbCBDTjkxMzItREIKCktvbnN0YW50aW4gUG9yb3RjaGtpbiAoMSk6CiAg
+YXJtNjQ6IGR0czogbWFydmVsbDogUHJlcGFyZSB0aGUgaW50cm9kdWN0aW9uIG9mIEFQODA3IGJh
+c2VkIFNvQ3MKCk1pcXVlbCBSYXluYWwgKDExKToKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBFbnVt
+ZXJhdGUgdGhlIGZpcnN0IEFQODA2IHN5c2NvbgogIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCBB
+UDgwNi1kdWFsIG1pc3NpbmcgQ1BVIGNsb2NrcwogIE1BSU5UQUlORVJTOiBBZGQgbmV3IE1hcnZl
+bGwgQ045MTMwLWJhc2VkIGZpbGVzIHRvIHRyYWNrCiAgYXJtNjQ6IGR0czogbWFydmVsbDogTW92
+ZSBjbG9ja3MgdG8gQVA4MDYgc3BlY2lmaWMgZmlsZQogIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFk
+ZCBzdXBwb3J0IGZvciBBUDgwNy9BUDgwNy1xdWFkCiAgYXJtNjQ6IGR0czogbWFydmVsbDogRml4
+IENQMTEwIE5BTkQgY29udHJvbGxlciBub2RlIG11bHRpLWxpbmUgY29tbWVudAogICAgYWxpZ25t
+ZW50CiAgYXJtNjQ6IGR0czogbWFydmVsbDogUHJlcGFyZSB0aGUgaW50cm9kdWN0aW9uIG9mIENQ
+MTE1CiAgYXJtNjQ6IGR0czogbWFydmVsbDogRHJvcCBQQ0llIEkvTyByYW5nZXMgZnJvbSBDUDEx
+eCBmaWxlCiAgYXJtNjQ6IGR0czogbWFydmVsbDogRXh0ZXJuYWxpemUgUENJZSBtYWNyb3MgZnJv
+bSBDUDExeCBmaWxlCiAgYXJtNjQ6IGR0czogbWFydmVsbDogQWRkIHN1cHBvcnQgZm9yIENQMTE1
+CiAgYXJtNjQ6IGR0czogbWFydmVsbDogQWRkIHN1cHBvcnQgZm9yIE1hcnZlbGwgQ045MTMwIFNv
+QyBzdXBwb3J0CgogLi4ucm9sbGVyLnR4dCA9PiBhcDgweC1zeXN0ZW0tY29udHJvbGxlci50eHR9
+IHwgIDE0ICstCiAuLi4vYmluZGluZ3MvYXJtL21hcnZlbGwvYXJtYWRhLTdrLThrLnR4dCAgICAg
+fCAgMTMgKy0KIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMyArLQogYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL01ha2VmaWxlICAgICAgICAgIHwg
+ICAzICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtNzB4MC5kdHNpICB8ICAy
+OCArLQogLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgwNDAtbWNiaW4uZHRzaSAgIHwgICAz
+ICstCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgweDAuZHRzaSAgfCAgNTYg
+Ky0KIC4uLi9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgwNi1kdWFsLmR0c2kgICB8ICAyMyAr
+CiAuLi4vYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtYXA4MDYtcXVhZC5kdHNpICAgfCAgNDIgKysK
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtYXA4MDYuZHRzaSB8IDQ1NiArLS0t
+LS0tLS0tLS0tLQogLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFwODA3LXF1YWQuZHRzaSAg
+IHwgIDkzICsrKwogYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgwNy5kdHNp
+IHwgIDI5ICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtYXA4MHguZHRzaSB8
+IDQ0NCArKysrKysrKysrKysrKwogLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWNv
+bW1vbi5kdHNpIHwgICA0ICstCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWNw
+MTEwLmR0c2kgfCA1NzUgKy0tLS0tLS0tLS0tLS0tLS0tCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21h
+cnZlbGwvYXJtYWRhLWNwMTE1LmR0c2kgfCAgMTIgKwogYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2
+ZWxsL2FybWFkYS1jcDExeC5kdHNpIHwgNTY4ICsrKysrKysrKysrKysrKysrCiBhcmNoL2FybTY0
+L2Jvb3QvZHRzL21hcnZlbGwvY245MTMwLWRiLmR0cyAgICAgfCA0MDMgKysrKysrKysrKysrCiBh
+cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvY245MTMwLmR0c2kgICAgICAgfCAgMzcgKysKIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9jbjkxMzEtZGIuZHRzICAgICB8IDIwMiArKysrKysK
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9jbjkxMzItZGIuZHRzICAgICB8IDIyMSArKysr
+KysrCiAyMSBmaWxlcyBjaGFuZ2VkLCAyMTYxIGluc2VydGlvbnMoKyksIDEwNjggZGVsZXRpb25z
+KC0pCiByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9tYXJ2ZWxs
+L3thcDgwNi1zeXN0ZW0tY29udHJvbGxlci50eHQgPT4gYXA4MHgtc3lzdGVtLWNvbnRyb2xsZXIu
+dHh0fSAoOTElKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVs
+bC9hcm1hZGEtYXA4MDctcXVhZC5kdHNpCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9i
+b290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgwNy5kdHNpCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
+aC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgweC5kdHNpCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExNS5kdHNpCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExeC5k
+dHNpCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2NuOTEz
+MC1kYi5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwv
+Y245MTMwLmR0c2kKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZl
+bGwvY245MTMxLWRiLmR0cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMv
+bWFydmVsbC9jbjkxMzItZGIuZHRzCgotLSAKMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
