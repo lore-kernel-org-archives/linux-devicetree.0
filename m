@@ -1,35 +1,23 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [RFCv2 6/9] dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-Date: Tue, 6 Aug 2019 21:21:32 +0200
-Message-ID: <CAFBinCCqpSkzNUNz5pbct1G6TEsLF3AHLH=kqqXgwY2wzPCawA@mail.gmail.com>
-References: <20190805120320.32282-1-narmstrong@baylibre.com>
- <20190805120320.32282-7-narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 4/6] arm64: dts: meson: sei510: Add minimal thermal zone
+Date: Tue, 6 Aug 2019 21:24:51 +0200
+Message-ID: <CAFBinCBMk=OZH3L0mWL=Wk95MeGey2O+xXD19T1PbYXz2CmuWw@mail.gmail.com>
+References: <20190806130506.8753-1-glaroque@baylibre.com> <20190806130506.8753-5-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190805120320.32282-7-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: kishon@ti.com, linux-amlogic@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190806130506.8753-5-glaroque@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 5, 2019 at 2:05 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Tue, Aug 6, 2019 at 3:06 PM Guillaume La Roque <glaroque@baylibre.com> wrote:
 >
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for the Amlogic G12A USB2 PHY over to a YAML schemas.
+> Add minimal thermal zone for two temperature sensor
+> One is located close to the DDR and the other one is
+> located close to the PLLs (between the CPU and GPU)
 >
-> While the original phy bindings specifies phy-supply as required,
-> the examples and implementations makes it optional, thus phy-supply
-> is not in the required list of attributes.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+I'm not familiar with the thermal subsystem but this looks sane so:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
