@@ -1,59 +1,136 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 1/4] dt-bindings: arm: imx: Add the soc binding for
- i.MX8MN
-Date: Tue, 6 Aug 2019 05:42:05 +0000
-Message-ID: <DB3PR0402MB39162CCE914A9C250CC203BFF5D50__4544.99284257821$1565070142$gmane$org@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190619022145.42398-1-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190619022145.42398-1-Anson.Huang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "j.neuschaefer@gmx.net" <j.neuschaefer@gmx.net>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, Leo Li <leoyang.li@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, devicetree
-Cc: dl-linux-imx <linux-imx@nxp.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1028a: Add Thermal Monitor Unit node
+Date: Tue,  6 Aug 2019 13:35:07 +0800
+Message-ID: <20190806053507.37069-1-andy.tang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Ping for this patch series...
+The Thermal Monitoring Unit (TMU) monitors and reports the
+temperature from 2 remote temperature measurement sites
+located on ls1028a chip.
+Add TMU dts node to enable this feature.
 
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> This patch adds the soc & board binding for i.MX8MN.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> No change.
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml
-> b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 407138e..b35abb1 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -177,6 +177,12 @@ properties:
->                - fsl,imx8mm-evk            # i.MX8MM EVK Board
->            - const: fsl,imx8mm
-> 
-> +      - description: i.MX8MN based Boards
-> +        items:
-> +          - enum:
-> +              - fsl,imx8mn-ddr4-evk            # i.MX8MN DDR4 EVK Board
-> +          - const: fsl,imx8mn
-> +
->        - description: i.MX8QXP based Boards
->          items:
->            - enum:
-> --
-> 2.7.4
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+Acked-by: Eduardo Valentin <edubezval@gmail.com>
+---
+v2:
+	- remove multiple sensors support
+
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index aef5b06a98d5..20d7e7db5dcb 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -29,6 +29,7 @@
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+ 			cpu-idle-states = <&CPU_PW20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -39,6 +40,7 @@
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+ 			cpu-idle-states = <&CPU_PW20>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		l2: l2-cache {
+@@ -503,6 +505,89 @@
+ 			status = "disabled";
+ 		};
+ 
++		tmu: tmu@1f00000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f80000 0x0 0x10000>;
++			interrupts = <0 23 0x4>;
++			fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
++			fsl,tmu-calibration = <0x00000000 0x00000024
++					       0x00000001 0x0000002b
++					       0x00000002 0x00000031
++					       0x00000003 0x00000038
++					       0x00000004 0x0000003f
++					       0x00000005 0x00000045
++					       0x00000006 0x0000004c
++					       0x00000007 0x00000053
++					       0x00000008 0x00000059
++					       0x00000009 0x00000060
++					       0x0000000a 0x00000066
++					       0x0000000b 0x0000006d
++
++					       0x00010000 0x0000001c
++					       0x00010001 0x00000024
++					       0x00010002 0x0000002c
++					       0x00010003 0x00000035
++					       0x00010004 0x0000003d
++					       0x00010005 0x00000045
++					       0x00010006 0x0000004d
++					       0x00010007 0x00000045
++					       0x00010008 0x0000005e
++					       0x00010009 0x00000066
++					       0x0001000a 0x0000006e
++
++					       0x00020000 0x00000018
++					       0x00020001 0x00000022
++					       0x00020002 0x0000002d
++					       0x00020003 0x00000038
++					       0x00020004 0x00000043
++					       0x00020005 0x0000004d
++					       0x00020006 0x00000058
++					       0x00020007 0x00000063
++					       0x00020008 0x0000006e
++
++					       0x00030000 0x00000010
++					       0x00030001 0x0000001c
++					       0x00030002 0x00000029
++					       0x00030003 0x00000036
++					       0x00030004 0x00000042
++					       0x00030005 0x0000004f
++					       0x00030006 0x0000005b
++					       0x00030007 0x00000068>;
++			little-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			core-cluster {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++				thermal-sensors = <&tmu 0>;
++
++				trips {
++					core_cluster_alert: core-cluster-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++
++					core_cluster_crit: core-cluster-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&core_cluster_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
++
+ 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+ 			compatible = "pci-host-ecam-generic";
+ 			reg = <0x01 0xf0000000 0x0 0x100000>;
+-- 
+2.17.1
