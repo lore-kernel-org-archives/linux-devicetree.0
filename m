@@ -1,54 +1,36 @@
-Return-Path: <SRS0=uCLo=WE=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V6 5/8] arm64: tegra: Add xudc node for Tegra210
-Date: Thu, 8 Aug 2019 15:07:23 +0530
-Message-ID: <1565257046-9890-6-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
-References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=S1SN=WC=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V4 1/4] dt-bindings: arm: imx: Add the soc binding for
+ i.MX8MN
+Date: Tue, 6 Aug 2019 05:42:05 +0000
+Message-ID: 
+ <DB3PR0402MB39162CCE914A9C250CC203BFF5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190619022145.42398-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190619022145.42398-1-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "j.neuschaefer@gmx.net" <j.neuschaefer@gmx.net>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, Leo Li <leoyang.li@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Tegra210 has one XUSB device mode controller, which can be operated
-HS and SS modes. Add DT support for XUSB device mode controller.
-
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 6597531..5de0b36 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1203,6 +1203,25 @@
- 		status = "disabled";
- 	};
- 
-+	usb@700d0000 {
-+		compatible = "nvidia,tegra210-xudc";
-+		reg = <0x0 0x700d0000 0x0 0x8000>,
-+		      <0x0 0x700d8000 0x0 0x1000>,
-+		      <0x0 0x700d9000 0x0 0x1000>;
-+		reg-names = "base", "fpci", "ipfs";
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
-+		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
-+		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+		power-domain-names = "dev", "ss";
-+		nvidia,xusb-padctl = <&padctl>;
-+		status = "disabled";
-+	};
-+
- 	mipi: mipi@700e3000 {
- 		compatible = "nvidia,tegra210-mipi";
- 		reg = <0x0 0x700e3000 0x0 0x100>;
--- 
-2.7.4
+UGluZyBmb3IgdGhpcyBwYXRjaCBzZXJpZXMuLi4NCg0KPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5z
+b24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc29jICYgYm9hcmQg
+YmluZGluZyBmb3IgaS5NWDhNTi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxB
+bnNvbi5IdWFuZ0BueHAuY29tPg0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4NCj4gLS0tDQo+IE5vIGNoYW5nZS4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sIHwgNiArKysrKysNCj4gIDEgZmlsZSBjaGFu
+Z2VkLCA2IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KPiBpbmRleCA0MDcxMzhlLi5iMzVhYmIxIDEwMDY0
+NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1s
+DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwN
+Cj4gQEAgLTE3Nyw2ICsxNzcsMTIgQEAgcHJvcGVydGllczoNCj4gICAgICAgICAgICAgICAgLSBm
+c2wsaW14OG1tLWV2ayAgICAgICAgICAgICMgaS5NWDhNTSBFVksgQm9hcmQNCj4gICAgICAgICAg
+ICAtIGNvbnN0OiBmc2wsaW14OG1tDQo+IA0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogaS5NWDhN
+TiBiYXNlZCBCb2FyZHMNCj4gKyAgICAgICAgaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0K
+PiArICAgICAgICAgICAgICAtIGZzbCxpbXg4bW4tZGRyNC1ldmsgICAgICAgICAgICAjIGkuTVg4
+TU4gRERSNCBFVksgQm9hcmQNCj4gKyAgICAgICAgICAtIGNvbnN0OiBmc2wsaW14OG1uDQo+ICsN
+Cj4gICAgICAgIC0gZGVzY3JpcHRpb246IGkuTVg4UVhQIGJhc2VkIEJvYXJkcw0KPiAgICAgICAg
+ICBpdGVtczoNCj4gICAgICAgICAgICAtIGVudW06DQo+IC0tDQo+IDIuNy40DQoNCg==
