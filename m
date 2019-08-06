@@ -1,37 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: mpc8xxx: Add new platforms GPIO DT node description
-Date: Tue, 6 Aug 2019 14:48:54 +0200
-Message-ID: <CACRpkdZ7hW+hSC41JqjqfLrwWvRY80+_8sXC89OhN7SwVtU7MA@mail.gmail.com>
-References: <20190806024923.34355-1-hui.song_1@nxp.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 0/2] dt-bindings: net: meson-dwmac: convert to yaml
+Date: Tue,  6 Aug 2019 14:50:39 +0200
+Message-ID: <20190806125041.16105-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806024923.34355-1-hui.song_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hui Song <hui.song_1@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: robh+dt@kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hui,
+This patchsets converts the Amlogic Meson DWMAC glue bindings over to
+YAML schemas using the already converted dwmac bindings.
 
-On Tue, Aug 6, 2019 at 4:59 AM Hui Song <hui.song_1@nxp.com> wrote:
+The first patch is needed because the Amlogic glue needs a supplementary
+reg cell to access the DWMAC glue registers.
 
-> From: Song Hui <hui.song_1@nxp.com>
->
-> Update the NXP GPIO node dt-binding file for QorIQ and
-> Layerscape platforms, and add one more example with
-> ls1028a GPIO node.
->
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-(...)
-> +Example of gpio-controller node for a ls1028a SoC:
-> +
-> +gpio1: gpio@2300000 {
-> +       compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
+Neil Armstrong (2):
+  dt-bindings: net: snps,dwmac: update reg minItems maxItems
+  dt-bindings: net: meson-dwmac: convert to yaml
 
-What you need to do is to add "fsl,ls1028a-gpio" to the list
-of compatible values at the top of the file "Required properties".
-Please send a v2 with this fixed.
+ .../bindings/net/amlogic,meson-dwmac.yaml     | 113 ++++++++++++++++++
+ .../devicetree/bindings/net/meson-dwmac.txt   |  71 -----------
+ .../devicetree/bindings/net/snps,dwmac.yaml   |   8 +-
+ 3 files changed, 120 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
 
-Yours,
-Linus Walleij
+-- 
+2.22.0
