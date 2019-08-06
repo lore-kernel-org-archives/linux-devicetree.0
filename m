@@ -1,205 +1,243 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
- H6 SoC
-Date: Wed, 7 Aug 2019 00:27:44 +0200
-Message-ID: <20190806222744.xqxocjfwbl3g5z4g@core.my.home>
-References: <20190412120730.473-1-megous@megous.com>
- <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
- <20190806183045.edhm3qzpegscf2z7@core.my.home>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Subject: Re: [PATCH v1 2/2] net: npcm: add NPCM7xx EMC 10/100 Ethernet driver
+Date: Tue, 6 Aug 2019 18:51:38 -0400
+Message-ID: <CAF=yD-KD1TNTMp1Dhex766MmZUyX6rt7Oo=FoCdkc19B6Z_07g@mail.gmail.com>
+References: <20190801072611.27935-1-avifishman70@gmail.com>
+ <20190801072611.27935-3-avifishman70@gmail.com> <CA+FuTSd89gJBX-zaZTzgNxpqtR_MvVfMf=6hdRe5+1MPRszw8g@mail.gmail.com>
+ <CAKKbWA6hjxupFQNnTUOfeKLXd2wtZ9+g7uUpe34CeErn5kBAaA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBYX5U7VAKGQEYTVEMRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190806183045.edhm3qzpegscf2z7-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKKbWA6hjxupFQNnTUOfeKLXd2wtZ9+g7uUpe34CeErn5kBAaA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Avi Fishman <avifishman70@gmail.com>
+Cc: Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Network Development <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 08:30:45PM +0200, megous hlavni wrote:
-> On Mon, Apr 15, 2019 at 04:18:12PM +0800, Chen-Yu Tsai wrote:
-> > On Fri, Apr 12, 2019 at 8:07 PM megous via linux-sunxi
-> > <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org> wrote:
-> > >
-> > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> > >
-> > > I went through the datasheets for H6 and H5, and compared the differences.
-> > > RTCs are largely similar, but not entirely compatible. Incompatibilities
-> > > are in details not yet implemented by the rtc driver though.
-> > >
-> > > I also corrected the clock tree in H6 DTSI.
-> > 
-> > Please also add DCXO clock input/output and XO clock input to the bindings
-> > and DT, and also fix up the clock tree. You can skip them in the driver for
-> > now, but please add a TODO. As long as you don't change the clock-output-name
-> > of osc24M, everything should work as before.
-> > 
-> > We just want the DT to describe what is actually there. For the XO input,
-> > you could just directly reference the external crystal node. The gate for
-> > it is likely somewhere in the PRCM block, which we don't have docs for.
-> 
-> So I was thinking about this for a while, and came up with this:
-> 
-> ----------------- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi -----------------
-> index 64c39f663d22..ac99ddbebe5c 100644
-> @@ -627,14 +635,15 @@
-> 
->  		rtc: rtc@7000000 {
->  			compatible = "allwinner,sun50i-h6-rtc";
->  			reg = <0x07000000 0x400>;
->  			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-> -			clock-output-names = "osc32k", "osc32k-out", "iosc";
-> -			clocks = <&ext_osc32k>;
-> +			clock-output-names = "osc32k", "osc32k-out", "iosc", "hosc";
-> +			clock-names = "losc", "dcxo";
-> +			clocks = <&ext_osc32k>, <&osc24M>;
->  			#clock-cells = <1>;
->  		};
-> 
->  		r_ccu: clock@7010000 {
->  			compatible = "allwinner,sun50i-h6-r-ccu";
->  			reg = <0x07010000 0x400>;
-> 
-> I'm not completely sure how (or why?) to describe in DTSI which oscillator the
-> designer used (XO vs DCXO). This information is signalled by the pad voltage and
-> can be determined at runtime from DCXO_CTRL_REG's OSC_CLK_SRC_SEL (bit 3). It's
-> not possible to change at runtime.
-> 
-> HOSC source selection is only material to the CPUS (ARISC) firmware when it
-> wants to turn off all PLLs and the main crystal oscillator so that it knows
-> which one to turn off. I don't see any other use for it. It's just
-> informational. I don't think (future) crust firmware has space to be reading
-> DTBs, so the detection will be using OSC_CLK_SRC_SEL anyway.
-> 
-> Maybe whether XO or DCXO is used also matters if you want to do some fine
-> tunning of DCXO (control register has pletny of options), but that's probably
-> better done in u-boot. And there's still no need to read HOSC source from DT.
-> The driver can just check compatible, and if it is H6 and OSC_CLK_SRC_SEL is 1,
-> it can do it's DCXO tunning, or whatever. But neither OS nor bootloader will
-> be using this info to gate/disable the osciallator.
-> 
-> If we really want this in DT, maybe we can model it by having just two input
-> clocks to RTC described in DTSI, and the DTSI for H6 would have this by default:
-> 
-> 	clock-names = "losc", "dcxo";
-> 	clocks = <&ext_osc32k>, <&osc24M>;
-> 
-> And the board designer could change it from a board file, like this:
-> 
-> &rtc {
-> 	clock-names = "losc", "xo";
-> 	clocks = <&ext_osc32k>, <&osc24M>;
-> };
-> 
-> The driver could decide which oscillator is used by the presence of either
-> dcxo or xo input clock.
-> 
-> But in any case, the driver can also get this info from DCXO_CTRL_REG's
-> OSC_CLK_SRC_SEL, so it doesn't need to read this from DT at all. So it's a bit
-> pointless.
-> 
-> So I see two options:
-> 
-> 1) skip adding dcxo/xo to input clocks of RTC completely
-> 2) the above
-> 
-> What do you think?
+> > Does this device support stacked VLAN?
+> I am not familiar with stacked VLAN.
+> Our HW for sure there is no support. can the SW stack handle it for me?
+> Does it mean that  the packets can be larger?
 
-I tried option 2) and it feels pointless. It just creates this clock tree:
+If the device does not support it, I believe it's fine to leave it to S/W.
 
-osc24M
-  hosc
-    plls...
+> > Is this really the device maximum?
+>
+> The device can support upto 64KB, but of course I will not allocate
+> for each RX data such a big buffer.
+> Can I know what is the maximum value the network stack may request? I
+> saw many driver allocating 1536 for each packet.
 
-from:
+The maximum is the minimum of the link layer and device h/w limits,
+but you indeed don't want to allocate for worst case if that is highly
+unlikely.
 
-osc24M
-  plls...
+Your choice of 1500 is fine for this initial commit, really. More on
+MTU below with ndo_change_mtu
 
-and doesn't achieve anything else, other than complicating things, for no reason
-because no driver will ever need or use this info from the DT.
+> > > +       rxd_offset = (readl((ether->reg + REG_CRXDSA)) -
+> > > +                     readl((ether->reg + REG_RXDLSA)))
+> > > +               / sizeof(struct npcm7xx_txbd);
+> > > +       DUMP_PRINT("RXD offset    %6d\n", rxd_offset);
+> > > +       DUMP_PRINT("cur_rx        %6d\n", ether->cur_rx);
+> > > +       DUMP_PRINT("rx_err        %6d\n", ether->rx_err);
+> > > +       ether->rx_err = 0;
+> > > +       DUMP_PRINT("rx_berr       %6d\n", ether->rx_berr);
+> > > +       ether->rx_berr = 0;
+> > > +       DUMP_PRINT("rx_stuck      %6d\n", ether->rx_stuck);
+> > > +       ether->rx_stuck = 0;
+> > > +       DUMP_PRINT("rdu           %6d\n", ether->rdu);
+> > > +       ether->rdu = 0;
+> > > +       DUMP_PRINT("rxov rx       %6d\n", ether->rxov);
+> > > +       ether->rxov = 0;
+> > > +       /* debug counters */
+> > > +       DUMP_PRINT("rx_int_count  %6d\n", ether->rx_int_count);
+> > > +       ether->rx_int_count = 0;
+> > > +       DUMP_PRINT("rx_err_count  %6d\n", ether->rx_err_count);
+> > > +       ether->rx_err_count = 0;
+> >
+> > Basic counters like tx_packets and rx_errors are probably better
+> > exported regardless of debug level as net_device_stats. And then don't
+> > need to be copied in debug output.
+>
+> They are also exported there, see below ether->stats.tx_packets++; and
+> ether->stats.rx_errors++;
+> those are different counters for debug since we had HW issues that we
+> needed to workaround and might need them for future use.
+> Currently the driver is stable on millions of parts in the field.
+>
+> >
+> > Less standard counters like tx interrupt count are probably better
+> > candidates for ethtool -S.
+>
+> I don't have support for ethtool.
+> is it a must? it is quite some work and this driver is already in the
+> field for quite some years.
 
-So my preference is for keeping it simple and going with option 1).
+Your driver includes a struct ethtool_ops. Implementing its callback
+.get_ethtool_stats seems straightforward?
 
-regards,
-	o.
+David also requested using standard infrastructure over this custom
+debug logic. Ethool stats appear the most logical choice to me. But
+there may be others.
 
+> > > +static struct sk_buff *get_new_skb(struct net_device *netdev, u32 i)
+> > > +{
+> > > +       __le32 buffer;
+> > > +       struct npcm7xx_ether *ether = netdev_priv(netdev);
+> > > +       struct sk_buff *skb = netdev_alloc_skb(netdev,
+> > > +               roundup(MAX_PACKET_SIZE_W_CRC, 4));
+> > > +
+> > > +       if (unlikely(!skb)) {
+> > > +               if (net_ratelimit())
+> > > +                       netdev_warn(netdev, "failed to allocate rx skb\n");
+> >
+> > can use net_warn_ratelimited (here and elsewhere)
+>
+> should I replace every netdev_warn/err/info with net_warn/err/inf_ratelimited?
+> I saw in drivers that are using net_warn_ratelimited, that many time
+> uses also netdev_warn/err/info
 
-> regards,
-> 	o.
-> 
-> 
-> > > There's a small detail here, that's not described absolutely correctly in
-> > > DTSI, but the difference is not really that material. ext_osc32k is
-> > > originally modelled as a fixed clock that feeds into RTC module, but in
-> > > reality it's the RTC module that implements via its registers enabling and
-> > > disabling of this oscillator/clock.
-> > >
-> > > Though:
-> > > - there's no other possible user of ext_osc32k than RTC module
-> > > - there's no other possible external configuration for the crystal
-> > >   circuit that would need to be handled in the dts per board
-> > >
-> > > So I guess, while the description is not perfect, this patch series still
-> > > improves the current situation. Or maybe I'm misunderstanding something,
-> > > and &ext_osc32k node just describes a fact that there's a crystal on
-> > > the board. Then, everything is perhaps fine. :)
-> > 
-> > Correct. The external clock nodes are modeling the crystal, not the internal
-> > clock gate / distributor.
-> > 
-> > Were the vendor to not include the crystal (for whatever reasons), the DT
-> > should be able to describe it via the absence of the clock input, and the
-> > driver should correctly use the internal (inaccurate) oscillator. I realize
-> > the clocks property is required, and the driver doesn't handle this case
-> > either, so we might have to fix that if it were to appear in the wild.
-> > 
-> > > For now, the enable bit for this oscillator is toggled by the re-parenting
-> > > code automatically, as needed.
-> > 
-> > That's fine. No need to increase the clock tree depth.
-> > 
-> > ChenYu
-> > 
-> > > This patchset is necessary for implementing the WiFi/Bluetooth support
-> > > on boards using H6 SoC.
-> > >
-> > > Please take a look.
-> > >
-> > > Thank you and regards,
-> > >   Ondrej Jirman
-> > >
-> > > Ondrej Jirman (3):
-> > >   dt-bindings: Add compatible for H6 RTC
-> > >   rtc: sun6i: Add support for H6 RTC
-> > >   arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
-> > >
-> > >  .../devicetree/bindings/rtc/sun6i-rtc.txt     |  1 +
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 30 +++++++-------
-> > >  drivers/rtc/rtc-sun6i.c                       | 40 ++++++++++++++++++-
-> > >  3 files changed, 55 insertions(+), 16 deletions(-)
-> > >
-> > > --
-> > > 2.21.0
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> > > For more options, visit https://groups.google.com/d/optout.
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+They probably use the second in non-ratelimited cases?
+
+> > > +static irqreturn_t npcm7xx_tx_interrupt(int irq, void *dev_id)
+> > > +{
+> > > +       struct npcm7xx_ether *ether;
+> > > +       struct platform_device *pdev;
+> > > +       struct net_device *netdev;
+> > > +       __le32 status;
+> > > +       unsigned long flags;
+> > > +
+> > > +       netdev = dev_id;
+> > > +       ether = netdev_priv(netdev);
+> > > +       pdev = ether->pdev;
+> > > +
+> > > +       npcm7xx_get_and_clear_int(netdev, &status, 0xFFFF0000);
+> > > +
+> > > +       ether->tx_int_count++;
+> > > +
+> > > +       if (status & MISTA_EXDEF)
+> > > +               dev_err(&pdev->dev, "emc defer exceed interrupt status=0x%08X\n"
+> > > +                       , status);
+> > > +       else if (status & MISTA_TXBERR) {
+> > > +               dev_err(&pdev->dev, "emc bus error interrupt status=0x%08X\n",
+> > > +                       status);
+> > > +#ifdef CONFIG_NPCM7XX_EMC_ETH_DEBUG
+> > > +               npcm7xx_info_print(netdev);
+> > > +#endif
+> > > +               spin_lock_irqsave(&ether->lock, flags);
+> >
+> > irqsave in hard interrupt context?
+>
+> I need to protect my REG_MIEN register that is changed in other places.
+> I think that spin_lock_irqsave() is relevant when working in SMP,
+> since other CPU may still be running.
+> Isn't it?
+
+This is an interesting case. The hardware interrupt handler will not
+interrupt itself. But it is architecture dependent whether all
+interrupts are disabled when a particular interrupt handler is running
+(as per the unreliable guide to locking).
+
+So even in absence of SMP, this would indeed need spin_lock_irqsave if
+there are multiple hardware interrupt handlers potentially accessing
+the same data. That sounds unlikely in general, but does happen here
+for REG_MIEN, in npcm7xx_tx_interrupt and npcm7xx_rx_interrupt. So I
+was mistaken, this is not only the most conservative locking method,
+it is indeed required.
+
+>
+> >
+> > > +               writel(0, (ether->reg + REG_MIEN)); /* disable any interrupt */
+> > > +               spin_unlock_irqrestore(&ether->lock, flags);
+> > > +               ether->need_reset = 1;
+> > > +       } else if (status & ~(MISTA_TXINTR | MISTA_TXCP | MISTA_TDU))
+> > > +               dev_err(&pdev->dev, "emc other error interrupt status=0x%08X\n",
+> > > +                       status);
+> > > +
+> > > +    /* if we got MISTA_TXCP | MISTA_TDU remove those interrupt and call napi */
+> >
+> > The goal of napi is to keep interrupts disabled until napi completes.
+>
+> We have a HW issue that because of it I still enabled TX complete interrupt,
+> I will see if I can disable all interrupts and only leave the error interrupts
+
+Please do. I'm not sure what happens when trying to schedule napi
+while it is already scheduled or running. Even in the best case
+(nothing), these spurious interrupts are inefficient.
+
+> >
+> > > +       if (status & (MISTA_TXCP | MISTA_TDU) &
+> > > +           readl((ether->reg + REG_MIEN))) {
+> > > +               __le32 reg_mien;
+> > > +
+> > > +               spin_lock_irqsave(&ether->lock, flags);
+> > > +               reg_mien = readl((ether->reg + REG_MIEN));
+> > > +               if (reg_mien & ENTDU)
+> > > +                       /* Disable TDU interrupt */
+> > > +                       writel(reg_mien & (~ENTDU), (ether->reg + REG_MIEN));
+> > > +
+> > > +               spin_unlock_irqrestore(&ether->lock, flags);
+> > > +
+> > > +               if (status & MISTA_TXCP)
+> > > +                       ether->tx_cp_i++;
+> > > +               if (status & MISTA_TDU)
+> > > +                       ether->tx_tdu_i++;
+> > > +       } else {
+> > > +               dev_dbg(&pdev->dev, "status=0x%08X\n", status);
+> > > +       }
+> > > +
+> > > +       napi_schedule(&ether->napi);
+> > > +
+> > > +       return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +static irqreturn_t npcm7xx_rx_interrupt(int irq, void *dev_id)
+> > > +{
+> > > +       struct net_device *netdev = (struct net_device *)dev_id;
+> > > +       struct npcm7xx_ether *ether = netdev_priv(netdev);
+> > > +       struct platform_device *pdev = ether->pdev;
+> > > +       __le32 status;
+> > > +       unsigned long flags;
+> > > +       unsigned int any_err = 0;
+> > > +       __le32 rxfsm;
+> > > +
+> > > +       npcm7xx_get_and_clear_int(netdev, &status, 0xFFFF);
+> >
+> > Same here
+>
+> in non error case I do leave only the error interrupts and schedule napi.
+
+Oh, so the Rx interrupt remains suppressed. Then that's fine.
+
+> > > +static const struct net_device_ops npcm7xx_ether_netdev_ops = {
+> > > +       .ndo_open               = npcm7xx_ether_open,
+> > > +       .ndo_stop               = npcm7xx_ether_close,
+> > > +       .ndo_start_xmit         = npcm7xx_ether_start_xmit,
+> > > +       .ndo_get_stats          = npcm7xx_ether_stats,
+> > > +       .ndo_set_rx_mode        = npcm7xx_ether_set_rx_mode,
+> > > +       .ndo_set_mac_address    = npcm7xx_set_mac_address,
+> > > +       .ndo_do_ioctl           = npcm7xx_ether_ioctl,
+> > > +       .ndo_validate_addr      = eth_validate_addr,
+> > > +       .ndo_change_mtu         = eth_change_mtu,
+> >
+> > This is marked as deprecated. Also in light of the hardcoded
+> > MAX_PACKET_SIZE, probably want to set dev->max_mtu.
+>
+> can I just not set .ndo_change_mtu? or I must add my own implementation?
+> setting of dev->max_mtu, can be done in probe, yes?
+
+It's fine to just not have it. The patchset that introduced max_mtu
+(61e84623ace3, a52ad514fdf3) removed many.
+
+One reason to have a callback function is to bring the device down/up
+with different sized rx buffers.
+
+But handling that might be too much extra complexity for the initial
+patch. It's fine to keep the fixed rx alloc size as is.
+
+> BTW, I see that currently the mtu is 1500 but I do get transactions
+> with len of 1514 (I didn't compile with VLAN)
+
+That is to be expected, as MTU excludes link layer header (and FCS,
+and perhaps also vlan?)
