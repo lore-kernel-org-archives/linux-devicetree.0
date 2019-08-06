@@ -1,11 +1,14 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v4 09/10] MAINTAINERS: add Mediatek shutdown drivers
-Date: Tue,  6 Aug 2019 18:30:25 +0200
-Message-ID: <20190806163026.8530-1-frank-w@public-files.de>
+Subject: [PATCH v4 10/10] arm: dts: mt6323: add keys, power-controller,
+ rtc and codec
+Date: Tue,  6 Aug 2019 18:30:26 +0200
+Message-ID: <20190806163026.8530-2-frank-w@public-files.de>
+References: <20190806163026.8530-1-frank-w@public-files.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190806163026.8530-1-frank-w@public-files.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,34 +24,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-add Section in MAINTAINERS file for poweroff driver
+support poweroff and power-related keys on bpi-r2
 
+Suggested-by: Frank Wunderlich <frank-w@public-files.de>
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
-changes since v3: moved SOB
-changes since v2: none (=v2 part 6)
+changes since v3: none
+changes since v2: none (=v2 part 7)
 
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6426db5198f0..4172a3177633 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10128,6 +10128,13 @@ S:	Maintained
- F:	drivers/net/dsa/mt7530.*
- F:	net/dsa/tag_mtk.c
- 
-+MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
-+M:	Sean Wang <sean.wang@mediatek.com>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-+F:	drivers/power/reset/mt6323-poweroff.c
+diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
+index ba397407c1dd..7fda40ab5fe8 100644
+--- a/arch/arm/boot/dts/mt6323.dtsi
++++ b/arch/arm/boot/dts/mt6323.dtsi
+@@ -238,5 +238,32 @@
+ 				regulator-enable-ramp-delay = <216>;
+ 			};
+ 		};
 +
- MEDIATEK JPEG DRIVER
- M:	Rick Chang <rick.chang@mediatek.com>
- M:	Bin Liu <bin.liu@mediatek.com>
++		mt6323keys: mt6323keys {
++			compatible = "mediatek,mt6323-keys";
++			mediatek,long-press-mode = <1>;
++			power-off-time-sec = <0>;
++
++			power {
++				linux,keycodes = <116>;
++				wakeup-source;
++			};
++
++			home {
++				linux,keycodes = <114>;
++			};
++		};
++
++		codec: mt6397codec {
++			compatible = "mediatek,mt6397-codec";
++		};
++
++		power-controller {
++			compatible = "mediatek,mt6323-pwrc";
++		};
++
++		rtc {
++			compatible = "mediatek,mt6323-rtc";
++		};
+ 	};
+ };
 -- 
 2.17.1
