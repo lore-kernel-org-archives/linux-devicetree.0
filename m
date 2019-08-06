@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 11/20] arm64: dts: marvell: Fix CP110 NAND controller node
- multi-line comment alignment
-Date: Tue,  6 Aug 2019 16:54:51 +0200
-Message-ID: <20190806145500.24109-12-miquel.raynal@bootlin.com>
+Subject: [PATCH 10/20] arm64: dts: marvell: Add AP807-quad cache description
+Date: Tue,  6 Aug 2019 16:54:50 +0200
+Message-ID: <20190806145500.24109-11-miquel.raynal@bootlin.com>
 References: <20190806145500.24109-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,32 +21,90 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Fix this tiny typo before renaming/changing this file.
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
 
-Fixes: 72a3713fadfd ("arm64: dts: marvell: de-duplicate CP110 description")
+Adding appropriate entries to device-tree allows the cache description
+to show up in sysfs under: /sys/devices/system/cpu/cpuX/cache/.
+
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../boot/dts/marvell/armada-ap807-quad.dtsi   | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index d81944902650..8259fc8f86f2 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -438,10 +438,10 @@
- 
- 		CP110_LABEL(nand_controller): nand@720000 {
- 			/*
--			* Due to the limitation of the pins available
--			* this controller is only usable on the CPM
--			* for A7K and on the CPS for A8K.
--			*/
-+			 * Due to the limitation of the pins available
-+			 * this controller is only usable on the CPM
-+			 * for A7K and on the CPS for A8K.
-+			 */
- 			compatible = "marvell,armada-8k-nand-controller",
- 				"marvell,armada370-nand-controller";
- 			reg = <0x720000 0x54>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+index 65364691257d..840466e143b4 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+@@ -22,6 +22,13 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 			clocks = <&cpu_clk 0>;
++			i-cache-size = <0xc000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <256>;
++			next-level-cache = <&l2_0>;
+ 		};
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+@@ -30,6 +37,13 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 			clocks = <&cpu_clk 0>;
++			i-cache-size = <0xc000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <256>;
++			next-level-cache = <&l2_0>;
+ 		};
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+@@ -38,6 +52,13 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 			clocks = <&cpu_clk 1>;
++			i-cache-size = <0xc000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <256>;
++			next-level-cache = <&l2_1>;
+ 		};
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+@@ -46,6 +67,27 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>;
+ 			clocks = <&cpu_clk 1>;
++			i-cache-size = <0xc000>;
++			i-cache-line-size = <64>;
++			i-cache-sets = <256>;
++			d-cache-size = <0x8000>;
++			d-cache-line-size = <64>;
++			d-cache-sets = <256>;
++			next-level-cache = <&l2_1>;
++		};
++
++		l2_0: l2-cache0 {
++			compatible = "cache";
++			cache-size = <0x80000>;
++			cache-line-size = <64>;
++			cache-sets = <512>;
++		};
++
++		l2_1: l2-cache1 {
++			compatible = "cache";
++			cache-size = <0x80000>;
++			cache-line-size = <64>;
++			cache-sets = <512>;
+ 		};
+ 	};
+ };
 -- 
 2.20.1
