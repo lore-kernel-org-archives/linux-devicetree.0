@@ -1,86 +1,150 @@
-From: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Subject: [PATCH v8 4/4] arm64: dts: allwinner: orange-pi-3:
- Enable HDMI output
-Date: Tue,  6 Aug 2019 17:57:43 +0200
-Message-ID: <20190806155744.10263-5-megous@megous.com>
+From: megous@megous.com
+Subject: [PATCH v8 3/4] drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
+Date: Tue,  6 Aug 2019 17:57:42 +0200
+Message-ID: <20190806155744.10263-4-megous@megous.com>
 References: <20190806155744.10263-1-megous@megous.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBAOHU3VAKGQEWA72O2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190806155744.10263-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190806155744.10263-1-megous@megous.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc: Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+From: Ondrej Jirman <megous@megous.com>
 
-Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
-I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
-This is realized by the ddc-en-gpios property.
+Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
+for the DDC bus to be usable.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Add support for hdmi-connector node's optional ddc-en-gpios property to
+support this use case.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 54 +++++++++++++++++++++++++--
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
+ 2 files changed, 52 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 2c6807b74ff6..01bb1bafe284 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -22,6 +22,18 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+index 8ca5af0c912f..a44dca4b0219 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+@@ -97,10 +97,34 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
+ 	return crtcs;
+ }
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
-+		type = "a";
++static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
++					     struct platform_device **pdev_out)
++{
++	struct platform_device *pdev;
++	struct device_node *remote;
 +
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
++	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
++	if (!remote)
++		return -ENODEV;
 +
- 	leds {
- 		compatible = "gpio-leds";
++	if (!of_device_is_compatible(remote, "hdmi-connector")) {
++		of_node_put(remote);
++		return -ENODEV;
++	}
++
++	pdev = of_find_device_by_node(remote);
++	of_node_put(remote);
++	if (!pdev)
++		return -ENODEV;
++
++	*pdev_out = pdev;
++	return 0;
++}
++
+ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 			      void *data)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
++	struct platform_device *pdev = to_platform_device(dev), *connector_pdev;
+ 	struct dw_hdmi_plat_data *plat_data;
+ 	struct drm_device *drm = data;
+ 	struct device_node *phy_node;
+@@ -150,16 +174,30 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 		return PTR_ERR(hdmi->regulator);
+ 	}
  
-@@ -72,6 +84,10 @@
- 	cpu-supply = <&reg_dcdca>;
++	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &connector_pdev);
++	if (!ret) {
++		hdmi->ddc_en = gpiod_get_optional(&connector_pdev->dev,
++						  "ddc-en", GPIOD_OUT_HIGH);
++		platform_device_put(connector_pdev);
++
++		if (IS_ERR(hdmi->ddc_en)) {
++			dev_err(dev, "Couldn't get ddc-en gpio\n");
++			return PTR_ERR(hdmi->ddc_en);
++		}
++	}
++
+ 	ret = regulator_enable(hdmi->regulator);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to enable regulator\n");
+-		return ret;
++		goto err_unref_ddc_en;
+ 	}
+ 
++	gpiod_set_value(hdmi->ddc_en, 1);
++
+ 	ret = reset_control_deassert(hdmi->rst_ctrl);
+ 	if (ret) {
+ 		dev_err(dev, "Could not deassert ctrl reset control\n");
+-		goto err_disable_regulator;
++		goto err_disable_ddc_en;
+ 	}
+ 
+ 	ret = clk_prepare_enable(hdmi->clk_tmds);
+@@ -212,8 +250,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ err_assert_ctrl_reset:
+ 	reset_control_assert(hdmi->rst_ctrl);
+-err_disable_regulator:
++err_disable_ddc_en:
++	gpiod_set_value(hdmi->ddc_en, 0);
+ 	regulator_disable(hdmi->regulator);
++err_unref_ddc_en:
++	if (hdmi->ddc_en)
++		gpiod_put(hdmi->ddc_en);
+ 
+ 	return ret;
+ }
+@@ -227,7 +269,11 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
+ 	sun8i_hdmi_phy_remove(hdmi);
+ 	clk_disable_unprepare(hdmi->clk_tmds);
+ 	reset_control_assert(hdmi->rst_ctrl);
++	gpiod_set_value(hdmi->ddc_en, 0);
+ 	regulator_disable(hdmi->regulator);
++
++	if (hdmi->ddc_en)
++		gpiod_put(hdmi->ddc_en);
+ }
+ 
+ static const struct component_ops sun8i_dw_hdmi_ops = {
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index 720c5aa8adc1..d707c9171824 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -9,6 +9,7 @@
+ #include <drm/bridge/dw_hdmi.h>
+ #include <drm/drm_encoder.h>
+ #include <linux/clk.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+@@ -190,6 +191,7 @@ struct sun8i_dw_hdmi {
+ 	struct regulator		*regulator;
+ 	const struct sun8i_dw_hdmi_quirks *quirks;
+ 	struct reset_control		*rst_ctrl;
++	struct gpio_desc		*ddc_en;
  };
  
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -91,6 +107,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ static inline struct sun8i_dw_hdmi *
 -- 
 2.22.0
