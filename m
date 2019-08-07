@@ -1,7 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to fec
-Date: Wed, 7 Aug 2019 08:26:34 +0000
-Message-ID: <20190807082556.5013-15-philippe.schenker@toradex.com>
+Subject: [PATCH v3 15/21] ARM: dts: imx6ull-colibri: reduce v_batt current in
+ power off
+Date: Wed, 7 Aug 2019 08:26:36 +0000
+Message-ID: <20190807082556.5013-16-philippe.schenker@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -14,55 +15,52 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Do not change the clock as the power for this phy is switched
-with that clock.
+From: Max Krummenacher <max.krummenacher@toradex.com>
 
+Reduce the current drawn from VCC_BATT when the main power on the 3V3
+pins to the module are switched off.
+
+This switches off SoC internal pull resistors which are provided on the
+module for TAMPER7 and TAMPER9 SoC pin and switches on a pull down
+instead of a pullup for the USBC_DET module pin (TAMPER2).
+
+Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
 6ull-colibri.dtsi
-index d56728f03c35..1019ce69a242 100644
+index 1019ce69a242..1f112ec55e5c 100644
 --- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -62,8 +62,9 @@
- };
+@@ -533,19 +533,19 @@
 =20
- &fec2 {
--	pinctrl-names =3D "default";
-+	pinctrl-names =3D "default", "sleep";
- 	pinctrl-0 =3D <&pinctrl_enet2>;
-+	pinctrl-1 =3D <&pinctrl_enet2_sleep>;
- 	phy-mode =3D "rmii";
- 	phy-handle =3D <&ethphy1>;
- 	status =3D "okay";
-@@ -220,6 +221,21 @@
+ 	pinctrl_snvs_ad7879_int: snvs-ad7879-int-grp { /* TOUCH Interrupt */
+ 		fsl,pins =3D <
+-			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
++			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x100b0
  		>;
  	};
 =20
-+	pinctrl_enet2_sleep: enet2sleepgrp {
-+		fsl,pins =3D <
-+			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
-+			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
-+			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
-+			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
-+			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-+			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
-+			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
-+			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
-+		>;
-+	};
-+
- 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
+ 	pinctrl_snvs_reg_sd: snvs-reg-sd-grp {
  		fsl,pins =3D <
- 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
+-			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x4001b8b0
++			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x400100b0
+ 		>;
+ 	};
+=20
+ 	pinctrl_snvs_usbc_det: snvs-usbc-det-grp {
+ 		fsl,pins =3D <
+-			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
++			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
+ 		>;
+ 	};
+=20
 --=20
 2.22.0
