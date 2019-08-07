@@ -1,65 +1,127 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 1/7] ASoC: fsl_sai: Add registers
- definition for multiple datalines
-Date: Tue, 6 Aug 2019 18:12:23 -0700
-Message-ID: <20190807011222.GB8938@Asurada-Nvidia.nvidia.com>
-References: <20190728192429.1514-1-daniel.baluta@nxp.com>
- <20190728192429.1514-2-daniel.baluta@nxp.com>
- <20190729194214.GA20594@Asurada-Nvidia.nvidia.com>
- <CAEnQRZDmnAmgUkRGv3V5S7b5EnYTd2BO5NFuME2CfGb1=nAHzQ@mail.gmail.com>
- <20190729202001.GC4787@sirena.org.uk>
- <20190730075934.GA5892@Asurada>
- <CAEnQRZBpQPoi5OH--c=ubKYc6B3rspmVnb846UTFW7P5SE62ww@mail.gmail.com>
+From: Atish Patra <Atish.Patra@wdc.com>
+Subject: Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
+Date: Wed, 7 Aug 2019 01:13:16 +0000
+Message-ID: <1e23ef1face9d323fda4b756811f922caa5f7689.camel@wdc.com>
+References: <20190801005843.10343-1-atish.patra@wdc.com>
+         <20190801005843.10343-4-atish.patra@wdc.com>
+         <alpine.DEB.2.21.9999.1908061625190.13971@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAEnQRZBpQPoi5OH--c=ubKYc6B3rspmVnb846UTFW7P5SE62ww@mail.gmail.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1908061625190.13971@viisi.sifive.com>
+Content-Language: en-US
+Content-ID: <491CCE35E6E1AF498E1AE2926EFFB451@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Timur Tabi <timur@kernel.org>, Rob Herring <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Takashi Iwai <tiwai@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, Fabio Estevam <festevam@gmail.com>, Mihai Serban <mihai.serban@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+To: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Cc: "info@metux.net" <info@metux.net>, "allison@lohutok.net" <allison@lohutok.net>, "palmer@sifive.com" <palmer@sifive.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Anup Patel <Anup.Patel@wdc.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "johan@kernel.org" <johan@kernel.org>, "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 02:15:03PM +0300, Daniel Baluta wrote:
-> On Tue, Jul 30, 2019 at 10:59 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > On Mon, Jul 29, 2019 at 09:20:01PM +0100, Mark Brown wrote:
-> > > On Mon, Jul 29, 2019 at 10:57:43PM +0300, Daniel Baluta wrote:
-> > > > On Mon, Jul 29, 2019 at 10:42 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> > > > > On Sun, Jul 28, 2019 at 10:24:23PM +0300, Daniel Baluta wrote:
-> > >
-> > > > > > @@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
-> > > > > >       case FSL_SAI_TCR3:
-> > > > > >       case FSL_SAI_TCR4:
-> > > > > >       case FSL_SAI_TCR5:
-> > > > > > -     case FSL_SAI_TFR:
-> > > > > > +     case FSL_SAI_TFR0:
-> > >
-> > > > > A tricky thing here is that those SAI instances on older SoC don't
-> > > > > support multi data lines physically, while seemly having registers
-> > > > > pre-defined. So your change doesn't sound doing anything wrong to
-> > > > > them at all, I am still wondering if it is necessary to apply them
-> > > > > to newer compatible only though, as for older compatibles of SAI,
-> > > > > these registers would be useless and confusing if being exposed.
-> > >
-> > > > > What do you think?
-> > >
-> > > > Yes, I thought about this too. But, I tried to keep the code as short
-> > > > as possible and technically it is not wrong. When 1 data line is supported
-> > > > for example application will only care about TDR0, TFR0, etc.
-> > >
-> > > So long as it's safe to read the registers (you don't get a bus error or
-> > > anything) I'd say it's more trouble than it's worth to have separate
-> > > regmap configuations just for this.  The main reasons for restricting
-> > > readability are where there's physical problems with doing the reads or
-> > > to keep the size of the debugfs files under control for usability and
-> > > performance reasons.
-> >
-> > Thanks for the input, Mark.
-> >
-> > Daniel, did you get a chance to test it on older SoCs? At least
-> > nothing breaks like bus errors?
-> 
-> Tested on imx6sx-sdb, everything looks good. No bus errors.
-
-Okay. Let's just stick to it then. Thanks for the reply.
+T24gVHVlLCAyMDE5LTA4LTA2IGF0IDE2OjI3IC0wNzAwLCBQYXVsIFdhbG1zbGV5IHdyb3RlOg0K
+PiBPbiBXZWQsIDMxIEp1bCAyMDE5LCBBdGlzaCBQYXRyYSB3cm90ZToNCj4gDQo+ID4gQ3VycmVu
+dGx5LCBrZXJuZWwgcHJpbnRzIGEgaW5mbyB3YXJuaW5nIGlmIGFueSBvZiB0aGUgZXh0ZW5zaW9u
+cw0KPiA+IGZyb20gIm1hZmRjc3UiIGlzIG1pc3NpbmcgaW4gZGV2aWNlIHRyZWUuIFRoaXMgaXMg
+bm90IGVudGlyZWx5DQo+ID4gY29ycmVjdCBhcyBMaW51eCBjYW4gYm9vdCB3aXRoICJmIG9yIGQi
+IGV4dGVuc2lvbnMgaWYga2VybmVsIGlzDQo+ID4gY29uZmlndXJlZCBhY2NvcmRpbmdseS4gTW9y
+ZW92ZXIsIGl0IHdpbGwgY29udGludWUgdG8gcHJpbnQgdGhlDQo+ID4gaW5mbyBzdHJpbmcgZm9y
+IGZ1dHVyZSBleHRlbnNpb25zIHN1Y2ggYXMgaHlwZXJ2aXNvciBhcyB3ZWxsIHdoaWNoDQo+ID4g
+aXMgbWlzbGVhZGluZy4gL3Byb2MvY3B1aW5mbyBhbHNvIGRvZXNuJ3QgcHJpbnQgYW55IG90aGVy
+DQo+ID4gZXh0ZW5zaW9ucw0KPiA+IGV4Y2VwdCAibWFmZGNzdSIuDQo+ID4gDQo+ID4gTWFrZSBz
+dXJlIHRoYXQgaW5mbyBsb2cgaXMgb25seSBwcmludGVkIG9ubHkgaWYga2VybmVsIGlzDQo+ID4g
+Y29uZmlndXJlZA0KPiA+IHRvIGhhdmUgYW55IG1hbmRhdG9yeSBleHRlbnNpb25zIGJ1dCBkZXZp
+Y2UgdHJlZSBkb2Vzbid0IGRlc2NyaWJlDQo+ID4gaXQuDQo+ID4gQWxsIHRoZSBleHRlbnNpb25z
+IHByZXNlbnQgaW4gZGV2aWNlIHRyZWUgYW5kIGZvbGxvdyB0aGUgb3JkZXINCj4gPiBkZXNjcmli
+ZWQgaW4gdGhlIFJJU0MtViBzcGVjaWZpY2F0aW9uIChleGNlcHQgJ1MnKSBhcmUgcHJpbnRlZCB2
+aWENCj4gPiAvcHJvYy9jcHVpbmZvIGFsd2F5cy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
+dGlzaCBQYXRyYSA8YXRpc2gucGF0cmFAd2RjLmNvbT4NCj4gDQo+IEkgdGVzdGVkIHRoaXMgcGF0
+Y2ggYWZ0ZXIgZHJvcHBpbmcgdGhlIENPTkZJR19JU0FfUklTQ1ZfQyB0ZXN0IChzZWUgDQo+IGJl
+bG93KS4gIFJ1bm5pbmcgImNhdCAvcHJvYy9jcHVpbmZvIiBnZW5lcmF0ZWQgdGhlIGZvbGxvd2lu
+ZyBrZXJuZWwgDQo+IHdhcm5pbmdzOg0KPiAgICAgICAgICAgDQo+IFsgICA3My40MTI2MjZdIHVu
+c3VwcG9ydGVkIElTQSBleHRlbnNpb25zICJzdSIgaW4gZGV2aWNlIHRyZWUgZm9yIGNwdQ0KPiBb
+MF0NCj4gWyAgIDczLjQxODQxN10gdW5zdXBwb3J0ZWQgSVNBIGV4dGVuc2lvbnMgInN1IiBpbiBk
+ZXZpY2UgdHJlZSBmb3IgY3B1DQo+IFsxXQ0KPiBbICAgNzMuNDI0OTEyXSB1bnN1cHBvcnRlZCBJ
+U0EgZXh0ZW5zaW9ucyAic3UiIGluIGRldmljZSB0cmVlIGZvciBjcHUNCj4gWzJdDQo+IFsgICA3
+My40MzE0MjVdIHVuc3VwcG9ydGVkIElTQSBleHRlbnNpb25zICJzdSIgaW4gZGV2aWNlIHRyZWUg
+Zm9yIGNwdQ0KPiBbM10NCj4gDQoNCnllYWguIEkganVzdCB0ZXN0ZWQgaW4gUUVNVS4gSXQgc2Vl
+bXMgdGhhdCBRRU1VIGhhcyANCiJydjY0aW1hZmRjc3UiIGFzIGlzYSBzdHJpbmcgaW4gaXRzIERU
+LiBUaGF0J3Mgd2h5IEkgbmV2ZXIgc2F3IHRoaXMuDQoNCj4gU2VlbXMgbGlrZSB0aGUgInN1IiBz
+aG91bGQgYmUgZHJvcHBlZCBmcm9tIG1hbmRhdG9yeV9leHQuICBXaGF0IGRvDQo+IHlvdSANCj4g
+dGhpbms/DQo+IA0KDQpZdXAuIEFzIERUIGJpbmRpbmcgb25seSBtZW50aW9uIGltYWZkYywgbWFu
+ZGF0b3J5IGV4dGVuc2lvbnMgc2hvdWxkDQpjb250YWluIG9ubHkgdGhhdCBhbmQganVzdCBjb25z
+aWRlciAic3UiIGV4dGVuc2lvbnMgYXJlIGNvbnNpZGVyZWQgYXMNCmltcGxpY2l0IGFzIHdlIGFy
+ZSBydW5uaW5nIExpbnV4LiANCg0KRG8geW91IHRoaW5rIFFFTVUgRFQgc2hvdWxkIGJlIHVwZGF0
+ZWQgdG8gcmVmbGVjdCB0aGF0ID8NCg0KPiA+IC0tLQ0KPiA+ICBhcmNoL3Jpc2N2L2tlcm5lbC9j
+cHUuYyB8IDQ3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0NCj4gPiAtLS0t
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkN
+Cj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9rZXJuZWwvY3B1LmMgYi9hcmNoL3Jp
+c2N2L2tlcm5lbC9jcHUuYw0KPiA+IGluZGV4IDdkYTNjNmE5M2FiZC4uOWIxZDQ1NTBmYmU2IDEw
+MDY0NA0KPiA+IC0tLSBhL2FyY2gvcmlzY3Yva2VybmVsL2NwdS5jDQo+ID4gKysrIGIvYXJjaC9y
+aXNjdi9rZXJuZWwvY3B1LmMNCj4gPiBAQCAtNyw2ICs3LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxp
+bnV4L3NlcV9maWxlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICAjaW5jbHVk
+ZSA8YXNtL3NtcC5oPg0KPiA+ICsjaW5jbHVkZSA8YXNtL2h3Y2FwLmg+DQo+ID4gIA0KPiA+ICAv
+Kg0KPiA+ICAgKiBSZXR1cm5zIHRoZSBoYXJ0IElEIG9mIHRoZSBnaXZlbiBkZXZpY2UgdHJlZSBu
+b2RlLCBvciAtRU5PREVWDQo+ID4gaWYgdGhlIG5vZGUNCj4gPiBAQCAtNDYsMTEgKzQ3LDE0IEBA
+IGludCByaXNjdl9vZl9wcm9jZXNzb3JfaGFydGlkKHN0cnVjdA0KPiA+IGRldmljZV9ub2RlICpu
+b2RlKQ0KPiA+ICANCj4gPiAgI2lmZGVmIENPTkZJR19QUk9DX0ZTDQo+ID4gIA0KPiA+IC1zdGF0
+aWMgdm9pZCBwcmludF9pc2Eoc3RydWN0IHNlcV9maWxlICpmLCBjb25zdCBjaGFyICpvcmlnX2lz
+YSkNCj4gPiArc3RhdGljIHZvaWQgcHJpbnRfaXNhKHN0cnVjdCBzZXFfZmlsZSAqZiwgY29uc3Qg
+Y2hhciAqb3JpZ19pc2EsDQo+ID4gKwkJICAgICAgdW5zaWduZWQgbG9uZyBjcHVpZCkNCj4gPiAg
+ew0KPiA+IC0Jc3RhdGljIGNvbnN0IGNoYXIgKmV4dCA9ICJtYWZkY3N1IjsNCj4gPiArCXN0YXRp
+YyBjb25zdCBjaGFyICptYW5kYXRvcnlfZXh0ID0gIm1hZmRjc3UiOw0KPiA+ICAJY29uc3QgY2hh
+ciAqaXNhID0gb3JpZ19pc2E7DQo+ID4gIAljb25zdCBjaGFyICplOw0KPiA+ICsJY2hhciB1bnN1
+cHBvcnRlZF9pc2FbMjZdID0gezB9Ow0KPiA+ICsJaW50IGluZGV4ID0gMDsNCj4gPiAgDQo+ID4g
+IAkvKg0KPiA+ICAJICogTGludXggZG9lc24ndCBzdXBwb3J0IHJ2MzJlIG9yIHJ2MTI4aSwgYW5k
+IHdlIG9ubHkgc3VwcG9ydA0KPiA+IGJvb3RpbmcNCj4gPiBAQCAtNzAsMjcgKzc0LDUwIEBAIHN0
+YXRpYyB2b2lkIHByaW50X2lzYShzdHJ1Y3Qgc2VxX2ZpbGUgKmYsIGNvbnN0DQo+ID4gY2hhciAq
+b3JpZ19pc2EpDQo+ID4gIAlpc2EgKz0gNTsNCj4gPiAgDQo+ID4gIAkvKg0KPiA+IC0JICogQ2hl
+Y2sgdGhlIHJlc3Qgb2YgdGhlIElTQSBzdHJpbmcgZm9yIHZhbGlkIGV4dGVuc2lvbnMsDQo+ID4g
+cHJpbnRpbmcgdGhvc2UNCj4gPiAtCSAqIHdlIGZpbmQuICBSSVNDLVYgSVNBIHN0cmluZ3MgZGVm
+aW5lIGFuIG9yZGVyLCBzbyB3ZSBvbmx5DQo+ID4gcHJpbnQgdGhlDQo+ID4gKwkgKiBSSVNDLVYg
+SVNBIHN0cmluZ3MgZGVmaW5lIGFuIG9yZGVyLCBzbyB3ZSBvbmx5IHByaW50IGFsbCB0aGUNCj4g
+PiAgCSAqIGV4dGVuc2lvbiBiaXRzIHdoZW4gdGhleSdyZSBpbiBvcmRlci4gSGlkZSB0aGUgc3Vw
+ZXJ2aXNvcg0KPiA+IChTKQ0KPiA+ICAJICogZXh0ZW5zaW9uIGZyb20gdXNlcnNwYWNlIGFzIGl0
+J3Mgbm90IGFjY2Vzc2libGUgZnJvbSB0aGVyZS4NCj4gPiArCSAqIFRocm93IGEgd2FybmluZyBv
+bmx5IGlmIGFueSBtYW5kYXRvcnkgZXh0ZW5zaW9ucyBhcmUgbm90DQo+ID4gYXZhaWxhYmxlDQo+
+ID4gKwkgKiBhbmQga2VybmVsIGlzIGNvbmZpZ3VyZWQgdG8gaGF2ZSB0aGF0IG1hbmRhdG9yeSBl
+eHRlbnNpb25zLg0KPiA+ICAJICovDQo+ID4gLQlmb3IgKGUgPSBleHQ7ICplICE9ICdcMCc7ICsr
+ZSkgew0KPiA+IC0JCWlmIChpc2FbMF0gPT0gZVswXSkgew0KPiA+ICsJZm9yIChlID0gbWFuZGF0
+b3J5X2V4dDsgKmUgIT0gJ1wwJzsgKytlKSB7DQo+ID4gKwkJaWYgKGlzYVswXSAhPSBlWzBdKSB7
+DQo+ID4gKyNpZiBkZWZpbmVkKENPTkZJR19JU0FfUklTQ1ZfQykNCj4gDQo+IFRoZXJlJ3Mgbm8g
+S2NvbmZpZyBvcHRpb24gYnkgdGhpcyBuYW1lLCBhbmQgd2UncmUgcmVxdWlyaW5nDQo+IGNvbXBy
+ZXNzZWQgDQoNClNvcnJ5LiBUaGlzIHdhcyBhIHR5cG8uIEl0IHNob3VsZCBoYXZlIGJlZW4gQ09O
+RklHX1JJU0NWX0lTQV9DLg0KDQo+IGluc3RydWN0aW9uIHN1cHBvcnQgYXMgcGFydCBvZiB0aGUg
+UklTQy1WIExpbnV4IGJhc2VsaW5lLiAgQ291bGQgeW91DQo+IHNoYXJlIA0KPiB0aGUgcmF0aW9u
+YWxlIGJlaGluZCB0aGlzPyAgDQoNCkkgdGhpbmsgSSBhZGRlZCB0aGlzIGNoZWNrIGF0IHRoZSBj
+b25maWcgZmlsZS4gTG9va2luZyBhdCB0aGUgS2NvbmZpZywNClJJU0NWX0lTQV9DIGlzIGFsd2F5
+cyBlbmFibGVkLiBTbyB3ZSBjYW4gZHJvcCB0aGlzLg0KDQpSZWdhcmRzLA0KQXRpc2gNCj4gTG9v
+a3MgdG8gbWUgbGlrZSB0aGlzIHNob3VsZCBiZSBkcm9wcGVkLg0KPiANCj4gDQo+ID4gKwkJCWlm
+IChpc2FbMF0gPT0gJ2MnKQ0KPiA+ICsJCQkJY29udGludWU7DQo+ID4gKyNlbmRpZg0KPiA+ICsj
+aWYgZGVmaW5lZChDT05GSUdfRlApDQo+ID4gKwkJCWlmICgoaXNhWzBdID09ICdmJykgfHwgKGlz
+YVswXSA9PSAnZCcpKQ0KPiA+ICsJCQkJY29udGludWU7DQo+ID4gKyNlbmRpZg0KPiA+ICsJCQl1
+bnN1cHBvcnRlZF9pc2FbaW5kZXhdID0gZVswXTsNCj4gPiArCQkJaW5kZXgrKzsNCj4gPiArCQl9
+DQo+ID4gKwkJLyogT25seSB3cml0ZSBpZiBwYXJ0IG9mIGlzYSBzdHJpbmcgKi8NCj4gPiArCQlp
+ZiAoaXNhWzBdICE9ICdcMCcpIHsNCj4gPiAgCQkJaWYgKGlzYVswXSAhPSAncycpDQo+ID4gIAkJ
+CQlzZXFfd3JpdGUoZiwgaXNhLCAxKTsNCj4gPiAtDQo+ID4gIAkJCWlzYSsrOw0KPiA+ICAJCX0N
+Cj4gPiAgCX0NCj4gPiArCWlmIChpc2FbMF0gIT0gJ1wwJykgew0KPiA+ICsJCS8qIEFkZCByZW1h
+aW5naW5nIGlzYSBzdHJpbmdzICovDQo+ID4gKwkJZm9yIChlID0gaXNhOyAqZSAhPSAnXDAnOyAr
+K2UpIHsNCj4gPiArI2lmICFkZWZpbmVkKENPTkZJR19WSVJUVUFMSVpBVElPTikNCj4gPiArCQkJ
+aWYgKGVbMF0gIT0gJ2gnKQ0KPiA+ICsjZW5kaWYNCj4gPiArCQkJCXNlcV93cml0ZShmLCBlLCAx
+KTsNCj4gPiArCQl9DQo+ID4gKwl9DQo+ID4gIAlzZXFfcHV0cyhmLCAiXG4iKTsNCj4gPiAgDQo+
+ID4gIAkvKg0KPiA+ICAJICogSWYgd2Ugd2VyZSBnaXZlbiBhbiB1bnN1cHBvcnRlZCBJU0EgaW4g
+dGhlIGRldmljZSB0cmVlIHRoZW4NCj4gPiBwcmludA0KPiA+ICAJICogYSBiaXQgb2YgaW5mbyBk
+ZXNjcmliaW5nIHdoYXQgd2VudCB3cm9uZy4NCj4gPiAgCSAqLw0KPiA+IC0JaWYgKGlzYVswXSAh
+PSAnXDAnKQ0KPiA+IC0JCXByX2luZm8oInVuc3VwcG9ydGVkIElTQSBcIiVzXCIgaW4gZGV2aWNl
+IHRyZWVcbiIsDQo+ID4gb3JpZ19pc2EpOw0KPiA+ICsJaWYgKHVuc3VwcG9ydGVkX2lzYVswXSkN
+Cj4gPiArCQlwcl9pbmZvKCJ1bnN1cHBvcnRlZCBJU0EgZXh0ZW5zaW9ucyBcIiVzXCIgaW4gZGV2
+aWNlDQo+ID4gdHJlZSBmb3IgY3B1IFslbGRdXG4iLA0KPiA+ICsJCQl1bnN1cHBvcnRlZF9pc2Es
+IGNwdWlkKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiAgc3RhdGljIHZvaWQgcHJpbnRfbW11KHN0cnVj
+dCBzZXFfZmlsZSAqZiwgY29uc3QgY2hhciAqbW11X3R5cGUpDQo+ID4gQEAgLTEzNCw3ICsxNjEs
+NyBAQCBzdGF0aWMgaW50IGNfc2hvdyhzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKnYpDQo+ID4g
+IAlzZXFfcHJpbnRmKG0sICJwcm9jZXNzb3JcdDogJWx1XG4iLCBjcHVfaWQpOw0KPiA+ICAJc2Vx
+X3ByaW50ZihtLCAiaGFydFx0XHQ6ICVsdVxuIiwgY3B1aWRfdG9faGFydGlkX21hcChjcHVfaWQp
+KTsNCj4gPiAgCWlmICghb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcobm9kZSwgInJpc2N2LGlzYSIs
+ICZpc2EpKQ0KPiA+IC0JCXByaW50X2lzYShtLCBpc2EpOw0KPiA+ICsJCXByaW50X2lzYShtLCBp
+c2EsIGNwdV9pZCk7DQo+ID4gIAlpZiAoIW9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5vZGUsICJt
+bXUtdHlwZSIsICZtbXUpKQ0KPiA+ICAJCXByaW50X21tdShtLCBtbXUpOw0KPiA+ICAJaWYgKCFv
+Zl9wcm9wZXJ0eV9yZWFkX3N0cmluZyhub2RlLCAiY29tcGF0aWJsZSIsICZjb21wYXQpDQo+ID4g
+LS0gDQo+ID4gMi4yMS4wDQo+ID4gDQo+ID4gDQo+IA0KPiAtIFBhdWwNCg0K
