@@ -1,7 +1,7 @@
 From: fugang.duan@nxp.com
-Subject: [PATCH nvmem v2 2/2] dt-bindings: fsl: scu: add new compatible string for ocotp
-Date: Wed,  7 Aug 2019 12:03:20 +0800
-Message-ID: <20190807040320.1760-3-fugang.duan@nxp.com>
+Subject: [PATCH nvmem v2 1/2] nvmem: imx: add i.MX8QM platform support
+Date: Wed,  7 Aug 2019 12:03:19 +0800
+Message-ID: <20190807040320.1760-2-fugang.duan@nxp.com>
 References: <20190807040320.1760-1-fugang.duan@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190807040320.1760-1-fugang.duan@nxp.com>
@@ -12,28 +12,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fugang Duan <fugang.duan@nxp.com>
 
-Add new compatible string "fsl,imx8qm-scu-ocotp" into binding
-doc  for i.MX8 SCU OCOTP driver.
+i.MX8QM efuse table has some difference with i.MX8QXP platform,
+so add i.MX8QM platform support.
 
 Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
 ---
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/nvmem/imx-ocotp-scu.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index a575e42..c149fad 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -136,7 +136,9 @@ Required properties:
- OCOTP bindings based on SCU Message Protocol
- ------------------------------------------------------------
- Required properties:
--- compatible:		Should be "fsl,imx8qxp-scu-ocotp"
-+- compatible:		Should be one of:
-+			"fsl,imx8qm-scu-ocotp",
-+			"fsl,imx8qxp-scu-ocotp".
- - #address-cells:	Must be 1. Contains byte index
- - #size-cells:		Must be 1. Contains byte length
+diff --git a/drivers/nvmem/imx-ocotp-scu.c b/drivers/nvmem/imx-ocotp-scu.c
+index be2f5f0..0d78ab4 100644
+--- a/drivers/nvmem/imx-ocotp-scu.c
++++ b/drivers/nvmem/imx-ocotp-scu.c
+@@ -16,6 +16,7 @@
  
+ enum ocotp_devtype {
+ 	IMX8QXP,
++	IMX8QM,
+ };
+ 
+ struct ocotp_devtype_data {
+@@ -39,6 +40,11 @@ static struct ocotp_devtype_data imx8qxp_data = {
+ 	.nregs = 800,
+ };
+ 
++static struct ocotp_devtype_data imx8qm_data = {
++	.devtype = IMX8QM,
++	.nregs = 800,
++};
++
+ static int imx_sc_misc_otp_fuse_read(struct imx_sc_ipc *ipc, u32 word,
+ 				     u32 *val)
+ {
+@@ -118,6 +124,7 @@ static struct nvmem_config imx_scu_ocotp_nvmem_config = {
+ 
+ static const struct of_device_id imx_scu_ocotp_dt_ids[] = {
+ 	{ .compatible = "fsl,imx8qxp-scu-ocotp", (void *)&imx8qxp_data },
++	{ .compatible = "fsl,imx8qm-scu-ocotp", (void *)&imx8qm_data },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, imx_scu_ocotp_dt_ids);
 -- 
 2.7.4
