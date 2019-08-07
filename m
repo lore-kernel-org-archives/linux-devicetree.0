@@ -1,36 +1,38 @@
-From: Anup Patel <anup@brainfault.org>
-Subject: Re: [PATCH v4 2/4] RISC-V: Add riscv_isa reprensenting ISA features
- common across CPUs
-Date: Wed, 7 Aug 2019 12:25:35 +0530
-Message-ID: <CAAhSdy2eP+z28XJmP9O6YPftQ=Rg6AwdSrVwu83igrfvYSRKhw@mail.gmail.com>
-References: <20190803042723.7163-1-atish.patra@wdc.com> <20190803042723.7163-3-atish.patra@wdc.com>
- <20190807065119.GA7825@infradead.org>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 0/7] Add support for Qualcomm SM8150 and SC7180 SoCs
+Date: Wed,  7 Aug 2019 12:39:50 +0530
+Message-ID: <20190807070957.30655-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807065119.GA7825@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Atish Patra <atish.patra@wdc.com>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Alan Kao <alankao@andestech.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Anup Patel <anup.patel@wdc.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv <linux-riscv@lists.infradead.org>, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org
+Cc: mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 12:21 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Fri, Aug 02, 2019 at 09:27:21PM -0700, Atish Patra wrote:
-> > From: Anup Patel <anup.patel@wdc.com>
-> >
-> > This patch adds riscv_isa integer to represent ISA features common
-> > across all CPUs. The riscv_isa is not same as elf_hwcap because
-> > elf_hwcap will only have ISA features relevant for user-space apps
-> > whereas riscv_isa will have ISA features relevant to both kernel
-> > and user-space apps.
-> >
-> > One of the use case is KVM hypervisor where riscv_isa will be used
-> > to do following operations:
->
-> Please add this to the kvm series.  Right now this is just dead code.
+This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
+support on SM8150 and SC7180 SoCs.
 
-Sure, I will include this patch in KVM series.
+v2:
+ * re-arrange the compatible lists in sort order
 
-Regards,
-Anup
+Sibi Sankar (7):
+  soc: qcom: smem: Update max processor count
+  dt-bindings: firmware: scm: re-order compatible list
+  dt-bindings: firmware: scm: Add SM8150 and SC7180 support
+  dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
+  mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+  dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
+  soc: qcom: aoss: Add AOSS QMP support
+
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 4 +++-
+ .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
+ Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 ++++-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
+ drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
+ drivers/soc/qcom/smem.c                                      | 2 +-
+ 6 files changed, 14 insertions(+), 3 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
