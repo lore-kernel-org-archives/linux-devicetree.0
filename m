@@ -1,62 +1,93 @@
-From: Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH] arm64: dts: rockchip: add rk3328 VPU node
-Date: Wed, 7 Aug 2019 15:20:37 +0000
-Message-ID: <HE1PR06MB4011E3DA40C22EA9FC337F53ACD40@HE1PR06MB4011.eurprd06.prod.outlook.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
+ support
+Date: Wed, 7 Aug 2019 10:22:12 -0500
+Message-ID: <85b4a2c4-761e-bdcf-f05e-2fb16c06f11e@linux.intel.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com>
+ <20190723084104.12639-4-daniel.baluta@nxp.com>
+ <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+ <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
+ <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add a VPU device node for rk3328.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+>>>> +static int sof_dt_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +     struct device *dev = &pdev->dev;
+>>>> +     const struct sof_dev_desc *desc;
+>>>> +     /*TODO: create a generic snd_soc_xxx_mach */
+>>>> +     struct snd_soc_acpi_mach *mach;
+>>>
+>>> I wonder if you really need to use the same structures. For Intel we get
+>>> absolutely zero info from the firmware so rely on an ACPI codec ID as a
+>>> key to find information on which firmware and topology to use, and which
+>>> machine driver to load. You could have all this information in a DT blob?
+>>
+>> Yes. I see your point. I will still need to make a generic structure for
+>> snd_soc_acpi_mach so that everyone can use sof_nocodec_setup function.
+>>
+>> Maybe something like this:
+>>
+>> struct snd_soc_mach {
+>>    union {
+>>    struct snd_soc_acpi_mach acpi_mach;
+>>    struct snd_soc_of_mach of_mach;
+>>    }
+>> };
+>>
+>> and then change the prototype of sof_nocodec_setup.
+> 
+> Hi Pierre,
+> 
+> I fixed all the comments except the one above. Replacing snd_soc_acpi_mach
+> with a generic snd_soc_mach is not trivial task.
+> 
+> I wonder if it is acceptable to get the initial patches as they are
+> now and later switch to
+> generic ACPI/OF abstraction.
+> 
+> Asking this because for the moment on the i.MX side I have only
+> implemented no codec
+> version and we don't probe any of the machine drivers we have.
+> 
+> So, there is this only one member of snd_soc_acpi_mach that imx
+> version is making use of:
+> 
+>    mach->drv_name = "sof-nocodec";
+> 
+> That's all.
+> 
+> I think the change as it is now is very clean and non-intrusive. Later
+> we will get options to
+> read firmware name and stuff from DT.
+> 
+> Anyhow, I don't think we can get rid of snd_dev_desc structure on
+> i.MX. This will be used
+> to store the information read from DT:
+> 
+> static struct sof_dev_desc sof_of_imx8qxp_desc = {
+> »       .default_fw_path = "imx/sof",
+> »       .default_tplg_path = "imx/sof-tplg",
+> »       .nocodec_fw_filename = "sof-imx8.ri",
+> »       .nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
+> »       .ops = &sof_imx8_ops,
+> };
+> 
+> For the moment we will only use the default values.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index e9fefd8a7e02..4a175fff2861 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -278,6 +278,7 @@
- 			};
- 			pd_vpu@RK3328_PD_VPU {
- 				reg = <RK3328_PD_VPU>;
-+				clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 			};
- 		};
- 
-@@ -596,6 +597,17 @@
- 		status = "disabled";
- 	};
- 
-+	vpu: video-codec@ff350000 {
-+		compatible = "rockchip,rk3328-vpu";
-+		reg = <0x0 0xff350000 0x0 0x800>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vdpu";
-+		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vpu_mmu>;
-+		power-domains = <&power RK3328_PD_VPU>;
-+	};
-+
- 	vpu_mmu: iommu@ff350800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff350800 0x0 0x40>;
-@@ -604,7 +616,7 @@
- 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
--		status = "disabled";
-+		power-domains = <&power RK3328_PD_VPU>;
- 	};
- 
- 	rkvdec_mmu: iommu@ff360480 {
--- 
-2.17.1
+Yes, that's fine for now. If you don't have a real machine driver then 
+there's nothing urgent to change.
+
+Is the new version on GitHub?
+
+Thanks
+-Pierre
