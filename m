@@ -1,47 +1,69 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv3 1/3] dt-bindings: interconnect: Add bindings for imx
-Date: Wed, 7 Aug 2019 22:35:07 +0000
-Message-ID: <VI1PR04MB7023CE6687A6D31D8BCB3E4EEED40@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1565088423.git.leonard.crestez@nxp.com>
- <90561b14af66655ca859d387b3808a84641eea4e.1565088423.git.leonard.crestez@nxp.com>
- <123536fc-c3ce-5bfe-fbd6-20cde0c13cc0@linaro.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: imx8mn: Fix tab indentation for yaml file
+Date: Wed, 07 Aug 2019 16:59:22 -0700
+Message-ID: <20190807235923.9D714217D9@mail.kernel.org>
+References: <20190725020551.27034-1-Anson.Huang@nxp.com> <20190725210619.5EB94218D4@mail.kernel.org> <CAL_JsqKZHG-y_cKitU0=EksgyVU-YLOi1gAcFXx4ve21CMki1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Saravana Kannan <saravanak@google.com>, Anson Huang <anson.huang@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>d
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKZHG-y_cKitU0=EksgyVU-YLOi1gAcFXx4ve21CMki1g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/7/2019 6:16 PM, Georgi Djakov wrote:
+Quoting Rob Herring (2019-07-25 14:37:24)
+> On Thu, Jul 25, 2019 at 3:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Anson.Huang@nxp.com (2019-07-24 19:05:51)
+> > > From: Anson Huang <Anson.Huang@nxp.com>
+> > >
+> > > YAML file can NOT contain tab as indentation, fix it.
+> > >
+> >
+> > Would be nice if checkpatch could check for this.
+>=20
+> Would be nice if folks just ran 'make dt_binding_check'. :) It
+> wouldn't be hard to add a tab check to checkpatch, but that's just one
+> potential problem.
+>=20
 
-> Please put some commit text.
+Cool, thanks for the pointer. Seems I forgot :)
 
-Will fix
+Here's a patch to improve the documentation and make help to answer
+questions I had about how to work this into my workflow.
 
->> +properties:
->> +  compatible:
->> +    contains:
->> +      enum:
->> +        - fsl,imx8mm-interconnect
-> 
-> Maybe fsl,imx8mm-busfreq? I thought it's called busfreq in downstream, but it's
-> up to you.
-
-In the vendor tree busfreq is effectively its own subsystem with its own 
-API calls used by imx drivers. As part of replacing this with standard 
-devfreq + interconnect in upstream the old name should go away.
-
---
-Regards,
-Leonard
+diff --git a/Documentation/devicetree/writing-schema.md b/Documentation/dev=
+icetree/writing-schema.md
+index dc032db36262..17ad67887fde 100644
+--- a/Documentation/devicetree/writing-schema.md
++++ b/Documentation/devicetree/writing-schema.md
+@@ -120,6 +120,7 @@ This will first run the `dt_binding_check` which genera=
+tes the processed schema.
+ It is also possible to run checks with a single schema file by setting the
+ 'DT_SCHEMA_FILES' variable to a specific schema file.
+=20
++`make dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings=
+/trivial-devices.yaml`
+ `make dtbs_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/trivi=
+al-devices.yaml`
+=20
+=20
+diff --git a/Makefile b/Makefile
+index 9be5834073f8..96bb28aa1c46 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1503,8 +1503,10 @@ help:
+ 	@echo  ''
+ 	@$(if $(dtstree), \
+ 		echo 'Devicetree:'; \
+-		echo '* dtbs            - Build device tree blobs for enabled boards'; \
+-		echo '  dtbs_install    - Install dtbs to $(INSTALL_DTBS_PATH)'; \
++		echo '* dtbs             - Build device tree blobs for enabled boards'; \
++		echo '  dtbs_install     - Install dtbs to $(INSTALL_DTBS_PATH)'; \
++		echo '  dt_binding_check - Validate device tree binding documents'; \
++		echo '  dtbs_check       - Validate device tree source files'; \
+ 		echo '')
+=20
+ 	@echo 'Userspace tools targets:'
