@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 03/21] ARM: dts: imx7-colibri: prepare module device tree
- for FlexCAN
-Date: Wed, 7 Aug 2019 08:26:11 +0000
-Message-ID: <20190807082556.5013-4-philippe.schenker@toradex.com>
+Subject: [PATCH v3 06/21] ARM: dts: imx7-colibri: add GPIO wakeup key
+Date: Wed, 7 Aug 2019 08:26:17 +0000
+Message-ID: <20190807082556.5013-7-philippe.schenker@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -12,97 +11,74 @@ In-Reply-To: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Stefan Agner <stefan.agner@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Prepare FlexCAN use on SODIMM 55/63 178/188. Those SODIMM pins are
-compatible for CAN bus use with several modules from the Colibri
-family.
-Add Better drivestrength and also add flexcan2.
+From: Stefan Agner <stefan.agner@toradex.com>
 
+Add wakeup GPIO key which is able to wake the system from sleep
+modes (e.g. Suspend-to-Memory).
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 35 ++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 14 ++++++++++++++
+ arch/arm/boot/dts/imx7-colibri.dtsi         |  7 ++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
+s/imx7-colibri-eval-v3.dtsi
+index 3f2746169181..d4dbc4fc1adf 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -52,6 +52,20 @@
+ 		clock-frequency =3D <16000000>;
+ 	};
+=20
++	gpio-keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpiokeys>;
++
++		power {
++			label =3D "Wake-Up";
++			gpios =3D <&gpio1 1 GPIO_ACTIVE_HIGH>;
++			linux,code =3D <KEY_WAKEUP>;
++			debounce-interval =3D <10>;
++			gpio-key,wakeup;
++		};
++	};
++
+ 	panel: panel {
+ 		compatible =3D "edt,et057090dhu";
+ 		backlight =3D <&bl>;
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
 olibri.dtsi
-index f7c9ce5bed47..52046085ce6f 100644
+index 2480623c92ff..16d1a1ed1aff 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -117,6 +117,18 @@
- 	fsl,magic-packet;
- };
+@@ -741,12 +741,17 @@
 =20
-+&flexcan1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_flexcan1>;
-+	status =3D "disabled";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_flexcan2>;
-+	status =3D "disabled";
-+};
-+
- &gpmi {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_gpmi_nand>;
-@@ -330,12 +342,11 @@
-=20
- &iomuxc {
- 	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio=
-4>;
-+	pinctrl-0 =3D <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio=
-4
-+		     &pinctrl_gpio7>;
-=20
- 	pinctrl_gpio1: gpio1-grp {
+ 	pinctrl_gpio_lpsr: gpio1-grp {
  		fsl,pins =3D <
--			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
--			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
- 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
- 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
- 			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
-@@ -416,6 +427,13 @@
+-			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x59
+ 			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x59
+ 			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x59
  		>;
  	};
 =20
-+	pinctrl_gpio7: gpio7-grp { /* Alternatively CAN1 */
++	pinctrl_gpiokeys: gpiokeysgrp {
 +		fsl,pins =3D <
-+			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x14 /* SODIMM 55 */
-+			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x14 /* SODIMM 63 */
++			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x19
 +		>;
 +	};
 +
- 	pinctrl_i2c1_int: i2c1-int-grp { /* PMIC / TOUCH */
+ 	pinctrl_i2c1: i2c1-grp {
  		fsl,pins =3D <
- 			MX7D_PAD_GPIO1_IO13__GPIO1_IO13	0x79
-@@ -459,10 +477,17 @@
- 		>;
- 	};
-=20
-+	pinctrl_flexcan1: flexcan1-grp {
-+		fsl,pins =3D <
-+			MX7D_PAD_ENET1_RGMII_RD3__FLEXCAN1_TX	0x79 /* SODIMM 55 */
-+			MX7D_PAD_ENET1_RGMII_RD2__FLEXCAN1_RX	0x79 /* SODIMM 63 */
-+		>;
-+	};
-+
- 	pinctrl_flexcan2: flexcan2-grp {
- 		fsl,pins =3D <
--			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x59
--			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x59
-+			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x79 /* SODIMM 188 */
-+			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x79 /* SODIMM 178 */
- 		>;
- 	};
-=20
+ 			MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA	0x4000007f
 --=20
 2.22.0
