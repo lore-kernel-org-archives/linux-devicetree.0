@@ -1,38 +1,37 @@
-Return-Path: <SRS0=MILw=WD=denx.de=marex@kernel.org>
-Subject: Re: [PATCH 1/2] Input: ili210x - Add DT binding for the Ilitek
- ILI2117 touch controller
-References: <20190302141704.32547-1-marex@denx.de>
- <20190327194425.GA641@bogus>
-From: Marek Vasut <marex@denx.de>
-Message-ID: <2b9ecd9d-c383-5686-c8f8-9ba88096fbf9@denx.de>
-Date: Wed, 7 Aug 2019 13:27:52 +0200
+Return-Path: <SRS0=v9ql=WD=pengutronix.de=ukl@kernel.org>
+Date: Wed, 7 Aug 2019 08:33:48 +0200
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFC 5/7] pwm: rcar: remove a redundant condition in
+ rcar_pwm_apply()
+Message-ID: <20190807063348.vpjh2ptpg7sgy3gm@pengutronix.de>
+References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1562576868-8124-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20190327194425.GA641@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Rob Herring <robh@kernel.org>
-Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1562576868-8124-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linus.walleij@linaro.org, geert+renesas@glider.be, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 3/27/19 8:44 PM, Rob Herring wrote:
-> On Sat,  2 Mar 2019 15:17:03 +0100, Marek Vasut wrote:
->> Add DT binding for the Ilitek ILI2117 touch controller, which is yet
->> again a slightly different device in the ILI21xx family.
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
->> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Cc: Henrik Rydberg <rydberg@bitmath.org>
->> Cc: Olivier Sobrie <olivier@sobrie.be>
->> Cc: Philipp Puschmann <pp@emlix.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> To: linux-input@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hello,
 
-Bump ? I noticed these patches were never applied.
+On Mon, Jul 08, 2019 at 06:07:46PM +0900, Yoshihiro Shimoda wrote:
+> Since the rcar_pwm_apply() has already check whehter state->enabled
+> is not set or not, this patch removes a redundant condition.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
+
+This patch (and also patch 6 of this series) doesn't seem to have made
+it to the pwm list and pwm patchwork.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
