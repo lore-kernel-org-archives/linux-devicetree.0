@@ -1,93 +1,75 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date: Wed, 7 Aug 2019 17:36:54 +0100
-Message-ID: <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092711.11786-4-jonnyc@amazon.com>
+From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Date: Wed, 7 Aug 2019 16:42:17 +0000
+Message-ID: <VI1PR0402MB2863C4406C06B0BDA3581822DFD40@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+ <20190805153114.GA16836@kroah.com>
+ <HE1PR0402MB28579034C09EB49A76A4F8E7DFD50@HE1PR0402MB2857.eurprd04.prod.outlook.com>
+ <20190806184042.GA26041@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190723092711.11786-4-jonnyc@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Chocron <jonnyc@amazon.com>
-Cc: bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "corbet@lwn.net" <corbet@lwn.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Larisa Ileana Grigore <larisa.grigore@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:27:11PM +0300, Jonathan Chocron wrote:
-> This basically aligns the usage of PCI_PROBE_ONLY and
-> PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-> pci_host_common_probe().
+On 8/6/2019 9:40 PM, gregkh@linuxfoundation.org wrote:
+> On Tue, Aug 06, 2019 at 05:11:17PM +0000, Stefan-gabriel Mirea wrote:
+>> On 8/5/2019 6:31 PM, gregkh@linuxfoundation.org wrote:
+>>> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
+>>>>
+>>>> +/* Freescale Linflex UART */
+>>>> +#define PORT_LINFLEXUART     121
+>>>
+>>> Do you really need this modified?
+>>
+>> Hello Greg,
+>>
+>> This macro is meant to be assigned to port->type in the config_port
+>> method from uart_ops, in order for verify_port to know if the received
+>> serial_struct structure was really targeted for a LINFlex port. It
+>> needs to be defined outside, to avoid "collisions" with other drivers.
 > 
-> Now it will be possible to control via the devicetree whether to just
-> probe the PCI bus (in cases where FW already configured it) or to fully
-> configure it.
+> Yes, I know what it goes to, but does anyone in userspace actually use
+> it?
+
+No, we do not use it from userspace, but kept the pattern only for
+conformance.
+
+>> Other than that, I do not see anything wrong with the addition of a
+>> define in serial_core.h for this purpose (which is also what most of the
+>> serial drivers do, including amba-pl011.c, mentioned in
+>> Documentation/driver-api/serial/driver.rst as providing the reference
+>> implementation), so please be more specific.
 > 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 23 +++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d2ca748e4c85..0a294d8aa21a 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	if (!bridge)
->  		return -ENOMEM;
->  
-> +	of_pci_check_probe_only();
-> +
->  	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
->  					&bridge->windows, &pp->io_base);
->  	if (ret)
-> @@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  
->  	pp->root_bus_nr = pp->busn->start;
->  
-> +	/* Do not reassign bus nums if probe only */
-> +	if (!pci_has_flag(PCI_PROBE_ONLY))
-> +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
+> I am getting tired of dealing with merge issues with that list, and no
+> one seems to be able to find where they are really needed for userspace,
+> especially for new devices.  What happens if you do not have use it?
 
-This changes the default for bus reassignment on all DWC host (that are
-!PCI_PROBE_ONLY), we should drop this line, it can trigger regressions.
+I see. If I drop its usage completely and leave 'type' from the
+uart_port as 0, uart_port_startup() will fail when finding that
+uport->type == PORT_UNKNOWN at [1] (there may be other effects as well,
+e.g. due to the check in uart_configure_port[2]).
 
-If we still want to merge it as a separate change we must test it on all
-DWC host bridges to make sure it does not trigger any issues with
-current set-ups, that's not going to be easy though.
+So I suppose that I need to define some nonzero 'PORT_KNOWN' macro in
+the driver and use that one internally for 'type'. Is my understanding
+correct? Will there be any problems if I define it to a positive integer
+which is already assigned to another driver, according to serial_core.h?
 
-Lorenzo
+Regards,
+Stefan
 
-> +
->  	bridge->dev.parent = dev;
->  	bridge->sysdata = pp;
->  	bridge->busnr = pp->root_bus_nr;
-> @@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	if (pp->ops->scan_bus)
->  		pp->ops->scan_bus(pp);
->  
-> -	pci_bus_size_bridges(pp->root_bus);
-> -	pci_bus_assign_resources(pp->root_bus);
-> +	/*
-> +	 * We insert PCI resources into the iomem_resource and
-> +	 * ioport_resource trees in either pci_bus_claim_resources()
-> +	 * or pci_bus_assign_resources().
-> +	 */
-> +	if (pci_has_flag(PCI_PROBE_ONLY)) {
-> +		pci_bus_claim_resources(pp->root_bus);
-> +	} else {
-> +		pci_bus_size_bridges(pp->root_bus);
-> +		pci_bus_assign_resources(pp->root_bus);
->  
-> -	list_for_each_entry(child, &pp->root_bus->children, node)
-> -		pcie_bus_configure_settings(child);
-> +		list_for_each_entry(child, &pp->root_bus->children, node)
-> +			pcie_bus_configure_settings(child);
-> +	}
->  
->  	pci_bus_add_devices(pp->root_bus);
->  	return 0;
-> -- 
-> 2.17.1
-> 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/serial_core.c?h=v5.3-rc1#n188
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/serial_core.c?h=v5.3-rc1#n2348
