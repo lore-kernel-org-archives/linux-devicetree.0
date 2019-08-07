@@ -1,108 +1,83 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
-Date: Wed,  7 Aug 2019 16:54:31 +0530
-Message-ID: <20190807112432.26521-2-sibis@codeaurora.org>
-References: <20190807112432.26521-1-sibis@codeaurora.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
+Date: Wed, 7 Aug 2019 13:56:14 +0200
+Message-ID: <20190807115614.phm7sbyae6yajkug@flea>
+References: <20190806140135.4739-1-anarsoul@gmail.com>
+ <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
+ <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
+ <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
+ <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
+ <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+ <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807112432.26521-1-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc: bjorn.andersson@linaro.org, agross@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, evgreen@chromium.org, daidavid1@codeaurora.org, saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Operating State Manager (OSM) L3 interconnect provider
-on SDM845 SoCs.
+On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruzhick wrote:
+> On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
+> > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
+> > >>
+> > >> Vasily Khoruzhick writes:
+> > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > >>>>
+> > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
+> > >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
+> > >>>>> as result 'perf top' shows no events.
+> > >>>>
+> > >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
+> > >>>> It could well just be that the interrupt numbers are wrong...
+> > >>>
+> > >>> Looks like it does, at least result looks plausible:
+> > >>
+> > >> I'm using perf stat regularly (cache benchmarks) and it works fine.
+> > >>
+> > >> Unfortunately I wasn't aware that perf stat is a poor test for
+> > >> the interrupts part of the node, when I added it. So I'm not too
+> > >> surprised I got it wrong.
+> > >>
+> > >> However, it would be unfortunate if the node got removed completely,
+> > >> because perf stat would not work anymore. Maybe we can only remove
+> > >> the interrupts or just fix them even if the HW doesn't work?
+> > >
+> > > I'm not familiar with PMU driver. Is it possible to get it working
+> > > without interrupts?
+> >
+> > Yup - you get a grumpy message from the driver, it will refuse sampling
+> > events (the ones which weren't working anyway), and if you measure
+> > anything for long enough that a counter overflows you'll get wonky
+> > results. But for counting hardware events over relatively short periods
+> > it'll still do the job.
+>
+> I tried to drop interrupts completely from the node but 'perf top' is
+> still broken. Though now in different way: it complains "cycles: PMU
+> Hardware doesn't support sampling/overflow-interrupts. Try 'perf
+> stat'"
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- .../bindings/interconnect/qcom,osm-l3.yaml    | 55 +++++++++++++++++++
- .../dt-bindings/interconnect/qcom,osm-l3.h    | 13 +++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
- create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
+I have no idea if that's the culprit, but what is the state of the
+0x09010000 register?
 
-diff --git a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-new file mode 100644
-index 0000000000000..51a4722e1a69f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Operating State Manager (OSM) L3 Interconnect Provider
-+
-+maintainers:
-+  - Sibi Sankar <sibis@codeaurora.org>
-+
-+description:
-+  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the OSM.
-+  The OSM L3 interconnect provider aggregates the L3 bandwidth requests
-+  from CPU/GPU and relays it to the OSM.
-+
-+properties:
-+  compatible:
-+    const: "qcom,sdm845-osm-l3"
-+
-+  reg:
-+    maxItems: 1
-+    description: OSM L3 registers
-+
-+  clocks:
-+    items:
-+      - description: xo clock
-+      - description: alternate clock
-+
-+  clock-names:
-+    items:
-+      - const: xo
-+      - const: alternate
-+
-+  '#interconnect-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clocks-names
-+  - '#interconnect-cells'
-+
-+examples:
-+  - |
-+    osm_l3: interconnect@17d41000 {
-+      compatible = "qcom,sdm845-osm-l3";
-+      reg = <0 0x17d41000 0 0x1400>;
-+
-+      clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+      clock-names = "xo", "alternate";
-+
-+      #interconnect-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h b/include/dt-bindings/interconnect/qcom,osm-l3.h
-new file mode 100644
-index 0000000000000..6662134c84248
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019 The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-+
-+#define MASTER_OSM_L3_APPS	0
-+#define MASTER_OSM_L3_GPU	1
-+#define SLAVE_OSM_L3		2
-+
-+#endif
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+(in particular, are the bits 16-19 and 24 set or not?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
