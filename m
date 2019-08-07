@@ -1,34 +1,75 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 3/5] dt-bindings: arm: Extend SCMI to support new
- reset protocol
-Date: Wed, 7 Aug 2019 18:41:12 +0100
-Message-ID: <20190807174112.GA30884@e107155-lin>
-References: <20190806170208.6787-1-sudeep.holla@arm.com>
- <20190806170208.6787-4-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
+Date: Wed, 07 Aug 2019 10:42:30 -0700 (PDT)
+Message-ID: <mhng-5befbd83-7239-4ee0-8c03-06e377e53f72@palmer-si-x1e>
+References: <a2795337bd86ff22ae9618d7ccae22e7482be332.camel@wdc.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190806170208.6787-4-sudeep.holla@arm.com>
+In-Reply-To: <a2795337bd86ff22ae9618d7ccae22e7482be332.camel@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org, Bo Zhang <bozhang.zhang@broadcom.com>, Jim Quinlan <james.quinlan@broadcom.com>, Volodymyr Babchuk <volodymyr_babchuk@epam.com>, Gaku Inami <gaku.inami.xh@renesas.com>, aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com, Etienne Carriere <etienne.carriere@linaro.org>, Souvik Chakravarty <Souvik.Chakravarty@arm.com>, wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>, Saeed Nowshadi <saeed.nowshadi@xilinx.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Atish Patra <Atish.Patra@wdc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, info@metux.net, allison@lohutok.net, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org, Anup Patel <Anup.Patel@wdc.com>, mark.rutland@arm.com, johan@kernel.org, robh+dt@kernel.org, Greg KH <gregkh@linuxfoundation.org>, tiny.windzz@gmail.com, gary@garyguo.net, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 07 Aug 2019 10:31:51 PDT (-0700), Atish Patra wrote:
+> On Tue, 2019-08-06 at 18:26 -0700, Paul Walmsley wrote:
+>> On Wed, 7 Aug 2019, Atish Patra wrote:
+>> 
+>> > On Tue, 2019-08-06 at 16:27 -0700, Paul Walmsley wrote:
+>> > 
+>> > > Seems like the "su" should be dropped from mandatory_ext.  What
+>> > > do you 
+>> > > think?
+>> > > 
+>> > 
+>> > Yup. As DT binding only mention imafdc, mandatory extensions should
+>> > contain only that and just consider "su" extensions are considered
+>> > as
+>> > implicit as we are running Linux. 
+>> 
+>> Discussing this with Andrew and Palmer, it looks like "su" is
+>> currently 
+>> non-compliant.  Section 22.6 of the user-level specification states
+>> that 
+>> the "s" character indicates that a longer standard supervisor
+>> extension 
+>> name will follow.  So far I don't think any of these have been
+>> defined.
+>> 
+>> > Do you think QEMU DT should be updated to reflect that ?
+>> 
+>> Yes.
+>> 
+>> > > There's no Kconfig option by this name, and we're requiring
+>> > > compressed 
+>> > 
+>> > Sorry. This was a typo. It should have been CONFIG_RISCV_ISA_C.
+>> > 
+>> > > instruction support as part of the RISC-V Linux baseline.  Could
+>> > > you 
+>> > > share the rationale behind this?
+>> > 
+>> > I think I added this check at the config file. Looking at the
+>> > Kconfig,
+>> > RISCV_ISA_C is always enabled. So we can drop this.
+>> 
+>> OK great.  Do you want to resend an updated patch, or would you like
+>> me to 
+>> fix it up here?
+>> 
+> 
+> I am sending the patch right now. We can remove the 'S' mode check as
+> palmer have already sent the QEMU patch as well, .
 
-On Tue, Aug 06, 2019 at 06:02:06PM +0100, Sudeep Holla wrote:
-> SCMIv2.0 adds a new Reset Management Protocol to manage various reset
-> states a given device or domain can enter. Extend the existing SCMI
-> bindings to add reset protocol support by re-using the reset bindings
-> for bothe reset providers and consumers.
->
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
+Looks like I missed the boat for 4.1, though.
 
-Sorry for the nag, can you review the binding so that I can plan
-to get this merged for v5.4
-
---
-Regards,
-Sudeep
+> 
+> Regards,
+> Atish
+>> I'll also send a patch to drop CONFIG_RISCV_ISA_C.
+>> 
+>> 
+>> - Paul
+> 
