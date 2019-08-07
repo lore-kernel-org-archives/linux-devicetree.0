@@ -1,15 +1,16 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
 Subject: [RFC, v4,
- 0/4] media: platform: mtk-isp: Add Mediatek ISP Pass 1 driver
-Date: Wed, 7 Aug 2019 20:47:59 +0800
-Message-ID: <20190807124803.29884-1-jungo.lin@mediatek.com>
+ 3/4] media: platform: Add Mediatek ISP P1 image & meta formats
+Date: Wed, 7 Aug 2019 20:48:03 +0800
+Message-ID: <20190807124803.29884-4-jungo.lin@mediatek.com>
 References: <Jungo Lin <jungo.lin@mediatek.com>
+ <20190807124803.29884-1-jungo.lin@mediatek.com>
 Reply-To: Jungo Lin <jungo.lin@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <Jungo Lin <jungo.lin@mediatek.com>
+In-Reply-To: <20190807124803.29884-1-jungo.lin@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,1786 +24,28 @@ To: tfiga@chromium.org, hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.
 Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, suleiman@chromium.org, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, robh@kernel.org, ryan.yu@mediatek.com, Jerry-ch.Chen@mediatek.com, frankie.chiu@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, ddavenport@chromium.org, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This RFC patch series adding the driver for Pass 1 (P1) unit in
-Mediatek's camera ISP system on mt8183 SoC, which will be used in
-camera features of CrOS. It's the first time Mediatek develops
-ISP kernel drivers based on V4L2 and media controller framework.
-I posted the main part of the ISP Pass 1 driver as RFC to discuss
-first and would like some review comments on the overall architecture
-of the driver.
-
-Pass 1 unit processes image signal from sensor devices and accepts the
-tuning parameters to adjust the image quality. It performs optical
-black correction, defect pixel correction, W/IR imbalance correction
-and lens shading correction for RAW processing.
-
-The driver is implemented with V4L2 and media controller framework so
-we have the following entities to describe the ISP pass 1 path.
-
-(The current metadata interface used in meta input and partial meta
-nodes is only a temporary solution to kick off the driver development
-and is not ready to be reviewed yet.)
-
-1. meta input (output video device): connect to ISP P1 sub device.
-It accepts the tuning buffer from user.
-
-2. ISP P1 (sub device): connect to partial meta 0/1/2/3,
-main stream and packed out video devices. When processing an image,
-Pass 1 hardware supports multiple output images with different sizes
-and formats so it needs two capture video devices ("main stream" and
-"packed out") to return the image data to the user.
-
-3. main stream (capture video device): return the processed image data
-which is used in capture scenario.
-
-4. packed out (capture video device): return the processed image data
-which is used in preview scenario.
-
-5. partial meta 0 (capture video device): return the AE/AWB statistics.
-
-6. partial meta 1 (capture video device): return the AF statistics.
-
-7. partial meta 2 (capture video device): return the local contrast
-   enhanced statistics.
-
-8. partial meta 3 (capture video device): return the local motion
-   vector statistics.
-
-The overall patches of the series is:
-
-* Patch 1 & 2 are dt-bindings & dts information related to ISP P1 driver.
-* Patch 3 extends the original V4L2 image & meta formats for ISP P1 driver.
-* Patch 4 is the heart of ISP P1 driver. It handles the ISP
-  HW configuration. Moreover, implement standard V4L2 video driver that utilizes
-  V4L2 and media framework APIs. Communicate with co-process via SCP communication
-  to compose ISP registers in the firmware.
-
-Here is ISP P1 media topology:
-It is included the main/sub sensor & sen-inf sub-devices which are implemented
-in below patch[1][2][3]:
-
-For Mediatek ISP P1 driver, it also depends on MT8183 SCP[6] & IOMMU[7] patchsets
-
-/usr/bin/media-ctl -p -d /dev/media1
-
-Media controller API version 4.19.59
-
-Media device information
-------------------------
-driver          mtk-cam-p1
-model           mtk-cam-p1
-serial          
-bus info        platform:1a000000.camisp
-hw revision     0x0
-driver version  4.19.59
-
-Device topology
-- entity 1: mtk-cam-p1 (12 pads, 8 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev5
-	pad0: Sink
-		<- "mtk-cam-p1 meta input":0 []
-	pad1: Source
-		-> "mtk-cam-p1 main stream":0 [ENABLED,IMMUTABLE]
-	pad2: Source
-		-> "mtk-cam-p1 packed out":0 []
-	pad3: Source
-		-> "mtk-cam-p1 partial meta 0":0 []
-	pad4: Source
-		-> "mtk-cam-p1 partial meta 1":0 []
-	pad5: Source
-		-> "mtk-cam-p1 partial meta 2":0 []
-	pad6: Source
-		-> "mtk-cam-p1 partial meta 3":0 []
-	pad7: Source
-	pad8: Source
-	pad9: Source
-	pad10: Source
-	pad11: Sink
-		<- "1a040000.seninf.mipi-csi":4 [ENABLED,IMMUTABLE]
-
-- entity 14: mtk-cam-p1 meta input (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video25
-	pad0: Source
-		-> "mtk-cam-p1":0 []
-
-- entity 20: mtk-cam-p1 main stream (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video26
-	pad0: Sink
-		<- "mtk-cam-p1":1 [ENABLED,IMMUTABLE]
-
-- entity 26: mtk-cam-p1 packed out (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video27
-	pad0: Sink
-		<- "mtk-cam-p1":2 []
-
-- entity 32: mtk-cam-p1 partial meta 0 (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video28
-	pad0: Sink
-		<- "mtk-cam-p1":3 []
-
-- entity 38: mtk-cam-p1 partial meta 1 (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video29
-	pad0: Sink
-		<- "mtk-cam-p1":4 []
-
-- entity 44: mtk-cam-p1 partial meta 2 (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video30
-	pad0: Sink
-		<- "mtk-cam-p1":5 []
-
-- entity 50: mtk-cam-p1 partial meta 3 (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video31
-	pad0: Sink
-		<- "mtk-cam-p1":6 []
-
-- entity 56: 1a040000.seninf.mipi-csi (12 pads, 3 links)
-             type V4L2 subdev subtype Unknown flags 0
-             device node name /dev/v4l-subdev6
-	pad0: Sink
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-		<- "ov5695 2-0036":0 []
-	pad1: Sink
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-		<- "ov2685 4-003c":0 []
-	pad2: Sink
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad3: Sink
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad4: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-		-> "mtk-cam-p1":11 [ENABLED,IMMUTABLE]
-	pad5: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad6: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad7: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad8: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad9: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad10: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-	pad11: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-
-- entity 69: ov5695 2-0036 (1 pad, 1 link)
-             type V4L2 subdev subtype Sensor flags 0
-             device node name /dev/v4l-subdev7
-	pad0: Source
-		[fmt:SBGGR10_1X10/2592x1944 field:none colorspace:srgb]
-		-> "1a040000.seninf.mipi-csi":0 []
-
-- entity 73: ov2685 4-003c (1 pad, 1 link)
-             type V4L2 subdev subtype Sensor flags 0
-             device node name /dev/v4l-subdev8
-	pad0: Source
-		[fmt:SBGGR10_1X10/1600x1200 field:none colorspace:srgb]
-		-> "1a040000.seninf.mipi-csi":1 []
-
-===========
-= history =
-===========
-
-version 4:
- - Fix Tomasz's comments which are addressed in MTK ISP P1 driver v3 patch[4]
- - Fix some Tomasz comments which are addressed in DIP's v2 patch[5]
- - Extend MTK proprietary image formats to support bayer order
- - Support V4L2_BUF_FLAG_TSTAMP_SRC_SOE for capture devices
-
-Todo:
- - vb2_ops's buf_request_complete callback function implementation
- - Add rst documents for Mediatek meta formats
- - New meta buffer structure design & re-factoring
- - Support V4L2_BUF_FLAG_TIMESTAMP_BOOTTIME timestamp flag
- - Align and pack IPI comamnd structures for EC ROM size shrink
-
-version 3:
- - Remove ISP Pass 1 reserved memory device node and change to use SCP's
-   reserved memory region. (Rob Herring)
- - Fix comments of ISP Pass 1 device node & dt-bindings document (Rob Herring)
- - Revise ISP Pass1 Kconfig
- - Add rst documents for Mediatek image formats (Hans Verkuil)
- - Fix kernel warning messages when running v4l2_compliance test
- - Move AFO buffer enqueue & de-queue from request API to non-request
- - mtk_cam-ctrl.h/mtk_cam-ctrl.c
-   Revise Mediatek ISP Pass1 specific V4L2 control naming & file licence declaration (Hans Verkuil)
-   Split GET_BIN_INFO control into two controls to get width & height in-dependently (Hans Verkuil)
- - mtk_cam-v4l2-util.h/mtk_cam-v4l2-util.c
-   Merging mtk_cam-dev.c and mtk_cam-v4l2-util.c. (Drew Davenport)
-   Remove the pix_mode argument in related functions and unreachable code. (Drew Davenport)
-   Fix Drew's comments which are addressed in v2 patch
-   Fix some Tomasz comments which are addressed in DIP's v1 patch[3]
- - mtk_cam-regs.h / mtk_cam.h / mtk_cam.c
-   Fix Drew's comments which are addressed in v2 patch
-   Fix some Tomasz comments which are addressed in DIP's v1 patch[3]
-   Refactoring mtk_isp_config & mtk_isp_req_enqueue functions
- - mtk_cam-scp.h / mtk_cam-scp.c
-   Move function declarations from mtk_cam.h to mtk_cam-scp.h (Drew Davenport)
-   Fix some Tomasz comments which are addressed in DIP's v1 patch[3]
-   Fix ISP de-initialize timing KE issue
- - mtk_cam-smem.h / mtk_cam-smem-dev.c
-   Get the reserved shared memory via SCP driver (Tomasz Figa)
-
-Todo:
- - Add rst documents for Mediatek meta formats
- - New meta buffer structure design & re-factoring
-
-version 2:
- - Add 3A enhancement feature which includes:
-   Separates 3A pipeline out of frame basis to improve
-   AE/AWB (exposure and white balance) performance.
-   Add 2 SCP sub-commands for 3A meta buffers.
- - Add new child device to manage P1 shared memory between P1 HW unit
-   and co-processor.
- - Remove mediatek,cam_smem.txt & cam_smem dts node in mt8183.dtsi.
- - Revised document wording for dt-bindings documents & dts information.
- - Remove mtk_cam-ctx.h & mtk_cam-dev-ctx-core.c and move these
-   source codes to mtk_cam-dev.h & mtk_cam-dev.c.
- - mtk_cam-dev.h / mtk_cam-dev.c
-   Revised mtk_cam_video_device & mtk_cam_dev to remove unused structure fields
-   or add comments.
-   Revised buffer size for LMVO & LCSO.
-   Fix pixel format utility function.
-   Add vb2_dma_contig_set_max_seg_size to configure DMA max segment size.
- - mtk_cam-v4l2-util.c
-   Refactoring V4L2 async mechanism with seninf driver only
-   Refactoring CIO (Connection IO) implementation with active sensor
-   Revised stream on function for 3A enhancement feature
-   Add new V4L2 en-queue/de-queue utility functions for 3A enhancement feature
- - mtk_cam-regs.h / mtk_cam.h / mtk_cam.c
-   Add meta buffer index register definitions
-   Add meta DMA configuration function.
-   Separate with frame-base and non-frame-base en-queue/de-queue functions
-   Add isp_setup_scp_rproc function to get RPC handle
-   Add mtk_cam_reserved_memory_init for shared memory management
- - mtk_cam-scp.h / mtk_cam-scp.c
-   Add new meta strictures for 3A enhancement feature
-   Add new IPI command utility function for 3A enhancement feature
-   Enhance isp_composer_dma_sg_init function flow
-   Shorten overall IPI command structure size
-   Remove scp_state state checking
-   Improve code readability
- - mtk_cam-smem.h / mtk_cam-smem-dev.c
-   Add mtk_cam_alloc_smem_dev to allocate one new child device of ISP driver.
-   Handling P1 driver 's reserved memory & allocate DMA buffers based on this
-   memory region.
-
-TODOs:
- - 3A enhancement feature bug fixing
-
-version 1:
- - Revised driver sources based on Tomasz's comments including
-   part1/2/3/4 in RFC V0 patch.
- - Remove DMA cache mechanism.
-   Support two new video devices (LCSO/LMVO) for advance camera
-   features.
- - Fixed v4l2-compliance test failure items.
- - Add private controls for Mediatek camera middle-ware.
- - Replace VPU driver's APIs with new SCP driver interface for
-   co-processor communication.
- - Refactoring mtk_cam_scp.c to use ring-buffers mechanism for IPI
-   commands RX handling.
- - Fix internal bugs.
-
-TODOs:
- - Remove mtk_cam_smem_drv.c & mtk_cam_smem.h and implement DMA pool
-   for shared memory management.
- - Revised file names.
- - Support non frame-sync AFO/AAO DMA buffers
-
-version 0:
-- Initial submission
-
-==================
- Dependent patch
-==================
-
-Camera ISP P1 driver depends on seninf driver, SCP driver.
-The patches are listed as following:
-
-[1]. BACKPORT: FROMLIST: platform: mtk-isp: Add Mediatek sensor interface driver
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1482517
-
-[2]. WIP: media: ov5695: support ov5695 sensor in mt8183
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1614887
-
-[3]. WIP: media: ov2685: support ov2685 sensor in mt8183
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1614885
-
-[4]. media: platform: mtk-isp: Add Mediatek ISP Pass 1 driver
-https://patchwork.linuxtv.org/cover/56778/
-
-[5]. [RFC,V2,4/6] platform: mtk-isp: Add Mediatek DIP driver
-https://patchwork.linuxtv.org/patch/57472/
-
-[6]. Add support for mt8183 SCP
-https://patchwork.kernel.org/cover/11076543/
-
-[7]. MT8183 IOMMU SUPPORT
-https://patchwork.kernel.org/cover/10984739/
-
-==================
- Compliance test
-==================
-
-The v4l2-compliance is built with the below lastest patch.
-https://git.linuxtv.org/v4l-utils.git/commit/?id=28be49b4e9d72c5866188cf5ba408541c665c921
-
-Note 1.
-This testing depends on the above seninf & sensors patches[1][2][3].
-
-Note 2.
-The current failure items are related to Mediatek seninf driver which
-is under developing in other patchset.[1]
-
-/usr/bin/v4l2-compliance -m /dev/media1
-
-v4l2-compliance SHA: not available, 32 bits
-
-Compliance test for mtk-cam-p1 device /dev/media1:
-
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-
-Required ioctls:
-	test MEDIA_IOC_DEVICE_INFO: OK
-
-Allow for multiple opens:
-	test second /dev/media1 open: OK
-	test MEDIA_IOC_DEVICE_INFO: OK
-	test for unlimited opens: OK
-
-Media Controller ioctls:
-	test MEDIA_IOC_G_TOPOLOGY: OK
-	Entities: 11 Interfaces: 11 Pads: 33 Links: 21
-	test MEDIA_IOC_ENUM_ENTITIES/LINKS: OK
-	test MEDIA_IOC_SETUP_LINK: OK
-
-Total for mtk-cam-p1 device /dev/media1: 7, Succeeded: 7, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video25:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x8c200000
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x0c200000
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000010
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x0000000e (14)
-	Name             : mtk-cam-p1 meta input
-	Function         : V4L2 I/O
-	Pad 0x0100000f   : 0: Source
-	  Link 0x02000012: to remote pad 0x1000002 of entity 'mtk-cam-p1': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video25 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video25: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video26:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x84201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000016
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000014 (20)
-	Name             : mtk-cam-p1 main stream
-	Function         : V4L2 I/O
-	Pad 0x01000015   : 0: Sink
-	  Link 0x02000018: from remote pad 0x1000003 of entity 'mtk-cam-p1': Data, Enabled, Immutable
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video26 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video26: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video27:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x84201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x0300001c
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x0000001a (26)
-	Name             : mtk-cam-p1 packed out
-	Function         : V4L2 I/O
-	Pad 0x0100001b   : 0: Sink
-	  Link 0x0200001e: from remote pad 0x1000004 of entity 'mtk-cam-p1': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video27 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video27: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video28:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x84a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000022
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000020 (32)
-	Name             : mtk-cam-p1 partial meta 0
-	Function         : V4L2 I/O
-	Pad 0x01000021   : 0: Sink
-	  Link 0x02000024: from remote pad 0x1000005 of entity 'mtk-cam-p1': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video28 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video28: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video29:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x84a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000028
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000026 (38)
-	Name             : mtk-cam-p1 partial meta 1
-	Function         : V4L2 I/O
-	Pad 0x01000027   : 0: Sink
-	  Link 0x0200002a: from remote pad 0x1000006 of entity 'mtk-cam-p1': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video29 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video29: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video30:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x84a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x0300002e
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x0000002c (44)
-	Name             : mtk-cam-p1 partial meta 2
-	Function         : V4L2 I/O
-	Pad 0x0100002d   : 0: Sink
-	  Link 0x02000030: from remote pad 0x1000007 of entity 'mtk-cam-p1': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video30 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video30: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/video31:
-
-Driver Info:
-	Driver name      : mtk-cam-p1
-	Card type        : mtk-cam-p1
-	Bus info         : platform:1a000000.camisp
-	Driver version   : 4.19.59
-	Capabilities     : 0x84a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04a00000
-		Metadata Capture
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000034
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000032 (50)
-	Name             : mtk-cam-p1 partial meta 3
-	Function         : V4L2 I/O
-	Pad 0x01000033   : 0: Sink
-	  Link 0x02000036: from remote pad 0x1000008 of entity 'mtk-cam-p1': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video31 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK
-
-Total for mtk-cam-p1 device /dev/video31: 45, Succeeded: 45, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/v4l-subdev5:
-
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x0300004f
-	Type             : V4L Sub-Device
-Entity Info:
-	ID               : 0x00000001 (1)
-	Name             : mtk-cam-p1
-	Function         : Video Pixel Formatter
-	Pad 0x01000002   : 0: Sink
-	  Link 0x02000012: from remote pad 0x100000f of entity 'mtk-cam-p1 meta input': Data
-	Pad 0x01000003   : 1: Source
-	  Link 0x02000018: to remote pad 0x1000015 of entity 'mtk-cam-p1 main stream': Data, Enabled, Immutable
-	Pad 0x01000004   : 2: Source
-	  Link 0x0200001e: to remote pad 0x100001b of entity 'mtk-cam-p1 packed out': Data
-	Pad 0x01000005   : 3: Source
-	  Link 0x02000024: to remote pad 0x1000021 of entity 'mtk-cam-p1 partial meta 0': Data
-	Pad 0x01000006   : 4: Source
-	  Link 0x0200002a: to remote pad 0x1000027 of entity 'mtk-cam-p1 partial meta 1': Data
-	Pad 0x01000007   : 5: Source
-	  Link 0x02000030: to remote pad 0x100002d of entity 'mtk-cam-p1 partial meta 2': Data
-	Pad 0x01000008   : 6: Source
-	  Link 0x02000036: to remote pad 0x1000033 of entity 'mtk-cam-p1 partial meta 3': Data
-	Pad 0x01000009   : 7: Source
-	Pad 0x0100000a   : 8: Source
-	Pad 0x0100000b   : 9: Source
-	Pad 0x0100000c   : 10: Source
-	Pad 0x0100000d   : 11: Sink
-	  Link 0x0200004d: from remote pad 0x100003d of entity '1a040000.seninf.mipi-csi': Data, Enabled, Immutable
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-	test second /dev/v4l-subdev5 open: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 0):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 1):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 2):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 3):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 4):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 5):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 6):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 7):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 8):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 9):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 10):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 11):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK (Not Supported)
-	test VIDIOC_TRY_FMT: OK (Not Supported)
-	test VIDIOC_S_FMT: OK (Not Supported)
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-	test VIDIOC_EXPBUF: OK (Not Supported)
-	test Requests: OK (Not Supported)
-
-Total for mtk-cam-p1 device /dev/v4l-subdev5: 125, Succeeded: 125, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/v4l-subdev6:
-
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000051
-	Type             : V4L Sub-Device
-Entity Info:
-	ID               : 0x00000038 (56)
-	Name             : 1a040000.seninf.mipi-csi
-	Function         : Video Interface Bridge
-	Pad 0x01000039   : 0: Sink
-	  Link 0x02000047: from remote pad 0x1000046 of entity 'ov5695 2-0036': Data
-	Pad 0x0100003a   : 1: Sink
-	  Link 0x0200004b: from remote pad 0x100004a of entity 'ov2685 4-003c': Data
-	Pad 0x0100003b   : 2: Sink
-	Pad 0x0100003c   : 3: Sink
-	Pad 0x0100003d   : 4: Source
-	  Link 0x0200004d: to remote pad 0x100000d of entity 'mtk-cam-p1': Data, Enabled, Immutable
-	Pad 0x0100003e   : 5: Source
-	Pad 0x0100003f   : 6: Source
-	Pad 0x01000040   : 7: Source
-	Pad 0x01000041   : 8: Source
-	Pad 0x01000042   : 9: Source
-	Pad 0x01000043   : 10: Source
-	Pad 0x01000044   : 11: Source
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-	test second /dev/v4l-subdev6 open: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 0):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 1):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 2):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Sink Pad 3):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 4):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-  test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 5):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 6):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 7):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 8):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 9):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 10):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 11):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(381): s_fmt.format.code == ~0U
-	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
-		fail: v4l2-test-subdevs.cpp(313): fmt.code == 0 || fmt.code == ~0U
-		fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK (Not Supported)
-	test VIDIOC_TRY_FMT: OK (Not Supported)
-	test VIDIOC_S_FMT: OK (Not Supported)
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-	test VIDIOC_EXPBUF: OK (Not Supported)
-	test Requests: OK (Not Supported)
-
-Total for mtk-cam-p1 device /dev/v4l-subdev6: 125, Succeeded: 101, Failed: 24, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/v4l-subdev7:
-
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000053
-	Type             : V4L Sub-Device
-Entity Info:
-	ID               : 0x00000045 (69)
-	Name             : ov5695 2-0036
-	Function         : Camera Sensor
-	Pad 0x01000046   : 0: Source
-	  Link 0x02000047: to remote pad 0x1000039 of entity '1a040000.seninf.mipi-csi': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-	test second /dev/v4l-subdev7 open: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 0):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 11 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK (Not Supported)
-	test VIDIOC_TRY_FMT: OK (Not Supported)
-	test VIDIOC_S_FMT: OK (Not Supported)
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-	test VIDIOC_EXPBUF: OK (Not Supported)
-	test Requests: OK (Not Supported)
-
-Total for mtk-cam-p1 device /dev/v4l-subdev7: 48, Succeeded: 48, Failed: 0, Warnings: 0
---------------------------------------------------------------------------------
-Compliance test for mtk-cam-p1 device /dev/v4l-subdev8:
-
-Media Driver Info:
-	Driver name      : mtk-cam-p1
-	Model            : mtk-cam-p1
-	Serial           : 
-	Bus info         : platform:1a000000.camisp
-	Media version    : 4.19.59
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.19.59
-Interface Info:
-	ID               : 0x03000055
-	Type             : V4L Sub-Device
-Entity Info:
-	ID               : 0x00000049 (73)
-	Name             : ov2685 4-003c
-	Function         : Camera Sensor
-	Pad 0x0100004a   : 0: Source
-	  Link 0x0200004b: to remote pad 0x100003a of entity '1a040000.seninf.mipi-csi': Data
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-
-Allow for multiple opens:
-	test second /dev/v4l-subdev8 open: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Sub-Device ioctls (Source Pad 0):
-	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-	test Try VIDIOC_SUBDEV_G/S_FMT: OK
-	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-	test Active VIDIOC_SUBDEV_G/S_FMT: OK
-	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 10 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK (Not Supported)
-	test VIDIOC_TRY_FMT: OK (Not Supported)
-	test VIDIOC_S_FMT: OK (Not Supported)
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-	test VIDIOC_EXPBUF: OK (Not Supported)
-	test Requests: OK (Not Supported)
-
-Total for mtk-cam-p1 device /dev/v4l-subdev8: 48, Succeeded: 48, Failed: 0, Warnings: 0
-
-Grand Total for mtk-cam-p1 device /dev/media1: 668, Succeeded: 644, Failed: 24, Warnings: 0
-
-=========================================================================================
-
-Jungo Lin (4):
-  media: dt-bindings: mt8183: Added camera ISP Pass 1
-  dts: arm64: mt8183: Add ISP Pass 1 nodes
-  media: platform: Add Mediatek ISP P1 image & meta formats
-  media: platform: Add Mediatek ISP P1 V4L2 device driver
-
- .../bindings/media/mediatek,camisp.txt        |   73 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr10.rst   |   65 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr10f.rst  |   90 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr12.rst   |   61 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr12f.rst  |  110 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr14.rst   |   73 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr14f.rst  |  110 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr8.rst    |   51 +
- .../media/uapi/v4l/pixfmt-mtisp-sbggr8f.rst   |   78 +
- Documentation/media/uapi/v4l/pixfmt-rgb.rst   |    8 +
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   31 +
- drivers/media/platform/Kconfig                |    1 +
- drivers/media/platform/Makefile               |    1 +
- drivers/media/platform/mtk-isp/Kconfig        |   17 +
- .../media/platform/mtk-isp/isp_50/Makefile    |    3 +
- .../platform/mtk-isp/isp_50/cam/Makefile      |    6 +
- .../platform/mtk-isp/isp_50/cam/mtk_cam-hw.c  |  622 +++++
- .../platform/mtk-isp/isp_50/cam/mtk_cam-hw.h  |   65 +
- .../platform/mtk-isp/isp_50/cam/mtk_cam-ipi.h |  222 ++
- .../mtk-isp/isp_50/cam/mtk_cam-regs.h         |   95 +
- .../platform/mtk-isp/isp_50/cam/mtk_cam.c     | 2066 +++++++++++++++++
- .../platform/mtk-isp/isp_50/cam/mtk_cam.h     |  242 ++
- drivers/media/v4l2-core/v4l2-ioctl.c          |   37 +
- include/uapi/linux/videodev2.h                |   39 +
- 24 files changed, 4166 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+Add packed/full-g bayer formats with 8/10/12/14 bit
+for image output. Add Pass 1 (P1) specific meta formats for
+parameter processing and 3A/other statistics.
+
+(The current metadata format used in meta input and partial
+meta nodes is only a temporary solution to kick off the driver
+development and is not ready to be reviewed yet.)
+
+Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+---
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr10.rst   |  65 +++++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr10f.rst  |  90 ++++++++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr12.rst   |  61 ++++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr12f.rst  | 110 ++++++++++++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr14.rst   |  73 ++++++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr14f.rst  | 110 ++++++++++++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr8.rst    |  51 ++++++++
+ .../media/uapi/v4l/pixfmt-mtisp-sbggr8f.rst   |  78 +++++++++++++
+ Documentation/media/uapi/v4l/pixfmt-rgb.rst   |   8 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c          |  37 ++++++
+ include/uapi/linux/videodev2.h                |  39 +++++++
+ 11 files changed, 722 insertions(+)
  create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10.rst
  create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10f.rst
  create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12.rst
@@ -1811,12 +54,828 @@ Jungo Lin (4):
  create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14f.rst
  create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8.rst
  create mode 100644 Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8f.rst
- create mode 100644 drivers/media/platform/mtk-isp/Kconfig
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/Makefile
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-hw.c
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-hw.h
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ipi.h
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-regs.h
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam.c
- create mode 100644 drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam.h
+
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10.rst
+new file mode 100644
+index 000000000000..534edb4f0fd4
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10.rst
+@@ -0,0 +1,65 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr10:
++.. _v4l2-pix-fmt-mtisp-sgbrg10:
++.. _v4l2-pix-fmt-mtisp-sgrbg10:
++.. _v4l2-pix-fmt-mtisp-srggb10:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR10 ('MBBA'), V4L2_PIX_FMT_MTISP_SGBRG10('MBGA'), V4L2_PIX_FMT_MTISP_SGRBG10('MBgA'), V4L2_PIX_FMT_MTISP_SRGGB10('MBRA')
++*******************************
++
++10-bit Packed Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format, meaning all the data bits for a pixel lying
++next to each other with no padding in memory, with a depth of 10 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++They are conventionally described as GRGR... BGBG..., RGRG... GBGB..., etc.
++Below is an example of conventional RGB byte order BGGR.
++
++**Byte Order.**
++Each cell is one byte.
++
++pixels cross the byte boundary and have a ratio of 5 bytes for each 4 pixels.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - G\ :sub:`01low bits 5--0` (bits 7--2) B\ :sub:`00high bits 9--8`\ (bits 1--0)
++    * - start + 2:
++      - B\ :sub:`02low bits 3--0`\ (bits 7--4) G\ :sub:`01high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`03low bits 1--0`\ (bits 7--6) B\ :sub:`02high bits 9--4`\ (bits 5--0)
++    * - start + 4:
++      - G\ :sub:`03high bits 9--2`
++    * - start + 6:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 5--0`\ (bits 7--2) G\ :sub:`10high bits 9--8`\ (bits 1--0)
++    * - start + 8:
++      - G\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 9--6`\ (bits 3--0)
++      - R\ :sub:`13low bits 1--0`\ (bits 7--6) G\ :sub:`12high bits 9--4`\ (bits 5--0)
++    * - start + 10:
++      - R\ :sub:`13high bits 9--2`
++    * - start + 12:
++      - B\ :sub:`20low bits 7--0`
++      - G\ :sub:`21low bits 5--0`\ (bits 7--2) B\ :sub:`20high bits 9--8`\ (bits 1--0)
++    * - start + 14:
++      - B\ :sub:`22low bits 3--0`\ (bits 7--4) G\ :sub:`21high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`23low bits 1--0`\ (bits 7--6) B\ :sub:`22high bits 9--4`\ (bits 5--0)
++    * - start + 16:
++      - G\ :sub:`23high bits 9--2`
++    * - start + 18:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 5--0`\ (bits 7--2) G\ :sub:`30high bits 9--8`\ (bits 1--0)
++    * - start + 20:
++      - G\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 9--6`\ (bits 3--0)
++      - R\ :sub:`33low bits 1--0`\ (bits 7--6) G\ :sub:`32high bits 9--4`\ (bits 5--0)
++    * - start + 22:
++      - R\ :sub:`33high bits 9--2` (bits 7--0)
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10f.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10f.rst
+new file mode 100644
+index 000000000000..7be527711602
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr10f.rst
+@@ -0,0 +1,90 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr10f:
++.. _v4l2-pix-fmt-mtisp-sgbrg10f:
++.. _v4l2-pix-fmt-mtisp-sgrbg10f:
++.. _v4l2-pix-fmt-mtisp-srggb10f:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR10F ('MFBA'), V4L2_PIX_FMT_MTISP_SGBRG10F('MFGA'), V4L2_PIX_FMT_MTISP_SGRBG10F('MFgA'), V4L2_PIX_FMT_MTISP_SRGGB10F('MFRA')
++*******************************
++
++10-bit Packed Full-G Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format with a depth of 10 bits per sample with every 4 pixels.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor. They are conventionally
++described as GRGR... BGBG..., RGRG... GBGB..., etc. Below is an example of conventional
++RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - FG\ :sub:`01low bits 5--0`\ (bits 7--2) B\ :sub:`00high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`02low bits 3--0`\ (bits 7--4) FG\ :sub:`01high bits 9--6`\ (bits 3--0)
++      - B\ :sub:`03low bits 1--0`\ (bits 7--6) G\ :sub:`02high bits 9--4`\ (bits 5--0)
++    * - start + 4:
++      - B\ :sub:`03high bits 9--2`
++      - FG\ :sub:`04low bits 7--0`
++      - G\ :sub:`05low bits 5--0`\ (bits 7--2) FG\ :sub:`04high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`05high bits 3--0`
++    * - start + 8:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 5--0`\ (bits 7--2) G\ :sub:`10high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`13low bits 1--0`\ (bits 7--6) FG\ :sub:`12high bits 9--4`\ (bits 5--0)
++    * - start + 12:
++      - G\ :sub:`13high bits 9--2`
++      - R\ :sub:`14low bits 7--0`
++      - FG\ :sub:`15low bits 5--0`\ (bits 7--2) R\ :sub:`14high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`15high bits 3--0`
++    * - start + 16:
++      - B\ :sub:`20low bits 7--0`
++      - FG\ :sub:`21low bits 5--0`\ (bits 7--2) B\ :sub:`20high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`22low bits 3--0`\ (bits 7--4) FG\ :sub:`21high bits 9--6`\ (bits 3--0)
++      - B\ :sub:`23low bits 1--0`\ (bits 7--6) G\ :sub:`22high bits 9--4`\ (bits 5--0)
++    * - start + 20:
++      - B\ :sub:`23high bits 9--2`
++      - FG\ :sub:`24low bits 7--0`
++      - G\ :sub:`25low bits 5--0`\ (bits 7--2) FG\ :sub:`24high bits 9--8`\ (bits 1--0)
++      - G\ :sub:`25high bits 3--0`
++    * - start + 24:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 5--0`\ (bits 7--2) G\ :sub:`30high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 9--6`\ (bits 3--0)
++      - G\ :sub:`33low bits 1--0`\ (bits 7--6) FG\ :sub:`32high bits 9--4`\ (bits 5--0)
++    * - start + 28:
++      - G\ :sub:`33high bits 9--2`
++      - R\ :sub:`34low bits 7--0`
++      - FG\ :sub:`35low bits 5--0`\ (bits 7--2) R\ :sub:`34high bits 9--8`\ (bits 1--0)
++      - FG\ :sub:`35high bits 3--0`
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12.rst
+new file mode 100644
+index 000000000000..cc888aac42c2
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12.rst
+@@ -0,0 +1,61 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr12:
++.. _v4l2-pix-fmt-mtisp-sgbrg12:
++.. _v4l2-pix-fmt-mtisp-sgrbg12:
++.. _v4l2-pix-fmt-mtisp-srggb12:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR12 ('MBBC'), V4L2_PIX_FMT_MTISP_SGBRG12('MBGC'), V4L2_PIX_FMT_MTISP_SGRBG12('MBgC'), V4L2_PIX_FMT_MTISP_SRGGB12('MBRC')
++*******************************
++
++12-bit Packed Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format, meaning all the data bits for a pixel lying
++next to each other with no padding in memory, with a depth of 12 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++They are conventionally described as GRGR... BGBG..., RGRG... GBGB..., etc.
++Below is an example of conventional RGB byte order BGGR.
++
++**Byte Order.**
++Each cell is one byte.
++
++pixels cross the byte boundary and have a ratio of 6 bytes for each 4 pixels.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00lowbits 7--0`
++      - G\ :sub:`01lowbits 3--0`\ (bits 7--4) B\ :sub:`00highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`01highbits 7--0`
++      - B\ :sub:`02lowbits 7--0`
++      - G\ :sub:`03lowbits 3--0`\ (bits 7--4) B\ :sub:`02highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`03highbits 7--0`
++    * - start + 6:
++      - G\ :sub:`10lowbits 7--0`
++      - R\ :sub:`11lowbits 3--0`\ (bits 7--4) G\ :sub:`10highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`11highbits 7--0`
++      - G\ :sub:`12lowbits 7--0`
++      - R\ :sub:`13lowbits 3--0`\ (bits 7--4) G\ :sub:`12highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`13highbits 7--0`
++    * - start + 12:
++      - B\ :sub:`20lowbits 7--0`
++      - G\ :sub:`21lowbits 3--0`\ (bits 7--4) B\ :sub:`20highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`21highbits 7--0`
++      - B\ :sub:`22lowbits 7--0`
++      - G\ :sub:`23lowbits 3--0`\ (bits 7--4) B\ :sub:`22highbits 11--8`\ (bits 3--0)
++      - G\ :sub:`23highbits 7--0`
++    * - start + 18:
++      - G\ :sub:`30lowbits 7--0`
++      - R\ :sub:`31lowbits 3--0`\ (bits 7--4) G\ :sub:`30highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`31highbits 7--0`
++      - G\ :sub:`32lowbits 7--0`
++      - R\ :sub:`33lowbits 3--0`\ (bits 7--4) G\ :sub:`32highbits 11--8`\ (bits 3--0)
++      - R\ :sub:`33highbits 7--0`
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12f.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12f.rst
+new file mode 100644
+index 000000000000..c063de9f9ad8
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr12f.rst
+@@ -0,0 +1,110 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr12f:
++.. _v4l2-pix-fmt-mtisp-sgbrg12f:
++.. _v4l2-pix-fmt-mtisp-sgrbg12f:
++.. _v4l2-pix-fmt-mtisp-srggb12f:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR12F ('MFBC'), V4L2_PIX_FMT_MTISP_SGBRG12F('MFGC'), V4L2_PIX_FMT_MTISP_SGRBG12F('MFgC'), V4L2_PIX_FMT_MTISP_SRGGB12F('MFRC')
++*******************************
++
++12-bit Packed Full-G Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format with a depth of 12 bits per sample with every 4 pixels.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor. They are conventionally
++described as GRGR... BGBG..., RGRG... GBGB..., etc. Below is an example of conventional
++RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - FG\ :sub:`01low bits 3--0`\ (bits 7--4) B\ :sub:`00high bits 11--8`\ (bits 3--0)
++    * - start + 2:
++      - FG\ :sub:`01high bits 7--0`
++      - G\ :sub:`02low bits 7--0`
++    * - start + 4:
++      - B\ :sub:`03low bits 3--0`\ (bits 7--4) G\ :sub:`02high bits 11--8`\ (bits 3--0)
++      - B\ :sub:`03high bits 7--0`
++    * - start + 6:
++      - FG\ :sub:`04low bits 7--0`
++      - G\ :sub:`05low bits 3--0`\ (bits 7--4) FG\ :sub:`04high bits 11--8`\ (bits 3--0)
++    * - start + 8:
++      - G\ :sub:`05high bits 7--0`
++      -
++    * - start + 10:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 3--0`\ (bits 7--4) G\ :sub:`10high bits 11--8`\ (bits 3--0)
++    * - start + 12:
++      - R\ :sub:`11high bits 7--0`
++      - FG\ :sub:`12low bits 7--0`
++    * - start + 14:
++      - G\ :sub:`13low bits 3--0`\ (bits 7--4) FG\ :sub:`12high bits 11--8`\ (bits 3--0)
++      - G\ :sub:`13high bits 7--0`
++    * - start + 16:
++      - R\ :sub:`14low bits 7--0`
++      - FG\ :sub:`15low bits 3--0`\ (bits 7--4) R\ :sub:`14high bits 11--8`\ (bits 3--0)
++    * - start + 18:
++      - FG\ :sub:`15high bits 7--0`
++      -
++    * - start + 20:
++      - B\ :sub:`20low bits 7--0`
++      - FG\ :sub:`21low bits 3--0`\ (bits 7--4) B\ :sub:`20high bits 11--8`\ (bits 3--0)
++    * - start + 22:
++      - FG\ :sub:`21high bits 7--0`
++      - G\ :sub:`22low bits 7--0`
++    * - start + 24:
++      - B\ :sub:`23low bits 3--0`\ (bits 7--4) G\ :sub:`22high bits 11--8`\ (bits 3--0)
++      - B\ :sub:`23high bits 7--0`
++    * - start + 26:
++      - FG\ :sub:`24low bits 7--0`
++      - G\ :sub:`25low bits 3--0`\ (bits 7--4) FG\ :sub:`24high bits 11--8`\ (bits 3--0)
++    * - start + 28:
++      - G\ :sub:`25high bits 7--0`
++      -
++    * - start + 30:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 3--0`\ (bits 7--4) G\ :sub:`30high bits 11--8`\ (bits 3--0)
++    * - start + 32:
++      - R\ :sub:`31high bits 7--0`
++      - FG\ :sub:`32low bits 7--0`
++    * - start + 34:
++      - G\ :sub:`33low bits 3--0`\ (bits 7--4) FG\ :sub:`32high bits 11--8`\ (bits 3--0)
++      - G\ :sub:`33high bits 7--0`
++    * - start + 36:
++      - R\ :sub:`34low bits 7--0`
++      - FG\ :sub:`35low bits 3--0`\ (bits 7--4) R\ :sub:`34high bits 11--8`\ (bits 3--0)
++    * - start + 38:
++      - FG\ :sub:`35high bits 7--0`
++      -
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14.rst
+new file mode 100644
+index 000000000000..39ea9882a792
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14.rst
+@@ -0,0 +1,73 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr14:
++.. _v4l2-pix-fmt-mtisp-sgbrg14:
++.. _v4l2-pix-fmt-mtisp-sgrbg14:
++.. _v4l2-pix-fmt-mtisp-srggb14:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR14 ('MBBE'), V4L2_PIX_FMT_MTISP_SGBRG14('MBGE'), V4L2_PIX_FMT_MTISP_SGRBG14('MBgE'), V4L2_PIX_FMT_MTISP_SRGGB14('MBRE')
++*******************************
++
++14-bit Packed Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format, meaning all the data bits for a pixel lying
++next to each other with no padding in memory, with a depth of 14 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++They are conventionally described as GRGR... BGBG..., RGRG... GBGB..., etc.
++Below is an example of conventional RGB byte order BGGR.
++
++**Byte Order.**
++Each cell is one byte.
++
++pixels cross the byte boundary and have a ratio of 7 bytes for each 4 pixels.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - G\ :sub:`01low bits 1--0`\ (bits 7--6) B\ :sub:`00high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`01low bits 9--2`\
++      - B\ :sub:`02low bits 3--0`\ (bits 7--4) G\ :sub:`01high bits 13--10`\ (bits 3--0)
++    * - start + 4:
++      - B\ :sub:`02low bits 11--4`\
++      - G\ :sub:`03low bits 5--0`\ (bits 7--2) B\ :sub:`02high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`03high bits 13--6`\
++      -
++    * - start + 8:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 1--0`\ (bits 7--6) G\ :sub:`10high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`11low bits 9--2`\
++      - G\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 13--10`\ (bits 3--0)
++    * - start + 12:
++      - G\ :sub:`12low bits 11--4`\
++      - R\ :sub:`13low bits 5--0`\ (bits 7--2) G\ :sub:`12high bits 13--12`\ (bits 1--0)
++      - R\ :sub:`13high bits 13--6`\
++      -
++    * - start + 16:
++      - B\ :sub:`20low bits 7--0`
++      - G\ :sub:`21low bits 1--0`\ (bits 7--6) B\ :sub:`20high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`21low bits 9--2`\
++      - B\ :sub:`22low bits 3--0`\ (bits 7--4) G\ :sub:`21high bits 13--10`\ (bits 3--0)
++    * - start + 20:
++      - B\ :sub:`22low bits 11--4`\
++      - G\ :sub:`23low bits 5--0`\ (bits 7--2) B\ :sub:`22high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`23high bits 13--6`\
++      -
++    * - start + 24:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 1--0`\ (bits 7--6) G\ :sub:`30high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`31low bits 9--2`\
++      - G\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 13--10`\ (bits 3--0)
++    * - start + 28:
++      - G\ :sub:`32low bits 11--4`\
++      - R\ :sub:`33low bits 5--0`\ (bits 7--2) G\ :sub:`32high bits 13--12`\ (bits 1--0)
++      - R\ :sub:`33high bits 13--6`\
++      -
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14f.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14f.rst
+new file mode 100644
+index 000000000000..010b1c190c60
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr14f.rst
+@@ -0,0 +1,110 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr14f:
++.. _v4l2-pix-fmt-mtisp-sgbrg14f:
++.. _v4l2-pix-fmt-mtisp-sgrbg14f:
++.. _v4l2-pix-fmt-mtisp-srggb14f:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR14F ('MFBE'), V4L2_PIX_FMT_MTISP_SGBRG14F('MFGE'), V4L2_PIX_FMT_MTISP_SGRBG14F('MFgE'), V4L2_PIX_FMT_MTISP_SRGGB14F('MFRE')
++*******************************
++
++14-bit Packed Full-G Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format with a depth of 14 bits per sample with every 4 pixels.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor. They are conventionally
++described as GRGR... BGBG..., RGRG... GBGB..., etc. Below is an example of conventional
++RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00low bits 7--0`
++      - FG\ :sub:`01low bits 1--0`\ (bits 7--6) B\ :sub:`00high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`01low bits 9--2`
++      - G\ :sub:`02low bits 3--0`\ (bits 7--4) FG\ :sub:`01high bits 13--10`\ (bits 3--0)
++    * - start + 4:
++      - G\ :sub:`02low bits 11--4`
++      - B\ :sub:`03low bits 5--0`\ (bits 7--2) G\ :sub:`02high bits 13--12`\ (bits 1--0)
++      - B\ :sub:`03high bits 13--6`
++      - FG\ :sub:`04low bits 7--0`
++    * - start + 8:
++      - G\ :sub:`05low bits 1--0`\ (bits 7--6) FG\ :sub:`04high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`05high bits 9--2`
++      - G\ :sub:`05high bits 13--10`
++      -
++    * - start + 12:
++      - G\ :sub:`10low bits 7--0`
++      - R\ :sub:`11low bits 1--0`\ (bits 7--6) G\ :sub:`10high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`11low bits 9--2`
++      - FG\ :sub:`12low bits 3--0`\ (bits 7--4) R\ :sub:`11high bits 13--10`\ (bits 3--0)
++    * - start + 16:
++      - FG\ :sub:`12low bits 11--4`
++      - G\ :sub:`13low bits 5--0`\ (bits 7--2) FG\ :sub:`12high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`13high bits 13--6`
++      - R\ :sub:`14low bits 7--0`
++    * - start + 20:
++      - FG\ :sub:`15low bits 1--0`\ (bits 7--6) R\ :sub:`14high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`15high bits 9--2`
++      - FG\ :sub:`15high bits 13--10`
++      -
++    * - start + 24:
++      - B\ :sub:`20low bits 7--0`
++      - FG\ :sub:`21low bits 1--0`\ (bits 7--6) B\ :sub:`20high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`21low bits 9--2`
++      - G\ :sub:`22low bits 3--0`\ (bits 7--4) FG\ :sub:`21high bits 13--10`\ (bits 3--0)
++    * - start + 28:
++      - G\ :sub:`22low bits 11--4`
++      - B\ :sub:`23low bits 5--0`\ (bits 7--2) G\ :sub:`22high bits 13--12`\ (bits 1--0)
++      - B\ :sub:`23high bits 13--6`
++      - FG\ :sub:`24low bits 7--0`
++    * - start + 32:
++      - G\ :sub:`25low bits 1--0`\ (bits 7--6) FG\ :sub:`24high bits 13--8`\ (bits 5--0)
++      - G\ :sub:`25high bits 9--2`
++      - G\ :sub:`25high bits 13--10`
++      -
++    * - start + 36:
++      - G\ :sub:`30low bits 7--0`
++      - R\ :sub:`31low bits 1--0`\ (bits 7--6) G\ :sub:`30high bits 13--8`\ (bits 5--0)
++      - R\ :sub:`31low bits 9--2`
++      - FG\ :sub:`32low bits 3--0`\ (bits 7--4) R\ :sub:`31high bits 13--10`\ (bits 3--0)
++    * - start + 40:
++      - FG\ :sub:`32low bits 11--4`
++      - G\ :sub:`33low bits 5--0`\ (bits 7--2) FG\ :sub:`32high bits 13--12`\ (bits 1--0)
++      - G\ :sub:`33high bits 13--6`
++      - R\ :sub:`34low bits 7--0`
++    * - start + 44:
++      - FG\ :sub:`35low bits 1--0`\ (bits 7--6) R\ :sub:`34high bits 13--8`\ (bits 5--0)
++      - FG\ :sub:`35high bits 9--2`
++      - FG\ :sub:`35high bits 13--10`
++      -
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8.rst
+new file mode 100644
+index 000000000000..86cadbf38175
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8.rst
+@@ -0,0 +1,51 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr8:
++.. _v4l2-pix-fmt-mtisp-sgbrg8:
++.. _v4l2-pix-fmt-mtisp-sgrbg8:
++.. _v4l2-pix-fmt-mtisp-srggb8:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR8 ('MBB8'), V4L2_PIX_FMT_MTISP_SGBRG8('MBG8'), V4L2_PIX_FMT_MTISP_SGRBG8('MBg8'), V4L2_PIX_FMT_MTISP_SRGGB8('MBR8')
++*******************************
++
++8-bit Packed Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format, meaning all the data bits for a pixel lying
++next to each other with no padding in memory, with a depth of 8 bits per pixel.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor.
++They are conventionally described as GRGR... BGBG..., RGRG... GBGB..., etc.
++Below is an example of conventional RGB byte order BGGR.
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00`
++      - G\ :sub:`01`
++      - B\ :sub:`02`
++      - G\ :sub:`03`
++    * - start + 4:
++      - G\ :sub:`10`
++      - R\ :sub:`11`
++      - G\ :sub:`12`
++      - R\ :sub:`13`
++    * - start + 8:
++      - B\ :sub:`20`
++      - G\ :sub:`21`
++      - B\ :sub:`22`
++      - G\ :sub:`23`
++    * - start + 12:
++      - G\ :sub:`30`
++      - R\ :sub:`31`
++      - G\ :sub:`32`
++      - R\ :sub:`33`
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8f.rst b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8f.rst
+new file mode 100644
+index 000000000000..ca5151312bca
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-mtisp-sbggr8f.rst
+@@ -0,0 +1,78 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _v4l2-pix-fmt-mtisp-sbggr8f:
++.. _v4l2-pix-fmt-mtisp-sgbrg8f:
++.. _v4l2-pix-fmt-mtisp-sgrbg8f:
++.. _v4l2-pix-fmt-mtisp-srggb8f:
++
++*******************************
++V4L2_PIX_FMT_MTISP_SBGGR8F ('MFB8'), V4L2_PIX_FMT_MTISP_SGBRG8F('MFG8'), V4L2_PIX_FMT_MTISP_SGRBG8F('MFg8'), V4L2_PIX_FMT_MTISP_SRGGB8F('MFR8')
++*******************************
++
++8-bit Packed Full-G Bayer formats.
++
++Description
++===========
++
++These four pixel formats are used by Mediatek ISP P1.
++This is a packed format with a depth of 8 bits per sample with every 4 pixels.
++Full-G means 1 more pixel for green channel every 2 pixels.
++The least significant byte is stored at lower memory addresses (little-endian).
++The RGB byte order follows raw sRGB / Bayer format from sensor. They are conventionally
++described as GRGR... BGBG..., RGRG... GBGB..., etc. Below is an example of conventional
++RGB byte order BGGR.
++
++**Bit-packed representation.**
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++
++    * - start + 0:
++      - B\ :sub:`00`
++      - FG\ :sub:`01`
++      - G\ :sub:`02`
++      - B\ :sub:`03`
++      - FG\ :sub:`04`
++      - G\ :sub:`05`
++    * - start + 6:
++      - G\ :sub:`10`
++      - R\ :sub:`11`
++      - FG\ :sub:`12`
++      - G\ :sub:`13`
++      - R\ :sub:`14`
++      - FG\ :sub:`15`
++    * - start + 12:
++      - B\ :sub:`20`
++      - FG\ :sub:`21`
++      - G\ :sub:`22`
++      - B\ :sub:`23`
++      - FG\ :sub:`24`
++      - G\ :sub:`25`
++    * - start + 18:
++      - G\ :sub:`30`
++      - R\ :sub:`31`
++      - FG\ :sub:`32`
++      - G\ :sub:`33`
++      - R\ :sub:`34`
++      - FG\ :sub:`35`
+\ No newline at end of file
+diff --git a/Documentation/media/uapi/v4l/pixfmt-rgb.rst b/Documentation/media/uapi/v4l/pixfmt-rgb.rst
+index 48ab80024835..1ba260c84083 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-rgb.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-rgb.rst
+@@ -28,3 +28,11 @@ RGB Formats
+     pixfmt-srggb12p
+     pixfmt-srggb14p
+     pixfmt-srggb16
++    pixfmt-pixfmt-mtisp-srggb8
++    pixfmt-pixfmt-mtisp-srggb10
++    pixfmt-pixfmt-mtisp-srggb12
++    pixfmt-pixfmt-mtisp-srggb14
++    pixfmt-pixfmt-mtisp-srggb8f
++    pixfmt-pixfmt-mtisp-srggb10f
++    pixfmt-pixfmt-mtisp-srggb12f
++    pixfmt-pixfmt-mtisp-srggb14f
+\ No newline at end of file
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index b1f4b991dba6..451dada2146d 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1293,6 +1293,38 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_PIX_FMT_KONICA420:	descr = "GSPCA KONICA420"; break;
+ 	case V4L2_PIX_FMT_HSV24:	descr = "24-bit HSV 8-8-8"; break;
+ 	case V4L2_PIX_FMT_HSV32:	descr = "32-bit XHSV 8-8-8-8"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR8: descr = "8-bit Bayer BGGR MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG8: descr = "8-bit Bayer GBRG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG8: descr = "8-bit Bayer GRBG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB8: descr = "8-bit Bayer RGGB MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR10: descr = "10-bit Bayer BGGR MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG10: descr = "10-bit Bayer GBRG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG10: descr = "10-bit Bayer GRBG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB10: descr = "10-bit Bayer RGGB MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR12: descr = "12-bit Bayer BGGR MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG12: descr = "12-bit Bayer GBRG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG12: descr = "12-bit Bayer GRBG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB12: descr = "12-bit Bayer RGGB MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR14: descr = "14-bit Bayer BGGR MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG14: descr = "14-bit Bayer GBRG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG14: descr = "14-bit Bayer GRBG MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB14: descr = "14-bit Bayer RGGB MTISP Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR8F: descr = "8-bit Full-G Bayer BGGR Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG8F: descr = "8-bit Full-G Bayer GBRG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG8F: descr = "8-bit Full-G Bayer GRBG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB8F: descr = "8-bit Full-G Bayer RGGB Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR10F: descr = "10-bit Full-G Bayer BGGR Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG10F: descr = "10-bit Full-G Bayer GBRG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG10F: descr = "10-bit Full-G Bayer GRBG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB10F: descr = "10-bit Full-G Bayer RGGB Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR12F: descr = "12-bit Full-G Bayer BGGR Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG12F: descr = "12-bit Full-G Bayer GBRG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG12F: descr = "12-bit Full-G Bayer GRBG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB12F: descr = "12-bit Full-G Bayer RGGB Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SBGGR14F: descr = "14-bit Full-G Bayer BGGR Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGBRG14F: descr = "14-bit Full-G Bayer GBRG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SGRBG14F: descr = "14-bit Full-G Bayer GRBG Packed"; break;
++	case V4L2_PIX_FMT_MTISP_SRGGB14F: descr = "14-bit Full-G Bayer RGGB Packed"; break;
+ 	case V4L2_SDR_FMT_CU8:		descr = "Complex U8"; break;
+ 	case V4L2_SDR_FMT_CU16LE:	descr = "Complex U16LE"; break;
+ 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+@@ -1308,6 +1340,11 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_META_FMT_VSP1_HGO:	descr = "R-Car VSP1 1-D Histogram"; break;
+ 	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
+ 	case V4L2_META_FMT_UVC:		descr = "UVC payload header metadata"; break;
++	case V4L2_META_FMT_MTISP_3A:	descr = "AE/AWB Histogram"; break;
++	case V4L2_META_FMT_MTISP_AF:	descr = "AF Histogram"; break;
++	case V4L2_META_FMT_MTISP_LCS:	descr = "Local Contrast Enhancement Stat"; break;
++	case V4L2_META_FMT_MTISP_LMV:	descr = "Local Motion Vector Histogram"; break;
++	case V4L2_META_FMT_MTISP_PARAMS: descr = "MTK ISP Tuning Metadata"; break;
+ 
+ 	default:
+ 		/* Compressed formats */
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 9d9705ceda76..8eabcd6a97bc 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -728,6 +728,40 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_IPU3_SGRBG10	v4l2_fourcc('i', 'p', '3', 'G') /* IPU3 packed 10-bit GRBG bayer */
+ #define V4L2_PIX_FMT_IPU3_SRGGB10	v4l2_fourcc('i', 'p', '3', 'r') /* IPU3 packed 10-bit RGGB bayer */
+ 
++/* Vendor specific - Mediatek ISP bayer formats */
++#define V4L2_PIX_FMT_MTISP_SBGGR8   v4l2_fourcc('M', 'B', 'B', '8') /*  Packed  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG8   v4l2_fourcc('M', 'B', 'G', '8') /*  Packed  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG8   v4l2_fourcc('M', 'B', 'g', '8') /*  Packed  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB8   v4l2_fourcc('M', 'B', 'R', '8') /*  Packed  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR10  v4l2_fourcc('M', 'B', 'B', 'A') /*  Packed 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG10  v4l2_fourcc('M', 'B', 'G', 'A') /*  Packed 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG10  v4l2_fourcc('M', 'B', 'g', 'A') /*  Packed 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB10  v4l2_fourcc('M', 'B', 'R', 'A') /*  Packed 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR12  v4l2_fourcc('M', 'B', 'B', 'C') /*  Packed 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG12  v4l2_fourcc('M', 'B', 'G', 'C') /*  Packed 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG12  v4l2_fourcc('M', 'B', 'g', 'C') /*  Packed 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB12  v4l2_fourcc('M', 'B', 'R', 'C') /*  Packed 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR14  v4l2_fourcc('M', 'B', 'B', 'E') /*  Packed 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG14  v4l2_fourcc('M', 'B', 'G', 'E') /*  Packed 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG14  v4l2_fourcc('M', 'B', 'g', 'E') /*  Packed 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB14  v4l2_fourcc('M', 'B', 'R', 'E') /*  Packed 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR8F  v4l2_fourcc('M', 'F', 'B', '8') /*  Full-G  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG8F  v4l2_fourcc('M', 'F', 'G', '8') /*  Full-G  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG8F  v4l2_fourcc('M', 'F', 'g', '8') /*  Full-G  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB8F  v4l2_fourcc('M', 'F', 'R', '8') /*  Full-G  8-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR10F  v4l2_fourcc('M', 'F', 'B', 'A') /*  Full-G 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG10F  v4l2_fourcc('M', 'F', 'G', 'A') /*  Full-G 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG10F  v4l2_fourcc('M', 'F', 'g', 'A') /*  Full-G 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB10F  v4l2_fourcc('M', 'F', 'R', 'A') /*  Full-G 10-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR12F  v4l2_fourcc('M', 'F', 'B', 'C') /*  Full-G 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG12F  v4l2_fourcc('M', 'F', 'G', 'C') /*  Full-G 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG12F  v4l2_fourcc('M', 'F', 'g', 'C') /*  Full-G 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB12F  v4l2_fourcc('M', 'F', 'R', 'C') /*  Full-G 12-bit  */
++#define V4L2_PIX_FMT_MTISP_SBGGR14F  v4l2_fourcc('M', 'F', 'B', 'E') /*  Full-G 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SGBRG14F  v4l2_fourcc('M', 'F', 'G', 'E') /*  Full-G 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SGRBG14F  v4l2_fourcc('M', 'F', 'g', 'E') /*  Full-G 14-bit  */
++#define V4L2_PIX_FMT_MTISP_SRGGB14F  v4l2_fourcc('M', 'F', 'R', 'E') /*  Full-G 14-bit  */
++
+ /* SDR formats - used only for Software Defined Radio devices */
+ #define V4L2_SDR_FMT_CU8          v4l2_fourcc('C', 'U', '0', '8') /* IQ u8 */
+ #define V4L2_SDR_FMT_CU16LE       v4l2_fourcc('C', 'U', '1', '6') /* IQ u16le */
+@@ -749,6 +783,11 @@ struct v4l2_pix_format {
+ #define V4L2_META_FMT_VSP1_HGT    v4l2_fourcc('V', 'S', 'P', 'T') /* R-Car VSP1 2-D Histogram */
+ #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
+ #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
++#define V4L2_META_FMT_MTISP_3A    v4l2_fourcc('M', 'T', 'f', 'a') /* AE/AWB histogram */
++#define V4L2_META_FMT_MTISP_AF    v4l2_fourcc('M', 'T', 'f', 'f') /* AF histogram */
++#define V4L2_META_FMT_MTISP_LCS   v4l2_fourcc('M', 'T', 'f', 'c') /* Local contrast enhanced statistics */
++#define V4L2_META_FMT_MTISP_LMV   v4l2_fourcc('M', 'T', 'f', 'm') /* Local motion vector histogram */
++#define V4L2_META_FMT_MTISP_PARAMS v4l2_fourcc('M', 'T', 'f', 'p') /* ISP tuning parameters */
+ 
+ /* priv field value to indicates that subsequent fields are valid. */
+ #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+-- 
+2.18.0
