@@ -1,179 +1,65 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v5 2/4] net: phy: Add support for generic LED configuration through the DT
-Date: Wed,  7 Aug 2019 10:04:47 -0700
-Message-ID: <20190807170449.205378-3-mka@chromium.org>
-References: <20190807170449.205378-1-mka@chromium.org>
+From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Date: Wed, 7 Aug 2019 17:05:43 +0000
+Message-ID: <VI1PR0402MB2863C28FAB5DA6356280432BDFD40@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+ <20190805153114.GA16836@kroah.com>
+ <HE1PR0402MB28579034C09EB49A76A4F8E7DFD50@HE1PR0402MB2857.eurprd04.prod.outlook.com>
+ <20190806184042.GA26041@kroah.com>
+ <VI1PR0402MB2863C4406C06B0BDA3581822DFD40@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+ <20190807165646.GA6584@kroah.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807170449.205378-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "corbet@lwn.net" <corbet@lwn.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Larisa Ileana Grigore <larisa.grigore@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-For PHYs with a device tree node look for LED trigger configuration
-using the generic binding, if it exists try to apply it via the new
-driver hook .config_led.
+On 8/7/2019 7:56 PM, gregkh@linuxfoundation.org wrote:
+> On Wed, Aug 07, 2019 at 04:42:17PM +0000, Stefan-gabriel Mirea wrote:
+>> On 8/6/2019 9:40 PM, gregkh@linuxfoundation.org wrote:
+>>> On Tue, Aug 06, 2019 at 05:11:17PM +0000, Stefan-gabriel Mirea wrote:
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v5:
-- add callback to configure a LED to the PHY driver, instead of
-  having the driver retrieve the DT data
-- use new trigger names
-- added support for trigger 'none'
-- release DT nodes after use
-- renamed 'PHY_LED_LINK_*' to 'PHY_LED_TRIGGER_LINK_*'
-- added anonymous struct to struct phy_led_config to track
-  'activity' in a separate flag. this could be changed to 'flags' if
-  needed/desired.
-- updated commit message (previous subject was 'net: phy: Add
-  function to retrieve LED configuration from the DT')
+<snip>
 
-Changes in v4:
-- patch added to the series
----
- drivers/net/phy/phy_device.c | 72 ++++++++++++++++++++++++++++++++++++
- include/linux/phy.h          | 22 +++++++++++
- 2 files changed, 94 insertions(+)
+>>>> Other than that, I do not see anything wrong with the addition of a
+>>>> define in serial_core.h for this purpose (which is also what most of the
+>>>> serial drivers do, including amba-pl011.c, mentioned in
+>>>> Documentation/driver-api/serial/driver.rst as providing the reference
+>>>> implementation), so please be more specific.
+>>>
+>>> I am getting tired of dealing with merge issues with that list, and no
+>>> one seems to be able to find where they are really needed for userspace,
+>>> especially for new devices.  What happens if you do not have use it?
+>>
+>> I see. If I drop its usage completely and leave 'type' from the
+>> uart_port as 0, uart_port_startup() will fail when finding that
+>> uport->type == PORT_UNKNOWN at [1] (there may be other effects as well,
+>> e.g. due to the check in uart_configure_port[2]).
+>>
+>> So I suppose that I need to define some nonzero 'PORT_KNOWN' macro in
+>> the driver and use that one internally for 'type'. Is my understanding
+>> correct? Will there be any problems if I define it to a positive integer
+>> which is already assigned to another driver, according to serial_core.h?
+> 
+> Ugh, ok, that's messy, nevermind.  Keep the #define in there, I will try
+> to figure out how to move all of these at once sometime in the future...
+> 
+> sorry for the noise.
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6b5cb87f3866..6f85fdf72af0 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -29,6 +29,7 @@
- #include <linux/phy_led_triggers.h>
- #include <linux/mdio.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <linux/uaccess.h>
- 
- MODULE_DESCRIPTION("PHY library");
-@@ -1064,6 +1065,75 @@ static int phy_poll_reset(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static void of_phy_config_leds(struct phy_device *phydev)
-+{
-+	struct device_node *np, *child;
-+	struct phy_led_config cfg;
-+	const char *trigger;
-+	int ret;
-+
-+	if (!IS_ENABLED(CONFIG_OF_MDIO) || !phydev->drv->config_led)
-+		return;
-+
-+	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
-+	if (!np)
-+		return;
-+
-+	for_each_child_of_node(np, child) {
-+		u32 led;
-+
-+		if (of_property_read_u32(child, "reg", &led))
-+			goto skip_config;
-+
-+		ret = of_property_read_string(child, "linux,default-trigger",
-+					      &trigger);
-+		if (ret)
-+			trigger = "none";
-+
-+		memset(&cfg, 0, sizeof(cfg));
-+
-+		if (!strcmp(trigger, "none")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_NONE;
-+		} else if (!strcmp(trigger, "phy-link")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
-+		} else if (!strcmp(trigger, "phy-link-10m")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
-+		} else if (!strcmp(trigger, "phy-link-100m")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
-+		} else if (!strcmp(trigger, "phy-link-1g")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
-+		} else if (!strcmp(trigger, "phy-link-10g")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
-+		} else if (!strcmp(trigger, "phy-link-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-10m-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-100m-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-1g-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
-+			cfg.trigger.activity = true;
-+		} else if (!strcmp(trigger, "phy-link-10g-activity")) {
-+			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
-+			cfg.trigger.activity = true;
-+		} else {
-+			phydev_warn(phydev, "trigger '%s' for LED%d is invalid\n",
-+				    trigger, led);
-+			goto skip_config;
-+		}
-+
-+		phydev->drv->config_led(phydev, led, &cfg);
-+
-+	skip_config:
-+		of_node_put(child);
-+	}
-+
-+	of_node_put(np);
-+}
-+
- int phy_init_hw(struct phy_device *phydev)
- {
- 	int ret = 0;
-@@ -1087,6 +1157,8 @@ int phy_init_hw(struct phy_device *phydev)
- 	if (phydev->drv->config_init)
- 		ret = phydev->drv->config_init(phydev);
- 
-+	of_phy_config_leds(phydev);
-+
- 	return ret;
- }
- EXPORT_SYMBOL(phy_init_hw);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 462b90b73f93..3a07390fc5e9 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -325,6 +325,24 @@ struct phy_c45_device_ids {
- 	u32 device_ids[8];
- };
- 
-+/* Triggers for PHY LEDs */
-+enum phy_led_trigger {
-+	PHY_LED_TRIGGER_NONE,
-+	PHY_LED_TRIGGER_LINK,
-+	PHY_LED_TRIGGER_LINK_10M,
-+	PHY_LED_TRIGGER_LINK_100M,
-+	PHY_LED_TRIGGER_LINK_1G,
-+	PHY_LED_TRIGGER_LINK_10G,
-+};
-+
-+/* Configuration of a single PHY LED */
-+struct phy_led_config {
-+	struct {
-+		enum phy_led_trigger t;
-+		bool activity;
-+	} trigger;
-+};
-+
- /* phy_device: An instance of a PHY
-  *
-  * drv: Pointer to the driver for this PHY instance
-@@ -626,6 +644,10 @@ struct phy_driver {
- 			    struct ethtool_tunable *tuna,
- 			    const void *data);
- 	int (*set_loopback)(struct phy_device *dev, bool enable);
-+
-+	/* Configure a PHY LED */
-+	int (*config_led)(struct phy_device *dev, int led,
-+			  struct phy_led_config *cfg);
- };
- #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
- 				      struct phy_driver, mdiodrv)
--- 
-2.22.0.770.g0f2c4a37fd-goog
+No problem, thank you for your time.
+
+Regards,
+Stefan
