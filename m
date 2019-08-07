@@ -1,65 +1,72 @@
-From: Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v2 4/4] dt-bindings: iio: adc: Add AD7606B ADC documentation
-Date: Wed, 7 Aug 2019 16:31:37 +0300
-Message-ID: <20190807133137.11185-4-beniamin.bia@analog.com>
-References: <20190807133137.11185-1-beniamin.bia@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190807133137.11185-1-beniamin.bia@analog.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: jic23@kernel.org
-Cc: devel@driverdev.osuosl.org, mark.rutland@arm.com, lars@metafoo.de, biabeniamin@outlook.com, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, mchehab+samsung@kernel.org, paulmck@linux.ibm.com, Beniamin Bia <beniamin.bia@analog.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: dt-bindings: Introduce compatible strings for 7ULP and 8MQ" to the asoc tree
+Date: Wed,  7 Aug 2019 14:30:49 +0100 (BST)
+Message-ID: <20190807133049.4088D2742B9E@ypsilon.sirena.org.uk>
+References: <20190806151214.6783-6-daniel.baluta@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190806151214.6783-6-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: alsa-devel@alsa-project.org, angus@akkea.ca, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com, linux-kernel@vger.kernel.org, l.stach@pengutronix.deMark Brown <broonie@kernel.org>, mihai.serban@gmail.com, nicoleotsuka@gmail.comNicolin Chen <nicoleotsuka@gmail.com>, robh@kernel.org, shengjiu.wang@nxp.com, timur@kernel.org, tiwai@suse.com
 List-Id: devicetree@vger.kernel.org
 
-Documentation for AD7606B Analog to Digital Converter and software
-mode was added.
+The patch
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+   ASoC: dt-bindings: Introduce compatible strings for 7ULP and 8MQ
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 371be51a925a619f1fb149b8d7707e353d9c9f86 Mon Sep 17 00:00:00 2001
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Date: Tue, 6 Aug 2019 18:12:14 +0300
+Subject: [PATCH] ASoC: dt-bindings: Introduce compatible strings for 7ULP and
+ 8MQ
+
+For i.MX7ULP and i.MX8MQ register map is changed. Add two new compatbile
+strings to differentiate this.
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/20190806151214.6783-6-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-Changes in v2:
--nothing changed
+ Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-index 509dbe9c84d2..2afe31747a70 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-@@ -13,6 +13,7 @@ maintainers:
- description: |
-   Analog Devices AD7606 Simultaneous Sampling ADC
-   https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7606B.pdf
-   https://www.analog.com/media/en/technical-documentation/data-sheets/AD7616.pdf
+diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+index 2e726b983845..e61c0dc1fc0b 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+@@ -8,7 +8,8 @@ codec/DSP interfaces.
+ Required properties:
  
- properties:
-@@ -22,6 +23,7 @@ properties:
-       - adi,ad7606-8
-       - adi,ad7606-6
-       - adi,ad7606-4
-+      - adi,ad7606b
-       - adi,ad7616
+   - compatible		: Compatible list, contains "fsl,vf610-sai",
+-			  "fsl,imx6sx-sai" or "fsl,imx6ul-sai"
++			  "fsl,imx6sx-sai", "fsl,imx6ul-sai",
++			  "fsl,imx7ulp-sai" or "fsl,imx8mq-sai".
  
-   reg:
-@@ -87,7 +89,7 @@ properties:
+   - reg			: Offset and length of the register set for the device.
  
-   adi,sw-mode:
-     description:
--      Software mode of operation, so far available only for ad7616.
-+      Software mode of operation, so far available only for ad7616 and ad7606B.
-       It is enabled when all three oversampling mode pins are connected to
-       high level. The device is configured by the corresponding registers. If the
-       adi,oversampling-ratio-gpios property is defined, then the driver will set the
 -- 
-2.17.1
+2.20.1
