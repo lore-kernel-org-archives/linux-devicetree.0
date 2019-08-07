@@ -1,56 +1,78 @@
-From: fugang.duan@nxp.com
-Subject: [PATCH nvmem v2 1/2] nvmem: imx: add i.MX8QM platform support
-Date: Wed,  7 Aug 2019 12:03:19 +0800
-Message-ID: <20190807040320.1760-2-fugang.duan@nxp.com>
-References: <20190807040320.1760-1-fugang.duan@nxp.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v5 2/4] drm/mediatek: dpi dual edge support
+Date: Wed, 7 Aug 2019 14:02:55 +0800
+Message-ID: <20190807060257.57007-3-jitao.shi@mediatek.com>
+References: <20190807060257.57007-1-jitao.shi@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807040320.1760-1-fugang.duan@nxp.com>
+In-Reply-To: <20190807060257.57007-1-jitao.shi@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: robh@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, shawnguo@kernel.org, fugang.duan@nxp.com, kernel@pengutronix.de, gregkh@linuxfoundation.org, festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jitao Shi <jitao.shi@mediatek.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, ck.hu
 List-Id: devicetree@vger.kernel.org
 
-From: Fugang Duan <fugang.duan@nxp.com>
+DPI sample the data both rising and falling edge.
+It can reduce half data io pins.
 
-i.MX8QM efuse table has some difference with i.MX8QXP platform,
-so add i.MX8QM platform support.
-
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
- drivers/nvmem/imx-ocotp-scu.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/imx-ocotp-scu.c b/drivers/nvmem/imx-ocotp-scu.c
-index be2f5f0..0d78ab4 100644
---- a/drivers/nvmem/imx-ocotp-scu.c
-+++ b/drivers/nvmem/imx-ocotp-scu.c
-@@ -16,6 +16,7 @@
- 
- enum ocotp_devtype {
- 	IMX8QXP,
-+	IMX8QM,
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index bacd989cc9aa..743230864ba0 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -72,6 +72,7 @@ struct mtk_dpi {
+ 	enum mtk_dpi_out_bit_num bit_num;
+ 	enum mtk_dpi_out_channel_swap channel_swap;
+ 	int refcount;
++	bool dual_edge;
  };
  
- struct ocotp_devtype_data {
-@@ -39,6 +40,11 @@ static struct ocotp_devtype_data imx8qxp_data = {
- 	.nregs = 800,
- };
+ static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
+@@ -345,6 +346,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+ 		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+ }
  
-+static struct ocotp_devtype_data imx8qm_data = {
-+	.devtype = IMX8QM,
-+	.nregs = 800,
-+};
++static void mtk_dpi_enable_dual_edge(struct mtk_dpi *dpi)
++{
++	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
++		     DDR_EN | DDR_4PHASE);
++	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
++}
 +
- static int imx_sc_misc_otp_fuse_read(struct imx_sc_ipc *ipc, u32 word,
- 				     u32 *val)
+ static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+ 					enum mtk_dpi_out_color_format format)
  {
-@@ -118,6 +124,7 @@ static struct nvmem_config imx_scu_ocotp_nvmem_config = {
+@@ -436,7 +444,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+ 	pll_rate = clk_get_rate(dpi->tvd_clk);
  
- static const struct of_device_id imx_scu_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx8qxp-scu-ocotp", (void *)&imx8qxp_data },
-+	{ .compatible = "fsl,imx8qm-scu-ocotp", (void *)&imx8qm_data },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx_scu_ocotp_dt_ids);
+ 	vm.pixelclock = pll_rate / factor;
+-	clk_set_rate(dpi->pixel_clk, vm.pixelclock);
++	clk_set_rate(dpi->pixel_clk,
++		     vm.pixelclock * (dpi->dual_edge ? 2 : 1));
+ 	vm.pixelclock = clk_get_rate(dpi->pixel_clk);
+ 
+ 	dev_dbg(dpi->dev, "Got  PLL %lu Hz, pixel clock %lu Hz\n",
+@@ -501,6 +510,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+ 	mtk_dpi_config_color_format(dpi, dpi->color_format);
+ 	mtk_dpi_config_2n_h_fre(dpi);
+ 	mtk_dpi_config_disable_edge(dpi);
++	if (dpi->dual_edge)
++		mtk_dpi_enable_dual_edge(dpi);
+ 	mtk_dpi_sw_reset(dpi, false);
+ 
+ 	return 0;
+@@ -686,6 +697,7 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+ 
+ 	dpi->dev = dev;
+ 	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
++	dpi->dual_edge = of_property_read_bool(dev->of_node, "dpi_dual_edge");
+ 
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	dpi->regs = devm_ioremap_resource(dev, mem);
 -- 
-2.7.4
+2.21.0
