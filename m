@@ -1,112 +1,86 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
- functionality to exynos-bus
-Date: Wed, 7 Aug 2019 17:21:15 +0300
-Message-ID: <4155482f-8f8f-a659-63ba-25701540b2c5@linaro.org>
-References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
- <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
- <20190723122016.30279-10-a.swigon@partner.samsung.com>
- <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
- <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [RFCv2 1/9] dt-bindings: mailbox: meson-mhu: convert to yaml
+Date: Wed, 7 Aug 2019 16:34:31 +0200
+Message-ID: <20190807143431.6w6dg44mjiwtffi2@flea>
+References: <20190805120320.32282-1-narmstrong@baylibre.com>
+ <20190805120320.32282-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190805120320.32282-2-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, robh+dt@kernel.org, jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Artur,
+Hi,
 
-On 8/1/19 10:59, Artur Świgoń wrote:
-> Hi Georgi,
-> 
-> On Fri, 2019-07-26 at 11:05 +0300, Georgi Djakov wrote:
->> Hi Artur,
->>
->> On 7/23/19 15:20, Artur Świgoń wrote:
->>> This patch adds interconnect functionality to the exynos-bus devfreq
->>> driver.
->>>
->>> The SoC topology is a graph (or, more specifically, a tree) and most of its
->>> edges are taken from the devfreq parent-child hierarchy (cf.
->>> Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
->>> patch adds missing edges to the DT (under the name 'parent'). Due to
->>> unspecified relative probing order, -EPROBE_DEFER may be propagated to
->>> guarantee that a child is probed before its parent.
->>>
->>> Each bus is now an interconnect provider and an interconnect node as well
->>> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
->>> itself as a node. Node IDs are not hardcoded but rather assigned at
->>> runtime, in probing order (subject to the above-mentioned exception
->>> regarding relative order). This approach allows for using this driver with
->>> various Exynos SoCs.
->>
->> I am not familiar with the Exynos bus topology, but it seems to me that it's not
->> represented correctly. An interconnect provider with just a single node (port)
->> is odd. I would expect that each provider consists of multiple master and slave
->> nodes. This data would be used by a framework to understand what are the links
->> and how the traffic flows between the IP blocks and through which buses.
-> 
-> To summarize the exynos-bus topology[1] used by the devfreq driver: There are
-> many data buses for data transfer in Samsung Exynos SoC. Every bus has its own
-> clock. Buses often share power lines, in which case one of the buses on the
-> power line is referred to as 'parent' (or as 'devfreq' in the DT). In the
-> particular case of Exynos4412[1][2], the topology can be expressed as follows:
-> 
-> bus_dmc
-> -- bus_acp
-> -- bus_c2c
-> 
-> bus_leftbus
-> -- bus_rightbus
-> -- bus_display
-> -- bus_fsys
-> -- bus_peri
-> -- bus_mfc
-> 
-> Where bus_dmc and bus_leftbus probably could be referred to as masters, and the
-> following indented nodes as slaves. Patch 08/11 of this RFC additionally adds
-> the following to the DT:
-> 
-> bus_dmc
-> -- bus_leftbus
-> 
-> Which makes the topology a valid tree.
-> 
-> The exynos-bus concept in devfreq[3] is designed in such a way that every bus is
-> probed separately as a platform device, and is a largely independent entity.
+On Mon, Aug 05, 2019 at 02:03:12PM +0200, Neil Armstrong wrote:
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic MHU controller over to a YAML schemas.
 >
-> This RFC proposes an extension to the existing devfreq driver that basically
-> provides a simple QoS to ensure minimum clock frequency for selected buses
-> (possibly overriding devfreq governor calculations) using the interconnect
-> framework.
-> 
-> The hierarchy is modelled in such a way that every bus is an interconnect node.
-> On the other hand, what is considered an interconnect provider here is quite
-> arbitrary, but for the reasons mentioned in the above paragraph, this RFC
-> assumes that every bus is a provider of itself as a node. Using an alternative
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../mailbox/amlogic,meson-gxbb-mhu.yaml       | 53 +++++++++++++++++++
+>  .../devicetree/bindings/mailbox/meson-mhu.txt | 34 ------------
+>  2 files changed, 53 insertions(+), 34 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml b/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+> new file mode 100644
+> index 000000000000..2536a0082cff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/mailbox/amlogic,meson-gxbb-mhu.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Amlogic Meson Message-Handling-Unit Controller
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +description: |
+> +  The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
+> +  that has 3 independent channels/links to communicate with remote processor(s).
+> +  MHU links are hardwired on a platform. A link raises interrupt for any
+> +  received data. However, there is no specified way of knowing if the sent
+> +  data has been read by the remote. This driver assumes the sender polls
+> +  STAT register and the remote clears it after having read the data.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-gxbb-mhu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 3
+> +    maxItems: 3
 
-IIUC, in case we want to transfer data between the display and the memory
-controller, the path would look like this:
+You don't need to specify both here. If one is missing, the tools will
+fill it automatically with the other's value.
 
-display --> bus_display --> bus_leftbus --> bus_dmc --> memory
+Maxime
 
-But the bus_display for example would have not one, but two nodes (ports),
-right?  One representing the link to the display controller and another one
-representing the link to bus_leftbus? So i think that all the buses should
-have at least two nodes, to represent each end of the wire.
-
-> singleton provider approach was deemed more complicated since the 'dev' field in
-> 'struct icc_provider' has to be set to something meaningful and we are tied to
-> the 'samsung,exynos-bus' compatible string in the driver (and multiple instances
-> of exynos-bus probed in indeterminate relative order).
-> 
-
-Sure, the rest makes sense to me.
-
-Thanks,
-Georgi
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
