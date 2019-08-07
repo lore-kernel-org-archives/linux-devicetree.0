@@ -1,74 +1,150 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Wed, 7 Aug 2019 12:12:57 +0100
-Message-ID: <20190807111256.GC54191@lakrids.cambridge.arm.com>
-References: <20190806140135.4739-1-anarsoul@gmail.com>
- <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
- <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
- <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+From: Tushar Khandelwal <Tushar.Khandelwal@arm.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
+ documentation
+Date: Wed, 7 Aug 2019 11:17:27 +0000
+Message-ID: <998A97B0-D9D3-4F01-B5D4-56F875D38FC8@arm.com>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com>
+ <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <20190802105938.GG23424@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190802105938.GG23424@e107155-lin>
+Content-Language: en-GB
+Content-ID: <A255E356161BDE4ABF590540DBE20E36@eurprd08.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "morten_bp@live.dk" <morten_bp@live.dk>, nd <nd@arm.com>, Morten Petersen <Morten.Petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 10:14:39PM +0100, Robin Murphy wrote:
-> On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
-> > > 
-> > > Vasily Khoruzhick writes:
-> > > > On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > 
-> > > > > On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> > > > > > Looks like PMU in A64 is broken, it generates no interrupts at all and
-> > > > > > as result 'perf top' shows no events.
-> > > > > 
-> > > > > Does something like 'perf stat sleep 1' at least count cycles correctly?
-> > > > > It could well just be that the interrupt numbers are wrong...
-> > > > 
-> > > > Looks like it does, at least result looks plausible:
-> > > 
-> > > I'm using perf stat regularly (cache benchmarks) and it works fine.
-> > > 
-> > > Unfortunately I wasn't aware that perf stat is a poor test for
-> > > the interrupts part of the node, when I added it. So I'm not too
-> > > surprised I got it wrong.
-> > > 
-> > > However, it would be unfortunate if the node got removed completely,
-> > > because perf stat would not work anymore. Maybe we can only remove
-> > > the interrupts or just fix them even if the HW doesn't work?
-> > 
-> > I'm not familiar with PMU driver. Is it possible to get it working
-> > without interrupts?
-> 
-> Yup - you get a grumpy message from the driver, it will refuse sampling
-> events (the ones which weren't working anyway), and if you measure anything
-> for long enough that a counter overflows you'll get wonky results. But for
-> counting hardware events over relatively short periods it'll still do the
-> job.
-
-Even that's stupidly dodgy; a CPU_CYCLES event could easily overflow
-several times between the kernel sampling it, so you can lose billions
-of events without any idea that happened.
-
-For other PMUs we can fix that with a hrtimer, but I think for a CPU PMU
-it has to be at such a high frequency that it imposes a ridiculous
-overhead, even assuming we can choose a sufficient frequency. :/
-
-Thanks,
-Mark.
+DQoNCu+7v09uIDAyLzA4LzIwMTksIDExOjU5LCAiU3VkZWVwIEhvbGxhIiA8c3VkZWVwLmhvbGxh
+QGFybS5jb20+IHdyb3RlOg0KDQogICAgT24gU3VuLCBKdWwgMjEsIDIwMTkgYXQgMDQ6NTg6MDRQ
+TSAtMDUwMCwgSmFzc2kgQnJhciB3cm90ZToNCiAgICA+IE9uIFdlZCwgSnVsIDE3LCAyMDE5IGF0
+IDI6MjYgUE0gVHVzaGFyIEtoYW5kZWx3YWwNCiAgICA+IDx0dXNoYXIua2hhbmRlbHdhbEBhcm0u
+Y29tPiB3cm90ZToNCiAgICA+DQogICAgPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9hcm0sbWh1djIudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLG1odXYyLnR4dA0KICAgID4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NA0KICAgID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjNhMDU1OTM0MTRiYw0K
+ICAgID4gPiAtLS0gL2Rldi9udWxsDQogICAgPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybSxtaHV2Mi50eHQNCiAgICA+ID4gQEAgLTAsMCArMSwx
+MDggQEANCiAgICA+ID4gK0FybSBNSFV2MiBNYWlsYm94IERyaXZlcg0KICAgID4gPiArPT09PT09
+PT09PT09PT09PT09PT09PT09DQogICAgPiA+ICsNCiAgICA+ID4gK1RoZSBBcm0gTWVzc2FnZS1I
+YW5kbGluZy1Vbml0IChNSFUpIFZlcnNpb24gMiBpcyBhIG1haWxib3ggY29udHJvbGxlciB0aGF0
+IGhhcw0KICAgID4gPiArYmV0d2VlbiAxIGFuZCAxMjQgY2hhbm5lbCB3aW5kb3dzIHRvIHByb3Zp
+ZGUgdW5pZGlyZWN0aW9uYWwgY29tbXVuaWNhdGlvbiB3aXRoDQogICAgPiA+ICtyZW1vdGUgcHJv
+Y2Vzc29yKHMpLg0KICAgID4gPiArDQogICAgPiA+ICtHaXZlbiB0aGUgdW5pZGlyZWN0aW9uYWwg
+bmF0dXJlIG9mIHRoZSBkZXZpY2UsIGFuIE1IVXYyIG1haWxib3ggbWF5IG9ubHkgYmUNCiAgICA+
+ID4gK3dyaXR0ZW4gdG8gb3IgcmVhZCBmcm9tLiBJZiBhIHBhaXIgb2YgTUhVIGRldmljZXMgaXMg
+aW1wbGVtZW50ZWQgYmV0d2VlbiB0d28NCiAgICA+ID4gK3Byb2Nlc3NpbmcgZWxlbWVudHMgdG8g
+cHJvdmlkZSBiaWRpcmVjdGlvbmFsIGNvbW11bmljYXRpb24sIHRoZXNlIG11c3QgYmUNCiAgICA+
+ID4gK3NwZWNpZmllZCBhcyB0d28gc2VwYXJhdGUgbWFpbGJveGVzLg0KICAgID4gPiArDQogICAg
+PiA+ICtBIGRldmljZSB0cmVlIG5vZGUgZm9yIGFuIEFybSBNSFV2MiBkZXZpY2UgbXVzdCBzcGVj
+aWZ5IGVpdGhlciBhIHJlY2VpdmVyIGZyYW1lDQogICAgPiA+ICtvciBhIHNlbmRlciBmcmFtZSwg
+aW5kaWNhdGluZyB3aGljaCBlbmQgb2YgdGhlIHVuaWRpcmVjdGlvbmFsIE1IVSBkZXZpY2Ugd2hp
+Y2gNCiAgICA+ID4gK3RoZSBkZXZpY2Ugbm9kZSBlbnRyeSBkZXNjcmliZXMuDQogICAgPiA+ICsN
+CiAgICA+ID4gK0FuIE1IVSBkZXZpY2UgbXVzdCBiZSBzcGVjaWZpZWQgd2l0aCBhIHRyYW5zcG9y
+dCBwcm90b2NvbC4gVGhlIHRyYW5zcG9ydA0KICAgID4gPiArcHJvdG9jb2wgb2YgYW4gTUhVIGRl
+dmljZSBkZXRlcm1pbmVzIHRoZSBtZXRob2Qgb2YgZGF0YSB0cmFuc21pc3Npb24gYXMgd2VsbCBh
+cw0KICAgID4gPiArdGhlIG51bWJlciBvZiBwcm92aWRlZCBtYWlsYm94ZXMuDQogICAgPiA+ICtG
+b2xsb3dpbmcgYXJlIHRoZSBwb3NzaWJsZSB0cmFuc3BvcnQgcHJvdG9jb2wgdHlwZXM6DQogICAg
+PiA+ICstIFNpbmdsZS13b3JkOiBBbiBNSFUgZGV2aWNlIGltcGxlbWVudHMgYXMgbWFueSBtYWls
+Ym94ZXMgYXMgaXQNCiAgICA+ID4gKyAgICAgICAgICAgICAgIHByb3ZpZGVzIGNoYW5uZWwgd2lu
+ZG93cy4gRGF0YSBpcyB0cmFuc21pdHRlZCB0aHJvdWdoDQogICAgPiA+ICsgICAgICAgICAgICAg
+ICB0aGUgTUhVIHJlZ2lzdGVycy4NCiAgICA+ID4gKy0gTXVsdGktd29yZDogIEFuIE1IVSBkZXZp
+Y2UgaW1wbGVtZW50cyBhIHNpbmdsZSBtYWlsYm94LiBBbGwgY2hhbm5lbCB3aW5kb3dzDQogICAg
+PiA+ICsgICAgICAgICAgICAgICB3aWxsIGJlIHVzZWQgZHVyaW5nIHRyYW5zbWlzc2lvbi4gRGF0
+YSBpcyB0cmFuc21pdHRlZCB0aHJvdWdoDQogICAgPiA+ICsgICAgICAgICAgICAgICB0aGUgTUhV
+IHJlZ2lzdGVycy4NCiAgICA+ID4gKy0gRG9vcmJlbGw6ICAgIEFuIE1IVSBkZXZpY2UgaW1wbGVt
+ZW50cyBhcyBtYW55IG1haWxib3hlcyBhcyB0aGVyZSBhcmUgZmxhZw0KICAgID4gPiArICAgICAg
+ICAgICAgICAgYml0cyBhdmFpbGFibGUgaW4gaXRzIGNoYW5uZWwgd2luZG93cy4gT3B0aW9uYWxs
+eSwgZGF0YSBtYXkNCiAgICA+ID4gKyAgICAgICAgICAgICAgIGJlIHRyYW5zbWl0dGVkIHRocm91
+Z2ggYSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiwgd2hlcmVpbiB0aGUgTUhVDQogICAgPiA+ICsgICAg
+ICAgICAgICAgICBpcyB1c2VkIHN0cmljdGx5IGFzIGFuIGludGVycnVwdCBnZW5lcmF0aW9uIG1l
+Y2hhbmlzbS4NCiAgICA+ID4gKw0KICAgID4gPiArTWFpbGJveCBEZXZpY2UgTm9kZToNCiAgICA+
+ID4gKz09PT09PT09PT09PT09PT09PT09DQogICAgPiA+ICsNCiAgICA+ID4gK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6DQogICAgPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLQ0KICAgID4gPiArLSBjb21w
+YXRpYmxlOiAgU2hhbGwgYmUgImFybSxtaHV2MiIgJiAiYXJtLHByaW1lY2VsbCINCiAgICA+ID4g
+Ky0gcmVnOiAgICAgICAgIENvbnRhaW5zIHRoZSBtYWlsYm94IHJlZ2lzdGVyIGFkZHJlc3MgcmFu
+Z2UgKGJhc2UNCiAgICA+ID4gKyAgICAgICAgICAgICAgIGFkZHJlc3MgYW5kIGxlbmd0aCkNCiAg
+ICA+ID4gKy0gI21ib3gtY2VsbHMgIFNoYWxsIGJlIDEgLSB0aGUgaW5kZXggb2YgdGhlIGNoYW5u
+ZWwgbmVlZGVkLg0KICAgID4gPiArLSBtaHUtZnJhbWUgICAgRnJhbWUgdHlwZSBvZiB0aGUgZGV2
+aWNlLg0KICAgID4gPiArICAgICAgICAgICAgICAgU2hhbGwgYmUgZWl0aGVyICJzZW5kZXIiIG9y
+ICJyZWNlaXZlciINCiAgICA+ID4gKy0gbWh1LXByb3RvY29sIFRyYW5zcG9ydCBwcm90b2NvbCBv
+ZiB0aGUgZGV2aWNlLiBTaGFsbCBiZSBvbmUgb2YgdGhlDQogICAgPiA+ICsgICAgICAgICAgICAg
+ICBmb2xsb3dpbmc6ICJzaW5nbGUtd29yZCIsICJtdWx0aS13b3JkIiwgImRvb3JiZWxsIg0KICAg
+ID4gPiArDQogICAgPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIChyZWNlaXZlciBmcmFtZSk6DQog
+ICAgPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQogICAgPiA+ICst
+IGludGVycnVwdHM6ICBDb250YWlucyB0aGUgaW50ZXJydXB0IGluZm9ybWF0aW9uIGNvcnJlc3Bv
+bmRpbmcgdG8gdGhlDQogICAgPiA+ICsgICAgICAgICAgICAgICBjb21iaW5lZCBpbnRlcnJ1cHQg
+b2YgdGhlIHJlY2VpdmVyIGZyYW1lDQogICAgPiA+ICsNCiAgICA+ID4gK0V4YW1wbGU6DQogICAg
+PiA+ICstLS0tLS0tLQ0KICAgID4gPiArDQogICAgPiA+ICsgICAgICAgbWJveF9td190eDogbWh1
+QDEwMDAwMDAwIHsNCiAgICA+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLG1o
+dXYyIiwiYXJtLHByaW1lY2VsbCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgx
+MDAwMDAwMCAweDEwMDA+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZyZWZj
+bGsxMDBtaHo+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3Bj
+bGsiOw0KICAgID4gPiArICAgICAgICAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQogICAgPiA+
+ICsgICAgICAgICAgICAgICBtaHUtcHJvdG9jb2wgPSAibXVsdGktd29yZCI7DQogICAgPiA+ICsg
+ICAgICAgICAgICAgICBtaHUtZnJhbWUgPSAic2VuZGVyIjsNCiAgICA+ID4gKyAgICAgICB9Ow0K
+ICAgID4gPiArDQogICAgPiA+ICsgICAgICAgbWJveF9zd190eDogbWh1QDEwMDAwMDAwIHsNCiAg
+ICA+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLG1odXYyIiwiYXJtLHByaW1l
+Y2VsbCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgxMTAwMDAwMCAweDEwMDA+
+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZyZWZjbGsxMDBtaHo+Ow0KICAg
+ID4gPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KICAgID4gPiAr
+ICAgICAgICAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQogICAgPiA+ICsgICAgICAgICAgICAg
+ICBtaHUtcHJvdG9jb2wgPSAic2luZ2xlLXdvcmQiOw0KICAgID4gPiArICAgICAgICAgICAgICAg
+bWh1LWZyYW1lID0gInNlbmRlciI7DQogICAgPiA+ICsgICAgICAgfTsNCiAgICA+ID4gKw0KICAg
+ID4gPiArICAgICAgIG1ib3hfZGJfcng6IG1odUAxMDAwMDAwMCB7DQogICAgPiA+ICsgICAgICAg
+ICAgICAgICBjb21wYXRpYmxlID0gImFybSxtaHV2MiIsImFybSxwcmltZWNlbGwiOw0KICAgID4g
+PiArICAgICAgICAgICAgICAgcmVnID0gPDB4MTIwMDAwMDAgMHgxMDAwPjsNCiAgICA+ID4gKyAg
+ICAgICAgICAgICAgIGNsb2NrcyA9IDwmcmVmY2xrMTAwbWh6PjsNCiAgICA+ID4gKyAgICAgICAg
+ICAgICAgIGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCiAgICA+ID4gKyAgICAgICAgICAgICAg
+ICNtYm94LWNlbGxzID0gPDE+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9
+IDwwIDQ1IDQ+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gIm1o
+dV9yeCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICBtaHUtcHJvdG9jb2wgPSAiZG9vcmJlbGwi
+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgbWh1LWZyYW1lID0gInJlY2VpdmVyIjsNCiAgICA+
+ID4gKyAgICAgICB9Ow0KICAgID4gPiArDQogICAgPiA+ICsgICAgICAgbWh1X2NsaWVudDogc2Ni
+QDJlMDAwMDAwIHsNCiAgICA+ID4gKyAgICAgICBjb21wYXRpYmxlID0gImZ1aml0c3UsbWI4NnM3
+MC1zY2ItMS4wIjsNCiAgICA+ID4gKyAgICAgICByZWcgPSA8MCAweDJlMDAwMDAwIDB4NDAwMD47
+DQogICAgPiA+ICsgICAgICAgbWJveGVzID0NCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIEZv
+ciBtdWx0aS13b3JkIGZyYW1lcywgY2xpZW50IG1heSBvbmx5IGluc3RhbnRpYXRlIGEgc2luZ2xl
+DQogICAgPiA+ICsgICAgICAgICAgICAgICAvLyBtYWlsYm94IGZvciBhIG1haWxib3ggY29udHJv
+bGxlcg0KICAgID4gPiArICAgICAgICAgICAgICAgPCZtYm94X213X3R4IDA+LA0KICAgID4gPiAr
+DQogICAgPiA+ICsgICAgICAgICAgICAgICAvLyBGb3Igc2luZ2xlLXdvcmQgZnJhbWVzLCBjbGll
+bnQgbWF5IGluc3RhbnRpYXRlIGFzIG1hbnkNCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIG1h
+aWxib3hlcyBhcyB0aGVyZSBhcmUgY2hhbm5lbCB3aW5kb3dzIGluIHRoZSBNSFUNCiAgICA+ID4g
+KyAgICAgICAgICAgICAgICA8Jm1ib3hfc3dfdHggMD4sDQogICAgPiA+ICsgICAgICAgICAgICAg
+ICAgPCZtYm94X3N3X3R4IDE+LA0KICAgID4gPiArICAgICAgICAgICAgICAgIDwmbWJveF9zd190
+eCAyPiwNCiAgICA+ID4gKyAgICAgICAgICAgICAgICA8Jm1ib3hfc3dfdHggMz4sDQogICAgPiA+
+ICsNCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIEZvciBkb29yYmVsbCBmcmFtZXMsIGNsaWVu
+dCBtYXkgaW5zdGFudGlhdGUgYXMgbWFueSBtYWlsYm94ZXMNCiAgICA+ID4gKyAgICAgICAgICAg
+ICAgIC8vIGFzIHRoZXJlIGFyZSBiaXRzIGF2YWlsYWJsZSBpbiB0aGUgY29tYmluZWQgbnVtYmVy
+IG9mIGNoYW5uZWwNCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIHdpbmRvd3MgKChjaGFubmVs
+IHdpbmRvd3MgKiAzMikgbWFpbGJveGVzKQ0KICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94
+X2RiX3J4IDA+LA0KICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94X2RiX3J4IDE+LA0KICAg
+ID4gPiArICAgICAgICAgICAgICAgIC4uLg0KICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94
+X2RiX3J4IDE3PjsNCiAgICA+ID4gKyAgICAgICB9Ow0KICAgID4NCiAgICA+IElmIHRoZSBtaHV2
+MiBpbnN0YW5jZSBpbXBsZW1lbnRzLCBzYXksIDMgY2hhbm5lbCB3aW5kb3dzIGJldHdlZW4NCiAg
+ICA+IHNlbmRlciAobGludXgpIGFuZCByZWNlaXZlciAoZmlybXdhcmUpLCBhbmQgTGludXggcnVu
+cyB0d28gcHJvdG9jb2xzDQogICAgPiBlYWNoIHJlcXVpcmluZyAxIGFuZCAyLXdvcmQgc2l6ZWQg
+bWVzc2FnZXMgcmVzcGVjdGl2ZWx5LiBUaGUgaGFyZHdhcmUNCiAgICA+IHN1cHBvcnRzIHRoYXQg
+YnkgYXNzaWduaW5nIHdpbmRvd3MgWzBdIGFuZCBbMSwyXSB0byBlYWNoIHByb3RvY29sLg0KICAg
+ID4gSG93ZXZlciwgSSBkb24ndCB0aGluayB0aGUgZHJpdmVyIGNhbiBzdXBwb3J0IHRoYXQuIE9y
+IGRvZXMgaXQ/DQogICAgPg0KDQogICAgRldJVywgdGhlIElQIGlzIGRlc2lnbmVkIHRvIGNvdmVy
+IHdpZGUgcmFuZ2Ugb2YgdXNlY2FzZSBmcm9tIElvVCB0byBzZXJ2ZXJzDQogICAgd2l0aCB2YXJp
+YWJsZSB3aW5kb3cgbGVuZ3RoLiBJIGRvbid0IHNlZSB0aGUgbmVlZCB0byBjb21wbGljYXRlIHRo
+ZSBkcml2ZXINCiAgICBzdXBwb3J0aW5nIG1peC1uLW1hdGNoIGF0IHRoZSBjb3N0IG9mIGxhdGVu
+Y3kuIEVhY2ggcGxhdGZvcm0gY2hvb3NlIG9uZQ0KICAgIHRyYW5zcG9ydCBwcm90b2NvbCBmb3Ig
+YWxsIGl0J3MgdXNlLg0KDQpUaGUgZHJpdmVyIGRlc2lnbiBpcyB0byBhZGRyZXNzIHRoZSBtb3N0
+IHByb2JhYmxlIHNjZW5hcmlvcyBhbmQgbm90IGFsbC4NClNpbmdsZS13b3JkIDogQ2xpZW50IGdl
+dHMgb25lIDMyLWJpdCB3aW5kb3cNCkRvb3JiZWxsIDogQ2xpZW50IGdldHMgMzIgZGF0YSBwb2lu
+dGVycyAoYXJtX21lc3NhZ2UpDQpNdWx0aS13b3JkOiBDbGllbnQgZ2V0cyBhbGwgY2hhbm5lbHMg
+YXZhaWxhYmxlIGluIHRoZSBwbGF0Zm9ybS4NCg0KLS1UdXNoYXINCiAgICAtLQ0KICAgIFJlZ2Fy
+ZHMsDQogICAgU3VkZWVwDQoNCg0KSU1QT1JUQU5UIE5PVElDRTogVGhlIGNvbnRlbnRzIG9mIHRo
+aXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgY29uZmlkZW50aWFsIGFuZCBtYXkgYWxz
+byBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBw
+bGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0
+aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwgdXNlIGl0IGZvciBhbnkgcHVycG9zZSwg
+b3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24gaW4gYW55IG1lZGl1bS4gVGhhbmsgeW91
+Lg0K
