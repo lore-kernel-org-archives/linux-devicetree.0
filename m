@@ -1,73 +1,64 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Tue, 6 Aug 2019 19:39:26 -0700
-Message-ID: <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
-References: <20190806140135.4739-1-anarsoul@gmail.com>
- <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
- <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
- <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
+Date: Tue, 6 Aug 2019 20:40:47 -0700
+Message-ID: <dadf0cc7-fba4-9ab5-6ac9-0c8699eb4401@nvidia.com>
+References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
+ <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
+ <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
+ <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
-> >>
-> >> Vasily Khoruzhick writes:
-> >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>>>
-> >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
-> >>>>> as result 'perf top' shows no events.
-> >>>>
-> >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
-> >>>> It could well just be that the interrupt numbers are wrong...
-> >>>
-> >>> Looks like it does, at least result looks plausible:
-> >>
-> >> I'm using perf stat regularly (cache benchmarks) and it works fine.
-> >>
-> >> Unfortunately I wasn't aware that perf stat is a poor test for
-> >> the interrupts part of the node, when I added it. So I'm not too
-> >> surprised I got it wrong.
-> >>
-> >> However, it would be unfortunate if the node got removed completely,
-> >> because perf stat would not work anymore. Maybe we can only remove
-> >> the interrupts or just fix them even if the HW doesn't work?
-> >
-> > I'm not familiar with PMU driver. Is it possible to get it working
-> > without interrupts?
->
-> Yup - you get a grumpy message from the driver, it will refuse sampling
-> events (the ones which weren't working anyway), and if you measure
-> anything for long enough that a counter overflows you'll get wonky
-> results. But for counting hardware events over relatively short periods
-> it'll still do the job.
 
-I tried to drop interrupts completely from the node but 'perf top' is
-still broken. Though now in different way: it complains "cycles: PMU
-Hardware doesn't support sampling/overflow-interrupts. Try 'perf
-stat'"
-
-Is there any way to make it working?
-
+On 8/6/19 2:51 PM, Sowjanya Komatineni wrote:
 >
-> Robin.
+> On 8/5/19 2:20 AM, Linus Walleij wrote:
+>> On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
+>> <skomatineni@nvidia.com> wrote:
+>>
+>>> This patch adds support for Tegra pinctrl driver suspend and resume.
+>>>
+>>> During suspend, context of all pinctrl registers are stored and
+>>> on resume they are all restored to have all the pinmux and pad
+>>> configuration for normal operation.
+>>>
+>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> Patch applied to the pinctrl tree.
+>>
+>> This patch seems finished.
+>>
+>> Also if the rest don't get merged for v5.4 then at least this is so
+>> your patch stack gets more shallow.
+>>
+>> I hope it's fine to merge this separately, else tell me and I'll
+>> pull it out.
+>>
+>> Yours,
+>> Linus Walleij
+>
+> Yes, this patch can be merged separately. But, there's latest feedback 
+> from Dmitry to add barrier after writes to make sure pinmux register 
+> writes happen.
+>
+> So will update this patch to add barrier in v8. So, need to wait for v8.
+>
+> Thanks
+>
+> Sowjanya
+>
+I see it merged. So will exclude suspend/resume patch and will add patch 
+for necessary write barrier fix in v8 version.
+
+Thanks
+
+Sowjanya
