@@ -1,66 +1,89 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
-Date: Wed, 07 Aug 2019 08:37:48 -0700 (PDT)
-Message-ID: <mhng-6a70927a-4b6a-452f-910c-0639d5f47dff@palmer-si-x1e>
-References: <alpine.DEB.2.21.9999.1908061818360.13971@viisi.sifive.com>
-Mime-Version: 1.0 (MHng)
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
+ support
+Date: Wed, 7 Aug 2019 11:01:21 -0500
+Message-ID: <123a1cf0-1eac-03bd-6628-8c67004eadc5@linux.intel.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com>
+ <20190723084104.12639-4-daniel.baluta@nxp.com>
+ <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+ <CAEnQRZARFQjutkvW3_xkQAQznNm8c5jSjtAG715VtrZnDxztoA@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1908061818360.13971@viisi.sifive.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, tiny.windzz@gmail.com, Greg KH <gregkh@linuxfoundation.org>, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, johan@kernel.org, Atish Patra <Atish.Patra@wdc.com>, Anup Patel <Anup.Patel@wdc.com>, robh+dt@kernel.org, gary@garyguo.net, tglx@linutronix.de, info@metux.net, linux-riscv@lists.infradead.org, allison@lohutok.net
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEnQRZARFQjutkvW3_xkQAQznNm8c5jSjtAG715VtrZnDxztoA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 06 Aug 2019 18:26:08 PDT (-0700), Paul Walmsley wrote:
-> On Wed, 7 Aug 2019, Atish Patra wrote:
->
->> On Tue, 2019-08-06 at 16:27 -0700, Paul Walmsley wrote:
->>
->> > Seems like the "su" should be dropped from mandatory_ext.  What do you
->> > think?
->> >
->>
->> Yup. As DT binding only mention imafdc, mandatory extensions should
->> contain only that and just consider "su" extensions are considered as
->> implicit as we are running Linux.
->
-> Discussing this with Andrew and Palmer, it looks like "su" is currently
-> non-compliant.  Section 22.6 of the user-level specification states that
-> the "s" character indicates that a longer standard supervisor extension
-> name will follow.  So far I don't think any of these have been defined.
->
->> Do you think QEMU DT should be updated to reflect that ?
->
-> Yes.
 
-https://lists.nongnu.org/archive/html/qemu-riscv/2019-08/msg00141.html
 
->
->> > There's no Kconfig option by this name, and we're requiring
->> > compressed
+On 8/7/19 10:29 AM, Daniel Baluta wrote:
+> On Tue, Jul 23, 2019 at 6:19 PM Pierre-Louis Bossart
+> <pierre-louis.bossart@linux.intel.com> wrote:
 >>
->> Sorry. This was a typo. It should have been CONFIG_RISCV_ISA_C.
 >>
->> > instruction support as part of the RISC-V Linux baseline.  Could you
->> > share the rationale behind this?
+>>> diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+>>> index 61b97fc55bb2..2aa3a1cdf60c 100644
+>>> --- a/sound/soc/sof/Kconfig
+>>> +++ b/sound/soc/sof/Kconfig
+>>> @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
+>>>          Say Y if you need this option
+>>>          If unsure select "N".
+>>>
+>>> +config SND_SOC_SOF_DT
+>>> +     tristate "SOF DT enumeration support"
+>>> +     select SND_SOC_SOF
+>>> +     select SND_SOC_SOF_OPTIONS
+>>> +     help
+>>> +       This adds support for Device Tree enumeration. This option is
+>>> +       required to enable i.MX8 devices.
+>>> +       Say Y if you need this option. If unsure select "N".
+>>> +
 >>
->> I think I added this check at the config file. Looking at the Kconfig,
->> RISCV_ISA_C is always enabled. So we can drop this.
->
-> OK great.  Do you want to resend an updated patch, or would you like me to
-> fix it up here?
->
-> I'll also send a patch to drop CONFIG_RISCV_ISA_C.
->
->
-> - Paul
+>> [snip]
+>>
+>>> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+>>> index fff64a9970f0..fa35994a79c4 100644
+>>> --- a/sound/soc/sof/imx/Kconfig
+>>> +++ b/sound/soc/sof/imx/Kconfig
+>>> @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+>>>
+>>>    config SND_SOC_SOF_IMX8
+>>>        tristate "SOF support for i.MX8"
+>>> +     select SND_SOC_SOF_DT
+>>
+>> This looks upside down. You should select SOF_DT first then include the
+>> NXP stuff.
+> 
+> One more thing: So this should be 'depends on SND_SOC_SOF_DT' right?
+
+I would do this:
+
+config SND_SOC_SOF_DT
+      	tristate "SOF DT enumeration support"
+      	depends on OF # or whatever the top-level DT dependency is
+      	select SND_SOC_SOF
+      	select SND_SOC_SOF_OPTIONS
+
+
+config SND_SOC_SOF_IMX_TOPLEVEL
+	bool "SOF support for NXP i.MX audio DSPs"
+	depends on ARM64 && SND_SOC_SOF_DT || COMPILE_TEST
+	
+if SND_SOC_SOF_IMX_TOPLEVEL
+
+config SND_SOC_SOF_IMX8
+	tristate "SOF support for i.MX8"
+
+In other words push the dependencies at a higher level.
