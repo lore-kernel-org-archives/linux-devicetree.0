@@ -1,25 +1,52 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 06/16] net: phy: adin: support PHY mode converters
-Date: Wed, 7 Aug 2019 15:20:19 +0200
-Message-ID: <20190807132019.GL20422@lunn.ch>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
- <20190805165453.3989-7-alexandru.ardelean@analog.com>
- <20190805145105.GN24275@lunn.ch>
- <15cf5732415c313a7bfe610e7039e7c97b987073.camel@analog.com>
- <20190806153910.GB20422@lunn.ch>
- <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 2/5] serial: lantiq: Use proper DT compatible string
+Date: Wed, 7 Aug 2019 16:20:56 +0300
+Message-ID: <20190807132056.GX30120@smile.fi.intel.com>
+References: <cover.1565160764.git.rahul.tanwar@linux.intel.com>
+ <12c3029f406ca1fedf14154154f7082e358f0473.1565160764.git.rahul.tanwar@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
-Sender: netdev-owner@vger.kernel.org
-To: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+In-Reply-To: <12c3029f406ca1fedf14154154f7082e358f0473.1565160764.git.rahul.tanwar@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-> Is it ok if we defer the solution for this drivers/patchset?
+On Wed, Aug 07, 2019 at 05:21:32PM +0800, Rahul Tanwar wrote:
+> The patch adds change to use explicit string instead of a macro for
+> DT compatible string.
 
-Yes, not a problem if phy-mode means phy-mode.
+For consistency you may need to convert OF_EARLYCON_DECLARE() as well.
 
-     Andrew
+Perhaps commit message should explain the rationale, i.e. the following patches
+will add another compatible string and thus it makes sense to have them
+explicitly mentioned.
+
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  drivers/tty/serial/lantiq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
+> index 42e27b48e9cc..1116261c973e 100644
+> --- a/drivers/tty/serial/lantiq.c
+> +++ b/drivers/tty/serial/lantiq.c
+> @@ -792,7 +792,7 @@ lqasc_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ltq_asc_match[] = {
+> -	{ .compatible = DRVNAME },
+> +	{ .compatible = "lantiq,asc" },
+>  	{},
+>  };
+>  
+> -- 
+> 2.11.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
