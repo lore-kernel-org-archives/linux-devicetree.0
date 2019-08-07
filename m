@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 13/21] ARM: dts: imx6-colibri: Add missing pinmuxing to
- Toradex eval board
-Date: Wed, 7 Aug 2019 08:26:32 +0000
-Message-ID: <20190807082556.5013-14-philippe.schenker@toradex.com>
+Subject: [PATCH v3 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to fec
+Date: Wed, 7 Aug 2019 08:26:34 +0000
+Message-ID: <20190807082556.5013-15-philippe.schenker@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,39 +14,55 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds some missing pinmuxing that is in the colibri
-standard to the dts.
+Do not change the clock as the power for this phy is switched
+with that clock.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-
 ---
 
 Changes in v3: None
-Changes in v2:
-- Commit title
+Changes in v2: None
 
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/d=
-ts/imx6dl-colibri-eval-v3.dts
-index 763fb5e90bd3..e7a2d8c3b2d4 100644
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -191,6 +191,14 @@
+diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
+6ull-colibri.dtsi
+index d56728f03c35..1019ce69a242 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+@@ -62,8 +62,9 @@
  };
 =20
- &iomuxc {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <
-+		&pinctrl_weim_gpio_1 &pinctrl_weim_gpio_2
-+		&pinctrl_weim_gpio_3 &pinctrl_weim_gpio_4
-+		&pinctrl_weim_gpio_5 &pinctrl_weim_gpio_6
-+		&pinctrl_usbh_oc_1 &pinctrl_usbc_id_1
-+	>;
+ &fec2 {
+-	pinctrl-names =3D "default";
++	pinctrl-names =3D "default", "sleep";
+ 	pinctrl-0 =3D <&pinctrl_enet2>;
++	pinctrl-1 =3D <&pinctrl_enet2_sleep>;
+ 	phy-mode =3D "rmii";
+ 	phy-handle =3D <&ethphy1>;
+ 	status =3D "okay";
+@@ -220,6 +221,21 @@
+ 		>;
+ 	};
+=20
++	pinctrl_enet2_sleep: enet2sleepgrp {
++		fsl,pins =3D <
++			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
++			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
++			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
++			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
++			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
++			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
++			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
++			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
++			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
++			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
++		>;
++	};
 +
- 	pinctrl_pcap_1: pcap-1 {
+ 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
  		fsl,pins =3D <
- 			MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x1b0b0 /* SODIMM 28 */
+ 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
 --=20
 2.22.0
