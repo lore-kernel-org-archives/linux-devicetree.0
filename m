@@ -1,64 +1,67 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-Date: Tue, 6 Aug 2019 20:40:47 -0700
-Message-ID: <dadf0cc7-fba4-9ab5-6ac9-0c8699eb4401@nvidia.com>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
- <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
- <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
+From: Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH v4 2/4] RISC-V: Add riscv_isa reprensenting ISA features
+ common across CPUs
+Date: Wed, 7 Aug 2019 09:42:29 +0530
+Message-ID: <CAAhSdy3tJ3RbnyOtKAT4zsjPUxMQkm+UtWa4sTTZxSAsYUBs5g@mail.gmail.com>
+References: <20190803042723.7163-1-atish.patra@wdc.com>
+ <20190803042723.7163-3-atish.patra@wdc.com>
+ <alpine.DEB.2.21.9999.1908061452570.13971@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1908061452570.13971@viisi.sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Alan Kao <alankao@andestech.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>, Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@sifive.com>, linux-riscv <linux-riscv@lists.infradead.org>, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 7, 2019 at 3:24 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> Hi Anup, Atish,
+>
+> On Fri, 2 Aug 2019, Atish Patra wrote:
+>
+> > From: Anup Patel <anup.patel@wdc.com>
+> >
+> > This patch adds riscv_isa integer to represent ISA features common
+> > across all CPUs. The riscv_isa is not same as elf_hwcap because
+> > elf_hwcap will only have ISA features relevant for user-space apps
+> > whereas riscv_isa will have ISA features relevant to both kernel
+> > and user-space apps.
+> >
+> > One of the use case is KVM hypervisor where riscv_isa will be used
+> > to do following operations:
+> >
+> > 1. Check whether hypervisor extension is available
+> > 2. Find ISA features that need to be virtualized (e.g. floating
+> >    point support, vector extension, etc.)
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>
+> Do you have any opinions on how this patch might change for the Z-prefix
+> extensions?  This bitfield approach probably won't scale, and with the
+> EXPORT_SYMBOL(), it might be worth trying to put together a approach that
+> would work over the long term?
 
-On 8/6/19 2:51 PM, Sowjanya Komatineni wrote:
->
-> On 8/5/19 2:20 AM, Linus Walleij wrote:
->> On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
->> <skomatineni@nvidia.com> wrote:
->>
->>> This patch adds support for Tegra pinctrl driver suspend and resume.
->>>
->>> During suspend, context of all pinctrl registers are stored and
->>> on resume they are all restored to have all the pinmux and pad
->>> configuration for normal operation.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> Patch applied to the pinctrl tree.
->>
->> This patch seems finished.
->>
->> Also if the rest don't get merged for v5.4 then at least this is so
->> your patch stack gets more shallow.
->>
->> I hope it's fine to merge this separately, else tell me and I'll
->> pull it out.
->>
->> Yours,
->> Linus Walleij
->
-> Yes, this patch can be merged separately. But, there's latest feedback 
-> from Dmitry to add barrier after writes to make sure pinmux register 
-> writes happen.
->
-> So will update this patch to add barrier in v8. So, need to wait for v8.
->
-> Thanks
->
-> Sowjanya
->
-I see it merged. So will exclude suspend/resume patch and will add patch 
-for necessary write barrier fix in v8 version.
+Our plan is to use bitmap instead of bitfield and all Zxyz extensions will be
+assigned bit positions "27 + i" where "i" will be based on order in-which they
+are defined in RISC-V spec. In general, "i" is just a unique relative index
+(starting from 0).
 
-Thanks
+To summarize, the existing bitfield approach can be naturally extended
+using bitmap.
 
-Sowjanya
+We will update this patch accordingly.
+
+Regards,
+Anup
