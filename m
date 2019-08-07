@@ -1,53 +1,104 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device support
-Date: Wed, 7 Aug 2019 18:29:36 +0300
-Message-ID: <CAEnQRZARFQjutkvW3_xkQAQznNm8c5jSjtAG715VtrZnDxztoA@mail.gmail.com>
-References: <20190723084104.12639-1-daniel.baluta@nxp.com> <20190723084104.12639-4-daniel.baluta@nxp.com>
- <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v8 09/14] media: rkisp1: add rockchip isp1 core driver
+Date: Wed, 7 Aug 2019 18:36:46 +0300
+Message-ID: <20190807153646.GO21370@paasikivi.fi.intel.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-10-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-10-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-firmware@alsa-project.org
+To: Helen Koike <helen.koike@collabora.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Jacob Chen <cc@rock-chips.com>, Allon Huang <allon.huang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 6:19 PM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
->
-> > diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
-> > index 61b97fc55bb2..2aa3a1cdf60c 100644
-> > --- a/sound/soc/sof/Kconfig
-> > +++ b/sound/soc/sof/Kconfig
-> > @@ -36,6 +36,15 @@ config SND_SOC_SOF_ACPI
-> >         Say Y if you need this option
-> >         If unsure select "N".
-> >
-> > +config SND_SOC_SOF_DT
-> > +     tristate "SOF DT enumeration support"
-> > +     select SND_SOC_SOF
-> > +     select SND_SOC_SOF_OPTIONS
-> > +     help
-> > +       This adds support for Device Tree enumeration. This option is
-> > +       required to enable i.MX8 devices.
-> > +       Say Y if you need this option. If unsure select "N".
-> > +
->
-> [snip]
->
-> > diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-> > index fff64a9970f0..fa35994a79c4 100644
-> > --- a/sound/soc/sof/imx/Kconfig
-> > +++ b/sound/soc/sof/imx/Kconfig
-> > @@ -12,6 +12,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
-> >
-> >   config SND_SOC_SOF_IMX8
-> >       tristate "SOF support for i.MX8"
-> > +     select SND_SOC_SOF_DT
->
-> This looks upside down. You should select SOF_DT first then include the
-> NXP stuff.
+Hi Helen,
 
-One more thing: So this should be 'depends on SND_SOC_SOF_DT' right?
+On Tue, Jul 30, 2019 at 03:42:51PM -0300, Helen Koike wrote:
+
+...
+
+> +static int rkisp1_fwnode_parse(struct device *dev,
+> +			       struct v4l2_fwnode_endpoint *vep,
+> +			       struct v4l2_async_subdev *asd)
+> +{
+> +	struct sensor_async_subdev *s_asd =
+> +			container_of(asd, struct sensor_async_subdev, asd);
+> +
+> +	if (vep->bus_type != V4L2_MBUS_CSI2_DPHY) {
+> +		dev_err(dev, "Only CSI2 bus type is currently supported\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (vep->base.port != 0) {
+> +		dev_err(dev, "The ISP has only port 0\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	s_asd->mbus.type = vep->bus_type;
+> +	s_asd->mbus.flags = vep->bus.mipi_csi2.flags;
+> +	s_asd->lanes = vep->bus.mipi_csi2.num_data_lanes;
+> +
+> +	switch (vep->bus.mipi_csi2.num_data_lanes) {
+> +	case 1:
+> +		s_asd->mbus.flags |= V4L2_MBUS_CSI2_1_LANE;
+> +		break;
+> +	case 2:
+> +		s_asd->mbus.flags |= V4L2_MBUS_CSI2_2_LANE;
+> +		break;
+> +	case 3:
+> +		s_asd->mbus.flags |= V4L2_MBUS_CSI2_3_LANE;
+> +		break;
+> +	case 4:
+> +		s_asd->mbus.flags |= V4L2_MBUS_CSI2_4_LANE;
+> +		break;
+
+Could you use struct v4l2_fwnode_endpoint directly? The mbus config is a
+legacy struct from bygone times and I'd like to avoid using it in new
+drivers.
+
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_async_notifier_operations subdev_notifier_ops = {
+> +	.bound = subdev_notifier_bound,
+> +	.unbind = subdev_notifier_unbind,
+> +	.complete = subdev_notifier_complete,
+> +};
+> +
+> +static int isp_subdev_notifier(struct rkisp1_device *isp_dev)
+> +{
+> +	struct v4l2_async_notifier *ntf = &isp_dev->notifier;
+> +	struct device *dev = isp_dev->dev;
+> +	int ret;
+> +
+> +	v4l2_async_notifier_init(ntf);
+> +
+> +	ret = v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+> +		dev, ntf, sizeof(struct sensor_async_subdev), 0,
+> +		rkisp1_fwnode_parse);
+
+I know these functions aren't old but there's a better alternative. See
+e.g. isp_parse_of_endpoints in drivers/media/platform/omap3isp/isp.c or
+cio2_parse_firmware in drivers/media/pci/intel/ipu3/ipu3-cio2.c.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (list_empty(&ntf->asd_list))
+> +		return -ENODEV;	/* no endpoint */
+> +
+> +	ntf->ops = &subdev_notifier_ops;
+> +
+> +	return v4l2_async_notifier_register(&isp_dev->v4l2_dev, ntf);
+> +}
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
