@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 1/7] soc: qcom: smem: Update max processor count
-Date: Wed,  7 Aug 2019 12:39:51 +0530
-Message-ID: <20190807070957.30655-2-sibis@codeaurora.org>
+Subject: [PATCH v2 2/7] dt-bindings: firmware: scm: re-order compatible list
+Date: Wed,  7 Aug 2019 12:39:52 +0530
+Message-ID: <20190807070957.30655-3-sibis@codeaurora.org>
 References: <20190807070957.30655-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,27 +12,32 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org, aneela@cod
 Cc: mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Update max processor count to reflect the number of
-co-processors on SC7180 SoCs.
+re-order compatible list to maintain sort order.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/soc/qcom/smem.c | 2 +-
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
-index f27c00d82ae49..bef8502625f96 100644
---- a/drivers/soc/qcom/smem.c
-+++ b/drivers/soc/qcom/smem.c
-@@ -84,7 +84,7 @@
- #define SMEM_GLOBAL_HOST	0xfffe
- 
- /* Max number of processors/hosts in a system */
--#define SMEM_HOST_COUNT		10
-+#define SMEM_HOST_COUNT		11
- 
- /**
-   * struct smem_proc_comm - proc_comm communication struct (legacy)
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+index 41f133a4e2fa7..d19be836df533 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -9,13 +9,13 @@ Required properties:
+ - compatible: must contain one of the following:
+  * "qcom,scm-apq8064"
+  * "qcom,scm-apq8084"
++ * "qcom,scm-ipq4019"
+  * "qcom,scm-msm8660"
+  * "qcom,scm-msm8916"
+  * "qcom,scm-msm8960"
+  * "qcom,scm-msm8974"
+  * "qcom,scm-msm8996"
+  * "qcom,scm-msm8998"
+- * "qcom,scm-ipq4019"
+  * "qcom,scm-sdm845"
+  and:
+  * "qcom,scm"
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
