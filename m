@@ -1,54 +1,68 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 01/21] ARM: dts: imx7-colibri: make sure module supplies
- are always on
-Date: Wed, 7 Aug 2019 08:26:07 +0000
-Message-ID: <20190807082556.5013-2-philippe.schenker@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+Subject: [PATCH v3 00/21] Common patches from downstream development
+Date: Wed, 7 Aug 2019 08:26:05 +0000
+Message-ID: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Content-Language: en-US
+Content-ID: <DCE9C65B249DB54BA44E3BB0E0E30CB6@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
-Prevent regulators from being switched off.
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
----
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
-olibri.dtsi
-index 895fbde4d433..f1c1971f2160 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -54,6 +54,7 @@
- 		regulator-name =3D "+V3.3";
- 		regulator-min-microvolt =3D <3300000>;
- 		regulator-max-microvolt =3D <3300000>;
-+		regulator-always-on;
- 	};
-=20
- 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
-@@ -61,6 +62,7 @@
- 		regulator-name =3D "+V3.3_AVDD_AUDIO";
- 		regulator-min-microvolt =3D <3300000>;
- 		regulator-max-microvolt =3D <3300000>;
-+		regulator-always-on;
- 	};
-=20
- 	sound {
---=20
-2.22.0
+DQpUaGlzIHBhdGNoc2V0IGhvbGRzIHNvbWUgY29tbW9uIGNoYW5nZXMgdGhhdCB3ZXJlIG5ldmVy
+IHVwc3RyZWFtZWQuDQpXaXRoIGxhdGVzdCBkb3duc3RyZWFtIGtlcm5lbCB1cGdyYWRlLCBJIHRv
+b2sgdGhlIGFwcm9hY2ggdG8gc2VsZWN0DQptYWlubGluZSBkZXZpY2V0cmVlcyBhbmQgYXRvbWlj
+YWxseSBhZGQgbWlzc2luZyBzdHVmZiBmb3IgZG93bnN0cmVhbS4NCg0KVGhlc2UgcGF0Y2hlcyBJ
+IHNlbmQgaGVyZSBhcmUgc2VwYXJhdGVkIG91dCB3aXRoIGNoYW5nZXMgdGhhdCBhbHNvDQpoYXZl
+IGEgYmVuZml0IGZvciBtYWlubGluZS4NCg0KUGhpbGlwcGUNCg0KQ2hhbmdlcyBpbiB2MzoNCi0g
+QWRkIG5ldyBjb21taXQgbWVzc2FnZSBmcm9tIFN0ZWZhbidzIHByb3Bvc2FsIG9uIE1MDQotIEZp
+eCBjb21taXQgbWVzc2FnZQ0KLSBGaXggY29tbWl0IHRpdGxlIHRvICIuLi5pbXg2LWFwYWxpczou
+Li4iDQotIE5ldyBwYXRjaCB0byBtYWtlIHVzZSBvZiBBUk06IGR0czogaW14Ny1jb2xpYnJpOiBm
+aXggMS44Vi9VSFMgc3VwcG9ydA0KDQpDaGFuZ2VzIGluIHYyOg0KLSBEZWxldGVkIHRvdWNocmV2
+b2x1dGlvbiBkb3duc3RyZWFtIHN0dWZmDQotIFVzZSBnZW5lcmljIG5vZGUgbmFtZQ0KLSBCZXR0
+ZXIgY29tbWVudA0KLSBDaGFuZ2VkIGNvbW1pdCB0aXRsZSB0byAnLi4uaW14NnFkbC1hcGFsaXM6
+Li4uJw0KLSBEZWxldGVkIHRvdWNocmV2b2x1dGlvbiBkb3duc3RyZWFtIHN0dWZmDQotIFVzZSBn
+ZW5lcmljIG5vZGUgbmFtZQ0KLSBQdXQgYSBiZXR0ZXIgY29tbWVudCBpbiB0aGVyZQ0KLSBDb21t
+aXQgdGl0bGUNCi0gUmVtb3ZlZCBmMDcxMGEsIHRoYXQgaXMgZG93bnN0cmVhbSBvbmx5DQotIENo
+YW5nZWQgdG8gZ2VuZXJpYyBub2RlIG5hbWUNCi0gQmV0dGVyIGNvbW1lbnQNCg0KTWFyY2VsIFpp
+c3dpbGVyICgxKToNCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogbWFrZSBzdXJlIG1vZHVsZSBz
+dXBwbGllcyBhcmUgYWx3YXlzIG9uDQoNCk1heCBLcnVtbWVuYWNoZXIgKDIpOg0KICBBUk06IGR0
+czogaW14NnVsbC1jb2xpYnJpOiByZWR1Y2Ugdl9iYXR0IGN1cnJlbnQgaW4gcG93ZXIgb2ZmDQog
+IEFSTTogZHRzOiBpbXg2dWxsOiBpbXByb3ZlIGNhbiB0ZW1wbGF0ZXMNCg0KT2xla3NhbmRyIFN1
+dm9yb3YgKDEpOg0KICBBUk06IGR0czogYWRkIHJlY292ZXJ5IGZvciBJMkMgZm9yIGlNWDcNCg0K
+UGhpbGlwcGUgU2NoZW5rZXIgKDE0KToNCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogcHJlcGFy
+ZSBtb2R1bGUgZGV2aWNlIHRyZWUgZm9yIEZsZXhDQU4NCiAgQVJNOiBkdHM6IGlteDctY29saWJy
+aTogQWRkIHNsZWVwIG1vZGUgdG8gZXRoZXJuZXQNCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTog
+QWRkIHRvdWNoIGNvbnRyb2xsZXJzDQogIEFSTTogZHRzOiBpbXg2cWRsLWNvbGlicmk6IGFkZCBw
+aHkgdG8gZmVjDQogIEFSTTogZHRzOiBpbXg2cWRsLWNvbGlicmk6IEFkZCBtaXNzaW5nIHBpbiBk
+ZWNsYXJhdGlvbiBpbiBpb211eGMNCiAgQVJNOiBkdHM6IGlteDZxZGwtYXBhbGlzOiBBZGQgc2xl
+ZXAgc3RhdGUgdG8gY2FuIGludGVyZmFjZXMNCiAgQVJNOiBkdHM6IGlteDYtYXBhbGlzOiBBZGQg
+dG91Y2hzY3JlZW5zIHVzZWQgb24gVG9yYWRleCBldmFsIGJvYXJkcw0KICBBUk06IGR0czogaW14
+Ni1jb2xpYnJpOiBBZGQgbWlzc2luZyBwaW5tdXhpbmcgdG8gVG9yYWRleCBldmFsIGJvYXJkDQog
+IEFSTTogZHRzOiBpbXg2dWxsLWNvbGlicmk6IEFkZCBzbGVlcCBtb2RlIHRvIGZlYw0KICBBUk06
+IGR0czogaW14NnVsbC1jb2xpYnJpOiBBZGQgd2F0Y2hkb2cNCiAgQVJNOiBkdHM6IGlteDZ1bGwt
+Y29saWJyaTogQWRkIGdlbmVyYWwgd2FrZXVwIGtleSB1c2VkIG9uIENvbGlicmkNCiAgQVJNOiBk
+dHM6IGlteDYvNy1jb2xpYnJpOiBzd2l0Y2ggZHJfbW9kZSB0byBvdGcNCiAgQVJNOiBkdHM6IGlt
+eDZ1bGwtY29saWJyaTogQWRkIHRvdWNoc2NyZWVuIHVzZWQgd2l0aCBFdmFsIEJvYXJkDQogIEFS
+TTogZHRzOiBpbXg3LWNvbGlicmk6IEFkZCBVSFMgc3VwcG9ydCB0byBldmFsIGJvYXJkDQoNClN0
+ZWZhbiBBZ25lciAoMyk6DQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IGRpc2FibGUgSFM0MDAN
+CiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogYWRkIEdQSU8gd2FrZXVwIGtleQ0KICBBUk06IGR0
+czogaW14Ny1jb2xpYnJpOiBmaXggMS44Vi9VSFMgc3VwcG9ydA0KDQogYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMgIHwgIDM5ICsrKysrKw0KIGFyY2gvYXJtL2Jv
+b3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0cyAgICAgICB8ICAxMyArKw0KIGFyY2gvYXJtL2Jv
+b3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS12MS4xLmR0cyB8ICAxMyArKw0KIGFyY2gvYXJtL2Jv
+b3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS5kdHMgICAgICB8ICAxMyArKw0KIGFyY2gvYXJtL2Jv
+b3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kgICAgICAgICB8ICAyNyArKysrLQ0KIGFyY2gvYXJt
+L2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5kdHNpICAgICAgICB8ICAyNyArKysrLQ0KIC4uLi9h
+cm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8ICA1MCArKysrKysrKw0K
+IC4uLi9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLW5vbndpZmkuZHRzaSB8ICAgMiArLQ0K
+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13aWZpLmR0c2kgICB8ICAgMiArLQ0K
+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpICAgICAgICB8ICA1MiArKysr
+KysrLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0c2kgICB8ICA0
+OSArKysrKysrLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpICAgICAgICAg
+ICB8IDExNCArKysrKysrKysrKysrKysrLS0NCiAxMiBmaWxlcyBjaGFuZ2VkLCAzNzMgaW5zZXJ0
+aW9ucygrKSwgMjggZGVsZXRpb25zKC0pDQoNCi0tIA0KMi4yMi4wDQoNCg==
