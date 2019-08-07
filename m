@@ -1,32 +1,75 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [v2,0/2] PCI: mediatek: Add support for MT7629
-Date: Wed, 7 Aug 2019 11:57:09 +0100
-Message-ID: <20190807105709.GA16214@e121166-lin.cambridge.arm.com>
-References: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+From: Tushar Khandelwal <Tushar.Khandelwal@arm.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
+ documentation
+Date: Wed, 7 Aug 2019 11:11:19 +0000
+Message-ID: <9D863536-33C8-4103-A553-64C95FF94FC4@arm.com>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com>
+ <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+ <20190802105357.GF23424@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190628073425.25165-1-jianjun.wang@mediatek.com>
+In-Reply-To: <20190802105357.GF23424@e107155-lin>
+Content-Language: en-GB
+Content-ID: <811613A61F70F546AB1E06819B5521E4@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, youlin.pei@mediatek.com
+To: Sudeep Holla <Sudeep.Holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "morten_bp@live.dk" <morten_bp@live.dk>, nd <nd@arm.com>, Morten Petersen <Morten.Petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2019 at 03:34:23PM +0800, Jianjun Wang wrote:
-> These series patches modify pcie-mediatek.c and dt-bindings compatible
-> string to support MT7629 PCIe host.
-> 
-> Jianjun Wang (2):
->   dt-bindings: PCI: Add support for MT7629
->   PCI: mediatek: Add controller support for MT7629
-> 
->  .../devicetree/bindings/pci/mediatek-pcie.txt  |  1 +
->  drivers/pci/controller/pcie-mediatek.c         | 18 ++++++++++++++++++
->  include/linux/pci_ids.h                        |  1 +
->  3 files changed, 20 insertions(+)
-
-Applied to pci/mediatek for v5.4.
-
-Thanks,
-Lorenzo
+DQoNCu+7v09uIDAyLzA4LzIwMTksIDExOjU0LCAiU3VkZWVwIEhvbGxhIiA8c3VkZWVwLmhvbGxh
+QGFybS5jb20+IHdyb3RlOg0KDQogICAgT24gVGh1LCBKdWwgMjUsIDIwMTkgYXQgMTI6NDk6NThB
+TSAtMDUwMCwgSmFzc2kgQnJhciB3cm90ZToNCiAgICA+IE9uIFN1biwgSnVsIDIxLCAyMDE5IGF0
+IDQ6NTggUE0gSmFzc2kgQnJhciA8amFzc2lzaW5naGJyYXJAZ21haWwuY29tPiB3cm90ZToNCiAg
+ICA+ID4NCg0KICAgIFsuLi5dDQoNCiAgICA+ID4gSWYgdGhlIG1odXYyIGluc3RhbmNlIGltcGxl
+bWVudHMsIHNheSwgMyBjaGFubmVsIHdpbmRvd3MgYmV0d2Vlbg0KICAgID4gPiBzZW5kZXIgKGxp
+bnV4KSBhbmQgcmVjZWl2ZXIgKGZpcm13YXJlKSwgYW5kIExpbnV4IHJ1bnMgdHdvIHByb3RvY29s
+cw0KICAgID4gPiBlYWNoIHJlcXVpcmluZyAxIGFuZCAyLXdvcmQgc2l6ZWQgbWVzc2FnZXMgcmVz
+cGVjdGl2ZWx5LiBUaGUgaGFyZHdhcmUNCiAgICA+ID4gc3VwcG9ydHMgdGhhdCBieSBhc3NpZ25p
+bmcgd2luZG93cyBbMF0gYW5kIFsxLDJdIHRvIGVhY2ggcHJvdG9jb2wuDQogICAgPiA+IEhvd2V2
+ZXIsIEkgZG9uJ3QgdGhpbmsgdGhlIGRyaXZlciBjYW4gc3VwcG9ydCB0aGF0LiBPciBkb2VzIGl0
+Pw0KICAgID4gPg0KICAgID4gVGhpbmtpbmcgYWJvdXQgaXQsIElNTywgdGhlIG1ib3gtY2VsbCBz
+aG91bGQgY2FycnkgYSAxMjggKDR4MzIpIGJpdA0KICAgID4gbWFzayBzcGVjaWZ5aW5nIHRoZSBz
+ZXQgb2Ygd2luZG93cyAoY29ycmVzcG9uZGluZyB0byB0aGUgYml0cyBzZXQgaW4NCiAgICA+IHRo
+ZSBtYXNrKSBhc3NvY2lhdGVkIHdpdGggdGhlIGNoYW5uZWwuDQogICAgPiBBbmQgdGhlIGNvbnRy
+b2xsZXIgZHJpdmVyIHNob3VsZCBzZWUgYW55IGNoYW5uZWwgYXMgYXNzb2NpYXRlZCB3aXRoDQog
+ICAgPiB2YXJpYWJsZSBudW1iZXIgb2Ygd2luZG93cyAnTicsIHdoZXJlIE4gaXMgWzAsMTI0XQ0K
+ICAgID4NCiAgICA+IG1odV9jbGllbnQxOiBwcm90bzFAMmUwMDAwMDAgew0KICAgID4gICAgICAg
+IC4uLi4uDQogICAgPiAgICAgICAgbWJveGVzID0gPCZtYm94IDB4MCAweDAgMHgwIDB4MT4NCiAg
+ICA+IH0NCiAgICA+DQogICAgPiBtaHVfY2xpZW50MjogcHJvdG8yQDJmMDAwMDAwIHsNCiAgICA+
+ICAgICAgICAuLi4uLg0KICAgID4gICAgICAgIG1ib3hlcyA9IDwmbWJveCAweDAgMHgwIDB4MCAw
+eDY+DQogICAgPiB9DQogICAgPg0KDQogICAgVGhpcyBzdGlsbCBkb2Vzbid0IGFkZHJlc3MgdGhl
+IG92ZXJoZWFkIEkgbWVudGlvbmVkIGluIG15IGFybV9taHVfdjENCiAgICBzZXJpZXMuDQoNCiAg
+ICBBcyBwZXIgeW91IHN1Z2dlc3Rpb24sIHdlIHdpbGwgaGF2ZSBvbmUgY2hhbm5lbCB3aXRoIGFs
+bCBwb3NzaWJsZQ0KICAgIGJpdCBtYXNrIHZhbHVlIHRvIHNwZWNpZnkgdGhlIHdpbmRvdy4gTGV0
+J3MgaW1hZ2luZSB0aGF0IDIgcHJvdG9jb2xzDQogICAgc2hhcmUgdGhlIHNhbWUgY2hhbm5lbCwg
+dGhlbiB0aGUgcmVxdWVzdHMgYXJlIHNlcmlhbGlzZWQuDQogICAgRS5nLiBpZiBiaXRzIDAgYW5k
+IDEgYXJlIGFsbG9jYXRlZCBmb3Igc2F5IHByb3RvY29sIzEgYW5kIGJpdHMgMiBhbmQgMw0KICAg
+IGZvciBwcm90b2NvbCMyLg0KDQpBdCBhIGdpdmVuIHRpbWUgb25seSBvbmUgcHJvdG9jb2wgY2Fu
+IGJlIHVzZWQgYnkgYSBjbGllbnQuIE5vIG1peC1tYXRjaA0Kb2YgcHJvdG9jb2xzIGFyZSBoYW5k
+bGVkIGJ5IHRoZSBkcml2ZXIgY3VycmVudGx5LiBBbHNvIGl0cyBub3QgcG9zc2libGUgdG8gYWRk
+cmVzcyBhbGwNCnBvc3NpYmxlIHNjZW5hcmlvcyBvZmZlcmVkIGJ5IHRoZSBJUC4gVGhhdCdzIHdo
+eSB0aGUgY3VycmVudCBkcml2ZXIgZGVzaWduIGlzDQpiYXNlZCBvbiB0aGUgaW1wbGVtZW50YXRp
+b24gaW4gdGhlIGV4aXN0aW5nIHBsYXRmb3Jtcy4NCg0KICAgIEZ1cnRoZXIgcHJvdG9jb2wjMSBo
+YXMgaGlnaGVyIGxhdGVuY3kgcmVxdWlyZW1lbnRzIGxpa2Ugc2NoZWQtZ292ZXJub3INCiAgICBE
+VkZTIGFuZCB0aGVyZSBhcmUgMy00IHBlbmRpbmcgcmVxdWVzdHMgb24gcHJvdG9jb2wjMiwgdGhl
+biB0aGUgaW5jb21pbmcNCiAgICByZXF1ZXN0cyBmb3IgcHJvdG9jb2wjMSBpcyBibG9ja2VkLg0K
+DQogICAgVGhpcyBpcyBkZWZpbml0ZWx5IG92ZXJoZWFkIGFuZCBJIGhhdmUgc2VlbiBsb3RzIG9m
+IGlzc3VlIGFyb3VuZCB0aGlzDQogICAgYW5kIGhlbmNlIEkgd2FzIHJlcXVlc3RpbmcgdGhhdCB3
+ZSBuZWVkIHRvIGNyZWF0ZSBpbmRpdmlkdWFsIGNoYW5uZWxzDQogICAgZm9yIGVhY2ggb2YgdGhl
+c2UuIEhhdmluZyBhYnN0cmFjdGlvbiBvbiB0b3AgdG8gbXVsdGlwbGV4IG9yIGFyYml0cmF0ZQ0K
+ICAgIHdvbid0IGhlbHAuDQoNCkFsc28gdGhlIChtYm94LWNlbGxzKSBhcHByb2FjaCB3aWxsIG5v
+dCBhbGxvdyB1cyB0byBkaWZmZXJlbnRpYXRlIGJldHdlZW4NCnNpbmdsZS13b3JkIGFuZCBkb29y
+YmVsbCB3aGljaCBpcyByZXF1aXJlZCB0byBtYWtlIHRoZSBjb250cm9sbGVyIGRyaXZlcg0KYXdh
+cmUgb2YgdGhlIGRhdGEgZXhwZWN0ZWQgd2hldGhlciBpdCdzIGEgcG9pbnRlciB0byBhIGxvY2F0
+aW9uIG9yIGluDQpyZWdpc3RlciBpdHNlbGYuDQoNCi0tVHVzaGFyDQogICAgLS0NCiAgICBSZWdh
+cmRzLA0KICAgIFN1ZGVlcA0KDQoNCklNUE9SVEFOVCBOT1RJQ0U6IFRoZSBjb250ZW50cyBvZiB0
+aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGNvbmZpZGVudGlhbCBhbmQgbWF5IGFs
+c28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwg
+cGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGltbWVkaWF0ZWx5IGFuZCBkbyBub3QgZGlzY2xvc2Ug
+dGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBwZXJzb24sIHVzZSBpdCBmb3IgYW55IHB1cnBvc2Us
+IG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9ybWF0aW9uIGluIGFueSBtZWRpdW0uIFRoYW5rIHlv
+dS4NCg==
