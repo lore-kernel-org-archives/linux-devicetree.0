@@ -1,66 +1,70 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 01/20] pinctrl: tegra: Add suspend and resume support
-Date: Wed, 7 Aug 2019 15:11:29 +0200
-Message-ID: <CACRpkda+YGfRYXbT2Okq8rO82ZWQAJJPMqK_EyTRe4PLUsxvNw@mail.gmail.com>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-2-git-send-email-skomatineni@nvidia.com>
- <CACRpkdZVR-i1c5eATL2hSPbLXcX1sR8NgXwa4j259XXUi57xug@mail.gmail.com>
- <a2fb3795-5ec1-1d03-f496-f151d1270e90@nvidia.com> <dadf0cc7-fba4-9ab5-6ac9-0c8699eb4401@nvidia.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 4/5] dt-bindings: serial: lantiq: Update for new SoC
+Date: Wed, 7 Aug 2019 16:17:42 +0300
+Message-ID: <20190807131742.GV30120@smile.fi.intel.com>
+References: <cover.1565160764.git.rahul.tanwar@linux.intel.com>
+ <47c6565f5537575b16f65ca5ccc5ecfc61818dbc.1565160764.git.rahul.tanwar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dadf0cc7-fba4-9ab5-6ac9-0c8699eb4401@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <47c6565f5537575b16f65ca5ccc5ecfc61818dbc.1565160764.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
+To: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 5:40 AM Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
-> On 8/6/19 2:51 PM, Sowjanya Komatineni wrote:
-> >
-> > On 8/5/19 2:20 AM, Linus Walleij wrote:
-> >> On Wed, Jul 31, 2019 at 11:11 PM Sowjanya Komatineni
-> >> <skomatineni@nvidia.com> wrote:
-> >>
-> >>> This patch adds support for Tegra pinctrl driver suspend and resume.
-> >>>
-> >>> During suspend, context of all pinctrl registers are stored and
-> >>> on resume they are all restored to have all the pinmux and pad
-> >>> configuration for normal operation.
-> >>>
-> >>> Acked-by: Thierry Reding <treding@nvidia.com>
-> >>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> >>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> >> Patch applied to the pinctrl tree.
-> >>
-> >> This patch seems finished.
-> >>
-> >> Also if the rest don't get merged for v5.4 then at least this is so
-> >> your patch stack gets more shallow.
-> >>
-> >> I hope it's fine to merge this separately, else tell me and I'll
-> >> pull it out.
-> >>
-> >> Yours,
-> >> Linus Walleij
-> >
-> > Yes, this patch can be merged separately. But, there's latest feedback
-> > from Dmitry to add barrier after writes to make sure pinmux register
-> > writes happen.
-> >
-> > So will update this patch to add barrier in v8. So, need to wait for v8.
-> >
-> > Thanks
-> >
-> > Sowjanya
-> >
-> I see it merged. So will exclude suspend/resume patch and will add patch
-> for necessary write barrier fix in v8 version.
+On Wed, Aug 07, 2019 at 05:21:34PM +0800, Rahul Tanwar wrote:
+> There is a new Intel Atom based Lightning Mountain(LGM) network processor SoC which
+> reuses Lantiq ASC serial controller IP. This patch adds new compatible string
+> and its expected property value in order to support the driver for LGM as well.
 
-Yeah just make an incremental patch, that's fine.
-If you want to overdo it you can add a Fixes: tag to
-the original patch, but I don't care much.
+I think it makes sense to convert to YAML before adding new properties.
 
-Yours,
-Linus Walleij
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  Documentation/devicetree/bindings/serial/lantiq_asc.txt | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+> index 40e81a5818f6..18b45dd13a61 100644
+> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+> @@ -1,10 +1,14 @@
+>  Lantiq SoC ASC serial controller
+>  
+>  Required properties:
+> -- compatible : Should be "lantiq,asc"
+> +- compatible : Should be "lantiq,asc" or "intel,lgm-asc"
+>  - reg : Address and length of the register set for the device
+> -- interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
+> +- interrupts:
+> +  For "lantiq,asc" - the 3 (tx rx err) interrupt numbers. The interrupt specifier
+>    depends on the interrupt-parent interrupt controller.
+> +	or
+> +  For "intel,lgm-asc" - the common interrupt number for all of tx rx & err interrupts
+> +  followed by level/sense specifier.
+>  
+>  Optional properties:
+>  - clocks: Should contain frequency clock and gate clock
+> @@ -29,3 +33,12 @@ asc1: serial@e100c00 {
+>  	interrupt-parent = <&icu0>;
+>  	interrupts = <112 113 114>;
+>  };
+> +
+> +asc0: serial@e0a00000 {
+> +	compatible = "intel,lgm-asc";
+> +	reg = <0xe0a00000 0x1000>;
+> +	interrupt-parent = <&ioapic1>;
+> +	interrupts = <128 1>;
+> +	clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
+> +	clock-names = "freq", "asc";
+> +};
+> -- 
+> 2.11.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
