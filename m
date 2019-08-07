@@ -1,75 +1,74 @@
-From: Tushar Khandelwal <Tushar.Khandelwal@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Date: Wed, 7 Aug 2019 11:11:19 +0000
-Message-ID: <9D863536-33C8-4103-A553-64C95FF94FC4@arm.com>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
- <20190802105357.GF23424@e107155-lin>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
+Date: Wed, 7 Aug 2019 12:12:57 +0100
+Message-ID: <20190807111256.GC54191@lakrids.cambridge.arm.com>
+References: <20190806140135.4739-1-anarsoul@gmail.com>
+ <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
+ <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
+ <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
+ <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
+ <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802105357.GF23424@e107155-lin>
-Content-Language: en-GB
-Content-ID: <811613A61F70F546AB1E06819B5521E4@eurprd08.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "morten_bp@live.dk" <morten_bp@live.dk>, nd <nd@arm.com>, Morten Petersen <Morten.Petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCu+7v09uIDAyLzA4LzIwMTksIDExOjU0LCAiU3VkZWVwIEhvbGxhIiA8c3VkZWVwLmhvbGxh
-QGFybS5jb20+IHdyb3RlOg0KDQogICAgT24gVGh1LCBKdWwgMjUsIDIwMTkgYXQgMTI6NDk6NThB
-TSAtMDUwMCwgSmFzc2kgQnJhciB3cm90ZToNCiAgICA+IE9uIFN1biwgSnVsIDIxLCAyMDE5IGF0
-IDQ6NTggUE0gSmFzc2kgQnJhciA8amFzc2lzaW5naGJyYXJAZ21haWwuY29tPiB3cm90ZToNCiAg
-ICA+ID4NCg0KICAgIFsuLi5dDQoNCiAgICA+ID4gSWYgdGhlIG1odXYyIGluc3RhbmNlIGltcGxl
-bWVudHMsIHNheSwgMyBjaGFubmVsIHdpbmRvd3MgYmV0d2Vlbg0KICAgID4gPiBzZW5kZXIgKGxp
-bnV4KSBhbmQgcmVjZWl2ZXIgKGZpcm13YXJlKSwgYW5kIExpbnV4IHJ1bnMgdHdvIHByb3RvY29s
-cw0KICAgID4gPiBlYWNoIHJlcXVpcmluZyAxIGFuZCAyLXdvcmQgc2l6ZWQgbWVzc2FnZXMgcmVz
-cGVjdGl2ZWx5LiBUaGUgaGFyZHdhcmUNCiAgICA+ID4gc3VwcG9ydHMgdGhhdCBieSBhc3NpZ25p
-bmcgd2luZG93cyBbMF0gYW5kIFsxLDJdIHRvIGVhY2ggcHJvdG9jb2wuDQogICAgPiA+IEhvd2V2
-ZXIsIEkgZG9uJ3QgdGhpbmsgdGhlIGRyaXZlciBjYW4gc3VwcG9ydCB0aGF0LiBPciBkb2VzIGl0
-Pw0KICAgID4gPg0KICAgID4gVGhpbmtpbmcgYWJvdXQgaXQsIElNTywgdGhlIG1ib3gtY2VsbCBz
-aG91bGQgY2FycnkgYSAxMjggKDR4MzIpIGJpdA0KICAgID4gbWFzayBzcGVjaWZ5aW5nIHRoZSBz
-ZXQgb2Ygd2luZG93cyAoY29ycmVzcG9uZGluZyB0byB0aGUgYml0cyBzZXQgaW4NCiAgICA+IHRo
-ZSBtYXNrKSBhc3NvY2lhdGVkIHdpdGggdGhlIGNoYW5uZWwuDQogICAgPiBBbmQgdGhlIGNvbnRy
-b2xsZXIgZHJpdmVyIHNob3VsZCBzZWUgYW55IGNoYW5uZWwgYXMgYXNzb2NpYXRlZCB3aXRoDQog
-ICAgPiB2YXJpYWJsZSBudW1iZXIgb2Ygd2luZG93cyAnTicsIHdoZXJlIE4gaXMgWzAsMTI0XQ0K
-ICAgID4NCiAgICA+IG1odV9jbGllbnQxOiBwcm90bzFAMmUwMDAwMDAgew0KICAgID4gICAgICAg
-IC4uLi4uDQogICAgPiAgICAgICAgbWJveGVzID0gPCZtYm94IDB4MCAweDAgMHgwIDB4MT4NCiAg
-ICA+IH0NCiAgICA+DQogICAgPiBtaHVfY2xpZW50MjogcHJvdG8yQDJmMDAwMDAwIHsNCiAgICA+
-ICAgICAgICAuLi4uLg0KICAgID4gICAgICAgIG1ib3hlcyA9IDwmbWJveCAweDAgMHgwIDB4MCAw
-eDY+DQogICAgPiB9DQogICAgPg0KDQogICAgVGhpcyBzdGlsbCBkb2Vzbid0IGFkZHJlc3MgdGhl
-IG92ZXJoZWFkIEkgbWVudGlvbmVkIGluIG15IGFybV9taHVfdjENCiAgICBzZXJpZXMuDQoNCiAg
-ICBBcyBwZXIgeW91IHN1Z2dlc3Rpb24sIHdlIHdpbGwgaGF2ZSBvbmUgY2hhbm5lbCB3aXRoIGFs
-bCBwb3NzaWJsZQ0KICAgIGJpdCBtYXNrIHZhbHVlIHRvIHNwZWNpZnkgdGhlIHdpbmRvdy4gTGV0
-J3MgaW1hZ2luZSB0aGF0IDIgcHJvdG9jb2xzDQogICAgc2hhcmUgdGhlIHNhbWUgY2hhbm5lbCwg
-dGhlbiB0aGUgcmVxdWVzdHMgYXJlIHNlcmlhbGlzZWQuDQogICAgRS5nLiBpZiBiaXRzIDAgYW5k
-IDEgYXJlIGFsbG9jYXRlZCBmb3Igc2F5IHByb3RvY29sIzEgYW5kIGJpdHMgMiBhbmQgMw0KICAg
-IGZvciBwcm90b2NvbCMyLg0KDQpBdCBhIGdpdmVuIHRpbWUgb25seSBvbmUgcHJvdG9jb2wgY2Fu
-IGJlIHVzZWQgYnkgYSBjbGllbnQuIE5vIG1peC1tYXRjaA0Kb2YgcHJvdG9jb2xzIGFyZSBoYW5k
-bGVkIGJ5IHRoZSBkcml2ZXIgY3VycmVudGx5LiBBbHNvIGl0cyBub3QgcG9zc2libGUgdG8gYWRk
-cmVzcyBhbGwNCnBvc3NpYmxlIHNjZW5hcmlvcyBvZmZlcmVkIGJ5IHRoZSBJUC4gVGhhdCdzIHdo
-eSB0aGUgY3VycmVudCBkcml2ZXIgZGVzaWduIGlzDQpiYXNlZCBvbiB0aGUgaW1wbGVtZW50YXRp
-b24gaW4gdGhlIGV4aXN0aW5nIHBsYXRmb3Jtcy4NCg0KICAgIEZ1cnRoZXIgcHJvdG9jb2wjMSBo
-YXMgaGlnaGVyIGxhdGVuY3kgcmVxdWlyZW1lbnRzIGxpa2Ugc2NoZWQtZ292ZXJub3INCiAgICBE
-VkZTIGFuZCB0aGVyZSBhcmUgMy00IHBlbmRpbmcgcmVxdWVzdHMgb24gcHJvdG9jb2wjMiwgdGhl
-biB0aGUgaW5jb21pbmcNCiAgICByZXF1ZXN0cyBmb3IgcHJvdG9jb2wjMSBpcyBibG9ja2VkLg0K
-DQogICAgVGhpcyBpcyBkZWZpbml0ZWx5IG92ZXJoZWFkIGFuZCBJIGhhdmUgc2VlbiBsb3RzIG9m
-IGlzc3VlIGFyb3VuZCB0aGlzDQogICAgYW5kIGhlbmNlIEkgd2FzIHJlcXVlc3RpbmcgdGhhdCB3
-ZSBuZWVkIHRvIGNyZWF0ZSBpbmRpdmlkdWFsIGNoYW5uZWxzDQogICAgZm9yIGVhY2ggb2YgdGhl
-c2UuIEhhdmluZyBhYnN0cmFjdGlvbiBvbiB0b3AgdG8gbXVsdGlwbGV4IG9yIGFyYml0cmF0ZQ0K
-ICAgIHdvbid0IGhlbHAuDQoNCkFsc28gdGhlIChtYm94LWNlbGxzKSBhcHByb2FjaCB3aWxsIG5v
-dCBhbGxvdyB1cyB0byBkaWZmZXJlbnRpYXRlIGJldHdlZW4NCnNpbmdsZS13b3JkIGFuZCBkb29y
-YmVsbCB3aGljaCBpcyByZXF1aXJlZCB0byBtYWtlIHRoZSBjb250cm9sbGVyIGRyaXZlcg0KYXdh
-cmUgb2YgdGhlIGRhdGEgZXhwZWN0ZWQgd2hldGhlciBpdCdzIGEgcG9pbnRlciB0byBhIGxvY2F0
-aW9uIG9yIGluDQpyZWdpc3RlciBpdHNlbGYuDQoNCi0tVHVzaGFyDQogICAgLS0NCiAgICBSZWdh
-cmRzLA0KICAgIFN1ZGVlcA0KDQoNCklNUE9SVEFOVCBOT1RJQ0U6IFRoZSBjb250ZW50cyBvZiB0
-aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGNvbmZpZGVudGlhbCBhbmQgbWF5IGFs
-c28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwg
-cGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGltbWVkaWF0ZWx5IGFuZCBkbyBub3QgZGlzY2xvc2Ug
-dGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBwZXJzb24sIHVzZSBpdCBmb3IgYW55IHB1cnBvc2Us
-IG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9ybWF0aW9uIGluIGFueSBtZWRpdW0uIFRoYW5rIHlv
-dS4NCg==
+On Tue, Aug 06, 2019 at 10:14:39PM +0100, Robin Murphy wrote:
+> On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
+> > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
+> > > 
+> > > Vasily Khoruzhick writes:
+> > > > On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > > 
+> > > > > On 06/08/2019 15:01, Vasily Khoruzhick wrote:
+> > > > > > Looks like PMU in A64 is broken, it generates no interrupts at all and
+> > > > > > as result 'perf top' shows no events.
+> > > > > 
+> > > > > Does something like 'perf stat sleep 1' at least count cycles correctly?
+> > > > > It could well just be that the interrupt numbers are wrong...
+> > > > 
+> > > > Looks like it does, at least result looks plausible:
+> > > 
+> > > I'm using perf stat regularly (cache benchmarks) and it works fine.
+> > > 
+> > > Unfortunately I wasn't aware that perf stat is a poor test for
+> > > the interrupts part of the node, when I added it. So I'm not too
+> > > surprised I got it wrong.
+> > > 
+> > > However, it would be unfortunate if the node got removed completely,
+> > > because perf stat would not work anymore. Maybe we can only remove
+> > > the interrupts or just fix them even if the HW doesn't work?
+> > 
+> > I'm not familiar with PMU driver. Is it possible to get it working
+> > without interrupts?
+> 
+> Yup - you get a grumpy message from the driver, it will refuse sampling
+> events (the ones which weren't working anyway), and if you measure anything
+> for long enough that a counter overflows you'll get wonky results. But for
+> counting hardware events over relatively short periods it'll still do the
+> job.
+
+Even that's stupidly dodgy; a CPU_CYCLES event could easily overflow
+several times between the kernel sampling it, so you can lose billions
+of events without any idea that happened.
+
+For other PMUs we can fix that with a hrtimer, but I think for a CPU PMU
+it has to be at such a high frequency that it imposes a ridiculous
+overhead, even assuming we can choose a sufficient frequency. :/
+
+Thanks,
+Mark.
