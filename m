@@ -1,54 +1,73 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH v3] gpio: mpc8xxx: Add new platforms GPIO DT node description
-Date: Wed,  7 Aug 2019 10:12:54 +0800
-Message-ID: <20190807021254.49092-1-hui.song_1@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
+Date: Tue, 6 Aug 2019 19:39:26 -0700
+Message-ID: <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
+References: <20190806140135.4739-1-anarsoul@gmail.com>
+ <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
+ <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
+ <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
+ <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
+ <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
+> > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
+> >>
+> >> Vasily Khoruzhick writes:
+> >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >>>>
+> >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
+> >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
+> >>>>> as result 'perf top' shows no events.
+> >>>>
+> >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
+> >>>> It could well just be that the interrupt numbers are wrong...
+> >>>
+> >>> Looks like it does, at least result looks plausible:
+> >>
+> >> I'm using perf stat regularly (cache benchmarks) and it works fine.
+> >>
+> >> Unfortunately I wasn't aware that perf stat is a poor test for
+> >> the interrupts part of the node, when I added it. So I'm not too
+> >> surprised I got it wrong.
+> >>
+> >> However, it would be unfortunate if the node got removed completely,
+> >> because perf stat would not work anymore. Maybe we can only remove
+> >> the interrupts or just fix them even if the HW doesn't work?
+> >
+> > I'm not familiar with PMU driver. Is it possible to get it working
+> > without interrupts?
+>
+> Yup - you get a grumpy message from the driver, it will refuse sampling
+> events (the ones which weren't working anyway), and if you measure
+> anything for long enough that a counter overflows you'll get wonky
+> results. But for counting hardware events over relatively short periods
+> it'll still do the job.
 
-Update the NXP GPIO node dt-binding file for QorIQ and
-Layerscape platforms, and add one more example with
-ls1028a GPIO node.
+I tried to drop interrupts completely from the node but 'perf top' is
+still broken. Though now in different way: it complains "cycles: PMU
+Hardware doesn't support sampling/overflow-interrupts. Try 'perf
+stat'"
 
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Is there any way to make it working?
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-index 69d4616..baf95d9 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible : Should be "fsl,<soc>-gpio"
-   The following <soc>s are known to be supported:
- 	mpc5121, mpc5125, mpc8349, mpc8572, mpc8610, pq3, qoriq,
--	ls1021a, ls1043a, ls2080a.
-+	ls1021a, ls1043a, ls2080a, ls1028a.
- - reg : Address and length of the register set for the device
- - interrupts : Should be the port interrupt shared by all 32 pins.
- - #gpio-cells : Should be two.  The first cell is the pin number and
-@@ -37,3 +37,17 @@ gpio0: gpio@2300000 {
- 	interrupt-controller;
- 	#interrupt-cells = <2>;
- };
-+
-+
-+Example of gpio-controller node for a ls1028a SoC:
-+
-+gpio1: gpio@2300000 {
-+	compatible = "fsl,ls1028a-gpio","fsl,qoriq-gpio";
-+	reg = <0x0 0x2300000 0x0 0x10000>;
-+	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	little-endian;
-+};
--- 
-2.9.5
+>
+> Robin.
