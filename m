@@ -1,33 +1,52 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 3/5] dt-bindings: arm: Extend SCMI to support new
- reset protocol
-Date: Wed, 7 Aug 2019 11:18:08 +0100
-Message-ID: <20190807101808.GF16546@e107155-lin>
-References: <20190806170208.6787-1-sudeep.holla@arm.com>
- <20190806170208.6787-4-sudeep.holla@arm.com>
- <1565166410.5048.5.camel@pengutronix.de>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH v9 2/6] usb:gadget Separated decoding functions from dwc3 driver.
+Date: Wed, 07 Aug 2019 13:22:25 +0300
+Message-ID: <877e7pnula.fsf@gmail.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-3-git-send-email-pawell@cadence.com> <87tvc0lngz.fsf@linux.intel.com> <BYAPR07MB4709964C1D0AA2A851BF2F55DDF50@BYAPR07MB4709.namprd07.prod.outlook.com> <b66216dd-6fcf-2900-e67b-42fdb81af78a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565166410.5048.5.camel@pengutronix.de>
+In-Reply-To: <b66216dd-6fcf-2900-e67b-42fdb81af78a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org, Bo Zhang <bozhang.zhang@broadcom.com>, Jim Quinlan <james.quinlan@broadcom.com>, Volodymyr Babchuk <volodymyr_babchuk@epam.com>, Gaku Inami <gaku.inami.xh@renesas.com>, aidapala@qti.qualcomm.com, pajay@qti.qualcomm.com, Etienne Carriere <etienne.carriere@linaro.org>, Souvik Chakravarty <Souvik.Chakravarty@arm.com>, wesleys@xilinx.com, Felix Burton <fburton@xilinx.com>, Saeed Nowshadi <saeed.nowshadi@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 10:26:50AM +0200, Philipp Zabel wrote:
-> On Tue, 2019-08-06 at 18:02 +0100, Sudeep Holla wrote:
-> > SCMIv2.0 adds a new Reset Management Protocol to manage various reset
-> > states a given device or domain can enter. Extend the existing SCMI
-> > bindings to add reset protocol support by re-using the reset bindings
-> > for bothe reset providers and consumers.
->           ^
-> typo
+
+Hi,
+
+Roger Quadros <rogerq@ti.com> writes:
+>>>> +extern const char *usb_decode_ctrl(char *str, size_t size, __u8 bRequestType,
+>>>> +				   __u8 bRequest, __u16 wValue, __u16 wIndex,
+>>>> +				   __u16 wLength);
+>>>> +
+>>>
+>>> where's the stub when !TRACING?
+>> 
+>> Right, I will add 
+>> #ifdef	CONFIG_TRACING 
+>> 	.....
+>> #endif 
 >
+> Can usb_decode_ctrl() be used even when CONFIG_TRACING is not set?
+> If yes then above #ifdefe is not sufficient.
+>
+> You might need to do something like
+>
+> #if defined(CONFIG_TRACING)
+>
+> extern const char *usb_decode_ctrl(..)
+>
+> #else
+>
+> static inline const char *usb_decode_ctrl(..) {
+> 	return NULL;
+> }
+>
+> #endif
 
-Thanks, fixed now.
+This is what I mean. They shouldn't be used outside of TRACING, but it's
+far safer to have the stubs.
 
---
-Regards,
-Sudeep
+-- 
+balbi
