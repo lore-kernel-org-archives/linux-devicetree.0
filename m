@@ -1,73 +1,62 @@
-From: k.konieczny@partner.samsung.com
-Subject: [PATCH v5 0/4] add coupled regulators for Exynos5422/5800
-Date: Wed,  7 Aug 2019 15:38:34 +0200
-Message-ID: <20190807133838.14678-1-k.konieczny@partner.samsung.com>
-References: <CGME20190807133855eucas1p1cab425b791262e8dee1b17cbe8b1b3da@eucas1p1.samsung.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH v3 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Wed, 7 Aug 2019 13:41:12 +0000
+Message-ID: <9f05bcbad4b56d0b7c4f90b53b99c07833f68bb2.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-8-philippe.schenker@toradex.com>
+         <CAOMZO5CdWmVKXmNSLdbsmnU6_ZKwbeVArtOQzuTg_gtqTUnVag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5CdWmVKXmNSLdbsmnU6_ZKwbeVArtOQzuTg_gtqTUnVag@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <84D9259A9961C34FA2F02A5D7E80D047@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+To: "festevam@gmail.com" <festevam@gmail.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-The main purpose of this patch series is to add coupled regulators for
-Exynos5422/5800 to keep constrain on voltage difference between vdd_arm
-and vdd_int to be at most 300mV. In exynos-bus instead of using
-regulator_set_voltage_tol() with default voltage tolerance it should be
-used regulator_set_voltage_triplet() with volatege range, and this is
-already present in opp/core.c code, so it can be reused. While at this,
-move setting regulators into opp/core.
-
-This patchset was tested on Odroid XU3.
-
-The DTS coupled regulators patch depends on previous patches.
-
-Changes:
-v5:
-- squashed last patch "remove exynos_bus_passive_target()" into second
-- added Acked-by to patch "correct clock enable sequence"
-v4:
-- removed "opp: core: add regulators enable and disable" from patchset
-  as it was applied by Viresh Kumar and changed cover letter
-- fix patch "devfreq: exynos-bus: correct clock enable sequence" to
-  correct order of enable/disable
-- removed unrelated changes in "devfreq: exynos-bus: convert to use
-  dev_pm_opp_set_rate()"
-- added new patch "devfreq: exynos-bus: remove exynos_bus_passive_target()"
-  as suggested by Chanwoo Choi
-v3:
-- added new exynos-bus patch to correct clock and regulator enabling
-  and disabling sequence as suggested by Chanwoo Choi
-- corrected error path in enable and improved commit message in opp/core
-- improve comment in devfreq/exynos-bus.c before devfreq_recommended_opp()
-- change cover letter as there is new patch
-- added note before Signed-off-by in 4th patch
-v2:
-- improve regulators enable/disable code in opp/core as suggested by
-  Viresh Kumar
-- add new patch for remove unused dt-bindings as suggested by Krzysztof
-  Kozlowski
-
-Kamil Konieczny (3):
-  devfreq: exynos-bus: correct clock enable sequence
-  devfreq: exynos-bus: convert to use dev_pm_opp_set_rate()
-  dt-bindings: devfreq: exynos-bus: remove unused property
-
-Marek Szyprowski (1):
-  ARM: dts: exynos: add initial data for coupled regulators for
-    Exynos5422/5800
-
- .../bindings/devfreq/exynos-bus.txt           |   2 -
- arch/arm/boot/dts/exynos5420.dtsi             |  34 ++--
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi |   4 +
- arch/arm/boot/dts/exynos5800-peach-pi.dts     |   4 +
- arch/arm/boot/dts/exynos5800.dtsi             |  32 ++--
- drivers/devfreq/exynos-bus.c                  | 153 +++++-------------
- 6 files changed, 78 insertions(+), 151 deletions(-)
-
--- 
-2.22.0
+T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjE5IC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
+PiBIaSBQaGlsaXBwZSwNCj4gDQo+IE9uIFdlZCwgQXVnIDcsIDIwMTkgYXQgNToyNiBBTSBQaGls
+aXBwZSBTY2hlbmtlcg0KPiA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+IHdyb3RlOg0K
+PiA+IEZyb206IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFkZXguY29tPg0KPiA+IA0K
+PiA+IEFkZCBwaW5tdXhpbmcgYW5kIGRvIG5vdCBzcGVjaWZ5IHZvbHRhZ2UgcmVzdHJpY3Rpb25z
+IGZvciB0aGUgdXNkaGMNCj4gPiBpbnN0YW5jZSBhdmFpbGFibGUgb24gdGhlIG1vZHVsZXMgZWRn
+ZSBjb25uZWN0b3IuIFRoaXMgYWxsb3dzIHRvIHVzZQ0KPiA+IFNELWNhcmRzIHdpdGggaGlnaGVy
+IHRyYW5zZmVyIG1vZGVzIGlmIHN1cHBvcnRlZCBieSB0aGUgY2Fycmllcg0KPiA+IGJvYXJkLg0K
+PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFk
+ZXguY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5z
+Y2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gPiANCj4gPiAtLS0NCj4gPiANCj4gPiBDaGFuZ2VzIGlu
+IHYzOg0KPiA+IC0gQWRkIG5ldyBjb21taXQgbWVzc2FnZSBmcm9tIFN0ZWZhbidzIHByb3Bvc2Fs
+IG9uIE1MDQo+IA0KPiBUaGUgY29tbWl0IG1lc3NhZ2UgaGFzIGJlZW4gaW1wcm92ZWQsIGJ1dCB0
+aGVyZSBpcyBhbHNvIGFub3RoZXIgcG9pbnQNCj4gSSBtZW50aW9uZWQgZWFybGllcjoNCj4gDQo+
+ID4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0KPiA+IA0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3
+LWNvbGlicmkuZHRzaSB8IDIzICsrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAt
+LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gYi9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiA+IGluZGV4IDE2ZDFhMWVkMWFmZi4uNjdm
+NWUwYzg3ZmRjIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJy
+aS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCj4g
+PiBAQCAtMzI2LDcgKzMyNiw2IEBADQo+ID4gICZ1c2RoYzEgew0KPiA+ICAgICAgICAgcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAgICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91
+c2RoYzEgJnBpbmN0cmxfY2RfdXNkaGMxPjsNCj4gPiAtICAgICAgIG5vLTEtOC12Ow0KPiA+ICAg
+ICAgICAgY2QtZ3Bpb3MgPSA8JmdwaW8xIDAgR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiAgICAgICAg
+IGRpc2FibGUtd3A7DQo+ID4gICAgICAgICB2cW1tYy1zdXBwbHkgPSA8JnJlZ19MRE8yPjsNCj4g
+PiBAQCAtNjcxLDYgKzY3MCwyOCBAQA0KPiA+ICAgICAgICAgICAgICAgICA+Ow0KPiA+ICAgICAg
+ICAgfTsNCj4gPiANCj4gPiArICAgICAgIHBpbmN0cmxfdXNkaGMxXzEwMG1oejogdXNkaGMxZ3Jw
+XzEwMG1oeiB7DQo+IA0KPiBUaGlzIG5ldyBlbnRyeSBoYXMgYmVlbiBhZGRlZCBhbmQgaXQgaXMg
+bm90IHJlZmVyZW5jZWQuDQoNClNvcnJ5LCBJIHByb2JhYmx5IGNvdWxkIGhhdmUgbWVudGlvbmVk
+IHRoYXQgaW4gdGhpcyBjb21taXQuIEkgd2FudCwgaWYNCnBvc3NpYmxlLCB0byBsZXQgdGhpcyBj
+b21tbWl0IGFzIGlzLiBUaGF0J3Mgd2h5IEkgYWRkZWQgYW5vdGhlciBvbiB0b3ANCm9mIHRoaXMg
+cGF0Y2hzZXQuIFBsZWFzZSBzZWUgcGF0Y2ggMjEvMjEgdGhhdCBtYWtlcyB1c2Ugb2YgdGhpcyBj
+aGFuZ2UuDQo+IA0KPiA+ICsgICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ01EX19TRDFfQ01EICAgICAgIDB4NWENCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLICAgICAg
+IDB4MWENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfREFUQTBfX1NE
+MV9EQVRBMCAgIDB4NWENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFf
+REFUQTFfX1NEMV9EQVRBMSAgIDB4NWENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdE
+X1BBRF9TRDFfREFUQTJfX1NEMV9EQVRBMiAgIDB4NWENCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICBNWDdEX1BBRF9TRDFfREFUQTNfX1NEMV9EQVRBMyAgIDB4NWENCj4gPiArICAgICAgICAg
+ICAgICAgPjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgcGluY3RybF91c2Ro
+YzFfMjAwbWh6OiB1c2RoYzFncnBfMjAwbWh6IHsNCj4gDQo+IFNhbWUgaGVyZS4NCg==
