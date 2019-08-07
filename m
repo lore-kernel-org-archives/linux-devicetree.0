@@ -1,150 +1,75 @@
-From: Tushar Khandelwal <Tushar.Khandelwal@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Date: Wed, 7 Aug 2019 11:17:27 +0000
-Message-ID: <998A97B0-D9D3-4F01-B5D4-56F875D38FC8@arm.com>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <20190802105938.GG23424@e107155-lin>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Wed, 7 Aug 2019 08:19:13 -0300
+Message-ID: <CAOMZO5CdWmVKXmNSLdbsmnU6_ZKwbeVArtOQzuTg_gtqTUnVag@mail.gmail.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com> <20190807082556.5013-8-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802105938.GG23424@e107155-lin>
-Content-Language: en-GB
-Content-ID: <A255E356161BDE4ABF590540DBE20E36@eurprd08.prod.outlook.com>
+In-Reply-To: <20190807082556.5013-8-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "morten_bp@live.dk" <morten_bp@live.dk>, nd <nd@arm.com>, Morten Petersen <Morten.Petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCu+7v09uIDAyLzA4LzIwMTksIDExOjU5LCAiU3VkZWVwIEhvbGxhIiA8c3VkZWVwLmhvbGxh
-QGFybS5jb20+IHdyb3RlOg0KDQogICAgT24gU3VuLCBKdWwgMjEsIDIwMTkgYXQgMDQ6NTg6MDRQ
-TSAtMDUwMCwgSmFzc2kgQnJhciB3cm90ZToNCiAgICA+IE9uIFdlZCwgSnVsIDE3LCAyMDE5IGF0
-IDI6MjYgUE0gVHVzaGFyIEtoYW5kZWx3YWwNCiAgICA+IDx0dXNoYXIua2hhbmRlbHdhbEBhcm0u
-Y29tPiB3cm90ZToNCiAgICA+DQogICAgPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9hcm0sbWh1djIudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLG1odXYyLnR4dA0KICAgID4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KICAgID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjNhMDU1OTM0MTRiYw0K
-ICAgID4gPiAtLS0gL2Rldi9udWxsDQogICAgPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybSxtaHV2Mi50eHQNCiAgICA+ID4gQEAgLTAsMCArMSwx
-MDggQEANCiAgICA+ID4gK0FybSBNSFV2MiBNYWlsYm94IERyaXZlcg0KICAgID4gPiArPT09PT09
-PT09PT09PT09PT09PT09PT09DQogICAgPiA+ICsNCiAgICA+ID4gK1RoZSBBcm0gTWVzc2FnZS1I
-YW5kbGluZy1Vbml0IChNSFUpIFZlcnNpb24gMiBpcyBhIG1haWxib3ggY29udHJvbGxlciB0aGF0
-IGhhcw0KICAgID4gPiArYmV0d2VlbiAxIGFuZCAxMjQgY2hhbm5lbCB3aW5kb3dzIHRvIHByb3Zp
-ZGUgdW5pZGlyZWN0aW9uYWwgY29tbXVuaWNhdGlvbiB3aXRoDQogICAgPiA+ICtyZW1vdGUgcHJv
-Y2Vzc29yKHMpLg0KICAgID4gPiArDQogICAgPiA+ICtHaXZlbiB0aGUgdW5pZGlyZWN0aW9uYWwg
-bmF0dXJlIG9mIHRoZSBkZXZpY2UsIGFuIE1IVXYyIG1haWxib3ggbWF5IG9ubHkgYmUNCiAgICA+
-ID4gK3dyaXR0ZW4gdG8gb3IgcmVhZCBmcm9tLiBJZiBhIHBhaXIgb2YgTUhVIGRldmljZXMgaXMg
-aW1wbGVtZW50ZWQgYmV0d2VlbiB0d28NCiAgICA+ID4gK3Byb2Nlc3NpbmcgZWxlbWVudHMgdG8g
-cHJvdmlkZSBiaWRpcmVjdGlvbmFsIGNvbW11bmljYXRpb24sIHRoZXNlIG11c3QgYmUNCiAgICA+
-ID4gK3NwZWNpZmllZCBhcyB0d28gc2VwYXJhdGUgbWFpbGJveGVzLg0KICAgID4gPiArDQogICAg
-PiA+ICtBIGRldmljZSB0cmVlIG5vZGUgZm9yIGFuIEFybSBNSFV2MiBkZXZpY2UgbXVzdCBzcGVj
-aWZ5IGVpdGhlciBhIHJlY2VpdmVyIGZyYW1lDQogICAgPiA+ICtvciBhIHNlbmRlciBmcmFtZSwg
-aW5kaWNhdGluZyB3aGljaCBlbmQgb2YgdGhlIHVuaWRpcmVjdGlvbmFsIE1IVSBkZXZpY2Ugd2hp
-Y2gNCiAgICA+ID4gK3RoZSBkZXZpY2Ugbm9kZSBlbnRyeSBkZXNjcmliZXMuDQogICAgPiA+ICsN
-CiAgICA+ID4gK0FuIE1IVSBkZXZpY2UgbXVzdCBiZSBzcGVjaWZpZWQgd2l0aCBhIHRyYW5zcG9y
-dCBwcm90b2NvbC4gVGhlIHRyYW5zcG9ydA0KICAgID4gPiArcHJvdG9jb2wgb2YgYW4gTUhVIGRl
-dmljZSBkZXRlcm1pbmVzIHRoZSBtZXRob2Qgb2YgZGF0YSB0cmFuc21pc3Npb24gYXMgd2VsbCBh
-cw0KICAgID4gPiArdGhlIG51bWJlciBvZiBwcm92aWRlZCBtYWlsYm94ZXMuDQogICAgPiA+ICtG
-b2xsb3dpbmcgYXJlIHRoZSBwb3NzaWJsZSB0cmFuc3BvcnQgcHJvdG9jb2wgdHlwZXM6DQogICAg
-PiA+ICstIFNpbmdsZS13b3JkOiBBbiBNSFUgZGV2aWNlIGltcGxlbWVudHMgYXMgbWFueSBtYWls
-Ym94ZXMgYXMgaXQNCiAgICA+ID4gKyAgICAgICAgICAgICAgIHByb3ZpZGVzIGNoYW5uZWwgd2lu
-ZG93cy4gRGF0YSBpcyB0cmFuc21pdHRlZCB0aHJvdWdoDQogICAgPiA+ICsgICAgICAgICAgICAg
-ICB0aGUgTUhVIHJlZ2lzdGVycy4NCiAgICA+ID4gKy0gTXVsdGktd29yZDogIEFuIE1IVSBkZXZp
-Y2UgaW1wbGVtZW50cyBhIHNpbmdsZSBtYWlsYm94LiBBbGwgY2hhbm5lbCB3aW5kb3dzDQogICAg
-PiA+ICsgICAgICAgICAgICAgICB3aWxsIGJlIHVzZWQgZHVyaW5nIHRyYW5zbWlzc2lvbi4gRGF0
-YSBpcyB0cmFuc21pdHRlZCB0aHJvdWdoDQogICAgPiA+ICsgICAgICAgICAgICAgICB0aGUgTUhV
-IHJlZ2lzdGVycy4NCiAgICA+ID4gKy0gRG9vcmJlbGw6ICAgIEFuIE1IVSBkZXZpY2UgaW1wbGVt
-ZW50cyBhcyBtYW55IG1haWxib3hlcyBhcyB0aGVyZSBhcmUgZmxhZw0KICAgID4gPiArICAgICAg
-ICAgICAgICAgYml0cyBhdmFpbGFibGUgaW4gaXRzIGNoYW5uZWwgd2luZG93cy4gT3B0aW9uYWxs
-eSwgZGF0YSBtYXkNCiAgICA+ID4gKyAgICAgICAgICAgICAgIGJlIHRyYW5zbWl0dGVkIHRocm91
-Z2ggYSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiwgd2hlcmVpbiB0aGUgTUhVDQogICAgPiA+ICsgICAg
-ICAgICAgICAgICBpcyB1c2VkIHN0cmljdGx5IGFzIGFuIGludGVycnVwdCBnZW5lcmF0aW9uIG1l
-Y2hhbmlzbS4NCiAgICA+ID4gKw0KICAgID4gPiArTWFpbGJveCBEZXZpY2UgTm9kZToNCiAgICA+
-ID4gKz09PT09PT09PT09PT09PT09PT09DQogICAgPiA+ICsNCiAgICA+ID4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6DQogICAgPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLQ0KICAgID4gPiArLSBjb21w
-YXRpYmxlOiAgU2hhbGwgYmUgImFybSxtaHV2MiIgJiAiYXJtLHByaW1lY2VsbCINCiAgICA+ID4g
-Ky0gcmVnOiAgICAgICAgIENvbnRhaW5zIHRoZSBtYWlsYm94IHJlZ2lzdGVyIGFkZHJlc3MgcmFu
-Z2UgKGJhc2UNCiAgICA+ID4gKyAgICAgICAgICAgICAgIGFkZHJlc3MgYW5kIGxlbmd0aCkNCiAg
-ICA+ID4gKy0gI21ib3gtY2VsbHMgIFNoYWxsIGJlIDEgLSB0aGUgaW5kZXggb2YgdGhlIGNoYW5u
-ZWwgbmVlZGVkLg0KICAgID4gPiArLSBtaHUtZnJhbWUgICAgRnJhbWUgdHlwZSBvZiB0aGUgZGV2
-aWNlLg0KICAgID4gPiArICAgICAgICAgICAgICAgU2hhbGwgYmUgZWl0aGVyICJzZW5kZXIiIG9y
-ICJyZWNlaXZlciINCiAgICA+ID4gKy0gbWh1LXByb3RvY29sIFRyYW5zcG9ydCBwcm90b2NvbCBv
-ZiB0aGUgZGV2aWNlLiBTaGFsbCBiZSBvbmUgb2YgdGhlDQogICAgPiA+ICsgICAgICAgICAgICAg
-ICBmb2xsb3dpbmc6ICJzaW5nbGUtd29yZCIsICJtdWx0aS13b3JkIiwgImRvb3JiZWxsIg0KICAg
-ID4gPiArDQogICAgPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzIChyZWNlaXZlciBmcmFtZSk6DQog
-ICAgPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQogICAgPiA+ICst
-IGludGVycnVwdHM6ICBDb250YWlucyB0aGUgaW50ZXJydXB0IGluZm9ybWF0aW9uIGNvcnJlc3Bv
-bmRpbmcgdG8gdGhlDQogICAgPiA+ICsgICAgICAgICAgICAgICBjb21iaW5lZCBpbnRlcnJ1cHQg
-b2YgdGhlIHJlY2VpdmVyIGZyYW1lDQogICAgPiA+ICsNCiAgICA+ID4gK0V4YW1wbGU6DQogICAg
-PiA+ICstLS0tLS0tLQ0KICAgID4gPiArDQogICAgPiA+ICsgICAgICAgbWJveF9td190eDogbWh1
-QDEwMDAwMDAwIHsNCiAgICA+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLG1o
-dXYyIiwiYXJtLHByaW1lY2VsbCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgx
-MDAwMDAwMCAweDEwMDA+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZyZWZj
-bGsxMDBtaHo+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3Bj
-bGsiOw0KICAgID4gPiArICAgICAgICAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQogICAgPiA+
-ICsgICAgICAgICAgICAgICBtaHUtcHJvdG9jb2wgPSAibXVsdGktd29yZCI7DQogICAgPiA+ICsg
-ICAgICAgICAgICAgICBtaHUtZnJhbWUgPSAic2VuZGVyIjsNCiAgICA+ID4gKyAgICAgICB9Ow0K
-ICAgID4gPiArDQogICAgPiA+ICsgICAgICAgbWJveF9zd190eDogbWh1QDEwMDAwMDAwIHsNCiAg
-ICA+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLG1odXYyIiwiYXJtLHByaW1l
-Y2VsbCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgxMTAwMDAwMCAweDEwMDA+
-Ow0KICAgID4gPiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZyZWZjbGsxMDBtaHo+Ow0KICAg
-ID4gPiArICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KICAgID4gPiAr
-ICAgICAgICAgICAgICAgI21ib3gtY2VsbHMgPSA8MT47DQogICAgPiA+ICsgICAgICAgICAgICAg
-ICBtaHUtcHJvdG9jb2wgPSAic2luZ2xlLXdvcmQiOw0KICAgID4gPiArICAgICAgICAgICAgICAg
-bWh1LWZyYW1lID0gInNlbmRlciI7DQogICAgPiA+ICsgICAgICAgfTsNCiAgICA+ID4gKw0KICAg
-ID4gPiArICAgICAgIG1ib3hfZGJfcng6IG1odUAxMDAwMDAwMCB7DQogICAgPiA+ICsgICAgICAg
-ICAgICAgICBjb21wYXRpYmxlID0gImFybSxtaHV2MiIsImFybSxwcmltZWNlbGwiOw0KICAgID4g
-PiArICAgICAgICAgICAgICAgcmVnID0gPDB4MTIwMDAwMDAgMHgxMDAwPjsNCiAgICA+ID4gKyAg
-ICAgICAgICAgICAgIGNsb2NrcyA9IDwmcmVmY2xrMTAwbWh6PjsNCiAgICA+ID4gKyAgICAgICAg
-ICAgICAgIGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCiAgICA+ID4gKyAgICAgICAgICAgICAg
-ICNtYm94LWNlbGxzID0gPDE+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9
-IDwwIDQ1IDQ+Ow0KICAgID4gPiArICAgICAgICAgICAgICAgaW50ZXJydXB0LW5hbWVzID0gIm1o
-dV9yeCI7DQogICAgPiA+ICsgICAgICAgICAgICAgICBtaHUtcHJvdG9jb2wgPSAiZG9vcmJlbGwi
-Ow0KICAgID4gPiArICAgICAgICAgICAgICAgbWh1LWZyYW1lID0gInJlY2VpdmVyIjsNCiAgICA+
-ID4gKyAgICAgICB9Ow0KICAgID4gPiArDQogICAgPiA+ICsgICAgICAgbWh1X2NsaWVudDogc2Ni
-QDJlMDAwMDAwIHsNCiAgICA+ID4gKyAgICAgICBjb21wYXRpYmxlID0gImZ1aml0c3UsbWI4NnM3
-MC1zY2ItMS4wIjsNCiAgICA+ID4gKyAgICAgICByZWcgPSA8MCAweDJlMDAwMDAwIDB4NDAwMD47
-DQogICAgPiA+ICsgICAgICAgbWJveGVzID0NCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIEZv
-ciBtdWx0aS13b3JkIGZyYW1lcywgY2xpZW50IG1heSBvbmx5IGluc3RhbnRpYXRlIGEgc2luZ2xl
-DQogICAgPiA+ICsgICAgICAgICAgICAgICAvLyBtYWlsYm94IGZvciBhIG1haWxib3ggY29udHJv
-bGxlcg0KICAgID4gPiArICAgICAgICAgICAgICAgPCZtYm94X213X3R4IDA+LA0KICAgID4gPiAr
-DQogICAgPiA+ICsgICAgICAgICAgICAgICAvLyBGb3Igc2luZ2xlLXdvcmQgZnJhbWVzLCBjbGll
-bnQgbWF5IGluc3RhbnRpYXRlIGFzIG1hbnkNCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIG1h
-aWxib3hlcyBhcyB0aGVyZSBhcmUgY2hhbm5lbCB3aW5kb3dzIGluIHRoZSBNSFUNCiAgICA+ID4g
-KyAgICAgICAgICAgICAgICA8Jm1ib3hfc3dfdHggMD4sDQogICAgPiA+ICsgICAgICAgICAgICAg
-ICAgPCZtYm94X3N3X3R4IDE+LA0KICAgID4gPiArICAgICAgICAgICAgICAgIDwmbWJveF9zd190
-eCAyPiwNCiAgICA+ID4gKyAgICAgICAgICAgICAgICA8Jm1ib3hfc3dfdHggMz4sDQogICAgPiA+
-ICsNCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIEZvciBkb29yYmVsbCBmcmFtZXMsIGNsaWVu
-dCBtYXkgaW5zdGFudGlhdGUgYXMgbWFueSBtYWlsYm94ZXMNCiAgICA+ID4gKyAgICAgICAgICAg
-ICAgIC8vIGFzIHRoZXJlIGFyZSBiaXRzIGF2YWlsYWJsZSBpbiB0aGUgY29tYmluZWQgbnVtYmVy
-IG9mIGNoYW5uZWwNCiAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIHdpbmRvd3MgKChjaGFubmVs
-IHdpbmRvd3MgKiAzMikgbWFpbGJveGVzKQ0KICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94
-X2RiX3J4IDA+LA0KICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94X2RiX3J4IDE+LA0KICAg
-ID4gPiArICAgICAgICAgICAgICAgIC4uLg0KICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94
-X2RiX3J4IDE3PjsNCiAgICA+ID4gKyAgICAgICB9Ow0KICAgID4NCiAgICA+IElmIHRoZSBtaHV2
-MiBpbnN0YW5jZSBpbXBsZW1lbnRzLCBzYXksIDMgY2hhbm5lbCB3aW5kb3dzIGJldHdlZW4NCiAg
-ICA+IHNlbmRlciAobGludXgpIGFuZCByZWNlaXZlciAoZmlybXdhcmUpLCBhbmQgTGludXggcnVu
-cyB0d28gcHJvdG9jb2xzDQogICAgPiBlYWNoIHJlcXVpcmluZyAxIGFuZCAyLXdvcmQgc2l6ZWQg
-bWVzc2FnZXMgcmVzcGVjdGl2ZWx5LiBUaGUgaGFyZHdhcmUNCiAgICA+IHN1cHBvcnRzIHRoYXQg
-YnkgYXNzaWduaW5nIHdpbmRvd3MgWzBdIGFuZCBbMSwyXSB0byBlYWNoIHByb3RvY29sLg0KICAg
-ID4gSG93ZXZlciwgSSBkb24ndCB0aGluayB0aGUgZHJpdmVyIGNhbiBzdXBwb3J0IHRoYXQuIE9y
-IGRvZXMgaXQ/DQogICAgPg0KDQogICAgRldJVywgdGhlIElQIGlzIGRlc2lnbmVkIHRvIGNvdmVy
-IHdpZGUgcmFuZ2Ugb2YgdXNlY2FzZSBmcm9tIElvVCB0byBzZXJ2ZXJzDQogICAgd2l0aCB2YXJp
-YWJsZSB3aW5kb3cgbGVuZ3RoLiBJIGRvbid0IHNlZSB0aGUgbmVlZCB0byBjb21wbGljYXRlIHRo
-ZSBkcml2ZXINCiAgICBzdXBwb3J0aW5nIG1peC1uLW1hdGNoIGF0IHRoZSBjb3N0IG9mIGxhdGVu
-Y3kuIEVhY2ggcGxhdGZvcm0gY2hvb3NlIG9uZQ0KICAgIHRyYW5zcG9ydCBwcm90b2NvbCBmb3Ig
-YWxsIGl0J3MgdXNlLg0KDQpUaGUgZHJpdmVyIGRlc2lnbiBpcyB0byBhZGRyZXNzIHRoZSBtb3N0
-IHByb2JhYmxlIHNjZW5hcmlvcyBhbmQgbm90IGFsbC4NClNpbmdsZS13b3JkIDogQ2xpZW50IGdl
-dHMgb25lIDMyLWJpdCB3aW5kb3cNCkRvb3JiZWxsIDogQ2xpZW50IGdldHMgMzIgZGF0YSBwb2lu
-dGVycyAoYXJtX21lc3NhZ2UpDQpNdWx0aS13b3JkOiBDbGllbnQgZ2V0cyBhbGwgY2hhbm5lbHMg
-YXZhaWxhYmxlIGluIHRoZSBwbGF0Zm9ybS4NCg0KLS1UdXNoYXINCiAgICAtLQ0KICAgIFJlZ2Fy
-ZHMsDQogICAgU3VkZWVwDQoNCg0KSU1QT1JUQU5UIE5PVElDRTogVGhlIGNvbnRlbnRzIG9mIHRo
-aXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgY29uZmlkZW50aWFsIGFuZCBtYXkgYWxz
-byBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBw
-bGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0
-aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwgdXNlIGl0IGZvciBhbnkgcHVycG9zZSwg
-b3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24gaW4gYW55IG1lZGl1bS4gVGhhbmsgeW91
-Lg0K
+Hi Philippe,
+
+On Wed, Aug 7, 2019 at 5:26 AM Philippe Schenker
+<philippe.schenker@toradex.com> wrote:
+>
+> From: Stefan Agner <stefan.agner@toradex.com>
+>
+> Add pinmuxing and do not specify voltage restrictions for the usdhc
+> instance available on the modules edge connector. This allows to use
+> SD-cards with higher transfer modes if supported by the carrier board.
+>
+> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+>
+> ---
+>
+> Changes in v3:
+> - Add new commit message from Stefan's proposal on ML
+
+The commit message has been improved, but there is also another point
+I mentioned earlier:
+
+>
+> Changes in v2: None
+>
+>  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index 16d1a1ed1aff..67f5e0c87fdc 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -326,7 +326,6 @@
+>  &usdhc1 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+> -       no-1-8-v;
+>         cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+>         disable-wp;
+>         vqmmc-supply = <&reg_LDO2>;
+> @@ -671,6 +670,28 @@
+>                 >;
+>         };
+>
+> +       pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
+
+This new entry has been added and it is not referenced.
+
+> +               fsl,pins = <
+> +                       MX7D_PAD_SD1_CMD__SD1_CMD       0x5a
+> +                       MX7D_PAD_SD1_CLK__SD1_CLK       0x1a
+> +                       MX7D_PAD_SD1_DATA0__SD1_DATA0   0x5a
+> +                       MX7D_PAD_SD1_DATA1__SD1_DATA1   0x5a
+> +                       MX7D_PAD_SD1_DATA2__SD1_DATA2   0x5a
+> +                       MX7D_PAD_SD1_DATA3__SD1_DATA3   0x5a
+> +               >;
+> +       };
+> +
+> +       pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
+
+Same here.
