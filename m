@@ -1,690 +1,181 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: fsl_sai: Add support for SAI new
-	version" to the asoc tree
-Date: Wed,  7 Aug 2019 14:30:46 +0100 (BST)
-Message-ID: <20190807133046.9E5F02742BE8@ypsilon.sirena.org.uk>
-References: <20190806151214.6783-4-daniel.baluta@nxp.com>
+From: Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v2 1/4] iio: adc: ad7606: Add support for AD7606B ADC
+Date: Wed, 7 Aug 2019 16:31:34 +0300
+Message-ID: <20190807133137.11185-1-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190806151214.6783-4-daniel.baluta@nxp.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, timur@kernel.org, robh@kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>, angus@akkea.ca, linux-kernel@vger.kernel.org, tiwai@suse.com, Nicolin Chen <nicoleotsuka@gmail.com>, Mark Brown <broonie@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Mihai Serban <mihai.serban@nxp.com>, festevam@gmail.com, mihai.serban@gmail.com, l.stach@pengutronix.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: jic23@kernel.org
+Cc: devel@driverdev.osuosl.org, mark.rutland@arm.com, lars@metafoo.de, biabeniamin@outlook.com, Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, mchehab+samsung@kernel.org, paulmck@linux.ibm.com, Beniamin Bia <beniamin.bia@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: fsl_sai: Add support for SAI new version
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 4f7a0728b5305e2d865f543fbcffd617e03c7674 Mon Sep 17 00:00:00 2001
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Date: Tue, 6 Aug 2019 18:12:12 +0300
-Subject: [PATCH] ASoC: fsl_sai: Add support for SAI new version
-
-New IP version introduces Version ID and Parameter registers
-and optionally added Timestamp feature.
-
-VERID and PARAM registers are placed at the top of registers
-address space and some registers are shifted according to
-the following table:
-
-Tx/Rx data registers and Tx/Rx FIFO registers keep their
-addresses, all other registers are shifted by 8.
-
-SAI Memory map is described in chapter 13.10.4.1.1 I2S Memory map
-of the Reference Manual [1].
-
-In order to make as less changes as possible we attach an offset
-to each register offset to each changed register definition. The
-offset is read from each board private data.
-
-[1]https://cache.nxp.com/secured/assets/documents/en/reference-manual/IMX8MDQLQRM.pdf?__gda__=1563728701_38bea7f0f726472cc675cb141b91bec7&fileExt=.pdf
-
-Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
-[initial coding in the NXP internal tree]
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-[bugfixing and cleanups]
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-[adapted to linux-next]
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/20190806151214.6783-4-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/fsl/fsl_sai.c | 228 ++++++++++++++++++++++++----------------
- sound/soc/fsl/fsl_sai.h |  41 ++++----
- 2 files changed, 156 insertions(+), 113 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index f2698c94c9fe..0c5452927c04 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -40,6 +40,7 @@ static const struct snd_pcm_hw_constraint_list fsl_sai_rate_constraints = {
- static irqreturn_t fsl_sai_isr(int irq, void *devid)
- {
- 	struct fsl_sai *sai = (struct fsl_sai *)devid;
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	struct device *dev = &sai->pdev->dev;
- 	u32 flags, xcsr, mask;
- 	bool irq_none = true;
-@@ -52,7 +53,7 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
- 	mask = (FSL_SAI_FLAGS >> FSL_SAI_CSR_xIE_SHIFT) << FSL_SAI_CSR_xF_SHIFT;
- 
- 	/* Tx IRQ */
--	regmap_read(sai->regmap, FSL_SAI_TCSR, &xcsr);
-+	regmap_read(sai->regmap, FSL_SAI_TCSR(ofs), &xcsr);
- 	flags = xcsr & mask;
- 
- 	if (flags)
-@@ -82,11 +83,11 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
- 	xcsr &= ~FSL_SAI_CSR_xF_MASK;
- 
- 	if (flags)
--		regmap_write(sai->regmap, FSL_SAI_TCSR, flags | xcsr);
-+		regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), flags | xcsr);
- 
- irq_rx:
- 	/* Rx IRQ */
--	regmap_read(sai->regmap, FSL_SAI_RCSR, &xcsr);
-+	regmap_read(sai->regmap, FSL_SAI_RCSR(ofs), &xcsr);
- 	flags = xcsr & mask;
- 
- 	if (flags)
-@@ -116,7 +117,7 @@ static irqreturn_t fsl_sai_isr(int irq, void *devid)
- 	xcsr &= ~FSL_SAI_CSR_xF_MASK;
- 
- 	if (flags)
--		regmap_write(sai->regmap, FSL_SAI_RCSR, flags | xcsr);
-+		regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), flags | xcsr);
- 
- out:
- 	if (irq_none)
-@@ -140,6 +141,7 @@ static int fsl_sai_set_dai_sysclk_tr(struct snd_soc_dai *cpu_dai,
- 		int clk_id, unsigned int freq, int fsl_dir)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	bool tx = fsl_dir == FSL_FMT_TRANSMITTER;
- 	u32 val_cr2 = 0;
- 
-@@ -160,7 +162,7 @@ static int fsl_sai_set_dai_sysclk_tr(struct snd_soc_dai *cpu_dai,
- 		return -EINVAL;
- 	}
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx, ofs),
- 			   FSL_SAI_CR2_MSEL_MASK, val_cr2);
- 
- 	return 0;
-@@ -193,6 +195,7 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 				unsigned int fmt, int fsl_dir)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	bool tx = fsl_dir == FSL_FMT_TRANSMITTER;
- 	u32 val_cr2 = 0, val_cr4 = 0;
- 
-@@ -287,9 +290,9 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 		return -EINVAL;
- 	}
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx, ofs),
- 			   FSL_SAI_CR2_BCP | FSL_SAI_CR2_BCD_MSTR, val_cr2);
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
- 			   FSL_SAI_CR4_MF | FSL_SAI_CR4_FSE |
- 			   FSL_SAI_CR4_FSP | FSL_SAI_CR4_FSD_MSTR, val_cr4);
- 
-@@ -316,6 +319,7 @@ static int fsl_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	unsigned long clk_rate;
- 	u32 savediv = 0, ratio, savesub = freq;
- 	u32 id;
-@@ -378,17 +382,17 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
- 	 */
- 	if ((sai->synchronous[TX] && !sai->synchronous[RX]) ||
- 	    (!tx && !sai->synchronous[RX])) {
--		regmap_update_bits(sai->regmap, FSL_SAI_RCR2,
-+		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs),
- 				   FSL_SAI_CR2_MSEL_MASK,
- 				   FSL_SAI_CR2_MSEL(sai->mclk_id[tx]));
--		regmap_update_bits(sai->regmap, FSL_SAI_RCR2,
-+		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs),
- 				   FSL_SAI_CR2_DIV_MASK, savediv - 1);
- 	} else if ((sai->synchronous[RX] && !sai->synchronous[TX]) ||
- 		   (tx && !sai->synchronous[TX])) {
--		regmap_update_bits(sai->regmap, FSL_SAI_TCR2,
-+		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs),
- 				   FSL_SAI_CR2_MSEL_MASK,
- 				   FSL_SAI_CR2_MSEL(sai->mclk_id[tx]));
--		regmap_update_bits(sai->regmap, FSL_SAI_TCR2,
-+		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs),
- 				   FSL_SAI_CR2_DIV_MASK, savediv - 1);
- 	}
- 
-@@ -403,6 +407,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 		struct snd_soc_dai *cpu_dai)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	unsigned int channels = params_channels(params);
- 	u32 word_width = params_width(params);
-@@ -455,19 +460,19 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 
- 	if (!sai->is_slave_mode) {
- 		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
--			regmap_update_bits(sai->regmap, FSL_SAI_TCR4,
-+			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
- 				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
- 				val_cr4);
--			regmap_update_bits(sai->regmap, FSL_SAI_TCR5,
-+			regmap_update_bits(sai->regmap, FSL_SAI_TCR5(ofs),
- 				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
- 				FSL_SAI_CR5_FBT_MASK, val_cr5);
- 			regmap_write(sai->regmap, FSL_SAI_TMR,
- 				~0UL - ((1 << channels) - 1));
- 		} else if (!sai->synchronous[RX] && sai->synchronous[TX] && tx) {
--			regmap_update_bits(sai->regmap, FSL_SAI_RCR4,
-+			regmap_update_bits(sai->regmap, FSL_SAI_RCR4(ofs),
- 				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
- 				val_cr4);
--			regmap_update_bits(sai->regmap, FSL_SAI_RCR5,
-+			regmap_update_bits(sai->regmap, FSL_SAI_RCR5(ofs),
- 				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
- 				FSL_SAI_CR5_FBT_MASK, val_cr5);
- 			regmap_write(sai->regmap, FSL_SAI_RMR,
-@@ -475,10 +480,10 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 		}
- 	}
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
- 			   FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
- 			   val_cr4);
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx, ofs),
- 			   FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
- 			   FSL_SAI_CR5_FBT_MASK, val_cr5);
- 	regmap_write(sai->regmap, FSL_SAI_xMR(tx), ~0UL - ((1 << channels) - 1));
-@@ -506,6 +511,8 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
- 		struct snd_soc_dai *cpu_dai)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
-+
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	u32 xcsr, count = 100;
- 
-@@ -514,9 +521,9 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
- 	 * Rx sync with Tx clocks: Clear SYNC for Tx, set it for Rx.
- 	 * Tx sync with Rx clocks: Clear SYNC for Rx, set it for Tx.
- 	 */
--	regmap_update_bits(sai->regmap, FSL_SAI_TCR2, FSL_SAI_CR2_SYNC,
--		           sai->synchronous[TX] ? FSL_SAI_CR2_SYNC : 0);
--	regmap_update_bits(sai->regmap, FSL_SAI_RCR2, FSL_SAI_CR2_SYNC,
-+	regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs), FSL_SAI_CR2_SYNC,
-+			   sai->synchronous[TX] ? FSL_SAI_CR2_SYNC : 0);
-+	regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs), FSL_SAI_CR2_SYNC,
- 			   sai->synchronous[RX] ? FSL_SAI_CR2_SYNC : 0);
- 
- 	/*
-@@ -527,43 +534,44 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
--		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
- 				   FSL_SAI_CSR_FRDE, FSL_SAI_CSR_FRDE);
- 
--		regmap_update_bits(sai->regmap, FSL_SAI_RCSR,
-+		regmap_update_bits(sai->regmap, FSL_SAI_RCSR(ofs),
- 				   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
--		regmap_update_bits(sai->regmap, FSL_SAI_TCSR,
-+		regmap_update_bits(sai->regmap, FSL_SAI_TCSR(ofs),
- 				   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
- 
--		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
- 				   FSL_SAI_CSR_xIE_MASK, FSL_SAI_FLAGS);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
--		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
- 				   FSL_SAI_CSR_FRDE, 0);
--		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx),
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
- 				   FSL_SAI_CSR_xIE_MASK, 0);
- 
- 		/* Check if the opposite FRDE is also disabled */
--		regmap_read(sai->regmap, FSL_SAI_xCSR(!tx), &xcsr);
-+		regmap_read(sai->regmap, FSL_SAI_xCSR(!tx, ofs), &xcsr);
- 		if (!(xcsr & FSL_SAI_CSR_FRDE)) {
- 			/* Disable both directions and reset their FIFOs */
--			regmap_update_bits(sai->regmap, FSL_SAI_TCSR,
-+			regmap_update_bits(sai->regmap, FSL_SAI_TCSR(ofs),
- 					   FSL_SAI_CSR_TERE, 0);
--			regmap_update_bits(sai->regmap, FSL_SAI_RCSR,
-+			regmap_update_bits(sai->regmap, FSL_SAI_RCSR(ofs),
- 					   FSL_SAI_CSR_TERE, 0);
- 
- 			/* TERE will remain set till the end of current frame */
- 			do {
- 				udelay(10);
--				regmap_read(sai->regmap, FSL_SAI_xCSR(tx), &xcsr);
-+				regmap_read(sai->regmap,
-+					    FSL_SAI_xCSR(tx, ofs), &xcsr);
- 			} while (--count && xcsr & FSL_SAI_CSR_TERE);
- 
--			regmap_update_bits(sai->regmap, FSL_SAI_TCSR,
-+			regmap_update_bits(sai->regmap, FSL_SAI_TCSR(ofs),
- 					   FSL_SAI_CSR_FR, FSL_SAI_CSR_FR);
--			regmap_update_bits(sai->regmap, FSL_SAI_RCSR,
-+			regmap_update_bits(sai->regmap, FSL_SAI_RCSR(ofs),
- 					   FSL_SAI_CSR_FR, FSL_SAI_CSR_FR);
- 
- 			/*
-@@ -575,13 +583,13 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
- 			 */
- 			if (!sai->is_slave_mode) {
- 				/* Software Reset for both Tx and Rx */
--				regmap_write(sai->regmap,
--					     FSL_SAI_TCSR, FSL_SAI_CSR_SR);
--				regmap_write(sai->regmap,
--					     FSL_SAI_RCSR, FSL_SAI_CSR_SR);
-+				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs),
-+					     FSL_SAI_CSR_SR);
-+				regmap_write(sai->regmap, FSL_SAI_RCSR(ofs),
-+					     FSL_SAI_CSR_SR);
- 				/* Clear SR bit to finish the reset */
--				regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
--				regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-+				regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), 0);
-+				regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
- 			}
- 		}
- 		break;
-@@ -596,10 +604,11 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
- 		struct snd_soc_dai *cpu_dai)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	int ret;
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
- 			   FSL_SAI_CR3_TRCE_MASK,
- 			   FSL_SAI_CR3_TRCE);
- 
-@@ -613,9 +622,10 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
- 		struct snd_soc_dai *cpu_dai)
- {
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
- 			   FSL_SAI_CR3_TRCE_MASK, 0);
- }
- 
-@@ -633,18 +643,20 @@ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
- static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- {
- 	struct fsl_sai *sai = dev_get_drvdata(cpu_dai->dev);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 
- 	/* Software Reset for both Tx and Rx */
--	regmap_write(sai->regmap, FSL_SAI_TCSR, FSL_SAI_CSR_SR);
--	regmap_write(sai->regmap, FSL_SAI_RCSR, FSL_SAI_CSR_SR);
-+	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), FSL_SAI_CSR_SR);
-+	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), FSL_SAI_CSR_SR);
- 	/* Clear SR bit to finish the reset */
--	regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
--	regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-+	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), 0);
-+	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_TCR1, FSL_SAI_CR1_RFW_MASK,
-+	regmap_update_bits(sai->regmap, FSL_SAI_TCR1(ofs),
-+			   FSL_SAI_CR1_RFW_MASK,
- 			   sai->soc_data->fifo_depth - FSL_SAI_MAXBURST_TX);
--	regmap_update_bits(sai->regmap, FSL_SAI_RCR1, FSL_SAI_CR1_RFW_MASK,
--			   FSL_SAI_MAXBURST_RX - 1);
-+	regmap_update_bits(sai->regmap, FSL_SAI_RCR1(ofs),
-+			   FSL_SAI_CR1_RFW_MASK, FSL_SAI_MAXBURST_RX - 1);
- 
- 	snd_soc_dai_init_dma_data(cpu_dai, &sai->dma_params_tx,
- 				&sai->dma_params_rx);
-@@ -681,12 +693,12 @@ static const struct snd_soc_component_driver fsl_component = {
- 	.name           = "fsl-sai",
- };
- 
--static struct reg_default fsl_sai_reg_defaults[] = {
--	{FSL_SAI_TCR1, 0},
--	{FSL_SAI_TCR2, 0},
--	{FSL_SAI_TCR3, 0},
--	{FSL_SAI_TCR4, 0},
--	{FSL_SAI_TCR5, 0},
-+static struct reg_default fsl_sai_reg_defaults_ofs0[] = {
-+	{FSL_SAI_TCR1(0), 0},
-+	{FSL_SAI_TCR2(0), 0},
-+	{FSL_SAI_TCR3(0), 0},
-+	{FSL_SAI_TCR4(0), 0},
-+	{FSL_SAI_TCR5(0), 0},
- 	{FSL_SAI_TDR0, 0},
- 	{FSL_SAI_TDR1, 0},
- 	{FSL_SAI_TDR2, 0},
-@@ -695,24 +707,50 @@ static struct reg_default fsl_sai_reg_defaults[] = {
- 	{FSL_SAI_TDR5, 0},
- 	{FSL_SAI_TDR6, 0},
- 	{FSL_SAI_TDR7, 0},
--	{FSL_SAI_TMR,  0},
--	{FSL_SAI_RCR1, 0},
--	{FSL_SAI_RCR2, 0},
--	{FSL_SAI_RCR3, 0},
--	{FSL_SAI_RCR4, 0},
--	{FSL_SAI_RCR5, 0},
--	{FSL_SAI_RMR,  0},
-+	{FSL_SAI_TMR, 0},
-+	{FSL_SAI_RCR1(0), 0},
-+	{FSL_SAI_RCR2(0), 0},
-+	{FSL_SAI_RCR3(0), 0},
-+	{FSL_SAI_RCR4(0), 0},
-+	{FSL_SAI_RCR5(0), 0},
-+	{FSL_SAI_RMR, 0},
-+};
-+
-+static struct reg_default fsl_sai_reg_defaults_ofs8[] = {
-+	{FSL_SAI_TCR1(8), 0},
-+	{FSL_SAI_TCR2(8), 0},
-+	{FSL_SAI_TCR3(8), 0},
-+	{FSL_SAI_TCR4(8), 0},
-+	{FSL_SAI_TCR5(8), 0},
-+	{FSL_SAI_TDR0, 0},
-+	{FSL_SAI_TDR1, 0},
-+	{FSL_SAI_TDR2, 0},
-+	{FSL_SAI_TDR3, 0},
-+	{FSL_SAI_TDR4, 0},
-+	{FSL_SAI_TDR5, 0},
-+	{FSL_SAI_TDR6, 0},
-+	{FSL_SAI_TDR7, 0},
-+	{FSL_SAI_TMR, 0},
-+	{FSL_SAI_RCR1(8), 0},
-+	{FSL_SAI_RCR2(8), 0},
-+	{FSL_SAI_RCR3(8), 0},
-+	{FSL_SAI_RCR4(8), 0},
-+	{FSL_SAI_RCR5(8), 0},
-+	{FSL_SAI_RMR, 0},
- };
- 
- static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- {
-+	struct fsl_sai *sai = dev_get_drvdata(dev);
-+	unsigned int ofs = sai->soc_data->reg_offset;
-+
-+	if (reg >= FSL_SAI_TCSR(ofs) && reg <= FSL_SAI_TCR5(ofs))
-+		return true;
-+
-+	if (reg >= FSL_SAI_RCSR(ofs) && reg <= FSL_SAI_RCR5(ofs))
-+		return true;
-+
- 	switch (reg) {
--	case FSL_SAI_TCSR:
--	case FSL_SAI_TCR1:
--	case FSL_SAI_TCR2:
--	case FSL_SAI_TCR3:
--	case FSL_SAI_TCR4:
--	case FSL_SAI_TCR5:
- 	case FSL_SAI_TFR0:
- 	case FSL_SAI_TFR1:
- 	case FSL_SAI_TFR2:
-@@ -722,12 +760,6 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_TFR6:
- 	case FSL_SAI_TFR7:
- 	case FSL_SAI_TMR:
--	case FSL_SAI_RCSR:
--	case FSL_SAI_RCR1:
--	case FSL_SAI_RCR2:
--	case FSL_SAI_RCR3:
--	case FSL_SAI_RCR4:
--	case FSL_SAI_RCR5:
- 	case FSL_SAI_RDR0:
- 	case FSL_SAI_RDR1:
- 	case FSL_SAI_RDR2:
-@@ -753,9 +785,13 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
- 
- static bool fsl_sai_volatile_reg(struct device *dev, unsigned int reg)
- {
-+	struct fsl_sai *sai = dev_get_drvdata(dev);
-+	unsigned int ofs = sai->soc_data->reg_offset;
-+
-+	if (reg == FSL_SAI_TCSR(ofs) || reg == FSL_SAI_RCSR(ofs))
-+		return true;
-+
- 	switch (reg) {
--	case FSL_SAI_TCSR:
--	case FSL_SAI_RCSR:
- 	case FSL_SAI_TFR0:
- 	case FSL_SAI_TFR1:
- 	case FSL_SAI_TFR2:
-@@ -788,13 +824,16 @@ static bool fsl_sai_volatile_reg(struct device *dev, unsigned int reg)
- 
- static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
- {
-+	struct fsl_sai *sai = dev_get_drvdata(dev);
-+	unsigned int ofs = sai->soc_data->reg_offset;
-+
-+	if (reg >= FSL_SAI_TCSR(ofs) && reg <= FSL_SAI_TCR5(ofs))
-+		return true;
-+
-+	if (reg >= FSL_SAI_RCSR(ofs) && reg <= FSL_SAI_RCR5(ofs))
-+		return true;
-+
- 	switch (reg) {
--	case FSL_SAI_TCSR:
--	case FSL_SAI_TCR1:
--	case FSL_SAI_TCR2:
--	case FSL_SAI_TCR3:
--	case FSL_SAI_TCR4:
--	case FSL_SAI_TCR5:
- 	case FSL_SAI_TDR0:
- 	case FSL_SAI_TDR1:
- 	case FSL_SAI_TDR2:
-@@ -804,12 +843,6 @@ static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
- 	case FSL_SAI_TDR6:
- 	case FSL_SAI_TDR7:
- 	case FSL_SAI_TMR:
--	case FSL_SAI_RCSR:
--	case FSL_SAI_RCR1:
--	case FSL_SAI_RCR2:
--	case FSL_SAI_RCR3:
--	case FSL_SAI_RCR4:
--	case FSL_SAI_RCR5:
- 	case FSL_SAI_RMR:
- 		return true;
- 	default:
-@@ -817,15 +850,15 @@ static bool fsl_sai_writeable_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
--static const struct regmap_config fsl_sai_regmap_config = {
-+static struct regmap_config fsl_sai_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
- 	.val_bits = 32,
- 	.fast_io = true,
- 
- 	.max_register = FSL_SAI_RMR,
--	.reg_defaults = fsl_sai_reg_defaults,
--	.num_reg_defaults = ARRAY_SIZE(fsl_sai_reg_defaults),
-+	.reg_defaults = fsl_sai_reg_defaults_ofs0,
-+	.num_reg_defaults = ARRAY_SIZE(fsl_sai_reg_defaults_ofs0),
- 	.readable_reg = fsl_sai_readable_reg,
- 	.volatile_reg = fsl_sai_volatile_reg,
- 	.writeable_reg = fsl_sai_writeable_reg,
-@@ -857,6 +890,12 @@ static int fsl_sai_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	if (sai->soc_data->reg_offset == 8) {
-+		fsl_sai_regmap_config.reg_defaults = fsl_sai_reg_defaults_ofs8;
-+		fsl_sai_regmap_config.num_reg_defaults =
-+			ARRAY_SIZE(fsl_sai_reg_defaults_ofs8);
-+	}
-+
- 	sai->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
- 			"bus", base, &fsl_sai_regmap_config);
- 
-@@ -971,11 +1010,13 @@ static int fsl_sai_remove(struct platform_device *pdev)
- static const struct fsl_sai_soc_data fsl_sai_vf610_data = {
- 	.use_imx_pcm = false,
- 	.fifo_depth = 32,
-+	.reg_offset = 0,
- };
- 
- static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
- 	.use_imx_pcm = true,
- 	.fifo_depth = 32,
-+	.reg_offset = 0,
- };
- 
- static const struct of_device_id fsl_sai_ids[] = {
-@@ -1008,6 +1049,7 @@ static int fsl_sai_runtime_suspend(struct device *dev)
- static int fsl_sai_runtime_resume(struct device *dev)
- {
- 	struct fsl_sai *sai = dev_get_drvdata(dev);
-+	unsigned int ofs = sai->soc_data->reg_offset;
- 	int ret;
- 
- 	ret = clk_prepare_enable(sai->bus_clk);
-@@ -1029,11 +1071,11 @@ static int fsl_sai_runtime_resume(struct device *dev)
- 	}
- 
- 	regcache_cache_only(sai->regmap, false);
--	regmap_write(sai->regmap, FSL_SAI_TCSR, FSL_SAI_CSR_SR);
--	regmap_write(sai->regmap, FSL_SAI_RCSR, FSL_SAI_CSR_SR);
-+	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), FSL_SAI_CSR_SR);
-+	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), FSL_SAI_CSR_SR);
- 	usleep_range(1000, 2000);
--	regmap_write(sai->regmap, FSL_SAI_TCSR, 0);
--	regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
-+	regmap_write(sai->regmap, FSL_SAI_TCSR(ofs), 0);
-+	regmap_write(sai->regmap, FSL_SAI_RCSR(ofs), 0);
- 
- 	ret = regcache_sync(sai->regmap);
- 	if (ret)
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 20c5b9b1e8bc..b89b0ca26053 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -14,12 +14,12 @@
- 			 SNDRV_PCM_FMTBIT_S32_LE)
- 
- /* SAI Register Map Register */
--#define FSL_SAI_TCSR	0x00 /* SAI Transmit Control */
--#define FSL_SAI_TCR1	0x04 /* SAI Transmit Configuration 1 */
--#define FSL_SAI_TCR2	0x08 /* SAI Transmit Configuration 2 */
--#define FSL_SAI_TCR3	0x0c /* SAI Transmit Configuration 3 */
--#define FSL_SAI_TCR4	0x10 /* SAI Transmit Configuration 4 */
--#define FSL_SAI_TCR5	0x14 /* SAI Transmit Configuration 5 */
-+#define FSL_SAI_TCSR(ofs)	(0x00 + ofs) /* SAI Transmit Control */
-+#define FSL_SAI_TCR1(ofs)	(0x04 + ofs) /* SAI Transmit Configuration 1 */
-+#define FSL_SAI_TCR2(ofs)	(0x08 + ofs) /* SAI Transmit Configuration 2 */
-+#define FSL_SAI_TCR3(ofs)	(0x0c + ofs) /* SAI Transmit Configuration 3 */
-+#define FSL_SAI_TCR4(ofs)	(0x10 + ofs) /* SAI Transmit Configuration 4 */
-+#define FSL_SAI_TCR5(ofs)	(0x14 + ofs) /* SAI Transmit Configuration 5 */
- #define FSL_SAI_TDR0	0x20 /* SAI Transmit Data 0 */
- #define FSL_SAI_TDR1	0x24 /* SAI Transmit Data 1 */
- #define FSL_SAI_TDR2	0x28 /* SAI Transmit Data 2 */
-@@ -37,12 +37,12 @@
- #define FSL_SAI_TFR6	0x58 /* SAI Transmit FIFO 6 */
- #define FSL_SAI_TFR7	0x5C /* SAI Transmit FIFO 7 */
- #define FSL_SAI_TMR	0x60 /* SAI Transmit Mask */
--#define FSL_SAI_RCSR	0x80 /* SAI Receive Control */
--#define FSL_SAI_RCR1	0x84 /* SAI Receive Configuration 1 */
--#define FSL_SAI_RCR2	0x88 /* SAI Receive Configuration 2 */
--#define FSL_SAI_RCR3	0x8c /* SAI Receive Configuration 3 */
--#define FSL_SAI_RCR4	0x90 /* SAI Receive Configuration 4 */
--#define FSL_SAI_RCR5	0x94 /* SAI Receive Configuration 5 */
-+#define FSL_SAI_RCSR(ofs)	(0x80 + ofs) /* SAI Receive Control */
-+#define FSL_SAI_RCR1(ofs)	(0x84 + ofs)/* SAI Receive Configuration 1 */
-+#define FSL_SAI_RCR2(ofs)	(0x88 + ofs) /* SAI Receive Configuration 2 */
-+#define FSL_SAI_RCR3(ofs)	(0x8c + ofs) /* SAI Receive Configuration 3 */
-+#define FSL_SAI_RCR4(ofs)	(0x90 + ofs) /* SAI Receive Configuration 4 */
-+#define FSL_SAI_RCR5(ofs)	(0x94 + ofs) /* SAI Receive Configuration 5 */
- #define FSL_SAI_RDR0	0xa0 /* SAI Receive Data 0 */
- #define FSL_SAI_RDR1	0xa4 /* SAI Receive Data 1 */
- #define FSL_SAI_RDR2	0xa8 /* SAI Receive Data 2 */
-@@ -61,14 +61,14 @@
- #define FSL_SAI_RFR7	0xdc /* SAI Receive FIFO 7 */
- #define FSL_SAI_RMR	0xe0 /* SAI Receive Mask */
- 
--#define FSL_SAI_xCSR(tx)	(tx ? FSL_SAI_TCSR : FSL_SAI_RCSR)
--#define FSL_SAI_xCR1(tx)	(tx ? FSL_SAI_TCR1 : FSL_SAI_RCR1)
--#define FSL_SAI_xCR2(tx)	(tx ? FSL_SAI_TCR2 : FSL_SAI_RCR2)
--#define FSL_SAI_xCR3(tx)	(tx ? FSL_SAI_TCR3 : FSL_SAI_RCR3)
--#define FSL_SAI_xCR4(tx)	(tx ? FSL_SAI_TCR4 : FSL_SAI_RCR4)
--#define FSL_SAI_xCR5(tx)	(tx ? FSL_SAI_TCR5 : FSL_SAI_RCR5)
--#define FSL_SAI_xDR(tx)		(tx ? FSL_SAI_TDR : FSL_SAI_RDR)
--#define FSL_SAI_xFR(tx)		(tx ? FSL_SAI_TFR : FSL_SAI_RFR)
-+#define FSL_SAI_xCSR(tx, ofs)	(tx ? FSL_SAI_TCSR(ofs) : FSL_SAI_RCSR(ofs))
-+#define FSL_SAI_xCR1(tx, ofs)	(tx ? FSL_SAI_TCR1(ofs) : FSL_SAI_RCR1(ofs))
-+#define FSL_SAI_xCR2(tx, ofs)	(tx ? FSL_SAI_TCR2(ofs) : FSL_SAI_RCR2(ofs))
-+#define FSL_SAI_xCR3(tx, ofs)	(tx ? FSL_SAI_TCR3(ofs) : FSL_SAI_RCR3(ofs))
-+#define FSL_SAI_xCR4(tx, ofs)	(tx ? FSL_SAI_TCR4(ofs) : FSL_SAI_RCR4(ofs))
-+#define FSL_SAI_xCR5(tx, ofs)	(tx ? FSL_SAI_TCR5(ofs) : FSL_SAI_RCR5(ofs))
-+#define FSL_SAI_xDR(tx, ofs)	(tx ? FSL_SAI_TDR(ofs) : FSL_SAI_RDR(ofs))
-+#define FSL_SAI_xFR(tx, ofs)	(tx ? FSL_SAI_TFR(ofs) : FSL_SAI_RFR(ofs))
- #define FSL_SAI_xMR(tx)		(tx ? FSL_SAI_TMR : FSL_SAI_RMR)
- 
- /* SAI Transmit/Receive Control Register */
-@@ -158,6 +158,7 @@
- struct fsl_sai_soc_data {
- 	bool use_imx_pcm;
- 	unsigned int fifo_depth;
-+	unsigned int reg_offset;
- };
- 
- struct fsl_sai {
--- 
-2.20.1
+RnJvbTogU3RlZmFuIFBvcGEgPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+CgpUaGUgQUQ3NjA2QiBp
+cyBhIDE2LWJpdCBBREMgdGhhdCBzdXBwb3J0cyBzaW11bHRhbmVvdXMgc2FtcGxpbmcgb2YgOApj
+aGFubmVscy4gSXQgaXMgcGluIGNvbXBhdGlibGUgdG8gQUQ3NjA2LCBidXQgYWRkcyBleHRyYSBt
+b2RlcyBieQp3cml0aW5nIHRvIHRoZSByZWdpc3RlciBtYXAuCgpUaGUgQUQ3NjA2QiBjYW4gYmUg
+Y29uZmlndXJlZCB0byB3b3JrIGluIHNvZnR3YXJlIG1vZGUgYnkgc2V0dGluZyBhbGwKb3ZlcnNh
+bXBsaW5nIHBpbnMgdG8gaGlnaC4gVGhpcyBtb2RlIGlzIHNlbGVjdGVkIGJ5IGRlZmF1bHQuClRo
+ZSBvdmVyc2FtcGxpbmcgcmF0aW8gaXMgY29uZmlndXJlZCBmcm9tIHRoZSBPU19NT0RFIHJlZ2lz
+dGVyIChhZGRyZXNzCjB4MDgpIHdpdGggdGhlIGFkZGl0aW9uIG9mIE9TPTEyOCBhbmQgT1M9MjU2
+IHRoYXQgd2VyZSBub3QgYXZhaWxhYmxlIGluCmhhcmR3YXJlIG1vZGUuCgpUaGUgZGV2aWNlIGlz
+IGNvbmZpZ3VyZWQgdG8gb3V0cHV0IGRhdGEgb24gYSBzaW5nbGUgc3BpIGNoYW5uZWwsIGJ1dCB0
+aGlzCmNvbmZpZ3VyYXRpb24gbXVzdCBiZSBkb25lIHJpZ2h0IGFmdGVyIHJlc3RhcnQuIFRoYXQg
+aXMgd2h5IHRoZSBkZWxheSB3YXMKcmVtb3ZlZCBmb3IgZGV2aWNlcyB3aGljaCBkb2Vzbid0IHJl
+cXVpcmUgaXQuCgpNb3Jlb3ZlciwgaW4gc29mdHdhcmUgbW9kZSwgdGhlIHJhbmdlIGdwaW8gaGFz
+IG5vIGxvbmdlciBpdHMgZnVuY3Rpb24uCkluc3RlYWQsIHRoZSBzY2FsZSBjYW4gYmUgY29uZmln
+dXJlZCBpbmRpdmlkdWFsbHkgZm9yIGVhY2ggY2hhbm5lbCBmcm9tCnRoZSBSQU5HRV9DSCByZWdp
+c3RlcnMgKGFkZHJlc3MgMHgwMyB0byAweDA2KS4gQmVzaWRlcyB0aGUgYWxyZWFkeQpzdXBwb3J0
+ZWQgwrExMCBWIGFuZCDCsTUgViByYW5nZXMsIHNvZnR3YXJlIG1vZGUgY2FuIGFsc28gYWNjb21t
+b2RhdGUgdGhlCsKxMi41IFYgcmFuZ2UuCgpTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUG9wYSA8c3Rl
+ZmFuLnBvcGFAYW5hbG9nLmNvbT4KQ28tZGV2ZWxvcGVkLWJ5OiBCZW5pYW1pbiBCaWEgPGJlbmlh
+bWluLmJpYUBhbmFsb2cuY29tPgpTaWduZWQtb2ZmLWJ5OiBCZW5pYW1pbiBCaWEgPGJlbmlhbWlu
+LmJpYUBhbmFsb2cuY29tPgpBY2tlZC1ieTogSm9uYXRoYW4gQ2FtZXJvbiA8amljMjNAa2VybmVs
+Lm9yZz4KLS0tCkNoYW5nZXMgaW4gdjI6Ci1ub3RoaW5nIGNoYW5nZWQKCiBkcml2ZXJzL2lpby9h
+ZGMvYWQ3NjA2LmMgICAgIHwgIDEzICsrKystCiBkcml2ZXJzL2lpby9hZGMvYWQ3NjA2LmggICAg
+IHwgICA0ICsrCiBkcml2ZXJzL2lpby9hZGMvYWQ3NjA2X3NwaS5jIHwgMTA3ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDEyMiBpbnNlcnRpb25z
+KCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2FkYy9hZDc2MDYu
+YyBiL2RyaXZlcnMvaWlvL2FkYy9hZDc2MDYuYwppbmRleCBlZDJkMDg0MzdlNWQuLmY1YmE5NGMw
+M2E4ZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9paW8vYWRjL2FkNzYwNi5jCisrKyBiL2RyaXZlcnMv
+aWlvL2FkYy9hZDc2MDYuYwpAQCAtNDEwLDEyICs0MTAsMTkgQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBhZDc2MDZfY2hpcF9pbmZvIGFkNzYwNl9jaGlwX2luZm9fdGJsW10gPSB7CiAJCS5vdmVyc2Ft
+cGxpbmdfYXZhaWwgPSBhZDc2MDZfb3ZlcnNhbXBsaW5nX2F2YWlsLAogCQkub3ZlcnNhbXBsaW5n
+X251bSA9IEFSUkFZX1NJWkUoYWQ3NjA2X292ZXJzYW1wbGluZ19hdmFpbCksCiAJfSwKKwlbSURf
+QUQ3NjA2Ql0gPSB7CisJCS5jaGFubmVscyA9IGFkNzYwNl9jaGFubmVscywKKwkJLm51bV9jaGFu
+bmVscyA9IDksCisJCS5vdmVyc2FtcGxpbmdfYXZhaWwgPSBhZDc2MDZfb3ZlcnNhbXBsaW5nX2F2
+YWlsLAorCQkub3ZlcnNhbXBsaW5nX251bSA9IEFSUkFZX1NJWkUoYWQ3NjA2X292ZXJzYW1wbGlu
+Z19hdmFpbCksCisJfSwKIAlbSURfQUQ3NjE2XSA9IHsKIAkJLmNoYW5uZWxzID0gYWQ3NjE2X2No
+YW5uZWxzLAogCQkubnVtX2NoYW5uZWxzID0gMTcsCiAJCS5vdmVyc2FtcGxpbmdfYXZhaWwgPSBh
+ZDc2MTZfb3ZlcnNhbXBsaW5nX2F2YWlsLAogCQkub3ZlcnNhbXBsaW5nX251bSA9IEFSUkFZX1NJ
+WkUoYWQ3NjE2X292ZXJzYW1wbGluZ19hdmFpbCksCiAJCS5vc19yZXFfcmVzZXQgPSB0cnVlLAor
+CQkuaW5pdF9kZWxheV9tcyA9IDE1LAogCX0sCiB9OwogCkBAIC02MzEsOCArNjM4LDEwIEBAIGlu
+dCBhZDc2MDZfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaXJxLCB2b2lkIF9faW9tZW0g
+KmJhc2VfYWRkcmVzcywKIAkJZGV2X3dhcm4oc3QtPmRldiwgImZhaWxlZCB0byBSRVNFVDogbm8g
+UkVTRVQgR1BJTyBzcGVjaWZpZWRcbiIpOwogCiAJLyogQUQ3NjE2IHJlcXVpcmVzIGFsIGxlYXN0
+IDE1bXMgdG8gcmVjb25maWd1cmUgYWZ0ZXIgYSByZXNldCAqLwotCWlmIChtc2xlZXBfaW50ZXJy
+dXB0aWJsZSgxNSkpCi0JCXJldHVybiAtRVJFU1RBUlRTWVM7CisJaWYgKHN0LT5jaGlwX2luZm8t
+PmluaXRfZGVsYXlfbXMpIHsKKwkJaWYgKG1zbGVlcF9pbnRlcnJ1cHRpYmxlKHN0LT5jaGlwX2lu
+Zm8tPmluaXRfZGVsYXlfbXMpKQorCQkJcmV0dXJuIC1FUkVTVEFSVFNZUzsKKwl9CiAKIAlzdC0+
+d3JpdGVfc2NhbGUgPSBhZDc2MDZfd3JpdGVfc2NhbGVfaHc7CiAJc3QtPndyaXRlX29zID0gYWQ3
+NjA2X3dyaXRlX29zX2h3OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL2FkNzYwNi5oIGIv
+ZHJpdmVycy9paW8vYWRjL2FkNzYwNi5oCmluZGV4IGVlYWFhOGI5MDVkYi4uOTM1MGVmMWY2M2I1
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2lpby9hZGMvYWQ3NjA2LmgKKysrIGIvZHJpdmVycy9paW8v
+YWRjL2FkNzYwNi5oCkBAIC00Niw2ICs0Niw4IEBACiAgKgkJCW92ZXJzYW1wbGluZyByYXRpb3Mu
+CiAgKiBAb3ZlcnNhbXBsaW5nX251bQludW1iZXIgb2YgZWxlbWVudHMgc3RvcmVkIGluIG92ZXJz
+YW1wbGluZ19hdmFpbCBhcnJheQogICogQG9zX3JlcV9yZXNldAlzb21lIGRldmljZXMgcmVxdWly
+ZSBhIHJlc2V0IHRvIHVwZGF0ZSBvdmVyc2FtcGxpbmcKKyAqIEBpbml0X2RlbGF5X21zCXJlcXVp
+cmVkIGRlbGF5IGluIG1pbGlzZWNvbmRzIGZvciBpbml0aWFsaXphdGlvbgorICoJCQlhZnRlciBh
+IHJlc3RhcnQKICAqLwogc3RydWN0IGFkNzYwNl9jaGlwX2luZm8gewogCWNvbnN0IHN0cnVjdCBp
+aW9fY2hhbl9zcGVjCSpjaGFubmVsczsKQEAgLTUzLDYgKzU1LDcgQEAgc3RydWN0IGFkNzYwNl9j
+aGlwX2luZm8gewogCWNvbnN0IHVuc2lnbmVkIGludAkJKm92ZXJzYW1wbGluZ19hdmFpbDsKIAl1
+bnNpZ25lZCBpbnQJCQlvdmVyc2FtcGxpbmdfbnVtOwogCWJvb2wJCQkJb3NfcmVxX3Jlc2V0Owor
+CXVuc2lnbmVkIGxvbmcJCQlpbml0X2RlbGF5X21zOwogfTsKIAogLyoqCkBAIC0xNTUsNiArMTU4
+LDcgQEAgZW51bSBhZDc2MDZfc3VwcG9ydGVkX2RldmljZV9pZHMgewogCUlEX0FENzYwNl84LAog
+CUlEX0FENzYwNl82LAogCUlEX0FENzYwNl80LAorCUlEX0FENzYwNkIsCiAJSURfQUQ3NjE2LAog
+fTsKIApkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL2FkNzYwNl9zcGkuYyBiL2RyaXZlcnMv
+aWlvL2FkYy9hZDc2MDZfc3BpLmMKaW5kZXggOThlZDUyYjc0NTA3Li4wNzBlZTdlMzFlMmMgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvaWlvL2FkYy9hZDc2MDZfc3BpLmMKKysrIGIvZHJpdmVycy9paW8v
+YWRjL2FkNzYwNl9zcGkuYwpAQCAtMzEsNiArMzEsMjAgQEAKIC8qIFRoZSByYW5nZSBvZiB0aGUg
+Y2hhbm5lbCBpcyBzdG9yZWQgb24gMiBiaXRzKi8KICNkZWZpbmUgQUQ3NjE2X1JBTkdFX0NIX01T
+SyhjaCkJCSgwYjExIDw8ICgoKGNoKSAmIDBiMTEpICogMikpCiAjZGVmaW5lIEFENzYxNl9SQU5H
+RV9DSF9NT0RFKGNoLCBtb2RlKQkoKG1vZGUpIDw8ICgoKChjaCkgJiAwYjExKSkgKiAyKSkKKwor
+I2RlZmluZSBBRDc2MDZfQ09ORklHVVJBVElPTl9SRUdJU1RFUgkweDAyCisjZGVmaW5lIEFENzYw
+Nl9TSU5HTEVfRE9VVAkJMHgwCisKKy8qCisgKiBSYW5nZSBmb3IgQUQ3NjA2QiBjaGFubmVscyBh
+cmUgc3RvcmVkIGluIHJlZ2lzdGVycyBzdGFydGluZyB3aXRoIGFkZHJlc3MgMHgzLgorICogRWFj
+aCByZWdpc3RlciBzdG9yZXMgcmFuZ2UgZm9yIDIgY2hhbm5lbHMoNCBiaXRzIHBlciBjaGFubmVs
+KS4KKyAqLworI2RlZmluZSBBRDc2MDZfUkFOR0VfQ0hfTVNLKGNoKQkJKEdFTk1BU0soMywgMCkg
+PDwgKDQgKiAoKGNoKSAmIDB4MSkpKQorI2RlZmluZSBBRDc2MDZfUkFOR0VfQ0hfTU9ERShjaCwg
+bW9kZSkJXAorCSgoR0VOTUFTSygzLCAwKSAmIG1vZGUpIDw8ICg0ICogKChjaCkgJiAweDEpKSkK
+KyNkZWZpbmUgQUQ3NjA2X1JBTkdFX0NIX0FERFIoY2gpCSgweDAzICsgKChjaCkgPj4gMSkpCisj
+ZGVmaW5lIEFENzYwNl9PU19NT0RFCQkJMHgwOAorCiBzdGF0aWMgY29uc3Qgc3RydWN0IGlpb19j
+aGFuX3NwZWMgYWQ3NjE2X3N3X2NoYW5uZWxzW10gPSB7CiAJSUlPX0NIQU5fU09GVF9USU1FU1RB
+TVAoMTYpLAogCUFENzYxNl9DSEFOTkVMKDApLApAQCAtNTEsNiArNjUsMjIgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBpaW9fY2hhbl9zcGVjIGFkNzYxNl9zd19jaGFubmVsc1tdID0gewogCUFENzYx
+Nl9DSEFOTkVMKDE1KSwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBh
+ZDc2MDZCX3N3X2NoYW5uZWxzW10gPSB7CisJSUlPX0NIQU5fU09GVF9USU1FU1RBTVAoOCksCisJ
+QUQ3NjE2X0NIQU5ORUwoMCksCisJQUQ3NjE2X0NIQU5ORUwoMSksCisJQUQ3NjE2X0NIQU5ORUwo
+MiksCisJQUQ3NjE2X0NIQU5ORUwoMyksCisJQUQ3NjE2X0NIQU5ORUwoNCksCisJQUQ3NjE2X0NI
+QU5ORUwoNSksCisJQUQ3NjE2X0NIQU5ORUwoNiksCisJQUQ3NjE2X0NIQU5ORUwoNyksCit9Owor
+CitzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50IGFkNzYwNkJfb3ZlcnNhbXBsaW5nX2F2YWlsWzld
+ID0geworCTEsIDIsIDQsIDgsIDE2LCAzMiwgNjQsIDEyOCwgMjU2Cit9OworCiBzdGF0aWMgdTE2
+IGFkNzYxNl9zcGlfcmRfd3JfY21kKGludCBhZGRyLCBjaGFyIGlzV3JpdGVPcCkKIHsKIAkvKgpA
+QCAtNjAsNiArOTAsMTYgQEAgc3RhdGljIHUxNiBhZDc2MTZfc3BpX3JkX3dyX2NtZChpbnQgYWRk
+ciwgY2hhciBpc1dyaXRlT3ApCiAJcmV0dXJuICgoYWRkciAmIDB4N0YpIDw8IDEpIHwgKChpc1dy
+aXRlT3AgJiAweDEpIDw8IDcpOwogfQogCitzdGF0aWMgdTE2IGFkNzYwNkJfc3BpX3JkX3dyX2Nt
+ZChpbnQgYWRkciwgY2hhciBpc1dyaXRlT3ApCit7CisJLyoKKwkgKiBUaGUgYWRkcmVzcyBvZiBy
+ZWdpc3RlciBjb25zaXN0cyBvZiBvbmUgYml0IHdoaWNoCisJICogc3BlY2lmaWVzIGEgcmVhZCBj
+b21tYW5kIHBsYWNlZCBiaXQgNiwgZm9sbG93ZWQgYnkKKwkgKiA2IGJpdHMgb2YgYWRkcmVzcy4K
+KwkgKi8KKwlyZXR1cm4gKGFkZHIgJiAweDNGKSB8ICgoKH5pc1dyaXRlT3ApICYgMHgxKSA8PCA2
+KTsKK30KKwogc3RhdGljIGludCBhZDc2MDZfc3BpX3JlYWRfYmxvY2soc3RydWN0IGRldmljZSAq
+ZGV2LAogCQkJCSBpbnQgY291bnQsIHZvaWQgKmJ1ZikKIHsKQEAgLTE2OSw2ICsyMDksMjMgQEAg
+c3RhdGljIGludCBhZDc2MTZfd3JpdGVfb3Nfc3coc3RydWN0IGlpb19kZXYgKmluZGlvX2Rldiwg
+aW50IHZhbCkKIAkJCQkgICAgIEFENzYxNl9PU19NQVNLLCB2YWwgPDwgMik7CiB9CiAKK3N0YXRp
+YyBpbnQgYWQ3NjA2X3dyaXRlX3NjYWxlX3N3KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsIGlu
+dCBjaCwgaW50IHZhbCkKK3sKKwlzdHJ1Y3QgYWQ3NjA2X3N0YXRlICpzdCA9IGlpb19wcml2KGlu
+ZGlvX2Rldik7CisKKwlyZXR1cm4gYWQ3NjA2X3NwaV93cml0ZV9tYXNrKHN0LAorCQkJCSAgICAg
+QUQ3NjA2X1JBTkdFX0NIX0FERFIoY2gpLAorCQkJCSAgICAgQUQ3NjA2X1JBTkdFX0NIX01TSyhj
+aCksCisJCQkJICAgICBBRDc2MDZfUkFOR0VfQ0hfTU9ERShjaCwgdmFsKSk7Cit9CisKK3N0YXRp
+YyBpbnQgYWQ3NjA2X3dyaXRlX29zX3N3KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsIGludCB2
+YWwpCit7CisJc3RydWN0IGFkNzYwNl9zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOwor
+CisJcmV0dXJuIGFkNzYwNl9zcGlfcmVnX3dyaXRlKHN0LCBBRDc2MDZfT1NfTU9ERSwgdmFsKTsK
+K30KKwogc3RhdGljIGludCBhZDc2MTZfc3dfbW9kZV9jb25maWcoc3RydWN0IGlpb19kZXYgKmlu
+ZGlvX2RldikKIHsKIAlzdHJ1Y3QgYWQ3NjA2X3N0YXRlICpzdCA9IGlpb19wcml2KGluZGlvX2Rl
+dik7CkBAIC0xODksNiArMjQ2LDQyIEBAIHN0YXRpYyBpbnQgYWQ3NjE2X3N3X21vZGVfY29uZmln
+KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYpCiAJCQkgICAgICBBRDc2MTZfQlVSU1RfTU9ERSB8
+IEFENzYxNl9TRVFFTl9NT0RFKTsKIH0KIAorc3RhdGljIGludCBhZDc2MDZCX3N3X21vZGVfY29u
+ZmlnKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYpCit7CisJc3RydWN0IGFkNzYwNl9zdGF0ZSAq
+c3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOworCXVuc2lnbmVkIGxvbmcgb3NbM10gPSB7MX07CisK
+KwkvKgorCSAqIFNvZnR3YXJlIG1vZGUgaXMgZW5hYmxlZCB3aGVuIGFsbCB0aHJlZSBvdmVyc2Ft
+cGxpbmcKKwkgKiBwaW5zIGFyZSBzZXQgdG8gaGlnaC4gSWYgb3ZlcnNhbXBsaW5nIGdwaW9zIGFy
+ZSBkZWZpbmVkCisJICogaW4gdGhlIGRldmljZSB0cmVlLCB0aGVuIHRoZXkgbmVlZCB0byBiZSBz
+ZXQgdG8gaGlnaCwKKwkgKiBvdGhlcndpc2UsIHRoZXkgbXVzdCBiZSBoYXJkd2lyZWQgdG8gVkRE
+CisJICovCisJaWYgKHN0LT5ncGlvX29zKSB7CisJCWdwaW9kX3NldF9hcnJheV92YWx1ZShBUlJB
+WV9TSVpFKG9zKSwKKwkJCQkgICAgICBzdC0+Z3Bpb19vcy0+ZGVzYywgc3QtPmdwaW9fb3MtPmlu
+Zm8sIG9zKTsKKwl9CisJLyogT1Mgb2YgMTI4IGFuZCAyNTYgYXJlIGF2YWlsYWJsZSBvbmx5IGlu
+IHNvZnR3YXJlIG1vZGUgKi8KKwlzdC0+b3ZlcnNhbXBsaW5nX2F2YWlsID0gYWQ3NjA2Ql9vdmVy
+c2FtcGxpbmdfYXZhaWw7CisJc3QtPm51bV9vc19yYXRpb3MgPSBBUlJBWV9TSVpFKGFkNzYwNkJf
+b3ZlcnNhbXBsaW5nX2F2YWlsKTsKKworCXN0LT53cml0ZV9zY2FsZSA9IGFkNzYwNl93cml0ZV9z
+Y2FsZV9zdzsKKwlzdC0+d3JpdGVfb3MgPSAmYWQ3NjA2X3dyaXRlX29zX3N3OworCisJLyogQ29u
+ZmlndXJlIGRldmljZSBzcGkgdG8gb3V0cHV0IG9uIGEgc2luZ2xlIGNoYW5uZWwgKi8KKwlzdC0+
+Ym9wcy0+cmVnX3dyaXRlKHN0LAorCQkJICAgIEFENzYwNl9DT05GSUdVUkFUSU9OX1JFR0lTVEVS
+LAorCQkJICAgIEFENzYwNl9TSU5HTEVfRE9VVCk7CisKKwkvKgorCSAqIFNjYWxlIGNhbiBiZSBj
+b25maWd1cmVkIGluZGl2aWR1YWxseSBmb3IgZWFjaCBjaGFubmVsCisJICogaW4gc29mdHdhcmUg
+bW9kZS4KKwkgKi8KKwlpbmRpb19kZXYtPmNoYW5uZWxzID0gYWQ3NjA2Ql9zd19jaGFubmVsczsK
+KworCXJldHVybiAwOworfQorCiBzdGF0aWMgY29uc3Qgc3RydWN0IGFkNzYwNl9idXNfb3BzIGFk
+NzYwNl9zcGlfYm9wcyA9IHsKIAkucmVhZF9ibG9jayA9IGFkNzYwNl9zcGlfcmVhZF9ibG9jaywK
+IH07CkBAIC0yMDIsNiArMjk1LDE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYWQ3NjA2X2J1c19v
+cHMgYWQ3NjE2X3NwaV9ib3BzID0gewogCS5zd19tb2RlX2NvbmZpZyA9IGFkNzYxNl9zd19tb2Rl
+X2NvbmZpZywKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYWQ3NjA2X2J1c19vcHMgYWQ3NjA2
+Ql9zcGlfYm9wcyA9IHsKKwkucmVhZF9ibG9jayA9IGFkNzYwNl9zcGlfcmVhZF9ibG9jaywKKwku
+cmVnX3JlYWQgPSBhZDc2MDZfc3BpX3JlZ19yZWFkLAorCS5yZWdfd3JpdGUgPSBhZDc2MDZfc3Bp
+X3JlZ193cml0ZSwKKwkud3JpdGVfbWFzayA9IGFkNzYwNl9zcGlfd3JpdGVfbWFzaywKKwkucmRf
+d3JfY21kID0gYWQ3NjA2Ql9zcGlfcmRfd3JfY21kLAorCS5zd19tb2RlX2NvbmZpZyA9IGFkNzYw
+NkJfc3dfbW9kZV9jb25maWcsCit9OworCiBzdGF0aWMgaW50IGFkNzYwNl9zcGlfcHJvYmUoc3Ry
+dWN0IHNwaV9kZXZpY2UgKnNwaSkKIHsKIAljb25zdCBzdHJ1Y3Qgc3BpX2RldmljZV9pZCAqaWQg
+PSBzcGlfZ2V0X2RldmljZV9pZChzcGkpOwpAQCAtMjExLDYgKzMxMyw5IEBAIHN0YXRpYyBpbnQg
+YWQ3NjA2X3NwaV9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQogCWNhc2UgSURfQUQ3NjE2
+OgogCQlib3BzID0gJmFkNzYxNl9zcGlfYm9wczsKIAkJYnJlYWs7CisJY2FzZSBJRF9BRDc2MDZC
+OgorCQlib3BzID0gJmFkNzYwNkJfc3BpX2JvcHM7CisJCWJyZWFrOwogCWRlZmF1bHQ6CiAJCWJv
+cHMgPSAmYWQ3NjA2X3NwaV9ib3BzOwogCQlicmVhazsKQEAgLTIyNiw2ICszMzEsNyBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IHNwaV9kZXZpY2VfaWQgYWQ3NjA2X2lkX3RhYmxlW10gPSB7CiAJeyAi
+YWQ3NjA2LTQiLCBJRF9BRDc2MDZfNCB9LAogCXsgImFkNzYwNi02IiwgSURfQUQ3NjA2XzYgfSwK
+IAl7ICJhZDc2MDYtOCIsIElEX0FENzYwNl84IH0sCisJeyAiYWQ3NjA2YiIsICBJRF9BRDc2MDZC
+IH0sCiAJeyAiYWQ3NjE2IiwgICBJRF9BRDc2MTYgfSwKIAl7fQogfTsKQEAgLTIzNiw2ICszNDIs
+NyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhZDc2MDZfb2ZfbWF0Y2hbXSA9
+IHsKIAl7IC5jb21wYXRpYmxlID0gImFkaSxhZDc2MDYtNCIgfSwKIAl7IC5jb21wYXRpYmxlID0g
+ImFkaSxhZDc2MDYtNiIgfSwKIAl7IC5jb21wYXRpYmxlID0gImFkaSxhZDc2MDYtOCIgfSwKKwl7
+IC5jb21wYXRpYmxlID0gImFkaSxhZDc2MDZiIiB9LAogCXsgLmNvbXBhdGlibGUgPSAiYWRpLGFk
+NzYxNiIgfSwKIAl7IH0sCiB9OwotLSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2
+ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
