@@ -1,62 +1,112 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v3 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-Date: Wed, 7 Aug 2019 13:41:12 +0000
-Message-ID: <9f05bcbad4b56d0b7c4f90b53b99c07833f68bb2.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-8-philippe.schenker@toradex.com>
-         <CAOMZO5CdWmVKXmNSLdbsmnU6_ZKwbeVArtOQzuTg_gtqTUnVag@mail.gmail.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [RFC PATCH 09/11] devfreq: exynos-bus: Add interconnect
+ functionality to exynos-bus
+Date: Wed, 7 Aug 2019 17:21:15 +0300
+Message-ID: <4155482f-8f8f-a659-63ba-25701540b2c5@linaro.org>
+References: <20190723122016.30279-1-a.swigon@partner.samsung.com>
+ <CGME20190723122028eucas1p2eb75f35b810e71d6c590370aaff0997b@eucas1p2.samsung.com>
+ <20190723122016.30279-10-a.swigon@partner.samsung.com>
+ <6e8b2081-2fb3-9ab8-37d1-8b5fe5fd8e11@linaro.org>
+ <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5CdWmVKXmNSLdbsmnU6_ZKwbeVArtOQzuTg_gtqTUnVag@mail.gmail.com>
+In-Reply-To: <62557522be4924a01d3822d4734c30f2965c608b.camel@partner.samsung.com>
 Content-Language: en-US
-Content-ID: <84D9259A9961C34FA2F02A5D7E80D047@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "festevam@gmail.com" <festevam@gmail.com>
-Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: krzk@kernel.org, cw00.choi@samsung.com, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, m.szyprowski@samsung.com, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjE5IC0wMzAwLCBGYWJpbyBFc3RldmFtIHdyb3RlOg0K
-PiBIaSBQaGlsaXBwZSwNCj4gDQo+IE9uIFdlZCwgQXVnIDcsIDIwMTkgYXQgNToyNiBBTSBQaGls
-aXBwZSBTY2hlbmtlcg0KPiA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+IHdyb3RlOg0K
-PiA+IEZyb206IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFkZXguY29tPg0KPiA+IA0K
-PiA+IEFkZCBwaW5tdXhpbmcgYW5kIGRvIG5vdCBzcGVjaWZ5IHZvbHRhZ2UgcmVzdHJpY3Rpb25z
-IGZvciB0aGUgdXNkaGMNCj4gPiBpbnN0YW5jZSBhdmFpbGFibGUgb24gdGhlIG1vZHVsZXMgZWRn
-ZSBjb25uZWN0b3IuIFRoaXMgYWxsb3dzIHRvIHVzZQ0KPiA+IFNELWNhcmRzIHdpdGggaGlnaGVy
-IHRyYW5zZmVyIG1vZGVzIGlmIHN1cHBvcnRlZCBieSB0aGUgY2Fycmllcg0KPiA+IGJvYXJkLg0K
-PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFk
-ZXguY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5z
-Y2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gPiANCj4gPiAtLS0NCj4gPiANCj4gPiBDaGFuZ2VzIGlu
-IHYzOg0KPiA+IC0gQWRkIG5ldyBjb21taXQgbWVzc2FnZSBmcm9tIFN0ZWZhbidzIHByb3Bvc2Fs
-IG9uIE1MDQo+IA0KPiBUaGUgY29tbWl0IG1lc3NhZ2UgaGFzIGJlZW4gaW1wcm92ZWQsIGJ1dCB0
-aGVyZSBpcyBhbHNvIGFub3RoZXIgcG9pbnQNCj4gSSBtZW50aW9uZWQgZWFybGllcjoNCj4gDQo+
-ID4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0KPiA+IA0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3
-LWNvbGlicmkuZHRzaSB8IDIzICsrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gYi9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiA+IGluZGV4IDE2ZDFhMWVkMWFmZi4uNjdm
-NWUwYzg3ZmRjIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJy
-aS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCj4g
-PiBAQCAtMzI2LDcgKzMyNiw2IEBADQo+ID4gICZ1c2RoYzEgew0KPiA+ICAgICAgICAgcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAgICAgICAgIHBpbmN0cmwtMCA9IDwmcGluY3RybF91
-c2RoYzEgJnBpbmN0cmxfY2RfdXNkaGMxPjsNCj4gPiAtICAgICAgIG5vLTEtOC12Ow0KPiA+ICAg
-ICAgICAgY2QtZ3Bpb3MgPSA8JmdwaW8xIDAgR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiAgICAgICAg
-IGRpc2FibGUtd3A7DQo+ID4gICAgICAgICB2cW1tYy1zdXBwbHkgPSA8JnJlZ19MRE8yPjsNCj4g
-PiBAQCAtNjcxLDYgKzY3MCwyOCBAQA0KPiA+ICAgICAgICAgICAgICAgICA+Ow0KPiA+ICAgICAg
-ICAgfTsNCj4gPiANCj4gPiArICAgICAgIHBpbmN0cmxfdXNkaGMxXzEwMG1oejogdXNkaGMxZ3Jw
-XzEwMG1oeiB7DQo+IA0KPiBUaGlzIG5ldyBlbnRyeSBoYXMgYmVlbiBhZGRlZCBhbmQgaXQgaXMg
-bm90IHJlZmVyZW5jZWQuDQoNClNvcnJ5LCBJIHByb2JhYmx5IGNvdWxkIGhhdmUgbWVudGlvbmVk
-IHRoYXQgaW4gdGhpcyBjb21taXQuIEkgd2FudCwgaWYNCnBvc3NpYmxlLCB0byBsZXQgdGhpcyBj
-b21tbWl0IGFzIGlzLiBUaGF0J3Mgd2h5IEkgYWRkZWQgYW5vdGhlciBvbiB0b3ANCm9mIHRoaXMg
-cGF0Y2hzZXQuIFBsZWFzZSBzZWUgcGF0Y2ggMjEvMjEgdGhhdCBtYWtlcyB1c2Ugb2YgdGhpcyBj
-aGFuZ2UuDQo+IA0KPiA+ICsgICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ01EX19TRDFfQ01EICAgICAgIDB4NWENCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLICAgICAg
-IDB4MWENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfREFUQTBfX1NE
-MV9EQVRBMCAgIDB4NWENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFf
-REFUQTFfX1NEMV9EQVRBMSAgIDB4NWENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBNWDdE
-X1BBRF9TRDFfREFUQTJfX1NEMV9EQVRBMiAgIDB4NWENCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBNWDdEX1BBRF9TRDFfREFUQTNfX1NEMV9EQVRBMyAgIDB4NWENCj4gPiArICAgICAgICAg
-ICAgICAgPjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgcGluY3RybF91c2Ro
-YzFfMjAwbWh6OiB1c2RoYzFncnBfMjAwbWh6IHsNCj4gDQo+IFNhbWUgaGVyZS4NCg==
+Hi Artur,
+
+On 8/1/19 10:59, Artur Świgoń wrote:
+> Hi Georgi,
+> 
+> On Fri, 2019-07-26 at 11:05 +0300, Georgi Djakov wrote:
+>> Hi Artur,
+>>
+>> On 7/23/19 15:20, Artur Świgoń wrote:
+>>> This patch adds interconnect functionality to the exynos-bus devfreq
+>>> driver.
+>>>
+>>> The SoC topology is a graph (or, more specifically, a tree) and most of its
+>>> edges are taken from the devfreq parent-child hierarchy (cf.
+>>> Documentation/devicetree/bindings/devfreq/exynos-bus.txt). The previous
+>>> patch adds missing edges to the DT (under the name 'parent'). Due to
+>>> unspecified relative probing order, -EPROBE_DEFER may be propagated to
+>>> guarantee that a child is probed before its parent.
+>>>
+>>> Each bus is now an interconnect provider and an interconnect node as well
+>>> (cf. Documentation/interconnect/interconnect.rst), i.e. every bus registers
+>>> itself as a node. Node IDs are not hardcoded but rather assigned at
+>>> runtime, in probing order (subject to the above-mentioned exception
+>>> regarding relative order). This approach allows for using this driver with
+>>> various Exynos SoCs.
+>>
+>> I am not familiar with the Exynos bus topology, but it seems to me that it's not
+>> represented correctly. An interconnect provider with just a single node (port)
+>> is odd. I would expect that each provider consists of multiple master and slave
+>> nodes. This data would be used by a framework to understand what are the links
+>> and how the traffic flows between the IP blocks and through which buses.
+> 
+> To summarize the exynos-bus topology[1] used by the devfreq driver: There are
+> many data buses for data transfer in Samsung Exynos SoC. Every bus has its own
+> clock. Buses often share power lines, in which case one of the buses on the
+> power line is referred to as 'parent' (or as 'devfreq' in the DT). In the
+> particular case of Exynos4412[1][2], the topology can be expressed as follows:
+> 
+> bus_dmc
+> -- bus_acp
+> -- bus_c2c
+> 
+> bus_leftbus
+> -- bus_rightbus
+> -- bus_display
+> -- bus_fsys
+> -- bus_peri
+> -- bus_mfc
+> 
+> Where bus_dmc and bus_leftbus probably could be referred to as masters, and the
+> following indented nodes as slaves. Patch 08/11 of this RFC additionally adds
+> the following to the DT:
+> 
+> bus_dmc
+> -- bus_leftbus
+> 
+> Which makes the topology a valid tree.
+> 
+> The exynos-bus concept in devfreq[3] is designed in such a way that every bus is
+> probed separately as a platform device, and is a largely independent entity.
+>
+> This RFC proposes an extension to the existing devfreq driver that basically
+> provides a simple QoS to ensure minimum clock frequency for selected buses
+> (possibly overriding devfreq governor calculations) using the interconnect
+> framework.
+> 
+> The hierarchy is modelled in such a way that every bus is an interconnect node.
+> On the other hand, what is considered an interconnect provider here is quite
+> arbitrary, but for the reasons mentioned in the above paragraph, this RFC
+> assumes that every bus is a provider of itself as a node. Using an alternative
+
+IIUC, in case we want to transfer data between the display and the memory
+controller, the path would look like this:
+
+display --> bus_display --> bus_leftbus --> bus_dmc --> memory
+
+But the bus_display for example would have not one, but two nodes (ports),
+right?  One representing the link to the display controller and another one
+representing the link to bus_leftbus? So i think that all the buses should
+have at least two nodes, to represent each end of the wire.
+
+> singleton provider approach was deemed more complicated since the 'dev' field in
+> 'struct icc_provider' has to be set to something meaningful and we are tied to
+> the 'samsung,exynos-bus' compatible string in the driver (and multiple instances
+> of exynos-bus probed in indeterminate relative order).
+> 
+
+Sure, the rest makes sense to me.
+
+Thanks,
+Georgi
