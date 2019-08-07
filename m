@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 2/7] dt-bindings: firmware: scm: re-order compatible list
-Date: Wed,  7 Aug 2019 12:39:52 +0530
-Message-ID: <20190807070957.30655-3-sibis@codeaurora.org>
+Subject: [PATCH v2 3/7] dt-bindings: firmware: scm: Add SM8150 and SC7180 support
+Date: Wed,  7 Aug 2019 12:39:53 +0530
+Message-ID: <20190807070957.30655-4-sibis@codeaurora.org>
 References: <20190807070957.30655-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,32 +12,27 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org, aneela@cod
 Cc: mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-re-order compatible list to maintain sort order.
+Add compatible for SM8150 and SC7180 SoCs.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- Documentation/devicetree/bindings/firmware/qcom,scm.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-index 41f133a4e2fa7..d19be836df533 100644
+index d19be836df533..3f29ea04b5fe9 100644
 --- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
 +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -9,13 +9,13 @@ Required properties:
- - compatible: must contain one of the following:
-  * "qcom,scm-apq8064"
-  * "qcom,scm-apq8084"
-+ * "qcom,scm-ipq4019"
-  * "qcom,scm-msm8660"
-  * "qcom,scm-msm8916"
-  * "qcom,scm-msm8960"
+@@ -16,7 +16,9 @@ Required properties:
   * "qcom,scm-msm8974"
   * "qcom,scm-msm8996"
   * "qcom,scm-msm8998"
-- * "qcom,scm-ipq4019"
++ * "qcom,scm-sc7180"
   * "qcom,scm-sdm845"
++ * "qcom,scm-sm8150"
   and:
   * "qcom,scm"
+ - clocks: Specifies clocks needed by the SCM interface, if any:
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
