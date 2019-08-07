@@ -1,40 +1,30 @@
-From: Bin Meng <bmeng.cn@gmail.com>
-Subject: [PATCH] riscv: dts: sifive: Add missing "clock-frequency" to cpu0/cpu1 nodes
-Date: Tue,  6 Aug 2019 23:22:40 -0700
-Message-ID: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v4 2/4] RISC-V: Add riscv_isa reprensenting ISA features
+ common across CPUs
+Date: Tue, 6 Aug 2019 23:51:19 -0700
+Message-ID: <20190807065119.GA7825@infradead.org>
+References: <20190803042723.7163-1-atish.patra@wdc.com>
+ <20190803042723.7163-3-atish.patra@wdc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190803042723.7163-3-atish.patra@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+To: Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Alan Kao <alankao@andestech.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Anup Patel <anup.patel@wdc.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org, Enrico Weigelt <info@metux.net>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing "clock-frequency" property to the cpu0/cpu1 nodes
-for consistency with other cpu nodes.
+On Fri, Aug 02, 2019 at 09:27:21PM -0700, Atish Patra wrote:
+> From: Anup Patel <anup.patel@wdc.com>
+> 
+> This patch adds riscv_isa integer to represent ISA features common
+> across all CPUs. The riscv_isa is not same as elf_hwcap because
+> elf_hwcap will only have ISA features relevant for user-space apps
+> whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+> 
+> One of the use case is KVM hypervisor where riscv_isa will be used
+> to do following operations:
 
-Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
----
-
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 42b5ec2..4befc70 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -22,6 +22,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		cpu0: cpu@0 {
-+			clock-frequency = <0>;
- 			compatible = "sifive,e51", "sifive,rocket0", "riscv";
- 			device_type = "cpu";
- 			i-cache-block-size = <64>;
-@@ -37,6 +38,7 @@
- 			};
- 		};
- 		cpu1: cpu@1 {
-+			clock-frequency = <0>;
- 			compatible = "sifive,u54-mc", "sifive,rocket0", "riscv";
- 			d-cache-block-size = <64>;
- 			d-cache-sets = <64>;
--- 
-2.7.4
+Please add this to the kvm series.  Right now this is just dead code.
