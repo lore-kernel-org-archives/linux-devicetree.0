@@ -1,77 +1,54 @@
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: next-20190806: arm64: adv7511 3-0039: failed to find dsi host
-Date: Wed, 7 Aug 2019 13:47:37 +0530
-Message-ID: <CA+G9fYus+cW4775Y2_Xqpc+G6YP_KfjGeCMzoSQq6o2yVY8Q3w@mail.gmail.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH v3 01/21] ARM: dts: imx7-colibri: make sure module supplies
+ are always on
+Date: Wed, 7 Aug 2019 08:26:07 +0000
+Message-ID: <20190807082556.5013-2-philippe.schenker@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190807082556.5013-1-philippe.schenker@toradex.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, agross@kernel.org, david.brown@linaro.org, lkft-triage@lists.linaro.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-arm64 devices dragonboard 410c (QC410E) and hi6220-hikey running Linux
-next-20190806 loading modules causing floods of kernel messages.
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-We have enabled few extra kernel configs for testing.
-CONFIG_DRM_I2C_ADV7511=m
-CONFIG_DRM_I2C_ADV7511_CEC=y
-...
+Prevent regulators from being switched off.
 
-Please find below boot log and config file link.
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
 
-[    0.000000] Linux version 5.3.0-rc3-next-20190806 (oe-user@oe-host)
-(gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Tue Aug 6 05:49:36 UTC 2019
-[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-....
-[   10.051193] adv7511 3-0039: 3-0039 supply dvdd not found, using
-dummy regulator
-[   10.051633] adv7511 3-0039: 3-0039 supply pvdd not found, using
-dummy regulator
-[   10.076257] adreno 1c00000.gpu: Adding to iommu group 0
-[   10.090929] adv7511 3-0039: 3-0039 supply a2vdd not found, using
-dummy regulator
-[   10.101703] msm_mdp 1a01000.mdp: Adding to iommu group 1
-[   10.102563] msm_mdp 1a01000.mdp: No interconnect support may cause
-display underflows!
-[   10.139492] adv7511 3-0039: failed to find dsi host
-...
-[   33.065744] adv7511 3-0039: failed to find dsi host
-[   33.076721] msm 1a00000.mdss: 1a00000.mdss supply vdd not found,
-using dummy regulator
-[   33.078344] msm_mdp 1a01000.mdp: [drm:mdp5_bind [msm]] MDP5 version v1.6
-[   33.083862] msm 1a00000.mdss: bound 1a01000.mdp (ops mdp5_ops [msm])
-[   33.090892] msm_dsi 1a98000.dsi: 1a98000.dsi supply gdsc not found,
-using dummy regulator
-[   33.097756] msm_dsi 1a98000.dsi: 1a98000.dsi supply gdsc not found,
-using dummy regulator
-[   33.106606] msm_dsi_manager_register: failed to register mipi dsi
-host for DSI 0
-[   33.114579] msm 1a00000.mdss: failed to bind 1a98000.dsi (ops
-dsi_ops [msm]): -517
-[   33.121263] msm 1a00000.mdss: master bind failed: -517
-[   33.135547] adv7511 3-0039: 3-0039 supply dvdd not found, using
-dummy regulator
-[   33.139360] adv7511 3-0039: 3-0039 supply pvdd not found, using
-dummy regulator
-[   33.143646] adv7511 3-0039: 3-0039 supply a2vdd not found, using
-dummy regulator
+Changes in v3: None
+Changes in v2: None
 
-Full test log
-https://lkft.validation.linaro.org/scheduler/job/860208#L956
+ arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-  git commit: 958eb4327c1761c609bde8e9f7c04e9d1c6fbb96
-  git describe: next-20190806
-  make_kernelversion: 5.3.0-rc3
-  kernel-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579/config
-  kernel-defconfig:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579/defconfig
-  build-location:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/579
-
-Best regards
-Naresh Kamboju
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index 895fbde4d433..f1c1971f2160 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -54,6 +54,7 @@
+ 		regulator-name =3D "+V3.3";
+ 		regulator-min-microvolt =3D <3300000>;
+ 		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
+ 	};
+=20
+ 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
+@@ -61,6 +62,7 @@
+ 		regulator-name =3D "+V3.3_AVDD_AUDIO";
+ 		regulator-min-microvolt =3D <3300000>;
+ 		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
+ 	};
+=20
+ 	sound {
+--=20
+2.22.0
