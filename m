@@ -1,117 +1,105 @@
-From: Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH v8 00/14] Rockchip ISP1 Driver
-Date: Wed, 7 Aug 2019 14:57:02 -0300
-Message-ID: <6a65a050-6c97-a2d2-2bf2-85d5071dfe7f@collabora.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190807153759.GP21370@paasikivi.fi.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFCv2 9/9] dt-bindings: watchdog: meson-gxbb-wdt: convert to yaml
+Date: Wed, 7 Aug 2019 10:59:42 -0700
+Message-ID: <20190807175942.GA26331@roeck-us.net>
+References: <20190805120320.32282-1-narmstrong@baylibre.com>
+ <20190805120320.32282-10-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807153759.GP21370@paasikivi.fi.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190805120320.32282-10-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, robh+dt@kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 8/7/19 12:37 PM, Sakari Ailus wrote:
-> On Tue, Jul 30, 2019 at 03:42:42PM -0300, Helen Koike wrote:
->> Hello,
->>
->> I'm re-sending a new version of ISP(Camera) v4l2 driver for rockchip
->> rk3399 SoC.
->>
->> I didn't change much from the last version, just applying the
->> suggestions made in the previous one.
->>
->> This patchset is also available at:
->> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v8
->>
->> Libcamera patched to work with this version:
->> https://gitlab.collabora.com/koike/libcamera
->> (also sent to the mailing list)
->>
->> I tested on the rockpi 4 with a rpi v1.3 sensor and also with the
->> Scarlet Chromebook.
+On Mon, Aug 05, 2019 at 02:03:20PM +0200, Neil Armstrong wrote:
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic GXBB Watchdog timer over to a YAML schemas.
 > 
-> Could you also post media-ctl -p printout e.g. as a reply to the cover
-> letter?
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  .../watchdog/amlogic,meson-gxbb-wdt.yaml      | 37 +++++++++++++++++++
+>  .../bindings/watchdog/meson-gxbb-wdt.txt      | 16 --------
+>  2 files changed, 37 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
 > 
-> Thanks.
-> 
-
-Yes, I had posted in v7 and I forgot to add it in subsequent cover letters:
-
-media-ctl --print-dot -> file available at: http://ix.io/1NIH
-
-root@rockpi:~# media-ctl -p
-Media controller API version 5.3.0
-
-Media device information
-------------------------
-driver          rkisp1
-model           rkisp1
-serial
-bus info        platform: rkisp1
-hw revision     0x0
-driver version  5.3.0
-
-Device topology
-- entity 1: rkisp1-isp-subdev (4 pads, 5 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev0
-        pad0: Sink
-                [fmt:SBGGR10_1X10/800x600 field:none
-                 crop.bounds:(0,0)/800x600
-                 crop:(0,0)/800x600]
-                <- "ov5647 4-0036":0 [ENABLED]
-        pad1: Sink
-                [fmt:FIXED/800x600 field:none]
-                <- "rkisp1-input-params":0 [ENABLED]
-        pad2: Source
-                [fmt:YUYV8_2X8/800x600 field:none
-                 crop.bounds:(0,0)/800x600
-                 crop:(0,0)/800x600]
-                -> "rkisp1_selfpath":0 [ENABLED]
-                -> "rkisp1_mainpath":0 [ENABLED]
-        pad3: Source
-                [fmt:FIXED/800x600 field:none]
-                -> "rkisp1-statistics":0 [ENABLED]
-
-- entity 6: rkisp1_mainpath (1 pad, 1 link)
-            type Node subtype V4L flags 0
-            device node name /dev/video0
-        pad0: Sink
-                <- "rkisp1-isp-subdev":2 [ENABLED]
-
-- entity 10: rkisp1_selfpath (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video1
-        pad0: Sink
-                <- "rkisp1-isp-subdev":2 [ENABLED]
-
-- entity 14: rkisp1-statistics (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video2
-        pad0: Sink
-                <- "rkisp1-isp-subdev":3 [ENABLED]
-
-- entity 18: rkisp1-input-params (1 pad, 1 link)
-             type Node subtype V4L flags 0
-             device node name /dev/video3
-        pad0: Source
-                -> "rkisp1-isp-subdev":1 [ENABLED]
-
-- entity 22: ov5647 4-0036 (1 pad, 1 link)
-             type V4L2 subdev subtype Sensor flags 0
-             device node name /dev/v4l-subdev1
-        pad0: Source
-                [fmt:SBGGR8_1X8/1280x960 field:none]
-                -> "rkisp1-isp-subdev":0 [ENABLED]
-
-
-Thanks
-Helen
+> diff --git a/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml b/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
+> new file mode 100644
+> index 000000000000..d7352f709b37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/watchdog/amlogic,meson-gxbb-wdt.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Meson GXBB SoCs Watchdog timer
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-gxbb-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to the clock of this PHY
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    watchdog@98d0 {
+> +          compatible = "amlogic,meson-gxbb-wdt";
+> +          reg = <0x98d0 0x10>;
+> +          clocks = <&xtal>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
+> deleted file mode 100644
+> index c7fe36fa739c..000000000000
+> --- a/Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -Meson GXBB SoCs Watchdog timer
+> -
+> -Required properties:
+> -
+> -- compatible : should be "amlogic,meson-gxbb-wdt"
+> -- reg : Specifies base physical address and size of the registers.
+> -- clocks : Should be a phandle to the Watchdog clock source, for GXBB the xtal
+> -	   is the default clock source.
+> -
+> -Example:
+> -
+> -wdt: watchdog@98d0 {
+> -	compatible = "amlogic,meson-gxbb-wdt";
+> -	reg = <0 0x98d0 0x0 0x10>;
+> -	clocks = <&xtal>;
+> -};
