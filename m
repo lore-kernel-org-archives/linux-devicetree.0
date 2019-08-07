@@ -1,72 +1,61 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 8/8] ARM: OMAP2+: pdata-quirks: add PRM data for reset support
-Date: Wed, 7 Aug 2019 10:48:59 +0300
-Message-ID: <1565164139-21886-9-git-send-email-t-kristo@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 15/16] net: phy: adin: add ethtool get_stats support
+Date: Wed, 7 Aug 2019 07:52:58 +0000
+Message-ID: <9a5e8fe7b617f887c2308b00f8825cac447a099a.camel@analog.com>
+References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
+         <20190805165453.3989-16-alexandru.ardelean@analog.com>
+         <20190805152832.GT24275@lunn.ch>
+         <ce952e3f8d927cdbccb268d708b4e47179d69b06.camel@analog.com>
+         <20190806154658.GC20422@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190806154658.GC20422@lunn.ch>
+Content-Language: en-US
+Content-ID: <F8C2C7551A30B74FA21E355ED40FF30F@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The parent clockdomain for reset must be in force wakeup mode, otherwise
-the reset may never complete. Add pdata quirks for this purpose for PRM
-driver.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/mach-omap2/pdata-quirks.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 6c6f8fc..87e2457 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -25,6 +25,7 @@
- #include <linux/platform_data/ti-sysc.h>
- #include <linux/platform_data/wkup_m3.h>
- #include <linux/platform_data/asoc-ti-mcbsp.h>
-+#include <linux/platform_data/ti-prm.h>
- 
- #include "clockdomain.h"
- #include "common.h"
-@@ -565,6 +566,12 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
- 	pcs_pdata.rearm = rearm;
- }
- 
-+static struct ti_prm_platform_data ti_prm_pdata = {
-+	.clkdm_deny_idle = clkdm_deny_idle,
-+	.clkdm_allow_idle = clkdm_allow_idle,
-+	.clkdm_lookup = clkdm_lookup,
-+};
-+
- /*
-  * GPIOs for TWL are initialized by the I2C bus and need custom
-  * handing until DSS has device tree bindings.
-@@ -664,6 +671,9 @@ static void __init omap3_mcbsp_init(void) {}
- 	/* Common auxdata */
- 	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
- 	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
-+	OF_DEV_AUXDATA("ti,omap4-prm-inst", 0, NULL, &ti_prm_pdata),
-+	OF_DEV_AUXDATA("ti,dra7-prm-inst", 0, NULL, &ti_prm_pdata),
-+	OF_DEV_AUXDATA("ti,am3-prm-inst", 0, NULL, &ti_prm_pdata),
- 	{ /* sentinel */ },
- };
- 
--- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gVHVlLCAyMDE5LTA4LTA2IGF0IDE3OjQ2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gT24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDc6MTE6NTdBTSArMDAw
+MCwgQXJkZWxlYW4sIEFsZXhhbmRydSB3cm90ZToNCj4gPiBPbiBNb24sIDIwMTktMDgtMDUgYXQg
+MTc6MjggKzAyMDAsIEFuZHJldyBMdW5uIHdyb3RlOg0KPiA+ID4gW0V4dGVybmFsXQ0KPiA+ID4g
+DQo+ID4gPiA+ICtzdHJ1Y3QgYWRpbl9od19zdGF0IHsNCj4gPiA+ID4gKwljb25zdCBjaGFyICpz
+dHJpbmc7DQo+ID4gPiA+ICtzdGF0aWMgdm9pZCBhZGluX2dldF9zdHJpbmdzKHN0cnVjdCBwaHlf
+ZGV2aWNlICpwaHlkZXYsIHU4ICpkYXRhKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCWludCBpOw0K
+PiA+ID4gPiArDQo+ID4gPiA+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoYWRpbl9od19z
+dGF0cyk7IGkrKykgew0KPiA+ID4gPiArCQltZW1jcHkoZGF0YSArIGkgKiBFVEhfR1NUUklOR19M
+RU4sDQo+ID4gPiA+ICsJCSAgICAgICBhZGluX2h3X3N0YXRzW2ldLnN0cmluZywgRVRIX0dTVFJJ
+TkdfTEVOKTsNCj4gPiA+IA0KPiA+ID4gWW91IGRlZmluZSBzdHJpbmcgYXMgYSBjaGFyICouIFNv
+IGl0IHdpbGwgYmUgb25seSBhcyBsb25nIGFzIGl0IHNob3VsZA0KPiA+ID4gYmUuIEhvd2V2ZXIg
+bWVtY3B5IGFsd2F5cyBjb3BpZXMgRVRIX0dTVFJJTkdfTEVOIGJ5dGVzLCBkb2luZyBvZmYgdGhl
+DQo+ID4gPiBlbmQgb2YgdGhlIHN0cmluZyBhbmQgaW50byB3aGF0ZXZlciBmb2xsb3dzLg0KPiA+
+ID4gDQo+ID4gDQo+ID4gaG1tLCB3aWxsIHVzZSBzdHJsY3B5KCkNCj4gPiBpIGJsaW5kZWRseSBj
+b3BpZWQgbWVtY3B5KCkgZnJvbSBzb21lIG90aGVyIGRyaXZlcg0KPiANCj4gSG9wZWZ1bGx5IHRo
+YXQgZHJpdmVyIHVzZWQgY29uc3QgY2hhciBzdHJpbmdbRVRIX0dTVFJJTkdfTEVOXS4gVGhlbiBh
+DQo+IG1lbWNweSBpcyBzYWZlLiBJZiBub3QsIHBsZWFzZSBsZXQgbWUga25vdyB3aGF0IGRyaXZl
+ciB5b3UgY29waWVkLg0KDQpJdCB3YXMgYW4gb2xkZXIgTWFydmVsbCBQSFkgZHJpdmVyIChtYXJ2
+ZWxsLmMpIDsgaW4gdmVyc2lvbiA0LjE0Lg0KSSB1c2VkIHRoYXQgYXMgYW4gaW5pdGlhbCB3b3Jr
+LWJhc2UgZm9yIHdyaXRpbmcgdGhlIGRyaXZlci4NClRoZW4gSSBkaWQgdGhlIGNvbnZlcnNpb24g
+dG8gYSBuZXdlciBrZXJuZWwsIHRoZW4gSSBhbHNvIGhhZCB0byBhbHNvIGNvbnNpZGVyIGFuIG9s
+ZGVyIGtlcm5lbCwgdGhlbiBJIGdvdCBjb25mdXNlZCA6KQ0KDQpXZWxsLCBpbiBhbnkgY2FzZSwg
+SSBhbSBzb2xlbHkgY29uc2lkZXJpbmcgbmV0LW5leHQgbWFzdGVyIChub3cpIGZvciB1cHN0cmVh
+bWluZyB0aGlzLg0KDQo+IA0KPiA+IGknbSBhZnJhaWQgaSBkb24ndCB1bmRlcnN0YW5kIGFib3V0
+IHRoZSBzbmFwc2hvdCBmZWF0dXJlIHlvdSBhcmUgbWVudGlvbmluZzsNCj4gPiBpLmUuIGkgZG9u
+J3QgcmVtZW1iZXIgc2VlaW5nIGl0IGluIG90aGVyIGNoaXBzOw0KPiANCj4gSXQgaXMgZnJlcXVl
+bmN5IGRvbmUgYXQgdGhlIE1BQyBsYXllciBmb3Igc3RhdGlzdGljcy4gWW91IHRlbGwgdGhlDQo+
+IGhhcmR3YXJlIHRvIHNuYXBzaG90IGFsbCB0aGUgc3RhdGlzdGljcy4gSXQgYXRvbWljYWxseSBt
+YWtlcyBhIGNvcHkgb2YNCj4gYWxsIHRoZSBzdGF0aXN0aWNzIGludG8gYSBzZXQgb2YgcmVnaXN0
+ZXJzLiBUaGVzZSB2YWx1ZXMgYXJlIHRoZW4NCj4gc3RhdGljLCBhbmQgY29uc2lzdGVudCBiZXR3
+ZWVuIGNvdW50ZXJzLiBZb3UgY2FuIHJlYWQgdGhlbSBvdXQga25vd2luZw0KPiB0aGV5IGFyZSBu
+b3QgZ29pbmcgdG8gY2hhbmdlLg0KPiANCj4gPiByZWdhcmRpbmcgdGhlIGRhbmdlciB0aGF0IHN0
+YXQtPnJlZzEgcm9sbHMgb3ZlciwgaSBndWVzcyB0aGF0IGlzDQo+ID4gcG9zc2libGUsIGJ1dCBp
+dCdzIGEgYml0IGhhcmQgdG8gZ3VhcmQgYWdhaW5zdDsNCj4gDQo+IFRoZSBub3JtYWwgc29sdXRp
+b24gaXMgdGhlIHJlYWQgdGhlIE1TQiwgdGhlIExTQiBhbmQgdGhlbiB0aGUgTVNCDQo+IGFnYWlu
+LiBJZiB0aGUgTVNCIHZhbHVlIGhhcyBjaGFuZ2VkIGJldHdlZW4gdGhlIHR3byByZWFkcywgeW91
+IGtub3cgYQ0KPiByb2xsIG92ZXIgaGFzIGhhcHBlbmVkLCBhbmQgeW91IG5lZWQgdG8gZG8gaXQg
+YWxsIGFnYWluLg0KDQpobW07IG9rDQpJJ2xsIHRyeSB0byBsb29rIGZvciBhbiBleGlzdGluZyBl
+eGFtcGxlIGZvciB0aGlzLg0KDQo+IA0KPiAgICAgIEFuZHJldw0K
