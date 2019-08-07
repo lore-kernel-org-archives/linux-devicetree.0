@@ -1,8 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 18/21] ARM: dts: imx6ull-colibri: Add general wakeup key
- used on Colibri
-Date: Wed, 7 Aug 2019 08:26:42 +0000
-Message-ID: <20190807082556.5013-19-philippe.schenker@toradex.com>
+Subject: [PATCH v3 20/21] ARM: dts: imx6ull-colibri: Add touchscreen used with
+ Eval Board
+Date: Wed, 7 Aug 2019 08:26:46 +0000
+Message-ID: <20190807082556.5013-21-philippe.schenker@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,43 +15,61 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This adds the possibility to wake the module with an external signal
-as defined in the Colibri standard
+This adds the common touchscreen that is used with Toradex's
+Eval Boards.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+
 ---
 
 Changes in v3: None
-Changes in v2: None
+Changes in v2:
+- Removed f0710a, that is downstream only
+- Changed to generic node name
+- Better comment
 
- arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot=
 /dts/imx6ull-colibri-eval-v3.dtsi
-index 3bee37c75aa6..d3c4809f140e 100644
+index d3c4809f140e..78e74bfeca1b 100644
 --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
 +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-@@ -8,6 +8,20 @@
- 		stdout-path =3D "serial0:115200n8";
- 	};
+@@ -112,6 +112,21 @@
+ &i2c1 {
+ 	status =3D "okay";
 =20
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
++	/*
++	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
++	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
++	 */
++	touchscreen@4a {
++		compatible =3D "atmel,maxtouch";
 +		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_snvs_gpiokeys>;
-+
-+		power {
-+			label =3D "Wake-Up";
-+			gpios =3D <&gpio5 1 GPIO_ACTIVE_HIGH>;
-+			linux,code =3D <KEY_WAKEUP>;
-+			debounce-interval =3D <10>;
-+			wakeup-source;
-+		};
++		pinctrl-0 =3D <&pinctrl_gpiotouch>;
++		reg =3D <0x4a>;
++		interrupt-parent =3D <&gpio4>;
++		interrupts =3D <16 IRQ_TYPE_EDGE_FALLING>;	/* SODIMM 28 */
++		reset-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
++		status =3D "disabled";
 +	};
 +
- 	/* fixed crystal dedicated to mcp2515 */
- 	clk16m: clk16m {
- 		compatible =3D "fixed-clock";
+ 	/* M41T0M6 real time clock on carrier board */
+ 	m41t0m6: rtc@68 {
+ 		compatible =3D "st,m41t0";
+@@ -188,3 +203,12 @@
+ 	sd-uhs-sdr104;
+ 	status =3D "okay";
+ };
++
++&iomuxc {
++	pinctrl_gpiotouch: touchgpios {
++		fsl,pins =3D <
++			MX6UL_PAD_NAND_DQS__GPIO4_IO16		0x74
++			MX6UL_PAD_ENET1_TX_EN__GPIO2_IO05	0x14
++		>;
++	};
++};
 --=20
 2.22.0
