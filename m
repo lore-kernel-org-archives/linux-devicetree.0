@@ -1,106 +1,231 @@
-Return-Path: <SRS0=SfsX=WE=gmail.com=tmaimon77@kernel.org>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190808131448.349161-1-tmaimon77@gmail.com> <20190808131448.349161-3-tmaimon77@gmail.com>
- <20190808132740.GG3795@sirena.co.uk>
-In-Reply-To: <20190808132740.GG3795@sirena.co.uk>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Thu, 8 Aug 2019 18:37:06 +0300
-Message-ID: <CAP6Zq1j7jHejdx9h-nxCJcVjtGx_3rHmay7R8nn11DLaE8Q4gA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-Content-Type: multipart/alternative; boundary="000000000000f45bbc058f9cb6ba"
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vignesh Raghavendra <vigneshr@ti.com>, bbrezillon@kernel.org, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190807181301.15326-3-tdas@codeaurora.org>
+References: <20190807181301.15326-1-tdas@codeaurora.org> <20190807181301.15326-3-tdas@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 2/2] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+Date: Wed, 07 Aug 2019 15:24:23 -0700
+Message-Id: <20190807222424.17549214C6@mail.kernel.org>
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000f45bbc058f9cb6ba
-Content-Type: text/plain; charset="UTF-8"
+Quoting Taniya Das (2019-08-07 11:13:01)
+> Add support for the global clock controller found on SC7180
+> based devices. This should allow most non-multimedia device
+> drivers to probe and control their clocks.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 
-Hi Mark,
+Overall looks pretty good to me. Some minor nitpicks below.
 
-Thanks for the prompt reply.
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index e1ff83cc361e..9e634cf27464 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -323,4 +323,13 @@ config KRAITCC
+>           Support for the Krait CPU clocks on Qualcomm devices.
+>           Say Y if you want to support CPU frequency scaling.
+>=20
+> +config SC_GCC_7180
 
-On Thu, 8 Aug 2019 at 16:27, Mark Brown <broonie@kernel.org> wrote:
+Can this be sorted alphabetically in this file? It's getting out of hand
+when they all get added to the end.
 
-> On Thu, Aug 08, 2019 at 04:14:48PM +0300, Tomer Maimon wrote:
->
-> > +     ctrl->mode_bits = SPI_RX_DUAL | SPI_RX_QUAD
-> > +             | SPI_TX_DUAL | SPI_TX_QUAD;
-> > +     ctrl->setup = npcm_fiu_setup;
->
-> I'm not seeing where we implement dual or quad modes in the driver?
-> There's some
->
->
-Do you mean you do not see where it is implemented in the NPCM FIU driver?
+> +       tristate "SC7180 Global Clock Controller"
+> +       select QCOM_GDSC
+> +       depends on COMMON_CLK_QCOM
+> +       help
+> +         Support for the global clock controller on SC7180 devices.
+> +         Say Y if you want to use peripheral devices such as UART, SPI,
+> +         I2C, USB, UFS, SDCC, etc.
+> +
+>  endif
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+> new file mode 100644
+> index 000000000000..004b76e69402
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> @@ -0,0 +1,2496 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +
+> +#include "clk-alpha-pll.h"
+> +#include "clk-branch.h"
+> +#include "clk-rcg.h"
+> +#include "clk-regmap.h"
+> +#include "common.h"
+> +#include "gdsc.h"
+> +#include "reset.h"
+> +
+> +#define GCC_MMSS_MISC          0x09ffc
+> +#define GCC_NPU_MISC           0x4d110
+> +#define GCC_GPU_MISC           0x71028
+> +
+> +enum {
+> +       P_BI_TCXO,
+> +       P_CORE_BI_PLL_TEST_SE,
+> +       P_GPLL0_OUT_EVEN,
+> +       P_GPLL0_OUT_MAIN,
+> +       P_GPLL1_OUT_MAIN,
+> +       P_GPLL4_OUT_MAIN,
+> +       P_GPLL6_OUT_MAIN,
+> +       P_GPLL7_OUT_MAIN,
+> +       P_SLEEP_CLK,
+> +};
+> +
+> +static struct clk_alpha_pll gpll0;
+> +static struct clk_alpha_pll gpll1;
+> +static struct clk_alpha_pll gpll4;
+> +static struct clk_alpha_pll gpll6;
+> +static struct clk_alpha_pll gpll7;
+> +static struct clk_alpha_pll_postdiv gpll0_out_even;
 
-for example in our driver we modify the access type (singe, dual or quad)
-according the op->addr.buswidth
-for example in the npcm_fiu_set_drd function.
+Can't we create these PLLs before the parent maps? I don't see why we
+need to forward declare the structs.
 
-        regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
-                           NPCM_FIU_DRD_CFG_ACCTYPE,
-                           ilog2(op->addr.buswidth) <<
-                           NPCM_FIU_DRD_ACCTYPE_SHIFT);
+> +
+> +static const struct parent_map gcc_parent_map_0[] =3D {
+> +       { P_BI_TCXO, 0 },
+> +       { P_GPLL0_OUT_MAIN, 1 },
+> +       { P_GPLL0_OUT_EVEN, 6 },
+> +       { P_CORE_BI_PLL_TEST_SE, 7 },
+> +};
+> +
+> +static const struct clk_parent_data gcc_parent_data_0[] =3D {
+> +       { .fw_name =3D "bi_tcxo", .name =3D "bi_tcxo" },
+> +       { .hw =3D &gpll0.clkr.hw },
+[...]
+> +static struct clk_branch gcc_camera_ahb_clk =3D {
+> +       .halt_reg =3D 0xb008,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .hwcg_reg =3D 0xb008,
+> +       .hwcg_bit =3D 1,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0xb008,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_camera_ahb_clk",
+> +                       .flags =3D CLK_IS_CRITICAL,
 
-we also modify it in the UMA R/W functions.
+Please add a comment for CLK_IS_CRITICAL usage explaining why clks must
+be kept on forever.
 
-> +     dev_info(dev, "NPCM %s probe succeed\n", fiu->info->name);
->
-> Just remove this, it makes the log more verbose but doesn't really add
-> any information.
->
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_camera_hf_axi_clk =3D {
+> +       .halt_reg =3D 0xb020,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0xb020,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+[...]
+> +
+> +static const struct qcom_reset_map gcc_sc7180_resets[] =3D {
+> +       [GCC_QUSB2PHY_PRIM_BCR] =3D { 0x26000 },
+> +       [GCC_QUSB2PHY_SEC_BCR] =3D { 0x26004 },
+> +       [GCC_UFS_PHY_BCR] =3D { 0x77000 },
+> +       [GCC_USB30_PRIM_BCR] =3D { 0xf000 },
+> +       [GCC_USB3_PHY_PRIM_BCR] =3D { 0x50000 },
+> +       [GCC_USB3PHY_PHY_PRIM_BCR] =3D { 0x50004 },
+> +       [GCC_USB3_PHY_SEC_BCR] =3D { 0x5000c },
+> +       [GCC_USB3_DP_PHY_PRIM_BCR] =3D { 0x50008 },
+> +       [GCC_USB3PHY_PHY_SEC_BCR] =3D { 0x50010 },
+> +       [GCC_USB3_DP_PHY_SEC_BCR] =3D { 0x50014 },
+> +       [GCC_USB_PHY_CFG_AHB2PHY_BCR] =3D { 0x6a000 },
+> +};
+> +
+> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] =3D {
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk),
 
-I will remove it.
+I was happy if you wanted to include the _src changing patch from
+earlier. Can you throw it into this series?
 
-Thanks,
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk),
+> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk),
+> +};
+> +
+> +static const struct regmap_config gcc_sc7180_regmap_config =3D {
+> +       .reg_bits =3D 32,
+> +       .reg_stride =3D 4,
+> +       .val_bits =3D 32,
+> +       .max_register =3D 0x18208c,
+> +       .fast_io =3D true,
+> +};
+> +
+> +static const struct qcom_cc_desc gcc_sc7180_desc =3D {
+> +       .config =3D &gcc_sc7180_regmap_config,
+> +       .clk_hws =3D gcc_sc7180_hws,
+> +       .num_clk_hws =3D ARRAY_SIZE(gcc_sc7180_hws),
+> +       .clks =3D gcc_sc7180_clocks,
+> +       .num_clks =3D ARRAY_SIZE(gcc_sc7180_clocks),
+> +       .resets =3D gcc_sc7180_resets,
+> +       .num_resets =3D ARRAY_SIZE(gcc_sc7180_resets),
+> +       .gdscs =3D gcc_sc7180_gdscs,
+> +       .num_gdscs =3D ARRAY_SIZE(gcc_sc7180_gdscs),
+> +};
+> +
+> +static const struct of_device_id gcc_sc7180_match_table[] =3D {
+> +       { .compatible =3D "qcom,gcc-sc7180" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
+> +
+> +static int gcc_sc7180_probe(struct platform_device *pdev)
+> +{
+> +       struct regmap *regmap;
+> +       int ret;
+> +
+> +       regmap =3D qcom_cc_map(pdev, &gcc_sc7180_desc);
+> +       if (IS_ERR(regmap)) {
+> +               pr_err("Failed to map the gcc registers\n");
 
-Tomer
+I don't think we need this error message. Please remove it.
 
---000000000000f45bbc058f9cb6ba
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> +               return PTR_ERR(regmap);
+> +       }
+> +
+> +       /*
+> +        * Disable the GPLL0 active input to MM blocks, NPU
+> +        * and GPU via MISC registers.
+> +        */
+> +       regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
+> +       regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
+> +       regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
+> +
+> +       /* DFS clock registration */
 
-<div dir=3D"ltr"><div dir=3D"ltr">Hi Mark,<div><br></div><div>Thanks for th=
-e prompt reply.</div></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" =
-class=3D"gmail_attr">On Thu, 8 Aug 2019 at 16:27, Mark Brown &lt;<a href=3D=
-"mailto:broonie@kernel.org">broonie@kernel.org</a>&gt; wrote:<br></div><blo=
-ckquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left=
-:1px solid rgb(204,204,204);padding-left:1ex">On Thu, Aug 08, 2019 at 04:14=
-:48PM +0300, Tomer Maimon wrote:<br>
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ctrl-&gt;mode_bits =3D SPI_RX_DUAL | SPI_RX_QUAD<=
-br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| SPI_TX_DUAL | SPI_T=
-X_QUAD;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ctrl-&gt;setup =3D npcm_fiu_setup;<br>
-<br>
-I&#39;m not seeing where we implement dual or quad modes in the driver?<br>
-There&#39;s some <br>
-<br></blockquote><div>=C2=A0</div><div>Do you mean you do not see where it =
-is implemented in the NPCM FIU driver?</div><div><br></div><div>for example=
- in our driver we modify the access type (singe, dual or quad) according th=
-e=C2=A0<span style=3D"color:rgb(0,0,0);font-family:&quot;Courier New&quot;;=
-font-size:11pt">op-&gt;addr.buswidth</span></div><div>for example in the=C2=
-=A0<span style=3D"font-weight:bolder;color:rgb(0,0,0);font-family:&quot;Cou=
-rier New&quot;;font-size:11pt">npcm_fiu_set_drd function.</span></div><div>=
-<div style=3D"font-family:&quot;Courier New&quot;;font-size:11pt;color:rgb(=
-0,0,0)">
-<pre>        <span style=3D"font-weight:bolder">regmap_update_bits</span>(f=
-iu-&gt;regmap, NPCM_FIU_DRD_CFG,
-                           NPCM_FIU_DRD_CFG_ACCTYPE,
-                           <span style=3D"font-weight:bolder">ilog2</span>(=
-op-&gt;addr.buswidth) &lt;&lt;
-                           NPCM_FIU_DRD_ACCTYPE_SHIFT);
-</pre></div></div><div>we also modify it in the UMA R/W functions.</div><di=
-v><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0=
-.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-&gt; +=C2=A0 =C2=A0 =C2=A0dev_info(dev, &quot;NPCM %s probe succeed\n&quot;=
-, fiu-&gt;info-&gt;name);<br>
-<br>
-Just remove this, it makes the log more verbose but doesn&#39;t really add<=
-br>
-any information.<br></blockquote><div><br></div><div>I will remove it.</div=
-><div><br></div><div>Thanks,</div><div><br></div><div>Tomer=C2=A0</div></di=
-v></div>
+This comment is pretty useless, please remove it.
 
---000000000000f45bbc058f9cb6ba--
+> +       ret =3D qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
+> +                                       ARRAY_SIZE(gcc_dfs_clocks));
+> +       if (ret)
+> +               return ret;
+> +
+> +       return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
+> +}
