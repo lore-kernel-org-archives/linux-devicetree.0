@@ -1,90 +1,62 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v15 5/5] arm64: dts: mt8183: add scp node
-Date: Wed,  7 Aug 2019 18:43:46 +0800
-Message-ID: <20190807104352.259767-6-pihsun@chromium.org>
-References: <20190807104352.259767-1-pihsun@chromium.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
+Date: Wed, 7 Aug 2019 12:51:07 +0200
+Message-ID: <20190807105107.nqqltv64tjxprow6@pengutronix.de>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+ <20190807082556.5013-10-philippe.schenker@toradex.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807104352.259767-1-pihsun@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20190807082556.5013-10-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
+On Wed, Aug 07, 2019 at 08:26:23AM +0000, Philippe Schenker wrote:
+> Add the phy-node and mdio bus to the fec-node, represented as is on
+> hardware.
+> This commit includes micrel,led-mode that is set to the default
+> value, prepared for someone who wants to change this.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 1beac22266ed..019dda6b88ad 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -140,7 +140,18 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+>  	phy-mode = "rmii";
+> +	phy-handle = <&ethphy>;
+>  	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy: ethernet-phy@0 {
+> +			reg = <0>;
+> +			micrel,led-mode = <0>;
 
-Add scp node to mt8183 and mt8183-evb
+Doesn't that need a compatible entry to be actually used?
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
-Changes from v14:
- - No change.
+Best regards
+Uwe
+> 
+> 
 
-Changes from v13:
- - Change the size of the cfg register region.
-
-Changes from v12, v11, v10:
- - No change.
-
-Changes from v9:
- - Remove extra reserve-memory-vpu_share node.
-
-Changes from v8:
- - New patch.
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index d8e555cbb5d3..e46e34ce3159 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -24,6 +24,17 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
- };
- 
- &auxadc {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c2749c4631bc..871754c2f477 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -254,6 +254,18 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		scp: scp@10500000 {
-+			compatible = "mediatek,mt8183-scp";
-+			reg = <0 0x10500000 0 0x80000>,
-+			      <0 0x105c0000 0 0x19080>;
-+			reg-names = "sram", "cfg";
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+			clock-names = "main";
-+			memory-region = <&scp_mem_reserved>;
-+			status = "disabled";
-+		};
-+
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
 -- 
-2.22.0.770.g0f2c4a37fd-goog
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
