@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v5 4/4] net: phy: realtek: Add LED configuration support for RTL8211E
-Date: Wed,  7 Aug 2019 10:04:49 -0700
-Message-ID: <20190807170449.205378-5-mka@chromium.org>
+Subject: [PATCH v5 2/4] net: phy: Add support for generic LED configuration through the DT
+Date: Wed,  7 Aug 2019 10:04:47 -0700
+Message-ID: <20190807170449.205378-3-mka@chromium.org>
 References: <20190807170449.205378-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,184 +12,168 @@ To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a .config_led hook which is called by the PHY core when
-configuration data for a PHY LED is available. Each LED can be
-configured to be solid 'off, solid 'on' for certain (or all)
-link speeds or to blink on RX/TX activity.
+For PHYs with a device tree node look for LED trigger configuration
+using the generic binding, if it exists try to apply it via the new
+driver hook .config_led.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v5:
-- use 'config_leds' driver callback instead of requesting the DT
-  configuration
+- add callback to configure a LED to the PHY driver, instead of
+  having the driver retrieve the DT data
+- use new trigger names
 - added support for trigger 'none'
-- always disable EEE LED mode when a LED is configured. We have no
-  device data struct to keep track of its state, the number of LEDs
-  is limited, so the overhead of disabling it multiple times (once for
-  each LED that is configured) during initialization is negligible
-- print warning when disabling EEE LED mode fails
-- updated commit message (previous subject was 'net: phy: realtek:
-  configure RTL8211E LEDs')
+- release DT nodes after use
+- renamed 'PHY_LED_LINK_*' to 'PHY_LED_TRIGGER_LINK_*'
+- added anonymous struct to struct phy_led_config to track
+  'activity' in a separate flag. this could be changed to 'flags' if
+  needed/desired.
+- updated commit message (previous subject was 'net: phy: Add
+  function to retrieve LED configuration from the DT')
 
 Changes in v4:
-- use the generic PHY LED binding
-- keep default/current configuration if none is specified
-- added rtl8211e_disable_eee_led_mode()
-  - was previously in separate patch, however since we always want to
-    disable EEE LED mode when a LED configuration is specified it makes
-    sense to just add the function here.
-- don't call phy_restore_page() in rtl8211e_config_leds() if
-  selection of the extended page failed.
-- use phydev_warn() instead of phydev_err() if LED configuration
-  fails since we don't bail out
-- use hex number to specify page for consistency
-- add hex number to comment about ext page 44 to facilitate searching
-
-Changes in v3:
-- sanity check led-modes values
-- set LACR bits in a more readable way
-- use phydev_err() instead of dev_err()
-- log an error if LED configuration fails
-
-Changes in v2:
 - patch added to the series
 ---
- drivers/net/phy/realtek.c | 101 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c | 72 ++++++++++++++++++++++++++++++++++++
+ include/linux/phy.h          | 22 +++++++++++
+ 2 files changed, 94 insertions(+)
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index a5b3708dc4d8..5064ad732443 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -9,8 +9,9 @@
-  * Copyright (c) 2004 Freescale Semiconductor, Inc.
-  */
- #include <linux/bitops.h>
--#include <linux/phy.h>
-+#include <linux/bits.h>
- #include <linux/module.h>
-+#include <linux/phy.h>
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 6b5cb87f3866..6f85fdf72af0 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -29,6 +29,7 @@
+ #include <linux/phy_led_triggers.h>
+ #include <linux/mdio.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/uaccess.h>
  
- #define RTL821x_PHYSR				0x11
- #define RTL821x_PHYSR_DUPLEX			BIT(13)
-@@ -26,6 +27,18 @@
- #define RTL821x_EXT_PAGE_SELECT			0x1e
- #define RTL821x_PAGE_SELECT			0x1f
- 
-+/* RTL8211E page 5 */
-+#define RTL8211E_EEE_LED_MODE1			0x05
-+#define RTL8211E_EEE_LED_MODE2			0x06
-+
-+/* RTL8211E extension page 44 (0x2c) */
-+#define RTL8211E_LACR				0x1a
-+#define RLT8211E_LACR_LEDACTCTRL_SHIFT		4
-+#define RTL8211E_LCR				0x1c
-+
-+#define LACR_MASK(led)				BIT(4 + led)
-+#define LCR_MASK(led)				GENMASK((led * 4) + 2, led * 4)
-+
- #define RTL8211F_INSR				0x1d
- 
- #define RTL8211F_TX_DELAY			BIT(8)
-@@ -83,6 +96,91 @@ static int rtl8211x_modify_ext_paged(struct phy_device *phydev, int page,
- 	return phy_restore_page(phydev, oldpage, ret);
+ MODULE_DESCRIPTION("PHY library");
+@@ -1064,6 +1065,75 @@ static int phy_poll_reset(struct phy_device *phydev)
+ 	return 0;
  }
  
-+static void rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
++static void of_phy_config_leds(struct phy_device *phydev)
 +{
-+	int oldpage;
-+	int err = 0;
++	struct device_node *np, *child;
++	struct phy_led_config cfg;
++	const char *trigger;
++	int ret;
 +
-+	oldpage = phy_select_page(phydev, 5);
-+	if (oldpage < 0)
-+		goto out;
++	if (!IS_ENABLED(CONFIG_OF_MDIO) || !phydev->drv->config_led)
++		return;
 +
-+	/* write magic values to disable EEE LED mode */
-+	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
-+	if (err)
-+		goto out;
++	np = of_find_node_by_name(phydev->mdio.dev.of_node, "leds");
++	if (!np)
++		return;
 +
-+	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
++	for_each_child_of_node(np, child) {
++		u32 led;
 +
-+out:
-+	if (err)
-+		phydev_warn(phydev, "failed to disable EEE LED mode: %d\n", err);
++		if (of_property_read_u32(child, "reg", &led))
++			goto skip_config;
 +
-+	phy_restore_page(phydev, oldpage, err);
++		ret = of_property_read_string(child, "linux,default-trigger",
++					      &trigger);
++		if (ret)
++			trigger = "none";
++
++		memset(&cfg, 0, sizeof(cfg));
++
++		if (!strcmp(trigger, "none")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_NONE;
++		} else if (!strcmp(trigger, "phy-link")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
++		} else if (!strcmp(trigger, "phy-link-10m")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
++		} else if (!strcmp(trigger, "phy-link-100m")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
++		} else if (!strcmp(trigger, "phy-link-1g")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
++		} else if (!strcmp(trigger, "phy-link-10g")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
++		} else if (!strcmp(trigger, "phy-link-activity")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK;
++			cfg.trigger.activity = true;
++		} else if (!strcmp(trigger, "phy-link-10m-activity")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10M;
++			cfg.trigger.activity = true;
++		} else if (!strcmp(trigger, "phy-link-100m-activity")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_100M;
++			cfg.trigger.activity = true;
++		} else if (!strcmp(trigger, "phy-link-1g-activity")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_1G;
++			cfg.trigger.activity = true;
++		} else if (!strcmp(trigger, "phy-link-10g-activity")) {
++			cfg.trigger.t = PHY_LED_TRIGGER_LINK_10G;
++			cfg.trigger.activity = true;
++		} else {
++			phydev_warn(phydev, "trigger '%s' for LED%d is invalid\n",
++				    trigger, led);
++			goto skip_config;
++		}
++
++		phydev->drv->config_led(phydev, led, &cfg);
++
++	skip_config:
++		of_node_put(child);
++	}
++
++	of_node_put(np);
 +}
 +
-+static int rtl8211e_config_led(struct phy_device *phydev, int led,
-+			       struct phy_led_config *cfg)
-+{
-+	u16 lacr_bits = 0, lcr_bits = 0;
-+	int oldpage, ret;
-+
-+	switch (cfg->trigger.t) {
-+	case PHY_LED_TRIGGER_LINK:
-+		lcr_bits = 7 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_LINK_10M:
-+		lcr_bits = 1 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_LINK_100M:
-+		lcr_bits = 2 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_LINK_1G:
-+		lcr_bits |= 4 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_NONE:
-+		break;
-+
-+	default:
-+		phydev_warn(phydev,
-+			    "unknown trigger for LED%d: %d\n",
-+			    led, cfg->trigger.t);
-+		return -EINVAL;
-+	}
-+
-+	if (cfg->trigger.activity)
-+		lacr_bits = BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + led);
-+
-+	rtl8211e_disable_eee_led_mode(phydev);
-+
-+	oldpage = rtl8211x_select_ext_page(phydev, 0x2c);
-+	if (oldpage < 0) {
-+		phydev_err(phydev, "failed to select extended page: %d\n", oldpage);
-+		return oldpage;
-+	}
-+
-+	ret = __phy_modify(phydev, RTL8211E_LACR,
-+			   LACR_MASK(led), lacr_bits);
-+	if (ret) {
-+		phydev_err(phydev, "failed to write LACR reg: %d\n",
-+			   ret);
-+		goto err;
-+	}
-+
-+	ret = __phy_modify(phydev, RTL8211E_LCR,
-+			   LCR_MASK(led), lcr_bits);
-+	if (ret)
-+		phydev_err(phydev, "failed to write LCR reg: %d\n",
-+			   ret);
-+
-+err:
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static int rtl8201_ack_interrupt(struct phy_device *phydev)
+ int phy_init_hw(struct phy_device *phydev)
  {
- 	int err;
-@@ -330,6 +428,7 @@ static struct phy_driver realtek_drvs[] = {
- 		.config_init	= &rtl8211e_config_init,
- 		.ack_interrupt	= &rtl821x_ack_interrupt,
- 		.config_intr	= &rtl8211e_config_intr,
-+		.config_led	= &rtl8211e_config_led,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
- 		.read_page	= rtl821x_read_page,
+ 	int ret = 0;
+@@ -1087,6 +1157,8 @@ int phy_init_hw(struct phy_device *phydev)
+ 	if (phydev->drv->config_init)
+ 		ret = phydev->drv->config_init(phydev);
+ 
++	of_phy_config_leds(phydev);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL(phy_init_hw);
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 462b90b73f93..3a07390fc5e9 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -325,6 +325,24 @@ struct phy_c45_device_ids {
+ 	u32 device_ids[8];
+ };
+ 
++/* Triggers for PHY LEDs */
++enum phy_led_trigger {
++	PHY_LED_TRIGGER_NONE,
++	PHY_LED_TRIGGER_LINK,
++	PHY_LED_TRIGGER_LINK_10M,
++	PHY_LED_TRIGGER_LINK_100M,
++	PHY_LED_TRIGGER_LINK_1G,
++	PHY_LED_TRIGGER_LINK_10G,
++};
++
++/* Configuration of a single PHY LED */
++struct phy_led_config {
++	struct {
++		enum phy_led_trigger t;
++		bool activity;
++	} trigger;
++};
++
+ /* phy_device: An instance of a PHY
+  *
+  * drv: Pointer to the driver for this PHY instance
+@@ -626,6 +644,10 @@ struct phy_driver {
+ 			    struct ethtool_tunable *tuna,
+ 			    const void *data);
+ 	int (*set_loopback)(struct phy_device *dev, bool enable);
++
++	/* Configure a PHY LED */
++	int (*config_led)(struct phy_device *dev, int led,
++			  struct phy_led_config *cfg);
+ };
+ #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
+ 				      struct phy_driver, mdiodrv)
 -- 
 2.22.0.770.g0f2c4a37fd-goog
