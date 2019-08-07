@@ -1,75 +1,85 @@
-From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
-Date: Wed, 7 Aug 2019 16:42:17 +0000
-Message-ID: <VI1PR0402MB2863C4406C06B0BDA3581822DFD40@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
- <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
- <20190805153114.GA16836@kroah.com>
- <HE1PR0402MB28579034C09EB49A76A4F8E7DFD50@HE1PR0402MB2857.eurprd04.prod.outlook.com>
- <20190806184042.GA26041@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "corbet@lwn.net" <corbet@lwn.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Larisa Ileana Grigore <larisa.grigore@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v3 4/5] arm64: dts: imx8qxp: Add DSP DT node
+Date: Wed,  7 Aug 2019 19:42:57 +0300
+Message-ID: <20190807164258.8306-5-daniel.baluta@nxp.com>
+References: <20190807164258.8306-1-daniel.baluta@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190807164258.8306-1-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: daniel.baluta@nxp.com, shawnguo@kernel.org
+Cc: aisheng.dong@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org, festevam@gmail.com, kernel@pengutronix.de, leonard.crestez@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org, m.felsch@pengutronix.de, mark.rutland@arm.com, paul.olaru@nxp.com, peng.fan@nxp.com, robh+dt@kernel.org, shengjiu.wang@nxp.com, sound-open-firmware@alsa-project.org, pierre-louis.bossart@linux.intel.com, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 8/6/2019 9:40 PM, gregkh@linuxfoundation.org wrote:
-> On Tue, Aug 06, 2019 at 05:11:17PM +0000, Stefan-gabriel Mirea wrote:
->> On 8/5/2019 6:31 PM, gregkh@linuxfoundation.org wrote:
->>> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
->>>>
->>>> +/* Freescale Linflex UART */
->>>> +#define PORT_LINFLEXUART     121
->>>
->>> Do you really need this modified?
->>
->> Hello Greg,
->>
->> This macro is meant to be assigned to port->type in the config_port
->> method from uart_ops, in order for verify_port to know if the received
->> serial_struct structure was really targeted for a LINFlex port. It
->> needs to be defined outside, to avoid "collisions" with other drivers.
-> 
-> Yes, I know what it goes to, but does anyone in userspace actually use
-> it?
+This includes DSP reserved memory, ADMA DSP device and DSP MU
+communication channels description.
 
-No, we do not use it from userspace, but kept the pattern only for
-conformance.
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |  4 +++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 32 +++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
->> Other than that, I do not see anything wrong with the addition of a
->> define in serial_core.h for this purpose (which is also what most of the
->> serial drivers do, including amba-pl011.c, mentioned in
->> Documentation/driver-api/serial/driver.rst as providing the reference
->> implementation), so please be more specific.
-> 
-> I am getting tired of dealing with merge issues with that list, and no
-> one seems to be able to find where they are really needed for userspace,
-> especially for new devices.  What happens if you do not have use it?
-
-I see. If I drop its usage completely and leave 'type' from the
-uart_port as 0, uart_port_startup() will fail when finding that
-uport->type == PORT_UNKNOWN at [1] (there may be other effects as well,
-e.g. due to the check in uart_configure_port[2]).
-
-So I suppose that I need to define some nonzero 'PORT_KNOWN' macro in
-the driver and use that one internally for 'type'. Is my understanding
-correct? Will there be any problems if I define it to a positive integer
-which is already assigned to another driver, according to serial_core.h?
-
-Regards,
-Stefan
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/serial_core.c?h=v5.3-rc1#n188
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/serial_core.c?h=v5.3-rc1#n2348
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+index bfdada2db176..19468058e6ae 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+@@ -230,3 +230,7 @@
+ 		>;
+ 	};
+ };
++
++&adma_dsp {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 05fa0b7f36bb..b6c408fb2b7f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -113,6 +113,17 @@
+ 		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		dsp_reserved: dsp@92400000 {
++			reg = <0 0x92400000 0 0x2000000>;
++			no-map;
++		};
++	};
++
+ 	pmu {
+ 		compatible = "arm,armv8-pmuv3";
+ 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
+@@ -204,6 +215,27 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		adma_dsp: dsp@596e8000 {
++			compatible = "fsl,imx8qxp-dsp";
++			reg = <0x596e8000 0x88000>;
++			clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
++				<&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
++				<&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
++			clock-names = "ipg", "ocram", "core";
++			power-domains = <&pd IMX_SC_R_MU_13A>,
++				<&pd IMX_SC_R_MU_13B>,
++				<&pd IMX_SC_R_DSP>,
++				<&pd IMX_SC_R_DSP_RAM>;
++			mbox-names = "txdb0", "txdb1",
++				"rxdb0", "rxdb1";
++			mboxes = <&lsio_mu13 2 0>,
++				<&lsio_mu13 2 1>,
++				<&lsio_mu13 3 0>,
++				<&lsio_mu13 3 1>;
++			memory-region = <&dsp_reserved>;
++			status = "disabled";
++		};
++
+ 		adma_lpuart0: serial@5a060000 {
+ 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ 			reg = <0x5a060000 0x1000>;
+-- 
+2.17.1
