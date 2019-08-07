@@ -1,157 +1,47 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v5 3/3] OPP: Add helper function for bandwidth OPP tables
-Date: Wed,  7 Aug 2019 15:31:11 -0700
-Message-ID: <20190807223111.230846-4-saravanak@google.com>
-References: <20190807223111.230846-1-saravanak@google.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [RFCv3 1/3] dt-bindings: interconnect: Add bindings for imx
+Date: Wed, 7 Aug 2019 22:35:07 +0000
+Message-ID: <VI1PR04MB7023CE6687A6D31D8BCB3E4EEED40@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <cover.1565088423.git.leonard.crestez@nxp.com>
+ <90561b14af66655ca859d387b3808a84641eea4e.1565088423.git.leonard.crestez@nxp.com>
+ <123536fc-c3ce-5bfe-fbd6-20cde0c13cc0@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807223111.230846-1-saravanak@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Saravana Kannan <saravanak@google.com>, Anson Huang <anson.huang@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>d
 List-Id: devicetree@vger.kernel.org
 
-The frequency OPP tables have helper functions to search for entries in the
-table based on frequency and get the frequency values for a given (or
-suspend) OPP entry.
+On 8/7/2019 6:16 PM, Georgi Djakov wrote:
 
-Add similar helper functions for bandwidth OPP tables to search for entries
-in the table based on peak bandwidth and to get the peak and average
-bandwidth for a given (or suspend) OPP entry.
+> Please put some commit text.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/opp/core.c     | 51 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_opp.h | 19 ++++++++++++++++
- 2 files changed, 70 insertions(+)
+Will fix
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 3b7ffd0234e9..22dcf22f908f 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
- 
-+/**
-+ * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
-+ * @opp:	opp for which frequency has to be returned for
-+ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-+ *		Can be NULL.
-+ *
-+ * Return: Peak bandwidth in kBps corresponding to the opp, else
-+ * return 0
-+ */
-+unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
-+{
-+	if (IS_ERR_OR_NULL(opp) || !opp->available) {
-+		pr_err("%s: Invalid parameters\n", __func__);
-+		return 0;
-+	}
-+
-+	if (avg_bw)
-+		*avg_bw = opp->avg_bw;
-+
-+	return opp->rate;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-+
- /**
-  * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
-  * @opp:	opp for which level value has to be returned for
-@@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
- 
-+/**
-+ * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
-+ * @dev:	device for which we do this operation
-+ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-+ *		Can be NULL.
-+ *
-+ * Return: This function returns the peak bandwidth of the OPP marked as
-+ * suspend_opp if one is available, else returns 0;
-+ */
-+unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+					    unsigned long *avg_bw)
-+{
-+	struct opp_table *opp_table;
-+	unsigned long peak_bw = 0;
-+
-+	opp_table = _find_opp_table(dev);
-+	if (IS_ERR(opp_table))
-+		return 0;
-+
-+	if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-+		peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-+
-+	dev_pm_opp_put_opp_table(opp_table);
-+
-+	return peak_bw;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
-+
- int _get_opp_count(struct opp_table *opp_table)
- {
- 	struct dev_pm_opp *opp;
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index b8197ab014f2..f4e900f36414 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -82,6 +82,7 @@ void dev_pm_opp_put_opp_table(struct opp_table *opp_table);
- unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp);
- 
- unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp);
-+unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw);
- 
- unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp);
- 
-@@ -92,6 +93,8 @@ unsigned long dev_pm_opp_get_max_clock_latency(struct device *dev);
- unsigned long dev_pm_opp_get_max_volt_latency(struct device *dev);
- unsigned long dev_pm_opp_get_max_transition_latency(struct device *dev);
- unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev);
-+unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+					    unsigned long *avg_bw);
- 
- struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
- 					      unsigned long freq,
-@@ -160,6 +163,11 @@ static inline unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
- {
- 	return 0;
- }
-+static inline unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp,
-+					      unsigned long *avg_bw)
-+{
-+	return 0;
-+}
- 
- static inline unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp)
- {
-@@ -196,6 +204,12 @@ static inline unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
- 	return 0;
- }
- 
-+static inline unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+							  unsigned long *avg_bw)
-+{
-+	return 0;
-+}
-+
- static inline struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
- 					unsigned long freq, bool available)
- {
-@@ -337,6 +351,11 @@ static inline void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask
- 
- #endif		/* CONFIG_PM_OPP */
- 
-+#define dev_pm_opp_find_peak_bw_exact	dev_pm_opp_find_freq_exact
-+#define dev_pm_opp_find_peak_bw_floor	dev_pm_opp_find_freq_floor
-+#define dev_pm_opp_find_peak_bw_ceil_by_volt dev_pm_opp_find_freq_ceil_by_volt
-+#define dev_pm_opp_find_peak_bw_ceil	dev_pm_opp_find_freq_ceil
-+
- #if defined(CONFIG_PM_OPP) && defined(CONFIG_OF)
- int dev_pm_opp_of_add_table(struct device *dev);
- int dev_pm_opp_of_add_table_indexed(struct device *dev, int index);
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+>> +properties:
+>> +  compatible:
+>> +    contains:
+>> +      enum:
+>> +        - fsl,imx8mm-interconnect
+> 
+> Maybe fsl,imx8mm-busfreq? I thought it's called busfreq in downstream, but it's
+> up to you.
+
+In the vendor tree busfreq is effectively its own subsystem with its own 
+API calls used by imx drivers. As part of replacing this with standard 
+devfreq + interconnect in upstream the old name should go away.
+
+--
+Regards,
+Leonard
