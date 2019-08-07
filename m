@@ -1,53 +1,56 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH v3 3/5] RISC-V: Fix unsupported isa string info.
-Date: Tue, 6 Aug 2019 18:26:08 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1908061818360.13971@viisi.sifive.com>
-References: <20190801005843.10343-1-atish.patra@wdc.com>  <20190801005843.10343-4-atish.patra@wdc.com>  <alpine.DEB.2.21.9999.1908061625190.13971@viisi.sifive.com> <1e23ef1face9d323fda4b756811f922caa5f7689.camel@wdc.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v3 3/5] ASoC: fsl_sai: Add support for SAI new version
+Date: Tue, 6 Aug 2019 18:40:35 -0700
+Message-ID: <20190807014035.GF8938@Asurada-Nvidia.nvidia.com>
+References: <20190806151214.6783-1-daniel.baluta@nxp.com>
+ <20190806151214.6783-4-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1e23ef1face9d323fda4b756811f922caa5f7689.camel@wdc.com>
+Content-Disposition: inline
+In-Reply-To: <20190806151214.6783-4-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <Atish.Patra@wdc.com>
-Cc: "info@metux.net" <info@metux.net>, "allison@lohutok.net" <allison@lohutok.net>, "palmer@sifive.com" <palmer@sifive.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Anup Patel <Anup.Patel@wdc.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "johan@kernel.org" <johan@kernel.org>, "tiny.windzz@gmail.com" <tiny.windzz@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gary@garyguo.net" <gary@garyguo.net>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: broonie@kernel.org, l.stach@pengutronix.de, mihai.serban@gmail.com, alsa-devel@alsa-project.org, timur@kernel.org, shengjiu.wang@nxp.com, angus@akkea.ca, tiwai@suse.com, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Mihai Serban <mihai.serban@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 7 Aug 2019, Atish Patra wrote:
-
-> On Tue, 2019-08-06 at 16:27 -0700, Paul Walmsley wrote:
+On Tue, Aug 06, 2019 at 06:12:12PM +0300, Daniel Baluta wrote:
+> New IP version introduces Version ID and Parameter registers
+> and optionally added Timestamp feature.
 > 
-> > Seems like the "su" should be dropped from mandatory_ext.  What do you 
-> > think?
-> > 
+> VERID and PARAM registers are placed at the top of registers
+> address space and some registers are shifted according to
+> the following table:
 > 
-> Yup. As DT binding only mention imafdc, mandatory extensions should
-> contain only that and just consider "su" extensions are considered as
-> implicit as we are running Linux. 
-
-Discussing this with Andrew and Palmer, it looks like "su" is currently 
-non-compliant.  Section 22.6 of the user-level specification states that 
-the "s" character indicates that a longer standard supervisor extension 
-name will follow.  So far I don't think any of these have been defined.
-
-> Do you think QEMU DT should be updated to reflect that ?
-
-Yes.
-
-> > There's no Kconfig option by this name, and we're requiring
-> > compressed 
+> Tx/Rx data registers and Tx/Rx FIFO registers keep their
+> addresses, all other registers are shifted by 8.
 > 
-> Sorry. This was a typo. It should have been CONFIG_RISCV_ISA_C.
+> SAI Memory map is described in chapter 13.10.4.1.1 I2S Memory map
+> of the Reference Manual [1].
 > 
-> > instruction support as part of the RISC-V Linux baseline.  Could you 
-> > share the rationale behind this?
+> In order to make as less changes as possible we attach an offset
+> to each register offset to each changed register definition. The
+> offset is read from each board private data.
 > 
-> I think I added this check at the config file. Looking at the Kconfig,
-> RISCV_ISA_C is always enabled. So we can drop this.
+> [1]https://cache.nxp.com/secured/assets/documents/en/reference-manual/IMX8MDQLQRM.pdf?__gda__=1563728701_38bea7f0f726472cc675cb141b91bec7&fileExt=.pdf
+> 
+> Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> [initial coding in the NXP internal tree]
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> [bugfixing and cleanups]
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> [adapted to linux-next]
 
-OK great.  Do you want to resend an updated patch, or would you like me to 
-fix it up here?
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-I'll also send a patch to drop CONFIG_RISCV_ISA_C.
+One small request that we can do with a separate patch later:
 
+>  struct fsl_sai_soc_data {
+>  	bool use_imx_pcm;
+>  	unsigned int fifo_depth;
+> +	unsigned int reg_offset;
+>  };
 
-- Paul
+I think we need a list of comments for the structure defines.
+It might be okay for the old two entries but reg_offset isn't
+that explicit any more.
