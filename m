@@ -1,117 +1,70 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 5/5] dt-bindings: dsp: fsl: Add DSP core binding support
-Date: Wed,  7 Aug 2019 19:42:58 +0300
-Message-ID: <20190807164258.8306-6-daniel.baluta@nxp.com>
-References: <20190807164258.8306-1-daniel.baluta@nxp.com>
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Date: Wed, 7 Aug 2019 18:56:46 +0200
+Message-ID: <20190807165646.GA6584@kroah.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+ <20190805153114.GA16836@kroah.com>
+ <HE1PR0402MB28579034C09EB49A76A4F8E7DFD50@HE1PR0402MB2857.eurprd04.prod.outlook.com>
+ <20190806184042.GA26041@kroah.com>
+ <VI1PR0402MB2863C4406C06B0BDA3581822DFD40@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807164258.8306-1-daniel.baluta@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB2863C4406C06B0BDA3581822DFD40@VI1PR0402MB2863.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.baluta@nxp.com, shawnguo@kernel.org
-Cc: aisheng.dong@nxp.com, anson.huang@nxp.com, devicetree@vger.kernel.org, festevam@gmail.com, kernel@pengutronix.de, leonard.crestez@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org, m.felsch@pengutronix.de, mark.rutland@arm.com, paul.olaru@nxp.com, peng.fan@nxp.com, robh+dt@kernel.org, shengjiu.wang@nxp.com, sound-open-firmware@alsa-project.org, pierre-louis.bossart@linux.intel.com, l.stach@pengutronix.de
+To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, Larisa Ileana Grigore <larisa.grigore@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This describes the DSP device tree node.
+On Wed, Aug 07, 2019 at 04:42:17PM +0000, Stefan-gabriel Mirea wrote:
+> On 8/6/2019 9:40 PM, gregkh@linuxfoundation.org wrote:
+> > On Tue, Aug 06, 2019 at 05:11:17PM +0000, Stefan-gabriel Mirea wrote:
+> >> On 8/5/2019 6:31 PM, gregkh@linuxfoundation.org wrote:
+> >>> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
+> >>>>
+> >>>> +/* Freescale Linflex UART */
+> >>>> +#define PORT_LINFLEXUART     121
+> >>>
+> >>> Do you really need this modified?
+> >>
+> >> Hello Greg,
+> >>
+> >> This macro is meant to be assigned to port->type in the config_port
+> >> method from uart_ops, in order for verify_port to know if the received
+> >> serial_struct structure was really targeted for a LINFlex port. It
+> >> needs to be defined outside, to avoid "collisions" with other drivers.
+> > 
+> > Yes, I know what it goes to, but does anyone in userspace actually use
+> > it?
+> 
+> No, we do not use it from userspace, but kept the pattern only for
+> conformance.
+> 
+> >> Other than that, I do not see anything wrong with the addition of a
+> >> define in serial_core.h for this purpose (which is also what most of the
+> >> serial drivers do, including amba-pl011.c, mentioned in
+> >> Documentation/driver-api/serial/driver.rst as providing the reference
+> >> implementation), so please be more specific.
+> > 
+> > I am getting tired of dealing with merge issues with that list, and no
+> > one seems to be able to find where they are really needed for userspace,
+> > especially for new devices.  What happens if you do not have use it?
+> 
+> I see. If I drop its usage completely and leave 'type' from the
+> uart_port as 0, uart_port_startup() will fail when finding that
+> uport->type == PORT_UNKNOWN at [1] (there may be other effects as well,
+> e.g. due to the check in uart_configure_port[2]).
+> 
+> So I suppose that I need to define some nonzero 'PORT_KNOWN' macro in
+> the driver and use that one internally for 'type'. Is my understanding
+> correct? Will there be any problems if I define it to a positive integer
+> which is already assigned to another driver, according to serial_core.h?
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/dsp/fsl,dsp.yaml      | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+Ugh, ok, that's messy, nevermind.  Keep the #define in there, I will try
+to figure out how to move all of these at once sometime in the future...
 
-diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-new file mode 100644
-index 000000000000..24b9fd64e3eb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dsp/fsl,dsp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP i.MX8 DSP core
-+
-+maintainers:
-+  - Daniel Baluta <daniel.baluta@nxp.com>
-+
-+description: |
-+  Some boards from i.MX8 family contain a DSP core used for
-+  advanced pre- and post- audio processing.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8qxp-dsp
-+
-+  reg:
-+    description: Should contain register location and length
-+
-+  clocks:
-+    items:
-+      - description: ipg clock
-+      - description: ocram clock
-+      - description: core clock
-+
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: ocram
-+      - const: core
-+
-+  power-domains:
-+    description:
-+      List of phandle and PM domain specifier as documented in
-+      Documentation/devicetree/bindings/power/power_domain.txt
-+    maxItems: 4
-+
-+  mboxes:
-+    description:
-+      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
-+      (see mailbox/fsl,mu.txt)
-+    maxItems: 4
-+
-+  mbox-names:
-+    items:
-+      - const: txdb0
-+      - const: txdb1
-+      - const: rxdb0
-+      - const: rxdb1
-+
-+  memory-region:
-+    description:
-+       phandle to a node describing reserved memory (System RAM memory)
-+       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - mboxes
-+  - mbox-names
-+  - memory-region
-+
-+examples:
-+  - |
-+    #include <dt-bindings/firmware/imx/rsrc.h>
-+    #include <dt-bindings/clock/imx8-clock.h>
-+    dsp@596e8000 {
-+        compatbile = "fsl,imx8qxp-dsp";
-+        reg = <0x596e8000 0x88000>;
-+        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
-+        clock-names = "ipg", "ocram", "core";
-+        power-domains = <&pd IMX_SC_R_MU_13A>,
-+                        <&pd IMX_SC_R_MU_13B>,
-+                        <&pd IMX_SC_R_DSP>,
-+                        <&pd IMX_SC_R_DSP_RAM>;
-+        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-+        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-+    };
--- 
-2.17.1
+sorry for the noise.
+
+greg k-h
