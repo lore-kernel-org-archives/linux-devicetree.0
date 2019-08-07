@@ -1,75 +1,39 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 06/16] net: phy: adin: support PHY mode converters
-Date: Wed, 7 Aug 2019 08:00:53 +0000
-Message-ID: <7747cb845a9122004b9565f444b4719170f74b35.camel@analog.com>
-References: <20190805165453.3989-1-alexandru.ardelean@analog.com>
-         <20190805165453.3989-7-alexandru.ardelean@analog.com>
-         <20190805145105.GN24275@lunn.ch>
-         <15cf5732415c313a7bfe610e7039e7c97b987073.camel@analog.com>
-         <20190806153910.GB20422@lunn.ch>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 1/4] RISC-V: Remove per cpu clocksource
+Date: Wed, 7 Aug 2019 10:04:01 +0200
+Message-ID: <5687851a-2cdb-95a2-708f-30f6c14ba817@linaro.org>
+References: <20190803042723.7163-1-atish.patra@wdc.com>
+ <20190803042723.7163-2-atish.patra@wdc.com>
+ <alpine.DEB.2.21.9999.1908061437000.13971@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806153910.GB20422@lunn.ch>
+In-Reply-To: <alpine.DEB.2.21.9999.1908061437000.13971@viisi.sifive.com>
 Content-Language: en-US
-Content-ID: <134A0BE5A682A84CA3FF29E92A40ADAD@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>, Atish Patra <atish.patra@wdc.com>
+Cc: linux-kernel@vger.kernel.org, Alan Kao <alankao@andestech.com>, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup.patel@wdc.com>, devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTA2IGF0IDE3OjM5ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gT24gVHVlLCBBdWcgMDYsIDIwMTkgYXQgMDY6NDc6MDhBTSArMDAw
-MCwgQXJkZWxlYW4sIEFsZXhhbmRydSB3cm90ZToNCj4gPiBPbiBNb24sIDIwMTktMDgtMDUgYXQg
-MTY6NTEgKzAyMDAsIEFuZHJldyBMdW5uIHdyb3RlOg0KPiA+ID4gW0V4dGVybmFsXQ0KPiA+ID4g
-DQo+ID4gPiBPbiBNb24sIEF1ZyAwNSwgMjAxOSBhdCAwNzo1NDo0M1BNICswMzAwLCBBbGV4YW5k
-cnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gPiA+IFNvbWV0aW1lcywgdGhlIGNvbm5lY3Rpb24gYmV0
-d2VlbiBhIE1BQyBhbmQgUEhZIGlzIGRvbmUgdmlhIGENCj4gPiA+ID4gbW9kZS9pbnRlcmZhY2Ug
-Y29udmVydGVyLiBBbiBleGFtcGxlIGlzIGEgR01JSS10by1SR01JSSBjb252ZXJ0ZXIsIHdoaWNo
-DQo+ID4gPiA+IHdvdWxkIG1lYW4gdGhhdCB0aGUgTUFDIG9wZXJhdGVzIGluIEdNSUkgbW9kZSB3
-aGlsZSB0aGUgUEhZIG9wZXJhdGVzIGluDQo+ID4gPiA+IFJHTUlJLiBJbiB0aGlzIGNhc2UgdGhl
-cmUgaXMgYSBkaXNjcmVwYW5jeSBiZXR3ZWVuIHdoYXQgdGhlIE1BQyBleHBlY3RzICYNCj4gPiA+
-ID4gd2hhdCB0aGUgUEhZIGV4cGVjdHMgYW5kIGJvdGggbmVlZCB0byBiZSBjb25maWd1cmVkIGlu
-IHRoZWlyIHJlc3BlY3RpdmUNCj4gPiA+ID4gbW9kZXMuDQo+ID4gPiA+IA0KPiA+ID4gPiBTb21l
-dGltZXMsIHRoaXMgY29udmVydGVyIGlzIHNwZWNpZmllZCB2aWEgYSBib2FyZC9zeXN0ZW0gY29u
-ZmlndXJhdGlvbiAoaW4NCj4gPiA+ID4gdGhlIGRldmljZS10cmVlIGZvciBleGFtcGxlKS4gQnV0
-LCBvdGhlciB0aW1lcyBpdCBjYW4gYmUgbGVmdCB1bnNwZWNpZmllZC4NCj4gPiA+ID4gVGhlIHVz
-ZSBvZiB0aGVzZSBjb252ZXJ0ZXJzIGlzIGNvbW1vbiBpbiBib2FyZHMgdGhhdCBoYXZlIEZQR0Eg
-b24gdGhlbS4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgcGF0Y2ggYWxzbyBhZGRzIHN1cHBvcnQg
-Zm9yIGEgYGFkaSxwaHktbW9kZS1pbnRlcm5hbGAgcHJvcGVydHkgdGhhdA0KPiA+ID4gPiBjYW4g
-YmUgdXNlZCBpbiB0aGVzZSAoaW1wbGljaXQgY29udmVydCkgY2FzZXMuIFRoZSBpbnRlcm5hbCBQ
-SFkgbW9kZSB3aWxsDQo+ID4gPiA+IGJlIHVzZWQgdG8gc3BlY2lmeSB0aGUgY29ycmVjdCByZWdp
-c3RlciBzZXR0aW5ncyBmb3IgdGhlIFBIWS4NCj4gPiA+ID4gDQo+ID4gPiA+IGBmd25vZGVfaGFu
-ZGxlYCBpcyB1c2VkLCBzaW5jZSB0aGlzIHByb3BlcnR5IG1heSBiZSBzcGVjaWZpZWQgdmlhIEFD
-UEkgYXMNCj4gPiA+ID4gd2VsbCBpbiBvdGhlciBzZXR1cHMsIGJ1dCB0ZXN0aW5nIGhhcyBiZWVu
-IGRvbmUgaW4gRFQgY29udGV4dC4NCj4gPiA+IA0KPiA+ID4gTG9va2luZyBhdCB0aGUgcGF0Y2gs
-IHlvdSBzZWVtcyB0byBhc3N1bWUgcGh5LW1vZGUgaXMgd2hhdCB0aGUgTUFDIGlzDQo+ID4gPiB1
-c2luZz8gVGhhdCBzZWVtcyByYXRoZXIgb2RkLCBnaXZlbiB0aGUgbmFtZS4gSXQgc2VlbXMgbGlr
-ZSBhIGJldHRlcg0KPiA+ID4gc29sdXRpb24gd291bGQgYmUgdG8gYWRkIGEgbWFjLW1vZGUsIHdo
-aWNoIHRoZSBNQUMgdXNlcyB0byBjb25maWd1cmUNCj4gPiA+IGl0cyBzaWRlIG9mIHRoZSBsaW5r
-LiBUaGUgTUFDIGRyaXZlciB3b3VsZCB0aGVuIGltcGxlbWVudCB0aGlzDQo+ID4gPiBwcm9wZXJ0
-eS4NCj4gPiA+IA0KPiA+IA0KPiA+IGFjdHVhbGx5LCB0aGF0J3MgYSBwcmV0dHkgZ29vZCBpZGVh
-Ow0KPiA+IGkgZ3Vlc3MgaSB3YXMgbmFycm93LW1pbmRlZCB3aGVuIHdyaXRpbmcgdGhlIGRyaXZl
-ciwgYW5kIGdvdCBzdHVjayBvbiBwaHkgc3BlY2lmaWNzLCBhbmQgZm9yZ290IGFib3V0IHRoZSBN
-QUMtc2lkZTsNCj4gPiBbIGkgYWxzbyBjYXRjaCB0aGVzZSBkZXNpZ24gZWxlbWVudHMgd2hlbiBy
-ZXZpZXdpbmcsIGJ1dCBpIGFsc28gc2VlbSB0byBtaXNzIHRoZW0gd2hlbiB3cml0aW5nIHN0dWZm
-IHNvbWV0aW1lcyBdDQo+ID4gDQo+IA0KPiBIaSBBcmRlbGVhbg0KPiANCj4gV2Ugc2hvdWxkIGFs
-c28gY29uc2lkZXIgdGhlIG1lZGlhIGNvbnZlcnRlciBpdHNlbGYuIEl0IGlzIHBhc3NpdmUsIG9y
-DQo+IGRvZXMgaXQgbmVlZCBhIGRyaXZlci4gWW91IHNlZW1zIHRvIGJlIGNvbnNpZGVyaW5nIEdN
-SUktdG8tUkdNSUkuIEJ1dA0KPiB3aGF0IGFib3V0IFJHTUlJIHRvIFNHTUlJPyBvciBSR01JSSB0
-byAxMDAwQmFzZS1LWCBldGM/IElkZWFsbHkgd2UNCj4gd2FudCBhIGdlbmVyaWMgc29sdXRpb24g
-YW5kIHdlIG5lZWQgdG8gdGhpbmsgYWJvdXQgYWxsIHRoZSBwYXJ0cyBpbg0KPiB0aGUgc3lzdGVt
-Lg0KDQpJbiBvdXIgY2FzZSB0aGUgR01JSS10by1SR01JSSBjb252ZXJ0ZXIgaXMgcGFzc2l2ZSBh
-bmQgZG9lcyBub3QgbmVlZCBhIGRyaXZlci4NCkl0J3MgYW4gSERML0ZQR0EgYmxvY2suDQpUaGVy
-ZSBtYXkgYmUgb3RoZXIgY29udmVydGVycyB0aGF0IGRvIG5lZWQgYSBkcml2ZXIuDQpUbyBiZSBo
-b25lc3QsIHRoZSBtdWx0aXR1ZGUgb2YgcG9zc2libGUgY29uZmlndXJhdGlvbnMgW2dpdmVuIHRo
-YXQgaXQncyBGUEdBXSBjYW4gYmUuLi4gYSBsb3QuDQoNCkluIG9uZSBvZiBvdXIgY2FzZXMsIHNw
-ZWNpZnlpbmcgdGhlIE1BQyBtb2RlIHRvIGJlIGRpZmZlcmVudCB0aGFuIFBIWSBtb2RlIFt3aGlj
-aCBhc3N1bWVzIHRoYXQgdGhlcmUgaXMgYW4gaW1wbGljaXQNCnBhc3NpdmUgbWVkaWEgY29udmVy
-dGVyIGluLWJldHdlZW5dIHdvcmtzLg0KDQpJIGFkbWl0IHRoYXQgYSBnZW5lcmljIHNvbHV0aW9u
-IHdvdWxkIGJlIG5pY2UuDQpJcyBpdCBvayBpZiB3ZSBkZWZlciB0aGUgc29sdXRpb24gZm9yIHRo
-aXMgZHJpdmVycy9wYXRjaHNldD8NCg0KSWYgeW91IHByb3Bvc2Ugc29tZXRoaW5nLCBJIGNhbiB0
-YWtlIGEgbG9vayBhcyBwYXJ0IG9mIGEgZGlmZmVyZW50L25ldyBkaXNjdXNzaW9uLg0KDQpObyBn
-dWFycmFudGVlcyBhYm91dCBob3cgc29vbiBpdCB3b3VsZCBiZSBpbXBsZW1lbnRlZC4NCg0KVGhh
-bmtzDQpBbGV4DQoNCj4gDQo+ICAgICAgQW5kcmV3DQo=
+On 06/08/2019 23:37, Paul Walmsley wrote:
+> On Fri, 2 Aug 2019, Atish Patra wrote:
+> 
+>> There is only one clocksource in RISC-V. The boot cpu initializes
+>> that clocksource. No need to keep a percpu data structure.
+>>
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> 
+> Thanks, queued for v5.3-rc4.
+
+Please, in the future wait for my:
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
