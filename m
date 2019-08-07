@@ -1,299 +1,163 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Wed, 07 Aug 2019 13:34:45 +0300
-Message-ID: <8736idnu0q.fsf@gmail.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <877e8tm25r.fsf@linux.intel.com> <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+Date: Wed, 7 Aug 2019 12:39:17 +0200
+Message-ID: <f229a840-bcf3-50c8-27c6-363c72de1d01@xs4all.nl>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <86e17716-193f-ca49-1104-9c599a667eeb@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com>
+In-Reply-To: <86e17716-193f-ca49-1104-9c599a667eeb@collabora.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Helen Koike <helen.koike@collabora.com>, hans.verkuil@cisco.com
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Jacob Chen <cc@rock-chips.com>, Allon Huang <allon.huang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-Pawel Laszczak <pawell@cadence.com> writes:
->>> +static int cdns3_gadget_start(struct cdns3 *cdns)
->>> +{
->>> +	struct cdns3_device *priv_dev;
->>> +	u32 max_speed;
->>> +	int ret;
->>> +
->>> +	priv_dev = kzalloc(sizeof(*priv_dev), GFP_KERNEL);
->>> +	if (!priv_dev)
->>> +		return -ENOMEM;
->>> +
->>> +	cdns->gadget_dev = priv_dev;
->>> +	priv_dev->sysdev = cdns->dev;
->>> +	priv_dev->dev = cdns->dev;
->>> +	priv_dev->regs = cdns->dev_regs;
->>> +
->>> +	device_property_read_u16(priv_dev->dev, "cdns,on-chip-buff-size",
->>> +				 &priv_dev->onchip_buffers);
->>> +
->>> +	if (priv_dev->onchip_buffers <=  0) {
->>> +		u32 reg = readl(&priv_dev->regs->usb_cap2);
->>> +
->>> +		priv_dev->onchip_buffers = USB_CAP2_ACTUAL_MEM_SIZE(reg);
->>> +	}
->>> +
->>> +	if (!priv_dev->onchip_buffers)
->>> +		priv_dev->onchip_buffers = 256;
->>> +
->>> +	max_speed = usb_get_maximum_speed(cdns->dev);
->>> +
->>> +	/* Check the maximum_speed parameter */
->>> +	switch (max_speed) {
->>> +	case USB_SPEED_FULL:
->>> +	case USB_SPEED_HIGH:
->>> +	case USB_SPEED_SUPER:
->>> +		break;
->>> +	default:
->>> +		dev_err(cdns->dev, "invalid maximum_speed parameter %d\n",
->>> +			max_speed);
->>> +		/* fall through */
->>> +	case USB_SPEED_UNKNOWN:
->>> +		/* default to superspeed */
->>> +		max_speed = USB_SPEED_SUPER;
->>> +		break;
->>> +	}
->>> +
->>> +	/* fill gadget fields */
->>> +	priv_dev->gadget.max_speed = max_speed;
->>> +	priv_dev->gadget.speed = USB_SPEED_UNKNOWN;
->>> +	priv_dev->gadget.ops = &cdns3_gadget_ops;
->>> +	priv_dev->gadget.name = "usb-ss-gadget";
->>> +	priv_dev->gadget.sg_supported = 1;
->>> +
->>> +	spin_lock_init(&priv_dev->lock);
->>> +	INIT_WORK(&priv_dev->pending_status_wq,
->>> +		  cdns3_pending_setup_status_handler);
->>> +
->>> +	/* initialize endpoint container */
->>> +	INIT_LIST_HEAD(&priv_dev->gadget.ep_list);
->>> +	INIT_LIST_HEAD(&priv_dev->aligned_buf_list);
->>> +
->>> +	ret = cdns3_init_eps(priv_dev);
->>> +	if (ret) {
->>> +		dev_err(priv_dev->dev, "Failed to create endpoints\n");
->>> +		goto err1;
->>> +	}
->>> +
->>> +	/* allocate memory for setup packet buffer */
->>> +	priv_dev->setup_buf = dma_alloc_coherent(priv_dev->sysdev, 8,
->>> +						 &priv_dev->setup_dma, GFP_DMA);
->>> +	if (!priv_dev->setup_buf) {
->>> +		ret = -ENOMEM;
->>> +		goto err2;
->>> +	}
->>> +
->>> +	priv_dev->dev_ver = readl(&priv_dev->regs->usb_cap6);
->>> +
->>> +	dev_dbg(priv_dev->dev, "Device Controller version: %08x\n",
->>> +		readl(&priv_dev->regs->usb_cap6));
->>> +	dev_dbg(priv_dev->dev, "USB Capabilities:: %08x\n",
->>> +		readl(&priv_dev->regs->usb_cap1));
->>> +	dev_dbg(priv_dev->dev, "On-Chip memory cnfiguration: %08x\n",
->>> +		readl(&priv_dev->regs->usb_cap2));
->>> +
->>> +	priv_dev->dev_ver = GET_DEV_BASE_VERSION(priv_dev->dev_ver);
->>> +
->>> +	priv_dev->zlp_buf = kzalloc(CDNS3_EP_ZLP_BUF_SIZE, GFP_KERNEL);
->>> +	if (!priv_dev->zlp_buf) {
->>> +		ret = -ENOMEM;
->>> +		goto err3;
->>> +	}
->>> +
->>> +	/* add USB gadget device */
->>> +	ret = usb_add_gadget_udc(priv_dev->dev, &priv_dev->gadget);
->>> +	if (ret < 0) {
->>> +		dev_err(priv_dev->dev,
->>> +			"Failed to register USB device controller\n");
->>> +		goto err4;
->>> +	}
->>> +
->>> +	return 0;
->>> +err4:
->>> +	kfree(priv_dev->zlp_buf);
->>> +err3:
->>> +	dma_free_coherent(priv_dev->sysdev, 8, priv_dev->setup_buf,
->>> +			  priv_dev->setup_dma);
->>> +err2:
->>> +	cdns3_free_all_eps(priv_dev);
->>> +err1:
->>> +	cdns->gadget_dev = NULL;
->>> +	return ret;
->>> +}
->>> +
->>> +static int __cdns3_gadget_init(struct cdns3 *cdns)
->>> +{
->>> +	struct cdns3_device *priv_dev;
->>> +	int ret = 0;
->>> +
->>> +	cdns3_drd_switch_gadget(cdns, 1);
->>> +	pm_runtime_get_sync(cdns->dev);
->>> +
->>> +	ret = cdns3_gadget_start(cdns);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	priv_dev = cdns->gadget_dev;
->>> +	ret = devm_request_threaded_irq(cdns->dev, cdns->dev_irq,
->>> +					cdns3_device_irq_handler,
->>> +					cdns3_device_thread_irq_handler,
->>> +					IRQF_SHARED, dev_name(cdns->dev), cdns);
+On 8/6/19 8:51 PM, Helen Koike wrote:
+> Hi Hans,
+> 
+> On 7/30/19 3:42 PM, Helen Koike wrote:
+>> From: Jacob Chen <jacob2.chen@rock-chips.com>
 >>
->>copied handlers here for commenting. Note that you don't have
->>IRQF_ONESHOT:
->
-> I know, I can't use  IRQF_ ONESHOT flag in this case. I have implemented 
-> some code for masking/unmasking interrupts in cdns3_device_irq_handler.
->
-> Some priority interrupts should be handled ASAP so I can't blocked interrupt 
-> Line. 
-
-You're completely missing my comment. Your top half should be as short
-as possile. It should only check if current device generated
-interrupts. If it did, then you should wake the thread handler.
-
-This is to improve realtime behavior but not keeping preemption disabled
-for longer than necessary.
-
->>> +static irqreturn_t cdns3_device_irq_handler(int irq, void *data)
->>> +{
->>> +	struct cdns3_device *priv_dev;
->>> +	struct cdns3 *cdns = data;
->>> +	irqreturn_t ret = IRQ_NONE;
->>> +	unsigned long flags;
->>> +	u32 reg;
->>> +
->>> +	priv_dev = cdns->gadget_dev;
->>> +	spin_lock_irqsave(&priv_dev->lock, flags);
+>> Add the subdev driver for rockchip isp1.
 >>
->>the top half handler runs in hardirq context. You don't need any locks
->>here. Also IRQs are *already* disabled, you don't need to disable them again.
->
-> I will remove spin_lock_irqsave but I need to disable only some of the interrupts. 
-> I disable interrupts associated with USB endpoints. Handling of them can be 
-> deferred to thread handled.
-
-you should defer all of them to thread. Endpoints or otherwise.
-
->>> +
->>> +	/* check USB device interrupt */
->>> +	reg = readl(&priv_dev->regs->usb_ists);
->>> +
->>> +	if (reg) {
->>> +		writel(reg, &priv_dev->regs->usb_ists);
->>> +		cdns3_check_usb_interrupt_proceed(priv_dev, reg);
->>> +		ret = IRQ_HANDLED;
+>> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+>> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+>> Signed-off-by: Yichong Zhong <zyc@rock-chips.com>
+>> Signed-off-by: Jacob Chen <cc@rock-chips.com>
+>> Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+>> Signed-off-by: Allon Huang <allon.huang@rock-chips.com>
+>> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+>> [fixed unknown entity type / switched to PIXEL_RATE]
+>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>> [update for upstream]
+>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
 >>
->>now, because you _don't_ mask this interrupt, you're gonna have
->>issues. Say we actually get both device and endpoint interrupts while
->>the thread is already running with previous endpoint interrupts. Now
->>we're gonna reenter the top half, because device interrupts are *not*
->>masked, which will read usb_ists and handle it here.
->
-> Endpoint interrupts are masked in cdns3_device_irq_handler and stay masked
-> until they are not handled in threaded handler. 
-
-Quick question, then: these ISTS registers, are they masked interrupt
-status or raw interrupt status?
-
-> Of course, not all endpoint interrupts are masked, but only reported in ep_ists.
-> USB interrupt will be handled immediately. 
->
-> Also, I can get next endpoint interrupt from not masked endpoint and driver also again wake 
-> the thread. I saw such situation, but threaded interrupt handler has been working correct
-> in such situations.
->
-> In thread handler driver checks again which endpoint should be handled in ep_ists. 
->
-> I think that such situation should also occurs during our LPM enter/exit test. 
-> So, driver has  been tested for such case. During this test driver during 
-> transferring data generate a huge number of LPM interrupts which 
-> are usb interrupts.
->
-> I can't block usb interrupts interrupts because:
-> /*
->  * WORKAROUND: CDNS3 controller has issue with hardware resuming
->  * from L1. To fix it, if any DMA transfer is pending driver
->  * must starts driving resume signal immediately.
->  */
-
-I can't see why this would prevent you from defering handling to thread
-handler.
-
->>> +	if (priv_dev->run_garbage_colector) {
+>> ---
 >>
->>wait, what?
->
-> DMA require data buffer aligned to 8 bytes. So, if buffer data is not aligned 
-> driver allocate aligned buffer for data and copy it from unaligned to 
-> Aligned.  
->
+>> Changes in v8: None
+>> Changes in v7:
+>> - fixed warning because of unknown entity type
+>> - fixed v4l2-compliance errors regarding rkisp1 formats, try formats
+>> and default values
+>> - fix typo riksp1/rkisp1
+>> - redesign: remove mipi/csi subdevice, sensors connect directly to the
+>> isp subdevice in the media topology now. As a consequence, remove the
+>> hack in mipidphy_g_mbus_config() where information from the sensor was
+>> being propagated through the topology.
+>> - From the old dphy:
+>>         * cache get_remote_sensor() in s_stream
+>>         * use V4L2_CID_PIXEL_RATE instead of V4L2_CID_LINK_FREQ
+>> - Replace stream state with a boolean
+>> - code styling and checkpatch fixes
+>> - fix stop_stream (return after calling stop, do not reenable the stream)
+>> - fix rkisp1_isp_sd_get_selection when V4L2_SUBDEV_FORMAT_TRY is set
+>> - fix get format in output (isp_sd->out_fmt.mbus_code was being ignored)
+>> - s/intput/input
+>> - remove #define sd_to_isp_sd(_sd), add a static inline as it will be
+>> reused by the capture
 >>
->>ps: correct spelling is "collector" ;-)
->
-> Ok, thanks. 
+>>  drivers/media/platform/rockchip/isp1/rkisp1.c | 1286 +++++++++++++++++
+>>  drivers/media/platform/rockchip/isp1/rkisp1.h |  111 ++
+>>  2 files changed, 1397 insertions(+)
+>>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
+>>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
 >>
->>> +		struct cdns3_aligned_buf *buf, *tmp;
->>> +
->>> +		list_for_each_entry_safe(buf, tmp, &priv_dev->aligned_buf_list,
->>> +					 list) {
->>> +			if (!buf->in_use) {
->>> +				list_del(&buf->list);
->>> +
->>> +				spin_unlock_irqrestore(&priv_dev->lock, flags);
->>
->>creates the possibility of a race condition
-> Why? In this place the buf can't be used. 
+>> diff --git a/drivers/media/platform/rockchip/isp1/rkisp1.c b/drivers/media/platform/rockchip/isp1/rkisp1.c
+>> new file mode 100644
+>> index 000000000000..6d0c0ffb5e03
+>> --- /dev/null
+>> +++ b/drivers/media/platform/rockchip/isp1/rkisp1.c
+>> @@ -0,0 +1,1286 @@
 
-but you're reenabling interrupts, right?
+<snip>
 
->>> +				dma_free_coherent(priv_dev->sysdev, buf->size,
->>> +						  buf->buf,
->>> +						  buf->dma);
->>> +				spin_lock_irqsave(&priv_dev->lock, flags);
->>> +
->>> +				kfree(buf);
->>
->>why do you even need this "garbage collector"?
->
-> I need to free not used memory. The once allocated buffer will be associated with
-> request, but if request.length will be increased in usb_request then driver will  
-> must allocate the  bigger buffer. As I remember I couldn't call dma_free_coherent
-> in interrupt context so I had to move it to thread handled. This flag was used to avoid
-> going through whole  aligned_buf_list  every time. 
-> In most cases this part will never called int this place 
+>> +static int rkisp1_isp_sd_get_fmt(struct v4l2_subdev *sd,
+>> +				 struct v4l2_subdev_pad_config *cfg,
+>> +				 struct v4l2_subdev_format *fmt)
+>> +{
+>> +	struct rkisp1_isp_subdev *isp_sd = sd_to_isp_sd(sd);
+>> +	struct v4l2_mbus_framefmt *mf = &fmt->format;
+>> +
+>> +	if ((fmt->pad != RKISP1_ISP_PAD_SINK) &&
+>> +	    (fmt->pad != RKISP1_ISP_PAD_SOURCE_PATH)) {
+>> +		fmt->format.code = MEDIA_BUS_FMT_FIXED;
+>> +		/*
+>> +		 * NOTE: setting a format here doesn't make much sense
+>> +		 * but v4l2-compliance complains
+>> +		 */
+>> +		fmt->format.width = RKISP1_DEFAULT_WIDTH;
+>> +		fmt->format.height = RKISP1_DEFAULT_HEIGHT;
+> 
+> As I had mentioned to you, this is called for the isp pads connected to the
+> DMA engines for statistics and parameters (meta data).
+> 
+> If I remove those, I get the following errors:
+> 
+> Sub-Device ioctls (Sink Pad 1):
+>         test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
+>                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
+>                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
+>         test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
+>         test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+>         test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
+>                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
+>                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
+>         test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
+>         test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+>         test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+> 
+> Here is the full log: http://ix.io/1QNt
+> 
+> Is this a bug in v4l2-compliance?
 
-Did you try, btw, setting the quirk flag which tells gadget drivers to
-always allocate buffers aligned to MaxPacketSize? Wouldn't that be enough?
+Yes and no :-)
 
->>> +	TP_printk("%s: req: %p, req buff %p, length: %u/%u %s%s%s, status: %d,"
->>> +		cd   " trb: [start:%d, end:%d: virt addr %pa], flags:%x ",
->>> +		__get_str(name), __entry->req, __entry->buf, __entry->actual,
->>> +		__entry->length,
->>> +		__entry->zero ? "zero | " : "",
->>> +		__entry->short_not_ok ? "short | " : "",
->>> +		__entry->no_interrupt ? "no int" : "",
->>
->>I guess you didn't really think the formatting through. Think about what
->>happens if you get a request with only zero flag or only short flag. How
->>will this log look like?
->
-> Like this:
-> cdns3_gadget_giveback: ep0: req: 0000000071a6a5f5, req buff 000000008d40c4db, length: 60/60 zero | , status: 0, trb: [start:0, end:0: virt addr (null)], flags:0
->
-> Is it something wrong with this?. Maybe one extra sign |.
+Currently v4l2-compliance assumes that only video is transferred over a media bus.
+But that's not the case here, and testing the code field doesn't help v4l2-compliance
+since MEDIA_BUS_FMT_FIXED is also still used by some older subdev drivers for video.
 
-yes, the extra | :-)
+I think we need a new bus format: MEDIA_BUS_FMT_FIXED_METADATA. Then v4l2-compliance
+can tell it apart from the regular fixed video bus format.
 
-This is one reason why I switched to character flags where a lower case
-character means flag is cleared while uppercase means it's set.
+If I do a 'git grep MEDIA_BUS_FMT_FIXED' then I see that it is also in use by vsp1
+for histogram information, so that should also be converted to use the new FIXED_METADATA
+format, although that might be too late (there might be userspace complications).
 
--- 
-balbi
+Regards,
+
+	Hans
+
+> 
+> Thanks
+> Helen
+> 
+>> +		fmt->format.field = V4L2_FIELD_NONE;
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
+>> +		mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
+>> +		fmt->format = *mf;
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (fmt->pad == RKISP1_ISP_PAD_SINK) {
+>> +		*mf = isp_sd->in_frm;
+>> +	} else if (fmt->pad == RKISP1_ISP_PAD_SOURCE_PATH) {
+>> +		/* format of source pad */
+>> +		*mf = isp_sd->in_frm;
+>> +		mf->code = isp_sd->out_fmt.mbus_code;
+>> +		/* window size of source pad */
+>> +		mf->width = isp_sd->out_crop.width;
+>> +		mf->height = isp_sd->out_crop.height;
+>> +		mf->quantization = isp_sd->quantization;
+>> +	}
+>> +	mf->field = V4L2_FIELD_NONE;
+>> +
+>> +	return 0;
+>> +}
