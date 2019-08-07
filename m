@@ -1,95 +1,65 @@
-From: Qian Cai <cai@lca.pw>
-Subject: "of/platform: Pause/resume sync state during init and
- of_platform_populate()" with a warning on arm64
-Date: Tue, 6 Aug 2019 20:46:20 -0400
-Message-ID: <B4B0AD7F-FA0F-4DA0-9A8B-EAE1CEE11759@lca.pw>
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [alsa-devel] [PATCH v2 1/7] ASoC: fsl_sai: Add registers
+ definition for multiple datalines
+Date: Tue, 6 Aug 2019 18:12:23 -0700
+Message-ID: <20190807011222.GB8938@Asurada-Nvidia.nvidia.com>
+References: <20190728192429.1514-1-daniel.baluta@nxp.com>
+ <20190728192429.1514-2-daniel.baluta@nxp.com>
+ <20190729194214.GA20594@Asurada-Nvidia.nvidia.com>
+ <CAEnQRZDmnAmgUkRGv3V5S7b5EnYTd2BO5NFuME2CfGb1=nAHzQ@mail.gmail.com>
+ <20190729202001.GC4787@sirena.org.uk>
+ <20190730075934.GA5892@Asurada>
+ <CAEnQRZBpQPoi5OH--c=ubKYc6B3rspmVnb846UTFW7P5SE62ww@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAEnQRZBpQPoi5OH--c=ubKYc6B3rspmVnb846UTFW7P5SE62ww@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Timur Tabi <timur@kernel.org>, Rob Herring <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Takashi Iwai <tiwai@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, Fabio Estevam <festevam@gmail.com>, Mihai Serban <mihai.serban@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-SXQgbG9va3MgbGlrZSB0aGUgbGludXgtbmV4dCBjb21taXQg4oCcb2YvcGxhdGZvcm06IFBhdXNl
-L3Jlc3VtZSBzeW5jIHN0YXRlIGR1cmluZyBpbml0IGFuZCBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgp
-4oCdIFsxXQpJbnRyb2R1Y2VkIGEgd2FybmluZyB3aGlsZSBib290aW5nIGFybTY0LgoKWzFdIGh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTA3MzEyMjE3MjEuMTg3NzEzLTYtc2FyYXZh
-bmFrQGdvb2dsZS5jb20vCgpbICAgOTMuNDQ5MzAwXVsgICAgVDFdIGFybS1zbW11LXYzIGFybS1z
-bW11LXYzLjQuYXV0bzogaWFzIDQ0LWJpdCwgb2FzIDQ0LWJpdCAoZmVhdHVyZXMgMHgwMDAwMTcw
-ZCkKWyAgIDkzLjQ2NDg3M11bICAgIFQxXSBhcm0tc21tdS12MyBhcm0tc21tdS12My40LmF1dG86
-IGFsbG9jYXRlZCA1MjQyODggZW50cmllcyBmb3IgY21kcQpbICAgOTMuNDg1NDgxXVsgICAgVDFd
-IGFybS1zbW11LXYzIGFybS1zbW11LXYzLjQuYXV0bzogYWxsb2NhdGVkIDUyNDI4OCBlbnRyaWVz
-IGZvciBldnRxClsgICA5My40OTYzMjBdWyAgICBUMV0gYXJtLXNtbXUtdjMgYXJtLXNtbXUtdjMu
-NS5hdXRvOiBvcHRpb24gbWFzayAweDIKWyAgIDkzLjUwMjkxN11bICAgIFQxXSBhcm0tc21tdS12
-MyBhcm0tc21tdS12My41LmF1dG86IGlhcyA0NC1iaXQsIG9hcyA0NC1iaXQgKGZlYXR1cmVzIDB4
-MDAwMDE3MGQpClsgICA5My42MjE4MThdWyAgICBUMV0gYXJtLXNtbXUtdjMgYXJtLXNtbXUtdjMu
-NS5hdXRvOiBhbGxvY2F0ZWQgNTI0Mjg4IGVudHJpZXMgZm9yIGNtZHEKWyAgIDkzLjY0MzAwMF1b
-ICAgIFQxXSBhcm0tc21tdS12MyBhcm0tc21tdS12My41LmF1dG86IGFsbG9jYXRlZCA1MjQyODgg
-ZW50cmllcyBmb3IgZXZ0cQpbICAgOTQuNTE5NDQ1XVsgICAgVDFdIGxpYnBoeTogRml4ZWQgTURJ
-TyBCdXM6IHByb2JlZApbICAgOTQuNTI0NjQ5XVsgICAgVDFdIEVGSSBWYXJpYWJsZXMgRmFjaWxp
-dHkgdjAuMDggMjAwNC1NYXktMTcKWyAgIDk0LjYwMTE2Nl1bICAgIFQxXSBORVQ6IFJlZ2lzdGVy
-ZWQgcHJvdG9jb2wgZmFtaWx5IDE3ClsgICA5NC43NjYwMDhdWyAgICBUMV0genN3YXA6IGxvYWRl
-ZCB1c2luZyBwb29sIGx6by96YnVkClsgICA5NC43NzQ3NDVdWyAgICBUMV0ga21lbWxlYWs6IEtl
-cm5lbCBtZW1vcnkgbGVhayBkZXRlY3RvciBpbml0aWFsaXplZCAobWVtcG9vbCBzaXplOiAxNjM4
-NCkKWyAgIDk0Ljc3NDc1Nl1bIFQxNjk5XSBrbWVtbGVhazogQXV0b21hdGljIG1lbW9yeSBzY2Fu
-bmluZyB0aHJlYWQgc3RhcnRlZApbICAgOTQuODEyMzM4XVsgVDEzNjhdIHBjaWVwb3J0IDAwMDA6
-MGY6MDAuMDogQWRkaW5nIHRvIGlvbW11IGdyb3VwIDAKWyAgIDk0Ljk4NDQ2Nl1bICAgIFQxXSAt
-LS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KWyAgIDk0Ljk4OTgyN11bICAgIFQx
-XSBVbm1hdGNoZWQgc3luY19zdGF0ZSBwYXVzZS9yZXN1bWUhClsgICA5NC45ODk4OTRdWyAgICBU
-MV0gV0FSTklORzogQ1BVOiAyNSBQSUQ6IDEgYXQgZHJpdmVycy9iYXNlL2NvcmUuYzo2OTEgZGV2
-aWNlX2xpbmtzX3N1cHBsaWVyX3N5bmNfc3RhdGVfcmVzdW1lKzB4MTAwLzB4MTI4ClsgICA5NS4w
-MDYwNjJdWyAgICBUMV0gTW9kdWxlcyBsaW5rZWQgaW46ClsgICA5NS4wMDk4MTVdWyAgICBUMV0g
-Q1BVOiAyNSBQSUQ6IDEgQ29tbTogc3dhcHBlci8wIE5vdCB0YWludGVkIDUuMy4wLXJjMy1uZXh0
-LTIwMTkwODA2KyAjMTEKWyAgIDk1LjAxODE2MV1bICAgIFQxXSBIYXJkd2FyZSBuYW1lOiBIUEUg
-QXBvbGxvIDcwICAgICAgICAgICAgIC9DMDFfQVBBQ0hFX01CICAgICAgICAgLCBCSU9TIEw1MF81
-LjEzXzEuMTEgMDYvMTgvMjAxOQpbICAgOTUuMDI4NTkzXVsgICAgVDFdIHBzdGF0ZTogNjA0MDAw
-MDkgKG5aQ3YgZGFpZiArUEFOIC1VQU8pClsgICA5NS4wMzQwNzddWyAgICBUMV0gcGMgOiBkZXZp
-Y2VfbGlua3Nfc3VwcGxpZXJfc3luY19zdGF0ZV9yZXN1bWUrMHgxMDAvMHgxMjgKWyAgIDk1LjA0
-MTEyNF1bICAgIFQxXSBsciA6IGRldmljZV9saW5rc19zdXBwbGllcl9zeW5jX3N0YXRlX3Jlc3Vt
-ZSsweDEwMC8weDEyOApbICAgOTUuMDQ4MTY3XVsgICAgVDFdIHNwIDogMzRmZjgwMDgwNmU2ZmJj
-MApbICAgOTUuMDUyMTcyXVsgICAgVDFdIHgyOTogMzRmZjgwMDgwNmU2ZmMwMCB4Mjg6IDAwMDAw
-MDAwMDAwMDAwMDAgClsgICA5NS4wNTgxNzddWyAgICBUMV0geDI3OiAwMDAwMDAwMDAwMDAwMDAw
-IHgyNjogMDAwMDAwMDAwMDAwMDAwMCAKWyAgIDk1LjA2NDE4MV1bICAgIFQxXSB4MjU6IDAwMDAw
-MDAwMDAwMDAwMzggeDI0OiAwMDAwMDAwMDAwMDAwMDAwIApbICAgOTUuMDcwMTg1XVsgICAgVDFd
-IHgyMzogMDAwMDAwMDAwMDAwMDAwMCB4MjI6IDAwMDAwMDAwMDAwMDAwMTkgClsgICA5NS4wNzYx
-ODldWyAgICBUMV0geDIxOiAwMDAwMDAwMDAwMDAwMDAwIHgyMDogZjlmZjgwOGI4MDRlNmM1MCAK
-WyAgIDk1LjA4MjE5M11bICAgIFQxXSB4MTk6IGZmZmYxMDAwMTRhNmU2MDAgeDE4OiAwMDAwMDAw
-MDAwMDAwMDQwIApbICAgOTUuMDg4MTk3XVsgICAgVDFdIHgxNzogMDAwMDAwMDAwMDAwMDAwMCB4
-MTY6IDg2ZmY4MDA5OWQ1ODFiNTAgClsgICA5NS4wOTQyMDFdWyAgICBUMV0geDE1OiAwMDAwMDAw
-MDAwMDAwMDAwIHgxNDogZmZmZjEwMDAxMDA4NmQxYyAKWyAgIDk1LjEwMDIwNV1bICAgIFQxXSB4
-MTM6IGZmZmYxMDAwMTA5ZDg2ODggeDEyOiBmZmZmZmZmZmZmZmZmZmZmIApbICAgOTUuMTA2MjA5
-XVsgICAgVDFdIHgxMTogMDAwMDAwMDAwMDAwMDBmOSB4MTA6IGZmZmYwODA4YjgwNGU2YzYgClsg
-ICA5NS4xMTIyMTNdWyAgICBUMV0geDkgOiA0YjcxYWQ1MjJjODUxZDAwIHg4IDogNGI3MWFkNTIy
-Yzg1MWQwMCAKWyAgIDk1LjExODIxN11bICAgIFQxXSB4NyA6IDYxNzAyMDY1NzQ2MTc0NzMgeDYg
-OiBmZmZmMTAwMDE0MDc2OTcyIApbICAgOTUuMTI0MjIxXVsgICAgVDFdIHg1IDogMzRmZjgwMDgw
-NmU2ZjhmMCB4NCA6IDAwMDAwMDAwMDAwMDAwMGYgClsgICA5NS4xMzAyMjVdWyAgICBUMV0geDMg
-OiBmZmZmMTAwMDEwMWJmYTVjIHgyIDogMDAwMDAwMDAwMDAwMDAwMSAKWyAgIDk1LjEzNjIyOV1b
-ICAgIFQxXSB4MSA6IDAwMDAwMDAwMDAwMDAwMDEgeDAgOiAwMDAwMDAwMDAwMDAwMDIyIApbICAg
-OTUuMTQyMjMzXVsgICAgVDFdIENhbGwgdHJhY2U6ClsgICA5NS4xNDUzNzRdWyAgICBUMV0gIGRl
-dmljZV9saW5rc19zdXBwbGllcl9zeW5jX3N0YXRlX3Jlc3VtZSsweDEwMC8weDEyOApbICAgOTUu
-MTUyMDc0XVsgICAgVDFdICBvZl9wbGF0Zm9ybV9zeW5jX3N0YXRlX2luaXQrMHgxMC8weDFjClsg
-ICA5NS4xNTc1NTddWyAgICBUMV0gIGRvX29uZV9pbml0Y2FsbCsweDJmOC8weDYwMApbICAgOTUu
-MTYyMTcyXVsgICAgVDFdICBkb19pbml0Y2FsbF9sZXZlbCsweDM3Yy8weDNmYwpbICAgOTUuMTY2
-OTU5XVsgICAgVDFdICBkb19iYXNpY19zZXR1cCsweDM0LzB4NGMKWyAgIDk1LjE3MTMxM11bICAg
-IFQxXSAga2VybmVsX2luaXRfZnJlZWFibGUrMHgxODgvMHgyNGMKWyAgIDk1LjE3NjM2M11bICAg
-IFQxXSAga2VybmVsX2luaXQrMHgxOC8weDMzNApbICAgOTUuMTgwNTQzXVsgICAgVDFdICByZXRf
-ZnJvbV9mb3JrKzB4MTAvMHgxOApbICAgOTUuMTg0ODA5XVsgICAgVDFdIC0tLVsgZW5kIHRyYWNl
-IGE5ZWE2OGM5MDI1NDBmZTUgXS0tLQpbICAgOTUuMjY5MDg1XVsgICAgVDFdIEZyZWVpbmcgdW51
-c2VkIGtlcm5lbCBtZW1vcnk6IDI4NjcySwpbICAxMDEuMDY5ODYwXVsgICAgVDFdIENoZWNrZWQg
-VytYIG1hcHBpbmdzOiBwYXNzZWQsIG5vIFcrWCBwYWdlcyBmb3VuZApbICAxMDEuMDc2MjY1XVsg
-ICAgVDFdIFJ1biAvaW5pdCBhcyBpbml0IHByb2Nlc3MKWyAgMTAxLjE4NjM1OV1bICAgIFQxXSBz
-eXN0ZW1kWzFdOiBTeXN0ZW0gdGltZSBiZWZvcmUgYnVpbGQgdGltZSwgYWR2YW5jaW5nIGNsb2Nr
-LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On Tue, Aug 06, 2019 at 02:15:03PM +0300, Daniel Baluta wrote:
+> On Tue, Jul 30, 2019 at 10:59 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> >
+> > On Mon, Jul 29, 2019 at 09:20:01PM +0100, Mark Brown wrote:
+> > > On Mon, Jul 29, 2019 at 10:57:43PM +0300, Daniel Baluta wrote:
+> > > > On Mon, Jul 29, 2019 at 10:42 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> > > > > On Sun, Jul 28, 2019 at 10:24:23PM +0300, Daniel Baluta wrote:
+> > >
+> > > > > > @@ -704,7 +711,14 @@ static bool fsl_sai_readable_reg(struct device *dev, unsigned int reg)
+> > > > > >       case FSL_SAI_TCR3:
+> > > > > >       case FSL_SAI_TCR4:
+> > > > > >       case FSL_SAI_TCR5:
+> > > > > > -     case FSL_SAI_TFR:
+> > > > > > +     case FSL_SAI_TFR0:
+> > >
+> > > > > A tricky thing here is that those SAI instances on older SoC don't
+> > > > > support multi data lines physically, while seemly having registers
+> > > > > pre-defined. So your change doesn't sound doing anything wrong to
+> > > > > them at all, I am still wondering if it is necessary to apply them
+> > > > > to newer compatible only though, as for older compatibles of SAI,
+> > > > > these registers would be useless and confusing if being exposed.
+> > >
+> > > > > What do you think?
+> > >
+> > > > Yes, I thought about this too. But, I tried to keep the code as short
+> > > > as possible and technically it is not wrong. When 1 data line is supported
+> > > > for example application will only care about TDR0, TFR0, etc.
+> > >
+> > > So long as it's safe to read the registers (you don't get a bus error or
+> > > anything) I'd say it's more trouble than it's worth to have separate
+> > > regmap configuations just for this.  The main reasons for restricting
+> > > readability are where there's physical problems with doing the reads or
+> > > to keep the size of the debugfs files under control for usability and
+> > > performance reasons.
+> >
+> > Thanks for the input, Mark.
+> >
+> > Daniel, did you get a chance to test it on older SoCs? At least
+> > nothing breaks like bus errors?
+> 
+> Tested on imx6sx-sdb, everything looks good. No bus errors.
+
+Okay. Let's just stick to it then. Thanks for the reply.
