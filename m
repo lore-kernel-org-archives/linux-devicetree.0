@@ -1,8 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 15/21] ARM: dts: imx6ull-colibri: reduce v_batt current in
- power off
-Date: Wed, 7 Aug 2019 08:26:36 +0000
-Message-ID: <20190807082556.5013-16-philippe.schenker@toradex.com>
+Subject: [PATCH v3 18/21] ARM: dts: imx6ull-colibri: Add general wakeup key
+ used on Colibri
+Date: Wed, 7 Aug 2019 08:26:42 +0000
+Message-ID: <20190807082556.5013-19-philippe.schenker@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,52 +15,43 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
+This adds the possibility to wake the module with an external signal
+as defined in the Colibri standard
 
-Reduce the current drawn from VCC_BATT when the main power on the 3V3
-pins to the module are switched off.
-
-This switches off SoC internal pull resistors which are provided on the
-module for TAMPER7 and TAMPER9 SoC pin and switches on a pull down
-instead of a pullup for the USBC_DET module pin (TAMPER2).
-
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
 
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index 1019ce69a242..1f112ec55e5c 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -533,19 +533,19 @@
-=20
- 	pinctrl_snvs_ad7879_int: snvs-ad7879-int-grp { /* TOUCH Interrupt */
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x100b0
- 		>;
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot=
+/dts/imx6ull-colibri-eval-v3.dtsi
+index 3bee37c75aa6..d3c4809f140e 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+@@ -8,6 +8,20 @@
+ 		stdout-path =3D "serial0:115200n8";
  	};
 =20
- 	pinctrl_snvs_reg_sd: snvs-reg-sd-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x4001b8b0
-+			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x400100b0
- 		>;
- 	};
-=20
- 	pinctrl_snvs_usbc_det: snvs-usbc-det-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
- 		>;
- 	};
-=20
++	gpio-keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_snvs_gpiokeys>;
++
++		power {
++			label =3D "Wake-Up";
++			gpios =3D <&gpio5 1 GPIO_ACTIVE_HIGH>;
++			linux,code =3D <KEY_WAKEUP>;
++			debounce-interval =3D <10>;
++			wakeup-source;
++		};
++	};
++
+ 	/* fixed crystal dedicated to mcp2515 */
+ 	clk16m: clk16m {
+ 		compatible =3D "fixed-clock";
 --=20
 2.22.0
