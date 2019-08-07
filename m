@@ -1,7 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v3 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
-Date: Wed, 7 Aug 2019 08:26:23 +0000
-Message-ID: <20190807082556.5013-10-philippe.schenker@toradex.com>
+Subject: [PATCH v3 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Wed, 7 Aug 2019 08:26:19 +0000
+Message-ID: <20190807082556.5013-8-philippe.schenker@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -11,46 +11,69 @@ In-Reply-To: <20190807082556.5013-1-philippe.schenker@toradex.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Stefan Agner <stefan.agner@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add the phy-node and mdio bus to the fec-node, represented as is on
-hardware.
-This commit includes micrel,led-mode that is set to the default
-value, prepared for someone who wants to change this.
+From: Stefan Agner <stefan.agner@toradex.com>
 
+Add pinmuxing and do not specify voltage restrictions for the usdhc
+instance available on the modules edge connector. This allows to use
+SD-cards with higher transfer modes if supported by the carrier board.
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+
 ---
 
-Changes in v3: None
+Changes in v3:
+- Add new commit message from Stefan's proposal on ML
+
 Changes in v2: None
 
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx=
-6qdl-colibri.dtsi
-index 1beac22266ed..019dda6b88ad 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -140,7 +140,18 @@
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index 16d1a1ed1aff..67f5e0c87fdc 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -326,7 +326,6 @@
+ &usdhc1 {
  	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_enet>;
- 	phy-mode =3D "rmii";
-+	phy-handle =3D <&ethphy>;
- 	status =3D "okay";
-+
-+	mdio {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		ethphy: ethernet-phy@0 {
-+			reg =3D <0>;
-+			micrel,led-mode =3D <0>;
-+		};
-+	};
- };
+ 	pinctrl-0 =3D <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+-	no-1-8-v;
+ 	cd-gpios =3D <&gpio1 0 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	vqmmc-supply =3D <&reg_LDO2>;
+@@ -671,6 +670,28 @@
+ 		>;
+ 	};
 =20
- &hdmi {
++	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
++		fsl,pins =3D <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5a
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1a
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5a
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5a
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5a
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5a
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
++		fsl,pins =3D <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5b
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1b
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5b
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5b
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5b
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5b
++		>;
++	};
++
+ 	pinctrl_usdhc3: usdhc3grp {
+ 		fsl,pins =3D <
+ 			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
 --=20
 2.22.0
