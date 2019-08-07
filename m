@@ -1,48 +1,38 @@
-Return-Path: <SRS0=oE1C=WE=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=MILw=WD=denx.de=marex@kernel.org>
+Subject: Re: [PATCH 1/2] Input: ili210x - Add DT binding for the Ilitek
+ ILI2117 touch controller
+References: <20190302141704.32547-1-marex@denx.de>
+ <20190327194425.GA641@bogus>
+From: Marek Vasut <marex@denx.de>
+Message-ID: <2b9ecd9d-c383-5686-c8f8-9ba88096fbf9@denx.de>
+Date: Wed, 7 Aug 2019 13:27:52 +0200
 MIME-Version: 1.0
-References: <20190729074757.9581-1-horms+renesas@verge.net.au> <CAMuHMdUkogXnd6_H_q=STyVS0zxpKYif_iJH0pw753onCeU3gw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUkogXnd6_H_q=STyVS0zxpKYif_iJH0pw753onCeU3gw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 Aug 2019 10:58:14 +0200
-Message-ID: <CAMuHMdXhcnN2K-5K-fwYNEK6UoBK=Y4gNjF=w7G4HqjMn7pLGQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: rcar-imr: Rename bindings documentation file
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <20190327194425.GA641@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 29, 2019 at 10:31 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Mon, Jul 29, 2019 at 9:48 AM Simon Horman <horms+renesas@verge.net.au>=
- wrote:
-> > Renesas media binding documentation files uses a naming schema of
->
-> use
->
-> > 'renesas,<module>.txt'. Rename IMR file to match this pattern.
->
-> the IMR file?
->
-> >
-> > Cc: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 3/27/19 8:44 PM, Rob Herring wrote:
+> On Sat,  2 Mar 2019 15:17:03 +0100, Marek Vasut wrote:
+>> Add DT binding for the Ilitek ILI2117 touch controller, which is yet
+>> again a slightly different device in the ILI21xx family.
+>>
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: Henrik Rydberg <rydberg@bitmath.org>
+>> Cc: Olivier Sobrie <olivier@sobrie.be>
+>> Cc: Philipp Puschmann <pp@emlix.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> To: linux-input@vger.kernel.org
+>> ---
+>>  Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks, queued in renesas-devel/renesas-dt-bindings-for-v5.4 with the above
-fixed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bump ? I noticed these patches were never applied.
