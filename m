@@ -1,173 +1,106 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v2] ARM: dts: am335x-boneblue: Use of am335x-osd335x-common.dtsi
-Date: Wed,  7 Aug 2019 15:09:34 -0500
-Message-ID: <20190807200934.25173-1-david@lechnology.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v4 2/3] OPP: Add support for bandwidth OPP tables
+Date: Wed, 7 Aug 2019 13:46:14 -0700
+Message-ID: <CAGETcx8n_YfPH1Fbvb2ay5A=AqG60V6nvtfE0s1OAJMhVQjDmA@mail.gmail.com>
+References: <20190726231558.175130-1-saravanak@google.com> <20190726231558.175130-3-saravanak@google.com>
+ <fc8e4a77-5544-0dd7-f103-147f87e44a28@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fc8e4a77-5544-0dd7-f103-147f87e44a28@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: David Lechner <david@lechnology.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This makes use of the am335x-osd335x-common.dtsi file that contains the
-common device tree components for Octavo Systems AM335x System-in-
-Package that is used on the BeagleBone Blue.
+On Wed, Aug 7, 2019 at 5:53 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> Hi Saravana,
+>
+> On 7/27/19 02:15, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of frequency.
+> > Devices like interconnects quantify their performance points in terms of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
+> >  drivers/opp/opp.h |  4 +++-
+> >  2 files changed, 35 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index b313aca9894f..ac73512f4416 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate;
+> > +             return 0;
+>
+> So we can't have a single OPP table with both frequency and bandwidth?
 
-This has two minor side-effects:
-1. pinmux_i2c0_pins is renamed to pinmux-i2c0-pins
-2. the 1000MHz cpufreq operating point is enabled
+Right, because we can have only 1 "key" for the OPP table. Having more
+than one "key" for an OPP table makes a lot of things pretty messy.
+Most of the helper functions need to be rewritten to say which key is
+being referred to when searching. A lot of the error checking when
+creating OPP tables becomes convoluted -- can we allow more than one
+OPP entry with the same frequency just because the opp-peak-kBps is
+different? Etc. Seems like a lot of code change for something that I
+don't think is a very useful.
 
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: David Lechner <david@lechnology.com>
----
+Also, an OPP table is either going to represent performance levels of
+a clock domain (opp-hz) or the performance levels of an interconnect
+path (opp-peak-kBps) or an OPP table for genpd. Mixing them all up is
+just going to make it convoluted with not enough benefit or use case
+that can't be handled as is (separate BW and freq OPP tables).
 
-v2 changes:
-- fix typo s/1MHz/1000MHz/ in commit message
+> > +     }
+> > +
+> > +     ret = of_property_read_u32(np, "opp-peak-KBps", &bw);
+> > +     if (ret)
+> > +             return ret;
+> > +     new_opp->rate = (unsigned long) bw;
+> > +
+> > +     ret = of_property_read_u32(np, "opp-avg-KBps", &bw);
+> > +     if (!ret)
+> > +             new_opp->avg_bw = (unsigned long) bw;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+> >   * @opp_table:       OPP table
+> > @@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     ret = _read_opp_key(new_opp, np);
+> >       if (ret < 0) {
+> >               /* "opp-hz" is optional for devices like power domains. */
+> >               if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > +                     dev_err(dev, "%s: opp-hz or opp-peak-bw not found\n",
+>
+> s/opp-peak-bw/opp-peak-kBps/
 
- arch/arm/boot/dts/am335x-boneblue.dts | 92 +--------------------------
- 1 file changed, 2 insertions(+), 90 deletions(-)
+Thanks. Will fix.
 
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index df3978ce061c..cde8dd4320b0 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -5,23 +5,13 @@
- /dts-v1/;
- 
- #include "am33xx.dtsi"
-+#include "am335x-osd335x-common.dtsi"
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "TI AM335x BeagleBone Blue";
- 	compatible = "ti,am335x-bone-blue", "ti,am33xx";
- 
--	cpus {
--		cpu@0 {
--			cpu0-supply = <&dcdc2_reg>;
--		};
--	};
--
--	memory@80000000 {
--		device_type = "memory";
--		reg = <0x80000000 0x20000000>; /* 512 MB */
--	};
--
- 	chosen {
- 		stdout-path = &uart0;
- 	};
-@@ -142,13 +132,6 @@
- 		>;
- 	};
- 
--	i2c0_pins: pinmux_i2c0_pins {
--		pinctrl-single,pins = <
--			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, PIN_INPUT_PULLUP, MUX_MODE0)	/* (C17) I2C0_SDA.I2C0_SDA */
--			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, PIN_INPUT_PULLUP, MUX_MODE0)	/* (C16) I2C0_SCL.I2C0_SCL */
--		>;
--	};
--
- 	i2c2_pins: pinmux_i2c2_pins {
- 		pinctrl-single,pins = <
- 			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT_PULLUP, MUX_MODE3)	/* (D18) uart1_ctsn.I2C2_SDA */
-@@ -352,16 +335,6 @@
- };
- 
- &i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
--
--	status = "okay";
--	clock-frequency = <400000>;
--
--	tps: tps@24 {
--		reg = <0x24>;
--	};
--
- 	baseboard_eeprom: baseboard_eeprom@50 {
- 		compatible = "atmel,24c256";
- 		reg = <0x50>;
-@@ -405,66 +378,13 @@
- /include/ "tps65217.dtsi"
- 
- &tps {
--	interrupts = <7>; /* NMI */
--	interrupt-parent = <&intc>;
-+	/delete-property/ ti,pmic-shutdown-controller;
- 
- 	charger {
- 		interrupts = <0>, <1>;
- 		interrupt-names = "USB", "AC";
- 		status = "okay";
- 	};
--
--	pwrbutton {
--		interrupts = <2>;
--		status = "okay";
--	};
--
--	regulators {
--		dcdc1_reg: regulator@0 {
--			regulator-name = "vdds_dpr";
--			regulator-always-on;
--		};
--
--		dcdc2_reg: regulator@1 {
--			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
--			regulator-name = "vdd_mpu";
--			regulator-min-microvolt = <925000>;
--			regulator-max-microvolt = <1351500>;
--			regulator-boot-on;
--			regulator-always-on;
--		};
--
--		dcdc3_reg: regulator@2 {
--			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
--			regulator-name = "vdd_core";
--			regulator-min-microvolt = <925000>;
--			regulator-max-microvolt = <1150000>;
--			regulator-boot-on;
--			regulator-always-on;
--		};
--
--		ldo1_reg: regulator@3 {
--			regulator-name = "vio,vrtc,vdds";
--			regulator-always-on;
--		};
--
--		ldo2_reg: regulator@4 {
--			regulator-name = "vdd_3v3aux";
--			regulator-always-on;
--		};
--
--		ldo3_reg: regulator@5 {
--			regulator-name = "vdd_1v8";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			regulator-always-on;
--		};
--
--		ldo4_reg: regulator@6 {
--			regulator-name = "vdd_3v3a";
--			regulator-always-on;
--		};
--	};
- };
- 
- &mmc1 {
-@@ -526,14 +446,6 @@
- 	};
- };
- 
--&aes {
--	status = "okay";
--};
--
--&sham {
--	status = "okay";
--};
--
- &rtc {
- 	system-power-controller;
- 	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
--- 
-2.17.1
+-Saravana
