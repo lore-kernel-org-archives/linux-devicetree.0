@@ -1,98 +1,115 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: fsl_sai: Update Tx/Rx channel enable mask" to the asoc tree
-Date: Wed,  7 Aug 2019 14:30:46 +0100 (BST)
-Message-ID: <20190807133047.05EA42742B9E@ypsilon.sirena.org.uk>
-References: <20190806151214.6783-3-daniel.baluta@nxp.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 5/5] serial: lantiq: Add support for Lightning Mountain
+ SoC
+Date: Wed, 7 Aug 2019 16:31:23 +0300
+Message-ID: <20190807133123.GZ30120@smile.fi.intel.com>
+References: <cover.1565160764.git.rahul.tanwar@linux.intel.com>
+ <a947355d6cf0ab71205e81779e1549f42f3f945a.1565160764.git.rahul.tanwar@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806151214.6783-3-daniel.baluta@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <a947355d6cf0ab71205e81779e1549f42f3f945a.1565160764.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: alsa-devel@alsa-project.org, angus@akkea.ca, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com, linux-kernel@vger.kernel.org, l.stach@pengutronix.deMark Brown <broonie@kernel.org>, mihai.serban@gmail.com, nicoleotsuka@gmail.comNicolin Chen <nicoleotsuka@gmail.com>, robh@kernel.org, shengjiu.wang@nxp.com, timur@kernel.org, tiwai@suse.com
+To: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jslaby@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Wed, Aug 07, 2019 at 05:21:35PM +0800, Rahul Tanwar wrote:
+> This patch adds IRQ & ISR support in the driver for Lightning Mountain SoC.
 
-   ASoC: fsl_sai: Update Tx/Rx channel enable mask
+> +#define ASC_IRNCR_MASK		0x7
 
-has been applied to the asoc tree at
+GENMASK() ?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+> +static irqreturn_t lqasc_irq(int irq, void *p)
+> +{
+> +	unsigned long flags;
+> +	u32 stat;
+> +	struct uart_port *port = p;
+> +	struct ltq_uart_port *ltq_port = to_ltq_uart_port(port);
+> +
+> +	spin_lock_irqsave(&ltq_port->lock, flags);
+> +	stat = readl(port->membase + LTQ_ASC_IRNCR);
+> +	if (!(stat & ASC_IRNCR_MASK)) {
+> +		spin_unlock_irqrestore(&ltq_port->lock, flags);
+> +		return IRQ_NONE;
+> +	}
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> +	spin_unlock_irqrestore(&ltq_port->lock, flags);
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Are you sure the below does not need a serialization?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+If it's not the case, you may unlock the lock immediately after readl().
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> +
+> +	if (stat & ASC_IRNCR_TIR)
+> +		lqasc_tx_int(irq, p);
+> +
+> +	if (stat & ASC_IRNCR_RIR)
+> +		lqasc_rx_int(irq, p);
+> +
+> +	if (stat & ASC_IRNCR_EIR)
+> +		lqasc_err_int(irq, p);
+> +
+> +	return IRQ_HANDLED;
+> +}
 
-Thanks,
-Mark
+> +static int fetch_irq_intel(struct platform_device *pdev,
+> +			   struct ltq_uart_port *ltq_port)
+> +{
+> +	struct uart_port *port = &ltq_port->port;
+> +	int ret;
+> +
+> +	ret = of_irq_get(pdev->dev.of_node, 0);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"failed to fetch IRQ for serial port\n");
 
->From b84f50b0fcb497a62068926fca793d2d213c7dbd Mon Sep 17 00:00:00 2001
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Date: Tue, 6 Aug 2019 18:12:11 +0300
-Subject: [PATCH] ASoC: fsl_sai: Update Tx/Rx channel enable mask
+> +		return -ENODEV;
 
-Tx channel enable (TCE) / Rx channel enable (RCE) bits
-enable corresponding data channel for Tx/Rx operation.
+	return ret;
 
-Because SAI supports up the 8 channels TCE/RCE occupy
-up the 8 bits inside TCR3/RCR3 registers we need to extend
-the mask to reflect this.
+> +	}
+> +	ltq_port->common_irq = ret;
+> +	port->irq = ret;
+> +
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/20190806151214.6783-3-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/fsl/fsl_sai.c | 6 ++++--
- sound/soc/fsl/fsl_sai.h | 1 +
- 2 files changed, 5 insertions(+), 2 deletions(-)
+> +	return ret;
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index e4221f2a5ee3..f2698c94c9fe 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -599,7 +599,8 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	int ret;
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE,
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-+			   FSL_SAI_CR3_TRCE_MASK,
- 			   FSL_SAI_CR3_TRCE);
- 
- 	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
-@@ -614,7 +615,8 @@ static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
- 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 
--	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx), FSL_SAI_CR3_TRCE, 0);
-+	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx),
-+			   FSL_SAI_CR3_TRCE_MASK, 0);
- }
- 
- static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
-diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
-index 4bb478041d67..20c5b9b1e8bc 100644
---- a/sound/soc/fsl/fsl_sai.h
-+++ b/sound/soc/fsl/fsl_sai.h
-@@ -110,6 +110,7 @@
- 
- /* SAI Transmit and Receive Configuration 3 Register */
- #define FSL_SAI_CR3_TRCE	BIT(16)
-+#define FSL_SAI_CR3_TRCE_MASK	GENMASK(23, 16)
- #define FSL_SAI_CR3_WDFL(x)	(x)
- #define FSL_SAI_CR3_WDFL_MASK	0x1f
- 
+Same as per patch 3, i.e.
+
+	return 0;
+
+> +}
+
+> +static int request_irq_intel(struct uart_port *port)
+> +{
+> +	struct ltq_uart_port *ltq_port = to_ltq_uart_port(port);
+> +	int retval;
+> +
+> +	retval = request_irq(ltq_port->common_irq, lqasc_irq, 0,
+> +			     "asc_irq", port);
+
+> +	if (retval) {
+> +		dev_err(port->dev, "failed to request asc_irq\n");
+> +		return retval;
+> +	}
+> +
+> +	return 0;
+
+	if (retval)
+		dev_err();
+
+	return retval;
+
+> +}
+
+> +
+> +
+
+One blank line is enough.
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
