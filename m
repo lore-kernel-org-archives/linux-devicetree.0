@@ -1,7 +1,7 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
-Subject: [RFC,v4,2/4] dts: arm64: mt8183: Add ISP Pass 1 nodes
-Date: Wed, 7 Aug 2019 20:48:01 +0800
-Message-ID: <20190807124803.29884-3-jungo.lin@mediatek.com>
+Subject: [RFC,v4,1/4] media: dt-bindings: mt8183: Added camera ISP Pass 1
+Date: Wed, 7 Aug 2019 20:48:00 +0800
+Message-ID: <20190807124803.29884-2-jungo.lin@mediatek.com>
 References: <Jungo Lin <jungo.lin@mediatek.com>
  <20190807124803.29884-1-jungo.lin@mediatek.com>
 Reply-To: Jungo Lin <jungo.lin@mediatek.com>
@@ -23,24 +23,66 @@ To: tfiga@chromium.org, hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.
 Cc: shik@chromium.org, devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, suleiman@chromium.org, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, robh@kernel.org, ryan.yu@mediatek.com, Jerry-ch.Chen@mediatek.com, frankie.chiu@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, ddavenport@chromium.org, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for Pass 1 unit of Mediatek's camera ISP system.
-Pass 1 unit embedded in Mediatek SoCs, works with the
-co-processor to process image signal from the image sensor
-and output RAW image data.
+This patch adds DT binding document for the Pass 1 (P1) unit
+in Mediatek's camera ISP system. The Pass 1 unit grabs the sensor
+data out from the sensor interface, applies ISP image effects
+from tuning data and outputs the image data or statistics data to DRAM.
 
 Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 31 ++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ .../bindings/media/mediatek,camisp.txt        | 73 +++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 111866d36862..1692466c62fc 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -487,6 +487,37 @@
- 			#clock-cells = <1>;
- 		};
- 
+diff --git a/Documentation/devicetree/bindings/media/mediatek,camisp.txt b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
+new file mode 100644
+index 000000000000..fa2713acceca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
+@@ -0,0 +1,73 @@
++* Mediatek Image Signal Processor Pass 1 (ISP P1)
++
++The Pass 1 unit of Mediatek's camera ISP system grabs the sensor data out
++from the sensor interface, applies ISP effects from tuning data and outputs
++the image data and statistics data to DRAM. Furthermore, Pass 1 unit has
++the ability to output two different resolutions frames at the same time to
++increase the performance of the camera application.
++
++Required properties:
++- compatible: Must be "mediatek,mt8183-camisp" for MT8183.
++- reg: Physical base address of the camera function block register and
++  length of memory mapped region. Must contain an entry for each entry
++  in reg-names.
++- reg-names: Must include the following entries:
++  "cam_sys": Camera base function block
++  "cam_uni": Camera UNI function block
++  "cam_a": Camera ISP P1 hardware unit A
++  "cam_b": Camera ISP P1 hardware unit B
++  "cam_c": Camera ISP P1 hardware unit C
++- interrupts: Must contain an entry for each entry in interrupt-names.
++- interrupt-names : Must include the following entries:
++  "cam_uni": Camera UNI interrupt
++  "cam_a": Camera unit A interrupt
++  "cam_b": Camera unit B interrupt
++  "cam_c": Camera unit C interrupt
++- iommus: Shall point to the respective IOMMU block with master port
++  as argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
++  for details.
++- clocks: A list of phandle and clock specifier pairs as listed
++  in clock-names property, see
++  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
++- clock-names: Must be "camsys_cam_cgpdn" and "camsys_camtg_cgpdn".
++- mediatek,larb: Must contain the local arbiters in the current SoCs, see
++  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
++  for details.
++- power-domains: a phandle to the power domain, see
++  Documentation/devicetree/bindings/power/power_domain.txt for details.
++- mediatek,scp : The node of system control processor (SCP), see
++  Documentation/devicetree/bindings/remoteproc/mtk,scp.txt for details.
++
++Example:
++SoC specific DT entry:
++
 +		camisp: camisp@1a000000 {
 +			compatible = "mediatek,mt8183-camisp", "syscon";
 +			reg = <0 0x1a000000 0 0x1000>,
@@ -71,9 +113,5 @@ index 111866d36862..1692466c62fc 100644
 +			power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
 +			mediatek,scp = <&scp>;
 +		};
-+
- 		larb6: larb@1a001000 {
- 			compatible = "mediatek,mt8183-smi-larb";
- 			reg = <0 0x1a001000 0 0x1000>;
 -- 
 2.18.0
