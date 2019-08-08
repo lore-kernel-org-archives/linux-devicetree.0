@@ -1,8 +1,8 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-j721e-main: Fix gic-its node
+Subject: [PATCH 1/2] arm64: dts: ti: k3-am65-main: Fix gic-its node
  unit-address
-Date: Thu, 8 Aug 2019 09:39:29 -0500
-Message-ID: <20190808143929.11148-3-s-anna@ti.com>
+Date: Thu, 8 Aug 2019 09:39:28 -0500
+Message-ID: <20190808143929.11148-2-s-anna@ti.com>
 References: <20190808143929.11148-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -25,19 +25,19 @@ List-Id: devicetree@vger.kernel.org
 The gic-its node unit-address has an additional zero compared
 to the actual reg value. Fix it.
 
-Fixes: 2d87061e70de ("arm64: dts: ti: Add Support for J721E SoC")
+Fixes: ea47eed33a3f ("arm64: dts: ti: Add Support for AM654 SoC")
 Reported-by: Robert Tivy <rtivy@ti.com>
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 2 +-
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index a01308142f77..ea5c0fd42baf 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -31,7 +31,7 @@
- 		/* vcpumntirq: virtual CPU interface maintenance interrupt */
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index ca70ff73f171..38c75fb3f232 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -42,7 +42,7 @@
+ 		 */
  		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
  
 -		gic_its: gic-its@18200000 {
