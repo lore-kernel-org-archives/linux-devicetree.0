@@ -1,130 +1,109 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 15/15] dt-bindings: net: add bindings for ADIN PHY driver
-Date: Thu, 8 Aug 2019 17:03:20 -0600
-Message-ID: <CAL_Jsq+zH9cL5-8aDARzPar+xoD71WbESTckGjzaUTodu-+Trg@mail.gmail.com>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com> <20190808123026.17382-16-alexandru.ardelean@analog.com>
+From: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+Date: Fri, 9 Aug 2019 01:39:30 +0200
+Message-ID: <20190808233930.GM3600@piout.net>
+References: <20190412120730.473-1-megous@megous.com>
+ <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+ <20190806183045.edhm3qzpegscf2z7@core.my.home>
+ <20190807105502.GK3600@piout.net>
+ <20190808121237.g6twq2nh3sayu3vx@core.my.home>
+Reply-To: alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808123026.17382-16-alexandru.ardelean@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCKYNX7Y3IMBBNPFWLVAKGQEHEBEZAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190808121237.g6twq2nh3sayu3vx-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 6:31 AM Alexandru Ardelean
-<alexandru.ardelean@analog.com> wrote:
->
-> This change adds bindings for the Analog Devices ADIN PHY driver, detailing
-> all the properties implemented by the driver.
->
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../devicetree/bindings/net/adi,adin.yaml     | 76 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> new file mode 100644
-> index 000000000000..86177c8fe23a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/adi,adin.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices ADIN1200/ADIN1300 PHY
-> +
-> +maintainers:
-> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> +
-> +description: |
-> +  Bindings for Analog Devices Industrial Ethernet PHYs
-> +
-> +allOf:
-> +  - $ref: ethernet-phy.yaml#
-> +
-> +properties:
-> +  adi,rx-internal-delay-ps:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
-> +      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
-> +    enum: [ 1600, 1800, 2000, 2200, 2400 ]
-> +    default: 2000
+On 08/08/2019 14:12:37+0200, Ond=C5=99ej Jirman wrote:
+> On Wed, Aug 07, 2019 at 12:55:02PM +0200, Alexandre Belloni wrote:
+> > Hi,
+> >=20
+> > On 06/08/2019 20:30:45+0200, Ond=C5=99ej Jirman wrote:
+> > > Maybe whether XO or DCXO is used also matters if you want to do some =
+fine
+> > > tunning of DCXO (control register has pletny of options), but that's =
+probably
+> > > better done in u-boot. And there's still no need to read HOSC source =
+from DT.
+> > > The driver can just check compatible, and if it is H6 and OSC_CLK_SRC=
+_SEL is 1,
+> > > it can do it's DCXO tunning, or whatever. But neither OS nor bootload=
+er will
+> > > be using this info to gate/disable the osciallator.
+> > >=20
+> >=20
+> > It is actually useful to be able to tweak the crystal tuning at
+> > runtime to be able to reduce clock drift and compare with a reliable
+> > source (e.g. NTP).
+>=20
+> I don't think there's a Linux kernel API that you can use to achieve that=
+, so
+> that's a rather theoretical concern at the moment.
+>=20
 
-This doesn't actually do what you think. The '$ref' has to be under an
-'allOf' to work. It's an oddity of json-schema. However, anything with
-a standard unit suffix already has a schema to define the type, so you
-don't need to here and can just drop $ref.
+There is /sys/class/rtc/rtcX/offset which is even properly documented.
 
-> +
-> +  adi,tx-internal-delay-ps:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
-> +      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
-> +    enum: [ 1600, 1800, 2000, 2200, 2400 ]
-> +    default: 2000
-> +
-> +  adi,fifo-depth-bits:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      When operating in RMII mode, this option configures the FIFO depth.
-> +    enum: [ 4, 8, 12, 16, 20, 24 ]
-> +    default: 8
-> +
-> +  adi,disable-energy-detect:
-> +    description: |
-> +      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
-> +      is enabled if this property is unspecified)
-> +    type: boolean
-> +
-> +examples:
-> +  - |
-> +    ethernet {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        phy-mode = "rgmii-id";
-> +
-> +        ethernet-phy@0 {
-> +            reg = <0>;
-> +
-> +            adi,rx-internal-delay-ps = <1800>;
-> +            adi,tx-internal-delay-ps = <2200>;
-> +        };
-> +    };
-> +  - |
-> +    ethernet {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        phy-mode = "rmii";
-> +
-> +        ethernet-phy@1 {
-> +            reg = <1>;
-> +
-> +            adi,fifo-depth-bits = <16>;
-> +            adi,disable-energy-detect;
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e8aa8a667864..fd9ab61c2670 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -944,6 +944,7 @@ L:  netdev@vger.kernel.org
->  W:     http://ez.analog.com/community/linux-device-drivers
->  S:     Supported
->  F:     drivers/net/phy/adin.c
-> +F:     Documentation/devicetree/bindings/net/adi,adin.yaml
->
->  ANALOG DEVICES INC ADIS DRIVER LIBRARY
->  M:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-> --
-> 2.20.1
->
+The reason I asked is that some RTCs have both analog (changing the
+oscillator capacitance) and digital (changing the RTC counter) so I'm
+wondering whether this interface should be extended.
+
+> Also there are multiple clocks, that can drive the RTC, and you usually d=
+on't
+> drive it from 24MHz DCXO oscillator. The reason is that you'd have to dea=
+l with
+> the fact that the clock for RTC then becomes 24000000/750 (750 is fixed
+> divider), which is 32000.
+>=20
+> So if you want to get 32768Hz for RTC by tuning the DCXO, it would have t=
+o have
+> 24 576 000 Hz. And even if you could achieve that (doubtful), it would th=
+row off
+> timings in the rest of the system (say UART, USB, CPU, display ctl) in a =
+major way.
+>=20
+> I guess you can try tuning 24MHz oscillator so that it's closer to the
+> real-world 24MHz via NTP reference for other reasons. But it would be
+> complicated, and require precise interaction with other components, like =
+using
+> HW timers sourced from 24MHz HOSC clock, because you can't use CPU's time=
+rs,
+> because of inaccuracies introduced during DVFS, for example.
+>=20
+> regards,
+> 	o.
+>=20
+> > I'm curious, what kind of options does this RTC have?
+> >=20
+> > --=20
+> > Alexandre Belloni, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> >=20
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190808233930.GM3600%40piout.net.
