@@ -1,47 +1,93 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 00/15] net: phy: adin: add support for Analog
- Devices PHYs
-Date: Thu, 08 Aug 2019 11:24:31 -0700 (PDT)
-Message-ID: <20190808.112431.1358324079415442430.davem@davemloft.net>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
+ configure internal mapping
+Date: Thu, 8 Aug 2019 13:31:06 -0500
+Message-ID: <5a81f82a-2cba-7ec5-ced2-714516319d6a@lechnology.com>
+References: <20190731224149.11153-1-s-anna@ti.com>
+ <20190731224149.11153-5-s-anna@ti.com>
+ <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
+ <89abc27f-5d02-a8ce-df0e-b185c2a647cd@ti.com>
+ <1ac233f6-f3a3-6cec-9ad2-49e985fdfaca@lechnology.com>
+ <6c17875e-496d-1277-278f-239d3a9d8ca2@ti.com>
+ <124b03b8-f8e7-682b-8767-13a739329da2@lechnology.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+In-Reply-To: <124b03b8-f8e7-682b-8767-13a739329da2@lechnology.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandru.ardelean@analog.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch
+To: Suman Anna <s-anna@ti.com>, Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Date: Thu, 8 Aug 2019 15:30:11 +0300
+On 8/8/19 12:09 PM, David Lechner wrote:
+> 
+> Then we can provide a vendor resource hook in the remoteproc driver to handle
+> these resources:
+> 
+> static int ti_pru_rproc_handle_rsc(struct rproc *rproc, u32 rsc_type, void *rsc,
+>                     int offset, int avail)
+> {
+>      struct ti_pru_data *pru = rproc->priv;
+>      struct irq_fwspec fwspec;
+>      unsigned int virq;
+> 
+>      switch (rsc_type) {
+>      case TI_PRU_VENDOR_RESOURCE_IRQ:
+>      {
+>          struct ti_pru_vendor_resource_irq *rsc_irq = rsc;
+> 
+>          fwspec.fwnode = pru->intc_fwnode;
+>          fwspec.param[0] = le32_to_cpu(rsc_irq->event);
+>          fwspec.param[1] = le32_to_cpu(rsc_irq->channel);
+>          fwspec.param[2] = le32_to_cpu(rsc_irq->host);
+>          fwspec.param[3] = le32_to_cpu(rsc_irq->domain);
+>          fwspec.param_count = 4;
+>      }
+>          break;
+>      case TI_PRU_VENDOR_RESOURCE_IRQ2:
+>      {
+>          struct ti_pru_vendor_resource_irq2 *rsc_irq2 = rsc;
+> 
+>          fwspec.fwnode = pru->intc_fwnode;
+>          fwspec.param[0] = le32_to_cpu(rsc_irq2->event);
+>          fwspec.param[1] = le32_to_cpu(rsc_irq2->evt_sel);
+>          fwspec.param[2] = le32_to_cpu(rsc_irq2->channel);
+>          fwspec.param[3] = le32_to_cpu(rsc_irq2->host);
+>          fwspec.param[4] = le32_to_cpu(rsc_irq2->domain);
+>          fwspec.param_count = 5;
+>          break;
+>      }
+>      default:
+>          return RSC_IGNORED;
+>      }
+> 
+>      virq = irq_create_fwspec_mapping(&fwspec);
+>      if (!virq)
+>          return -EINVAL;
+> 
+>      /* TODO: save virq (and other metadata) for later use */
+> 
+>      return RSC_HANDLED;
+> }
+> 
+> static const struct rproc_ops ti_pru_rproc_ops = {
+>      .start = ti_pru_rproc_start,
+>      .stop = ti_pru_rproc_stop,
+>      .kick = ti_pru_rproc_kick,
+>      .da_to_va = ti_pru_rproc_da_to_va,
+>      .handle_rsc = ti_pru_rproc_handle_rsc,
+> };
+> 
 
-> This changeset adds support for Analog Devices Industrial Ethernet PHYs.
-> Particularly the PHYs this driver adds support for:
->  * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
->  * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
->    Ethernet PHY
-> 
-> The 2 chips are pin & register compatible with one another. The main
-> difference being that ADIN1200 doesn't operate in gigabit mode.
-> 
-> The chips can be operated by the Generic PHY driver as well via the
-> standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
-> kernel as well. This assumes that configuration of the PHY has been done
-> completely in HW, according to spec, i.e. no extra SW configuration
-> required.
-> 
-> This changeset also implements the ability to configure the chips via SW
-> registers.
-> 
-> Datasheets:
->   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
->   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+After re-reading some of the previous discussions, it sounds like
+we wouldn't want to always map every IRQ in the firmware resource
+table.
 
-I think, at a minimum, the c22 vs. c45 issues need to be discussed more
-and even if no code changes occur there is definitely some adjustments
-and clairifications that need to occur on this issue in the commit
-messages and/or documentation.
+In that case, we could implement the rproc_ops parse_fw callback
+instead. All firmware nodes could be collected (from both the
+firmware resource table and device tree) and the remoteproc driver
+could decide which ones need to be mapped and which ones don't.
+Then it could call irq_create_fwspec_mapping() only the nodes
+that need to be mapped based on the current application.
