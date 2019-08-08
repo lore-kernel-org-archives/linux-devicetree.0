@@ -1,7 +1,7 @@
 From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH RESEND v7 1/3] arm64: map FDT as RW for early_init_dt_scan()
-Date: Fri,  9 Aug 2019 01:38:03 +0800
-Message-ID: <20190808173803.1146-2-hsinyi@chromium.org>
+Subject: [PATCH RESEND v7 2/3] fdt: add support for rng-seed
+Date: Fri,  9 Aug 2019 01:38:05 +0800
+Message-ID: <20190808173803.1146-3-hsinyi@chromium.org>
 References: <20190808173803.1146-1-hsinyi@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,118 +12,52 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently in arm64, FDT is mapped to RO before it's passed to
-early_init_dt_scan(). However, there might be some codes
-(eg. commit "fdt: add support for rng-seed") that need to modify FDT
-during init. Map FDT to RO after early fixups are done.
+Introducing a chosen node, rng-seed, which is an entropy that can be
+passed to kernel called very early to increase initial device
+randomness. Bootloader should provide this entropy and the value is
+read from /chosen/rng-seed in DT.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/include/asm/mmu.h |  2 +-
- arch/arm64/kernel/kaslr.c    |  5 +----
- arch/arm64/kernel/setup.c    |  9 ++++++++-
- arch/arm64/mm/mmu.c          | 15 +--------------
- 4 files changed, 11 insertions(+), 20 deletions(-)
+ drivers/of/fdt.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-index fd6161336653..f217e3292919 100644
---- a/arch/arm64/include/asm/mmu.h
-+++ b/arch/arm64/include/asm/mmu.h
-@@ -126,7 +126,7 @@ extern void init_mem_pgprot(void);
- extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
- 			       unsigned long virt, phys_addr_t size,
- 			       pgprot_t prot, bool page_mappings_only);
--extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
-+extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
- extern void mark_linear_text_alias_ro(void);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 9cdf14b9aaab..640c817cf65b 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -24,6 +24,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/random.h>
  
- #define INIT_MM_CONTEXT(name)	\
-diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
-index 708051655ad9..d94a3e41cef9 100644
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -62,9 +62,6 @@ static __init const u8 *kaslr_get_cmdline(void *fdt)
- 	return default_cmdline;
- }
- 
--extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
--				       pgprot_t prot);
--
- /*
-  * This routine will be executed with the kernel mapped at its default virtual
-  * address, and if it returns successfully, the kernel will be remapped, and
-@@ -93,7 +90,7 @@ u64 __init kaslr_early_init(u64 dt_phys)
- 	 * attempt at mapping the FDT in setup_machine()
- 	 */
- 	early_fixmap_init();
--	fdt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
-+	fdt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
- 	if (!fdt)
- 		return 0;
- 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 9c4bad7d7131..25f5127210f8 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -170,9 +170,13 @@ static void __init smp_build_mpidr_hash(void)
- 
- static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -1044,6 +1045,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
  {
--	void *dt_virt = fixmap_remap_fdt(dt_phys);
-+	int size;
-+	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
- 	const char *name;
+ 	int l;
+ 	const char *p;
++	const void *rng_seed;
  
-+	if (dt_virt)
-+		memblock_reserve(dt_phys, size);
+ 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+ 
+@@ -1078,6 +1080,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	pr_debug("Command line is: %s\n", (char*)data);
+ 
++	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
++	if (rng_seed && l > 0) {
++		add_device_randomness(rng_seed, l);
 +
- 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
- 		pr_crit("\n"
- 			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
-@@ -184,6 +188,9 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
- 			cpu_relax();
- 	}
- 
-+	/* Early fixups are done, map the FDT as read-only now */
-+	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
++		/* try to clear seed so it won't be found. */
++		fdt_nop_property(initial_boot_params, node, "rng-seed");
++	}
 +
- 	name = of_flat_dt_get_machine_name();
- 	if (!name)
- 		return;
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 63d730c5b7a9..bed9db92be24 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -876,7 +876,7 @@ void __set_fixmap(enum fixed_addresses idx,
- 	}
+ 	/* break now */
+ 	return 1;
  }
- 
--void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
-+void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
- {
- 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
- 	int offset;
-@@ -929,19 +929,6 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
- 	return dt_virt;
- }
- 
--void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
--{
--	void *dt_virt;
--	int size;
--
--	dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
--	if (!dt_virt)
--		return NULL;
--
--	memblock_reserve(dt_phys, size);
--	return dt_virt;
--}
--
- int __init arch_ioremap_p4d_supported(void)
- {
- 	return 0;
 -- 
 2.20.1
