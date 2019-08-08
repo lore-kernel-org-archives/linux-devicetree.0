@@ -1,34 +1,33 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: riscv: fix the schema compatible string for
- the HiFive Unleashed board
-Date: Thu, 8 Aug 2019 16:52:56 -0600
-Message-ID: <CAL_JsqK5ms_65sux=Xi=beyu-vD9Qh-ziTpvpLz-qrtwOaLoEw@mail.gmail.com>
-References: <alpine.DEB.2.21.9999.1908081545190.15649@viisi.sifive.com>
+Subject: Re: [PATCH] dt-bindings: riscv: remove obsolete cpus.txt
+Date: Thu, 8 Aug 2019 16:56:25 -0600
+Message-ID: <CAL_Jsq+db+_u47yutb+H7dcMqP27PF9jjwinsB2qgi609t9zWQ@mail.gmail.com>
+References: <alpine.DEB.2.21.9999.1908081520100.6414@viisi.sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1908081545190.15649@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1908081520100.6414@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 4:46 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+On Thu, Aug 8, 2019 at 4:22 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
 >
 >
-> The YAML binding document for SiFive boards has an incorrect
-> compatible string for the HiFive Unleashed board.  Change it to match
-> the name of the board on the SiFive web site:
+> Remove the now-obsolete riscv/cpus.txt DT binding document, since we
+> are using YAML binding documentation instead.
 >
->    https://www.sifive.com/boards/hifive-unleashed
+> While doing so, transfer the explanatory text about 'harts' (with some
+> edits) into the YAML file, at Rob's request.
 >
-> which also matches the contents of the board DT data file:
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts#n13
->
+> Link: https://lore.kernel.org/linux-riscv/CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com/
 > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Rob Herring <robh@kernel.org>
 > ---
->  Documentation/devicetree/bindings/riscv/sifive.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/riscv/cpus.txt        | 162 ------------------
+>  .../devicetree/bindings/riscv/cpus.yaml       |  12 ++
+>  2 files changed, 12 insertions(+), 162 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/riscv/cpus.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
