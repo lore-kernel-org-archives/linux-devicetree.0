@@ -1,93 +1,123 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 04/15] net: phy: adin: add support for interrupts
-Date: Thu, 8 Aug 2019 15:30:15 +0300
-Message-ID: <20190808123026.17382-5-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 06/15] net: phy: adin: configure RGMII/RMII/MII modes on config
+Date: Thu, 8 Aug 2019 15:30:17 +0300
+Message-ID: <20190808123026.17382-7-alexandru.ardelean@analog.com>
 References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190808123026.17382-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This change adds support for enabling PHY interrupts that can be used by
-the PHY framework to get signal for link/speed/auto-negotiation changes.
+The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
+unconfigured) is RGMII.
+This change adds support for configuring these modes via the device
+registers.
+
+For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
+the default delay is 2 ns. This can be configurable and will be done in
+a subsequent change.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 45490fbe273b..69000fb16704 100644
+index a833e329be6f..9169d6c08383 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -14,11 +14,45 @@
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
+@@ -33,9 +33,86 @@
+ 	 ADIN1300_INT_HW_IRQ_EN)
+ #define ADIN1300_INT_STATUS_REG			0x0019
  
-+#define ADIN1300_INT_MASK_REG			0x0018
-+#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-+#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-+#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-+#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-+#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-+#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-+#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-+#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-+#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-+#define ADIN1300_INT_MASK_EN	\
-+	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
-+	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
-+	 ADIN1300_INT_HW_IRQ_EN)
-+#define ADIN1300_INT_STATUS_REG			0x0019
++#define ADIN1300_GE_RGMII_CFG_REG		0xff23
++#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
++#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
++#define   ADIN1300_GE_RGMII_EN			BIT(0)
++
++#define ADIN1300_GE_RMII_CFG_REG		0xff24
++#define   ADIN1300_GE_RMII_EN			BIT(0)
++
++static int adin_config_rgmii_mode(struct phy_device *phydev)
++{
++	int reg;
++
++	if (!phy_interface_is_rgmii(phydev))
++		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
++					  ADIN1300_GE_RGMII_CFG_REG,
++					  ADIN1300_GE_RGMII_EN);
++
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
++	if (reg < 0)
++		return reg;
++
++	reg |= ADIN1300_GE_RGMII_EN;
++
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
++		reg |= ADIN1300_GE_RGMII_RXID_EN;
++	} else {
++		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
++	}
++
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
++		reg |= ADIN1300_GE_RGMII_TXID_EN;
++	} else {
++		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
++	}
++
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
++			     ADIN1300_GE_RGMII_CFG_REG, reg);
++}
++
++static int adin_config_rmii_mode(struct phy_device *phydev)
++{
++	int reg;
++
++	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
++		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
++					  ADIN1300_GE_RMII_CFG_REG,
++					  ADIN1300_GE_RMII_EN);
++
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
++	if (reg < 0)
++		return reg;
++
++	reg |= ADIN1300_GE_RMII_EN;
++
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
++			     ADIN1300_GE_RMII_CFG_REG, reg);
++}
 +
  static int adin_config_init(struct phy_device *phydev)
  {
- 	return genphy_config_init(phydev);
+-	return genphy_config_init(phydev);
++	int rc;
++
++	rc = genphy_config_init(phydev);
++	if (rc < 0)
++		return rc;
++
++	rc = adin_config_rgmii_mode(phydev);
++	if (rc < 0)
++		return rc;
++
++	rc = adin_config_rmii_mode(phydev);
++	if (rc < 0)
++		return rc;
++
++	phydev_dbg(phydev, "PHY is using mode '%s'\n",
++		   phy_modes(phydev->interface));
++
++	return 0;
  }
  
-+static int adin_phy_ack_intr(struct phy_device *phydev)
-+{
-+	/* Clear pending interrupts */
-+	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
-+
-+	return rc < 0 ? rc : 0;
-+}
-+
-+static int adin_phy_config_intr(struct phy_device *phydev)
-+{
-+	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-+		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-+				    ADIN1300_INT_MASK_EN);
-+
-+	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-+			      ADIN1300_INT_MASK_EN);
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -27,6 +61,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
- 		.get_features	= genphy_read_abilities,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
-@@ -37,6 +73,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
- 		.get_features	= genphy_read_abilities,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
+ static int adin_phy_ack_intr(struct phy_device *phydev)
 -- 
 2.20.1
