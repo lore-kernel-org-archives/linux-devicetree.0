@@ -1,40 +1,108 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2 13/15] net: phy: adin: configure downshift on
- config_init
-Date: Thu, 8 Aug 2019 21:38:40 +0200
-Message-ID: <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
- <20190808123026.17382-14-alexandru.ardelean@analog.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/6] thermal: amlogic: Add thermal driver to support
+ G12 SoCs
+Date: Thu, 8 Aug 2019 21:47:35 +0200
+Message-ID: <CAFBinCBzDM7dpAKwf29UENvHgCEscyUCHdjQwb6Wkz4i2ShJbQ@mail.gmail.com>
+References: <20190731153529.30159-1-glaroque@baylibre.com> <20190731153529.30159-3-glaroque@baylibre.com>
+ <CAFBinCDGSJABnS1L1ULueyeXZaV38qrxEA0a12gB-uyRC_TvPQ@mail.gmail.com>
+ <14e14cd9-46bd-0d43-654c-6db64397f5c7@baylibre.com> <CAFBinCB3ZBPVEJKV2Rfh_w-zWrhoToYdoYE6Wox+JeB-YH+Khw@mail.gmail.com>
+ <7hblx0fjkw.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808123026.17382-14-alexandru.ardelean@analog.com>
-Content-Language: en-US
+In-Reply-To: <7hblx0fjkw.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, andrew@lunn.ch
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: guillaume La Roque <glaroque@baylibre.com>, daniel.lezcano@linaro.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08.08.2019 14:30, Alexandru Ardelean wrote:
-> Down-speed auto-negotiation may not always be enabled, in which case the
-> PHY won't down-shift to 100 or 10 during auto-negotiation.
-> 
-> This change enables downshift and configures the number of retries to
-> default 8 (maximum supported value).
-> 
-> The change has been adapted from the Marvell PHY driver.
-> 
-Instead of a fixed downshift setting (like in the Marvell driver) you
-may consider to implement the ethtool phy-tunable ETHTOOL_PHY_DOWNSHIFT.
-See the Aquantia PHY driver for an example.
-Then the user can configure whether he wants downshift and if yes after
-how many retries.
+Hi Kevin,
 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 39 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-[...]
+On Thu, Aug 8, 2019 at 4:59 AM Kevin Hilman <khilman@baylibre.com> wrote:
+>
+> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+>
+> > Hi Guillaume,
+> >
+> > On Mon, Aug 5, 2019 at 2:48 PM guillaume La Roque <glaroque@baylibre.com> wrote:
+> >>
+> >> Hi Martin,
+> >>
+> >> again thanks for your review.
+> > you're welcome - thank you for working on the driver :-)
+> >
+> > [...]
+> >> > The IP block has more functionality, which may be added to this driver
+> >> > in the future:
+> >> > - reading up to 16 stored temperature samples
+> >>
+> >> it's not working, you can verify it if you check the regmap define in the driver. in fact temp is only write in one register, it's confirmed by amlogic.
+> > I missed that - so please skip this part
+> >
+> > [...]
+> >> >> +config AMLOGIC_THERMAL
+> >> > we typically use "MESON" in the Kconfig symbols:
+> >> > $ grep -c AMLOGIC .config
+> >> > 1
+> >> > $ grep -c MESON .config
+> >> > 33
+> >> >
+> >> > I also wonder if we should add G12 or G12A so we don't conflict with
+> >> > upcoming thermal sensors with a different design (assuming that this
+> >> > will be a thing).
+> >> > for example we already have three different USB2 PHY drivers
+> >> >
+> >> > [...]
+> >>
+> >> i check with Neil and for new family it's better to use Amlogic instead of meson.
+> > can you please share the considerations behind this decision?
+> > if new drivers should use AMLOGIC_* Kconfig symbols instead of MESON_*
+> > then we all should know about it
+> >
+> >> i don't add G12 because we already know it's same sensors for SM1 SoC family [0].
+> > my idea behind this was to avoid conflicts in the future
+> > in case of the thermal driver we may be fine with using a generic name
+> > assuming that Amlogic will not switch to a new IP block in the next
+> > years
+> > I'm not saying you have to change the name - I'm bringing this up so
+> > you can decide for yourself based on examples from the past
+> >
+> > here are a few examples:
+> > - when Kevin upstreamed the MMC driver for GX he decided to use
+> > MMC_MESON_GX for the Kconfig symbol name. it turns out that this is
+> > smart because there are at least two other MMC controller IPs on the
+> > 32-bit SoCs. due to him including GX in the name the drivers are easy
+> > to differentiate (MMC_MESON_MX_SDIO and MMC_MESON_MX_SDHC being the
+> > other ones, while the latter is not upstream yet)
+> > - when Carlo upstreamed the eFuse driver he decided to use MESON_EFUSE
+> > for the Kconfig symbol name. I found out much later that the 32-bit
+> > SoCs use a different IP (or at least direct register access instead of
+> > going through Secure Monitor). the driver for the 32-bit SoCs now uses
+> > MESON_MX_EFUSE. if you don't know which driver applies where then it's
+> > easy to mix up MESON_EFUSE and MESON_MX_EFUSE
+> > - when Jerome upstreamed the ALSA driver for AXG (which is also used
+> > on G12A and G12B) he decided to use the SND_MESON_AXG_* prefix for the
+> > Kconfig symbol names. in my opinion this was a good choice because GXM
+> > and everything earlier (including the 32-bit SoCs) use a different
+> > audio IP block. we won't have a Kconfig symbol name clash when a
+> > driver for the "older" SoCs is upstreamed
+> > - (there are more examples, Meson8b USB PHY driver, Meson8b DWMAC
+> > glue, ... - just like there's many examples where the IP block is
+> > mostly compatible with older generations: SAR ADC, RNG, SPI, ...)
+>
+> While these are all good examples, you can see it can go both ways, so
+> there's really no way know up front what is the "right" way.  We only
+> know after the fact.  Unfortunately, we simply have no visibility into
+> future chips and where IP blocks may be shared or not (there are other
+> examples where vendors add a new version of an IP *and* keep the old
+> version. ;)
+>
+> Even having worked inside a (different) SoC vendor and having some
+> knowledge about what IPs are shared, it's difficult to get this right.
+right. The fact that it'll be the IP block in SM1 will be backwards
+compatible (or even the same) means that it has a longer life-span
+than some of the USB PHY IP.
+so I'm fine either way
 
-Heiner
+
+Martin
