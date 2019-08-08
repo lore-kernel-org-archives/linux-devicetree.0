@@ -1,49 +1,70 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/6] dt-bindings: arm: amlogic: add bindings for G12B based S922X SoC
-Date: Wed, 07 Aug 2019 20:02:33 -0700
-Message-ID: <7h7e7ofjg6.fsf@baylibre.com>
-References: <20190731124000.22072-1-narmstrong@baylibre.com> <20190731124000.22072-3-narmstrong@baylibre.com> <7hblx3gua3.fsf@baylibre.com> <CAL_JsqL_L2qHe334sB57hR_coRhawKiqXYjKAQDJt_DHfBamBQ@mail.gmail.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v9 2/6] usb:gadget Separated decoding functions from dwc3
+ driver.
+Date: Thu, 8 Aug 2019 03:07:54 +0000
+Message-ID: <BYAPR07MB470987E1FD7C2ED4ADC0516ADDD70@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1562324238-16655-1-git-send-email-pawell@cadence.com>
+ <1562324238-16655-3-git-send-email-pawell@cadence.com>
+ <87tvc0lngz.fsf@linux.intel.com>
+ <BYAPR07MB4709964C1D0AA2A851BF2F55DDF50@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <b66216dd-6fcf-2900-e67b-42fdb81af78a@ti.com> <877e7pnula.fsf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL_L2qHe334sB57hR_coRhawKiqXYjKAQDJt_DHfBamBQ@mail.gmail.com>
+In-Reply-To: <877e7pnula.fsf@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christian Hewitt <christianshewitt@gmail.com>
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, Roger Quadros <rogerq@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
+Hi,
 
-> On Mon, Aug 5, 2019 at 3:46 PM Kevin Hilman <khilman@baylibre.com> wrote:
->>
->> Neil Armstrong <narmstrong@baylibre.com> writes:
->>
->> > Add a specific compatible for the Amlogic G12B family based S922X SoC
->> > to differentiate with the A311D SoC from the same family.
->> >
->> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> > ---
->> >  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
->> >  1 file changed, 1 insertion(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
->> > index 325c6fd3566d..3c3bc806cd23 100644
->> > --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
->> > +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
->> > @@ -139,6 +139,7 @@ properties:
->> >          items:
->> >            - enum:
->> >                - hardkernel,odroid-n2
->> > +          - const: amlogic,s922x
->> >            - const: amlogic,g12b
->>
->> nit: in previous binding docs, we were trying to keep these sorted
->> alphabetically.  I'll reorder the new "s922x" after "g12b" when
->> applying.
 >
-> No, this is not documentation ordering. It's the order compatible
-> strings must be in.
+>Roger Quadros <rogerq@ti.com> writes:
+>>>>> +extern const char *usb_decode_ctrl(char *str, size_t size, __u8 bReq=
+uestType,
+>>>>> +				   __u8 bRequest, __u16 wValue, __u16 wIndex,
+>>>>> +				   __u16 wLength);
+>>>>> +
+>>>>
+>>>> where's the stub when !TRACING?
+>>>
+>>> Right, I will add
+>>> #ifdef	CONFIG_TRACING
+>>> 	.....
+>>> #endif
+>>
+>> Can usb_decode_ctrl() be used even when CONFIG_TRACING is not set?
+>> If yes then above #ifdefe is not sufficient.
+>>
+>> You might need to do something like
+>>
+>> #if defined(CONFIG_TRACING)
+>>
+>> extern const char *usb_decode_ctrl(..)
+>>
+>> #else
+>>
+>> static inline const char *usb_decode_ctrl(..) {
+>> 	return NULL;
+>> }
+>>
+>> #endif
+>
+>This is what I mean. They shouldn't be used outside of TRACING, but it's
+>far safer to have the stubs.
 
-Ah, thanks for clarifying,
+usb-common-$(CONFIG_TRACING)      +=3D debug.o
+has been added in Makefile so  we don't want to use this if CONFIG_TRACING =
+is not set.
 
-Kevin
+I assume that with this approach this part is correct.
+
+Thanks
+Pawell
+
+>
+>--
+>balbi
