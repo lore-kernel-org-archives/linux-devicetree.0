@@ -1,192 +1,148 @@
-From: Morten Borup Petersen <morten_bp@live.dk>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Date: Thu, 8 Aug 2019 10:31:26 +0000
-Message-ID: <VI1PR0601MB2111B7BEEC4930AA68FDAA1E8FD70@VI1PR0601MB2111.eurprd06.prod.outlook.com>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <20190802105938.GG23424@e107155-lin>
- <998A97B0-D9D3-4F01-B5D4-56F875D38FC8@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
+ PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+Date: Thu, 8 Aug 2019 11:58:21 +0100
+Message-ID: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-4-jonnyc@amazon.com>
+ <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
+ <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <998A97B0-D9D3-4F01-B5D4-56F875D38FC8@arm.com>
-Content-Language: en-US
-Content-ID: <96129D670C7F0049A07FB7F87C2314DD@eurprd06.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tushar Khandelwal <Tushar.Khandelwal@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, nd <nd@arm.com>, Morten Petersen <Morten.Petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+To: "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDgvNy8xOSAxOjE3IFBNLCBUdXNoYXIgS2hhbmRlbHdhbCB3cm90ZToNCj4gDQo+IA0K
-PiDvu79PbiAwMi8wOC8yMDE5LCAxMTo1OSwgIlN1ZGVlcCBIb2xsYSIgPHN1ZGVlcC5ob2xsYUBh
-cm0uY29tPiB3cm90ZToNCj4gDQo+ICAgICBPbiBTdW4sIEp1bCAyMSwgMjAxOSBhdCAwNDo1ODow
-NFBNIC0wNTAwLCBKYXNzaSBCcmFyIHdyb3RlOg0KPiAgICAgPiBPbiBXZWQsIEp1bCAxNywgMjAx
-OSBhdCAyOjI2IFBNIFR1c2hhciBLaGFuZGVsd2FsDQo+ICAgICA+IDx0dXNoYXIua2hhbmRlbHdh
-bEBhcm0uY29tPiB3cm90ZToNCj4gICAgID4NCj4gICAgID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLG1odXYyLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybSxtaHV2Mi50eHQNCj4gICAg
-ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiAgICAgPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4u
-M2EwNTU5MzQxNGJjDQo+ICAgICA+ID4gLS0tIC9kZXYvbnVsbA0KPiAgICAgPiA+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybSxtaHV2Mi50eHQNCj4g
-ICAgID4gPiBAQCAtMCwwICsxLDEwOCBAQA0KPiAgICAgPiA+ICtBcm0gTUhVdjIgTWFpbGJveCBE
-cml2ZXINCj4gICAgID4gPiArPT09PT09PT09PT09PT09PT09PT09PT09DQo+ICAgICA+ID4gKw0K
-PiAgICAgPiA+ICtUaGUgQXJtIE1lc3NhZ2UtSGFuZGxpbmctVW5pdCAoTUhVKSBWZXJzaW9uIDIg
-aXMgYSBtYWlsYm94IGNvbnRyb2xsZXIgdGhhdCBoYXMNCj4gICAgID4gPiArYmV0d2VlbiAxIGFu
-ZCAxMjQgY2hhbm5lbCB3aW5kb3dzIHRvIHByb3ZpZGUgdW5pZGlyZWN0aW9uYWwgY29tbXVuaWNh
-dGlvbiB3aXRoDQo+ICAgICA+ID4gK3JlbW90ZSBwcm9jZXNzb3IocykuDQo+ICAgICA+ID4gKw0K
-PiAgICAgPiA+ICtHaXZlbiB0aGUgdW5pZGlyZWN0aW9uYWwgbmF0dXJlIG9mIHRoZSBkZXZpY2Us
-IGFuIE1IVXYyIG1haWxib3ggbWF5IG9ubHkgYmUNCj4gICAgID4gPiArd3JpdHRlbiB0byBvciBy
-ZWFkIGZyb20uIElmIGEgcGFpciBvZiBNSFUgZGV2aWNlcyBpcyBpbXBsZW1lbnRlZCBiZXR3ZWVu
-IHR3bw0KPiAgICAgPiA+ICtwcm9jZXNzaW5nIGVsZW1lbnRzIHRvIHByb3ZpZGUgYmlkaXJlY3Rp
-b25hbCBjb21tdW5pY2F0aW9uLCB0aGVzZSBtdXN0IGJlDQo+ICAgICA+ID4gK3NwZWNpZmllZCBh
-cyB0d28gc2VwYXJhdGUgbWFpbGJveGVzLg0KPiAgICAgPiA+ICsNCj4gICAgID4gPiArQSBkZXZp
-Y2UgdHJlZSBub2RlIGZvciBhbiBBcm0gTUhVdjIgZGV2aWNlIG11c3Qgc3BlY2lmeSBlaXRoZXIg
-YSByZWNlaXZlciBmcmFtZQ0KPiAgICAgPiA+ICtvciBhIHNlbmRlciBmcmFtZSwgaW5kaWNhdGlu
-ZyB3aGljaCBlbmQgb2YgdGhlIHVuaWRpcmVjdGlvbmFsIE1IVSBkZXZpY2Ugd2hpY2gNCj4gICAg
-ID4gPiArdGhlIGRldmljZSBub2RlIGVudHJ5IGRlc2NyaWJlcy4NCj4gICAgID4gPiArDQo+ICAg
-ICA+ID4gK0FuIE1IVSBkZXZpY2UgbXVzdCBiZSBzcGVjaWZpZWQgd2l0aCBhIHRyYW5zcG9ydCBw
-cm90b2NvbC4gVGhlIHRyYW5zcG9ydA0KPiAgICAgPiA+ICtwcm90b2NvbCBvZiBhbiBNSFUgZGV2
-aWNlIGRldGVybWluZXMgdGhlIG1ldGhvZCBvZiBkYXRhIHRyYW5zbWlzc2lvbiBhcyB3ZWxsIGFz
-DQo+ICAgICA+ID4gK3RoZSBudW1iZXIgb2YgcHJvdmlkZWQgbWFpbGJveGVzLg0KPiAgICAgPiA+
-ICtGb2xsb3dpbmcgYXJlIHRoZSBwb3NzaWJsZSB0cmFuc3BvcnQgcHJvdG9jb2wgdHlwZXM6DQo+
-ICAgICA+ID4gKy0gU2luZ2xlLXdvcmQ6IEFuIE1IVSBkZXZpY2UgaW1wbGVtZW50cyBhcyBtYW55
-IG1haWxib3hlcyBhcyBpdA0KPiAgICAgPiA+ICsgICAgICAgICAgICAgICBwcm92aWRlcyBjaGFu
-bmVsIHdpbmRvd3MuIERhdGEgaXMgdHJhbnNtaXR0ZWQgdGhyb3VnaA0KPiAgICAgPiA+ICsgICAg
-ICAgICAgICAgICB0aGUgTUhVIHJlZ2lzdGVycy4NCj4gICAgID4gPiArLSBNdWx0aS13b3JkOiAg
-QW4gTUhVIGRldmljZSBpbXBsZW1lbnRzIGEgc2luZ2xlIG1haWxib3guIEFsbCBjaGFubmVsIHdp
-bmRvd3MNCj4gICAgID4gPiArICAgICAgICAgICAgICAgd2lsbCBiZSB1c2VkIGR1cmluZyB0cmFu
-c21pc3Npb24uIERhdGEgaXMgdHJhbnNtaXR0ZWQgdGhyb3VnaA0KPiAgICAgPiA+ICsgICAgICAg
-ICAgICAgICB0aGUgTUhVIHJlZ2lzdGVycy4NCj4gICAgID4gPiArLSBEb29yYmVsbDogICAgQW4g
-TUhVIGRldmljZSBpbXBsZW1lbnRzIGFzIG1hbnkgbWFpbGJveGVzIGFzIHRoZXJlIGFyZSBmbGFn
-DQo+ICAgICA+ID4gKyAgICAgICAgICAgICAgIGJpdHMgYXZhaWxhYmxlIGluIGl0cyBjaGFubmVs
-IHdpbmRvd3MuIE9wdGlvbmFsbHksIGRhdGEgbWF5DQo+ICAgICA+ID4gKyAgICAgICAgICAgICAg
-IGJlIHRyYW5zbWl0dGVkIHRocm91Z2ggYSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiwgd2hlcmVpbiB0
-aGUgTUhVDQo+ICAgICA+ID4gKyAgICAgICAgICAgICAgIGlzIHVzZWQgc3RyaWN0bHkgYXMgYW4g
-aW50ZXJydXB0IGdlbmVyYXRpb24gbWVjaGFuaXNtLg0KPiAgICAgPiA+ICsNCj4gICAgID4gPiAr
-TWFpbGJveCBEZXZpY2UgTm9kZToNCj4gICAgID4gPiArPT09PT09PT09PT09PT09PT09PT0NCj4g
-ICAgID4gPiArDQo+ICAgICA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAgICA+ID4gKy0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAgICA+ID4gKy0gY29tcGF0aWJsZTogIFNoYWxsIGJlICJh
-cm0sbWh1djIiICYgImFybSxwcmltZWNlbGwiDQo+ICAgICA+ID4gKy0gcmVnOiAgICAgICAgIENv
-bnRhaW5zIHRoZSBtYWlsYm94IHJlZ2lzdGVyIGFkZHJlc3MgcmFuZ2UgKGJhc2UNCj4gICAgID4g
-PiArICAgICAgICAgICAgICAgYWRkcmVzcyBhbmQgbGVuZ3RoKQ0KPiAgICAgPiA+ICstICNtYm94
-LWNlbGxzICBTaGFsbCBiZSAxIC0gdGhlIGluZGV4IG9mIHRoZSBjaGFubmVsIG5lZWRlZC4NCj4g
-ICAgID4gPiArLSBtaHUtZnJhbWUgICAgRnJhbWUgdHlwZSBvZiB0aGUgZGV2aWNlLg0KPiAgICAg
-PiA+ICsgICAgICAgICAgICAgICBTaGFsbCBiZSBlaXRoZXIgInNlbmRlciIgb3IgInJlY2VpdmVy
-Ig0KPiAgICAgPiA+ICstIG1odS1wcm90b2NvbCBUcmFuc3BvcnQgcHJvdG9jb2wgb2YgdGhlIGRl
-dmljZS4gU2hhbGwgYmUgb25lIG9mIHRoZQ0KPiAgICAgPiA+ICsgICAgICAgICAgICAgICBmb2xs
-b3dpbmc6ICJzaW5nbGUtd29yZCIsICJtdWx0aS13b3JkIiwgImRvb3JiZWxsIg0KPiAgICAgPiA+
-ICsNCj4gICAgID4gPiArUmVxdWlyZWQgcHJvcGVydGllcyAocmVjZWl2ZXIgZnJhbWUpOg0KPiAg
-ICAgPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAgICA+ID4g
-Ky0gaW50ZXJydXB0czogIENvbnRhaW5zIHRoZSBpbnRlcnJ1cHQgaW5mb3JtYXRpb24gY29ycmVz
-cG9uZGluZyB0byB0aGUNCj4gICAgID4gPiArICAgICAgICAgICAgICAgY29tYmluZWQgaW50ZXJy
-dXB0IG9mIHRoZSByZWNlaXZlciBmcmFtZQ0KPiAgICAgPiA+ICsNCj4gICAgID4gPiArRXhhbXBs
-ZToNCj4gICAgID4gPiArLS0tLS0tLS0NCj4gICAgID4gPiArDQo+ICAgICA+ID4gKyAgICAgICBt
-Ym94X213X3R4OiBtaHVAMTAwMDAwMDAgew0KPiAgICAgPiA+ICsgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gImFybSxtaHV2MiIsImFybSxwcmltZWNlbGwiOw0KPiAgICAgPiA+ICsgICAgICAg
-ICAgICAgICByZWcgPSA8MHgxMDAwMDAwMCAweDEwMDA+Ow0KPiAgICAgPiA+ICsgICAgICAgICAg
-ICAgICBjbG9ja3MgPSA8JnJlZmNsazEwMG1oej47DQo+ICAgICA+ID4gKyAgICAgICAgICAgICAg
-IGNsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgI21i
-b3gtY2VsbHMgPSA8MT47DQo+ICAgICA+ID4gKyAgICAgICAgICAgICAgIG1odS1wcm90b2NvbCA9
-ICJtdWx0aS13b3JkIjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgbWh1LWZyYW1lID0gInNl
-bmRlciI7DQo+ICAgICA+ID4gKyAgICAgICB9Ow0KPiAgICAgPiA+ICsNCj4gICAgID4gPiArICAg
-ICAgIG1ib3hfc3dfdHg6IG1odUAxMDAwMDAwMCB7DQo+ICAgICA+ID4gKyAgICAgICAgICAgICAg
-IGNvbXBhdGlibGUgPSAiYXJtLG1odXYyIiwiYXJtLHByaW1lY2VsbCI7DQo+ICAgICA+ID4gKyAg
-ICAgICAgICAgICAgIHJlZyA9IDwweDExMDAwMDAwIDB4MTAwMD47DQo+ICAgICA+ID4gKyAgICAg
-ICAgICAgICAgIGNsb2NrcyA9IDwmcmVmY2xrMTAwbWh6PjsNCj4gICAgID4gPiArICAgICAgICAg
-ICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPiAgICAgPiA+ICsgICAgICAgICAgICAg
-ICAjbWJveC1jZWxscyA9IDwxPjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgbWh1LXByb3Rv
-Y29sID0gInNpbmdsZS13b3JkIjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgbWh1LWZyYW1l
-ID0gInNlbmRlciI7DQo+ICAgICA+ID4gKyAgICAgICB9Ow0KPiAgICAgPiA+ICsNCj4gICAgID4g
-PiArICAgICAgIG1ib3hfZGJfcng6IG1odUAxMDAwMDAwMCB7DQo+ICAgICA+ID4gKyAgICAgICAg
-ICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLG1odXYyIiwiYXJtLHByaW1lY2VsbCI7DQo+ICAgICA+
-ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDEyMDAwMDAwIDB4MTAwMD47DQo+ICAgICA+ID4g
-KyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmcmVmY2xrMTAwbWh6PjsNCj4gICAgID4gPiArICAg
-ICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPiAgICAgPiA+ICsgICAgICAg
-ICAgICAgICAjbWJveC1jZWxscyA9IDwxPjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgaW50
-ZXJydXB0cyA9IDwwIDQ1IDQ+Ow0KPiAgICAgPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHQt
-bmFtZXMgPSAibWh1X3J4IjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgbWh1LXByb3RvY29s
-ID0gImRvb3JiZWxsIjsNCj4gICAgID4gPiArICAgICAgICAgICAgICAgbWh1LWZyYW1lID0gInJl
-Y2VpdmVyIjsNCj4gICAgID4gPiArICAgICAgIH07DQo+ICAgICA+ID4gKw0KPiAgICAgPiA+ICsg
-ICAgICAgbWh1X2NsaWVudDogc2NiQDJlMDAwMDAwIHsNCj4gICAgID4gPiArICAgICAgIGNvbXBh
-dGlibGUgPSAiZnVqaXRzdSxtYjg2czcwLXNjYi0xLjAiOw0KPiAgICAgPiA+ICsgICAgICAgcmVn
-ID0gPDAgMHgyZTAwMDAwMCAweDQwMDA+Ow0KPiAgICAgPiA+ICsgICAgICAgbWJveGVzID0NCj4g
-ICAgID4gPiArICAgICAgICAgICAgICAgLy8gRm9yIG11bHRpLXdvcmQgZnJhbWVzLCBjbGllbnQg
-bWF5IG9ubHkgaW5zdGFudGlhdGUgYSBzaW5nbGUNCj4gICAgID4gPiArICAgICAgICAgICAgICAg
-Ly8gbWFpbGJveCBmb3IgYSBtYWlsYm94IGNvbnRyb2xsZXINCj4gICAgID4gPiArICAgICAgICAg
-ICAgICAgPCZtYm94X213X3R4IDA+LA0KPiAgICAgPiA+ICsNCj4gICAgID4gPiArICAgICAgICAg
-ICAgICAgLy8gRm9yIHNpbmdsZS13b3JkIGZyYW1lcywgY2xpZW50IG1heSBpbnN0YW50aWF0ZSBh
-cyBtYW55DQo+ICAgICA+ID4gKyAgICAgICAgICAgICAgIC8vIG1haWxib3hlcyBhcyB0aGVyZSBh
-cmUgY2hhbm5lbCB3aW5kb3dzIGluIHRoZSBNSFUNCj4gICAgID4gPiArICAgICAgICAgICAgICAg
-IDwmbWJveF9zd190eCAwPiwNCj4gICAgID4gPiArICAgICAgICAgICAgICAgIDwmbWJveF9zd190
-eCAxPiwNCj4gICAgID4gPiArICAgICAgICAgICAgICAgIDwmbWJveF9zd190eCAyPiwNCj4gICAg
-ID4gPiArICAgICAgICAgICAgICAgIDwmbWJveF9zd190eCAzPiwNCj4gICAgID4gPiArDQo+ICAg
-ICA+ID4gKyAgICAgICAgICAgICAgIC8vIEZvciBkb29yYmVsbCBmcmFtZXMsIGNsaWVudCBtYXkg
-aW5zdGFudGlhdGUgYXMgbWFueSBtYWlsYm94ZXMNCj4gICAgID4gPiArICAgICAgICAgICAgICAg
-Ly8gYXMgdGhlcmUgYXJlIGJpdHMgYXZhaWxhYmxlIGluIHRoZSBjb21iaW5lZCBudW1iZXIgb2Yg
-Y2hhbm5lbA0KPiAgICAgPiA+ICsgICAgICAgICAgICAgICAvLyB3aW5kb3dzICgoY2hhbm5lbCB3
-aW5kb3dzICogMzIpIG1haWxib3hlcykNCj4gICAgID4gPiArICAgICAgICAgICAgICAgIDxtYm94
-X2RiX3J4IDA+LA0KPiAgICAgPiA+ICsgICAgICAgICAgICAgICAgPG1ib3hfZGJfcnggMT4sDQo+
-ICAgICA+ID4gKyAgICAgICAgICAgICAgICAuLi4NCj4gICAgID4gPiArICAgICAgICAgICAgICAg
-IDxtYm94X2RiX3J4IDE3PjsNCj4gICAgID4gPiArICAgICAgIH07DQo+ICAgICA+DQo+ICAgICA+
-IElmIHRoZSBtaHV2MiBpbnN0YW5jZSBpbXBsZW1lbnRzLCBzYXksIDMgY2hhbm5lbCB3aW5kb3dz
-IGJldHdlZW4NCj4gICAgID4gc2VuZGVyIChsaW51eCkgYW5kIHJlY2VpdmVyIChmaXJtd2FyZSks
-IGFuZCBMaW51eCBydW5zIHR3byBwcm90b2NvbHMNCj4gICAgID4gZWFjaCByZXF1aXJpbmcgMSBh
-bmQgMi13b3JkIHNpemVkIG1lc3NhZ2VzIHJlc3BlY3RpdmVseS4gVGhlIGhhcmR3YXJlDQo+ICAg
-ICA+IHN1cHBvcnRzIHRoYXQgYnkgYXNzaWduaW5nIHdpbmRvd3MgWzBdIGFuZCBbMSwyXSB0byBl
-YWNoIHByb3RvY29sLg0KPiAgICAgPiBIb3dldmVyLCBJIGRvbid0IHRoaW5rIHRoZSBkcml2ZXIg
-Y2FuIHN1cHBvcnQgdGhhdC4gT3IgZG9lcyBpdD8NCj4gICAgID4NCj4gDQo+ICAgICBGV0lXLCB0
-aGUgSVAgaXMgZGVzaWduZWQgdG8gY292ZXIgd2lkZSByYW5nZSBvZiB1c2VjYXNlIGZyb20gSW9U
-IHRvIHNlcnZlcnMNCj4gICAgIHdpdGggdmFyaWFibGUgd2luZG93IGxlbmd0aC4gSSBkb24ndCBz
-ZWUgdGhlIG5lZWQgdG8gY29tcGxpY2F0ZSB0aGUgZHJpdmVyDQo+ICAgICBzdXBwb3J0aW5nIG1p
-eC1uLW1hdGNoIGF0IHRoZSBjb3N0IG9mIGxhdGVuY3kuIEVhY2ggcGxhdGZvcm0gY2hvb3NlIG9u
-ZQ0KPiAgICAgdHJhbnNwb3J0IHByb3RvY29sIGZvciBhbGwgaXQncyB1c2UuDQo+IA0KPiBUaGUg
-ZHJpdmVyIGRlc2lnbiBpcyB0byBhZGRyZXNzIHRoZSBtb3N0IHByb2JhYmxlIHNjZW5hcmlvcyBh
-bmQgbm90IGFsbC4NCj4gU2luZ2xlLXdvcmQgOiBDbGllbnQgZ2V0cyBvbmUgMzItYml0IHdpbmRv
-dw0KPiBEb29yYmVsbCA6IENsaWVudCBnZXRzIDMyIGRhdGEgcG9pbnRlcnMgKGFybV9tZXNzYWdl
-KQ0KPiBNdWx0aS13b3JkOiBDbGllbnQgZ2V0cyBhbGwgY2hhbm5lbHMgYXZhaWxhYmxlIGluIHRo
-ZSBwbGF0Zm9ybS4NCj4gDQo+IC0tVHVzaGFyDQo+DQoNClRvIGVsYWJvcmF0ZSBmb3IgYmV0dGVy
-IHVuZGVyc3RhbmRpbmc7DQphcm1fbWVzc2FnZSBpcyB1c2VkIHdoZW4gYSBtYWlsYm94IGNsaWVu
-dCBpcyB0byB0cmFuc21pdCBkYXRhIHRocm91Z2ggYW4NCk1IVXYyIG1haWxib3ggKGllLiBpbi1i
-YW5kIHRyYW5zbWlzc2lvbiksIHdoZXJlaW4gdGhlIE1IVXYyIGlzIGluIGENCnNpbmdsZS13b3Jk
-IG9yIG11bHRpLXdvcmQgcHJvdG9jb2wgbW9kZS4NCmFybV9tZXNzYWdlIGFsbG93cyBmb3IgYSBt
-YWlsYm94IGNsaWVudCB0byB0cmFuc21pdCBkYXRhIHdpdGggYXJiaXRyYXJ5DQpsZW5ndGgsIHdp
-dGhvdXQgaGF2aW5nIHRvIGtub3cgdGhlIHRlY2huaWNhbGl0aWVzIG9mIHVuZGVybHlpbmcNCnRy
-YW5zcG9ydCBwcm90b2NvbCwgbnVtYmVyIG9mIE1IVSBjaGFubmVscyBldGMuIEFzIHN1Y2gsIHRo
-ZSBtYWlsYm94DQpjbGllbnQgZHJpdmVyIGNvZGUgbWF5IHJlbWFpbiB1bmNoYW5nZWQsIGlmIHRo
-ZSB1bmRlcmx5aW5nIHRyYW5zcG9ydA0KcHJvdG9jb2wgaXMgY2hhbmdlZCBmcm9tIGllLiBzaW5n
-bGUtd29yZCB0byBtdWx0aS13b3JkLCBvciBpZiBtb3JlDQpjaGFubmVsLXdpbmRvd3MgYXJlIGFk
-ZGVkIHRvIGFuIE1IVXYyIGRldmljZSBpbiBtdWx0aS13b3JkIG1vZGUuDQpUcmFuc21pc3Npb24g
-b2YgZGF0YSBhcyB3ZWxsIGFzIG1heGltdW0gdXRpbGl6YXRpb24gb2YgdGhlIGF2YWlsYWJsZQ0K
-Y2hhbm5lbCB3aW5kb3dzIChpbiBtdWx0aS13b3JkIG1vZGUpIGlzIHNvbGVseSBqb2IgZm9yIHRo
-ZSBNSFV2MiBkcml2ZXIuDQoNCkdpdmVuIHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHVzaW5nIGFu
-IE1IVXYyIG1haWxib3ggaW4gc2luZ2xlLSBhbmQNCm11bHRpLXdvcmQgbW9kZSBjb21wYXJlZCB0
-byBkb29yYmVsbCBtb2RlLCBpdCBpcyBob3dldmVyIGV4cGVjdGVkIHRoYXQNCm1haWxib3ggY2xp
-ZW50IGRyaXZlciBjb2RlIG11c3QgYmUgY2hhbmdlZCBpZiBzd2l0Y2hpbmcgZnJvbSBzaW5nbGUt
-IG9yDQptdWx0aS13b3JkIHRvIGRvb3JiZWxsLg0KQXMgcGVyIHRoZSBNSFV2MiBzcGVjLCB3aGVu
-IGluIGRvb3JiZWxsIG1vZGUsIGl0IGlzIGV4cGVjdGVkIHRoYXQgdGhlDQpyZWNlaXZlciBhbmQg
-dHJhbnNtaXR0ZXIgaGFzIGRlY2lkZWQgYmVmb3JlaGFuZCBib3RoIHdoZXJlIGRhdGEgaXMNCnBs
-YWNlZCBpbiBzaGFyZWQgbWVtb3J5LCBhcyB3ZWxsIGFzIHRoZSBmb3JtYXQgb2YgdGhpcyBkYXRh
-LiBIZXJlIHdlIGRvDQpub3QgcmVxdWlyZSB0aGF0IGFybV9tZXNzYWdlIGlzIHVzZWQsIGdpdmVu
-IHRoYXQgYWxsIGRhdGEgaXMgdHJhbnNtaXR0ZWQNCm91dC1vZi1iYW5kLCBhbmQgdGhlIE1IVXYy
-IGlzIG9ubHkgdXNlZCBhcyBhbiBpbnRlcnJ1cHQgZ2VuZXJhdGluZw0KbWVjaGFuaXNtLg0KDQpU
-byBnaXZlIGFuIGV4YW1wbGUgb2YgaG93IGFybV9tZXNzYWdlIG1heSBiZSB1c2VkOw0KU2F5LCBh
-IGNsaWVudC1kcml2ZXIgcHJvdG9jb2wgaGFzIGJlZW4gd3JpdHRlbiBhcyBmb2xsb3dzOg0KDQo+
-IHN0cnVjdCB7DQo+ICAgICBpbnQgY21kOw0KPiAgICAgaW50WzRdIGFyZ3M7DQo+IH0gZm9vX3Q7
-DQoNCk5vdywgYSBjbGllbnQgZHJpdmVyIG1heSB0cmFuc21pdCB0aGlzIHRocm91Z2ggYSBtYWls
-Ym94IHdoaWNoIGhhcyBhbg0KTUhVdjIgYXMgdGhlIGNvbnRyb2xsZXIgLSB3ZSBkbyBub3QgbmVl
-ZCB0byBrbm93IHRoZSB1bmRlcmx5aW5nDQp0cmFuc3BvcnQgcHJvdG9jb2wsIGp1c3QgdGhhdCBp
-dCBoYXMgdG8gYmUgZWl0aGVyIHNpbmdsZS0gb3IgbXVsdGkgd29yZC4NCg0KPiAvLyBDcmVhdGUg
-dXNlci1zcGVjaWZpYyBwcm90b2NvbCBzdHJ1Y3QNCj4gZm9vX3QgZm9vOw0KPg0KPiAvKiBNb2Rp
-ZnkgZm9vIHdpdGggdGhlIGRhdGEgdG8gYmUgdHJhbnNtaXR0ZWQuLi4gKi8NCj4NCj4gLyogV3Jh
-cCBtZXNzYWdlIGludG8gYXJtX21lc3NhZ2UgZm9ybWF0LCBzbyB0aGUgTUhVdjIgZHJpdmVyIGtu
-b3dzIGhvdw0KPiBtdWNoIGRhdGEgdG8gc2VuZCovDQo+DQo+IGFybV9tZXNzYWdlIG1zZzsNCj4g
-bXNnLmRhdGEgPSAmZm9vOw0KPiBtc2cubGVuID0gc2l6ZW9mKGZvbyk7DQo+DQo+IC8qIFRyYW5z
-bWl0IHRoZSBhcm1fbWVzc2FnZSAqLw0KPiBtYm94X3NlbmRfbWVzc2FnZShtYm94LCAmbXNnKTsN
-Cj4NCg0KT24gdGhlIHJlY2VpdmVyIHNpZGUsIHRoZXJlIHNob3VsZCBiZSBzb21lIGFjY29tcGFu
-eWluZyBsb2dpYyBpbiB0aGUNCmNsaWVudCBkcml2ZXIgd2hpY2ggaXMgYXdhcmUgb2YgZm9vX3Qg
-YW5kIGZyb20gdGhpcyBtYXkgcmVjb25zdHJ1Y3QgdGhlDQpyZWNlaXZlZCBtZXNzYWdlLiBSZWNv
-bnN0cnVjdGlvbiBvZiBhIHJlY2VpdmVkIG1lc3NhZ2UgaXMgYSB0YXNrIGZvciB0aGUNCm1haWxi
-b3ggY2xpZW50IGRyaXZlci4NCg0KLSBNb3J0ZW4NCg==
+Side note, run:
+
+git log --oneline on drivers/pci/controller/dwc existing files and
+make sure commit subjects are in line with those.
+
+Eg PCI: dw: should be PCI: dwc:
+
+On Thu, Aug 08, 2019 at 09:30:05AM +0000, Chocron, Jonathan wrote:
+> On Wed, 2019-08-07 at 17:36 +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Jul 23, 2019 at 12:27:11PM +0300, Jonathan Chocron wrote:
+> > > This basically aligns the usage of PCI_PROBE_ONLY and
+> > > PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
+> > > pci_host_common_probe().
+> > > 
+> > > Now it will be possible to control via the devicetree whether to
+> > > just
+> > > probe the PCI bus (in cases where FW already configured it) or to
+> > > fully
+> > > configure it.
+> > > 
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > ---
+> > >  .../pci/controller/dwc/pcie-designware-host.c | 23
+> > > +++++++++++++++----
+> > >  1 file changed, 19 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index d2ca748e4c85..0a294d8aa21a 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  	if (!bridge)
+> > >  		return -ENOMEM;
+> > >  
+> > > +	of_pci_check_probe_only();
+> > > +
+> > >  	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
+> > >  					&bridge->windows, &pp-
+> > > >io_base);
+> > >  	if (ret)
+> > > @@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  
+> > >  	pp->root_bus_nr = pp->busn->start;
+> > >  
+> > > +	/* Do not reassign bus nums if probe only */
+> > > +	if (!pci_has_flag(PCI_PROBE_ONLY))
+> > > +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
+> > 
+> > This changes the default for bus reassignment on all DWC host (that
+> > are
+> > !PCI_PROBE_ONLY), we should drop this line, it can trigger
+> > regressions.
+> > 
+> Will be dropped as part of v4. There might also be a behavioral
+> difference below where I added the if (pci_has_flag(PCI_PROBE_ONLY)).
+> Is that still ok?
+
+That's true but I doubt any DWC host has a DT firmware with
+"linux,pci-probe-only" in it.
+
+It is trial and error I am afraid, please make sure all DWC
+maintainers are copied in.
+
+> As I pointed out in the cover letter, since PCI_PROBE_ONLY is a system
+> wide flag, does it make sense to call of_pci_check_probe_only() here,
+> in the context of a specific driver (including the existing invocation
+> in pci_host_common_probe()), as opposed to a platform/arch context?
+
+It is an ongoing discussion to define how we should handle
+PCI_PROBE_ONLY. Adding this code into DWC I do not think it
+would hurt but if we can postpone it for the next (v5.5) merge
+window after we debate this at LPC within the PCI microconference
+it would be great.
+
+Please sync with Benjamin as a first step, I trust he would ask
+you to do the right thing.
+
+> > If we still want to merge it as a separate change we must test it on
+> > all
+> > DWC host bridges to make sure it does not trigger any issues with
+> > current set-ups, that's not going to be easy though.
+> > 
+> Just out of curiosity, how are such exhaustive tests achieved when a
+> patch requires them?
+
+CC DWC host bridge maintainers and ask them to test it. I do not have
+the HW (and FW) required, I am sorry, that's the only option I can give
+you. -next coverage would help too but to a minor extent.
+
+Thanks,
+Lorenzo
+
+> 
+> > Lorenzo
+> > 
+> > > +
+> > >  	bridge->dev.parent = dev;
+> > >  	bridge->sysdata = pp;
+> > >  	bridge->busnr = pp->root_bus_nr;
+> > > @@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > >  	if (pp->ops->scan_bus)
+> > >  		pp->ops->scan_bus(pp);
+> > >  
+> > > -	pci_bus_size_bridges(pp->root_bus);
+> > > -	pci_bus_assign_resources(pp->root_bus);
+> > > +	/*
+> > > +	 * We insert PCI resources into the iomem_resource and
+> > > +	 * ioport_resource trees in either pci_bus_claim_resources()
+> > > +	 * or pci_bus_assign_resources().
+> > > +	 */
+> > > +	if (pci_has_flag(PCI_PROBE_ONLY)) {
+> > > +		pci_bus_claim_resources(pp->root_bus);
+> > > +	} else {
+> > > +		pci_bus_size_bridges(pp->root_bus);
+> > > +		pci_bus_assign_resources(pp->root_bus);
+> > >  
+> > > -	list_for_each_entry(child, &pp->root_bus->children, node)
+> > > -		pcie_bus_configure_settings(child);
+> > > +		list_for_each_entry(child, &pp->root_bus->children,
+> > > node)
+> > > +			pcie_bus_configure_settings(child);
+> > > +	}
+> > >  
+> > >  	pci_bus_add_devices(pp->root_bus);
+> > >  	return 0;
+> > > -- 
+> > > 2.17.1
+> > > 
