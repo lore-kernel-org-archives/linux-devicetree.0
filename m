@@ -1,11 +1,13 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 0/9] dt-bindings: first tentative of conversion to yaml format
-Date: Thu,  8 Aug 2019 10:51:30 +0200
-Message-ID: <20190808085139.21438-1-narmstrong@baylibre.com>
+Subject: [PATCH 2/9] dt-bindings: rng: amlogic,meson-rng: convert to yaml
+Date: Thu,  8 Aug 2019 10:51:32 +0200
+Message-ID: <20190808085139.21438-3-narmstrong@baylibre.com>
+References: <20190808085139.21438-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190808085139.21438-1-narmstrong@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,79 +18,91 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, jassisinghbrar@gmail.com, linux-spi@vger.kernel.org, linux-crypto@vger.kernel.org, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, kishon@ti.com, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is a first tentative to convert some of the simplest Amlogic
-dt-bindings to the yaml format.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic Random Number generator over to a YAML schemas.
 
-All have been tested using :
-$ make ARCH=arm64 dtbs_check
-
-Issues with the amlogic arm64 DTs has already been identified thanks
-to the validation scripts. The DT fixes will be pushed once these yaml
-bindings are acked.
-
-Changes since rfc v2:
-- Collected Rob's, Martin's, Philipp's and Guenter's tags
-- Removed mhu maxItems: 3 to leave only minItems
-- Fixed flash@0 in spifc example
-
-Changes since rfc v1:
-- Fixed bindings according to Rob's comments
-- Added commit log
-- renamed yaml files using amlogic prefix
-
-Neil Armstrong (9):
-  dt-bindings: mailbox: meson-mhu: convert to yaml
-  dt-bindings: rng: amlogic,meson-rng: convert to yaml
-  dt-bindings: spi: meson: convert to yaml
-  dt-bindings: reset: amlogic,meson-reset: convert to yaml
-  dt-bindings: arm: amlogic: amlogic,meson-gx-ao-secure: convert to yaml
-  dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-  dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to yaml
-  dt-bindings: serial: meson-uart: convert to yaml
-  dt-bindings: watchdog: meson-gxbb-wdt: convert to yaml
-
- .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 -------
- .../amlogic/amlogic,meson-gx-ao-secure.yaml   | 52 +++++++++++++
- .../mailbox/amlogic,meson-gxbb-mhu.yaml       | 52 +++++++++++++
- .../devicetree/bindings/mailbox/meson-mhu.txt | 34 ---------
- .../phy/amlogic,meson-g12a-usb2-phy.yaml      | 63 ++++++++++++++++
- .../phy/amlogic,meson-g12a-usb3-pcie-phy.yaml | 57 +++++++++++++++
- .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 ------
- .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 ------
- .../bindings/reset/amlogic,meson-reset.txt    | 19 -----
- .../bindings/reset/amlogic,meson-reset.yaml   | 37 ++++++++++
- .../bindings/rng/amlogic,meson-rng.txt        | 21 ------
- .../bindings/rng/amlogic,meson-rng.yaml       | 37 ++++++++++
- .../bindings/serial/amlogic,meson-uart.txt    | 38 ----------
- .../bindings/serial/amlogic,meson-uart.yaml   | 73 +++++++++++++++++++
- .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 67 +++++++++++++++++
- .../bindings/spi/amlogic,meson6-spifc.yaml    | 53 ++++++++++++++
- .../devicetree/bindings/spi/spi-meson.txt     | 55 --------------
- .../watchdog/amlogic,meson-gxbb-wdt.yaml      | 37 ++++++++++
- .../bindings/watchdog/meson-gxbb-wdt.txt      | 16 ----
- 19 files changed, 528 insertions(+), 255 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
- create mode 100644 Documentation/devicetree/bindings/mailbox/amlogic,meson-gxbb-mhu.yaml
- delete mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
- delete mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
- create mode 100644 Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/rng/amlogic,meson-rng.txt        | 21 -----------
+ .../bindings/rng/amlogic,meson-rng.yaml       | 37 +++++++++++++++++++
+ 2 files changed, 37 insertions(+), 21 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
  create mode 100644 Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
- create mode 100644 Documentation/devicetree/bindings/spi/amlogic,meson6-spifc.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-meson.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/amlogic,meson-gxbb-wdt.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/meson-gxbb-wdt.txt
 
+diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+deleted file mode 100644
+index 4d403645ac9b..000000000000
+--- a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-Amlogic Meson Random number generator
+-=====================================
+-
+-Required properties:
+-
+-- compatible : should be "amlogic,meson-rng"
+-- reg : Specifies base physical address and size of the registers.
+-
+-Optional properties:
+-
+-- clocks : phandle to the following named clocks
+-- clock-names: Name of core clock, must be "core"
+-
+-Example:
+-
+-rng {
+-	compatible = "amlogic,meson-rng";
+-	reg = <0x0 0xc8834000 0x0 0x4>;
+-	clocks = <&clkc CLKID_RNG0>;
+-	clock-names = "core";
+-};
+diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
+new file mode 100644
+index 000000000000..a9ff3cb35c5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/rng/amlogic,meson-rng.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson Random number generator
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson-rng
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: core
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    rng@c8834000 {
++          compatible = "amlogic,meson-rng";
++          reg = <0xc8834000 0x4>;
++    };
 -- 
 2.22.0
