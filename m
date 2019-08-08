@@ -1,8 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 5/9] dt-bindings: arm: amlogic: amlogic,
- meson-gx-ao-secure: convert to yaml
-Date: Thu,  8 Aug 2019 10:51:35 +0200
-Message-ID: <20190808085139.21438-6-narmstrong@baylibre.com>
+Subject: [PATCH 6/9] dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
+Date: Thu,  8 Aug 2019 10:51:36 +0200
+Message-ID: <20190808085139.21438-7-narmstrong@baylibre.com>
 References: <20190808085139.21438-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,112 +18,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic Always-On Secure Registers over to a YAML schemas.
+bindings for the Amlogic G12A USB2 PHY over to a YAML schemas.
+
+While the original phy bindings specifies phy-supply as required,
+the examples and implementations makes it optional, thus phy-supply
+is not in the required list of attributes.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ----------
- .../amlogic/amlogic,meson-gx-ao-secure.yaml   | 52 +++++++++++++++++++
- 2 files changed, 52 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+ .../phy/amlogic,meson-g12a-usb2-phy.yaml      | 63 +++++++++++++++++++
+ .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 -------
+ 2 files changed, 63 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-deleted file mode 100644
-index c67d9f48fb91..000000000000
---- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--Amlogic Meson Firmware registers Interface
--------------------------------------------
--
--The Meson SoCs have a register bank with status and data shared with the
--secure firmware.
--
--Required properties:
-- - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
--
--Properties should indentify components of this register interface :
--
--Meson GX SoC Information
--------------------------
--A firmware register encodes the SoC type, package and revision information on
--the Meson GX SoCs.
--If present, the following property should be added :
--
--Optional properties:
--  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
--
--Example
---------
--
--ao-secure@140 {
--	compatible = "amlogic,meson-gx-ao-secure", "syscon";
--	reg = <0x0 0x140 0x0 0x140>;
--	amlogic,has-chip-id;
--};
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
 new file mode 100644
-index 000000000000..853d7d2b56f5
+index 000000000000..51254b4e65dd
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
-@@ -0,0 +1,52 @@
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+@@ -0,0 +1,63 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/arm/amlogic/amlogic,meson-gx-ao-secure.yaml#"
++$id: "http://devicetree.org/schemas/phy/amlogic,meson-g12a-usb2-phy.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic Meson Firmware registers Interface
++title: Amlogic G12A USB2 PHY
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
 +
-+description: |
-+  The Meson SoCs have a register bank with status and data shared with the
-+  secure firmware.
-+
-+# We need a select here so we don't match all nodes with 'syscon'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: amlogic,meson-gx-ao-secure
-+  required:
-+    - compatible
-+
 +properties:
 +  compatible:
-+   items:
-+      - const: amlogic,meson-gx-ao-secure
-+      - const: syscon
++    enum:
++      - amlogic,meson-g12a-usb2-phy
 +
 +  reg:
 +    maxItems: 1
 +
-+  amlogic,has-chip-id:
-+    description: |
-+      A firmware register encodes the SoC type, package and revision
-+      information on the Meson GX SoCs. If present, the interface gives
-+      the current SoC version.
-+    type: boolean
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: xtal
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: phy
++
++  "#phy-cells":
++    const: 0
++
++  phy-supply:
++     maxItems: 1
++     description:
++       Phandle to a regulator that provides power to the PHY. This
++       regulator will be managed during the PHY power on/off sequence.
 +
 +required:
 +  - compatible
 +  - reg
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - "#phy-cells"
 +
 +examples:
 +  - |
-+    ao-secure@140 {
-+          compatible = "amlogic,meson-gx-ao-secure", "syscon";
-+          reg = <0x140 0x140>;
-+          amlogic,has-chip-id;
++    phy@36000 {
++          compatible = "amlogic,meson-g12a-usb2-phy";
++          reg = <0x36000 0x2000>;
++          clocks = <&xtal>;
++          clock-names = "xtal";
++          resets = <&phy_reset>;
++          reset-names = "phy";
++          #phy-cells = <0>;
 +    };
+diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+deleted file mode 100644
+index a6ebc3dea159..000000000000
+--- a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-* Amlogic G12A USB2 PHY binding
+-
+-Required properties:
+-- compatible:	Should be "amlogic,meson-g12a-usb2-phy"
+-- reg:		The base address and length of the registers
+-- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
+-- clocks:	a phandle to the clock of this PHY
+-- clock-names:	must be "xtal"
+-- resets:	a phandle to the reset line of this PHY
+-- reset-names:	must be "phy"
+-- phy-supply:	see phy-bindings.txt in this directory
+-
+-Example:
+-	usb2_phy0: phy@36000 {
+-		compatible = "amlogic,g12a-usb2-phy";
+-		reg = <0x0 0x36000 0x0 0x2000>;
+-		clocks = <&xtal>;
+-		clock-names = "xtal";
+-		resets = <&reset RESET_USB_PHY21>;
+-		reset-names = "phy";
+-		#phy-cells = <0>;
+-	};
 -- 
 2.22.0
