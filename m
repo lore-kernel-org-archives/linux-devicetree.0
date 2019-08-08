@@ -1,128 +1,45 @@
-Return-Path: <SRS0=ncc+=WE=pengutronix.de=ukl@kernel.org>
-Date: Thu, 8 Aug 2019 09:31:48 +0200
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RFC 6/7] pwm: rcar: Add gpio support to output duty zero
-Message-ID: <20190808073148.xx2ywr2myntcqry3@pengutronix.de>
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=vd8T=WE=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH RFC 6/7] pwm: rcar: Add gpio support to output duty zero
+Date: Thu, 8 Aug 2019 07:02:55 +0000
+Message-ID: 
+ <TYAPR01MB45447F9F1768D94E862DFDF0D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: 
+ <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <1562576868-8124-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <20190807070326.cgkbt4kpzhqvo5a3@pengutronix.de>
  <TYAPR01MB45445D854C1FDBB473A89559D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <CAMuHMdUQpTvwk=PxhwJGbW8izBXSzHw0sNvypzONPovR7sZutA@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdUQpTvwk=PxhwJGbW8izBXSzHw0sNvypzONPovR7sZutA@mail.gmail.com>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYAPR01MB45445D854C1FDBB473A89559D8D70@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: "geert+renesas@glider.be" <geert+renesas@glider.be>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
-
-On Thu, Aug 08, 2019 at 03:52:52AM +0000, Yoshihiro Shimoda wrote:
-> > From: Uwe Kleine-K�nig, Sent: Wednesday, August 7, 2019 4:03 PM
-> > On Mon, Jul 08, 2019 at 06:07:47PM +0900, Yoshihiro Shimoda wrote:
-> > > @@ -119,8 +121,11 @@ static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
-> > >  	ph = tmp & RCAR_PWMCNT_PH0_MASK;
-> > >
-> > >  	/* Avoid prohibited setting */
-> > > -	if (cyc == 0 || ph == 0)
-> > > +	if (cyc == 0)
-> > >  		return -EINVAL;
-> > > +	/* Try to use GPIO to output duty zero */
-> > > +	if (ph == 0)
-> > > +		return -EAGAIN;
-> > 
-> > If there is no gpio requesting cyc=0 should still yield an error.
-> 
-> I'm sorry, I cannot understand this.
-
-I meant that if getting the gpio failed but it's needed to yield the
-right level this should result in an error. I thought I removed that
-comment because this is taken care of further below.
-
-> > >  	rcar_pwm_write(rp, cyc | ph, RCAR_PWMCNT);
-> > >
-> > > @@ -157,6 +162,28 @@ static void rcar_pwm_disable(struct rcar_pwm_chip *rp)
-> > >  	rcar_pwm_update(rp, RCAR_PWMCR_EN0, 0, RCAR_PWMCR);
-> > >  }
-> > >
-> > > +static int rcar_pwm_gpiod_get(struct rcar_pwm_chip *rp)
-> > > +{
-> > > +	if (rp->gpio)
-> > > +		return 0;
-> > > +
-> > > +	rp->gpio = gpiod_get(rp->chip.dev, "renesas,duty-zero", GPIOD_OUT_LOW);
-> > > +	if (!IS_ERR(rp->gpio))
-> > > +		return 0;
-> > > +
-> > > +	rp->gpio = NULL;
-> > > +	return -EINVAL;
-> > 
-> > Does getting the gpio automatically switch the pinmuxing?
-> > 
-> > If yes, this is IMHO a really surprising mis-feature of the gpio
-> > subsystem. I'd prefer to "get" the gpio at probe time and only switch
-> > the pinmuxing in .apply(). This makes .apply() quicker, ensures that all
-> > resources necessary for pwm operation are available, handles
-> > -EPROBE_DEFER (and maybe other errors) correctly.
-> 
-> The current pinctrl subsystem only has .set_mux(). I checked the pinctrl subsystem
-> history and the commit 2243a87d90b42eb38bc281957df3e57c712b5e56 removed the ".disable()" ops.
-> So, IIUC, we cannot such a handling.
-
-You'd need to reactivate the pwm setting when changing from 0% to
-something bigger of course.
-
-But as I understand it "getting" the gpio already implies that it is
-muxed which is bad here. So it would be great if we could opt-out.
-Linus?
-
-The pwm-imx driver has a similar problem[1] where we already considered
-using a gpio. There auto-muxing would be in the way, too. (Maybe it
-isn't because it isn't implmented on i.MX?)
-
-> > Note you're introducing a bug here because switching to gpio doesn't
-> > ensure that the currently running period is completed.
-> 
-> Umm, the hardware doesn't have such a condition so that the driver cannot manage it.
-> So, I'll add this into the "Limitations" too.
-
-yes please.
-
-> > > +static void rcar_pwm_gpiod_put(struct rcar_pwm_chip *rp)
-> > > +{
-> > > +	if (!rp->gpio)
-> > > +		return;
-> > > +
-> > > +	gpiod_put(rp->gpio);
-> > > +	rp->gpio = NULL;
-> > > +}
-> > > +
-> > >  static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > >  			  struct pwm_state *state)
-> > >  {
-> > > @@ -171,6 +198,7 @@ static int rcar_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > >
-> > >  	if (!state->enabled) {
-> > >  		rcar_pwm_disable(rp);
-> > > +		rcar_pwm_gpiod_put(rp);
-> > 
-> > From the framework's POV disabling a PWM is quite similar to duty cycle
-> > 0. Assuming disabling the PWM completes the currently running period[1]
-> > it might be better and easier to disable instead of switching to gpio.
-> > (Further assuming that disable really yields the inactive level which is
-> > should and is another limitation if not.)
-> 
-> If we disable the hardware, the duty cycle is 100% unfortunately. So,
-> I think I should describe it as one of "Limitations".
-
-It seems you got the idea .. :-)
-
-Best regards
-Uwe
-
-[1] it goes to 0 on disable even if the polarity is inverted
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVGh1cnNk
+YXksIEF1Z3VzdCA4LCAyMDE5IDM6NDkgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4g
+T24gVGh1LCBBdWcgOCwgMjAxOSBhdCA1OjUzIEFNIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3No
+aWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gPiBGcm9tOiBVd2UgS2xl
+aW5lLUvDtm5pZywgU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgNywgMjAxOSA0OjAzIFBNDQo+ID4g
+PiBXaGlsZSBhdCBpdDogSWYgdGhlcmUgaXMgYSBwdWJsaWNseSBhdmFpbGFibGUgcmVmZXJlbmNl
+IG1hbnVhbCBhZGRpbmcgYSBsaW5lOg0KPiA+ID4NCj4gPiA+ICAgICAgIFJlZmVyZW5jZSBNYW51
+YWw6IGh0dHBzOi8vLi4uDQo+ID4gPg0KPiA+ID4gd291bGQgYmUgZ3JlYXQsIHRvby4NCj4gPg0K
+PiA+IFVuZm9ydHVuYXRlbHksIHRoZSBkb2N1bWVudCBpcyBub3QgcHVibGljLi4uDQo+IA0KPiBS
+Wi9HMSBoYXMgdGhlIHNhbWUgaGFyZHdhcmUgYmxvY2ssIHJpZ2h0Pw0KPiBJdHMgSGFyZHdhcmUg
+VXNlcidzIE1hbnVhbCBpcyBwdWJsaWNseSBhdmFpbGFibGUsIGUuZy4gZm9yIFJaL0cxTToNCj4g
+aHR0cHM6Ly93d3cucmVuZXNhcy5jb20vZXUvZW4vcHJvZHVjdHMvbWljcm9jb250cm9sbGVycy1t
+aWNyb3Byb2Nlc3NvcnMvcnovcnpnL3J6ZzFtLmh0bWwjZG9jdW1lbnRzDQoNCllvdSdyZSByaWdo
+dC4NCiMgU2luY2UgSSBjb3VsZCBnZXQgUlovRzIgc2VyaWVzIGhhcmR3YXJlIHVzZXIncyBtYW51
+YWwgZnJvbSBwdWJsaWMgd2Vic2l0ZSB5ZXN0ZXJkYXksDQojIEkgd2FzIHRoaW5raW5nIGFueSBt
+YW51YWxzIGFyZSBub3QgcHVibGljLi4uDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGlt
+b2RhDQoNCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
+IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0KPiBJbiBw
+ZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2Vs
+ZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0
+IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
