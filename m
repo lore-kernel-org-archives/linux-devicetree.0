@@ -1,55 +1,92 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of/platform: fix compilation warning of
- of_link_property()
-Date: Thu, 8 Aug 2019 09:09:52 -0700
-Message-ID: <a4c12db8-bac3-0093-1f3f-0bd325acb03a@gmail.com>
-References: <20190808141818.22724-1-anders.roxell@linaro.org>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Introduce soc sleep stats bindings for Qualcomm SoCs
+Date: Thu, 08 Aug 2019 09:20:04 -0700
+Message-ID: <5d4c4bb6.1c69fb81.db640.7518@mx.google.com>
+References: <20190808061228.16573-1-mkshah@codeaurora.org> <20190808061228.16573-2-mkshah@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808141818.22724-1-anders.roxell@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20190808061228.16573-2-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anders Roxell <anders.roxell@linaro.org>, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, mkshah@codeaurora.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/8/19 7:18 AM, Anders Roxell wrote:
-> GCC warns that a negative integer can be returned but the
-> of_link_property() function should return a boolean.
-> 
-> ../drivers/of/platform.c: In function ‘of_link_property’:
-> ../drivers/of/platform.c:650:18: warning: ?: using integer constants in boolean context [-Wint-in-bool-context]
->   return done ? 0 : -ENODEV;
-> 
-> Rework so function of_link_property() return an integer instead of a boolean.
-> 
-> Fixes: 690ff7881b26 ("of/platform: Add functional dependency link from DT bindings")
-> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Quoting Maulik Shah (2019-08-07 23:12:27)
+> Add device binding documentation for Qualcomm Technology Inc's (QTI)
+> SoC sleep stats driver. The driver is used for displaying SoC sleep
+> statistic maintained by Always On Processor or Resource Power Manager.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+
+Your SoB chain is odd. The author is Mahesh? Otherwise, use the
+Co-Developed-by tag.
+
 > ---
->  drivers/of/platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 21838226d68a..86fb8ab8c012 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -625,7 +625,7 @@ static const struct supplier_bindings bindings[] = {
->  	{ },
->  };
->  
-> -static bool of_link_property(struct device *dev, struct device_node *con_np,
-> +static int of_link_property(struct device *dev, struct device_node *con_np,
->  			     const char *prop)
->  {
->  	struct device_node *phandle;
-> 
+>  .../bindings/soc/qcom/soc-sleep-stats.txt     | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-=
+stats.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.t=
+xt b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
+> new file mode 100644
+> index 000000000000..ee40687ded34
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
+> @@ -0,0 +1,36 @@
+> +* SoC Sleep Stats
+> +
+> +Always On Processor/Resource Power Manager maintains statistics of the S=
+oC
+> +sleep modes involving lowering or powering down of the backbone rails - =
+Cx
 
-Hi Anders,
+What is a 'backbone' rail?
 
-Thanks for catching this.
+> +and Mx and the oscillator clock, XO.
 
-Another patch was submitted to fix this just before your patch.
+Drop the comma? XO is the oscillator clock.
 
--Frank
+> +
+> +Statistics includes SoC sleep mode type, number of times low power mode =
+were
+> +entered, time of last entry, time of last exit and accumulated sleep dur=
+ation.
+> +SoC Sleep Stats driver provides sysfs interface to display this informat=
+ion.
+
+Can this document be YAML? Then it can be validated.
+
+> +
+> +PROPERTIES
+> +
+> +- compatible:
+> +       Usage: required
+> +       Value type: <string>
+> +       Definition: Should be "qcom,rpmh-sleep-stats" or "qcom,rpm-sleep-=
+stats".
+> +
+> +- reg:
+> +       Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: The base address on the Always On Processor or Resour=
+ce Power
+> +                   Manager from where the stats are read.
+> +
+> +EXAMPLE 1:
+> +
+> +       rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
+> +               compatible =3D "qcom,rpmh-sleep-stats";
+> +               reg =3D <0 0xc3f0000 0 0x400>;
+
+Is this memory region in DDR? Or some specific IMEM location? I wonder
+if it would be better to just have a pointer from the RPM node to this
+memory region and then populate some stats if so.
+
+> +       };
+> +
