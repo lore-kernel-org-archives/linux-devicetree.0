@@ -1,22 +1,110 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 12/15] arm64: dts: msm8974: thermal: Add interrupt support
-Date: Thu, 8 Aug 2019 16:49:34 -0400
-Message-ID: <20190808204934.GB29281@onstation.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <ec8205566eb9c015ad51fbb88f0da7ca60b414fd.1564091601.git.amit.kucheria@linaro.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: 21871a99b3 ("of/platform: Pause/resume sync state during init
+ .."): WARNING: CPU: 0 PID: 1 at drivers/base/core.c:691 device_links_supplier_sync_state_resume
+Date: Thu, 8 Aug 2019 13:55:05 -0700
+Message-ID: <CAGETcx__STm5jSWRCFc3eZYVm4sW7P=HNjuGBa+Tj_YCc3o8Bg@mail.gmail.com>
+References: <5d4bce76.Bu8zZv8tcbDqokLR%lkp@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ec8205566eb9c015ad51fbb88f0da7ca60b414fd.1564091601.git.amit.kucheria@linaro.org>
+In-Reply-To: <5d4bce76.Bu8zZv8tcbDqokLR%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+To: kernel test robot <lkp@intel.com>
+Cc: LKP <lkp@01.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, philip.li@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 03:48:47AM +0530, Amit Kucheria wrote:
-> Register upper-lower interrupt for the tsens controller.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+On Thu, Aug 8, 2019 at 12:25 AM kernel test robot <lkp@intel.com> wrote:
+>
+> Greetings,
+>
+> 0day kernel testing robot got the below dmesg and the first bad commit is
+>
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/gregkh/driver-core.git driver-core-testing
+>
+> commit 21871a99b34c65c56a24193c277a4981529c306f
+> Author:     Saravana Kannan <saravanak@google.com>
+> AuthorDate: Wed Jul 31 15:17:18 2019 -0700
+> Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CommitDate: Thu Aug 1 16:04:14 2019 +0200
+>
+>     of/platform: Pause/resume sync state during init and of_platform_populate()
+>
+>     When all the top level devices are populated from DT during kernel
+>     init, the supplier devices could be added and probed before the
+>     consumer devices are added and linked to the suppliers. To avoid the
+>     sync_state() callback from being called prematurely, pause the
+>     sync_state() callbacks before populating the devices and resume them
+>     at late_initcall_sync().
+>
+>     Similarly, when children devices are populated after kernel init using
+>     of_platform_populate(), there could be supplier-consumer dependencies
+>     between the children devices that are populated. To avoid the same
+>     problem with sync_state() being called prematurely, pause and resume
+>     sync_state() callbacks across of_platform_populate().
+>
+>     Signed-off-by: Saravana Kannan <saravanak@google.com>
+>     Link: https://lore.kernel.org/r/20190731221721.187713-6-saravanak@google.com
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> 8f8184d6bf  driver core: Add sync_state driver/bus callback
+> 21871a99b3  of/platform: Pause/resume sync state during init and of_platform_populate()
+> 5adf578101  of/platform: Fix device_links_supplier_sync_state_resume() warning
+> 3880be629e  Add linux-next specific files for 20190807
+> +-------------------------------------------------------------------------+------------+------------+------------+---------------+
+> |                                                                         | 8f8184d6bf | 21871a99b3 | 5adf578101 | next-20190807 |
+> +-------------------------------------------------------------------------+------------+------------+------------+---------------+
+> | boot_successes                                                          | 27         | 0          | 0          | 0             |
+> | boot_failures                                                           | 2          | 11         | 11         | 11            |
+> | WARNING:at_mm/usercopy.c:#usercopy_warn                                 | 1          |            |            |               |
+> | RIP:usercopy_warn                                                       | 1          |            |            |               |
+> | invoked_oom-killer:gfp_mask=0x                                          | 1          |            |            |               |
+> | Mem-Info                                                                | 1          |            |            |               |
+> | WARNING:at_drivers/base/core.c:#device_links_supplier_sync_state_resume | 0          | 11         | 11         | 11            |
+> | RIP:device_links_supplier_sync_state_resume                             | 0          | 11         | 11         | 11            |
+> +-------------------------------------------------------------------------+------------+------------+------------+---------------+
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> [   26.905004] i2c i2c-1: Added multiplexed i2c bus 3
+> [   26.917068] ### dt-test ### FAIL of_unittest_overlay_high_level():2380 overlay_base_root not initialized
+> [   26.920311] ### dt-test ### end of unittest - 219 passed, 1 failed
+> [   26.922504] ------------[ cut here ]------------
+> [   26.924102] Unmatched sync_state pause/resume!
+> [   26.924192] WARNING: CPU: 0 PID: 1 at drivers/base/core.c:691 device_links_supplier_sync_state_resume+0x140/0x160
+> [   26.929493] Modules linked in:
+> [   26.930681] CPU: 0 PID: 1 Comm: swapper Tainted: G                T 5.3.0-rc1-00025-g21871a99b34c6 #1
+> [   26.933665] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> [   26.936451] RIP: 0010:device_links_supplier_sync_state_resume+0x140/0x160
+> [   26.938611] Code: 84 c0 49 8d 84 24 c8 00 00 00 0f 85 48 ff ff ff 49 8d 94 24 d0 00 00 00 48 89 55 d0 eb 86 48 c7 c7 c0 30 be 83 e8 10 c0 e5 fe <0f> 0b 48 c7 c7 80 33 c4 84 e8 12 19 d0 00 48 83 c4 10 5b 41 5c 41
+> [   26.944420] RSP: 0018:ffff88801a397da8 EFLAGS: 00010286
+> [   26.946213] RAX: 0000000000000022 RBX: b05332a62e1f2e76 RCX: 0000000000000000
+> [   26.948487] RDX: 0000000000000022 RSI: ffffffff81276c83 RDI: 0000000000000246
+> [   26.950858] RBP: ffff88801a397de0 R08: fffffbfff0aa192d R09: fffffbfff0aa192d
+> [   26.953192] R10: ffff88801a397df0 R11: 0000000000000001 R12: 0000000000000000
+> [   26.955411] R13: 00000000ffffffff R14: 1ffff11003472fc3 R15: ffff88801a397eb8
+> [   26.957678] FS:  0000000000000000(0000) GS:ffffffff846b3000(0000) knlGS:0000000000000000
+> [   26.960398] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   26.962374] CR2: 00007fb42acb9480 CR3: 000000000462a006 CR4: 00000000001606f0
+> [   26.964683] Call Trace:
+> [   26.965713]  of_platform_sync_state_init+0x17/0x3a
+> [   26.967381]  ? of_core_init+0x16a/0x16a
+> [   26.968769]  do_one_initcall+0x103/0x295
+> [   26.970179]  ? trace_event_raw_event_initcall_finish+0x150/0x150
+> [   26.972130]  ? down_write+0xbe/0x100
+> [   26.973467]  ? __down_killable+0x260/0x260
+> [   26.974933]  ? __kasan_check_write+0x1f/0x30
+> [   26.976433]  kernel_init_freeable+0x232/0x349
+> [   26.978003]  ? rest_init+0xd0/0xd0
+> [   26.979274]  kernel_init+0xe/0x120
+> [   26.980580]  ? rest_init+0xd0/0xd0
+> [   26.981870]  ret_from_fork+0x24/0x30
+> [   26.983168] ---[ end trace fa753e8363323d3d ]---
+> [   26.991111] Freeing unused decrypted memory: 2040K
 
-Tested-by: Brian Masney <masneyb@onstation.org>
+This looks like the same issue fixed by:
+https://lore.kernel.org/lkml/20190807020559.74458-1-saravanak@google.com/
+
+If anyone thinks otherwise, please let me know.
+
+-Saravana
