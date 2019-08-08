@@ -1,74 +1,26 @@
-Return-Path: <SRS0=LAFF=WC=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1562576868-8124-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CACRpkdZqTaA04bja16xh338JiwoSqFpH_2rV95FaF7YhawQzMg@mail.gmail.com> <TYAPR01MB4544031C6A027A3690FFFB77D8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB4544031C6A027A3690FFFB77D8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 6 Aug 2019 10:49:33 +0200
-Message-ID: <CAMuHMdUqDsMA_uZ+Sen15kgue8DoQee0vd4qmUXmFX+cRT11EA@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/7] pinctrl: sh-pfc: remove incomplete flag "cfg->type"
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190710134346.30239-4-gregory.clement@bootlin.com>
+References: <20190710134346.30239-1-gregory.clement@bootlin.com> <20190710134346.30239-4-gregory.clement@bootlin.com>
+Subject: Re: [PATCH v7 3/6] clk: mvebu: add CPU clock driver for Armada 7K/8K
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Thu, 08 Aug 2019 09:12:16 -0700
+Message-Id: <20190808161217.6280721743@mail.kernel.org>
+To: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+Quoting Gregory CLEMENT (2019-07-10 06:43:43)
+> The CPU frequency is managed at the AP level for the Armada 7K/8K. The
+> CPU frequency is modified by cluster: the CPUs of the same cluster have
+> the same frequency.
+>=20
+> This patch adds the clock driver that will be used by CPUFreq, it is
+> based on the work of Omri Itach <omrii@marvell.com>.
+>=20
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
 
-On Mon, Jul 29, 2019 at 7:16 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Linus Walleij, Sent: Monday, July 29, 2019 8:02 AM
-> >
-> > On Mon, Jul 8, 2019 at 11:08 AM Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> >
-> > > The old commit c58d9c1b26e3 ("sh-pfc: Implement generic pinconf
-> > > support") broke the cfg->type flag to PINMUX_TYPE_FUNCTION because
-> > > sh_pfc_pinconf_set() didn't call sh_pfc_reconfig_pin().
-> > > Now if we fix the cfg->type condition, it gets worse because:
-> > >  - Some drivers might be deferred so that .set_mux() will be called
-> > >    multiple times.
-> > >  - In such the case, the sh-pfc driver returns -EBUSY even if
-> > >    the group is the same, and then that driver fails to probe.
-> > >
-> > > Since the pinctrl subsystem already has such conditions according
-> > > to @set_mux and @gpio_request_enable, this patch just remove
-> > > the incomplete flag from sh-pfc/pinctrl.c.
-> > >
-> > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >
-> > This looks like it should have a Fixes: tag as well.
->
-> I got it. The Fixes tag should be:
->
-> Fixes: c58d9c1b26e3 ("sh-pfc: Implement generic pinconf support")
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> > Geert will decide what to do with this.
->
-> I got it.
->
-> > Can all the pinctrl patches be applied independently of the other
-> > changes so Geert can apply and send me those patches in his pull
-> > requests?
->
-> The pinctrl patches (1/7 through 3/7) can be applied on next-20190726
-> so I think Geert can apply these patches into his repo.
-
-Looks mostly OK to me (I have some comments on 3/7).
-I'll apply it to my local tree, so it will receive some testing on all
-boards I have.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Applied to clk-next
