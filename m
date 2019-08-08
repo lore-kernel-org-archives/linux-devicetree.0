@@ -1,105 +1,55 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: soundwire: add slave bindings
-Date: Thu, 8 Aug 2019 10:58:49 -0500
-Message-ID: <d346b2af-f285-4c53-b706-46a129ab7951@linux.intel.com>
-References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
- <20190808144504.24823-2-srinivas.kandagatla@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of/platform: fix compilation warning of
+ of_link_property()
+Date: Thu, 8 Aug 2019 09:09:52 -0700
+Message-ID: <a4c12db8-bac3-0093-1f3f-0bd325acb03a@gmail.com>
+References: <20190808141818.22724-1-anders.roxell@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808144504.24823-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20190808141818.22724-1-anders.roxell@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, vkoul@kernel.org, broonie@kernel.org
-Cc: bgoswami@codeaurora.org, plai@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Anders Roxell <anders.roxell@linaro.org>, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-> +++ b/Documentation/devicetree/bindings/soundwire/slave.txt
-> @@ -0,0 +1,46 @@
-> +SoundWire slave device bindings.
-> +
-> +SoundWire is a 2-pin multi-drop interface with data and clock line.
-> +It facilitates development of low cost, efficient, high performance systems.
-> +
-> +SoundWire slave devices:
-> +Every SoundWire controller node can contain zero or more child nodes
-> +representing slave devices on the bus. Every SoundWire slave device is
-> +uniquely determined by the enumeration address containing 5 fields:
-> +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
-> +for a device. Addition to below required properties, child nodes can
-> +have device specific bindings.
-
-In case the controller supports multiple links, what's the encoding then?
-in the MIPI DisCo spec there is a linkId field in the _ADR encoding that 
-helps identify which link the Slave device is connected to
-
-> +
-> +Required property for SoundWire child node if it is present:
-> +- compatible:	 "sdwVER,MFD,PID,CID". The textual representation of
-> +		  SoundWire Enumeration address comprising SoundWire
-> +		  Version, Manufacturer ID, Part ID and Class ID,
-> +		  shall be in lower-case hexadecimal with leading
-> +		  zeroes suppressed.
-> +		  Version number '0x10' represents SoundWire 1.0
-> +		  Version number '0x11' represents SoundWire 1.1
-> +		  ex: "sdw10,0217,2010,0"
-> +
-> +- sdw-instance-id: Should be ('Instance ID') from SoundWire
-> +		  Enumeration Address. Instance ID is for the cases
-> +		  where multiple Devices of the same type or Class
-> +		  are attached to the bus.
-
-so it is actually required if you have a single Slave device? Or is it 
-only required when you have more than 1 device of the same type?
-
-FWIW in the MIPI DisCo spec we kept the instanceID as part of the _ADR, 
-so it's implicitly mandatory (and ignored by the bus if there is only 
-one device of the same time)
-
-> +
-> +SoundWire example for Qualcomm's SoundWire controller:
-> +
-> +soundwire@c2d0000 {
-> +	compatible = "qcom,soundwire-v1.5.0"
-> +	reg = <0x0c2d0000 0x2000>;
-> +
-> +	spkr_left:wsa8810-left{
-> +		compatible = "sdw10,0217,2010,0";
-> +		sdw-instance-id = <1>;
-> +		...
-> +	};
-> +
-> +	spkr_right:wsa8810-right{
-> +		compatible = "sdw10,0217,2010,0";
-> +		sdw-instance-id = <2>;
-
-Isn't the MIPI encoding reported in the Dev_ID0..5 registers 0-based?
-
-> +		...
-> +	};
-> +};
+On 8/8/19 7:18 AM, Anders Roxell wrote:
+> GCC warns that a negative integer can be returned but the
+> of_link_property() function should return a boolean.
+> 
+> ../drivers/of/platform.c: In function ‘of_link_property’:
+> ../drivers/of/platform.c:650:18: warning: ?: using integer constants in boolean context [-Wint-in-bool-context]
+>   return done ? 0 : -ENODEV;
+> 
+> Rework so function of_link_property() return an integer instead of a boolean.
+> 
+> Fixes: 690ff7881b26 ("of/platform: Add functional dependency link from DT bindings")
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 21838226d68a..86fb8ab8c012 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -625,7 +625,7 @@ static const struct supplier_bindings bindings[] = {
+>  	{ },
+>  };
+>  
+> -static bool of_link_property(struct device *dev, struct device_node *con_np,
+> +static int of_link_property(struct device *dev, struct device_node *con_np,
+>  			     const char *prop)
+>  {
+>  	struct device_node *phandle;
 > 
 
-And now that I think of it, wouldn't it be simpler for everyone if we 
-aligned on that MIPI DisCo public spec? e.g. you'd have one property 
-with a 64-bit number that follows the MIPI spec. No special encoding 
-necessary for device tree cases, your DT blob would use this:
+Hi Anders,
 
-soundwire@c2d0000 {
-	compatible = "qcom,soundwire-v1.5.0"
-	reg = <0x0c2d0000 0x2000>;
+Thanks for catching this.
 
-	spkr_left:wsa8810-left{
-		compatible = "sdw0000100217201000"
-	}
+Another patch was submitted to fix this just before your patch.
 
-	spkr_right:wsa8810-right{
-		compatible = "sdw0000100217201100"
-	}
-}
-
-We could use parentheses if it makes people happier, but the information 
-from the MIPI DisCo spec can be used as is, and provide a means for spec 
-changes via reserved bits.
+-Frank
