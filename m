@@ -1,55 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-Date: Thu, 8 Aug 2019 19:55:22 +0100
-Message-ID: <20190808185522.GJ3795@sirena.co.uk>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
- <20190808131448.349161-3-tmaimon77@gmail.com>
- <20190808132740.GG3795@sirena.co.uk>
- <CAP6Zq1j7jHejdx9h-nxCJcVjtGx_3rHmay7R8nn11DLaE8Q4gA@mail.gmail.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities() to
+ get_features
+Date: Thu, 8 Aug 2019 21:32:57 +0200
+Message-ID: <eeda87c9-bdba-8ef7-6043-85a16bd2cfc2@gmail.com>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+ <20190808123026.17382-3-alexandru.ardelean@analog.com>
+ <20190808152403.GB27917@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP6Zq1j7jHejdx9h-nxCJcVjtGx_3rHmay7R8nn11DLaE8Q4gA@mail.gmail.com>
+In-Reply-To: <20190808152403.GB27917@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vignesh Raghavendra <vigneshr@ti.com>, bbrezillon@kernel.org, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andrew Lunn <andrew@lunn.ch>, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 08.08.2019 17:24, Andrew Lunn wrote:
+> On Thu, Aug 08, 2019 at 03:30:13PM +0300, Alexandru Ardelean wrote:
+>> The ADIN PHYs can operate with Clause 45, however they are not typical for
+>> how phylib considers Clause 45 PHYs.
+>>
+>> If the `features` field & the `get_features` hook are unspecified, and the
+>> device wants to operate via Clause 45, it would also try to read features
+>> via the `genphy_c45_pma_read_abilities()`, which will try to read PMA regs
+>> that are unsupported.
+>>
+>> Hooking the `genphy_read_abilities()` function to the `get_features` hook
+>> will ensure that this does not happen and the PHY features are read
+>> correctly regardless of Clause 22 or Clause 45 operation.
+> 
+> I think we need to stop and think about a PHY which supports both C22
+> and C45.
+> 
+> How does bus enumeration work? Is it discovered twice?  I've always
+> considered phydev->is_c45 means everything is c45, not that some
+> registers can be accessed via c45. But the driver is mixing c22 and
+> c45. Does the driver actually require c45? Are some features which are
+> only accessibly via C45? What does C45 actually bring us for this
+> device?
+> 
+genphy_c45_pma_read_abilities() is only called if phydev->is_c45 is set.
+And this flag means that the PHY complies with Clause 45 incl. all the
+standard devices like PMA. In the case here only some vendor-specific
+registers can be accessed via Clause 45 and therefore is_c45 shouldn't
+bet set. As a consequence this patch isn't needed.
 
---5me2qT3T17SWzdxI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Aug 08, 2019 at 06:37:06PM +0300, Tomer Maimon wrote:
-
-> for example in our driver we modify the access type (singe, dual or quad)
-> according the op->addr.buswidth
-> for example in the npcm_fiu_set_drd function.
-
->         regmap_update_bits(fiu->regmap, NPCM_FIU_DRD_CFG,
->                            NPCM_FIU_DRD_CFG_ACCTYPE,
->                            ilog2(op->addr.buswidth) <<
->                            NPCM_FIU_DRD_ACCTYPE_SHIFT);
-
-> we also modify it in the UMA R/W functions.
-
-Ah, it's only for the flash functions - that's fine.
-
---5me2qT3T17SWzdxI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1McBkACgkQJNaLcl1U
-h9CSyQf9HMQyWI7F+/mz/TefzbACHnpE0c8lwToPC8gs3NlHo8g0orLblfG3DsLm
-UEB893DEnNq2PyAZ3RalNBeet13paLEA0qBru8OSMUWpeNwDNxNPJnw0LKgWMfJd
-hR7ajSCzI8nNleQRxNko7depUDzpemRXDWxmIyeoBPOYzHxX3AWFoyuaz9aUo2Rl
-Unh0Hf1osxqIy1e/McvePEnPv0TT99Ymj8k6/8GnvioyP4EpahOXI8dSR2jI0EhD
-E00zLhgmAoNpkwrV/jtjy/U4bWl2oEXrySbQ9Ljy8b0iFVArSIEFILHO06iXOkXP
-gKzJeeqWsQ6fz//+fGxegx1F6fcTpg==
-=AZer
------END PGP SIGNATURE-----
-
---5me2qT3T17SWzdxI--
+>      Andrew
+> 
+Heiner
