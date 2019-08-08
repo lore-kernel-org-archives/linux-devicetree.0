@@ -1,54 +1,41 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/2] mmc: sdhci-of-at91: add quirk for broken HS200
-Date: Thu, 8 Aug 2019 17:23:00 +0200
-Message-ID: <CAPDyKFrUr8_VP1JLRk48zR8_p1Y62wKLBnS0iTgdhUSArwD49Q@mail.gmail.com>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities() to
+ get_features
+Date: Thu, 8 Aug 2019 17:24:03 +0200
+Message-ID: <20190808152403.GB27917@lunn.ch>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+ <20190808123026.17382-3-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+Content-Disposition: inline
+In-Reply-To: <20190808123026.17382-3-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen.Hristev@microchip.com
-Cc: Nicolas Ferre <Nicolas.Ferre@microchip.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Adrian Hunter <adrian.hunter@intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 10:35, <Eugen.Hristev@microchip.com> wrote:
->
-> From: Eugen Hristev <eugen.hristev@microchip.com>
->
-> HS200 is not implemented in the driver, but the controller claims it
-> through caps.
-> Remove it via quirk.
-> Without this quirk, the mmc core will try to enable hs200, which will fail,
-> and the eMMC initialization will fail.
->
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+On Thu, Aug 08, 2019 at 03:30:13PM +0300, Alexandru Ardelean wrote:
+> The ADIN PHYs can operate with Clause 45, however they are not typical for
+> how phylib considers Clause 45 PHYs.
+> 
+> If the `features` field & the `get_features` hook are unspecified, and the
+> device wants to operate via Clause 45, it would also try to read features
+> via the `genphy_c45_pma_read_abilities()`, which will try to read PMA regs
+> that are unsupported.
+> 
+> Hooking the `genphy_read_abilities()` function to the `get_features` hook
+> will ensure that this does not happen and the PHY features are read
+> correctly regardless of Clause 22 or Clause 45 operation.
 
-Should this be applied as a fix and possibly tagged for stable?
+I think we need to stop and think about a PHY which supports both C22
+and C45.
 
-In such case, do you have a specific commit that it fixes?
+How does bus enumeration work? Is it discovered twice?  I've always
+considered phydev->is_c45 means everything is c45, not that some
+registers can be accessed via c45. But the driver is mixing c22 and
+c45. Does the driver actually require c45? Are some features which are
+only accessibly via C45? What does C45 actually bring us for this
+device?
 
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/sdhci-of-at91.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-> index 57fe3b2..3a8c6d8 100644
-> --- a/drivers/mmc/host/sdhci-of-at91.c
-> +++ b/drivers/mmc/host/sdhci-of-at91.c
-> @@ -370,6 +370,9 @@ static int sdhci_at91_probe(struct platform_device *pdev)
->         pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
->         pm_runtime_use_autosuspend(&pdev->dev);
->
-> +       /* HS200 is broken at this moment */
-> +       host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
-> +
->         ret = sdhci_add_host(host);
->         if (ret)
->                 goto pm_runtime_disable;
-> --
-> 2.7.4
->
+     Andrew
