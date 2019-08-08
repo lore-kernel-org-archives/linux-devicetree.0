@@ -1,44 +1,24 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 13/15] net: phy: adin: configure downshift on
- config_init
-Date: Thu, 8 Aug 2019 22:39:32 +0200
-Message-ID: <20190808203932.GP27917@lunn.ch>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
- <20190808123026.17382-14-alexandru.ardelean@analog.com>
- <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 05/15] arm: dts: msm8974: thermal: Add thermal zones for
+ each sensor
+Date: Thu, 8 Aug 2019 16:49:03 -0400
+Message-ID: <20190808204903.GA29281@onstation.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
+ <9e2948528c789225bf8a6ef458b83a5350a7ea26.1564091601.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <420c8e15-3361-a722-4ad1-3c448b1d3bc1@gmail.com>
+In-Reply-To: <9e2948528c789225bf8a6ef458b83a5350a7ea26.1564091601.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 09:38:40PM +0200, Heiner Kallweit wrote:
-> On 08.08.2019 14:30, Alexandru Ardelean wrote:
-> > Down-speed auto-negotiation may not always be enabled, in which case the
-> > PHY won't down-shift to 100 or 10 during auto-negotiation.
-> > 
-> > This change enables downshift and configures the number of retries to
-> > default 8 (maximum supported value).
-> > 
-> > The change has been adapted from the Marvell PHY driver.
-> > 
-> Instead of a fixed downshift setting (like in the Marvell driver) you
-> may consider to implement the ethtool phy-tunable ETHTOOL_PHY_DOWNSHIFT.
+On Fri, Jul 26, 2019 at 03:48:40AM +0530, Amit Kucheria wrote:
+> msm8974 has 11 sensors connected to a single TSENS IP. Define a thermal
+> zone for each of those sensors to expose the temperature of each zone.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Hi Alexandru
-
-Upps, sorry, my bad.
-
-I looked at marvell_set_downshift(), and assumed it was connected to
-the phy-tunable. I have patches somewhere which does that. But they
-have not made it into mainline yet.
-
-> See the Aquantia PHY driver for an example.
-
-Yes, that does have all the tunable stuff.
-
-     Andrew
+Tested-by: Brian Masney <masneyb@onstation.org> # msm8974
