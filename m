@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 07/15] net: phy: adin: make RGMII internal delays configurable
-Date: Thu, 8 Aug 2019 15:30:18 +0300
-Message-ID: <20190808123026.17382-8-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 04/15] net: phy: adin: add support for interrupts
+Date: Thu, 8 Aug 2019 15:30:15 +0300
+Message-ID: <20190808123026.17382-5-alexandru.ardelean@analog.com>
 References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,141 +13,81 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The internal delays for the RGMII are configurable for both RX & TX. This
-change adds support for configuring them via device-tree (or ACPI).
+This change adds support for enabling PHY interrupts that can be used by
+the PHY framework to get signal for link/speed/auto-negotiation changes.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 82 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 9169d6c08383..62c1268e55f7 100644
+index 45490fbe273b..69000fb16704 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -5,11 +5,13 @@
-  * Copyright 2019 Analog Devices Inc.
-  */
- #include <linux/kernel.h>
-+#include <linux/bitfield.h>
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/mii.h>
- #include <linux/phy.h>
-+#include <linux/property.h>
- 
+@@ -14,11 +14,45 @@
  #define PHY_ID_ADIN1200				0x0283bc20
  #define PHY_ID_ADIN1300				0x0283bc30
-@@ -34,15 +36,83 @@
- #define ADIN1300_INT_STATUS_REG			0x0019
  
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
-+#define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
-+#define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-+		FIELD_PREP(ADIN1300_GE_RGMII_RX_MSK, x)
-+#define   ADIN1300_GE_RGMII_GTX_MSK		GENMASK(5, 3)
-+#define   ADIN1300_GE_RGMII_GTX_SEL(x)		\
-+		FIELD_PREP(ADIN1300_GE_RGMII_GTX_MSK, x)
- #define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
- #define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
- #define   ADIN1300_GE_RGMII_EN			BIT(0)
- 
-+/* RGMII internal delay settings for rx and tx for ADIN1300 */
-+#define ADIN1300_RGMII_1_60_NS			0x0001
-+#define ADIN1300_RGMII_1_80_NS			0x0002
-+#define	ADIN1300_RGMII_2_00_NS			0x0000
-+#define	ADIN1300_RGMII_2_20_NS			0x0006
-+#define	ADIN1300_RGMII_2_40_NS			0x0007
++#define ADIN1300_INT_MASK_REG			0x0018
++#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
++#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
++#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
++#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
++#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
++#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
++#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
++#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
++#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
++#define ADIN1300_INT_MASK_EN	\
++	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
++	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
++	 ADIN1300_INT_HW_IRQ_EN)
++#define ADIN1300_INT_STATUS_REG			0x0019
 +
- #define ADIN1300_GE_RMII_CFG_REG		0xff24
- #define   ADIN1300_GE_RMII_EN			BIT(0)
- 
-+/**
-+ * struct adin_cfg_reg_map - map a config value to aregister value
-+ * @cfg		value in device configuration
-+ * @reg		value in the register
-+ */
-+struct adin_cfg_reg_map {
-+	int cfg;
-+	int reg;
-+};
-+
-+static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
-+	{ 1600, ADIN1300_RGMII_1_60_NS },
-+	{ 1800, ADIN1300_RGMII_1_80_NS },
-+	{ 2000, ADIN1300_RGMII_2_00_NS },
-+	{ 2200, ADIN1300_RGMII_2_20_NS },
-+	{ 2400, ADIN1300_RGMII_2_40_NS },
-+	{ },
-+};
-+
-+static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
-+{
-+	size_t i;
-+
-+	for (i = 0; tbl[i].cfg; i++) {
-+		if (tbl[i].cfg == cfg)
-+			return tbl[i].reg;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static u32 adin_get_reg_value(struct phy_device *phydev,
-+			      const char *prop_name,
-+			      const struct adin_cfg_reg_map *tbl,
-+			      u32 dflt)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	u32 val;
-+	int rc;
-+
-+	if (device_property_read_u32(dev, prop_name, &val))
-+		return dflt;
-+
-+	rc = adin_lookup_reg_value(tbl, val);
-+	if (rc < 0) {
-+		phydev_warn(phydev,
-+			    "Unsupported value %u for %s using default (%u)\n",
-+			    val, prop_name, dflt);
-+		return dflt;
-+	}
-+
-+	return rc;
-+}
-+
- static int adin_config_rgmii_mode(struct phy_device *phydev)
+ static int adin_config_init(struct phy_device *phydev)
  {
-+	u32 val;
- 	int reg;
+ 	return genphy_config_init(phydev);
+ }
  
- 	if (!phy_interface_is_rgmii(phydev))
-@@ -59,6 +129,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
- 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
- 		reg |= ADIN1300_GE_RGMII_RXID_EN;
++static int adin_phy_ack_intr(struct phy_device *phydev)
++{
++	/* Clear pending interrupts */
++	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
 +
-+		val = adin_get_reg_value(phydev, "adi,rx-internal-delay-ps",
-+					 adin_rgmii_delays,
-+					 ADIN1300_RGMII_2_00_NS);
-+		reg &= ~ADIN1300_GE_RGMII_RX_MSK;
-+		reg |= ADIN1300_GE_RGMII_RX_SEL(val);
- 	} else {
- 		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
- 	}
-@@ -66,6 +142,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
- 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
- 		reg |= ADIN1300_GE_RGMII_TXID_EN;
++	return rc < 0 ? rc : 0;
++}
 +
-+		val = adin_get_reg_value(phydev, "adi,tx-internal-delay-ps",
-+					 adin_rgmii_delays,
-+					 ADIN1300_RGMII_2_00_NS);
-+		reg &= ~ADIN1300_GE_RGMII_GTX_MSK;
-+		reg |= ADIN1300_GE_RGMII_GTX_SEL(val);
- 	} else {
- 		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
- 	}
++static int adin_phy_config_intr(struct phy_device *phydev)
++{
++	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
++		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
++				    ADIN1300_INT_MASK_EN);
++
++	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
++			      ADIN1300_INT_MASK_EN);
++}
++
+ static struct phy_driver adin_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+@@ -27,6 +61,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_aneg	= genphy_config_aneg,
+ 		.read_status	= genphy_read_status,
+ 		.get_features	= genphy_read_abilities,
++		.ack_interrupt	= adin_phy_ack_intr,
++		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
+ 	},
+@@ -37,6 +73,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_aneg	= genphy_config_aneg,
+ 		.read_status	= genphy_read_status,
+ 		.get_features	= genphy_read_abilities,
++		.ack_interrupt	= adin_phy_ack_intr,
++		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
+ 	},
 -- 
 2.20.1
