@@ -1,82 +1,48 @@
-From: "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date: Thu, 8 Aug 2019 09:30:05 +0000
-Message-ID: <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
-         <20190723092711.11786-4-jonnyc@amazon.com>
-         <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 1/2] regulator: dt-bindings: Add PM8150x compatibles
+Date: Thu,  8 Aug 2019 15:03:42 +0530
+Message-ID: <20190808093343.5600-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
-Content-ID: <02523ED388245240977776EA8FACEFCD@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDE3OjM2ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gVHVlLCBKdWwgMjMsIDIwMTkgYXQgMTI6Mjc6MTFQTSArMDMwMCwgSm9uYXRoYW4g
-Q2hvY3JvbiB3cm90ZToNCj4gPiBUaGlzIGJhc2ljYWxseSBhbGlnbnMgdGhlIHVzYWdlIG9mIFBD
-SV9QUk9CRV9PTkxZIGFuZA0KPiA+IFBDSV9SRUFTU0lHTl9BTExfQlVTIGluIGR3X3BjaWVfaG9z
-dF9pbml0KCkgd2l0aCB0aGUgbG9naWMgaW4NCj4gPiBwY2lfaG9zdF9jb21tb25fcHJvYmUoKS4N
-Cj4gPiANCj4gPiBOb3cgaXQgd2lsbCBiZSBwb3NzaWJsZSB0byBjb250cm9sIHZpYSB0aGUgZGV2
-aWNldHJlZSB3aGV0aGVyIHRvDQo+ID4ganVzdA0KPiA+IHByb2JlIHRoZSBQQ0kgYnVzIChpbiBj
-YXNlcyB3aGVyZSBGVyBhbHJlYWR5IGNvbmZpZ3VyZWQgaXQpIG9yIHRvDQo+ID4gZnVsbHkNCj4g
-PiBjb25maWd1cmUgaXQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gQ2hvY3Jv
-biA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9wY2kvY29udHJvbGxlci9k
-d2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYyB8IDIzDQo+ID4gKysrKysrKysrKysrKysrLS0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4g
-PiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNp
-Z253YXJlLWhvc3QuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNp
-Z253YXJlLWhvc3QuYw0KPiA+IGluZGV4IGQyY2E3NDhlNGM4NS4uMGEyOTRkOGFhMjFhIDEwMDY0
-NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1o
-b3N0LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndh
-cmUtaG9zdC5jDQo+ID4gQEAgLTM0Miw2ICszNDIsOCBAQCBpbnQgZHdfcGNpZV9ob3N0X2luaXQo
-c3RydWN0IHBjaWVfcG9ydCAqcHApDQo+ID4gIAlpZiAoIWJyaWRnZSkNCj4gPiAgCQlyZXR1cm4g
-LUVOT01FTTsNCj4gPiAgDQo+ID4gKwlvZl9wY2lfY2hlY2tfcHJvYmVfb25seSgpOw0KPiA+ICsN
-Cj4gPiAgCXJldCA9IGRldm1fb2ZfcGNpX2dldF9ob3N0X2JyaWRnZV9yZXNvdXJjZXMoZGV2LCAw
-LCAweGZmLA0KPiA+ICAJCQkJCSZicmlkZ2UtPndpbmRvd3MsICZwcC0NCj4gPiA+aW9fYmFzZSk7
-DQo+ID4gIAlpZiAocmV0KQ0KPiA+IEBAIC00NzQsNiArNDc2LDEwIEBAIGludCBkd19wY2llX2hv
-c3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0ICpwcCkNCj4gPiAgDQo+ID4gIAlwcC0+cm9vdF9idXNf
-bnIgPSBwcC0+YnVzbi0+c3RhcnQ7DQo+ID4gIA0KPiA+ICsJLyogRG8gbm90IHJlYXNzaWduIGJ1
-cyBudW1zIGlmIHByb2JlIG9ubHkgKi8NCj4gPiArCWlmICghcGNpX2hhc19mbGFnKFBDSV9QUk9C
-RV9PTkxZKSkNCj4gPiArCQlwY2lfYWRkX2ZsYWdzKFBDSV9SRUFTU0lHTl9BTExfQlVTKTsNCj4g
-DQo+IFRoaXMgY2hhbmdlcyB0aGUgZGVmYXVsdCBmb3IgYnVzIHJlYXNzaWdubWVudCBvbiBhbGwg
-RFdDIGhvc3QgKHRoYXQNCj4gYXJlDQo+ICFQQ0lfUFJPQkVfT05MWSksIHdlIHNob3VsZCBkcm9w
-IHRoaXMgbGluZSwgaXQgY2FuIHRyaWdnZXINCj4gcmVncmVzc2lvbnMuDQo+IA0KV2lsbCBiZSBk
-cm9wcGVkIGFzIHBhcnQgb2YgdjQuIFRoZXJlIG1pZ2h0IGFsc28gYmUgYSBiZWhhdmlvcmFsDQpk
-aWZmZXJlbmNlIGJlbG93IHdoZXJlIEkgYWRkZWQgdGhlIGlmIChwY2lfaGFzX2ZsYWcoUENJX1BS
-T0JFX09OTFkpKS4NCklzIHRoYXQgc3RpbGwgb2s/DQoNCkFzIEkgcG9pbnRlZCBvdXQgaW4gdGhl
-IGNvdmVyIGxldHRlciwgc2luY2UgUENJX1BST0JFX09OTFkgaXMgYSBzeXN0ZW0NCndpZGUgZmxh
-ZywgZG9lcyBpdCBtYWtlIHNlbnNlIHRvIGNhbGwgb2ZfcGNpX2NoZWNrX3Byb2JlX29ubHkoKSBo
-ZXJlLA0KaW4gdGhlIGNvbnRleHQgb2YgYSBzcGVjaWZpYyBkcml2ZXIgKGluY2x1ZGluZyB0aGUg
-ZXhpc3RpbmcgaW52b2NhdGlvbg0KaW4gcGNpX2hvc3RfY29tbW9uX3Byb2JlKCkpLCBhcyBvcHBv
-c2VkIHRvIGEgcGxhdGZvcm0vYXJjaCBjb250ZXh0Pw0KDQoNCj4gSWYgd2Ugc3RpbGwgd2FudCB0
-byBtZXJnZSBpdCBhcyBhIHNlcGFyYXRlIGNoYW5nZSB3ZSBtdXN0IHRlc3QgaXQgb24NCj4gYWxs
-DQo+IERXQyBob3N0IGJyaWRnZXMgdG8gbWFrZSBzdXJlIGl0IGRvZXMgbm90IHRyaWdnZXIgYW55
-IGlzc3VlcyB3aXRoDQo+IGN1cnJlbnQgc2V0LXVwcywgdGhhdCdzIG5vdCBnb2luZyB0byBiZSBl
-YXN5IHRob3VnaC4NCj4gDQpKdXN0IG91dCBvZiBjdXJpb3NpdHksIGhvdyBhcmUgc3VjaCBleGhh
-dXN0aXZlIHRlc3RzIGFjaGlldmVkIHdoZW4gYQ0KcGF0Y2ggcmVxdWlyZXMgdGhlbT8NCg0KPiBM
-b3JlbnpvDQo+IA0KPiA+ICsNCj4gPiAgCWJyaWRnZS0+ZGV2LnBhcmVudCA9IGRldjsNCj4gPiAg
-CWJyaWRnZS0+c3lzZGF0YSA9IHBwOw0KPiA+ICAJYnJpZGdlLT5idXNuciA9IHBwLT5yb290X2J1
-c19ucjsNCj4gPiBAQCAtNDkwLDExICs0OTYsMjAgQEAgaW50IGR3X3BjaWVfaG9zdF9pbml0KHN0
-cnVjdCBwY2llX3BvcnQgKnBwKQ0KPiA+ICAJaWYgKHBwLT5vcHMtPnNjYW5fYnVzKQ0KPiA+ICAJ
-CXBwLT5vcHMtPnNjYW5fYnVzKHBwKTsNCj4gPiAgDQo+ID4gLQlwY2lfYnVzX3NpemVfYnJpZGdl
-cyhwcC0+cm9vdF9idXMpOw0KPiA+IC0JcGNpX2J1c19hc3NpZ25fcmVzb3VyY2VzKHBwLT5yb290
-X2J1cyk7DQo+ID4gKwkvKg0KPiA+ICsJICogV2UgaW5zZXJ0IFBDSSByZXNvdXJjZXMgaW50byB0
-aGUgaW9tZW1fcmVzb3VyY2UgYW5kDQo+ID4gKwkgKiBpb3BvcnRfcmVzb3VyY2UgdHJlZXMgaW4g
-ZWl0aGVyIHBjaV9idXNfY2xhaW1fcmVzb3VyY2VzKCkNCj4gPiArCSAqIG9yIHBjaV9idXNfYXNz
-aWduX3Jlc291cmNlcygpLg0KPiA+ICsJICovDQo+ID4gKwlpZiAocGNpX2hhc19mbGFnKFBDSV9Q
-Uk9CRV9PTkxZKSkgew0KPiA+ICsJCXBjaV9idXNfY2xhaW1fcmVzb3VyY2VzKHBwLT5yb290X2J1
-cyk7DQo+ID4gKwl9IGVsc2Ugew0KPiA+ICsJCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290
-X2J1cyk7DQo+ID4gKwkJcGNpX2J1c19hc3NpZ25fcmVzb3VyY2VzKHBwLT5yb290X2J1cyk7DQo+
-ID4gIA0KPiA+IC0JbGlzdF9mb3JfZWFjaF9lbnRyeShjaGlsZCwgJnBwLT5yb290X2J1cy0+Y2hp
-bGRyZW4sIG5vZGUpDQo+ID4gLQkJcGNpZV9idXNfY29uZmlndXJlX3NldHRpbmdzKGNoaWxkKTsN
-Cj4gPiArCQlsaXN0X2Zvcl9lYWNoX2VudHJ5KGNoaWxkLCAmcHAtPnJvb3RfYnVzLT5jaGlsZHJl
-biwNCj4gPiBub2RlKQ0KPiA+ICsJCQlwY2llX2J1c19jb25maWd1cmVfc2V0dGluZ3MoY2hpbGQp
-Ow0KPiA+ICsJfQ0KPiA+ICANCj4gPiAgCXBjaV9idXNfYWRkX2RldmljZXMocHAtPnJvb3RfYnVz
-KTsNCj4gPiAgCXJldHVybiAwOw0KPiA+IC0tIA0KPiA+IDIuMTcuMQ0KPiA+IA0K
+Add PM8150, PM8150L and PM8009 compatibles for these PMICs found
+in some Qualcomm platforms.
+
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ .../devicetree/bindings/regulator/qcom,rpmh-regulator.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+index 14d2eee96b3d..1a9cab50503a 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+@@ -25,6 +25,9 @@ Supported regulator node names:
+ 	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
+ 	PMI8998:	bob
+ 	PM8005:		smps1 - smps4
++	PM8150:		smps1 - smps10, ldo1 - ldo18
++	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
++	PM8009:		smps1 - smps2, ld01 - ldo7
+ 
+ ========================
+ First Level Nodes - PMIC
+@@ -35,7 +38,10 @@ First Level Nodes - PMIC
+ 	Value type: <string>
+ 	Definition: Must be one of: "qcom,pm8998-rpmh-regulators",
+ 		    "qcom,pmi8998-rpmh-regulators" or
+-		    "qcom,pm8005-rpmh-regulators".
++		    "qcom,pm8005-rpmh-regulators" or
++		    "qcom,pm8150-rpmh-regulators" or
++		    "qcom,pm8150l-rpmh-regulators" or
++		    "qcom,pm8009-rpmh-regulators".
+ 
+ - qcom,pmic-id
+ 	Usage:      required
+-- 
+2.20.1
