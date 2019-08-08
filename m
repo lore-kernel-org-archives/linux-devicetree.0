@@ -1,97 +1,42 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 0/4] add coupled regulators for Exynos5422/5800
-Date: Thu, 8 Aug 2019 10:47:14 +0900
-Message-ID: <6888b704-1971-4832-d7b9-092368c797d0@samsung.com>
-References: <CGME20190807133855eucas1p1cab425b791262e8dee1b17cbe8b1b3da@eucas1p1.samsung.com>
-        <20190807133838.14678-1-k.konieczny@partner.samsung.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v7 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Wed, 7 Aug 2019 19:02:57 -0700
+Message-ID: <84338c58-a4e7-a701-4871-f90370d0af49@gmail.com>
+References: <20190724001100.133423-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807133838.14678-1-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190724001100.133423-1-saravanak@google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Kamil,
+Hi Saravana,
 
-When I applied them to testing branch, those don't have the author name
-only just have the email address as following:
-You have to edit the your git author information with your name.
-
-author	k.konieczny@partner.samsung.com <k.konieczny@partner.samsung.com>	2019-08-07 15:38:36 +0200
-committer	Chanwoo Choi <cw00.choi@samsung.com>	2019-08-08 10:35:16 +0900
-commit	4304f4ecec93cebd255463d56b0a4f112ee9dc50 (patch)
-tree	2859e566d6f68219f71a61e7c412717c1adba4f5
-parent	57d85421038b458dd87ec268404ff608f90c36ae (diff)
-download	linux-4304f4ecec93cebd255463d56b0a4f112ee9dc50.tar.gz
-
-Regards,
-Chanwoo Choi
-
-On 19. 8. 7. 오후 10:38, k.konieczny@partner.samsung.com wrote:
-> Hi,
-> 
-> The main purpose of this patch series is to add coupled regulators for
-> Exynos5422/5800 to keep constrain on voltage difference between vdd_arm
-> and vdd_int to be at most 300mV. In exynos-bus instead of using
-> regulator_set_voltage_tol() with default voltage tolerance it should be
-> used regulator_set_voltage_triplet() with volatege range, and this is
-> already present in opp/core.c code, so it can be reused. While at this,
-> move setting regulators into opp/core.
-> 
-> This patchset was tested on Odroid XU3.
-> 
-> The DTS coupled regulators patch depends on previous patches.
-> 
-> Changes:
-> v5:
-> - squashed last patch "remove exynos_bus_passive_target()" into second
-> - added Acked-by to patch "correct clock enable sequence"
-> v4:
-> - removed "opp: core: add regulators enable and disable" from patchset
->   as it was applied by Viresh Kumar and changed cover letter
-> - fix patch "devfreq: exynos-bus: correct clock enable sequence" to
->   correct order of enable/disable
-> - removed unrelated changes in "devfreq: exynos-bus: convert to use
->   dev_pm_opp_set_rate()"
-> - added new patch "devfreq: exynos-bus: remove exynos_bus_passive_target()"
->   as suggested by Chanwoo Choi
-> v3:
-> - added new exynos-bus patch to correct clock and regulator enabling
->   and disabling sequence as suggested by Chanwoo Choi
-> - corrected error path in enable and improved commit message in opp/core
-> - improve comment in devfreq/exynos-bus.c before devfreq_recommended_opp()
-> - change cover letter as there is new patch
-> - added note before Signed-off-by in 4th patch
-> v2:
-> - improve regulators enable/disable code in opp/core as suggested by
->   Viresh Kumar
-> - add new patch for remove unused dt-bindings as suggested by Krzysztof
->   Kozlowski
-> 
-> Kamil Konieczny (3):
->   devfreq: exynos-bus: correct clock enable sequence
->   devfreq: exynos-bus: convert to use dev_pm_opp_set_rate()
->   dt-bindings: devfreq: exynos-bus: remove unused property
-> 
-> Marek Szyprowski (1):
->   ARM: dts: exynos: add initial data for coupled regulators for
->     Exynos5422/5800
-> 
->  .../bindings/devfreq/exynos-bus.txt           |   2 -
->  arch/arm/boot/dts/exynos5420.dtsi             |  34 ++--
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |   4 +
->  arch/arm/boot/dts/exynos5800-peach-pi.dts     |   4 +
->  arch/arm/boot/dts/exynos5800.dtsi             |  32 ++--
->  drivers/devfreq/exynos-bus.c                  | 153 +++++-------------
->  6 files changed, 78 insertions(+), 151 deletions(-)
+On 7/23/19 5:10 PM, Saravana Kannan wrote:
+> Add device-links to track functional dependencies between devices
+> after they are created (but before they are probed) by looking at
+> their common DT bindings like clocks, interconnects, etc.
 > 
 
+< snip >
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+I know that this series has moved on to versions 8 and 9.  And some
+additional patches submitted.
+
+Version 8 was a rebase to handle device_link changes.  The version 8
+patch 0/7 description of the changes did not note any functional
+changes, so I am assuming that my comments on version 7 are still
+applicable.
+
+The version 9 changes do not impact my comments.
+
+I am sending review comments on patches 1, 2, and 3.  I will continue
+review of patches later in the series when the fall out from these
+review comments result in a new series.
+
+-Frank
