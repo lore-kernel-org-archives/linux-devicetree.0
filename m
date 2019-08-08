@@ -1,46 +1,25 @@
-From: Bin Meng <bmeng.cn@gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: pci: pci-msi: Correct the unit-address
- of the pci node name
-Date: Thu, 8 Aug 2019 11:26:03 +0800
-Message-ID: <CAEUhbmXHzK0Ho27nn+zMAxZfMQxcuN2Pe8fb6_uOEi7RVbJ=_Q@mail.gmail.com>
-References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
- <1564306219-17439-2-git-send-email-bmeng.cn@gmail.com> <CAEUhbmVjELVPKwW6R+W+V2hQbZ_Zj_5j2ogjnTsuCwnK1pT-og@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v1 0/2] Remove smbus quick cmd and update adapter name
+Date: Thu,  8 Aug 2019 09:07:51 +0530
+Message-ID: <1565235473-28461-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEUhbmVjELVPKwW6R+W+V2hQbZ_Zj_5j2ogjnTsuCwnK1pT-og@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 5:53 PM Bin Meng <bmeng.cn@gmail.com> wrote:
->
-> On Sun, Jul 28, 2019 at 5:30 PM Bin Meng <bmeng.cn@gmail.com> wrote:
-> >
-> > The unit-address must match the first address specified in the
-> > reg property of the node.
-> >
-> > Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
-> > ---
-> >
-> >  Documentation/devicetree/bindings/pci/pci-msi.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
-> > index 9b3cc81..b73d839 100644
-> > --- a/Documentation/devicetree/bindings/pci/pci-msi.txt
-> > +++ b/Documentation/devicetree/bindings/pci/pci-msi.txt
-> > @@ -201,7 +201,7 @@ Example (5)
-> >                 #msi-cells = <1>;
-> >         };
-> >
-> > -       pci: pci@c {
-> > +       pci: pci@f {
-> >                 reg = <0xf 0x1>;
-> >                 compatible = "vendor,pcie-root-complex";
-> >                 device_type = "pci";
-> > --
->
-> Ping?
+Hi,
 
-Ping?
+This patchset contains following changes:
+- Remove SMBUS quick command support
+- Update full name of dt node to adapter name
+
+Lori Hikichi (2):
+  i2c: iproc: Stop advertising support of SMBUS quick cmd
+  i2c: iproc: Add full name of devicetree node to adapter name
+
+ drivers/i2c/busses/i2c-bcm-iproc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+-- 
+1.9.1
