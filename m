@@ -1,116 +1,102 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
- ordering
-Date: Wed, 7 Aug 2019 19:13:26 -0700
-Message-ID: <05d4f2b2-0395-476d-8c93-37b2b07bdd4f@gmail.com>
-References: <20190731221721.187713-1-saravanak@google.com>
- <20190801061209.GA3570@kroah.com>
- <5a1e785d-075e-19a0-7d3d-949e1b65d726@gmail.com>
- <20190801193248.GA24916@kroah.com>
- <6366cb2a-65ea-cb44-f765-f246f3fb3bf9@gmail.com>
- <20190802063720.GA12789@kroah.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 2/6] thermal: amlogic: Add thermal driver to support G12 SoCs
+Date: Wed, 07 Aug 2019 19:59:43 -0700
+Message-ID: <7hblx0fjkw.fsf@baylibre.com>
+References: <20190731153529.30159-1-glaroque@baylibre.com> <20190731153529.30159-3-glaroque@baylibre.com> <CAFBinCDGSJABnS1L1ULueyeXZaV38qrxEA0a12gB-uyRC_TvPQ@mail.gmail.com> <14e14cd9-46bd-0d43-654c-6db64397f5c7@baylibre.com> <CAFBinCB3ZBPVEJKV2Rfh_w-zWrhoToYdoYE6Wox+JeB-YH+Khw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190802063720.GA12789@kroah.com>
-Content-Language: en-US
+In-Reply-To: <CAFBinCB3ZBPVEJKV2Rfh_w-zWrhoToYdoYE6Wox+JeB-YH+Khw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, guillaume La Roque <glaroque@baylibre.com>
+Cc: daniel.lezcano@linaro.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg, Saravana,
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-On 8/1/19 11:37 PM, Greg Kroah-Hartman wrote:
-> On Thu, Aug 01, 2019 at 12:59:25PM -0700, Frank Rowand wrote:
->> On 8/1/19 12:32 PM, Greg Kroah-Hartman wrote:
->>> On Thu, Aug 01, 2019 at 12:28:13PM -0700, Frank Rowand wrote:
->>>> Hi Greg,
->>>>
->>>> On 7/31/19 11:12 PM, Greg Kroah-Hartman wrote:
->>>>> On Wed, Jul 31, 2019 at 03:17:13PM -0700, Saravana Kannan wrote:
->>>>>> Add device-links to track functional dependencies between devices
->>>>>> after they are created (but before they are probed) by looking at
->>>>>> their common DT bindings like clocks, interconnects, etc.
->>>>>>
->>>>>> Having functional dependencies automatically added before the devices
->>>>>> are probed, provides the following benefits:
->>>>>>
->>>>>> - Optimizes device probe order and avoids the useless work of
->>>>>>   attempting probes of devices that will not probe successfully
->>>>>>   (because their suppliers aren't present or haven't probed yet).
->>>>>>
->>>>>>   For example, in a commonly available mobile SoC, registering just
->>>>>>   one consumer device's driver at an initcall level earlier than the
->>>>>>   supplier device's driver causes 11 failed probe attempts before the
->>>>>>   consumer device probes successfully. This was with a kernel with all
->>>>>>   the drivers statically compiled in. This problem gets a lot worse if
->>>>>>   all the drivers are loaded as modules without direct symbol
->>>>>>   dependencies.
->>>>>>
->>>>>> - Supplier devices like clock providers, interconnect providers, etc
->>>>>>   need to keep the resources they provide active and at a particular
->>>>>>   state(s) during boot up even if their current set of consumers don't
->>>>>>   request the resource to be active. This is because the rest of the
->>>>>>   consumers might not have probed yet and turning off the resource
->>>>>>   before all the consumers have probed could lead to a hang or
->>>>>>   undesired user experience.
->>>>>>
->>>>>>   Some frameworks (Eg: regulator) handle this today by turning off
->>>>>>   "unused" resources at late_initcall_sync and hoping all the devices
->>>>>>   have probed by then. This is not a valid assumption for systems with
->>>>>>   loadable modules. Other frameworks (Eg: clock) just don't handle
->>>>>>   this due to the lack of a clear signal for when they can turn off
->>>>>>   resources. This leads to downstream hacks to handle cases like this
->>>>>>   that can easily be solved in the upstream kernel.
->>>>>>
->>>>>>   By linking devices before they are probed, we give suppliers a clear
->>>>>>   count of the number of dependent consumers. Once all of the
->>>>>>   consumers are active, the suppliers can turn off the unused
->>>>>>   resources without making assumptions about the number of consumers.
->>>>>>
->>>>>> By default we just add device-links to track "driver presence" (probe
->>>>>> succeeded) of the supplier device. If any other functionality provided
->>>>>> by device-links are needed, it is left to the consumer/supplier
->>>>>> devices to change the link when they probe.
->>>>>
->>>>> All now queued up in my driver-core-testing branch, and if 0-day is
->>>>> happy with this, will move it to my "real" driver-core-next branch in a
->>>>> day or so to get included in linux-next.
->>>>
->>>> I have been slow in getting my review out.
->>>>
->>>> This patch series is not yet ready for sending to Linus, so if putting
->>>> this in linux-next implies that it will be in your next pull request
->>>> to Linus, please do not put it in linux-next.
->>>
->>> It means that it will be in my pull request for 5.4-rc1, many many
->>> waeeks away from now.
+> Hi Guillaume,
+>
+> On Mon, Aug 5, 2019 at 2:48 PM guillaume La Roque <glaroque@baylibre.com> wrote:
 >>
->> If you are willing to revert the series before the pull request _if_ I
->> have significant review issues in the next couple of days, then I am happy
->> to see the patches get exposure in linux-next.
-> 
-> If you have significant review issues, yes, I will be glad to revert them.
+>> Hi Martin,
+>>
+>> again thanks for your review.
+> you're welcome - thank you for working on the driver :-)
+>
+> [...]
+>> > The IP block has more functionality, which may be added to this driver
+>> > in the future:
+>> > - reading up to 16 stored temperature samples
+>>
+>> it's not working, you can verify it if you check the regmap define in the driver. in fact temp is only write in one register, it's confirmed by amlogic.
+> I missed that - so please skip this part
+>
+> [...]
+>> >> +config AMLOGIC_THERMAL
+>> > we typically use "MESON" in the Kconfig symbols:
+>> > $ grep -c AMLOGIC .config
+>> > 1
+>> > $ grep -c MESON .config
+>> > 33
+>> >
+>> > I also wonder if we should add G12 or G12A so we don't conflict with
+>> > upcoming thermal sensors with a different design (assuming that this
+>> > will be a thing).
+>> > for example we already have three different USB2 PHY drivers
+>> >
+>> > [...]
+>>
+>> i check with Neil and for new family it's better to use Amlogic instead of meson.
+> can you please share the considerations behind this decision?
+> if new drivers should use AMLOGIC_* Kconfig symbols instead of MESON_*
+> then we all should know about it
+>
+>> i don't add G12 because we already know it's same sensors for SM1 SoC family [0].
+> my idea behind this was to avoid conflicts in the future
+> in case of the thermal driver we may be fine with using a generic name
+> assuming that Amlogic will not switch to a new IP block in the next
+> years
+> I'm not saying you have to change the name - I'm bringing this up so
+> you can decide for yourself based on examples from the past
+>
+> here are a few examples:
+> - when Kevin upstreamed the MMC driver for GX he decided to use
+> MMC_MESON_GX for the Kconfig symbol name. it turns out that this is
+> smart because there are at least two other MMC controller IPs on the
+> 32-bit SoCs. due to him including GX in the name the drivers are easy
+> to differentiate (MMC_MESON_MX_SDIO and MMC_MESON_MX_SDHC being the
+> other ones, while the latter is not upstream yet)
+> - when Carlo upstreamed the eFuse driver he decided to use MESON_EFUSE
+> for the Kconfig symbol name. I found out much later that the 32-bit
+> SoCs use a different IP (or at least direct register access instead of
+> going through Secure Monitor). the driver for the 32-bit SoCs now uses
+> MESON_MX_EFUSE. if you don't know which driver applies where then it's
+> easy to mix up MESON_EFUSE and MESON_MX_EFUSE
+> - when Jerome upstreamed the ALSA driver for AXG (which is also used
+> on G12A and G12B) he decided to use the SND_MESON_AXG_* prefix for the
+> Kconfig symbol names. in my opinion this was a good choice because GXM
+> and everything earlier (including the 32-bit SoCs) use a different
+> audio IP block. we won't have a Kconfig symbol name clash when a
+> driver for the "older" SoCs is upstreamed
+> - (there are more examples, Meson8b USB PHY driver, Meson8b DWMAC
+> glue, ... - just like there's many examples where the IP block is
+> mostly compatible with older generations: SAR ADC, RNG, SPI, ...)
 
-Just a heads up that I have sent review issues in reply to version 7 of this
-patch series.
+While these are all good examples, you can see it can go both ways, so
+there's really no way know up front what is the "right" way.  We only
+know after the fact.  Unfortunately, we simply have no visibility into
+future chips and where IP blocks may be shared or not (there are other
+examples where vendors add a new version of an IP *and* keep the old
+version. ;)
 
-We'll see what the responses are to my review comments, but I am expecting
-the changes are big enough to result in a new version (or a couple more
-versions) of the patch series.
+Even having worked inside a (different) SoC vendor and having some
+knowledge about what IPs are shared, it's difficult to get this right.
 
-No rush to revert version 9 since your 5.4-rc1 pull request is still not
-near, and I am glad for whatever exposure these patches are getting in
-linux-next.
+> I'm not sure what driver naming rules other mainline SoC teams use
+> to me it seems that the rule for Allwinner driver names is to use the
+> "code-name of the first SoC the IP block appeared in"
 
-Thanks,
+That's a good rule of thumb (and one we generally follow) but I don't
+feel it's important enough to enforce strictly either.
 
-Frank
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Kevin
