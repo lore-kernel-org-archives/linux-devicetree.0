@@ -1,175 +1,130 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v15 00/13] TCU patchset v15
-Date: Thu, 8 Aug 2019 23:02:57 +0000
-Message-ID: <MWHPR2201MB12771581FD6FBA4634D53566C1D70@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190724171615.20774-1-paul@crapouillou.net>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 15/15] dt-bindings: net: add bindings for ADIN PHY driver
+Date: Thu, 8 Aug 2019 17:03:20 -0600
+Message-ID: <CAL_Jsq+zH9cL5-8aDARzPar+xoD71WbESTckGjzaUTodu-+Trg@mail.gmail.com>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com> <20190808123026.17382-16-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724171615.20774-1-paul@crapouillou.net>
-Content-Language: en-US
+In-Reply-To: <20190808123026.17382-16-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <pburton@wavecomp.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>linu
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Aug 8, 2019 at 6:31 AM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> This change adds bindings for the Analog Devices ADIN PHY driver, detailing
+> all the properties implemented by the driver.
+>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  .../devicetree/bindings/net/adi,adin.yaml     | 76 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+> new file mode 100644
+> index 000000000000..86177c8fe23a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/adi,adin.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADIN1200/ADIN1300 PHY
+> +
+> +maintainers:
+> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> +
+> +description: |
+> +  Bindings for Analog Devices Industrial Ethernet PHYs
+> +
+> +allOf:
+> +  - $ref: ethernet-phy.yaml#
+> +
+> +properties:
+> +  adi,rx-internal-delay-ps:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
+> +      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
+> +    enum: [ 1600, 1800, 2000, 2200, 2400 ]
+> +    default: 2000
 
-Paul Cercueil wrote:
-> Hi,
->=20
-> This is the V15 of my Ingenic TCU patchet.
->=20
-> The big change since V14 is that the custom MFD driver
-> (ex patch 04/13) was dropped in favor of a small patch to syscon
-> and a "simple-mfd" compatible.
->=20
-> The patchset was based on mips/mips-next, but all of them minus
-> the last one will apply cleanly on v5.3-rc1.
->=20
-> Changelog:
->=20
-> * [02/13]: Remove info about MFD driver
-> * [03/13]: Add "simple-mfd" compatible string
-> * [04/13]: New patch
-> * [05/13]: - Use CLK_OF_DECLARE_DRIVER since we use "simple-mfd"
->            - Use device_node_to_regmap()
-> * [06/13]: Use device_node_to_regmap()
-> * [07/13]: Use device_node_to_regmap()
-> * [09/13]: Add "simple-mfd" compatible string
->=20
-> Cheers,
+This doesn't actually do what you think. The '$ref' has to be under an
+'allOf' to work. It's an oddity of json-schema. However, anything with
+a standard unit suffix already has a schema to define the type, so you
+don't need to here and can just drop $ref.
 
-Series applied to mips-next.
-
-> dt-bindings: ingenic: Add DT bindings for TCU clocks
->   commit 4bc3c420246e
->   https://git.kernel.org/mips/c/4bc3c420246e
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Reviewed-by: Rob Herring <robh@kernel.org>
->   Acked-by: Stephen Boyd <sboyd@kernel.org>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> doc: Add doc for the Ingenic TCU hardware
->   commit 97689a1a3fda
->   https://git.kernel.org/mips/c/97689a1a3fda
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> dt-bindings: Add doc for the Ingenic TCU drivers
->   commit 2e8722a5255e
->   https://git.kernel.org/mips/c/2e8722a5255e
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Reviewed-by: Rob Herring <robh@kernel.org>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> mfd/syscon: Add device_node_to_regmap()
->   commit 39233b7c6112
->   https://git.kernel.org/mips/c/39233b7c6112
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Acked-by: Arnd Bergmann <arnd@arndb.de>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> clk: ingenic: Add driver for the TCU clocks
->   commit 4f89e4b8f121
->   https://git.kernel.org/mips/c/4f89e4b8f121
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Acked-by: Stephen Boyd <sboyd@kernel.org>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> irqchip: Add irq-ingenic-tcu driver
->   commit 9536eba03ec7
->   https://git.kernel.org/mips/c/9536eba03ec7
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
->   Acked-by: Marc Zyngier <maz@kernel.org>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> clocksource: Add a new timer-ingenic driver
->   commit 34e9368301d5
->   https://git.kernel.org/mips/c/34e9368301d5
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> clk: jz4740: Add TCU clock
->   commit 73dd11dc1a88
->   https://git.kernel.org/mips/c/73dd11dc1a88
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Acked-by: Stephen Boyd <sboyd@kernel.org>
->   Acked-by: Rob Herring <robh@kernel.org>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> MIPS: jz4740: Add DTS nodes for the TCU drivers
->   commit 36aafdbd5288
->   https://git.kernel.org/mips/c/36aafdbd5288
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> MIPS: qi_lb60: Reduce system timer and clocksource to 750 kHz
->   commit a68d3b052b57
->   https://git.kernel.org/mips/c/a68d3b052b57
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> MIPS: CI20: Reduce system timer and clocksource to 3 MHz
->   commit 157c887aff52
->   https://git.kernel.org/mips/c/157c887aff52
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> MIPS: GCW0: Reduce system timer and clocksource to 750 kHz
->   commit 967a7100400a
->   https://git.kernel.org/mips/c/967a7100400a
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
->=20
-> MIPS: jz4740: Drop obsolete code
->   commit abc552284f6b
->   https://git.kernel.org/mips/c/abc552284f6b
->  =20
->   Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->   Tested-by: Mathieu Malaterre <malat@debian.org>
->   Tested-by: Artur Rojek <contact@artur-rojek.eu>
->   Signed-off-by: Paul Burton <paul.burton@mips.com>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+> +
+> +  adi,tx-internal-delay-ps:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
+> +      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
+> +    enum: [ 1600, 1800, 2000, 2200, 2400 ]
+> +    default: 2000
+> +
+> +  adi,fifo-depth-bits:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      When operating in RMII mode, this option configures the FIFO depth.
+> +    enum: [ 4, 8, 12, 16, 20, 24 ]
+> +    default: 8
+> +
+> +  adi,disable-energy-detect:
+> +    description: |
+> +      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
+> +      is enabled if this property is unspecified)
+> +    type: boolean
+> +
+> +examples:
+> +  - |
+> +    ethernet {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        phy-mode = "rgmii-id";
+> +
+> +        ethernet-phy@0 {
+> +            reg = <0>;
+> +
+> +            adi,rx-internal-delay-ps = <1800>;
+> +            adi,tx-internal-delay-ps = <2200>;
+> +        };
+> +    };
+> +  - |
+> +    ethernet {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        phy-mode = "rmii";
+> +
+> +        ethernet-phy@1 {
+> +            reg = <1>;
+> +
+> +            adi,fifo-depth-bits = <16>;
+> +            adi,disable-energy-detect;
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e8aa8a667864..fd9ab61c2670 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -944,6 +944,7 @@ L:  netdev@vger.kernel.org
+>  W:     http://ez.analog.com/community/linux-device-drivers
+>  S:     Supported
+>  F:     drivers/net/phy/adin.c
+> +F:     Documentation/devicetree/bindings/net/adi,adin.yaml
+>
+>  ANALOG DEVICES INC ADIS DRIVER LIBRARY
+>  M:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+> --
+> 2.20.1
+>
