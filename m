@@ -1,81 +1,50 @@
-Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v7 09/13] media: tvp5150: add s_power callback
-Date: Thu, 15 Aug 2019 13:57:43 +0200
-Message-Id: <20190815115747.24018-10-m.felsch@pengutronix.de>
-In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
-References: <20190815115747.24018-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=R4lo=WE=gmail.com=frowand.list@kernel.org>
+Subject: Re: [PATCH] of/platform: Clean up a return type in of_link_property()
+References: <20190808103207.GA30506@mwanda>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <b5afe4e9-db49-f50c-eb03-5d300a72e88b@gmail.com>
+Date: Thu, 8 Aug 2019 09:09:58 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <20190808103207.GA30506@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Dan Carpenter <dan.carpenter@oracle.com>, Rob Herring <robh+dt@kernel.org>, Saravana Kannan <saravanak@google.com>
+Cc: Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Don't en-/disable the interrupts during s_stream because someone can
-disable the stream but wants to get informed if the stream is locked
-again. So keep the interrupts enabled the whole time the pipeline is
-opened.
+On 8/8/19 3:32 AM, Dan Carpenter wrote:
+> This function is supposed to return zero on success and negative
+> error codes on failure but currently it returns true on failure.  The
+> caller only checks for zero and non-zero so this mixup doesn't cause any
+> runtime issues.
+> 
+> Fixes: 690ff7881b26 ("of/platform: Add functional dependency link from DT bindings")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 21838226d68a..86fb8ab8c012 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -625,7 +625,7 @@ static const struct supplier_bindings bindings[] = {
+>  	{ },
+>  };
+>  
+> -static bool of_link_property(struct device *dev, struct device_node *con_np,
+> +static int of_link_property(struct device *dev, struct device_node *con_np,
+>  			     const char *prop)
+>  {
+>  	struct device_node *phandle;
+> 
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+Hi Dan,
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 26a156da3ab4..9a812d5f45d7 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1354,11 +1354,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-+static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int val = 0;
-+
-+	if (on)
-+		val = TVP5150_INT_A_LOCK;
-+
-+	if (decoder->irq)
-+		/* Enable / Disable lock interrupt */
-+		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-+				   TVP5150_INT_A_LOCK, val);
-+
-+	return 0;
-+}
- 
- static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
--	unsigned int mask, val = 0, int_val = 0;
-+	unsigned int mask, val = 0;
- 
- 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
- 	       TVP5150_MISC_CTL_CLOCK_OE;
-@@ -1371,15 +1386,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 			val = decoder->lock ? decoder->oe : 0;
- 		else
- 			val = decoder->oe;
--		int_val = TVP5150_INT_A_LOCK;
- 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
- 	}
- 
- 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
--	if (decoder->irq)
--		/* Enable / Disable lock interrupt */
--		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
--				   TVP5150_INT_A_LOCK, int_val);
- 
- 	return 0;
- }
-@@ -1575,6 +1585,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
- 	.g_register = tvp5150_g_register,
- 	.s_register = tvp5150_s_register,
- #endif
-+	.s_power = tvp5150_s_power,
- };
- 
- static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
--- 
-2.20.1
+
+Thanks for catching this.
+
+Another patch was submitted to fix this just before your patch.
+
+-Frank
