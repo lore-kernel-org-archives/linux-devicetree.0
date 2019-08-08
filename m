@@ -1,43 +1,35 @@
-From: Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] of/platform: fix compilation warning of of_link_property()
-Date: Thu,  8 Aug 2019 16:18:18 +0200
-Message-ID: <20190808141818.22724-1-anders.roxell@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: display: amlogic,meson-vpu: convert
+ to yaml
+Date: Thu, 8 Aug 2019 08:22:39 -0600
+Message-ID: <CAL_JsqJgjjPzb4uWaJ-M=11-LRjByyRcHmot6iRyK-dXMOnkxg@mail.gmail.com>
+References: <20190808085522.21950-1-narmstrong@baylibre.com> <20190808085522.21950-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190808085522.21950-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, frowand.list@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-GCC warns that a negative integer can be returned but the
-of_link_property() function should return a boolean.
+On Thu, Aug 8, 2019 at 2:55 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for the Amlogic Display Controller over to YAML schemas.
+>
+> The original example has a leftover "dmc" memory cell, that has been
+> removed in the yaml rewrite.
+>
+> The port connection table has been dropped in favor of a description
+> of each port.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/display/amlogic,meson-vpu.txt    | 121 ----------------
+>  .../bindings/display/amlogic,meson-vpu.yaml   | 137 ++++++++++++++++++
+>  2 files changed, 137 insertions(+), 121 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
 
-../drivers/of/platform.c: In function ‘of_link_property’:
-../drivers/of/platform.c:650:18: warning: ?: using integer constants in boolean context [-Wint-in-bool-context]
-  return done ? 0 : -ENODEV;
-
-Rework so function of_link_property() return an integer instead of a boolean.
-
-Fixes: 690ff7881b26 ("of/platform: Add functional dependency link from DT bindings")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- drivers/of/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 21838226d68a..86fb8ab8c012 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -625,7 +625,7 @@ static const struct supplier_bindings bindings[] = {
- 	{ },
- };
- 
--static bool of_link_property(struct device *dev, struct device_node *con_np,
-+static int of_link_property(struct device *dev, struct device_node *con_np,
- 			     const char *prop)
- {
- 	struct device_node *phandle;
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
