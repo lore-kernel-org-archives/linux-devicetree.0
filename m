@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 12/15] net: phy: adin: implement Energy Detect Powerdown mode
-Date: Thu, 8 Aug 2019 15:30:23 +0300
-Message-ID: <20190808123026.17382-13-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 15/15] dt-bindings: net: add bindings for ADIN PHY driver
+Date: Thu, 8 Aug 2019 15:30:26 +0300
+Message-ID: <20190808123026.17382-16-alexandru.ardelean@analog.com>
 References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,95 +13,109 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN PHYs support Energy Detect Powerdown mode, which puts the PHY into
-a low power mode when there is no signal on the wire (typically cable
-unplugged).
-This behavior is enabled by default, but can be disabled via device
-property.
+This change adds bindings for the Analog Devices ADIN PHY driver, detailing
+all the properties implemented by the driver.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ .../devicetree/bindings/net/adi,adin.yaml     | 76 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index f276d692bdee..bc4393195de7 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -24,6 +24,11 @@
- #define   ADIN1300_AUTO_MDI_EN			BIT(10)
- #define   ADIN1300_MAN_MDIX_EN			BIT(9)
+diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+new file mode 100644
+index 000000000000..86177c8fe23a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/adi,adin.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADIN1200/ADIN1300 PHY
++
++maintainers:
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
++
++description: |
++  Bindings for Analog Devices Industrial Ethernet PHYs
++
++allOf:
++  - $ref: ethernet-phy.yaml#
++
++properties:
++  adi,rx-internal-delay-ps:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
++      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
++    enum: [ 1600, 1800, 2000, 2200, 2400 ]
++    default: 2000
++
++  adi,tx-internal-delay-ps:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
++      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
++    enum: [ 1600, 1800, 2000, 2200, 2400 ]
++    default: 2000
++
++  adi,fifo-depth-bits:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      When operating in RMII mode, this option configures the FIFO depth.
++    enum: [ 4, 8, 12, 16, 20, 24 ]
++    default: 8
++
++  adi,disable-energy-detect:
++    description: |
++      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
++      is enabled if this property is unspecified)
++    type: boolean
++
++examples:
++  - |
++    ethernet {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        phy-mode = "rgmii-id";
++
++        ethernet-phy@0 {
++            reg = <0>;
++
++            adi,rx-internal-delay-ps = <1800>;
++            adi,tx-internal-delay-ps = <2200>;
++        };
++    };
++  - |
++    ethernet {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        phy-mode = "rmii";
++
++        ethernet-phy@1 {
++            reg = <1>;
++
++            adi,fifo-depth-bits = <16>;
++            adi,disable-energy-detect;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e8aa8a667864..fd9ab61c2670 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -944,6 +944,7 @@ L:	netdev@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/net/phy/adin.c
++F:	Documentation/devicetree/bindings/net/adi,adin.yaml
  
-+#define ADIN1300_PHY_CTRL_STATUS2		0x0015
-+#define   ADIN1300_NRG_PD_EN			BIT(3)
-+#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
-+#define   ADIN1300_NRG_PD_STATUS		BIT(1)
-+
- #define ADIN1300_INT_MASK_REG			0x0018
- #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
- #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-@@ -138,6 +143,14 @@ static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
- 	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
- };
- 
-+/**
-+ * struct adin_priv - ADIN PHY driver private data
-+ * edpd_enabled		true if Energy Detect Powerdown mode is enabled
-+ */
-+struct adin_priv {
-+	bool			edpd_enabled;
-+};
-+
- static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
- {
- 	size_t i;
-@@ -246,6 +259,18 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
- 			     ADIN1300_GE_RMII_CFG_REG, reg);
- }
- 
-+static int adin_config_init_edpd(struct phy_device *phydev)
-+{
-+	struct adin_priv *priv = phydev->priv;
-+
-+	if (priv->edpd_enabled)
-+		return phy_set_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
-+
-+	return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+			(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
-+}
-+
- static int adin_config_init(struct phy_device *phydev)
- {
- 	int rc;
-@@ -264,6 +289,10 @@ static int adin_config_init(struct phy_device *phydev)
- 	if (rc < 0)
- 		return rc;
- 
-+	rc = adin_config_init_edpd(phydev);
-+	if (rc < 0)
-+		return rc;
-+
- 	phydev_dbg(phydev, "PHY is using mode '%s'\n",
- 		   phy_modes(phydev->interface));
- 
-@@ -495,6 +524,17 @@ static int adin_reset(struct phy_device *phydev)
- 
- static int adin_probe(struct phy_device *phydev)
- {
-+	struct device *dev = &phydev->mdio.dev;
-+	struct adin_priv *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->edpd_enabled =
-+		device_property_read_bool(dev, "adi,disable-energy-detect");
-+	phydev->priv = priv;
-+
- 	return adin_reset(phydev);
- }
- 
+ ANALOG DEVICES INC ADIS DRIVER LIBRARY
+ M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
 -- 
 2.20.1
