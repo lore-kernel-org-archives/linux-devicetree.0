@@ -1,61 +1,27 @@
-Return-Path: <SRS0=CtMQ=V5=the-dreams.de=wsa@kernel.org>
-Date: Thu, 1 Aug 2019 14:57:50 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 0/4] dt-bindings: i2c: renesas: Rename bindings
- documentation files
-Message-ID: <20190801125750.GM1659@ninjato>
-References: <20190724121559.19079-1-horms+renesas@verge.net.au>
+Return-Path: <SRS0=skGX=WE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:47822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390021AbfHHPUS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 8 Aug 2019 11:20:18 -0400
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="M2Pxvdb9QxnGd/3e"
-Content-Disposition: inline
-In-Reply-To: <20190724121559.19079-1-horms+renesas@verge.net.au>
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190726092332.25202-4-govinds@codeaurora.org>
+References: <20190726092332.25202-1-govinds@codeaurora.org> <20190726092332.25202-4-govinds@codeaurora.org>
+Subject: Re: [PATCH v5 3/7] clk: qcom: define probe by index API as common API
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Thu, 08 Aug 2019 08:20:17 -0700
+Message-Id: <20190808152017.D044B218BA@mail.kernel.org>
+Sender: devicetree-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Cc: andy.gross@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
---M2Pxvdb9QxnGd/3e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 24, 2019 at 02:15:55PM +0200, Simon Horman wrote:
-> Rename the bindings documentation file for Renesas I2C controllers.
+Quoting Govind Singh (2019-07-26 02:23:28)
+> Extend the probe by index API in common code to be used
+> by other qcom clock controller.
 >=20
-> This is part of an ongoing effort to name bindings documentation files for
-> Renesas IP blocks consistently, in line with the compat strings they
-> document.
->=20
-> Based on v5.3-rc1
->=20
-> Simon Horman (4):
->   dt-bindings: i2c: sh_mobile: Rename bindings documentation file
->   dt-bindings: i2c: rcar: Rename bindings documentation file
->   dt-bindings: i2c: riic: Rename bindings documentation file
->   dt-bindings: i2c: riic: Rename bindings documentation file
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
 
-Applied to for-next, thanks!
-
-
---M2Pxvdb9QxnGd/3e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1C4c0ACgkQFA3kzBSg
-KbamRA/9GpOM7rqnCrHHeVm2ymvAN0h9chZDp/OQeW+ZzsvTNji1kfiSih8XwZGd
-/fT81qsO/8/Tdr5lHeRpiue+90jwkEkesllOhiwxahlEM8JIi1mU9Z7eW0bmP73A
-fGUw26PKqqRMmGozuOeVrU9varCkCwOnVdOV5y9rKbO42IDxtE+i+XfG7jscGO+R
-TMdy7yVa0gv21ppwBykY7JfGfvoKdxmhRMPYSnzj1TcWRvO6vf7SXz8zU1PDJOCc
-7oU1hEEhSx1SqvK9ygBB15+kUDE+8bV8VdmYlvRczCE/u5Vt+IYYgxTbbgGrBwS4
-yuEGIcBPRfCIzcL9jWlmZZiW9D6HrylKumCnRRpOZA5s4zri389QD/QT4yh7i7AP
-BL9nqI65+o00cGoy++jrPWlIImHFZ46+cUuzBXIYFwE66hEV/WOoVn25lYfeKdc+
-YANf2kXbkBWy6LZvO+ugu+TfxwJcWYJmLBN2balOU82/biLsk8yZnn4PdiIUbI5U
-WFC217rXBQmo+4KB7KvoirUijfsQaVrUktzg473dht8knDFMKDUx0P9hc5ur9MY9
-/X9PxNTYQCwlGBxHSAacCRNvThfj2hm2lG4C7dri68XMVnxYT3AxCaekjeijKi4j
-agZvW7GxgtpR34VpD9yOdtIj0yZJOdR1L2lA0w1HAfB+tk/PvZ8=
-=MYiC
------END PGP SIGNATURE-----
-
---M2Pxvdb9QxnGd/3e--
+Applied to clk-next
