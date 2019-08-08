@@ -1,43 +1,63 @@
-From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
-Date: Thu, 8 Aug 2019 12:47:00 +0000
-Message-ID: <VI1PR0402MB28635661A4A294EC6F01095EDFD70@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
- <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
- <20190808080832.nleult5bknmzr3ze@willie-the-truck>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 3/9] soc: samsung: Add Exynos Adaptive Supply Voltage
+ driver
+Date: Thu, 8 Aug 2019 13:48:24 +0100
+Message-ID: <669c6b25-eb7e-ed3a-72a2-ee155a568363@arm.com>
+References: <CGME20190718143130eucas1p26f2058f47eb2f4020e1ddbf1619d1ac8@eucas1p2.samsung.com>
+ <20190718143044.25066-1-s.nawrocki@samsung.com>
+ <20190718143044.25066-4-s.nawrocki@samsung.com>
+ <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
+ <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com>
+ <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>
-Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, Larisa Ileana Grigore <larisa.grigore@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org, pankaj.dubey@samsung.com, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, kgene@kernel.org, vireshk@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Will,=0A=
-=0A=
-On 8/8/2019 11:08 AM, Will Deacon wrote:=0A=
-> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:=0A=
->> +             linflex,<addr>=0A=
->> +                     Use early console provided by Freescale LinFlex UA=
-RT=0A=
->> +                     serial driver for NXP S32V234 SoCs. A valid base=
-=0A=
->> +                     address must be provided, and the serial port must=
-=0A=
->> +                     already be setup and configured.=0A=
-> =0A=
-> Why isn't earlycon=3D sufficient for this?=0A=
-=0A=
-"earlycon=3D" is not actually supported. I will fix this in the next=0A=
-version by adding a /chosen/stdout-path to the dts. The compatible=0A=
-string provided to OF_EARLYCON_DECLARE will also be changed from=0A=
-"fsl,s32v234-linflexuart" to "fsl,s32-linflexuart" to match the one in=0A=
-the device tree nodes. I missed this after importing a rename from our=0A=
-codebase.=0A=
-=0A=
-Should I remove this addition from kernel-parameters.txt after that?=0A=
-=0A=
-Regards,=0A=
-Stefan=0A=
+On 08/08/2019 13:31, Krzysztof Kozlowski wrote:
+> On Thu, 8 Aug 2019 at 14:07, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>>>> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
+>>>> +                                     unsigned int pkg_id)
+>>>> +{
+>>>> +       return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
+>>>> +}
+>>>> +
+>>>> +static bool exynos5422_asv_parse_bin2(struct exynos_asv *asv,
+>>>> +                                    unsigned int pkg_id)
+>>>> +{
+>>>> +       return (pkg_id >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
+>>>
+>>> return !!() for converting to boolean.
+>>
+>> I'm not convinced it is needed, the return type of the function is bool
+>> and value of the expression will be implicitly converted to that type.
+>> Is there any compiler warning related to that?
+> 
+> Yeah, but bool is int so there will be no implicit conversion... I
+> guess it is a convention. In theory !! is the proper conversion to
+> bool but if bool==int then it's essentially conversion to 1. I am not
+> sure what's the benefit, maybe for some wrong code which would do
+> comparisons on result like if (exynos5422_asv_parse_bin2() == TRUE)...
+
+Not so - since we use "-std=gnu89", we have C99-like _Bool, which our 
+bool is a typedef of. Conversions, either implicit or explicit, are 
+well-defined:
+
+"6.3.1.2 Boolean type
+
+When any scalar value is converted to _Bool, the result is 0 if the 
+value compares equal
+to 0; otherwise, the result is 1."
+
+This is even called out in Documentation/process/coding-style.rst:
+
+"When using bool types the !! construction is not needed, which 
+eliminates a class of bugs."
+
+Robin.
