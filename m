@@ -1,30 +1,72 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 5/5] clk: qcom: gcc: Add global clock controller driver for SM8150
-Date: Wed, 07 Aug 2019 21:30:43 -0700
-Message-ID: <20190808043043.EEBD321743@mail.kernel.org>
-References: <20190722074348.29582-1-vkoul@kernel.org> <20190722074348.29582-6-vkoul@kernel.org>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 1/8] dt-bindings: omap: add new binding for PRM instances
+Date: Thu, 8 Aug 2019 10:05:31 +0530
+Message-ID: <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-2-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190722074348.29582-6-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Deepak Katragadda <dkatraga@codeaurora.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1565164139-21886-2-git-send-email-t-kristo@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2019-07-22 00:43:48)
-> From: Deepak Katragadda <dkatraga@codeaurora.org>
->=20
-> Add the clocks supported in global clock controller which clock the
-> peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
-> to the clock framework for the clients to be able to request for them.
->=20
-> Signed-off-by: Deepak Katragadda <dkatraga@codeaurora.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> [vkoul: port to upstream and tidy-up
->         port to new parent scheme
->         Add comments for critical clocks]]
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
 
-Applied to clk-next
+
+On 07/08/19 1:18 PM, Tero Kristo wrote:
+> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
+> of these will act as a power domain controller and potentially as a reset
+> provider.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>   .../devicetree/bindings/arm/omap/prm-inst.txt      | 24 ++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> new file mode 100644
+> index 0000000..e0ae87b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> @@ -0,0 +1,24 @@
+> +OMAP PRM instance bindings
+> +
+> +Power and Reset Manager is an IP block on OMAP family of devices which
+> +handle the power domains and their current state, and provide reset
+> +handling for the domains and/or separate IP blocks under the power domain
+> +hierarchy.
+> +
+> +Required properties:
+> +- compatible:	Must be one of:
+> +		"ti,am3-prm-inst"
+> +		"ti,am4-prm-inst"
+> +		"ti,omap4-prm-inst"
+> +		"ti,omap5-prm-inst"
+> +		"ti,dra7-prm-inst"
+> +- reg:		Contains PRM instance register address range
+> +		(base address and length)
+
+How about reset-cells property, Isn't that a mandatory property?
+
+> +
+> +Example:
+> +
+> +prm_dsp2: prm@1b00 {
+> +	compatible = "ti,dra7-prm-inst";
+> +	reg = <0x1b00 0x40>;
+> +	#reset-cells = <1>;
+> +};
+> 
