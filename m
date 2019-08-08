@@ -1,93 +1,68 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 4/6] irqchip/irq-pruss-intc: Add helper functions to
- configure internal mapping
-Date: Thu, 8 Aug 2019 13:31:06 -0500
-Message-ID: <5a81f82a-2cba-7ec5-ced2-714516319d6a@lechnology.com>
-References: <20190731224149.11153-1-s-anna@ti.com>
- <20190731224149.11153-5-s-anna@ti.com>
- <1a63eb50-7c5c-eb3d-3cbe-bd1cc59ce3fe@kernel.org>
- <89abc27f-5d02-a8ce-df0e-b185c2a647cd@ti.com>
- <1ac233f6-f3a3-6cec-9ad2-49e985fdfaca@lechnology.com>
- <6c17875e-496d-1277-278f-239d3a9d8ca2@ti.com>
- <124b03b8-f8e7-682b-8767-13a739329da2@lechnology.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH] dt-bindings: mfd: rn5t618: Document optional property
+ system-power-controller
+Date: Thu, 8 Aug 2019 20:39:24 +0200
+Message-ID: <20190808183924.GB1966@latitude>
+References: <20190129135917.29521-1-j.neuschaefer@gmx.net>
+ <20190201092411.GG783@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <124b03b8-f8e7-682b-8767-13a739329da2@lechnology.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190201092411.GG783@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Sekhar Nori <nsekhar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/8/19 12:09 PM, David Lechner wrote:
-> 
-> Then we can provide a vendor resource hook in the remoteproc driver to handle
-> these resources:
-> 
-> static int ti_pru_rproc_handle_rsc(struct rproc *rproc, u32 rsc_type, void *rsc,
->                     int offset, int avail)
-> {
->      struct ti_pru_data *pru = rproc->priv;
->      struct irq_fwspec fwspec;
->      unsigned int virq;
-> 
->      switch (rsc_type) {
->      case TI_PRU_VENDOR_RESOURCE_IRQ:
->      {
->          struct ti_pru_vendor_resource_irq *rsc_irq = rsc;
-> 
->          fwspec.fwnode = pru->intc_fwnode;
->          fwspec.param[0] = le32_to_cpu(rsc_irq->event);
->          fwspec.param[1] = le32_to_cpu(rsc_irq->channel);
->          fwspec.param[2] = le32_to_cpu(rsc_irq->host);
->          fwspec.param[3] = le32_to_cpu(rsc_irq->domain);
->          fwspec.param_count = 4;
->      }
->          break;
->      case TI_PRU_VENDOR_RESOURCE_IRQ2:
->      {
->          struct ti_pru_vendor_resource_irq2 *rsc_irq2 = rsc;
-> 
->          fwspec.fwnode = pru->intc_fwnode;
->          fwspec.param[0] = le32_to_cpu(rsc_irq2->event);
->          fwspec.param[1] = le32_to_cpu(rsc_irq2->evt_sel);
->          fwspec.param[2] = le32_to_cpu(rsc_irq2->channel);
->          fwspec.param[3] = le32_to_cpu(rsc_irq2->host);
->          fwspec.param[4] = le32_to_cpu(rsc_irq2->domain);
->          fwspec.param_count = 5;
->          break;
->      }
->      default:
->          return RSC_IGNORED;
->      }
-> 
->      virq = irq_create_fwspec_mapping(&fwspec);
->      if (!virq)
->          return -EINVAL;
-> 
->      /* TODO: save virq (and other metadata) for later use */
-> 
->      return RSC_HANDLED;
-> }
-> 
-> static const struct rproc_ops ti_pru_rproc_ops = {
->      .start = ti_pru_rproc_start,
->      .stop = ti_pru_rproc_stop,
->      .kick = ti_pru_rproc_kick,
->      .da_to_va = ti_pru_rproc_da_to_va,
->      .handle_rsc = ti_pru_rproc_handle_rsc,
-> };
-> 
 
-After re-reading some of the previous discussions, it sounds like
-we wouldn't want to always map every IRQ in the firmware resource
-table.
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In that case, we could implement the rproc_ops parse_fw callback
-instead. All firmware nodes could be collected (from both the
-firmware resource table and device tree) and the remoteproc driver
-could decide which ones need to be mapped and which ones don't.
-Then it could call irq_create_fwspec_mapping() only the nodes
-that need to be mapped based on the current application.
+On Fri, Feb 01, 2019 at 09:24:11AM +0000, Lee Jones wrote:
+> On Tue, 29 Jan 2019, Jonathan Neusch=C3=A4fer wrote:
+>=20
+> > The RN5T618 family of PMICs can be used as system management
+> > controllers, in which case they handle poweroff and restart. Document
+> > this capability by referring to the corresponding generic DT binding.
+> >=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/rn5t618.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+>=20
+> Applied, thanks.
+
+Hi,
+
+apparently this patch got lost somehow (I can't find it in mainline or
+-next). Should I resend it?
+
+
+Thanks
+Jonathan Neusch=C3=A4fer
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1MbFMACgkQCDBEmo7z
+X9teow/7BstSO97Sl8F6BD6eFHTwI0a/YAhcZlXYyQ11Rvt/a9JFhEE+b9oDaFuc
+MaLE3wXSEcx1Ssh8xPhrUzpPsQ8MWV83f1roR6jU0lwUYkjdWm4Far8BSUi5ilmz
+BVPeBOlWgRwoyMEjMojIfYLuvhFm2iBvTNbRyU99h7tMF99n4kor07zu/zaQY+fX
+8hH1/o4TY19vMgMIK/OQjNAYJHQBoJbX/RrICvBq/QB74nxv/XmgICv2eoI1Tkup
+Jf/A6IuTdlhUjGxn1UYwKFfsilMYrLMHYb2l7Zsb6sVYlly3vZjrgBwHsmQWQaYQ
+9aKqaK2x3rb1GMfYKhMIHh+4vN2qjJJZeNHn34ut3CHGVhkI08o2lPk5d3DdeHFC
+ctl6EoCtb9cGpDBUQKdwZc838tB9Tt5Qdn3ixNknpc17M2rhi/XqxJgjwRmOOC2M
+dl2rEh2Ryk4f0mkII5Eo9MoPXimv1fB+rTY5LUFFa91n1rBRYSD6Ko+TvHIpNQDG
+Beyx3ol41HSnSqYrfscl2plPZimIQq53bHfKaRQq094Ph/YqIRPtte1jZo/qRnns
+6LOF3YBGt7M07VKtSjUKm4zM6mFj2oxD7YE1T/9jq05bxwFSFp5oi+3wmRJ+oENx
+f2Ul03iVlXXLBR+W1igbzv09+KAiMeFc8zmkxZ+tKvTLOXNAm5Q=
+=nKs6
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
