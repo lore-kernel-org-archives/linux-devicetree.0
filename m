@@ -1,66 +1,71 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
- H6 SoC
-Date: Thu, 8 Aug 2019 13:48:55 +0800
-Message-ID: <CAGb2v64y+iUknG=h6NC_16JsiBXATim4PpX6g3OVg3G0vDjBwA@mail.gmail.com>
-References: <20190412120730.473-1-megous@megous.com> <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
- <20190806183045.edhm3qzpegscf2z7@core.my.home> <20190807105502.GK3600@piout.net>
-Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH 1/2] dt-bindings: Introduce soc sleep stats bindings for Qualcomm SoCs
+Date: Thu,  8 Aug 2019 11:42:27 +0530
+Message-ID: <20190808061228.16573-2-mkshah@codeaurora.org>
+References: <20190808061228.16573-1-mkshah@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVXPV3VAKGQE23XYBOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190807105502.GK3600-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190808061228.16573-1-mkshah@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, mkshah@codeaurora.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 6:55 PM Alexandre Belloni
-<alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> Hi,
->
-> On 06/08/2019 20:30:45+0200, Ond=C5=99ej Jirman wrote:
-> > Maybe whether XO or DCXO is used also matters if you want to do some fi=
-ne
-> > tunning of DCXO (control register has pletny of options), but that's pr=
-obably
-> > better done in u-boot. And there's still no need to read HOSC source fr=
-om DT.
-> > The driver can just check compatible, and if it is H6 and OSC_CLK_SRC_S=
-EL is 1,
-> > it can do it's DCXO tunning, or whatever. But neither OS nor bootloader=
- will
-> > be using this info to gate/disable the osciallator.
-> >
->
-> It is actually useful to be able to tweak the crystal tuning at
-> runtime to be able to reduce clock drift and compare with a reliable
-> source (e.g. NTP).
-> I'm curious, what kind of options does this RTC have?
+Add device binding documentation for Qualcomm Technology Inc's (QTI)
+SoC sleep stats driver. The driver is used for displaying SoC sleep
+statistic maintained by Always On Processor or Resource Power Manager.
 
-It has options to set the current, trim cap value, band gap voltage, and al=
-so
-change the mode to just accept an external clock signal, instead of driving
-a crystal. The settings for the former parameters are not explained though.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ .../bindings/soc/qcom/soc-sleep-stats.txt     | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
 
-See page 364 of
-http://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-
-ChenYu
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/CAGb2v64y%2BiUknG%3Dh6NC_16JsiBXATim4PpX6g3OVg3G0vDjBwA%40mail=
-.gmail.com.
+diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
+new file mode 100644
+index 000000000000..ee40687ded34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
+@@ -0,0 +1,36 @@
++* SoC Sleep Stats
++
++Always On Processor/Resource Power Manager maintains statistics of the SoC
++sleep modes involving lowering or powering down of the backbone rails - Cx
++and Mx and the oscillator clock, XO.
++
++Statistics includes SoC sleep mode type, number of times low power mode were
++entered, time of last entry, time of last exit and accumulated sleep duration.
++SoC Sleep Stats driver provides sysfs interface to display this information.
++
++PROPERTIES
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,rpmh-sleep-stats" or "qcom,rpm-sleep-stats".
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: The base address on the Always On Processor or Resource Power
++		    Manager from where the stats are read.
++
++EXAMPLE 1:
++
++	rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
++		compatible = "qcom,rpmh-sleep-stats";
++		reg = <0 0xc3f0000 0 0x400>;
++	};
++
++EXAMPLE 2:
++
++	rpm_sleep_stats: soc-sleep-stats@4690000 {
++		compatible = "qcom,rpm-sleep-stats";
++		reg = <0 0x04690000 0 0x400>;
++	};
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
