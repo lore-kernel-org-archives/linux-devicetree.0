@@ -1,67 +1,64 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Date: Thu, 8 Aug 2019 18:34:37 +0530
-Message-ID: <CAHLCerP4v_Lz5OGswx7+Z5uHVq_D8G5brq-_M6fOc0K6DK2OKg@mail.gmail.com>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/9] soc: samsung: Add Exynos Adaptive Supply Voltage driver
+Date: Thu, 8 Aug 2019 15:14:54 +0200
+Message-ID: <CAJKOXPc01ViCcwpasJ4o+yxvz5r8v0D1h5F5dc4=s0R0Jn4uNw@mail.gmail.com>
+References: <CGME20190718143130eucas1p26f2058f47eb2f4020e1ddbf1619d1ac8@eucas1p2.samsung.com>
+ <20190718143044.25066-1-s.nawrocki@samsung.com> <20190718143044.25066-4-s.nawrocki@samsung.com>
+ <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
+ <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com> <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
+ <669c6b25-eb7e-ed3a-72a2-ee155a568363@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1564091601.git.amit.kucheria@linaro.org>
+In-Reply-To: <669c6b25-eb7e-ed3a-72a2-ee155a568363@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, sivaa@codeaurora.org
-Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org, pankaj.dubey@samsung.com, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, kgene@kernel.org, vireshk@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2019 at 3:48 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+On Thu, 8 Aug 2019 at 14:48, Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> Add interrupt support to TSENS. The first 6 patches are general fixes and
-> cleanups to the driver before interrupt support is introduced.
+> On 08/08/2019 13:31, Krzysztof Kozlowski wrote:
+> > On Thu, 8 Aug 2019 at 14:07, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+> >>>> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
+> >>>> +                                     unsigned int pkg_id)
+> >>>> +{
+> >>>> +       return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
+> >>>> +}
+> >>>> +
+> >>>> +static bool exynos5422_asv_parse_bin2(struct exynos_asv *asv,
+> >>>> +                                    unsigned int pkg_id)
+> >>>> +{
+> >>>> +       return (pkg_id >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
+> >>>
+> >>> return !!() for converting to boolean.
+> >>
+> >> I'm not convinced it is needed, the return type of the function is bool
+> >> and value of the expression will be implicitly converted to that type.
+> >> Is there any compiler warning related to that?
+> >
+> > Yeah, but bool is int so there will be no implicit conversion... I
+> > guess it is a convention. In theory !! is the proper conversion to
+> > bool but if bool==int then it's essentially conversion to 1. I am not
+> > sure what's the benefit, maybe for some wrong code which would do
+> > comparisons on result like if (exynos5422_asv_parse_bin2() == TRUE)...
 >
-> This series has been developed against qcs404 and sdm845 and then tested on
-> msm8916. Testing on msm8998 and msm8974 would be appreciated since I don't
-> have hardware handy. Further, I plan to test on msm8996 and also submit to
-> kernelci.
+> Not so - since we use "-std=gnu89", we have C99-like _Bool, which our
+> bool is a typedef of. Conversions, either implicit or explicit, are
+> well-defined:
+>
+> "6.3.1.2 Boolean type
+>
+> When any scalar value is converted to _Bool, the result is 0 if the
+> value compares equal
+> to 0; otherwise, the result is 1."
+>
+> This is even called out in Documentation/process/coding-style.rst:
+>
+> "When using bool types the !! construction is not needed, which
+> eliminates a class of bugs."
 
-Gentle nudge for reviews. This has now been successfully tested on
-8974 (along with 8916, qcs404, sdm845). Testing on msm8998 would be
-much appreciated.
+Good point, thanks!
 
-> I'm sending this out for more review to get help with testing.
->
-> Amit Kucheria (15):
->   drivers: thermal: tsens: Get rid of id field in tsens_sensor
->   drivers: thermal: tsens: Simplify code flow in tsens_probe
->   drivers: thermal: tsens: Add __func__ identifier to debug statements
->   drivers: thermal: tsens: Add debugfs support
->   arm: dts: msm8974: thermal: Add thermal zones for each sensor
->   arm64: dts: msm8916: thermal: Fixup HW ids for cpu sensors
->   dt: thermal: tsens: Document interrupt support in tsens driver
->   arm64: dts: sdm845: thermal: Add interrupt support
->   arm64: dts: msm8996: thermal: Add interrupt support
->   arm64: dts: msm8998: thermal: Add interrupt support
->   arm64: dts: qcs404: thermal: Add interrupt support
->   arm64: dts: msm8974: thermal: Add interrupt support
->   arm64: dts: msm8916: thermal: Add interrupt support
->   drivers: thermal: tsens: Create function to return sign-extended
->     temperature
->   drivers: thermal: tsens: Add interrupt support
->
->  .../bindings/thermal/qcom-tsens.txt           |   5 +
->  arch/arm/boot/dts/qcom-msm8974.dtsi           | 108 +++-
->  arch/arm64/boot/dts/qcom/msm8916.dtsi         |  26 +-
->  arch/arm64/boot/dts/qcom/msm8996.dtsi         |  60 +-
->  arch/arm64/boot/dts/qcom/msm8998.dtsi         |  82 +--
->  arch/arm64/boot/dts/qcom/qcs404.dtsi          |  42 +-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  88 +--
->  drivers/thermal/qcom/tsens-8960.c             |   4 +-
->  drivers/thermal/qcom/tsens-common.c           | 610 +++++++++++++++++-
->  drivers/thermal/qcom/tsens-v0_1.c             |  11 +
->  drivers/thermal/qcom/tsens-v1.c               |  29 +
->  drivers/thermal/qcom/tsens-v2.c               |  18 +
->  drivers/thermal/qcom/tsens.c                  |  52 +-
->  drivers/thermal/qcom/tsens.h                  | 285 +++++++-
->  14 files changed, 1214 insertions(+), 206 deletions(-)
->
-> --
-> 2.17.1
->
+Best regards,
+Krzysztof
