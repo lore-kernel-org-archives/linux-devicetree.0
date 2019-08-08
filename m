@@ -1,148 +1,126 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date: Thu, 8 Aug 2019 11:58:21 +0100
-Message-ID: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092711.11786-4-jonnyc@amazon.com>
- <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
- <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of
+	qcom_scm_call
+Date: Thu, 8 Aug 2019 17:05:21 +0530
+Message-ID: <CAFp+6iHhh9749dAV4YDeE_0w1nCiftecTBedW4Rf0aiaOJsN2A@mail.gmail.com>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+	<20190612071554.13573-2-vivek.gautam@codeaurora.org>
+	<20190618175536.GI4270@fuggles.cambridge.arm.com>
+	<CAFp+6iEwN6jeEGNxKVU5_i5NxdEbuF2ZggegEJZ1Rq6F=H34jg@mail.gmail.com>
+	<20190805222755.GB2634@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190805222755.GB2634@builder>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Side note, run:
+On Tue, Aug 6, 2019 at 3:58 AM Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Wed 19 Jun 04:34 PDT 2019, Vivek Gautam wrote:
+>
+> > On Tue, Jun 18, 2019 at 11:25 PM Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > >
+> > > On Wed, Jun 12, 2019 at 12:45:51PM +0530, Vivek Gautam wrote:
+> > > > There are scnenarios where drivers are required to make a
+> > > > scm call in atomic context, such as in one of the qcom's
+> > > > arm-smmu-500 errata [1].
+> > > >
+> > > > [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
+> > > >       drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
+> > > >       msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
+> > > >
+> > > > Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > > Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > ---
+> > > >  drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
+> > > >  1 file changed, 92 insertions(+), 44 deletions(-)
+> > > >
+> > > > diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> > > > index 91d5ad7cf58b..b6dca32c5ac4 100644
+> > > > --- a/drivers/firmware/qcom_scm-64.c
+> > > > +++ b/drivers/firmware/qcom_scm-64.c
+> >
+> > [snip]
+> >
+> > > > +
+> > > > +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
+> > > > +                          struct arm_smccc_res *res, u32 fn_id,
+> > > > +                          u64 x5, bool atomic)
+> > > > +{
+> > >
+> > > Maybe pass in the call type (ARM_SMCCC_FAST_CALL vs ARM_SMCCC_STD_CALL)
+> > > instead of "bool atomic"? Would certainly make the callsites easier to
+> > > understand.
+> >
+> > Sure, will do that.
+> >
+> > >
+> > > > +     int retry_count = 0;
+> > > > +
+> > > > +     if (!atomic) {
+> > > > +             do {
+> > > > +                     mutex_lock(&qcom_scm_lock);
+> > > > +
+> > > > +                     __qcom_scm_call_do(desc, res, fn_id, x5,
+> > > > +                                        ARM_SMCCC_STD_CALL);
+> > > > +
+> > > > +                     mutex_unlock(&qcom_scm_lock);
+> > > > +
+> > > > +                     if (res->a0 == QCOM_SCM_V2_EBUSY) {
+> > > > +                             if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
+> > > > +                                     break;
+> > > > +                             msleep(QCOM_SCM_EBUSY_WAIT_MS);
+> > > > +                     }
+> > > > +             }  while (res->a0 == QCOM_SCM_V2_EBUSY);
+> > > > +     } else {
+> > > > +             __qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
+> > > > +     }
+> > >
+> > > Is it safe to make concurrent FAST calls?
+> >
+> > I better add a spinlock here.
+> >
+>
+> Hi Vivek,
+>
+> Would you be able to respin this patch, so that we could unblock the
+> introduction of the display nodes in the various device?
 
-git log --oneline on drivers/pci/controller/dwc existing files and
-make sure commit subjects are in line with those.
+Will pointed [1] to the restructuring of arm-smmu to support
+implementation specific details.
+That hasn't been posted yet, and I haven't yet been able to work on that either.
+I will be happy to respin this series with the comments addressed if
+Will is okay to pull changes to unblock sdm845 devices. :)
 
-Eg PCI: dw: should be PCI: dwc:
+[1] https://lore.kernel.org/patchwork/patch/1087457/
 
-On Thu, Aug 08, 2019 at 09:30:05AM +0000, Chocron, Jonathan wrote:
-> On Wed, 2019-08-07 at 17:36 +0100, Lorenzo Pieralisi wrote:
-> > On Tue, Jul 23, 2019 at 12:27:11PM +0300, Jonathan Chocron wrote:
-> > > This basically aligns the usage of PCI_PROBE_ONLY and
-> > > PCI_REASSIGN_ALL_BUS in dw_pcie_host_init() with the logic in
-> > > pci_host_common_probe().
-> > > 
-> > > Now it will be possible to control via the devicetree whether to
-> > > just
-> > > probe the PCI bus (in cases where FW already configured it) or to
-> > > fully
-> > > configure it.
-> > > 
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > ---
-> > >  .../pci/controller/dwc/pcie-designware-host.c | 23
-> > > +++++++++++++++----
-> > >  1 file changed, 19 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index d2ca748e4c85..0a294d8aa21a 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -342,6 +342,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  	if (!bridge)
-> > >  		return -ENOMEM;
-> > >  
-> > > +	of_pci_check_probe_only();
-> > > +
-> > >  	ret = devm_of_pci_get_host_bridge_resources(dev, 0, 0xff,
-> > >  					&bridge->windows, &pp-
-> > > >io_base);
-> > >  	if (ret)
-> > > @@ -474,6 +476,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  
-> > >  	pp->root_bus_nr = pp->busn->start;
-> > >  
-> > > +	/* Do not reassign bus nums if probe only */
-> > > +	if (!pci_has_flag(PCI_PROBE_ONLY))
-> > > +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> > 
-> > This changes the default for bus reassignment on all DWC host (that
-> > are
-> > !PCI_PROBE_ONLY), we should drop this line, it can trigger
-> > regressions.
-> > 
-> Will be dropped as part of v4. There might also be a behavioral
-> difference below where I added the if (pci_has_flag(PCI_PROBE_ONLY)).
-> Is that still ok?
+Thanks & Regards
+Vivek
 
-That's true but I doubt any DWC host has a DT firmware with
-"linux,pci-probe-only" in it.
+>
+> Regards,
+> Bjorn
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-It is trial and error I am afraid, please make sure all DWC
-maintainers are copied in.
 
-> As I pointed out in the cover letter, since PCI_PROBE_ONLY is a system
-> wide flag, does it make sense to call of_pci_check_probe_only() here,
-> in the context of a specific driver (including the existing invocation
-> in pci_host_common_probe()), as opposed to a platform/arch context?
 
-It is an ongoing discussion to define how we should handle
-PCI_PROBE_ONLY. Adding this code into DWC I do not think it
-would hurt but if we can postpone it for the next (v5.5) merge
-window after we debate this at LPC within the PCI microconference
-it would be great.
-
-Please sync with Benjamin as a first step, I trust he would ask
-you to do the right thing.
-
-> > If we still want to merge it as a separate change we must test it on
-> > all
-> > DWC host bridges to make sure it does not trigger any issues with
-> > current set-ups, that's not going to be easy though.
-> > 
-> Just out of curiosity, how are such exhaustive tests achieved when a
-> patch requires them?
-
-CC DWC host bridge maintainers and ask them to test it. I do not have
-the HW (and FW) required, I am sorry, that's the only option I can give
-you. -next coverage would help too but to a minor extent.
-
-Thanks,
-Lorenzo
-
-> 
-> > Lorenzo
-> > 
-> > > +
-> > >  	bridge->dev.parent = dev;
-> > >  	bridge->sysdata = pp;
-> > >  	bridge->busnr = pp->root_bus_nr;
-> > > @@ -490,11 +496,20 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  	if (pp->ops->scan_bus)
-> > >  		pp->ops->scan_bus(pp);
-> > >  
-> > > -	pci_bus_size_bridges(pp->root_bus);
-> > > -	pci_bus_assign_resources(pp->root_bus);
-> > > +	/*
-> > > +	 * We insert PCI resources into the iomem_resource and
-> > > +	 * ioport_resource trees in either pci_bus_claim_resources()
-> > > +	 * or pci_bus_assign_resources().
-> > > +	 */
-> > > +	if (pci_has_flag(PCI_PROBE_ONLY)) {
-> > > +		pci_bus_claim_resources(pp->root_bus);
-> > > +	} else {
-> > > +		pci_bus_size_bridges(pp->root_bus);
-> > > +		pci_bus_assign_resources(pp->root_bus);
-> > >  
-> > > -	list_for_each_entry(child, &pp->root_bus->children, node)
-> > > -		pcie_bus_configure_settings(child);
-> > > +		list_for_each_entry(child, &pp->root_bus->children,
-> > > node)
-> > > +			pcie_bus_configure_settings(child);
-> > > +	}
-> > >  
-> > >  	pci_bus_add_devices(pp->root_bus);
-> > >  	return 0;
-> > > -- 
-> > > 2.17.1
-> > > 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
