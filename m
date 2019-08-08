@@ -1,189 +1,96 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 3/9] soc: samsung: Add Exynos Adaptive Supply Voltage
- driver
-Date: Thu, 8 Aug 2019 14:07:36 +0200
-Message-ID: <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com>
-References: <CGME20190718143130eucas1p26f2058f47eb2f4020e1ddbf1619d1ac8@eucas1p2.samsung.com>
-        <20190718143044.25066-1-s.nawrocki@samsung.com>
-        <20190718143044.25066-4-s.nawrocki@samsung.com>
-        <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+Date: Thu, 8 Aug 2019 14:12:37 +0200
+Message-ID: <20190808121237.g6twq2nh3sayu3vx@core.my.home>
+References: <20190412120730.473-1-megous@megous.com>
+ <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+ <20190806183045.edhm3qzpegscf2z7@core.my.home>
+ <20190807105502.GK3600@piout.net>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBOFDWDVAKGQEH4UXCLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190807105502.GK3600-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/23/19 15:38, Krzysztof Kozlowski wrote:
-> On Thu, 18 Jul 2019 at 16:31, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->>
->> The Adaptive Supply Voltage (ASV) driver adjusts CPU cluster operating
->> points depending on exact revision of an SoC retrieved from the CHIPID
->> block or the OTP memory.  This allows for some power saving as for some
->> CPU clock frequencies we can lower CPU cluster supply voltage comparing
->> to safe values common to the all chip revisions.
->>
->> This patch adds support for Exynos5422/5800 SoC, it is partially based
->> on code from https://github.com/hardkernel/linux repository,
->> branch odroidxu4-4.14.y, files: arch/arm/mach-exynos/exynos5422-asv.[ch].
->>
->> Tested on Odroid XU3, XU4, XU3 Lite.
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->> Changes since v1 (RFC):
->>  - removed code for parsing the ASV OPP tables from DT, the ASV OPP tables
->>    moved to the driver;
->>  - converted to use the regmap API;
->>  - converted to normal platform driver.
->> ---
->>  drivers/soc/samsung/Kconfig          |  11 +
->>  drivers/soc/samsung/Makefile         |   3 +
->>  drivers/soc/samsung/exynos-asv.c     | 185 ++++++++++
->>  drivers/soc/samsung/exynos-asv.h     |  82 +++++
->>  drivers/soc/samsung/exynos5422-asv.c | 499 +++++++++++++++++++++++++++
->>  drivers/soc/samsung/exynos5422-asv.h |  25 ++
->>  6 files changed, 805 insertions(+)
->>  create mode 100644 drivers/soc/samsung/exynos-asv.c
->>  create mode 100644 drivers/soc/samsung/exynos-asv.h
->>  create mode 100644 drivers/soc/samsung/exynos5422-asv.c
->>  create mode 100644 drivers/soc/samsung/exynos5422-asv.h
->>
->> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
->> index 2905f5262197..539cd95dd176 100644
->> --- a/drivers/soc/samsung/Kconfig
->> +++ b/drivers/soc/samsung/Kconfig
->> @@ -7,6 +7,17 @@ menuconfig SOC_SAMSUNG
->>
->>  if SOC_SAMSUNG
->>
->> +config EXYNOS_ASV
->> +       bool "Exynos Adaptive Supply Voltage support" if COMPILE_TEST
->> +       depends on ARCH_EXYNOS || COMPILE_TEST
->> +       depends on EXYNOS_CHIPID
-> 
-> (ARCH_EXYNOS && EXYNOS_CHIPID) || COMPILE_TEST
+On Wed, Aug 07, 2019 at 12:55:02PM +0200, Alexandre Belloni wrote:
+> Hi,
+>=20
+> On 06/08/2019 20:30:45+0200, Ond=C5=99ej Jirman wrote:
+> > Maybe whether XO or DCXO is used also matters if you want to do some fi=
+ne
+> > tunning of DCXO (control register has pletny of options), but that's pr=
+obably
+> > better done in u-boot. And there's still no need to read HOSC source fr=
+om DT.
+> > The driver can just check compatible, and if it is H6 and OSC_CLK_SRC_S=
+EL is 1,
+> > it can do it's DCXO tunning, or whatever. But neither OS nor bootloader=
+ will
+> > be using this info to gate/disable the osciallator.
+> >=20
+>=20
+> It is actually useful to be able to tweak the crystal tuning at
+> runtime to be able to reduce clock drift and compare with a reliable
+> source (e.g. NTP).
 
-OK
->> +       select EXYNOS_ASV_ARM if ARM && ARCH_EXYNOS
->> +
->> +# There is no need to enable these drivers for ARMv8
->> +config EXYNOS_ASV_ARM
->> +       bool "Exynos ASV ARMv7-specific driver extensions" if COMPILE_TEST
->> +       depends on EXYNOS_ASV
+I don't think there's a Linux kernel API that you can use to achieve that, =
+so
+that's a rather theoretical concern at the moment.
 
->> diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
->> new file mode 100644
->> index 000000000000..b1a7e0ba8870
->> --- /dev/null
->> +++ b/drivers/soc/samsung/exynos-asv.c
->> @@ -0,0 +1,185 @@
+Also there are multiple clocks, that can drive the RTC, and you usually don=
+'t
+drive it from 24MHz DCXO oscillator. The reason is that you'd have to deal =
+with
+the fact that the clock for RTC then becomes 24000000/750 (750 is fixed
+divider), which is 32000.
 
->> +static int exynos_asv_probe(struct platform_device *pdev)
->> +{
->> +       int (*probe_func)(struct exynos_asv *asv);
->> +       struct exynos_asv *asv;
->> +       struct device *cpu_dev;
->> +       u32 product_id = 0;
->> +       int ret, i;
->> +
->> +       cpu_dev = get_cpu_device(0);
->> +       ret = dev_pm_opp_get_opp_count(cpu_dev);
->> +       if (ret < 0)
->> +               return -EPROBE_DEFER;
->> +
->> +       asv = kcalloc(1, sizeof(*asv), GFP_KERNEL);
->> +       if (!asv)
->> +               return -ENOMEM;
->> +
->> +       asv->chipid_regmap = syscon_node_to_regmap(pdev->dev.of_node);
->> +       if (IS_ERR(asv->chipid_regmap)) {
->> +               dev_err(&pdev->dev, "Could not find syscon regmap\n");
-> 
-> Here and in following error-paths - kfree().
+So if you want to get 32768Hz for RTC by tuning the DCXO, it would have to =
+have
+24 576 000 Hz. And even if you could achieve that (doubtful), it would thro=
+w off
+timings in the rest of the system (say UART, USB, CPU, display ctl) in a ma=
+jor way.
 
-Thanks, I will fix that.
+I guess you can try tuning 24MHz oscillator so that it's closer to the
+real-world 24MHz via NTP reference for other reasons. But it would be
+complicated, and require precise interaction with other components, like us=
+ing
+HW timers sourced from 24MHz HOSC clock, because you can't use CPU's timers=
+,
+because of inaccuracies introduced during DVFS, for example.
 
->> +               return PTR_ERR(asv->chipid_regmap);
->> +       }
->> +
->> +       regmap_read(asv->chipid_regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
+regards,
+	o.
 
->> +module_platform_driver(exynos_asv_driver);
->> diff --git a/drivers/soc/samsung/exynos-asv.h b/drivers/soc/samsung/exynos-asv.h
->> new file mode 100644
->> index 000000000000..d0a5d603093d
->> --- /dev/null
->> +++ b/drivers/soc/samsung/exynos-asv.h
->> @@ -0,0 +1,82 @@
+> I'm curious, what kind of options does this RTC have?
+>=20
+> --=20
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
->> +#ifndef _EXYNOS_ASV_H
->> +#define _EXYNOS_ASV_H
-> 
-> Here and in other header use prefix:
-> __LINUX_SOC_
-> (just like the existing exynos-pmu.h)
-
-OK, I will change that.
-
->> +struct exynos_asv_subsys {
->> +       struct exynos_asv *asv;
->> +       char *cpu_dt_compat;
-> 
-> const char *
-
-OK
->> +       int id;
-
->> +#endif /* _EXYNOS_ASV_H */
->> diff --git a/drivers/soc/samsung/exynos5422-asv.c b/drivers/soc/samsung/exynos5422-asv.c
->> new file mode 100644
->> index 000000000000..5fd673a6a733
->> --- /dev/null
->> +++ b/drivers/soc/samsung/exynos5422-asv.c
->> @@ -0,0 +1,499 @@
-
->> +#include <linux/bitrev.h>
->> +#include <linux/device.h>
->> +#include <linux/errno.h>
->> +#include <linux/init.h>
-> 
-> Looks unused.
-
-Indeed, I will drop it.
-
->> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
->> +                                     unsigned int pkg_id)
->> +{
->> +       return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
->> +}
->> +
->> +static bool exynos5422_asv_parse_bin2(struct exynos_asv *asv,
->> +                                    unsigned int pkg_id)
->> +{
->> +       return (pkg_id >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
-> 
-> return !!() for converting to boolean.
-
-I'm not convinced it is needed, the return type of the function is bool
-and value of the expression will be implicitly converted to that type.
-Is there any compiler warning related to that?
-
->> +}
->> +
->> +static bool exynos5422_asv_parse_sg(struct exynos_asv *asv,
->> +                                       unsigned int pkg_id)
->> +{
->> +       return ((pkg_id >> EXYNOS5422_USESG_OFFSET) & EXYNOS5422_USESG_MASK);
-> 
-> Unneeded () over entire statement.
-
-Will drop it.
-
--- 
-Regards,
-Sylwester
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190808121237.g6twq2nh3sayu3vx%40core.my.home.
