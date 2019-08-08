@@ -1,71 +1,84 @@
-From: Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH 1/2] dt-bindings: Introduce soc sleep stats bindings for Qualcomm SoCs
-Date: Thu,  8 Aug 2019 11:42:27 +0530
-Message-ID: <20190808061228.16573-2-mkshah@codeaurora.org>
-References: <20190808061228.16573-1-mkshah@codeaurora.org>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [Sound-open-firmware] [PATCH v2 3/5] ASoC: SOF: Add DT DSP device
+ support
+Date: Thu, 8 Aug 2019 09:27:37 +0300
+Message-ID: <CAEnQRZCmKXNxx=mjHRcn6rYQJxzaaPLL4WQf79RZ5Aqdzqcu3Q@mail.gmail.com>
+References: <20190723084104.12639-1-daniel.baluta@nxp.com>
+ <20190723084104.12639-4-daniel.baluta@nxp.com>
+ <d85909d6-c7cb-c64b-dfa9-6cee6c0da2cb@linux.intel.com>
+ <CAEnQRZDr+gj_eiESLNbVUVy1rreRE1nnDgtb3g=CjaRF5Aq9Vw@mail.gmail.com>
+ <CAEnQRZDctjdzQ2RjJXhQh+s=d0y_j3Taa51hDaR4bqJ62C=7iQ@mail.gmail.com>
+ <85b4a2c4-761e-bdcf-f05e-2fb16c06f11e@linux.intel.com>
+ <CAEnQRZCE3mxorYpL_nPXiU4MezGDaqUfuFDx8ci0WdXzDa68JA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808061228.16573-1-mkshah@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, mkshah@codeaurora.org, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEnQRZCE3mxorYpL_nPXiU4MezGDaqUfuFDx8ci0WdXzDa68JA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Peng Fan <peng.fan@nxp.com>, Fabio Estevam <festevam@gmail.com>, Anson Huang <anson.huang@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Paul Olaru <paul.olaru@nxp.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sound-open-firmware@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Add device binding documentation for Qualcomm Technology Inc's (QTI)
-SoC sleep stats driver. The driver is used for displaying SoC sleep
-statistic maintained by Always On Processor or Resource Power Manager.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- .../bindings/soc/qcom/soc-sleep-stats.txt     | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
-new file mode 100644
-index 000000000000..ee40687ded34
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.txt
-@@ -0,0 +1,36 @@
-+* SoC Sleep Stats
-+
-+Always On Processor/Resource Power Manager maintains statistics of the SoC
-+sleep modes involving lowering or powering down of the backbone rails - Cx
-+and Mx and the oscillator clock, XO.
-+
-+Statistics includes SoC sleep mode type, number of times low power mode were
-+entered, time of last entry, time of last exit and accumulated sleep duration.
-+SoC Sleep Stats driver provides sysfs interface to display this information.
-+
-+PROPERTIES
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,rpmh-sleep-stats" or "qcom,rpm-sleep-stats".
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: The base address on the Always On Processor or Resource Power
-+		    Manager from where the stats are read.
-+
-+EXAMPLE 1:
-+
-+	rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
-+		compatible = "qcom,rpmh-sleep-stats";
-+		reg = <0 0xc3f0000 0 0x400>;
-+	};
-+
-+EXAMPLE 2:
-+
-+	rpm_sleep_stats: soc-sleep-stats@4690000 {
-+		compatible = "qcom,rpm-sleep-stats";
-+		reg = <0 0x04690000 0 0x400>;
-+	};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+T24gV2VkLCBBdWcgNywgMjAxOSBhdCA2OjI4IFBNIERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1
+dGFAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIFdlZCwgQXVnIDcsIDIwMTkgYXQgNjoyMiBQTSBQ
+aWVycmUtTG91aXMgQm9zc2FydAo+IDxwaWVycmUtbG91aXMuYm9zc2FydEBsaW51eC5pbnRlbC5j
+b20+IHdyb3RlOgo+ID4KPiA+Cj4gPiA+Pj4+ICtzdGF0aWMgaW50IHNvZl9kdF9wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gPj4+PiArewo+ID4gPj4+PiArICAgICBzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ID4gPj4+PiArICAgICBjb25zdCBzdHJ1Y3Qg
+c29mX2Rldl9kZXNjICpkZXNjOwo+ID4gPj4+PiArICAgICAvKlRPRE86IGNyZWF0ZSBhIGdlbmVy
+aWMgc25kX3NvY194eHhfbWFjaCAqLwo+ID4gPj4+PiArICAgICBzdHJ1Y3Qgc25kX3NvY19hY3Bp
+X21hY2ggKm1hY2g7Cj4gPiA+Pj4KPiA+ID4+PiBJIHdvbmRlciBpZiB5b3UgcmVhbGx5IG5lZWQg
+dG8gdXNlIHRoZSBzYW1lIHN0cnVjdHVyZXMuIEZvciBJbnRlbCB3ZSBnZXQKPiA+ID4+PiBhYnNv
+bHV0ZWx5IHplcm8gaW5mbyBmcm9tIHRoZSBmaXJtd2FyZSBzbyByZWx5IG9uIGFuIEFDUEkgY29k
+ZWMgSUQgYXMgYQo+ID4gPj4+IGtleSB0byBmaW5kIGluZm9ybWF0aW9uIG9uIHdoaWNoIGZpcm13
+YXJlIGFuZCB0b3BvbG9neSB0byB1c2UsIGFuZCB3aGljaAo+ID4gPj4+IG1hY2hpbmUgZHJpdmVy
+IHRvIGxvYWQuIFlvdSBjb3VsZCBoYXZlIGFsbCB0aGlzIGluZm9ybWF0aW9uIGluIGEgRFQgYmxv
+Yj8KPiA+ID4+Cj4gPiA+PiBZZXMuIEkgc2VlIHlvdXIgcG9pbnQuIEkgd2lsbCBzdGlsbCBuZWVk
+IHRvIG1ha2UgYSBnZW5lcmljIHN0cnVjdHVyZSBmb3IKPiA+ID4+IHNuZF9zb2NfYWNwaV9tYWNo
+IHNvIHRoYXQgZXZlcnlvbmUgY2FuIHVzZSBzb2Zfbm9jb2RlY19zZXR1cCBmdW5jdGlvbi4KPiA+
+ID4+Cj4gPiA+PiBNYXliZSBzb21ldGhpbmcgbGlrZSB0aGlzOgo+ID4gPj4KPiA+ID4+IHN0cnVj
+dCBzbmRfc29jX21hY2ggewo+ID4gPj4gICAgdW5pb24gewo+ID4gPj4gICAgc3RydWN0IHNuZF9z
+b2NfYWNwaV9tYWNoIGFjcGlfbWFjaDsKPiA+ID4+ICAgIHN0cnVjdCBzbmRfc29jX29mX21hY2gg
+b2ZfbWFjaDsKPiA+ID4+ICAgIH0KPiA+ID4+IH07Cj4gPiA+Pgo+ID4gPj4gYW5kIHRoZW4gY2hh
+bmdlIHRoZSBwcm90b3R5cGUgb2Ygc29mX25vY29kZWNfc2V0dXAuCj4gPiA+Cj4gPiA+IEhpIFBp
+ZXJyZSwKPiA+ID4KPiA+ID4gSSBmaXhlZCBhbGwgdGhlIGNvbW1lbnRzIGV4Y2VwdCB0aGUgb25l
+IGFib3ZlLiBSZXBsYWNpbmcgc25kX3NvY19hY3BpX21hY2gKPiA+ID4gd2l0aCBhIGdlbmVyaWMg
+c25kX3NvY19tYWNoIGlzIG5vdCB0cml2aWFsIHRhc2suCj4gPiA+Cj4gPiA+IEkgd29uZGVyIGlm
+IGl0IGlzIGFjY2VwdGFibGUgdG8gZ2V0IHRoZSBpbml0aWFsIHBhdGNoZXMgYXMgdGhleSBhcmUK
+PiA+ID4gbm93IGFuZCBsYXRlciBzd2l0Y2ggdG8KPiA+ID4gZ2VuZXJpYyBBQ1BJL09GIGFic3Ry
+YWN0aW9uLgo+ID4gPgo+ID4gPiBBc2tpbmcgdGhpcyBiZWNhdXNlIGZvciB0aGUgbW9tZW50IG9u
+IHRoZSBpLk1YIHNpZGUgSSBoYXZlIG9ubHkKPiA+ID4gaW1wbGVtZW50ZWQgbm8gY29kZWMKPiA+
+ID4gdmVyc2lvbiBhbmQgd2UgZG9uJ3QgcHJvYmUgYW55IG9mIHRoZSBtYWNoaW5lIGRyaXZlcnMg
+d2UgaGF2ZS4KPiA+ID4KPiA+ID4gU28sIHRoZXJlIGlzIHRoaXMgb25seSBvbmUgbWVtYmVyIG9m
+IHNuZF9zb2NfYWNwaV9tYWNoIHRoYXQgaW14Cj4gPiA+IHZlcnNpb24gaXMgbWFraW5nIHVzZSBv
+ZjoKPiA+ID4KPiA+ID4gICAgbWFjaC0+ZHJ2X25hbWUgPSAic29mLW5vY29kZWMiOwo+ID4gPgo+
+ID4gPiBUaGF0J3MgYWxsLgo+ID4gPgo+ID4gPiBJIHRoaW5rIHRoZSBjaGFuZ2UgYXMgaXQgaXMg
+bm93IGlzIHZlcnkgY2xlYW4gYW5kIG5vbi1pbnRydXNpdmUuIExhdGVyCj4gPiA+IHdlIHdpbGwg
+Z2V0IG9wdGlvbnMgdG8KPiA+ID4gcmVhZCBmaXJtd2FyZSBuYW1lIGFuZCBzdHVmZiBmcm9tIERU
+Lgo+ID4gPgo+ID4gPiBBbnlob3csIEkgZG9uJ3QgdGhpbmsgd2UgY2FuIGdldCByaWQgb2Ygc25k
+X2Rldl9kZXNjIHN0cnVjdHVyZSBvbgo+ID4gPiBpLk1YLiBUaGlzIHdpbGwgYmUgdXNlZAo+ID4g
+PiB0byBzdG9yZSB0aGUgaW5mb3JtYXRpb24gcmVhZCBmcm9tIERUOgo+ID4gPgo+ID4gPiBzdGF0
+aWMgc3RydWN0IHNvZl9kZXZfZGVzYyBzb2Zfb2ZfaW14OHF4cF9kZXNjID0gewo+ID4gPiDCuyAg
+ICAgICAuZGVmYXVsdF9md19wYXRoID0gImlteC9zb2YiLAo+ID4gPiDCuyAgICAgICAuZGVmYXVs
+dF90cGxnX3BhdGggPSAiaW14L3NvZi10cGxnIiwKPiA+ID4gwrsgICAgICAgLm5vY29kZWNfZndf
+ZmlsZW5hbWUgPSAic29mLWlteDgucmkiLAo+ID4gPiDCuyAgICAgICAubm9jb2RlY190cGxnX2Zp
+bGVuYW1lID0gInNvZi1pbXg4LW5vY29kZWMudHBsZyIsCj4gPiA+IMK7ICAgICAgIC5vcHMgPSAm
+c29mX2lteDhfb3BzLAo+ID4gPiB9Owo+ID4gPgo+ID4gPiBGb3IgdGhlIG1vbWVudCB3ZSB3aWxs
+IG9ubHkgdXNlIHRoZSBkZWZhdWx0IHZhbHVlcy4KPiA+Cj4gPiBZZXMsIHRoYXQncyBmaW5lIGZv
+ciBub3cuIElmIHlvdSBkb24ndCBoYXZlIGEgcmVhbCBtYWNoaW5lIGRyaXZlciB0aGVuCj4gPiB0
+aGVyZSdzIG5vdGhpbmcgdXJnZW50IHRvIGNoYW5nZS4KPiA+Cj4gPiBJcyB0aGUgbmV3IHZlcnNp
+b24gb24gR2l0SHViPwo+Cj4gTm90IHlldCwgd2lsbCBwdXNoIGl0IHRvZGF5IGFuZCBwaW5nIHlv
+dS4KClBSIHVwZGF0ZWQ6IGh0dHBzOi8vZ2l0aHViLmNvbS90aGVzb2Zwcm9qZWN0L2xpbnV4L3B1
+bGwvMTA0OAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
