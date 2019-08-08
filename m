@@ -1,54 +1,115 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 3/9] soc: samsung: Add Exynos Adaptive Supply Voltage
- driver
-Date: Thu, 8 Aug 2019 14:31:39 +0200
-Message-ID: <CAJKOXPc8iFo=2JAGEZSC46N3sZae4+JcZYBCjpKysb6PFPzyaQ@mail.gmail.com>
-References: <CGME20190718143130eucas1p26f2058f47eb2f4020e1ddbf1619d1ac8@eucas1p2.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com>
- <20190718143044.25066-4-s.nawrocki@samsung.com>
- <CAJKOXPeOfDHjqSotxVwVuy+6r9X3Q8ZXLit1_=gGd7bOwkHupA@mail.gmail.com>
- <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 05/15] net: phy: adin: add {write,read}_mmd hooks
+Date: Thu, 8 Aug 2019 15:30:16 +0300
+Message-ID: <20190808123026.17382-6-alexandru.ardelean@analog.com>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a56fe2d8-1f26-b462-1564-f23902f7dbb5@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org, pankaj.dubey@samsung.com, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, kgene@kernel.org, vireshk@kernel.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 14:07, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
-> >> +static unsigned int exynos5422_asv_parse_table(struct exynos_asv *asv,
-> >> +                                     unsigned int pkg_id)
-> >> +{
-> >> +       return (pkg_id >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
-> >> +}
-> >> +
-> >> +static bool exynos5422_asv_parse_bin2(struct exynos_asv *asv,
-> >> +                                    unsigned int pkg_id)
-> >> +{
-> >> +       return (pkg_id >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
-> >
-> > return !!() for converting to boolean.
->
-> I'm not convinced it is needed, the return type of the function is bool
-> and value of the expression will be implicitly converted to that type.
-> Is there any compiler warning related to that?
+Both ADIN1200 & ADIN1300 support Clause 45 access.
+The Extended Management Interface (EMI) registers are accessible via both
+Clause 45 (at register MDIO_MMD_VEND1) and using Clause 22.
 
-Yeah, but bool is int so there will be no implicit conversion... I
-guess it is a convention. In theory !! is the proper conversion to
-bool but if bool==int then it's essentially conversion to 1. I am not
-sure what's the benefit, maybe for some wrong code which would do
-comparisons on result like if (exynos5422_asv_parse_bin2() == TRUE)...
+However, the Clause 22 MMD access operations differ from the implementation
+in the kernel, in the sense that it uses registers ExtRegPtr (0x10) &
+ExtRegData (0x11) to access Clause 45 & EMI registers.
 
-Best regards,
-Krzysztof
+The indirect access is done via the following mechanism (for both R/W):
+1. Write the address of the register in the ExtRegPtr
+2. Read/write the value of the register (written at ExtRegPtr)
+
+This mechanism is needed to manage configuration of chip settings and to
+access EEE registers (via Clause 22).
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/net/phy/adin.c | 46 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index 69000fb16704..a833e329be6f 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -14,6 +14,9 @@
+ #define PHY_ID_ADIN1200				0x0283bc20
+ #define PHY_ID_ADIN1300				0x0283bc30
+ 
++#define ADIN1300_MII_EXT_REG_PTR		0x0010
++#define ADIN1300_MII_EXT_REG_DATA		0x0011
++
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -53,6 +56,45 @@ static int adin_phy_config_intr(struct phy_device *phydev)
+ 			      ADIN1300_INT_MASK_EN);
+ }
+ 
++static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
++{
++	struct mii_bus *bus = phydev->mdio.bus;
++	int phy_addr = phydev->mdio.addr;
++	int err;
++
++	if (phydev->is_c45) {
++		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
++
++		return __mdiobus_read(bus, phy_addr, addr);
++	}
++
++	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
++	if (err)
++		return err;
++
++	return __mdiobus_read(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA);
++}
++
++static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
++			  u16 val)
++{
++	struct mii_bus *bus = phydev->mdio.bus;
++	int phy_addr = phydev->mdio.addr;
++	int err;
++
++	if (phydev->is_c45) {
++		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
++
++		return __mdiobus_write(bus, phy_addr, addr, val);
++	}
++
++	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
++	if (err)
++		return err;
++
++	return __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA, val);
++}
++
+ static struct phy_driver adin_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+@@ -65,6 +107,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
++		.read_mmd	= adin_read_mmd,
++		.write_mmd	= adin_write_mmd,
+ 	},
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
+@@ -77,6 +121,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
++		.read_mmd	= adin_read_mmd,
++		.write_mmd	= adin_write_mmd,
+ 	},
+ };
+ 
+-- 
+2.20.1
