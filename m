@@ -1,44 +1,81 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v3 09/21] ARM: dts: imx6qdl-colibri: add phy to fec
-Date: Thu, 8 Aug 2019 08:03:22 +0000
-Message-ID: <9849ffad4a07b4ce90b412ccdada93ee45c5bc5d.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-10-philippe.schenker@toradex.com>
-         <20190807105107.nqqltv64tjxprow6@pengutronix.de>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Date: Thu, 8 Aug 2019 09:08:33 +0100
+Message-ID: <20190808080832.nleult5bknmzr3ze@willie-the-truck>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807105107.nqqltv64tjxprow6@pengutronix.de>
-Content-Language: en-US
-Content-ID: <8092D70CEC74144BB6A1B117940CE27E@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-Cc: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, Larisa Ileana Grigore <larisa.grigore@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDEyOjUxICswMjAwLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90
-ZToNCj4gT24gV2VkLCBBdWcgMDcsIDIwMTkgYXQgMDg6MjY6MjNBTSArMDAwMCwgUGhpbGlwcGUg
-U2NoZW5rZXIgd3JvdGU6DQo+ID4gQWRkIHRoZSBwaHktbm9kZSBhbmQgbWRpbyBidXMgdG8gdGhl
-IGZlYy1ub2RlLCByZXByZXNlbnRlZCBhcyBpcyBvbg0KPiA+IGhhcmR3YXJlLg0KPiA+IFRoaXMg
-Y29tbWl0IGluY2x1ZGVzIG1pY3JlbCxsZWQtbW9kZSB0aGF0IGlzIHNldCB0byB0aGUgZGVmYXVs
-dA0KPiA+IHZhbHVlLCBwcmVwYXJlZCBmb3Igc29tZW9uZSB3aG8gd2FudHMgdG8gY2hhbmdlIHRo
-aXMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBl
-LnNjaGVua2VyQHRvcmFkZXguY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZXMgaW4gdjM6
-IE5vbmUNCj4gPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+ID4gDQo+ID4gIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZxZGwtY29saWJyaS5kdHNpIHwgMTEgKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZxZGwtY29saWJyaS5kdHNpDQo+ID4gaW5kZXggMWJlYWMyMjI2NmVkLi4wMTlkZGE2Yjg4YWQg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kN
-Cj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiA+IEBA
-IC0xNDAsNyArMTQwLDE4IEBADQo+ID4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+
-ICAJcGluY3RybC0wID0gPCZwaW5jdHJsX2VuZXQ+Ow0KPiA+ICAJcGh5LW1vZGUgPSAicm1paSI7
-DQo+ID4gKwlwaHktaGFuZGxlID0gPCZldGhwaHk+Ow0KPiA+ICAJc3RhdHVzID0gIm9rYXkiOw0K
-PiA+ICsNCj4gPiArCW1kaW8gew0KPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJ
-CSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICsNCj4gPiArCQlldGhwaHk6IGV0aGVybmV0LXBoeUAw
-IHsNCj4gPiArCQkJcmVnID0gPDA+Ow0KPiA+ICsJCQltaWNyZWwsbGVkLW1vZGUgPSA8MD47DQo+
-IA0KPiBEb2Vzbid0IHRoYXQgbmVlZCBhIGNvbXBhdGlibGUgZW50cnkgdG8gYmUgYWN0dWFsbHkg
-dXNlZD8NCj4gDQo+IEJlc3QgcmVnYXJkcw0KPiBVd2UNCg0KSGkgVXdlIGFuZCB0aGFua3MgZm9y
-IHBvaW50aW5nIHRoaXMgb3V0LiBJIGp1c3QgdHJpZWQgaXQgYW5kIGl0IHdvcmtzDQpmaW5lIHdp
-dGhvdXQgdGhlIGNvbXBhdGlibGUuDQoNClBoaWxpcHBlDQoNCj4gPiANCg==
+On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:
+> Introduce support for LINFlex driver, based on:
+> - the version of Freescale LPUART driver after commit b3e3bf2ef2c7 ("Merge
+>   4.0-rc7 into tty-next");
+> - commit abf1e0a98083 ("tty: serial: fsl_lpuart: lock port on console
+>   write").
+> In this basic version, the driver can be tested using initramfs and relies
+> on the clocks and pin muxing set up by U-Boot.
+> 
+> Remarks concerning the earlycon support:
+> 
+> - LinFlexD does not allow character transmissions in the INIT mode (see
+>   section 47.4.2.1 in the reference manual[1]). Therefore, a mutual
+>   exclusion between the first linflex_setup_watermark/linflex_set_termios
+>   executions and linflex_earlycon_putchar was employed and the characters
+>   normally sent to earlycon during initialization are kept in a buffer and
+>   sent afterwards.
+> 
+> - Empirically, character transmission is also forbidden within the last 1-2
+>   ms before entering the INIT mode, so we use an explicit timeout
+>   (PREINIT_DELAY) between linflex_earlycon_putchar and the first call to
+>   linflex_setup_watermark.
+> 
+> - U-Boot currently uses the UART FIFO mode, while this driver makes the
+>   transition to the buffer mode. Therefore, the earlycon putchar function
+>   matches the U-Boot behavior before initializations and the Linux behavior
+>   after.
+> 
+> [1] https://www.nxp.com/webapp/Download?colCode=S32V234RM
+> 
+> Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
+> Signed-off-by: Adrian.Nitu <adrian.nitu@freescale.com>
+> Signed-off-by: Larisa Grigore <Larisa.Grigore@nxp.com>
+> Signed-off-by: Ana Nedelcu <B56683@freescale.com>
+> Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
+> Signed-off-by: Matthew Nunez <matthew.nunez@nxp.com>
+> [stefan-gabriel.mirea@nxp.com: Reduced for upstreaming and implemented
+>                                earlycon support]
+> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |   6 +
+>  drivers/tty/serial/Kconfig                    |  15 +
+>  drivers/tty/serial/Makefile                   |   1 +
+>  drivers/tty/serial/fsl_linflexuart.c          | 956 ++++++++++++++++++
+>  include/uapi/linux/serial_core.h              |   3 +
+>  5 files changed, 981 insertions(+)
+>  create mode 100644 drivers/tty/serial/fsl_linflexuart.c
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 46b826fcb5ad..4d545732aadc 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1090,6 +1090,12 @@
+>  			the framebuffer, pass the 'ram' option so that it is
+>  			mapped with the correct attributes.
+>  
+> +		linflex,<addr>
+> +			Use early console provided by Freescale LinFlex UART
+> +			serial driver for NXP S32V234 SoCs. A valid base
+> +			address must be provided, and the serial port must
+> +			already be setup and configured.
+
+Why isn't earlycon= sufficient for this?
+
+Will
