@@ -1,36 +1,82 @@
-Return-Path: <SRS0=S1SN=WC=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 1/4] dt-bindings: arm: imx: Add the soc binding for
- i.MX8MN
-Date: Tue, 6 Aug 2019 05:42:05 +0000
-Message-ID: 
- <DB3PR0402MB39162CCE914A9C250CC203BFF5D50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190619022145.42398-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190619022145.42398-1-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=skGX=WE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7833 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732389AbfHHJia (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2019 05:38:30 -0400
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V6 6/8] arm64: tegra: Enable xudc on Jetson TX1
+Date: Thu, 8 Aug 2019 15:07:24 +0530
+Message-ID: <1565257046-9890-7-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "j.neuschaefer@gmx.net" <j.neuschaefer@gmx.net>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, Leo Li <leoyang.li@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Vabhav Sharma <vabhav.sharma@nxp.com>, Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-UGluZyBmb3IgdGhpcyBwYXRjaCBzZXJpZXMuLi4NCg0KPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5z
-b24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgc29jICYgYm9hcmQg
-YmluZGluZyBmb3IgaS5NWDhNTi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxB
-bnNvbi5IdWFuZ0BueHAuY29tPg0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4NCj4gLS0tDQo+IE5vIGNoYW5nZS4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sIHwgNiArKysrKysNCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA2IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KPiBpbmRleCA0MDcxMzhlLi5iMzVhYmIxIDEwMDY0
-NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1s
-DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwN
-Cj4gQEAgLTE3Nyw2ICsxNzcsMTIgQEAgcHJvcGVydGllczoNCj4gICAgICAgICAgICAgICAgLSBm
-c2wsaW14OG1tLWV2ayAgICAgICAgICAgICMgaS5NWDhNTSBFVksgQm9hcmQNCj4gICAgICAgICAg
-ICAtIGNvbnN0OiBmc2wsaW14OG1tDQo+IA0KPiArICAgICAgLSBkZXNjcmlwdGlvbjogaS5NWDhN
-TiBiYXNlZCBCb2FyZHMNCj4gKyAgICAgICAgaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0K
-PiArICAgICAgICAgICAgICAtIGZzbCxpbXg4bW4tZGRyNC1ldmsgICAgICAgICAgICAjIGkuTVg4
-TU4gRERSNCBFVksgQm9hcmQNCj4gKyAgICAgICAgICAtIGNvbnN0OiBmc2wsaW14OG1uDQo+ICsN
-Cj4gICAgICAgIC0gZGVzY3JpcHRpb246IGkuTVg4UVhQIGJhc2VkIEJvYXJkcw0KPiAgICAgICAg
-ICBpdGVtczoNCj4gICAgICAgICAgICAtIGVudW06DQo+IC0tDQo+IDIuNy40DQoNCg==
+Enable XUSB device mode driver for USB0 slot on Jetson TX1.
+
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 31 +++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index a7dc319..2c9de2b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1362,7 +1362,7 @@
+ 				status = "okay";
+ 
+ 				lanes {
+-					usb2-0 {
++					micro_b: usb2-0 {
+ 						nvidia,function = "xusb";
+ 						status = "okay";
+ 					};
+@@ -1483,6 +1483,21 @@
+ 		vmmc-supply = <&vdd_3v3_sd>;
+ 	};
+ 
++	usb@700d0000 {
++		status = "okay";
++		phys = <&micro_b>;
++		phy-names = "usb2";
++		avddio-usb-supply = <&vdd_3v3_sys>;
++		hvdd-usb-supply = <&vdd_1v8>;
++		usb-role-switch;
++
++		port {
++			usb_role_switch: endpoint {
++				remote-endpoint = <&usb_b_conn_ep>;
++			};
++		};
++	};
++
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -1641,4 +1656,18 @@
+ 			linux,code = <KEY_VOLUMEUP>;
+ 		};
+ 	};
++
++	usb_type_b: connector {
++		compatible = "linux,usb-conn-gpio", "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
++		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
++
++		port {
++			usb_b_conn_ep: endpoint {
++				remote-endpoint = <&usb_role_switch>;
++			};
++		};
++	};
++
+ };
+-- 
+2.7.4
