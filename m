@@ -1,39 +1,115 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of
- qcom_scm_call
-Date: Thu, 8 Aug 2019 17:30:14 +0100
-Message-ID: <20190808163013.u5qbke54kj555oxn@willie-the-truck>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-2-vivek.gautam@codeaurora.org>
- <20190618175536.GI4270@fuggles.cambridge.arm.com>
- <CAFp+6iEwN6jeEGNxKVU5_i5NxdEbuF2ZggegEJZ1Rq6F=H34jg@mail.gmail.com>
- <20190805222755.GB2634@builder>
- <CAFp+6iHhh9749dAV4YDeE_0w1nCiftecTBedW4Rf0aiaOJsN2A@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: soundwire: add slave bindings
+Date: Thu, 8 Aug 2019 17:48:56 +0100
+Message-ID: <cdd2bded-551c-65f5-ca29-d2bb825bdaba@linaro.org>
+References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
+ <20190808144504.24823-2-srinivas.kandagatla@linaro.org>
+ <d346b2af-f285-4c53-b706-46a129ab7951@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iHhh9749dAV4YDeE_0w1nCiftecTBedW4Rf0aiaOJsN2A@mail.gmail.com>
+In-Reply-To: <d346b2af-f285-4c53-b706-46a129ab7951@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, vkoul@kernel.org, broonie@kernel.org
+Cc: bgoswami@codeaurora.org, plai@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 05:05:21PM +0530, Vivek Gautam wrote:
-> On Tue, Aug 6, 2019 at 3:58 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> > Would you be able to respin this patch, so that we could unblock the
-> > introduction of the display nodes in the various device?
-> 
-> Will pointed [1] to the restructuring of arm-smmu to support
-> implementation specific details.
-> That hasn't been posted yet, and I haven't yet been able to work on that either.
-> I will be happy to respin this series with the comments addressed if
-> Will is okay to pull changes to unblock sdm845 devices. :)
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1087457/
 
-Just checked with Robin, and he's planning to post something tomorrow.
+On 08/08/2019 16:58, Pierre-Louis Bossart wrote:
+> 
+>> +++ b/Documentation/devicetree/bindings/soundwire/slave.txt
+>> @@ -0,0 +1,46 @@
+>> +SoundWire slave device bindings.
+>> +
+>> +SoundWire is a 2-pin multi-drop interface with data and clock line.
+>> +It facilitates development of low cost, efficient, high performance 
+>> systems.
+>> +
+>> +SoundWire slave devices:
+>> +Every SoundWire controller node can contain zero or more child nodes
+>> +representing slave devices on the bus. Every SoundWire slave device is
+>> +uniquely determined by the enumeration address containing 5 fields:
+>> +SoundWire Version, Instance ID, Manufacturer ID, Part ID and Class ID
+>> +for a device. Addition to below required properties, child nodes can
+>> +have device specific bindings.
+> 
+> In case the controller supports multiple links, what's the encoding then?
+> in the MIPI DisCo spec there is a linkId field in the _ADR encoding that 
+> helps identify which link the Slave device is connected to
+>  >> +
+>> +Required property for SoundWire child node if it is present:
+>> +- compatible:     "sdwVER,MFD,PID,CID". The textual representation of
+>> +          SoundWire Enumeration address comprising SoundWire
+>> +          Version, Manufacturer ID, Part ID and Class ID,
+>> +          shall be in lower-case hexadecimal with leading
+>> +          zeroes suppressed.
+>> +          Version number '0x10' represents SoundWire 1.0
+>> +          Version number '0x11' represents SoundWire 1.1
+>> +          ex: "sdw10,0217,2010,0"
+>> +
+>> +- sdw-instance-id: Should be ('Instance ID') from SoundWire
+>> +          Enumeration Address. Instance ID is for the cases
+>> +          where multiple Devices of the same type or Class
+>> +          are attached to the bus.
+> 
+> so it is actually required if you have a single Slave device? Or is it 
+> only required when you have more than 1 device of the same type?
+> 
 
-Will
+This is mandatory for any slave device!
+
+> FWIW in the MIPI DisCo spec we kept the instanceID as part of the _ADR, 
+> so it's implicitly mandatory (and ignored by the bus if there is only 
+> one device of the same time)
+> 
+>> +
+>> +SoundWire example for Qualcomm's SoundWire controller:
+>> +
+>> +soundwire@c2d0000 {
+>> +    compatible = "qcom,soundwire-v1.5.0"
+>> +    reg = <0x0c2d0000 0x2000>;
+>> +
+>> +    spkr_left:wsa8810-left{
+>> +        compatible = "sdw10,0217,2010,0";
+>> +        sdw-instance-id = <1>;
+>> +        ...
+>> +    };
+>> +
+>> +    spkr_right:wsa8810-right{
+>> +        compatible = "sdw10,0217,2010,0";
+>> +        sdw-instance-id = <2>;
+> 
+> Isn't the MIPI encoding reported in the Dev_ID0..5 registers 0-based?
+> 
+>> +        ...
+>> +    };
+>> +};
+>>
+> 
+> And now that I think of it, wouldn't it be simpler for everyone if we 
+> aligned on that MIPI DisCo public spec? e.g. you'd have one property 
+> with a 64-bit number that follows the MIPI spec. No special encoding 
+> necessary for device tree cases, your DT blob would use this:
+
+Thanks for the suggestion, adding 64 device bits as compatible string 
+should take care of linkID too. I will give that a go!
+
+> 
+> soundwire@c2d0000 {
+>      compatible = "qcom,soundwire-v1.5.0"
+>      reg = <0x0c2d0000 0x2000>;
+> 
+>      spkr_left:wsa8810-left{
+>          compatible = "sdw00 00 10 02 17 20 10 00"
+>      }
+> 
+>      spkr_right:wsa8810-right{
+>          compatible = "sdw0000100217201100"
+>      }
+> }
+> 
+> We could use parentheses if it makes people happier, but the information 
+> from the MIPI DisCo spec can be used as is, and provide a means for spec 
+> changes via reserved bits.
