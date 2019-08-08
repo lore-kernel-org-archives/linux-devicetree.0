@@ -1,52 +1,43 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 1/2] mmc: sdhci-of-at91: add quirk for broken HS200
-Date: Thu, 8 Aug 2019 14:42:38 +0200
-Message-ID: <20190808124238.qui3rhk3t6dabbk7@M43218.corp.atmel.com>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Subject: Re: [PATCH 5/6] tty: serial: Add linflexuart driver for S32V234
+Date: Thu, 8 Aug 2019 12:47:00 +0000
+Message-ID: <VI1PR0402MB28635661A4A294EC6F01095EDFD70@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <20190802194702.30249-1-stefan-gabriel.mirea@nxp.com>
+ <20190802194702.30249-6-stefan-gabriel.mirea@nxp.com>
+ <20190808080832.nleult5bknmzr3ze@willie-the-truck>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
-Cc: Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, Larisa Ileana Grigore <larisa.grigore@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 10:35:40AM +0200, Eugen Hristev - M18282 wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> HS200 is not implemented in the driver, but the controller claims it
-> through caps.
-> Remove it via quirk.
-> Without this quirk, the mmc core will try to enable hs200, which will fail,
-> and the eMMC initialization will fail.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-Thanks
-
-Ludovic
-
-> ---
->  drivers/mmc/host/sdhci-of-at91.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
-> index 57fe3b2..3a8c6d8 100644
-> --- a/drivers/mmc/host/sdhci-of-at91.c
-> +++ b/drivers/mmc/host/sdhci-of-at91.c
-> @@ -370,6 +370,9 @@ static int sdhci_at91_probe(struct platform_device *pdev)
->  	pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
->  	pm_runtime_use_autosuspend(&pdev->dev);
->  
-> +	/* HS200 is broken at this moment */
-> +	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
-> +
->  	ret = sdhci_add_host(host);
->  	if (ret)
->  		goto pm_runtime_disable;
-> -- 
-> 2.7.4
-> 
+Hello Will,=0A=
+=0A=
+On 8/8/2019 11:08 AM, Will Deacon wrote:=0A=
+> On Fri, Aug 02, 2019 at 07:47:23PM +0000, Stefan-gabriel Mirea wrote:=0A=
+>> +             linflex,<addr>=0A=
+>> +                     Use early console provided by Freescale LinFlex UA=
+RT=0A=
+>> +                     serial driver for NXP S32V234 SoCs. A valid base=
+=0A=
+>> +                     address must be provided, and the serial port must=
+=0A=
+>> +                     already be setup and configured.=0A=
+> =0A=
+> Why isn't earlycon=3D sufficient for this?=0A=
+=0A=
+"earlycon=3D" is not actually supported. I will fix this in the next=0A=
+version by adding a /chosen/stdout-path to the dts. The compatible=0A=
+string provided to OF_EARLYCON_DECLARE will also be changed from=0A=
+"fsl,s32v234-linflexuart" to "fsl,s32-linflexuart" to match the one in=0A=
+the device tree nodes. I missed this after importing a rename from our=0A=
+codebase.=0A=
+=0A=
+Should I remove this addition from kernel-parameters.txt after that?=0A=
+=0A=
+Regards,=0A=
+Stefan=0A=
