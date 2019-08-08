@@ -1,303 +1,43 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 2/3] dt-bindings: display: amlogic,meson-vpu: convert to yaml
-Date: Thu,  8 Aug 2019 10:55:21 +0200
-Message-ID: <20190808085522.21950-3-narmstrong@baylibre.com>
+Subject: [PATCH v3 3/3] MAINTAINERS: Update with Amlogic DRM bindings
+ converted as YAML
+Date: Thu,  8 Aug 2019 10:55:22 +0200
+Message-ID: <20190808085522.21950-4-narmstrong@baylibre.com>
 References: <20190808085522.21950-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190808085522.21950-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: robh+dt@kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic Display Controller over to YAML schemas.
-
-The original example has a leftover "dmc" memory cell, that has been
-removed in the yaml rewrite.
-
-The port connection table has been dropped in favor of a description
-of each port.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/display/amlogic,meson-vpu.txt    | 121 ----------------
- .../bindings/display/amlogic,meson-vpu.yaml   | 137 ++++++++++++++++++
- 2 files changed, 137 insertions(+), 121 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
- create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
-deleted file mode 100644
-index be40a780501c..000000000000
---- a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
-+++ /dev/null
-@@ -1,121 +0,0 @@
--Amlogic Meson Display Controller
--================================
--
--The Amlogic Meson Display controller is composed of several components
--that are going to be documented below:
--
--DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
--   | vd1   _______     _____________    _________________     |               |
--D  |-------|      |----|            |   |                |    |   HDMI PLL    |
--D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
--R  |-------|      |----| Processing |   |                |    |               |
--   | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
--R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
--A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
--M  |-------|______|----|____________|   |________________|    |               |
--___|__________________________________________________________|_______________|
--
--
--VIU: Video Input Unit
-----------------------
--
--The Video Input Unit is in charge of the pixel scanout from the DDR memory.
--It fetches the frames addresses, stride and parameters from the "Canvas" memory.
--This part is also in charge of the CSC (Colorspace Conversion).
--It can handle 2 OSD Planes and 2 Video Planes.
--
--VPP: Video Post Processing
----------------------------
--
--The Video Post Processing is in charge of the scaling and blending of the
--various planes into a single pixel stream.
--There is a special "pre-blending" used by the video planes with a dedicated
--scaler and a "post-blending" to merge with the OSD Planes.
--The OSD planes also have a dedicated scaler for one of the OSD.
--
--VENC: Video Encoders
----------------------
--
--The VENC is composed of the multiple pixel encoders :
-- - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
-- - ENCP : Progressive Video Encoder for HDMI
-- - ENCL : LCD LVDS Encoder
--The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
--tree and provides the scanout clock to the VPP and VIU.
--The ENCI is connected to a single VDAC for Composite Output.
--The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
--
--Device Tree Bindings:
-----------------------
--
--VPU: Video Processing Unit
----------------------------
--
--Required properties:
--- compatible: value should be different for each SoC family as :
--	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
--	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
--	- GXM (S912) : "amlogic,meson-gxm-vpu"
--	followed by the common "amlogic,meson-gx-vpu"
--	- G12A (S905X2, S905Y2, S905D2) : "amlogic,meson-g12a-vpu"
--- reg: base address and size of he following memory-mapped regions :
--	- vpu
--	- hhi
--- reg-names: should contain the names of the previous memory regions
--- interrupts: should contain the VENC Vsync interrupt number
--- amlogic,canvas: phandle to canvas provider node as described in the file
--	../soc/amlogic/amlogic,canvas.txt
--
--Optional properties:
--- power-domains: Optional phandle to associated power domain as described in
--	the file ../power/power_domain.txt
--
--Required nodes:
--
--The connections to the VPU output video ports are modeled using the OF graph
--bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--The following table lists for each supported model the port number
--corresponding to each VPU output.
--
--		Port 0		Port 1
-------------------------------------------
-- S905 (GXBB)	CVBS VDAC	HDMI-TX
-- S905X (GXL)	CVBS VDAC	HDMI-TX
-- S905D (GXL)	CVBS VDAC	HDMI-TX
-- S912 (GXM)	CVBS VDAC	HDMI-TX
-- S905X2 (G12A)	CVBS VDAC	HDMI-TX
-- S905Y2 (G12A)	CVBS VDAC	HDMI-TX
-- S905D2 (G12A)	CVBS VDAC	HDMI-TX
--
--Example:
--
--tv-connector {
--	compatible = "composite-video-connector";
--
--	port {
--		tv_connector_in: endpoint {
--			remote-endpoint = <&cvbs_vdac_out>;
--		};
--	};
--};
--
--vpu: vpu@d0100000 {
--	compatible = "amlogic,meson-gxbb-vpu";
--	reg = <0x0 0xd0100000 0x0 0x100000>,
--	      <0x0 0xc883c000 0x0 0x1000>,
--	      <0x0 0xc8838000 0x0 0x1000>;
--	reg-names = "vpu", "hhi", "dmc";
--	interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	/* CVBS VDAC output port */
--	port@0 {
--		reg = <0>;
--
--		cvbs_vdac_out: endpoint {
--			remote-endpoint = <&tv_connector_in>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-new file mode 100644
-index 000000000000..d1205a6697a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-@@ -0,0 +1,137 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/display/amlogic,meson-vpu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson Display Controller
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+
-+description: |
-+  The Amlogic Meson Display controller is composed of several components
-+  that are going to be documented below
-+
-+  DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
-+     | vd1   _______     _____________    _________________     |               |
-+  D  |-------|      |----|            |   |                |    |   HDMI PLL    |
-+  D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
-+  R  |-------|      |----| Processing |   |                |    |               |
-+     | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
-+  R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
-+  A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
-+  M  |-------|______|----|____________|   |________________|    |               |
-+  ___|__________________________________________________________|_______________|
-+
-+
-+  VIU: Video Input Unit
-+  ---------------------
-+
-+  The Video Input Unit is in charge of the pixel scanout from the DDR memory.
-+  It fetches the frames addresses, stride and parameters from the "Canvas" memory.
-+  This part is also in charge of the CSC (Colorspace Conversion).
-+  It can handle 2 OSD Planes and 2 Video Planes.
-+
-+  VPP: Video Post Processing
-+  --------------------------
-+
-+  The Video Post Processing is in charge of the scaling and blending of the
-+  various planes into a single pixel stream.
-+  There is a special "pre-blending" used by the video planes with a dedicated
-+  scaler and a "post-blending" to merge with the OSD Planes.
-+  The OSD planes also have a dedicated scaler for one of the OSD.
-+
-+  VENC: Video Encoders
-+  --------------------
-+
-+  The VENC is composed of the multiple pixel encoders
-+   - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
-+   - ENCP : Progressive Video Encoder for HDMI
-+   - ENCL : LCD LVDS Encoder
-+  The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
-+  tree and provides the scanout clock to the VPP and VIU.
-+  The ENCI is connected to a single VDAC for Composite Output.
-+  The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - amlogic,meson-gxbb-vpu # GXBB (S905)
-+              - amlogic,meson-gxl-vpu # GXL (S905X, S905D)
-+              - amlogic,meson-gxm-vpu # GXM (S912)
-+          - const: amlogic,meson-gx-vpu
-+      - enum:
-+          - amlogic,meson-g12a-vpu # G12A (S905X2, S905Y2, S905D2)
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+   items:
-+     - const: vpu
-+     - const: hhi
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+    description: phandle to the associated power domain
-+
-+  port@0:
-+    type: object
-+    description:
-+      A port node pointing to the CVBS VDAC port node.
-+
-+  port@1:
-+    type: object
-+    description:
-+      A port node pointing to the HDMI-TX port node.
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - port@0
-+  - port@1
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    vpu: vpu@d0100000 {
-+        compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
-+        reg = <0xd0100000 0x100000>, <0xc883c000 0x1000>;
-+        reg-names = "vpu", "hhi";
-+        interrupts = <3>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* CVBS VDAC output port */
-+        port@0 {
-+            reg = <0>;
-+
-+            cvbs_vdac_out: endpoint {
-+                remote-endpoint = <&tv_connector_in>;
-+            };
-+        };
-+
-+        /* HDMI TX output port */
-+        port@1 {
-+            reg = <1>;
-+
-+            hdmi_tx_out: endpoint {
-+                remote-endpoint = <&hdmi_tx_in>;
-+            };
-+        };
-+    };
--- 
-2.22.0
+VGhlIGFtbG9naWMsbWVzb24tZHctaGRtaS50eHQgYW5kIGFtbG9naWMsbWVzb24tdnB1LnR4dCBo
+YXMgYmVlbgpjb252ZXJ0ZWQgdG8gWUFNTCBzY2hlbWFzLCB1cGRhdGUgTUFJTlRBSU5FUlMgdG8g
+bWF0Y2ggdGhlbSBhZ2Fpbi4KClNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ry
+b25nQGJheWxpYnJlLmNvbT4KLS0tCiBNQUlOVEFJTkVSUyB8IDQgKystLQogMSBmaWxlIGNoYW5n
+ZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9NQUlOVEFJ
+TkVSUyBiL01BSU5UQUlORVJTCmluZGV4IDY0MjZkYjUxOThmMC4uYzU1YzE4NTMxY2QxIDEwMDY0
+NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlOVEFJTkVSUwpAQCAtNTMxOCw4ICs1MzE4LDgg
+QEAgTDoJbGludXgtYW1sb2dpY0BsaXN0cy5pbmZyYWRlYWQub3JnCiBXOglodHRwOi8vbGludXgt
+bWVzb24uY29tLwogUzoJU3VwcG9ydGVkCiBGOglkcml2ZXJzL2dwdS9kcm0vbWVzb24vCi1GOglE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29uLXZw
+dS50eHQKLUY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9n
+aWMsbWVzb24tZHctaGRtaS50eHQKK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2FtbG9naWMsbWVzb24tdnB1LnlhbWwKK0Y6CURvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tZHctaGRtaS55YW1sCiBGOglEb2N1
+bWVudGF0aW9uL2dwdS9tZXNvbi5yc3QKIFQ6CWdpdCBnaXQ6Ly9hbm9uZ2l0LmZyZWVkZXNrdG9w
+Lm9yZy9kcm0vZHJtLW1pc2MKIAotLSAKMi4yMi4wCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWw=
