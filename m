@@ -1,37 +1,79 @@
-Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbfHEKS7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 5 Aug 2019 06:18:59 -0400
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH 2/2] dt-bindings: iio: imu: st_lsm6dsx: add ism330dhcx device bindings
-Date: Mon,  5 Aug 2019 12:18:44 +0200
-Message-Id: <0a970fdcd934c940be1af82ecf1fe2a746abcd2a.1564999807.git.lorenzo@kernel.org>
-In-Reply-To: <cover.1564999807.git.lorenzo@kernel.org>
-References: <cover.1564999807.git.lorenzo@kernel.org>
+Return-Path: <SRS0=uCLo=WE=nvidia.com=nkristam@kernel.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [Patch V6 1/8] phy: tegra: xusb: Add XUSB dual mode support on Tegra210
+Date: Thu, 8 Aug 2019 15:07:19 +0530
+Message-ID: <1565257046-9890-2-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: lorenzo.bianconi@redhat.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
- 1 file changed, 1 insertion(+)
+Configure the port capabilities based on usb_dr_mode settings.
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-index 92b48f242356..87407d110bb7 100644
---- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-@@ -12,6 +12,7 @@ Required properties:
-   "st,lsm6dsox"
-   "st,lsm6dsr"
-   "st,lsm6ds3tr-c"
-+  "st,ism330dhcx"
- - reg: i2c address of the sensor / spi cs line
+Based on work by JC Kuo <jckuo@nvidia.com>.
+
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Reviewed-by: JC Kuo <jckuo@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/phy/tegra/xusb-tegra210.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index 0c0df68..0351c4a 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -39,7 +39,10 @@
+ #define XUSB_PADCTL_USB2_PAD_MUX_USB2_BIAS_PAD_XUSB 0x1
  
- Optional properties:
+ #define XUSB_PADCTL_USB2_PORT_CAP 0x008
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(x) (0x0 << ((x) * 4))
+ #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(x) (0x1 << ((x) * 4))
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(x) (0x2 << ((x) * 4))
++#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(x) (0x3 << ((x) * 4))
+ #define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(x) (0x3 << ((x) * 4))
+ 
+ #define XUSB_PADCTL_SS_PORT_MAP 0x014
+@@ -64,6 +67,7 @@
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
++#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
+ #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
+ 
+ #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
+@@ -957,7 +961,14 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
+ 	value &= ~XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_MASK(index);
+-	value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
++	if (port->mode == USB_DR_MODE_UNKNOWN)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DISABLED(index);
++	else if (port->mode == USB_DR_MODE_PERIPHERAL)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_DEVICE(index);
++	else if (port->mode == USB_DR_MODE_HOST)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_HOST(index);
++	else if (port->mode == USB_DR_MODE_OTG)
++		value |= XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_OTG(index);
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+@@ -989,7 +1000,12 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 	value &= ~(XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK <<
+ 		   XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT);
+-	value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
++	if (port->mode == USB_DR_MODE_HOST)
++		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
++	else
++		value |=
++		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL <<
++		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT;
+ 	padctl_writel(padctl, value,
+ 		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+ 
 -- 
-2.21.0
+2.7.4
