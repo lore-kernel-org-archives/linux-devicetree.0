@@ -1,56 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add dts for Leez RK3399 P710 SBC
-Date: Thu, 8 Aug 2019 08:24:12 -0600
-Message-ID: <CAL_Jsq+1KVVube322GZXetVWdthrtWG=QiOTSnUg5aLbXjBuWg@mail.gmail.com>
-References: <20190805124037.10597-1-andyshrk@gmail.com> <CAL_JsqJ6_J1pR-MYK5kmUN5Q+tX32UNFqLW81tmBf=pYxtAmjg@mail.gmail.com>
- <CANbgqATvVSo_D-n_mW2hK2KEK_8cs3374ddB6C8GcZZwjMSoRQ@mail.gmail.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/2] K3 dts minor typo fixes
+Date: Thu, 8 Aug 2019 09:39:27 -0500
+Message-ID: <20190808143929.11148-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANbgqATvVSo_D-n_mW2hK2KEK_8cs3374ddB6C8GcZZwjMSoRQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andyshrk@gmail.com>
-Cc: "heiko@sntech.de" <heiko@sntech.de>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 12:14 AM Andy Yan <andyshrk@gmail.com> wrote:
->
-> Hi Rob:
->
-> Rob Herring <robh+dt@kernel.org> =E4=BA=8E2019=E5=B9=B48=E6=9C=886=E6=97=
-=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8810:48=E5=86=99=E9=81=93=EF=BC=9A
->>
->> On Mon, Aug 5, 2019 at 6:40 AM Andy Yan <andyshrk@gmail.com> wrote:
->> >
->> > P710 is a RK3399 based SBC, designed by Leez [0].
->> >
->> > Specification
->> > - Rockchip RK3399
->> > - 4/2GB LPDDR4
->> > - TF sd scard slot
->> > - eMMC
->> > - M.2 B-Key for 4G LTE
->> > - AP6256 for WiFi + BT
->> > - Gigabit ethernet
->> > - HDMI out
->> > - 40 pin header
->> > - USB 2.0 x 2
->> > - USB 3.0 x 1
->> > - USB 3.0 Type-C x 1
->> > - TYPE-C Power supply
->> >
->> > [0]https://leez.lenovo.com
->>
->> I'm not really convinced Leez is a vendor. Looks like branding to me.
->> We have enough with company names changing, we don't need changing
->> brands too. Use 'lenovo'.
->>
->
-> I had checked with Leez people before V1, they said Leez will run as an i=
-ndependent company, so they don't want to
-> give a lenovo label for this board.
+Hi Tero, Nishanth,
 
-Okay.
+The following 2 patches are minor typo fixes in git-its nodes
+on both AM65x and J721E SoCs. Patches done on top of the latest
+master.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+regards
+Suman
+
+Suman Anna (2):
+  arm64: dts: ti: k3-am65-main: Fix gic-its node unit-address
+  arm64: dts: ti: k3-j721e-main: Fix gic-its node unit-address
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi  | 2 +-
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.22.0
