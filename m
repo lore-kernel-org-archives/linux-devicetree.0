@@ -1,7 +1,8 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 6/9] dt-bindings: phy: meson-g12a-usb2-phy: convert to yaml
-Date: Thu,  8 Aug 2019 10:51:36 +0200
-Message-ID: <20190808085139.21438-7-narmstrong@baylibre.com>
+Subject: [PATCH 7/9] dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert to
+ yaml
+Date: Thu,  8 Aug 2019 10:51:37 +0200
+Message-ID: <20190808085139.21438-8-narmstrong@baylibre.com>
 References: <20190808085139.21438-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,40 +19,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have the DT validation in place, let's convert the device tree
-bindings for the Amlogic G12A USB2 PHY over to a YAML schemas.
+bindings for the Amlogic G12A USB3 + PCIE Combo PHY over to a YAML schemas.
 
 While the original phy bindings specifies phy-supply as required,
 the examples and implementations makes it optional, thus phy-supply
-is not in the required list of attributes.
+is not present in the properties and required lists.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../phy/amlogic,meson-g12a-usb2-phy.yaml      | 63 +++++++++++++++++++
- .../bindings/phy/meson-g12a-usb2-phy.txt      | 22 -------
- 2 files changed, 63 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+ .../phy/amlogic,meson-g12a-usb3-pcie-phy.yaml | 57 +++++++++++++++++++
+ .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 -------
+ 2 files changed, 57 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
 new file mode 100644
-index 000000000000..51254b4e65dd
+index 000000000000..346f9c35427c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb2-phy.yaml
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml
+@@ -0,0 +1,57 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +# Copyright 2019 BayLibre, SAS
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/phy/amlogic,meson-g12a-usb2-phy.yaml#"
++$id: "http://devicetree.org/schemas/phy/amlogic,meson-g12a-usb3-pcie-phy.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Amlogic G12A USB2 PHY
++title: Amlogic G12A USB3 + PCIE Combo PHY
 +
 +maintainers:
 +  - Neil Armstrong <narmstrong@baylibre.com>
@@ -59,7 +59,7 @@ index 000000000000..51254b4e65dd
 +properties:
 +  compatible:
 +    enum:
-+      - amlogic,meson-g12a-usb2-phy
++      - amlogic,meson-g12a-usb3-pcie-phy
 +
 +  reg:
 +    maxItems: 1
@@ -69,7 +69,7 @@ index 000000000000..51254b4e65dd
 +
 +  clock-names:
 +    items:
-+      - const: xtal
++      - const: ref_clk
 +
 +  resets:
 +    maxItems: 1
@@ -79,13 +79,7 @@ index 000000000000..51254b4e65dd
 +      - const: phy
 +
 +  "#phy-cells":
-+    const: 0
-+
-+  phy-supply:
-+     maxItems: 1
-+     description:
-+       Phandle to a regulator that provides power to the PHY. This
-+       regulator will be managed during the PHY power on/off sequence.
++    const: 1
 +
 +required:
 +  - compatible
@@ -98,42 +92,42 @@ index 000000000000..51254b4e65dd
 +
 +examples:
 +  - |
-+    phy@36000 {
-+          compatible = "amlogic,meson-g12a-usb2-phy";
-+          reg = <0x36000 0x2000>;
-+          clocks = <&xtal>;
-+          clock-names = "xtal";
++    phy@46000 {
++          compatible = "amlogic,meson-g12a-usb3-pcie-phy";
++          reg = <0x46000 0x2000>;
++          clocks = <&ref_clk>;
++          clock-names = "ref_clk";
 +          resets = <&phy_reset>;
 +          reset-names = "phy";
-+          #phy-cells = <0>;
++          #phy-cells = <1>;
 +    };
-diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+diff --git a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt b/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 deleted file mode 100644
-index a6ebc3dea159..000000000000
---- a/Documentation/devicetree/bindings/phy/meson-g12a-usb2-phy.txt
+index 7cfc17e2df31..000000000000
+--- a/Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 +++ /dev/null
 @@ -1,22 +0,0 @@
--* Amlogic G12A USB2 PHY binding
+-* Amlogic G12A USB3 + PCIE Combo PHY binding
 -
 -Required properties:
--- compatible:	Should be "amlogic,meson-g12a-usb2-phy"
+-- compatible:	Should be "amlogic,meson-g12a-usb3-pcie-phy"
+-- #phys-cells:	must be 1. The cell number is used to select the phy mode
+-  as defined in <dt-bindings/phy/phy.h> between PHY_TYPE_USB3 and PHY_TYPE_PCIE
 -- reg:		The base address and length of the registers
--- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
--- clocks:	a phandle to the clock of this PHY
--- clock-names:	must be "xtal"
--- resets:	a phandle to the reset line of this PHY
+-- clocks:	a phandle to the 100MHz reference clock of this PHY
+-- clock-names:	must be "ref_clk"
+-- resets:	phandle to the reset lines for the PHY control
 -- reset-names:	must be "phy"
--- phy-supply:	see phy-bindings.txt in this directory
 -
 -Example:
--	usb2_phy0: phy@36000 {
--		compatible = "amlogic,g12a-usb2-phy";
--		reg = <0x0 0x36000 0x0 0x2000>;
--		clocks = <&xtal>;
--		clock-names = "xtal";
--		resets = <&reset RESET_USB_PHY21>;
+-	usb3_pcie_phy: phy@46000 {
+-		compatible = "amlogic,g12a-usb3-pcie-phy";
+-		reg = <0x0 0x46000 0x0 0x2000>;
+-		clocks = <&clkc CLKID_PCIE_PLL>;
+-		clock-names = "ref_clk";
+-		resets = <&reset RESET_PCIE_PHY>;
 -		reset-names = "phy";
--		#phy-cells = <0>;
+-		#phy-cells = <1>;
 -	};
 -- 
 2.22.0
