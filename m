@@ -1,72 +1,29 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 1/8] dt-bindings: omap: add new binding for PRM instances
-Date: Thu, 8 Aug 2019 10:05:31 +0530
-Message-ID: <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-2-git-send-email-t-kristo@ti.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 0/7] Add support for Qualcomm SM8150 and SC7180 SoCs
+Date: Thu, 8 Aug 2019 10:22:17 +0530
+Message-ID: <20190808045217.GJ12733@vkoul-mobl.Dlink>
+References: <20190807070957.30655-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565164139-21886-2-git-send-email-t-kristo@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190807070957.30655-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, aneela@codeaurora.org, mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/08/19 1:18 PM, Tero Kristo wrote:
-> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
-> of these will act as a power domain controller and potentially as a reset
-> provider.
+On 07-08-19, 12:39, Sibi Sankar wrote:
+> This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
+> support on SM8150 and SC7180 SoCs.
 > 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->   .../devicetree/bindings/arm/omap/prm-inst.txt      | 24 ++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
-> new file mode 100644
-> index 0000000..e0ae87b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
-> @@ -0,0 +1,24 @@
-> +OMAP PRM instance bindings
-> +
-> +Power and Reset Manager is an IP block on OMAP family of devices which
-> +handle the power domains and their current state, and provide reset
-> +handling for the domains and/or separate IP blocks under the power domain
-> +hierarchy.
-> +
-> +Required properties:
-> +- compatible:	Must be one of:
-> +		"ti,am3-prm-inst"
-> +		"ti,am4-prm-inst"
-> +		"ti,omap4-prm-inst"
-> +		"ti,omap5-prm-inst"
-> +		"ti,dra7-prm-inst"
-> +- reg:		Contains PRM instance register address range
-> +		(base address and length)
+> v2:
+>  * re-arrange the compatible lists in sort order
 
-How about reset-cells property, Isn't that a mandatory property?
+i checked these lgtm and tested on SM8150
 
-> +
-> +Example:
-> +
-> +prm_dsp2: prm@1b00 {
-> +	compatible = "ti,dra7-prm-inst";
-> +	reg = <0x1b00 0x40>;
-> +	#reset-cells = <1>;
-> +};
-> 
+Tested-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
