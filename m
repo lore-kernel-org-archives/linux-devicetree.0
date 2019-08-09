@@ -1,48 +1,63 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 02/14] net: phy: adin: hook genphy_{suspend,resume} into the driver
-Date: Fri, 9 Aug 2019 16:35:40 +0300
-Message-ID: <20190809133552.21597-3-alexandru.ardelean@analog.com>
-References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
+ driver.
+Date: Fri, 9 Aug 2019 14:54:40 +0100
+Message-ID: <20190809135440.GI48423@lakrids.cambridge.arm.com>
+References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+Content-Disposition: inline
+In-Reply-To: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
+To: Joe Burmeister <joe.burmeister@devtank.co.uk>
+Cc: Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, YueHaibing <yuehaibing@huawei.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The chip supports standard suspend/resume via BMCR reg.
-Hook these functions into the `adin` driver.
+On Fri, Aug 09, 2019 at 01:53:55PM +0100, Joe Burmeister wrote:
+> Many, though not all, AT25s have an instruction for chip erase.
+> If there is one in the datasheet, it can be added to device tree.
+> Erase can then be done in userspace via the sysfs API with a new
+> "erase" device attribute. This matches the eeprom_93xx46 driver's
+> "erase".
+> 
+> Signed-off-by: Joe Burmeister <joe.burmeister@devtank.co.uk>
+> ---
+>  .../devicetree/bindings/eeprom/at25.txt       |  2 +
+>  drivers/misc/eeprom/at25.c                    | 83 ++++++++++++++++++-
+>  2 files changed, 82 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
+> index b3bde97dc199..c65d11e14c7a 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at25.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/at25.txt
+> @@ -19,6 +19,7 @@ Optional properties:
+>  - spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
+>  - spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
+>  - read-only : this parameter-less property disables writes to the eeprom
+> +- chip_erase_instruction : Chip erase instruction for this AT25, often 0xc7 or 0x62.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This should be using '-' rather than '_', as per general DT conventions
+and as with the existing properties.
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 6d7af4743957..fc0148ba4b94 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -26,6 +26,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.resume		= genphy_resume,
-+		.suspend	= genphy_suspend,
- 	},
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
-@@ -33,6 +35,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.resume		= genphy_resume,
-+		.suspend	= genphy_suspend,
- 	},
- };
- 
--- 
-2.20.1
+>  Obsolete legacy properties can be used in place of "size", "pagesize",
+>  "address-width", and "read-only":
+> @@ -39,4 +40,5 @@ Example:
+>  		pagesize = <64>;
+>  		size = <32768>;
+>  		address-width = <16>;
+> +		chip_erase_instruction = <0x62>;
+
+[...]
+
+> +	/* Optional chip erase instruction */
+> +	device_property_read_u8(&spi->dev, "chip_erase_instruction", &at25->erase_instr);
+
+This will not behave as you expect, since you didn't mark the property as
+8-bits.
+
+Read this as a u32 into the existing val temporary variable, as is done
+for pagesize. You can add a warnign if it's out-of-range.
+
+Thanks,
+Mark.
