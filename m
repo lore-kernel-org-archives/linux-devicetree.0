@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 04/14] net: phy: adin: add {write,read}_mmd hooks
-Date: Fri, 9 Aug 2019 16:35:42 +0300
-Message-ID: <20190809133552.21597-5-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 05/14] net: phy: adin: configure RGMII/RMII/MII modes on config
+Date: Fri, 9 Aug 2019 16:35:43 +0300
+Message-ID: <20190809133552.21597-6-alexandru.ardelean@analog.com>
 References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,103 +13,112 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Both ADIN1200 & ADIN1300 support Clause 45 access for some registers.
-The Extended Management Interface (EMI) registers are accessible via both
-Clause 45 (at register MDIO_MMD_VEND1) and using Clause 22.
+The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
+unconfigured) is RGMII.
+This change adds support for configuring these modes via the device
+registers.
 
-However, the Clause 22 access for MMD regs differs from the standard one
-defined by 802.3. The ADIN PHYs  use registers ExtRegPtr (0x0010) and
-ExtRegData (0x0011) to access Clause 45 & EMI registers.
+For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
+the default delay is 2 ns. This can be configurable and will be done in
+a subsequent change.
 
-The indirect access is done via the following mechanism (for both R/W):
-1. Write the address of the register in the ExtRegPtr
-2. Read/write the value of the register (written at ExtRegPtr)
-
-This mechanism is needed to manage configuration of chip settings and to
-access EEE registers (via Clause 22).
-
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 46 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 91ff26d08fd5..8973ad819b93 100644
+index 8973ad819b93..6ea0d7bd76c5 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -14,6 +14,9 @@
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
+@@ -33,9 +33,86 @@
+ 	 ADIN1300_INT_HW_IRQ_EN)
+ #define ADIN1300_INT_STATUS_REG			0x0019
  
-+#define ADIN1300_MII_EXT_REG_PTR		0x0010
-+#define ADIN1300_MII_EXT_REG_DATA		0x0011
++#define ADIN1300_GE_RGMII_CFG_REG		0xff23
++#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
++#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
++#define   ADIN1300_GE_RGMII_EN			BIT(0)
 +
- #define ADIN1300_INT_MASK_REG			0x0018
- #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
- #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-@@ -53,6 +56,45 @@ static int adin_phy_config_intr(struct phy_device *phydev)
- 			      ADIN1300_INT_MASK_EN);
++#define ADIN1300_GE_RMII_CFG_REG		0xff24
++#define   ADIN1300_GE_RMII_EN			BIT(0)
++
++static int adin_config_rgmii_mode(struct phy_device *phydev)
++{
++	int reg;
++
++	if (!phy_interface_is_rgmii(phydev))
++		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
++					  ADIN1300_GE_RGMII_CFG_REG,
++					  ADIN1300_GE_RGMII_EN);
++
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
++	if (reg < 0)
++		return reg;
++
++	reg |= ADIN1300_GE_RGMII_EN;
++
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
++		reg |= ADIN1300_GE_RGMII_RXID_EN;
++	} else {
++		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
++	}
++
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
++		reg |= ADIN1300_GE_RGMII_TXID_EN;
++	} else {
++		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
++	}
++
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
++			     ADIN1300_GE_RGMII_CFG_REG, reg);
++}
++
++static int adin_config_rmii_mode(struct phy_device *phydev)
++{
++	int reg;
++
++	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
++		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
++					  ADIN1300_GE_RMII_CFG_REG,
++					  ADIN1300_GE_RMII_EN);
++
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
++	if (reg < 0)
++		return reg;
++
++	reg |= ADIN1300_GE_RMII_EN;
++
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
++			     ADIN1300_GE_RMII_CFG_REG, reg);
++}
++
+ static int adin_config_init(struct phy_device *phydev)
+ {
+-	return genphy_config_init(phydev);
++	int rc;
++
++	rc = genphy_config_init(phydev);
++	if (rc < 0)
++		return rc;
++
++	rc = adin_config_rgmii_mode(phydev);
++	if (rc < 0)
++		return rc;
++
++	rc = adin_config_rmii_mode(phydev);
++	if (rc < 0)
++		return rc;
++
++	phydev_dbg(phydev, "PHY is using mode '%s'\n",
++		   phy_modes(phydev->interface));
++
++	return 0;
  }
  
-+static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int phy_addr = phydev->mdio.addr;
-+	int err;
-+
-+	if (phydev->is_c45) {
-+		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
-+
-+		return __mdiobus_read(bus, phy_addr, addr);
-+	}
-+
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	if (err)
-+		return err;
-+
-+	return __mdiobus_read(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA);
-+}
-+
-+static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
-+			  u16 val)
-+{
-+	struct mii_bus *bus = phydev->mdio.bus;
-+	int phy_addr = phydev->mdio.addr;
-+	int err;
-+
-+	if (phydev->is_c45) {
-+		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
-+
-+		return __mdiobus_write(bus, phy_addr, addr, val);
-+	}
-+
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	if (err)
-+		return err;
-+
-+	return __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA, val);
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -64,6 +106,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
-+		.read_mmd	= adin_read_mmd,
-+		.write_mmd	= adin_write_mmd,
- 	},
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
-@@ -75,6 +119,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
-+		.read_mmd	= adin_read_mmd,
-+		.write_mmd	= adin_write_mmd,
- 	},
- };
- 
+ static int adin_phy_ack_intr(struct phy_device *phydev)
 -- 
 2.20.1
