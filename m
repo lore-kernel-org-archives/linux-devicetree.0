@@ -1,83 +1,50 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 4/6] arm64: dts: ti: k3-j721e-common-proc-board: Disable
- unused gpio modules
-Date: Fri, 9 Aug 2019 20:25:40 +0530
-Message-ID: <f6ac4c30-92e6-e952-237b-603537b67053@ti.com>
-References: <20190809082947.30590-1-lokeshvutla@ti.com>
- <20190809082947.30590-5-lokeshvutla@ti.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v3 08/21] ARM: dts: imx7-colibri: Add touch controllers
+Date: Fri, 9 Aug 2019 14:56:14 +0000
+Message-ID: <4875e91c34f7206d960ccdf7b499408b6f48364b.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-9-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190809082947.30590-5-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190807082556.5013-9-philippe.schenker@toradex.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
+Content-ID: <06F6FF2CD78DF146ADC461BDE4286D40@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/08/19 1:59 PM, Lokesh Vutla wrote:
-> There are 10 gpio instances inside SoC with 3 groups as below:
-> - Group1: main_gpio0, main_gpio2, main_gpio4, main_gpio6
-> - Group2: main_gpio1, main_gpio3, main_gpio5, main_gpio7
-> - Group3: wkup_gpio0, wkup_gpio1
-> 
-> Only one instance can be used in each group at a time. So use main_gpio0,
-> main_gpio1 and wkup_gpio0 for the current linux context and mark other
-> gpio nodes as disabled.
-
-Reviewed-by: Keerthy <j-keerthy@ti.com>
-
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->   .../dts/ti/k3-j721e-common-proc-board.dts     | 28 +++++++++++++++++++
->   1 file changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> index 63b47b839388..509579ca3db2 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> @@ -52,3 +52,31 @@
->   	/* UART not brought out */
->   	status = "disabled";
->   };
-> +
-> +&main_gpio2 {
-> +	status = "disabled";
-> +};
-> +
-> +&main_gpio3 {
-> +	status = "disabled";
-> +};
-> +
-> +&main_gpio4 {
-> +	status = "disabled";
-> +};
-> +
-> +&main_gpio5 {
-> +	status = "disabled";
-> +};
-> +
-> +&main_gpio6 {
-> +	status = "disabled";
-> +};
-> +
-> +&main_gpio7 {
-> +	status = "disabled";
-> +};
-> +
-> +&wkup_gpio1 {
-> +	status = "disabled";
-> +};
-> 
+T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
+ZToNCj4gQWRkIHRvdWNoIGNvbnRyb2xsZXIgdGhhdCBpcyBjb25uZWN0ZWQgb3ZlciBhbiBJMkMg
+YnVzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBlLnNj
+aGVua2VyQHRvcmFkZXguY29tPg0KDQpBY2tlZC1ieTogTWFyY2VsIFppc3dpbGVyIDxtYXJjZWwu
+emlzd2lsZXJAdG9yYWRleC5jb20+DQoNCj4gLS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYzOg0KPiAt
+IEZpeCBjb21taXQgbWVzc2FnZQ0KPiANCj4gQ2hhbmdlcyBpbiB2MjoNCj4gLSBEZWxldGVkIHRv
+dWNocmV2b2x1dGlvbiBkb3duc3RyZWFtIHN0dWZmDQo+IC0gVXNlIGdlbmVyaWMgbm9kZSBuYW1l
+DQo+IC0gQmV0dGVyIGNvbW1lbnQNCj4gDQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGli
+cmktZXZhbC12My5kdHNpIHwgMjQNCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gYi9hcmNoL2FybS9ib290L2R0cy9p
+bXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+IGluZGV4IGQ0ZGJjNGZjMWFkZi4uNTc2ZGVjOWZm
+ODFjIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12
+My5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0
+c2kNCj4gQEAgLTE0NSw2ICsxNDUsMjEgQEANCj4gICZpMmM0IHsNCj4gIAlzdGF0dXMgPSAib2th
+eSI7DQo+ICANCj4gKwkvKg0KPiArCSAqIFRvdWNoc2NyZWVuIGlzIHVzaW5nIFNPRElNTSAyOC8z
+MCwgYWxzbyB1c2VkIGZvciBQV008Qj4sDQo+IFBXTTxDPiwNCj4gKwkgKiBha2EgcHdtMiwgcHdt
+My4gc28gaWYgeW91IGVuYWJsZSB0b3VjaHNjcmVlbiwgZGlzYWJsZSB0aGUNCj4gcHdtcw0KPiAr
+CSAqLw0KPiArCXRvdWNoc2NyZWVuQDRhIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJhdG1lbCxtYXh0
+b3VjaCI7DQo+ICsJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsJCXBpbmN0cmwtMCA9
+IDwmcGluY3RybF9ncGlvdG91Y2g+Ow0KPiArCQlyZWcgPSA8MHg0YT47DQo+ICsJCWludGVycnVw
+dC1wYXJlbnQgPSA8JmdwaW8xPjsNCj4gKwkJaW50ZXJydXB0cyA9IDw5IElSUV9UWVBFX0VER0Vf
+RkFMTElORz47CQkvKg0KPiBTT0RJTU0gMjggKi8NCj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8x
+IDEwIEdQSU9fQUNUSVZFX0hJR0g+OwkvKg0KPiBTT0RJTU0gMzAgKi8NCj4gKwkJc3RhdHVzID0g
+ImRpc2FibGVkIjsNCj4gKwl9Ow0KPiArDQo+ICAJLyogTTQxVDBNNiByZWFsIHRpbWUgY2xvY2sg
+b24gY2FycmllciBib2FyZCAqLw0KPiAgCXJ0YzogbTQxdDBtNkA2OCB7DQo+ICAJCWNvbXBhdGli
+bGUgPSAic3QsbTQxdDAiOw0KPiBAQCAtMjAwLDMgKzIxNSwxMiBAQA0KPiAgCXZtbWMtc3VwcGx5
+ID0gPCZyZWdfM3YzPjsNCj4gIAlzdGF0dXMgPSAib2theSI7DQo+ICB9Ow0KPiArDQo+ICsmaW9t
+dXhjIHsNCj4gKwlwaW5jdHJsX2dwaW90b3VjaDogdG91Y2hncGlvcyB7DQo+ICsJCWZzbCxwaW5z
+ID0gPA0KPiArCQkJTVg3RF9QQURfR1BJTzFfSU8wOV9fR1BJTzFfSU85CQkweDc0DQo+ICsJCQlN
+WDdEX1BBRF9HUElPMV9JTzEwX19HUElPMV9JTzEwCQkweDE0DQo+ICsJCT47DQo+ICsJfTsNCj4g
+K307DQo=
