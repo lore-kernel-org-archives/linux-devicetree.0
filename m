@@ -1,101 +1,97 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 03/14] net: phy: adin: add support for interrupts
-Date: Fri, 9 Aug 2019 20:19:39 +0200
-Message-ID: <a8a52659-b905-3796-e0ae-86d3af44dca3@gmail.com>
-References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
- <20190809133552.21597-4-alexandru.ardelean@analog.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v8 19/21] soc/tegra: pmc: Configure deep sleep control
+ settings
+Date: Fri, 9 Aug 2019 21:22:26 +0300
+Message-ID: <5b585870-f622-0727-8c4d-78cd48623edd@gmail.com>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-20-git-send-email-skomatineni@nvidia.com>
+ <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
+ <275f3685-bc53-38ff-c778-cf2ea588e5a5@nvidia.com>
+ <60ea494a-9960-b7fc-3afb-8c17feec9fda@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190809133552.21597-4-alexandru.ardelean@analog.com>
+In-Reply-To: <60ea494a-9960-b7fc-3afb-8c17feec9fda@nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, andrew@lunn.ch
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09.08.2019 15:35, Alexandru Ardelean wrote:
-> This change adds support for enabling PHY interrupts that can be used by
-> the PHY framework to get signal for link/speed/auto-negotiation changes.
+09.08.2019 20:24, Sowjanya Komatineni пишет:
 > 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-> index fc0148ba4b94..91ff26d08fd5 100644
-> --- a/drivers/net/phy/adin.c
-> +++ b/drivers/net/phy/adin.c
-> @@ -14,11 +14,45 @@
->  #define PHY_ID_ADIN1200				0x0283bc20
->  #define PHY_ID_ADIN1300				0x0283bc30
->  
-> +#define ADIN1300_INT_MASK_REG			0x0018
-> +#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-> +#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-> +#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-> +#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-> +#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-> +#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-> +#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-> +#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-> +#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-> +#define ADIN1300_INT_MASK_EN	\
-> +	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
-> +	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
-> +	 ADIN1300_INT_HW_IRQ_EN)
+> On 8/9/19 9:23 AM, Sowjanya Komatineni wrote:
+>>
+>> On 8/9/19 6:23 AM, Dmitry Osipenko wrote:
+>>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
+>>>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
+>>>> timings which are platform specific that should be configured before
+>>>> entering into deep sleep.
+>>>>
+>>>> Below are the timing specific configurations for deep sleep entry and
+>>>> wakeup.
+>>>> - Core rail power-on stabilization timer
+>>>> - OSC clock stabilization timer after SOC rail power is stabilized.
+>>>> - Core power off time is the minimum wake delay to keep the system
+>>>>    in deep sleep state irrespective of any quick wake event.
+>>>>
+>>>> These values depends on the discharge time of regulators and turn OFF
+>>>> time of the PMIC to allow the complete system to finish entering into
+>>>> deep sleep state.
+>>>>
+>>>> These values vary based on the platform design and are specified
+>>>> through the device tree.
+>>>>
+>>>> This patch has implementation to configure these timings which are must
+>>>> to have for proper deep sleep and wakeup operations.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/soc/tegra/pmc.c | 13 ++++++++++++-
+>>>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>> index e013ada7e4e9..9a78d8417367 100644
+>>>> --- a/drivers/soc/tegra/pmc.c
+>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>> @@ -88,6 +88,8 @@
+>>>>     #define PMC_CPUPWRGOOD_TIMER        0xc8
+>>>>   #define PMC_CPUPWROFF_TIMER        0xcc
+>>>> +#define PMC_COREPWRGOOD_TIMER        0x3c
+>>>> +#define PMC_COREPWROFF_TIMER        0xe0
+>>>>     #define PMC_PWR_DET_VALUE        0xe4
+>>>>   @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_regs = {
+>>>>     static void tegra20_pmc_init(struct tegra_pmc *pmc)
+>>>>   {
+>>>> -    u32 value;
+>>>> +    u32 value, osc, pmu, off;
+>>>>         /* Always enable CPU power request */
+>>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>>>> @@ -2303,6 +2305,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pmc)
+>>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
+>>>>       value |= PMC_CNTRL_SYSCLK_OE;
+>>>>       tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>>>> +
+>>>> +    osc = DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
+>>>> +    pmu = DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
+>>>> +    off = DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
+>>>> +    if (osc && pmu)
+>>>> +        tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
+>>>> +                 PMC_COREPWRGOOD_TIMER);
+>>>> +    if (off)
+>>>> +        tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
+>>> The osc/pmu/off values are undefined if they are not defined in device-tree. I suppose this
+>>> need to be corrected in tegra_pmc_parse_dt() if the values really matter even if LP0 suspend
+>>> isn't supported in device-tree.
+>>>
+>>> And I'm also not sure what's wrong with setting 0 for the timers.
+>>>
+>> These settings are for SC7 only and will not have any impact in normal state.
+> POR value for these timing registers is not 0 and has default timings based on chip design
+> and on top of that based on platform HW components charge/discharge timings there's a need
+> to increase these timings so support for programming these thru DT is needed and these
+> values have effect only in LP0.
 
-phylib only needs the link status change interrupt. It shouldn't hurt
-if enable more interrupt sources, but it's not needed.
-
-
-> +#define ADIN1300_INT_STATUS_REG			0x0019
-> +
->  static int adin_config_init(struct phy_device *phydev)
->  {
->  	return genphy_config_init(phydev);
->  }
->  
-> +static int adin_phy_ack_intr(struct phy_device *phydev)
-> +{
-> +	/* Clear pending interrupts */
-> +	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
-> +
-> +	return rc < 0 ? rc : 0;
-> +}
-> +
-> +static int adin_phy_config_intr(struct phy_device *phydev)
-> +{
-> +	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-> +		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-> +				    ADIN1300_INT_MASK_EN);
-> +
-> +	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-> +			      ADIN1300_INT_MASK_EN);
-> +}
-> +
->  static struct phy_driver adin_driver[] = {
->  	{
->  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-> @@ -26,6 +60,8 @@ static struct phy_driver adin_driver[] = {
->  		.config_init	= adin_config_init,
->  		.config_aneg	= genphy_config_aneg,
->  		.read_status	= genphy_read_status,
-> +		.ack_interrupt	= adin_phy_ack_intr,
-> +		.config_intr	= adin_phy_config_intr,
->  		.resume		= genphy_resume,
->  		.suspend	= genphy_suspend,
->  	},
-> @@ -35,6 +71,8 @@ static struct phy_driver adin_driver[] = {
->  		.config_init	= adin_config_init,
->  		.config_aneg	= genphy_config_aneg,
->  		.read_status	= genphy_read_status,
-> +		.ack_interrupt	= adin_phy_ack_intr,
-> +		.config_intr	= adin_phy_config_intr,
->  		.resume		= genphy_resume,
->  		.suspend	= genphy_suspend,
->  	},
-> 
+If it is legal to omit the timings in DT, then tegra_pmc_parse_dt() need to be corrected if
+there is assumption of 0 meaning that values are undefined in DT.
