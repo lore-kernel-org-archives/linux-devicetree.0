@@ -1,35 +1,143 @@
-Return-Path: <SRS0=Op4i=V6=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH/RFC 10/12] arm64: dts: renesas: r8a774c0: Point LVDS0 to its companion LVDS1
-Date: Fri,  2 Aug 2019 08:34:07 +0100
-Message-Id: <1564731249-22671-11-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=vdDf=WF=gmail.com=dmitry.torokhov@kernel.org>
+Date: Fri, 9 Aug 2019 09:42:00 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/4] Input: ads7846 - add support for general touchscreen
+ bindings
+Message-ID: <20190809164200.GJ178933@dtor-ws>
+References: <20190327133927.1340-1-m.felsch@pengutronix.de>
+ <20190327133927.1340-5-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327133927.1340-5-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the new renesas,companion property to the LVDS0 node to point to the
-companion LVDS encoder LVDS1.
-Based on similar work from Laurent Pinchart for the r8a7799[05].
+On Wed, Mar 27, 2019 at 02:39:27PM +0100, Marco Felsch wrote:
+> A few vendor specific bindings are now covered by common bindings.
+> 
+> Let the driver parse the common bindings to make use of common
+> inverting and swapping mechnism. Aslo make use of
+> touchscreen_report_pos() to ensure the correct inverting-swapping
+> order.
+> 
+> The vendor specific properties are used as default (backward
+> compatibility) and gets overwritten by common bindings.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Applied, thank you.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index e7b5bf2..b36d3b08 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -1844,6 +1844,8 @@
- 			resets = <&cpg 727>;
- 			status = "disabled";
- 
-+			renesas,companion = <&lvds1>;
-+
- 			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+> ---
+>  drivers/input/touchscreen/ads7846.c | 38 +++++++++++++++++++++++------
+>  1 file changed, 30 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+> index 5a7a8425d619..2fe3b91f1db8 100644
+> --- a/drivers/input/touchscreen/ads7846.c
+> +++ b/drivers/input/touchscreen/ads7846.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/delay.h>
+>  #include <linux/input.h>
+> +#include <linux/input/touchscreen.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/slab.h>
+>  #include <linux/pm.h>
+> @@ -132,6 +133,8 @@ struct ads7846 {
+>  
+>  	u16			penirq_recheck_delay_usecs;
+>  
+> +	struct touchscreen_properties core_prop;
+> +
+>  	struct mutex		lock;
+>  	bool			stopped;	/* P: lock */
+>  	bool			disabled;	/* P: lock */
+> @@ -826,17 +829,13 @@ static void ads7846_report_state(struct ads7846 *ts)
+>  	if (Rt) {
+>  		struct input_dev *input = ts->input;
+>  
+> -		if (ts->swap_xy)
+> -			swap(x, y);
+> -
+>  		if (!ts->pendown) {
+>  			input_report_key(input, BTN_TOUCH, 1);
+>  			ts->pendown = true;
+>  			dev_vdbg(&ts->spi->dev, "DOWN\n");
+>  		}
+>  
+> -		input_report_abs(input, ABS_X, x);
+> -		input_report_abs(input, ABS_Y, y);
+> +		touchscreen_report_pos(input, &ts->core_prop, x, y, false);
+>  		input_report_abs(input, ABS_PRESSURE, ts->pressure_max - Rt);
+>  
+>  		input_sync(input);
+> @@ -1188,6 +1187,7 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
+>  	struct ads7846_platform_data *pdata;
+>  	struct device_node *node = dev->of_node;
+>  	const struct of_device_id *match;
+> +	u32 value;
+>  
+>  	if (!node) {
+>  		dev_err(dev, "Device does not have associated DT data\n");
+> @@ -1226,10 +1226,18 @@ static const struct ads7846_platform_data *ads7846_probe_dt(struct device *dev)
+>  	of_property_read_u16(node, "ti,x-max", &pdata->x_max);
+>  	of_property_read_u16(node, "ti,y-max", &pdata->y_max);
+>  
+> +	/*
+> +	 * touchscreen-max-pressure gets parsed during
+> +	 * touchscreen_parse_properties()
+> +	 */
+>  	of_property_read_u16(node, "ti,pressure-min", &pdata->pressure_min);
+> +	if (!of_property_read_u32(node, "touchscreen-min-pressure", &value))
+> +		pdata->pressure_min = (u16) value;
+>  	of_property_read_u16(node, "ti,pressure-max", &pdata->pressure_max);
+>  
+>  	of_property_read_u16(node, "ti,debounce-max", &pdata->debounce_max);
+> +	if (!of_property_read_u32(node, "touchscreen-average-samples", &value))
+> +		pdata->debounce_max = (u16) value;
+>  	of_property_read_u16(node, "ti,debounce-tol", &pdata->debounce_tol);
+>  	of_property_read_u16(node, "ti,debounce-rep", &pdata->debounce_rep);
+>  
+> @@ -1314,10 +1322,7 @@ static int ads7846_probe(struct spi_device *spi)
+>  	ts->model = pdata->model ? : 7846;
+>  	ts->vref_delay_usecs = pdata->vref_delay_usecs ? : 100;
+>  	ts->x_plate_ohms = pdata->x_plate_ohms ? : 400;
+> -	ts->pressure_max = pdata->pressure_max ? : ~0;
+> -
+>  	ts->vref_mv = pdata->vref_mv;
+> -	ts->swap_xy = pdata->swap_xy;
+>  
+>  	if (pdata->filter != NULL) {
+>  		if (pdata->filter_init != NULL) {
+> @@ -1368,6 +1373,23 @@ static int ads7846_probe(struct spi_device *spi)
+>  	input_set_abs_params(input_dev, ABS_PRESSURE,
+>  			pdata->pressure_min, pdata->pressure_max, 0, 0);
+>  
+> +	/*
+> +	 * Parse common framework properties. Must be done here to ensure the
+> +	 * correct behaviour in case of using the legacy vendor bindings. The
+> +	 * general binding value overrides the vendor specific one.
+> +	 */
+> +	touchscreen_parse_properties(ts->input, false, &ts->core_prop);
+> +	ts->pressure_max = input_abs_get_max(input_dev, ABS_PRESSURE) ? : ~0;
+> +
+> +	/*
+> +	 * Check if legacy ti,swap-xy binding is used instead of
+> +	 * touchscreen-swapped-x-y
+> +	 */
+> +	if (!ts->core_prop.swap_x_y && pdata->swap_xy) {
+> +		swap(input_dev->absinfo[ABS_X], input_dev->absinfo[ABS_Y]);
+> +		ts->core_prop.swap_x_y = true;
+> +	}
+> +
+>  	ads7846_setup_spi_msg(ts, pdata);
+>  
+>  	ts->reg = regulator_get(&spi->dev, "vcc");
+> -- 
+> 2.20.1
+> 
+
 -- 
-2.7.4
+Dmitry
