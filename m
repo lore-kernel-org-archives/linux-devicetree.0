@@ -1,60 +1,60 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v3 11/21] ARM: dts: imx6qdl-apalis: Add sleep state to can
- interfaces
-Date: Fri, 9 Aug 2019 15:02:31 +0000
-Message-ID: <b84b451cf39db49188b45882a5c61a65da03eb2e.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-12-philippe.schenker@toradex.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
+Date: Fri, 9 Aug 2019 17:25:57 +0200
+Message-ID: <20190809172557.346e7c41@collabora.com>
+References: <20190808131448.349161-1-tmaimon77@gmail.com>
+        <20190808131448.349161-3-tmaimon77@gmail.com>
+        <20190808173232.4d79d698@collabora.com>
+        <CAP6Zq1iW0C0FDOoqmn5r_xk5HQFWw+GgLfeapvt-8mB50N2Vvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807082556.5013-12-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <C54E04AC58AC69479C00A40BCBAB2527@eurprd05.prod.outlook.com>
+In-Reply-To: <CAP6Zq1iW0C0FDOoqmn5r_xk5HQFWw+GgLfeapvt-8mB50N2Vvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gVGhpcyBwYXRjaCBwcmVwYXJlcyB0aGUgZGV2aWNldHJlZSBmb3IgdGhlIG5ldyBJeG9y
-YSBWMS4yIHdoZXJlIHdlDQo+IGFyZQ0KPiBhYmxlIHRvIHR1cm4gb2ZmIHRoZSBzdXBwbHkgb2Yg
-dGhlIGNhbiB0cmFuc2NlaXZlci4gVGhpcyBpbXBsaWVzIHRvDQo+IHVzZQ0KPiBhIHNsZWVwIHN0
-YXRlIG9uIHRyYW5zbWlzc2lvbiBwaW5zIGluIG9yZGVyIHRvIHByZXZlbnQgYmFja2ZlZWRpbmcu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5r
-ZXJAdG9yYWRleC5jb20+DQoNCkFja2VkLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3
-aWxlckB0b3JhZGV4LmNvbT4NCg0KPiAtLS0NCj4gDQo+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4g
-Q2hhbmdlcyBpbiB2MjoNCj4gLSBDaGFuZ2VkIGNvbW1pdCB0aXRsZSB0byAnLi4uaW14NnFkbC1h
-cGFsaXM6Li4uJw0KPiANCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kg
-fCAyNyArKysrKysrKysrKysrKysrKysrKystLQ0KPiAtLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwg
-MjEgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnFkbC1hcGFsaXMuZHRzaQ0KPiBpbmRleCA3YzRhZDU0MWMzZjUuLjU5ZWQyZTRhMWZkMSAx
-MDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQ0KPiAr
-KysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpDQo+IEBAIC0xNDgsMTQg
-KzE0OCwxNiBAQA0KPiAgfTsNCj4gIA0KPiAgJmNhbjEgew0KPiAtCXBpbmN0cmwtbmFtZXMgPSAi
-ZGVmYXVsdCI7DQo+IC0JcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4xPjsNCj4gKwlwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiLCAic2xlZXAiOw0KPiArCXBpbmN0cmwtMCA9IDwmcGluY3Ry
-bF9mbGV4Y2FuMV9kZWZhdWx0PjsNCj4gKwlwaW5jdHJsLTEgPSA8JnBpbmN0cmxfZmxleGNhbjFf
-c2xlZXA+Ow0KPiAgCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICB9Ow0KPiAgDQo+ICAmY2FuMiB7
-DQo+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gLQlwaW5jdHJsLTAgPSA8JnBpbmN0
-cmxfZmxleGNhbjI+Ow0KPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJzbGVlcCI7DQo+
-ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4yX2RlZmF1bHQ+Ow0KPiArCXBpbmN0cmwt
-MSA9IDwmcGluY3RybF9mbGV4Y2FuMl9zbGVlcD47DQo+ICAJc3RhdHVzID0gImRpc2FibGVkIjsN
-Cj4gIH07DQo+ICANCj4gQEAgLTU5OSwxOSArNjAxLDMyIEBADQo+ICAJCT47DQo+ICAJfTsNCj4g
-IA0KPiAtCXBpbmN0cmxfZmxleGNhbjE6IGZsZXhjYW4xZ3JwIHsNCj4gKwlwaW5jdHJsX2ZsZXhj
-YW4xX2RlZmF1bHQ6IGZsZXhjYW4xZGVmZ3JwIHsNCj4gIAkJZnNsLHBpbnMgPSA8DQo+ICAJCQlN
-WDZRRExfUEFEX0dQSU9fN19fRkxFWENBTjFfVFggMHgxYjBiMA0KPiAgCQkJTVg2UURMX1BBRF9H
-UElPXzhfX0ZMRVhDQU4xX1JYIDB4MWIwYjANCj4gIAkJPjsNCj4gIAl9Ow0KPiAgDQo+IC0JcGlu
-Y3RybF9mbGV4Y2FuMjogZmxleGNhbjJncnAgew0KPiArCXBpbmN0cmxfZmxleGNhbjFfc2xlZXA6
-IGZsZXhjYW4xc2xwZ3JwIHsNCj4gKwkJZnNsLHBpbnMgPSA8DQo+ICsJCQlNWDZRRExfUEFEX0dQ
-SU9fN19fR1BJTzFfSU8wNyAweDANCj4gKwkJCU1YNlFETF9QQURfR1BJT184X19HUElPMV9JTzA4
-IDB4MA0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4gKwlwaW5jdHJsX2ZsZXhjYW4yX2RlZmF1bHQ6
-IGZsZXhjYW4yZGVmZ3JwIHsNCj4gIAkJZnNsLHBpbnMgPSA8DQo+ICAJCQlNWDZRRExfUEFEX0tF
-WV9DT0w0X19GTEVYQ0FOMl9UWCAweDFiMGIwDQo+ICAJCQlNWDZRRExfUEFEX0tFWV9ST1c0X19G
-TEVYQ0FOMl9SWCAweDFiMGIwDQo+ICAJCT47DQo+ICAJfTsNCj4gKwlwaW5jdHJsX2ZsZXhjYW4y
-X3NsZWVwOiBmbGV4Y2FuMnNscGdycCB7DQo+ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg2UURM
-X1BBRF9LRVlfQ09MNF9fR1BJTzRfSU8xNCAweDANCj4gKwkJCU1YNlFETF9QQURfS0VZX1JPVzRf
-X0dQSU80X0lPMTUgMHgwDQo+ICsJCT47DQo+ICsJfTsNCj4gIA0KPiAgCXBpbmN0cmxfZ3Bpb19i
-bF9vbjogZ3Bpb2Jsb24gew0KPiAgCQlmc2wscGlucyA9IDwNCg==
+On Fri, 9 Aug 2019 18:26:23 +0300
+Tomer Maimon <tmaimon77@gmail.com> wrote:
+
+> Hi Boris,
+> 
+> Thanks a lot for your comment.
+> 
+> On Thu, 8 Aug 2019 at 18:32, Boris Brezillon <boris.brezillon@collabora.com>
+> wrote:
+> 
+> > On Thu,  8 Aug 2019 16:14:48 +0300
+> > Tomer Maimon <tmaimon77@gmail.com> wrote:
+> >
+> >  
+> > > +
+> > > +static const struct spi_controller_mem_ops npcm_fiu_mem_ops = {
+> > > +     .exec_op = npcm_fiu_exec_op,  
+> >
+> > No npcm_supports_op()? That's suspicious, especially after looking at
+> > the npcm_fiu_exec_op() (and the functions called from there) where the
+> > requested ->buswidth seems to be completely ignored...
+> >
+> > Sorry but I do not fully understand it, do you mean a support for the  
+> buswidth?
+> If yes it been done in the UMA functions as follow:
+> 
+>                 uma_cfg |= ilog2(op->cmd.buswidth);
+>                 uma_cfg |= ilog2(op->addr.buswidth) <<
+>                         NPCM_FIU_UMA_CFG_ADBPCK_SHIFT;
+>                 uma_cfg |= ilog2(op->data.buswidth) <<
+>                         NPCM_FIU_UMA_CFG_WDBPCK_SHIFT;
+>                 uma_cfg |= op->addr.nbytes << NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT;
+>                 regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR, op->addr.val);
+>
+
+Hm, the default supports_op() implementation might be just fine for
+your use case. But there's one thing you still need to check: the
+number of addr cycles (or address size as you call it in this driver).
+Looks like your IP is limited to 4 address cycles, if I'm right, you
+should reject any operation that have op->addr.nbytes > 4. I also
+wonder if there's a limitation on the data size you can have on a
+single transfer. If there's one you should implement ->adjust_op() too.
