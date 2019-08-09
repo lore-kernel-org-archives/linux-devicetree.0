@@ -1,88 +1,87 @@
-From: Pankaj Bansal <pankaj.bansal@nxp.com>
-Subject: RE: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI
- nodes
-Date: Fri, 9 Aug 2019 06:18:47 +0000
-Message-ID: <VI1PR0401MB2496C44034AB6DB5F5379904F1D60@VI1PR0401MB2496.eurprd04.prod.outlook.com>
-References: <20190320143800.3555-1-frieder.schrempf@kontron.de>
- <20190320143800.3555-2-frieder.schrempf@kontron.de>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
+ capabilities for SDMMC0
+Date: Fri, 9 Aug 2019 08:23:22 +0200
+Message-ID: <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
+References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+ <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
+ <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
+ <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190320143800.3555-2-frieder.schrempf@kontron.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Schrempf Frieder <frieder.schrempf@kontron.de>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Varun Sethi <V.Sethi@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>, Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn/Leo,
+On Thu, Aug 08, 2019 at 03:57:30PM +0300, Adrian Hunter wrote:
+> On 8/08/19 3:42 PM, Ludovic Desroches wrote:
+> > On Thu, Aug 08, 2019 at 10:35:43AM +0200, Eugen Hristev - M18282 wrote:
+> >> From: Eugen Hristev <eugen.hristev@microchip.com>
+> >>
+> >> Add mmc capabilities for SDMMC0 for this board.
+> >> With this enabled, eMMC connected card is detected as:
+> >>
+> >> mmc0: new DDR MMC card at address 0001
+> >>
+> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > 
+> > I am interested to have the some insights about the use of sd-uhs-*
+> > properties.
+> > 
+> > Our IP can't deal with 1V8 by itself. It has a 1V8SEL signal which can
+> > be used as the logic control input of a mux. So even if the IP claims
+> > to support UHS modes, it depends on the board.
+> > 
+> > Are the sd-uhs-* properties a way to deal with this? I tend to think no
+> > as sdhci_setup_host() will set the caps depending on the content of the
+> > capabilities register. Do we have to use the SDHCI_QUIRK_MISSING_CAPS
+> > quirk or sdhci-caps/sdhci-caps-mask?
+> 
+> There is "no-1-8-v" which it looks like sdhci-of-at91.c already supports:
+> 
+>   sdhci_at91_probe() -> sdhci_get_of_property() -> sdhci_get_property()
+> 
+>     	if (device_property_present(dev, "no-1-8-v"))
+> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+> 
 
-Removing the "big-endian" property has caused problems in our UEFI firmware=
-.
-In UEFI, we use the device tree to detect and use the qspi controller and f=
-lashes attached to it.
-We don't maintain a list of platforms like linux driver.
+Right, I forgot this property. Thanks.
 
-Can you please revert the endianness change from linux mainline ?
+Eugen, do you see cases we can't cover with this property?
 
-Regards,
-Pankaj Bansal
+Regards
 
-> -----Original Message-----
-> From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org>
-> On Behalf Of Schrempf Frieder
-> Sent: Wednesday, 20 March, 2019 08:08 PM
-> To: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>
-> Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; Rob Herring
-> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; linux-arm-
-> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI
-> nodes
->=20
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
->=20
-> After switching to the new FSL QSPI driver the properties 'fsl,qspi-has-s=
-econd-
-> chip' and 'big-endian' are not used anymore.
->=20
-> The driver now uses the 'reg' property to determine the bus and the chips=
-elect.
-> The endianness is selected by the driver depending on which SoC is used.
->=20
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 -
-> arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 --
->  2 files changed, 3 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index 6fd6116509cc..2fb8138c6bb0 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -296,7 +296,6 @@
->  			interrupts =3D <0 99 0x4>;
->  			clock-names =3D "qspi_en", "qspi";
->  			clocks =3D <&clockgen 4 0>, <&clockgen 4 0>;
-> -			big-endian;
->  			status =3D "disabled";
->  		};
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index cb7185014d3a..b0ef08b090dd 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -215,8 +215,6 @@
->  			interrupts =3D <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->  			clock-names =3D "qspi_en", "qspi";
->  			clocks =3D <&clockgen 4 1>, <&clockgen 4 1>;
-> -			big-endian;
-> -			fsl,qspi-has-second-chip;
->  			status =3D "disabled";
->  		};
->=20
-> --
-> 2.17.1
+Ludovic
+
+> 
+> > 
+> > Regards
+> > 
+> > Ludovic
+> > 
+> >> ---
+> >>  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> >> index 149e539..194b3a3 100644
+> >> --- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> >> +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> >> @@ -54,6 +54,7 @@
+> >>  
+> >>  		sdmmc0: sdio-host@a0000000 {
+> >>  			bus-width = <8>;
+> >> +			mmc-ddr-3_3v;
+> >>  			pinctrl-names = "default";
+> >>  			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+> >>  			status = "okay";
+> >> -- 
+> >> 2.7.4
+> >>
+> > 
+> 
