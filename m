@@ -1,66 +1,164 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
-Date: Fri, 9 Aug 2019 20:50:30 +0300
-Message-ID: <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
- <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
- <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 4/4] regulator: qcom-rpmh: Update PMIC modes for PMIC5
+Date: Fri, 9 Aug 2019 11:00:14 -0700
+Message-ID: <20190809180014.GP26807@tuxbook-pro>
+References: <20190809073616.1235-1-vkoul@kernel.org>
+ <20190809073616.1235-4-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190809073616.1235-4-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-09.08.2019 20:39, Sowjanya Komatineni пишет:
-> 
-> On 8/9/19 4:33 AM, Dmitry Osipenko wrote:
->> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>> This patch implements save and restore of PLL context.
->>>
->>> During system suspend, core power goes off and looses the settings
->>> of the Tegra CAR controller registers.
->>>
->>> So during suspend entry pll context is stored and on resume it is
->>> restored back along with its state.
->>>
->>> Acked-by: Thierry Reding <treding@nvidia.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
->>>   drivers/clk/tegra/clk.h     |  2 ++
->>>   2 files changed, 58 insertions(+), 32 deletions(-)
->>>
->>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
->>> index 1583f5fc992f..e52add2bbdbb 100644
->>> --- a/drivers/clk/tegra/clk-pll.c
->>> +++ b/drivers/clk/tegra/clk-pll.c
->>> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
->>>       return rate;
->>>   }
->>>   +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
->>> +{
->>> +    struct tegra_clk_pll *pll = to_clk_pll(hw);
->>> +    struct clk_hw *parent = clk_hw_get_parent(hw);
->>> +    unsigned long parent_rate = clk_hw_get_rate(parent);
->>> +    unsigned long rate = clk_hw_get_rate(hw);
->>> +    u32 val;
->>> +
->>> +    if (clk_pll_is_enabled(hw))
->>> +        return;
->>> +
->>> +    if (pll->params->set_defaults)
->>> +        pll->params->set_defaults(pll);
->>> +
->>> +    clk_pll_set_rate(hw, rate, parent_rate);
->>> +
->>> +    if (!__clk_get_enable_count(hw->clk))
->> What about orphaned clocks? Is enable_count > 0 for them?
-> There are no orphaned pll clocks.
+On Fri 09 Aug 00:36 PDT 2019, Vinod Koul wrote:
 
-Sorry, I meant the "clk_ignore_unused".
+> Add the PMIC5 modes and use them pmic5 ldo and smps
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+>  drivers/regulator/qcom-rpmh-regulator.c | 52 +++++++++++++++++++++----
+>  1 file changed, 45 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+> index 391ed844a251..db6c085da65e 100644
+> --- a/drivers/regulator/qcom-rpmh-regulator.c
+> +++ b/drivers/regulator/qcom-rpmh-regulator.c
+> @@ -50,6 +50,20 @@ enum rpmh_regulator_type {
+>  #define PMIC4_BOB_MODE_AUTO			2
+>  #define PMIC4_BOB_MODE_PWM			3
+>  
+> +#define PMIC5_LDO_MODE_RETENTION		3
+> +#define PMIC5_LDO_MODE_LPM			4
+> +#define PMIC5_LDO_MODE_HPM			7
+> +
+> +#define PMIC5_SMPS_MODE_RETENTION		3
+> +#define PMIC5_SMPS_MODE_PFM			4
+> +#define PMIC5_SMPS_MODE_AUTO			6
+> +#define PMIC5_SMPS_MODE_PWM			7
+> +
+> +#define PMIC5_BOB_MODE_PASS			2
+> +#define PMIC5_BOB_MODE_PFM			4
+> +#define PMIC5_BOB_MODE_AUTO			6
+> +#define PMIC5_BOB_MODE_PWM			7
+> +
+>  /**
+>   * struct rpmh_vreg_hw_data - RPMh regulator hardware configurations
+>   * @regulator_type:		RPMh accelerator type used to manage this
+> @@ -488,6 +502,14 @@ static const int pmic_mode_map_pmic4_ldo[REGULATOR_MODE_STANDBY + 1] = {
+>  	[REGULATOR_MODE_FAST]    = -EINVAL,
+>  };
+>  
+> +static const int pmic_mode_map_pmic5_ldo[REGULATOR_MODE_STANDBY + 1] = {
+> +	[REGULATOR_MODE_INVALID] = -EINVAL,
+> +	[REGULATOR_MODE_STANDBY] = PMIC5_LDO_MODE_RETENTION,
+> +	[REGULATOR_MODE_IDLE]    = PMIC5_LDO_MODE_LPM,
+> +	[REGULATOR_MODE_NORMAL]  = PMIC5_LDO_MODE_HPM,
+> +	[REGULATOR_MODE_FAST]    = -EINVAL,
+> +};
+> +
+>  static unsigned int rpmh_regulator_pmic4_ldo_of_map_mode(unsigned int rpmh_mode)
+>  {
+>  	unsigned int mode;
+> @@ -518,6 +540,14 @@ static const int pmic_mode_map_pmic4_smps[REGULATOR_MODE_STANDBY + 1] = {
+>  	[REGULATOR_MODE_FAST]    = PMIC4_SMPS_MODE_PWM,
+>  };
+>  
+> +static const int pmic_mode_map_pmic5_smps[REGULATOR_MODE_STANDBY + 1] = {
+> +	[REGULATOR_MODE_INVALID] = -EINVAL,
+> +	[REGULATOR_MODE_STANDBY] = PMIC5_SMPS_MODE_RETENTION,
+> +	[REGULATOR_MODE_IDLE]    = PMIC5_SMPS_MODE_PFM,
+> +	[REGULATOR_MODE_NORMAL]  = PMIC5_SMPS_MODE_AUTO,
+> +	[REGULATOR_MODE_FAST]    = PMIC5_SMPS_MODE_PWM,
+> +};
+> +
+>  static unsigned int
+>  rpmh_regulator_pmic4_smps_of_map_mode(unsigned int rpmh_mode)
+>  {
+> @@ -552,6 +582,14 @@ static const int pmic_mode_map_pmic4_bob[REGULATOR_MODE_STANDBY + 1] = {
+>  	[REGULATOR_MODE_FAST]    = PMIC4_BOB_MODE_PWM,
+>  };
+>  
+> +static const int pmic_mode_map_pmic5_bob[REGULATOR_MODE_STANDBY + 1] = {
+> +	[REGULATOR_MODE_INVALID] = -EINVAL,
+> +	[REGULATOR_MODE_STANDBY] = -EINVAL,
+> +	[REGULATOR_MODE_IDLE]    = PMIC5_BOB_MODE_PFM,
+> +	[REGULATOR_MODE_NORMAL]  = PMIC5_BOB_MODE_AUTO,
+> +	[REGULATOR_MODE_FAST]    = PMIC5_BOB_MODE_PWM,
+> +};
+> +
+>  static unsigned int rpmh_regulator_pmic4_bob_of_map_mode(unsigned int rpmh_mode)
+>  {
+>  	unsigned int mode;
+> @@ -643,7 +681,7 @@ static const struct rpmh_vreg_hw_data pmic5_pldo = {
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 255, 8000),
+>  	.n_voltages = 256,
+>  	.hpm_min_load_uA = 10000,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
+>  	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+>  };
+>  
+> @@ -653,7 +691,7 @@ static const struct rpmh_vreg_hw_data pmic5_pldo_lv = {
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 62, 8000),
+>  	.n_voltages = 63,
+>  	.hpm_min_load_uA = 10000,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
+>  	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+>  };
+>  
+> @@ -663,7 +701,7 @@ static const struct rpmh_vreg_hw_data pmic5_nldo = {
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 123, 8000),
+>  	.n_voltages = 124,
+>  	.hpm_min_load_uA = 30000,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
+>  	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
+>  };
+>  
+> @@ -672,7 +710,7 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps510 = {
+>  	.ops = &rpmh_regulator_vrm_ops,
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
+>  	.n_voltages = 216,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_smps,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_smps,
+>  	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
+>  };
+>  
+> @@ -681,7 +719,7 @@ static const struct rpmh_vreg_hw_data pmic5_ftsmps510 = {
+>  	.ops = &rpmh_regulator_vrm_ops,
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 263, 4000),
+>  	.n_voltages = 264,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_smps,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_smps,
+>  	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
+>  };
+>  
+> @@ -690,7 +728,7 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps515 = {
+>  	.ops = &rpmh_regulator_vrm_ops,
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(2800000, 0, 4, 1600),
+>  	.n_voltages = 5,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_smps,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_smps,
+>  	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
+>  };
+>  
+> @@ -699,7 +737,7 @@ static const struct rpmh_vreg_hw_data pmic5_bob = {
+>  	.ops = &rpmh_regulator_vrm_bypass_ops,
+>  	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
+>  	.n_voltages = 136,
+> -	.pmic_mode_map = pmic_mode_map_pmic4_bob,
+> +	.pmic_mode_map = pmic_mode_map_pmic5_bob,
+>  	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
+>  };
+>  
+> -- 
+> 2.20.1
+> 
