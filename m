@@ -1,156 +1,305 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4/4] regulator: qcom-rpmh: Update PMIC modes for PMIC5
-Date: Fri,  9 Aug 2019 13:06:16 +0530
-Message-ID: <20190809073616.1235-4-vkoul@kernel.org>
-References: <20190809073616.1235-1-vkoul@kernel.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 2/4] watchdog: Add i.MX7ULP watchdog support
+Date: Fri,  9 Aug 2019 15:14:00 +0800
+Message-ID: <1565334842-28161-2-git-send-email-Anson.Huang@nxp.com>
+References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190809073616.1235-1-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add the PMIC5 modes and use them pmic5 ldo and smps
+The i.MX7ULP Watchdog Timer (WDOG) module is an independent timer
+that is available for system use.
+It provides a safety feature to ensure that software is executing
+as planned and that the CPU is not stuck in an infinite loop or
+executing unintended code. If the WDOG module is not serviced
+(refreshed) within a certain period, it resets the MCU.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Add driver support for i.MX7ULP watchdog.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/regulator/qcom-rpmh-regulator.c | 52 +++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 7 deletions(-)
+ drivers/watchdog/Kconfig       |  13 +++
+ drivers/watchdog/Makefile      |   1 +
+ drivers/watchdog/imx7ulp_wdt.c | 221 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 235 insertions(+)
+ create mode 100644 drivers/watchdog/imx7ulp_wdt.c
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 391ed844a251..db6c085da65e 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -50,6 +50,20 @@ enum rpmh_regulator_type {
- #define PMIC4_BOB_MODE_AUTO			2
- #define PMIC4_BOB_MODE_PWM			3
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 8188963..0884e53 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -740,6 +740,19 @@ config IMX_SC_WDT
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called imx_sc_wdt.
  
-+#define PMIC5_LDO_MODE_RETENTION		3
-+#define PMIC5_LDO_MODE_LPM			4
-+#define PMIC5_LDO_MODE_HPM			7
++config IMX7ULP_WDT
++	tristate "IMX7ULP Watchdog"
++	depends on ARCH_MXC || COMPILE_TEST
++	select WATCHDOG_CORE
++	help
++	  This is the driver for the hardware watchdog on the Freescale
++	  IMX7ULP and later processors. If you have one of these
++	  processors and wish to have watchdog support enabled,
++	  say Y, otherwise say N.
 +
-+#define PMIC5_SMPS_MODE_RETENTION		3
-+#define PMIC5_SMPS_MODE_PFM			4
-+#define PMIC5_SMPS_MODE_AUTO			6
-+#define PMIC5_SMPS_MODE_PWM			7
++	  To compile this driver as a module, choose M here: the
++	  module will be called imx7ulp_wdt.
 +
-+#define PMIC5_BOB_MODE_PASS			2
-+#define PMIC5_BOB_MODE_PFM			4
-+#define PMIC5_BOB_MODE_AUTO			6
-+#define PMIC5_BOB_MODE_PWM			7
+ config UX500_WATCHDOG
+ 	tristate "ST-Ericsson Ux500 watchdog"
+ 	depends on MFD_DB8500_PRCMU
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 7caa920..7d32537 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -69,6 +69,7 @@ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+ obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+ obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+ obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
++obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
+ obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
+ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+ obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
+new file mode 100644
+index 0000000..8d56023
+--- /dev/null
++++ b/drivers/watchdog/imx7ulp_wdt.c
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 NXP.
++ */
 +
- /**
-  * struct rpmh_vreg_hw_data - RPMh regulator hardware configurations
-  * @regulator_type:		RPMh accelerator type used to manage this
-@@ -488,6 +502,14 @@ static const int pmic_mode_map_pmic4_ldo[REGULATOR_MODE_STANDBY + 1] = {
- 	[REGULATOR_MODE_FAST]    = -EINVAL,
- };
- 
-+static const int pmic_mode_map_pmic5_ldo[REGULATOR_MODE_STANDBY + 1] = {
-+	[REGULATOR_MODE_INVALID] = -EINVAL,
-+	[REGULATOR_MODE_STANDBY] = PMIC5_LDO_MODE_RETENTION,
-+	[REGULATOR_MODE_IDLE]    = PMIC5_LDO_MODE_LPM,
-+	[REGULATOR_MODE_NORMAL]  = PMIC5_LDO_MODE_HPM,
-+	[REGULATOR_MODE_FAST]    = -EINVAL,
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/watchdog.h>
++
++#define WDOG_CS			0x0
++#define WDOG_CS_CMD32EN		(1 << 13)
++#define WDOG_CS_ULK		(1 << 11)
++#define WDOG_CS_RCS		(1 << 10)
++#define WDOG_CS_EN		(1 << 7)
++#define WDOG_CS_UPDATE		(1 << 5)
++
++#define WDOG_CNT	0x4
++#define WDOG_TOVAL	0x8
++
++#define REFRESH_SEQ0	0xA602
++#define REFRESH_SEQ1	0xB480
++#define REFRESH		((REFRESH_SEQ1 << 16) | (REFRESH_SEQ0))
++
++#define UNLOCK_SEQ0	0xC520
++#define UNLOCK_SEQ1	0xD928
++#define UNLOCK		((UNLOCK_SEQ1 << 16) | (UNLOCK_SEQ0))
++
++#define DEFAULT_TIMEOUT 60
++#define MAX_TIMEOUT 128
++
++static bool nowayout = WATCHDOG_NOWAYOUT;
++module_param(nowayout, bool, 0000);
++MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
++		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++
++struct imx7ulp_wdt_device {
++	struct notifier_block restart_handler;
++	struct watchdog_device wdd;
++	void __iomem *base;
++	int rate;
 +};
 +
- static unsigned int rpmh_regulator_pmic4_ldo_of_map_mode(unsigned int rpmh_mode)
- {
- 	unsigned int mode;
-@@ -518,6 +540,14 @@ static const int pmic_mode_map_pmic4_smps[REGULATOR_MODE_STANDBY + 1] = {
- 	[REGULATOR_MODE_FAST]    = PMIC4_SMPS_MODE_PWM,
- };
- 
-+static const int pmic_mode_map_pmic5_smps[REGULATOR_MODE_STANDBY + 1] = {
-+	[REGULATOR_MODE_INVALID] = -EINVAL,
-+	[REGULATOR_MODE_STANDBY] = PMIC5_SMPS_MODE_RETENTION,
-+	[REGULATOR_MODE_IDLE]    = PMIC5_SMPS_MODE_PFM,
-+	[REGULATOR_MODE_NORMAL]  = PMIC5_SMPS_MODE_AUTO,
-+	[REGULATOR_MODE_FAST]    = PMIC5_SMPS_MODE_PWM,
++static inline void imx7ulp_wdt_enable(void __iomem *base, bool enable)
++{
++	u32 val = readl(base + WDOG_CS);
++
++	writel(UNLOCK, base + WDOG_CNT);
++	if (enable)
++		writel(val | WDOG_CS_EN, base + WDOG_CS);
++	else
++		writel(val & ~WDOG_CS_EN, base + WDOG_CS);
++}
++
++static inline bool imx7ulp_wdt_is_enabled(void __iomem *base)
++{
++	u32 val = readl(base + WDOG_CS);
++
++	return val & WDOG_CS_EN;
++}
++
++static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
++{
++	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
++
++	writel(REFRESH, wdt->base + WDOG_CNT);
++
++	return 0;
++}
++
++static int imx7ulp_wdt_start(struct watchdog_device *wdog)
++{
++	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
++
++	imx7ulp_wdt_enable(wdt->base, true);
++
++	return 0;
++}
++
++static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
++{
++	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
++
++	imx7ulp_wdt_enable(wdt->base, false);
++
++	return 0;
++}
++
++static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
++				   unsigned int timeout)
++{
++	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
++	u32 val = wdt->rate * timeout;
++
++	writel(UNLOCK, wdt->base + WDOG_CNT);
++	writel(val, wdt->base + WDOG_TOVAL);
++
++	wdog->timeout = timeout;
++
++	return 0;
++}
++
++static const struct watchdog_ops imx7ulp_wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = imx7ulp_wdt_start,
++	.stop  = imx7ulp_wdt_stop,
++	.ping  = imx7ulp_wdt_ping,
++	.set_timeout = imx7ulp_wdt_set_timeout,
 +};
 +
- static unsigned int
- rpmh_regulator_pmic4_smps_of_map_mode(unsigned int rpmh_mode)
- {
-@@ -552,6 +582,14 @@ static const int pmic_mode_map_pmic4_bob[REGULATOR_MODE_STANDBY + 1] = {
- 	[REGULATOR_MODE_FAST]    = PMIC4_BOB_MODE_PWM,
- };
- 
-+static const int pmic_mode_map_pmic5_bob[REGULATOR_MODE_STANDBY + 1] = {
-+	[REGULATOR_MODE_INVALID] = -EINVAL,
-+	[REGULATOR_MODE_STANDBY] = -EINVAL,
-+	[REGULATOR_MODE_IDLE]    = PMIC5_BOB_MODE_PFM,
-+	[REGULATOR_MODE_NORMAL]  = PMIC5_BOB_MODE_AUTO,
-+	[REGULATOR_MODE_FAST]    = PMIC5_BOB_MODE_PWM,
++static const struct watchdog_info imx7ulp_wdt_info = {
++	.identity = "i.MX7ULP watchdog timer",
++	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
++		    WDIOF_MAGICCLOSE,
 +};
 +
- static unsigned int rpmh_regulator_pmic4_bob_of_map_mode(unsigned int rpmh_mode)
- {
- 	unsigned int mode;
-@@ -643,7 +681,7 @@ static const struct rpmh_vreg_hw_data pmic5_pldo = {
- 	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 255, 8000),
- 	.n_voltages = 256,
- 	.hpm_min_load_uA = 10000,
--	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
- 	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
- };
- 
-@@ -653,7 +691,7 @@ static const struct rpmh_vreg_hw_data pmic5_pldo_lv = {
- 	.voltage_range = REGULATOR_LINEAR_RANGE(1504000, 0, 62, 8000),
- 	.n_voltages = 63,
- 	.hpm_min_load_uA = 10000,
--	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
- 	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
- };
- 
-@@ -663,7 +701,7 @@ static const struct rpmh_vreg_hw_data pmic5_nldo = {
- 	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 123, 8000),
- 	.n_voltages = 124,
- 	.hpm_min_load_uA = 30000,
--	.pmic_mode_map = pmic_mode_map_pmic4_ldo,
-+	.pmic_mode_map = pmic_mode_map_pmic5_ldo,
- 	.of_map_mode = rpmh_regulator_pmic4_ldo_of_map_mode,
- };
- 
-@@ -672,7 +710,7 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps510 = {
- 	.ops = &rpmh_regulator_vrm_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
- 	.n_voltages = 216,
--	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.pmic_mode_map = pmic_mode_map_pmic5_smps,
- 	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
- };
- 
-@@ -681,7 +719,7 @@ static const struct rpmh_vreg_hw_data pmic5_ftsmps510 = {
- 	.ops = &rpmh_regulator_vrm_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 263, 4000),
- 	.n_voltages = 264,
--	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.pmic_mode_map = pmic_mode_map_pmic5_smps,
- 	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
- };
- 
-@@ -690,7 +728,7 @@ static const struct rpmh_vreg_hw_data pmic5_hfsmps515 = {
- 	.ops = &rpmh_regulator_vrm_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(2800000, 0, 4, 1600),
- 	.n_voltages = 5,
--	.pmic_mode_map = pmic_mode_map_pmic4_smps,
-+	.pmic_mode_map = pmic_mode_map_pmic5_smps,
- 	.of_map_mode = rpmh_regulator_pmic4_smps_of_map_mode,
- };
- 
-@@ -699,7 +737,7 @@ static const struct rpmh_vreg_hw_data pmic5_bob = {
- 	.ops = &rpmh_regulator_vrm_bypass_ops,
- 	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
- 	.n_voltages = 136,
--	.pmic_mode_map = pmic_mode_map_pmic4_bob,
-+	.pmic_mode_map = pmic_mode_map_pmic5_bob,
- 	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
- };
- 
++static inline void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
++{
++	u32 val;
++
++	/* unlock the wdog for reconfiguration */
++	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
++	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
++
++	/* set an initial timeout value in TOVAL */
++	writel(timeout, base + WDOG_TOVAL);
++	/* enable 32bit command sequence and reconfigure */
++	val = (1 << 13) | (1 << 8) | (1 << 5);
++	writel(val, base + WDOG_CS);
++}
++
++static int imx7ulp_wdt_probe(struct platform_device *pdev)
++{
++	struct imx7ulp_wdt_device *imx7ulp_wdt;
++	struct device *dev = &pdev->dev;
++	struct watchdog_device *wdog;
++	int ret;
++
++	imx7ulp_wdt = devm_kzalloc(&pdev->dev,
++				   sizeof(*imx7ulp_wdt), GFP_KERNEL);
++	if (!imx7ulp_wdt)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, imx7ulp_wdt);
++
++	imx7ulp_wdt->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(imx7ulp_wdt->base))
++		return PTR_ERR(imx7ulp_wdt->base);
++
++	imx7ulp_wdt->rate = 1000;
++	wdog = &imx7ulp_wdt->wdd;
++	wdog->info = &imx7ulp_wdt_info;
++	wdog->ops = &imx7ulp_wdt_ops;
++	wdog->min_timeout = 1;
++	wdog->max_timeout = MAX_TIMEOUT;
++	wdog->parent = dev;
++	wdog->timeout = DEFAULT_TIMEOUT;
++
++	watchdog_init_timeout(wdog, 0, dev);
++	watchdog_stop_on_reboot(wdog);
++	watchdog_stop_on_unregister(wdog);
++	watchdog_set_drvdata(wdog, imx7ulp_wdt);
++	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * imx7ulp_wdt->rate);
++
++	ret = devm_watchdog_register_device(dev, wdog);
++	if (ret)
++		dev_err(dev, "Failed to register watchdog device\n");
++
++	return ret;
++}
++
++static int __maybe_unused imx7ulp_wdt_suspend(struct device *dev)
++{
++	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
++
++	if (watchdog_active(&imx7ulp_wdt->wdd))
++		imx7ulp_wdt_stop(&imx7ulp_wdt->wdd);
++
++	return 0;
++}
++
++static int __maybe_unused imx7ulp_wdt_resume(struct device *dev)
++{
++	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
++	u32 timeout = imx7ulp_wdt->wdd.timeout * imx7ulp_wdt->rate;
++
++	if (imx7ulp_wdt_is_enabled(imx7ulp_wdt->base))
++		imx7ulp_wdt_init(imx7ulp_wdt->base, timeout);
++
++	if (watchdog_active(&imx7ulp_wdt->wdd))
++		imx7ulp_wdt_start(&imx7ulp_wdt->wdd);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(imx7ulp_wdt_pm_ops, imx7ulp_wdt_suspend,
++			 imx7ulp_wdt_resume);
++
++static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
++	{ .compatible = "fsl,imx7ulp-wdt", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, imx7ulp_wdt_dt_ids);
++
++static struct platform_driver imx7ulp_wdt_driver = {
++	.probe		= imx7ulp_wdt_probe,
++	.driver		= {
++		.name	= "imx7ulp-wdt",
++		.pm	= &imx7ulp_wdt_pm_ops,
++		.of_match_table = imx7ulp_wdt_dt_ids,
++	},
++};
++module_platform_driver(imx7ulp_wdt_driver);
++
++MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
++MODULE_DESCRIPTION("Freescale i.MX7ULP watchdog driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.20.1
+2.7.4
