@@ -1,41 +1,27 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v3 0/2] dt-bindings: net: meson-dwmac: convert to yaml
-Date: Fri, 9 Aug 2019 11:31:58 +0200
-Message-ID: <e39ca095-d68e-7231-f746-2470e16cd2e9@baylibre.com>
-References: <20190808114101.29982-1-narmstrong@baylibre.com>
- <20190808.112033.180369877501058953.davem@davemloft.net>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 00/19] Initial support for Marvell MMP3 SoC
+Date: Fri,  9 Aug 2019 11:31:39 +0200
+Message-ID: <20190809093158.7969-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808.112033.180369877501058953.davem@davemloft.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: robh+dt@kernel.org, martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 08/08/2019 20:20, David Miller wrote:
-> From: Neil Armstrong <narmstrong@baylibre.com>
-> Date: Thu,  8 Aug 2019 13:40:59 +0200
-> 
->> This patchsets converts the Amlogic Meson DWMAC glue bindings over to
->> YAML schemas using the already converted dwmac bindings.
->>
->> The first patch is needed because the Amlogic glue needs a supplementary
->> reg cell to access the DWMAC glue registers.
->>
->> Changes since v2:
->> - Added review tags
->> - Updated allwinner,sun7i-a20-gmac.yaml reg maxItems
-> 
-> Where is this targetted to be merged, an ARM tree?  Or one of my
-> networking trees?
-> 
+this patch set adds support for the Marvell MMP3 processor. MMP3 is used
+in OLPC XO-4 laptops, Panasonic Toughpad FZ-A1 tablet and Dell Wyse 3020
+Tx0D thin clients.
 
-I assume you can take it in one of your net trees.
+Apart from the adjustments in mach-mmp/, the patch makes necessary
+changes to the irqchip driver and adds an USB2 PHY driver. The latter
+has a dependency on the mach-mmp/ changes, so it can't be submitted
+separately.
 
-Thanks,
-Neil
+The patch set has been tested to work on Wyse Tx0D and not ruin MMP2
+support on XO-1.75.
+
+Lubo
