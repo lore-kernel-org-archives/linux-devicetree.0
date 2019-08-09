@@ -1,129 +1,60 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v8 08/21] clk: tegra: periph: Add restore_context support
-Date: Fri, 9 Aug 2019 14:55:13 +0300
-Message-ID: <5a5f9fb9-9cdd-5d91-4b0e-9bdb95b2625e@gmail.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-9-git-send-email-skomatineni@nvidia.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities()
+ to get_features
+Date: Fri, 9 Aug 2019 12:00:17 +0000
+Message-ID: <16511bd0d6421549b2968a9419e971923c0d0146.camel@analog.com>
+References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
+         <20190808123026.17382-3-alexandru.ardelean@analog.com>
+         <20190808152403.GB27917@lunn.ch>
+         <eeda87c9-bdba-8ef7-6043-85a16bd2cfc2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565308020-31952-9-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <eeda87c9-bdba-8ef7-6043-85a16bd2cfc2@gmail.com>
 Content-Language: en-US
+Content-ID: <A9DA33D6E6744C46A1BA73A0E11EF19D@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements restore_context support for clk-periph and
-> clk-sdmmc-mux clock operations to restore clock parent and rates
-> on system resume.
-> 
-> During system suspend, core power goes off and looses the context
-> of the Tegra clock controller registers.
-> 
-> So on system resume, clocks parent and rate are restored back to
-> the context before suspend based on cached data.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-periph.c    | 18 ++++++++++++++++++
->  drivers/clk/tegra/clk-sdmmc-mux.c | 12 ++++++++++++
->  2 files changed, 30 insertions(+)
-> 
-> diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-periph.c
-> index 58437da25156..c9d28cbadccc 100644
-> --- a/drivers/clk/tegra/clk-periph.c
-> +++ b/drivers/clk/tegra/clk-periph.c
-> @@ -3,6 +3,7 @@
->   * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/export.h>
->  #include <linux/slab.h>
-> @@ -99,6 +100,20 @@ static void clk_periph_disable(struct clk_hw *hw)
->  	gate_ops->disable(gate_hw);
->  }
->  
-> +static void clk_periph_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_periph *periph = to_clk_periph(hw);
-> +	const struct clk_ops *div_ops = periph->div_ops;
-> +	struct clk_hw *div_hw = &periph->divider.hw;
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	int parent_id = clk_hw_get_parent_index(hw, parent);
-> +
-> +	if (!(periph->gate.flags & TEGRA_PERIPH_NO_DIV))
-> +		div_ops->restore_context(div_hw);
-> +
-> +	clk_periph_set_parent(hw, parent_id);
-> +}
-> +
->  const struct clk_ops tegra_clk_periph_ops = {
->  	.get_parent = clk_periph_get_parent,
->  	.set_parent = clk_periph_set_parent,
-> @@ -108,6 +123,7 @@ const struct clk_ops tegra_clk_periph_ops = {
->  	.is_enabled = clk_periph_is_enabled,
->  	.enable = clk_periph_enable,
->  	.disable = clk_periph_disable,
-> +	.restore_context = clk_periph_restore_context,
->  };
->  
->  static const struct clk_ops tegra_clk_periph_nodiv_ops = {
-> @@ -116,6 +132,7 @@ static const struct clk_ops tegra_clk_periph_nodiv_ops = {
->  	.is_enabled = clk_periph_is_enabled,
->  	.enable = clk_periph_enable,
->  	.disable = clk_periph_disable,
-> +	.restore_context = clk_periph_restore_context,
->  };
->  
->  static const struct clk_ops tegra_clk_periph_no_gate_ops = {
-> @@ -124,6 +141,7 @@ static const struct clk_ops tegra_clk_periph_no_gate_ops = {
->  	.recalc_rate = clk_periph_recalc_rate,
->  	.round_rate = clk_periph_round_rate,
->  	.set_rate = clk_periph_set_rate,
-> +	.restore_context = clk_periph_restore_context,
->  };
->  
->  static struct clk *_tegra_clk_register_periph(const char *name,
-> diff --git a/drivers/clk/tegra/clk-sdmmc-mux.c b/drivers/clk/tegra/clk-sdmmc-mux.c
-> index a5cd3e31dbae..8db48966b100 100644
-> --- a/drivers/clk/tegra/clk-sdmmc-mux.c
-> +++ b/drivers/clk/tegra/clk-sdmmc-mux.c
-> @@ -194,6 +194,17 @@ static void clk_sdmmc_mux_disable(struct clk_hw *hw)
->  	gate_ops->disable(gate_hw);
->  }
->  
-> +static void clk_sdmmc_mux_restore_context(struct clk_hw *hw)
-> +{
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	unsigned long parent_rate = clk_hw_get_rate(parent);
-> +	unsigned long rate = clk_hw_get_rate(hw);
-> +	int parent_id = clk_hw_get_parent_index(hw, parent);
-> +
-> +	clk_sdmmc_mux_set_parent(hw, parent_id);
-> +	clk_sdmmc_mux_set_rate(hw, rate, parent_rate);
-
-For the periph clocks you're restoring rate at first and then the
-parent, while here it's the other way around. I'm wondering if there is
-any difference in practice and thus whether rate's divider need to be
-set to a some safe value before switching to a new parent that has a
-higher clock rate than the old parent.
-
-> +}
-> +
->  static const struct clk_ops tegra_clk_sdmmc_mux_ops = {
->  	.get_parent = clk_sdmmc_mux_get_parent,
->  	.set_parent = clk_sdmmc_mux_set_parent,
-> @@ -203,6 +214,7 @@ static const struct clk_ops tegra_clk_sdmmc_mux_ops = {
->  	.is_enabled = clk_sdmmc_mux_is_enabled,
->  	.enable = clk_sdmmc_mux_enable,
->  	.disable = clk_sdmmc_mux_disable,
-> +	.restore_context = clk_sdmmc_mux_restore_context,
->  };
->  
->  struct clk *tegra_clk_register_sdmmc_mux_div(const char *name,
-> 
+T24gVGh1LCAyMDE5LTA4LTA4IGF0IDIxOjMyICswMjAwLCBIZWluZXIgS2FsbHdlaXQgd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDA4LjA4LjIwMTkgMTc6MjQsIEFuZHJldyBMdW5uIHdy
+b3RlOg0KPiA+IE9uIFRodSwgQXVnIDA4LCAyMDE5IGF0IDAzOjMwOjEzUE0gKzAzMDAsIEFsZXhh
+bmRydSBBcmRlbGVhbiB3cm90ZToNCj4gPiA+IFRoZSBBRElOIFBIWXMgY2FuIG9wZXJhdGUgd2l0
+aCBDbGF1c2UgNDUsIGhvd2V2ZXIgdGhleSBhcmUgbm90IHR5cGljYWwgZm9yDQo+ID4gPiBob3cg
+cGh5bGliIGNvbnNpZGVycyBDbGF1c2UgNDUgUEhZcy4NCj4gPiA+IA0KPiA+ID4gSWYgdGhlIGBm
+ZWF0dXJlc2AgZmllbGQgJiB0aGUgYGdldF9mZWF0dXJlc2AgaG9vayBhcmUgdW5zcGVjaWZpZWQs
+IGFuZCB0aGUNCj4gPiA+IGRldmljZSB3YW50cyB0byBvcGVyYXRlIHZpYSBDbGF1c2UgNDUsIGl0
+IHdvdWxkIGFsc28gdHJ5IHRvIHJlYWQgZmVhdHVyZXMNCj4gPiA+IHZpYSB0aGUgYGdlbnBoeV9j
+NDVfcG1hX3JlYWRfYWJpbGl0aWVzKClgLCB3aGljaCB3aWxsIHRyeSB0byByZWFkIFBNQSByZWdz
+DQo+ID4gPiB0aGF0IGFyZSB1bnN1cHBvcnRlZC4NCj4gPiA+IA0KPiA+ID4gSG9va2luZyB0aGUg
+YGdlbnBoeV9yZWFkX2FiaWxpdGllcygpYCBmdW5jdGlvbiB0byB0aGUgYGdldF9mZWF0dXJlc2Ag
+aG9vaw0KPiA+ID4gd2lsbCBlbnN1cmUgdGhhdCB0aGlzIGRvZXMgbm90IGhhcHBlbiBhbmQgdGhl
+IFBIWSBmZWF0dXJlcyBhcmUgcmVhZA0KPiA+ID4gY29ycmVjdGx5IHJlZ2FyZGxlc3Mgb2YgQ2xh
+dXNlIDIyIG9yIENsYXVzZSA0NSBvcGVyYXRpb24uDQo+ID4gDQo+ID4gSSB0aGluayB3ZSBuZWVk
+IHRvIHN0b3AgYW5kIHRoaW5rIGFib3V0IGEgUEhZIHdoaWNoIHN1cHBvcnRzIGJvdGggQzIyDQo+
+ID4gYW5kIEM0NS4NCj4gPiANCj4gPiBIb3cgZG9lcyBidXMgZW51bWVyYXRpb24gd29yaz8gSXMg
+aXQgZGlzY292ZXJlZCB0d2ljZT8gIEkndmUgYWx3YXlzDQo+ID4gY29uc2lkZXJlZCBwaHlkZXYt
+PmlzX2M0NSBtZWFucyBldmVyeXRoaW5nIGlzIGM0NSwgbm90IHRoYXQgc29tZQ0KPiA+IHJlZ2lz
+dGVycyBjYW4gYmUgYWNjZXNzZWQgdmlhIGM0NS4gQnV0IHRoZSBkcml2ZXIgaXMgbWl4aW5nIGMy
+MiBhbmQNCj4gPiBjNDUuIERvZXMgdGhlIGRyaXZlciBhY3R1YWxseSByZXF1aXJlIGM0NT8gQXJl
+IHNvbWUgZmVhdHVyZXMgd2hpY2ggYXJlDQo+ID4gb25seSBhY2Nlc3NpYmx5IHZpYSBDNDU/IFdo
+YXQgZG9lcyBDNDUgYWN0dWFsbHkgYnJpbmcgdXMgZm9yIHRoaXMNCj4gPiBkZXZpY2U/DQo+ID4g
+DQoNCkhtbSwgSSBjYW4ndCBhbnN3ZXIgW2FsbF0gdGhlc2UgcXVlc3Rpb25zLg0KDQpUaGVzZSBQ
+SFlzIHNlZW0gdG8gYmUgYSBiaXQgZGlmZmVyZW50IGZyb20gdGhlIHJlc3QgdGhhdCBJIGxvb2tl
+ZCBhdCBpbiBkcml2ZXJzL25ldC9waHkgd2l0aCByZWdhcmQgdG8gQzQ1ICYgQzIyLg0KQW5kIEM0
+NSBzZWVtcyB0byBiZSBtb3JlL2Nsb3NlciByZWxhdGVkIHRvIDEwRyBQSFlzIFtmcm9tIHdoYXQg
+SSBjYW4gdGVsbF0uDQoNClRoZSBBRElOIFBIWXMgY2FuIG9wZXJhdGUgb25seSBpbiBDMjIuDQpU
+aGUgb25seSB0aGluZyB0aGF0IGlzIG5lZWRlZCBbYW5kIGEgYml0IHNwZWNpYWxdIGlzIEVFRSwg
+d2hpY2ggW2ZvciBDMjJdIHJlcXVpcmVzIHRoZSB0cmFuc2xhdGlvbiBsYXllciB0byBjb252ZXJ0
+IEM0NQ0KcmVnIGFkZHJlc3NlcyB0byBpbnRlcm5hbCBDMjIgZXF1aXZhbGVudC4NCg0KPiBnZW5w
+aHlfYzQ1X3BtYV9yZWFkX2FiaWxpdGllcygpIGlzIG9ubHkgY2FsbGVkIGlmIHBoeWRldi0+aXNf
+YzQ1IGlzIHNldC4NCj4gQW5kIHRoaXMgZmxhZyBtZWFucyB0aGF0IHRoZSBQSFkgY29tcGxpZXMg
+d2l0aCBDbGF1c2UgNDUgaW5jbC4gYWxsIHRoZQ0KPiBzdGFuZGFyZCBkZXZpY2VzIGxpa2UgUE1B
+LiBJbiB0aGUgY2FzZSBoZXJlIG9ubHkgc29tZSB2ZW5kb3Itc3BlY2lmaWMNCj4gcmVnaXN0ZXJz
+IGNhbiBiZSBhY2Nlc3NlZCB2aWEgQ2xhdXNlIDQ1IGFuZCB0aGVyZWZvcmUgaXNfYzQ1IHNob3Vs
+ZG4ndA0KPiBiZXQgc2V0LiBBcyBhIGNvbnNlcXVlbmNlIHRoaXMgcGF0Y2ggaXNuJ3QgbmVlZGVk
+Lg0KDQphY2ssIHdpbGwgZHJvcCBwYXRjaA0KDQo+IA0KPiA+ICAgICAgQW5kcmV3DQo+ID4gDQo+
+IEhlaW5lcg0KPiANCg==
