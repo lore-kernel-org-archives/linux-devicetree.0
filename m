@@ -1,7 +1,8 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 2/6] arm64: dts: ti: k3-j721e: Add gpio nodes in main domain
-Date: Fri, 9 Aug 2019 13:59:43 +0530
-Message-ID: <20190809082947.30590-3-lokeshvutla@ti.com>
+Subject: [PATCH 4/6] arm64: dts: ti: k3-j721e-common-proc-board: Disable
+ unused gpio modules
+Date: Fri, 9 Aug 2019 13:59:45 +0530
+Message-ID: <20190809082947.30590-5-lokeshvutla@ti.com>
 References: <20190809082947.30590-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,167 +22,55 @@ To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linus.walleij@lin
 Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-There are 8 instances of gpio modules in main domain divided into 2 groups:
-- Group1: gpio0, gpio2, gpio4, gpio6
-- Group2: gpio1, gpio3, gpio5, gpio7
+There are 10 gpio instances inside SoC with 3 groups as below:
+- Group1: main_gpio0, main_gpio2, main_gpio4, main_gpio6
+- Group2: main_gpio1, main_gpio3, main_gpio5, main_gpio7
+- Group3: wkup_gpio0, wkup_gpio1
 
-Groups are created to provide protection between two different processor
-virtual worlds. There are x gpio lines coming out of each group. Each module
-in a group has equal x gpio lines pinned out. There is a top level mux for
-selecting the module instance for each pin coming out of group. Exactly
-one module can be selected to control the corresponding pin. This muxing
-can be controlled along the pad mux configuration registers.
-
-Group1 pins out 128 lines(8 banks). Group 2 pins out 36 lines(2 banks).
-
-Add DT nodes for each module instance in the main domain. Users should
-make sure that correct gpio instance is selected in their pad configuration.
+Only one instance can be used in each group at a time. So use main_gpio0,
+main_gpio1 and wkup_gpio0 for the current linux context and mark other
+gpio nodes as disabled.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 132 ++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 01661c22c39d..199bc9a00b20 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -240,4 +240,136 @@
- 		clocks = <&k3_clks 286 0>;
- 		clock-names = "fclk";
- 	};
-+
-+	main_gpio0: gpio@600000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00600000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <105 0>, <105 1>, <105 2>, <105 3>,
-+			     <105 4>, <105 5>, <105 6>, <105 7>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <128>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 105 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 105 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio1: gpio@601000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00601000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <106 0>, <106 1>, <106 2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <36>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 106 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 106 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio2: gpio@610000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00610000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <107 0>, <107 1>, <107 2>, <107 3>,
-+			     <107 4>, <107 5>, <107 6>, <107 7>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <128>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 107 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 107 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio3: gpio@611000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00611000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <108 0>, <108 1>, <108 2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <36>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 108 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 108 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio4: gpio@620000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00620000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <109 0>, <109 1>, <109 2>, <109 3>,
-+			     <109 4>, <109 5>, <109 6>, <109 7>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <128>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 109 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 109 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio5: gpio@621000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00621000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <110 0>, <110 1>, <110 2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <36>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 110 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 110 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio6: gpio@630000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00630000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <111 0>, <111 1>, <111 2>, <111 3>,
-+			     <111 4>, <111 5>, <111 6>, <111 7>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <128>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 111 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 111 0>;
-+		clock-names = "gpio";
-+	};
-+
-+	main_gpio7: gpio@631000 {
-+		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
-+		reg = <0x0 0x00631000 0x0 0x100>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&main_gpio_intr>;
-+		interrupts = <112 0>, <112 1>, <112 2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		ti,ngpio = <36>;
-+		ti,davinci-gpio-unbanked = <0>;
-+		power-domains = <&k3_pds 112 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 112 0>;
-+		clock-names = "gpio";
-+	};
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 63b47b839388..509579ca3db2 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -52,3 +52,31 @@
+ 	/* UART not brought out */
+ 	status = "disabled";
  };
++
++&main_gpio2 {
++	status = "disabled";
++};
++
++&main_gpio3 {
++	status = "disabled";
++};
++
++&main_gpio4 {
++	status = "disabled";
++};
++
++&main_gpio5 {
++	status = "disabled";
++};
++
++&main_gpio6 {
++	status = "disabled";
++};
++
++&main_gpio7 {
++	status = "disabled";
++};
++
++&wkup_gpio1 {
++	status = "disabled";
++};
 -- 
 2.22.0
