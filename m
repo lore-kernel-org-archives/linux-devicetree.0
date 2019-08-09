@@ -1,152 +1,89 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 09/14] net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
-Date: Fri, 9 Aug 2019 16:35:47 +0300
-Message-ID: <20190809133552.21597-10-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 07/14] net: phy: adin: make RMII fifo depth configurable
+Date: Fri, 9 Aug 2019 16:35:45 +0300
+Message-ID: <20190809133552.21597-8-alexandru.ardelean@analog.com>
 References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN1200 & ADIN1300 PHYs support EEE by using standard Clause 45 access
-to access MMD registers for EEE.
+The FIFO depth can be configured for the RMII mode. This change adds
+support for doing this via device-tree (or ACPI).
 
-The EEE register addresses (when using Clause 22) are available at
-different addresses (than Clause 45), and since accessing these regs (via
-Clause 22) needs a special mechanism, a translation table is required to
-convert these addresses.
-
-For Clause 45, this is not needed; the addresses are available as specified
-by IEEE.
-
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 69 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 2 deletions(-)
+ drivers/net/phy/adin.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 45ab89ec1b59..bd002103f083 100644
+index 06d3db75c3db..a076887bf165 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -42,6 +42,17 @@
- #define ADIN1300_PHY_STATUS1			0x001a
- #define   ADIN1300_PAIR_01_SWAP			BIT(11)
+@@ -54,8 +54,19 @@
+ #define	ADIN1300_RGMII_2_40_NS			0x0007
  
-+/* EEE register addresses, accessible via Clause 22 access using
-+ * ADIN1300_MII_EXT_REG_PTR & ADIN1300_MII_EXT_REG_DATA.
-+ * The bit-fields are the same as specified by IEEE, and can be
-+ * accessed via standard Clause 45 access.
-+ */
-+#define ADIN1300_EEE_CAP_REG			0x8000
-+#define ADIN1300_EEE_ADV_REG			0x8001
-+#define ADIN1300_EEE_LPABLE_REG			0x8002
-+#define ADIN1300_CLOCK_STOP_REG			0x9400
-+#define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
+ #define ADIN1300_GE_RMII_CFG_REG		0xff24
++#define   ADIN1300_GE_RMII_FIFO_DEPTH_MSK	GENMASK(6, 4)
++#define   ADIN1300_GE_RMII_FIFO_DEPTH_SEL(x)	\
++		FIELD_PREP(ADIN1300_GE_RMII_FIFO_DEPTH_MSK, x)
+ #define   ADIN1300_GE_RMII_EN			BIT(0)
+ 
++/* RMII fifo depth values */
++#define ADIN1300_RMII_4_BITS			0x0000
++#define ADIN1300_RMII_8_BITS			0x0001
++#define ADIN1300_RMII_12_BITS			0x0002
++#define ADIN1300_RMII_16_BITS			0x0003
++#define ADIN1300_RMII_20_BITS			0x0004
++#define ADIN1300_RMII_24_BITS			0x0005
 +
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
- #define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
- #define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-@@ -103,6 +114,26 @@ static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
+ /**
+  * struct adin_cfg_reg_map - map a config value to aregister value
+  * @cfg		value in device configuration
+@@ -75,6 +86,16 @@ static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
  	{ },
  };
  
-+/**
-+ * struct adin_clause45_mmd_map - map to convert Clause 45 regs to Clause 22
-+ * @devad		device address used in Clause 45 access
-+ * @cl45_regnum		register address defined by Clause 45
-+ * @adin_regnum		equivalent register address accessible via Clause 22
-+ */
-+struct adin_clause45_mmd_map {
-+	int devad;
-+	u16 cl45_regnum;
-+	u16 adin_regnum;
-+};
-+
-+static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
-+	{ MDIO_MMD_PCS,	MDIO_PCS_EEE_ABLE,	ADIN1300_EEE_CAP_REG },
-+	{ MDIO_MMD_AN,	MDIO_AN_EEE_LPABLE,	ADIN1300_EEE_LPABLE_REG },
-+	{ MDIO_MMD_AN,	MDIO_AN_EEE_ADV,	ADIN1300_EEE_ADV_REG },
-+	{ MDIO_MMD_PCS,	MDIO_CTRL1,		ADIN1300_CLOCK_STOP_REG },
-+	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
++static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
++	{ 4,  ADIN1300_RMII_4_BITS },
++	{ 8,  ADIN1300_RMII_8_BITS },
++	{ 12, ADIN1300_RMII_12_BITS },
++	{ 16, ADIN1300_RMII_16_BITS },
++	{ 20, ADIN1300_RMII_20_BITS },
++	{ 24, ADIN1300_RMII_24_BITS },
++	{ },
 +};
 +
  static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
  {
  	size_t i;
-@@ -253,10 +284,33 @@ static int adin_phy_config_intr(struct phy_device *phydev)
- 			      ADIN1300_INT_MASK_EN);
+@@ -158,6 +179,7 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 
+ static int adin_config_rmii_mode(struct phy_device *phydev)
+ {
++	u32 val;
+ 	int reg;
+ 
+ 	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
+@@ -171,6 +193,13 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
+ 
+ 	reg |= ADIN1300_GE_RMII_EN;
+ 
++	val = adin_get_reg_value(phydev, "adi,fifo-depth-bits",
++				 adin_rmii_fifo_depths,
++				 ADIN1300_RMII_8_BITS);
++
++	reg &= ~ADIN1300_GE_RMII_FIFO_DEPTH_MSK;
++	reg |= ADIN1300_GE_RMII_FIFO_DEPTH_SEL(val);
++
+ 	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
+ 			     ADIN1300_GE_RMII_CFG_REG, reg);
  }
- 
-+static int adin_cl45_to_adin_reg(struct phy_device *phydev, int devad,
-+				 u16 cl45_regnum)
-+{
-+	struct adin_clause45_mmd_map *m;
-+	int i;
-+
-+	if (devad == MDIO_MMD_VEND1)
-+		return cl45_regnum;
-+
-+	for (i = 0; i < ARRAY_SIZE(adin_clause45_mmd_map); i++) {
-+		m = &adin_clause45_mmd_map[i];
-+		if (m->devad == devad && m->cl45_regnum == cl45_regnum)
-+			return m->adin_regnum;
-+	}
-+
-+	phydev_err(phydev,
-+		   "No translation available for devad: %d reg: %04x\n",
-+		   devad, cl45_regnum);
-+
-+	return -EINVAL;
-+}
-+
- static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
- {
- 	struct mii_bus *bus = phydev->mdio.bus;
- 	int phy_addr = phydev->mdio.addr;
-+	int adin_regnum;
- 	int err;
- 
- 	if (phydev->is_c45) {
-@@ -265,7 +319,12 @@ static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
- 		return __mdiobus_read(bus, phy_addr, addr);
- 	}
- 
--	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	adin_regnum = adin_cl45_to_adin_reg(phydev, devad, regnum);
-+	if (adin_regnum < 0)
-+		return adin_regnum;
-+
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR,
-+			      adin_regnum);
- 	if (err)
- 		return err;
- 
-@@ -277,6 +336,7 @@ static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
- {
- 	struct mii_bus *bus = phydev->mdio.bus;
- 	int phy_addr = phydev->mdio.addr;
-+	int adin_regnum;
- 	int err;
- 
- 	if (phydev->is_c45) {
-@@ -285,7 +345,12 @@ static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
- 		return __mdiobus_write(bus, phy_addr, addr, val);
- 	}
- 
--	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	adin_regnum = adin_cl45_to_adin_reg(phydev, devad, regnum);
-+	if (adin_regnum < 0)
-+		return adin_regnum;
-+
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR,
-+			      adin_regnum);
- 	if (err)
- 		return err;
- 
 -- 
 2.20.1
