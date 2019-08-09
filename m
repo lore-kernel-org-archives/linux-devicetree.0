@@ -1,14 +1,11 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 1/6] dt-bindings: gpio: davinci: Add new compatible for J721E
- SoCs
-Date: Fri, 9 Aug 2019 13:59:42 +0530
-Message-ID: <20190809082947.30590-2-lokeshvutla@ti.com>
-References: <20190809082947.30590-1-lokeshvutla@ti.com>
+Subject: [PATCH 0/6] arm64: dts: ti: k3-j721e: Add gpio nodes
+Date: Fri, 9 Aug 2019 13:59:41 +0530
+Message-ID: <20190809082947.30590-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190809082947.30590-1-lokeshvutla@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,25 +19,32 @@ To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linus.walleij@lin
 Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-J721e SoCs have same gpio IP as K2G davinci gpio. Add a new compatible to
-handle J721E SoCs.
+This series adds gpio nodes for J721E SoC and enable gpio keys
+in J72E common process board.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 1 +
- 1 file changed, 1 insertion(+)
+Tested Boot log: https://pastebin.ubuntu.com/p/P6QqmZYtSC/
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-index bc6b4b62df83..cd91d61eac31 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-@@ -6,6 +6,7 @@ Required Properties:
- 						66AK2E SoCs
- 			"ti,k2g-gpio", "ti,keystone-gpio": for 66AK2G
- 			"ti,am654-gpio", "ti,keystone-gpio": for TI K3 AM654
-+			"ti,j721e-gpio", "ti,keystone-gpio": for J721E SoCs
- 
- - reg: Physical base address of the controller and the size of memory mapped
-        registers.
+This series depends on Power-domain cells update series:
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=152109
+
+
+Lokesh Vutla (5):
+  dt-bindings: gpio: davinci: Add new compatible for J721E SoCs
+  arm64: dts: ti: k3-j721e: Add gpio nodes in main domain
+  arm64: dts: ti: k3-j721e: Add gpio nodes in wakeup domain
+  arm64: dts: ti: k3-j721e-common-proc-board: Disable unused gpio
+    modules
+  dt-bindings: pinctrl: k3: Introduce pinmux definitions for J721E
+
+Nikhil Devshatwar (1):
+  arm64: dts: k3-j721e: Add gpio-keys on common processor board
+
+ .../devicetree/bindings/gpio/gpio-davinci.txt |   1 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     |  65 +++++++++
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 132 ++++++++++++++++++
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  34 +++++
+ include/dt-bindings/pinctrl/k3.h              |   3 +
+ 5 files changed, 235 insertions(+)
+
 -- 
 2.22.0
