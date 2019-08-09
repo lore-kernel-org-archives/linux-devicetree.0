@@ -1,60 +1,107 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-Date: Fri, 9 Aug 2019 17:25:57 +0200
-Message-ID: <20190809172557.346e7c41@collabora.com>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
-        <20190808131448.349161-3-tmaimon77@gmail.com>
-        <20190808173232.4d79d698@collabora.com>
-        <CAP6Zq1iW0C0FDOoqmn5r_xk5HQFWw+GgLfeapvt-8mB50N2Vvg@mail.gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v3 12/21] ARM: dts: imx6-apalis: Add touchscreens used on
+ Toradex eval boards
+Date: Fri, 9 Aug 2019 15:35:20 +0000
+Message-ID: <e8bba2172801ca926a556e828dc08292a07f5704.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-13-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1iW0C0FDOoqmn5r_xk5HQFWw+GgLfeapvt-8mB50N2Vvg@mail.gmail.com>
+In-Reply-To: <20190807082556.5013-13-philippe.schenker@toradex.com>
+Content-Language: en-US
+Content-ID: <D22C3F5D34AF6A48ABB2B25F40AF38C6@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Aug 2019 18:26:23 +0300
-Tomer Maimon <tmaimon77@gmail.com> wrote:
-
-> Hi Boris,
-> 
-> Thanks a lot for your comment.
-> 
-> On Thu, 8 Aug 2019 at 18:32, Boris Brezillon <boris.brezillon@collabora.com>
-> wrote:
-> 
-> > On Thu,  8 Aug 2019 16:14:48 +0300
-> > Tomer Maimon <tmaimon77@gmail.com> wrote:
-> >
-> >  
-> > > +
-> > > +static const struct spi_controller_mem_ops npcm_fiu_mem_ops = {
-> > > +     .exec_op = npcm_fiu_exec_op,  
-> >
-> > No npcm_supports_op()? That's suspicious, especially after looking at
-> > the npcm_fiu_exec_op() (and the functions called from there) where the
-> > requested ->buswidth seems to be completely ignored...
-> >
-> > Sorry but I do not fully understand it, do you mean a support for the  
-> buswidth?
-> If yes it been done in the UMA functions as follow:
-> 
->                 uma_cfg |= ilog2(op->cmd.buswidth);
->                 uma_cfg |= ilog2(op->addr.buswidth) <<
->                         NPCM_FIU_UMA_CFG_ADBPCK_SHIFT;
->                 uma_cfg |= ilog2(op->data.buswidth) <<
->                         NPCM_FIU_UMA_CFG_WDBPCK_SHIFT;
->                 uma_cfg |= op->addr.nbytes << NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT;
->                 regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR, op->addr.val);
->
-
-Hm, the default supports_op() implementation might be just fine for
-your use case. But there's one thing you still need to check: the
-number of addr cycles (or address size as you call it in this driver).
-Looks like your IP is limited to 4 address cycles, if I'm right, you
-should reject any operation that have op->addr.nbytes > 4. I also
-wonder if there's a limitation on the data size you can have on a
-single transfer. If there's one you should implement ->adjust_op() too.
+SGkgUGhpbGlwcGUNCg0KT24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBw
+ZSBTY2hlbmtlciB3cm90ZToNCj4gVGhpcyBjb21taXQgYWRkcyB0aGUgdG91Y2hzY3JlZW5zIGZy
+b20gVG9yYWRleCBzbyBvbmUgY2FuIGVuYWJsZSBpdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFBo
+aWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gDQo+IC0t
+LQ0KPiANCj4gQ2hhbmdlcyBpbiB2MzoNCj4gLSBGaXggY29tbWl0IHRpdGxlIHRvICIuLi5pbXg2
+LWFwYWxpczouLi4iDQo+IA0KPiBDaGFuZ2VzIGluIHYyOg0KPiAtIERlbGV0ZWQgdG91Y2hyZXZv
+bHV0aW9uIGRvd25zdHJlYW0gc3R1ZmYNCj4gLSBVc2UgZ2VuZXJpYyBub2RlIG5hbWUNCj4gLSBQ
+dXQgYSBiZXR0ZXIgY29tbWVudCBpbiB0aGVyZQ0KPiANCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZkbC1jb2xpYnJpLWV2YWwtdjMuZHRzICB8IDMxDQo+ICsrKysrKysrKysrKysrKysrKysNCj4g
+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0cyAgICAgICB8IDEzICsrKysr
+KysrDQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cS1hcGFsaXMtaXhvcmEtdjEuMS5kdHMgfCAx
+MyArKysrKysrKw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtYXBhbGlzLWl4b3JhLmR0cyAg
+ICAgIHwgMTMgKysrKysrKysNCj4gIDQgZmlsZXMgY2hhbmdlZCwgNzAgaW5zZXJ0aW9ucygrKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwt
+djMuZHRzDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMN
+Cj4gaW5kZXggOWE1ZDZjOTRjY2E0Li43NjNmYjVlOTBiZDMgMTAwNjQ0DQo+IC0tLSBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwtdjMuZHRzDQo+ICsrKyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwtdjMuZHRzDQo+IEBAIC0xNjgsNiArMTY4LDIx
+IEBADQo+ICAmaTJjMyB7DQo+ICAJc3RhdHVzID0gIm9rYXkiOw0KPiAgDQo+ICsJLyoNCj4gKwkg
+KiBUb3VjaHNjcmVlbiBpcyB1c2luZyBTT0RJTU0gMjgvMzAsIGFsc28gdXNlZCBmb3IgUFdNPEI+
+LA0KPiBQV008Qz4sDQo+ICsJICogYWthIHB3bTIsIHB3bTMuIHNvIGlmIHlvdSBlbmFibGUgdG91
+Y2hzY3JlZW4sIGRpc2FibGUgdGhlDQo+IHB3bXMNCj4gKwkgKi8NCj4gKwl0b3VjaHNjcmVlbkA0
+YSB7DQo+ICsJCWNvbXBhdGlibGUgPSAiYXRtZWwsbWF4dG91Y2giOw0KPiArCQlwaW5jdHJsLW5h
+bWVzID0gImRlZmF1bHQiOw0KPiArCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfcGNhcF8xPjsNCj4g
+KwkJcmVnID0gPDB4NGE+Ow0KPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMT47DQo+ICsJ
+CWludGVycnVwdHMgPSA8OSBJUlFfVFlQRV9FREdFX0ZBTExJTkc+OwkJLyoNCj4gU09ESU1NIDI4
+ICovDQo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMiAxMCBHUElPX0FDVElWRV9ISUdIPjsJLyoN
+Cj4gU09ESU1NIDMwICovDQo+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsJfTsNCj4gKw0K
+PiAgCS8qIE00MVQwTTYgcmVhbCB0aW1lIGNsb2NrIG9uIGNhcnJpZXIgYm9hcmQgKi8NCj4gIAly
+dGNfaTJjOiBydGNANjggew0KPiAgCQljb21wYXRpYmxlID0gInN0LG00MXQwIjsNCj4gQEAgLTE3
+NSw2ICsxOTAsMjIgQEANCj4gIAl9Ow0KPiAgfTsNCj4gIA0KPiArJmlvbXV4YyB7DQo+ICsJcGlu
+Y3RybF9wY2FwXzE6IHBjYXAtMSB7DQo+ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg2UURMX1BB
+RF9HUElPXzlfX0dQSU8xX0lPMDkJMHgxYjBiMCAvKg0KPiBTT0RJTU0gMjggKi8NCj4gKwkJCU1Y
+NlFETF9QQURfU0Q0X0RBVDJfX0dQSU8yX0lPMTAJMHgxYjBiMCAvKg0KPiBTT0RJTU0gMzAgKi8N
+Cj4gKwkJPjsNCj4gKwl9Ow0KDQpXaGF0IGV4YWN0bHkgYXJlIHRoZSBhYm92ZSB3aGljaCBnZXQg
+dXNlZCBmdXJ0aGVyIHVwIHZzLiB0aGUgYmVsb3cNCndoaWNoIGRvIG5vdCBzZWVtIHRvIGdldCB1
+c2VkIGFueXdoZXJlPw0KDQo+ICsJcGluY3RybF9teHRfdHM6IG14dC10cyB7DQo+ICsJCWZzbCxw
+aW5zID0gPA0KPiArCQkJTVg2UURMX1BBRF9FSU1fQ1MxX19HUElPMl9JTzI0CTB4MTMwYjAgLyoN
+Cj4gU09ESU1NIDEwNyAqLw0KPiArCQkJTVg2UURMX1BBRF9TRDJfREFUMV9fR1BJTzFfSU8xNAkw
+eDEzMGIwIC8qDQo+IFNPRElNTSAxMDYgKi8NCj4gKwkJPjsNCj4gKwl9Ow0KPiArfTsNCj4gKw0K
+PiAgJmlwdTFfZGkwX2Rpc3AwIHsNCj4gIAlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZF9kaXNwbGF5
+X2luPjsNCj4gIH07DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1hcGFs
+aXMtZXZhbC5kdHMNCj4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1hcGFsaXMtZXZhbC5kdHMN
+Cj4gaW5kZXggMGVkZDMwNDNkOWMxLi40NjY1ZTE1YjE5NmQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0cw0KPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9pbXg2cS1hcGFsaXMtZXZhbC5kdHMNCj4gQEAgLTE2Nyw2ICsxNjcsMTkgQEANCj4gICZp
+MmMxIHsNCj4gIAlzdGF0dXMgPSAib2theSI7DQo+ICANCj4gKwkvKg0KPiArCSAqIFRvdWNoc2Ny
+ZWVuIGlzIHVzaW5nIFNPRElNTSAyOC8zMCwgYWxzbyB1c2VkIGZvciBQV008Qj4sDQo+IFBXTTxD
+PiwNCj4gKwkgKiBha2EgcHdtMiwgcHdtMy4gc28gaWYgeW91IGVuYWJsZSB0b3VjaHNjcmVlbiwg
+ZGlzYWJsZSB0aGUNCj4gcHdtcw0KPiArCSAqLw0KPiArCXRvdWNoc2NyZWVuQDRhIHsNCj4gKwkJ
+Y29tcGF0aWJsZSA9ICJhdG1lbCxtYXh0b3VjaCI7DQo+ICsJCXJlZyA9IDwweDRhPjsNCj4gKwkJ
+aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzY+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPDEwIElSUV9U
+WVBFX0VER0VfRkFMTElORz47DQo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvNiA5IEdQSU9fQUNU
+SVZFX0hJR0g+OyAvKiBTT0RJTU0gMTMNCj4gKi8NCg0KV291bGRuJ3QgYWJvdmUgdHdvIHBpbnMg
+YWxzbyBuZWVkIHJlc3AuIHBpbmN0cmwgZW50cmllcz8NCg0KPiArCQlzdGF0dXMgPSAiZGlzYWJs
+ZWQiOw0KPiArCX07DQo+ICsNCj4gIAlwY2llLXN3aXRjaEA1OCB7DQo+ICAJCWNvbXBhdGlibGUg
+PSAicGx4LHBleDg2MDUiOw0KPiAgCQlyZWcgPSA8MHg1OD47DQo+IGRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9pbXg2cS1hcGFsaXMtaXhvcmEtdjEuMS5kdHMNCj4gYi9hcmNoL2FybS9i
+b290L2R0cy9pbXg2cS1hcGFsaXMtaXhvcmEtdjEuMS5kdHMNCj4gaW5kZXggYjk0YmI2ODdiZTZi
+Li5hM2ZhMDRhOTdkODEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFw
+YWxpcy1peG9yYS12MS4xLmR0cw0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1hcGFs
+aXMtaXhvcmEtdjEuMS5kdHMNCj4gQEAgLTE3Miw2ICsxNzIsMTkgQEANCj4gICZpMmMxIHsNCj4g
+IAlzdGF0dXMgPSAib2theSI7DQo+ICANCj4gKwkvKg0KPiArCSAqIFRvdWNoc2NyZWVuIGlzIHVz
+aW5nIFNPRElNTSAyOC8zMCwgYWxzbyB1c2VkIGZvciBQV008Qj4sDQo+IFBXTTxDPiwNCj4gKwkg
+KiBha2EgcHdtMiwgcHdtMy4gc28gaWYgeW91IGVuYWJsZSB0b3VjaHNjcmVlbiwgZGlzYWJsZSB0
+aGUNCj4gcHdtcw0KPiArCSAqLw0KPiArCXRvdWNoc2NyZWVuQDRhIHsNCj4gKwkJY29tcGF0aWJs
+ZSA9ICJhdG1lbCxtYXh0b3VjaCI7DQo+ICsJCXJlZyA9IDwweDRhPjsNCj4gKwkJaW50ZXJydXB0
+LXBhcmVudCA9IDwmZ3BpbzY+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPDEwIElSUV9UWVBFX0VER0Vf
+RkFMTElORz47DQo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvNiA5IEdQSU9fQUNUSVZFX0hJR0g+
+OyAvKiBTT0RJTU0gMTMNCj4gKi8NCg0KRGl0dG8uDQoNCj4gKwkJc3RhdHVzID0gImRpc2FibGVk
+IjsNCj4gKwl9Ow0KPiArDQo+ICAJLyogTTQxVDBNNiByZWFsIHRpbWUgY2xvY2sgb24gY2Fycmll
+ciBib2FyZCAqLw0KPiAgCXJ0Y19pMmM6IHJ0Y0A2OCB7DQo+ICAJCWNvbXBhdGlibGUgPSAic3Qs
+bTQxdDAiOw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtYXBhbGlzLWl4
+b3JhLmR0cw0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS5kdHMNCj4g
+aW5kZXggMzAyZmQ2YWRjOGE3Li41YmE0OWQwZjQ4ODAgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS5kdHMNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnEtYXBhbGlzLWl4b3JhLmR0cw0KPiBAQCAtMTcxLDYgKzE3MSwxOSBAQA0KPiAgJmky
+YzEgew0KPiAgCXN0YXR1cyA9ICJva2F5IjsNCj4gIA0KPiArCS8qDQo+ICsJICogVG91Y2hzY3Jl
+ZW4gaXMgdXNpbmcgU09ESU1NIDI4LzMwLCBhbHNvIHVzZWQgZm9yIFBXTTxCPiwNCj4gUFdNPEM+
+LA0KPiArCSAqIGFrYSBwd20yLCBwd20zLiBzbyBpZiB5b3UgZW5hYmxlIHRvdWNoc2NyZWVuLCBk
+aXNhYmxlIHRoZQ0KPiBwd21zDQo+ICsJICovDQo+ICsJdG91Y2hzY3JlZW5ANGEgew0KPiArCQlj
+b21wYXRpYmxlID0gImF0bWVsLG1heHRvdWNoIjsNCj4gKwkJcmVnID0gPDB4NGE+Ow0KPiArCQlp
+bnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvNj47DQo+ICsJCWludGVycnVwdHMgPSA8MTAgSVJRX1RZ
+UEVfRURHRV9GQUxMSU5HPjsNCj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW82IDkgR1BJT19BQ1RJ
+VkVfSElHSD47IC8qIFNPRElNTSAxMw0KPiAqLw0KDQpEaXR0by4NCg0KPiArCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOw0KPiArCX07DQo+ICsNCj4gIAllZXByb21ANTAgew0KPiAgCQljb21wYXRpYmxl
+ID0gImF0bWVsLDI0YzAyIjsNCj4gIAkJcmVnID0gPDB4NTA+Ow0KDQpDaGVlcnMNCg0KTWFyY2Vs
+DQo=
