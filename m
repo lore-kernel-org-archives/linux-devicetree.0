@@ -1,433 +1,119 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
-Date: Fri, 9 Aug 2019 11:10:13 +0200
-Message-ID: <20190809091013.vguj4wty7qiab64t@pengutronix.de>
-References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
- <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+Date: Fri, 9 Aug 2019 11:16:26 +0200
+Message-ID: <20190809091626.6kanjbmvbi4oipco@core.my.home>
+References: <20190412120730.473-1-megous@megous.com>
+ <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+ <20190806183045.edhm3qzpegscf2z7@core.my.home>
+ <20190807105502.GK3600@piout.net>
+ <20190808121237.g6twq2nh3sayu3vx@core.my.home>
+ <20190808233930.GM3600@piout.net>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB27TWTVAKGQEAENEUDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, vincent.guittot@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <20190808233930.GM3600-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
-> From: Neo Hou <neo.hou@unisoc.com>
-> 
-> This patch adds the Spreadtrum PWM support, which provides maximum 4
-> channels.
-> 
-> Signed-off-by: Neo Hou <neo.hou@unisoc.com>
-> Co-developed-by: Baolin Wang <baolin.wang@linaro.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  drivers/pwm/Kconfig    |   10 ++
->  drivers/pwm/Makefile   |    1 +
->  drivers/pwm/pwm-sprd.c |  311 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 322 insertions(+)
->  create mode 100644 drivers/pwm/pwm-sprd.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index a7e5751..4963b4d 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -423,6 +423,16 @@ config PWM_SPEAR
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-spear.
->  
-> +config PWM_SPRD
-> +	tristate "Spreadtrum PWM support"
-> +	depends on ARCH_SPRD || COMPILE_TEST
+On Fri, Aug 09, 2019 at 01:39:30AM +0200, Alexandre Belloni wrote:
+> On 08/08/2019 14:12:37+0200, Ond=C5=99ej Jirman wrote:
+> > On Wed, Aug 07, 2019 at 12:55:02PM +0200, Alexandre Belloni wrote:
+> > > Hi,
+> > >=20
+> > > On 06/08/2019 20:30:45+0200, Ond=C5=99ej Jirman wrote:
+> > > > Maybe whether XO or DCXO is used also matters if you want to do som=
+e fine
+> > > > tunning of DCXO (control register has pletny of options), but that'=
+s probably
+> > > > better done in u-boot. And there's still no need to read HOSC sourc=
+e from DT.
+> > > > The driver can just check compatible, and if it is H6 and OSC_CLK_S=
+RC_SEL is 1,
+> > > > it can do it's DCXO tunning, or whatever. But neither OS nor bootlo=
+ader will
+> > > > be using this info to gate/disable the osciallator.
+> > > >=20
+> > >=20
+> > > It is actually useful to be able to tweak the crystal tuning at
+> > > runtime to be able to reduce clock drift and compare with a reliable
+> > > source (e.g. NTP).
+> >=20
+> > I don't think there's a Linux kernel API that you can use to achieve th=
+at, so
+> > that's a rather theoretical concern at the moment.
+> >=20
+>=20
+> There is /sys/class/rtc/rtcX/offset which is even properly documented.
+>=20
+> The reason I asked is that some RTCs have both analog (changing the
+> oscillator capacitance) and digital (changing the RTC counter) so I'm
+> wondering whether this interface should be extended.
 
-I think you need
+As I wrote below, that can't be achieved by tuning DCXO.
 
-	depends on HAS_IOMEM
+> > Also there are multiple clocks, that can drive the RTC, and you usually=
+ don't
+> > drive it from 24MHz DCXO oscillator. The reason is that you'd have to d=
+eal with
+> > the fact that the clock for RTC then becomes 24000000/750 (750 is fixed
+> > divider), which is 32000.
+> >=20
+> > So if you want to get 32768Hz for RTC by tuning the DCXO, it would have=
+ to have
+> > 24 576 000 Hz. And even if you could achieve that (doubtful), it would =
+throw off
+> > timings in the rest of the system (say UART, USB, CPU, display ctl) in =
+a major way.
+> >=20
+> > I guess you can try tuning 24MHz oscillator so that it's closer to the
+> > real-world 24MHz via NTP reference for other reasons. But it would be
+> > complicated, and require precise interaction with other components, lik=
+e using
+> > HW timers sourced from 24MHz HOSC clock, because you can't use CPU's ti=
+mers,
+> > because of inaccuracies introduced during DVFS, for example.
+> >=20
+> > regards,
+> > 	o.
+> >=20
+> > > I'm curious, what kind of options does this RTC have?
+> > >=20
+> > > --=20
+> > > Alexandre Belloni, Bootlin
+> > > Embedded Linux and Kernel engineering
+> > > https://bootlin.com
+> > >=20
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
+> --=20
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +	help
-> +	  Generic PWM framework driver for the PWM controller on
-> +	  Spreadtrum SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-sprd.
-> +
->  config PWM_STI
->  	tristate "STiH4xx PWM support"
->  	depends on ARCH_STI
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 76b555b..26326ad 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
->  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
->  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
->  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
-> +obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
->  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
->  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
->  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> new file mode 100644
-> index 0000000..f6fc793
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -0,0 +1,311 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Spreadtrum Communications Inc.
-
-If there is a publicly available reference manual available, please add
-a link to it here.
-
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/math64.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +
-> +#define SPRD_PWM_PRESCALE	0x0
-> +#define SPRD_PWM_MOD		0x4
-> +#define SPRD_PWM_DUTY		0x8
-> +#define SPRD_PWM_DIV		0xc
-> +#define SPRD_PWM_PAT_LOW	0x10
-> +#define SPRD_PWM_PAT_HIGH	0x14
-> +#define SPRD_PWM_ENABLE		0x18
-> +
-> +#define SPRD_PWM_MOD_MAX	GENMASK(7, 0)
-> +#define SPRD_PWM_REG_MSK	GENMASK(15, 0)
-> +#define SPRD_PWM_ENABLE_BIT	BIT(0)
-> +
-> +#define SPRD_PWM_NUM		4
-> +#define SPRD_PWM_REGS_SHIFT	5
-> +#define SPRD_PWM_NUM_CLKS	2
-> +#define SPRD_PWM_DEFAULT_CLK	26000000UL
-> +
-> +struct sprd_pwm_chn {
-> +	struct clk_bulk_data clks[SPRD_PWM_NUM_CLKS];
-> +	unsigned long clk_rate;
-> +	bool clk_enabled;
-> +};
-> +
-> +struct sprd_pwm_chip {
-> +	void __iomem *base;
-> +	struct device *dev;
-> +	struct pwm_chip chip;
-> +	int num_pwms;
-> +	struct sprd_pwm_chn chn[SPRD_PWM_NUM];
-> +};
-> +
-> +/* list of clocks required by PWM channels */
-> +static const char * const sprd_pwm_clks[] = {
-> +	"enable0", "pwm0",
-> +	"enable1", "pwm1",
-> +	"enable2", "pwm2",
-> +	"enable3", "pwm3",
-> +};
-> +
-> +static u32 sprd_pwm_read(struct sprd_pwm_chip *chip, u32 num, u32 reg)
-
-num is the channel id here? Then maybe "hwid" or "chanid" would be a
-better name. Or pass struct pwm_chip only?
-
-Please (if you keep sprd_pwm_chip) rename chip to spc which is the name
-used in other places for structures of this type. "chip" is for struct
-pwm_chip.
-
-> +{
-> +	u32 offset = reg + (num << SPRD_PWM_REGS_SHIFT);
-> +
-> +	return readl_relaxed(chip->base + offset);
-> +}
-> +
-> +static void sprd_pwm_write(struct sprd_pwm_chip *chip, u32 num,
-> +			   u32 reg, u32 val)
-> +{
-> +	u32 offset = reg + (num << SPRD_PWM_REGS_SHIFT);
-> +
-> +	writel_relaxed(val, chip->base + offset);
-> +}
-> +
-> +static int sprd_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			   int duty_ns, int period_ns)
-
-Please implement .apply() instead of .config(), .enable() and
-.disable().
-
-> +{
-> +	struct sprd_pwm_chip *spc =
-> +		container_of(chip, struct sprd_pwm_chip, chip);
-> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> +	u64 div, tmp;
-> +	u32 prescale, duty;
-> +	int ret;
-> +
-> +	/*
-> +	 * NOTE: the clocks to PWM channel has to be enabled first before
-> +	 * writing to the registers.
-> +	 */
-> +	if (!chn->clk_enabled) {
-> +		ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
-
-Do you really need to enable all 8 clocks to configure a single channel?
-
-> +		if (ret) {
-> +			dev_err(spc->dev, "failed to enable pwm%u clock\n",
-> +				pwm->hwpwm);
-> +			return ret;
-> +		}
-> +
-> +		chn->clk_enabled = true;
-> +	}
-> +
-> +	duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-
-@Baolin: until we're there that there are framework requirements how to
-round, please document at least how you do it here. Also describing the
-underlying concepts would be good for the driver reader.
-
-Something like:
-
-/*
- * The hardware provides a counter that is feed by the source clock.
- * The period length is (PRESCALE + 1) * MOD counter steps.
- * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
- *
- * To keep the maths simple we're always using MOD = MOD_MAX.
- * The value for PRESCALE is selected such that the resulting period
- * gets the maximal length not bigger than the requested one with the
- * given settings (MOD = MOD_MAX and input clock).
- */
-
-@Thierry: having a framework guideline here would be good. Or still
-better a guideline and a debug setting that notices drivers stepping out
-of line.
-
-I assume using MOD = 0 is forbidden?
-
-> +	/*
-> +	 * According to the datasheet, the period_ns calculation formula
-> +	 * should be:
-> +	 * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
-> +	 *
-> +	 * Then we can get the prescale formula:
-> +	 * prescale = (period_ns * clk_rate) / (10^9 * mod) -1
-> +	 */
-> +	tmp = chn->clk_rate * period_ns;
-> +	div = 1000000000ULL * SPRD_PWM_MOD_MAX;
-
-Please use NSEC_PER_SEC instead of 1000000000ULL.
-
-> +	prescale = div64_u64(tmp, div) - 1;
-
-If tmp is smaller than div you end up with prescale = 0xffffffff which
-should be catched. What if prescale > 0xffff?
-
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
-
-You're losing precision here as you always use SPRD_PWM_MOD_MAX, right?
-(Just for my understanding, if this simpler approach is good enough
-here that's fine.)
-
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PAT_LOW, SPRD_PWM_REG_MSK);
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PAT_HIGH, SPRD_PWM_REG_MSK);
-
-Please describe these two registers in a short comment.
-
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
-
-Is the configuration here atomic in the sense that the write of DUTY
-above only gets effective when PRESCALE is written? If not, please add
-a describing paragraph at the top of the driver similar to what is
-written in pwm-sifive.c. When the PWM is already running before, how
-does a configuration change effects the output? Is the currently running
-period completed?
-
-> +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			       struct pwm_state *state)
-> +{
-> +	struct sprd_pwm_chip *spc =
-> +		container_of(chip, struct sprd_pwm_chip, chip);
-> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> +	u32 enabled, duty, prescale;
-> +	u64 tmp;
-> +	int ret;
-> +
-> +	ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
-> +	if (ret) {
-> +		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
-> +			pwm->hwpwm);
-> +		return;
-> +	}
-> +
-> +	chn->clk_enabled = true;
-> +
-> +	duty = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY) & SPRD_PWM_REG_MSK;
-> +	prescale = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE) & SPRD_PWM_REG_MSK;
-> +	enabled = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE) & SPRD_PWM_ENABLE_BIT;
-> +
-> +	/*
-> +	 * According to the datasheet, the period_ns and duty_ns calculation
-> +	 * formula should be:
-> +	 * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
-> +	 * duty_ns = 10^9 * (prescale + 1) * duty / clk_rate
-> +	 */
-> +	tmp = (prescale + 1) * 1000000000ULL * SPRD_PWM_MOD_MAX;
-> +	state->period = div64_u64(tmp, chn->clk_rate);
-
-This is not idempotent. If you apply the configuration that is returned
-here this shouldn't result in a reconfiguration.
-
-> +	tmp = (prescale + 1) * 1000000000ULL * duty;
-> +	state->duty_cycle = div64_u64(tmp, chn->clk_rate);
-> +
-> +	state->enabled = !!enabled;
-> +
-> +	/* Disable PWM clocks if the PWM channel is not in enable state. */
-> +	if (!enabled) {
-> +		clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-> +		chn->clk_enabled = false;
-> +	}
-> +}
-> +
-> +static const struct pwm_ops sprd_pwm_ops = {
-> +	.config = sprd_pwm_config,
-> +	.enable = sprd_pwm_enable,
-> +	.disable = sprd_pwm_disable,
-> +	.get_state = sprd_pwm_get_state,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
-> +{
-> +	struct clk *clk_parent, *clk_pwm;
-> +	int ret, i, clk_index = 0;
-> +
-> +	clk_parent = devm_clk_get(spc->dev, "source");
-> +	if (IS_ERR(clk_parent)) {
-> +		dev_err(spc->dev, "failed to get source clock\n");
-> +		return PTR_ERR(clk_parent);
-> +	}
-> +
-> +	for (i = 0; i < SPRD_PWM_NUM; i++) {
-> +		struct sprd_pwm_chn *chn = &spc->chn[i];
-> +		int j;
-> +
-> +		for (j = 0; j < SPRD_PWM_NUM_CLKS; ++j)
-> +			chn->clks[j].id = sprd_pwm_clks[clk_index++];
-> +
-> +		ret = devm_clk_bulk_get(spc->dev, SPRD_PWM_NUM_CLKS, chn->clks);
-> +		if (ret) {
-> +			if (ret == -ENOENT)
-> +				break;
-
-devm_clk_bulk_get_optional ? I'm sure you don't want to get all 8 clocks
-8 times.
-
-> +
-> +			dev_err(spc->dev, "failed to get channel clocks\n");
-> +			return ret;
-> +		}
-> +
-> +		clk_pwm = chn->clks[1].clk;
-
-This 1 looks suspicious. Are you using all clocks provided in the dtb at
-all? You're not using i in the loop at all, this doesn't look right.
-
-> +		if (!clk_set_parent(clk_pwm, clk_parent))
-> +			chn->clk_rate = clk_get_rate(clk_pwm);
-> +		else
-> +			chn->clk_rate = SPRD_PWM_DEFAULT_CLK;
-
-I don't know all the clock framework details, but I think there are
-better ways to ensure that a given clock is used as parent for another
-given clock. Please read the chapter about "Assigned clock parents and
-rates" in the clock bindings and check if this could be used for the
-purpose here and so simplify the driver.
-
-> +	}
-> +
-> +	if (!i) {
-> +		dev_err(spc->dev, "no availbale PWM channels\n");
-
-s/availbale/available/
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	spc->num_pwms = i;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct sprd_pwm_chip *spc;
-> +	int ret;
-> +
-> +	spc = devm_kzalloc(&pdev->dev, sizeof(*spc), GFP_KERNEL);
-> +	if (!spc)
-> +		return -ENOMEM;
-> +
-> +	spc->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(spc->base))
-> +		return PTR_ERR(spc->base);
-> +
-> +	spc->dev = &pdev->dev;
-> +	ret = sprd_pwm_clk_init(spc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	spc->chip.dev = &pdev->dev;
-> +	spc->chip.ops = &sprd_pwm_ops;
-> +	spc->chip.base = -1;
-> +	spc->chip.npwm = spc->num_pwms;
-> +
-> +	ret = pwmchip_add(&spc->chip);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to add PWM chip\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, spc);
-
-If you do this earlier you can simplify the last part of the driver to:
-
-	ret = pwmchip_add(&spc->chip);
-	if (ret)
-		dev_err(&pdev->dev, "failed to add PWM chip\n");
-
-	return ret;
-
-> +	return 0;
-> +}
-> +
-> +static int sprd_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
-> +	int i;
-> +
-> +	for (i = 0; i < spc->num_pwms; i++)
-> +		pwm_disable(&spc->chip.pwms[i]);
-
-This is wrong. You must not call pwm_disable here. It's the consumer's
-responsibility to disable the hardware.
-
-> +
-> +	return pwmchip_remove(&spc->chip);
-> +}
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190809091626.6kanjbmvbi4oipco%40core.my.home.
