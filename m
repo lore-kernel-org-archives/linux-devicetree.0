@@ -1,41 +1,76 @@
 From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v3 18/21] ARM: dts: imx6ull-colibri: Add general wakeup
- key used on Colibri
-Date: Fri, 9 Aug 2019 15:48:46 +0000
-Message-ID: <a6f9f8d870fc6dfa408e3c3417bcc04e37ed2417.camel@toradex.com>
+Subject: Re: [PATCH v3 19/21] ARM: dts: imx6/7-colibri: switch dr_mode to otg
+Date: Fri, 9 Aug 2019 15:50:38 +0000
+Message-ID: <6fdbd56b71c1192c67b2e28accd611ced92de555.camel@toradex.com>
 References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-19-philippe.schenker@toradex.com>
+ <20190807082556.5013-20-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807082556.5013-19-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190807082556.5013-20-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <07359E6F6703474DA5B286CB329F8648@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-ID: <D139DAE6FC76ED4083AA45298C565149@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+Cc: "linux-imx@nxp.com" <linux-imx@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gVGhpcyBhZGRzIHRoZSBwb3NzaWJpbGl0eSB0byB3YWtlIHRoZSBtb2R1bGUgd2l0aCBh
-biBleHRlcm5hbCBzaWduYWwNCj4gYXMgZGVmaW5lZCBpbiB0aGUgQ29saWJyaSBzdGFuZGFyZA0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBlLnNjaGVua2Vy
-QHRvcmFkZXguY29tPg0KDQpBY2tlZC1ieTogTWFyY2VsIFppc3dpbGVyIDxtYXJjZWwuemlzd2ls
-ZXJAdG9yYWRleC5jb20+DQoNCj4gLS0tDQo+IA0KPiBDaGFuZ2VzIGluIHYzOiBOb25lDQo+IENo
-YW5nZXMgaW4gdjI6IE5vbmUNCj4gDQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGli
-cmktZXZhbC12My5kdHNpIHwgMTQgKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-NCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwt
-Y29saWJyaS1ldmFsLXYzLmR0c2kNCj4gaW5kZXggM2JlZTM3Yzc1YWE2Li5kM2M0ODA5ZjE0MGUg
-MTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYz
-LmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMu
-ZHRzaQ0KPiBAQCAtOCw2ICs4LDIwIEBADQo+ICAJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1
-MjAwbjgiOw0KPiAgCX07DQo+ICANCj4gKwlncGlvLWtleXMgew0KPiArCQljb21wYXRpYmxlID0g
-ImdwaW8ta2V5cyI7DQo+ICsJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ICsJCXBpbmN0
-cmwtMCA9IDwmcGluY3RybF9zbnZzX2dwaW9rZXlzPjsNCj4gKw0KPiArCQlwb3dlciB7DQo+ICsJ
-CQlsYWJlbCA9ICJXYWtlLVVwIjsNCj4gKwkJCWdwaW9zID0gPCZncGlvNSAxIEdQSU9fQUNUSVZF
-X0hJR0g+Ow0KPiArCQkJbGludXgsY29kZSA9IDxLRVlfV0FLRVVQPjsNCj4gKwkJCWRlYm91bmNl
-LWludGVydmFsID0gPDEwPjsNCj4gKwkJCXdha2V1cC1zb3VyY2U7DQo+ICsJCX07DQo+ICsJfTsN
-Cj4gKw0KPiAgCS8qIGZpeGVkIGNyeXN0YWwgZGVkaWNhdGVkIHRvIG1jcDI1MTUgKi8NCj4gIAlj
-bGsxNm06IGNsazE2bSB7DQo+ICAJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0K
+Hi Philippe
+
+On Wed, 2019-08-07 at 08:26 +0000, Philippe Schenker wrote:
+> In order for the otg ports, that these modules support, it is needed
+> that dr_mode is on otg. Switch to use that feature.
+
+Isn't further extcon integration required for this to truly work?
+
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 2 +-
+>  arch/arm/boot/dts/imx7-colibri.dtsi    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 9a63debab0b5..6674198346d2 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -388,7 +388,7 @@
+>  &usbotg {
+>  	pinctrl-names = "default";
+>  	disable-over-current;
+> -	dr_mode = "peripheral";
+> +	dr_mode = "otg";
+>  	status = "disabled";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi
+> b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index 67f5e0c87fdc..42478f1aa146 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -320,7 +320,7 @@
+>  };
+>  
+>  &usbotg1 {
+> -	dr_mode = "host";
+> +	dr_mode = "otg";
+>  };
+>  
+>  &usdhc1 {
+
+Cheers
+
+Marcel
