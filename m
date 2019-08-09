@@ -1,14 +1,14 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/4] regulator: dt-bindings: Sort the compatibles and
- nodes
-Date: Fri, 9 Aug 2019 10:01:34 -0700
-Message-ID: <20190809170134.GM26807@tuxbook-pro>
+Subject: Re: [PATCH 2/4] regulator: qcom-rpmh: Sort the compatibles
+Date: Fri, 9 Aug 2019 10:02:13 -0700
+Message-ID: <20190809170213.GN26807@tuxbook-pro>
 References: <20190809073616.1235-1-vkoul@kernel.org>
+ <20190809073616.1235-2-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190809073616.1235-1-vkoul@kernel.org>
+In-Reply-To: <20190809073616.1235-2-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vkoul@kernel.org>
 Cc: Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
@@ -16,59 +16,59 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri 09 Aug 00:36 PDT 2019, Vinod Koul wrote:
 
-> It helps to keep sorted order for compatibles and nodes, so sort them
+> It helps to keep sorted order for compatibles, so sort them
 > 
 > Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../regulator/qcom,rpmh-regulator.txt         | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
-> index 1a9cab50503a..bab9f71140b8 100644
-> --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
-> @@ -22,12 +22,12 @@ RPMh resource.
->  
->  The names used for regulator nodes must match those supported by a given PMIC.
->  Supported regulator node names:
-> -	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
-> -	PMI8998:	bob
->  	PM8005:		smps1 - smps4
-> +	PM8009:		smps1 - smps2, ldo1 - ldo7
->  	PM8150:		smps1 - smps10, ldo1 - ldo18
->  	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
-> -	PM8009:		smps1 - smps2, ld01 - ldo7
-> +	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
-> +	PMI8998:	bob
->  
->  ========================
->  First Level Nodes - PMIC
-> @@ -36,12 +36,13 @@ First Level Nodes - PMIC
->  - compatible
->  	Usage:      required
->  	Value type: <string>
-> -	Definition: Must be one of: "qcom,pm8998-rpmh-regulators",
-> -		    "qcom,pmi8998-rpmh-regulators" or
-> -		    "qcom,pm8005-rpmh-regulators" or
-> -		    "qcom,pm8150-rpmh-regulators" or
-> -		    "qcom,pm8150l-rpmh-regulators" or
-> -		    "qcom,pm8009-rpmh-regulators".
-> +	Definition: Must be one of below:
-> +		    "qcom,pm8005-rpmh-regulators"
-> +		    "qcom,pm8009-rpmh-regulators"
-> +		    "qcom,pm8150-rpmh-regulators"
-> +		    "qcom,pm8150l-rpmh-regulators"
-> +		    "qcom,pm8998-rpmh-regulators"
-> +		    "qcom,pmi8998-rpmh-regulators"
-
-Thanks for dropping the "or" as well.
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+> ---
+>  drivers/regulator/qcom-rpmh-regulator.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+> index 693ffec62f3e..0ef2716da3bd 100644
+> --- a/drivers/regulator/qcom-rpmh-regulator.c
+> +++ b/drivers/regulator/qcom-rpmh-regulator.c
+> @@ -878,18 +878,14 @@ static int rpmh_regulator_probe(struct platform_device *pdev)
+>  }
 >  
->  - qcom,pmic-id
->  	Usage:      required
+>  static const struct of_device_id rpmh_regulator_match_table[] = {
+> -	{
+> -		.compatible = "qcom,pm8998-rpmh-regulators",
+> -		.data = pm8998_vreg_data,
+> -	},
+> -	{
+> -		.compatible = "qcom,pmi8998-rpmh-regulators",
+> -		.data = pmi8998_vreg_data,
+> -	},
+>  	{
+>  		.compatible = "qcom,pm8005-rpmh-regulators",
+>  		.data = pm8005_vreg_data,
+>  	},
+> +	{
+> +		.compatible = "qcom,pm8009-rpmh-regulators",
+> +		.data = pm8009_vreg_data,
+> +	},
+>  	{
+>  		.compatible = "qcom,pm8150-rpmh-regulators",
+>  		.data = pm8150_vreg_data,
+> @@ -899,8 +895,12 @@ static const struct of_device_id rpmh_regulator_match_table[] = {
+>  		.data = pm8150l_vreg_data,
+>  	},
+>  	{
+> -		.compatible = "qcom,pm8009-rpmh-regulators",
+> -		.data = pm8009_vreg_data,
+> +		.compatible = "qcom,pm8998-rpmh-regulators",
+> +		.data = pm8998_vreg_data,
+> +	},
+> +	{
+> +		.compatible = "qcom,pmi8998-rpmh-regulators",
+> +		.data = pmi8998_vreg_data,
+>  	},
+>  	{}
+>  };
 > -- 
 > 2.20.1
 > 
