@@ -1,45 +1,66 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 3/4] ARM: imx_v6_v7_defconfig: Enable CONFIG_IMX7ULP_WDT by
- default
-Date: Fri,  9 Aug 2019 15:14:01 +0800
-Message-ID: <1565334842-28161-3-git-send-email-Anson.Huang@nxp.com>
-References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 2/4] regulator: qcom-rpmh: Sort the compatibles
+Date: Fri,  9 Aug 2019 13:06:14 +0530
+Message-ID: <20190809073616.1235-2-vkoul@kernel.org>
+References: <20190809073616.1235-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190809073616.1235-1-vkoul@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Select CONFIG_IMX7ULP_WDT by default to support i.MX7ULP watchdog.
+It helps to keep sorted order for compatibles, so sort them
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/qcom-rpmh-regulator.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index bd2e2f5..f69075b 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -235,6 +235,7 @@ CONFIG_DA9062_WATCHDOG=y
- CONFIG_DA9063_WATCHDOG=m
- CONFIG_RN5T618_WATCHDOG=y
- CONFIG_IMX2_WDT=y
-+CONFIG_IMX7ULP_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
- CONFIG_MFD_DA9063=y
+diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+index 693ffec62f3e..0ef2716da3bd 100644
+--- a/drivers/regulator/qcom-rpmh-regulator.c
++++ b/drivers/regulator/qcom-rpmh-regulator.c
+@@ -878,18 +878,14 @@ static int rpmh_regulator_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id rpmh_regulator_match_table[] = {
+-	{
+-		.compatible = "qcom,pm8998-rpmh-regulators",
+-		.data = pm8998_vreg_data,
+-	},
+-	{
+-		.compatible = "qcom,pmi8998-rpmh-regulators",
+-		.data = pmi8998_vreg_data,
+-	},
+ 	{
+ 		.compatible = "qcom,pm8005-rpmh-regulators",
+ 		.data = pm8005_vreg_data,
+ 	},
++	{
++		.compatible = "qcom,pm8009-rpmh-regulators",
++		.data = pm8009_vreg_data,
++	},
+ 	{
+ 		.compatible = "qcom,pm8150-rpmh-regulators",
+ 		.data = pm8150_vreg_data,
+@@ -899,8 +895,12 @@ static const struct of_device_id rpmh_regulator_match_table[] = {
+ 		.data = pm8150l_vreg_data,
+ 	},
+ 	{
+-		.compatible = "qcom,pm8009-rpmh-regulators",
+-		.data = pm8009_vreg_data,
++		.compatible = "qcom,pm8998-rpmh-regulators",
++		.data = pm8998_vreg_data,
++	},
++	{
++		.compatible = "qcom,pmi8998-rpmh-regulators",
++		.data = pmi8998_vreg_data,
+ 	},
+ 	{}
+ };
 -- 
-2.7.4
+2.20.1
