@@ -1,96 +1,88 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 2/4] soundwire: core: add device tree support for
- slave devices
-Date: Fri, 9 Aug 2019 11:16:02 +0530
-Message-ID: <20190809054602.GK12733@vkoul-mobl.Dlink>
-References: <20190808144504.24823-1-srinivas.kandagatla@linaro.org>
- <20190808144504.24823-3-srinivas.kandagatla@linaro.org>
- <42ca4170-0fa0-6951-f568-89a05c095d5a@linux.intel.com>
- <564f5fa4-59ec-b4e5-a7a5-29dee99039b3@linaro.org>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: RE: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI
+ nodes
+Date: Fri, 9 Aug 2019 06:18:47 +0000
+Message-ID: <VI1PR0401MB2496C44034AB6DB5F5379904F1D60@VI1PR0401MB2496.eurprd04.prod.outlook.com>
+References: <20190320143800.3555-1-frieder.schrempf@kontron.de>
+ <20190320143800.3555-2-frieder.schrempf@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <564f5fa4-59ec-b4e5-a7a5-29dee99039b3@linaro.org>
+In-Reply-To: <20190320143800.3555-2-frieder.schrempf@kontron.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Schrempf Frieder <frieder.schrempf@kontron.de>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>, Varun Sethi <V.Sethi@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08-08-19, 16:17, Srinivas Kandagatla wrote:
-> Thanks for taking time to review.
-> 
-> On 08/08/2019 16:00, Pierre-Louis Bossart wrote:
-> > 
-> > > @@ -35,6 +36,7 @@ static int sdw_slave_add(struct sdw_bus *bus,
-> > >       slave->dev.release = sdw_slave_release;
-> > >       slave->dev.bus = &sdw_bus_type;
-> > > +    slave->dev.of_node = of_node_get(to_of_node(fwnode));
-> > 
-> > shouldn't this protected by
-> > #if IS_ENABLED(CONFIG_OF) ?
-> > 
-> These macros and functions have dummy entries, so it should not be an issue.
-> I did build soundwire with i386_defconfig with no issues.
+Hi Shawn/Leo,
 
-That means this function was compiled without errors, that is not strange nowadays
-given the ARM compiles ACPI and x86 OF, so check with OF being disable
-just to be safe :) I think dummy entries are helping
+Removing the "big-endian" property has caused problems in our UEFI firmware=
+.
+In UEFI, we use the device tree to detect and use the qspi controller and f=
+lashes attached to it.
+We don't maintain a list of platforms like linux driver.
 
-> 
-> > >       slave->bus = bus;
-> > >       slave->status = SDW_SLAVE_UNATTACHED;
-> > >       slave->dev_num = 0;
-> > > @@ -112,3 +114,48 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
-> > >   }
-> > >   #endif
-> > > +
-> > > +/*
-> > > + * sdw_of_find_slaves() - Find Slave devices in master device tree node
-> > > + * @bus: SDW bus instance
-> > > + *
-> > > + * Scans Master DT node for SDW child Slave devices and registers it.
-> > > + */
-> > > +int sdw_of_find_slaves(struct sdw_bus *bus)
-> > > +{
-> > > +    struct device *dev = bus->dev;
-> > > +    struct device_node *node;
-> > > +
-> > > +    for_each_child_of_node(bus->dev->of_node, node) {
-> > > +        struct sdw_slave_id id;
-> > > +        const char *compat = NULL;
-> > > +        int unique_id, ret;
-> > > +        int ver, mfg_id, part_id, class_id;
-> > > +
-> > > +        compat = of_get_property(node, "compatible", NULL);
-> > > +        if (!compat)
-> > > +            continue;
-> > > +
-> > > +        ret = sscanf(compat, "sdw%x,%x,%x,%x",
-> > > +                 &ver, &mfg_id, &part_id, &class_id);
-> > > +        if (ret != 4) {
-> > > +            dev_err(dev, "Manf ID & Product code not found %s\n",
-> > > +                compat);
-> > > +            continue;
-> > > +        }
-> > > +
-> > > +        ret = of_property_read_u32(node, "sdw-instance-id", &unique_id);
-> > > +        if (ret) {
-> > > +            dev_err(dev, "Instance id not found:%d\n", ret);
-> > > +            continue;
-> > 
-> > I am confused here.
-> > If you have two identical devices on the same link, isn't this property
-> > required and that should be a real error instead of a continue?
-> 
-> Yes, I agree it will be mandatory in such cases.
-> 
-> Am okay either way, I dont mind changing it to returning EINVAL in all the
-> cases.
+Can you please revert the endianness change from linux mainline ?
 
-Do we want to abort? We are in loop scanning for devices so makes sense
-if we do not do that and continue to check next one..
+Regards,
+Pankaj Bansal
 
--- 
-~Vinod
+> -----Original Message-----
+> From: devicetree-owner@vger.kernel.org <devicetree-owner@vger.kernel.org>
+> On Behalf Of Schrempf Frieder
+> Sent: Wednesday, 20 March, 2019 08:08 PM
+> To: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>
+> Cc: Schrempf Frieder <frieder.schrempf@kontron.de>; Rob Herring
+> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: [PATCH 2/2] ARM64: dts: Remove unused properties from FSL QSPI
+> nodes
+>=20
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+>=20
+> After switching to the new FSL QSPI driver the properties 'fsl,qspi-has-s=
+econd-
+> chip' and 'big-endian' are not used anymore.
+>=20
+> The driver now uses the 'reg' property to determine the bus and the chips=
+elect.
+> The endianness is selected by the driver depending on which SoC is used.
+>=20
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 -
+> arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 --
+>  2 files changed, 3 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index 6fd6116509cc..2fb8138c6bb0 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -296,7 +296,6 @@
+>  			interrupts =3D <0 99 0x4>;
+>  			clock-names =3D "qspi_en", "qspi";
+>  			clocks =3D <&clockgen 4 0>, <&clockgen 4 0>;
+> -			big-endian;
+>  			status =3D "disabled";
+>  		};
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index cb7185014d3a..b0ef08b090dd 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -215,8 +215,6 @@
+>  			interrupts =3D <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names =3D "qspi_en", "qspi";
+>  			clocks =3D <&clockgen 4 1>, <&clockgen 4 1>;
+> -			big-endian;
+> -			fsl,qspi-has-second-chip;
+>  			status =3D "disabled";
+>  		};
+>=20
+> --
+> 2.17.1
