@@ -1,77 +1,64 @@
-From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-Subject: [PATCH] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
-Date: Fri,  9 Aug 2019 04:12:27 +0100
-Message-ID: <20190809031227.3319-1-git@andred.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] regulator: dt-bindings: Add PM8150x compatibles
+Date: Thu, 8 Aug 2019 20:29:15 -0700
+Message-ID: <20190809032915.GK26807@tuxbook-pro>
+References: <20190808093343.5600-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190808093343.5600-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Ilya Ledvich <ilya@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Recent changes to the atheros at803x driver caused
-ethernet to stop working on this board.
-In particular commit 6d4cd041f0af
-("net: phy: at803x: disable delay only for RGMII mode")
-and commit cd28d1d6e52e
-("net: phy: at803x: Disable phy delay for RGMII mode")
-fix the AR8031 driver to configure the phy's (RX/TX)
-delays as per the 'phy-mode' in the device tree.
+On Thu 08 Aug 02:33 PDT 2019, Vinod Koul wrote:
 
-This now prevents ethernet from working on this board.
+> Add PM8150, PM8150L and PM8009 compatibles for these PMICs found
+> in some Qualcomm platforms.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/regulator/qcom,rpmh-regulator.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> index 14d2eee96b3d..1a9cab50503a 100644
+> --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> @@ -25,6 +25,9 @@ Supported regulator node names:
+>  	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
+>  	PMI8998:	bob
+>  	PM8005:		smps1 - smps4
+> +	PM8150:		smps1 - smps10, ldo1 - ldo18
+> +	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
+> +	PM8009:		smps1 - smps2, ld01 - ldo7
 
-It used to work before those commits, because the
-AR8031 comes out of reset with RX delay enabled, and
-the at803x driver didn't touch the delay configuration
-at all when "rgmii" mode was selected, and because
-arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
-unconditionally enables TX delay.
+Please maintain the sort order.
 
-Since above commits ar8031_phy_fixup() also has no
-effect anymore, and the end-result is that all delays
-are disabled in the phy, no ethernet.
+Apart from that
 
-Update the device tree to restore functionality.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: André Draszik <git@andred.net>
-CC: Ilya Ledvich <ilya@compulab.co.il>
-CC: Igor Grinberg <grinberg@compulab.co.il>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
----
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Regards,
+Bjorn
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index e61567437d73..62d5e9a4a781 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -44,7 +44,7 @@
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy0>;
- 	fsl,magic-packet;
- 	status = "okay";
-@@ -70,7 +70,7 @@
- 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy1>;
- 	fsl,magic-packet;
- 	status = "okay";
--- 
-2.20.1
+>  
+>  ========================
+>  First Level Nodes - PMIC
+> @@ -35,7 +38,10 @@ First Level Nodes - PMIC
+>  	Value type: <string>
+>  	Definition: Must be one of: "qcom,pm8998-rpmh-regulators",
+>  		    "qcom,pmi8998-rpmh-regulators" or
+> -		    "qcom,pm8005-rpmh-regulators".
+> +		    "qcom,pm8005-rpmh-regulators" or
+> +		    "qcom,pm8150-rpmh-regulators" or
+> +		    "qcom,pm8150l-rpmh-regulators" or
+> +		    "qcom,pm8009-rpmh-regulators".
+>  
+>  - qcom,pmic-id
+>  	Usage:      required
+> -- 
+> 2.20.1
+> 
