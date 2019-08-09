@@ -1,48 +1,109 @@
-Return-Path: <SRS0=skEl=WL=ideasonboard.com=laurent.pinchart@kernel.org>
-Date: Thu, 15 Aug 2019 15:33:35 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Return-Path: <SRS0=YRqP=WF=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37771 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfHIGAp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2019 02:00:45 -0400
+Date: Fri, 9 Aug 2019 08:00:37 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: Re: [PATCH v6 01/13] dt-bindings: connector: analog: add tv norms
  property
-Message-ID: <20190815123335.GB13823@pendragon.ideasonboard.com>
+Message-ID: <20190809060037.pauihgtyrom7nhmg@pengutronix.de>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
  <20190415124413.18456-2-m.felsch@pengutronix.de>
- <20190516162755.GN14820@pendragon.ideasonboard.com>
- <20190809055809.fm47nllixxfievre@pengutronix.de>
+ <9989034f-4794-adba-d89c-8330bbf7b27f@xs4all.nl>
+ <20190514151119.2099cd10@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190809055809.fm47nllixxfievre@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+In-Reply-To: <20190514151119.2099cd10@coco.lan>
+Sender: devicetree-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Marco,
+Hi Mauro, Hans,
 
-On Fri, Aug 09, 2019 at 07:58:09AM +0200, Marco Felsch wrote:
-> On 19-05-16 19:27, Laurent Pinchart wrote:
-> > On Mon, Apr 15, 2019 at 02:44:01PM +0200, Marco Felsch wrote:
+thanks for the review.
+
+On 19-05-14 15:11, Mauro Carvalho Chehab wrote:
+> Em Mon, 6 May 2019 12:01:06 +0200
+> Hans Verkuil <hverkuil@xs4all.nl> escreveu:
+> 
+> > On 4/15/19 2:44 PM, Marco Felsch wrote:
 > > > Some connectors no matter if in- or output supports only a limited
 > > > range of tv norms. It doesn't matter if the hardware behind that
 > > > connector supports more than the listed formats since the users are
 > > > restriced by a label e.g. to plug only a camera into this connector
-> > > which uses the PAL format.
+> > > which uses the PAL format.  
+> > 
+> > For S-Video and Composite connectors there are really just two formats
+> > to consider: 50 and 60 Hz. I.e. there is no difference between PAL
+> > and SECAM. Only for tuners/modulators does this matter.
+> > 
+> > So it is a good idea to add TVNORM_525_60, TVNORM_625_50 to tvnorms.h.
+
+Of course I can add this ones. With Mauro's concerns below do you still
+think that it is a good idea to adapt the example?
+
+Regards,
+  Marco
+
+> > In the various bindings examples I would recommend that you use
+> > TVNORM_525_60 or TVNORM_625_50 rather than e.g. PAL_M since that's what
+> > you would use in practice for Composite/S-Video.
+> 
+> Hans, that could be true for component video, but for S-Video and
+> Composite, you need to tell the demod how the color sub-carrier is
+> encoded, and what's its frequency, or otherwise it won't work.
+> 
+> There are plenty of equipments in Brazil that have both NTSC/M and
+> PAL/M (and a few with PAL/N') output. All those formats are 60Hz.
+> 
+> Colors are only decoded by tvp5150 and other demods if it is set
+> to the right color format (PAL or NTSC) and to the right line 
+> frequency (60Hz) [1]. Also, some decoders are very sensitive to the
+> chroma sub-carrier frequency. That's the case of tvp5150.
+> 
+> [1] Or - when supported by the hardware - if the demod is set to
+>     automatic mode.
+> 
+>     Automatic mode usually doesn't work well with PAL/M and PAL/N'.
+> 
+>     The problem is related to the sub-carrier frequency: both 
+>     PAL/N' (used only on Paraguay) and NTSC/M have the same 
+>     frequency; PAL/M has a close but different frequency for the
+>     color sub-carrier.
+> 
+>     Most decoders use the frequency of the chroma sub-carrier in
+>     order to switch between NTSC/M nd PAL/M. So, auto-detection
+>     usually fails with PAL/N', as such detectors understand it
+>     as NTSC.
+> 
+>     Worse than that, it is not uncommon to have pseudo-PAL-M devices
+>     that were made for the US market, and received a conversion
+>     to PAL, with envolves adding a small board with a NTSC->PAL converter.
+>     As most TV sets used in this part of the world are designed to
+>     work both with PAL/M and PAL/N' (by using a broader notch filter),
+>     to make the hardware cheaper, lots of manufacturers just
+>     change the modulation on encoders, while keeping the NTSC XTAL.
+>     So, in practice, such devices, sold as "PAL/M" are actually PAL/N'.
+>     A significant amount of old VCRs and DVD devices found in Brazil
+>     are actually PAL/N'. The same applies to game consoles.
+> 
+>     Btw, the main reason for having analog video streams here nowadays
+>     is to copy old videos from VCRs and encode them digitally or to
+>     record games from game consoles.
+> 
+> > 
+> > Regards,
+> > 
+> > 	Hans
+> > 
 > > > 
 > > > This patch adds the capability to describe such limitation within the
 > > > firmware. There are no format restrictions if the property isn't
 > > > present, so it's completely backward compatible.
-> > 
-> > Why is this needed ? It's not really a hardware property, is it ? What's
-> > the use case ?
-> 
-> Cause some hardware only support a limited range of formats to that
-> connector. Of course it is a hardware property. For example if a
-> customer wants to limit a connector to a specifc norm because the
-> hardware behind that connector only supports that format or is
-> restricted to that format.
-
-Then it should be a DT property of the hardware behind that connector
-(or information hardcoded directly into that driver), shouldn't it ?
-
+> > > 
 > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > > > Reviewed-by: Rob Herring <robh@kernel.org>
 > > > ---
@@ -146,8 +207,15 @@ Then it should be a DT property of the hardware behind that connector
 > > > +				 TVNORM_SECAM_LC)
 > > > +
 > > > +#endif /* _DT_BINDINGS_MEDIA_TVNORMS_H */
+> 
+> Patch looks good to me.
+> 
+> Thanks,
+> Mauro
+> 
 
 -- 
-Regards,
-
-Laurent Pinchart
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
