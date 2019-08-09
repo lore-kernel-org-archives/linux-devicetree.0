@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 05/19] irqchip/mmp: do not use of_address_to_resource() to get mux regs
-Date: Fri,  9 Aug 2019 11:31:44 +0200
-Message-ID: <20190809093158.7969-6-lkundrak@v3.sk>
+Subject: [PATCH 11/19] ARM: mmp: map the PGU as well
+Date: Fri,  9 Aug 2019 11:31:50 +0200
+Message-ID: <20190809093158.7969-12-lkundrak@v3.sk>
 References: <20190809093158.7969-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,69 +9,101 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190809093158.7969-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
-are offsets from intc's base, not addresses on the parent bus. At this
-point it probably can't be fixed.
-
-On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
-axi bus, and thus of_address_to_resource() won't work. We should treat
-the values as mere integers as opposed to bus addresses.
+The MMP2 and later includes a system control unit in this area. We'll nee=
+d
+that to initialize the secondary core on MMP3.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
 ---
- drivers/irqchip/irq-mmp.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ arch/arm/mach-mmp/addr-map.h |  7 +++++++
+ arch/arm/mach-mmp/common.c   | 15 +++++++++++++++
+ arch/arm/mach-mmp/common.h   |  1 +
+ arch/arm/mach-mmp/mmp2-dt.c  |  2 +-
+ 4 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 14618dc0bd396..af9cba4a51c2e 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_=
-init);
- static int __init mmp2_mux_of_init(struct device_node *node,
- 				   struct device_node *parent)
- {
--	struct resource res;
- 	int i, ret, irq, j =3D 0;
- 	u32 nr_irqs, mfp_irq;
-+	u32 reg[4];
+diff --git a/arch/arm/mach-mmp/addr-map.h b/arch/arm/mach-mmp/addr-map.h
+index 25edf6a92276e..3dc2f0b0ecba5 100644
+--- a/arch/arm/mach-mmp/addr-map.h
++++ b/arch/arm/mach-mmp/addr-map.h
+@@ -20,6 +20,10 @@
+ #define AXI_VIRT_BASE		IOMEM(0xfe200000)
+ #define AXI_PHYS_SIZE		0x00200000
 =20
- 	if (!parent)
- 		return -ENODEV;
-@@ -438,18 +438,20 @@ static int __init mmp2_mux_of_init(struct device_no=
-de *node,
- 		pr_err("Not found mrvl,intc-nr-irqs property\n");
- 		return -EINVAL;
- 	}
--	ret =3D of_address_to_resource(node, 0, &res);
++#define PGU_PHYS_BASE		0xe0000000
++#define PGU_VIRT_BASE		IOMEM(0xfe400000)
++#define PGU_PHYS_SIZE		0x00100000
 +
-+	/*
-+	 * For historical reasonsm, the "regs" property of the
-+	 * mrvl,mmp2-mux-intc is not a regular * "regs" property containing
-+	 * addresses on the parent bus, but offsets from the intc's base.
-+	 * That is why we can't use of_address_to_resource() here.
-+	 */
-+	ret =3D of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg));
- 	if (ret < 0) {
- 		pr_err("Not found reg property\n");
- 		return -EINVAL;
- 	}
--	icu_data[i].reg_status =3D mmp_icu_base + res.start;
--	ret =3D of_address_to_resource(node, 1, &res);
--	if (ret < 0) {
--		pr_err("Not found reg property\n");
--		return -EINVAL;
--	}
--	icu_data[i].reg_mask =3D mmp_icu_base + res.start;
-+	icu_data[i].reg_status =3D mmp_icu_base + reg[0];
-+	icu_data[i].reg_mask =3D mmp_icu_base + reg[2];
- 	icu_data[i].cascade_irq =3D irq_of_parse_and_map(node, 0);
- 	if (!icu_data[i].cascade_irq)
- 		return -EINVAL;
+ /* Static Memory Controller - Chip Select 0 and 1 */
+ #define SMC_CS0_PHYS_BASE	0x80000000
+ #define SMC_CS0_PHYS_SIZE	0x10000000
+@@ -38,4 +42,7 @@
+ #define CIU_VIRT_BASE		(AXI_VIRT_BASE + 0x82c00)
+ #define CIU_REG(x)		(CIU_VIRT_BASE + (x))
+=20
++#define SCU_VIRT_BASE		(PGU_VIRT_BASE)
++#define SCU_REG(x)		(SCU_VIRT_BASE + (x))
++
+ #endif /* __ASM_MACH_ADDR_MAP_H */
+diff --git a/arch/arm/mach-mmp/common.c b/arch/arm/mach-mmp/common.c
+index 6684abc7708bd..2ee08c78e8bc9 100644
+--- a/arch/arm/mach-mmp/common.c
++++ b/arch/arm/mach-mmp/common.c
+@@ -36,6 +36,15 @@ static struct map_desc standard_io_desc[] __initdata =3D=
+ {
+ 	},
+ };
+=20
++static struct map_desc mmp2_io_desc[] __initdata =3D {
++	{
++		.pfn		=3D __phys_to_pfn(PGU_PHYS_BASE),
++		.virtual	=3D (unsigned long)PGU_VIRT_BASE,
++		.length		=3D PGU_PHYS_SIZE,
++		.type		=3D MT_DEVICE,
++	},
++};
++
+ void __init mmp_map_io(void)
+ {
+ 	iotable_init(standard_io_desc, ARRAY_SIZE(standard_io_desc));
+@@ -44,6 +53,12 @@ void __init mmp_map_io(void)
+ 	mmp_chip_id =3D __raw_readl(MMP_CHIPID);
+ }
+=20
++void __init mmp2_map_io(void)
++{
++	mmp_map_io();
++	iotable_init(mmp2_io_desc, ARRAY_SIZE(mmp2_io_desc));
++}
++
+ void mmp_restart(enum reboot_mode mode, const char *cmd)
+ {
+ 	soft_restart(0);
+diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
+index 483b8b6d3005a..ed56b3f15b45e 100644
+--- a/arch/arm/mach-mmp/common.h
++++ b/arch/arm/mach-mmp/common.h
+@@ -5,4 +5,5 @@
+ extern void mmp_timer_init(int irq, unsigned long rate);
+=20
+ extern void __init mmp_map_io(void);
++extern void __init mmp2_map_io(void);
+ extern void mmp_restart(enum reboot_mode, const char *);
+diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
+index 305a9daba6d68..8eec881191f4b 100644
+--- a/arch/arm/mach-mmp/mmp2-dt.c
++++ b/arch/arm/mach-mmp/mmp2-dt.c
+@@ -33,7 +33,7 @@ static const char *const mmp2_dt_board_compat[] __initc=
+onst =3D {
+ };
+=20
+ DT_MACHINE_START(MMP2_DT, "Marvell MMP2 (Device Tree Support)")
+-	.map_io		=3D mmp_map_io,
++	.map_io		=3D mmp2_map_io,
+ 	.init_time	=3D mmp_init_time,
+ 	.dt_compat	=3D mmp2_dt_board_compat,
+ MACHINE_END
 --=20
 2.21.0
