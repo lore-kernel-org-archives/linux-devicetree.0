@@ -1,59 +1,53 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/2] regulator: qcom-rpmh: Add support for SM8150
-Date: Thu, 8 Aug 2019 20:32:55 -0700
-Message-ID: <20190809033255.GL26807@tuxbook-pro>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: dt-bindings: Add PM8150x compatibles
+Date: Fri, 9 Aug 2019 10:13:45 +0530
+Message-ID: <20190809044345.GD12733@vkoul-mobl.Dlink>
 References: <20190808093343.5600-1-vkoul@kernel.org>
- <20190808093343.5600-2-vkoul@kernel.org>
+ <20190809032915.GK26807@tuxbook-pro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190808093343.5600-2-vkoul@kernel.org>
+In-Reply-To: <20190809032915.GK26807@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 08 Aug 02:33 PDT 2019, Vinod Koul wrote:
-> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-[..]
-> +static const struct rpmh_vreg_hw_data pmic5_bob = {
-> +	.regulator_type = VRM,
-> +	.ops = &rpmh_regulator_vrm_bypass_ops,
-> +	.voltage_range = REGULATOR_LINEAR_RANGE(300000, 0, 135, 32000),
-> +	.n_voltages = 135,
+On 08-08-19, 20:29, Bjorn Andersson wrote:
+> On Thu 08 Aug 02:33 PDT 2019, Vinod Koul wrote:
+> 
+> > Add PM8150, PM8150L and PM8009 compatibles for these PMICs found
+> > in some Qualcomm platforms.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  .../devicetree/bindings/regulator/qcom,rpmh-regulator.txt | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> > index 14d2eee96b3d..1a9cab50503a 100644
+> > --- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> > +++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+> > @@ -25,6 +25,9 @@ Supported regulator node names:
+> >  	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
+> >  	PMI8998:	bob
+> >  	PM8005:		smps1 - smps4
+> > +	PM8150:		smps1 - smps10, ldo1 - ldo18
+> > +	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
+> > +	PM8009:		smps1 - smps2, ld01 - ldo7
+> 
+> Please maintain the sort order.
 
-There are 136 voltages in [0,135]
+Ah yes, Mark has applied the patch, I will send a sort order patch. Even
+in previous entries, PM8005 should be the first one..
 
-> +	.pmic_mode_map = pmic_mode_map_pmic4_bob,
-> +	.of_map_mode = rpmh_regulator_pmic4_bob_of_map_mode,
-> +};
-> +
-[..]
-> @@ -755,6 +890,18 @@ static const struct of_device_id rpmh_regulator_match_table[] = {
->  		.compatible = "qcom,pm8005-rpmh-regulators",
->  		.data = pm8005_vreg_data,
->  	},
-> +	{
-> +		.compatible = "qcom,pm8150-rpmh-regulators",
-> +		.data = pm8150_vreg_data,
-> +	},
-> +	{
-> +		.compatible = "qcom,pm8150l-rpmh-regulators",
-> +		.data = pm8150l_vreg_data,
-> +	},
-> +	{
-> +		.compatible = "qcom,pm8009-rpmh-regulators",
-> +		.data = pm8009_vreg_data,
-> +	},
+> 
+> Apart from that
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Sort order...
+Thanks for the review.
 
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, rpmh_regulator_match_table);
-
-Apart from these nits this looks good.
-
-Regards,
-Bjorn
+-- 
+~Vinod
