@@ -1,37 +1,54 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [v4 4/6] dt-bindings: phy: Document the Synopsys MIPI DPHY Rx
- bindings
-Date: Fri, 9 Aug 2019 17:47:27 +0300
-Message-ID: <20190809144727.GF864@valkosipuli.retiisi.org.uk>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-5-git-send-email-luis.oliveira@synopsys.com>
- <20190809144252.GD864@valkosipuli.retiisi.org.uk>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v3 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Fri, 9 Aug 2019 14:48:31 +0000
+Message-ID: <56f8b3c5be728af014388bb04cb372619dd8d440.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-8-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190809144252.GD864@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20190807082556.5013-8-philippe.schenker@toradex.com>
+Content-Language: en-US
+Content-ID: <6FE5F5AF4B177649BE50971E59338C67@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, robh@kernel.org, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com
+To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 05:42:52PM +0300, Sakari Ailus wrote:
-> > +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
-> > +Please refer to phy-bindings.txt for more information.
-> > +
-> > +Required properties:
-> > +- compatible		: Shall be "snps,dw-dphy-rx".
-> > +- #phy-cells		: Must be 1.
-> > +- bus-width		: Size of the test interface data bus (8 bits->8 or
-> > +			  12bits->12).
-> 
-> Hmm. This seems like runtime configuration as well.
-
-And it's for the parallel busses.
-
-I'd like to see the bindings that have the other interface described as
-well if there are parameters that affect device configuration there.
-
--- 
-Sakari Ailus
+T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
+ZToNCj4gRnJvbTogU3RlZmFuIEFnbmVyIDxzdGVmYW4uYWduZXJAdG9yYWRleC5jb20+DQo+IA0K
+PiBBZGQgcGlubXV4aW5nIGFuZCBkbyBub3Qgc3BlY2lmeSB2b2x0YWdlIHJlc3RyaWN0aW9ucyBm
+b3IgdGhlIHVzZGhjDQo+IGluc3RhbmNlIGF2YWlsYWJsZSBvbiB0aGUgbW9kdWxlcyBlZGdlIGNv
+bm5lY3Rvci4gVGhpcyBhbGxvd3MgdG8gdXNlDQo+IFNELWNhcmRzIHdpdGggaGlnaGVyIHRyYW5z
+ZmVyIG1vZGVzIGlmIHN1cHBvcnRlZCBieSB0aGUgY2Fycmllcg0KPiBib2FyZC4NCj4gDQo+IFNp
+Z25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFkZXguY29tPg0KPiBT
+aWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRl
+eC5jb20+DQoNCkFja2VkLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3Jh
+ZGV4LmNvbT4NCg0KPiAtLS0NCj4gDQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gQWRkIG5ldyBjb21t
+aXQgbWVzc2FnZSBmcm9tIFN0ZWZhbidzIHByb3Bvc2FsIG9uIE1MDQo+IA0KPiBDaGFuZ2VzIGlu
+IHYyOiBOb25lDQo+IA0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kgfCAy
+MyArKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
+cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5k
+dHNpDQo+IGluZGV4IDE2ZDFhMWVkMWFmZi4uNjdmNWUwYzg3ZmRjIDEwMDY0NA0KPiAtLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiBAQCAtMzI2LDcgKzMyNiw2IEBADQo+ICAmdXNkaGMx
+IHsNCj4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiAgCXBpbmN0cmwtMCA9IDwmcGlu
+Y3RybF91c2RoYzEgJnBpbmN0cmxfY2RfdXNkaGMxPjsNCj4gLQluby0xLTgtdjsNCj4gIAljZC1n
+cGlvcyA9IDwmZ3BpbzEgMCBHUElPX0FDVElWRV9MT1c+Ow0KPiAgCWRpc2FibGUtd3A7DQo+ICAJ
+dnFtbWMtc3VwcGx5ID0gPCZyZWdfTERPMj47DQo+IEBAIC02NzEsNiArNjcwLDI4IEBADQo+ICAJ
+CT47DQo+ICAJfTsNCj4gIA0KPiArCXBpbmN0cmxfdXNkaGMxXzEwMG1oejogdXNkaGMxZ3JwXzEw
+MG1oeiB7DQo+ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg3RF9QQURfU0QxX0NNRF9fU0QxX0NN
+RAkweDVhDQo+ICsJCQlNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLCTB4MWENCj4gKwkJCU1YN0Rf
+UEFEX1NEMV9EQVRBMF9fU0QxX0RBVEEwCTB4NWENCj4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBMV9f
+U0QxX0RBVEExCTB4NWENCj4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBMl9fU0QxX0RBVEEyCTB4NWEN
+Cj4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBM19fU0QxX0RBVEEzCTB4NWENCj4gKwkJPjsNCj4gKwl9
+Ow0KPiArDQo+ICsJcGluY3RybF91c2RoYzFfMjAwbWh6OiB1c2RoYzFncnBfMjAwbWh6IHsNCj4g
+KwkJZnNsLHBpbnMgPSA8DQo+ICsJCQlNWDdEX1BBRF9TRDFfQ01EX19TRDFfQ01ECTB4NWINCj4g
+KwkJCU1YN0RfUEFEX1NEMV9DTEtfX1NEMV9DTEsJMHgxYg0KPiArCQkJTVg3RF9QQURfU0QxX0RB
+VEEwX19TRDFfREFUQTAJMHg1Yg0KPiArCQkJTVg3RF9QQURfU0QxX0RBVEExX19TRDFfREFUQTEJ
+MHg1Yg0KPiArCQkJTVg3RF9QQURfU0QxX0RBVEEyX19TRDFfREFUQTIJMHg1Yg0KPiArCQkJTVg3
+RF9QQURfU0QxX0RBVEEzX19TRDFfREFUQTMJMHg1Yg0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4g
+IAlwaW5jdHJsX3VzZGhjMzogdXNkaGMzZ3JwIHsNCj4gIAkJZnNsLHBpbnMgPSA8DQo+ICAJCQlN
+WDdEX1BBRF9TRDNfQ01EX19TRDNfQ01ECQkweDU5DQo=
