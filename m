@@ -1,90 +1,99 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v2 2/2] spi: npcm-fiu: add NPCM FIU controller driver
-Date: Fri, 9 Aug 2019 17:51:40 +0200
-Message-ID: <20190809175140.77747c8d@collabora.com>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
-        <20190808131448.349161-3-tmaimon77@gmail.com>
-        <20190808173232.4d79d698@collabora.com>
-        <CAP6Zq1iW0C0FDOoqmn5r_xk5HQFWw+GgLfeapvt-8mB50N2Vvg@mail.gmail.com>
-        <20190809172557.346e7c41@collabora.com>
-        <CAP6Zq1hc0kNHzCE6tcLZdv7NcNWEdn5nh=Wzd8pdbZTuj31Hbg@mail.gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v3 20/21] ARM: dts: imx6ull-colibri: Add touchscreen used
+ with Eval Board
+Date: Fri, 9 Aug 2019 15:54:53 +0000
+Message-ID: <c3eb930aa727067e3d5bbc62523feb6b032244c0.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+ <20190807082556.5013-21-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1hc0kNHzCE6tcLZdv7NcNWEdn5nh=Wzd8pdbZTuj31Hbg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vignesh Raghavendra <vigneshr@ti.com>, Boris Brezillon <bbrezillon@kernel.org>, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, linux-spi@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190807082556.5013-21-philippe.schenker@toradex.com>
+Content-Language: en-US
+Content-ID: <5F14F17A2735E34D8E74A7B44EB49797@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-imx@nxp.com" <linux-imx@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Aug 2019 18:47:08 +0300
-Tomer Maimon <tmaimon77@gmail.com> wrote:
+Hi Philippe
 
-> On Fri, 9 Aug 2019 at 18:26, Boris Brezillon <boris.brezillon@collabora.com>
-> wrote:
+On Wed, 2019-08-07 at 08:26 +0000, Philippe Schenker wrote:
+> This adds the common touchscreen that is used with Toradex's
+> Eval Boards.
+
+Is that really Eval Board specific?
+
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 > 
-> > On Fri, 9 Aug 2019 18:26:23 +0300
-> > Tomer Maimon <tmaimon77@gmail.com> wrote:
-> >  
-> > > Hi Boris,
-> > >
-> > > Thanks a lot for your comment.
-> > >
-> > > On Thu, 8 Aug 2019 at 18:32, Boris Brezillon <
-> > boris.brezillon@collabora.com>
-> > > wrote:
-> > >  
-> > > > On Thu,  8 Aug 2019 16:14:48 +0300
-> > > > Tomer Maimon <tmaimon77@gmail.com> wrote:
-> > > >
-> > > >  
-> > > > > +
-> > > > > +static const struct spi_controller_mem_ops npcm_fiu_mem_ops = {
-> > > > > +     .exec_op = npcm_fiu_exec_op,  
-> > > >
-> > > > No npcm_supports_op()? That's suspicious, especially after looking at
-> > > > the npcm_fiu_exec_op() (and the functions called from there) where the
-> > > > requested ->buswidth seems to be completely ignored...
-> > > >
-> > > > Sorry but I do not fully understand it, do you mean a support for the  
-> > > buswidth?
-> > > If yes it been done in the UMA functions as follow:
-> > >
-> > >                 uma_cfg |= ilog2(op->cmd.buswidth);
-> > >                 uma_cfg |= ilog2(op->addr.buswidth) <<
-> > >                         NPCM_FIU_UMA_CFG_ADBPCK_SHIFT;
-> > >                 uma_cfg |= ilog2(op->data.buswidth) <<
-> > >                         NPCM_FIU_UMA_CFG_WDBPCK_SHIFT;
-> > >                 uma_cfg |= op->addr.nbytes <<  
-> > NPCM_FIU_UMA_CFG_ADDSIZ_SHIFT;  
-> > >                 regmap_write(fiu->regmap, NPCM_FIU_UMA_ADDR,  
-> > op->addr.val);  
-> > >  
-> >
-> > Hm, the default supports_op() implementation might be just fine for
-> > your use case. But there's one thing you still need to check: the
-> > number of addr cycles (or address size as you call it in this driver).
-> > Looks like your IP is limited to 4 address cycles, if I'm right, you
-> > should reject any operation that have op->addr.nbytes > 4. I also
-> >  
-> Indeed our IP limited to 4 address cycle (bytes) do we have NOR Flash with
-> more than 32bit address?
-
-spi-mem is not only about spi-nor, it can be used for any kind of
-memory (NOR, NAND, SRAM, ...) or even to communicate with an FGPA, so
-yes, you have to take care of that.
-
-> I will add this limitation thanks!
+> ---
 > 
-> > wonder if there's a limitation on the data size you can have on a
-> > single transfer. If there's one you should implement ->adjust_op() too.
-> >  
-> there is a limitation in a single transfer but I handle it in the
-> npcm_fiu_manualwrite
-> function.
-> Do you suggest to use ->adjust_op() instead?
+> Changes in v3: None
+> Changes in v2:
+> - Removed f0710a, that is downstream only
+> - Changed to generic node name
+> - Better comment
+> 
+>  .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 24
+> +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> index d3c4809f140e..78e74bfeca1b 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+> @@ -112,6 +112,21 @@
+>  &i2c1 {
+>  	status = "okay";
+>  
+> +	/*
+> +	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>,
+> PWM<C>,
+> +	 * aka pwm2, pwm3. so if you enable touchscreen, disable the
+> pwms
+> +	 */
+> +	touchscreen@4a {
+> +		compatible = "atmel,maxtouch";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpiotouch>;
+> +		reg = <0x4a>;
+> +		interrupt-parent = <&gpio4>;
+> +		interrupts = <16 IRQ_TYPE_EDGE_FALLING>;	/* SODIMM 28
+> */
+> +		reset-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;	/*
+> SODIMM 30 */
+> +		status = "disabled";
+> +	};
+> +
+>  	/* M41T0M6 real time clock on carrier board */
+>  	m41t0m6: rtc@68 {
+>  		compatible = "st,m41t0";
+> @@ -188,3 +203,12 @@
+>  	sd-uhs-sdr104;
+>  	status = "okay";
+>  };
+> +
+> +&iomuxc {
+> +	pinctrl_gpiotouch: touchgpios {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_DQS__GPIO4_IO16		0x74
+> +			MX6UL_PAD_ENET1_TX_EN__GPIO2_IO05	0x14
+> +		>;
+> +	};
+> +};
 
-Yes, should be exposed through ->adjust_op() => the caller needs to
-know when a new operation (one containing an opcode+address) is issued,
-because sometimes such splits are not supported by the memory.
+I guess that could also be moved to the module's dtsi for any carrier board to potentially profit from.
+
+Cheers
+
+Marcel
