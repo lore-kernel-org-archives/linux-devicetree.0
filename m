@@ -1,86 +1,174 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v8 10/21] clk: tegra: clk-super: Add restore-context
- support
-Date: Fri, 9 Aug 2019 15:17:25 +0300
-Message-ID: <4e33bad9-8d5a-dcd7-c75e-db5843c9be4a@gmail.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 07/19] irqchip/mmp: mask off interrupts from other cores
+Date: Fri, 9 Aug 2019 13:18:24 +0100
+Message-ID: <19a21c54-93ac-19dc-d679-8d376d44e68c@kernel.org>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+ <20190809093158.7969-8-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565308020-31952-11-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190809093158.7969-8-lkundrak@v3.sk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Andres Salomon <dilinger@queued.net>
 List-Id: devicetree@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements restore_context for clk_super_mux and clk_super.
+On 09/08/2019 10:31, Lubomir Rintel wrote:
+> From: Andres Salomon <dilinger@queued.net>
 > 
-> During system supend, core power goes off the and context of Tegra
-> CAR registers is lost.
+> On mmp3, there's an extra set of ICU registers (ICU2) that handle
+> interrupts on the extra cores.  When masking off interrupts on MP1,
+> these should be masked as well.
 > 
-> So on system resume, context of super clock registers are restored
-> to have them in same state as before suspend.
+> We add a new interrupt controller via device tree to identify when we're
+> looking at an mmp3 machine via compatible field of "marvell,mmp3-intc".
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> [lkundrak@v3.sk: Changed "mrvl,mmp3-intc" compatible strings to
+> "marvell,mmp3-intc". Tidied up the subject line a bit.]
+> 
+> Signed-off-by: Andres Salomon <dilinger@queued.net>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
 > ---
->  drivers/clk/tegra/clk-super.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  arch/arm/mach-mmp/regs-icu.h |  3 +++
+>  drivers/irqchip/irq-mmp.c    | 51 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
 > 
-> diff --git a/drivers/clk/tegra/clk-super.c b/drivers/clk/tegra/clk-super.c
-> index e2a1e95a8db7..74c9e913e41c 100644
-> --- a/drivers/clk/tegra/clk-super.c
-> +++ b/drivers/clk/tegra/clk-super.c
-> @@ -124,9 +124,18 @@ static int clk_super_set_parent(struct clk_hw *hw, u8 index)
->  	return err;
->  }
+> diff --git a/arch/arm/mach-mmp/regs-icu.h b/arch/arm/mach-mmp/regs-icu.h
+> index 0375d5a7fcb2b..410743d2b4020 100644
+> --- a/arch/arm/mach-mmp/regs-icu.h
+> +++ b/arch/arm/mach-mmp/regs-icu.h
+> @@ -11,6 +11,9 @@
+>  #define ICU_VIRT_BASE	(AXI_VIRT_BASE + 0x82000)
+>  #define ICU_REG(x)	(ICU_VIRT_BASE + (x))
 >  
-> +static void clk_super_mux_restore_context(struct clk_hw *hw)
-> +{
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	int parent_id = clk_hw_get_parent_index(hw, parent);
+> +#define ICU2_VIRT_BASE	(AXI_VIRT_BASE + 0x84000)
+> +#define ICU2_REG(x)	(ICU2_VIRT_BASE + (x))
 > +
-> +	clk_super_set_parent(hw, parent_id);
-
-All Super clocks have a divider, including the "MUX". Thus I'm wondering
-if there is a chance that divider's configuration may differ on resume
-from what it was on suspend.
-
-> +}
-> +
->  static const struct clk_ops tegra_clk_super_mux_ops = {
->  	.get_parent = clk_super_get_parent,
->  	.set_parent = clk_super_set_parent,
-> +	.restore_context = clk_super_mux_restore_context,
+>  #define ICU_INT_CONF(n)		ICU_REG((n) << 2)
+>  #define ICU_INT_CONF_MASK	(0xf)
+>  
+> diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+> index cd8d2253f56d1..25497c75cc861 100644
+> --- a/drivers/irqchip/irq-mmp.c
+> +++ b/drivers/irqchip/irq-mmp.c
+> @@ -44,6 +44,7 @@ struct icu_chip_data {
+>  	unsigned int		conf_enable;
+>  	unsigned int		conf_disable;
+>  	unsigned int		conf_mask;
+> +	unsigned int		conf2_mask;
+>  	unsigned int		clr_mfp_irq_base;
+>  	unsigned int		clr_mfp_hwirq;
+>  	struct irq_domain	*domain;
+> @@ -53,9 +54,11 @@ struct mmp_intc_conf {
+>  	unsigned int	conf_enable;
+>  	unsigned int	conf_disable;
+>  	unsigned int	conf_mask;
+> +	unsigned int	conf2_mask;
 >  };
 >  
->  static long clk_super_round_rate(struct clk_hw *hw, unsigned long rate,
-> @@ -162,12 +171,24 @@ static int clk_super_set_rate(struct clk_hw *hw, unsigned long rate,
->  	return super->div_ops->set_rate(div_hw, rate, parent_rate);
->  }
+>  static void __iomem *mmp_icu_base;
+> +static void __iomem *mmp_icu2_base;
+>  static struct icu_chip_data icu_data[MAX_ICU_NR];
+>  static int max_icu_nr;
 >  
-> +static void clk_super_restore_context(struct clk_hw *hw)
-> +{
-> +	struct tegra_clk_super_mux *super = to_clk_super_mux(hw);
-> +	struct clk_hw *div_hw = &super->frac_div.hw;
-> +	struct clk_hw *parent = clk_hw_get_parent(hw);
-> +	int parent_id = clk_hw_get_parent_index(hw, parent);
+> @@ -98,6 +101,16 @@ static void icu_mask_irq(struct irq_data *d)
+>  		r &= ~data->conf_mask;
+>  		r |= data->conf_disable;
+>  		writel_relaxed(r, mmp_icu_base + (hwirq << 2));
 > +
-> +	super->div_ops->restore_context(div_hw);
-> +	clk_super_set_parent(hw, parent_id);
-> +}
-> +
->  const struct clk_ops tegra_clk_super_ops = {
->  	.get_parent = clk_super_get_parent,
->  	.set_parent = clk_super_set_parent,
->  	.set_rate = clk_super_set_rate,
->  	.round_rate = clk_super_round_rate,
->  	.recalc_rate = clk_super_recalc_rate,
-> +	.restore_context = clk_super_restore_context,
+> +		if (data->conf2_mask) {
+> +			/*
+> +			 * ICU1 (above) only controls PJ4 MP1; if using SMP,
+> +			 * we need to also mask the MP2 and MM cores via ICU2.
+> +			 */
+> +			r = readl_relaxed(mmp_icu2_base + (hwirq << 2));
+> +			r &= ~data->conf2_mask;
+> +			writel_relaxed(r, mmp_icu2_base + (hwirq << 2));
+> +		}
+>  	} else {
+>  		r = readl_relaxed(data->reg_mask) | (1 << hwirq);
+>  		writel_relaxed(r, data->reg_mask);
+> @@ -201,6 +214,14 @@ static const struct mmp_intc_conf mmp2_conf = {
+>  			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
 >  };
 >  
->  struct clk *tegra_clk_register_super_mux(const char *name,
+> +static struct mmp_intc_conf mmp3_conf = {
+> +	.conf_enable	= 0x20,
+> +	.conf_disable	= 0x0,
+> +	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
+> +			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+> +	.conf2_mask	= 0xf0,
+> +};
+> +
+>  static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
+>  {
+>  	int hwirq;
+> @@ -364,6 +385,14 @@ static int __init mmp_init_bases(struct device_node *node)
+>  		pr_err("Failed to get interrupt controller register\n");
+>  		return -ENOMEM;
+>  	}
+> +	if (of_device_is_compatible(node, "marvell,mmp3-intc")) {
+
+Instead of harcoding the compatible property once more, why don't you
+simply pass a flag from mmpx_of_init()?
+
+> +		mmp_icu2_base = of_iomap(node, 1);
+> +		if (!mmp_icu2_base) {
+> +			pr_err("Failed to get interrupt controller register #2\n");
+> +			iounmap(mmp_icu_base);
+> +			return -ENOMEM;
+> +		}
+> +	}
+>  
+>  	icu_data[0].virq_base = 0;
+>  	icu_data[0].domain = irq_domain_add_linear(node, nr_irqs,
+> @@ -386,6 +415,8 @@ static int __init mmp_init_bases(struct device_node *node)
+>  			irq_dispose_mapping(icu_data[0].virq_base + i);
+>  	}
+>  	irq_domain_remove(icu_data[0].domain);
+> +	if (of_device_is_compatible(node, "marvell,mmp3-intc"))
+> +		iounmap(mmp_icu2_base);
+>  	iounmap(mmp_icu_base);
+>  	return -EINVAL;
+>  }
+> @@ -428,6 +459,26 @@ static int __init mmp2_of_init(struct device_node *node,
+>  }
+>  IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
+>  
+> +static int __init mmp3_of_init(struct device_node *node,
+> +			       struct device_node *parent)
+> +{
+> +	int ret;
+> +
+> +	ret = mmp_init_bases(node);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	icu_data[0].conf_enable = mmp3_conf.conf_enable;
+> +	icu_data[0].conf_disable = mmp3_conf.conf_disable;
+> +	icu_data[0].conf_mask = mmp3_conf.conf_mask;
+> +	icu_data[0].conf2_mask = mmp3_conf.conf2_mask;
+> +	irq_set_default_host(icu_data[0].domain);
+
+Why do you need this? On a fully DT-ified platform, there should be no
+notion of a default domain.
+
+> +	set_handle_irq(mmp2_handle_irq);
+> +	max_icu_nr = 1;
+> +	return 0;
+> +}
+> +IRQCHIP_DECLARE(mmp3_intc, "marvell,mmp3-intc", mmp3_of_init);
+> +
+>  static int __init mmp2_mux_of_init(struct device_node *node,
+>  				   struct device_node *parent)
+>  {
 > 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
