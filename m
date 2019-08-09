@@ -1,87 +1,52 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Date: Fri, 9 Aug 2019 08:23:22 +0200
-Message-ID: <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
- <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
- <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 7/9] dt-bindings: phy: meson-g12a-usb3-pcie-phy: convert
+ to yaml
+Date: Fri, 9 Aug 2019 09:00:01 +0200
+Message-ID: <2e6ade0e-175c-e77c-e767-28f4bbfbe575@baylibre.com>
+References: <20190808085139.21438-1-narmstrong@baylibre.com>
+ <20190808085139.21438-8-narmstrong@baylibre.com>
+ <CAFBinCBnVdTxWgqmnrPo-5uZ5gxy7p68w0PUa=_42fYxhVrDXQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>, Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCBnVdTxWgqmnrPo-5uZ5gxy7p68w0PUa=_42fYxhVrDXQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, kishon@ti.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 03:57:30PM +0300, Adrian Hunter wrote:
-> On 8/08/19 3:42 PM, Ludovic Desroches wrote:
-> > On Thu, Aug 08, 2019 at 10:35:43AM +0200, Eugen Hristev - M18282 wrote:
-> >> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>
-> >> Add mmc capabilities for SDMMC0 for this board.
-> >> With this enabled, eMMC connected card is detected as:
-> >>
-> >> mmc0: new DDR MMC card at address 0001
-> >>
-> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > 
-> > I am interested to have the some insights about the use of sd-uhs-*
-> > properties.
-> > 
-> > Our IP can't deal with 1V8 by itself. It has a 1V8SEL signal which can
-> > be used as the logic control input of a mux. So even if the IP claims
-> > to support UHS modes, it depends on the board.
-> > 
-> > Are the sd-uhs-* properties a way to deal with this? I tend to think no
-> > as sdhci_setup_host() will set the caps depending on the content of the
-> > capabilities register. Do we have to use the SDHCI_QUIRK_MISSING_CAPS
-> > quirk or sdhci-caps/sdhci-caps-mask?
-> 
-> There is "no-1-8-v" which it looks like sdhci-of-at91.c already supports:
-> 
->   sdhci_at91_probe() -> sdhci_get_of_property() -> sdhci_get_property()
-> 
->     	if (device_property_present(dev, "no-1-8-v"))
-> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> 
+Hi,
 
-Right, I forgot this property. Thanks.
+On 08/08/2019 21:50, Martin Blumenstingl wrote:
+> On Thu, Aug 8, 2019 at 10:54 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> Now that we have the DT validation in place, let's convert the device tree
+>> bindings for the Amlogic G12A USB3 + PCIE Combo PHY over to a YAML schemas.
+>>
+>> While the original phy bindings specifies phy-supply as required,
+>> the examples and implementations makes it optional, thus phy-supply
+>> is not present in the properties and required lists.
+> nit-pick: the original bindings didn't mention the phy-supply property at all
+> I'm not sure if you have to re-send it, maybe this can be fixed up
+> while applying?
 
-Eugen, do you see cases we can't cover with this property?
+It didn't, but the phy.txt made it mandatory, but was optional in all examples
+and implementation, thus rob asked me to precise it in the commit log.
 
-Regards
-
-Ludovic
+Neil
 
 > 
-> > 
-> > Regards
-> > 
-> > Ludovic
-> > 
-> >> ---
-> >>  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> >> index 149e539..194b3a3 100644
-> >> --- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> >> +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> >> @@ -54,6 +54,7 @@
-> >>  
-> >>  		sdmmc0: sdio-host@a0000000 {
-> >>  			bus-width = <8>;
-> >> +			mmc-ddr-3_3v;
-> >>  			pinctrl-names = "default";
-> >>  			pinctrl-0 = <&pinctrl_sdmmc0_default>;
-> >>  			status = "okay";
-> >> -- 
-> >> 2.7.4
-> >>
-> > 
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > 
