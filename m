@@ -1,59 +1,66 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v2 00/15] net: phy: adin: add support for Analog Devices
- PHYs
-Date: Fri, 9 Aug 2019 12:32:59 +0000
-Message-ID: <b5bce55e4c19e0cd0b848f14c413586ef5c53514.camel@analog.com>
-References: <20190808123026.17382-1-alexandru.ardelean@analog.com>
-         <20190808.112431.1358324079415442430.davem@davemloft.net>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
+Date: Fri, 9 Aug 2019 15:46:04 +0300
+Message-ID: <3e5867db-2675-a701-948b-1436f9d5dcd9@gmail.com>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808.112431.1358324079415442430.davem@davemloft.net>
+In-Reply-To: <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
 Content-Language: en-US
-Content-ID: <9E4521D3B1665946A42C0E06EA68FCA8@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "davem@davemloft.net" <davem@davemloft.net>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTA4IGF0IDExOjI0IC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
-IFtFeHRlcm5hbF0NCj4gDQo+IEZyb206IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFy
-ZGVsZWFuQGFuYWxvZy5jb20+DQo+IERhdGU6IFRodSwgOCBBdWcgMjAxOSAxNTozMDoxMSArMDMw
-MA0KPiANCj4gPiBUaGlzIGNoYW5nZXNldCBhZGRzIHN1cHBvcnQgZm9yIEFuYWxvZyBEZXZpY2Vz
-IEluZHVzdHJpYWwgRXRoZXJuZXQgUEhZcy4NCj4gPiBQYXJ0aWN1bGFybHkgdGhlIFBIWXMgdGhp
-cyBkcml2ZXIgYWRkcyBzdXBwb3J0IGZvcjoNCj4gPiAgKiBBRElOMTIwMCAtIFJvYnVzdCwgSW5k
-dXN0cmlhbCwgTG93IFBvd2VyIDEwLzEwMCBFdGhlcm5ldCBQSFkNCj4gPiAgKiBBRElOMTMwMCAt
-IFJvYnVzdCwgSW5kdXN0cmlhbCwgTG93IExhdGVuY3kgMTAvMTAwLzEwMDAgR2lnYWJpdA0KPiA+
-ICAgIEV0aGVybmV0IFBIWQ0KPiA+IA0KPiA+IFRoZSAyIGNoaXBzIGFyZSBwaW4gJiByZWdpc3Rl
-ciBjb21wYXRpYmxlIHdpdGggb25lIGFub3RoZXIuIFRoZSBtYWluDQo+ID4gZGlmZmVyZW5jZSBi
-ZWluZyB0aGF0IEFESU4xMjAwIGRvZXNuJ3Qgb3BlcmF0ZSBpbiBnaWdhYml0IG1vZGUuDQo+ID4g
-DQo+ID4gVGhlIGNoaXBzIGNhbiBiZSBvcGVyYXRlZCBieSB0aGUgR2VuZXJpYyBQSFkgZHJpdmVy
-IGFzIHdlbGwgdmlhIHRoZQ0KPiA+IHN0YW5kYXJkIElFRUUgUEhZIHJlZ2lzdGVycyAoMHgwMDAw
-IC0gMHgwMDBGKSB3aGljaCBhcmUgc3VwcG9ydGVkIGJ5IHRoZQ0KPiA+IGtlcm5lbCBhcyB3ZWxs
-LiBUaGlzIGFzc3VtZXMgdGhhdCBjb25maWd1cmF0aW9uIG9mIHRoZSBQSFkgaGFzIGJlZW4gZG9u
-ZQ0KPiA+IGNvbXBsZXRlbHkgaW4gSFcsIGFjY29yZGluZyB0byBzcGVjLCBpLmUuIG5vIGV4dHJh
-IFNXIGNvbmZpZ3VyYXRpb24NCj4gPiByZXF1aXJlZC4NCj4gPiANCj4gPiBUaGlzIGNoYW5nZXNl
-dCBhbHNvIGltcGxlbWVudHMgdGhlIGFiaWxpdHkgdG8gY29uZmlndXJlIHRoZSBjaGlwcyB2aWEg
-U1cNCj4gPiByZWdpc3RlcnMuDQo+ID4gDQo+ID4gRGF0YXNoZWV0czoNCj4gPiAgIGh0dHBzOi8v
-d3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVjaG5pY2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVl
-dHMvQURJTjEzMDAucGRmDQo+ID4gICBodHRwczovL3d3dy5hbmFsb2cuY29tL21lZGlhL2VuL3Rl
-Y2huaWNhbC1kb2N1bWVudGF0aW9uL2RhdGEtc2hlZXRzL0FESU4xMjAwLnBkZg0KPiA+IA0KPiA+
-IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFu
-YWxvZy5jb20+DQo+IA0KPiBJIHRoaW5rLCBhdCBhIG1pbmltdW0sIHRoZSBjMjIgdnMuIGM0NSBp
-c3N1ZXMgbmVlZCB0byBiZSBkaXNjdXNzZWQgbW9yZQ0KPiBhbmQgZXZlbiBpZiBubyBjb2RlIGNo
-YW5nZXMgb2NjdXIgdGhlcmUgaXMgZGVmaW5pdGVseSBzb21lIGFkanVzdG1lbnRzDQo+IGFuZCBj
-bGFpcmlmaWNhdGlvbnMgdGhhdCBuZWVkIHRvIG9jY3VyIG9uIHRoaXMgaXNzdWUgaW4gdGhlIGNv
-bW1pdA0KPiBtZXNzYWdlcyBhbmQvb3IgZG9jdW1lbnRhdGlvbi4NCg0KSSBndWVzcyBJJ2xsIGRy
-b3AvZGVmZXIgc29tZSBvZiB0aGUgQzQ1IHN0dWZmIGZvciBub3cuDQpJIGRvbid0IGtub3cgaG93
-IGRlY2lzaW9ucyB3ZXJlIGRvbmUgd2hlbiB0aGUgY2hpcHMgd2VyZSBjcmVhdGVkLg0KSSBhbSB0
-b2xkIHRoYXQgQzQ1IHdvcmtzLCBidXQgSSBtYXkgbmVlZCB0byBmaW5kIG91dCBtb3JlIG9uIG15
-IGVuZCwgc2luY2UgSSBhbSBhbHNvIG5ldyB0by91bmNsZWFyIG9uIHNvbWUgaXRlbXMuDQoNCltN
-eSBwZXJzb25hbCBmZWVsaW5nIGFib3V0IHRoaXNdDQpJIHRoaW5rIHRoZXJlIGFyZSBzb21lIGNv
-bmZ1c2lvbnMgW2ludGVybmFsbHkgb24gb3VyIHNpZGVdIGFib3V0IHdoYXQgQzQ1IGlzIGFuZCBo
-b3cgaXQgc2hvdWxkIGJlIGRvbmUuDQpJIGd1ZXNzIGl0J3MgcGFydCBvZiBkZXZlbG9waW5nIGtu
-b3dsZWRnZS9za2lsbHMgZm9yIGRldmVsb3BpbmcgUEhZcyBhcyBhIGNvbXBhbnkuDQpUaGVyZSdz
-IHBsZW50eSBvZiBrbm93bGVkZ2UgZm9yIGhvdyB0byBkbyB0aGUgZWxlY3RyaWNhbCwgbG93LXBv
-d2VyLXN0dWZmLCBldGMsIGFuZCBldmVuIHRoZSBkYXRhc2hlZXQgc29tZXRpbWVzIGZlZWxzDQps
-aWtlIGl0J3MgZm9yIGFuIEFEQy9EQUMuDQpbTXkgcGVyc29uYWwgZmVlbGluZyBhYm91dCB0aGlz
-XQ0KDQpUaGFua3MNCkFsZXgNCg==
+09.08.2019 2:46, Sowjanya Komatineni пишет:
+> This patch implements save and restore of PLL context.
+> 
+> During system suspend, core power goes off and looses the settings
+> of the Tegra CAR controller registers.
+> 
+> So during suspend entry pll context is stored and on resume it is
+> restored back along with its state.
+> 
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
+>  drivers/clk/tegra/clk.h     |  2 ++
+>  2 files changed, 58 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+> index 1583f5fc992f..e52add2bbdbb 100644
+> --- a/drivers/clk/tegra/clk-pll.c
+> +++ b/drivers/clk/tegra/clk-pll.c
+> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
+>  	return rate;
+>  }
+>  
+> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+> +{
+> +	struct tegra_clk_pll *pll = to_clk_pll(hw);
+> +	struct clk_hw *parent = clk_hw_get_parent(hw);
+> +	unsigned long parent_rate = clk_hw_get_rate(parent);
+> +	unsigned long rate = clk_hw_get_rate(hw);
+> +	u32 val;
+> +
+> +	if (clk_pll_is_enabled(hw))
+> +		return;
+> +
+> +	if (pll->params->set_defaults)
+> +		pll->params->set_defaults(pll);
+> +
+> +	clk_pll_set_rate(hw, rate, parent_rate);
+> +
+> +	if (!__clk_get_enable_count(hw->clk))
+> +		clk_pll_disable(hw);
+> +	else
+> +		clk_pll_enable(hw);
+> +}
+
+drivers/clk/tegra/clk-pll.c: In function ‘tegra_clk_pll_restore_context’:
+drivers/clk/tegra/clk-pll.c:1024:6: warning: unused variable ‘val’ [-Wunused-variable]
+ 1024 |  u32 val;
