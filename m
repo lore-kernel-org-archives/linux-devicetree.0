@@ -1,220 +1,342 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-Date: Fri, 9 Aug 2019 09:19:19 -0700
-Message-ID: <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
- <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/4] watchdog: Add i.MX7ULP watchdog support
+Date: Fri, 9 Aug 2019 09:19:56 -0700
+Message-ID: <20190809161956.GA6248@roeck-us.net>
+References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
+ <1565334842-28161-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1565334842-28161-2-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, leonard.crestez@nxp.com, schnitzeltony@gmail.com, linux-watchdog@vger.kernel.org, otavio@ossystems.com.br, festevam@gmail.com, s.hauer@pengutronix.de, jan.tuerk@emtrion.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, wim@linux-watchdog.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 09, 2019 at 03:14:00PM +0800, Anson Huang wrote:
+> The i.MX7ULP Watchdog Timer (WDOG) module is an independent timer
+> that is available for system use.
+> It provides a safety feature to ensure that software is executing
+> as planned and that the CPU is not stuck in an infinite loop or
+> executing unintended code. If the WDOG module is not serviced
+> (refreshed) within a certain period, it resets the MCU.
+> 
+> Add driver support for i.MX7ULP watchdog.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/watchdog/Kconfig       |  13 +++
+>  drivers/watchdog/Makefile      |   1 +
+>  drivers/watchdog/imx7ulp_wdt.c | 221 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 235 insertions(+)
+>  create mode 100644 drivers/watchdog/imx7ulp_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 8188963..0884e53 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -740,6 +740,19 @@ config IMX_SC_WDT
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called imx_sc_wdt.
+>  
+> +config IMX7ULP_WDT
+> +	tristate "IMX7ULP Watchdog"
+> +	depends on ARCH_MXC || COMPILE_TEST
+> +	select WATCHDOG_CORE
+> +	help
+> +	  This is the driver for the hardware watchdog on the Freescale
+> +	  IMX7ULP and later processors. If you have one of these
+> +	  processors and wish to have watchdog support enabled,
+> +	  say Y, otherwise say N.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called imx7ulp_wdt.
+> +
+>  config UX500_WATCHDOG
+>  	tristate "ST-Ericsson Ux500 watchdog"
+>  	depends on MFD_DB8500_PRCMU
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 7caa920..7d32537 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+>  obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+>  obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+>  obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
+> +obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
+>  obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
+>  obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>  obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
+> new file mode 100644
+> index 0000000..8d56023
+> --- /dev/null
+> +++ b/drivers/watchdog/imx7ulp_wdt.c
+> @@ -0,0 +1,221 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reboot.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define WDOG_CS			0x0
+> +#define WDOG_CS_CMD32EN		(1 << 13)
+> +#define WDOG_CS_ULK		(1 << 11)
+> +#define WDOG_CS_RCS		(1 << 10)
+> +#define WDOG_CS_EN		(1 << 7)
+> +#define WDOG_CS_UPDATE		(1 << 5)
+> +
 
-On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
-> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> This patch adds support for clk: tegra210: suspend-resume.
->>
->> All the CAR controller settings are lost on suspend when core
->> power goes off.
->>
->> This patch has implementation for saving and restoring all PLLs
->> and clocks context during system suspend and resume to have the
->> clocks back to same state for normal operation.
->>
->> Clock driver suspend and resume are registered as syscore_ops as clocks
->> restore need to happen before the other drivers resume to have all their
->> clocks back to the same state as before suspend.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++=
-++++++--
->>   drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->>   drivers/clk/tegra/clk.h          |   3 ++
->>   3 files changed, 166 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-te=
-gra210.c
->> index 998bf60b219a..8dd6f4f4debb 100644
->> --- a/drivers/clk/tegra/clk-tegra210.c
->> +++ b/drivers/clk/tegra/clk-tegra210.c
->> @@ -9,13 +9,13 @@
->>   #include <linux/clkdev.h>
->>   #include <linux/of.h>
->>   #include <linux/of_address.h>
->> +#include <linux/syscore_ops.h>
->>   #include <linux/delay.h>
->>   #include <linux/export.h>
->>   #include <linux/mutex.h>
->>   #include <linux/clk/tegra.h>
->>   #include <dt-bindings/clock/tegra210-car.h>
->>   #include <dt-bindings/reset/tegra210-car.h>
->> -#include <linux/iopoll.h>
->>   #include <linux/sizes.h>
->>   #include <soc/tegra/pmc.h>
->>  =20
->> @@ -220,11 +220,15 @@
->>   #define CLK_M_DIVISOR_SHIFT 2
->>   #define CLK_M_DIVISOR_MASK 0x3
->>  =20
->> +#define CLK_MASK_ARM	0x44
->> +#define MISC_CLK_ENB	0x48
->> +
->>   #define RST_DFLL_DVCO 0x2f4
->>   #define DVFS_DFLL_RESET_SHIFT 0
->>  =20
->>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->> +#define CPU_SOFTRST_CTRL 0x380
->>  =20
->>   #define LVL2_CLK_GATE_OVRA 0xf8
->>   #define LVL2_CLK_GATE_OVRC 0x3a0
->> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->>   	struct tegra_clk_pll_freq_table *fentry;
->>   	struct tegra_clk_pll pllu;
->>   	u32 reg;
->> +	int ret;
->>  =20
->>   	for (fentry =3D pll_u_freq_table; fentry->input_rate; fentry++) {
->>   		if (fentry->input_rate =3D=3D pll_ref_freq)
->> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->>   	reg |=3D PLL_ENABLE;
->>   	writel(reg, clk_base + PLLU_BASE);
->>  =20
->> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->> -					  reg & PLL_BASE_LOCK, 2, 1000);
->> -	if (!(reg & PLL_BASE_LOCK)) {
->> +	/*
->> +	 * During clocks resume, same PLLU init and enable sequence get
->> +	 * executed. So, readx_poll_timeout_atomic can't be used here as it
->> +	 * uses ktime_get() and timekeeping resume doesn't happen by that
->> +	 * time. So, using tegra210_wait_for_mask for PLL LOCK.
->> +	 */
->> +	ret =3D tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->> +	if (ret) {
->>   		pr_err("Timed out waiting for PLL_U to lock\n");
->>   		return -ETIMEDOUT;
->>   	}
->> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>   }
->>  =20
->>   #ifdef CONFIG_PM_SLEEP
->> +/*
->> + * This array lists mask values for each peripheral clk bank
->> + * to mask out reserved bits during the clocks state restore
->> + * on SC7 resume to prevent accidental writes to these reserved
->> + * bits.
->> + */
->> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] =3D {
-> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
->
-> What's actually wrong with touching of the reserved bits? They must be NO=
--OP.. or the
-> reserved bits are actually some kind of "secret" bits? If those bits have=
- some use-case
-> outside of Silicon HW (like FPGA simulation), then this doesn't matter fo=
-r upstream and you
-> have to keep the workaround locally in the downstream kernel or whatever.
+Please use BIT() where appropriate.
 
-Will rename as valid_mask.
+> +#define WDOG_CNT	0x4
+> +#define WDOG_TOVAL	0x8
+> +
+> +#define REFRESH_SEQ0	0xA602
+> +#define REFRESH_SEQ1	0xB480
+> +#define REFRESH		((REFRESH_SEQ1 << 16) | (REFRESH_SEQ0))
 
-some bits in these registers are undefined and is not good to write to=20
-these bits as they can cause pslverr.
+The inner ( ) are unnecessary. While I would accept it for readability
+for the first part, (REFRESH_SEQ0) really doesn't add value.
 
->
->> +	0x23282006,
->> +	0x782e0c18,
->> +	0x0c012c05,
->> +	0x003e7304,
->> +	0x86c04800,
->> +	0xc0199000,
->> +	0x03e03800,
->> +};
->> +
->> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_of=
-f) * 4))
->> +#define car_writel(_val, _base, _off) \
->> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->> +
->> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
->> +static u32 cpu_softrst_ctx[3];
->> +
->> +static int tegra210_clk_suspend(void)
->> +{
->> +	unsigned int i;
->> +
->> +	clk_save_context();
->> +
->> +	/*
->> +	 * Save the bootloader configured clock registers SPARE_REG0,
->> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
->> +	 */
->> +	spare_reg_ctx =3D readl_relaxed(clk_base + SPARE_REG0);
->> +	misc_clk_enb_ctx =3D readl_relaxed(clk_base + MISC_CLK_ENB);
->> +	clk_msk_arm_ctx =3D readl_relaxed(clk_base + CLK_MASK_ARM);
->> +
->> +	for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->> +		cpu_softrst_ctx[i] =3D car_readl(CPU_SOFTRST_CTRL, i);
->> +
->> +	tegra_clk_periph_suspend();
->> +	return 0;
->> +}
->> +
->> +static void tegra210_clk_resume(void)
->> +{
->> +	unsigned int i;
->> +
->> +	tegra_clk_osc_resume(clk_base);
->> +
->> +	/*
->> +	 * Restore the bootloader configured clock registers SPARE_REG0,
->> +	 * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
->> +	 */
->> +	writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
->> +	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
->> +	writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
->> +
->> +	for (i =3D 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->> +
->> +	fence_udelay(5, clk_base);
->> +
->> +	/* enable all the clocks before changing the clock sources */
->> +	tegra_clk_periph_force_on(periph_clk_rsvd_mask);
-> Why clocks need to be enabled before changing the sources?
+> +
+> +#define UNLOCK_SEQ0	0xC520
+> +#define UNLOCK_SEQ1	0xD928
+> +#define UNLOCK		((UNLOCK_SEQ1 << 16) | (UNLOCK_SEQ0))
 
-To prevent glitchless frequency switch, Tegra clock programming=20
-recommended sequence is to change MUX control or divisor or both with=20
-the clocks running.
+Same as above.
 
-Actual state of clocks before suspend are restored later after all PLL's=20
-and peripheral clocks are restored.
+> +
+> +#define DEFAULT_TIMEOUT 60
+> +#define MAX_TIMEOUT 128
 
->
->> +	/* wait for all writes to happen to have all the clocks enabled */
->> +	wmb();
-> fence_udelay() has exactly the same barrier at the very beginning of read=
-l(), no need to
-> duplicate it here.
->
->> +	fence_udelay(2, clk_base);
->> +
->> +	/* restore PLLs and all peripheral clock rates */
->> +	tegra210_init_pllu();
-> Why USB PLL need to be restored at first?
-USB PLL restore is independent to all other clocks restore. So this can=20
-be done either before clk_restore_context or even after.
->
->> +	clk_restore_context();
->> +
->> +	/* restore all peripheral clocks enable and reset state */
->> +	tegra_clk_periph_resume();
->> +}
-> [snip]
+tabs after _TIMEOUT, please
+
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0000);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +struct imx7ulp_wdt_device {
+> +	struct notifier_block restart_handler;
+> +	struct watchdog_device wdd;
+> +	void __iomem *base;
+> +	int rate;
+> +};
+> +
+> +static inline void imx7ulp_wdt_enable(void __iomem *base, bool enable)
+> +{
+> +	u32 val = readl(base + WDOG_CS);
+> +
+> +	writel(UNLOCK, base + WDOG_CNT);
+> +	if (enable)
+> +		writel(val | WDOG_CS_EN, base + WDOG_CS);
+> +	else
+> +		writel(val & ~WDOG_CS_EN, base + WDOG_CS);
+> +}
+> +
+> +static inline bool imx7ulp_wdt_is_enabled(void __iomem *base)
+> +{
+> +	u32 val = readl(base + WDOG_CS);
+> +
+> +	return val & WDOG_CS_EN;
+> +}
+> +
+> +static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +
+> +	writel(REFRESH, wdt->base + WDOG_CNT);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_start(struct watchdog_device *wdog)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +
+> +	imx7ulp_wdt_enable(wdt->base, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +
+> +	imx7ulp_wdt_enable(wdt->base, false);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
+> +				   unsigned int timeout)
+> +{
+> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
+> +	u32 val = wdt->rate * timeout;
+> +
+> +	writel(UNLOCK, wdt->base + WDOG_CNT);
+> +	writel(val, wdt->base + WDOG_TOVAL);
+> +
+> +	wdog->timeout = timeout;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_ops imx7ulp_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = imx7ulp_wdt_start,
+> +	.stop  = imx7ulp_wdt_stop,
+> +	.ping  = imx7ulp_wdt_ping,
+> +	.set_timeout = imx7ulp_wdt_set_timeout,
+> +};
+> +
+> +static const struct watchdog_info imx7ulp_wdt_info = {
+> +	.identity = "i.MX7ULP watchdog timer",
+> +	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+> +		    WDIOF_MAGICCLOSE,
+> +};
+> +
+> +static inline void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
+> +{
+> +	u32 val;
+> +
+> +	/* unlock the wdog for reconfiguration */
+> +	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
+> +	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
+> +
+> +	/* set an initial timeout value in TOVAL */
+> +	writel(timeout, base + WDOG_TOVAL);
+> +	/* enable 32bit command sequence and reconfigure */
+> +	val = (1 << 13) | (1 << 8) | (1 << 5);
+
+Please use BIT()
+
+> +	writel(val, base + WDOG_CS);
+> +}
+> +
+> +static int imx7ulp_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct imx7ulp_wdt_device *imx7ulp_wdt;
+> +	struct device *dev = &pdev->dev;
+> +	struct watchdog_device *wdog;
+> +	int ret;
+> +
+> +	imx7ulp_wdt = devm_kzalloc(&pdev->dev,
+> +				   sizeof(*imx7ulp_wdt), GFP_KERNEL);
+> +	if (!imx7ulp_wdt)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, imx7ulp_wdt);
+> +
+> +	imx7ulp_wdt->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(imx7ulp_wdt->base))
+> +		return PTR_ERR(imx7ulp_wdt->base);
+> +
+> +	imx7ulp_wdt->rate = 1000;
+> +	wdog = &imx7ulp_wdt->wdd;
+> +	wdog->info = &imx7ulp_wdt_info;
+> +	wdog->ops = &imx7ulp_wdt_ops;
+> +	wdog->min_timeout = 1;
+> +	wdog->max_timeout = MAX_TIMEOUT;
+> +	wdog->parent = dev;
+> +	wdog->timeout = DEFAULT_TIMEOUT;
+> +
+> +	watchdog_init_timeout(wdog, 0, dev);
+> +	watchdog_stop_on_reboot(wdog);
+> +	watchdog_stop_on_unregister(wdog);
+> +	watchdog_set_drvdata(wdog, imx7ulp_wdt);
+> +	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * imx7ulp_wdt->rate);
+> +
+> +	ret = devm_watchdog_register_device(dev, wdog);
+> +	if (ret)
+> +		dev_err(dev, "Failed to register watchdog device\n");
+
+An error message is already displayed by the watchdog core.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused imx7ulp_wdt_suspend(struct device *dev)
+> +{
+> +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
+> +
+> +	if (watchdog_active(&imx7ulp_wdt->wdd))
+> +		imx7ulp_wdt_stop(&imx7ulp_wdt->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused imx7ulp_wdt_resume(struct device *dev)
+> +{
+> +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
+> +	u32 timeout = imx7ulp_wdt->wdd.timeout * imx7ulp_wdt->rate;
+> +
+> +	if (imx7ulp_wdt_is_enabled(imx7ulp_wdt->base))
+> +		imx7ulp_wdt_init(imx7ulp_wdt->base, timeout);
+> +
+If I understand correctly, imx7ulp_wdt_is_enabled() returns true
+if the watchdog is running. Since it was stopped on suspend, that
+means that it was started in BIOS/rommon during resume.
+
+With that, the above translates to "If the watchdog was started by
+BIOS/rommon, re-initialize it. Otherwise do nothing". This doesn't
+really make much sense to me. What if the watchdog was reprogrammed
+by the BIOS/rommon, but not started ? In other words, why not call
+imx7ulp_wdt_init() unconditionally ?
+
+Also, if it is possible that the watchdog is started by BIOS/rommon,
+why not keep it enabled and tell the watchdog core about it in
+the probe function ?
+
+> +	if (watchdog_active(&imx7ulp_wdt->wdd))
+> +		imx7ulp_wdt_start(&imx7ulp_wdt->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(imx7ulp_wdt_pm_ops, imx7ulp_wdt_suspend,
+> +			 imx7ulp_wdt_resume);
+> +
+> +static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
+> +	{ .compatible = "fsl,imx7ulp-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx7ulp_wdt_dt_ids);
+> +
+> +static struct platform_driver imx7ulp_wdt_driver = {
+> +	.probe		= imx7ulp_wdt_probe,
+> +	.driver		= {
+> +		.name	= "imx7ulp-wdt",
+> +		.pm	= &imx7ulp_wdt_pm_ops,
+> +		.of_match_table = imx7ulp_wdt_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(imx7ulp_wdt_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("Freescale i.MX7ULP watchdog driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
