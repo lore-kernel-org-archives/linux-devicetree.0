@@ -1,77 +1,94 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 00/14] net: phy: adin: add support for Analog Devices PHYs
-Date: Fri, 9 Aug 2019 16:35:38 +0300
-Message-ID: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 03/14] net: phy: adin: add support for interrupts
+Date: Fri, 9 Aug 2019 16:35:41 +0300
+Message-ID: <20190809133552.21597-4-alexandru.ardelean@analog.com>
+References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This changeset adds support for Analog Devices Industrial Ethernet PHYs.
-Particularly the PHYs this driver adds support for:
- * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
- * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
-   Ethernet PHY
+This change adds support for enabling PHY interrupts that can be used by
+the PHY framework to get signal for link/speed/auto-negotiation changes.
 
-The 2 chips are pin & register compatible with one another. The main
-difference being that ADIN1200 doesn't operate in gigabit mode.
-
-The chips can be operated by the Generic PHY driver as well via the
-standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
-kernel as well. This assumes that configuration of the PHY has been done
-completely in HW, according to spec, i.e. no extra SW configuration
-required.
-
-This changeset also implements the ability to configure the chips via SW
-registers.
-
-Datasheets:
-  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
-  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
-
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-Alexandru Ardelean (14):
-  net: phy: adin: add support for Analog Devices PHYs
-  net: phy: adin: hook genphy_{suspend,resume} into the driver
-  net: phy: adin: add support for interrupts
-  net: phy: adin: add {write,read}_mmd hooks
-  net: phy: adin: configure RGMII/RMII/MII modes on config
-  net: phy: adin: make RGMII internal delays configurable
-  net: phy: adin: make RMII fifo depth configurable
-  net: phy: adin: add support MDI/MDIX/Auto-MDI selection
-  net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
-  net: phy: adin: implement PHY subsystem software reset
-  net: phy: adin: implement Energy Detect Powerdown mode
-  net: phy: adin: implement downshift configuration via phy-tunable
-  net: phy: adin: add ethtool get_stats support
-  dt-bindings: net: add bindings for ADIN PHY driver
-
- .../devicetree/bindings/net/adi,adin.yaml     |  73 ++
- MAINTAINERS                                   |   8 +
- drivers/net/phy/Kconfig                       |   9 +
- drivers/net/phy/Makefile                      |   1 +
- drivers/net/phy/adin.c                        | 777 ++++++++++++++++++
- 5 files changed, 868 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
- create mode 100644 drivers/net/phy/adin.c
-
---
-
-Changelog v2 -> v3:
-[ patches numbered from v2 ]
-
-* general: added Andrew Lunn's `Reviewed-by` tag to patches [where the case]
-* dropped [PATCH v2 02/15] net: phy: adin: hook genphy_read_abilities() to get_features
-* [PATCH v2 05/15] net: phy: adin: add {write,read}_mmd hooks
-  - reworded patch to mention C22 MMD access is defined by 802.3 standard
-* [PATCH v2 13/15] net: phy: adin: configure downshift on config_init
-  - reworked patch based on Aquantia PHY driver; using phy-tunable ETHTOOL_PHY_DOWNSHIFT
-* [PATCH v2 15/15] dt-bindings: net: add bindings for ADIN PHY driver
-  - removed $ref where not needed [based on feedback]
-
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index fc0148ba4b94..91ff26d08fd5 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -14,11 +14,45 @@
+ #define PHY_ID_ADIN1200				0x0283bc20
+ #define PHY_ID_ADIN1300				0x0283bc30
+ 
++#define ADIN1300_INT_MASK_REG			0x0018
++#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
++#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
++#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
++#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
++#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
++#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
++#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
++#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
++#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
++#define ADIN1300_INT_MASK_EN	\
++	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
++	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
++	 ADIN1300_INT_HW_IRQ_EN)
++#define ADIN1300_INT_STATUS_REG			0x0019
++
+ static int adin_config_init(struct phy_device *phydev)
+ {
+ 	return genphy_config_init(phydev);
+ }
+ 
++static int adin_phy_ack_intr(struct phy_device *phydev)
++{
++	/* Clear pending interrupts */
++	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
++
++	return rc < 0 ? rc : 0;
++}
++
++static int adin_phy_config_intr(struct phy_device *phydev)
++{
++	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
++		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
++				    ADIN1300_INT_MASK_EN);
++
++	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
++			      ADIN1300_INT_MASK_EN);
++}
++
+ static struct phy_driver adin_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+@@ -26,6 +60,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_init	= adin_config_init,
+ 		.config_aneg	= genphy_config_aneg,
+ 		.read_status	= genphy_read_status,
++		.ack_interrupt	= adin_phy_ack_intr,
++		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
+ 	},
+@@ -35,6 +71,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_init	= adin_config_init,
+ 		.config_aneg	= genphy_config_aneg,
+ 		.read_status	= genphy_read_status,
++		.ack_interrupt	= adin_phy_ack_intr,
++		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
+ 	},
+-- 
 2.20.1
