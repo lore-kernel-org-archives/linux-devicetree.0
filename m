@@ -1,42 +1,45 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 4/4] ARM: dts: imx7ulp: Add wdog1 node
-Date: Fri,  9 Aug 2019 15:14:02 +0800
-Message-ID: <1565334842-28161-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/4] ARM: imx_v6_v7_defconfig: Enable CONFIG_IMX7ULP_WDT by
+ default
+Date: Fri,  9 Aug 2019 15:14:01 +0800
+Message-ID: <1565334842-28161-3-git-send-email-Anson.Huang@nxp.com>
 References: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1565334842-28161-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add wdog1 node to support watchdog driver.
+Select CONFIG_IMX7ULP_WDT by default to support i.MX7ULP watchdog.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index 6859a3a..1fdb5a35 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -264,6 +264,16 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		wdog1: wdog@403d0000 {
-+			compatible = "fsl,imx7ulp-wdt";
-+			reg = <0x403d0000 0x10000>;
-+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+			assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+			assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+			timeout-sec = <40>;
-+		};
-+
- 		pcc2: clock-controller@403f0000 {
- 			compatible = "fsl,imx7ulp-pcc2";
- 			reg = <0x403f0000 0x10000>;
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index bd2e2f5..f69075b 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -235,6 +235,7 @@ CONFIG_DA9062_WATCHDOG=y
+ CONFIG_DA9063_WATCHDOG=m
+ CONFIG_RN5T618_WATCHDOG=y
+ CONFIG_IMX2_WDT=y
++CONFIG_IMX7ULP_WDT=y
+ CONFIG_MFD_DA9052_I2C=y
+ CONFIG_MFD_DA9062=y
+ CONFIG_MFD_DA9063=y
 -- 
 2.7.4
