@@ -1,33 +1,22 @@
 Return-Path: <SRS0=2AmA=WF=pengutronix.de=mfe@kernel.org>
-Date: Fri, 9 Aug 2019 09:55:36 +0200
+Date: Fri, 9 Aug 2019 09:20:28 +0200
 From: Marco Felsch <m.felsch@pengutronix.de>
 Subject: Re: [PATCH v6 02/13] media: v4l2-fwnode: add v4l2_fwnode_connector
-Message-ID: <20190809075536.pukp444dmb7haoxj@pengutronix.de>
+Message-ID: <20190809072028.tonmezl4zwg72fwv@pengutronix.de>
 References: <20190415124413.18456-1-m.felsch@pengutronix.de>
  <20190415124413.18456-3-m.felsch@pengutronix.de>
- <20190516163632.GO14820@pendragon.ideasonboard.com>
+ <c5c4b88d-7977-e253-1242-b9a86228a302@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190516163632.GO14820@pendragon.ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Jacopo Mondi <jacopo@jmondi.org>
+In-Reply-To: <c5c4b88d-7977-e253-1242-b9a86228a302@xs4all.nl>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Jacopo Mondi <jacopo@jmondi.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Laurent,
-
-On 19-05-16 19:36, Laurent Pinchart wrote:
-> Hi Marco,
-> 
-> Thank you for the patch.
-
-Thanks for the review and sorry for the delayed reply.
-
-> On Mon, Apr 15, 2019 at 02:44:02PM +0200, Marco Felsch wrote:
+On 19-05-06 11:50, Hans Verkuil wrote:
+> On 4/15/19 2:44 PM, Marco Felsch wrote:
 > > Currently every driver needs to parse the connector endpoints by it self.
-> 
-> s/it self/itself/
-> 
 > > This is the initial work to make this generic. The generic connector has
 > > some common fields and some connector specific parts. The generic one
 > > includes:
@@ -35,29 +24,7 @@ Thanks for the review and sorry for the delayed reply.
 > >   - label
 > >   - remote_port (the port where the connector is connected to)
 > >   - remote_id   (the endpoint where the connector is connected to)
-> 
-> This assumes a single connection between a connector and a remote port,
-> and a single port on the connector side. Is this guaranteed ? For the
-> mini-DIN-4 connectors (often used for S-Video) for instance, I recall
-> from the extensive discussions we had in the past that they should be
-> modeled with two pins, one for the Y component and one for C components.
-> The rationale for this is to support systems where such a connector
-> could be used to carry S-Video, but also two composite video signals
-> (usually through an external adapter from 2 RCA female connectors to one
-> S-Video male connector) that would be routed to two separate video
-> decoders (or two different inputs of the same video decoder). Other
-> topologies may be possible too.
-
-I got your concerns and I also remember the tvp5150 port bindings
-myself in the past. Do you know how often such a setup you described
-above happens these days? I would rather add more documentation to the
-bindings [1] and add a check to v4l2_fwnode_parse_connector() to
-guarantee that one port has only one endpoint. Because I don't think
-that analog connectors has a bright future these days.
-
-[1] Documentation/devicetree/bindings/display/connector/ \
-    analog-tv-connector.txt
-
+> > 
 > > The specific fields are within a union, since only one of them can be
 > > available at the time. Since this is the initial support the patch adds
 > > only the analog-connector specific ones.
@@ -101,19 +68,18 @@ that analog connectors has a bright future these days.
 > > +
 > > +#define V4L2_CONNECTOR_MAX_LABEL 41
 > 
-> Hans pointed out this was a weird number. Should you turn the label
-> field into a pointer to make this more generic (with a
-> v4l2_fwnode_connector_cleanup() function then) ?
+> Where does 41 come from? It's a weird number...
 
-Yes, that would be the better approach. I will change that.
+What would you suggest?
 
-Regards,
-  Marco
-
+> 
 > > +
 > > +/**
 > > + * enum v4l2_connector_type - connector type
 > > + * @V4L2_CON_UNKNOWN:   unknown connector type, no V4L2 connetor configuration
+> 
+> typo: connetor -> connector
+> 
 > > + * @V4L2_CON_COMPOSITE: analog composite connector
 > > + * @V4L2_CON_SVIDEO:    analog svideo connector
 > > + * @V4L2_CON_HDMI:      digital hdmi connector
@@ -127,6 +93,13 @@ Regards,
 > > +
 > > +#endif /* V4L2_CONNECTOR_H */
 > > +
+> 
+> Is there a reason to create a new header for this? I think it is perfectly OK to
+> add this define + enum for v4l2-fwnode.h.
+
+Okay, I can squash it.
+
+> 
 > > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
 > > index 6c07825e18b9..f4df1b95c5ef 100644
 > > --- a/include/media/v4l2-fwnode.h
@@ -158,6 +131,15 @@ Regards,
 > > + *		 to
 > > + * @remote_id: identifier of the remote endpoint the connector connects to
 > > + * @label: connetor label
+> 
+> Same typo. It's probably a good idea to grep for this typo in this patch series :-)
+
+I will grep it shortly before I send the new v7 ;-)
+
+Regards,
+  Marco
+
+> 
 > > + * @type: connector type
 > > + * @connector: connector configuration
 > > + * @connector.analog: analog connector configuration
@@ -178,11 +160,11 @@ Regards,
 > >  /**
 > >   * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
 > >   * @fwnode: pointer to the endpoint's fwnode handle
+> > 
 > 
-> -- 
 > Regards,
 > 
-> Laurent Pinchart
+> 	Hans
 > 
 
 -- 
