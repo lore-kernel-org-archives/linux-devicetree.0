@@ -1,43 +1,109 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v3 21/21] ARM: dts: imx7-colibri: Add UHS support to eval
- board
-Date: Fri, 9 Aug 2019 15:56:32 +0000
-Message-ID: <8e910a22de1ac80f60209c2a4b2031f41c3412b2.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-22-philippe.schenker@toradex.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Date: Fri, 9 Aug 2019 17:58:57 +0200
+Message-ID: <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+        <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+        <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+        <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807082556.5013-22-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <AB385BDA23BF814FBB3A01FFBD7521FE@eurprd05.prod.outlook.com>
+In-Reply-To: <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUNCg0KT24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBw
-ZSBTY2hlbmtlciB3cm90ZToNCj4gVGhpcyBjb21taXQgYWRkcyBVSFMgY2FwYWJpbGl0eSB0byBU
-b3JhZGV4IEV2YWwgQm9hcmRzDQoNCkhvdyBhYm91dCBhbnkgb3RoZXIgY2FycmllciBib2FyZD8N
-Cg0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJA
-dG9yYWRleC5jb20+DQo+IA0KPiAtLS0NCj4gDQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gTmV3IHBh
-dGNoIHRvIG1ha2UgdXNlIG9mIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IGZpeCAxLjhWL1VIUw0K
-PiBzdXBwb3J0DQo+IA0KPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+IA0KPiAgYXJjaC9hcm0vYm9v
-dC9kdHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDExICsrKysrKysrKy0tDQo+ICAxIGZp
-bGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gYi9h
-cmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+IGluZGV4IDU3NmRl
-YzlmZjgxYy4uOTAxMjFmYmU1NjFmIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDct
-Y29saWJyaS1ldmFsLXYzLmR0c2kNCj4gQEAgLTIxMCw5ICsyMTAsMTYgQEANCj4gIH07DQo+ICAN
-Cj4gICZ1c2RoYzEgew0KPiAtCWtlZXAtcG93ZXItaW4tc3VzcGVuZDsNCj4gLQl3YWtldXAtc291
-cmNlOw0KPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJzdGF0ZV8xMDBtaHoiLCAic3Rh
-dGVfMjAwbWh6IjsNCj4gKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNkaGMxICZwaW5jdHJsX2Nk
-X3VzZGhjMT47DQo+ICsJcGluY3RybC0xID0gPCZwaW5jdHJsX3VzZGhjMV8xMDBtaHogJnBpbmN0
-cmxfY2RfdXNkaGMxPjsNCj4gKwlwaW5jdHJsLTIgPSA8JnBpbmN0cmxfdXNkaGMxXzIwMG1oeiAm
-cGluY3RybF9jZF91c2RoYzE+Ow0KPiAgCXZtbWMtc3VwcGx5ID0gPCZyZWdfM3YzPjsNCj4gKwl2
-cW1tYy1zdXBwbHkgPSA8JnJlZ19MRE8yPjsNCj4gKwljZC1ncGlvcyA9IDwmZ3BpbzEgMCBHUElP
-X0FDVElWRV9MT1c+Ow0KPiArCWRpc2FibGUtd3A7DQo+ICsJZW5hYmxlLXNkaW8td2FrZXVwOw0K
-PiArCWtlZXAtcG93ZXItaW4tc3VzcGVuZDsNCj4gIAlzdGF0dXMgPSAib2theSI7DQo+ICB9Ow0K
-PiAgDQo+IC0tIA0KPiAyLjIyLjANCg0KQ2hlZXJzDQoNCk1hcmNlbA0K
+Hi Viresh,
+
+On 7/25/19 04:23, Viresh Kumar wrote:
+> On 24-07-19, 15:10, Marek Szyprowski wrote:
+>> On 2019-07-23 04:04, Viresh Kumar wrote:
+>>> On 18-07-19, 16:30, Sylwester Nawrocki wrote:
+>>>> This is second iteration of patch series adding ASV (Adaptive Supply
+>>>> Voltage) support for Exynos SoCs. The first one can be found at:
+>>>> https://lore.kernel.org/lkml/20190404171735.12815-1-s.nawrocki@samsung.com
+>>>>
+>>>> The main changes comparing to the first (RFC) version are:
+>>>>   - moving ASV data tables from DT to the driver,
+>>>>   - converting the chipid and the ASV drivers to use regmap,
+>>>>   - converting the ASV driver to proper platform driver.
+>>>>
+>>>> I tried the opp-supported-hw bitmask approach as in the Qualcomm CPUFreq
+>>>> DT bindings but it resulted in too many OPPs and DT nodes, around 200
+>>>> per CPU cluster. So the ASV OPP tables are now in the ASV driver, as in
+>>>> downstream kernels.
+>>> 
+>>> Hmm. Can you explain why do you have so many OPPs? How many
+>>> frequencies do you actually support per cluster and what all varies
+>>> per frequency based on hw ? How many hw version do u have ?
+>>
+>> For big cores there are 20 frequencies (2100MHz .. 200MHz). Each SoC 
+>> might belong to one of the 3 production 'sets' and each set contains 14 
+>> so called 'asv groups', which assign the certain voltage values for each 
+>> of those 20 frequencies (the lower asv group means lower voltage needed 
+>> for given frequency).
+>
+> There is another property which might be useful in this case:
+> "opp-microvolt-<name>" and then you can use API
+> dev_pm_opp_set_prop_name() to choose which voltage value to apply to
+> all OPPs.
+
+Thank you for your suggestions.
+
+For some Exynos SoC variants the algorithm of selecting CPU voltage supply
+is a bit more complex than just selecting a column in the frequency/voltage 
+matrix, i.e. selecting a set of voltage values for whole frequency range.
+
+Frequency range could be divided into sub-ranges and to each such a sub-range 
+part of different column could be assigned, depending on data fused in 
+the CHIPID block registers.
+
+We could create OPP node for each frequency and specify all needed voltages 
+as a list of "opp-microvolt-<name>" properties but apart from the fact that 
+it would have been quite many properties, e.g. 42 (3 tables * 14 columns), 
+only for some SoC types the dev_pm_opp_set_prop_name() approach could be 
+used. We would need to be able to set opp-microvolt-* property name 
+separately for each frequency (OPP).
+
+Probably most future proof would be a DT binding where we could still 
+re-create those Exynos-specific ASV tables from DT. For example add named 
+opp-microvolt-* properties or something similar to hold rows of each ASV 
+table. But that conflicts with "operating-points-v2" binding, where 
+multiple OPP voltage values are described by just named properties and 
+multiple entries correspond to min/target/max.
+
+opp_table0 {
+	compatible = "...", "operating-points-v2";
+	opp-shared;
+	opp-2100000000 {
+		opp-hz = /bits/ 64 <1800000000>;
+		opp-microvolt = <...>;
+		opp-microvolt-t1 = <1362500>, <1350000>, ....;
+		opp-microvolt-t2 = <1362500>, <1360000>, ....;
+		opp-microvolt-t3 = <1362500>, <1340000>, ....;
+	};
+	...
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+		opp-microvolt = <...>;
+		opp-microvolt-t1 = <900000>, <900000>, ....;
+		opp-microvolt-t2 = <900000>, <900000>, ....;
+		opp-microvolt-t3 = <900000>, <900000>, ....;
+	};
+};
+
+I might be missing some information now on how those Exynos ASV tables 
+are used on other SoCs that would need to be supported.
+
+There will be even more data to include when adding support for the Body
+Bias voltage, for each CPU supply voltage we could possibly have 
+corresponding Body Bias voltage.
+
+-- 
+Thanks,
+Sylwester
