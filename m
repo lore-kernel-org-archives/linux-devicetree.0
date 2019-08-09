@@ -1,129 +1,32 @@
-Return-Path: <SRS0=Ydm7=WC=denx.de=marex@kernel.org>
-Subject: Re: [PATCH 1/2] media: dt-bindings: Add Intersil ISL7998x DT bindings
-References: <20190520201812.7937-1-marex@denx.de>
- <20190528114758.a4oac3zgdy7dkx7k@uno.localdomain>
- <6cd36678-2a2c-2a43-e245-4263c0e0f666@denx.de>
- <20190528151036.nxsh7tjyqrbpbrhy@uno.localdomain>
- <08c1a65e-dcc5-e1ae-053a-823931b9ec15@denx.de>
- <20190529062844.bsdg7u7rgvkcmq6k@uno.localdomain>
- <e481c8a1-a0c8-f0d9-9df7-e016e5c3bc57@denx.de>
- <59881e2a-56c2-3801-2058-d939b25d6259@gmail.com>
- <acb6c57e-49da-614b-d9fd-833b5eca131c@denx.de>
- <040ee008-2ae9-40d3-fa2f-729e7da4331a@gmail.com>
-From: Marek Vasut <marex@denx.de>
-Message-ID: <e11b2f2b-1455-a3ce-e228-96e7fe9897e2@denx.de>
-Date: Tue, 6 Aug 2019 15:35:13 +0200
+Return-Path: <SRS0=vdDf=WF=gmail.com=dmitry.torokhov@kernel.org>
+Date: Fri, 9 Aug 2019 09:44:31 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/4] Input: ads7846 - convert to devm_ alloc functions
+Message-ID: <20190809164431.GL178933@dtor-ws>
+References: <20190327133927.1340-1-m.felsch@pengutronix.de>
+ <20190327133927.1340-2-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <040ee008-2ae9-40d3-fa2f-729e7da4331a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To: Ian Arkver <ian.arkver.dev@gmail.com>, Jacopo Mondi <jacopo@jmondi.org>
-Cc: linux-media@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327133927.1340-2-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 5/29/19 1:15 PM, Ian Arkver wrote:
-> Hi Marek,
+On Wed, Mar 27, 2019 at 02:39:24PM +0100, Marco Felsch wrote:
+> Convert to devm function to drop the 'no-mem' error handling path and
+> strip down the remove funciton a bit.
 > 
-> On 29/05/2019 12:09, Marek Vasut wrote:
->> On 5/29/19 1:04 PM, Ian Arkver wrote:
->>> Hi,
->>>
->>> On 29/05/2019 11:41, Marek Vasut wrote:
->>>> On 5/29/19 8:28 AM, Jacopo Mondi wrote:
->>>>
->>>> [...]
->>>>
->>>>>>>>> [1]
->>>>>>>>> https://www.renesas.com/eu/en/products/audio-video/video-decoders-encoders/video-decoders/device/ISL79987.html
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>> +Required Properties:
->>>>>>>>>> +- compatible: value should be "isil,isl79987"
->>>>>>>
->>>>>>> And here you might want to have 2 different compatibles for 79987
->>>>>>> and
->>>>>>> 79988.
->>>>>>
->>>>>> The 79988 is not supported yet, do we want to have it in the binding
->>>>>> doc?
->>>>>>
->>>>>
->>>>> I got mislead by the isl7998x naming scheme you used...
->>>>>
->>>>> I would say that's up to you, the two chips seems very similar,
->>>>> and it might make sense to provide bindings that support both. At the
->>>>> same time, as long as the here defined bindings does not prevent
->>>>> future expansions to include the ISL79988, its support could be safely
->>>>> post-poned. In that case please s/isl7998x/isl79987/ in this document
->>>>> and do not mention BT565 in the description.
->>>>
->>>> Right
->>>>
->>>>>> [...]
->>>>>>
->>>>>>>>> I see from the example you only support one output port? How do
->>>>>>>>> you
->>>>>>>>> model the input ones.
->>>>>>>>
->>>>>>>> I don't . Do we model analog inputs now somehow ?
->>>>>>>
->>>>>>> I really think so, please see:
->>>>>>> Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> And as an example of a board device tree using connectors to model
->>>>>>> analog input see how the cvbs input on Salvator-X is described:
->>>>>>>
->>>>>>>      cvbs-in {
->>>>>>>          compatible = "composite-video-connector";
->>>>>>>          label = "CVBS IN";
->>>>>>>
->>>>>>>          port {
->>>>>>>              cvbs_con: endpoint {
->>>>>>>                  remote-endpoint = <&adv7482_ain7>;
->>>>>>>              };
->>>>>>>          };
->>>>>>>      };
->>>>>>>
->>>>>>> I think you should provide 4 input ports, where to connect input
->>>>>>> from
->>>>>>> the analog connectors, and derive the number of enabled inputs from
->>>>>>> the number of endpoints connected to an active remote.
->>>>>>
->>>>>> Deriving the number of active physical inputs from some existing
->>>>>> binding
->>>>>> makes sense.
->>>>>>
->>>>>> However unlike the adv7482, the isl79987 does not support
->>>>>> remapping the
->>>>>> physical inputs to ADCs in the chip. It does support some
->>>>>> remapping of
->>>>>> physical inputs to MIPI CSI2 channels, but that's probably not very
->>>>>> useful.
->>>>>>
->>>>>
->>>>> I understand, but I will now use against you the argument you have
->>>>> correctly pointed out here below that DT should describe hardware, and
->>>>> the hardware has indeed 4 input ports..
->>>>
->>>> My question here is whether it makes sense to describe the ports
->>>> even if
->>>> they cannot be muxed to different ADC. Does it ?
->>>
->>> Each input port can be either differential CVBS or single ended with a
->>> 2:1 input select mux. It would be nice to be able to describe this.
->>
->> Where do you see that ?
-> 
-> Bits 0 and 1 of each channel page's Differential Clamping Control 4
-> (0x39, ISL7998x_REG_Px_DEC_DIFF_CLMP_CTL_4).
-> 
-> I don't think you change it from the default (single ended on the first
-> input).
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-I don't, since I have no way to test the differential mode of operation.
+I am not fond of partial devm conversions, as this causes reordering in
+of freeing resources in unwind path. In this particular case input
+device will be unregistered only after majority of the driver structure
+is torn down.
 
-[...]
+If we want to do devm conversion, we need to do a complete one.
+
+Thanks.
+
+-- 
+Dmitry
