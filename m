@@ -1,76 +1,49 @@
-Return-Path: <SRS0=gJgO=WW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:58732 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387588AbfHZSCt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:02:49 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4/6] ARM: dts: Drop legacy custom hwmods property for dra7 i2c
-Date: Mon, 26 Aug 2019 11:02:35 -0700
-Message-Id: <20190826180237.31571-5-tony@atomide.com>
-In-Reply-To: <20190826180237.31571-1-tony@atomide.com>
-References: <20190826180237.31571-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Vignesh R <vigneshr@ti.com>
+Return-Path: <SRS0=mJni=WF=vergenet.net=horms@kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2 2/4] dt-bindings: i2c: rcar: Rename bindings documentation file
+Date: Fri,  9 Aug 2019 14:30:02 -0700
+Message-Id: <20190809213004.31181-3-horms+renesas@verge.net.au>
+In-Reply-To: <20190809213004.31181-1-horms+renesas@verge.net.au>
+References: <20190809213004.31181-1-horms+renesas@verge.net.au>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-With recent ti-sysc driver changes, we can probe most devices with device
-tree data only and drop the custom "ti,hwmods" property.
+Rename the bindings documentation file for R-Car I2C controller
+from i2c-rcar.txt to renesas,i2c.txt.
 
-We have already added the related device tree data earlier, and have
-already dropped the platform data. But we have been still dynamically
-allocating the platform data based on "ti,hwmods" property. With recent
-ti-sysc driver changes this is no longer needed.
+This is part of an ongoing effort to name bindings documentation files for
+Renesas IP blocks consistently, in line with the compat strings they
+document.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 5 -----
- 1 file changed, 5 deletions(-)
+v2
+* Added review tag
+* Corrected changelog to refer to renesas,i2c.txt
+---
+ Documentation/devicetree/bindings/i2c/{i2c-rcar.txt => renesas,i2c.txt} | 0
+ MAINTAINERS                                                             | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/i2c/{i2c-rcar.txt => renesas,i2c.txt} (100%)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -1500,7 +1500,6 @@
- 
- 		target-module@60000 {			/* 0x48060000, ap 23 32.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c3";
- 			reg = <0x60000 0x8>,
- 			      <0x60010 0x8>,
- 			      <0x60090 0x8>;
-@@ -1693,7 +1692,6 @@
- 
- 		target-module@70000 {			/* 0x48070000, ap 30 22.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c1";
- 			reg = <0x70000 0x8>,
- 			      <0x70010 0x8>,
- 			      <0x70090 0x8>;
-@@ -1726,7 +1724,6 @@
- 
- 		target-module@72000 {			/* 0x48072000, ap 32 2a.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c2";
- 			reg = <0x72000 0x8>,
- 			      <0x72010 0x8>,
- 			      <0x72090 0x8>;
-@@ -1789,7 +1786,6 @@
- 
- 		target-module@7a000 {			/* 0x4807a000, ap 81 3a.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c4";
- 			reg = <0x7a000 0x8>,
- 			      <0x7a010 0x8>,
- 			      <0x7a090 0x8>;
-@@ -1822,7 +1818,6 @@
- 
- 		target-module@7c000 {			/* 0x4807c000, ap 83 4a.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c5";
- 			reg = <0x7c000 0x8>,
- 			      <0x7c010 0x8>,
- 			      <0x7c090 0x8>;
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/renesas,i2c.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+rename to Documentation/devicetree/bindings/i2c/renesas,i2c.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4c8262837da9..b8c1181baea9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13650,7 +13650,7 @@ F:	drivers/iio/adc/rcar-gyroadc.c
+ RENESAS R-CAR I2C DRIVERS
+ M:	Wolfram Sang <wsa+renesas@sang-engineering.com>
+ S:	Supported
+-F:	Documentation/devicetree/bindings/i2c/i2c-rcar.txt
++F:	Documentation/devicetree/bindings/i2c/renesas,i2c.txt
+ F:	Documentation/devicetree/bindings/i2c/renesas,iic.txt
+ F:	drivers/i2c/busses/i2c-rcar.c
+ F:	drivers/i2c/busses/i2c-sh_mobile.c
 -- 
-2.23.0
+2.11.0
