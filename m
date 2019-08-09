@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 09/19] ARM: l2c: add definition for FWA in PL310 aux register
-Date: Fri,  9 Aug 2019 11:31:48 +0200
-Message-ID: <20190809093158.7969-10-lkundrak@v3.sk>
+Subject: [PATCH 13/19] ARM: mmp: define MMP_CHIPID by the means of CIU_REG()
+Date: Fri,  9 Aug 2019 11:31:52 +0200
+Message-ID: <20190809093158.7969-14-lkundrak@v3.sk>
 References: <20190809093158.7969-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,27 +12,25 @@ To: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-The PL310 also has a "Force write allocate" bits in the Auxiliary
-Control Register.
+A rather trivial cosmetic improvement.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/include/asm/hardware/cache-l2x0.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mach-mmp/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/asm/hardware/cache-l2x0.h b/arch/arm/includ=
-e/asm/hardware/cache-l2x0.h
-index 32edfadb15935..a6d4ee86ba543 100644
---- a/arch/arm/include/asm/hardware/cache-l2x0.h
-+++ b/arch/arm/include/asm/hardware/cache-l2x0.h
-@@ -118,6 +118,8 @@
- #define L310_AUX_CTRL_STORE_LIMITATION		BIT(11)	/* R2P0+ */
- #define L310_AUX_CTRL_EXCLUSIVE_CACHE		BIT(12)
- #define L310_AUX_CTRL_ASSOCIATIVITY_16		BIT(16)
-+#define L310_AUX_CTRL_FWA_SHIFT			23
-+#define L310_AUX_CTRL_FWA_MASK			(3 << 23)
- #define L310_AUX_CTRL_CACHE_REPLACE_RR		BIT(25)	/* R2P0+ */
- #define L310_AUX_CTRL_NS_LOCKDOWN		BIT(26)
- #define L310_AUX_CTRL_NS_INT_CTRL		BIT(27)
+diff --git a/arch/arm/mach-mmp/common.c b/arch/arm/mach-mmp/common.c
+index 2ee08c78e8bc9..24c689a01ecb7 100644
+--- a/arch/arm/mach-mmp/common.c
++++ b/arch/arm/mach-mmp/common.c
+@@ -17,7 +17,7 @@
+=20
+ #include "common.h"
+=20
+-#define MMP_CHIPID	(AXI_VIRT_BASE + 0x82c00)
++#define MMP_CHIPID	CIU_REG(0x00)
+=20
+ unsigned int mmp_chip_id;
+ EXPORT_SYMBOL(mmp_chip_id);
 --=20
 2.21.0
