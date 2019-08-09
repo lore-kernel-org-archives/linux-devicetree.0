@@ -1,54 +1,195 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v3 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
-Date: Fri, 9 Aug 2019 14:48:31 +0000
-Message-ID: <56f8b3c5be728af014388bb04cb372619dd8d440.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-8-philippe.schenker@toradex.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 2/6] arm64: dts: ti: k3-j721e: Add gpio nodes in main
+ domain
+Date: Fri, 9 Aug 2019 20:23:30 +0530
+Message-ID: <170f021e-eeeb-9b5b-1e66-7cf2dfc54185@ti.com>
+References: <20190809082947.30590-1-lokeshvutla@ti.com>
+ <20190809082947.30590-3-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807082556.5013-8-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190809082947.30590-3-lokeshvutla@ti.com>
 Content-Language: en-US
-Content-ID: <6FE5F5AF4B177649BE50971E59338C67@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTA3IGF0IDA4OjI2ICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gRnJvbTogU3RlZmFuIEFnbmVyIDxzdGVmYW4uYWduZXJAdG9yYWRleC5jb20+DQo+IA0K
-PiBBZGQgcGlubXV4aW5nIGFuZCBkbyBub3Qgc3BlY2lmeSB2b2x0YWdlIHJlc3RyaWN0aW9ucyBm
-b3IgdGhlIHVzZGhjDQo+IGluc3RhbmNlIGF2YWlsYWJsZSBvbiB0aGUgbW9kdWxlcyBlZGdlIGNv
-bm5lY3Rvci4gVGhpcyBhbGxvd3MgdG8gdXNlDQo+IFNELWNhcmRzIHdpdGggaGlnaGVyIHRyYW5z
-ZmVyIG1vZGVzIGlmIHN1cHBvcnRlZCBieSB0aGUgY2Fycmllcg0KPiBib2FyZC4NCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFkZXguY29tPg0KPiBT
-aWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRl
-eC5jb20+DQoNCkFja2VkLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3Jh
-ZGV4LmNvbT4NCg0KPiAtLS0NCj4gDQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gQWRkIG5ldyBjb21t
-aXQgbWVzc2FnZSBmcm9tIFN0ZWZhbidzIHByb3Bvc2FsIG9uIE1MDQo+IA0KPiBDaGFuZ2VzIGlu
-IHYyOiBOb25lDQo+IA0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kgfCAy
-MyArKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlv
-bnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5k
-dHNpDQo+IGluZGV4IDE2ZDFhMWVkMWFmZi4uNjdmNWUwYzg3ZmRjIDEwMDY0NA0KPiAtLS0gYS9h
-cmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiBAQCAtMzI2LDcgKzMyNiw2IEBADQo+ICAmdXNkaGMx
-IHsNCj4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiAgCXBpbmN0cmwtMCA9IDwmcGlu
-Y3RybF91c2RoYzEgJnBpbmN0cmxfY2RfdXNkaGMxPjsNCj4gLQluby0xLTgtdjsNCj4gIAljZC1n
-cGlvcyA9IDwmZ3BpbzEgMCBHUElPX0FDVElWRV9MT1c+Ow0KPiAgCWRpc2FibGUtd3A7DQo+ICAJ
-dnFtbWMtc3VwcGx5ID0gPCZyZWdfTERPMj47DQo+IEBAIC02NzEsNiArNjcwLDI4IEBADQo+ICAJ
-CT47DQo+ICAJfTsNCj4gIA0KPiArCXBpbmN0cmxfdXNkaGMxXzEwMG1oejogdXNkaGMxZ3JwXzEw
-MG1oeiB7DQo+ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg3RF9QQURfU0QxX0NNRF9fU0QxX0NN
-RAkweDVhDQo+ICsJCQlNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLCTB4MWENCj4gKwkJCU1YN0Rf
-UEFEX1NEMV9EQVRBMF9fU0QxX0RBVEEwCTB4NWENCj4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBMV9f
-U0QxX0RBVEExCTB4NWENCj4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBMl9fU0QxX0RBVEEyCTB4NWEN
-Cj4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBM19fU0QxX0RBVEEzCTB4NWENCj4gKwkJPjsNCj4gKwl9
-Ow0KPiArDQo+ICsJcGluY3RybF91c2RoYzFfMjAwbWh6OiB1c2RoYzFncnBfMjAwbWh6IHsNCj4g
-KwkJZnNsLHBpbnMgPSA8DQo+ICsJCQlNWDdEX1BBRF9TRDFfQ01EX19TRDFfQ01ECTB4NWINCj4g
-KwkJCU1YN0RfUEFEX1NEMV9DTEtfX1NEMV9DTEsJMHgxYg0KPiArCQkJTVg3RF9QQURfU0QxX0RB
-VEEwX19TRDFfREFUQTAJMHg1Yg0KPiArCQkJTVg3RF9QQURfU0QxX0RBVEExX19TRDFfREFUQTEJ
-MHg1Yg0KPiArCQkJTVg3RF9QQURfU0QxX0RBVEEyX19TRDFfREFUQTIJMHg1Yg0KPiArCQkJTVg3
-RF9QQURfU0QxX0RBVEEzX19TRDFfREFUQTMJMHg1Yg0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4g
-IAlwaW5jdHJsX3VzZGhjMzogdXNkaGMzZ3JwIHsNCj4gIAkJZnNsLHBpbnMgPSA8DQo+ICAJCQlN
-WDdEX1BBRF9TRDNfQ01EX19TRDNfQ01ECQkweDU5DQo=
+
+
+On 09/08/19 1:59 PM, Lokesh Vutla wrote:
+> There are 8 instances of gpio modules in main domain divided into 2 groups:
+> - Group1: gpio0, gpio2, gpio4, gpio6
+> - Group2: gpio1, gpio3, gpio5, gpio7
+> 
+> Groups are created to provide protection between two different processor
+> virtual worlds. There are x gpio lines coming out of each group. Each module
+> in a group has equal x gpio lines pinned out. There is a top level mux for
+> selecting the module instance for each pin coming out of group. Exactly
+> one module can be selected to control the corresponding pin. This muxing
+> can be controlled along the pad mux configuration registers.
+> 
+> Group1 pins out 128 lines(8 banks). Group 2 pins out 36 lines(2 banks).
+> 
+> Add DT nodes for each module instance in the main domain. Users should
+> make sure that correct gpio instance is selected in their pad configuration.
+
+Reviewed-by: Keerthy <j-keerthy@ti.com>
+
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 132 ++++++++++++++++++++++
+>   1 file changed, 132 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> index 01661c22c39d..199bc9a00b20 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> @@ -240,4 +240,136 @@
+>   		clocks = <&k3_clks 286 0>;
+>   		clock-names = "fclk";
+>   	};
+> +
+> +	main_gpio0: gpio@600000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00600000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <105 0>, <105 1>, <105 2>, <105 3>,
+> +			     <105 4>, <105 5>, <105 6>, <105 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 105 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 105 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio1: gpio@601000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00601000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <106 0>, <106 1>, <106 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 106 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 106 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio2: gpio@610000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00610000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <107 0>, <107 1>, <107 2>, <107 3>,
+> +			     <107 4>, <107 5>, <107 6>, <107 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 107 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 107 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio3: gpio@611000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00611000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <108 0>, <108 1>, <108 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 108 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 108 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio4: gpio@620000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00620000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <109 0>, <109 1>, <109 2>, <109 3>,
+> +			     <109 4>, <109 5>, <109 6>, <109 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 109 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 109 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio5: gpio@621000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00621000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <110 0>, <110 1>, <110 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 110 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 110 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio6: gpio@630000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00630000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <111 0>, <111 1>, <111 2>, <111 3>,
+> +			     <111 4>, <111 5>, <111 6>, <111 7>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <128>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 111 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 111 0>;
+> +		clock-names = "gpio";
+> +	};
+> +
+> +	main_gpio7: gpio@631000 {
+> +		compatible = "ti,j721e-gpio", "ti,keystone-gpio";
+> +		reg = <0x0 0x00631000 0x0 0x100>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&main_gpio_intr>;
+> +		interrupts = <112 0>, <112 1>, <112 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		ti,ngpio = <36>;
+> +		ti,davinci-gpio-unbanked = <0>;
+> +		power-domains = <&k3_pds 112 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 112 0>;
+> +		clock-names = "gpio";
+> +	};
+>   };
+> 
