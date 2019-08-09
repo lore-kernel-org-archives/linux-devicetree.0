@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 17/19] ARM: mmp: remove MMP3 USB PHY registers from regs-usb.h
-Date: Fri,  9 Aug 2019 11:31:56 +0200
-Message-ID: <20190809093158.7969-18-lkundrak@v3.sk>
+Subject: [PATCH 15/19] ARM: mmp: add SMP support
+Date: Fri,  9 Aug 2019 11:31:54 +0200
+Message-ID: <20190809093158.7969-16-lkundrak@v3.sk>
 References: <20190809093158.7969-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,117 +12,67 @@ To: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Nothing in mach-mmp/ uses them and they belong to the PHY driver.
+Used to bring up the second core on MMP3.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/mach-mmp/regs-usb.h | 94 ------------------------------------
- 1 file changed, 94 deletions(-)
+ arch/arm/mach-mmp/Makefile  |  3 +++
+ arch/arm/mach-mmp/platsmp.c | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 arch/arm/mach-mmp/platsmp.c
 
-diff --git a/arch/arm/mach-mmp/regs-usb.h b/arch/arm/mach-mmp/regs-usb.h
-index d9f08c1601542..ed0d1aa0ad6c9 100644
---- a/arch/arm/mach-mmp/regs-usb.h
-+++ b/arch/arm/mach-mmp/regs-usb.h
-@@ -121,100 +121,6 @@
+diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
+index 322c1c97dc900..7b3a7f979eece 100644
+--- a/arch/arm/mach-mmp/Makefile
++++ b/arch/arm/mach-mmp/Makefile
+@@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
+ obj-$(CONFIG_CPU_PXA910)	+=3D pm-pxa910.o
+ obj-$(CONFIG_CPU_MMP2)		+=3D pm-mmp2.o
+ endif
++ifeq ($(CONFIG_SMP),y)
++obj-$(CONFIG_MACH_MMP3_DT)	+=3D platsmp.o
++endif
 =20
- #define UTMI_OTG_ADDON_OTG_ON			(1 << 0)
-=20
--/* For MMP3 USB Phy */
--#define USB2_PLL_REG0		0x4
--#define USB2_PLL_REG1		0x8
--#define USB2_TX_REG0		0x10
--#define USB2_TX_REG1		0x14
--#define USB2_TX_REG2		0x18
--#define USB2_RX_REG0		0x20
--#define USB2_RX_REG1		0x24
--#define USB2_RX_REG2		0x28
--#define USB2_ANA_REG0		0x30
--#define USB2_ANA_REG1		0x34
--#define USB2_ANA_REG2		0x38
--#define USB2_DIG_REG0		0x3C
--#define USB2_DIG_REG1		0x40
--#define USB2_DIG_REG2		0x44
--#define USB2_DIG_REG3		0x48
--#define USB2_TEST_REG0		0x4C
--#define USB2_TEST_REG1		0x50
--#define USB2_TEST_REG2		0x54
--#define USB2_CHARGER_REG0	0x58
--#define USB2_OTG_REG0		0x5C
--#define USB2_PHY_MON0		0x60
--#define USB2_RESETVE_REG0	0x64
--#define USB2_ICID_REG0		0x78
--#define USB2_ICID_REG1		0x7C
--
--/* USB2_PLL_REG0 */
--/* This is for Ax stepping */
--#define USB2_PLL_FBDIV_SHIFT_MMP3		0
--#define USB2_PLL_FBDIV_MASK_MMP3		(0xFF << 0)
--
--#define USB2_PLL_REFDIV_SHIFT_MMP3		8
--#define USB2_PLL_REFDIV_MASK_MMP3		(0xF << 8)
--
--#define USB2_PLL_VDD12_SHIFT_MMP3		12
--#define USB2_PLL_VDD18_SHIFT_MMP3		14
--
--/* This is for B0 stepping */
--#define USB2_PLL_FBDIV_SHIFT_MMP3_B0		0
--#define USB2_PLL_REFDIV_SHIFT_MMP3_B0		9
--#define USB2_PLL_VDD18_SHIFT_MMP3_B0		14
--#define USB2_PLL_FBDIV_MASK_MMP3_B0		0x01FF
--#define USB2_PLL_REFDIV_MASK_MMP3_B0		0x3E00
--
--#define USB2_PLL_CAL12_SHIFT_MMP3		0
--#define USB2_PLL_CALI12_MASK_MMP3		(0x3 << 0)
--
--#define USB2_PLL_VCOCAL_START_SHIFT_MMP3	2
--
--#define USB2_PLL_KVCO_SHIFT_MMP3		4
--#define USB2_PLL_KVCO_MASK_MMP3			(0x7<<4)
--
--#define USB2_PLL_ICP_SHIFT_MMP3			8
--#define USB2_PLL_ICP_MASK_MMP3			(0x7<<8)
--
--#define USB2_PLL_LOCK_BYPASS_SHIFT_MMP3		12
--
--#define USB2_PLL_PU_PLL_SHIFT_MMP3		13
--#define USB2_PLL_PU_PLL_MASK			(0x1 << 13)
--
--#define USB2_PLL_READY_MASK_MMP3		(0x1 << 15)
--
--/* USB2_TX_REG0 */
--#define USB2_TX_IMPCAL_VTH_SHIFT_MMP3		8
--#define USB2_TX_IMPCAL_VTH_MASK_MMP3		(0x7 << 8)
--
--#define USB2_TX_RCAL_START_SHIFT_MMP3		13
--
--/* USB2_TX_REG1 */
--#define USB2_TX_CK60_PHSEL_SHIFT_MMP3		0
--#define USB2_TX_CK60_PHSEL_MASK_MMP3		(0xf << 0)
--
--#define USB2_TX_AMP_SHIFT_MMP3			4
--#define USB2_TX_AMP_MASK_MMP3			(0x7 << 4)
--
--#define USB2_TX_VDD12_SHIFT_MMP3		8
--#define USB2_TX_VDD12_MASK_MMP3			(0x3 << 8)
--
--/* USB2_TX_REG2 */
--#define USB2_TX_DRV_SLEWRATE_SHIFT		10
--
--/* USB2_RX_REG0 */
--#define USB2_RX_SQ_THRESH_SHIFT_MMP3		4
--#define USB2_RX_SQ_THRESH_MASK_MMP3		(0xf << 4)
--
--#define USB2_RX_SQ_LENGTH_SHIFT_MMP3		10
--#define USB2_RX_SQ_LENGTH_MASK_MMP3		(0x3 << 10)
--
--/* USB2_ANA_REG1*/
--#define USB2_ANA_PU_ANA_SHIFT_MMP3		14
--
--/* USB2_OTG_REG0 */
--#define USB2_OTG_PU_OTG_SHIFT_MMP3		3
--
- /* fsic registers */
- #define FSIC_MISC			0x4
- #define FSIC_INT			0x28
+ # board support
+ obj-$(CONFIG_MACH_ASPENITE)	+=3D aspenite.o
+diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
+new file mode 100644
+index 0000000000000..255df640b5bc1
+--- /dev/null
++++ b/arch/arm/mach-mmp/platsmp.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
++ */
++#include <linux/io.h>
++#include <asm/smp_scu.h>
++#include <asm/smp.h>
++#include "addr-map.h"
++
++#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
++
++static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idl=
+e)
++{
++	/*
++	 * Apparently, the boot ROM on the second core spins on this
++	 * register becoming non-zero and then jumps to the address written
++	 * there. No IPIs involved.
++	 */
++	__raw_writel(virt_to_phys(secondary_startup), SW_BRANCH_VIRT_ADDR);
++	return 0;
++}
++
++static void mmp3_smp_prepare_cpus(unsigned int max_cpus)
++{
++	scu_enable(SCU_VIRT_BASE);
++}
++
++static const struct smp_operations mmp3_smp_ops __initconst =3D {
++	.smp_prepare_cpus	=3D mmp3_smp_prepare_cpus,
++	.smp_boot_secondary	=3D mmp3_boot_secondary,
++};
++CPU_METHOD_OF_DECLARE(mmp3_smp, "marvell,mmp3-smp", &mmp3_smp_ops);
 --=20
 2.21.0
