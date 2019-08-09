@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 03/19] dt-bindings: mrvl,intc: Add a MMP3 interrupt controller
-Date: Fri,  9 Aug 2019 11:31:42 +0200
-Message-ID: <20190809093158.7969-4-lkundrak@v3.sk>
+Subject: [PATCH 08/19] irqchip/mmp: coexist with GIC root IRQ controller
+Date: Fri,  9 Aug 2019 11:31:47 +0200
+Message-ID: <20190809093158.7969-9-lkundrak@v3.sk>
 References: <20190809093158.7969-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,73 +12,37 @@ To: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-Similar to MMP2 one, but has an extra range for the other core. The
-muxes stay the same.
+On MMP3, the GIC can be set as a root IRQ interrupt controller. If the
+device tree indicated that GIC is enabled, avoid hooking up
+mmp2_handle_irq().
+
+The interrupt muxes are still being used.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- .../interrupt-controller/mrvl,intc.txt        | 23 ++++++++++++++-----
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ drivers/irqchip/irq-mmp.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,=
-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,in=
-tc.txt
-index 608fee15a4cfc..41c131d026f94 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.tx=
-t
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.tx=
-t
-@@ -1,13 +1,15 @@
- * Marvell MMP Interrupt controller
-=20
- Required properties:
--- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
--  "mrvl,mmp2-mux-intc"
-+- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc",
-+  "marvell,mmp3-intc", "mrvl,mmp2-mux-intc"
- - reg : Address and length of the register set of the interrupt controll=
-er.
-   If the interrupt controller is intc, address and length means the rang=
-e
--  of the whole interrupt controller. If the interrupt controller is mux-=
-intc,
--  address and length means one register. Since address of mux-intc is in=
- the
--  range of intc. mux-intc is secondary interrupt controller.
-+  of the whole interrupt controller. The "marvell,mmp3-intc" controller
-+  also has a secondary range for the second CPU core.  If the interrupt
-+  controller is mux-intc, address and length means one register. Since
-+  address of mux-intc is in the range of intc. mux-intc is secondary
-+  interrupt controller.
- - reg-names : Name of the register set of the interrupt controller. It's
-   only required in mux-intc interrupt controller.
- - interrupts : Should be the port interrupt shared by mux interrupts. It=
-'s
-@@ -20,7 +22,7 @@ Required properties:
- - mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edg=
-e
-   detection first.
-=20
--Example:
-+Examples:
- 	intc: interrupt-controller@d4282000 {
- 		compatible =3D "mrvl,mmp2-intc";
- 		interrupt-controller;
-@@ -29,6 +31,15 @@ Example:
- 		mrvl,intc-nr-irqs =3D <64>;
- 	};
-=20
-+	intc: interrupt-controller@d4282000 {
-+		compatible =3D "marvell,mmp3-intc";
-+		interrupt-controller;
-+		#interrupt-cells =3D <1>;
-+		reg =3D <0xd4282000 0x1000>,
-+		      <0xd4284000 0x100>;
-+		mrvl,intc-nr-irqs =3D <64>;
-+	};
+diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+index 25497c75cc861..28feb0f393056 100644
+--- a/drivers/irqchip/irq-mmp.c
++++ b/drivers/irqchip/irq-mmp.c
+@@ -472,8 +472,13 @@ static int __init mmp3_of_init(struct device_node *n=
+ode,
+ 	icu_data[0].conf_disable =3D mmp3_conf.conf_disable;
+ 	icu_data[0].conf_mask =3D mmp3_conf.conf_mask;
+ 	icu_data[0].conf2_mask =3D mmp3_conf.conf2_mask;
+-	irq_set_default_host(icu_data[0].domain);
+-	set_handle_irq(mmp2_handle_irq);
 +
- 	intcmux4@d4282150 {
- 		compatible =3D "mrvl,mmp2-mux-intc";
- 		interrupts =3D <4>;
++	if (!parent) {
++		/* This is the main interrupt controller. */
++		irq_set_default_host(icu_data[0].domain);
++		set_handle_irq(mmp2_handle_irq);
++	}
++
+ 	max_icu_nr =3D 1;
+ 	return 0;
+ }
 --=20
 2.21.0
