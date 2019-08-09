@@ -1,23 +1,83 @@
-Return-Path: <SRS0=dYTO=WB=nxp.com=aisheng.dong@kernel.org>
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Date: Mon, 5 Aug 2019 07:00:37 +0000
-Message-ID: 
- <AM0PR04MB4211DA900C624AFE404946F480DA0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-In-Reply-To: <20190730022126.17883-1-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=2AmA=WF=pengutronix.de=mfe@kernel.org>
+Date: Fri, 9 Aug 2019 07:42:54 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v6 08/13] media: tvp5150: initialize subdev before
+ parsing device tree
+Message-ID: <20190809054254.k6saouaq6l4ebb3l@pengutronix.de>
+References: <20190415124413.18456-1-m.felsch@pengutronix.de>
+ <20190415124413.18456-9-m.felsch@pengutronix.de>
+ <20190514172052.7123204f@coco.lan>
 MIME-Version: 1.0
-To: Anson Huang <anson.huang@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514172052.7123204f@coco.lan>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFNvbWUgcGxh
-dGZvcm1zIGxpa2UgaS5NWDhNUSBoYXMgY2xvY2sgY29udHJvbCBmb3IgdGhpcyBtb2R1bGUsIG5l
-ZWQgdG8gYWRkDQo+IGNsb2NrIG9wZXJhdGlvbnMgdG8gbWFrZSBzdXJlIHRoZSBkcml2ZXIgaXMg
-d29ya2luZyBwcm9wZXJseS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNv
-bi5IdWFuZ0BueHAuY29tPg0KPiBSZXZpZXdlZC1ieTogR3VpZG8gR8O8bnRoZXIgPGFneEBzaWd4
-Y3B1Lm9yZz4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5j
-b20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg==
+Hi Mauro,
+
+On 19-05-14 17:20, Mauro Carvalho Chehab wrote:
+> Em Mon, 15 Apr 2019 14:44:08 +0200
+> Marco Felsch <m.felsch@pengutronix.de> escreveu:
+> 
+> > From: Michael Tretter <m.tretter@pengutronix.de>
+> > 
+> > There are several debug prints in the tvp5150_parse_dt() function, which
+> > do not print the prefix, because the v4l2_subdev is not initialized, yet.
+> > 
+> > Initialize the v4l2_subdev before parsing the device tree to fix the
+> > debug messages.
+> > 
+> > Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> 
+> Looks ok to me.
+
+Can I add you Reviewed-by tag here?
+
+Regards,
+  Marco
+
+> 
+> > ---
+> >  drivers/media/i2c/tvp5150.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+> > index 9331609425bf..305a5e256b31 100644
+> > --- a/drivers/media/i2c/tvp5150.c
+> > +++ b/drivers/media/i2c/tvp5150.c
+> > @@ -1973,6 +1973,9 @@ static int tvp5150_probe(struct i2c_client *c,
+> >  
+> >  	core->regmap = map;
+> >  	sd = &core->sd;
+> > +	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+> > +	sd->internal_ops = &tvp5150_internal_ops;
+> > +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> >  
+> >  	if (IS_ENABLED(CONFIG_OF) && np) {
+> >  		res = tvp5150_parse_dt(core, np);
+> > @@ -1985,10 +1988,6 @@ static int tvp5150_probe(struct i2c_client *c,
+> >  		core->mbus_type = V4L2_MBUS_BT656;
+> >  	}
+> >  
+> > -	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+> > -	sd->internal_ops = &tvp5150_internal_ops;
+> > -	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> > -
+> >  	res = tvp5150_mc_init(core);
+> >  	if (res)
+> >  		goto err_cleanup_dt;
+> 
+> 
+> 
+> Thanks,
+> Mauro
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
