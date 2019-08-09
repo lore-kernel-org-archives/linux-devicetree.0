@@ -1,94 +1,153 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 03/14] net: phy: adin: add support for interrupts
-Date: Fri, 9 Aug 2019 16:35:41 +0300
-Message-ID: <20190809133552.21597-4-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 01/14] net: phy: adin: add support for Analog Devices PHYs
+Date: Fri, 9 Aug 2019 16:35:39 +0300
+Message-ID: <20190809133552.21597-2-alexandru.ardelean@analog.com>
 References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This change adds support for enabling PHY interrupts that can be used by
-the PHY framework to get signal for link/speed/auto-negotiation changes.
+This change adds support for Analog Devices Industrial Ethernet PHYs.
+Particularly the PHYs this driver adds support for:
+ * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+ * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+   Ethernet PHY
+
+The 2 chips are pin & register compatible with one another. The main
+difference being that ADIN1200 doesn't operate in gigabit mode.
+
+The chips can be operated by the Generic PHY driver as well via the
+standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+kernel as well. This assumes that configuration of the PHY has been done
+completely in HW, according to spec.
+
+Configuration can also be done via registers, which will be supported by
+this driver.
+
+Datasheets:
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ MAINTAINERS              |  7 ++++++
+ drivers/net/phy/Kconfig  |  9 ++++++++
+ drivers/net/phy/Makefile |  1 +
+ drivers/net/phy/adin.c   | 49 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 66 insertions(+)
+ create mode 100644 drivers/net/phy/adin.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e352550a6895..e8aa8a667864 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -938,6 +938,13 @@ S:	Supported
+ F:	drivers/mux/adgs1408.c
+ F:	Documentation/devicetree/bindings/mux/adi,adgs1408.txt
+ 
++ANALOG DEVICES INC ADIN DRIVER
++M:	Alexandru Ardelean <alexaundru.ardelean@analog.com>
++L:	netdev@vger.kernel.org
++W:	http://ez.analog.com/community/linux-device-drivers
++S:	Supported
++F:	drivers/net/phy/adin.c
++
+ ANALOG DEVICES INC ADIS DRIVER LIBRARY
+ M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
+ S:	Supported
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 48ca213c0ada..03be30cde552 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -257,6 +257,15 @@ config SFP
+ 	depends on HWMON || HWMON=n
+ 	select MDIO_I2C
+ 
++config ADIN_PHY
++	tristate "Analog Devices Industrial Ethernet PHYs"
++	help
++	  Adds support for the Analog Devices Industrial Ethernet PHYs.
++	  Currently supports the:
++	  - ADIN1200 - Robust,Industrial, Low Power 10/100 Ethernet PHY
++	  - ADIN1300 - Robust,Industrial, Low Latency 10/100/1000 Gigabit
++	    Ethernet PHY
++
+ config AMD_PHY
+ 	tristate "AMD PHYs"
+ 	---help---
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index ba07c27e4208..a03437e091f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_SFP)		+= sfp.o
+ sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
+ obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
+ 
++obj-$(CONFIG_ADIN_PHY)		+= adin.o
+ obj-$(CONFIG_AMD_PHY)		+= amd.o
+ aquantia-objs			+= aquantia_main.o
+ ifdef CONFIG_HWMON
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index fc0148ba4b94..91ff26d08fd5 100644
---- a/drivers/net/phy/adin.c
+new file mode 100644
+index 000000000000..6d7af4743957
+--- /dev/null
 +++ b/drivers/net/phy/adin.c
-@@ -14,11 +14,45 @@
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
- 
-+#define ADIN1300_INT_MASK_REG			0x0018
-+#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-+#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-+#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-+#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-+#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-+#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-+#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-+#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-+#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-+#define ADIN1300_INT_MASK_EN	\
-+	(ADIN1300_INT_ANEG_STAT_CHNG_EN | ADIN1300_INT_ANEG_PAGE_RX_EN | \
-+	 ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_SPEED_CHNG_EN | \
-+	 ADIN1300_INT_HW_IRQ_EN)
-+#define ADIN1300_INT_STATUS_REG			0x0019
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: GPL-2.0+
++/**
++ *  Driver for Analog Devices Industrial Ethernet PHYs
++ *
++ * Copyright 2019 Analog Devices Inc.
++ */
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/mii.h>
++#include <linux/phy.h>
 +
- static int adin_config_init(struct phy_device *phydev)
- {
- 	return genphy_config_init(phydev);
- }
- 
-+static int adin_phy_ack_intr(struct phy_device *phydev)
++#define PHY_ID_ADIN1200				0x0283bc20
++#define PHY_ID_ADIN1300				0x0283bc30
++
++static int adin_config_init(struct phy_device *phydev)
 +{
-+	/* Clear pending interrupts */
-+	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
-+
-+	return rc < 0 ? rc : 0;
++	return genphy_config_init(phydev);
 +}
 +
-+static int adin_phy_config_intr(struct phy_device *phydev)
-+{
-+	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-+		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-+				    ADIN1300_INT_MASK_EN);
++static struct phy_driver adin_driver[] = {
++	{
++		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
++		.name		= "ADIN1200",
++		.config_init	= adin_config_init,
++		.config_aneg	= genphy_config_aneg,
++		.read_status	= genphy_read_status,
++	},
++	{
++		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
++		.name		= "ADIN1300",
++		.config_init	= adin_config_init,
++		.config_aneg	= genphy_config_aneg,
++		.read_status	= genphy_read_status,
++	},
++};
 +
-+	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-+			      ADIN1300_INT_MASK_EN);
-+}
++module_phy_driver(adin_driver);
 +
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -26,6 +60,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
-@@ -35,6 +71,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
++static struct mdio_device_id __maybe_unused adin_tbl[] = {
++	{ PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200) },
++	{ PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300) },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(mdio, adin_tbl);
++MODULE_DESCRIPTION("Analog Devices Industrial Ethernet PHY driver");
++MODULE_LICENSE("GPL");
 -- 
 2.20.1
