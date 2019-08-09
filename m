@@ -1,93 +1,126 @@
 From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
-Date: Fri,  9 Aug 2019 18:24:21 +0200
-Message-ID: <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
-References: <cover.1565367567.git.agx@sigxcpu.org>
+Subject: [PATCH v2 0/3] drm: bridge: Add NWL MIPI DSI host controller support
+Date: Fri,  9 Aug 2019 18:24:20 +0200
+Message-ID: <cover.1565367567.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1565367567.git.agx@sigxcpu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds all the gpr registers and the define needed for selecting
-the input source in the imx-nwl drm bridge.
-
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h | 62 ++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-
-diff --git a/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-new file mode 100644
-index 000000000000..62e85ffacfad
---- /dev/null
-+++ b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2017 NXP
-+ *               2019 Purism SPC
-+ */
-+
-+#ifndef __LINUX_IMX8MQ_IOMUXC_GPR_H
-+#define __LINUX_IMX8MQ_IOMUXC_GPR_H
-+
-+#define IOMUXC_GPR0	0x00
-+#define IOMUXC_GPR1	0x04
-+#define IOMUXC_GPR2	0x08
-+#define IOMUXC_GPR3	0x0c
-+#define IOMUXC_GPR4	0x10
-+#define IOMUXC_GPR5	0x14
-+#define IOMUXC_GPR6	0x18
-+#define IOMUXC_GPR7	0x1c
-+#define IOMUXC_GPR8	0x20
-+#define IOMUXC_GPR9	0x24
-+#define IOMUXC_GPR10	0x28
-+#define IOMUXC_GPR11	0x2c
-+#define IOMUXC_GPR12	0x30
-+#define IOMUXC_GPR13	0x34
-+#define IOMUXC_GPR14	0x38
-+#define IOMUXC_GPR15	0x3c
-+#define IOMUXC_GPR16	0x40
-+#define IOMUXC_GPR17	0x44
-+#define IOMUXC_GPR18	0x48
-+#define IOMUXC_GPR19	0x4c
-+#define IOMUXC_GPR20	0x50
-+#define IOMUXC_GPR21	0x54
-+#define IOMUXC_GPR22	0x58
-+#define IOMUXC_GPR23	0x5c
-+#define IOMUXC_GPR24	0x60
-+#define IOMUXC_GPR25	0x64
-+#define IOMUXC_GPR26	0x68
-+#define IOMUXC_GPR27	0x6c
-+#define IOMUXC_GPR28	0x70
-+#define IOMUXC_GPR29	0x74
-+#define IOMUXC_GPR30	0x78
-+#define IOMUXC_GPR31	0x7c
-+#define IOMUXC_GPR32	0x80
-+#define IOMUXC_GPR33	0x84
-+#define IOMUXC_GPR34	0x88
-+#define IOMUXC_GPR35	0x8c
-+#define IOMUXC_GPR36	0x90
-+#define IOMUXC_GPR37	0x94
-+#define IOMUXC_GPR38	0x98
-+#define IOMUXC_GPR39	0x9c
-+#define IOMUXC_GPR40	0xa0
-+#define IOMUXC_GPR41	0xa4
-+#define IOMUXC_GPR42	0xa8
-+#define IOMUXC_GPR43	0xac
-+#define IOMUXC_GPR44	0xb0
-+#define IOMUXC_GPR45	0xb4
-+#define IOMUXC_GPR46	0xb8
-+#define IOMUXC_GPR47	0xbc
-+
-+/* i.MX8Mq iomux gpr register field defines */
-+#define IMX8MQ_GPR13_MIPI_MUX_SEL		BIT(2)
-+
-+#endif /* __LINUX_IMX8MQ_IOMUXC_GPR_H */
--- 
-2.20.1
+VGhpcyBhZGRzIGluaXRpYWwgc3VwcG9ydCBmb3IgdGhlIE5XTCBNSVBJIERTSSBIb3N0IGNvbnRy
+b2xsZXIgZm91bmQgb24gaS5NWDgKU29Dcy4KCkl0IGFkZHMgc3VwcG9ydCBmb3IgdGhlIGkuTVg4
+TVEgYnV0IHRoZSBzYW1lIElQIGNvcmUgY2FuIGFsc28gYmUgZm91bmQgb24gZS5nLgppLk1YOFFY
+UC4gSSBhZGRlZCB0aGUgbmVjZXNzYXJ5IGhvb2tzIHRvIHN1cHBvcnQgb3RoZXIgaW14OCB2YXJp
+YW50cyBidXQgc2luY2UKSSBvbmx5IGhhdmUgaW14OG1xIGJvYXJkcyB0byB0ZXN0IEkgb21pdHRl
+ZCB0aGUgcGxhdGZvcm0gZGF0YSBmb3Igb3RoZXIgU29Dcy4KClRoZSBjb2RlIGlzIGJhc2VkIG9u
+IE5YUHMgQlNQIHNvIEkgYWRkZWQgUm9iZXJ0IENoaXJhcyBhcwpDby1hdXRob3JlZC1ieS4gUm9i
+ZXJ0LCBpZiB0aGlzIGxvb2tzIHNhbmUgY291bGQgeW91IGFkZCB5b3VyClNpZ25lZC1vZmYtYnk6
+PwoKVGhlIG1vc3Qgbm90YWJsZSBjaGFuZ2VzIG92ZXIgdGhlIEJTUCBkcml2ZXIgYXJlCiAtIENh
+bGN1bGF0ZSBIUyBtb2RlIHRpbWluZyBmcm9tIHBoeV9jb25maWd1cmVfb3B0c19taXBpX2RwaHkK
+IC0gUGVyZm9ybSBhbGwgY2xvY2sgc2V0dXAgdmlhIERUCiAtIE1lcmdlIG53bC1pbXggYW5kIG53
+bCBkcml2ZXJzCiAtIEFkZCBCMCBzaWxpb24gcmV2aXNpb24gcXVpcmsKIC0gQmVjb21lIGEgYnJp
+ZGdlIGRyaXZlciB0byBob29rIGludG8gbXhzZmIgKGZyb20gd2hhdCBJIHJlYWRbMF0gRENTUywg
+d2hpY2gKICAgYWxzbyBjYW4gZHJpdmUgdGhlIG53bCBvbiB0aGUgaW14OG1xIHdpbGwgbGlrZWx5
+IG5vdCBiZWNvbWUgcGFydCBvZgogICBpbXgtZGlzcGxheS1zdWJzeXN0ZW0gc28gaXQgbWFrZXMg
+c2Vuc2UgdG8gbWFrZSBpdCBkcml2ZSBhIGJyaWRnZSBmb3IgZHNpIGFzCiAgIHdlbGwpLgogLSBV
+c2UgcGFuZWxfYnJpZGdlIHRvIGF0dGFjaCB0aGUgcGFuZWwKClRoaXMgaGFzIGJlZW4gdGVzdGVk
+IG9uIGEgTGlicmVtIDUgZGV2a2l0IHVzaW5nIG14c2ZiIHdpdGggUm9iZXJ0J3MgcGF0Y2hlc1sx
+XQphbmQgdGhlIHJvY2t0ZWNoLWpoMDU3bjAwOTAwIHBhbmVsIGRyaXZlciBvbiBuZXh0LTIwMTkw
+ODA3LiBUaGUgRENTUyBjYW4gbGF0ZXIKb24gYWxzbyBhY3QgYXMgaW5wdXQgc291cmNlIHRvby4K
+CkNoYW5nZXMgZnJvbSB2MToKLSBQZXIgcmV2aWV3IGNvbW1lbnRzIGJ5IFNhbSBSYXZuYm9yZwog
+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE5LUp1
+bHkvMjI4MTMwLmh0bWwKICAtIENoYW5nZSBiaW5kaW5nIGRvY3MgdG8gWUFNTAogIC0gYnVpbGQ6
+IERvbid0IGFsd2F5cyB2aXNpdCBpbXgtbndsLwogIC0gYnVpbGQ6IEFkZCBoZWFkZXItdGVzdC15
+CiAgLSBTb3J0IGhlYWRlcnMgYWNjb3JkaW5nIHRvIERSTSBjb252ZW50aW9uCiAgLSBVc2UgZHJt
+X2Rpc3BsYXlfbW9kZSBpbnN0ZWFkIG9mIHZpZGVtb2RlCi0gUGVyIHJldmlldyBjb21tZW50cyBi
+eSBGYWJpbyBFc3RldmFtCiAgaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMv
+ZHJpLWRldmVsLzIwMTktSnVseS8yMjgyOTkuaHRtbAogIC0gRG9uJ3QgcmVzdHJpY3QgYnVpbGQg
+dG8gQVJDSF9NWEMKICAtIERyb3AgdW51c2VkIGluY2x1ZGVzCiAgLSBEcm9wIHVucmVhY2hhYmxl
+IGNvZGUgaW4gaW14X253bF9kc2lfYnJpZGdlX21vZGVfZml4dXAoKQogIC0gRHJvcCByZW1haW5p
+bmcgY2FsbHMgb2YgZGV2X2VycigpIGFuZCB1c2UgRFJNX0RFVl9FUlIoKQogICAgY29uc2lzdGVu
+dGx5LgogIC0gVXNlIGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZSgpCiAgLSBEcm9wIGRl
+dm1fZnJlZV9pcnEoKSBpbiBwcm9iZSgpIGVycm9yIHBhdGgKICAtIFVzZSBzaW5nbGUgbGluZSBj
+b21tZW50cyB3aGVyZSBzdWZmaWNpZW50CiAgLSBVc2UgPGxpbnV4L3RpbWU2NC5oPiBpbnN0ZWFk
+IG9mIGRlZmluaW5nIFVTRUNfUEVSX1NFQwogIC0gTWFrZSBpbnB1dCBzb3VyY2Ugc2VsZWN0IGlt
+eDggc3BlY2lmaWMKICAtIERyb3AgPGFzbS91bmFsaWduZWQuaD4gaW5jbHVzaW9uIChhZnRlciBy
+ZW1vdmFsIG9mIGdldF91bmFsaWduZWRfbGUzMikKICAtIERyb3AgYWxsIEVYUE9SVF9TWU1CT0xf
+R1BMKCkgZm9yIGZ1bmN0aW9ucyB1c2VkIGluIHRoZSBzYW1lIG1vZHVsZQogICAgYnV0IGRpZmZl
+cmVudCBzb3VyY2UgZmlsZXMuCiAgLSBEcm9wIG53bF9kc2lfZW5hYmxlX3tyeCx0eH1fY2xvY2so
+KSBieSBpbnZva2luZyBjbGtfcHJlcGFyZV9lbmFibGUoKQogICAgZGlyZWN0bHkKICAtIFJlbW92
+ZSBwb2ludGxlc3MgY29tbWVudAotIExhdXJlbnQgUGluY2hhcnQKICBodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOS1KdWx5LzIyODMxMy5odG1sCiAg
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTktSnVs
+eS8yMjgzMDguaHRtbAogIC0gRHJvcCAob24gaU1YOE1RKSB1bnVzZWQgY3NyIHJlZ21hcAogIC0g
+VXNlIE5XTF9NQVhfUExBVEZPUk1fQ0xPQ0tTIGV2ZXJ5d2hlcmUKICAtIERyb3AgZ2V0X3VuYWxp
+Z25lZF9sZTMyKCkgdXNhZ2UKICAtIHJlbW92ZSBkdXBsaWNhdGUgJ2ZvciB0aGUnIGluIGJpbmRp
+bmcgZG9jcwogIC0gRG9uJ3QgaW5jbHVkZSB1bnVzZWQgPGxpbnV4L2Nsay1wcm92aWRlci5oPgog
+IC0gRG9uJ3QgaW5jbHVkZSB1bnVzZWQgPGxpbnV4L2NvbXBvbmVudC5oPgogIC0gRHJvcCBkcG1z
+X21vZGUgZm9yIHRyYWNraW5nIHN0YXRlLCB0cnVzdCB0aGUgZHJtIGxheWVyIG9uIHRoYXQKICAt
+IFVzZSBwbV9ydW50aW1lX3B1dCgpIGluc3RlYWQgb2YgcG1fcnVudGltZV9wdXRfc3luYygpCiAg
+LSBEb24ndCBvdmVyd3JpdGUgZW5jb2RlciB0eXBlCiAgLSBNYWtlIGlteF9ud2xfcGxhdGZvcm1f
+ZGF0YSBjb25zdAogIC0gVXNlIHRoZSByZXNldCBjb250cm9sbGVyIEFQSSBpbnN0ZWFkIG9mIG9w
+ZW4gY29kaW5nIHRoYXQgcGxhdGZvcm0gc3BlY2lmaWMKICAgIHBhcnQKICAtIFVzZSA8bGludXgv
+Yml0ZmllbGQuaD4gaW50ZWFkIG9mIG1ha2luZyB1cCBvdXIgb3duIGRlZmluZXMKICAtIG5hbWUg
+bWlwaV9kc2lfdHJhbnNmZXIgbGVzcyBnZW5lcmljOiBud2xfZHNpX3RyYW5zZmVyCiAgLSBlbnN1
+cmUgY2xlYW4gaW4gLnJlbW92ZSBieSBjYWxsaW5nIG1pcGlfZHNpX2hvc3RfdW5yZWdpc3Rlci4K
+ICAtIHByZWZpeCBjb25zdGFudHMgYnkgTldMX0RTSV8KICAtIHByb3Blcmx5IGZvcm1hdCB0cmFu
+c2Zlcl9kaXJlY3Rpb24gZW51bQogIC0gc2ltcGxpZnkgcGxhdGZvcm0gY2xvY2sgaGFuZGxpbmcK
+ICAtIERvbid0IG1vZGlmeSBzdGF0ZSBpbiBtb2RlX2ZpeHVwKCkgYW5kIHVzZSBtb2RlX3NldCgp
+IGluc3RlYWQKICAtIERyb3AgYnJpZGdlIGRldGFjaCgpLCBhbHJlYWR5IGhhbmRsZSBieSBud2xf
+ZHNpX2hvc3RfZGV0YWNoKCkKICAtIERyb3AgVVNFXypfUVVJUksoKSBtYWNyb3MKLSBEcm9wIChm
+b3Igbm93KSB1bnVzZWQgY2xvY2sgZGVmbml0aW9ucy4gJ3BpeGVsJyBhbmQgJ2J5cGFzcycgY2xv
+Y2sgd2lsbCBiZQogIHVzZWQgZm9yIGkuTVg4IFNvQ3MgYnV0IHNpbmNlIHRoZXkncmUgdW51c2Vk
+IGF0bSBkcm9wIHRoZSBkZWZpbml0aW9ucyAtIGJ1dAogIGtlZXAgdGhlIGxvZ2ljIHRvIGVuYWJs
+ZS9kaXNhYmxlIHNldmVyYWwgY2xvY2tzIGluIHBsYWNlIHNpbmNlIHdlIGtub3cgd2UnbGwKICBu
+ZWVkIGl0IGluIHRoZSBmdXR1cmUuCgpDaGFuZ2VzIGZyb20gdjA6Ci0gQWRkIHF1aXJrIGZvciBJ
+TVE4TVEgc2lsaWNvbiBCMCByZXZpc2lvbiB0byBub3QgbWVzcyB3aXRoIHRoZQogIHN5c3RlbSBy
+ZXNldCBjb250cm9sbGVyIG9uIHBvd2VyIGRvd24gc2luY2UgZW5hYmxlKCkgd29uJ3Qgd29yawog
+IG90aGVyd2lzZS4KLSBEcm9wIGRldm1fZnJlZV9pcnEoKSBoYW5kbGVkIGJ5IHRoZSBkZXZpY2Ug
+ZHJpdmVyIGNvcmUKLSBEaXNhYmxlIHR4IGVzYyBjbG9jayBhZnRlciB0aGUgcGh5IHBvd2VyIGRv
+d24gdG8gdW5icmVhawogIGRpc2FibGUvZW5hYmxlICh1bmJsYW5rL2JsYW5rKQotIEFkZCBwb3J0
+cyB0byBkdCBiaW5kaW5nIGRvY3MKLSBTZWxlY3QgR0VORVJJQ19QSFlfTUlQSV9EUEhZIGluc3Rl
+YWQgb2YgR0VORVJJQ19QSFkgZm9yCiAgcGh5X21pcGlfZHBoeV9nZXRfZGVmYXVsdF9jb25maWcK
+LSBTZWxlY3QgRFJNX01JUElfRFNJCi0gSW5jbHVkZSBkcm1fcHJpbnQuaCB0byBmaXggYnVpbGQg
+b24gbmV4dC0yMDE5MDQwOAotIERyb3Agc29tZSBkZWJ1Z2dpbmcgbWVzc2FnZXMKLSBOZXdsaW5l
+IHRlcm1pbmF0ZSBhbGwgRFJNXyBwcmludG91dHMKLSBUdXJuIGNvbXBvbmVudCBkcml2ZXIgaW50
+byBhIGRybSBicmlkZ2UKClswXTogaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2
+ZXMvZHJpLWRldmVsLzIwMTktTWF5LzIxOTQ4NC5odG1sClsxXTogaHR0cHM6Ly9wYXRjaHdvcmsu
+ZnJlZWRlc2t0b3Aub3JnL3Nlcmllcy82MjgyMi8KCkd1aWRvIEfDvG50aGVyICgzKToKICBhcm02
+NDogaW14OG1xOiBhZGQgaW14OG1xIGlvbXV4LWdwciBmaWVsZCBkZWZpbmVzCiAgZHQtYmluZGlu
+Z3M6IGRpc3BsYXkvYnJpZGdlOiBBZGQgYmluZGluZyBmb3IgTldMIG1pcGkgZHNpIGhvc3QKICAg
+IGNvbnRyb2xsZXIKICBkcm0vYnJpZGdlOiBBZGQgTldMIE1JUEkgRFNJIGhvc3QgY29udHJvbGxl
+ciBzdXBwb3J0CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL253bC1kc2kueWFtbCAgICAg
+IHwgMTU1ICsrKysKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAg
+ICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAg
+fCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpL0tjb25maWcgICAgICAgIHwg
+IDE1ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRzaS9NYWtlZmlsZSAgICAgICB8ICAg
+NCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1kc2kvbndsLWRydi5jICAgICAgfCA0ODQg
+KysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1kc2kvbndsLWRydi5oICAg
+ICAgfCAgNjYgKysKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRzaS9ud2wtZHNpLmMgICAg
+ICB8IDcwMCArKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRz
+aS9ud2wtZHNpLmggICAgICB8IDExMiArKysKIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg4
+bXEtaW9tdXhjLWdwci5oICB8ICA2MiArKwogMTAgZmlsZXMgY2hhbmdlZCwgMTYwMSBpbnNlcnRp
+b25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL253bC1kc2kueWFtbAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvbndsLWRzaS9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpL253bC1kcnYuYwogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRzaS9ud2wtZHJ2LmgKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1kc2kvbndsLWRzaS5jCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpL253bC1kc2kuaAogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg4bXEtaW9tdXhjLWdw
+ci5oCgotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
