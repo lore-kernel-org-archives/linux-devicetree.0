@@ -1,93 +1,101 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 6/6] arm64: dts: k3-j721e: Add gpio-keys on common processor
- board
-Date: Fri, 9 Aug 2019 13:59:47 +0530
-Message-ID: <20190809082947.30590-7-lokeshvutla@ti.com>
-References: <20190809082947.30590-1-lokeshvutla@ti.com>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [linux-sunxi] [PATCH v8 4/4] arm64: dts: allwinner: orange-pi-3:
+ Enable HDMI output
+Date: Fri, 9 Aug 2019 11:04:43 +0200
+Message-ID: <20190809090443.kq5bnsrkgr746l2i@core.my.home>
+References: <20190806155744.10263-1-megous@megous.com>
+ <20190806155744.10263-5-megous@megous.com>
+ <CAEKpxBn1nF0t-M34iRSy1yYEuUxgNMUXFBhtjXBY8Qk+43zbDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190809082947.30590-1-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linus.walleij@linaro.org
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAEKpxBn1nF0t-M34iRSy1yYEuUxgNMUXFBhtjXBY8Qk+43zbDQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Code Kipper <codekipper@gmail.com>
+Cc: linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nikhil Devshatwar <nikhil.nd@ti.com>
+On Fri, Aug 09, 2019 at 10:25:32AM +0200, Code Kipper wrote:
+> On Tue, 6 Aug 2019 at 17:57, <megous@megous.com> wrote:
+> >
+> > From: Ondrej Jirman <megous@megous.com>
+> >
+> > Orange Pi 3 has a DDC_CEC_EN signal connected to PH2, that enables the DDC
+> > I2C bus voltage shifter. Before EDID can be read, we need to pull PH2 high.
+> > This is realized by the ddc-en-gpios property.
+> Great work. Is there any chance you can move this to the
+> arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi?, as all the H6
+> based orange-pi's have this feature.
 
-Common processor board for K3 J721E platform has two push buttons
-namely SW10 and SW11.
-Add a gpio-keys device node to model them as input keys in Linux.
-Add required pinmux nodes to set GPIO pins as input.
+I plan to do that as a followup patch, once this is merged.
 
-Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- .../dts/ti/k3-j721e-common-proc-board.dts     | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+regards,
+	o.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 509579ca3db2..d2894d55fbbe 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -6,12 +6,49 @@
- /dts-v1/;
- 
- #include "k3-j721e-som-p0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	chosen {
- 		stdout-path = "serial2:115200n8";
- 		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000";
- 	};
-+
-+	gpio_keys: gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sw10_button_pins_default &sw11_button_pins_default>;
-+
-+		sw10: sw10 {
-+			label = "GPIO Key USER1";
-+			linux,code = <BTN_0>;
-+			gpios = <&main_gpio0 0 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sw11: sw11 {
-+			label = "GPIO Key USER2";
-+			linux,code = <BTN_1>;
-+			gpios = <&wkup_gpio0 7 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&main_pmx0 {
-+	sw10_button_pins_default: sw10_button_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x0, PIN_INPUT, 7) /* (AC18) EXTINTn.GPIO0_0 */
-+		>;
-+	};
-+};
-+
-+&wkup_pmx0 {
-+	sw11_button_pins_default: sw11_button_pins_default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0xcc, PIN_INPUT, 7) /* (G28) WKUP_GPIO0_7 */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
--- 
-2.22.0
+> BR,
+> CK
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 26 +++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > index 2c6807b74ff6..01bb1bafe284 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> > @@ -22,6 +22,18 @@
+> >                 stdout-path = "serial0:115200n8";
+> >         };
+> >
+> > +       connector {
+> > +               compatible = "hdmi-connector";
+> > +               ddc-en-gpios = <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
+> > +               type = "a";
+> > +
+> > +               port {
+> > +                       hdmi_con_in: endpoint {
+> > +                               remote-endpoint = <&hdmi_out_con>;
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> >         leds {
+> >                 compatible = "gpio-leds";
+> >
+> > @@ -72,6 +84,10 @@
+> >         cpu-supply = <&reg_dcdca>;
+> >  };
+> >
+> > +&de {
+> > +       status = "okay";
+> > +};
+> > +
+> >  &ehci0 {
+> >         status = "okay";
+> >  };
+> > @@ -91,6 +107,16 @@
+> >         status = "okay";
+> >  };
+> >
+> > +&hdmi {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&hdmi_out {
+> > +       hdmi_out_con: endpoint {
+> > +               remote-endpoint = <&hdmi_con_in>;
+> > +       };
+> > +};
+> > +
+> >  &mdio {
+> >         ext_rgmii_phy: ethernet-phy@1 {
+> >                 compatible = "ethernet-phy-ieee802.3-c22";
+> > --
+> > 2.22.0
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190806155744.10263-5-megous%40megous.com.
