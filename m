@@ -1,219 +1,121 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-Date: Fri, 9 Aug 2019 21:18:15 +0300
-Message-ID: <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
- <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
- <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 04/14] net: phy: adin: add {write,read}_mmd hooks
+Date: Fri, 9 Aug 2019 20:21:26 +0200
+Message-ID: <eb89d746-cf4a-6586-f4c7-101e00765c08@gmail.com>
+References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
+ <20190809133552.21597-5-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+In-Reply-To: <20190809133552.21597-5-alexandru.ardelean@analog.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-09.08.2019 19:19, Sowjanya Komatineni пишет:
+On 09.08.2019 15:35, Alexandru Ardelean wrote:
+> Both ADIN1200 & ADIN1300 support Clause 45 access for some registers.
+> The Extended Management Interface (EMI) registers are accessible via both
+> Clause 45 (at register MDIO_MMD_VEND1) and using Clause 22.
 > 
-> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
->> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>> This patch adds support for clk: tegra210: suspend-resume.
->>>
->>> All the CAR controller settings are lost on suspend when core
->>> power goes off.
->>>
->>> This patch has implementation for saving and restoring all PLLs
->>> and clocks context during system suspend and resume to have the
->>> clocks back to same state for normal operation.
->>>
->>> Clock driver suspend and resume are registered as syscore_ops as clocks
->>> restore need to happen before the other drivers resume to have all their
->>> clocks back to the same state as before suspend.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
->>>   drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->>>   drivers/clk/tegra/clk.h          |   3 ++
->>>   3 files changed, 166 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->>> index 998bf60b219a..8dd6f4f4debb 100644
->>> --- a/drivers/clk/tegra/clk-tegra210.c
->>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>> @@ -9,13 +9,13 @@
->>>   #include <linux/clkdev.h>
->>>   #include <linux/of.h>
->>>   #include <linux/of_address.h>
->>> +#include <linux/syscore_ops.h>
->>>   #include <linux/delay.h>
->>>   #include <linux/export.h>
->>>   #include <linux/mutex.h>
->>>   #include <linux/clk/tegra.h>
->>>   #include <dt-bindings/clock/tegra210-car.h>
->>>   #include <dt-bindings/reset/tegra210-car.h>
->>> -#include <linux/iopoll.h>
->>>   #include <linux/sizes.h>
->>>   #include <soc/tegra/pmc.h>
->>>   @@ -220,11 +220,15 @@
->>>   #define CLK_M_DIVISOR_SHIFT 2
->>>   #define CLK_M_DIVISOR_MASK 0x3
->>>   +#define CLK_MASK_ARM    0x44
->>> +#define MISC_CLK_ENB    0x48
->>> +
->>>   #define RST_DFLL_DVCO 0x2f4
->>>   #define DVFS_DFLL_RESET_SHIFT 0
->>>     #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->>> +#define CPU_SOFTRST_CTRL 0x380
->>>     #define LVL2_CLK_GATE_OVRA 0xf8
->>>   #define LVL2_CLK_GATE_OVRC 0x3a0
->>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->>>       struct tegra_clk_pll_freq_table *fentry;
->>>       struct tegra_clk_pll pllu;
->>>       u32 reg;
->>> +    int ret;
->>>         for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>>           if (fentry->input_rate == pll_ref_freq)
->>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->>>       reg |= PLL_ENABLE;
->>>       writel(reg, clk_base + PLLU_BASE);
->>>   -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->>> -                      reg & PLL_BASE_LOCK, 2, 1000);
->>> -    if (!(reg & PLL_BASE_LOCK)) {
->>> +    /*
->>> +     * During clocks resume, same PLLU init and enable sequence get
->>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
->>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
->>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
->>> +     */
->>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->>> +    if (ret) {
->>>           pr_err("Timed out waiting for PLL_U to lock\n");
->>>           return -ETIMEDOUT;
->>>       }
->>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>>   }
->>>     #ifdef CONFIG_PM_SLEEP
->>> +/*
->>> + * This array lists mask values for each peripheral clk bank
->>> + * to mask out reserved bits during the clocks state restore
->>> + * on SC7 resume to prevent accidental writes to these reserved
->>> + * bits.
->>> + */
->>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
->> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
->>
->> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
->> reserved bits are actually some kind of "secret" bits? If those bits have some use-case
->> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
->> have to keep the workaround locally in the downstream kernel or whatever.
+> However, the Clause 22 access for MMD regs differs from the standard one
+> defined by 802.3. The ADIN PHYs  use registers ExtRegPtr (0x0010) and
+> ExtRegData (0x0011) to access Clause 45 & EMI registers.
 > 
-> Will rename as valid_mask.
+> The indirect access is done via the following mechanism (for both R/W):
+> 1. Write the address of the register in the ExtRegPtr
+> 2. Read/write the value of the register (written at ExtRegPtr)
 > 
-> some bits in these registers are undefined and is not good to write to these bits as they
-> can cause pslverr.
-
-Okay, it should be explained in the comment.
-
-Is it possible to disable trapping of changing the undefined bits?
-
->>
->>> +    0x23282006,
->>> +    0x782e0c18,
->>> +    0x0c012c05,
->>> +    0x003e7304,
->>> +    0x86c04800,
->>> +    0xc0199000,
->>> +    0x03e03800,
->>> +};
->>> +
->>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
->>> +#define car_writel(_val, _base, _off) \
->>> +        writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->>> +
->>> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
->>> +static u32 cpu_softrst_ctx[3];
->>> +
->>> +static int tegra210_clk_suspend(void)
->>> +{
->>> +    unsigned int i;
->>> +
->>> +    clk_save_context();
->>> +
->>> +    /*
->>> +     * Save the bootloader configured clock registers SPARE_REG0,
->>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
->>> +     */
->>> +    spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
->>> +    misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
->>> +    clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>> +        cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
->>> +
->>> +    tegra_clk_periph_suspend();
->>> +    return 0;
->>> +}
->>> +
->>> +static void tegra210_clk_resume(void)
->>> +{
->>> +    unsigned int i;
->>> +
->>> +    tegra_clk_osc_resume(clk_base);
->>> +
->>> +    /*
->>> +     * Restore the bootloader configured clock registers SPARE_REG0,
->>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
->>> +     */
->>> +    writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
->>> +    writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
->>> +    writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>> +        car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->>> +
->>> +    fence_udelay(5, clk_base);
->>> +
->>> +    /* enable all the clocks before changing the clock sources */
->>> +    tegra_clk_periph_force_on(periph_clk_rsvd_mask);
->> Why clocks need to be enabled before changing the sources?
+> This mechanism is needed to manage configuration of chip settings and to
+> access EEE registers (via Clause 22).
 > 
-> To prevent glitchless frequency switch, Tegra clock programming recommended sequence is to
-> change MUX control or divisor or both with the clocks running.
-
-This should be explained in the comment.
-
-> Actual state of clocks before suspend are restored later after all PLL's and peripheral
-> clocks are restored.
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/net/phy/adin.c | 46 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
->>
->>> +    /* wait for all writes to happen to have all the clocks enabled */
->>> +    wmb();
->> fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
->> duplicate it here.
+> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+> index 91ff26d08fd5..8973ad819b93 100644
+> --- a/drivers/net/phy/adin.c
+> +++ b/drivers/net/phy/adin.c
+> @@ -14,6 +14,9 @@
+>  #define PHY_ID_ADIN1200				0x0283bc20
+>  #define PHY_ID_ADIN1300				0x0283bc30
+>  
+> +#define ADIN1300_MII_EXT_REG_PTR		0x0010
+> +#define ADIN1300_MII_EXT_REG_DATA		0x0011
+> +
+>  #define ADIN1300_INT_MASK_REG			0x0018
+>  #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+>  #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+> @@ -53,6 +56,45 @@ static int adin_phy_config_intr(struct phy_device *phydev)
+>  			      ADIN1300_INT_MASK_EN);
+>  }
+>  
+> +static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
+> +{
+> +	struct mii_bus *bus = phydev->mdio.bus;
+> +	int phy_addr = phydev->mdio.addr;
+> +	int err;
+> +
+> +	if (phydev->is_c45) {
 
-Actually, readl does the rmb() and it should be a more correct variant of fencing because it
-actually ensures that the write reached hardware. I suppose that something like fence_udelay
-should be used for the pinctrl as well.
+Similar to what we discussed regarding feature detection:
+Flag is_c45 shouldn't be set with these PHY's, therefore this is dead code.
 
->>> +    fence_udelay(2, clk_base);
->>> +
->>> +    /* restore PLLs and all peripheral clock rates */
->>> +    tegra210_init_pllu();
->> Why USB PLL need to be restored at first?
-> USB PLL restore is independent to all other clocks restore. So this can be done either
-> before clk_restore_context or even after.
-
-Then why not to implement restore_context for PLLU?
-
->>> +    clk_restore_context();
->>> +
->>> +    /* restore all peripheral clocks enable and reset state */
->>> +    tegra_clk_periph_resume();
->>> +}
->> [snip]
+> +		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
+> +
+> +		return __mdiobus_read(bus, phy_addr, addr);
+> +	}
+> +
+> +	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
+> +	if (err)
+> +		return err;
+> +
+> +	return __mdiobus_read(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA);
+> +}
+> +
+> +static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
+> +			  u16 val)
+> +{
+> +	struct mii_bus *bus = phydev->mdio.bus;
+> +	int phy_addr = phydev->mdio.addr;
+> +	int err;
+> +
+> +	if (phydev->is_c45) {
+> +		u32 addr = MII_ADDR_C45 | (devad << 16) | (regnum & 0xffff);
+> +
+> +		return __mdiobus_write(bus, phy_addr, addr, val);
+> +	}
+> +
+> +	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
+> +	if (err)
+> +		return err;
+> +
+> +	return __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA, val);
+> +}
+> +
+>  static struct phy_driver adin_driver[] = {
+>  	{
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+> @@ -64,6 +106,8 @@ static struct phy_driver adin_driver[] = {
+>  		.config_intr	= adin_phy_config_intr,
+>  		.resume		= genphy_resume,
+>  		.suspend	= genphy_suspend,
+> +		.read_mmd	= adin_read_mmd,
+> +		.write_mmd	= adin_write_mmd,
+>  	},
+>  	{
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
+> @@ -75,6 +119,8 @@ static struct phy_driver adin_driver[] = {
+>  		.config_intr	= adin_phy_config_intr,
+>  		.resume		= genphy_resume,
+>  		.suspend	= genphy_suspend,
+> +		.read_mmd	= adin_read_mmd,
+> +		.write_mmd	= adin_write_mmd,
+>  	},
+>  };
+>  
+> 
