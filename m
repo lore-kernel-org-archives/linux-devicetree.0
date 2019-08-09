@@ -1,99 +1,93 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v8 19/21] soc/tegra: pmc: Configure deep sleep control
- settings
-Date: Fri, 9 Aug 2019 09:23:20 -0700
-Message-ID: <275f3685-bc53-38ff-c778-cf2ea588e5a5@nvidia.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-20-git-send-email-skomatineni@nvidia.com>
- <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
+Date: Fri,  9 Aug 2019 18:24:21 +0200
+Message-ID: <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+References: <cover.1565367567.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57ed54cd-bf57-cab1-eb63-8548761640de@gmail.com>
-Content-Language: en-US
+In-Reply-To: <cover.1565367567.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert
 List-Id: devicetree@vger.kernel.org
 
+This adds all the gpr registers and the define needed for selecting
+the input source in the imx-nwl drm bridge.
 
-On 8/9/19 6:23 AM, Dmitry Osipenko wrote:
-> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->> timings which are platform specific that should be configured before
->> entering into deep sleep.
->>
->> Below are the timing specific configurations for deep sleep entry and
->> wakeup.
->> - Core rail power-on stabilization timer
->> - OSC clock stabilization timer after SOC rail power is stabilized.
->> - Core power off time is the minimum wake delay to keep the system
->>    in deep sleep state irrespective of any quick wake event.
->>
->> These values depends on the discharge time of regulators and turn OFF
->> time of the PMIC to allow the complete system to finish entering into
->> deep sleep state.
->>
->> These values vary based on the platform design and are specified
->> through the device tree.
->>
->> This patch has implementation to configure these timings which are must
->> to have for proper deep sleep and wakeup operations.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/soc/tegra/pmc.c | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->> index e013ada7e4e9..9a78d8417367 100644
->> --- a/drivers/soc/tegra/pmc.c
->> +++ b/drivers/soc/tegra/pmc.c
->> @@ -88,6 +88,8 @@
->>  =20
->>   #define PMC_CPUPWRGOOD_TIMER		0xc8
->>   #define PMC_CPUPWROFF_TIMER		0xcc
->> +#define PMC_COREPWRGOOD_TIMER		0x3c
->> +#define PMC_COREPWROFF_TIMER		0xe0
->>  =20
->>   #define PMC_PWR_DET_VALUE		0xe4
->>  =20
->> @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_reg=
-s =3D {
->>  =20
->>   static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>   {
->> -	u32 value;
->> +	u32 value, osc, pmu, off;
->>  =20
->>   	/* Always enable CPU power request */
->>   	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->> @@ -2303,6 +2305,15 @@ static void tegra20_pmc_init(struct tegra_pmc *pm=
-c)
->>   	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
->>   	value |=3D PMC_CNTRL_SYSCLK_OE;
->>   	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->> +
->> +	osc =3D DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
->> +	pmu =3D DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
->> +	off =3D DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
->> +	if (osc && pmu)
->> +		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
->> +				 PMC_COREPWRGOOD_TIMER);
->> +	if (off)
->> +		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
-> The osc/pmu/off values are undefined if they are not defined in device-tr=
-ee. I suppose this
-> need to be corrected in tegra_pmc_parse_dt() if the values really matter =
-even if LP0 suspend
-> isn't supported in device-tree.
->
-> And I'm also not sure what's wrong with setting 0 for the timers.
->
-These settings are for SC7 only and will not have any impact in normal=20
-state.
->>   }
->>  =20
->>   static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
->>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h | 62 ++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+
+diff --git a/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+new file mode 100644
+index 000000000000..62e85ffacfad
+--- /dev/null
++++ b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2017 NXP
++ *               2019 Purism SPC
++ */
++
++#ifndef __LINUX_IMX8MQ_IOMUXC_GPR_H
++#define __LINUX_IMX8MQ_IOMUXC_GPR_H
++
++#define IOMUXC_GPR0	0x00
++#define IOMUXC_GPR1	0x04
++#define IOMUXC_GPR2	0x08
++#define IOMUXC_GPR3	0x0c
++#define IOMUXC_GPR4	0x10
++#define IOMUXC_GPR5	0x14
++#define IOMUXC_GPR6	0x18
++#define IOMUXC_GPR7	0x1c
++#define IOMUXC_GPR8	0x20
++#define IOMUXC_GPR9	0x24
++#define IOMUXC_GPR10	0x28
++#define IOMUXC_GPR11	0x2c
++#define IOMUXC_GPR12	0x30
++#define IOMUXC_GPR13	0x34
++#define IOMUXC_GPR14	0x38
++#define IOMUXC_GPR15	0x3c
++#define IOMUXC_GPR16	0x40
++#define IOMUXC_GPR17	0x44
++#define IOMUXC_GPR18	0x48
++#define IOMUXC_GPR19	0x4c
++#define IOMUXC_GPR20	0x50
++#define IOMUXC_GPR21	0x54
++#define IOMUXC_GPR22	0x58
++#define IOMUXC_GPR23	0x5c
++#define IOMUXC_GPR24	0x60
++#define IOMUXC_GPR25	0x64
++#define IOMUXC_GPR26	0x68
++#define IOMUXC_GPR27	0x6c
++#define IOMUXC_GPR28	0x70
++#define IOMUXC_GPR29	0x74
++#define IOMUXC_GPR30	0x78
++#define IOMUXC_GPR31	0x7c
++#define IOMUXC_GPR32	0x80
++#define IOMUXC_GPR33	0x84
++#define IOMUXC_GPR34	0x88
++#define IOMUXC_GPR35	0x8c
++#define IOMUXC_GPR36	0x90
++#define IOMUXC_GPR37	0x94
++#define IOMUXC_GPR38	0x98
++#define IOMUXC_GPR39	0x9c
++#define IOMUXC_GPR40	0xa0
++#define IOMUXC_GPR41	0xa4
++#define IOMUXC_GPR42	0xa8
++#define IOMUXC_GPR43	0xac
++#define IOMUXC_GPR44	0xb0
++#define IOMUXC_GPR45	0xb4
++#define IOMUXC_GPR46	0xb8
++#define IOMUXC_GPR47	0xbc
++
++/* i.MX8Mq iomux gpr register field defines */
++#define IMX8MQ_GPR13_MIPI_MUX_SEL		BIT(2)
++
++#endif /* __LINUX_IMX8MQ_IOMUXC_GPR_H */
+-- 
+2.20.1
