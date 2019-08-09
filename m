@@ -1,118 +1,158 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 10/14] net: phy: adin: implement PHY subsystem software reset
-Date: Fri, 9 Aug 2019 16:35:48 +0300
-Message-ID: <20190809133552.21597-11-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 12/14] net: phy: adin: implement downshift configuration via phy-tunable
+Date: Fri, 9 Aug 2019 16:35:50 +0300
+Message-ID: <20190809133552.21597-13-alexandru.ardelean@analog.com>
 References: <20190809133552.21597-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190809133552.21597-1-alexandru.ardelean@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN PHYs supports 4 types of reset:
-1. The standard PHY reset via BMCR_RESET bit in MII_BMCR reg
-2. Reset via GPIO
-3. Reset via reg GeSftRst (0xff0c) & reload previous pin configs
-4. Reset via reg GeSftRst (0xff0c) & request new pin configs
+Down-speed auto-negotiation may not always be enabled, in which case the
+PHY won't down-shift to 100 or 10 during auto-negotiation.
 
-Resets 2 & 4 are almost identical, with the exception that the crystal
-oscillator is available during reset for 2.
+This change enables downshift and configures the number of retries to
+default 4 (which is also in the datasheet
 
-As it turns out, phylib already supports GPIO reset.
-In case this is configured, the PHY driver won't do anything. In case it
-isn't specified the subsystem software reset will kick in.
+The downshift control mechanism can also be controlled via the phy-tunable
+interface (ETHTOOL_PHY_DOWNSHIFT control).
 
-Resetting via GeSftRst or via GPIO is useful when doing a warm reboot,
-because this will reset the subsystem registers to default values.
+The change has been adapted from the Aquantia PHY driver.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 43 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/net/phy/adin.c | 86 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index bd002103f083..63b57c83de91 100644
+index e086e2d989e0..fb39104508ff 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/kernel.h>
- #include <linux/bitfield.h>
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/module.h>
-@@ -53,6 +54,9 @@
- #define ADIN1300_CLOCK_STOP_REG			0x9400
- #define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
+@@ -29,6 +29,17 @@
+ #define   ADIN1300_NRG_PD_TX_EN			BIT(2)
+ #define   ADIN1300_NRG_PD_STATUS		BIT(1)
  
-+#define ADIN1300_GE_SOFT_RESET_REG		0xff0c
-+#define   ADIN1300_GE_SOFT_RESET		BIT(0)
++#define ADIN1300_PHY_CTRL2			0x0016
++#define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
++#define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
++#define   ADIN1300_GROUP_MDIO_EN		BIT(6)
++#define   ADIN1300_DOWNSPEEDS_EN	\
++	(ADIN1300_DOWNSPEED_AN_100_EN | ADIN1300_DOWNSPEED_AN_10_EN)
 +
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
- #define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
- #define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-@@ -457,11 +461,49 @@ static int adin_read_status(struct phy_device *phydev)
- 	return genphy_read_status(phydev);
++#define ADIN1300_PHY_CTRL3			0x0017
++#define   ADIN1300_LINKING_EN			BIT(13)
++#define   ADIN1300_DOWNSPEED_RETRIES_MSK	GENMASK(12, 10)
++
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -259,6 +270,73 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
+ 			     ADIN1300_GE_RMII_CFG_REG, reg);
  }
  
-+static int adin_subsytem_soft_reset(struct phy_device *phydev)
++static int adin_get_downshift(struct phy_device *phydev, u8 *data)
 +{
-+	int reg, rc, i;
++	int val, cnt, enable;
 +
-+	rc = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1,
-+			      ADIN1300_GE_SOFT_RESET_REG,
-+			      ADIN1300_GE_SOFT_RESET);
++	val = phy_read(phydev, ADIN1300_PHY_CTRL2);
++	if (val < 0)
++		return val;
++
++	cnt = phy_read(phydev, ADIN1300_PHY_CTRL3);
++	if (cnt < 0)
++		return cnt;
++
++	enable = FIELD_GET(ADIN1300_DOWNSPEEDS_EN, val);
++	cnt = FIELD_GET(ADIN1300_DOWNSPEED_RETRIES_MSK, cnt);
++
++	*data = enable & cnt ? cnt : DOWNSHIFT_DEV_DISABLE;
++
++	return 0;
++}
++
++static int adin_set_downshift(struct phy_device *phydev, u8 cnt)
++{
++	u16 val;
++	int rc;
++
++	if (cnt == DOWNSHIFT_DEV_DISABLE)
++		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL2,
++				      ADIN1300_DOWNSPEEDS_EN);
++
++	if (cnt > 8)
++		return -E2BIG;
++
++	val = FIELD_PREP(ADIN1300_DOWNSPEED_RETRIES_MSK, cnt);
++	val |= ADIN1300_LINKING_EN;
++
++	rc = phy_modify(phydev, ADIN1300_PHY_CTRL3,
++			ADIN1300_LINKING_EN | ADIN1300_DOWNSPEED_RETRIES_MSK,
++			val);
 +	if (rc < 0)
 +		return rc;
 +
-+	for (i = 0; i < 20; i++) {
-+		usleep_range(500, 1000);
-+		reg = phy_read_mmd(phydev, MDIO_MMD_VEND1,
-+				   ADIN1300_GE_SOFT_RESET_REG);
-+		if (reg < 0 || (reg & ADIN1300_GE_SOFT_RESET))
-+			continue;
-+		return 0;
++	return phy_set_bits(phydev, ADIN1300_PHY_CTRL2,
++			    ADIN1300_DOWNSPEEDS_EN);
++}
++
++static int adin_get_tunable(struct phy_device *phydev,
++			    struct ethtool_tunable *tuna, void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return adin_get_downshift(phydev, data);
++	default:
++		return -EOPNOTSUPP;
 +	}
-+
-+	return -ETIMEDOUT;
 +}
 +
-+static int adin_reset(struct phy_device *phydev)
++static int adin_set_tunable(struct phy_device *phydev,
++			    struct ethtool_tunable *tuna, const void *data)
 +{
-+	/* If there is a reset GPIO just exit */
-+	if (!IS_ERR_OR_NULL(phydev->mdio.reset_gpio))
-+		return 0;
-+
-+	/* Reset PHY core regs & subsystem regs */
-+	return adin_subsytem_soft_reset(phydev);
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return adin_set_downshift(phydev, *(const u8 *)data);
++	default:
++		return -EOPNOTSUPP;
++	}
 +}
 +
-+static int adin_probe(struct phy_device *phydev)
-+{
-+	return adin_reset(phydev);
-+}
+ static int adin_config_init_edpd(struct phy_device *phydev)
+ {
+ 	struct adin_priv *priv = phydev->priv;
+@@ -289,6 +367,10 @@ static int adin_config_init(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 
++	rc = adin_set_downshift(phydev, 4);
++	if (rc < 0)
++		return rc;
 +
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
- 		.name		= "ADIN1200",
- 		.config_init	= adin_config_init,
-+		.probe		= adin_probe,
+ 	rc = adin_config_init_edpd(phydev);
+ 	if (rc < 0)
+ 		return rc;
+@@ -546,6 +628,8 @@ static struct phy_driver adin_driver[] = {
+ 		.probe		= adin_probe,
  		.config_aneg	= adin_config_aneg,
  		.read_status	= adin_read_status,
++		.get_tunable	= adin_get_tunable,
++		.set_tunable	= adin_set_tunable,
  		.ack_interrupt	= adin_phy_ack_intr,
-@@ -475,6 +517,7 @@ static struct phy_driver adin_driver[] = {
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
- 		.name		= "ADIN1300",
- 		.config_init	= adin_config_init,
-+		.probe		= adin_probe,
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+@@ -560,6 +644,8 @@ static struct phy_driver adin_driver[] = {
+ 		.probe		= adin_probe,
  		.config_aneg	= adin_config_aneg,
  		.read_status	= adin_read_status,
++		.get_tunable	= adin_get_tunable,
++		.set_tunable	= adin_set_tunable,
  		.ack_interrupt	= adin_phy_ack_intr,
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
 -- 
 2.20.1
