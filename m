@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v5 04/18] thermal: sun8i: get ths sensor number from device compatible
-Date: Sat, 10 Aug 2019 05:28:15 +0000
-Message-ID: <20190810052829.6032-5-tiny.windzz@gmail.com>
+Subject: [PATCH v5 05/18] thermal: sun8i: rework for sun8i_ths_get_temp()
+Date: Sat, 10 Aug 2019 05:28:16 +0000
+Message-ID: <20190810052829.6032-6-tiny.windzz@gmail.com>
 References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
@@ -10,112 +10,81 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-For different socs, the number of ths sensors is different.
-So we need to do some work in order to support more soc.
+For different socs, the way they get and calculate the
+temperature is roughly the same. So get the difference
+from device compatible.
+
+Difference point:
+  1) temperature calculation formula parameters
+  2) ths data register start address
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/sun8i_thermal.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 2ce36fa3fec3..e9c2acbaac74 100644
+index e9c2acbaac74..f338fa25b98e 100644
 --- a/drivers/thermal/sun8i_thermal.c
 +++ b/drivers/thermal/sun8i_thermal.c
-@@ -22,7 +22,6 @@
+@@ -22,9 +22,6 @@
  
  #define MAX_SENSOR_NUM	4
  
--#define SUN50I_H6_SENSOR_NUM	2
- #define SUN50I_H6_OFFSET	-2794
- #define SUN50I_H6_SCALE		-67
+-#define SUN50I_H6_OFFSET	-2794
+-#define SUN50I_H6_SCALE		-67
+-
+ #define FT_TEMP_MASK				GENMASK(11, 0)
+ #define TEMP_CALIB_MASK				GENMASK(11, 0)
+ #define TEMP_TO_REG				672
+@@ -58,6 +55,10 @@ struct tsensor {
  
-@@ -57,7 +56,12 @@ struct tsensor {
- 	int				id;
+ struct ths_thermal_chip {
+ 	int		sensor_num;
++	int		offset;
++	int		scale;
++	int		ft_deviation;
++	int		temp_data_base;
  };
  
-+struct ths_thermal_chip {
-+	int		sensor_num;
-+};
-+
  struct ths_device {
-+	const struct ths_thermal_chip		*chip;
- 	struct device				*dev;
- 	struct regmap				*regmap;
- 	struct reset_control			*reset;
-@@ -117,7 +121,7 @@ static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
- 
- 	regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
- 
--	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-+	for (i = 0; i < tmdev->chip->sensor_num; i++) {
- 
- 		if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
- 			/* clear data irq pending */
-@@ -167,7 +171,7 @@ static int sun50i_ths_calibrate(struct ths_device *tmdev)
- 		goto out;
- 	}
- 
--	if (!caldata[0] || callen < 2 + 2 * SUN50I_H6_SENSOR_NUM) {
-+	if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num) {
- 		ret = -EINVAL;
- 		goto out_free;
- 	}
-@@ -190,7 +194,7 @@ static int sun50i_ths_calibrate(struct ths_device *tmdev)
- 	 */
- 	ft_temp = caldata[0] & FT_TEMP_MASK;
- 
--	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-+	for (i = 0; i < tmdev->chip->sensor_num; i++) {
- 		int reg = (int)caldata[i + 1];
- 		int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
- 		int delta, cdata, offset;
-@@ -297,10 +301,10 @@ static int sun50i_h6_thermal_init(struct ths_device *tmdev)
- 	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
- 		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
- 	/* enable sensor */
--	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
-+	val = GENMASK(tmdev->chip->sensor_num - 1, 0);
- 	regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
- 	/* thermal data interrupt enable */
--	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
-+	val = GENMASK(tmdev->chip->sensor_num - 1, 0);
- 	regmap_write(tmdev->regmap, SUN50I_H6_THS_DIC, val);
- 
- 	return 0;
-@@ -311,7 +315,7 @@ static int sun8i_ths_register(struct ths_device *tmdev)
- 	struct thermal_zone_device *tzd;
- 	int i;
- 
--	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-+	for (i = 0; i < tmdev->chip->sensor_num; i++) {
- 		tmdev->sensor[i].tmdev = tmdev;
- 		tmdev->sensor[i].id = i;
- 		tmdev->sensor[i].tzd =
-@@ -337,6 +341,10 @@ static int sun8i_ths_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	tmdev->dev = dev;
-+	tmdev->chip = of_device_get_match_data(&pdev->dev);
-+	if (!tmdev->chip)
-+		return -EINVAL;
-+
- 	platform_set_drvdata(pdev, tmdev);
- 
- 	ret = sun8i_ths_resource_init(tmdev);
-@@ -379,8 +387,12 @@ static int sun8i_ths_remove(struct platform_device *pdev)
- 	return 0;
+@@ -73,7 +74,7 @@ struct ths_device {
+ static int sun8i_ths_reg2temp(struct ths_device *tmdev,
+ 			      int reg)
+ {
+-	return (reg + SUN50I_H6_OFFSET) * SUN50I_H6_SCALE;
++	return (reg + tmdev->chip->offset) * tmdev->chip->scale;
  }
  
-+static const struct ths_thermal_chip sun50i_h6_ths = {
-+	.sensor_num = 2,
-+};
-+
- static const struct of_device_id of_ths_match[] = {
--	{ .compatible = "allwinner,sun50i-h6-ths"},
-+	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
- 	{ /* sentinel */ },
+ static int sun8i_ths_get_temp(void *data, int *temp)
+@@ -82,7 +83,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
+ 	struct ths_device *tmdev = s->tmdev;
+ 	int val;
+ 
+-	regmap_read(tmdev->regmap, SUN50I_H6_THS_TEMP_DATA +
++	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+ 		    0x4 * s->id, &val);
+ 
+ 	/* ths have no data yet */
+@@ -98,7 +99,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
+ 	 * temperature above is also used when the sensor is calibrated. If
+ 	 * do this, the correct calibration formula is hard to know.
+ 	 */
+-	*temp += SUN50I_H6_FT_DEVIATION;
++	*temp += tmdev->chip->ft_deviation;
+ 
+ 	return 0;
+ }
+@@ -389,6 +390,10 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+ 
+ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.sensor_num = 2,
++	.offset = -2794,
++	.scale = -67,
++	.ft_deviation = SUN50I_H6_FT_DEVIATION,
++	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
  };
- MODULE_DEVICE_TABLE(of, of_ths_match);
+ 
+ static const struct of_device_id of_ths_match[] = {
 -- 
 2.17.1
