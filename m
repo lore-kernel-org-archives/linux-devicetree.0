@@ -1,271 +1,241 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [v4 2/6] media: platform: dwc: Add MIPI CSI-2 controller driver
-Date: Sat, 10 Aug 2019 16:09:21 +0300
-Message-ID: <CAHp75VeutP=W43GHtY+FKvVGjBnQrF+nKbdaq_QXy8ZCoS=k1g@mail.gmail.com>
-References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
- <1560280855-18085-3-git-send-email-luis.oliveira@synopsys.com> <20190809141000.GB864@valkosipuli.retiisi.org.uk>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [PATCH v11 09/12] soc: mediatek: cmdq: define the instruction
+ struct
+Date: Sun, 11 Aug 2019 00:12:00 +0800
+Message-ID: <1565453520.19079.17.camel@mhfsdcap03>
+References: <20190729070106.9332-1-bibby.hsieh@mediatek.com>
+         <20190729070106.9332-10-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190809141000.GB864@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20190729070106.9332-10-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Rob Herring <robh@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, paulmck@linux.ibm.com, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joao Pinto <Joao.Pinto@synopsys.com>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 5:38 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> On Tue, Jun 11, 2019 at 09:20:51PM +0200, Luis Oliveira wrote:
-> > Add the Synopsys MIPI CSI-2 controller driver. This
-> > controller driver is divided in platform functions and core functions.
-> > This way it serves as platform for future DesignWare drivers.
+Hi Bibby, I have inline comment in function cmdq_pkt_write_mask().
 
-> > +const struct mipi_dt csi_dt[] = {
->
-> Make this static or use a common prefix that somehow resembles the name
-> name of the driver.
->
-> > +     {
-> > +             .hex = CSI_2_YUV420_8,
-> > +             .name = "YUV420_8bits",
-> > +     }, {
-> > +             .hex = CSI_2_YUV420_10,
-> > +             .name = "YUV420_10bits",
-> > +     }, {
-> > +             .hex = CSI_2_YUV420_8_LEG,
-> > +             .name = "YUV420_8bits_LEGACY",
-> > +     }, {
-> > +             .hex = CSI_2_YUV420_8_SHIFT,
-> > +             .name = "YUV420_8bits_SHIFT",
-> > +     }, {
-> > +             .hex = CSI_2_YUV420_10_SHIFT,
-> > +             .name = "YUV420_10bits_SHIFT",
-> > +     }, {
-> > +             .hex = CSI_2_YUV422_8,
-> > +             .name = "YUV442_8bits",
-> > +     }, {
-> > +             .hex = CSI_2_YUV422_10,
-> > +             .name = "YUV442_10bits",
-> > +     }, {
-> > +             .hex = CSI_2_RGB444,
-> > +             .name = "RGB444",
-> > +     }, {
-> > +             .hex = CSI_2_RGB555,
-> > +             .name = "RGB555",
-> > +     }, {
-> > +             .hex = CSI_2_RGB565,
-> > +             .name = "RGB565",
-> > +     }, {
-> > +             .hex = CSI_2_RGB666,
-> > +             .name = "RGB666",
-> > +     }, {
-> > +             .hex = CSI_2_RGB888,
-> > +             .name = "RGB888",
-> > +     }, {
-> > +             .hex = CSI_2_RAW6,
-> > +             .name = "RAW6",
-> > +     }, {
-> > +             .hex = CSI_2_RAW7,
-> > +             .name = "RAW7",
-> > +     }, {
-> > +             .hex = CSI_2_RAW8,
-> > +             .name = "RAW8",
-> > +     }, {
-> > +             .hex = CSI_2_RAW10,
-> > +             .name = "RAW10",
-> > +     }, {
-> > +             .hex = CSI_2_RAW12,
-> > +             .name = "RAW12",
-> > +     }, {
-> > +             .hex = CSI_2_RAW14,
-> > +             .name = "RAW14",
-> > +     }, {
-> > +             .hex = CSI_2_RAW16,
-> > +             .name = "RAW16",
-> > +     },
-> > +};
-
-One may utilize __stringify() macro and do somelike
-
-#define CSI_FMT_DESC(fmt) \
- { .hex = CSI_2_##fmt, .name = __stringify(fmt), }
-
-And do
-
- CSI_FMT_DESC(RAW16),
-
-etc.
-
-> > +             return cfg ? v4l2_subdev_get_try_format(&dev->sd,
-> > +                                                     cfg,
-> > +                                                     0) : NULL;
-
-This indentation looks ugly.
-I would rather put this on one line.
-
-> > +     dev_dbg(dev->dev,
-> > +             "%s got v4l2_mbus_pixelcode. 0x%x\n", __func__,
-> > +             dev->format.code);
-> > +     dev_dbg(dev->dev,
-> > +             "%s got width. 0x%x\n", __func__,
-> > +             dev->format.width);
-> > +     dev_dbg(dev->dev,
-> > +             "%s got height. 0x%x\n", __func__,
-> > +             dev->format.height);
-
-__func__ is usually redundant (if Dynamic Debug in use it can be
-switched at run-time).
-
-> I'd just omit these debug prints in a driver. But adding them to the
-> framework might make sense. We don't have a lot of debug prints dealing
-> with user parameters in there. OTOH the common test programs largely do the
-> same already.
-
-I would rather see tracepoints instead of debug prints if we are
-talking about generic solution for entire framework.
-
->
-> > +     return &dev->format;
-> > +}
-
-> > +     struct mipi_fmt *dev_fmt;
-
-This is simple bad name. We have dev_fmt() macro. I would rather avoid
-potential collisions.
-
-> > +     struct v4l2_mbus_framefmt *mf;
-> > +
-> > +     mf = dw_mipi_csi_get_format(dev, cfg, fmt->which);
-> > +     if (!mf)
-> > +             return -EINVAL;
-
-Can't you rather return an error pointer in this and similar cases?
-
-> > +     dev_vdbg(dev->dev, "%s: on=%d\n", __func__, on);
-
-This is noise. If you would like to debug Function Tracer is a good start.
-
-> > +     of_id = of_match_node(dw_mipi_csi_of_match, dev->of_node);
-> > +     if (!of_id)
-> > +             return -EINVAL;
-
-Is it possible to have this asserted?
+On Mon, 2019-07-29 at 15:01 +0800, Bibby Hsieh wrote:
+> Define an instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 103 +++++++++++++++--------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  2 files changed, 72 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 7aa0517ff2f3..0886c4967ca4 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,12 +9,24 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+>  
+> +struct cmdq_instruction {
+> +	union {
+> +		u32 value;
+> +		u32 mask;
+> +	};
+> +	union {
+> +		u16 offset;
+> +		u16 event;
+> +	};
+> +	u8 subsys;
+> +	u8 op;
+> +};
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+>  {
+> -	u64 *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -127,81 +137,108 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+>  			__func__, (u32)pkt->buf_size);
+> -		return -ENOMEM;
+> +		return NULL;
+>  	}
+> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> +
+>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  
+> -	return 0;
+> +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+>  }
+>  
+>  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WRITE;
+> +	inst->value = value;
+> +	inst->offset = offset;
+> +	inst->subsys = subsys;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+>  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  			u16 offset, u32 value, u32 mask)
+>  {
+> +	struct cmdq_instruction *inst;
+>  	u32 offset_mask = offset;
+> -	int err = 0;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		inst = cmdq_pkt_append_command(pkt);
+> +		if (!inst)
+> +			return -ENOMEM;
+> +
+> +		inst->op = CMDQ_CODE_MASK;
+> +		inst->mask = ~mask;
 
 
-> > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+There were some discussion about how to reduce cmdq buffer allocation
+times reuse a cmdq packet.Please refer to the below links.
+https://patchwork.kernel.org/patch/10193349/
+https://patchwork.kernel.org/patch/10491161/
 
-> > +     if (!res)
-> > +             return -ENXIO;
+If we reuse a cmdq packet, we get the cmdq instruction buffer which may
+contains previous data. To generate correct instructions, we may need
+consider how to clear the previous data.
+1.Set all members of a cmdq_instruction instance.
+  e.g. Add two lines of code below for this case.
+	inst->offset = 0;
+	inst->subsys = 0;
+2. Before reuse a packet, do memset() for the command buffer.
 
-Redundant. Below does the check for you.
+How do you think about it?
 
-> > +
-> > +     csi->base_address = devm_ioremap_resource(dev, res);
-> > +     if (IS_ERR(csi->base_address)) {
-
-> > +             dev_err(dev, "Base address not set.\n");
-
-Redundant. Above does print an error message for you.
-
-> > +             return PTR_ERR(csi->base_address);
-> > +     }
-
-Moreover, use devm_platform_ioremap_resource() instead of both.
-
-> > +     csi->ctrl_irq_number = platform_get_irq(pdev, 0);
-> > +     if (csi->ctrl_irq_number < 0) {
-
-> > +             dev_err(dev, "irq number %d not set.\n", csi->ctrl_irq_number);
-
-Redundant since this cycle (v5.4).
-
-> > +             ret = csi->ctrl_irq_number;
-
-Better to do the opposite
-
-ret = platform_get_irq();
-if (ret)
- goto end;
-... = ret;
-
-> > +             goto end;
-> > +     }
-
-> > +     ret = devm_request_irq(dev, csi->ctrl_irq_number,
-> > +                            dw_mipi_csi_irq1, IRQF_SHARED,
-> > +                            dev_name(dev), csi);
-> > +     if (ret) {
-> > +             dev_err(dev, "irq csi %s failed\n", of_id->name);
-> > +
-> > +             goto end;
-> > +     }
-
-devm_*irq() might be a bad idea. Is it race free in your driver?
-
-> > +static const struct of_device_id dw_mipi_csi_of_match[] = {
-> > +     { .compatible = "snps,dw-csi" },
-
-> > +     {},
-
-Better without comma. Terminator may terminate even at compile time.
-
-> > +};
-
-> > +static ssize_t core_version_show(struct device *dev,
-> > +                              struct device_attribute *attr,
-> > +                              char *buf)
-> > +{
-> > +     struct platform_device *pdev = to_platform_device(dev);
-> > +     struct v4l2_subdev *sd = platform_get_drvdata(pdev);
-> > +     struct dw_csi *csi_dev = sd_to_mipi_csi_dev(sd);
-
-> > +
-> > +     char buffer[10];
-> > +
-> > +     snprintf(buffer, 10, "v.%d.%d*\n", csi_dev->hw_version_major,
-> > +              csi_dev->hw_version_minor);
-> > +
-> > +     return strlcpy(buf, buffer, PAGE_SIZE);
-
-Oh, can't you simple without any temprorary useless buffers?
- sprintf(buf, ...)?
-(Yes, note _absence_ of *n* there)
-
-> > +}
-
-> > +static ssize_t n_lanes_store(struct device *dev, struct device_attribute *attr,
-> > +                          const char *buf, size_t count)
-> > +{
-> > +     int ret;
-> > +     unsigned long lanes;
-
-> > +
-
-More blank lines! We need them!
-
-> > +     struct platform_device *pdev = to_platform_device(dev);
-> > +     struct v4l2_subdev *sd = platform_get_drvdata(pdev);
-> > +     struct dw_csi *csi_dev = sd_to_mipi_csi_dev(sd);
-> > +
-> > +     ret = kstrtoul(buf, 10, &lanes);
-> > +     if (ret < 0)
-> > +             return ret;
-
-Can it return positive number?
-
-> > +     dev_info(dev, "Lanes %lu\n", lanes);
-
-Noise.
-The user gets it, why to spam kernel log???
-
-> > +     csi_dev->hw.num_lanes = lanes;
-> > +
-> > +     return count;
-> > +}
-
-I told once, can repeat again. Synopsys perhaps needs better reviews
-inside company. Each time I see the code, it repeats same mistakes
-over and over. Have you, guys, do something about it?
-
--- 
-With Best Regards,
-Andy Shevchenko
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+>  
+> -	return err;
+> +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> +	struct cmdq_instruction *inst;
+>  
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_OPTION;
+> +	inst->event = event;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+> +	struct cmdq_instruction *inst;
+> +
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_UPDATE;
+> +	inst->event = event;
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+> -	int err;
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+>  
+> -	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	inst->op = CMDQ_CODE_EOC;
+> +	inst->value = CMDQ_EOC_IRQ_EN;
+>  
+> -	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_JUMP;
+> +	inst->value = CMDQ_JUMP_PASS;
+>  
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 911475da7a53..c8adedefaf42 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
