@@ -1,59 +1,147 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 0/6] Add support of New Amlogic temperature sensor for G12 SoCs
-Date: Fri, 09 Aug 2019 17:11:37 -0700
-Message-ID: <7hd0hd3mme.fsf@baylibre.com>
-References: <20190806130506.8753-1-glaroque@baylibre.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Fri, 9 Aug 2019 19:57:43 -0700
+Message-ID: <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
+References: <20190731221721.187713-1-saravanak@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806130506.8753-1-glaroque@baylibre.com>
+In-Reply-To: <20190731221721.187713-1-saravanak@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>, daniel.lezcano@linaro.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
+Hi Saravana,
 
-> This patchs series add support of New Amlogic temperature sensor and minimal
-> thermal zone for SEI510 and ODROID-N2 boards.
->
-> First implementation was doing on IIO[1] but after comments i move on thermal framework.
-> Formulas and calibration values come from amlogic.
->
-> Changes since v2:
->   - fix yaml documention 
->   - remove unneeded status variable for temperature-sensor node
->   - rework driver after Martin review
->   - add some information in commit message
->
-> Changes since v1:
->   - fix enum vs const in documentation
->   - fix error with thermal-sensor-cells value set to 1 instead of 0
->   - add some dependencies needed to add cooling-maps
->
-> Dependencies :
-> - patch 3,4 & 5: depends on Neil's patch and series :
->               - missing dwc2 phy-names[2]
->               - patchsets to add DVFS on G12a[3] which have deps on [4] and [5]
->
-> [1] https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@baylibre.com/
-> [2] https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@baylibre.com/
-> [3] https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@baylibre.com/
-> [4] https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@baylibre.com/
-> [5] https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@baylibre.com/
+On 7/31/19 3:17 PM, Saravana Kannan wrote:
+> Add device-links to track functional dependencies between devices
+> after they are created (but before they are probed) by looking at
+> their common DT bindings like clocks, interconnects, etc.
+> 
+> Having functional dependencies automatically added before the devices
+> are probed, provides the following benefits:
+> 
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
+> 
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
+> 
+> - Supplier devices like clock providers, interconnect providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
+> 
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources. This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
+> 
+>   By linking devices before they are probed, we give suppliers a clear
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
+> 
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
+> 
+> v1 -> v2:
+> - Drop patch to speed up of_find_device_by_node()
+> - Drop depends-on property and use existing bindings
+> 
+> v2 -> v3:
+> - Refactor the code to have driver core initiate the linking of devs
+> - Have driver core link consumers to supplier before it's probed
+> - Add support for drivers to edit the device links before probing
+> 
+> v3 -> v4:
+> - Tested edit_links() on system with cyclic dependency. Works.
+> - Added some checks to make sure device link isn't attempted from
+>   parent device node to child device node.
+> - Added way to pause/resume sync_state callbacks across
+>   of_platform_populate().
+> - Recursively parse DT node to create device links from parent to
+>   suppliers of parent and all child nodes.
+> 
+> v4 -> v5:
+> - Fixed copy-pasta bugs with linked list handling
+> - Walk up the phandle reference till I find an actual device (needed
+>   for regulators to work)
+> - Added support for linking devices from regulator DT bindings
+> - Tested the whole series again to make sure cyclic dependencies are
+>   broken with edit_links() and regulator links are created properly.
+> 
+> v5 -> v6:
+> - Split, squashed and reordered some of the patches.
+> - Refactored the device linking code to follow the same code pattern for
+>   any property.
+> 
+> v6 -> v7:
+> - No functional changes.
+> - Renamed i to index
+> - Added comment to clarify not having to check property name for every
+>   index
+> - Added "matched" variable to clarify code. No functional change.
+> - Added comments to include/linux/device.h for add_links()
+> 
+> v7 -> v8:
+> - Rebased on top of linux-next to handle device link changes in [1]
+> 
 
-Thank you for the detailed list of dependencies!  Much appreciated.
 
-With all the deps, I tested this on sei510 and odroid-n2, and basic
-functionality seems to work.
+> v8 -> v9:
+> - Fixed kbuild test bot reported errors (docs and const)
 
-As discussed off-list: it would be nice to have an example of how
-cpufreq could be used as a cooling device for hot temperatures.  The
-vendor kernel has some trip points that could be included as examples,
-or even included as extra patches.
+Some maintainers have strong opinions about whether change logs should be:
 
-Also the driver patch is missing the two main thermal maintainers, so
-please resend at least the driver and bindings including them.
+  (1) only in patch 0
+  (2) only in the specific patches that are changed
+  (3) both in patch 0 and in the specific patches that are changed.
+
+I can adapt to any of the three styles.  But for style "(1)" please
+list which specific patch has changed for each item in the change list.
+
+-Frank
 
 
-Kevin
+> 
+> [1] - https://lore.kernel.org/lkml/2305283.AStDPdUUnE@kreacher/
+> 
+> -Saravana
+> 
+> 
+> Saravana Kannan (7):
+>   driver core: Add support for linking devices during device addition
+>   driver core: Add edit_links() callback for drivers
+>   of/platform: Add functional dependency link from DT bindings
+>   driver core: Add sync_state driver/bus callback
+>   of/platform: Pause/resume sync state during init and
+>     of_platform_populate()
+>   of/platform: Create device links for all child-supplier depencencies
+>   of/platform: Don't create device links for default busses
+> 
+>  .../admin-guide/kernel-parameters.txt         |   5 +
+>  drivers/base/core.c                           | 168 ++++++++++++++++
+>  drivers/base/dd.c                             |  29 +++
+>  drivers/of/platform.c                         | 189 ++++++++++++++++++
+>  include/linux/device.h                        |  60 ++++++
+>  5 files changed, 451 insertions(+)
+> 
