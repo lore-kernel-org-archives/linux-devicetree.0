@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v5 15/18] thermal: sun8i: allow to use custom temperature calculation function
-Date: Sat, 10 Aug 2019 05:28:26 +0000
-Message-ID: <20190810052829.6032-16-tiny.windzz@gmail.com>
+Subject: [PATCH v5 16/18] thermal: sun8i: add support for Allwinner H5 thermal sensor
+Date: Sat, 10 Aug 2019 05:28:27 +0000
+Message-ID: <20190810052829.6032-17-tiny.windzz@gmail.com>
 References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
@@ -12,62 +12,61 @@ List-Id: devicetree@vger.kernel.org
 
 From: Icenowy Zheng <icenowy@aosc.io>
 
-The H5 temperature calculation function is strange. Firstly, it's
-segmented. Secondly, the formula of two sensors are different in the
-second segment.
+The thermal sensor in Allwinner H5 has 2 sensors, and they have a
+special segmented temperature calculation formula.
 
-Allow to use a custom temperature calculation function, in case of
-the function is complex.
+Add support for this thermal sensor.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- drivers/thermal/sun8i_thermal.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 3259081da841..a761e2afda08 100644
+index a761e2afda08..78a888d85cba 100644
 --- a/drivers/thermal/sun8i_thermal.c
 +++ b/drivers/thermal/sun8i_thermal.c
-@@ -76,6 +76,7 @@ struct ths_thermal_chip {
- 				     u16 *caldata, int callen);
- 	int		(*init)(struct ths_device *tmdev);
- 	int             (*irq_ack)(struct ths_device *tmdev);
-+	int		(*calc_temp)(int id, int reg);
- };
- 
- struct ths_device {
-@@ -90,9 +91,12 @@ struct ths_device {
- 
- /* Temp Unit: millidegree Celsius */
- static int sun8i_ths_reg2temp(struct ths_device *tmdev,
--			      int reg)
-+			      int id, int reg)
- {
--	return (reg + tmdev->chip->offset) * tmdev->chip->scale;
-+	if (tmdev->chip->calc_temp)
-+		return tmdev->chip->calc_temp(id, reg);
-+	else
-+		return (reg + tmdev->chip->offset) * tmdev->chip->scale;
+@@ -99,6 +99,16 @@ static int sun8i_ths_reg2temp(struct ths_device *tmdev,
+ 		return (reg + tmdev->chip->offset) * tmdev->chip->scale;
  }
  
++static int sun50i_h5_calc_temp(int id, int reg)
++{
++	if (reg >= 0x500)
++		return -1191 * reg / 10 + 223000;
++	else if (!id)
++		return -1452 * reg / 10 + 259000;
++	else
++		return -1590 * reg / 10 + 276000;
++}
++
  static int sun8i_ths_get_temp(void *data, int *temp)
-@@ -108,7 +112,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
- 	if (!val)
- 		return -EAGAIN;
+ {
+ 	struct tsensor *s = data;
+@@ -530,6 +540,16 @@ static const struct ths_thermal_chip sun50i_a64_ths = {
+ 	.irq_ack = sun8i_h3_irq_ack,
+ };
  
--	*temp = sun8i_ths_reg2temp(tmdev, val);
-+	*temp = sun8i_ths_reg2temp(tmdev, s->id, val);
- 	/*
- 	 * XX - According to the original sdk, there are some platforms(rarely)
- 	 * that add a fixed offset value after calculating the temperature
-@@ -232,7 +236,7 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
- 
- 	for (i = 0; i < tmdev->chip->sensor_num; i++) {
- 		int reg = (int)caldata[i + 1];
--		int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
-+		int sensor_temp = sun8i_ths_reg2temp(tmdev, i, reg);
- 		int delta, cdata, offset;
- 
- 		/*
++static const struct ths_thermal_chip sun50i_h5_ths = {
++	.sensor_num = 2,
++	.has_mod_clk = true,
++	.temp_data_base = SUN8I_THS_TEMP_DATA,
++	.calibrate = sun8i_h3_ths_calibrate,
++	.init = sun8i_h3_thermal_init,
++	.irq_ack = sun8i_h3_irq_ack,
++	.calc_temp = sun50i_h5_calc_temp,
++};
++
+ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.sensor_num = 2,
+ 	.offset = -2794,
+@@ -544,6 +564,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
+ static const struct of_device_id of_ths_match[] = {
+ 	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
+ 	{ .compatible = "allwinner,sun50i-a64-ths", .data = &sun50i_a64_ths },
++	{ .compatible = "allwinner,sun50i-h5-ths", .data = &sun50i_h5_ths },
+ 	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
+ 	{ /* sentinel */ },
+ };
 -- 
 2.17.1
