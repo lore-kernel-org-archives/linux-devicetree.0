@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v5 05/18] thermal: sun8i: rework for sun8i_ths_get_temp()
-Date: Sat, 10 Aug 2019 05:28:16 +0000
-Message-ID: <20190810052829.6032-6-tiny.windzz@gmail.com>
+Subject: [PATCH v5 06/18] thermal: sun8i: get ths init func from device compatible
+Date: Sat, 10 Aug 2019 05:28:17 +0000
+Message-ID: <20190810052829.6032-7-tiny.windzz@gmail.com>
 References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
@@ -10,79 +10,41 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-For different socs, the way they get and calculate the
-temperature is roughly the same. So get the difference
+There are some differences in register initialization for
+different socs. So we get different initialization functions
 from device compatible.
-
-Difference point:
-  1) temperature calculation formula parameters
-  2) ths data register start address
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/sun8i_thermal.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index e9c2acbaac74..f338fa25b98e 100644
+index f338fa25b98e..ad877b54f58e 100644
 --- a/drivers/thermal/sun8i_thermal.c
 +++ b/drivers/thermal/sun8i_thermal.c
-@@ -22,9 +22,6 @@
- 
- #define MAX_SENSOR_NUM	4
- 
--#define SUN50I_H6_OFFSET	-2794
--#define SUN50I_H6_SCALE		-67
--
- #define FT_TEMP_MASK				GENMASK(11, 0)
- #define TEMP_CALIB_MASK				GENMASK(11, 0)
- #define TEMP_TO_REG				672
-@@ -58,6 +55,10 @@ struct tsensor {
- 
- struct ths_thermal_chip {
- 	int		sensor_num;
-+	int		offset;
-+	int		scale;
-+	int		ft_deviation;
-+	int		temp_data_base;
+@@ -59,6 +59,7 @@ struct ths_thermal_chip {
+ 	int		scale;
+ 	int		ft_deviation;
+ 	int		temp_data_base;
++	int		(*init)(struct ths_device *tmdev);
  };
  
  struct ths_device {
-@@ -73,7 +74,7 @@ struct ths_device {
- static int sun8i_ths_reg2temp(struct ths_device *tmdev,
- 			      int reg)
- {
--	return (reg + SUN50I_H6_OFFSET) * SUN50I_H6_SCALE;
-+	return (reg + tmdev->chip->offset) * tmdev->chip->scale;
- }
+@@ -356,7 +357,7 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
  
- static int sun8i_ths_get_temp(void *data, int *temp)
-@@ -82,7 +83,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
- 	struct ths_device *tmdev = s->tmdev;
- 	int val;
+-	ret = sun50i_h6_thermal_init(tmdev);
++	ret = tmdev->chip->init(tmdev);
+ 	if (ret)
+ 		return ret;
  
--	regmap_read(tmdev->regmap, SUN50I_H6_THS_TEMP_DATA +
-+	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
- 		    0x4 * s->id, &val);
- 
- 	/* ths have no data yet */
-@@ -98,7 +99,7 @@ static int sun8i_ths_get_temp(void *data, int *temp)
- 	 * temperature above is also used when the sensor is calibrated. If
- 	 * do this, the correct calibration formula is hard to know.
- 	 */
--	*temp += SUN50I_H6_FT_DEVIATION;
-+	*temp += tmdev->chip->ft_deviation;
- 
- 	return 0;
- }
-@@ -389,6 +390,10 @@ static int sun8i_ths_remove(struct platform_device *pdev)
- 
- static const struct ths_thermal_chip sun50i_h6_ths = {
- 	.sensor_num = 2,
-+	.offset = -2794,
-+	.scale = -67,
-+	.ft_deviation = SUN50I_H6_FT_DEVIATION,
-+	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
+@@ -394,6 +395,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
+ 	.scale = -67,
+ 	.ft_deviation = SUN50I_H6_FT_DEVIATION,
+ 	.temp_data_base = SUN50I_H6_THS_TEMP_DATA,
++	.init = sun50i_h6_thermal_init,
  };
  
  static const struct of_device_id of_ths_match[] = {
