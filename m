@@ -1,7 +1,7 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v5 03/18] thermal: fix indentation in makefile
-Date: Sat, 10 Aug 2019 05:28:14 +0000
-Message-ID: <20190810052829.6032-4-tiny.windzz@gmail.com>
+Subject: [PATCH v5 04/18] thermal: sun8i: get ths sensor number from device compatible
+Date: Sat, 10 Aug 2019 05:28:15 +0000
+Message-ID: <20190810052829.6032-5-tiny.windzz@gmail.com>
 References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
@@ -10,48 +10,112 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-To unify code style.
+For different socs, the number of ths sensors is different.
+So we need to do some work in order to support more soc.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/Makefile | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/sun8i_thermal.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index fa6f8b206281..d7eafb5ef8ef 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -5,7 +5,7 @@
+diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+index 2ce36fa3fec3..e9c2acbaac74 100644
+--- a/drivers/thermal/sun8i_thermal.c
++++ b/drivers/thermal/sun8i_thermal.c
+@@ -22,7 +22,6 @@
  
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
--					thermal_helpers.o
-+				   thermal_helpers.o
+ #define MAX_SENSOR_NUM	4
  
- # interface to/from other layers providing sensors
- thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
-@@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
- thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+-#define SUN50I_H6_SENSOR_NUM	2
+ #define SUN50I_H6_OFFSET	-2794
+ #define SUN50I_H6_SCALE		-67
  
- # devfreq cooling
--thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
-+thermal_sys-$(CONFIG_DEVFREQ_THERMAL) 	+= devfreq_cooling.o
+@@ -57,7 +56,12 @@ struct tsensor {
+ 	int				id;
+ };
  
- # platform thermal drivers
- obj-y				+= broadcom/
--obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
-+obj-$(CONFIG_THERMAL_MMIO)	+= thermal_mmio.o
- obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
- obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
- obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
-@@ -50,7 +50,7 @@ obj-$(CONFIG_TI_SOC_THERMAL)	+= ti-soc-thermal/
- obj-y				+= st/
- obj-$(CONFIG_QCOM_TSENS)	+= qcom/
- obj-y				+= tegra/
--obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
-+obj-$(CONFIG_HISI_THERMAL)     	+= hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
++struct ths_thermal_chip {
++	int		sensor_num;
++};
++
+ struct ths_device {
++	const struct ths_thermal_chip		*chip;
+ 	struct device				*dev;
+ 	struct regmap				*regmap;
+ 	struct reset_control			*reset;
+@@ -117,7 +121,7 @@ static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
+ 
+ 	regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
+ 
+-	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
++	for (i = 0; i < tmdev->chip->sensor_num; i++) {
+ 
+ 		if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
+ 			/* clear data irq pending */
+@@ -167,7 +171,7 @@ static int sun50i_ths_calibrate(struct ths_device *tmdev)
+ 		goto out;
+ 	}
+ 
+-	if (!caldata[0] || callen < 2 + 2 * SUN50I_H6_SENSOR_NUM) {
++	if (!caldata[0] || callen < 2 + 2 * tmdev->chip->sensor_num) {
+ 		ret = -EINVAL;
+ 		goto out_free;
+ 	}
+@@ -190,7 +194,7 @@ static int sun50i_ths_calibrate(struct ths_device *tmdev)
+ 	 */
+ 	ft_temp = caldata[0] & FT_TEMP_MASK;
+ 
+-	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
++	for (i = 0; i < tmdev->chip->sensor_num; i++) {
+ 		int reg = (int)caldata[i + 1];
+ 		int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
+ 		int delta, cdata, offset;
+@@ -297,10 +301,10 @@ static int sun50i_h6_thermal_init(struct ths_device *tmdev)
+ 	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
+ 		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
+ 	/* enable sensor */
+-	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
++	val = GENMASK(tmdev->chip->sensor_num - 1, 0);
+ 	regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
+ 	/* thermal data interrupt enable */
+-	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
++	val = GENMASK(tmdev->chip->sensor_num - 1, 0);
+ 	regmap_write(tmdev->regmap, SUN50I_H6_THS_DIC, val);
+ 
+ 	return 0;
+@@ -311,7 +315,7 @@ static int sun8i_ths_register(struct ths_device *tmdev)
+ 	struct thermal_zone_device *tzd;
+ 	int i;
+ 
+-	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
++	for (i = 0; i < tmdev->chip->sensor_num; i++) {
+ 		tmdev->sensor[i].tmdev = tmdev;
+ 		tmdev->sensor[i].id = i;
+ 		tmdev->sensor[i].tzd =
+@@ -337,6 +341,10 @@ static int sun8i_ths_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	tmdev->dev = dev;
++	tmdev->chip = of_device_get_match_data(&pdev->dev);
++	if (!tmdev->chip)
++		return -EINVAL;
++
+ 	platform_set_drvdata(pdev, tmdev);
+ 
+ 	ret = sun8i_ths_resource_init(tmdev);
+@@ -379,8 +387,12 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct ths_thermal_chip sun50i_h6_ths = {
++	.sensor_num = 2,
++};
++
+ static const struct of_device_id of_ths_match[] = {
+-	{ .compatible = "allwinner,sun50i-h6-ths"},
++	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, of_ths_match);
 -- 
 2.17.1
