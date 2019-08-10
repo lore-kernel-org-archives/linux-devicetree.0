@@ -1,145 +1,55 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
- ordering
-Date: Fri, 9 Aug 2019 22:20:52 -0700
-Message-ID: <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
-References: <20190731221721.187713-1-saravanak@google.com>
- <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
- <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH v5 00/18] add thermal driver for h6
+Date: Sat, 10 Aug 2019 05:28:11 +0000
+Message-ID: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/9/19 10:00 PM, Saravana Kannan wrote:
-> On Fri, Aug 9, 2019 at 7:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> Hi Saravana,
->>
->> On 7/31/19 3:17 PM, Saravana Kannan wrote:
->>> Add device-links to track functional dependencies between devices
->>> after they are created (but before they are probed) by looking at
->>> their common DT bindings like clocks, interconnects, etc.
->>>
->>> Having functional dependencies automatically added before the devices
->>> are probed, provides the following benefits:
->>>
->>> - Optimizes device probe order and avoids the useless work of
->>>   attempting probes of devices that will not probe successfully
->>>   (because their suppliers aren't present or haven't probed yet).
->>>
->>>   For example, in a commonly available mobile SoC, registering just
->>>   one consumer device's driver at an initcall level earlier than the
->>>   supplier device's driver causes 11 failed probe attempts before the
->>>   consumer device probes successfully. This was with a kernel with all
->>>   the drivers statically compiled in. This problem gets a lot worse if
->>>   all the drivers are loaded as modules without direct symbol
->>>   dependencies.
->>>
->>> - Supplier devices like clock providers, interconnect providers, etc
->>>   need to keep the resources they provide active and at a particular
->>>   state(s) during boot up even if their current set of consumers don't
->>>   request the resource to be active. This is because the rest of the
->>>   consumers might not have probed yet and turning off the resource
->>>   before all the consumers have probed could lead to a hang or
->>>   undesired user experience.
->>>
->>>   Some frameworks (Eg: regulator) handle this today by turning off
->>>   "unused" resources at late_initcall_sync and hoping all the devices
->>>   have probed by then. This is not a valid assumption for systems with
->>>   loadable modules. Other frameworks (Eg: clock) just don't handle
->>>   this due to the lack of a clear signal for when they can turn off
->>>   resources. This leads to downstream hacks to handle cases like this
->>>   that can easily be solved in the upstream kernel.
->>>
->>>   By linking devices before they are probed, we give suppliers a clear
->>>   count of the number of dependent consumers. Once all of the
->>>   consumers are active, the suppliers can turn off the unused
->>>   resources without making assumptions about the number of consumers.
->>>
->>> By default we just add device-links to track "driver presence" (probe
->>> succeeded) of the supplier device. If any other functionality provided
->>> by device-links are needed, it is left to the consumer/supplier
->>> devices to change the link when they probe.
->>>
->>> v1 -> v2:
->>> - Drop patch to speed up of_find_device_by_node()
->>> - Drop depends-on property and use existing bindings
->>>
->>> v2 -> v3:
->>> - Refactor the code to have driver core initiate the linking of devs
->>> - Have driver core link consumers to supplier before it's probed
->>> - Add support for drivers to edit the device links before probing
->>>
->>> v3 -> v4:
->>> - Tested edit_links() on system with cyclic dependency. Works.
->>> - Added some checks to make sure device link isn't attempted from
->>>   parent device node to child device node.
->>> - Added way to pause/resume sync_state callbacks across
->>>   of_platform_populate().
->>> - Recursively parse DT node to create device links from parent to
->>>   suppliers of parent and all child nodes.
->>>
->>> v4 -> v5:
->>> - Fixed copy-pasta bugs with linked list handling
->>> - Walk up the phandle reference till I find an actual device (needed
->>>   for regulators to work)
->>> - Added support for linking devices from regulator DT bindings
->>> - Tested the whole series again to make sure cyclic dependencies are
->>>   broken with edit_links() and regulator links are created properly.
->>>
->>> v5 -> v6:
->>> - Split, squashed and reordered some of the patches.
->>> - Refactored the device linking code to follow the same code pattern for
->>>   any property.
->>>
->>> v6 -> v7:
->>> - No functional changes.
->>> - Renamed i to index
->>> - Added comment to clarify not having to check property name for every
->>>   index
->>> - Added "matched" variable to clarify code. No functional change.
->>> - Added comments to include/linux/device.h for add_links()
->>>
->>> v7 -> v8:
->>> - Rebased on top of linux-next to handle device link changes in [1]
->>>
->>
->>
->>> v8 -> v9:
->>> - Fixed kbuild test bot reported errors (docs and const)
->>
->> Some maintainers have strong opinions about whether change logs should be:
->>
->>   (1) only in patch 0
->>   (2) only in the specific patches that are changed
->>   (3) both in patch 0 and in the specific patches that are changed.
->>
->> I can adapt to any of the three styles.  But for style "(1)" please
->> list which specific patch has changed for each item in the change list.
->>
-> 
-> Thanks for the context Frank. I'm okay with (1) or (2) but I'll stick
-> with (1) for this series. Didn't realize there were options (2) and
-> (3). Since you started reviewing from v7, I'll do that in the future
-> updates? Also, I haven't forgotten your emails. Just tied up with
-> something else for a few days. I'll get to your emails next week.
+This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
 
-Yes, starting with future updates is fine, no need to redo the v9
-change logs.
+Thx to Icenowy and Vasily.
 
-No problem on the timing.  I figured you were busy or away from the
-internet.
+BTY, do a cleanup in thermal makfile.
 
--Frank
+Icenowy Zheng (3):
+  thermal: sun8i: allow to use custom temperature calculation function
+  thermal: sun8i: add support for Allwinner H5 thermal sensor
+  thermal: sun8i: add support for Allwinner R40 thermal sensor
 
-> 
-> Thanks,
-> Saravana
-> 
+Vasily Khoruzhick (1):
+  thermal: sun8i: add thermal driver for A64
+
+Yangtao Li (14):
+  thermal: sun8i: add thermal driver for h6
+  dt-bindings: thermal: add binding document for h6 thermal controller
+  thermal: fix indentation in makefile
+  thermal: sun8i: get ths sensor number from device compatible
+  thermal: sun8i: rework for sun8i_ths_get_temp()
+  thermal: sun8i: get ths init func from device compatible
+  thermal: sun8i: rework for ths irq handler func
+  thermal: sun8i: support mod clocks
+  thermal: sun8i: rework for ths calibrate func
+  dt-bindings: thermal: add binding document for h3 thermal controller
+  thermal: sun8i: add thermal driver for h3
+  dt-bindings: thermal: add binding document for a64 thermal controller
+  dt-bindings: thermal: add binding document for h5 thermal controller
+  dt-bindings: thermal: add binding document for r40 thermal controller
+
+ .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
+ MAINTAINERS                                   |   7 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   9 +-
+ drivers/thermal/sun8i_thermal.c               | 596 ++++++++++++++++++
+ 5 files changed, 779 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+ create mode 100644 drivers/thermal/sun8i_thermal.c
+
+---
+v5:
+-add more support
+-some trival fix
+---
+2.17.1
