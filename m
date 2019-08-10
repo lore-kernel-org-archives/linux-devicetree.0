@@ -1,70 +1,73 @@
-From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-Subject: Re: [PATCH] ARM: dts: imx7d: sbc-iot-imx7: add recovery for i2c3/4
-Date: Sat, 10 Aug 2019 22:58:17 +0100
-Message-ID: <20190810215817.5118-1-git@andred.net>
-References: <20190807082556.5013-6-philippe.schenker@toradex.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 0/9] DRM panel drivers for omapdrm
+Date: Sun, 11 Aug 2019 02:10:39 +0300
+Message-ID: <20190810231048.1921-1-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807082556.5013-6-philippe.schenker@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Max Krummenacher <max.krummenacher@toradex.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 07 Aug 2019 08:26:15 +0000, Philippe Schenker wrote:
-> From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
->
-> - add recovery mode for applicable i2c buses for
->   Colibri iMX7 module.
->
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
->
-> Changes in v3: None
-> Changes in v2: None
->
->  arch/arm/boot/dts/imx7-colibri.dtsi | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index a8d992f3e897..2480623c92ff 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -140,8 +140,12 @@
->
->  &i2c1 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c1 &pinctrl_i2c1_int>;
-> +	pinctrl-1 = <&pinctrl_i2c1_recovery &pinctrl_i2c1_int>;
-> +	scl-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-
-scl-gpios should be (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN) since
-commit d2d0ad2aec4a ("i2c: imx: use open drain for recovery GPIO")
-
-Otherwise you'll get a boot-time warning:
-   enforced open drain please flag it properly in DT/ACPI DSDT/board file
-
-> +	sda-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> +
->  	status = "okay";
->
->  	codec: sgtl5000@a {
-> @@ -242,8 +246,11 @@
->
->  &i2c4 {
->  	clock-frequency = <100000>;
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "gpio";
->  	pinctrl-0 = <&pinctrl_i2c4>;
-> +	pinctrl-1 = <&pinctrl_i2c4_recovery>;
-> +	scl-gpios = <&gpio7 8 GPIO_ACTIVE_HIGH>;
-
-and here, too.
-
-Cheers,
-André
+SGVsbG8gZXZlcnlib2R5LAoKVGhlc2UgOSBwYXRjaGVzIGhhdmUgaW5pdGlhbGx5IGJlZW4gcG9z
+dGVkIGFzIHBhcnQgb2YgdGhlIGxhcmdlciAiW1BBVENICjAwLzYwXSBkcm0vb21hcDogUmVwbGFj
+ZSBjdXN0b20gZGlzcGxheSBkcml2ZXJzIHdpdGggZHJtX2JyaWRnZSBhbmQKZHJtX3BhbmVsIiBz
+ZXJpZXMsIGhlbmNlIHRoZSB2MiBpbiB0aGUgc3ViamVjdCBwcmVmaXguCgpJJ20gcG9zdGluZyB0
+aGlzIHNlY29uZCB2ZXJzaW9uIHNlcGFyYXRlbHkgcGVyIFNhbSdzIHJlcXVlc3QgYXMgdGhlIHJl
+c3QKb2YgdGhlIG9yaWdpbmFsIHNlcmllcyBpcyBleHBlY3RlZCB0byB0YWtlIG1vcmUgdGltZSB0
+byBwcm9jZXNzIHRocm91Z2gKcmV2aWV3LiAKClRoZXJlJ3Mgbm90aGluZyB2ZXJ5IHNwZWNpYWwg
+aGVyZS4gVGhlIGZpcnN0IHRocmVlIHBhdGNoZXMgYWRkIERUIHZlbmRvcgpwcmVmaXhlcyBhbmQg
+RFQgYmluZGluZ3MuIFNpbmNlIHYxIHBhdGNoIDMvOSBoYXMgYmVlbiBjb252ZXJ0ZWQgZnJvbQp0
+ZXh0IHRvIFlBTUwsIGFuZCBhcyBJJ20gbm90IHZlcnkgZmFtaWxpYXIgd2l0aCBZQU1MIERUIGJp
+bmRpbmdzLCBJJ20KZWFnZXJseSB3YWl0aW5nIGZvciByZXZpZXdzLgoKVGhlIGxhc3Qgc2l4IHBh
+dGNoZXMgYWRkIG5ldyBwYW5lbCBkcml2ZXJzLiBUaGUgY29kZSBvcmlnaW5hdGVzIGZyb20gdGhl
+CmNvcnJlc3BvbmRpbmcgb21hcGRybS1zcGVjaWZpYyBwYW5lbCBkcml2ZXJzLCB3aGljaCBleHBs
+YWlucyB3aHkgb25seQpvbmUgbmV3IERUIGJpbmRpbmcgaXMgbmVlZGVkIGFzIG1vc3Qgb2YgdGhl
+bSBhcmUgYWxyZWFkeSBwcmVzZW50LgoKUGxlYXNlIHNlZSBpbmRpdmlkdWFsIHBhdGNoZXMgZm9y
+IGNoYW5nZWxvZ3MuIFNhbSwgSSBiZWxpZXZlIEkndmUgdGFrZW4KYWxsIHlvdXIgY29tbWVudHMg
+aW50byBhY2NvdW50LCBJIGhvcGUgbm9uZSBmZWxsIHRocm91Z2ggdGhlIGNyYWNrcy4KClRoZSBw
+YXRjaGVzIGFyZSBiYXNlZCBvbiB0b3Agb2YgZHJtLW1pc2MtbmV4dCBhbmQgY2FuIGJlIGZvdW5k
+IGF0CgoJZ2l0Oi8vbGludXh0di5vcmcvcGluY2hhcnRsL21lZGlhLmdpdCBvbWFwZHJtL3BhbmVs
+cwoKTGF1cmVudCBQaW5jaGFydCAoOSk6CiAgZHQtYmluZGluZ3M6IEFkZCB2ZW5kb3IgcHJlZml4
+IGZvciBMRyBEaXNwbGF5CiAgZHQtYmluZGluZ3M6IEFkZCBsZWdhY3kgJ3RvcHBvbHknIHZlbmRv
+ciBwcmVmaXgKICBkdC1iaW5kaW5nczogZGlzcGxheTogcGFuZWw6IEFkZCBiaW5kaW5ncyBmb3Ig
+TkVDIE5MODA0OEhMMTEgcGFuZWwKICBkcm0vcGFuZWw6IEFkZCBkcml2ZXIgZm9yIHRoZSBMRyBQ
+aGlsaXBzIExCMDM1UTAyIHBhbmVsCiAgZHJtL3BhbmVsOiBBZGQgZHJpdmVyIGZvciB0aGUgTkVD
+IE5MODA0OEhMMTEgcGFuZWwKICBkcm0vcGFuZWw6IEFkZCBkcml2ZXIgZm9yIHRoZSBTaGFycCBM
+UzAzN1Y3RFcwMSBwYW5lbAogIGRybS9wYW5lbDogQWRkIGRyaXZlciBmb3IgdGhlIFNvbnkgQUNY
+NTY1QUtNIHBhbmVsCiAgZHJtL3BhbmVsOiBBZGQgZHJpdmVyIGZvciB0aGUgVG9wcG9seSBURDAy
+OFRURUMxIHBhbmVsCiAgZHJtL3BhbmVsOiBBZGQgZHJpdmVyIGZvciB0aGUgVG9wcG9seSBURDA0
+M01URUExIHBhbmVsCgogLi4uL2Rpc3BsYXkvcGFuZWwvbmVjLG5sODA0OGhsMTEueWFtbCAgICAg
+ICAgIHwgIDQ5ICsrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMueWFt
+bCAgfCAgIDUgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAg
+IHwgIDQ2ICsrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUgICAgICAgICAgICAgICAg
+fCAgIDYgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWxnLWxiMDM1cTAyLmMgICAgIHwg
+MjM3ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW5lYy1ubDgwNDhobDExLmMg
+IHwgMjQ3ICsrKysrKysKIC4uLi9ncHUvZHJtL3BhbmVsL3BhbmVsLXNoYXJwLWxzMDM3djdkdzAx
+LmMgICB8IDIyNiArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zb255LWFjeDU2
+NWFrbS5jICB8IDY5MyArKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC10cG8tdGQwMjh0dGVjMS5jICB8IDM4MSArKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtdHBvLXRkMDQzbXRlYTEuYyAgfCA1MDggKysrKysrKysrKysrKwogMTAgZmls
+ZXMgY2hhbmdlZCwgMjM5OCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbmVjLG5sODA0OGhsMTEu
+eWFtbAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1sZy1s
+YjAzNXEwMi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
+LW5lYy1ubDgwNDhobDExLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2hhcnAtbHMwMzd2N2R3MDEuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1zb255LWFjeDU2NWFrbS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXRwby10ZDAyOHR0ZWMxLmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtdHBvLXRkMDQzbXRlYTEuYwoKLS0g
+ClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWw=
