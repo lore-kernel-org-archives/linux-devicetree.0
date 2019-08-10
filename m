@@ -1,278 +1,193 @@
-From: Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH 1/2] regulator: act8865: operating mode and suspend state support
-Date: Sat, 10 Aug 2019 13:18:54 +0530
-Message-ID: <1565423335-3213-2-git-send-email-raagjadav@gmail.com>
-References: <1565423335-3213-1-git-send-email-raagjadav@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565423335-3213-1-git-send-email-raagjadav@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Raag Jadav <raagjadav@gmail.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v9 00/21] MT8183 IOMMU SUPPORT
+Date: Sat, 10 Aug 2019 15:58:00 +0800
+Message-ID: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ming-fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Implement ->set_mode(), ->get_mode() and ->set_suspend_xx() hooks
-for act8865 with unlocked expert registers.
+This patchset mainly adds support for mt8183 IOMMU and SMI.
 
-Based on work done by Borris Brezillon on [1].
-[1] https://www.spinics.net/lists/kernel/msg2942960.html
+mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+uses ARM Short-Descriptor translation table format.
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
----
- drivers/regulator/act8865-regulator.c | 160 +++++++++++++++++++++++++++++++++-
- include/linux/regulator/act8865.h     |   2 +-
- 2 files changed, 160 insertions(+), 2 deletions(-)
+The mt8183 M4U-SMI HW diagram is as below:
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index 6a90d3c..df9b649 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -19,6 +19,7 @@
- #include <linux/power_supply.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regmap.h>
-+#include <dt-bindings/regulator/active-semi,8865-regulator.h>
- 
- /*
-  * ACT8600 Global Register Map.
-@@ -90,23 +91,31 @@
-  */
- #define	ACT8865_SYS_MODE	0x00
- #define	ACT8865_SYS_CTRL	0x01
-+#define	ACT8865_SYS_UNLK_REGS	0x0b
- #define	ACT8865_DCDC1_VSET1	0x20
- #define	ACT8865_DCDC1_VSET2	0x21
- #define	ACT8865_DCDC1_CTRL	0x22
-+#define	ACT8865_DCDC1_SUS	0x24
- #define	ACT8865_DCDC2_VSET1	0x30
- #define	ACT8865_DCDC2_VSET2	0x31
- #define	ACT8865_DCDC2_CTRL	0x32
-+#define	ACT8865_DCDC2_SUS	0x34
- #define	ACT8865_DCDC3_VSET1	0x40
- #define	ACT8865_DCDC3_VSET2	0x41
- #define	ACT8865_DCDC3_CTRL	0x42
-+#define	ACT8865_DCDC3_SUS	0x44
- #define	ACT8865_LDO1_VSET	0x50
- #define	ACT8865_LDO1_CTRL	0x51
-+#define	ACT8865_LDO1_SUS	0x52
- #define	ACT8865_LDO2_VSET	0x54
- #define	ACT8865_LDO2_CTRL	0x55
-+#define	ACT8865_LDO2_SUS	0x56
- #define	ACT8865_LDO3_VSET	0x60
- #define	ACT8865_LDO3_CTRL	0x61
-+#define	ACT8865_LDO3_SUS	0x62
- #define	ACT8865_LDO4_VSET	0x64
- #define	ACT8865_LDO4_CTRL	0x65
-+#define	ACT8865_LDO4_SUS	0x66
- #define	ACT8865_MSTROFF		0x20
- 
- /*
-@@ -136,6 +145,7 @@ struct act8865 {
- 	struct regmap *regmap;
- 	int off_reg;
- 	int off_mask;
-+	u32 op_mode[ACT8865_ID_MAX];
- };
- 
- static const struct regmap_range act8600_reg_ranges[] = {
-@@ -225,6 +235,143 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
- };
- 
-+static int act8865_set_suspend_state(struct regulator_dev *rdev, bool enable)
-+{
-+	struct regmap *regmap = rdev->regmap;
-+	int id = rdev->desc->id, reg, val;
-+
-+	switch (id) {
-+	case ACT8865_ID_DCDC1:
-+		reg = ACT8865_DCDC1_SUS;
-+		val = 0xa8;
-+		break;
-+	case ACT8865_ID_DCDC2:
-+		reg = ACT8865_DCDC2_SUS;
-+		val = 0xa8;
-+		break;
-+	case ACT8865_ID_DCDC3:
-+		reg = ACT8865_DCDC3_SUS;
-+		val = 0xa8;
-+		break;
-+	case ACT8865_ID_LDO1:
-+		reg = ACT8865_LDO1_SUS;
-+		val = 0xe8;
-+		break;
-+	case ACT8865_ID_LDO2:
-+		reg = ACT8865_LDO2_SUS;
-+		val = 0xe8;
-+		break;
-+	case ACT8865_ID_LDO3:
-+		reg = ACT8865_LDO3_SUS;
-+		val = 0xe8;
-+		break;
-+	case ACT8865_ID_LDO4:
-+		reg = ACT8865_LDO4_SUS;
-+		val = 0xe8;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (enable)
-+		val |= BIT(4);
-+
-+	/*
-+	 * Ask the PMIC to enable/disable this output when entering hibernate
-+	 * mode.
-+	 */
-+	return regmap_write(regmap, reg, val);
-+}
-+
-+static int act8865_set_suspend_enable(struct regulator_dev *rdev)
-+{
-+	return act8865_set_suspend_state(rdev, true);
-+}
-+
-+static int act8865_set_suspend_disable(struct regulator_dev *rdev)
-+{
-+	return act8865_set_suspend_state(rdev, false);
-+}
-+
-+static unsigned int act8865_of_map_mode(unsigned int mode)
-+{
-+	switch (mode) {
-+	case ACT8865_REGULATOR_MODE_FIXED:
-+	case ACT8865_REGULATOR_MODE_NORMAL:
-+		return REGULATOR_MODE_NORMAL;
-+	case ACT8865_REGULATOR_MODE_LOWPOWER:
-+		return REGULATOR_MODE_STANDBY;
-+	default:
-+		return REGULATOR_MODE_INVALID;
-+	}
-+}
-+
-+static int act8865_set_mode(struct regulator_dev *rdev, unsigned int mode)
-+{
-+	struct act8865 *act8865 = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = rdev->regmap;
-+	int id = rdev_get_id(rdev);
-+	int reg, ret, val = 0;
-+
-+	switch (id) {
-+	case ACT8865_ID_DCDC1:
-+		reg = ACT8865_DCDC1_CTRL;
-+		break;
-+	case ACT8865_ID_DCDC2:
-+		reg = ACT8865_DCDC2_CTRL;
-+		break;
-+	case ACT8865_ID_DCDC3:
-+		reg = ACT8865_DCDC3_CTRL;
-+		break;
-+	case ACT8865_ID_LDO1:
-+		reg = ACT8865_LDO1_SUS;
-+		break;
-+	case ACT8865_ID_LDO2:
-+		reg = ACT8865_LDO2_SUS;
-+		break;
-+	case ACT8865_ID_LDO3:
-+		reg = ACT8865_LDO3_SUS;
-+		break;
-+	case ACT8865_ID_LDO4:
-+		reg = ACT8865_LDO4_SUS;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_STANDBY:
-+		if (id > ACT8865_ID_DCDC3)
-+			val = BIT(5);
-+		break;
-+	case REGULATOR_MODE_NORMAL:
-+		if (id <= ACT8865_ID_DCDC3)
-+			val = BIT(5);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_update_bits(regmap, reg, BIT(5), val);
-+	if (ret)
-+		return ret;
-+
-+	act8865->op_mode[id] = mode;
-+
-+	return 0;
-+}
-+
-+static unsigned int act8865_get_mode(struct regulator_dev *rdev)
-+{
-+	struct act8865 *act8865 = rdev_get_drvdata(rdev);
-+	int id = rdev_get_id(rdev);
-+
-+	if (id < ACT8865_ID_DCDC1 || id >= ACT8865_ID_MAX)
-+		return -EINVAL;
-+
-+	return act8865->op_mode[id];
-+}
-+
- static const struct regulator_ops act8865_ops = {
- 	.list_voltage		= regulator_list_voltage_linear_range,
- 	.map_voltage		= regulator_map_voltage_linear_range,
-@@ -232,7 +379,11 @@ static const struct regulator_ops act8865_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
-+	.set_mode		= act8865_set_mode,
-+	.get_mode		= act8865_get_mode,
- 	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_suspend_enable	= act8865_set_suspend_enable,
-+	.set_suspend_disable	= act8865_set_suspend_disable,
- };
- 
- static const struct regulator_ops act8865_ldo_ops = {
-@@ -242,7 +393,11 @@ static const struct regulator_ops act8865_ldo_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
-+	.set_mode		= act8865_set_mode,
-+	.get_mode		= act8865_get_mode,
- 	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_suspend_enable	= act8865_set_suspend_enable,
-+	.set_suspend_disable	= act8865_set_suspend_disable,
- 	.set_pull_down		= regulator_set_pull_down_regmap,
- };
- 
-@@ -256,6 +411,7 @@ static const struct regulator_ops act8865_fixed_ldo_ops = {
- 	[_family##_ID_##_id] = {					\
- 		.name			= _name,			\
- 		.of_match		= of_match_ptr(_name),		\
-+		.of_map_mode		= act8865_of_map_mode,		\
- 		.regulators_node	= of_match_ptr("regulators"),	\
- 		.supply_name		= _supply,			\
- 		.id			= _family##_ID_##_id,		\
-@@ -590,7 +746,9 @@ static int act8865_pmic_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, act8865);
- 
--	return 0;
-+	/* Unlock expert registers for ACT8865. */
-+	return type != ACT8865 ? 0 : regmap_write(act8865->regmap,
-+						  ACT8865_SYS_UNLK_REGS, 0xef);
- }
- 
- static const struct i2c_device_id act8865_ids[] = {
-diff --git a/include/linux/regulator/act8865.h b/include/linux/regulator/act8865.h
-index d25e24f..55660e6 100644
---- a/include/linux/regulator/act8865.h
-+++ b/include/linux/regulator/act8865.h
-@@ -31,7 +31,7 @@ enum {
- 	ACT8865_ID_LDO2,
- 	ACT8865_ID_LDO3,
- 	ACT8865_ID_LDO4,
--	ACT8865_REG_NUM,
-+	ACT8865_ID_MAX,
- };
- 
- enum {
+                          EMI
+                           |
+                          M4U
+                           |
+                       ----------
+                       |        |
+                   gals0-rx   gals1-rx
+                       |        |
+                       |        |
+                   gals0-tx   gals1-tx
+                       |        |
+                      ------------
+                       SMI Common
+                      ------------
+                           |
+  +-----+-----+--------+-----+-----+-------+-------+
+  |     |     |        |     |     |       |       |
+  |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+  |     |     |        |     |     |       |       |
+  |     |     |        |     |     |       |       |
+  |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+  |     |     |        |     |     |       |       |
+larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+disp  vdec   img     cam    venc   img    cam
+
+All the connections are HW fixed, SW can NOT adjust it.
+
+Compared with mt8173, we add a GALS(Global Async Local Sync) module
+between SMI-common and M4U, and additional GALS between larb2/3/5/6
+and SMI-common. GALS can help synchronize for the modules in different
+clock frequency, it can be seen as a "asynchronous fifo".
+
+GALS can only help transfer the command/data while it doesn't have
+the configuring register, thus it has the special "smi" clock and it
+doesn't have the "apb" clock. From the diagram above, we add "gals0"
+and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+
+>From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+Control Unit) is connected with smi-common directly, we can take them
+as "larb2", "larb3" and "larb7", and their register spaces are
+different with the normal larb.
+
+The dtsi was sent at: [1] https://lore.kernel.org/patchwork/patch/1054099/
+
+Change notes:
+v9:
+   1) rebase on v5.3-rc1.
+   2) In v7s, Use oas to implement MTK 4GB mode. It nearly reconstruct the
+      patch, so I don't keep the R-b.
+
+v8: https://lists.linuxfoundation.org/pipermail/iommu/2019-June/037095.html
+   1) From the 4GB mode:
+      a. Move the patch sequency(Move "iommu/mediatek: Fix iova_to_phys PA
+      start for 4GB mode" before "iommu/io-pgtable-arm-v7s: Extend MediaTek
+      4G Mode").
+      b. Remove the patch "Rename enable_4GB to dram_is_4gb" and Use Evan's
+      suggestion.
+   2) add a "union" for smi gen1/gen2 base.
+   3) Clean up the structure "struct mtk_smi_iommu" since it have only one item,
+      suggested from Matthias.
+
+v7: https://lists.linuxfoundation.org/pipermail/iommu/2019-June/036552.html
+   1) rebase on v5.2-rc1.
+   2) Add fixed tags in patch 20.
+   3) Remove shutdown patch. I will send it independently if necessary.
+
+v6: https://lists.linuxfoundation.org/pipermail/iommu/2019-February/033685.html
+    1) rebase on v5.0-rc1.
+    2) About the register name (VLD_PA_RNG), Keep consistent in the patches.
+    3) In the 4GB mode, Always add MTK_4GB_quirk.
+    4) Reword some commit message helped from Evan. like common->smi_ao_base is
+       completely different from common->base; STANDARD_AXI_MODE reg is completely
+       different from CTRL_MISC; commit in the shutdown patch.
+    5) Add 2 new patches again:
+       iommu/mediatek: Rename enable_4GB to dram_is_4gb
+       iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+
+v5: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
+    1) Remove this patch "iommu/mediatek: Constify iommu_ops" from here as it
+       was applied for v5.0.
+    2) Again, add 3 preparing patches. Move two property into the plat_data.
+       iommu/mediatek: Move vld_pa_rng into plat_data
+       iommu/mediatek: Move reset_axi into plat_data
+       iommu/mediatek: Refine protect memory definition
+    3) Add shutdown callback for mtk_iommu_v1 in patch[19/20].
+
+v4: http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016205.html
+    1) Add 3 preparing patches. Seperate some minor meaningful code into
+       a new patch according to Matthias's suggestion.
+       memory: mtk-smi: Add gals support         
+       iommu/mediatek: Add larb-id remapped support 
+       iommu/mediatek: Add bclk can be supported optionally       
+    2) rebase on "iommu/mediatek: Make it explicitly non-modular"
+       which was applied.
+       https://lore.kernel.org/patchwork/patch/1020125/
+    3) add some comment about "mediatek,larb-id" in the commit message of
+       the patch "mtk-smi: Get rid of need_larbid".
+    4) Fix bus_sel value.
+
+v3: https://lists.linuxfoundation.org/pipermail/iommu/2018-November/031121.html
+    1) rebase on v4.20-rc1.
+    2) In the dt-binding, add a minor string "mt7623" which also use gen1
+       since Matthias added it in v4.20.
+    3) About v7s:
+       a) for paddr_to_pte, change the param from "arm_v7s_io_pgtable" to
+          "arm_pgtable_cfg", according to Robin suggestion.
+       b) Don't use CONFIG_PHYS_ADDR_T_64BIT.
+       c) add a little comment(pgtable address still don't over 4GB) in the
+          commit message of the patch "Extend MediaTek 4GB Mode".
+    4) add "iommu/mediatek: Constify iommu_ops" into this patchset. this may
+       be helpful for review and merge.
+       https://lists.linuxfoundation.org/pipermail/iommu/2018-October/030637.html
+
+v2: https://lists.linuxfoundation.org/pipermail/iommu/2018-September/030164.html
+    1) Fix typo in the commit message of dt-binding.
+    2) Change larb2/larb3 to the special larbs.
+    3) Refactor the larb-id remapped array(larbid_remapped), then we
+    don't need add the new function(mtk_iommu_get_larbid).
+    4) Add a new patch for v7s two helpers(paddr_to_iopte and
+    iopte_to_paddr).
+    5) Change some comment for MTK 4GB mode.
+
+v1: base on v4.19-rc1.
+http://lists.infradead.org/pipermail/linux-mediatek/2018-September/014881.html
+
+Yong Wu (21):
+  dt-bindings: mediatek: Add binding for mt8183 IOMMU and SMI
+  iommu/mediatek: Use a struct as the platform data
+  memory: mtk-smi: Use a general config_port interface
+  memory: mtk-smi: Use a struct for the platform data for smi-common
+  iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr
+    helpers
+  iommu/io-pgtable-arm-v7s: Use ias/oas to check the valid iova/pa
+  iommu/io-pgtable-arm-v7s: Rename 4GB quirk to QUIRK_MTK_EXT
+  iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode
+  iommu/mediatek: Add bclk can be supported optionally
+  iommu/mediatek: Add larb-id remapped support
+  iommu/mediatek: Refine protect memory definition
+  iommu/mediatek: Move reset_axi into plat_data
+  iommu/mediatek: Move vld_pa_rng into plat_data
+  memory: mtk-smi: Add gals support
+  iommu/mediatek: Add mt8183 IOMMU support
+  iommu/mediatek: Add mmu1 support
+  memory: mtk-smi: Invoke pm runtime_callback to enable clocks
+  memory: mtk-smi: Add bus_sel for mt8183
+  iommu/mediatek: Fix VLD_PA_RNG register backup when suspend
+  memory: mtk-smi: Get rid of need_larbid
+  iommu/mediatek: Clean up struct mtk_smi_iommu
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |  30 ++-
+ .../memory-controllers/mediatek,smi-common.txt     |  12 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   4 +
+ drivers/iommu/io-pgtable-arm-v7s.c                 |  84 +++++--
+ drivers/iommu/mtk_iommu.c                          | 143 +++++++----
+ drivers/iommu/mtk_iommu.h                          |  21 +-
+ drivers/iommu/mtk_iommu_v1.c                       |   6 +-
+ drivers/memory/mtk-smi.c                           | 268 ++++++++++++++-------
+ include/dt-bindings/memory/mt8183-larb-port.h      | 130 ++++++++++
+ include/linux/io-pgtable.h                         |  11 +-
+ include/soc/mediatek/smi.h                         |   5 -
+ 11 files changed, 533 insertions(+), 181 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
+
 -- 
-2.7.4
+1.9.1
