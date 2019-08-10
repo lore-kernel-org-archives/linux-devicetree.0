@@ -1,52 +1,109 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v5 13/18] thermal: sun8i: add thermal driver for A64
-Date: Sat, 10 Aug 2019 05:32:32 +0000
-Message-ID: <20190810053232.6125-1-tiny.windzz@gmail.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
+Date: Fri, 9 Aug 2019 23:16:48 -0700
+Message-ID: <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190810052829.6032-9-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
+>
+> H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
+> and adds the process of the clock.
+>
+> This is pre-work for supprt it.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index b934bc81eba7..6f4294c2aba7 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -54,6 +54,7 @@ struct tsensor {
+>  };
+>
+>  struct ths_thermal_chip {
+> +       bool            has_mod_clk;
+>         int             sensor_num;
+>         int             offset;
+>         int             scale;
+> @@ -69,6 +70,7 @@ struct ths_device {
+>         struct regmap                           *regmap;
+>         struct reset_control                    *reset;
+>         struct clk                              *bus_clk;
+> +       struct clk                              *mod_clk;
+>         struct tsensor                          sensor[MAX_SENSOR_NUM];
+>  };
+>
+> @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+>         if (IS_ERR(tmdev->bus_clk))
+>                 return PTR_ERR(tmdev->bus_clk);
+>
+> +       if (tmdev->chip->has_mod_clk) {
+> +               tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> +               if (IS_ERR(tmdev->mod_clk))
+> +                       return PTR_ERR(tmdev->mod_clk);
+> +       }
+> +
+>         ret = reset_control_deassert(tmdev->reset);
+>         if (ret)
+>                 return ret;
+> @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+>         if (ret)
+>                 goto assert_reset;
+>
+> -       ret = sun50i_ths_calibrate(tmdev);
+> +       ret = clk_prepare_enable(tmdev->mod_clk);
 
-Thermal sensor controller in A64 is similar to H3, but it has 3 sensors.
-Extend H3 functions to add support for multiple sensors.
+You have to set rate of modclk before enabling it since you can't rely
+on whatever bootloader left for you.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- drivers/thermal/sun8i_thermal.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 and
+ACQ1 are too aggressive and may result in high interrupt rate to the
+point when it may stall RCU. I changed driver a bit to use params from
+Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ0
+is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
+details.
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 41ce8cdc0546..3259081da841 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -515,6 +515,17 @@ static const struct ths_thermal_chip sun8i_h3_ths = {
- 	.irq_ack = sun8i_h3_irq_ack,
- };
- 
-+static const struct ths_thermal_chip sun50i_a64_ths = {
-+	.sensor_num = 3,
-+	.offset = -2170,
-+	.scale = -117,
-+	.has_mod_clk = true,
-+	.temp_data_base = SUN8I_THS_TEMP_DATA,
-+	.calibrate = sun8i_h3_ths_calibrate,
-+	.init = sun8i_h3_thermal_init,
-+	.irq_ack = sun8i_h3_irq_ack,
-+};
-+
- static const struct ths_thermal_chip sun50i_h6_ths = {
- 	.sensor_num = 2,
- 	.offset = -2794,
-@@ -528,6 +539,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
- 
- static const struct of_device_id of_ths_match[] = {
- 	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
-+	{ .compatible = "allwinner,sun50i-a64-ths", .data = &sun50i_a64_ths },
- 	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
- 	{ /* sentinel */ },
- };
--- 
-2.17.1
+[1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88fa9181a2ecbf79e8d513b2
+
+
+>         if (ret)
+>                 goto bus_disable;
+>
+> +       ret = sun50i_ths_calibrate(tmdev);
+> +       if (ret)
+> +               goto mod_disable;
+> +
+>         return 0;
+>
+> +mod_disable:
+> +       clk_disable_unprepare(tmdev->mod_clk);
+>  bus_disable:
+>         clk_disable_unprepare(tmdev->bus_clk);
+>  assert_reset:
+> @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_device *pdev)
+>  {
+>         struct ths_device *tmdev = platform_get_drvdata(pdev);
+>
+> +       clk_disable_unprepare(tmdev->mod_clk);
+>         clk_disable_unprepare(tmdev->bus_clk);
+>         reset_control_assert(tmdev->reset);
+>
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
