@@ -1,72 +1,33 @@
 From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v5 16/18] thermal: sun8i: add support for Allwinner H5 thermal sensor
-Date: Sat, 10 Aug 2019 05:28:27 +0000
-Message-ID: <20190810052829.6032-17-tiny.windzz@gmail.com>
+Subject: [PATCH v5 17/18] dt-bindings: thermal: add binding document for r40 thermal controller
+Date: Sat, 10 Aug 2019 05:28:28 +0000
+Message-ID: <20190810052829.6032-18-tiny.windzz@gmail.com>
 References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+This patch adds binding document for allwinner r40 thermal controller.
 
-The thermal sensor in Allwinner H5 has 2 sensors, and they have a
-special segmented temperature calculation formula.
-
-Add support for this thermal sensor.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/thermal/sun8i_thermal.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index a761e2afda08..78a888d85cba 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -99,6 +99,16 @@ static int sun8i_ths_reg2temp(struct ths_device *tmdev,
- 		return (reg + tmdev->chip->offset) * tmdev->chip->scale;
- }
- 
-+static int sun50i_h5_calc_temp(int id, int reg)
-+{
-+	if (reg >= 0x500)
-+		return -1191 * reg / 10 + 223000;
-+	else if (!id)
-+		return -1452 * reg / 10 + 259000;
-+	else
-+		return -1590 * reg / 10 + 276000;
-+}
-+
- static int sun8i_ths_get_temp(void *data, int *temp)
- {
- 	struct tsensor *s = data;
-@@ -530,6 +540,16 @@ static const struct ths_thermal_chip sun50i_a64_ths = {
- 	.irq_ack = sun8i_h3_irq_ack,
- };
- 
-+static const struct ths_thermal_chip sun50i_h5_ths = {
-+	.sensor_num = 2,
-+	.has_mod_clk = true,
-+	.temp_data_base = SUN8I_THS_TEMP_DATA,
-+	.calibrate = sun8i_h3_ths_calibrate,
-+	.init = sun8i_h3_thermal_init,
-+	.irq_ack = sun8i_h3_irq_ack,
-+	.calc_temp = sun50i_h5_calc_temp,
-+};
-+
- static const struct ths_thermal_chip sun50i_h6_ths = {
- 	.sensor_num = 2,
- 	.offset = -2794,
-@@ -544,6 +564,7 @@ static const struct ths_thermal_chip sun50i_h6_ths = {
- static const struct of_device_id of_ths_match[] = {
- 	{ .compatible = "allwinner,sun8i-h3-ths", .data = &sun8i_h3_ths },
- 	{ .compatible = "allwinner,sun50i-a64-ths", .data = &sun50i_a64_ths },
-+	{ .compatible = "allwinner,sun50i-h5-ths", .data = &sun50i_h5_ths },
- 	{ .compatible = "allwinner,sun50i-h6-ths", .data = &sun50i_h6_ths },
- 	{ /* sentinel */ },
- };
+diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+index 2e28f5b33d33..28c438d3bfea 100644
+--- a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+@@ -17,6 +17,7 @@ properties:
+   compatible:
+     enum:
+       - allwinner,sun8i-h3-ths
++      - allwinner,sun8i-r40-ths
+       - allwinner,sun50i-a64-ths
+       - allwinner,sun50i-h5-ths
+       - allwinner,sun50i-h6-ths
 -- 
 2.17.1
