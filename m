@@ -1,15 +1,15 @@
 Return-Path: <SRS0=/AEK=WG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37531 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfHJC0n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2019 22:26:43 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so45708604plr.4
-        for <devicetree@vger.kernel.org>; Fri, 09 Aug 2019 19:26:42 -0700 (PDT)
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42374 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfHJCMc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2019 22:12:32 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so46951246pff.9
+        for <devicetree@vger.kernel.org>; Fri, 09 Aug 2019 19:12:31 -0700 (PDT)
 Subject: Re: [PATCH v2] of/fdt: implement a "merge-cmdline" property
 References: <1565020400-25679-1-git-send-email-daniel@gimpelevich.san-francisco.ca.us>
 From: Frank Rowand <frowand.list@gmail.com>
-Message-ID: <6772aab0-a4eb-55dc-657d-0f2b67b0d163@gmail.com>
-Date: Fri, 9 Aug 2019 19:26:40 -0700
+Message-ID: <202c73b3-7b38-8040-49fc-a7ea14020370@gmail.com>
+Date: Fri, 9 Aug 2019 19:12:29 -0700
 MIME-Version: 1.0
 In-Reply-To: <1565020400-25679-1-git-send-email-daniel@gimpelevich.san-francisco.ca.us>
 Content-Type: text/plain; charset=utf-8
@@ -17,10 +17,14 @@ Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Daniel Gimpelevich <daniel@gimpelevich.san-francisco.ca.us>, devicetree@vger.kernel.org
-Cc: Paul Burton <paul.burton@mips.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: Paul Burton <paul.burton@mips.com>
 List-ID: <devicetree@vger.kernel.org>
 
-+Frank (me)
+Hi Daniel,
+
+Please include me on the distribution list for devicetree patches.
+
+-Frank
 
 On 8/5/19 8:53 AM, Daniel Gimpelevich wrote:
 > Currently, "bootargs" supplied via the "chosen" node can be used only to
