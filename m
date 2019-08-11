@@ -1,103 +1,71 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v8 04/21] clk: tegra: pllout: Save and restore pllout
- context
-Date: Sun, 11 Aug 2019 21:04:24 +0300
-Message-ID: <3bc1cdc5-c8e7-a210-67ae-2a3f6f01660f@gmail.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-5-git-send-email-skomatineni@nvidia.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
+ sequence handler on MTP
+Date: Sun, 11 Aug 2019 12:01:59 -0700
+Message-ID: <20190811190159.GQ26807@tuxbook-pro>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-5-vivek.gautam@codeaurora.org>
+ <20190805222627.GA2634@builder>
+ <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565308020-31952-5-git-send-email-skomatineni@nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-09.08.2019 2:46, Sowjanya Komatineni пишет:
-> This patch implements save and restore of pllout context.
+On Sun 11 Aug 09:08 PDT 2019, Vivek Gautam wrote:
+
+> On Tue, Aug 6, 2019 at 3:56 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+> >
+> > > Indicate on MTP SDM845 that firmware implements handler to
+> > > TLB invalidate erratum SCM call where SAFE sequence is toggled
+> > > to achieve optimum performance on real-time clients, such as
+> > > display and camera.
+> > >
+> > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index 78ec373a2b18..6a73d9744a71 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -2368,6 +2368,7 @@
+> > >                       compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+> > >                       reg = <0 0x15000000 0 0x80000>;
+> > >                       #iommu-cells = <2>;
+> > > +                     qcom,smmu-500-fw-impl-safe-errata;
+> >
+> > Looked back at this series and started to wonder if there there is a
+> > case where this should not be set? I mean we're after all adding this to
+> > the top 845 dtsi...
 > 
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
-> 
-> So during suspend entry the state of pllout is saved and on resume
-> it is restored back to have pllout in same state as before suspend.
-> 
-> pllout rate is saved and restore in clock divider so it will be at
-> same rate as before suspend when pllout state is restored.
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-pll-out.c  | 9 +++++++++
->  drivers/clk/tegra/clk-tegra210.c | 3 ++-
->  drivers/clk/tegra/clk.h          | 6 ++++++
->  3 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-pll-out.c b/drivers/clk/tegra/clk-pll-out.c
-> index 35f2bf00e1e6..d8bf89a81e6d 100644
-> --- a/drivers/clk/tegra/clk-pll-out.c
-> +++ b/drivers/clk/tegra/clk-pll-out.c
-> @@ -69,10 +69,19 @@ static void clk_pll_out_disable(struct clk_hw *hw)
->  		spin_unlock_irqrestore(pll_out->lock, flags);
->  }
->  
-> +static void tegra_clk_pll_out_restore_context(struct clk_hw *hw)
-> +{
-> +	if (!__clk_get_enable_count(hw->clk))
-> +		clk_pll_out_disable(hw);
-> +	else
-> +		clk_pll_out_enable(hw);
-> +}
-> +
->  const struct clk_ops tegra_clk_pll_out_ops = {
->  	.is_enabled = clk_pll_out_is_enabled,
->  	.enable = clk_pll_out_enable,
->  	.disable = clk_pll_out_disable,
-> +	.restore_context = tegra_clk_pll_out_restore_context,
->  };
->  
->  struct clk *tegra_clk_register_pll_out(const char *name,
-> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-> index df172d5772d7..4721ee030d1c 100644
-> --- a/drivers/clk/tegra/clk-tegra210.c
-> +++ b/drivers/clk/tegra/clk-tegra210.c
-> @@ -3200,7 +3200,8 @@ static void __init tegra210_pll_init(void __iomem *clk_base,
->  					 8, 8, 1, NULL);
->  	clk = tegra_clk_register_pll_out("pll_re_out1", "pll_re_out1_div",
->  					 clk_base + PLLRE_OUT1, 1, 0,
-> -					 CLK_SET_RATE_PARENT, 0, NULL);
-> +					 CLK_SET_RATE_PARENT, TEGRA_PLLRE_OUT,
-> +					 NULL);
->  	clks[TEGRA210_CLK_PLL_RE_OUT1] = clk;
->  
->  	/* PLLE */
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index 905bf1096558..a464524fbc90 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -437,6 +437,10 @@ struct clk *tegra_clk_register_pllu_tegra210(const char *name,
->   * @rst_bit_idx:	bit to reset PLL divider
->   * @lock:		register lock
->   * @flags:		hardware-specific flags
-> + *
-> + * Flags:
-> + * TEGRA_PLLRE_OUT - This flag indicates that it is PLLRE_OUT and is used to
-> + *		     identify PLLRE_OUT during clk_pll_out save and restore.
->   */
->  struct tegra_clk_pll_out {
->  	struct clk_hw	hw;
-> @@ -447,6 +451,8 @@ struct tegra_clk_pll_out {
->  	u8		flags;
->  };
->  
-> +#define TEGRA_PLLRE_OUT BIT(0)
-> +
->  #define to_clk_pll_out(_hw) container_of(_hw, struct tegra_clk_pll_out, hw)
->  
->  extern const struct clk_ops tegra_clk_pll_out_ops;
+> My bad.
+> This is not valid in case of cheza. Cheza firmware doesn't implement
+> the safe errata handling hook.
+> On cheza we just have the liberty of accessing the secure registers
+> through scm calls - this is what
+> we were doing in earlier patch series handling this errata.
+> So, a property like this should go to mtp board's dts file.
 > 
 
-Looks like the TEGRA_PLLRE_OUT flag is unused.
+It would have been nice if the common case was just selected by default,
+but afaict no safe workaround is needed on Cheza? You mention here that
+it should (could?) use the scm write based approach instead, would an
+introduction of that come with another flag?
+
+
+PS. In it's current form it's correct that this should be moved to the
+device dts files - all but one of them...
+
+Regards,
+Bjorn
