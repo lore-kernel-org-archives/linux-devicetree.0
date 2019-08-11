@@ -1,71 +1,63 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
- sequence handler on MTP
-Date: Sun, 11 Aug 2019 12:01:59 -0700
-Message-ID: <20190811190159.GQ26807@tuxbook-pro>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-5-vivek.gautam@codeaurora.org>
- <20190805222627.GA2634@builder>
- <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 3/5] counter: new TI eQEP driver
+Date: Sun, 11 Aug 2019 14:15:14 -0500
+Message-ID: <aa307094-c205-4e68-b21f-73d27f9ee257@lechnology.com>
+References: <20190807194023.15318-1-david@lechnology.com>
+ <20190807194023.15318-4-david@lechnology.com>
+ <20190811102345.1af5c23c@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
+In-Reply-To: <20190811102345.1af5c23c@archlinux>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, Andy Gross <agross@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+To: Jonathan Cameron <jic23@kernel.org>, linux-omap@vger.kernel.org
+Cc: linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 11 Aug 09:08 PDT 2019, Vivek Gautam wrote:
-
-> On Tue, Aug 6, 2019 at 3:56 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
-> >
-> > > Indicate on MTP SDM845 that firmware implements handler to
-> > > TLB invalidate erratum SCM call where SAFE sequence is toggled
-> > > to achieve optimum performance on real-time clients, such as
-> > > display and camera.
-> > >
-> > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index 78ec373a2b18..6a73d9744a71 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -2368,6 +2368,7 @@
-> > >                       compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
-> > >                       reg = <0 0x15000000 0 0x80000>;
-> > >                       #iommu-cells = <2>;
-> > > +                     qcom,smmu-500-fw-impl-safe-errata;
-> >
-> > Looked back at this series and started to wonder if there there is a
-> > case where this should not be set? I mean we're after all adding this to
-> > the top 845 dtsi...
+On 8/11/19 4:23 AM, Jonathan Cameron wrote:
+> On Wed,  7 Aug 2019 14:40:21 -0500
+> David Lechner <david@lechnology.com> wrote:
+>> +
+>> +	pm_runtime_enable(dev);
+>> +	pm_runtime_get(dev);
+> I'm a little confused on the flow here.
 > 
-> My bad.
-> This is not valid in case of cheza. Cheza firmware doesn't implement
-> the safe errata handling hook.
-> On cheza we just have the liberty of accessing the secure registers
-> through scm calls - this is what
-> we were doing in earlier patch series handling this errata.
-> So, a property like this should go to mtp board's dts file.
+> pm_runtime_enable turns on runtime pm in general.
+> 
+> pm_runtime_get basically calls runtime_resume to ensrue the
+> device has power.
+> 
+>> +
+>> +	return devm_counter_register(dev, &priv->counter);
+> 
+> This registers the userspace interfaces and exposes the device.
+> 
+>> +}
+>> +
+>> +static int ti_eqep_remove(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +
+>> +	pm_runtime_put(dev),
+>> +	pm_runtime_disable(dev);
+> 
+> pm_runtime_put notifies the system that the device is idle
+> (and hence potentially turns it off).
+> 
+> Not good if the counter is still registered.
+> 
+> I'm assuming the presence of runtime pm at all is to interact
+> with a parent driver and hence stop that turning off if this
+> driver is probed?  That's probably fine, but add a few comments
+> to make it clear that this driver itself doesn't really do
+> runtime pm at all.
 > 
 
-It would have been nice if the common case was just selected by default,
-but afaict no safe workaround is needed on Cheza? You mention here that
-it should (could?) use the scm write based approach instead, would an
-introduction of that come with another flag?
+To be honest, despite reading the runtime PM docs more than once,
+I still don't feel like I have a good grasp on how it is supposed
+to work. I just know that we get a crash if it is omitted because
+the IP block is not powered on.
 
-
-PS. In it's current form it's correct that this should be moved to the
-device dts files - all but one of them...
-
-Regards,
-Bjorn
+I will fix the ordering in _remove() and add a comment in v3.
