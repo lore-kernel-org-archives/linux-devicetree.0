@@ -1,86 +1,78 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 0/9] DRM panel drivers for omapdrm
-Date: Sun, 11 Aug 2019 19:23:01 +0200
-Message-ID: <20190811172301.GH14660@ravnborg.org>
-References: <20190810231048.1921-1-laurent.pinchart@ideasonboard.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v8 05/21] clk: tegra: pll: Save and restore pll context
+Date: Sun, 11 Aug 2019 20:24:25 +0300
+Message-ID: <d289b682-1760-efe1-e6a5-5b51c476f1ed@gmail.com>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-6-git-send-email-skomatineni@nvidia.com>
+ <68f65db6-44b7-1c75-2633-4a2fffd62a92@gmail.com>
+ <dd20aa34-d838-40c4-9edd-bbe5973053f3@nvidia.com>
+ <2eecf4ff-802d-7e0e-d971-0257fae4e3a2@gmail.com>
+ <9096cbca-f647-b0af-2ab8-d48769555c3e@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190810231048.1921-1-laurent.pinchart@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9096cbca-f647-b0af-2ab8-d48769555c3e@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudC4KCk9uIFN1biwgQXVnIDExLCAyMDE5IGF0IDAyOjEwOjM5QU0gKzAzMDAsIExh
-dXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gSGVsbG8gZXZlcnlib2R5LAo+IAo+IFRoZXNlIDkgcGF0
-Y2hlcyBoYXZlIGluaXRpYWxseSBiZWVuIHBvc3RlZCBhcyBwYXJ0IG9mIHRoZSBsYXJnZXIgIltQ
-QVRDSAo+IDAwLzYwXSBkcm0vb21hcDogUmVwbGFjZSBjdXN0b20gZGlzcGxheSBkcml2ZXJzIHdp
-dGggZHJtX2JyaWRnZSBhbmQKPiBkcm1fcGFuZWwiIHNlcmllcywgaGVuY2UgdGhlIHYyIGluIHRo
-ZSBzdWJqZWN0IHByZWZpeC4KPiAKPiBJJ20gcG9zdGluZyB0aGlzIHNlY29uZCB2ZXJzaW9uIHNl
-cGFyYXRlbHkgcGVyIFNhbSdzIHJlcXVlc3QgYXMgdGhlIHJlc3QKPiBvZiB0aGUgb3JpZ2luYWwg
-c2VyaWVzIGlzIGV4cGVjdGVkIHRvIHRha2UgbW9yZSB0aW1lIHRvIHByb2Nlc3MgdGhyb3VnaAo+
-IHJldmlldy4KVGhhbmtzLCBtYWtlIGdvb2Qgc2Vuc2UgKHRvIG1lKSB0aGF0IHdlIHByb2Nlc3Mg
-dGhlc2Ugbm93IHdoaWxlIHdhaXRpbmcKZm9yIHRoZSBkdXN0IHRvIHNldHRlbCBvbiB0aGUgb3Ro
-ZXIgbW9yZSBpbnZhc2l2ZSBwYXRjaGVzLgoKPiAKPiBUaGVyZSdzIG5vdGhpbmcgdmVyeSBzcGVj
-aWFsIGhlcmUuIFRoZSBmaXJzdCB0aHJlZSBwYXRjaGVzIGFkZCBEVCB2ZW5kb3IKPiBwcmVmaXhl
-cyBhbmQgRFQgYmluZGluZ3MuIFNpbmNlIHYxIHBhdGNoIDMvOSBoYXMgYmVlbiBjb252ZXJ0ZWQg
-ZnJvbQo+IHRleHQgdG8gWUFNTCwgYW5kIGFzIEknbSBub3QgdmVyeSBmYW1pbGlhciB3aXRoIFlB
-TUwgRFQgYmluZGluZ3MsIEknbQo+IGVhZ2VybHkgd2FpdGluZyBmb3IgcmV2aWV3cy4KPiAKPiBU
-aGUgbGFzdCBzaXggcGF0Y2hlcyBhZGQgbmV3IHBhbmVsIGRyaXZlcnMuIFRoZSBjb2RlIG9yaWdp
-bmF0ZXMgZnJvbSB0aGUKPiBjb3JyZXNwb25kaW5nIG9tYXBkcm0tc3BlY2lmaWMgcGFuZWwgZHJp
-dmVycywgd2hpY2ggZXhwbGFpbnMgd2h5IG9ubHkKPiBvbmUgbmV3IERUIGJpbmRpbmcgaXMgbmVl
-ZGVkIGFzIG1vc3Qgb2YgdGhlbSBhcmUgYWxyZWFkeSBwcmVzZW50Lgo+IAo+IFBsZWFzZSBzZWUg
-aW5kaXZpZHVhbCBwYXRjaGVzIGZvciBjaGFuZ2Vsb2dzLiBTYW0sIEkgYmVsaWV2ZSBJJ3ZlIHRh
-a2VuCj4gYWxsIHlvdXIgY29tbWVudHMgaW50byBhY2NvdW50LCBJIGhvcGUgbm9uZSBmZWxsIHRo
-cm91Z2ggdGhlIGNyYWNrcy4KSSBoYXZlIGJlZW4gdGhyb3VnaCB0aGUgcGF0Y2hlcyAtIGFsbCBs
-b29rZWQgZ29vZC4KT25lIGdlbmVyZWwgY29tbWVudCBhYm91dCBkcm1fcGFuZWxfcmVtb3ZlKCku
-CgpUaGUgRFQgZm9yIHRoZSBORUMgTkw4MDQ4SEwxMSBuZWVkcyB0byBiZSByZXZpZXdlZCwgYW5k
-IHRoZW4gd2UgY2FuCmxhbmQgYWxsIHBhdGNoZXMgaW4gb25lIGdvLgpVbmxlc3Mgc29tZW9uZSBl
-bHNlIHB1dCBzb21lIHJldmlldyBlZmZvcnQgaW4gYW5kIGZpbmQgc29tZXRoaW5nLgoKCVNhbQoK
-Cj4gCj4gVGhlIHBhdGNoZXMgYXJlIGJhc2VkIG9uIHRvcCBvZiBkcm0tbWlzYy1uZXh0IGFuZCBj
-YW4gYmUgZm91bmQgYXQKPiAKPiAJZ2l0Oi8vbGludXh0di5vcmcvcGluY2hhcnRsL21lZGlhLmdp
-dCBvbWFwZHJtL3BhbmVscwo+IAo+IExhdXJlbnQgUGluY2hhcnQgKDkpOgo+ICAgZHQtYmluZGlu
-Z3M6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBMRyBEaXNwbGF5Cj4gICBkdC1iaW5kaW5nczogQWRk
-IGxlZ2FjeSAndG9wcG9seScgdmVuZG9yIHByZWZpeAo+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6
-IHBhbmVsOiBBZGQgYmluZGluZ3MgZm9yIE5FQyBOTDgwNDhITDExIHBhbmVsCj4gICBkcm0vcGFu
-ZWw6IEFkZCBkcml2ZXIgZm9yIHRoZSBMRyBQaGlsaXBzIExCMDM1UTAyIHBhbmVsCj4gICBkcm0v
-cGFuZWw6IEFkZCBkcml2ZXIgZm9yIHRoZSBORUMgTkw4MDQ4SEwxMSBwYW5lbAo+ICAgZHJtL3Bh
-bmVsOiBBZGQgZHJpdmVyIGZvciB0aGUgU2hhcnAgTFMwMzdWN0RXMDEgcGFuZWwKPiAgIGRybS9w
-YW5lbDogQWRkIGRyaXZlciBmb3IgdGhlIFNvbnkgQUNYNTY1QUtNIHBhbmVsCj4gICBkcm0vcGFu
-ZWw6IEFkZCBkcml2ZXIgZm9yIHRoZSBUb3Bwb2x5IFREMDI4VFRFQzEgcGFuZWwKPiAgIGRybS9w
-YW5lbDogQWRkIGRyaXZlciBmb3IgdGhlIFRvcHBvbHkgVEQwNDNNVEVBMSBwYW5lbAo+IAo+ICAu
-Li4vZGlzcGxheS9wYW5lbC9uZWMsbmw4MDQ4aGwxMS55YW1sICAgICAgICAgfCAgNDkgKysKPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnlhbWwgIHwgICA1ICsKPiAg
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgIDQ2ICsrCj4g
-IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgNiArCj4g
-IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1sZy1sYjAzNXEwMi5jICAgICB8IDIzNyArKysr
-KysKPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW5lYy1ubDgwNDhobDExLmMgIHwgMjQ3
-ICsrKysrKysKPiAgLi4uL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2hhcnAtbHMwMzd2N2R3MDEuYyAg
-IHwgMjI2ICsrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc29ueS1hY3g1NjVh
-a20uYyAgfCA2OTMgKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
-YW5lbC10cG8tdGQwMjh0dGVjMS5jICB8IDM4MSArKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC10cG8tdGQwNDNtdGVhMS5jICB8IDUwOCArKysrKysrKysrKysrCj4gIDEw
-IGZpbGVzIGNoYW5nZWQsIDIzOTggaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbmVjLG5sODA0
-OGhsMTEueWFtbAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLWxnLWxiMDM1cTAyLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1uZWMtbmw4MDQ4aGwxMS5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2hhcnAtbHMwMzd2N2R3MDEuYwo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNvbnktYWN4NTY1YWttLmMKPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC10cG8tdGQwMjh0dGVj
-MS5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtdHBv
-LXRkMDQzbXRlYTEuYwo+IAo+IC0tIAo+IFJlZ2FyZHMsCj4gCj4gTGF1cmVudCBQaW5jaGFydApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+09.08.2019 21:50, Sowjanya Komatineni пишет:
+> 
+> On 8/9/19 10:50 AM, Dmitry Osipenko wrote:
+>> 09.08.2019 20:39, Sowjanya Komatineni пишет:
+>>> On 8/9/19 4:33 AM, Dmitry Osipenko wrote:
+>>>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
+>>>>> This patch implements save and restore of PLL context.
+>>>>>
+>>>>> During system suspend, core power goes off and looses the settings
+>>>>> of the Tegra CAR controller registers.
+>>>>>
+>>>>> So during suspend entry pll context is stored and on resume it is
+>>>>> restored back along with its state.
+>>>>>
+>>>>> Acked-by: Thierry Reding <treding@nvidia.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>    drivers/clk/tegra/clk-pll.c | 88 ++++++++++++++++++++++++++++-----------------
+>>>>>    drivers/clk/tegra/clk.h     |  2 ++
+>>>>>    2 files changed, 58 insertions(+), 32 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+>>>>> index 1583f5fc992f..e52add2bbdbb 100644
+>>>>> --- a/drivers/clk/tegra/clk-pll.c
+>>>>> +++ b/drivers/clk/tegra/clk-pll.c
+>>>>> @@ -1008,6 +1008,28 @@ static unsigned long clk_plle_recalc_rate(struct clk_hw *hw,
+>>>>>        return rate;
+>>>>>    }
+>>>>>    +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+>>>>> +{
+>>>>> +    struct tegra_clk_pll *pll = to_clk_pll(hw);
+>>>>> +    struct clk_hw *parent = clk_hw_get_parent(hw);
+>>>>> +    unsigned long parent_rate = clk_hw_get_rate(parent);
+>>>>> +    unsigned long rate = clk_hw_get_rate(hw);
+>>>>> +    u32 val;
+>>>>> +
+>>>>> +    if (clk_pll_is_enabled(hw))
+>>>>> +        return;
+>>>>> +
+>>>>> +    if (pll->params->set_defaults)
+>>>>> +        pll->params->set_defaults(pll);
+>>>>> +
+>>>>> +    clk_pll_set_rate(hw, rate, parent_rate);
+>>>>> +
+>>>>> +    if (!__clk_get_enable_count(hw->clk))
+>>>> What about orphaned clocks? Is enable_count > 0 for them?
+>>> There are no orphaned pll clocks.
+>> Sorry, I meant the "clk_ignore_unused".
+> 
+> clocks with CLK_IGNORE_UNUSED are taken care by clk driver.
+> 
+> clk_disable_unused checks for clocks with this flag and if they are not enabled it will
+> enable them.
+> 
+> So by the time suspend happens enable_count is > 0
+
+Okay.
