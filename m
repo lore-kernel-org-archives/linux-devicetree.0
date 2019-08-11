@@ -1,92 +1,68 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
-	sequence handler on MTP
-Date: Sun, 11 Aug 2019 21:38:24 +0530
-Message-ID: <CAFp+6iHGrXAJ2Y1ewxaePGYEcbnprjScUnGyR61qvOv03HVZhQ@mail.gmail.com>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
-	<20190612071554.13573-5-vivek.gautam@codeaurora.org>
-	<20190805222627.GA2634@builder>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 3/9] dt-bindings: display: panel: Add bindings for NEC
+ NL8048HL11 panel
+Date: Sun, 11 Aug 2019 18:55:58 +0200
+Message-ID: <20190811165558.GE14660@ravnborg.org>
+References: <20190810231048.1921-1-laurent.pinchart@ideasonboard.com>
+ <20190810231048.1921-4-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190805222627.GA2634@builder>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190810231048.1921-4-laurent.pinchart@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 3:56 AM Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
-> On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
->
-> > Indicate on MTP SDM845 that firmware implements handler to
-> > TLB invalidate erratum SCM call where SAFE sequence is toggled
-> > to achieve optimum performance on real-time clients, such as
-> > display and camera.
-> >
-> > Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index 78ec373a2b18..6a73d9744a71 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -2368,6 +2368,7 @@
-> >                       compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
-> >                       reg = <0 0x15000000 0 0x80000>;
-> >                       #iommu-cells = <2>;
-> > +                     qcom,smmu-500-fw-impl-safe-errata;
->
-> Looked back at this series and started to wonder if there there is a
-> case where this should not be set? I mean we're after all adding this to
-> the top 845 dtsi...
-
-My bad.
-This is not valid in case of cheza. Cheza firmware doesn't implement
-the safe errata handling hook.
-On cheza we just have the liberty of accessing the secure registers
-through scm calls - this is what
-we were doing in earlier patch series handling this errata.
-So, a property like this should go to mtp board's dts file.
-
-Thanks
-
-Vivek
-
->
-> How about making it the default in the driver and opt out of the errata
-> once there is a need?
->
-> Regards,
-> Bjorn
->
-> >                       #global-interrupts = <1>;
-> >                       interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-> >                                    <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> >
-> _______________________________________________
-> iommu mailing list
-> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
-
-
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+SGkgTGF1cmVudC4KCk15IG1ldGEtc2NoZW1hcyBmb28gaXMgdmVyeSBsaW1pdGVkLCBidXQgSSBu
+b3RpY2VkIGEgZmV3IHRoaW5ncy4KSG9wZWZ1bGx5IFJvYiBmaW5kcyB0aW1lIHNvb24gdG8gcmV2
+aWV3LgoKCVNhbQoKT24gU3VuLCBBdWcgMTEsIDIwMTkgYXQgMDI6MTA6NDJBTSArMDMwMCwgTGF1
+cmVudCBQaW5jaGFydCB3cm90ZToKPiBUaGUgTkVDIE5MODA0OEhMMTEgaXMgYSAxMC40Y20gV1ZH
+QSAoODAweDQ4MCkgcGFuZWwgd2l0aCBhIDI0LWJpdCBSR0IKPiBwYXJhbGxlbCBkYXRhIGludGVy
+ZmFjZSBhbmQgYW4gU1BJIGNvbnRyb2wgaW50ZXJmYWNlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IExh
+dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KPiAtLS0K
+PiBDaGFuZ2VzIHNpbmNlIHYxOgo+IAo+IC0gQ29udmVydCB0byBZQU1MCj4gLS0tCj4gIC4uLi9k
+aXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwgICAgICAgICB8IDQ5ICsrKysrKysrKysr
+KysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQ5IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L25lYyxubDgwNDhobDExLnlhbWwKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbmVjLG5sODA0OGhsMTEueWFtbCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDEx
+LnlhbWwKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uY2MzZDQw
+OTc1ODI4Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwKPiBAQCAtMCwwICsxLDQ5
+IEBACj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPiArJVlBTUwgMS4yCj4g
+Ky0tLQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2Rpc3BsYXkvcGFuZWwv
+bmVjLG5sODA0OGhsMTEueWFtbCMKPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21l
+dGEtc2NoZW1hcy9jb3JlLnlhbWwjCj4gKwo+ICt0aXRsZTogTkVDIE5MODA0OEhMMTEgNC4xIiBX
+VkdBIFRGVCBMQ0QgcGFuZWwKPiArCj4gK2Rlc2NyaXB0aW9uOgo+ICsgIFRoZSBORUMgTkw4MDQ4
+SEwxMSBpcyBhIDQuMSIgV1ZHQSBURlQgTENEIHBhbmVsIHdpdGggYSAyNC1iaXQgUkdCIHBhcmFs
+bGVsCj4gKyAgZGF0YSBpbnRlcmZhY2UgYW5kIGFuIFNQSSBjb250cm9sIGludGVyZmFjZS4KPiAr
+Cj4gK21haW50YWluZXJzOgo+ICsgIC0gTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFy
+dEBpZGVhc29uYm9hcmQuY29tPgo+ICsKPiArYWxsT2Y6Cj4gKyAgLSAkcmVmOiBwYW5lbC1jb21t
+b24ueWFtbCMKSSAqdGhpbmsqIHdlIGFyZSBtaXNzaW5nIGEgcmVmZXJlbmNlIHRvIHNwaS1jb250
+cm9sbGVyLnlhbWwgaGVyZS4KCgo+ICsKPiArcHJvcGVydGllczoKPiArICBjb21wYXRpYmxlOgo+
+ICsgICAgY29uc3Q6IG5lYyxubDgwNDhobDExCj4gKwo+ICsgIGxhYmVsOiB0cnVlCj4gKyAgcmVz
+ZXQtZ3Bpb3M6IHRydWUKPiArICBwb3J0OiB0cnVlCj4gKwo+ICtyZXF1aXJlZDoKPiArICAtIGNv
+bXBhdGlibGUKPiArICAtIHJlc2V0LWdwaW9zCj4gKyAgLSBwb3J0Cj4gKwo+ICthZGRpdGlvbmFs
+UHJvcGVydGllczogZmFsc2UKPiArCj4gK2V4YW1wbGVzOgo+ICsgIC0gfAo+ICsgICAgbGNkX3Bh
+bmVsOiBwYW5lbCB7Cj4gKyAgICAgIGNvbXBhdGlibGUgPSAibmVjLG5sODA0OGhsMTEiOwo+ICsg
+ICAgICBzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAwMDAwMD47Ck5vdCBzdXJlLCBidXQgc2hvdWxk
+IHRoZXJlIGJlIGEgcmVnIHByb3BlcnR5IGhlcmUgZm9yIHNwaSB0b28/Cgo+ICsKPiArICAgICAg
+cmVzZXQtZ3Bpb3MgPSA8JmdwaW83IDcgR1BJT19BQ1RJVkVfTE9XPjsKPiArCj4gKyAgICAgIHBv
+cnQgewo+ICsgICAgICAgIGxjZF9pbjogZW5kcG9pbnQgewo+ICsgICAgICAgICAgcmVtb3RlLWVu
+ZHBvaW50ID0gPCZkcGlfb3V0PjsKPiArICAgICAgICB9Owo+ICsgICAgICB9Owo+ICsgICAgfTsK
+PiArCj4gKy4uLgo+IC0tIAo+IFJlZ2FyZHMsCj4gCj4gTGF1cmVudCBQaW5jaGFydApfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
