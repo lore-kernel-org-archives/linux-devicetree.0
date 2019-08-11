@@ -1,38 +1,72 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v4 0/4] Add drivers for auo, kd101n80-45na and boe,
- tv101wum-nl6 panels
-Date: Sun, 11 Aug 2019 23:11:18 +0200
-Message-ID: <20190811211118.GA23636@ravnborg.org>
-References: <20190811091001.49555-1-jitao.shi@mediatek.com>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v5 00/18] add thermal driver for h6
+Date: Sun, 11 Aug 2019 23:14:30 +0200
+Message-ID: <f479c162-4eac-f320-3583-b9ddbef79b1a@gmail.com>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190811091001.49555-1-jitao.shi@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jitao Shi <jitao.shi@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, yingjoe.chen@mediatek.com, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSml0YW8uCgo+ICAuLi4vZGlzcGxheS9wYW5lbC9hdW8sa2QxMDFuODAtNDVuYS50eHQgICAg
-ICAgfCAgMzQgKwo+ICAuLi4vZGlzcGxheS9wYW5lbC9ib2UsdHYxMDF3dW0tbmw2LnR4dCAgICAg
-ICAgfCAgMzQgKwoKcGFuZWwgYmluZGluZ3MgYXJlIGluIHRoZSBwcm9jZXNzIG9mIGJlaW5nIG1p
-Z3JhdGVkIHRvIHRoZSBuZXcKbWV0YS1zY2hlbWEgZm9ybWF0LgpUaGVyZWZvcmUgbmV3IGJpbmRp
-bmdzIHNob3VsZCBwcmVmZXJhYmx5IGFsc28gZm9sbG93IHRoZSBuZXcgZm9ybWF0LgoKQ2FuIHlv
-dSBwbGVhc2UgbG9vayBpbnRvIHRoaXMuCkluIHVwc3RyZWFtIGFuZCBkcm0tbWlzYy1uZXh0IHRo
-ZXJlIGlzIGFscmVhZHkgc29tZSBleGFtcGxlcy4KCk5vdGU6IEl0IGlzIG5vdCBhIGhhcmQgcnVs
-ZSB0aGF0IG5ldyBiaW5kaW5ncyBzaGFsbCBiZSBpbgp0aGUgbmV3IG1ldGEtc2NoZW1hIGZvcm1h
-dCAoLnlhbWwgZXh0ZW5zaW9uKSwgYnV0IGFzIHRoaXMgaXMKYmVzdCBwcmFjdGljZSBub3cgaXQg
-aXMgcHJlZmVycmVkLgpTYW1lIGdvZXMgZm9yIGRpc3BsYXkgYmluZGluZ3MgYnR3LgoKCVNhbQpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Yangtao,
+
+On 10/08/2019 07:28, Yangtao Li wrote:
+> This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
+
+Could you add the device-tree configuration in the same series?
+This will allow user to test it.
+
+Thanks,
+Clément
+
+> 
+> Thx to Icenowy and Vasily.
+> 
+> BTY, do a cleanup in thermal makfile.
+> 
+> Icenowy Zheng (3):
+>    thermal: sun8i: allow to use custom temperature calculation function
+>    thermal: sun8i: add support for Allwinner H5 thermal sensor
+>    thermal: sun8i: add support for Allwinner R40 thermal sensor
+> 
+> Vasily Khoruzhick (1):
+>    thermal: sun8i: add thermal driver for A64
+> 
+> Yangtao Li (14):
+>    thermal: sun8i: add thermal driver for h6
+>    dt-bindings: thermal: add binding document for h6 thermal controller
+>    thermal: fix indentation in makefile
+>    thermal: sun8i: get ths sensor number from device compatible
+>    thermal: sun8i: rework for sun8i_ths_get_temp()
+>    thermal: sun8i: get ths init func from device compatible
+>    thermal: sun8i: rework for ths irq handler func
+>    thermal: sun8i: support mod clocks
+>    thermal: sun8i: rework for ths calibrate func
+>    dt-bindings: thermal: add binding document for h3 thermal controller
+>    thermal: sun8i: add thermal driver for h3
+>    dt-bindings: thermal: add binding document for a64 thermal controller
+>    dt-bindings: thermal: add binding document for h5 thermal controller
+>    dt-bindings: thermal: add binding document for r40 thermal controller
+> 
+>   .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
+>   MAINTAINERS                                   |   7 +
+>   drivers/thermal/Kconfig                       |  14 +
+>   drivers/thermal/Makefile                      |   9 +-
+>   drivers/thermal/sun8i_thermal.c               | 596 ++++++++++++++++++
+>   5 files changed, 779 insertions(+), 4 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>   create mode 100644 drivers/thermal/sun8i_thermal.c
+> ---
+> v5:
+> -add more support
+> -some trival fix
+> ---
+> 2.17.1
+> 
+> 
