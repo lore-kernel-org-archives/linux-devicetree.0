@@ -1,13 +1,16 @@
 From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 0/3] Allwinner H6 SPDIF support
-Date: Sun, 11 Aug 2019 22:31:41 +0200
-Message-ID: <20190811203144.5999-1-peron.clem@gmail.com>
+Subject: [PATCH v5 2/3] arm64: dts: allwinner: h6: Enable SPDIF
+ for Beelink GS1
+Date: Sun, 11 Aug 2019 22:31:43 +0200
+Message-ID: <20190811203144.5999-3-peron.clem@gmail.com>
+References: <20190811203144.5999-1-peron.clem@gmail.com>
 Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBPHWYHVAKGQE6RVMG6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCELXIX7UICBBPPWYHVAKGQEUK2WOAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190811203144.5999-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,45 +21,30 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob H
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
-is different from the previous H3 generation and not compatible.
+Beelink GS1 board has a SPDIF out connector, so enable it in
+the device-tree.
 
-Difference are an increase of fifo sizes, some memory mapping are different
-and there is now the possibility to output the master clock on a pin.
+Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Actually all these features are unused and only a bit for flushing the TX
-fifo is required.
-
-Changes since v4:
- - rename audio card name to sun50i-h6-spdif
- - drop patches already merged
-
-Changes since v3:
- - rename reg_fctl_ftx to val_fctl_ftx
- - rebase this series on sound-next
- - fix dt-bindings due to change in sound-next
- - change node name sound_spdif to sound-spdif
-
-Changes since v2:
- - Split quirks and H6 support patch
- - Add specific section for quirks comment
-
-Changes since v1:
- - Remove H3 compatible
- - Add TX fifo bit flush quirks
- - Add H6 bindings in SPDIF driver
-
-
-Cl=C3=A9ment P=C3=A9ron (3):
-  arm64: dts: allwinner: Add SPDIF node for Allwinner H6
-  arm64: dts: allwinner: h6: Enable SPDIF for Beelink GS1
-  arm64: defconfig: Enable Sun4i SPDIF module
-
- .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  4 ++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 38 +++++++++++++++++++
- arch/arm64/configs/defconfig                  |  1 +
- 3 files changed, 43 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch=
+/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 0dc33c90dd60..76a95ad33dc5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -243,6 +243,10 @@
+ 	vcc-pm-supply =3D <&reg_aldo1>;
+ };
+=20
++&spdif {
++	status =3D "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&uart0_ph_pins>;
 --=20
 2.20.1
 
@@ -66,4 +54,4 @@ linux-sunxi" group.
 To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190811203144.5999-1-peron.clem%40gmail.com.
+/linux-sunxi/20190811203144.5999-3-peron.clem%40gmail.com.
