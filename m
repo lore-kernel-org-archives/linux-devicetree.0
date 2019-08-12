@@ -1,7 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 16/21] ARM: dts: imx6ull-colibri: Add watchdog
-Date: Mon, 12 Aug 2019 14:21:40 +0000
-Message-ID: <20190812142105.1995-17-philippe.schenker@toradex.com>
+Subject: [PATCH v4 15/21] ARM: dts: imx6ull-colibri: reduce v_batt current in
+ power off
+Date: Mon, 12 Aug 2019 14:21:39 +0000
+Message-ID: <20190812142105.1995-16-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -14,8 +15,16 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the watchdog to the imx6ull-colibri devicetree
+From: Max Krummenacher <max.krummenacher@toradex.com>
 
+Reduce the current drawn from VCC_BATT when the main power on the 3V3
+pins to the module are switched off.
+
+This switches off SoC internal pull resistors which are provided on the
+module for TAMPER7 and TAMPER9 SoC pin and switches on a pull down
+instead of a pullup for the USBC_DET module pin (TAMPER2).
+
+Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
@@ -27,39 +36,36 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
 6ull-colibri.dtsi
-index 1f112ec55e5c..e3220298dd6f 100644
+index 1019ce69a242..1f112ec55e5c 100644
 --- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -199,6 +199,12 @@
- 	assigned-clock-rates =3D <0>, <198000000>;
- };
+@@ -533,19 +533,19 @@
 =20
-+&wdog1 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+};
-+
- &iomuxc {
- 	pinctrl_can_int: canint-grp {
+ 	pinctrl_snvs_ad7879_int: snvs-ad7879-int-grp { /* TOUCH Interrupt */
  		fsl,pins =3D <
-@@ -506,6 +512,12 @@
- 			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
+-			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
++			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x100b0
  		>;
  	};
-+
-+	pinctrl_wdog: wdog-grp {
-+		fsl,pins =3D <
-+			MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
-+		>;
-+	};
- };
 =20
- &iomuxc_snvs {
+ 	pinctrl_snvs_reg_sd: snvs-reg-sd-grp {
+ 		fsl,pins =3D <
+-			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x4001b8b0
++			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x400100b0
+ 		>;
+ 	};
+=20
+ 	pinctrl_snvs_usbc_det: snvs-usbc-det-grp {
+ 		fsl,pins =3D <
+-			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
++			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
+ 		>;
+ 	};
+=20
 --=20
 2.22.0
