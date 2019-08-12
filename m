@@ -1,89 +1,91 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 07/14] net: phy: adin: make RMII fifo depth configurable
-Date: Mon, 12 Aug 2019 14:23:43 +0300
-Message-ID: <20190812112350.15242-8-alexandru.ardelean@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
+Date: Mon, 12 Aug 2019 13:24:11 +0200
+Message-ID: <20190812112411.ty3npkq6ztbushhm@flea>
+References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
+ <20190722081229.22422-3-maxime.ripard@bootlin.com>
+ <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
+ <20190812091631.j2pr7i2zeput3hrc@flea>
+ <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: multipart/mixed; boundary="===============2267208261649099083=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The FIFO depth can be configured for the RMII mode. This change adds
-support for doing this via device-tree (or ACPI).
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+--===============2267208261649099083==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="chbync4osl7cj5bo"
+Content-Disposition: inline
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index c882fcd9ada5..4ca685780622 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -52,8 +52,19 @@
- #define	ADIN1300_RGMII_2_40_NS			0x0007
- 
- #define ADIN1300_GE_RMII_CFG_REG		0xff24
-+#define   ADIN1300_GE_RMII_FIFO_DEPTH_MSK	GENMASK(6, 4)
-+#define   ADIN1300_GE_RMII_FIFO_DEPTH_SEL(x)	\
-+		FIELD_PREP(ADIN1300_GE_RMII_FIFO_DEPTH_MSK, x)
- #define   ADIN1300_GE_RMII_EN			BIT(0)
- 
-+/* RMII fifo depth values */
-+#define ADIN1300_RMII_4_BITS			0x0000
-+#define ADIN1300_RMII_8_BITS			0x0001
-+#define ADIN1300_RMII_12_BITS			0x0002
-+#define ADIN1300_RMII_16_BITS			0x0003
-+#define ADIN1300_RMII_20_BITS			0x0004
-+#define ADIN1300_RMII_24_BITS			0x0005
-+
- /**
-  * struct adin_cfg_reg_map - map a config value to aregister value
-  * @cfg		value in device configuration
-@@ -73,6 +84,16 @@ static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
- 	{ },
- };
- 
-+static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
-+	{ 4,  ADIN1300_RMII_4_BITS },
-+	{ 8,  ADIN1300_RMII_8_BITS },
-+	{ 12, ADIN1300_RMII_12_BITS },
-+	{ 16, ADIN1300_RMII_16_BITS },
-+	{ 20, ADIN1300_RMII_20_BITS },
-+	{ 24, ADIN1300_RMII_24_BITS },
-+	{ },
-+};
-+
- static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
- {
- 	size_t i;
-@@ -156,6 +177,7 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
- 
- static int adin_config_rmii_mode(struct phy_device *phydev)
- {
-+	u32 val;
- 	int reg;
- 
- 	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
-@@ -169,6 +191,13 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
- 
- 	reg |= ADIN1300_GE_RMII_EN;
- 
-+	val = adin_get_reg_value(phydev, "adi,fifo-depth-bits",
-+				 adin_rmii_fifo_depths,
-+				 ADIN1300_RMII_8_BITS);
-+
-+	reg &= ~ADIN1300_GE_RMII_FIFO_DEPTH_MSK;
-+	reg |= ADIN1300_GE_RMII_FIFO_DEPTH_SEL(val);
-+
- 	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
- 			     ADIN1300_GE_RMII_CFG_REG, reg);
- }
--- 
-2.20.1
+
+--chbync4osl7cj5bo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Aug 12, 2019 at 11:21:50AM +0200, Daniel Lezcano wrote:
+> On 12/08/2019 11:16, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Mon, Aug 12, 2019 at 10:59:51AM +0200, Daniel Lezcano wrote:
+> >> On 22/07/2019 10:12, Maxime Ripard wrote:
+> >>> Newer Allwinner SoCs have different number of interrupts, let's add
+> >>> different compatibles for all of them to deal with this properly.
+> >>>
+> >>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >>
+> >> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >
+> > Thanks!
+> >
+> > Can you merge this through your tree (along with the bindings)? I'll
+> > merge the DT patches
+>
+> patches 1-4 then ?
+
+Yep, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--chbync4osl7cj5bo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVFMWwAKCRDj7w1vZxhR
+xRg7AP9AGyLnuIz1tKYeJZXcdHCdmVcPwADY+KkLmegiEm4mkwD/R7lwmli2RLhK
+8NMsjP1LNwEklTeR3aMbTsfrI1uvTw4=
+=0T8v
+-----END PGP SIGNATURE-----
+
+--chbync4osl7cj5bo--
+
+
+--===============2267208261649099083==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2267208261649099083==--
