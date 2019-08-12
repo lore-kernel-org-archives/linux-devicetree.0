@@ -1,169 +1,520 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 12 Aug 2019 11:19:19 +0300
-Message-ID: <87imr2u77c.fsf@gmail.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <877e8tm25r.fsf@linux.intel.com> <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com> <8736idnu0q.fsf@gmail.com> <BYAPR07MB4709B0A4FADFB76183D651DCDDD10@BYAPR07MB4709.namprd07.prod.outlook.com> <87k1bjvtvi.fsf@gmail.com> <BYAPR07MB470926DA6241B54FC5AF3C2ADDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Aleix Roca Nonell <kernelrocks@gmail.com>
+Subject: Re: [PATCH 2/6] irqchip: Add Realtek RTD129x intc driver
+Date: Mon, 12 Aug 2019 10:26:48 +0200
+Message-ID: <20190812082648.GA3694@rocks>
+References: <20190707132256.GC13340@arks.localdomain>
+ <5efa2ccb-9659-443c-7986-8ceb01aa64b9@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB470926DA6241B54FC5AF3C2ADDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <5efa2ccb-9659-443c-7986-8ceb01aa64b9@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Mark and everyone! Sorry for the large delay, I'm doing this in my
+free time, which is not that abundant. In this mail, I'm focusing only
+on the largest change mentioned by Mark. I will answer the rest later.
 
+On Mon, Jul 08, 2019 at 10:36:14AM +0100, Marc Zyngier wrote:
+> On 07/07/2019 14:22, Aleix Roca Nonell wrote:
+> > This driver adds support for the RTD1296 and RTD1295 interrupt
+> > controller (intc). It is based on both the BPI-SINOVOIP project and
+> > Andreas Färber's previous attempt to submit a similar driver.
+> > 
+> > There is currently no publicly available datasheet on this SoC and the
+> > exact behaviour of the registers controlling the intc remain uncertain.
+> > 
+> > This driver controls two intcs: "iso" and "misc". Each intc has its own
+> > Interrupt Enable Register (IER) and Interrupt Status Resgister (ISR).
+> 
+> Register
+> 
+> > However, not all "misc" intc irqs have the same offsets for both ISR and
+> > IER. For this reason an ISR to IER offsets table is defined.
+> > 
+> > The driver catches the IER value to reduce accesses to the table inside the
+> > interrupt handler. Actually, the driver stores the ISR offsets of currently
+> > enabled interrupts in a variable.
+> > 
+> > Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
+> 
+> I expect Andreas and you to sort the attribution issue. I'm certainly
+> not going to take this in if things are unclear.
+> 
+> > ---
+> >  drivers/irqchip/Makefile      |   1 +
+> >  drivers/irqchip/irq-rtd129x.c | 371 ++++++++++++++++++++++++++++++++++
+> >  2 files changed, 372 insertions(+)
+> >  create mode 100644 drivers/irqchip/irq-rtd129x.c
+> > 
+> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > index 606a003a0000..0689c3956250 100644
+> > --- a/drivers/irqchip/Makefile
+> > +++ b/drivers/irqchip/Makefile
+> > @@ -100,3 +100,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+> >  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+> >  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+> >  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+> > +obj-$(CONFIG_ARCH_REALTEK)		+= irq-rtd129x.o
+> > diff --git a/drivers/irqchip/irq-rtd129x.c b/drivers/irqchip/irq-rtd129x.c
+> > new file mode 100644
+> > index 000000000000..76358ca50f10
+> > --- /dev/null
+> > +++ b/drivers/irqchip/irq-rtd129x.c
+> > @@ -0,0 +1,371 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include <linux/irqchip.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/io.h>
+> > +#include <linux/spinlock.h>
+> > +#include <linux/irqchip.h>
+> > +#include <linux/bits.h>
+> > +#include <linux/irqchip/chained_irq.h>
+> > +
+> > +#define RTD129X_INTC_NR_IRQS 32
+> > +#define DEV_NAME "RTD1296_INTC"
+> > +
+> > +/*
+> > + * This interrupt controller (hereinafter intc) driver controls two intcs: "iso"
+> > + * and "misc". Each intc has its own Interrupt Enable Register (IER) and
+> > + * Interrupt Status Resgister (ISR). However, not all "misc" intc irqs have the
+> > + * same offsets for both ISR and IER. For this reason an ISR to IER offsets
+> > + * table is defined. Also, to reduce accesses to this table in the interrupt
+> > + * handler, the driver stores the ISR offsets of currently enabled interrupts in
+> > + * a variable.
+> > + */
+> > +
+> > +enum misc_int_en {
+> > +	MISC_INT_FAIL		= 0xFF,
+> > +	MISC_INT_RVD		= 0xFE,
+> > +	MISC_INT_EN_FAN		= 29,
+> > +	MISC_INT_EN_I2C3	= 28,
+> > +	MISC_INT_EN_GSPI	= 27,
+> > +	MISC_INT_EN_I2C2	= 26,
+> > +	MISC_INT_EN_SC0		= 24,
+> > +	MISC_INT_EN_LSADC1	= 22,
+> > +	MISC_INT_EN_LSADC0	= 21,
+> > +	MISC_INT_EN_GPIODA	= 20,
+> > +	MISC_INT_EN_GPIOA	= 19,
+> > +	MISC_INT_EN_I2C4	= 15,
+> > +	MISC_INT_EN_I2C5	= 14,
+> > +	MISC_INT_EN_RTC_DATA	= 12,
+> > +	MISC_INT_EN_RTC_HOUR	= 11,
+> > +	MISC_INT_EN_RTC_MIN	= 10,
+> > +	MISC_INT_EN_UR2		= 7,
+> > +	MISC_INT_EN_UR2_TO	= 6,
+> > +	MISC_INT_EN_UR1_TO	= 5,
+> > +	MISC_INT_EN_UR1		= 3,
+> > +};
+> > +
+> > +enum iso_int_en {
+> > +	ISO_INT_FAIL		= 0xFF,
+> > +	ISO_INT_RVD		= 0xFE,
+> > +	ISO_INT_EN_I2C1_REQ	= 31,
+> > +	ISO_INT_EN_GPHY_AV	= 30,
+> > +	ISO_INT_EN_GPHY_DV	= 29,
+> > +	ISO_INT_EN_GPIODA	= 20,
+> > +	ISO_INT_EN_GPIOA	= 19,
+> > +	ISO_INT_EN_RTC_ALARM	= 13,
+> > +	ISO_INT_EN_RTC_HSEC	= 12,
+> > +	ISO_INT_EN_I2C1		= 11,
+> > +	ISO_INT_EN_I2C0		= 8,
+> > +	ISO_INT_EN_IRDA		= 5,
+> > +	ISO_INT_EN_UR0		= 2,
+> > +};
+> > +
+> > +unsigned char rtd129x_intc_enable_map_misc[RTD129X_INTC_NR_IRQS] = {
+> > +	MISC_INT_FAIL,		/* Bit0 */
+> > +	MISC_INT_FAIL,		/* Bit1 */
+> > +	MISC_INT_RVD,		/* Bit2 */
+> > +	MISC_INT_EN_UR1,	/* Bit3 */
+> > +	MISC_INT_FAIL,		/* Bit4 */
+> > +	MISC_INT_EN_UR1_TO,	/* Bit5 */
+> > +	MISC_INT_RVD,		/* Bit6 */
+> > +	MISC_INT_RVD,		/* Bit7 */
+> > +	MISC_INT_EN_UR2,	/* Bit8 */
+> > +	MISC_INT_RVD,		/* Bit9 */
+> > +	MISC_INT_EN_RTC_MIN,	/* Bit10 */
+> > +	MISC_INT_EN_RTC_HOUR,	/* Bit11 */
+> > +	MISC_INT_EN_RTC_DATA,	/* Bit12 */
+> > +	MISC_INT_EN_UR2_TO,	/* Bit13 */
+> > +	MISC_INT_EN_I2C5,	/* Bit14 */
+> > +	MISC_INT_EN_I2C4,	/* Bit15 */
+> > +	MISC_INT_FAIL,		/* Bit16 */
+> > +	MISC_INT_FAIL,		/* Bit17 */
+> > +	MISC_INT_FAIL,		/* Bit18 */
+> > +	MISC_INT_EN_GPIOA,	/* Bit19 */
+> > +	MISC_INT_EN_GPIODA,	/* Bit20 */
+> > +	MISC_INT_EN_LSADC0,	/* Bit21 */
+> > +	MISC_INT_EN_LSADC1,	/* Bit22 */
+> > +	MISC_INT_EN_I2C3,	/* Bit23 */
+> > +	MISC_INT_EN_SC0,	/* Bit24 */
+> > +	MISC_INT_FAIL,		/* Bit25 */
+> > +	MISC_INT_EN_I2C2,	/* Bit26 */
+> > +	MISC_INT_EN_GSPI,	/* Bit27 */
+> > +	MISC_INT_FAIL,		/* Bit28 */
+> > +	MISC_INT_EN_FAN,	/* Bit29 */
+> > +	MISC_INT_FAIL,		/* Bit30 */
+> > +	MISC_INT_FAIL		/* Bit31 */
+> > +};
+> > +
+> > +unsigned char rtd129x_intc_enable_map_iso[RTD129X_INTC_NR_IRQS] = {
+> > +	ISO_INT_FAIL,		/* Bit0 */
+> > +	ISO_INT_RVD,		/* Bit1 */
+> > +	ISO_INT_EN_UR0,		/* Bit2 */
+> > +	ISO_INT_FAIL,		/* Bit3 */
+> > +	ISO_INT_FAIL,		/* Bit4 */
+> > +	ISO_INT_EN_IRDA,	/* Bit5 */
+> > +	ISO_INT_FAIL,		/* Bit6 */
+> > +	ISO_INT_RVD,		/* Bit7 */
+> > +	ISO_INT_EN_I2C0,	/* Bit8 */
+> > +	ISO_INT_RVD,		/* Bit9 */
+> > +	ISO_INT_FAIL,		/* Bit10 */
+> > +	ISO_INT_EN_I2C1,	/* Bit11 */
+> > +	ISO_INT_EN_RTC_HSEC,	/* Bit12 */
+> > +	ISO_INT_EN_RTC_ALARM,	/* Bit13 */
+> > +	ISO_INT_FAIL,		/* Bit14 */
+> > +	ISO_INT_FAIL,		/* Bit15 */
+> > +	ISO_INT_FAIL,		/* Bit16 */
+> > +	ISO_INT_FAIL,		/* Bit17 */
+> > +	ISO_INT_FAIL,		/* Bit18 */
+> > +	ISO_INT_EN_GPIOA,	/* Bit19 */
+> > +	ISO_INT_EN_GPIODA,	/* Bit20 */
+> > +	ISO_INT_RVD,		/* Bit21 */
+> > +	ISO_INT_RVD,		/* Bit22 */
+> > +	ISO_INT_RVD,		/* Bit23 */
+> > +	ISO_INT_RVD,		/* Bit24 */
+> > +	ISO_INT_FAIL,		/* Bit25 */
+> > +	ISO_INT_FAIL,		/* Bit26 */
+> > +	ISO_INT_FAIL,		/* Bit27 */
+> > +	ISO_INT_FAIL,		/* Bit28 */
+> > +	ISO_INT_EN_GPHY_DV,	/* Bit29 */
+> > +	ISO_INT_EN_GPHY_AV,	/* Bit30 */
+> > +	ISO_INT_EN_I2C1_REQ	/* Bit31 */
+> > +};
+> > +
+> > +struct rtd129x_intc_data {
+> > +	void __iomem		*unmask;
+> > +	void __iomem		*isr;
+> > +	void __iomem		*ier;
+> > +	u32			ier_cached;
+> > +	u32			isr_en;
+> > +	raw_spinlock_t		lock;
+> > +	unsigned int		parent_irq;
+> > +	const unsigned char	*en_map;
+> > +};
+> > +
+> > +static struct irq_domain *rtd129x_intc_domain;
+> > +
+> > +static void rtd129x_intc_irq_handle(struct irq_desc *desc)
+> > +{
+> > +	struct rtd129x_intc_data *priv = irq_desc_get_handler_data(desc);
+> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +	unsigned int local_irq;
+> > +	u32 status;
+> > +	int i;
+> > +
+> > +	chained_irq_enter(chip, desc);
+> > +
+> > +	raw_spin_lock(&priv->lock);
+> > +	status = readl_relaxed(priv->isr);
+> > +	status &= priv->isr_en;
+> > +	raw_spin_unlock(&priv->lock);
+> 
+> What is this lock protecting? isr_en?
+> 
+> > +
+> > +	while (status) {
+> > +		i = __ffs(status);
+> > +		status &= ~BIT(i);
+> > +
+> > +		local_irq = irq_find_mapping(rtd129x_intc_domain, i);
+> > +		if (likely(local_irq)) {
+> > +			if (!generic_handle_irq(local_irq))
+> > +				writel_relaxed(BIT(i), priv->isr);
+> 
+> What are the write semantics of the ISR register? Hot bit clear? How
+> does it work since mask() does the same thing? Clearly, something is
+> wrong here.
 
-Hi,
+Sorry but I have not been able to found the definition of "hot bit
+clear", could you explain it? Anyways, you were right, apparently the
+mask/unmask code were doing nothing useful. More on this below.
 
-Pawel Laszczak <pawell@cadence.com> writes:
->>> I have such situation in which one interrupt line is shared with ehci a=
-nd cdns3 driver.
->>> In such case this function returns error code.
->>
->>which function returns error code?
->
-> devm_request_threaded_irq, of course if I set IRQF_SHARED | IRQF_ONESHOT.
-> As I remember it was EBUSY error.
+> 
+> > +		} else {
+> > +			handle_bad_irq(desc);
+> > +		}
+> > +	}
+> > +
+> > +	chained_irq_exit(chip, desc);
+> > +}
+> > +
+> > +static void rtd129x_intc_mask(struct irq_data *data)
+> > +{
+> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > +
+> > +	writel_relaxed(BIT(data->hwirq), priv->isr);
+> > +}
+> > +
+> > +static void rtd129x_intc_unmask(struct irq_data *data)
+> > +{
+> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > +
+> > +	writel_relaxed(BIT(data->hwirq), priv->unmask);
+> 
+> What effect does this have on the isr register? The whole mask/unmask
+> thing seems to be pretty dodgy...
+> 
+> > +}
+> > +
+> > +static void rtd129x_intc_enable(struct irq_data *data)
+> > +{
+> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > +	unsigned long flags;
+> > +	u8 en_offset;
+> > +
+> > +	en_offset = priv->en_map[data->hwirq];
+> > +
+> > +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
+> > +		raw_spin_lock_irqsave(&priv->lock, flags);
+> > +
+> > +		priv->isr_en |= BIT(data->hwirq);
+> > +		priv->ier_cached |= BIT(en_offset);
+> > +		writel_relaxed(priv->ier_cached, priv->ier);
+> > +
+> > +		raw_spin_unlock_irqrestore(&priv->lock, flags);
+> > +	} else if (en_offset == MISC_INT_FAIL) {
+> > +		pr_err("[%s] Enable irq(%lu) failed\n", DEV_NAME, data->hwirq);
+> > +	}
+> > +}
+> > +
+> > +static void rtd129x_intc_disable(struct irq_data *data)
+> > +{
+> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
+> > +	unsigned long flags;
+> > +	u8 en_offset;
+> > +
+> > +	en_offset = priv->en_map[data->hwirq];
+> > +
+> > +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
+> > +		raw_spin_lock_irqsave(&priv->lock, flags);
+> > +
+> > +		priv->isr_en &= ~BIT(data->hwirq);
+> > +		priv->ier_cached &= ~BIT(en_offset);
+> > +		writel_relaxed(priv->ier_cached, priv->ier);
+> > +
+> > +		raw_spin_unlock_irqrestore(&priv->lock, flags);
+> > +	} else if (en_offset == MISC_INT_FAIL) {
+> > +		pr_err("[%s] Disable irq(%lu) failed\n", DEV_NAME, data->hwirq);
+> > +	}
+> > +}
+> 
+> So here's a thought: Why do we need all of this? If mask/unmask do their
+> job correctly, we could just enable all interrupts in one go (just a
+> 32bit write) at probe time, and leave all interrupts masked until they
+> are in use. You could then drop all these silly tables that don't bring
+> much...
 
-oh, right. That's probably because the handlers must agree on IRQ flags.
+The idea of dropping all those tables look really good to me, that
+would greatly simplify the code! I have been trying to mask all
+interrupts on the probe function using the ISR register but while
+doing so, I realized that it does not work. Writing to ISR does not
+mask interrupts, apparently it only acknowledges them once they have
+been triggered. On the scarse available documentation of this Soc I
+cannot find a mask-like register. It seems interrupts are managed with
+an ISR and an IER register. So it should be posible to use the enable
+register to maks/unmask instead. These do work. However, that would
+mean that we have to keep those ugly tables.
 
->>> So probably I will need to mask only the reported interrupts.
->>
->>you should mask all interrupts from your device, otherwise you top-halt
->>may still end up reentrant.
->>
->>> I can't mask all interrupt using controller register because I can miss=
- some of them.
->>
->>why would you miss them? They would be left in the register until you
->>unmask them and the line is raised again.
->
-> I consult this with author of controller.=20
-> We have:
-> USB_IEN  and USB_ISTS for  generic interrupts
-> EP_IEN and EP_ISTS for endpoint interrupts=20
->
-> Both these group works different.
-> For endpoint I can disable all interrupt and I don't miss any of them.=20
-> So it's normal behavior.
->
-> But USB_ISTS work little different. If we mask all interrupt in USB_IEN
-> then when new event occurs the EP_ISTS will not be updated.=20
+Nonetheless we might still be able to do something else. Please,
+correct me if I'm wrong, but do we really need to mask/unamsk in this
+scenario? This is the devised board layout:
 
-wait a minute. When you mask USB_ISTS, then EP_ISTS isn't updated? Is
-this a quirk on the controller or a design choice?
+           +------+       +----------+       +---------+
+           |      |       |          |       |         |
+           | UART |-------|2  INTC   |-------|c  GIC   |
+           |      |  +----|1         |  +----|b        |
+           +------+  | +--|0         |  | +--|a        |
+                     | |  |          |  | |  |         |
+                     | |  +----------+  | |  +---------+
+                     |                  |
 
-> It's not standard and not expected behavior but it works in this way.=20
+Once the UART generates an interrupt it passes through the line 2 of
+the custom realtek interrupt contoller before reaching the GIC's line
+"c". On the INTC interrupt handler, we call chained_irq_enter/exit
+to mask/unmask the GIC's "c" line. Because all of this realtek INTC
+interrupt lines (2,1,0,...) are muxed on the GIC's line "c", this
+means that while on the INTC interrupt handler it is not possible to
+send further interrupts on the CPU. Given that interrupts are masked
+on the GIC, it seems safe to just remove INTC's mask/unmask functions.
 
-Yeah, sounds rather odd.
+Therefore, the only work that this INTC handler would needs to do is
+to acknowledge the interrupt by writing to the ISR, which it could be
+done in the respective irq_ack callback of struct irq_chip instead of
+in the handler body.
 
->>>>>>> +	/* check USB device interrupt */
->>>>>>> +	reg =3D readl(&priv_dev->regs->usb_ists);
->>>>>>> +
->>>>>>> +	if (reg) {
->>>>>>> +		writel(reg, &priv_dev->regs->usb_ists);
->>>>>>> +		cdns3_check_usb_interrupt_proceed(priv_dev, reg);
->>>>>>> +		ret =3D IRQ_HANDLED;
->>>>>>
->>>>>>now, because you _don't_ mask this interrupt, you're gonna have
->>>>>>issues. Say we actually get both device and endpoint interrupts while
->>>>>>the thread is already running with previous endpoint interrupts. Now
->>>>>>we're gonna reenter the top half, because device interrupts are *not*
->>>>>>masked, which will read usb_ists and handle it here.
->>>>>
->>>>> Endpoint interrupts are masked in cdns3_device_irq_handler and stay m=
-asked
->>>>> until they are not handled in threaded handler.
->>>>
->>>>Quick question, then: these ISTS registers, are they masked interrupt
->>>>status or raw interrupt status?
->>>
->>> Yes it's masked, but after masking them the new interrupts will not be =
-reported
->>> In ISTS registers. Form this reason I can mask only reported interrupt.
->>
->>and what happens when you unmask the registers? Do they get reported?
->
-> No they are not reported in case of USB_ISTS register.
-> They should be reported in case EP_ISTS, but I need to test it.=20
+I have implemented this solution and it seems to work. What do you
+think? I'm missing something crucial?
 
-okay, please _do_ test and verify the behavior. The description above
-sounds really surprising to me. Does it really mean that if you mask all
-USB_ISTS and then disconnect the cable while interrupt is masked, you
-won't know cable was disconnected?
+> 
+> > +
+> > +static struct irq_chip rtd129x_intc_chip = {
+> > +	.name		= DEV_NAME,
+> > +	.irq_mask	= rtd129x_intc_mask,
+> > +	.irq_unmask	= rtd129x_intc_unmask,
+> > +	.irq_enable	= rtd129x_intc_enable,
+> > +	.irq_disable	= rtd129x_intc_disable,
+> > +};
+> > +
+> > +static int rtd129x_intc_map(struct irq_domain *d, unsigned int virq,
+> > +			    irq_hw_number_t hw_irq)
+> > +{
+> > +	struct rtd129x_intc_data *priv = d->host_data;
+> > +
+> > +	irq_set_chip_and_handler(virq, &rtd129x_intc_chip, handle_level_irq);
+> > +	irq_set_chip_data(virq, priv);
+> > +	irq_set_probe(virq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct irq_domain_ops rtd129x_intc_domain_ops = {
+> > +	.xlate			= irq_domain_xlate_onecell,
+> > +	.map			= rtd129x_intc_map,
+> > +};
+> > +
+> > +static const struct of_device_id rtd129x_intc_matches[] = {
+> > +	{ .compatible = "realtek,rtd129x-intc-misc",
+> > +		.data = rtd129x_intc_enable_map_misc
+> > +	},
+> > +	{ .compatible = "realtek,rtd129x-intc-iso",
+> > +		.data = rtd129x_intc_enable_map_iso
+> > +	},
+> > +	{ }
+> > +};
+> > +
+> > +static int rtd129x_intc_of_init(struct device_node *node,
+> > +				struct device_node *parent)
+> > +{
+> > +	struct rtd129x_intc_data *priv;
+> > +	const struct of_device_id *match;
+> > +	u32 isr_tmp, ier_tmp, ier_bit;
+> > +	int ret, i;
+> > +
+> > +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv) {
+> > +		ret = -ENOMEM;
+> > +		goto err;
+> > +	}
+> > +
+> > +	raw_spin_lock_init(&priv->lock);
+> > +
+> > +	priv->isr = of_iomap(node, 0);
+> > +	if (!priv->isr) {
+> > +		pr_err("unable to obtain status reg iomap address\n");
+> > +		ret = -ENOMEM;
+> > +		goto free_priv;
+> > +	}
+> > +
+> > +	priv->ier = of_iomap(node, 1);
+> > +	if (!priv->ier) {
+> > +		pr_err("unable to obtain enable reg iomap address\n");
+> > +		ret = -ENOMEM;
+> > +		goto iounmap_status;
+> > +	}
+> > +
+> > +	priv->unmask = of_iomap(node, 2);
+> > +	if (!priv->unmask) {
+> > +		pr_err("unable to obtain unmask reg iomap address\n");
+> > +		ret = -ENOMEM;
+> > +		goto iounmap_enable;
+> > +	}
+> > +
+> > +	priv->parent_irq = irq_of_parse_and_map(node, 0);
+> > +	if (!priv->parent_irq) {
+> > +		pr_err("failed to map parent interrupt %d\n", priv->parent_irq);
+> > +		ret = -EINVAL;
+> > +		goto iounmap_all;
+> > +	}
+> > +
+> > +	match = of_match_node(rtd129x_intc_matches, node);
+> > +	if (!match) {
+> > +		pr_err("failed to find matching node\n");
+> > +		ret = -ENODEV;
+> > +		goto iounmap_all;
+> > +	}
+> > +	priv->en_map = match->data;
+> > +
+> > +	// initialize enabled irq's map to its matching status bit in isr by
+> > +	// inverse walking the enable to status offsets map. Only needed for
+> > +	// misc
+> 
+> Why do we need any of this? The kernel is supposed to start from a clean
+> slate, not to inherit whatever has been set before, unless there is a
+> very compelling reason.
+> 
+> > +	priv->ier_cached = readl_relaxed(priv->ier);
+> > +	if (priv->en_map == rtd129x_intc_enable_map_misc) {
+> > +		ier_tmp = priv->ier_cached;
+> > +		isr_tmp = 0;
+> > +		while (ier_tmp) {
+> > +			ier_bit = __ffs(ier_tmp);
+> > +			ier_tmp &= ~BIT(ier_bit);
+> > +			for (i = 0; i < RTD129X_INTC_NR_IRQS; i++)
+> > +				if (priv->en_map[i] == ier_bit)
+> > +					isr_tmp |= BIT(i);
+> > +		}
+> > +		priv->isr_en = isr_tmp;
+> > +	} else {
+> > +		priv->isr_en = priv->ier_cached;
+> > +	}
+> > +
+> > +	rtd129x_intc_domain = irq_domain_add_linear(node, RTD129X_INTC_NR_IRQS,
+> > +						    &rtd129x_intc_domain_ops,
+> > +						    priv);
+> > +	if (!rtd129x_intc_domain) {
+> > +		pr_err("failed to create irq domain\n");
+> > +		ret = -ENOMEM;
+> > +		goto iounmap_all;
+> > +	}
+> > +
+> > +	irq_set_chained_handler_and_data(priv->parent_irq,
+> > +					 rtd129x_intc_irq_handle, priv);
+> > +
+> > +	return 0;
+> > +
+> > +iounmap_all:
+> > +	iounmap(priv->unmask);
+> > +iounmap_enable:
+> > +	iounmap(priv->ier);
+> > +iounmap_status:
+> > +	iounmap(priv->isr);
+> > +free_priv:
+> > +	kfree(priv);
+> > +err:
+> > +	return ret;
+> > +}
+> > +
+> > +IRQCHIP_DECLARE(rtd129x_intc_misc, "realtek,rtd129x-intc-misc",
+> > +		rtd129x_intc_of_init);
+> > +IRQCHIP_DECLARE(rtd129x_intc_iso, "realtek,rtd129x-intc-iso",
+> > +		rtd129x_intc_of_init);
+> > 
+> 
+> Thanks,
 
->>>>>>> +		struct cdns3_aligned_buf *buf, *tmp;
->>>>>>> +
->>>>>>> +		list_for_each_entry_safe(buf, tmp, &priv_dev->aligned_buf_list,
->>>>>>> +					 list) {
->>>>>>> +			if (!buf->in_use) {
->>>>>>> +				list_del(&buf->list);
->>>>>>> +
->>>>>>> +				spin_unlock_irqrestore(&priv_dev->lock, flags);
->>>>>>
->>>>>>creates the possibility of a race condition
->>>>> Why? In this place the buf can't be used.
->>>>
->>>>but you're reenabling interrupts, right?
->>>
->>> Yes, driver frees not used buffers here.
->>> I think that it's the safest place for this purpose.
->>
->>I guess you missed the point a little. Since you reenable interrupts
->>just to free the buffer, you end up creating the possibility for a race
->>condition. Specially since you don't mask all interrupt events. The
->>moment you reenable interrupts, one of your not-unmasked interrupt
->>sources could trigger, then top-half gets scheduled which tries to wake
->>up the IRQ thread again and things go boom.
->
-> Ok, I think I understand.  So I have 3 options:
-> 1. Mask the USB_IEN and EP_IEN interrupts, but then I can lost some USB_I=
-STS
-> events. It's dangerous options.=20
+Thank you very much for your time!
 
-sure sounds dangerous, but also sounds quite "peculiar" :-)
-
-> 2. Remove implementation of handling unaligned buffers and assume that=20
->     upper layer will worry about this. What with vendor specific drivers =
-that=20
->     can be used by companies and not upstreamed  ?=20
->     It could be good to have such safety mechanism even if it is not curr=
-ently used.
-
-dunno. It may become dead code that's NEVER used :-)
-
-> 3. Delegate this part of code for instance to separate thread that will b=
-e called=20
->    In free time.=20
-
-Yet another thread? Can't you just run this right before giving back the
-USB request? So, don't do it from IRQ handler, but from giveback path?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1RIQcACgkQzL64meEa
-mQbv3xAAuDWFJdZz6Yuz9RG8Y+enrvQvRYTHt9yWD3BXYAxGIh8xI3DxxhDhfN7L
-op0NZQGwAavUcjFrKFHCXnfmjG1kCaVl7XSe2fXV0TpjM/7pDMxjcruYRa+RvJia
-kqI0a1V8uxLIzsjaNoWYcxNm+5x7YoyBvJhIVpqxhs4A40yKK/rmasF7uD9h+htE
-/j/EjWC69OjuZDvYdEcZg0T5miFPJutIUYLJt31NLen2PhCeGhoDpmmgxn2CJM/3
-GB5WLPuge2m5vYgRuAzeCkCPkmgfU4qKbXohx8R2S0oCA0AA8HwpvKUCtDPXKpai
-0E4cTnDlr+SubBjCGPbO8g8LHegrCIGFDXOCv8ma2CB1Tqm3mK9jvCpXOMzFKHqB
-fNjmg0d6Rym4A5eq68D7aMHn1pxIzqaHUran600hIuBcCclDmL5xFwKfk4jGTah4
-Zmi1g3fqx6bbJwUYIr9BoRRks6h0E2/9Q9aaL/SADEvqsEwvc9owbHjwAXmOYCim
-BCkzSmMr0Q/+otKaJPZlwdP+DDqhqjbSgYzIE5DzdzY6MdqVANAB6+A9Te8T6cBZ
-D4eVYyvVMwYq4FmJguGAVglpwu3KXVau5uhTc2AwRntuSd53yrQvGlW7Iz7xnuDr
-MXnIZKXUK/Wi09vfbir0IlllbO7RLucADGRx2CNezMYqtNhNA/8=
-=s/Jz
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> 	M.
+> -- 
+> Jazz is not dead. It just smells funny...
