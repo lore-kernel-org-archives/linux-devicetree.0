@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 13/14] net: phy: adin: add ethtool get_stats support
-Date: Mon, 12 Aug 2019 14:23:49 +0300
-Message-ID: <20190812112350.15242-14-alexandru.ardelean@analog.com>
+Subject: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem software reset
+Date: Mon, 12 Aug 2019 14:23:46 +0300
+Message-ID: <20190812112350.15242-11-alexandru.ardelean@analog.com>
 References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,169 +13,106 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This change implements retrieving all the error counters from the PHY.
-The PHY supports several error counters/stats. The `Mean Square Errors`
-status values are only valie when a link is established, and shouldn't be
-accumulated. These values characterize the quality of a signal.
+The ADIN PHYs supports 4 types of reset:
+1. The standard PHY reset via BMCR_RESET bit in MII_BMCR reg
+2. Reset via GPIO
+3. Reset via reg GeSftRst (0xff0c) & reload previous pin configs
+4. Reset via reg GeSftRst (0xff0c) & request new pin configs
 
-The rest of the error counters are self-clearing on read.
-Most of them are reports from the Frame Checker engine that the PHY has.
+Resets 2 & 4 are almost identical, with the exception that the crystal
+oscillator is available during reset for 2.
 
-Not retrieving the `LPI Wake Error Count Register` here, since that is used
-by the PHY framework to check for any EEE errors. And that register is
-self-clearing when read (as per IEEE spec).
+As it turns out, phylib already supports GPIO reset.
+In case this is configured, the PHY driver won't do anything. In case it
+isn't specified the subsystem software reset will kick in.
+
+Resetting via GeSftRst or via GPIO is useful when doing a warm reboot,
+because this will reset the subsystem registers to default values.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 109 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+ drivers/net/phy/adin.c | 43 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index e4afa8c2bec7..3ab15a585c1b 100644
+index a0f8b616bcb7..ddf0512a9a4d 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -152,12 +152,40 @@ static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
- 	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
- };
- 
-+struct adin_hw_stat {
-+	const char *string;
-+	u16 reg1;
-+	u16 reg2;
-+	bool do_not_accumulate;
-+};
-+
-+/* Named just like in the datasheet */
-+static struct adin_hw_stat adin_hw_stats[] = {
-+	{ "RxErrCnt",		0x0014,	},
-+	{ "MseA",		0x8402,	0,	true },
-+	{ "MseB",		0x8403,	0,	true },
-+	{ "MseC",		0x8404,	0,	true },
-+	{ "MseD",		0x8405,	0,	true },
-+	{ "FcFrmCnt",		0x940A, 0x940B }, /* FcFrmCntH + FcFrmCntL */
-+	{ "FcLenErrCnt",	0x940C },
-+	{ "FcAlgnErrCnt",	0x940D },
-+	{ "FcSymbErrCnt",	0x940E },
-+	{ "FcOszCnt",		0x940F },
-+	{ "FcUszCnt",		0x9410 },
-+	{ "FcOddCnt",		0x9411 },
-+	{ "FcOddPreCnt",	0x9412 },
-+	{ "FcDribbleBitsCnt",	0x9413 },
-+	{ "FcFalseCarrierCnt",	0x9414 },
-+};
-+
- /**
-  * struct adin_priv - ADIN PHY driver private data
-  * edpd_enabled		true if Energy Detect Powerdown mode is enabled
-+ * stats		statistic counters for the PHY
+@@ -6,6 +6,7 @@
   */
- struct adin_priv {
- 	bool			edpd_enabled;
-+	u64			stats[ARRAY_SIZE(adin_hw_stats)];
- };
+ #include <linux/kernel.h>
+ #include <linux/bitfield.h>
++#include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -51,6 +52,9 @@
+ #define ADIN1300_CLOCK_STOP_REG			0x9400
+ #define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
  
- static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
-@@ -590,6 +618,81 @@ static int adin_reset(struct phy_device *phydev)
- 	return adin_subsytem_soft_reset(phydev);
++#define ADIN1300_GE_SOFT_RESET_REG		0xff0c
++#define   ADIN1300_GE_SOFT_RESET		BIT(0)
++
+ #define ADIN1300_GE_RGMII_CFG_REG		0xff23
+ #define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
+ #define   ADIN1300_GE_RGMII_RX_SEL(x)		\
+@@ -443,11 +447,49 @@ static int adin_read_status(struct phy_device *phydev)
+ 	return genphy_read_status(phydev);
  }
  
-+static int adin_get_sset_count(struct phy_device *phydev)
++static int adin_subsytem_soft_reset(struct phy_device *phydev)
 +{
-+	return ARRAY_SIZE(adin_hw_stats);
-+}
++	int reg, rc, i;
 +
-+static void adin_get_strings(struct phy_device *phydev, u8 *data)
-+{
-+	int i;
++	rc = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1,
++			      ADIN1300_GE_SOFT_RESET_REG,
++			      ADIN1300_GE_SOFT_RESET);
++	if (rc < 0)
++		return rc;
 +
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
-+		strlcpy(&data[i * ETH_GSTRING_LEN],
-+			adin_hw_stats[i].string, ETH_GSTRING_LEN);
++	for (i = 0; i < 20; i++) {
++		usleep_range(500, 1000);
++		reg = phy_read_mmd(phydev, MDIO_MMD_VEND1,
++				   ADIN1300_GE_SOFT_RESET_REG);
++		if (reg < 0 || (reg & ADIN1300_GE_SOFT_RESET))
++			continue;
++		return 0;
 +	}
++
++	return -ETIMEDOUT;
 +}
 +
-+static int adin_read_mmd_stat_regs(struct phy_device *phydev,
-+				   struct adin_hw_stat *stat,
-+				   u32 *val)
++static int adin_reset(struct phy_device *phydev)
 +{
-+	int ret;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = (ret & 0xffff);
-+
-+	if (stat->reg2 == 0)
++	/* If there is a reset GPIO just exit */
++	if (!IS_ERR_OR_NULL(phydev->mdio.reset_gpio))
 +		return 0;
 +
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val <<= 16;
-+	*val |= (ret & 0xffff);
-+
-+	return 0;
++	/* Reset PHY core regs & subsystem regs */
++	return adin_subsytem_soft_reset(phydev);
 +}
 +
-+static u64 adin_get_stat(struct phy_device *phydev, int i)
++static int adin_probe(struct phy_device *phydev)
 +{
-+	struct adin_hw_stat *stat = &adin_hw_stats[i];
-+	struct adin_priv *priv = phydev->priv;
-+	u32 val;
-+	int ret;
-+
-+	if (stat->reg1 > 0x1f) {
-+		ret = adin_read_mmd_stat_regs(phydev, stat, &val);
-+		if (ret < 0)
-+			return (u64)(~0);
-+	} else {
-+		ret = phy_read(phydev, stat->reg1);
-+		if (ret < 0)
-+			return (u64)(~0);
-+		val = (ret & 0xffff);
-+	}
-+
-+	if (stat->do_not_accumulate)
-+		priv->stats[i] = val;
-+	else
-+		priv->stats[i] += val;
-+
-+	return priv->stats[i];
++	return adin_reset(phydev);
 +}
 +
-+static void adin_get_stats(struct phy_device *phydev,
-+			   struct ethtool_stats *stats, u64 *data)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++)
-+		data[i] = adin_get_stat(phydev, i);
-+}
-+
- static int adin_probe(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -618,6 +721,9 @@ static struct phy_driver adin_driver[] = {
- 		.set_tunable	= adin_set_tunable,
+ static struct phy_driver adin_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+ 		.name		= "ADIN1200",
+ 		.config_init	= adin_config_init,
++		.probe		= adin_probe,
+ 		.config_aneg	= adin_config_aneg,
+ 		.read_status	= adin_read_status,
  		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
-@@ -634,6 +740,9 @@ static struct phy_driver adin_driver[] = {
- 		.set_tunable	= adin_set_tunable,
+@@ -461,6 +503,7 @@ static struct phy_driver adin_driver[] = {
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
+ 		.name		= "ADIN1300",
+ 		.config_init	= adin_config_init,
++		.probe		= adin_probe,
+ 		.config_aneg	= adin_config_aneg,
+ 		.read_status	= adin_read_status,
  		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
 -- 
 2.20.1
