@@ -1,103 +1,68 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH 00/15] thermal: qcom: tsens: Add interrupt support
-Date: Mon, 12 Aug 2019 17:28:26 +0200
-Message-ID: <20190812152826.GA7958@centauri>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <CAHLCerNay31+RNQvQZyxMMVyb1mLLfN5BoZbz-M+bMqbmbYwtA@mail.gmail.com>
- <20190729090735.GA897@onstation.org>
- <2123341.TWUfUUIiFt@g550jk>
- <CAHLCerNU3oAZd6aGw1pgN-SLOJTebi5usqxaFHbQUd+sC2sc9g@mail.gmail.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
+ capabilities for SDMMC0
+Date: Mon, 12 Aug 2019 15:38:34 +0000
+Message-ID: <fa0debbb-b84c-1f74-f8b8-8fdd7812aaee@microchip.com>
+References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+ <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
+ <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
+ <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
+ <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNU3oAZd6aGw1pgN-SLOJTebi5usqxaFHbQUd+sC2sc9g@mail.gmail.com>
+In-Reply-To: <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
+Content-Language: en-US
+Content-ID: <1A3BA531877C9C438F08D84BC3EDC250@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Luca Weiss <luca@z3ntu.xyz>, LKML <linux-kernel@vger.kernel.org>, Brian Masney <masneyb@onstation.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Marc Gonzalez <marc.w.gonzalez@free.fr>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: adrian.hunter@intel.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 03:20:11PM +0530, Amit Kucheria wrote:
-> On Mon, Jul 29, 2019 at 3:03 PM Luca Weiss <luca@z3ntu.xyz> wrote:
-> >
-> > On Montag, 29. Juli 2019 11:07:35 CEST Brian Masney wrote:
-> > > On Sat, Jul 27, 2019 at 12:58:54PM +0530, Amit Kucheria wrote:
-> > > > On Fri, Jul 26, 2019 at 4:59 PM Brian Masney <masneyb@onstation.org> wrote:
-> > > > > On Fri, Jul 26, 2019 at 04:40:16PM +0530, Amit Kucheria wrote:
-> > > > > > How well does cpufreq work on 8974? I haven't looked at it yet but
-> > > > > > we'll need it for thermal throttling.
-> > > > >
-> > > > > I'm not sure how to tell if the frequency is dynamically changed during
-> > > > > runtime on arm. x86-64 shows this information in /proc/cpuinfo. Here's
-> > > >
-> > > > > the /proc/cpuinfo on the Nexus 5:
-> > > > Nah. /proc/cpuinfo won't show what we need.
-> > > >
-> > > > Try the following:
-> > > >
-> > > > $ grep "" /sys/devices/system/cpu/cpufreq/policy?/*
-> > > >
-> > > > More specifically, the following files have the information you need.
-> > > > Run watch -n1 on them.
-> > > >
-> > > > $ grep "" /sys/devices/system/cpu/cpufreq/policy?/scaling_*_freq
-> > >
-> > > There's no cpufreq directory on msm8974:
-> > >
-> > >     # ls -1 /sys/devices/system/cpu/
-> > >     cpu0
-> > >     cpu1
-> > >     cpu2
-> > >     cpu3
-> > >     cpuidle
-> > >     hotplug
-> > >     isolated
-> > >     kernel_max
-> > >     modalias
-> > >     offline
-> > >     online
-> > >     possible
-> > >     power
-> > >     present
-> > >     smt
-> > >     uevent
-> > >
-> > > I'm using qcom_defconfig.
-> > >
-> > > Brian
-> >
-> > Hi Brian,
-> > cpufreq isn't supported on msm8974 yet.
-> > I have these patches [0] in my tree but I'm not sure they work correctly, but I haven't tested much with them. Feel free to try them on hammerhead.
-> >
-> > Luca
-> >
-> > [0] https://github.com/z3ntu/linux/compare/b0917f53ada0e929896a094b451219cd8091366e...6459ca6aff498c9d12acd35709b4903effc4c3f8
-> 
-> Niklas is working on refactoring some of the Krait code[1]. I'm not
-> sure if he looked at 8974 directly as part of the refactor adding him
-> here to get a better sense of the state of cpufreq on 8974.
-
-Hello,
-
-I took and cleaned up Sricharans commit
-"cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem based qcom socs"
-from his Krait cpufreq series.
-
-The commit renames and refactors the Kryo cpufreq driver.
-
-This commit is now in linux-next:
-https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git/commit/?h=cpufreq/arm/linux-next&id=106b976debd36b0e61847769f8edd71bfea56ed7
-
-
-I also added Qualcomm A53 support to this driver.
-
-However, Krait CPUs are different from both Kryo and Qualcomm A53,
-so you will need to take Sricharans patch series and rebase it
-on top of linux-next.
-
-Kind regards,
-Niklas
-
-> 
-> [1] https://lore.kernel.org/linux-arm-msm/20190726080823.xwhxagv5iuhudmic@vireshk-i7/T/#t
+DQoNCk9uIDA5LjA4LjIwMTkgMDk6MjMsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBU
+aHUsIEF1ZyAwOCwgMjAxOSBhdCAwMzo1NzozMFBNICswMzAwLCBBZHJpYW4gSHVudGVyIHdyb3Rl
+Og0KPj4gT24gOC8wOC8xOSAzOjQyIFBNLCBMdWRvdmljIERlc3JvY2hlcyB3cm90ZToNCj4+PiBP
+biBUaHUsIEF1ZyAwOCwgMjAxOSBhdCAxMDozNTo0M0FNICswMjAwLCBFdWdlbiBIcmlzdGV2IC0g
+TTE4MjgyIHdyb3RlOg0KPj4+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1p
+Y3JvY2hpcC5jb20+DQo+Pj4+DQo+Pj4+IEFkZCBtbWMgY2FwYWJpbGl0aWVzIGZvciBTRE1NQzAg
+Zm9yIHRoaXMgYm9hcmQuDQo+Pj4+IFdpdGggdGhpcyBlbmFibGVkLCBlTU1DIGNvbm5lY3RlZCBj
+YXJkIGlzIGRldGVjdGVkIGFzOg0KPj4+Pg0KPj4+PiBtbWMwOiBuZXcgRERSIE1NQyBjYXJkIGF0
+IGFkZHJlc3MgMDAwMQ0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxl
+dWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pj4gQWNrZWQtYnk6IEx1ZG92aWMgRGVzcm9j
+aGVzIDxsdWRvdmljLmRlc3JvY2hlc0BtaWNyb2NoaXAuY29tPg0KPj4+DQo+Pj4gSSBhbSBpbnRl
+cmVzdGVkIHRvIGhhdmUgdGhlIHNvbWUgaW5zaWdodHMgYWJvdXQgdGhlIHVzZSBvZiBzZC11aHMt
+Kg0KPj4+IHByb3BlcnRpZXMuDQo+Pj4NCj4+PiBPdXIgSVAgY2FuJ3QgZGVhbCB3aXRoIDFWOCBi
+eSBpdHNlbGYuIEl0IGhhcyBhIDFWOFNFTCBzaWduYWwgd2hpY2ggY2FuDQo+Pj4gYmUgdXNlZCBh
+cyB0aGUgbG9naWMgY29udHJvbCBpbnB1dCBvZiBhIG11eC4gU28gZXZlbiBpZiB0aGUgSVAgY2xh
+aW1zDQo+Pj4gdG8gc3VwcG9ydCBVSFMgbW9kZXMsIGl0IGRlcGVuZHMgb24gdGhlIGJvYXJkLg0K
+Pj4+DQo+Pj4gQXJlIHRoZSBzZC11aHMtKiBwcm9wZXJ0aWVzIGEgd2F5IHRvIGRlYWwgd2l0aCB0
+aGlzPyBJIHRlbmQgdG8gdGhpbmsgbm8NCj4+PiBhcyBzZGhjaV9zZXR1cF9ob3N0KCkgd2lsbCBz
+ZXQgdGhlIGNhcHMgZGVwZW5kaW5nIG9uIHRoZSBjb250ZW50IG9mIHRoZQ0KPj4+IGNhcGFiaWxp
+dGllcyByZWdpc3Rlci4gRG8gd2UgaGF2ZSB0byB1c2UgdGhlIFNESENJX1FVSVJLX01JU1NJTkdf
+Q0FQUw0KPj4+IHF1aXJrIG9yIHNkaGNpLWNhcHMvc2RoY2ktY2Fwcy1tYXNrPw0KPj4NCj4+IFRo
+ZXJlIGlzICJuby0xLTgtdiIgd2hpY2ggaXQgbG9va3MgbGlrZSBzZGhjaS1vZi1hdDkxLmMgYWxy
+ZWFkeSBzdXBwb3J0czoNCj4+DQo+PiAgICBzZGhjaV9hdDkxX3Byb2JlKCkgLT4gc2RoY2lfZ2V0
+X29mX3Byb3BlcnR5KCkgLT4gc2RoY2lfZ2V0X3Byb3BlcnR5KCkNCj4+DQo+PiAgICAgIAlpZiAo
+ZGV2aWNlX3Byb3BlcnR5X3ByZXNlbnQoZGV2LCAibm8tMS04LXYiKSkNCj4+IAkJaG9zdC0+cXVp
+cmtzMiB8PSBTREhDSV9RVUlSSzJfTk9fMV84X1Y7DQo+Pg0KPiANCj4gUmlnaHQsIEkgZm9yZ290
+IHRoaXMgcHJvcGVydHkuIFRoYW5rcy4NCj4gDQo+IEV1Z2VuLCBkbyB5b3Ugc2VlIGNhc2VzIHdl
+IGNhbid0IGNvdmVyIHdpdGggdGhpcyBwcm9wZXJ0eT8NCg0KSGksDQoNCkZvciBjdXJyZW50IHJl
+cXVpcmVtZW50cyBhbmQgZHJpdmVyIHN1cHBvcnQsIHRoaXMgc2hvdWxkIGJlIGVub3VnaC4NCg0K
+SSBub3RpY2VkIG9uZSB0aGluZyByZWdhcmRpbmcgU0QtQ2FyZHMsIGlmIEkgYWRkIHByb3BlcnR5
+IHNkLXVocy1zZHIxMDQgDQp0aGUgY2xhc3MgMTAgdWhzMSBjYXJkcyBhcmUgZGV0ZWN0ZWQgYXMg
+U0RSMTA0IC4gV2l0aG91dCB0aGlzIHByb3BlcnR5IA0KdGhleSBhcmUgZGV0ZWN0ZWQgYXMgRERS
+NTAuIEFueSBpZGVhIHdoeSB0aGUgZGlmZmVyZW5jZSA/IFRoZSBjb250cm9sbGVyIA0KZG9lcyBu
+b3QgY2xhaW0gdG8gaGF2ZSBTRFIxMDQgc3VwcG9ydCA/ICBXZSBzaG91bGQgYWRkIGl0ID8NCg0K
+RXVnZW4NCg0KPiANCj4gUmVnYXJkcw0KPiANCj4gTHVkb3ZpYw0KPiANCj4+DQo+Pj4NCj4+PiBS
+ZWdhcmRzDQo+Pj4NCj4+PiBMdWRvdmljDQo+Pj4NCj4+Pj4gLS0tDQo+Pj4+ICAgYXJjaC9hcm0v
+Ym9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20xX2VrLmR0cyB8IDEgKw0KPj4+PiAgIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20xX2VrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0
+OTEtc2FtYTVkMjdfc29tMV9lay5kdHMNCj4+Pj4gaW5kZXggMTQ5ZTUzOS4uMTk0YjNhMyAxMDA2
+NDQNCj4+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20xX2VrLmR0
+cw0KPj4+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDI3X3NvbTFfZWsuZHRz
+DQo+Pj4+IEBAIC01NCw2ICs1NCw3IEBADQo+Pj4+ICAgDQo+Pj4+ICAgCQlzZG1tYzA6IHNkaW8t
+aG9zdEBhMDAwMDAwMCB7DQo+Pj4+ICAgCQkJYnVzLXdpZHRoID0gPDg+Ow0KPj4+PiArCQkJbW1j
+LWRkci0zXzN2Ow0KPj4+PiAgIAkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+Pj4+ICAg
+CQkJcGluY3RybC0wID0gPCZwaW5jdHJsX3NkbW1jMF9kZWZhdWx0PjsNCj4+Pj4gICAJCQlzdGF0
+dXMgPSAib2theSI7DQo+Pj4+IC0tIA0KPj4+PiAyLjcuNA0KPj4+Pg0KPj4+DQo+Pg0KPiANCg==
