@@ -1,97 +1,69 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH] arm64: dts: ls1028a: fix gpio nodes
-Date: Mon, 12 Aug 2019 21:01:16 +0000
-Message-ID: <VE1PR04MB6687FD06F5E8DADE55F495D38FD30@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190805065700.7601-1-hui.song_1@nxp.com>
- <20190812134716.GF27041@X250>
+From: Joe Burmeister <joe.burmeister@devtank.co.uk>
+Subject: Re: [PATCH] Add optional chip erase functionality to AT25 EEPROM
+ driver.
+Date: Mon, 12 Aug 2019 22:03:32 +0100
+Message-ID: <dd5f6b9f-13bd-8127-71a8-40e7a7017d25@devtank.co.uk>
+References: <20190809125358.24440-1-joe.burmeister@devtank.co.uk>
+ <9f1c7d45020d482390737be22c885a9b@AcuMS.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812134716.GF27041@X250>
-Content-Language: en-US
+In-Reply-To: <9f1c7d45020d482390737be22c885a9b@AcuMS.aculab.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Hui Song <hui.song_1@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: David Laight <David.Laight@ACULAB.COM>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, YueHaibing <yuehaibing@huawei.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/08/2019 16:51, David Laight wrote:
+> From: Joe Burmeister
+>> Sent: 09 August 2019 13:54
+>>
+>> Many, though not all, AT25s have an instruction for chip erase.
+>> If there is one in the datasheet, it can be added to device tree.
+>> Erase can then be done in userspace via the sysfs API with a new
+>> "erase" device attribute. This matches the eeprom_93xx46 driver's
+>> "erase".
+> Is it actually worth doing though?
+>
+> I'm guessing that device erase can easily take over a minute.
 
 
-> -----Original Message-----
-> From: Shawn Guo <shawnguo@kernel.org>
-> Sent: Monday, August 12, 2019 8:47 AM
-> To: Hui Song <hui.song_1@nxp.com>; Leo Li <leoyang.li@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Linus Walleij <linus.walleij@linaro.org>; Bartosz
-> Golaszewski <bgolaszewski@baylibre.com>; linux-arm-
-> kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-gpio@vger.kernel.org
-> Subject: Re: [PATCH] arm64: dts: ls1028a: fix gpio nodes
->=20
-> On Mon, Aug 05, 2019 at 02:57:00PM +0800, Hui Song wrote:
-> > From: Song Hui <hui.song_1@nxp.com>
-> >
-> > Update the nodes to include little-endian property to be consistent
-> > with the hardware.
-> >
-> > Signed-off-by: Song Hui <hui.song_1@nxp.com>
->=20
-> @Leo, looks good?
+That must depend on the AT25. The one we're using (AT25F512A), as it's 
+setup, it's fast enough. The datasheet states "The CHIP ERASE cycle time 
+typically is 2 seconds.". I've not timed it's because as I said, seamed 
+fast enough.
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
 
->=20
-> Shawn
->=20
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index aef5b06..7ccbbfc 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -277,33 +277,36 @@
-> >  		};
-> >
-> >  		gpio1: gpio@2300000 {
-> > -			compatible =3D "fsl,qoriq-gpio";
-> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
-> >  			reg =3D <0x0 0x2300000 0x0 0x10000>;
-> >  			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> >  			gpio-controller;
-> >  			#gpio-cells =3D <2>;
-> >  			interrupt-controller;
-> >  			#interrupt-cells =3D <2>;
-> > +			little-endian;
-> >  		};
-> >
-> >  		gpio2: gpio@2310000 {
-> > -			compatible =3D "fsl,qoriq-gpio";
-> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
-> >  			reg =3D <0x0 0x2310000 0x0 0x10000>;
-> >  			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> >  			gpio-controller;
-> >  			#gpio-cells =3D <2>;
-> >  			interrupt-controller;
-> >  			#interrupt-cells =3D <2>;
-> > +			little-endian;
-> >  		};
-> >
-> >  		gpio3: gpio@2320000 {
-> > -			compatible =3D "fsl,qoriq-gpio";
-> > +			compatible =3D "fsl,ls1028a-gpio","fsl,qoriq-gpio";
-> >  			reg =3D <0x0 0x2320000 0x0 0x10000>;
-> >  			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> >  			gpio-controller;
-> >  			#gpio-cells =3D <2>;
-> >  			interrupt-controller;
-> >  			#interrupt-cells =3D <2>;
-> > +			little-endian;
-> >  		};
-> >
-> >  		usb0: usb@3100000 {
-> > --
-> > 2.9.5
-> >
+If you can't erase it, then it's basically write once, or you expose it 
+with spi_dev to Flashrom to erase it.
+
+
+> When I looked at 'device erase' on an EEPROM it took just as long
+> as erasing the sectors one at a time - but without the warm cosy
+> feeling that progress was being made.
+
+
+I didn't look at sector erase as I'm only interested in erasing it all 
+and there was a command for it. I figured if someone wanted sector by 
+sector they would implement it.
+
+
+
+> Not only that you can't really interrupt the erase, so either
+> the application has to sleep uninterruptibly for the duration
+> or you have to have some kind of 'device busy' response while
+> it is done asynchronously.
+
+
+That's true, but as I said, it's fast enough it's not an issue for us.
+
+> 	David
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+
+Regards,
+
+Joe
