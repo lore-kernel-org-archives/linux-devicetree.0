@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 19/21] ARM: dts: imx6ull-colibri: Add touchscreen used with
- Eval Board
-Date: Mon, 12 Aug 2019 14:21:44 +0000
-Message-ID: <20190812142105.1995-20-philippe.schenker@toradex.com>
+Subject: [PATCH v4 17/21] ARM: dts: imx6ull: improve can templates
+Date: Mon, 12 Aug 2019 14:21:41 +0000
+Message-ID: <20190812142105.1995-18-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,62 +14,119 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This adds the common touchscreen that is used with Toradex's
-Eval Boards.
+From: Max Krummenacher <max.krummenacher@toradex.com>
 
+Add the pinmuxing and a inactive node for flexcan1 on SODIMM 55/63
+and move the inactive flexcan nodes to imx6ull-colibri-eval-v3.dtsi
+where they belong.
+
+Note that this commit does not enable flexcan functionality, but rather
+eases the effort needed to do so.
+
+Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
 ---
 
-Changes in v4: None
+Changes in v4:
+- Move can nodes to module deviceteree include imx6ull-colibri.dtsi
+
 Changes in v3: None
-Changes in v2:
-- Removed f0710a, that is downstream only
-- Changed to generic node name
-- Better comment
+Changes in v2: None
 
- .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../arm/boot/dts/imx6ull-colibri-nonwifi.dtsi |  2 +-
+ arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi   |  2 +-
+ arch/arm/boot/dts/imx6ull-colibri.dtsi        | 28 +++++++++++++++++--
+ 3 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot=
-/dts/imx6ull-colibri-eval-v3.dtsi
-index a78849fd2afa..458a4084e53c 100644
---- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-@@ -100,6 +100,21 @@
- &i2c1 {
- 	status =3D "okay";
-=20
-+	/*
-+	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-+	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-+	 */
-+	touchscreen@4a {
-+		compatible =3D "atmel,maxtouch";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpiotouch>;
-+		reg =3D <0x4a>;
-+		interrupt-parent =3D <&gpio4>;
-+		interrupts =3D <16 IRQ_TYPE_EDGE_FALLING>;	/* SODIMM 28 */
-+		reset-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
-+		status =3D "disabled";
-+	};
-+
- 	/* M41T0M6 real time clock on carrier board */
- 	m41t0m6: rtc@68 {
- 		compatible =3D "st,m41t0";
-@@ -176,3 +191,12 @@
- 	sd-uhs-sdr104;
- 	status =3D "okay";
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi b/arch/arm/boot=
+/dts/imx6ull-colibri-nonwifi.dtsi
+index fb213bec4654..95a11b8bcbdb 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
+@@ -15,7 +15,7 @@
+ &iomuxc {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3
+-		&pinctrl_gpio4 &pinctrl_gpio5 &pinctrl_gpio6>;
++		&pinctrl_gpio4 &pinctrl_gpio5 &pinctrl_gpio6 &pinctrl_gpio7>;
  };
+=20
+ &iomuxc_snvs {
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dt=
+s/imx6ull-colibri-wifi.dtsi
+index 038d8c90f6df..a0545431b3dc 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+@@ -26,7 +26,7 @@
+ &iomuxc {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3
+-		&pinctrl_gpio4 &pinctrl_gpio5>;
++		&pinctrl_gpio4 &pinctrl_gpio5 &pinctrl_gpio7>;
+=20
+ };
+=20
+diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
+6ull-colibri.dtsi
+index e3220298dd6f..6d850d997e1e 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+@@ -54,6 +54,18 @@
+ 	vref-supply =3D <&reg_module_3v3_avdd>;
+ };
+=20
++&can1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan1>;
++	status =3D "disabled";
++};
 +
-+&iomuxc {
-+	pinctrl_gpiotouch: touchgpios {
++&can2 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_flexcan2>;
++	status =3D "disabled";
++};
++
+ /* Colibri SPI */
+ &ecspi1 {
+ 	cs-gpios =3D <&gpio3 26 GPIO_ACTIVE_HIGH>;
+@@ -256,6 +268,13 @@
+ 		>;
+ 	};
+=20
++	pinctrl_flexcan1: flexcan1-grp {
 +		fsl,pins =3D <
-+			MX6UL_PAD_NAND_DQS__GPIO4_IO16		0x74
-+			MX6UL_PAD_ENET1_TX_EN__GPIO2_IO05	0x14
++			MX6UL_PAD_ENET1_RX_DATA0__FLEXCAN1_TX	0x1b020
++			MX6UL_PAD_ENET1_RX_DATA1__FLEXCAN1_RX	0x1b020
 +		>;
 +	};
-+};
++
+ 	pinctrl_flexcan2: flexcan2-grp {
+ 		fsl,pins =3D <
+ 			MX6UL_PAD_ENET1_TX_DATA0__FLEXCAN2_RX	0x1b020
+@@ -271,8 +290,6 @@
+=20
+ 	pinctrl_gpio1: gpio1-grp {
+ 		fsl,pins =3D <
+-			MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00	0x74 /* SODIMM 55 */
+-			MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01	0x74 /* SODIMM 63 */
+ 			MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25	0X14 /* SODIMM 77 */
+ 			MX6UL_PAD_JTAG_TCK__GPIO1_IO14		0x14 /* SODIMM 99 */
+ 			MX6UL_PAD_NAND_CE1_B__GPIO4_IO14	0x14 /* SODIMM 133 */
+@@ -325,6 +342,13 @@
+ 		>;
+ 	};
+=20
++	pinctrl_gpio7: gpio7-grp { /* CAN1 */
++		fsl,pins =3D <
++			MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00	0x74 /* SODIMM 55 */
++			MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01	0x74 /* SODIMM 63 */
++		>;
++	};
++
+ 	pinctrl_gpmi_nand: gpmi-nand-grp {
+ 		fsl,pins =3D <
+ 			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0x100a9
 --=20
 2.22.0
