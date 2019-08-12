@@ -1,75 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] media: dt-bindings: Add JPEG ENC device tree node
- document
-Date: Mon, 12 Aug 2019 16:59:52 -0600
-Message-ID: <20190812225952.GA31298@bogus>
-References: <20190717093034.22826-1-xia.jiang@mediatek.com>
- <20190717093034.22826-2-xia.jiang@mediatek.com>
+Subject: Re: [PATCH v1] dt-bindings: fec: explicitly mark deprecated
+ properties
+Date: Mon, 12 Aug 2019 17:12:05 -0600
+Message-ID: <20190812231205.GA21028@bogus>
+References: <20190718201453.13062-1-TheSven73@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190717093034.22826-2-xia.jiang@mediatek.com>
+In-Reply-To: <20190718201453.13062-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xia Jiang <xia.jiang@mediatek.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Matthias Brugger <matthias.bgg@gmail.com>, Rick Chang <rick.chang@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: Fugang Duan <fugang.duan@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Fabio Estevam <festevam@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 05:30:30PM +0800, Xia Jiang wrote:
-> add JPEG ENC device tree node document
+On Thu, 18 Jul 2019 16:14:53 -0400, Sven Van Asbroeck wrote:
+> fec's gpio phy reset properties have been deprecated.
+> Update the dt-bindings documentation to explicitly mark
+> them as such, and provide a short description of the
+> recommended alternative.
 > 
-> Change-Id: I9f0a8aec7eced20c88acbc88d6ff179763f91246
-
-Run checkpatch.pl. (Remove this)
-
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 > ---
->  .../bindings/media/mediatek-jpeg-encoder.txt  | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
+>  .../devicetree/bindings/net/fsl-fec.txt       | 30 +++++++++++--------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt b/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
-> new file mode 100644
-> index 000000000000..1231fedb70bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
-> @@ -0,0 +1,33 @@
-> +* MediaTek JPEG Encoder
-> +
-> +MediaTek JPEG Encoder is the JPEG encode hardware present in MediaTek SoCs
-> +
-> +Required properties:
-> +- compatible : must be "mediatek,mtk-jpgenc"
 
-Needs an SoC specific compatible.
+Applied, thanks.
 
-> +- reg : physical base address of the JPEG encoder registers and length of
-> +  memory mapped region.
-> +- interrupts : interrupt number to the interrupt controller.
-> +- clocks: device clocks, see
-> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-> +- clock-names: must contain "jpgenc". It is the clock of JPEG encoder.
-> +- power-domains: a phandle to the power domain, see
-> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
-> +- mediatek,larb: must contain the local arbiters in the current SoCs, see
-> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-> +  for details.
-> +- iommus: should point to the respective IOMMU block with master port as
-> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> +  for details.
-> +
-> +Example:
-> +	jpegenc: jpegenc@1500a000 {
-> +		compatible = "mediatek,mtk-jpgenc";
-> +		reg = <0 0x1500a000 0 0x1000>;
-> +		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks =  <&imgsys CLK_IMG_VENC>;
-> +		clock-names = "jpgenc";
-> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-> +		mediatek,larb = <&larb2>;
-> +		iommus = <&iommu MT2701_M4U_PORT_JPGENC_RDMA>,
-> +			<&iommu MT2701_M4U_PORT_JPGENC_BSDMA>;
-> +	};
-> -- 
-> 2.18.0
-> 
+Rob
