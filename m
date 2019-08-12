@@ -1,100 +1,141 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v3 17/21] ARM: dts: imx6ull: improve can templates
-Date: Mon, 12 Aug 2019 08:54:43 +0000
-Message-ID: <cd5a729891dc88e2d4552d003dc1a1c77b03947a.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-18-philippe.schenker@toradex.com>
-         <8ae5742f29f17e61fd9fc39a8dbd1b7c3a2f45b0.camel@toradex.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v5 02/18] dt-bindings: thermal: add binding document for
+ h6 thermal controller
+Date: Mon, 12 Aug 2019 10:56:04 +0200
+Message-ID: <20190812085604.ozhl35wwm3ehlvqn@flea>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+ <20190810052829.6032-3-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4zhzclyt6oncb76d"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8ae5742f29f17e61fd9fc39a8dbd1b7c3a2f45b0.camel@toradex.com>
-Content-Language: en-US
-Content-ID: <C14B383B5E775B4D8048422DF03ECA3C@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190810052829.6032-3-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Max Krummenacher <max.krummenacher@toradex.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTA5IGF0IDE1OjQ3ICswMDAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6
-DQo+IEhpIFBoaWxpcHBlDQo+IA0KPiBPbiBXZWQsIDIwMTktMDgtMDcgYXQgMDg6MjYgKzAwMDAs
-IFBoaWxpcHBlIFNjaGVua2VyIHdyb3RlOg0KPiA+IEZyb206IE1heCBLcnVtbWVuYWNoZXIgPG1h
-eC5rcnVtbWVuYWNoZXJAdG9yYWRleC5jb20+DQo+ID4gDQo+ID4gQWRkIHRoZSBwaW5tdXhpbmcg
-YW5kIGEgaW5hY3RpdmUgbm9kZSBmb3IgZmxleGNhbjEgb24gU09ESU1NIDU1LzYzDQo+ID4gYW5k
-IG1vdmUgdGhlIGluYWN0aXZlIGZsZXhjYW4gbm9kZXMgdG8gaW14NnVsbC1jb2xpYnJpLWV2YWwt
-djMuZHRzaQ0KPiA+IHdoZXJlIHRoZXkgYmVsb25nLg0KPiA+IA0KPiA+IE5vdGUgdGhhdCB0aGlz
-IGNvbW1pdCBkb2VzIG5vdCBlbmFibGUgZmxleGNhbiBmdW5jdGlvbmFsaXR5LCBidXQNCj4gPiBy
-YXRoZXINCj4gPiBlYXNlcyB0aGUgZWZmb3J0IG5lZWRlZCB0byBkbyBzby4NCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBNYXggS3J1bW1lbmFjaGVyIDxtYXgua3J1bW1lbmFjaGVyQHRvcmFkZXgu
-Y29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hl
-bmtlckB0b3JhZGV4LmNvbT4NCj4gPiAtLS0NCj4gPiANCj4gPiBDaGFuZ2VzIGluIHYzOiBOb25l
-DQo+ID4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0KPiA+IA0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9p
-bXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpIHwgMTIgKysrKysrKysrKysrDQo+ID4gIGFyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ub253aWZpLmR0c2kgfCAgMiArLQ0KPiA+ICBh
-cmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktd2lmaS5kdHNpICAgIHwgIDIgKy0NCj4g
-PiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kgICAgICAgICB8IDE2ICsr
-KysrKysrKysrKysrLQ0KPiA+IC0NCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAyOCBpbnNlcnRpb25z
-KCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0
-cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpDQo+ID4gaW5kZXggYjYxNDdjNzZkMTU5Li4z
-YmVlMzdjNzVhYTYgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1j
-b2xpYnJpLWV2YWwtdjMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwt
-Y29saWJyaS1ldmFsLXYzLmR0c2kNCj4gPiBAQCAtODMsNiArODMsMTggQEANCj4gPiAgCX07DQo+
-ID4gIH07DQo+ID4gIA0KPiA+ICsmY2FuMSB7DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1
-bHQiOw0KPiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4xPjsNCj4gPiArCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmY2FuMiB7DQo+ID4gKwlwaW5j
-dHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhj
-YW4yPjsNCj4gPiArCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gK307DQo+IA0KPiBBcyB0aG9z
-ZSBkb24ndCByZWFsbHkgaGF2ZSBhbnl0aGluZyB0byBkbyB3aXRoIHRoZSBldmFsIGJvYXJkDQo+
-IGRpcmVjdGx5LA0KPiB3b3VsZG4ndCBpdCBtYWtlIG1vcmUgc2Vuc2UgdG8gcmF0aGVyIG1vdmUg
-dGhlbSBpbnRvIHRoZSBtb2R1bGUncyBkdHNpDQo+IGp1c3QgbGlrZSB0aGUgcGluIG11eGluZyBm
-dXJ0aGVyIGJlbG93Pw0KDQpJIGFncmVlLCBtb3ZlZCBmb3IgdjQuDQoNClRoYW5rcywgUGhpbGlw
-cGUNCj4gDQo+ID4gICZpMmMxIHsNCj4gPiAgCXN0YXR1cyA9ICJva2F5IjsNCj4gPiAgDQo+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ub253aWZpLmR0
-c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ub253aWZpLmR0c2kN
-Cj4gPiBpbmRleCBmYjIxM2JlYzQ2NTQuLjk1YTExYjhiY2JkYiAxMDA2NDQNCj4gPiAtLS0gYS9h
-cmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktbm9ud2lmaS5kdHNpDQo+ID4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLW5vbndpZmkuZHRzaQ0KPiA+IEBAIC0x
-NSw3ICsxNSw3IEBADQo+ID4gICZpb211eGMgew0KPiA+ICAJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IjsNCj4gPiAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvMSAmcGluY3RybF9ncGlvMiAm
-cGluY3RybF9ncGlvMw0KPiA+IC0JCSZwaW5jdHJsX2dwaW80ICZwaW5jdHJsX2dwaW81ICZwaW5j
-dHJsX2dwaW82PjsNCj4gPiArCQkmcGluY3RybF9ncGlvNCAmcGluY3RybF9ncGlvNSAmcGluY3Ry
-bF9ncGlvNg0KPiA+ICZwaW5jdHJsX2dwaW83PjsNCj4gPiAgfTsNCj4gPiAgDQo+ID4gICZpb211
-eGNfc252cyB7DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29s
-aWJyaS13aWZpLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS13
-aWZpLmR0c2kNCj4gPiBpbmRleCAwMzhkOGM5MGY2ZGYuLmEwNTQ1NDMxYjNkYyAxMDA2NDQNCj4g
-PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktd2lmaS5kdHNpDQo+ID4g
-KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLXdpZmkuZHRzaQ0KPiA+IEBA
-IC0yNiw3ICsyNiw3IEBADQo+ID4gICZpb211eGMgew0KPiA+ICAJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsNCj4gPiAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvMSAmcGluY3RybF9ncGlv
-MiAmcGluY3RybF9ncGlvMw0KPiA+IC0JCSZwaW5jdHJsX2dwaW80ICZwaW5jdHJsX2dwaW81PjsN
-Cj4gPiArCQkmcGluY3RybF9ncGlvNCAmcGluY3RybF9ncGlvNSAmcGluY3RybF9ncGlvNz47DQo+
-ID4gIA0KPiA+ICB9Ow0KPiA+ICANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29s
-aWJyaS5kdHNpDQo+ID4gaW5kZXggZTMyMjAyOThkZDZmLi41NTNkNGMxZjgwZTkgMTAwNjQ0DQo+
-ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gPiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmkuZHRzaQ0KPiA+IEBAIC0yNTYsNiAr
-MjU2LDEzIEBADQo+ID4gIAkJPjsNCj4gPiAgCX07DQo+ID4gIA0KPiA+ICsJcGluY3RybF9mbGV4
-Y2FuMTogZmxleGNhbjEtZ3JwIHsNCj4gPiArCQlmc2wscGlucyA9IDwNCj4gPiArCQkJTVg2VUxf
-UEFEX0VORVQxX1JYX0RBVEEwX19GTEVYQ0FOMV9UWAkweDFiDQo+ID4gMA0KPiA+IDIwDQo+ID4g
-KwkJCU1YNlVMX1BBRF9FTkVUMV9SWF9EQVRBMV9fRkxFWENBTjFfUlgJMHgxYg0KPiA+IDANCj4g
-PiAyMA0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgCXBpbmN0cmxfZmxleGNhbjI6
-IGZsZXhjYW4yLWdycCB7DQo+ID4gIAkJZnNsLHBpbnMgPSA8DQo+ID4gIAkJCU1YNlVMX1BBRF9F
-TkVUMV9UWF9EQVRBMF9fRkxFWENBTjJfUlgJMHgxYg0KPiA+IDANCj4gPiAyMA0KPiA+IEBAIC0y
-NzEsOCArMjc4LDYgQEANCj4gPiAgDQo+ID4gIAlwaW5jdHJsX2dwaW8xOiBncGlvMS1ncnAgew0K
-PiA+ICAJCWZzbCxwaW5zID0gPA0KPiA+IC0JCQlNWDZVTF9QQURfRU5FVDFfUlhfREFUQTBfX0dQ
-SU8yX0lPMDAJMHg3NA0KPiA+IC8qIFNPRElNTSA1NSAqLw0KPiA+IC0JCQlNWDZVTF9QQURfRU5F
-VDFfUlhfREFUQTFfX0dQSU8yX0lPMDEJMHg3NA0KPiA+IC8qIFNPRElNTSA2MyAqLw0KPiA+ICAJ
-CQlNWDZVTF9QQURfVUFSVDNfUlhfREFUQV9fR1BJTzFfSU8yNQkwWDE0DQo+ID4gLyogU09ESU1N
-IDc3ICovDQo+ID4gIAkJCU1YNlVMX1BBRF9KVEFHX1RDS19fR1BJTzFfSU8xNAkJMHgxNA0KPiA+
-IC8qIFNPRElNTSA5OSAqLw0KPiA+ICAJCQlNWDZVTF9QQURfTkFORF9DRTFfQl9fR1BJTzRfSU8x
-NAkweDE0IC8qDQo+ID4gU09ESU1NIDEzMyAqLw0KPiA+IEBAIC0zMjUsNiArMzMwLDEzIEBADQo+
-ID4gIAkJPjsNCj4gPiAgCX07DQo+ID4gIA0KPiA+ICsJcGluY3RybF9ncGlvNzogZ3BpbzctZ3Jw
-IHsgLyogQ0FOMSAqLw0KPiA+ICsJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQlNWDZVTF9QQURfRU5F
-VDFfUlhfREFUQTBfX0dQSU8yX0lPMDAJMHg3NA0KPiA+IC8qIFNPRElNTSA1NSAqLw0KPiA+ICsJ
-CQlNWDZVTF9QQURfRU5FVDFfUlhfREFUQTFfX0dQSU8yX0lPMDEJMHg3NA0KPiA+IC8qIFNPRElN
-TSA2MyAqLw0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgCXBpbmN0cmxfZ3BtaV9u
-YW5kOiBncG1pLW5hbmQtZ3JwIHsNCj4gPiAgCQlmc2wscGlucyA9IDwNCj4gPiAgCQkJTVg2VUxf
-UEFEX05BTkRfREFUQTAwX19SQVdOQU5EX0RBVEEwMAkweDEwDQo+ID4gMA0KPiA+IGE5DQo+IA0K
-PiBDaGVlcnMNCj4gDQo+IE1hcmNlbA0K
+
+--4zhzclyt6oncb76d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Aug 10, 2019 at 05:28:13AM +0000, Yangtao Li wrote:
+> This patch adds binding document for allwinner h6 thermal controller.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  .../bindings/thermal/sun8i-thermal.yaml       | 79 +++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> new file mode 100644
+> index 000000000000..e0973199ba3c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+
+We've used so far for the schemas the first compatible to introduce
+that controller as the filename, we should be consistent here. In that
+case that would be allwinner,sun8i-a23-ths.yaml
+
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Yangtao Li <tiny.windzz@gmail.com>
+> +
+> +description: |-
+> +  This describes the device tree binding for the Allwinner thermal
+> +  controller which measures the on-SoC temperatures.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun50i-h6-ths
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: bus
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +  nvmem-cells:
+
+You need a maxItems here too
+
+> +    description: ths calibrate data
+
+What about something like this:
+
+Calibration data for the thermal sensor
+
+> +
+> +  nvmem-cell-names:
+> +    const: calib
+
+I'm not sure we need a abbreviation here, calibration would be more
+explicit
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - "#thermal-sensor-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    ths: ths@5070400 {
+> +        compatible = "allwinner,sun50i-h6-ths";
+> +        reg = <0x05070400 0x100>;
+> +        clocks = <&ccu CLK_BUS_THS>;
+> +        clock-names = "bus";
+> +        resets = <&ccu RST_BUS_THS>;
+> +        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+
+Those examples won't compile.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--4zhzclyt6oncb76d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEppAAKCRDj7w1vZxhR
+xbePAQD4oGzekU98J4bCgNXtImN3X9EeDQ3DpYjvOJSUQtIlZgEAnRIw2ceIxFC7
+AomJrBOwFCYE3Ly30TnJfIXLEPZvYAU=
+=Si6e
+-----END PGP SIGNATURE-----
+
+--4zhzclyt6oncb76d--
