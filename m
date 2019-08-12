@@ -1,112 +1,63 @@
-From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH 3/4] staging: iio: adc: ad7192: Add system calibration support
-Date: Mon, 12 Aug 2019 12:03:40 +0300
-Message-ID: <20190812090341.27183-3-mircea.caprioru@analog.com>
-References: <20190812090341.27183-1-mircea.caprioru@analog.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 4/4] ASoC: codecs: add wsa881x amplifier support
+Date: Mon, 12 Aug 2019 10:05:05 +0100
+Message-ID: <a89e6a52-35da-15bf-6561-c58cb3453178@linaro.org>
+References: <20190809133407.25918-5-srinivas.kandagatla@linaro.org>
+ <201908121031.HBxXaLjU%lkp@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812090341.27183-1-mircea.caprioru@analog.com>
+In-Reply-To: <201908121031.HBxXaLjU%lkp@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, vkoul@kernel.org, broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org, pierre-louis.bossart@linux.intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch will add a system calibration attribute for each channel. Using
-this option the user will have the ability to calibrate each channel for
-zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
-to implement the functionality.
+Thanks for reporting this,
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
- drivers/staging/iio/adc/ad7192.c | 55 +++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
+On 12/08/2019 03:46, kbuild test robot wrote:
+> Hi Srinivas,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3-rc4 next-20190809]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Srinivas-Kandagatla/ASoC-codecs-Add-WSA881x-Smart-Speaker-amplifier-support/20190812-080612
+> config: m68k-allmodconfig (attached as .config)
+> compiler: m68k-linux-gcc (GCC) 7.4.0
+> reproduce:
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          GCC_VERSION=7.4.0 make.cross ARCH=m68k
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> ERROR: "sdw_unregister_driver" [sound/soc/codecs/snd-soc-wsa881x.ko] undefined!
+>>> ERROR: "sdw_write" [sound/soc/codecs/snd-soc-wsa881x.ko] undefined!
+>>> ERROR: "__sdw_register_driver" [sound/soc/codecs/snd-soc-wsa881x.ko] undefined!
+>>> ERROR: "sdw_write" [drivers/base/regmap/regmap-sdw.ko] undefined!
+>>> ERROR: "sdw_read" [drivers/base/regmap/regmap-sdw.ko] undefined!
+> 
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index d58ce08f3693..731072830f30 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -155,6 +155,11 @@
-  * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
-  */
- 
-+enum {
-+   AD7192_SYSCALIB_ZERO_SCALE,
-+   AD7192_SYSCALIB_FULL_SCALE,
-+};
-+
- struct ad7192_state {
- 	struct regulator		*avdd;
- 	struct regulator		*dvdd;
-@@ -169,10 +174,56 @@ struct ad7192_state {
- 	u8				devid;
- 	u8				clock_sel;
- 	struct mutex			lock;	/* protect sensor state */
-+	u8				syscalib_mode[8];
- 
- 	struct ad_sigma_delta		sd;
- };
- 
-+static const char * const ad7192_syscalib_modes[] = {
-+	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
-+	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
-+};
-+
-+static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    unsigned int mode)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	st->syscalib_mode[chan->channel] = mode;
-+
-+	if (mode == AD7192_SYSCALIB_ZERO_SCALE)
-+		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
-+				      chan->address);
-+	else
-+		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
-+				      chan->address);
-+
-+	return ret;
-+}
-+
-+static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+
-+	return st->syscalib_mode[chan->channel];
-+}
-+
-+static const struct iio_enum ad7192_syscalib_mode_enum = {
-+	.items = ad7192_syscalib_modes,
-+	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
-+	.set = ad7192_set_syscalib_mode,
-+	.get = ad7192_get_syscalib_mode
-+};
-+
-+static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
-+	IIO_ENUM("system_calibration", IIO_SEPARATE, &ad7192_syscalib_mode_enum),
-+	IIO_ENUM_AVAILABLE("system_calibration", &ad7192_syscalib_mode_enum),
-+	{}
-+};
-+
- static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
- {
- 	return container_of(sd, struct ad7192_state, sd);
-@@ -769,9 +820,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 		*chan = channels[i];
- 		chan->info_mask_shared_by_all |=
- 			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
--		if (chan->type != IIO_TEMP)
-+		if (chan->type != IIO_TEMP) {
- 			chan->info_mask_shared_by_type_available |=
- 				BIT(IIO_CHAN_INFO_SCALE);
-+			chan->ext_info = ad7192_calibsys_ext_info;
-+		}
- 		chan++;
- 	}
- 
--- 
-2.17.1
+
+There are changes in SoundWire Kconfigs 
+(https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/soundwire.git/commit/?h=fixes&id=8676b3ca4673517650fd509d7fa586aff87b3c28) 
+which are not available in linux/master yet so this error!
+
+Once this patch lands then below errors should disappear.
+
+
+thanks,
+srini
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
