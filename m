@@ -1,43 +1,33 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream
- like string builder
-Date: Mon, 12 Aug 2019 16:33:36 -0700
-Message-ID: <20190812233336.GA224410@google.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-4-brendanhiggins@google.com>
- <20190812225520.5A67C206A2@mail.kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] riscv: dts: Add DT node for SiFive FU540 Ethernet
+ controller driver
+Date: Mon, 12 Aug 2019 17:33:41 -0600
+Message-ID: <20190812233341.GA22016@bogus>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+ <1563534631-15897-3-git-send-email-yash.shah@sifive.com>
+ <alpine.DEB.2.21.9999.1907221446340.5793@viisi.sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812225520.5A67C206A2@mail.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1907221446340.5793@viisi.sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mp
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Yash Shah <yash.shah@sifive.com>, davem@davemloft.net, sagar.kadam@sifive.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, nicolas.ferre@microchip.com, ynezz@true.cz, sachin.ghadi@sifive.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 03:55:19PM -0700, Stephen Boyd wrote:
-> Quoting Brendan Higgins (2019-08-12 11:24:06)
-> > +void string_stream_clear(struct string_stream *stream)
-> > +{
-> > +       struct string_stream_fragment *frag_container, *frag_container_safe;
-> > +
-> > +       spin_lock(&stream->lock);
-> > +       list_for_each_entry_safe(frag_container,
-> > +                                frag_container_safe,
-> > +                                &stream->fragments,
-> > +                                node) {
-> > +               list_del(&frag_container->node);
+On Mon, Jul 22, 2019 at 02:48:40PM -0700, Paul Walmsley wrote:
+> On Fri, 19 Jul 2019, Yash Shah wrote:
 > 
-> Shouldn't we free the allocation here? Otherwise, if some test is going
-> to add, add, clear, add, it's going to leak until the test is over?
+> > DT node for SiFive FU540-C000 GEMGXL Ethernet controller driver added
+> > 
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> 
+> Thanks, queuing this one for v5.3-rc with Andrew's suggested change to 
+> change phy1 to phy0.
+> 
+> Am assuming patches 1 and 2 will go in via -net.
 
-So basically this means I should add a kunit_kfree and
-kunit_resource_destroy (respective equivalents to devm_kfree, and
-devres_destroy) and use kunit_kfree here?
+I don't think that has happened.
 
-> > +       }
-> > +       stream->length = 0;
-> > +       spin_unlock(&stream->lock);
-> > +}
-> > +
+Rob
