@@ -1,35 +1,51 @@
-From: "Frank Wunderlich" <frank-w@public-files.de>
-Subject: Aw: Re: [PATCH v3 01/10] dt-bindings: add powercontroller
-Date: Mon, 12 Aug 2019 13:10:21 +0200
-Message-ID: <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-2-frank-w@public-files.de>
- <20190812102035.GH26727@dell>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: regulator: act8865 regulator modes and
+ suspend states
+Date: Mon, 12 Aug 2019 12:11:40 +0100
+Message-ID: <20190812111140.GG4592@sirena.co.uk>
+References: <1565423335-3213-1-git-send-email-raagjadav@gmail.com>
+ <1565423335-3213-3-git-send-email-raagjadav@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812102035.GH26727@dell>
+Content-Disposition: inline
+In-Reply-To: <1565423335-3213-3-git-send-email-raagjadav@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>
+To: Raag Jadav <raagjadav@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> Gesendet: Montag, 12. August 2019 um 12:20 Uhr
-> Von: "Lee Jones" <lee.jones@linaro.org>
 
-> > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-...
-> > +	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.tx=
-t
->
-> Please use relative paths.
->
-> E.g: ../bindings/rtc/rtc-mt6397.txt
+--w/VI3ydZO+RcZ3Ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+On Sat, Aug 10, 2019 at 01:18:55PM +0530, Raag Jadav wrote:
 
-as we are in Documentation/devicetree/bindings/mfd/ it should be ../../bin=
-dings/..., right? or ../rtc/rtc-mt6397.txt ?
+> + * ACT8865 regulators as follows:
+> + * ACT8865_REGULATOR_MODE_FIXED:	It is specific to DCDC regulators and it
+> + *					specifies the usage of fixed-frequency
+> + *					PWM.
 
-regards Frank
+Ah, _FIXED doesn't mean what it sounded like - this should map to _FAST.
+The reason you use forced PWM is to avoid any delay in the hardware
+figuring out that it needs to go into PWM mode in the case of rapid load
+changes.
+
+--w/VI3ydZO+RcZ3Ux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1RSWsACgkQJNaLcl1U
+h9BgOwf+L+0uD2AkY2mKb2rgbO4kz8XM2/qXa/Guj883xw8zawXENnnGXMu1g+i3
+0gO9qV1QdTKin8sA2YFzlSqIreIjIh5EBwxcTDBizvq7+QO40zJVxLi4kvMNEQcN
+O144ApoOUPDU4HhhaZM9fW9+kx13IAgn4cficrqDdnoL2pZ8sNWsQP28vjprfgWH
+45DxGYJqrrhnXW3unBkGBT/z6Cu5DhCo9NYnNY6+G2eQqNtD+UacEu2K+HQuVuUj
+g/0Tg8h9ZhsIX+z1eo2Idorf7jkvd4QctqaA4DJHIKezvyD+7STfmAIwyobXC0Nh
+fDr0HHOLg3E7HBBIXu8mX4GEVDJkZw==
+=mPsh
+-----END PGP SIGNATURE-----
+
+--w/VI3ydZO+RcZ3Ux--
