@@ -1,135 +1,45 @@
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Re: [PATCH 2/2] mfd: madera: Add support for requesting the supply
- clocks
-Date: Mon, 12 Aug 2019 17:28:17 +0100
-Message-ID: <3b0ce497-f88a-ea27-d101-034887fb5808@opensource.cirrus.com>
-References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
- <20190806151321.31137-2-ckeepax@opensource.cirrus.com>
- <20190812103853.GM26727@dell>
- <20190812160937.GM54126@ediswmail.ad.cirrus.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: Update with Amlogic DRM bindings
+ converted as YAML
+Date: Mon, 12 Aug 2019 18:31:05 +0200
+Message-ID: <CAMO6naxDkpjLTaByYBhkgP6i1YE1F1ATBAp8gPuVjDy9DAUM7g@mail.gmail.com>
+References: <20190808085522.21950-1-narmstrong@baylibre.com> <20190808085522.21950-4-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812160937.GM54126@ediswmail.ad.cirrus.com>
-Content-Language: en-US
+In-Reply-To: <20190808085522.21950-4-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/19 17:09, Charles Keepax wrote:
-> On Mon, Aug 12, 2019 at 11:38:53AM +0100, Lee Jones wrote:
->> On Tue, 06 Aug 2019, Charles Keepax wrote:
->>
->>> Add the ability to get the clock for each clock input pin of the chip
->>> and enable MCLK2 since that is expected to be a permanently enabled
->>> 32kHz clock.
->>>
->>> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
->>> ---
->>>   int madera_dev_init(struct madera *madera)
->>>   {
->>> +	static const char * const mclk_name[] = { "mclk1", "mclk2", "mclk3" };
->>>   	struct device *dev = madera->dev;
->>>   	unsigned int hwid;
->>>   	int (*patch_fn)(struct madera *) = NULL;
->>> @@ -450,6 +451,17 @@ int madera_dev_init(struct madera *madera)
->>>   		       sizeof(madera->pdata));
->>>   	}
->>>   
->>> +	BUILD_BUG_ON(ARRAY_SIZE(madera->mclk) != ARRAY_SIZE(mclk_name));
->>
->> Not sure how this could happen.  Surely we don't need it.
->>
-> 
-> mclk_name is defined locally in this function and the mclk array in
-> include/linux/mfd/madera/core.h. This is to guard against one of
-> them being updated but not the other. It is by no means essential
-> but it feels like a good trade off given there is really limited
-> downside.
+On Thu, Aug 8, 2019 at 10:55 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> The amlogic,meson-dw-hdmi.txt and amlogic,meson-vpu.txt has been
+> converted to YAML schemas, update MAINTAINERS to match them again.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  MAINTAINERS | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6426db5198f0..c55c18531cd1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5318,8 +5318,8 @@ L:        linux-amlogic@lists.infradead.org
+>  W:     http://linux-meson.com/
+>  S:     Supported
+>  F:     drivers/gpu/drm/meson/
+> -F:     Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+> -F:     Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+> +F:     Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+> +F:     Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+>  F:     Documentation/gpu/meson.rst
+>  T:     git git://anongit.freedesktop.org/drm/drm-misc
+>
+> --
+> 2.22.0
 >
 
-I'd like to keep it if we can. Nicer to pick up a mistake at
-build time than using runtime checking or falling off the end of
-an undersized array.
-We use the same technique in the ASoC code.
-
->>> +	for (i = 0; i < ARRAY_SIZE(madera->mclk); i++) {
->>> +		madera->mclk[i] = devm_clk_get_optional(madera->dev,
->>> +							mclk_name[i]);
->>> +		if (IS_ERR(madera->mclk[i])) {
->>> +			dev_warn(madera->dev, "Failed to get %s: %ld\n",
->>> +				 mclk_name[i], PTR_ERR(madera->mclk[i]));
->>
->> Do we even want to warn on the non-acquisition of an optional clock?
->>
->> Especially with a message that looks like something actually failed.
->>
-> 
-> devm_clk_get_optional will return NULL if the clock was not
-> specified, so this is silent in that case. A warning in the case
-> something actually went wrong seems reasonable even if the clock
-> is optional as the user tried to do something and it didn't
-> behave as they intended.
-> 
->>> +			madera->mclk[i] = NULL;
->>> +		}
->>> +	}
->>> +
->>>   	ret = madera_get_reset_gpio(madera);
->>>   	if (ret)
->>>   		return ret;
->>> @@ -660,13 +672,19 @@ int madera_dev_init(struct madera *madera)
->>>   	}
->>>   
->>>   	/* Init 32k clock sourced from MCLK2 */
->>> +	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2]);
->>> +	if (ret != 0) {
->>> +		dev_err(madera->dev, "Failed to enable 32k clock: %d\n", ret);
->>> +		goto err_reset;
->>> +	}
->>
->> What happened to this being optional?
->>
-> 
-> The device needs the clock but specifying it through DT is
-> optional (the clock framework functions are no-ops and return
-> success if the clock pointer is NULL). Normally the 32kHz
-> clock is always on, and more importantly no existing users of
-> the driver will be specifying one.
-> 
-> We could remove the optional status for MCLK2, but it could break
-> existing users who don't yet specify the clock until they update
-> their DT and it will complicate the code as the other clocks are
-> definitely optional, so MCLK2 will need special handling.
-> 
->>>   	ret = regmap_update_bits(madera->regmap,
->>>   			MADERA_CLOCK_32K_1,
->>>   			MADERA_CLK_32K_ENA_MASK | MADERA_CLK_32K_SRC_MASK,
->>>   			MADERA_CLK_32K_ENA | MADERA_32KZ_MCLK2);
->>>   	if (ret) {
->>>   		dev_err(madera->dev, "Failed to init 32k clock: %d\n", ret);
->>> -		goto err_reset;
->>> +		goto err_clock;
->>>   	}
->>>   
->>>   	pm_runtime_set_active(madera->dev);
->>> @@ -687,6 +705,8 @@ int madera_dev_init(struct madera *madera)
->>>   
->>>   err_pm_runtime:
->>>   	pm_runtime_disable(madera->dev);
->>> +err_clock:
->>> +	clk_disable_unprepare(madera->mclk[MADERA_MCLK2]);
->>
->> Where are the other clocks consumed?
->>
-> 
-> Other clocks will be consumed by the ASoC part of the driver for
-> clocking the audio functionality and running the FLLs. I haven't
-> sent those patches yet, but was planning on doing so once this
-> was merged.
-> 
-> Thanks,
-> Charles
-> 
+Reviewed-by: Maxime Jourdan <mjourdan@baylibre.com>
