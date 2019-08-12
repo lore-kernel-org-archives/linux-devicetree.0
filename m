@@ -1,7 +1,7 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 3/7] PM / devfreq: Add generic imx bus driver
-Date: Mon, 12 Aug 2019 21:49:47 +0300
-Message-ID: <dbdd1ae60993d5fe73ce5b446b2c7d559c981cf1.1565633880.git.leonard.crestez@nxp.com>
+Subject: [PATCH 6/7] PM / devfreq: imx-ddrc: Measure bandwidth with perf
+Date: Mon, 12 Aug 2019 21:49:50 +0300
+Message-ID: <6d8762453bf6020b8f1ec8c06bb5713a3d3d635e.1565633880.git.leonard.crestez@nxp.com>
 References: <cover.1565633880.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,217 +23,228 @@ To: Stephen Boyd <sboyd@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Ky
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Anson Huang <Anson.Huang@nxp.com>, linux-arm-kernel@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, linux-imx@nxp.com, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Will Deacon <will@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, Jacky Bai <ping.bai@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial support for dynamic frequency switching on pieces of the imx
-interconnect fabric.
+The imx8m ddrc has a performance monitoring block attached which can
+be used to measure bandwidth usage and automatically adjust frequency.
 
-All this driver actually does is set a clk rate based on an opp table.
-
-No attempt is made to map registers or anything clever.
+There is already a perf driver for that block so instead of implementing
+a devfreq events driver use the in-kernel perf API to implement
+get_dev_status directly.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/devfreq/Kconfig       |  12 +++
- drivers/devfreq/Makefile      |   1 +
- drivers/devfreq/imx-devfreq.c | 148 ++++++++++++++++++++++++++++++++++
- 3 files changed, 161 insertions(+)
- create mode 100644 drivers/devfreq/imx-devfreq.c
+ drivers/devfreq/imx-ddrc.c | 136 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 134 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index defe1d438710..9088a151bafe 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -90,10 +90,22 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 	  Each memory bus group could contain many memoby bus block. It reads
- 	  PPMU counters of memory controllers by using DEVFREQ-event device
- 	  and adjusts the operating frequencies and voltages with OPP support.
- 	  This does not yet operate with optimal voltages.
+diff --git a/drivers/devfreq/imx-ddrc.c b/drivers/devfreq/imx-ddrc.c
+index e46a1e711bc6..d7f27cdce697 100644
+--- a/drivers/devfreq/imx-ddrc.c
++++ b/drivers/devfreq/imx-ddrc.c
+@@ -11,10 +11,13 @@
+ #include <linux/pm_opp.h>
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/arm-smccc.h>
  
-+config ARM_IMX_DEVFREQ
-+	tristate "i.MX DEVFREQ Driver"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	select DEVFREQ_GOV_PASSIVE
-+	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-+	select DEVFREQ_GOV_USERSPACE
-+	select PM_OPP
-+	help
-+	  This adds the DEVFREQ driver for the i.MX family of SoCs.
-+	  It allows adjusting frequencies for DDRC (DDR Controller) and various
-+	  NICs and NOCs which form the SOC interconnect fabric
++#include <asm/perf_event.h>
++#include <linux/perf_event.h>
 +
- config ARM_TEGRA_DEVFREQ
- 	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
- 	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \
- 		ARCH_TEGRA_132_SOC || ARCH_TEGRA_124_SOC || \
- 		ARCH_TEGRA_210_SOC || \
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index 338ae8440db6..c2463ed4c934 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -7,10 +7,11 @@ obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
- obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
- obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
+ #define IMX_SIP_DDR_DVFS			0xc2000004
  
- # DEVFREQ Drivers
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-+obj-$(CONFIG_ARM_IMX_DEVFREQ)		+= imx-devfreq.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
- obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
- obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
+ /* Values starting from 0 switch to specific frequency */
+ #define IMX_SIP_DDR_FREQ_SET_HIGH		0x00
  
- # DEVFREQ Event Drivers
-diff --git a/drivers/devfreq/imx-devfreq.c b/drivers/devfreq/imx-devfreq.c
-new file mode 100644
-index 000000000000..702a4368af7d
---- /dev/null
-+++ b/drivers/devfreq/imx-devfreq.c
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 NXP
-+ */
+@@ -81,10 +84,22 @@ struct imx_ddrc {
+ 	struct clk *dram_alt;
+ 	struct clk *dram_apb;
+ 
+ 	int freq_count;
+ 	struct imx_ddrc_freq freq_table[IMX_DDRC_MAX_FREQ_COUNT];
 +
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++	/* For measuring load with perf events: */
++	struct platform_device* pmu_pdev;
++	struct pmu *pmu;
 +
-+struct imx_devfreq {
-+	struct devfreq_dev_profile profile;
-+	struct devfreq *devfreq;
-+	struct clk *clk;
-+	struct devfreq_passive_data passive_data;
-+};
++	struct perf_event_attr rd_event_attr;
++	struct perf_event_attr wr_event_attr;
++	struct perf_event *rd_event;
++	struct perf_event *wr_event;
 +
-+static int imx_devfreq_target(struct device *dev, unsigned long *freq, u32 flags)
-+{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
-+	struct dev_pm_opp *new_opp;
-+	unsigned long new_freq;
-+	int ret;
++	u64 last_rd_val, last_rd_ena, last_rd_run;
++	u64 last_wr_val, last_wr_ena, last_wr_run;
+ };
+ 
+ static struct imx_ddrc_freq* imx_ddrc_find_freq(struct imx_ddrc* priv,
+ 						unsigned long rate)
+ {
+@@ -233,17 +248,117 @@ static int imx_ddrc_get_cur_freq(struct device *dev, unsigned long *freq)
+ static int imx_ddrc_get_dev_status(struct device *dev,
+ 		struct devfreq_dev_status *stat)
+ {
+ 	struct imx_ddrc *priv = dev_get_drvdata(dev);
+ 
+-	stat->busy_time = 0;
+-	stat->total_time = 0;
+ 	stat->current_frequency = clk_get_rate(priv->dram_core);
+ 
++	if (priv->rd_event && priv->wr_event) {
++		u64 rd_delta, rd_val, rd_ena, rd_run;
++		u64 wr_delta, wr_val, wr_ena, wr_run;
 +
-+	new_opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(new_opp)) {
-+		ret = PTR_ERR(new_opp);
-+		dev_err(dev, "failed to get recommended opp: %d\n", ret);
-+		return ret;
++		rd_val = perf_event_read_value(priv->rd_event, &rd_ena, &rd_run);
++		wr_val = perf_event_read_value(priv->wr_event, &wr_ena, &wr_run);
++
++		rd_delta = (rd_val - priv->last_rd_val) * (rd_ena - priv->last_rd_ena) / (rd_run - priv->last_rd_run);
++		priv->last_rd_val = rd_val;
++		priv->last_rd_ena = rd_ena;
++		priv->last_rd_run = rd_run;
++		wr_delta = (wr_val - priv->last_wr_val) * (wr_ena - priv->last_wr_ena) / (wr_run - priv->last_wr_run);
++		priv->last_wr_val = wr_val;
++		priv->last_wr_ena = wr_ena;
++		priv->last_wr_run = wr_run;
++
++		/* magic numbers, possibly wrong */
++		stat->busy_time = 4 * (rd_delta + wr_delta);
++		stat->total_time = stat->current_frequency;
++	} else {
++		stat->busy_time = 0;
++		stat->total_time = 0;
 +	}
-+	new_freq = dev_pm_opp_get_freq(new_opp);
-+	dev_pm_opp_put(new_opp);
-+
-+	return clk_set_rate(priv->clk, new_freq);
-+}
-+
-+static int imx_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
-+{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
-+
-+	*freq = clk_get_rate(priv->clk);
 +
 +	return 0;
 +}
 +
-+static int imx_devfreq_get_dev_status(struct device *dev,
-+		struct devfreq_dev_status *stat)
++static int imx_ddrc_perf_disable(struct imx_ddrc *priv)
 +{
-+	struct imx_devfreq *priv = dev_get_drvdata(dev);
++	/* release and set to NULL */
++	if (!IS_ERR_OR_NULL(priv->rd_event))
++		perf_event_release_kernel(priv->rd_event);
++	if (!IS_ERR_OR_NULL(priv->wr_event))
++		perf_event_release_kernel(priv->wr_event);
++	priv->rd_event = NULL;
++	priv->wr_event = NULL;
 +
-+	stat->busy_time = 0;
-+	stat->total_time = 0;
-+	stat->current_frequency = clk_get_rate(priv->clk);
-+
-+	return 0;
-+}
-+
-+static void imx_devfreq_exit(struct device *dev)
+ 	return 0;
+ }
+ 
++static int imx_ddrc_perf_enable(struct imx_ddrc *priv)
 +{
-+	return dev_pm_opp_of_remove_table(dev);
-+}
-+
-+static int imx_devfreq_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct imx_devfreq *priv;
-+	const char *gov = DEVFREQ_GOV_USERSPACE;
-+	void *govdata = NULL;
 +	int ret;
 +
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++	priv->rd_event_attr.size = sizeof(priv->rd_event_attr);
++	priv->rd_event_attr.type = priv->pmu->type;
++	priv->rd_event_attr.config = 0x2a;
 +
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		ret = PTR_ERR(priv->clk);
-+		dev_err(dev, "failed to fetch clk: %d\n", ret);
-+		return ret;
-+	}
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get OPP table\n");
-+		return ret;
-+	}
-+
-+	priv->profile.polling_ms = 1000;
-+	priv->profile.target = imx_devfreq_target;
-+	priv->profile.get_dev_status = imx_devfreq_get_dev_status;
-+	priv->profile.exit = imx_devfreq_exit;
-+	priv->profile.get_cur_freq = imx_devfreq_get_cur_freq;
-+	priv->profile.initial_freq = clk_get_rate(priv->clk);
-+
-+	/* Handle passive devfreq parent link */
-+	priv->passive_data.parent = devfreq_get_devfreq_by_phandle(dev, 0);
-+	if (!IS_ERR(priv->passive_data.parent)) {
-+		dev_info(dev, "passive link to %s\n",
-+				dev_name(priv->passive_data.parent->dev.parent));
-+		gov = DEVFREQ_GOV_PASSIVE;
-+		govdata = &priv->passive_data;
-+	} else if (priv->passive_data.parent != ERR_PTR(-ENODEV)) {
-+		// -ENODEV means no parent: not an error.
-+		ret = PTR_ERR(priv->passive_data.parent);
-+		if (ret != -EPROBE_DEFER)
-+			dev_warn(dev, "failed to get passive parent: %d\n", ret);
++	priv->rd_event = perf_event_create_kernel_counter(
++			&priv->rd_event_attr, 0, NULL, NULL, NULL);
++	if (IS_ERR(priv->rd_event)) {
++		ret = PTR_ERR(priv->rd_event);
 +		goto err;
 +	}
 +
-+	priv->devfreq = devm_devfreq_add_device(dev, &priv->profile,
-+						gov, govdata);
-+	if (IS_ERR(priv->devfreq)) {
-+		ret = PTR_ERR(priv->devfreq);
-+		dev_err(dev, "failed to add devfreq device: %d\n", ret);
++	priv->wr_event_attr.size = sizeof(priv->wr_event_attr);
++	priv->wr_event_attr.type = priv->pmu->type;
++	priv->wr_event_attr.config = 0x2b;
++
++	priv->wr_event = perf_event_create_kernel_counter(
++			&priv->wr_event_attr, 0, NULL, NULL, NULL);
++	if (IS_ERR(priv->wr_event)) {
++		ret = PTR_ERR(priv->wr_event);
 +		goto err;
 +	}
 +
 +	return 0;
 +
 +err:
-+	dev_pm_opp_of_remove_table(dev);
++	imx_ddrc_perf_disable(priv);
 +	return ret;
 +}
 +
-+static const struct of_device_id imx_devfreq_of_match[] = {
-+	{ .compatible = "fsl,imx8m-noc", },
-+	{ .compatible = "fsl,imx8m-nic", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, imx_devfreq_of_match);
++static int imx_ddrc_init_events(struct device *dev,
++				   struct device_node* events_node)
++{
++	struct imx_ddrc *priv = dev_get_drvdata(dev);
++	struct device_driver *driver;
 +
-+static struct platform_driver imx_devfreq_platdrv = {
-+	.probe		= imx_devfreq_probe,
-+	.driver = {
-+		.name	= "imx-devfreq",
-+		.of_match_table = of_match_ptr(imx_devfreq_of_match),
-+	},
-+};
-+module_platform_driver(imx_devfreq_platdrv);
++	/*
++	 * We need pmu->type for perf_event_attr but there is no API for
++	 * mapping device_node to pmu. Fetch private data for imx-ddr-pmu and
++	 * cast that to a struct pmu instead.
++	 */
++	priv->pmu_pdev = of_find_device_by_node(events_node);
++	if (!priv->pmu_pdev)
++		return -EPROBE_DEFER;
++	driver = priv->pmu_pdev->dev.driver;
++	if (!driver)
++		return -EPROBE_DEFER;
++	if (strcmp(driver->name, "imx-ddr-pmu")) {
++		dev_warn(dev, "devfreq-events node %pOF has unexpected driver %s\n",
++				events_node, driver->name);
++		return -ENODEV;
++	}
 +
-+MODULE_DESCRIPTION("Generic i.MX bus frequency driver");
-+MODULE_AUTHOR("Leonard Crestez <leonard.crestez@nxp.com>");
-+MODULE_LICENSE("GPL v2");
++	priv->pmu = platform_get_drvdata(priv->pmu_pdev);
++	if (!priv->pmu)
++		return -EINVAL;
++
++	dev_info(dev, "events from pmu %s\n", priv->pmu->name);
++
++	return imx_ddrc_perf_enable(priv);
++}
++
+ static int imx_ddrc_init_freq_info(struct device *dev)
+ {
+ 	struct imx_ddrc *priv = dev_get_drvdata(dev);
+ 	struct arm_smccc_res res;
+ 	int index;
+@@ -291,10 +406,13 @@ static int imx_ddrc_init_freq_info(struct device *dev)
+ 
+ static void imx_ddrc_exit(struct device *dev)
+ {
+ 	struct imx_ddrc *priv = dev_get_drvdata(dev);
+ 
++	imx_ddrc_perf_disable(priv);
++	platform_device_put(priv->pmu_pdev);
++
+ 	return dev_pm_opp_of_remove_table(dev);
+ }
+ 
+ static int imx_ddrc_probe(struct platform_device *pdev)
+ {
+@@ -342,10 +460,22 @@ static int imx_ddrc_probe(struct platform_device *pdev)
+ 	priv->profile.get_dev_status = imx_ddrc_get_dev_status;
+ 	priv->profile.exit = imx_ddrc_exit;
+ 	priv->profile.get_cur_freq = imx_ddrc_get_cur_freq;
+ 	priv->profile.initial_freq = clk_get_rate(priv->dram_core);
+ 
++	/* Handle devfreq-events */
++	events_node = of_parse_phandle(dev->of_node, "devfreq-events", 0);
++	if (events_node) {
++		ret = imx_ddrc_init_events(dev, events_node);
++		of_node_put(events_node);
++		if (ret) {
++			dev_warn(dev, "failed to init perf events: %d\n", ret);
++			goto err;
++		}
++		gov = DEVFREQ_GOV_SIMPLE_ONDEMAND;
++	}
++
+ 	priv->devfreq = devm_devfreq_add_device(dev, &priv->profile,
+ 						gov, NULL);
+ 	if (IS_ERR(priv->devfreq)) {
+ 		ret = PTR_ERR(priv->devfreq);
+ 		dev_err(dev, "failed to add devfreq device: %d\n", ret);
+@@ -353,10 +483,12 @@ static int imx_ddrc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	return 0;
+ 
+ err:
++	imx_ddrc_perf_disable(priv);
++	platform_device_put(priv->pmu_pdev);
+ 	dev_pm_opp_of_remove_table(dev);
+ 	return ret;
+ }
+ 
+ static const struct of_device_id imx_ddrc_of_match[] = {
 -- 
 2.17.1
