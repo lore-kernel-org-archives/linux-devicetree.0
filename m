@@ -1,74 +1,70 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/4] arm64: dts: ls1088a: Fix incorrect I2C clock divider
-Date: Mon, 12 Aug 2019 16:17:24 +0200
-Message-ID: <20190812141722.GJ27041@X250>
-References: <20190806084223.23543-1-chuanhua.han@nxp.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem
+ software reset
+Date: Mon, 12 Aug 2019 16:19:54 +0200
+Message-ID: <20190812141954.GP14290@lunn.ch>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-11-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190806084223.23543-1-chuanhua.han@nxp.com>
+In-Reply-To: <20190812112350.15242-11-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 04:42:20PM +0800, Chuanhua Han wrote:
-> Ls1088a platform, the i2c input clock is actually platform pll CLK / 8
-> (this is the hardware connection), other clock divider can not get the
-> correct i2c clock, resulting in the output of SCL pin clock is not
-> accurate.
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> +static int adin_reset(struct phy_device *phydev)
+> +{
+> +	/* If there is a reset GPIO just exit */
+> +	if (!IS_ERR_OR_NULL(phydev->mdio.reset_gpio))
+> +		return 0;
 
-@Leo, looks good?
+I'm not so happy with this.
 
-Shawn
+First off, there are two possible GPIO configurations. The GPIO can be
+applied to all PHYs on the MDIO bus. That GPIO is used when the bus is
+probed. There can also be a per PHY GPIO, which is what you are
+looking at here.
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 20f5ebd..30b760e 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -324,7 +324,7 @@
->  			#size-cells = <0>;
->  			reg = <0x0 0x2000000 0x0 0x10000>;
->  			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&clockgen 4 3>;
-> +			clocks = <&clockgen 4 7>;
->  			status = "disabled";
->  		};
->  
-> @@ -334,7 +334,7 @@
->  			#size-cells = <0>;
->  			reg = <0x0 0x2010000 0x0 0x10000>;
->  			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&clockgen 4 3>;
-> +			clocks = <&clockgen 4 7>;
->  			status = "disabled";
->  		};
->  
-> @@ -344,7 +344,7 @@
->  			#size-cells = <0>;
->  			reg = <0x0 0x2020000 0x0 0x10000>;
->  			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&clockgen 4 3>;
-> +			clocks = <&clockgen 4 7>;
->  			status = "disabled";
->  		};
->  
-> @@ -354,7 +354,7 @@
->  			#size-cells = <0>;
->  			reg = <0x0 0x2030000 0x0 0x10000>;
->  			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&clockgen 4 3>;
-> +			clocks = <&clockgen 4 7>;
->  			status = "disabled";
->  		};
->  
-> -- 
-> 2.9.5
-> 
+The idea of putting the GPIO handling in the core is that PHYs don't
+need to worry about it. How much of a difference does it make if the
+PHY is both reset via GPIO and then again in software? How slow is the
+software reset? Maybe just unconditionally do the reset, if it is not
+too slow.
+
+> +
+> +	/* Reset PHY core regs & subsystem regs */
+> +	return adin_subsytem_soft_reset(phydev);
+> +}
+> +
+> +static int adin_probe(struct phy_device *phydev)
+> +{
+> +	return adin_reset(phydev);
+> +}
+
+Why did you decide to do this as part of probe, and not use the
+.soft_reset member of phy_driver?
+
+> +
+>  static struct phy_driver adin_driver[] = {
+>  	{
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+>  		.name		= "ADIN1200",
+>  		.config_init	= adin_config_init,
+> +		.probe		= adin_probe,
+>  		.config_aneg	= adin_config_aneg,
+>  		.read_status	= adin_read_status,
+>  		.ack_interrupt	= adin_phy_ack_intr,
+> @@ -461,6 +503,7 @@ static struct phy_driver adin_driver[] = {
+>  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
+>  		.name		= "ADIN1300",
+>  		.config_init	= adin_config_init,
+> +		.probe		= adin_probe,
+>  		.config_aneg	= adin_config_aneg,
+>  		.read_status	= adin_read_status,
+>  		.ack_interrupt	= adin_phy_ack_intr,
+
+Thanks
+	Andrew
