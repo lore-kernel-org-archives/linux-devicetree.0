@@ -1,205 +1,172 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 4/4] arm64: dts: fsl: Remove num-lanes property from PCIe
- nodes
-Date: Mon, 12 Aug 2019 09:35:46 +0100
-Message-ID: <20190812083545.GV56241@e119886-lin.cambridge.arm.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-5-Zhiqiang.Hou@nxp.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
+Date: Mon, 12 Aug 2019 10:35:56 +0200
+Message-ID: <20190812083556.dvprpwv6mjy3cjae@pengutronix.de>
+References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
+ <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
+ <20190809091013.vguj4wty7qiab64t@pengutronix.de>
+ <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
+ <20190809144124.3as3rtctlywxkudr@pengutronix.de>
+ <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812042435.25102-5-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:22:33AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> controller is not fixed, it is determined by the selected
-> SerDes protocol in the RCW (Reset Configuration Word), and
-> the PCIe link training is completed automatically base on
-> the selected SerDes protocol, and the link width set-up is
-> updated by hardware. So the num-lanes is not needed to
-> specify the link width.
-> 
-> The current num-lanes indicates the max lanes PCIe controller
-> can support up to, instead of the lanes assigned to the PCIe
-> controller. This can result in PCIe link training fail after
-> hot-reset. So remove the num-lanes to avoid set-up to incorrect
-> link width.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 -
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ------
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 4 ----
->  5 files changed, 17 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> index ec6257a5b251..119c597ca867 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> @@ -486,7 +486,6 @@
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			device_type = "pci";
-> -			num-lanes = <4>;
->  			num-viewport = <2>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index 71d9ed9ff985..c084c7a4b6a6 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -677,7 +677,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -704,7 +703,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <2>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -731,7 +729,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <2>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   /* downstream I/O */
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index b0ef08b090dd..d4c1da3d4bde 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -649,7 +649,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <8>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -671,7 +670,6 @@
->  			reg-names = "regs", "addr_space";
->  			num-ib-windows = <6>;
->  			num-ob-windows = <8>;
-> -			num-lanes = <2>;
->  			status = "disabled";
->  		};
->  
-> @@ -687,7 +685,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <2>;
->  			num-viewport = <8>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -709,7 +706,6 @@
->  			reg-names = "regs", "addr_space";
->  			num-ib-windows = <6>;
->  			num-ob-windows = <8>;
-> -			num-lanes = <2>;
->  			status = "disabled";
->  		};
->  
-> @@ -725,7 +721,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <2>;
->  			num-viewport = <8>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -747,7 +742,6 @@
->  			reg-names = "regs", "addr_space";
->  			num-ib-windows = <6>;
->  			num-ob-windows = <8>;
-> -			num-lanes = <2>;
->  			status = "disabled";
->  		};
->  
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index dfbead405783..76c87afeba1e 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -456,7 +456,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <256>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -482,7 +481,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x28 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -508,7 +506,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <8>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x30 0x00010000 0x0 0x00010000   /* downstream I/O */
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> index 64101c9962ce..7a0be8eaa84a 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> @@ -639,7 +639,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			msi-parent = <&its>;
-> @@ -661,7 +660,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			msi-parent = <&its>;
-> @@ -683,7 +681,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <8>;
->  			num-viewport = <256>;
->  			bus-range = <0x0 0xff>;
->  			msi-parent = <&its>;
-> @@ -705,7 +702,6 @@
->  			#size-cells = <2>;
->  			device_type = "pci";
->  			dma-coherent;
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			msi-parent = <&its>;
+Hello Baolin,
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com> 
-
-> -- 
-> 2.17.1
+On Mon, Aug 12, 2019 at 03:29:07PM +0800, Baolin Wang wrote:
+> Hi Uwe,
 > 
+> On Fri, 9 Aug 2019 at 22:41, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Fri, Aug 09, 2019 at 06:06:21PM +0800, Baolin Wang wrote:
+> > > On Fri, 9 Aug 2019 at 17:10, Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Thu, Aug 08, 2019 at 04:59:39PM +0800, Baolin Wang wrote:
+> > > > > +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > > +                            struct pwm_state *state)
+> > > > > +{
+> > > > > +     struct sprd_pwm_chip *spc =
+> > > > > +             container_of(chip, struct sprd_pwm_chip, chip);
+> > > > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> > > > > +     u32 enabled, duty, prescale;
+> > > > > +     u64 tmp;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
+> > > > > +     if (ret) {
+> > > > > +             dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+> > > > > +                     pwm->hwpwm);
+> > > > > +             return;
+> > > > > +     }
+> > > > > +
+> > > > > +     chn->clk_enabled = true;
+> > > > > +
+> > > > > +     duty = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY) & SPRD_PWM_REG_MSK;
+> > > > > +     prescale = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE) & SPRD_PWM_REG_MSK;
+> > > > > +     enabled = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE) & SPRD_PWM_ENABLE_BIT;
+> > > > > +
+> > > > > +     /*
+> > > > > +      * According to the datasheet, the period_ns and duty_ns calculation
+> > > > > +      * formula should be:
+> > > > > +      * period_ns = 10^9 * (prescale + 1) * mod / clk_rate
+> > > > > +      * duty_ns = 10^9 * (prescale + 1) * duty / clk_rate
+> > > > > +      */
+> > > > > +     tmp = (prescale + 1) * 1000000000ULL * SPRD_PWM_MOD_MAX;
+> > > > > +     state->period = div64_u64(tmp, chn->clk_rate);
+> > > >
+> > > > This is not idempotent. If you apply the configuration that is returned
+> > > > here this shouldn't result in a reconfiguration.
+> > >
+> > > Since we may configure the  PWM in bootloader, so in kernel part we
+> > > should get current PWM state to avoid reconfiguration if state
+> > > configuration are same.
+> >
+> > This is also important as some consumers might do something like:
+> >
+> >         state = pwm_get_state(mypwm)
+> >         if (something):
+> >                 state->duty = 0
+> >         else:
+> >                 state->duty = state->period / 2
+> >         pwm_set_state(mypwm, state)
+> >
+> > and then period shouldn't get smaller in each step.
+> > (This won't happen as of now because the PWM framework caches the last
+> > state that was set and returns this for pwm_get_state. Still getting
+> > this right would be good.)
+> 
+> I understood your concern, but the period can be configured in
+> bootloader, we have no software things to save the accurate period.
+
+I don't understand what you're saying here. The bootloader configuring
+the hardware is a usual use-case. That's why we have the .get_state
+callback in the first place.
+
+> Moreover I think I can change to use DIV_ROUND_CLOSET_ULL to keep the
+> accuracy.
+
+DIV_ROUND_CLOSEST_ULL still doesn't match what the apply callback uses.
+With the lack of an official statement from the maintainer I'd prefer
+.apply to round down and implement .get_state such that
+
+	pwm_apply(pwm, pwm_get_state(pwm))
+
+is a no-op.
+ 
+> > > > > +
+> > > > > +                     dev_err(spc->dev, "failed to get channel clocks\n");
+> > > > > +                     return ret;
+> > > > > +             }
+> > > > > +
+> > > > > +             clk_pwm = chn->clks[1].clk;
+> > > >
+> > > > This 1 looks suspicious. Are you using all clocks provided in the dtb at
+> > > > all? You're not using i in the loop at all, this doesn't look right.
+> > >
+> > > Like I said above, each channel has 2 clocks: enable clock and pwm
+> > > clock, the 2nd clock of each channel's bulk clocks is the pwm clock,
+> > > which is used to set the source clock. I know this's not easy to read,
+> > > so do you have any good suggestion?
+> >
+> > Not sure this is easily possible to rework to make this clearer.
+> >
+> > Do these clks have different uses? e.g. one to enable register access
+> > and the other to enable the pwm output? If so just using
+> 
+> Yes.
+
+So assuming one of the clocks is for operation of the output and the
+other for accessing the registers, the latter can be disabled at the end
+of each callback?
+
+> > devm_clk_bulk_get isn't the right thing because you should be able know
+> > if clks[0] or clks[1] is the one you need to enable the output (or
+> > register access).
+> 
+> We've fixed the clock order in bulk clocks by the array
+> 'sprd_pwm_clks', maybe I should define one readable macro instead of
+> magic number.
+
+ack.
+
+> > > > > +             if (!clk_set_parent(clk_pwm, clk_parent))
+> > > > > +                     chn->clk_rate = clk_get_rate(clk_pwm);
+> > > > > +             else
+> > > > > +                     chn->clk_rate = SPRD_PWM_DEFAULT_CLK;
+> > > >
+> > > > I don't know all the clock framework details, but I think there are
+> > > > better ways to ensure that a given clock is used as parent for another
+> > > > given clock. Please read the chapter about "Assigned clock parents and
+> > > > rates" in the clock bindings and check if this could be used for the
+> > > > purpose here and so simplify the driver.
+> > >
+> > > Actually there are many other drivers set the parent clock like this,
+> > > and we want a default clock if failed to set the parent clock.
+> >
+> > These might be older than the clk framework capabilities, or the
+> > reviewers didn't pay attention to this detail; both shouldn't be a
+> > reason to not make it better here.
+> 
+> The clock framework supplies 'assigned-clocks' and
+> 'assigned-clock-parents' properties to set parent, but for our case we
+> still want to set a default clock rate if failed to set parent when
+> met some abnormal things.
+
+Without understanding the complete problem I'd say this is out of the
+area the driver should care about.
+ 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
