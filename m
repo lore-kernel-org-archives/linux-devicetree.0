@@ -1,24 +1,30 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 01/19] dt-bindings: arm: cpu: Add Marvell MMP3 SMP enable method
-Date: Mon, 12 Aug 2019 12:57:48 -0600
-Message-ID: <CAL_JsqLyQjRNONDQT=RM0kYzztd4PdsSZssjiVfd8WUwCjFUVA@mail.gmail.com>
-References: <20190809093158.7969-1-lkundrak@v3.sk> <20190809093158.7969-2-lkundrak@v3.sk>
+Subject: Re: [PATCH v2 1/6] dt-bindings: arm: fsl: Add the S32V234-EVB board
+Date: Mon, 12 Aug 2019 12:58:22 -0600
+Message-ID: <CAL_JsqJkTzcUnDCoWH9DP9LpwpdBh3wWHzPVfg=ieTTZet92pw@mail.gmail.com>
+References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com> <20190809112853.15846-2-stefan-gabriel.mirea@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190809093158.7969-2-lkundrak@v3.sk>
+In-Reply-To: <20190809112853.15846-2-stefan-gabriel.mirea@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Eddy Petrisor <eddy.petrisor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 3:32 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+On Fri, Aug 9, 2019 at 5:29 AM Stefan-gabriel Mirea
+<stefan-gabriel.mirea@nxp.com> wrote:
 >
-> Add the enable method for the second PJ4B core of the Marvell MMP3 SoC.
+> From: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
 >
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Add entry for the NXP S32V234 Customer Evaluation Board to the board/SoC
+> bindings.
+>
+> Signed-off-by: Eddy Petri=C8=99or <eddy.petrisor@nxp.com>
+> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
