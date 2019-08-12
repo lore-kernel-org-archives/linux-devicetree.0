@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 06/14] net: phy: adin: make RGMII internal delays configurable
-Date: Mon, 12 Aug 2019 14:23:42 +0300
-Message-ID: <20190812112350.15242-7-alexandru.ardelean@analog.com>
+Subject: [PATCH v4 11/14] net: phy: adin: implement Energy Detect Powerdown mode
+Date: Mon, 12 Aug 2019 14:23:47 +0300
+Message-ID: <20190812112350.15242-12-alexandru.ardelean@analog.com>
 References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,142 +13,95 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The internal delays for the RGMII are configurable for both RX & TX. This
-change adds support for configuring them via device-tree (or ACPI).
+The ADIN PHYs support Energy Detect Powerdown mode, which puts the PHY into
+a low power mode when there is no signal on the wire (typically cable
+unplugged).
+This behavior is enabled by default, but can be disabled via device
+property.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 82 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+ drivers/net/phy/adin.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index badca6881c6c..c882fcd9ada5 100644
+index ddf0512a9a4d..131a72567f25 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -5,11 +5,13 @@
-  * Copyright 2019 Analog Devices Inc.
-  */
- #include <linux/kernel.h>
-+#include <linux/bitfield.h>
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/mii.h>
- #include <linux/phy.h>
-+#include <linux/property.h>
+@@ -24,6 +24,11 @@
+ #define   ADIN1300_AUTO_MDI_EN			BIT(10)
+ #define   ADIN1300_MAN_MDIX_EN			BIT(9)
  
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
-@@ -32,15 +34,83 @@
- #define ADIN1300_INT_STATUS_REG			0x0019
- 
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
-+#define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
-+#define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-+		FIELD_PREP(ADIN1300_GE_RGMII_RX_MSK, x)
-+#define   ADIN1300_GE_RGMII_GTX_MSK		GENMASK(5, 3)
-+#define   ADIN1300_GE_RGMII_GTX_SEL(x)		\
-+		FIELD_PREP(ADIN1300_GE_RGMII_GTX_MSK, x)
- #define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
- #define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
- #define   ADIN1300_GE_RGMII_EN			BIT(0)
- 
-+/* RGMII internal delay settings for rx and tx for ADIN1300 */
-+#define ADIN1300_RGMII_1_60_NS			0x0001
-+#define ADIN1300_RGMII_1_80_NS			0x0002
-+#define	ADIN1300_RGMII_2_00_NS			0x0000
-+#define	ADIN1300_RGMII_2_20_NS			0x0006
-+#define	ADIN1300_RGMII_2_40_NS			0x0007
++#define ADIN1300_PHY_CTRL_STATUS2		0x0015
++#define   ADIN1300_NRG_PD_EN			BIT(3)
++#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
++#define   ADIN1300_NRG_PD_STATUS		BIT(1)
 +
- #define ADIN1300_GE_RMII_CFG_REG		0xff24
- #define   ADIN1300_GE_RMII_EN			BIT(0)
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -136,6 +141,14 @@ static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
+ 	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
+ };
  
 +/**
-+ * struct adin_cfg_reg_map - map a config value to aregister value
-+ * @cfg		value in device configuration
-+ * @reg		value in the register
++ * struct adin_priv - ADIN PHY driver private data
++ * edpd_enabled		true if Energy Detect Powerdown mode is enabled
 + */
-+struct adin_cfg_reg_map {
-+	int cfg;
-+	int reg;
++struct adin_priv {
++	bool			edpd_enabled;
 +};
 +
-+static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
-+	{ 1600, ADIN1300_RGMII_1_60_NS },
-+	{ 1800, ADIN1300_RGMII_1_80_NS },
-+	{ 2000, ADIN1300_RGMII_2_00_NS },
-+	{ 2200, ADIN1300_RGMII_2_20_NS },
-+	{ 2400, ADIN1300_RGMII_2_40_NS },
-+	{ },
-+};
-+
-+static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
-+{
-+	size_t i;
-+
-+	for (i = 0; tbl[i].cfg; i++) {
-+		if (tbl[i].cfg == cfg)
-+			return tbl[i].reg;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static u32 adin_get_reg_value(struct phy_device *phydev,
-+			      const char *prop_name,
-+			      const struct adin_cfg_reg_map *tbl,
-+			      u32 dflt)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	u32 val;
-+	int rc;
-+
-+	if (device_property_read_u32(dev, prop_name, &val))
-+		return dflt;
-+
-+	rc = adin_lookup_reg_value(tbl, val);
-+	if (rc < 0) {
-+		phydev_warn(phydev,
-+			    "Unsupported value %u for %s using default (%u)\n",
-+			    val, prop_name, dflt);
-+		return dflt;
-+	}
-+
-+	return rc;
-+}
-+
- static int adin_config_rgmii_mode(struct phy_device *phydev)
+ static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
  {
-+	u32 val;
- 	int reg;
+ 	size_t i;
+@@ -244,6 +257,18 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
+ 			     ADIN1300_GE_RMII_CFG_REG, reg);
+ }
  
- 	if (!phy_interface_is_rgmii(phydev))
-@@ -57,6 +127,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
- 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
- 		reg |= ADIN1300_GE_RGMII_RXID_EN;
++static int adin_config_init_edpd(struct phy_device *phydev)
++{
++	struct adin_priv *priv = phydev->priv;
 +
-+		val = adin_get_reg_value(phydev, "adi,rx-internal-delay-ps",
-+					 adin_rgmii_delays,
-+					 ADIN1300_RGMII_2_00_NS);
-+		reg &= ~ADIN1300_GE_RGMII_RX_MSK;
-+		reg |= ADIN1300_GE_RGMII_RX_SEL(val);
- 	} else {
- 		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
- 	}
-@@ -64,6 +140,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
- 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
- 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
- 		reg |= ADIN1300_GE_RGMII_TXID_EN;
++	if (priv->edpd_enabled)
++		return phy_set_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
++				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
 +
-+		val = adin_get_reg_value(phydev, "adi,tx-internal-delay-ps",
-+					 adin_rgmii_delays,
-+					 ADIN1300_RGMII_2_00_NS);
-+		reg &= ~ADIN1300_GE_RGMII_GTX_MSK;
-+		reg |= ADIN1300_GE_RGMII_GTX_SEL(val);
- 	} else {
- 		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
- 	}
++	return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
++			(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
++}
++
+ static int adin_config_init(struct phy_device *phydev)
+ {
+ 	int rc;
+@@ -262,6 +287,10 @@ static int adin_config_init(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 
++	rc = adin_config_init_edpd(phydev);
++	if (rc < 0)
++		return rc;
++
+ 	phydev_dbg(phydev, "PHY is using mode '%s'\n",
+ 		   phy_modes(phydev->interface));
+ 
+@@ -481,6 +510,17 @@ static int adin_reset(struct phy_device *phydev)
+ 
+ static int adin_probe(struct phy_device *phydev)
+ {
++	struct device *dev = &phydev->mdio.dev;
++	struct adin_priv *priv;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->edpd_enabled =
++		device_property_read_bool(dev, "adi,disable-energy-detect");
++	phydev->priv = priv;
++
+ 	return adin_reset(phydev);
+ }
+ 
 -- 
 2.20.1
