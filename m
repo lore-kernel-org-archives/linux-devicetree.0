@@ -1,32 +1,29 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: add device tree for Mecer Xtreme Mini S6
-Date: Mon, 12 Aug 2019 13:11:01 -0600
-Message-ID: <CAL_JsqKpNgVcM-Ou7BKWv0qxvkJx3=NuSHRTHonQ-XSz-NXb1w@mail.gmail.com>
-References: <20190811230015.28349-1-justin.swartz@risingedge.co.za>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Add ipsps1 as a trivial device
+Date: Mon, 12 Aug 2019 13:11:27 -0600
+Message-ID: <CAL_JsqJ1742r8vkwMjzem5FYEis21kVJKamrBt-TgDpMHHFsPw@mail.gmail.com>
+References: <20190812025242.15570-1-wangzqbj@inspur.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190811230015.28349-1-justin.swartz@risingedge.co.za>
+In-Reply-To: <20190812025242.15570-1-wangzqbj@inspur.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Justin Swartz <justin.swartz@risingedge.co.za>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: John Wang <wangzqbj@inspur.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Patrick Venture <venture@google.com>, Anson Huang <anson.huang@nxp.com>, Jeremy Gebben <jgebben@sweptlaser.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Milton Miller <miltonm@us.ibm.com>, Lei YU <mine260309@gmail.com>, duanzhijia01@inspur.com, Joel Stanley <joel@jms.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 11, 2019 at 5:01 PM Justin Swartz
-<justin.swartz@risingedge.co.za> wrote:
+On Sun, Aug 11, 2019 at 8:52 PM John Wang <wangzqbj@inspur.com> wrote:
 >
-> The Mecer Xtreme Mini S6 features a Rockchip RK3229 SoC,
-> 1GB DDR3 RAM, 8GB eMMC, MicroSD port, 10/100Mbps Ethernet,
-> Realtek 8723BS WLAN module, 2 x USB 2.0 ports, HDMI output,
-> and S/PDIF output.
+> The ipsps1 is an Inspur Power System power supply unit
 >
-> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+> Signed-off-by: John Wang <wangzqbj@inspur.com>
 > ---
->  .../devicetree/bindings/arm/rockchip.yaml          |   5 +
->  .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/rk3229-xms6.dts                  | 283 +++++++++++++++++++++
->  4 files changed, 291 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rk3229-xms6.dts
+> v3:
+>     - Fix adding entry to the inappropriate line
+> v2:
+>     - No changes.
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
