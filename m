@@ -1,49 +1,122 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v3 19/21] ARM: dts: imx6/7-colibri: switch dr_mode to otg
-Date: Mon, 12 Aug 2019 12:53:28 +0000
-Message-ID: <e9a6dea440a646d19c18f3487427bc0f754a7da0.camel@toradex.com>
-References: <20190807082556.5013-1-philippe.schenker@toradex.com>
-         <20190807082556.5013-20-philippe.schenker@toradex.com>
-         <6fdbd56b71c1192c67b2e28accd611ced92de555.camel@toradex.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 02/11] dt-bindings: clock: imx-lpcg: add support to
+ parse clocks from device tree
+Date: Mon, 12 Aug 2019 15:00:43 +0200
+Message-ID: <20190812130041.GD27041@X250>
+References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
+ <1563289265-10977-3-git-send-email-aisheng.dong@nxp.com>
+ <20190803135048.GL8870@X250.getinternet.no>
+ <CAA+hA=TVv8m2GZr0W-u+S6XzJUCYrFDF95iyUGyAsbYMwatyZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6fdbd56b71c1192c67b2e28accd611ced92de555.camel@toradex.com>
-Content-Language: en-US
-Content-ID: <7103F6984D8B004C9D2AA8AA0A4D7D7A@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Max Krummenacher <max.krummenacher@toradex.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAA+hA=TVv8m2GZr0W-u+S6XzJUCYrFDF95iyUGyAsbYMwatyZg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree <devicetree@vger.kernel.org>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTA5IGF0IDE1OjUwICswMDAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6
-DQo+IEhpIFBoaWxpcHBlDQo+IA0KPiBPbiBXZWQsIDIwMTktMDgtMDcgYXQgMDg6MjYgKzAwMDAs
-IFBoaWxpcHBlIFNjaGVua2VyIHdyb3RlOg0KPiA+IEluIG9yZGVyIGZvciB0aGUgb3RnIHBvcnRz
-LCB0aGF0IHRoZXNlIG1vZHVsZXMgc3VwcG9ydCwgaXQgaXMgbmVlZGVkDQo+ID4gdGhhdCBkcl9t
-b2RlIGlzIG9uIG90Zy4gU3dpdGNoIHRvIHVzZSB0aGF0IGZlYXR1cmUuDQo+IA0KPiBJc24ndCBm
-dXJ0aGVyIGV4dGNvbiBpbnRlZ3JhdGlvbiByZXF1aXJlZCBmb3IgdGhpcyB0byB0cnVseSB3b3Jr
-Pw0KDQpZZXMsIEkgd2Fzbid0IGF3YXJlIG9mIHRoYXQuIEkgd2lsbCBkcm9wIHRoaXMgcGF0Y2gg
-YXMgdGhpcyBpcyBhIHdob2xlDQpuZXcgdG9waWMgYW5kIHdpbGwgaG9wZWZ1bGx5IGJlIGEgd2hv
-bGUgbmV3IHBhdGNoc2V0IHNvb24uDQoNClBoaWxpcHBlDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gPiAt
-LS0NCj4gPiANCj4gPiBDaGFuZ2VzIGluIHYzOiBOb25lDQo+ID4gQ2hhbmdlcyBpbiB2MjogTm9u
-ZQ0KPiA+IA0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaSB8IDIg
-Ky0NCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kgICAgfCAyICstDQo+
-ID4gIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+
-IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRz
-aQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kNCj4gPiBpbmRl
-eCA5YTYzZGViYWIwYjUuLjY2NzQxOTgzNDZkMiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZxZGwtY29saWJyaS5kdHNpDQo+ID4gQEAgLTM4OCw3ICszODgsNyBAQA0KPiA+ICAmdXNi
-b3RnIHsNCj4gPiAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gIAlkaXNhYmxlLW92
-ZXItY3VycmVudDsNCj4gPiAtCWRyX21vZGUgPSAicGVyaXBoZXJhbCI7DQo+ID4gKwlkcl9tb2Rl
-ID0gIm90ZyI7DQo+ID4gIAlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICB9Ow0KPiA+ICANCj4g
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCj4gPiBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gaW5kZXggNjdmNWUwYzg3
-ZmRjLi40MjQ3OGYxYWExNDYgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-Ny1jb2xpYnJpLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmku
-ZHRzaQ0KPiA+IEBAIC0zMjAsNyArMzIwLDcgQEANCj4gPiAgfTsNCj4gPiAgDQo+ID4gICZ1c2Jv
-dGcxIHsNCj4gPiAtCWRyX21vZGUgPSAiaG9zdCI7DQo+ID4gKwlkcl9tb2RlID0gIm90ZyI7DQo+
-ID4gIH07DQo+ID4gIA0KPiA+ICAmdXNkaGMxIHsNCj4gDQo+IENoZWVycw0KPiANCj4gTWFyY2Vs
-DQo=
+On Mon, Aug 05, 2019 at 11:27:20AM +0800, Dong Aisheng wrote:
+> > > +- compatible:                Should be one of:
+> > > +                       "fsl,imx8qxp-lpcg"
+> > > +                       "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
+> > > +- reg:                       Address and length of the register set.
+> > > +- #clock-cells:              Should be 1. One LPCG supports multiple clocks.
+> > > +- clocks:            Input parent clocks phandle array for each clock.
+> > > +- bit-offset:                An integer array indicating the bit offset for each clock.
+> >
+> > I guess that the driver should be able to figure bit offset from
+> > 'clock-indices' property.
+> >
+> 
+> Yes, it can be done in theory.
+> Then the binding may look like:
+> sdhc0_lpcg: clock-controller@5b200000 {
+>         ...
+>         #clock-cells = <1>;
+>         clocks = <&sdhc0_clk IMX_SC_PM_CLK_PER>,
+>                  <&conn_ipg_clk>, <&conn_axi_clk>;
+>         clock-indices = <0>, <16>, <20>;
+>         clock-output-names = "sdhc0_lpcg_per_clk",
+>                              "sdhc0_lpcg_ipg_clk",
+>                              "sdhc0_lpcg_ahb_clk";
+>         power-domains = <&pd IMX_SC_R_SDHC_0>;
+> };
+> 
+> usdhc1: mmc@5b010000 {
+>         ...
+>         clocks = <&sdhc0_lpcg 16>,
+>                  <&sdhc0_lpcg 0>,
+>                  <&sdhc0_lpcg 20>;
+>         clock-names = "ipg", "per", "ahb";
+> };
+> 
+> However, after trying, i found  one limitation if using clock-indices
+> that users have to do a secondary search for the indices value from clock names
+> which is not very friendly.
+> 
+> Formerly from the clock output names, user can easily get the clock
+> index as they're
+> in fixed orders as output names, so very easily to use.
+> e.g.
+> clocks = <&sdhc0_lpcg 1>,
+>          <&sdhc0_lpcg 0>,
+>          <&sdhc0_lpcg 2>;
+> 
+> If using clock-indices, users have no way to know it's clock index
+> from clock output names order
+> unless they do a secondary search from the clock-indice array accordingly.
+> For example, for "sdhc0_lpcg_ahb_clk", user can easily know its
+> reference is <&sdhc0_lpcg 2>.
+> But if using clock-indice, we need search clock-indices array to find
+> its reference
+> becomes <&sdhc0_lpcg 20>. So this seems like a drawback if using clock-indices.
+
+Shouldn't we have constant macro defined for those numbers, so that both
+'clock-indices' and 'clocks' of client device can use?
+
+> 
+> Therefore, personally i'm still a bit intend to the original way which
+> is more simple and
+> straightforward from user point of view, unless there's a strong
+> objections on define another
+> vendor private property.
+> 
+> Shawn,
+> How do you think?
+> Should we enforce the complexity to users?
+> 
+> > > +- hw-autogate:               Boolean array indicating whether supports HW autogate for
+> > > +                     each clock.
+> >
+> > Not sure why it needs to be a property in DT.  Or asking it different
+> > way, when it should be true and when false?
+> >
+> 
+> It is one LPCG feature.
+> For some specific device LPCGs, it may support clock auto gating. (depends on
+> IP's capability. e.g. uSDHC).
+> So we define this feature in DT as well in case if user may want to
+> use it in the future.
+> 
+> But AFAIK, there's still no one using it. Most drivers reply on runtime PM to do
+> clock management. Did not use LPCG auto gate off feature.
+> But the current LPCG driver API does support this parameter.
+> 
+> If you think it's unnecessary to define it in DT as there're still no
+> users, i can remove it
+> and disabling autogate in driver by default.
+
+I would suggest to drop it then.
+
+Shawn
