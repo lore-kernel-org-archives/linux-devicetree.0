@@ -1,70 +1,56 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem
- software reset
-Date: Mon, 12 Aug 2019 16:19:54 +0200
-Message-ID: <20190812141954.GP14290@lunn.ch>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-11-alexandru.ardelean@analog.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Mon, 12 Aug 2019 10:20:07 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1908121018430.1659-100000@iolanthe.rowland.org>
+References: <877e7iu0xw.fsf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190812112350.15242-11-alexandru.ardelean@analog.com>
+In-Reply-To: <877e7iu0xw.fsf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-> +static int adin_reset(struct phy_device *phydev)
-> +{
-> +	/* If there is a reset GPIO just exit */
-> +	if (!IS_ERR_OR_NULL(phydev->mdio.reset_gpio))
-> +		return 0;
+On Mon, 12 Aug 2019, Felipe Balbi wrote:
 
-I'm not so happy with this.
+> I don't understand the intricacies of the coherent API to judge if it's
+> a bug in the API itself. In any case, here's where the splat comes from:
+> 
+> void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+> 		dma_addr_t dma_handle, unsigned long attrs)
+> {
+> 	const struct dma_map_ops *ops = get_dma_ops(dev);
+> 
+> 	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
+> 		return;
+> 	/*
+> 	 * On non-coherent platforms which implement DMA-coherent buffers via
+> 	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
+> 	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
+> 	 * sleep on some machines, and b) an indication that the driver is
+> 	 * probably misusing the coherent API anyway.
+> 	 */
+> 	WARN_ON(irqs_disabled());
+> 
+> 	if (!cpu_addr)
+> 		return;
+> 
+> 	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
+> 	if (dma_is_direct(ops))
+> 		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
+> 	else if (ops->free)
+> 		ops->free(dev, size, cpu_addr, dma_handle, attrs);
+> }
+> EXPORT_SYMBOL(dma_free_attrs);
+> 
+> maybe you're gonna have to fire up a workqueue to free this memory for
+> you :-(
+> 
+> Unless someone else has better ideas. Alan, Greg, any ideas?
 
-First off, there are two possible GPIO configurations. The GPIO can be
-applied to all PHYs on the MDIO bus. That GPIO is used when the bus is
-probed. There can also be a per PHY GPIO, which is what you are
-looking at here.
+I don't understand it very well myself, but there have been posts by 
+some of the DMA maintainers on this topic.  Maybe you can try asking 
+them.
 
-The idea of putting the GPIO handling in the core is that PHYs don't
-need to worry about it. How much of a difference does it make if the
-PHY is both reset via GPIO and then again in software? How slow is the
-software reset? Maybe just unconditionally do the reset, if it is not
-too slow.
-
-> +
-> +	/* Reset PHY core regs & subsystem regs */
-> +	return adin_subsytem_soft_reset(phydev);
-> +}
-> +
-> +static int adin_probe(struct phy_device *phydev)
-> +{
-> +	return adin_reset(phydev);
-> +}
-
-Why did you decide to do this as part of probe, and not use the
-.soft_reset member of phy_driver?
-
-> +
->  static struct phy_driver adin_driver[] = {
->  	{
->  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
->  		.name		= "ADIN1200",
->  		.config_init	= adin_config_init,
-> +		.probe		= adin_probe,
->  		.config_aneg	= adin_config_aneg,
->  		.read_status	= adin_read_status,
->  		.ack_interrupt	= adin_phy_ack_intr,
-> @@ -461,6 +503,7 @@ static struct phy_driver adin_driver[] = {
->  		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
->  		.name		= "ADIN1300",
->  		.config_init	= adin_config_init,
-> +		.probe		= adin_probe,
->  		.config_aneg	= adin_config_aneg,
->  		.read_status	= adin_read_status,
->  		.ack_interrupt	= adin_phy_ack_intr,
-
-Thanks
-	Andrew
+Alan Stern
