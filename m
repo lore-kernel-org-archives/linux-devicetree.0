@@ -1,117 +1,42 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
- property in EP driver.
-Date: Mon, 12 Aug 2019 12:35:43 +0100
-Message-ID: <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
- <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
- <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From: "Frank Wunderlich" <frank-w@public-files.de>
+Subject: Aw: Re: Re: [PATCH v3 01/10] dt-bindings: add powercontroller
+Date: Mon, 12 Aug 2019 13:37:55 +0200
+Message-ID: <trinity-738d59ed-ecac-4025-a729-0888eaea1f95-1565609875829@3c-app-gmx-bs80>
+References: <20190729174154.4335-1-frank-w@public-files.de>
+ <20190729174154.4335-2-frank-w@public-files.de>
+ <20190812102035.GH26727@dell>
+ <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
+ <20190812112507.GR26727@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: "kishon@ti.com" <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190812112507.GR26727@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-rtc@vger.kernel.org, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, "Tianping . Fang" <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, Alessandro Zummo <a.zummo@towertech.it>, Josef Friedl <josef.friedl@speed.at>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 10:39:00AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Sent: 2019年8月12日 18:12
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; kishon@ti.com
-> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; arnd@arndb.de;
-> > gregkh@linuxfoundation.org; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
-> > Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
-> > kstewart@linuxfoundation.org; pombredanne@nexb.com;
-> > shawn.lin@rock-chips.com; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
-> > property in EP driver.
-> > 
-> > Caution: EXT Email
-> > 
-> > First off:
-> > 
-> > Trim the CC list, you CC'ed maintainers (and mailing lists) for no reasons
-> > whatsover.
-> [Xiaowei Bao]Hi Lorenzo, I am not clear why the mail list is the CC, I use the command "git send-email --to", I will try to send the patch again, do I need to modify the version is v4 when I send this patch again?
+> Gesendet: Montag, 12. August 2019 um 13:25 Uhr
+> Von: "Lee Jones" <lee.jones@linaro.org>
+> It was an example (hence the "E.g.").
+>
+> You will need to adapt it depending on where the file ends up.
 
-Yes you do.
+i saw the e.g., but i wanted to know relative to which directory ;) your example mentions that it should contain the dt-bindings-folder and i think it should be relative to current file...
 
-Wrap lines to max 80 characters. There is no need to add [Xiaowei Bao].
+have applied your suggestions to my tree
 
-1) Read, email etiquette
+https://github.com/frank-w/BPI-R2-4.14/commits/5.3-poweroff
 
-https://kernelnewbies.org/PatchCulture
+please take a short look if i don't miss anything
 
-2) get_maintainer.pl -f drivers/pci/controller/dwc/pci-layerscape.c
-
-Compare the output to the people in CC, trim it accordingly.
-
-3) The NXP maintainers in the MAINTAINERS file have not given a single
-   comment for this patchset. Either they show up or I will remove them
-   from the MAINTAINERS list.
-
-4) Before submitting patches, talk to someone at NXP who can help you
-   format them in preparation for posting, I do not have time to write
-   guidelines for everyone posting on linux-pci, sorry, the information
-   is out there if you care to read it.
-
-Thanks,
-Lorenzo
-
-> > 
-> > Then, read this:
-> > 
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.ke
-> > rnel.org%2Flinux-pci%2F20171026223701.GA25649%40bhelgaas-glaptop.roa
-> > m.corp.google.com%2F&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7
-> > C1c586178e23c423a0e8808d71f0d8f6f%7C686ea1d3bc2b4c6fa92cd99c5c30
-> > 1635%7C0%7C0%7C637012015426788575&amp;sdata=3bx1bDFIzik8FnD0wl
-> > duAUv7wtLdD1J3hQ3xNH2xmFY%3D&amp;reserved=0
-> > 
-> > and make your patches compliant please.
-> > 
-> > On Fri, Jun 28, 2019 at 09:38:25AM +0800, Xiaowei Bao wrote:
-> > > The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1 is
-> > > 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware, so set
-> > > the bar_fixed_64bit with 0x14.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > > v2:
-> > >  - Replace value 0x14 with a macro.
-> > > v3:
-> > >  - No change.
-> > >
-> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
-> > >  1 files changed, 1 insertions(+), 0 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > index be61d96..227c33b 100644
-> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
-> > >       .linkup_notifier = false,
-> > >       .msi_capable = true,
-> > >       .msix_capable = false,
-> > > +     .bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> > 
-> > I would appreciate Kishon's ACK on this.
-> > 
-> > Lorenzo
-> > 
-> > >  };
-> > >
-> > >  static const struct pci_epc_features*
-> > > --
-> > > 1.7.1
-> > >
+regards Frank
