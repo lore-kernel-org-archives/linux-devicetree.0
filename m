@@ -1,11 +1,13 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v5 00/10] implement poweroff for mt6323 / bpi-r2
-Date: Mon, 12 Aug 2019 14:15:01 +0200
-Message-ID: <20190812121511.4169-1-frank-w@public-files.de>
+Subject: [PATCH v5 01/10] dt-bindings: add powercontroller
+Date: Mon, 12 Aug 2019 14:15:02 +0200
+Message-ID: <20190812121511.4169-2-frank-w@public-files.de>
+References: <20190812121511.4169-1-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190812121511.4169-1-frank-w@public-files.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,55 +18,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre>
-Cc: Frank Wunderlich <frank-w@public-files.de>
+Cc: Josef Friedl <josef.friedl@speed.at>, Frank Wunderlich <frank-w@public-files.de>
 List-Id: devicetree@vger.kernel.org
 
-bWFpbmxpbmUtZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgbXQ2MzIzCgp0aGlzIHNlcmllcyBtYWtl
-cyBzb21lIGNsZWFudXAgdG8gbXQ2Mzk3LXJ0Yy1kcml2ZXIsIGFkZHMgbXQ2MzIzIGFuZAppbXBs
-ZW1lbnQgcG93ZXItY29udHJvbGxlciBvbiBpdC4KCnRlc3RlZCBvbiBiYW5hbmFwaS1yMgoKT3Jp
-Z2luYWwgUGF0Y2ggZnJvbSBKb3NlZiBGcmllZGwKCmNoYW5nZXMgc2luY2UgdjQ6CgktIHJlbGF0
-aXZlIHBhdGggaW4gcGFydCAxKzIKCS0gZHJvcCBjaGFuZ2Ugb2YgY29weXJpZ2h0LXllYXIgaW4g
-cGFydCA1CmNoYW5nZXMgc2luY2UgdjM6CgktIG1vdmVkIFNPQiBpbiAyLzEwIGFuZCA5LzEwCgkt
-IG1vdmVkIHBhcnQgNSB0byA2IHRvIGJlIG5lYXIgZHJpdmVyLWNoYW5nZQoJLSBjaGFuZ2VoaXN0
-b3J5IG9mIHBhdGNoZXMgYmVsb3cgLS0tCgpjaGFuZ2VzIHNpbmNlIHYyOgoJLSBTcGxpdHRlZCBz
-b21lIHBhcnRzIGFuZCByZWJhc2VkIG9uIDUuMy1yYzI6CgoJdjIuMSBkdC1iaW5kaW5nczogYWRk
-IHBvd2VyY29udHJvbGxlciDigJMgdHJ5IHRvIG1ha2UgYmV0dGVyIHN1YmplY3QKCXYyLjIgc2Vw
-YXJhdGUgcnRjLW10NjM5Ny50eHQgKHN1Z2dlc3RlZCBieSBBbGV4YW5kcmUgQmVsbG9uaSkKCSAg
-ICAgYWRkIG1pc3NpbmcgY29tbWl0LW1lc3NhZ2UgKHN1Z2dlc3RlZCBieSBNYXR0aGlhcyBCcnVn
-Z2VyKQoJdjIuMyBmaXggYWxsb2MgYWZ0ZXIgSVJRIChzdWdnZXN0ZWQgYnkgQWxleGFuZHJlIEJl
-bGxvbmkpCgkgICAgIG5ldyBjb21wYXRpYmxlIChzcGxpdHRpbmcgc3VnZ2VzdGVkIGJ5IEFsZXhh
-bmRyZSBCZWxsb25pKQoJICAgICBuZWVkZWQgZHVlIHRvIGRpZmZlcmVudCBydGMtYmFzZS9zaXpl
-IHNlZSAjNwoJdjIuNCBzaW1wbGlmaWNhdGlvbnMgKERlZmluZS1yZXMtbWFjcm9zKQoJICAgICBh
-ZGQgbXQ2MzIzIHJ0Yytwd3JjCgl2Mi41IGFkZCBwb3dlcm9mZi1kcml2ZXIgKG5vIGNoYW5nZSkK
-CXYyLjYgTUFJTlRBSU5FUlMgKG5vIGNoYW5nZSkKCXYyLjcgRFRTLUNoYW5nZXMgKG5vIGNoYW5n
-ZSkKCgpKb3NlZiBGcmllZGwgKDEwKToKICBkdC1iaW5kaW5nczogYWRkIHBvd2VyY29udHJvbGxl
-cgogIGR0LWJpbmRpbmdzOiBhZGQgbWlzc2luZyBtdDYzOTcgcnRjCiAgcnRjOiBtdDYzOTc6IG1v
-dmUgc29tZSBjb21tb24gZGVmaW5pdGlvbnMgaW50byBydGMuaAogIHJ0YzogbXQ2Mzk3OiBpbXBy
-b3ZlbWVudHMgb2YgcnRjIGRyaXZlcgogIG1mZDogbXQ2MzIzOiBzb21lIGltcHJvdmVtZW50cyBv
-ZiBtdDYzOTctY29yZQogIHJ0YzogbXQ2Mzk3OiBhZGQgY29tcGF0aWJsZSBmb3IgbXQ2MzIzCiAg
-bWZkOiBtdDYzMjM6IGFkZCBtdDYzMjMgcnRjK3B3cmMKICBwb3dlcjogcmVzZXQ6IGFkZCBkcml2
-ZXIgZm9yIG10NjMyMyBwb3dlcm9mZgogIE1BSU5UQUlORVJTOiBhZGQgTWVkaWF0ZWsgc2h1dGRv
-d24gZHJpdmVycwogIGFybTogZHRzOiBtdDYzMjM6IGFkZCBrZXlzLCBwb3dlci1jb250cm9sbGVy
-LCBydGMgYW5kIGNvZGVjCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL210NjM5Ny50eHQg
-ICAgICAgIHwgIDIwICsrKy0KIC4uLi9iaW5kaW5ncy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJv
-ZmYudHh0ICB8ICAyMCArKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcnRjLW10NjM5
-Ny50eHQgICAgfCAgMjkgKysrKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgNyArKwogYXJjaC9hcm0vYm9vdC9kdHMvbXQ2MzIzLmR0c2kgICAgICAg
-ICAgICAgICAgIHwgIDI3ICsrKysrCiBkcml2ZXJzL21mZC9tdDYzOTctY29yZS5jICAgICAgICAg
-ICAgICAgICAgICAgfCAgMzggKysrKystLQogZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnICAg
-ICAgICAgICAgICAgICAgIHwgIDEwICsrCiBkcml2ZXJzL3Bvd2VyL3Jlc2V0L01ha2VmaWxlICAg
-ICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJv
-ZmYuYyAgICAgICAgIHwgIDk3ICsrKysrKysrKysrKysrKysKIGRyaXZlcnMvcnRjL3J0Yy1tdDYz
-OTcuYyAgICAgICAgICAgICAgICAgICAgICB8IDEwNyArKysrLS0tLS0tLS0tLS0tLS0KIGluY2x1
-ZGUvbGludXgvbWZkL210NjM5Ny9jb3JlLmggICAgICAgICAgICAgICB8ICAgMiArCiBpbmNsdWRl
-L2xpbnV4L21mZC9tdDYzOTcvcnRjLmggICAgICAgICAgICAgICAgfCAgNzEgKysrKysrKysrKysr
-CiAxMiBmaWxlcyBjaGFuZ2VkLCAzMjcgaW5zZXJ0aW9ucygrKSwgMTAyIGRlbGV0aW9ucygtKQog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
-ci9yZXNldC9tdDYzMjMtcG93ZXJvZmYudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtbXQ2Mzk3LnR4dAogY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2ZmLmMKIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBpbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvcnRjLmgKCi0tIAoyLjE3LjEKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+From: Josef Friedl <josef.friedl@speed.at>
+
+add mt6323-rtc and mt6323-pwrc to mt6397 mfd DT bindings
+an example is shown in mt6323-poweroff.txt
+
+Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+changes since v4: use relative path
+changes since v3: none
+changes since v2: separated rtc-mt6397.txt to part 2
+---
+ .../devicetree/bindings/mfd/mt6397.txt        | 20 +++++++++++++------
+ .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++++++++
+ 2 files changed, 34 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+index 0ebd08af777d..063f5fe1cace 100644
+--- a/Documentation/devicetree/bindings/mfd/mt6397.txt
++++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+@@ -8,11 +8,12 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+ - Clock
+ - LED
+ - Keys
++- Power controller
+ 
+ It is interfaced to host controller using SPI interface by a proprietary hardware
+ called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+ See the following for pwarp node definitions:
+-Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
++../../bindings/soc/mediatek/pwrap.txt
+ 
+ This document describes the binding for MFD device and its sub module.
+ 
+@@ -22,14 +23,16 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
+ Optional subnodes:
+ 
+ - rtc
+-	Required properties:
++	Required properties: Should be one of follows
++		- compatible: "mediatek,mt6323-rtc"
+ 		- compatible: "mediatek,mt6397-rtc"
++	For details, see ../../bindings/rtc/rtc-mt6397.txt
+ - regulators
+ 	Required properties:
+ 		- compatible: "mediatek,mt6397-regulator"
+-	see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
++	see ../../bindings/regulator/mt6397-regulator.txt
+ 		- compatible: "mediatek,mt6323-regulator"
+-	see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
++	see ../../bindings/regulator/mt6323-regulator.txt
+ - codec
+ 	Required properties:
+ 		- compatible: "mediatek,mt6397-codec"
+@@ -39,12 +42,17 @@ Optional subnodes:
+ - led
+ 	Required properties:
+ 		- compatible: "mediatek,mt6323-led"
+-	see Documentation/devicetree/bindings/leds/leds-mt6323.txt
++	see ../../bindings/leds/leds-mt6323.txt
+ 
+ - keys
+ 	Required properties:
+ 		- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
+-	see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
++	see ../../bindings/input/mtk-pmic-keys.txt
++
++- power-controller
++	Required properties:
++		- compatible: "mediatek,mt6323-pwrc"
++	For details, see ../../bindings/power/reset/mt6323-poweroff.txt
+ 
+ Example:
+ 	pwrap: pwrap@1000f000 {
+diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+new file mode 100644
+index 000000000000..933f0c48e887
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+@@ -0,0 +1,20 @@
++Device Tree Bindings for Power Controller on MediaTek PMIC
++
++The power controller which could be found on PMIC is responsible for externally
++powering off or on the remote MediaTek SoC through the circuit BBPU.
++
++Required properties:
++- compatible: Should be one of follows
++       "mediatek,mt6323-pwrc": for MT6323 PMIC
++
++Example:
++
++       pmic {
++               compatible = "mediatek,mt6323";
++
++               ...
++
++               power-controller {
++                       compatible = "mediatek,mt6323-pwrc";
++               };
++       }
+-- 
+2.17.1
