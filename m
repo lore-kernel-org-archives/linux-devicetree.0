@@ -1,49 +1,126 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] dt-bindings: mfd: rn5t618: Document optional property
- system-power-controller
-Date: Mon, 12 Aug 2019 07:25:20 +0100
-Message-ID: <20190812062520.GB4594@dell>
-References: <20190129135917.29521-1-j.neuschaefer@gmx.net>
- <20190201092411.GG783@dell>
- <20190808183924.GB1966@latitude>
+From: Chen-Yu Tsai <wens@kernel.org>
+Subject: Re: [linux-sunxi] [PATCH v5 1/3] arm64: dts: allwinner: Add SPDIF
+ node for Allwinner H6
+Date: Mon, 12 Aug 2019 14:34:50 +0800
+Message-ID: <CAGb2v67N5Ykzo6myKqrNMgu6PCH2pJTzw9JJ5t0MGP_p=0ae9g@mail.gmail.com>
+References: <20190811203144.5999-1-peron.clem@gmail.com> <20190811203144.5999-2-peron.clem@gmail.com>
+ <CAGb2v67T3h_KTVZ20NVWNd78xqCa2ZhYiCJr4oOwYjUM3OaZXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190808183924.GB1966@latitude>
+In-Reply-To: <CAGb2v67T3h_KTVZ20NVWNd78xqCa2ZhYiCJr4oOwYjUM3OaZXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc: Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 08 Aug 2019, Jonathan Neuschäfer wrote:
-
-> On Fri, Feb 01, 2019 at 09:24:11AM +0000, Lee Jones wrote:
-> > On Tue, 29 Jan 2019, Jonathan Neuschäfer wrote:
-> > 
-> > > The RN5T618 family of PMICs can be used as system management
-> > > controllers, in which case they handle poweroff and restart. Document
-> > > this capability by referring to the corresponding generic DT binding.
-> > > 
-> > > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/rn5t618.txt | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > 
-> > Applied, thanks.
-> 
+On Mon, Aug 12, 2019 at 12:52 PM Chen-Yu Tsai <wens@kernel.org> wrote:
+>
 > Hi,
-> 
-> apparently this patch got lost somehow (I can't find it in mainline or
-> -next). Should I resend it?
+>
+> On Mon, Aug 12, 2019 at 4:31 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
+.com> wrote:
+> >
+> > The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
+> >
+> > Only one pinmuxing is available so set it as default.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 38 ++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index 7628a7c83096..677eb374678d 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -83,6 +83,24 @@
+> >                 method =3D "smc";
+> >         };
+> >
+> > +       sound-spdif {
+> > +               compatible =3D "simple-audio-card";
+> > +               simple-audio-card,name =3D "sun50i-h6-spdif";
+> > +
+> > +               simple-audio-card,cpu {
+> > +                       sound-dai =3D <&spdif>;
+> > +               };
+> > +
+> > +               simple-audio-card,codec {
+> > +                       sound-dai =3D <&spdif_out>;
+> > +               };
+> > +       };
+> > +
+> > +       spdif_out: spdif-out {
+> > +               #sound-dai-cells =3D <0>;
+> > +               compatible =3D "linux,spdif-dit";
+> > +       };
+> > +
+>
+> We've always had this part in the board dts. It isn't relevant to boards
+> that don't have SPDIF output.
+>
+> Also, not so relevant here, but there are different simple sound card
+> constructs. Some support multiple audio streams with dynamic PCM routing.
+> How these are configured really depends on what interfaces are usable.
+>
+> So keeping this at the board level is IMO a better choice.
 
-Yes, it appears that it did.
+Forgot to mention. Both patches and all parts in this patch are OK. It's
+just the parts the need to be moved.
 
-I've applied it again.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> ChenYu
+>
+>
+> >         timer {
+> >                 compatible =3D "arm,armv8-timer";
+> >                 interrupts =3D <GIC_PPI 13
+> > @@ -282,6 +300,11 @@
+> >                                 bias-pull-up;
+> >                         };
+> >
+> > +                       spdif_tx_pin: spdif-tx-pin {
+> > +                               pins =3D "PH7";
+> > +                               function =3D "spdif";
+> > +                       };
+> > +
+> >                         uart0_ph_pins: uart0-ph-pins {
+> >                                 pins =3D "PH0", "PH1";
+> >                                 function =3D "uart0";
+> > @@ -411,6 +434,21 @@
+> >                         };
+> >                 };
+> >
+> > +               spdif: spdif@5093000 {
+> > +                       #sound-dai-cells =3D <0>;
+> > +                       compatible =3D "allwinner,sun50i-h6-spdif";
+> > +                       reg =3D <0x05093000 0x400>;
+> > +                       interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>=
+;
+> > +                       clocks =3D <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SPDI=
+F>;
+> > +                       clock-names =3D "apb", "spdif";
+> > +                       resets =3D <&ccu RST_BUS_SPDIF>;
+> > +                       dmas =3D <&dma 2>;
+> > +                       dma-names =3D "tx";
+> > +                       pinctrl-names =3D "default";
+> > +                       pinctrl-0 =3D <&spdif_tx_pin>;
+> > +                       status =3D "disabled";
+> > +               };
+> > +
+> >                 usb2otg: usb@5100000 {
+> >                         compatible =3D "allwinner,sun50i-h6-musb",
+> >                                      "allwinner,sun8i-a33-musb";
+> > --
+> > 2.20.1
+> >
+> > --
+> > You received this message because you are subscribed to the Google Grou=
+ps "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send =
+an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > To view this discussion on the web, visit https://groups.google.com/d/m=
+sgid/linux-sunxi/20190811203144.5999-2-peron.clem%40gmail.com.
