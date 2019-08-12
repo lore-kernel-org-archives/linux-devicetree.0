@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 20/21] ARM: dts: imx7-colibri: Add UHS support to eval
- board
-Date: Mon, 12 Aug 2019 14:21:45 +0000
-Message-ID: <20190812142105.1995-21-philippe.schenker@toradex.com>
+Subject: [PATCH v4 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Mon, 12 Aug 2019 14:21:25 +0000
+Message-ID: <20190812142105.1995-8-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -12,47 +11,73 @@ In-Reply-To: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Stefan Agner <stefan.agner@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds UHS capability to Toradex Eval Boards
+From: Stefan Agner <stefan.agner@toradex.com>
 
+Add pinmuxing and do not specify voltage restrictions for the usdhc
+instance available on the modules edge connector. This allows to use
+SD-cards with higher transfer modes if supported by the carrier board.
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
 ---
 
-Changes in v4: None
+Changes in v4:
+- Add Marcel Ziswiler's Ack
+
 Changes in v3:
-- New patch to make use of ARM: dts: imx7-colibri: fix 1.8V/UHS support
+- Add new commit message from Stefan's proposal on ML
 
 Changes in v2: None
 
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
-s/imx7-colibri-eval-v3.dtsi
-index 576dec9ff81c..90121fbe561f 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -210,9 +210,16 @@
- };
-=20
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index 5347ed38acb2..c563bb821b5e 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -326,7 +326,6 @@
  &usdhc1 {
--	keep-power-in-suspend;
--	wakeup-source;
-+	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 =3D <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
-+	pinctrl-1 =3D <&pinctrl_usdhc1_100mhz &pinctrl_cd_usdhc1>;
-+	pinctrl-2 =3D <&pinctrl_usdhc1_200mhz &pinctrl_cd_usdhc1>;
- 	vmmc-supply =3D <&reg_3v3>;
-+	vqmmc-supply =3D <&reg_LDO2>;
-+	cd-gpios =3D <&gpio1 0 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	enable-sdio-wakeup;
-+	keep-power-in-suspend;
- 	status =3D "okay";
- };
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+-	no-1-8-v;
+ 	cd-gpios =3D <&gpio1 0 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	vqmmc-supply =3D <&reg_LDO2>;
+@@ -671,6 +670,28 @@
+ 		>;
+ 	};
 =20
++	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
++		fsl,pins =3D <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5a
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1a
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5a
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5a
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5a
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5a
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
++		fsl,pins =3D <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5b
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1b
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5b
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5b
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5b
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5b
++		>;
++	};
++
+ 	pinctrl_usdhc3: usdhc3grp {
+ 		fsl,pins =3D <
+ 			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
 --=20
 2.22.0
