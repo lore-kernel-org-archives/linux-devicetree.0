@@ -1,68 +1,48 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Date: Mon, 12 Aug 2019 15:38:34 +0000
-Message-ID: <fa0debbb-b84c-1f74-f8b8-8fdd7812aaee@microchip.com>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
- <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
- <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
- <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v5 03/10] rtc: mt6397: move some common definitions into
+ rtc.h
+Date: Mon, 12 Aug 2019 17:38:56 +0200
+Message-ID: <20190812153856.GR3600@piout.net>
+References: <20190812121511.4169-1-frank-w@public-files.de>
+ <20190812121511.4169-4-frank-w@public-files.de>
+ <20190812151128.GV26727@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
-Content-Language: en-US
-Content-ID: <1A3BA531877C9C438F08D84BC3EDC250@namprd11.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190812151128.GV26727@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Frank Wunderlich <frank-w@public-files.de>, Alessandro Zummo <a.zummo@towertech.it>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.o>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA5LjA4LjIwMTkgMDk6MjMsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBU
-aHUsIEF1ZyAwOCwgMjAxOSBhdCAwMzo1NzozMFBNICswMzAwLCBBZHJpYW4gSHVudGVyIHdyb3Rl
-Og0KPj4gT24gOC8wOC8xOSAzOjQyIFBNLCBMdWRvdmljIERlc3JvY2hlcyB3cm90ZToNCj4+PiBP
-biBUaHUsIEF1ZyAwOCwgMjAxOSBhdCAxMDozNTo0M0FNICswMjAwLCBFdWdlbiBIcmlzdGV2IC0g
-TTE4MjgyIHdyb3RlOg0KPj4+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1p
-Y3JvY2hpcC5jb20+DQo+Pj4+DQo+Pj4+IEFkZCBtbWMgY2FwYWJpbGl0aWVzIGZvciBTRE1NQzAg
-Zm9yIHRoaXMgYm9hcmQuDQo+Pj4+IFdpdGggdGhpcyBlbmFibGVkLCBlTU1DIGNvbm5lY3RlZCBj
-YXJkIGlzIGRldGVjdGVkIGFzOg0KPj4+Pg0KPj4+PiBtbWMwOiBuZXcgRERSIE1NQyBjYXJkIGF0
-IGFkZHJlc3MgMDAwMQ0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxl
-dWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pj4gQWNrZWQtYnk6IEx1ZG92aWMgRGVzcm9j
-aGVzIDxsdWRvdmljLmRlc3JvY2hlc0BtaWNyb2NoaXAuY29tPg0KPj4+DQo+Pj4gSSBhbSBpbnRl
-cmVzdGVkIHRvIGhhdmUgdGhlIHNvbWUgaW5zaWdodHMgYWJvdXQgdGhlIHVzZSBvZiBzZC11aHMt
-Kg0KPj4+IHByb3BlcnRpZXMuDQo+Pj4NCj4+PiBPdXIgSVAgY2FuJ3QgZGVhbCB3aXRoIDFWOCBi
-eSBpdHNlbGYuIEl0IGhhcyBhIDFWOFNFTCBzaWduYWwgd2hpY2ggY2FuDQo+Pj4gYmUgdXNlZCBh
-cyB0aGUgbG9naWMgY29udHJvbCBpbnB1dCBvZiBhIG11eC4gU28gZXZlbiBpZiB0aGUgSVAgY2xh
-aW1zDQo+Pj4gdG8gc3VwcG9ydCBVSFMgbW9kZXMsIGl0IGRlcGVuZHMgb24gdGhlIGJvYXJkLg0K
-Pj4+DQo+Pj4gQXJlIHRoZSBzZC11aHMtKiBwcm9wZXJ0aWVzIGEgd2F5IHRvIGRlYWwgd2l0aCB0
-aGlzPyBJIHRlbmQgdG8gdGhpbmsgbm8NCj4+PiBhcyBzZGhjaV9zZXR1cF9ob3N0KCkgd2lsbCBz
-ZXQgdGhlIGNhcHMgZGVwZW5kaW5nIG9uIHRoZSBjb250ZW50IG9mIHRoZQ0KPj4+IGNhcGFiaWxp
-dGllcyByZWdpc3Rlci4gRG8gd2UgaGF2ZSB0byB1c2UgdGhlIFNESENJX1FVSVJLX01JU1NJTkdf
-Q0FQUw0KPj4+IHF1aXJrIG9yIHNkaGNpLWNhcHMvc2RoY2ktY2Fwcy1tYXNrPw0KPj4NCj4+IFRo
-ZXJlIGlzICJuby0xLTgtdiIgd2hpY2ggaXQgbG9va3MgbGlrZSBzZGhjaS1vZi1hdDkxLmMgYWxy
-ZWFkeSBzdXBwb3J0czoNCj4+DQo+PiAgICBzZGhjaV9hdDkxX3Byb2JlKCkgLT4gc2RoY2lfZ2V0
-X29mX3Byb3BlcnR5KCkgLT4gc2RoY2lfZ2V0X3Byb3BlcnR5KCkNCj4+DQo+PiAgICAgIAlpZiAo
-ZGV2aWNlX3Byb3BlcnR5X3ByZXNlbnQoZGV2LCAibm8tMS04LXYiKSkNCj4+IAkJaG9zdC0+cXVp
-cmtzMiB8PSBTREhDSV9RVUlSSzJfTk9fMV84X1Y7DQo+Pg0KPiANCj4gUmlnaHQsIEkgZm9yZ290
-IHRoaXMgcHJvcGVydHkuIFRoYW5rcy4NCj4gDQo+IEV1Z2VuLCBkbyB5b3Ugc2VlIGNhc2VzIHdl
-IGNhbid0IGNvdmVyIHdpdGggdGhpcyBwcm9wZXJ0eT8NCg0KSGksDQoNCkZvciBjdXJyZW50IHJl
-cXVpcmVtZW50cyBhbmQgZHJpdmVyIHN1cHBvcnQsIHRoaXMgc2hvdWxkIGJlIGVub3VnaC4NCg0K
-SSBub3RpY2VkIG9uZSB0aGluZyByZWdhcmRpbmcgU0QtQ2FyZHMsIGlmIEkgYWRkIHByb3BlcnR5
-IHNkLXVocy1zZHIxMDQgDQp0aGUgY2xhc3MgMTAgdWhzMSBjYXJkcyBhcmUgZGV0ZWN0ZWQgYXMg
-U0RSMTA0IC4gV2l0aG91dCB0aGlzIHByb3BlcnR5IA0KdGhleSBhcmUgZGV0ZWN0ZWQgYXMgRERS
-NTAuIEFueSBpZGVhIHdoeSB0aGUgZGlmZmVyZW5jZSA/IFRoZSBjb250cm9sbGVyIA0KZG9lcyBu
-b3QgY2xhaW0gdG8gaGF2ZSBTRFIxMDQgc3VwcG9ydCA/ICBXZSBzaG91bGQgYWRkIGl0ID8NCg0K
-RXVnZW4NCg0KPiANCj4gUmVnYXJkcw0KPiANCj4gTHVkb3ZpYw0KPiANCj4+DQo+Pj4NCj4+PiBS
-ZWdhcmRzDQo+Pj4NCj4+PiBMdWRvdmljDQo+Pj4NCj4+Pj4gLS0tDQo+Pj4+ICAgYXJjaC9hcm0v
-Ym9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20xX2VrLmR0cyB8IDEgKw0KPj4+PiAgIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20xX2VrLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0
-OTEtc2FtYTVkMjdfc29tMV9lay5kdHMNCj4+Pj4gaW5kZXggMTQ5ZTUzOS4uMTk0YjNhMyAxMDA2
-NDQNCj4+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20xX2VrLmR0
-cw0KPj4+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDI3X3NvbTFfZWsuZHRz
-DQo+Pj4+IEBAIC01NCw2ICs1NCw3IEBADQo+Pj4+ICAgDQo+Pj4+ICAgCQlzZG1tYzA6IHNkaW8t
-aG9zdEBhMDAwMDAwMCB7DQo+Pj4+ICAgCQkJYnVzLXdpZHRoID0gPDg+Ow0KPj4+PiArCQkJbW1j
-LWRkci0zXzN2Ow0KPj4+PiAgIAkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+Pj4+ICAg
-CQkJcGluY3RybC0wID0gPCZwaW5jdHJsX3NkbW1jMF9kZWZhdWx0PjsNCj4+Pj4gICAJCQlzdGF0
-dXMgPSAib2theSI7DQo+Pj4+IC0tIA0KPj4+PiAyLjcuNA0KPj4+Pg0KPj4+DQo+Pg0KPiANCg==
+On 12/08/2019 16:11:29+0100, Lee Jones wrote:
+> On Mon, 12 Aug 2019, Frank Wunderlich wrote:
+> 
+> > From: Josef Friedl <josef.friedl@speed.at>
+> > 
+> > move code to separate header-file to reuse definitions later
+> > in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> > 
+> > Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> > Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > ---
+> > changes since v4: none
+> > changes since v3: none
+> > changes since v2: add missing commit-message
+> > ---
+> >  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
+> >  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
+> 
+> include/linux/rtc/mt6397.h?
+> 
+
+It's just a bunch of registers and bit definitions so it may as well
+stay close to include/linux/mfd/mt6397/registers.h
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
