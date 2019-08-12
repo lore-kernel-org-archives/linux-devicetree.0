@@ -1,56 +1,81 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 12 Aug 2019 10:20:07 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1908121018430.1659-100000@iolanthe.rowland.org>
-References: <877e7iu0xw.fsf@gmail.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH v4 00/21] Common patches from downstream development
+Date: Mon, 12 Aug 2019 14:21:14 +0000
+Message-ID: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <877e7iu0xw.fsf@gmail.com>
+Content-Language: en-US
+Content-ID: <0E326AA5A3EF414E96F3C86703355650@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Aug 2019, Felipe Balbi wrote:
-
-> I don't understand the intricacies of the coherent API to judge if it's
-> a bug in the API itself. In any case, here's where the splat comes from:
-> 
-> void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
-> 		dma_addr_t dma_handle, unsigned long attrs)
-> {
-> 	const struct dma_map_ops *ops = get_dma_ops(dev);
-> 
-> 	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
-> 		return;
-> 	/*
-> 	 * On non-coherent platforms which implement DMA-coherent buffers via
-> 	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
-> 	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
-> 	 * sleep on some machines, and b) an indication that the driver is
-> 	 * probably misusing the coherent API anyway.
-> 	 */
-> 	WARN_ON(irqs_disabled());
-> 
-> 	if (!cpu_addr)
-> 		return;
-> 
-> 	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
-> 	if (dma_is_direct(ops))
-> 		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
-> 	else if (ops->free)
-> 		ops->free(dev, size, cpu_addr, dma_handle, attrs);
-> }
-> EXPORT_SYMBOL(dma_free_attrs);
-> 
-> maybe you're gonna have to fire up a workqueue to free this memory for
-> you :-(
-> 
-> Unless someone else has better ideas. Alan, Greg, any ideas?
-
-I don't understand it very well myself, but there have been posts by 
-some of the DMA maintainers on this topic.  Maybe you can try asking 
-them.
-
-Alan Stern
+DQpUaGlzIHBhdGNoc2V0IGhvbGRzIHNvbWUgY29tbW9uIGNoYW5nZXMgdGhhdCB3ZXJlIG5ldmVy
+IHVwc3RyZWFtZWQuDQpXaXRoIGxhdGVzdCBkb3duc3RyZWFtIGtlcm5lbCB1cGdyYWRlLCBJIHRv
+b2sgdGhlIGFwcm9hY2ggdG8gc2VsZWN0DQptYWlubGluZSBkZXZpY2V0cmVlcyBhbmQgYXRvbWlj
+YWxseSBhZGQgbWlzc2luZyBzdHVmZiBmb3IgZG93bnN0cmVhbS4NCg0KVGhlc2UgcGF0Y2hlcyBJ
+IHNlbmQgaGVyZSBhcmUgc2VwYXJhdGVkIG91dCB3aXRoIGNoYW5nZXMgdGhhdCBhbHNvDQpoYXZl
+IGEgYmVuZml0IGZvciBtYWlubGluZS4NCg0KUGhpbGlwcGUNCg0KQ2hhbmdlcyBpbiB2NDoNCi0g
+QWRkZWQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQotIEFkZGVkIE1hcmNlbCBaaXN3aWxlcidzIEFj
+aw0KLSBNYWtlIHNjbC1ncGlvcyBhbmQgc2RhLWdwaW9zIChHUElPX0FDVElWRV9ISUdIIHwgR1BJ
+T19PUEVOX0RSQUlOKQ0KLSBDaGFuZ2UgY29tbWl0IHRpdGxlIHRvIE1pY2hhbCdzIHN1Z2dlc3Rp
+b24NCi0gQWRkIE1hcmNlbCBaaXN3aWxlcidzIEFjaw0KLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3Mg
+QWNrDQotIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCi0gQWRkIE1hcmNlbCBaaXN3aWxlcidz
+IEFjaw0KLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQotIEFkZCBNYXJjZWwgWmlzd2lsZXIn
+cyBBY2sNCi0gQWRkIE1hcmNlbCBaaXN3aWxlcidzIEFjaw0KLSBBZGQgTWFyY2VsIFppc3dpbGVy
+J3MgQWNrDQotIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCi0gQWRkIE1hcmNlbCBaaXN3aWxl
+cidzIEFjaw0KLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQotIE1vdmUgY2FuIG5vZGVzIHRv
+IG1vZHVsZSBkZXZpY2V0ZXJlZSBpbmNsdWRlIGlteDZ1bGwtY29saWJyaS5kdHNpDQotIEFkZCBN
+YXJjZWwgWmlzd2lsZXIncyBBY2sNCi0gTmV3IHBhdGNoIGFzIG9mIHRoZSByZWNvbW1lbmRhdGlv
+biBmcm9tIE1hcmNlbCBvbiBNTA0KDQpDaGFuZ2VzIGluIHYzOg0KLSBBZGQgbmV3IGNvbW1pdCBt
+ZXNzYWdlIGZyb20gU3RlZmFuJ3MgcHJvcG9zYWwgb24gTUwNCi0gRml4IGNvbW1pdCBtZXNzYWdl
+DQotIEZpeCBjb21taXQgdGl0bGUgdG8gIi4uLmlteDYtYXBhbGlzOi4uLiINCi0gTmV3IHBhdGNo
+IHRvIG1ha2UgdXNlIG9mIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IGZpeCAxLjhWL1VIUyBzdXBw
+b3J0DQoNCkNoYW5nZXMgaW4gdjI6DQotIERlbGV0ZWQgdG91Y2hyZXZvbHV0aW9uIGRvd25zdHJl
+YW0gc3R1ZmYNCi0gVXNlIGdlbmVyaWMgbm9kZSBuYW1lDQotIEJldHRlciBjb21tZW50DQotIENo
+YW5nZWQgY29tbWl0IHRpdGxlIHRvICcuLi5pbXg2cWRsLWFwYWxpczouLi4nDQotIERlbGV0ZWQg
+dG91Y2hyZXZvbHV0aW9uIGRvd25zdHJlYW0gc3R1ZmYNCi0gVXNlIGdlbmVyaWMgbm9kZSBuYW1l
+DQotIFB1dCBhIGJldHRlciBjb21tZW50IGluIHRoZXJlDQotIENvbW1pdCB0aXRsZQ0KLSBSZW1v
+dmVkIGYwNzEwYSwgdGhhdCBpcyBkb3duc3RyZWFtIG9ubHkNCi0gQ2hhbmdlZCB0byBnZW5lcmlj
+IG5vZGUgbmFtZQ0KLSBCZXR0ZXIgY29tbWVudA0KDQpJZ29yIE9wYW5pdWsgKDEpOg0KICBBUk06
+IGR0czogaW14NnFkbC1jb2xpYnJpLmR0c2k6IFVIUy1JIHN1cHBvcnQgZm9yIHYxLjFhIGh3DQoN
+Ck1hcmNlbCBaaXN3aWxlciAoMSk6DQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IG1ha2Ugc3Vy
+ZSBtb2R1bGUgc3VwcGxpZXMgYXJlIGFsd2F5cyBvbg0KDQpNYXggS3J1bW1lbmFjaGVyICgyKToN
+CiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogcmVkdWNlIHZfYmF0dCBjdXJyZW50IGluIHBv
+d2VyIG9mZg0KICBBUk06IGR0czogaW14NnVsbDogaW1wcm92ZSBjYW4gdGVtcGxhdGVzDQoNCk9s
+ZWtzYW5kciBTdXZvcm92ICgxKToNCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogYWRkIHJlY292
+ZXJ5IGZvciBJMkMgZm9yIGlNWDcNCg0KUGhpbGlwcGUgU2NoZW5rZXIgKDEzKToNCiAgQVJNOiBk
+dHM6IGlteDctY29saWJyaTogcHJlcGFyZSBtb2R1bGUgZGV2aWNlIHRyZWUgZm9yIEZsZXhDQU4N
+CiAgQVJNOiBkdHM6IGlteDctY29saWJyaTogQWRkIHNsZWVwIG1vZGUgdG8gZXRoZXJuZXQNCiAg
+QVJNOiBkdHM6IGlteDctY29saWJyaTogQWRkIHRvdWNoIGNvbnRyb2xsZXJzDQogIEFSTTogZHRz
+OiBpbXg2cWRsLWNvbGlicmk6IGFkZCBwaHkgdG8gZmVjDQogIEFSTTogZHRzOiBpbXg2cWRsLWNv
+bGlicmk6IEFkZCBtaXNzaW5nIHBpbiBkZWNsYXJhdGlvbiBpbiBpb211eGMNCiAgQVJNOiBkdHM6
+IGlteDZxZGwtYXBhbGlzOiBBZGQgc2xlZXAgc3RhdGUgdG8gY2FuIGludGVyZmFjZXMNCiAgQVJN
+OiBkdHM6IGlteDYtYXBhbGlzOiBBZGQgdG91Y2hzY3JlZW5zIHVzZWQgb24gVG9yYWRleCBldmFs
+IGJvYXJkcw0KICBBUk06IGR0czogaW14Ni1jb2xpYnJpOiBBZGQgbWlzc2luZyBwaW5tdXhpbmcg
+dG8gVG9yYWRleCBldmFsIGJvYXJkDQogIEFSTTogZHRzOiBpbXg2dWxsLWNvbGlicmk6IEFkZCBz
+bGVlcCBtb2RlIHRvIGZlYw0KICBBUk06IGR0czogaW14NnVsbC1jb2xpYnJpOiBBZGQgd2F0Y2hk
+b2cNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogQWRkIGdlbmVyYWwgd2FrZXVwIGtleSB1
+c2VkIG9uIENvbGlicmkNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogQWRkIHRvdWNoc2Ny
+ZWVuIHVzZWQgd2l0aCBFdmFsIEJvYXJkDQogIEFSTTogZHRzOiBpbXg3LWNvbGlicmk6IEFkZCBV
+SFMgc3VwcG9ydCB0byBldmFsIGJvYXJkDQoNClN0ZWZhbiBBZ25lciAoMyk6DQogIEFSTTogZHRz
+OiBpbXg3LWNvbGlicmk6IGRpc2FibGUgSFM0MDANCiAgQVJNOiBkdHM6IGlteDctY29saWJyaTog
+YWRkIEdQSU8gd2FrZXVwIGtleQ0KICBBUk06IGR0czogaW14Ny1jb2xpYnJpOiBmaXggMS44Vi9V
+SFMgc3VwcG9ydA0KDQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5k
+dHMgIHwgIDM5ICsrKysrKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0
+cyAgICAgICB8ICAxMyArKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS12
+MS4xLmR0cyB8ICAxMyArKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1peG9yYS5k
+dHMgICAgICB8ICAxMyArKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kg
+ICAgICAgICB8ICAyNyArKysrLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5k
+dHNpICAgICAgICB8ICA2OCArKysrKysrKysrLQ0KIC4uLi9hcm0vYm9vdC9kdHMvaW14NnVsbC1j
+b2xpYnJpLWV2YWwtdjMuZHRzaSB8ICAzOCArKysrKysNCiAuLi4vYXJtL2Jvb3QvZHRzL2lteDZ1
+bGwtY29saWJyaS1ub253aWZpLmR0c2kgfCAgIDIgKy0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2
+dWxsLWNvbGlicmktd2lmaS5kdHNpICAgfCAgIDIgKy0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2
+dWxsLWNvbGlicmkuZHRzaSAgICAgICAgfCAgNjQgKysrKysrKysrLQ0KIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0c2kgICB8ICA0OSArKysrKysrLQ0KIGFyY2gvYXJt
+L2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpICAgICAgICAgICB8IDExMiArKysrKysrKysrKysr
+KysrLS0NCiAxMiBmaWxlcyBjaGFuZ2VkLCA0MTAgaW5zZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25z
+KC0pDQoNCi0tIA0KMi4yMi4wDQoNCg==
