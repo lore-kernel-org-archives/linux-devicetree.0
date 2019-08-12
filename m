@@ -1,67 +1,140 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH] dt-bindings: mfd: rn5t618: Document optional property
- system-power-controller
-Date: Mon, 12 Aug 2019 08:53:51 +0200
-Message-ID: <20190812065351.GE1966@latitude>
-References: <20190129135917.29521-1-j.neuschaefer@gmx.net>
- <20190201092411.GG783@dell>
- <20190808183924.GB1966@latitude>
- <20190812062520.GB4594@dell>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v5 1/3] arm64: dts: allwinner: Add SPDIF
+ node for Allwinner H6
+Date: Mon, 12 Aug 2019 09:11:50 +0200
+Message-ID: <CAJiuCccoxzjmuZLrD88NgKZmwWhWkNq5xD=bTF5fgkq6M0Qb4g@mail.gmail.com>
+References: <20190811203144.5999-1-peron.clem@gmail.com> <20190811203144.5999-2-peron.clem@gmail.com>
+ <CAGb2v67T3h_KTVZ20NVWNd78xqCa2ZhYiCJr4oOwYjUM3OaZXA@mail.gmail.com> <CAGb2v67N5Ykzo6myKqrNMgu6PCH2pJTzw9JJ5t0MGP_p=0ae9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="maH1Gajj2nflutpK"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190812062520.GB4594@dell>
+In-Reply-To: <CAGb2v67N5Ykzo6myKqrNMgu6PCH2pJTzw9JJ5t0MGP_p=0ae9g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chen-Yu,
 
---maH1Gajj2nflutpK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 12, 2019 at 07:25:20AM +0100, Lee Jones wrote:
-> On Thu, 08 Aug 2019, Jonathan Neusch=C3=A4fer wrote:
-> > On Fri, Feb 01, 2019 at 09:24:11AM +0000, Lee Jones wrote:
-> > > On Tue, 29 Jan 2019, Jonathan Neusch=C3=A4fer wrote:
-> > > >  Documentation/devicetree/bindings/mfd/rn5t618.txt | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > >=20
-> > > Applied, thanks.
-> >=20
+On Mon, 12 Aug 2019 at 08:35, Chen-Yu Tsai <wens@kernel.org> wrote:
+>
+> On Mon, Aug 12, 2019 at 12:52 PM Chen-Yu Tsai <wens@kernel.org> wrote:
+> >
 > > Hi,
-> >=20
-> > apparently this patch got lost somehow (I can't find it in mainline or
-> > -next). Should I resend it?
->=20
-> Yes, it appears that it did.
->=20
-> I've applied it again.
+> >
+> > On Mon, Aug 12, 2019 at 4:31 AM Cl=C3=A9ment P=C3=A9ron <peron.clem@gma=
+il.com> wrote:
+> > >
+> > > The Allwinner H6 has a SPDIF controller called OWA (One Wire Audio).
+> > >
+> > > Only one pinmuxing is available so set it as default.
+> > >
+> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 38 ++++++++++++++++++=
+++
+> > >  1 file changed, 38 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm6=
+4/boot/dts/allwinner/sun50i-h6.dtsi
+> > > index 7628a7c83096..677eb374678d 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > > @@ -83,6 +83,24 @@
+> > >                 method =3D "smc";
+> > >         };
+> > >
+> > > +       sound-spdif {
+> > > +               compatible =3D "simple-audio-card";
+> > > +               simple-audio-card,name =3D "sun50i-h6-spdif";
+> > > +
+> > > +               simple-audio-card,cpu {
+> > > +                       sound-dai =3D <&spdif>;
+> > > +               };
+> > > +
+> > > +               simple-audio-card,codec {
+> > > +                       sound-dai =3D <&spdif_out>;
+> > > +               };
+> > > +       };
+> > > +
+> > > +       spdif_out: spdif-out {
+> > > +               #sound-dai-cells =3D <0>;
+> > > +               compatible =3D "linux,spdif-dit";
+> > > +       };
+> > > +
+> >
+> > We've always had this part in the board dts. It isn't relevant to board=
+s
+> > that don't have SPDIF output.
+> >
+> > Also, not so relevant here, but there are different simple sound card
+> > constructs. Some support multiple audio streams with dynamic PCM routin=
+g.
+> > How these are configured really depends on what interfaces are usable.
+> >
+> > So keeping this at the board level is IMO a better choice.
 
-Thanks!
+I Agree, I try to keep coherency with sun50i-a64.dtsi.
+But sound routing is really at board level not SoC one.
 
---maH1Gajj2nflutpK
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards,
+Cl=C3=A9ment
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1RDPYACgkQCDBEmo7z
-X9shKw/+JZCAsjf1jIve1vL5EAHYyh19xmD6BTvCpIjinKKs3lspa2jQd34ePTCq
-4BhMRoisEjqvx5SqUlOccHAqT+WoU9gBAegDqkVUPTEUXFB2H0i2I8u6AoOWCQJ+
-tqltE/95fRn5oPxmk2rzF2hCPABRK94A1LQPEKr7YfLKqoA47tCmZ6CjWRqVzx+E
-mGo6aW/nChuMG5Sq1iZTJUOtJ1adSEL8I3h/S00UBumkd5XjXAu1fjBEBOX4l5Yg
-T5qV6LXxQppQLUV/UWS/025aSy1bYm9jBY526Tz9iHb0z8ZljlWY9Mn7oWLS9Ujo
-ExflAfx/QtiQ/45mwHYa/71xLz5rUhowbeo0dZfCfMTzDOB3e+gF83ss6eSOQ7sQ
-ehNbWYf1T5Ct/9AW/OBjuzChlP0UY02KfHPP/EpZV0VjsGo2PxV3C8qmnzYfrK5x
-wq4sblpFHdDIQHoJQPL7XgJwb12fhDgdmUCXkLJXrB1Hv2avEqmMBC30rJDeC1GL
-0YAZSMYEkW7FAYxYwiElKp8lKNd2hPM8zzwj6KnE9OOfuhvkE9TjtPSRTcmg6Cnu
-bxDH9iun1cy9MOIIJ2n3h0xeE3+Zf6YdC4hK0sRCPJnkNVS1o6+LKtpGEcyr1EFH
-SZoTweJD6Z2WOCvJ2a0iWIrY6893L8fCClafY+aEonYxmRYx+M0=
-=HJdh
------END PGP SIGNATURE-----
-
---maH1Gajj2nflutpK--
+>
+> Forgot to mention. Both patches and all parts in this patch are OK. It's
+> just the parts the need to be moved.
+>
+>
+> > ChenYu
+> >
+> >
+> > >         timer {
+> > >                 compatible =3D "arm,armv8-timer";
+> > >                 interrupts =3D <GIC_PPI 13
+> > > @@ -282,6 +300,11 @@
+> > >                                 bias-pull-up;
+> > >                         };
+> > >
+> > > +                       spdif_tx_pin: spdif-tx-pin {
+> > > +                               pins =3D "PH7";
+> > > +                               function =3D "spdif";
+> > > +                       };
+> > > +
+> > >                         uart0_ph_pins: uart0-ph-pins {
+> > >                                 pins =3D "PH0", "PH1";
+> > >                                 function =3D "uart0";
+> > > @@ -411,6 +434,21 @@
+> > >                         };
+> > >                 };
+> > >
+> > > +               spdif: spdif@5093000 {
+> > > +                       #sound-dai-cells =3D <0>;
+> > > +                       compatible =3D "allwinner,sun50i-h6-spdif";
+> > > +                       reg =3D <0x05093000 0x400>;
+> > > +                       interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIG=
+H>;
+> > > +                       clocks =3D <&ccu CLK_BUS_SPDIF>, <&ccu CLK_SP=
+DIF>;
+> > > +                       clock-names =3D "apb", "spdif";
+> > > +                       resets =3D <&ccu RST_BUS_SPDIF>;
+> > > +                       dmas =3D <&dma 2>;
+> > > +                       dma-names =3D "tx";
+> > > +                       pinctrl-names =3D "default";
+> > > +                       pinctrl-0 =3D <&spdif_tx_pin>;
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> > >                 usb2otg: usb@5100000 {
+> > >                         compatible =3D "allwinner,sun50i-h6-musb",
+> > >                                      "allwinner,sun8i-a33-musb";
+> > > --
+> > > 2.20.1
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Gr=
+oups "linux-sunxi" group.
+> > > To unsubscribe from this group and stop receiving emails from it, sen=
+d an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web, visit https://groups.google.com/d=
+/msgid/linux-sunxi/20190811203144.5999-2-peron.clem%40gmail.com.
