@@ -1,7 +1,7 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v5 06/10] rtc: mt6397: add compatible for mt6323
-Date: Mon, 12 Aug 2019 14:15:07 +0200
-Message-ID: <20190812121511.4169-7-frank-w@public-files.de>
+Subject: [PATCH v5 07/10] mfd: mt6323: add mt6323 rtc+pwrc
+Date: Mon, 12 Aug 2019 14:15:08 +0200
+Message-ID: <20190812121511.4169-8-frank-w@public-files.de>
 References: <20190812121511.4169-1-frank-w@public-files.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,30 +23,77 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-use mt6397 rtc driver also for mt6323 but with different
-base/size see "mfd: mt6323: add mt6323 rtc+pwrc"
+add entry for rtc and power-controller to mt6323
 
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
 changes since v4: none
-changes since v3: moved (was part 5)
-changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
+changes since v3: none
+changes since v2: only splitting, second part of v2 part 4
 ---
- drivers/rtc/rtc-mt6397.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/mt6397-core.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index 9370b7fc9f81..21cd9cc8b4c7 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
- 			mt6397_rtc_resume);
+diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+index c9a81087fa55..5916978a8feb 100644
+--- a/drivers/mfd/mt6397-core.c
++++ b/drivers/mfd/mt6397-core.c
+@@ -16,13 +16,24 @@
+ #include <linux/mfd/mt6397/registers.h>
+ #include <linux/mfd/mt6323/registers.h>
  
- static const struct of_device_id mt6397_rtc_of_match[] = {
-+	{ .compatible = "mediatek,mt6323-rtc", },
- 	{ .compatible = "mediatek,mt6397-rtc", },
- 	{ }
++#define MT6323_RTC_BASE		0x8000
++#define MT6323_RTC_SIZE		0x40
++
+ #define MT6397_RTC_BASE		0xe000
+ #define MT6397_RTC_SIZE		0x3e
+ 
++#define MT6323_PWRC_BASE	0x8000
++#define MT6323_PWRC_SIZE	0x40
++
+ #define MT6323_CID_CODE		0x23
+ #define MT6391_CID_CODE		0x91
+ #define MT6397_CID_CODE		0x97
+ 
++static const struct resource mt6323_rtc_resources[] = {
++	DEFINE_RES_MEM(MT6323_RTC_BASE, MT6323_RTC_SIZE),
++	DEFINE_RES_IRQ(MT6323_IRQ_STATUS_RTC),
++};
++
+ static const struct resource mt6397_rtc_resources[] = {
+ 	DEFINE_RES_MEM(MT6397_RTC_BASE, MT6397_RTC_SIZE),
+ 	DEFINE_RES_IRQ(MT6397_IRQ_RTC),
+@@ -38,8 +49,17 @@ static const struct resource mt6397_keys_resources[] = {
+ 	DEFINE_RES_IRQ(MT6397_IRQ_HOMEKEY),
  };
+ 
++static const struct resource mt6323_pwrc_resources[] = {
++	DEFINE_RES_MEM(MT6323_PWRC_BASE, MT6323_PWRC_SIZE),
++};
++
+ static const struct mfd_cell mt6323_devs[] = {
+ 	{
++		.name = "mt6323-rtc",
++		.num_resources = ARRAY_SIZE(mt6323_rtc_resources),
++		.resources = mt6323_rtc_resources,
++		.of_compatible = "mediatek,mt6323-rtc",
++	}, {
+ 		.name = "mt6323-regulator",
+ 		.of_compatible = "mediatek,mt6323-regulator"
+ 	}, {
+@@ -50,6 +70,11 @@ static const struct mfd_cell mt6323_devs[] = {
+ 		.num_resources = ARRAY_SIZE(mt6323_keys_resources),
+ 		.resources = mt6323_keys_resources,
+ 		.of_compatible = "mediatek,mt6323-keys"
++	}, {
++		.name = "mt6323-pwrc",
++		.num_resources = ARRAY_SIZE(mt6323_pwrc_resources),
++		.resources = mt6323_pwrc_resources,
++		.of_compatible = "mediatek,mt6323-pwrc"
+ 	},
+ };
+ 
 -- 
 2.17.1
