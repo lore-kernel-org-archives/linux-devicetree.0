@@ -1,114 +1,66 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/2] arm64: allwinner: h6: add I2C nodes
-Date: Mon, 12 Aug 2019 12:12:38 +0800
-Message-ID: <CAGb2v67_GjWFOEiThMp5o8m+nqYrrTCrNdSkscRfe5vmoJM47Q@mail.gmail.com>
-References: <20190811090503.32396-1-bshah@kde.org> <20190811090503.32396-2-bshah@kde.org>
+Subject: Re: [PATCH 2/2] arm64: allwinner: h6: enable i2c0 in PineH64
+Date: Mon, 12 Aug 2019 12:19:17 +0800
+Message-ID: <CAGb2v65xDCNywexZGW=EBrsJwm-KwANxpdCv-AM2sgVNbz6qQQ@mail.gmail.com>
+References: <20190811090503.32396-1-bshah@kde.org>
+ <20190811090503.32396-3-bshah@kde.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190811090503.32396-2-bshah@kde.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190811090503.32396-3-bshah@kde.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Bhushan Shah <bshah@kde.org>
-Cc: Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 On Sun, Aug 11, 2019 at 5:05 PM Bhushan Shah <bshah@kde.org> wrote:
 >
-> Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
-> nodes.
+> i2c0 bus is exposed by PI-2 BUS in the PineH64, model B.
 >
-> Suggested-by: Icenowy Zheng <icenowy@aosc.io>
 > Signed-off-by: Bhushan Shah <bshah@kde.org>
 > ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+>  arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index bcecca17d61d..1d9ad3ec0b65 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -329,6 +329,21 @@
->                                 function = "hdmi";
->                         };
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+> index 684d1daa3081..a184361bc10d 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+> @@ -160,6 +160,14 @@
+>         vcc-pg-supply = <&reg_aldo1>;
+>  };
 >
-> +                       i2c0_pins: i2c0-pins {
-> +                               pins = "PD25", "PD26";
-> +                               function = "i2c0";
-> +                       };
-> +
-> +                       i2c1_pins: i2c1-pins {
-> +                               pins = "PH5", "PH6";
-> +                               function = "i2c1";
-> +                       };
-> +
-> +                       i2c2_pins: i2c2-pins {
-> +                               pins = "PD23", "PD24";
-> +                               function = "i2c2";
-> +                       };
-> +
->                         mmc0_pins: mmc0-pins {
->                                 pins = "PF0", "PF1", "PF2", "PF3",
->                                        "PF4", "PF5";
-> @@ -464,6 +479,45 @@
->                         status = "disabled";
->                 };
->
-> +               i2c0: i2c@5002000 {
-> +                       compatible = "allwinner,sun6i-a31-i2c";
+> +&i2c0 {
+> +       status = "okay";
 
-Please add an soc-specific compatible string, like "allwinner,sun50i-h6-i2c".
-This is a last-resort way out in case the hardware isn't so compatible with
-the A31.
+We don't enable interfaces that are exposed on the extension headers
+by default. Instead we let the users enable it themselves, by modifying
+the device tree either with overlays or through U-boot commands.
 
-You'll also need to update the bindings in
-
-    Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
-
-The file also shows that we do this for other chips, such as the A23,
-A64 and A83T.
+Please set this to "disabled", and add a comment mentioning that it is
+on the PI-2 BUS. Having it explicitly listed in the source serves as a
+pointer to people looking at how to enable stuff.
 
 ChenYu
 
-> +                       reg = <0x05002000 0x400>;
-> +                       interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&ccu CLK_BUS_I2C0>;
-> +                       resets = <&ccu RST_BUS_I2C0>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&i2c0_pins>;
-> +                       status = "disabled";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
+> +};
 > +
-> +               i2c1: i2c@5002400 {
-> +                       compatible = "allwinner,sun6i-a31-i2c";
-> +                       reg = <0x05002400 0x400>;
-> +                       interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&ccu CLK_BUS_I2C1>;
-> +                       resets = <&ccu RST_BUS_I2C1>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&i2c1_pins>;
-> +                       status = "disabled";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
+> +&i2c0_pins {
+> +       bias-pull-up;
+> +};
 > +
-> +               i2c2: i2c@5002800 {
-> +                       compatible = "allwinner,sun6i-a31-i2c";
-> +                       reg = <0x05002800 0x400>;
-> +                       interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&ccu CLK_BUS_I2C2>;
-> +                       resets = <&ccu RST_BUS_I2C2>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&i2c2_pins>;
-> +                       status = "disabled";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +               };
-> +
->                 emac: ethernet@5020000 {
->                         compatible = "allwinner,sun50i-h6-emac",
->                                      "allwinner,sun50i-a64-emac";
+>  &r_i2c {
+>         status = "okay";
+>
 > --
 > 2.17.1
 >
