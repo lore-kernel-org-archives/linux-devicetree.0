@@ -1,132 +1,92 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH v5 08/18] thermal: sun8i: support mod clocks
-Date: Mon, 12 Aug 2019 16:54:15 -0700
-Message-ID: <CA+E=qVf9V9iTvCfXXyjqKeviCJOvYpKUO8qw6cQsKqoaRmdKYQ@mail.gmail.com>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-9-tiny.windzz@gmail.com>
- <CA+E=qVfp-rProxOwX__J6jM-pZ9g_SmeuOCOgvC_5DJVQw4OGw@mail.gmail.com> <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v12 04/18] kunit: test: add assertion printing library
+Date: Mon, 12 Aug 2019 16:56:29 -0700
+Message-ID: <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-5-brendanhiggins@google.com> <20190812234644.E054D20679@mail.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEExFWubLqtPZ=ZKJTCb6x2-PeYebXb3sr-t-XvtrLJTRiUU1A@mail.gmail.com>
+In-Reply-To: <20190812234644.E054D20679@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Lee <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Linux PM <linux-pm@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:46 PM Frank Lee <tiny.windzz@gmail.com> wrote:
+On Mon, Aug 12, 2019 at 4:46 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> HI Vasily,
+> Quoting Brendan Higgins (2019-08-12 11:24:07)
+> > Add `struct kunit_assert` and friends which provide a structured way to
+> > capture data from an expectation or an assertion (introduced later in
+> > the series) so that it may be printed out in the event of a failure.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
 >
-> On Sat, Aug 10, 2019 at 2:17 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
-> >
-> > On Fri, Aug 9, 2019 at 10:31 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > >
-> > > H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
-> > > and adds the process of the clock.
-> > >
-> > > This is pre-work for supprt it.
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
-> > >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > > index b934bc81eba7..6f4294c2aba7 100644
-> > > --- a/drivers/thermal/sun8i_thermal.c
-> > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > @@ -54,6 +54,7 @@ struct tsensor {
-> > >  };
-> > >
-> > >  struct ths_thermal_chip {
-> > > +       bool            has_mod_clk;
-> > >         int             sensor_num;
-> > >         int             offset;
-> > >         int             scale;
-> > > @@ -69,6 +70,7 @@ struct ths_device {
-> > >         struct regmap                           *regmap;
-> > >         struct reset_control                    *reset;
-> > >         struct clk                              *bus_clk;
-> > > +       struct clk                              *mod_clk;
-> > >         struct tsensor                          sensor[MAX_SENSOR_NUM];
-> > >  };
-> > >
-> > > @@ -274,6 +276,12 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> > >         if (IS_ERR(tmdev->bus_clk))
-> > >                 return PTR_ERR(tmdev->bus_clk);
-> > >
-> > > +       if (tmdev->chip->has_mod_clk) {
-> > > +               tmdev->mod_clk = devm_clk_get(&pdev->dev, "mod");
-> > > +               if (IS_ERR(tmdev->mod_clk))
-> > > +                       return PTR_ERR(tmdev->mod_clk);
-> > > +       }
-> > > +
-> > >         ret = reset_control_deassert(tmdev->reset);
-> > >         if (ret)
-> > >                 return ret;
-> > > @@ -282,12 +290,18 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> > >         if (ret)
-> > >                 goto assert_reset;
-> > >
-> > > -       ret = sun50i_ths_calibrate(tmdev);
-> > > +       ret = clk_prepare_enable(tmdev->mod_clk);
-> >
-> > You have to set rate of modclk before enabling it since you can't rely
-> > on whatever bootloader left for you.
-> >
-> > Also I found that parameters you're using for PC_TEMP_PERIOD, ACQ0 and
-> > ACQ1 are too aggressive and may result in high interrupt rate to the
-> > point when it may stall RCU. I changed driver a bit to use params from
-> > Philipp Rossak's work (modclk set to 4MHz, PC_TEMP_PERIOD is 7, ACQ0
-> > is 255, ACQ1 is 63) and it fixed RCU stalls for me, see [1] for
-> > details.
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 >
-> Why is the RCU stall happening, is it caused by a deadlock?
-> Can you provide log information and your configuration?
-> I am a bit curious.
+> Just some minor nits below
+>
+> > diff --git a/include/kunit/assert.h b/include/kunit/assert.h
+> > new file mode 100644
+> > index 0000000000000..55f1b88b0cb4d
+> > --- /dev/null
+> > +++ b/include/kunit/assert.h
+> > @@ -0,0 +1,183 @@
+> [...]
+> > +                           struct string_stream *stream);
+> > +
+> > +struct kunit_fail_assert {
+> > +       struct kunit_assert assert;
+> > +};
+> > +
+> > +void kunit_fail_assert_format(const struct kunit_assert *assert,
+> > +                             struct string_stream *stream);
+> > +
+> > +#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {                           \
+> > +               .assert = KUNIT_INIT_ASSERT_STRUCT(test,                       \
+> > +                                                  type,                       \
+> > +                                                  kunit_fail_assert_format)   \
+>
+> This one got indented one too many times?
 
-It's not deadlock, I believe it just can't handle that many interrupts
-when running at lowest CPU frequency. Even with Philipp's settings
-there's ~20 interrupts a second from ths. I don't remember how many
-interrupts were there with your settings.
+Not unless I have been using the wrong formatting for multiline
+macros. You can see this commit applied here:
+https://kunit.googlesource.com/linux/+/870964da2990920030990dd1ffb647ef408e52df/include/kunit/assert.h#59
 
-Unfortunately there's nothing interesting in backtraces, I'm using
-Pine64-LTS board.
+I have test, type, and kunit_fail_assert_format all column aligned (it
+just doesn't render nicely in the patch format).
 
-> Thx,
-> Yangtao
+> > +}
+> > +
+> > +struct kunit_unary_assert {
+> > +       struct kunit_assert assert;
+> > +       const char *condition;
+> > +       bool expected_true;
+> > +};
+> > +
+> > +void kunit_unary_assert_format(const struct kunit_assert *assert,
+> > +                              struct string_stream *stream);
+> > +
+> [...]
+> > +#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,                             \
+> > +                                           type,                              \
+> > +                                           op_str,                            \
+> > +                                           left_str,                          \
+> > +                                           left_val,                          \
+> > +                                           right_str,                         \
+> > +                                           right_val) {                       \
+> > +       .assert = KUNIT_INIT_ASSERT_STRUCT(test,                               \
+> > +                                          type,                               \
+> > +                                          kunit_binary_str_assert_format),    \
+> > +       .operation = op_str,                                                   \
+> > +       .left_text = left_str,                                                 \
+> > +       .left_value = left_val,                                                \
+> > +       .right_text = right_str,                                               \
+> > +       .right_value = right_val                                               \
+> > +}
 >
-> >
-> > [1] https://github.com/anarsoul/linux-2.6/commit/46b8bb0fe2ccd1cd88fa9181a2ecbf79e8d513b2
-> >
-> >
-> > >         if (ret)
-> > >                 goto bus_disable;
-> > >
-> > > +       ret = sun50i_ths_calibrate(tmdev);
-> > > +       if (ret)
-> > > +               goto mod_disable;
-> > > +
-> > >         return 0;
-> > >
-> > > +mod_disable:
-> > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > >  bus_disable:
-> > >         clk_disable_unprepare(tmdev->bus_clk);
-> > >  assert_reset:
-> > > @@ -395,6 +409,7 @@ static int sun8i_ths_remove(struct platform_device *pdev)
-> > >  {
-> > >         struct ths_device *tmdev = platform_get_drvdata(pdev);
-> > >
-> > > +       clk_disable_unprepare(tmdev->mod_clk);
-> > >         clk_disable_unprepare(tmdev->bus_clk);
-> > >         reset_control_assert(tmdev->reset);
-> > >
-> > > --
-> > > 2.17.1
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> It would be nice to have kernel doc on these macros so we know how to
+> use them.
+
+Sounds good. Will fix.
