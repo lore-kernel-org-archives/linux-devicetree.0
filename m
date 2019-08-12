@@ -1,148 +1,161 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: RE: [PATCH v9 5/6] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Mon, 12 Aug 2019 13:34:35 +0300
-Message-ID: <877e7iu0xw.fsf@gmail.com>
-References: <1562324238-16655-1-git-send-email-pawell@cadence.com> <1562324238-16655-6-git-send-email-pawell@cadence.com> <877e8tm25r.fsf@linux.intel.com> <BYAPR07MB4709152CB29B6B027ABEB688DDCF0@BYAPR07MB4709.namprd07.prod.outlook.com> <8736idnu0q.fsf@gmail.com> <BYAPR07MB4709B0A4FADFB76183D651DCDDD10@BYAPR07MB4709.namprd07.prod.outlook.com> <87k1bjvtvi.fsf@gmail.com> <BYAPR07MB470926DA6241B54FC5AF3C2ADDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <87imr2u77c.fsf@gmail.com> <BYAPR07MB4709C07ED94C952886858F14DDD30@BYAPR07MB4709.namprd07.prod.outlook.com> <87d0hau37p.fsf@gmail.com> <BYAPR07MB470931F8C699784CC88E21CBDDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] mfd: madera: Add support for requesting the supply
+ clocks
+Date: Mon, 12 Aug 2019 11:38:53 +0100
+Message-ID: <20190812103853.GM26727@dell>
+References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
+ <20190806151321.31137-2-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB470931F8C699784CC88E21CBDDD30@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190806151321.31137-2-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Jayshri Dajiram Pawar <jpawar@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, 06 Aug 2019, Charles Keepax wrote:
 
+> Add the ability to get the clock for each clock input pin of the chip
+> and enable MCLK2 since that is expected to be a permanently enabled
+> 32kHz clock.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/madera-core.c       | 24 +++++++++++++++++++++++-
+>  include/linux/mfd/madera/core.h | 11 +++++++++++
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
+> index 29540cbf75934..8d7ab1c7bf9f7 100644
+> --- a/drivers/mfd/madera-core.c
+> +++ b/drivers/mfd/madera-core.c
+> @@ -428,6 +428,7 @@ static void madera_set_micbias_info(struct madera *madera)
+>  
+>  int madera_dev_init(struct madera *madera)
+>  {
+> +	static const char * const mclk_name[] = { "mclk1", "mclk2", "mclk3" };
+>  	struct device *dev = madera->dev;
+>  	unsigned int hwid;
+>  	int (*patch_fn)(struct madera *) = NULL;
+> @@ -450,6 +451,17 @@ int madera_dev_init(struct madera *madera)
+>  		       sizeof(madera->pdata));
+>  	}
+>  
+> +	BUILD_BUG_ON(ARRAY_SIZE(madera->mclk) != ARRAY_SIZE(mclk_name));
 
-Hi,
+Not sure how this could happen.  Surely we don't need it.
 
-Pawel Laszczak <pawell@cadence.com> writes:
->>>>Yet another thread? Can't you just run this right before giving back the
->>>>USB request? So, don't do it from IRQ handler, but from giveback path?
->>>
->>> Do you mean in:
->>> 	if (request->complete) {
->>> 		spin_unlock(&priv_dev->lock);
->>> 		if (priv_dev->run_garbage_collector) {
->>> 			....
->>> 		}
->>> 		usb_gadget_giveback_request(&priv_ep->endpoint,
->>> 					    request);
->>> 		spin_lock(&priv_dev->lock);
->>> 	}
->>> ??
->>
->>right, you can do it right before giving back the request. Or right
->>after.
->>
->>> I ask because this is finally also called from IRQ handler:
->>>
->>> cdns3_device_thread_irq_handler
->>>     -> cdns3_check_ep_interrupt_proceed
->>>         -> cdns3_transfer_completed
->>>             -> cdns3_gadget_giveback
->>>                 -> usb_gadget_giveback_request
->>
->>Did you notice that it doesn't reenable interrupts, though?
->
-> I noticed that there is a lack of reenabling interrupts :)
->
-> The problem is that If I have disabled interrupt the kernel complains
-> for using dma_free_coherent function in such place.=20
->
-> Here you have a fragment of complaints:=20
-> [ 7420.502863] WARNING: CPU: 0 PID: 10260 at kernel/dma/mapping.c:281 dma=
-_free_attrs+0xa0/0xd0
-> [ 7420.502866] Modules linked in: usb_f_mass_storage cdns3(OE) cdns3_pci_=
-wrap(OE) libcomposite
-> 		...
-> [ 7420.502965]  cdns3_gadget_giveback+0x159/0x2a0 [cdns3]
-> [ 7420.502975]  cdns3_transfer_completed+0xc5/0x3c0 [cdns3]
-> [ 7420.502986]  cdns3_device_thread_irq_handler+0x1b1/0xab0 [cdns3]
-> [ 7420.502991]  ? __schedule+0x333/0x7e0
-> [ 7420.503001]  irq_thread_fn+0x26/0x60
-> [ 7420.503006]  ? irq_thread+0xa8/0x1b0
-> [ 7420.503011]  irq_thread+0x10e/0x1b0
-> [ 7420.503015]  ? irq_forced_thread_fn+0x80/0x80
-> [ 7420.503021]  ? wake_threads_waitq+0x30/0x30
-> [ 7420.503029]  kthread+0x12c/0x150
-> [ 7420.503034]  ? irq_thread_check_affinity+0xe0/0xe0
-> [ 7420.503038]  ? kthread_park+0x90/0x90
-> [ 7420.503045]  ret_from_fork+0x3a/0x50
-> [ 7420.503061] irq event stamp: 2962
-> [ 7420.503065] hardirqs last  enabled at (2961): [<ffffffffb252672c>] _ra=
-w_spin_unlock_irq+0x2c/0x40
-> [ 7420.503070] hardirqs last disabled at (2962): [<ffffffffb25268f5>] _ra=
-w_spin_lock_irqsave+0x25/0x60
-> [ 7420.503074] softirqs last  enabled at (2918): [<ffffffffb2800340>] __d=
-o_softirq+0x340/0x451
-> [ 7420.503079] softirqs last disabled at (2657): [<ffffffffb1aa02b6>] irq=
-_exit+0xc6/0xd0
-> [ 7420.503082] ---[ end trace d02652af11011c3b ]---
->
-> Maybe it's a bug in implementation of this function.  I allocate memory w=
-ith flag GFP_ATOMIC with=20
-> disabled interrupt, but I can't free such memory.=20
+> +	for (i = 0; i < ARRAY_SIZE(madera->mclk); i++) {
+> +		madera->mclk[i] = devm_clk_get_optional(madera->dev,
+> +							mclk_name[i]);
+> +		if (IS_ERR(madera->mclk[i])) {
+> +			dev_warn(madera->dev, "Failed to get %s: %ld\n",
+> +				 mclk_name[i], PTR_ERR(madera->mclk[i]));
 
-I don't understand the intricacies of the coherent API to judge if it's
-a bug in the API itself. In any case, here's where the splat comes from:
+Do we even want to warn on the non-acquisition of an optional clock?
 
-void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
-		dma_addr_t dma_handle, unsigned long attrs)
-{
-	const struct dma_map_ops *ops =3D get_dma_ops(dev);
+Especially with a message that looks like something actually failed.
 
-	if (dma_release_from_dev_coherent(dev, get_order(size), cpu_addr))
-		return;
-	/*
-	 * On non-coherent platforms which implement DMA-coherent buffers via
-	 * non-cacheable remaps, ops->free() may call vunmap(). Thus getting
-	 * this far in IRQ context is a) at risk of a BUG_ON() or trying to
-	 * sleep on some machines, and b) an indication that the driver is
-	 * probably misusing the coherent API anyway.
-	 */
-	WARN_ON(irqs_disabled());
+> +			madera->mclk[i] = NULL;
+> +		}
+> +	}
+> +
+>  	ret = madera_get_reset_gpio(madera);
+>  	if (ret)
+>  		return ret;
+> @@ -660,13 +672,19 @@ int madera_dev_init(struct madera *madera)
+>  	}
+>  
+>  	/* Init 32k clock sourced from MCLK2 */
+> +	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2]);
+> +	if (ret != 0) {
+> +		dev_err(madera->dev, "Failed to enable 32k clock: %d\n", ret);
+> +		goto err_reset;
+> +	}
 
-	if (!cpu_addr)
-		return;
+What happened to this being optional?
 
-	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
-	if (dma_is_direct(ops))
-		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
-	else if (ops->free)
-		ops->free(dev, size, cpu_addr, dma_handle, attrs);
-}
-EXPORT_SYMBOL(dma_free_attrs);
+>  	ret = regmap_update_bits(madera->regmap,
+>  			MADERA_CLOCK_32K_1,
+>  			MADERA_CLK_32K_ENA_MASK | MADERA_CLK_32K_SRC_MASK,
+>  			MADERA_CLK_32K_ENA | MADERA_32KZ_MCLK2);
+>  	if (ret) {
+>  		dev_err(madera->dev, "Failed to init 32k clock: %d\n", ret);
+> -		goto err_reset;
+> +		goto err_clock;
+>  	}
+>  
+>  	pm_runtime_set_active(madera->dev);
+> @@ -687,6 +705,8 @@ int madera_dev_init(struct madera *madera)
+>  
+>  err_pm_runtime:
+>  	pm_runtime_disable(madera->dev);
+> +err_clock:
+> +	clk_disable_unprepare(madera->mclk[MADERA_MCLK2]);
 
-maybe you're gonna have to fire up a workqueue to free this memory for
-you :-(
+Where are the other clocks consumed?
 
-Unless someone else has better ideas. Alan, Greg, any ideas?
+>  err_reset:
+>  	madera_enable_hard_reset(madera);
+>  	regulator_disable(madera->dcvdd);
+> @@ -713,6 +733,8 @@ int madera_dev_exit(struct madera *madera)
+>  	 */
+>  	pm_runtime_disable(madera->dev);
+>  
+> +	clk_disable_unprepare(madera->mclk[MADERA_MCLK2]);
+> +
+>  	regulator_disable(madera->dcvdd);
+>  	regulator_put(madera->dcvdd);
+>  
+> diff --git a/include/linux/mfd/madera/core.h b/include/linux/mfd/madera/core.h
+> index 7ffa696cce7ca..2b6c83fe221dc 100644
+> --- a/include/linux/mfd/madera/core.h
+> +++ b/include/linux/mfd/madera/core.h
+> @@ -8,6 +8,7 @@
+>  #ifndef MADERA_CORE_H
+>  #define MADERA_CORE_H
+>  
+> +#include <linux/clk.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/mfd/madera/pdata.h>
+> @@ -29,6 +30,13 @@ enum madera_type {
+>  	CS42L92 = 9,
+>  };
+>  
+> +enum {
+> +	MADERA_MCLK1,
+> +	MADERA_MCLK2,
+> +	MADERA_MCLK3,
+> +	MADERA_NUM_MCLK
+> +};
+> +
+>  #define MADERA_MAX_CORE_SUPPLIES	2
+>  #define MADERA_MAX_GPIOS		40
+>  
+> @@ -155,6 +163,7 @@ struct snd_soc_dapm_context;
+>   * @irq_dev:		the irqchip child driver device
+>   * @irq_data:		pointer to irqchip data for the child irqchip driver
+>   * @irq:		host irq number from SPI or I2C configuration
+> + * @mclk:		pointers to clock supplies
+>   * @out_clamp:		indicates output clamp state for each analogue output
+>   * @out_shorted:	indicates short circuit state for each analogue output
+>   * @hp_ena:		bitflags of enable state for the headphone outputs
+> @@ -184,6 +193,8 @@ struct madera {
+>  	struct regmap_irq_chip_data *irq_data;
+>  	int irq;
+>  
+> +	struct clk *mclk[MADERA_NUM_MCLK];
+> +
+>  	unsigned int num_micbias;
+>  	unsigned int num_childbias[MADERA_MAX_MICBIAS];
+>  
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1RQLsACgkQzL64meEa
-mQaIQRAA0TD8TKQptnOmAGv1zIYC6xgBgnsm0x2vGb6xL4PRP2OCZ5rtKxQ68m4V
-yp7zk5HSsVupbVXXvnlrwW1kkYSeSGy6Eu4R13SndS1AzDhoT4GXVQp4p4lnC/qP
-C7tHOOEFBAcN6/R5xmdfztd7OnNzvLVSyHQDjPTV/ZrhO5WA/7PiISDbrIJwko63
-ew2eR97yc6ieP0AntOPEePHqp07h2PkOSDBECZd3k4HqI2HhZI/yRK2x02dzYLTd
-UeKfQePHjlfyhoptUrsumaombaIvOi4OzaW+e/XXitZAzcQhlbjiKtBy8HzSiF0U
-4Y1ElXeeP1HqQBmWvOetFSgKLNjR5TAlRrWOp/x6XS8IUM/jyJHKIYqMWShjGbPZ
-/V2JvOhJH8z7/Gnldx47LC4qyHQaNFhtZ8DTvGTLyYiC4aJp1geNvOsn7h4hmUNp
-Un5t5ytPUuNrWITTN4V6w1S8eQem1GN947GTJmWDICYrlKWuBwAIfM7GrVgV0omp
-4YGouah8LD8o+h2IVHqAlRui/uNQMxk0h+MHHkxo8JbrFJfOdR2JBKUT36Npv4ut
-3KaCHAVG/LHY5+2LbqlbLZiH9gUjntSs0efbDDePT4OudMFqz3HX95MHAcNq1JgP
-s4NR1rdSKILE+EYOk9XT6ch5jNKqq9ylfwCuRhJtIShcyBGEHF0=
-=xDrg
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
