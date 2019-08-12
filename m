@@ -1,520 +1,66 @@
-From: Aleix Roca Nonell <kernelrocks@gmail.com>
-Subject: Re: [PATCH 2/6] irqchip: Add Realtek RTD129x intc driver
-Date: Mon, 12 Aug 2019 10:26:48 +0200
-Message-ID: <20190812082648.GA3694@rocks>
-References: <20190707132256.GC13340@arks.localdomain>
- <5efa2ccb-9659-443c-7986-8ceb01aa64b9@arm.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 2/4] PCI: dwc: Return directly when num-lanes is not found
+Date: Mon, 12 Aug 2019 09:34:13 +0100
+Message-ID: <20190812083412.GT56241@e119886-lin.cambridge.arm.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-3-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5efa2ccb-9659-443c-7986-8ceb01aa64b9@arm.com>
+In-Reply-To: <20190812042435.25102-3-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark and everyone! Sorry for the large delay, I'm doing this in my
-free time, which is not that abundant. In this mail, I'm focusing only
-on the largest change mentioned by Mark. I will answer the rest later.
+On Mon, Aug 12, 2019 at 04:22:22AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> The num-lanes is optional, so probably it isn't added
+> on some platforms. The subsequent programming is base
+> on the num-lanes, hence return when it is not found.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7d25102c304c..0a89bfd1636e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -423,8 +423,10 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  
+>  
+>  	ret = of_property_read_u32(np, "num-lanes", &lanes);
+> -	if (ret)
+> -		lanes = 0;
+> +	if (ret) {
+> +		dev_dbg(pci->dev, "property num-lanes isn't found\n");
+> +		return;
+> +	}
 
-On Mon, Jul 08, 2019 at 10:36:14AM +0100, Marc Zyngier wrote:
-> On 07/07/2019 14:22, Aleix Roca Nonell wrote:
-> > This driver adds support for the RTD1296 and RTD1295 interrupt
-> > controller (intc). It is based on both the BPI-SINOVOIP project and
-> > Andreas Färber's previous attempt to submit a similar driver.
-> > 
-> > There is currently no publicly available datasheet on this SoC and the
-> > exact behaviour of the registers controlling the intc remain uncertain.
-> > 
-> > This driver controls two intcs: "iso" and "misc". Each intc has its own
-> > Interrupt Enable Register (IER) and Interrupt Status Resgister (ISR).
-> 
-> Register
-> 
-> > However, not all "misc" intc irqs have the same offsets for both ISR and
-> > IER. For this reason an ISR to IER offsets table is defined.
-> > 
-> > The driver catches the IER value to reduce accesses to the table inside the
-> > interrupt handler. Actually, the driver stores the ISR offsets of currently
-> > enabled interrupts in a variable.
-> > 
-> > Signed-off-by: Aleix Roca Nonell <kernelrocks@gmail.com>
-> 
-> I expect Andreas and you to sort the attribution issue. I'm certainly
-> not going to take this in if things are unclear.
-> 
-> > ---
-> >  drivers/irqchip/Makefile      |   1 +
-> >  drivers/irqchip/irq-rtd129x.c | 371 ++++++++++++++++++++++++++++++++++
-> >  2 files changed, 372 insertions(+)
-> >  create mode 100644 drivers/irqchip/irq-rtd129x.c
-> > 
-> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > index 606a003a0000..0689c3956250 100644
-> > --- a/drivers/irqchip/Makefile
-> > +++ b/drivers/irqchip/Makefile
-> > @@ -100,3 +100,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
-> >  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
-> >  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
-> >  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
-> > +obj-$(CONFIG_ARCH_REALTEK)		+= irq-rtd129x.o
-> > diff --git a/drivers/irqchip/irq-rtd129x.c b/drivers/irqchip/irq-rtd129x.c
-> > new file mode 100644
-> > index 000000000000..76358ca50f10
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-rtd129x.c
-> > @@ -0,0 +1,371 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/irqchip.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/io.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/irqchip.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/irqchip/chained_irq.h>
-> > +
-> > +#define RTD129X_INTC_NR_IRQS 32
-> > +#define DEV_NAME "RTD1296_INTC"
-> > +
-> > +/*
-> > + * This interrupt controller (hereinafter intc) driver controls two intcs: "iso"
-> > + * and "misc". Each intc has its own Interrupt Enable Register (IER) and
-> > + * Interrupt Status Resgister (ISR). However, not all "misc" intc irqs have the
-> > + * same offsets for both ISR and IER. For this reason an ISR to IER offsets
-> > + * table is defined. Also, to reduce accesses to this table in the interrupt
-> > + * handler, the driver stores the ISR offsets of currently enabled interrupts in
-> > + * a variable.
-> > + */
-> > +
-> > +enum misc_int_en {
-> > +	MISC_INT_FAIL		= 0xFF,
-> > +	MISC_INT_RVD		= 0xFE,
-> > +	MISC_INT_EN_FAN		= 29,
-> > +	MISC_INT_EN_I2C3	= 28,
-> > +	MISC_INT_EN_GSPI	= 27,
-> > +	MISC_INT_EN_I2C2	= 26,
-> > +	MISC_INT_EN_SC0		= 24,
-> > +	MISC_INT_EN_LSADC1	= 22,
-> > +	MISC_INT_EN_LSADC0	= 21,
-> > +	MISC_INT_EN_GPIODA	= 20,
-> > +	MISC_INT_EN_GPIOA	= 19,
-> > +	MISC_INT_EN_I2C4	= 15,
-> > +	MISC_INT_EN_I2C5	= 14,
-> > +	MISC_INT_EN_RTC_DATA	= 12,
-> > +	MISC_INT_EN_RTC_HOUR	= 11,
-> > +	MISC_INT_EN_RTC_MIN	= 10,
-> > +	MISC_INT_EN_UR2		= 7,
-> > +	MISC_INT_EN_UR2_TO	= 6,
-> > +	MISC_INT_EN_UR1_TO	= 5,
-> > +	MISC_INT_EN_UR1		= 3,
-> > +};
-> > +
-> > +enum iso_int_en {
-> > +	ISO_INT_FAIL		= 0xFF,
-> > +	ISO_INT_RVD		= 0xFE,
-> > +	ISO_INT_EN_I2C1_REQ	= 31,
-> > +	ISO_INT_EN_GPHY_AV	= 30,
-> > +	ISO_INT_EN_GPHY_DV	= 29,
-> > +	ISO_INT_EN_GPIODA	= 20,
-> > +	ISO_INT_EN_GPIOA	= 19,
-> > +	ISO_INT_EN_RTC_ALARM	= 13,
-> > +	ISO_INT_EN_RTC_HSEC	= 12,
-> > +	ISO_INT_EN_I2C1		= 11,
-> > +	ISO_INT_EN_I2C0		= 8,
-> > +	ISO_INT_EN_IRDA		= 5,
-> > +	ISO_INT_EN_UR0		= 2,
-> > +};
-> > +
-> > +unsigned char rtd129x_intc_enable_map_misc[RTD129X_INTC_NR_IRQS] = {
-> > +	MISC_INT_FAIL,		/* Bit0 */
-> > +	MISC_INT_FAIL,		/* Bit1 */
-> > +	MISC_INT_RVD,		/* Bit2 */
-> > +	MISC_INT_EN_UR1,	/* Bit3 */
-> > +	MISC_INT_FAIL,		/* Bit4 */
-> > +	MISC_INT_EN_UR1_TO,	/* Bit5 */
-> > +	MISC_INT_RVD,		/* Bit6 */
-> > +	MISC_INT_RVD,		/* Bit7 */
-> > +	MISC_INT_EN_UR2,	/* Bit8 */
-> > +	MISC_INT_RVD,		/* Bit9 */
-> > +	MISC_INT_EN_RTC_MIN,	/* Bit10 */
-> > +	MISC_INT_EN_RTC_HOUR,	/* Bit11 */
-> > +	MISC_INT_EN_RTC_DATA,	/* Bit12 */
-> > +	MISC_INT_EN_UR2_TO,	/* Bit13 */
-> > +	MISC_INT_EN_I2C5,	/* Bit14 */
-> > +	MISC_INT_EN_I2C4,	/* Bit15 */
-> > +	MISC_INT_FAIL,		/* Bit16 */
-> > +	MISC_INT_FAIL,		/* Bit17 */
-> > +	MISC_INT_FAIL,		/* Bit18 */
-> > +	MISC_INT_EN_GPIOA,	/* Bit19 */
-> > +	MISC_INT_EN_GPIODA,	/* Bit20 */
-> > +	MISC_INT_EN_LSADC0,	/* Bit21 */
-> > +	MISC_INT_EN_LSADC1,	/* Bit22 */
-> > +	MISC_INT_EN_I2C3,	/* Bit23 */
-> > +	MISC_INT_EN_SC0,	/* Bit24 */
-> > +	MISC_INT_FAIL,		/* Bit25 */
-> > +	MISC_INT_EN_I2C2,	/* Bit26 */
-> > +	MISC_INT_EN_GSPI,	/* Bit27 */
-> > +	MISC_INT_FAIL,		/* Bit28 */
-> > +	MISC_INT_EN_FAN,	/* Bit29 */
-> > +	MISC_INT_FAIL,		/* Bit30 */
-> > +	MISC_INT_FAIL		/* Bit31 */
-> > +};
-> > +
-> > +unsigned char rtd129x_intc_enable_map_iso[RTD129X_INTC_NR_IRQS] = {
-> > +	ISO_INT_FAIL,		/* Bit0 */
-> > +	ISO_INT_RVD,		/* Bit1 */
-> > +	ISO_INT_EN_UR0,		/* Bit2 */
-> > +	ISO_INT_FAIL,		/* Bit3 */
-> > +	ISO_INT_FAIL,		/* Bit4 */
-> > +	ISO_INT_EN_IRDA,	/* Bit5 */
-> > +	ISO_INT_FAIL,		/* Bit6 */
-> > +	ISO_INT_RVD,		/* Bit7 */
-> > +	ISO_INT_EN_I2C0,	/* Bit8 */
-> > +	ISO_INT_RVD,		/* Bit9 */
-> > +	ISO_INT_FAIL,		/* Bit10 */
-> > +	ISO_INT_EN_I2C1,	/* Bit11 */
-> > +	ISO_INT_EN_RTC_HSEC,	/* Bit12 */
-> > +	ISO_INT_EN_RTC_ALARM,	/* Bit13 */
-> > +	ISO_INT_FAIL,		/* Bit14 */
-> > +	ISO_INT_FAIL,		/* Bit15 */
-> > +	ISO_INT_FAIL,		/* Bit16 */
-> > +	ISO_INT_FAIL,		/* Bit17 */
-> > +	ISO_INT_FAIL,		/* Bit18 */
-> > +	ISO_INT_EN_GPIOA,	/* Bit19 */
-> > +	ISO_INT_EN_GPIODA,	/* Bit20 */
-> > +	ISO_INT_RVD,		/* Bit21 */
-> > +	ISO_INT_RVD,		/* Bit22 */
-> > +	ISO_INT_RVD,		/* Bit23 */
-> > +	ISO_INT_RVD,		/* Bit24 */
-> > +	ISO_INT_FAIL,		/* Bit25 */
-> > +	ISO_INT_FAIL,		/* Bit26 */
-> > +	ISO_INT_FAIL,		/* Bit27 */
-> > +	ISO_INT_FAIL,		/* Bit28 */
-> > +	ISO_INT_EN_GPHY_DV,	/* Bit29 */
-> > +	ISO_INT_EN_GPHY_AV,	/* Bit30 */
-> > +	ISO_INT_EN_I2C1_REQ	/* Bit31 */
-> > +};
-> > +
-> > +struct rtd129x_intc_data {
-> > +	void __iomem		*unmask;
-> > +	void __iomem		*isr;
-> > +	void __iomem		*ier;
-> > +	u32			ier_cached;
-> > +	u32			isr_en;
-> > +	raw_spinlock_t		lock;
-> > +	unsigned int		parent_irq;
-> > +	const unsigned char	*en_map;
-> > +};
-> > +
-> > +static struct irq_domain *rtd129x_intc_domain;
-> > +
-> > +static void rtd129x_intc_irq_handle(struct irq_desc *desc)
-> > +{
-> > +	struct rtd129x_intc_data *priv = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +	unsigned int local_irq;
-> > +	u32 status;
-> > +	int i;
-> > +
-> > +	chained_irq_enter(chip, desc);
-> > +
-> > +	raw_spin_lock(&priv->lock);
-> > +	status = readl_relaxed(priv->isr);
-> > +	status &= priv->isr_en;
-> > +	raw_spin_unlock(&priv->lock);
-> 
-> What is this lock protecting? isr_en?
-> 
-> > +
-> > +	while (status) {
-> > +		i = __ffs(status);
-> > +		status &= ~BIT(i);
-> > +
-> > +		local_irq = irq_find_mapping(rtd129x_intc_domain, i);
-> > +		if (likely(local_irq)) {
-> > +			if (!generic_handle_irq(local_irq))
-> > +				writel_relaxed(BIT(i), priv->isr);
-> 
-> What are the write semantics of the ISR register? Hot bit clear? How
-> does it work since mask() does the same thing? Clearly, something is
-> wrong here.
+The existing code would assign a value of 0 to lanes when num-lanes isn't
+specified, however this value isn't supported by the following switch
+statement - thus we'd also print an error and return.
 
-Sorry but I have not been able to found the definition of "hot bit
-clear", could you explain it? Anyways, you were right, apparently the
-mask/unmask code were doing nothing useful. More on this below.
+Therefore the only and subtle effect effect of this patch is to change
+a dev_err to a dev_dbg when num-lanes isn't specified and avoid a read of
+PCIE_PORT_LINK_CONTROL.
 
-> 
-> > +		} else {
-> > +			handle_bad_irq(desc);
-> > +		}
-> > +	}
-> > +
-> > +	chained_irq_exit(chip, desc);
-> > +}
-> > +
-> > +static void rtd129x_intc_mask(struct irq_data *data)
-> > +{
-> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-> > +
-> > +	writel_relaxed(BIT(data->hwirq), priv->isr);
-> > +}
-> > +
-> > +static void rtd129x_intc_unmask(struct irq_data *data)
-> > +{
-> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-> > +
-> > +	writel_relaxed(BIT(data->hwirq), priv->unmask);
-> 
-> What effect does this have on the isr register? The whole mask/unmask
-> thing seems to be pretty dodgy...
-> 
-> > +}
-> > +
-> > +static void rtd129x_intc_enable(struct irq_data *data)
-> > +{
-> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-> > +	unsigned long flags;
-> > +	u8 en_offset;
-> > +
-> > +	en_offset = priv->en_map[data->hwirq];
-> > +
-> > +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
-> > +		raw_spin_lock_irqsave(&priv->lock, flags);
-> > +
-> > +		priv->isr_en |= BIT(data->hwirq);
-> > +		priv->ier_cached |= BIT(en_offset);
-> > +		writel_relaxed(priv->ier_cached, priv->ier);
-> > +
-> > +		raw_spin_unlock_irqrestore(&priv->lock, flags);
-> > +	} else if (en_offset == MISC_INT_FAIL) {
-> > +		pr_err("[%s] Enable irq(%lu) failed\n", DEV_NAME, data->hwirq);
-> > +	}
-> > +}
-> > +
-> > +static void rtd129x_intc_disable(struct irq_data *data)
-> > +{
-> > +	struct rtd129x_intc_data *priv = irq_data_get_irq_chip_data(data);
-> > +	unsigned long flags;
-> > +	u8 en_offset;
-> > +
-> > +	en_offset = priv->en_map[data->hwirq];
-> > +
-> > +	if ((en_offset != MISC_INT_RVD) && (en_offset != MISC_INT_FAIL)) {
-> > +		raw_spin_lock_irqsave(&priv->lock, flags);
-> > +
-> > +		priv->isr_en &= ~BIT(data->hwirq);
-> > +		priv->ier_cached &= ~BIT(en_offset);
-> > +		writel_relaxed(priv->ier_cached, priv->ier);
-> > +
-> > +		raw_spin_unlock_irqrestore(&priv->lock, flags);
-> > +	} else if (en_offset == MISC_INT_FAIL) {
-> > +		pr_err("[%s] Disable irq(%lu) failed\n", DEV_NAME, data->hwirq);
-> > +	}
-> > +}
-> 
-> So here's a thought: Why do we need all of this? If mask/unmask do their
-> job correctly, we could just enable all interrupts in one go (just a
-> 32bit write) at probe time, and leave all interrupts masked until they
-> are in use. You could then drop all these silly tables that don't bring
-> much...
+Given that num-lanes is described as optional this makes perfect sense.
+Though the commit message/hunk does give the apperance that this provides
+a more functional change.
 
-The idea of dropping all those tables look really good to me, that
-would greatly simplify the code! I have been trying to mask all
-interrupts on the probe function using the ISR register but while
-doing so, I realized that it does not work. Writing to ISR does not
-mask interrupts, apparently it only acknowledges them once they have
-been triggered. On the scarse available documentation of this Soc I
-cannot find a mask-like register. It seems interrupts are managed with
-an ISR and an IER register. So it should be posible to use the enable
-register to maks/unmask instead. These do work. However, that would
-mean that we have to keep those ugly tables.
+Anyway:
 
-Nonetheless we might still be able to do something else. Please,
-correct me if I'm wrong, but do we really need to mask/unamsk in this
-scenario? This is the devised board layout:
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-           +------+       +----------+       +---------+
-           |      |       |          |       |         |
-           | UART |-------|2  INTC   |-------|c  GIC   |
-           |      |  +----|1         |  +----|b        |
-           +------+  | +--|0         |  | +--|a        |
-                     | |  |          |  | |  |         |
-                     | |  +----------+  | |  +---------+
-                     |                  |
 
-Once the UART generates an interrupt it passes through the line 2 of
-the custom realtek interrupt contoller before reaching the GIC's line
-"c". On the INTC interrupt handler, we call chained_irq_enter/exit
-to mask/unmask the GIC's "c" line. Because all of this realtek INTC
-interrupt lines (2,1,0,...) are muxed on the GIC's line "c", this
-means that while on the INTC interrupt handler it is not possible to
-send further interrupts on the CPU. Given that interrupts are masked
-on the GIC, it seems safe to just remove INTC's mask/unmask functions.
-
-Therefore, the only work that this INTC handler would needs to do is
-to acknowledge the interrupt by writing to the ISR, which it could be
-done in the respective irq_ack callback of struct irq_chip instead of
-in the handler body.
-
-I have implemented this solution and it seems to work. What do you
-think? I'm missing something crucial?
-
-> 
-> > +
-> > +static struct irq_chip rtd129x_intc_chip = {
-> > +	.name		= DEV_NAME,
-> > +	.irq_mask	= rtd129x_intc_mask,
-> > +	.irq_unmask	= rtd129x_intc_unmask,
-> > +	.irq_enable	= rtd129x_intc_enable,
-> > +	.irq_disable	= rtd129x_intc_disable,
-> > +};
-> > +
-> > +static int rtd129x_intc_map(struct irq_domain *d, unsigned int virq,
-> > +			    irq_hw_number_t hw_irq)
-> > +{
-> > +	struct rtd129x_intc_data *priv = d->host_data;
-> > +
-> > +	irq_set_chip_and_handler(virq, &rtd129x_intc_chip, handle_level_irq);
-> > +	irq_set_chip_data(virq, priv);
-> > +	irq_set_probe(virq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct irq_domain_ops rtd129x_intc_domain_ops = {
-> > +	.xlate			= irq_domain_xlate_onecell,
-> > +	.map			= rtd129x_intc_map,
-> > +};
-> > +
-> > +static const struct of_device_id rtd129x_intc_matches[] = {
-> > +	{ .compatible = "realtek,rtd129x-intc-misc",
-> > +		.data = rtd129x_intc_enable_map_misc
-> > +	},
-> > +	{ .compatible = "realtek,rtd129x-intc-iso",
-> > +		.data = rtd129x_intc_enable_map_iso
-> > +	},
-> > +	{ }
-> > +};
-> > +
-> > +static int rtd129x_intc_of_init(struct device_node *node,
-> > +				struct device_node *parent)
-> > +{
-> > +	struct rtd129x_intc_data *priv;
-> > +	const struct of_device_id *match;
-> > +	u32 isr_tmp, ier_tmp, ier_bit;
-> > +	int ret, i;
-> > +
-> > +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv) {
-> > +		ret = -ENOMEM;
-> > +		goto err;
-> > +	}
-> > +
-> > +	raw_spin_lock_init(&priv->lock);
-> > +
-> > +	priv->isr = of_iomap(node, 0);
-> > +	if (!priv->isr) {
-> > +		pr_err("unable to obtain status reg iomap address\n");
-> > +		ret = -ENOMEM;
-> > +		goto free_priv;
-> > +	}
-> > +
-> > +	priv->ier = of_iomap(node, 1);
-> > +	if (!priv->ier) {
-> > +		pr_err("unable to obtain enable reg iomap address\n");
-> > +		ret = -ENOMEM;
-> > +		goto iounmap_status;
-> > +	}
-> > +
-> > +	priv->unmask = of_iomap(node, 2);
-> > +	if (!priv->unmask) {
-> > +		pr_err("unable to obtain unmask reg iomap address\n");
-> > +		ret = -ENOMEM;
-> > +		goto iounmap_enable;
-> > +	}
-> > +
-> > +	priv->parent_irq = irq_of_parse_and_map(node, 0);
-> > +	if (!priv->parent_irq) {
-> > +		pr_err("failed to map parent interrupt %d\n", priv->parent_irq);
-> > +		ret = -EINVAL;
-> > +		goto iounmap_all;
-> > +	}
-> > +
-> > +	match = of_match_node(rtd129x_intc_matches, node);
-> > +	if (!match) {
-> > +		pr_err("failed to find matching node\n");
-> > +		ret = -ENODEV;
-> > +		goto iounmap_all;
-> > +	}
-> > +	priv->en_map = match->data;
-> > +
-> > +	// initialize enabled irq's map to its matching status bit in isr by
-> > +	// inverse walking the enable to status offsets map. Only needed for
-> > +	// misc
-> 
-> Why do we need any of this? The kernel is supposed to start from a clean
-> slate, not to inherit whatever has been set before, unless there is a
-> very compelling reason.
-> 
-> > +	priv->ier_cached = readl_relaxed(priv->ier);
-> > +	if (priv->en_map == rtd129x_intc_enable_map_misc) {
-> > +		ier_tmp = priv->ier_cached;
-> > +		isr_tmp = 0;
-> > +		while (ier_tmp) {
-> > +			ier_bit = __ffs(ier_tmp);
-> > +			ier_tmp &= ~BIT(ier_bit);
-> > +			for (i = 0; i < RTD129X_INTC_NR_IRQS; i++)
-> > +				if (priv->en_map[i] == ier_bit)
-> > +					isr_tmp |= BIT(i);
-> > +		}
-> > +		priv->isr_en = isr_tmp;
-> > +	} else {
-> > +		priv->isr_en = priv->ier_cached;
-> > +	}
-> > +
-> > +	rtd129x_intc_domain = irq_domain_add_linear(node, RTD129X_INTC_NR_IRQS,
-> > +						    &rtd129x_intc_domain_ops,
-> > +						    priv);
-> > +	if (!rtd129x_intc_domain) {
-> > +		pr_err("failed to create irq domain\n");
-> > +		ret = -ENOMEM;
-> > +		goto iounmap_all;
-> > +	}
-> > +
-> > +	irq_set_chained_handler_and_data(priv->parent_irq,
-> > +					 rtd129x_intc_irq_handle, priv);
-> > +
-> > +	return 0;
-> > +
-> > +iounmap_all:
-> > +	iounmap(priv->unmask);
-> > +iounmap_enable:
-> > +	iounmap(priv->ier);
-> > +iounmap_status:
-> > +	iounmap(priv->isr);
-> > +free_priv:
-> > +	kfree(priv);
-> > +err:
-> > +	return ret;
-> > +}
-> > +
-> > +IRQCHIP_DECLARE(rtd129x_intc_misc, "realtek,rtd129x-intc-misc",
-> > +		rtd129x_intc_of_init);
-> > +IRQCHIP_DECLARE(rtd129x_intc_iso, "realtek,rtd129x-intc-iso",
-> > +		rtd129x_intc_of_init);
-> > 
-> 
-> Thanks,
-
-Thank you very much for your time!
-
-> 
-> 	M.
+>  
+>  	/* Set the number of lanes */
+>  	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
 > -- 
-> Jazz is not dead. It just smells funny...
+> 2.17.1
+> 
