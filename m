@@ -1,104 +1,99 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
-Date: Mon, 12 Aug 2019 11:24:50 +0100
-Message-ID: <20190812102450.GK26727@dell>
-References: <cover.1565367567.git.agx@sigxcpu.org>
- <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V15 00/13] PCI: tegra: Add Tegra194 PCIe support
+Date: Mon, 12 Aug 2019 12:25:19 +0200
+Message-ID: <20190812102519.GN8903@ulmo>
+References: <20190809044609.20401-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, arnd@arndb.de
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnborg.org>
+Content-Type: multipart/mixed; boundary="===============6138060843856164482=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190809044609.20401-1-vidyas@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, mperttunen@nvidia.com, mmaddireddy@nvidia.com, linux-pci@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, kthota@nvidia.com, kishon@ti.com, linux-tegra@vger.kernel.org, robh+dt@kernel.org, gustavo.pimentel@synopsys.com, jingoohan1@gmail.com, bhelgaas@google.com, digetx@gmail.com, jonathanh@nvidia.com, linux-arm-kernel@lists.infradead.org, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 09 Aug 2019, Guido Günther wrote:
 
-> This adds all the gpr registers and the define needed for selecting
-> the input source in the imx-nwl drm bridge.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h | 62 ++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
+--===============6138060843856164482==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="e8/wErwm0bqugfcz"
+Content-Disposition: inline
 
-I would like Arnd to look at this please.
 
-> diff --git a/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-> new file mode 100644
-> index 000000000000..62e85ffacfad
-> --- /dev/null
-> +++ b/include/linux/mfd/syscon/imx8mq-iomuxc-gpr.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2017 NXP
-> + *               2019 Purism SPC
-> + */
-> +
-> +#ifndef __LINUX_IMX8MQ_IOMUXC_GPR_H
-> +#define __LINUX_IMX8MQ_IOMUXC_GPR_H
-> +
-> +#define IOMUXC_GPR0	0x00
-> +#define IOMUXC_GPR1	0x04
-> +#define IOMUXC_GPR2	0x08
-> +#define IOMUXC_GPR3	0x0c
-> +#define IOMUXC_GPR4	0x10
-> +#define IOMUXC_GPR5	0x14
-> +#define IOMUXC_GPR6	0x18
-> +#define IOMUXC_GPR7	0x1c
-> +#define IOMUXC_GPR8	0x20
-> +#define IOMUXC_GPR9	0x24
-> +#define IOMUXC_GPR10	0x28
-> +#define IOMUXC_GPR11	0x2c
-> +#define IOMUXC_GPR12	0x30
-> +#define IOMUXC_GPR13	0x34
-> +#define IOMUXC_GPR14	0x38
-> +#define IOMUXC_GPR15	0x3c
-> +#define IOMUXC_GPR16	0x40
-> +#define IOMUXC_GPR17	0x44
-> +#define IOMUXC_GPR18	0x48
-> +#define IOMUXC_GPR19	0x4c
-> +#define IOMUXC_GPR20	0x50
-> +#define IOMUXC_GPR21	0x54
-> +#define IOMUXC_GPR22	0x58
-> +#define IOMUXC_GPR23	0x5c
-> +#define IOMUXC_GPR24	0x60
-> +#define IOMUXC_GPR25	0x64
-> +#define IOMUXC_GPR26	0x68
-> +#define IOMUXC_GPR27	0x6c
-> +#define IOMUXC_GPR28	0x70
-> +#define IOMUXC_GPR29	0x74
-> +#define IOMUXC_GPR30	0x78
-> +#define IOMUXC_GPR31	0x7c
-> +#define IOMUXC_GPR32	0x80
-> +#define IOMUXC_GPR33	0x84
-> +#define IOMUXC_GPR34	0x88
-> +#define IOMUXC_GPR35	0x8c
-> +#define IOMUXC_GPR36	0x90
-> +#define IOMUXC_GPR37	0x94
-> +#define IOMUXC_GPR38	0x98
-> +#define IOMUXC_GPR39	0x9c
-> +#define IOMUXC_GPR40	0xa0
-> +#define IOMUXC_GPR41	0xa4
-> +#define IOMUXC_GPR42	0xa8
-> +#define IOMUXC_GPR43	0xac
-> +#define IOMUXC_GPR44	0xb0
-> +#define IOMUXC_GPR45	0xb4
-> +#define IOMUXC_GPR46	0xb8
-> +#define IOMUXC_GPR47	0xbc
-> +
-> +/* i.MX8Mq iomux gpr register field defines */
-> +#define IMX8MQ_GPR13_MIPI_MUX_SEL		BIT(2)
-> +
-> +#endif /* __LINUX_IMX8MQ_IOMUXC_GPR_H */
+--e8/wErwm0bqugfcz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Fri, Aug 09, 2019 at 10:15:56AM +0530, Vidya Sagar wrote:
+> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+> to PCIe controller
+> This patch series
+> - Adds support for P2U PHY driver
+> - Adds support for PCIe host controller
+> - Adds device tree nodes each PCIe controllers
+> - Enables nodes applicable to p2972-0000 platform
+> - Adds helper APIs in Designware core driver to get capability regs offset
+> - Adds defines for new feature registers of PCIe spec revision 4
+> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
+>=20
+> Testing done on P2972-0000 platform
+> - Able to get PCIe link up with on-board Marvel eSATA controller
+> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+> - Able to do data transfers with both SATA drives and NVMe cards
+> - Able to perform suspend-resume sequence
+
+Do you happen to have a patch for P2972-0000 PCI support? I don't see it
+in this series.
+
+Thierry
+
+--e8/wErwm0bqugfcz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RPo8ACgkQ3SOs138+
+s6H7Pg//dh1al8/AaKqfOXUV7vJCuuAAP7eFAzEZssLuFIavDHghC4X+d5w0OsdZ
+eOnaJyrojkIFvpialETEQ3G+MLw2HyFoBt+f1G827JsyxMvVe+LDkGa2skg79F1y
+wa3gCp2zTkMM1mzS7cfm4wxGSdN1nUuuu63kMvBHpBOALTYnWeGv6hov5/rO+Yqg
+B9Wjbwu2rzNjNKirRW98/nUL5A9Ilxd4rVBu7o7JLz0VSoCdZ/5+DpursUTzZZz/
+9EbUFzy7pngftxrHxOL4DabxegjdehBj5JKQ7vR1ORmSo/9iukVrXh8dptqayijU
+8KUUWoYpnXmCCjBIAoc7mBwrwGfqZm9hF9rGedCILnpWxlVLgrXCxClsvBUn84TL
+db/VKF34Qo20wUfEPwUl0k5QjFwUc369XjfBEhBibkIXQb8+/4pA0EvolU7kedv7
+VrcLkUkEEPgGpTieaEKN11N3gARx8sEDde0muyKMG/bnRQmnvbq65nT0iiNI+lbj
+anvrkE3goyCno6raR0u7JLiWxCOgLVXA94aY+95h+16XpG6+jSQzgJfYWV0Xhi2L
+yPAuIH5zKzz2uzzbyqa4eF39lW0P4oBxghVt8jEvUfuqzcTXnR4VenQaciTjUb2A
+4S5Rtd/jNgp48OFTOpJTxcSPIBRZLzPKZnGGRhFGrpWZWUGikmY=
+=BYfL
+-----END PGP SIGNATURE-----
+
+--e8/wErwm0bqugfcz--
+
+
+--===============6138060843856164482==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6138060843856164482==--
