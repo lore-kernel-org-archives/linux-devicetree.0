@@ -1,7 +1,7 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 2/7] dt-bindings: devfreq: Add bindings for generic imx buses
-Date: Mon, 12 Aug 2019 21:49:46 +0300
-Message-ID: <97b0bff95ddb85b06ef3d2f8079faa36562a956d.1565633880.git.leonard.crestez@nxp.com>
+Subject: [PATCH 4/7] dt-bindings: devfreq: Add bindings for imx ddr controller
+Date: Mon, 12 Aug 2019 21:49:48 +0300
+Message-ID: <4cbddd75652c63aab19866c93faa0b784b56d53f.1565633880.git.leonard.crestez@nxp.com>
 References: <cover.1565633880.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,74 +23,74 @@ To: Stephen Boyd <sboyd@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Ky
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Anson Huang <Anson.Huang@nxp.com>, linux-arm-kernel@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, linux-imx@nxp.com, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Will Deacon <will@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, Jacky Bai <ping.bai@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial dt bindings for the interconnects inside i.MX chips.
-Multiple external IPs are involved but SOC integration means the
-software controllable interfaces are very similar.
-
-This is initially only for imx8mm but add an "fsl,imx8m-nic" fallback
-similar to exynos-bus.
+Add devicetree bindings for the i.MX DDR Controller on imx8m series
+chips. It supports dynamic frequency switching between multiple data
+rates and this is exposed to Linux via the devfreq subsystem.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- .../devicetree/bindings/devfreq/imx.yaml      | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml
+ .../devicetree/bindings/devfreq/imx-ddrc.yaml | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
 
-diff --git a/Documentation/devicetree/bindings/devfreq/imx.yaml b/Documentation/devicetree/bindings/devfreq/imx.yaml
+diff --git a/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml b/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
 new file mode 100644
-index 000000000000..0e2ee3a5205e
+index 000000000000..fa20280a682f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/devfreq/imx.yaml
-@@ -0,0 +1,50 @@
++++ b/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
+@@ -0,0 +1,53 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
 +$id: http://devicetree.org/schemas/devfreq/imx.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Generic i.MX bus frequency device
++title: i.MX DDR Controller
 +
 +maintainers:
 +  - Leonard Crestez <leonard.crestez@nxp.com>
 +
-+description: |
-+  The i.MX SoC family has multiple buses for which clock frequency (and sometimes
-+  voltage) can be adjusted.
-+
-+  Some of those buses expose register areas mentioned in the memory maps as GPV
-+  ("Global Programmers View") but not all. Access to this area might be denied for
-+  normal world.
-+
-+  The buses are based on externally licensed IPs such as ARM NIC-301 and Arteris
-+  FlexNOC but DT bindings are specific to the integration of these bus
-+  interconnect IPs into imx SOCs.
-+ 
 +properties:
 +  compatible:
 +    contains:
 +      enum:
-+       - fsl,imx8m-noc
-+       - fsl,imx8m-nic
++       - fsl,imx8m-ddrc
 +
 +  reg:
 +    maxItems: 1
-+    description: GPV area
++    description: DDR Controller registers
 +
 +  clocks:
-+    maxItems: 1
++    minItems: 5
++    maxItems: 5
++
++  clock-names:
++    items:
++      - const: dram_core
++      - const: dram_pll
++      - const: dram_alt_root
++      - const: dram_alt
++      - const: dram_apb
 +
 +required:
++  - reg
 +  - compatible
 +  - clocks
++  - clock-names
 +
 +examples:
 +  - |
 +    #include <dt-bindings/clock/imx8mm-clock.h>
-+    noc: noc@32700000 {
-+            compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
-+            reg = <0x32700000 0x100000>;
-+            clocks = <&clk IMX8MM_CLK_NOC>;
-+            operating-points-v2 = <&noc_opp_table>;
++    ddrc: dram-controller@3d400000 {
++        compatible = "fsl,imx8mm-ddrc", "fsl,imx8m-ddrc";
++        reg = <0x3d400000 0x400000>;
++        clock-names = "dram_core", "dram_pll", "dram_alt_root", "dram_alt", "dram_apb";
++        clocks = <&clk IMX8MM_CLK_DRAM_CORE>,
++                 <&clk IMX8MM_DRAM_PLL>,
++                 <&clk IMX8MM_CLK_DRAM_ALT_ROOT>,
++                 <&clk IMX8MM_CLK_DRAM_ALT>,
++                 <&clk IMX8MM_CLK_DRAM_APB>;
++        operating-points-v2 = <&ddrc_opp_table>;
 +    };
 -- 
 2.17.1
