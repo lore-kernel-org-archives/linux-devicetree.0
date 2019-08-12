@@ -1,104 +1,69 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: allwinner: Add devicetree for
- pine H64 modelA evaluation board
-Date: Mon, 12 Aug 2019 12:56:56 +0200
-Message-ID: <1648748.TWHgARQioU@jernej-laptop>
-References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
-Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH v3 05/21] ARM: dts: add recovery for I2C for iMX7
+Date: Mon, 12 Aug 2019 10:59:19 +0000
+Message-ID: <bfbf1b9c233da9362cdca5e000bc1dc7b92f08a2.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-6-philippe.schenker@toradex.com>
+         <cd0da6ed-6b59-be60-34b2-74eb603aa10d@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDP4JJM5QYGRB7ELYXVAKGQE6SCIGHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190808084253.10573-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cd0da6ed-6b59-be60-34b2-74eb603aa10d@ysoft.com>
+Content-Language: en-US
+Content-ID: <15A196EE244FFF46BAD0486B46FCD407@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 08. avgust 2019 ob 10:42:53 CEST je Corentin Labbe napisa=
-l(a):
-> This patch adds the evaluation variant of the model A of the PineH64.
-> The model A has the same size of the pine64 and has a PCIE slot.
->=20
-> The only devicetree difference with current pineH64, is the PHY
-> regulator.
-
-I have Model A board which also needs ddc-en-gpios property for HDMI connec=
-tor=20
-in order for HDMI to work correctly. Otherwise it will just use 1024x768=20
-resolution. Can you confirm that?
-
-Best regards,
-Jernej
-
->=20
-> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
->  .../sun50i-h6-pine-h64-modelA-eval.dts        | 26 +++++++++++++++++++
->  2 files changed, 27 insertions(+)
->  create mode 100644
-> arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/Makefile
-> b/arch/arm64/boot/dts/allwinner/Makefile index f6db0611cb85..9a02166cbf72
-> 100644
-> --- a/arch/arm64/boot/dts/allwinner/Makefile
-> +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> @@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
-> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64-modelA-eval.dtb
-> diff --git
-> a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts new fi=
-le
-> mode 100644
-> index 000000000000..d8ff02747efe
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (C) 2019 Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + */
-> +
-> +#include "sun50i-h6-pine-h64.dts"
-> +
-> +/ {
-> +	model =3D "Pine H64 model A evaluation board";
-> +	compatible =3D "pine64,pine-h64-modelA-eval", "allwinner,sun50i-h6";
-> +
-> +	reg_gmac_3v3: gmac-3v3 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc-gmac-3v3";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		startup-delay-us =3D <100000>;
-> +		gpio =3D <&pio 2 16 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +};
-> +
-> +&emac {
-> +	phy-supply =3D <&reg_gmac_3v3>;
-> +};
-
-
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/1648748.TWHgARQioU%40jernej-laptop.
+T24gTW9uLCAyMDE5LTA4LTEyIGF0IDExOjE1ICswMjAwLCBNaWNoYWwgVm9rw6HEjSB3cm90ZToN
+Cj4gT24gMDcuIDA4LiAxOSAxMDoyNiwgUGhpbGlwcGUgU2NoZW5rZXIgd3JvdGU6DQo+ID4gRnJv
+bTogT2xla3NhbmRyIFN1dm9yb3YgPG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KPiA+
+IA0KPiA+IC0gYWRkIHJlY292ZXJ5IG1vZGUgZm9yIGFwcGxpY2FibGUgaTJjIGJ1c2VzIGZvcg0K
+PiA+ICAgIENvbGlicmkgaU1YNyBtb2R1bGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogT2xl
+a3NhbmRyIFN1dm9yb3YgPG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNv
+bT4NCj4gPiAtLS0NCj4gSGkgUGhpbGlwcGUsDQo+IA0KPiBzaW5jZSB5b3UgYXJlIGdvaW5nIHRv
+IHNlbmQgdjQgYW55d2F5IEkgc3VnZ2VzdCB5b3UgdXBkYXRlIHRoZSBzdWJqZWN0DQo+IHRvIGJl
+IGNvbnNpc3RlbnQgYWNyb3NzIGFsbCB0aGUgcGF0Y2hlcy4NCj4gDQo+IAkiQVJNOiBkdHM6IGlt
+eDctY29saWJyaTogYWRkIHJlY292ZXJ5IGZvciBJMkMgZm9yIGlNWDciDQo+IA0KPiBmaXRzIGJl
+dHRlciBJIHRoaW5rLg0KPiANCj4gVGhhbmsgeW91LA0KPiBNaWNoYWwNCg0KT2theSwgd2lsbCBk
+byB0aGF0IGZvciB2NC4gSSdsbCBnbyBvdmVyIGFsbCBtZXNzYWdlcyB0aGVuIGFnYWluIGFuZCBz
+ZWUNCnRoYXQgaXQgaXMgY29uc2lzdGVudC4NCg0KUGhpbGlwcGUNCj4gDQo+ID4gQ2hhbmdlcyBp
+biB2MzogTm9uZQ0KPiA+IENoYW5nZXMgaW4gdjI6IE5vbmUNCj4gPiANCj4gPiAgIGFyY2gvYXJt
+L2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKyst
+LQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5k
+dHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaQ0KPiA+IGluZGV4
+IGE4ZDk5MmYzZTg5Ny4uMjQ4MDYyM2M5MmZmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
+Ny1jb2xpYnJpLmR0c2kNCj4gPiBAQCAtMTQwLDggKzE0MCwxMiBAQA0KPiA+ICAgDQo+ID4gICAm
+aTJjMSB7DQo+ID4gICAJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47DQo+ID4gLQlwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgImdw
+aW8iOw0KPiA+ICAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9pMmMxICZwaW5jdHJsX2kyYzFfaW50
+PjsNCj4gPiArCXBpbmN0cmwtMSA9IDwmcGluY3RybF9pMmMxX3JlY292ZXJ5ICZwaW5jdHJsX2ky
+YzFfaW50PjsNCj4gPiArCXNjbC1ncGlvcyA9IDwmZ3BpbzEgNCBHUElPX0FDVElWRV9ISUdIPjsN
+Cj4gPiArCXNkYS1ncGlvcyA9IDwmZ3BpbzEgNSBHUElPX0FDVElWRV9ISUdIPjsNCj4gPiArDQo+
+ID4gICAJc3RhdHVzID0gIm9rYXkiOw0KPiA+ICAgDQo+ID4gICAJY29kZWM6IHNndGw1MDAwQGEg
+ew0KPiA+IEBAIC0yNDIsOCArMjQ2LDExIEBADQo+ID4gICANCj4gPiAgICZpMmM0IHsNCj4gPiAg
+IAljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsNCj4gPiAtCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCI7DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAiZ3BpbyI7DQo+ID4gICAJ
+cGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzQ+Ow0KPiA+ICsJcGluY3RybC0xID0gPCZwaW5jdHJs
+X2kyYzRfcmVjb3Zlcnk+Ow0KPiA+ICsJc2NsLWdwaW9zID0gPCZncGlvNyA4IEdQSU9fQUNUSVZF
+X0hJR0g+Ow0KPiA+ICsJc2RhLWdwaW9zID0gPCZncGlvNyA5IEdQSU9fQUNUSVZFX0hJR0g+Ow0K
+PiA+ICAgfTsNCj4gPiAgIA0KPiA+ICAgJmxjZGlmIHsNCj4gPiBAQCAtNTQwLDYgKzU0NywxMyBA
+QA0KPiA+ICAgCQk+Ow0KPiA+ICAgCX07DQo+ID4gICANCj4gPiArCXBpbmN0cmxfaTJjNF9yZWNv
+dmVyeTogaTJjNC1yZWNvdmVyeWdycCB7DQo+ID4gKwkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJCU1Y
+N0RfUEFEX0VORVQxX1JHTUlJX1REMl9fR1BJTzdfSU84CTB4NDAwMDAwN2YNCj4gPiArCQkJTVg3
+RF9QQURfRU5FVDFfUkdNSUlfVEQzX19HUElPN19JTzkJMHg0MDAwMDA3Zg0KPiA+ICsJCT47DQo+
+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgIAlwaW5jdHJsX2xjZGlmX2RhdDogbGNkaWYtZGF0LWdycCB7
+DQo+ID4gICAJCWZzbCxwaW5zID0gPA0KPiA+ICAgCQkJTVg3RF9QQURfTENEX0RBVEEwMF9fTENE
+X0RBVEEwCQkweDc5DQo+ID4gQEAgLTc0MCw2ICs3NTQsMTMgQEANCj4gPiAgIAkJPjsNCj4gPiAg
+IAl9Ow0KPiA+ICAgDQo+ID4gKwlwaW5jdHJsX2kyYzFfcmVjb3Zlcnk6IGkyYzEtcmVjb3Zlcnln
+cnAgew0KPiA+ICsJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQlNWDdEX1BBRF9MUFNSX0dQSU8xX0lP
+MDRfX0dQSU8xX0lPNAkweDQwMDAwMDdmDQo+ID4gKwkJCU1YN0RfUEFEX0xQU1JfR1BJTzFfSU8w
+NV9fR1BJTzFfSU81CTB4NDAwMDAwN2YNCj4gPiArCQk+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4g
+ICAJcGluY3RybF9jZF91c2RoYzE6IHVzZGhjMS1jZC1ncnAgew0KPiA+ICAgCQlmc2wscGlucyA9
+IDwNCj4gPiAgIAkJCU1YN0RfUEFEX0xQU1JfR1BJTzFfSU8wMF9fR1BJTzFfSU8wCTB4NTkgLyog
+Q0QNCj4gPiAqLw0KPiA+IA0K
