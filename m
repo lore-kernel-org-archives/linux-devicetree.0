@@ -1,113 +1,80 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Mon, 12 Aug 2019 10:04:20 +0200
-Message-ID: <20190812080420.saelmqb36vkelxn4@flea>
-References: <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
- <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
- <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
- <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea>
- <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea>
- <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 0/4] Add support for Orange Pi 3
+Date: Mon, 12 Aug 2019 10:14:45 +0200
+Message-ID: <20190812081445.kfsbikfrt3pmsh6d@flea>
+References: <20190806155744.10263-1-megous@megous.com>
+ <2218280.0sI6yjypBf@jernej-laptop>
+ <CAGb2v67JVG2rhOdUwBmfsO0+RYb4DNOPmUo=Q_UhL3N+niLiEg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5669798909973755720=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wnuh5gs25vfqywb6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6F7YTVAKGQEIF6HBYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67JVG2rhOdUwBmfsO0+RYb4DNOPmUo=Q_UhL3N+niLiEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Jernej Skrabec <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============5669798909973755720==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jjtftgvl3v4z5fl7"
+--wnuh5gs25vfqywb6
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-
---jjtftgvl3v4z5fl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick wrote:
-> On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Mon, Aug 12, 2019 at 03:54:03PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Aug 12, 2019 at 3:45 PM Jernej =C5=A0krabec <jernej.skrabec@gmail=
+.com> wrote:
 > >
-> > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruzhick wrote:
-> > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruzhick wrote:
-> > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > >
-> > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
-> > > > > > >>
-> > > > > > >> Vasily Khoruzhick writes:
-> > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > >>>>
-> > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> > > > > > >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
-> > > > > > >>>>> as result 'perf top' shows no events.
-> > > > > > >>>>
-> > > > > > >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
-> > > > > > >>>> It could well just be that the interrupt numbers are wrong...
-> > > > > > >>>
-> > > > > > >>> Looks like it does, at least result looks plausible:
-> > > > > > >>
-> > > > > > >> I'm using perf stat regularly (cache benchmarks) and it works fine.
-> > > > > > >>
-> > > > > > >> Unfortunately I wasn't aware that perf stat is a poor test for
-> > > > > > >> the interrupts part of the node, when I added it. So I'm not too
-> > > > > > >> surprised I got it wrong.
-> > > > > > >>
-> > > > > > >> However, it would be unfortunate if the node got removed completely,
-> > > > > > >> because perf stat would not work anymore. Maybe we can only remove
-> > > > > > >> the interrupts or just fix them even if the HW doesn't work?
-> > > > > > >
-> > > > > > > I'm not familiar with PMU driver. Is it possible to get it working
-> > > > > > > without interrupts?
-> > > > > >
-> > > > > > Yup - you get a grumpy message from the driver, it will refuse sampling
-> > > > > > events (the ones which weren't working anyway), and if you measure
-> > > > > > anything for long enough that a counter overflows you'll get wonky
-> > > > > > results. But for counting hardware events over relatively short periods
-> > > > > > it'll still do the job.
-> > > > >
-> > > > > I tried to drop interrupts completely from the node but 'perf top' is
-> > > > > still broken. Though now in different way: it complains "cycles: PMU
-> > > > > Hardware doesn't support sampling/overflow-interrupts. Try 'perf
-> > > > > stat'"
-> > > >
-> > > > I have no idea if that's the culprit, but what is the state of the
-> > > > 0x09010000 register?
+> > Dne torek, 06. avgust 2019 ob 17:57:39 CEST je megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org napisa=
+l(a):
+> > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > > >
-> > > What register is that and how do I check it?
+> > > This series implements support for Xunlong Orange Pi 3 board. There
+> > > are only a few patches remaining.
+> > >
+> > > - ethernet support - just a DT change (patch 1)
+> > > - HDMI support (patches 2-4)
+> > >
+> > > For some people, ethernet doesn't work after reboot because u-boot do=
+esn't
+> > > support AXP805 PMIC, and will not turn off the etherent PHY regulator=
+s.
+> > > So the regulator controlled by gpio will be shut down, but the other =
+one
+> > > controlled by the AXP PMIC will not.
+> > >
+> > > This is a problem only when running with a builtin driver. This needs
+> > > to be fixed in u-boot.
+> > >
+> > >
+> > > Please take a look.
 > >
-> > It's in the CPUX Configuration block, and the bits are labelled as CPU
-> > Debug Reset.
-> >
-> > And if you have busybox, you can use devmem.
+> > Is there anything missing? It would be nice to get this in 5.4. There i=
+s a lot
+> > of H6 boards which needs DDC bus enable mechanism (part of H6 reference
+> > design), including Beelink GS1 which already has HDMI node in mainline =
+kernel
+> > DT, but due to disabled DDC lines works only with 1024x768 (fallback
+> > resolution in DRM core).
 >
-> CPUX configuration block is at 0x01700000 according to A64 user
-> manual, and particular register you're interested in is at 0x01700080,
-> its value is 0x1110110F.
+> I have a few minor comments about patch 1.
 >
-> Bits 16-19 are not defined in user manual and are not set.
+> I think the HDMI bits are good, but I don't have maintainership / commit
+> permissions for drm-misc, so I'll have to wait until someone applies patc=
+hes
+> 2 and 3 before I apply patch 4.
 
-Sorry, I somehow thought this was for the H6...
+I've applied 2,3 and 4
 
-I don't have any idea then :/
-
+Thanks!
 Maxime
 
 --
@@ -115,29 +82,23 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---jjtftgvl3v4z5fl7
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190812081445.kfsbikfrt3pmsh6d%40flea.
+
+--wnuh5gs25vfqywb6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEdhAAKCRDj7w1vZxhR
-xSyPAQCFME/zsUEVHgZg4ppjjkr35AZKmYuqCT3DqH/bapfBDAD+PK0I4XFjk7cN
-o4b5O3nwe0SmShTKrXjCEA0bEL8dfQ0=
-=gNZ7
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEf9QAKCRDj7w1vZxhR
+xXlgAP9MFKL3iPUwZUiy1/l5hoQrktuJFTIedDN9ko3r/H6TDAD/RZg3u4WBh6O3
+tteR/L/slzyHzMHsyD72abKseY8/IQE=
+=i2m2
 -----END PGP SIGNATURE-----
 
---jjtftgvl3v4z5fl7--
-
-
---===============5669798909973755720==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5669798909973755720==--
+--wnuh5gs25vfqywb6--
