@@ -1,63 +1,49 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v8 08/21] clk: tegra: periph: Add restore_context support
-Date: Mon, 12 Aug 2019 11:50:35 +0200
-Message-ID: <20190812095035.GG8903@ulmo>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-9-git-send-email-skomatineni@nvidia.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
+Date: Mon, 12 Aug 2019 17:50:45 +0800
+Message-ID: <CAMz4kuKDcFxbNPqS-MToiCGQCXKDSvFX75ML+iVJGZx6kL0gzA@mail.gmail.com>
+References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
+ <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
+ <20190809091013.vguj4wty7qiab64t@pengutronix.de> <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
+ <20190809144124.3as3rtctlywxkudr@pengutronix.de> <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
+ <20190812083556.dvprpwv6mjy3cjae@pengutronix.de> <CAMz4kuJA81ZP6Kc63dPV1jEn1ah=jow6tQBfO=UDCcTzSf3y-A@mail.gmail.com>
+ <20190812094607.yg7efmvefewxicke@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0qt3EE9wi45a2ZFX"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565308020-31952-9-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190812094607.yg7efmvefewxicke@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 12 Aug 2019 at 17:46, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Baolin,
+>
+> On Mon, Aug 12, 2019 at 05:11:56PM +0800, Baolin Wang wrote:
+> > On Mon, 12 Aug 2019 at 16:36, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Mon, Aug 12, 2019 at 03:29:07PM +0800, Baolin Wang wrote:
+> > > > The clock framework supplies 'assigned-clocks' and
+> > > > 'assigned-clock-parents' properties to set parent, but for our case=
+ we
+> > > > still want to set a default clock rate if failed to set parent when
+> > > > met some abnormal things.
+> > >
+> > > Without understanding the complete problem I'd say this is out of the
+> > > area the driver should care about.
+> >
+> > Fair enough, I will try to use 'assigned-clocks' and
+> > 'assigned-clock-parents' to simplify the code.
+>
+> There is also assigned-clock-rates if you need that.
 
---0qt3EE9wi45a2ZFX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for reminding, but we have no use case to set clock rate in PWM driv=
+er.
 
-On Thu, Aug 08, 2019 at 04:46:47PM -0700, Sowjanya Komatineni wrote:
-> This patch implements restore_context support for clk-periph and
-> clk-sdmmc-mux clock operations to restore clock parent and rates
-> on system resume.
->=20
-> During system suspend, core power goes off and looses the context
-> of the Tegra clock controller registers.
->=20
-> So on system resume, clocks parent and rate are restored back to
-> the context before suspend based on cached data.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-periph.c    | 18 ++++++++++++++++++
->  drivers/clk/tegra/clk-sdmmc-mux.c | 12 ++++++++++++
->  2 files changed, 30 insertions(+)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---0qt3EE9wi45a2ZFX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RNmsACgkQ3SOs138+
-s6HEfQ/+JkYMY0To8C0BvVEMjYOAPMPeZFfx7/M8IkLM4JwPwvZw244rHygPAm77
-lhurKqNDxH+H9j4UCGHv+h65jojQnYjBr+o7vgX5XObgj77QINiiKDFqW7shzgtl
-DiYq8icVRt5m7G4S5SurfoYq1iNWfFI63OxwLGMjTl9pGaewRtlDp09QWt/0gs32
-Es6aFmFXuJj9hirNLbaIHNpoN6xh1zrkLTTzLIh77DCRwvPVHZLenYpKoCeuPV1w
-+IYQGpG+uIIQEDGnPcCJrotPTIQ0+V9dKDuavpznm7TuHqacAwJLQiDCVFcssddG
-kGSINiKeQv2hVgQMY2/PUVkwA5rNa0ClMlTkuQzYXuN/HpjW9hqDxgNtm5xE1Pbi
-Au/T2Y8ejd+032DrW+E/pKOt8pS9vLXbIol1EOl7XMnjlOprbq85r/hKzIdbVOoz
-84IQKIPEZAL3HEe3KkWlOzf3by1j6uCl3L4gUccHQIjCF3WsagRjsGgq+00pm38a
-yGJ5qMqHt0FYsIw5WiTNCVThqxLdFHBLvm1dOT2s50dWvdmw6yJeY+aWcP4sGC3L
-U9fd8JFRJ/c3BDBFL4dxtI8EPwc7LpnywrSYxjzjn1ZSkvnkqiqwYWxIPv97tOS8
-r7WKKz/v6EfGGVRYYuav/O1x+LNrhi5a9wPtOS8e8JZaJ32fTD8=
-=ISLx
------END PGP SIGNATURE-----
-
---0qt3EE9wi45a2ZFX--
+--=20
+Baolin Wang
+Best Regards
