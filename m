@@ -1,46 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: Re: [PATCH v3 01/10] dt-bindings: add powercontroller
-Date: Mon, 12 Aug 2019 12:25:07 +0100
-Message-ID: <20190812112507.GR26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-2-frank-w@public-files.de>
- <20190812102035.GH26727@dell>
- <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v4 00/14] net: phy: adin: add support for Analog Devices PHYs
+Date: Mon, 12 Aug 2019 14:23:36 +0300
+Message-ID: <20190812112350.15242-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@k>
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Aug 2019, Frank Wunderlich wrote:
+This changeset adds support for Analog Devices Industrial Ethernet PHYs.
+Particularly the PHYs this driver adds support for:
+ * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+ * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+   Ethernet PHY
 
-> > Gesendet: Montag, 12. August 2019 um 12:20 Uhr
-> > Von: "Lee Jones" <lee.jones@linaro.org>
-> 
-> > > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> ...
-> > > +	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
-> >
-> > Please use relative paths.
-> >
-> > E.g: ../bindings/rtc/rtc-mt6397.txt
-> 
-> Hi,
-> 
-> as we are in Documentation/devicetree/bindings/mfd/ it should be
-> ../../bindings/..., right? or ../rtc/rtc-mt6397.txt ?
+The 2 chips are register compatible with one another. The main
+difference being that ADIN1200 doesn't operate in gigabit mode.
 
-It was an example (hence the "E.g.").
+The chips can be operated by the Generic PHY driver as well via the
+standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+kernel as well. This assumes that configuration of the PHY has been done
+completely in HW, according to spec, i.e. no extra SW configuration
+required.
 
-You will need to adapt it depending on where the file ends up.
+This changeset also implements the ability to configure the chips via SW
+registers.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Datasheets:
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Alexandru Ardelean (14):
+  net: phy: adin: add support for Analog Devices PHYs
+  net: phy: adin: hook genphy_{suspend,resume} into the driver
+  net: phy: adin: add support for interrupts
+  net: phy: adin: add {write,read}_mmd hooks
+  net: phy: adin: configure RGMII/RMII/MII modes on config
+  net: phy: adin: make RGMII internal delays configurable
+  net: phy: adin: make RMII fifo depth configurable
+  net: phy: adin: add support MDI/MDIX/Auto-MDI selection
+  net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
+  net: phy: adin: implement PHY subsystem software reset
+  net: phy: adin: implement Energy Detect Powerdown mode
+  net: phy: adin: implement downshift configuration via phy-tunable
+  net: phy: adin: add ethtool get_stats support
+  dt-bindings: net: add bindings for ADIN PHY driver
+
+ .../devicetree/bindings/net/adi,adin.yaml     |  73 ++
+ MAINTAINERS                                   |   8 +
+ drivers/net/phy/Kconfig                       |   9 +
+ drivers/net/phy/Makefile                      |   1 +
+ drivers/net/phy/adin.c                        | 763 ++++++++++++++++++
+ 5 files changed, 854 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
+ create mode 100644 drivers/net/phy/adin.c
+
+--
+
+Changelog v3 -> v4:
+
+* [PATCH v3 03/14] net: phy: adin: add support for interrupts
+   - using only Link status interrupt
+* [PATCH v3 04/14] net: phy: adin: add {write,read}_mmd hooks
+   - dropped C45 access code; it is dead-code, since `is_c45` will never be true
+
+2.20.1
