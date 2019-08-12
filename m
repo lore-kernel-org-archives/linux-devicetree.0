@@ -1,51 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: regulator: act8865 regulator modes and
- suspend states
-Date: Mon, 12 Aug 2019 12:11:40 +0100
-Message-ID: <20190812111140.GG4592@sirena.co.uk>
-References: <1565423335-3213-1-git-send-email-raagjadav@gmail.com>
- <1565423335-3213-3-git-send-email-raagjadav@gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/2] Allwinner H6 SPDIF support
+Date: Mon, 12 Aug 2019 13:23:28 +0200
+Message-ID: <20190812112328.o6xznp2mvnuchswe@flea>
+References: <20190812105115.26676-1-peron.clem@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jy2mseu76lv4s422"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMUYYXVAKGQEY7AKYYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1565423335-3213-3-git-send-email-raagjadav@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raag Jadav <raagjadav@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20190812105115.26676-1-peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---w/VI3ydZO+RcZ3Ux
-Content-Type: text/plain; charset=us-ascii
+--jy2mseu76lv4s422
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 10, 2019 at 01:18:55PM +0530, Raag Jadav wrote:
+On Mon, Aug 12, 2019 at 12:51:13PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Allwinner H6 SoC has a SPDIF controller called One Wire Audio (OWA) which
+> is different from the previous H3 generation and not compatible.
+>
+> Difference are an increase of fifo sizes, some memory mapping are differe=
+nt
+> and there is now the possibility to output the master clock on a pin.
+>
+> Actually all these features are unused and only a bit for flushing the TX
+> fifo is required.
 
-> + * ACT8865 regulators as follows:
-> + * ACT8865_REGULATOR_MODE_FIXED:	It is specific to DCDC regulators and it
-> + *					specifies the usage of fixed-frequency
-> + *					PWM.
+Applied both, thanks
 
-Ah, _FIXED doesn't mean what it sounded like - this should map to _FAST.
-The reason you use forced PWM is to avoid any delay in the hardware
-figuring out that it needs to go into PWM mode in the case of rapid load
-changes.
+Maxime
 
---w/VI3ydZO+RcZ3Ux
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/20190812112328.o6xznp2mvnuchswe%40flea.
+
+--jy2mseu76lv4s422
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1RSWsACgkQJNaLcl1U
-h9BgOwf+L+0uD2AkY2mKb2rgbO4kz8XM2/qXa/Guj883xw8zawXENnnGXMu1g+i3
-0gO9qV1QdTKin8sA2YFzlSqIreIjIh5EBwxcTDBizvq7+QO40zJVxLi4kvMNEQcN
-O144ApoOUPDU4HhhaZM9fW9+kx13IAgn4cficrqDdnoL2pZ8sNWsQP28vjprfgWH
-45DxGYJqrrhnXW3unBkGBT/z6Cu5DhCo9NYnNY6+G2eQqNtD+UacEu2K+HQuVuUj
-g/0Tg8h9ZhsIX+z1eo2Idorf7jkvd4QctqaA4DJHIKezvyD+7STfmAIwyobXC0Nh
-fDr0HHOLg3E7HBBIXu8mX4GEVDJkZw==
-=mPsh
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVFMLwAKCRDj7w1vZxhR
+xcPRAP0ebGBO67tqWojTHkbb+BtT7hi+/h6+hwFFzFt8mCG2RQD9GxoAuuARoreO
+CEPXNNW5FHOEKlw26Jh57e6Xkr2X1A8=
+=n+Qt
 -----END PGP SIGNATURE-----
 
---w/VI3ydZO+RcZ3Ux--
+--jy2mseu76lv4s422--
