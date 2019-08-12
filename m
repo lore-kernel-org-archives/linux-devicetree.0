@@ -1,51 +1,104 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 03/10] rtc: mt6397: move some common definitions into
- rtc.h
-Date: Mon, 12 Aug 2019 11:18:38 +0100
-Message-ID: <20190812101838.GG26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-4-frank-w@public-files.de>
- <20190805134842.GG3600@piout.net>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [EXT] Re: [PATCHv3 2/2] PCI: layerscape: Add
+ CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
+Date: Mon, 12 Aug 2019 10:18:59 +0000
+Message-ID: <AM5PR04MB3299F2291ECDB3350C4CDCE8F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+ <20190628013826.4705-2-xiaowei.bao@nxp.com>
+ <20190812100600.GA20861@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190805134842.GG3600@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>, Alessandro Zummo <a.zummo@towertech.it>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.o>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190812100600.GA20861@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "bhelgaas@google.com" <bhelgaas@google.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 05 Aug 2019, Alexandre Belloni wrote:
-
-> On 29/07/2019 19:41:47+0200, Frank Wunderlich wrote:
-> > From: Josef Friedl <josef.friedl@speed.at>
-> > 
-> > move code to separate header-file to reuse definitions later
-> > in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
-> > 
-> > changes since v2: add missing commit-message
-> 
-> The changelog should be after the --- marker.
-> > 
-> > Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> > Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > ---
-> >  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
-> >  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
-
-I think include/linux/rtc/mt6397.h would be better?
-
-Certainly from a maintainance PoV, it would be better reviewed and
-looked after by an RTC expert.
-
-> >  2 files changed, 72 insertions(+), 54 deletions(-)
-> >  create mode 100644 include/linux/mfd/mt6397/rtc.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjEyyNUgMTg6
+MDYNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogYmhlbGdh
+YXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsN
+Cj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNo
+b25AdGkuY29tOw0KPiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsg
+TS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2Fp
+Lmh1QG54cC5jb20+OyBSb3kgWmFuZw0KPiA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0QGxp
+bnV4Zm91bmRhdGlvbi5vcmc7DQo+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5Acm9j
+ay1jaGlwcy5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
+b3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0h2MyAyLzJdIFBDSTogbGF5ZXJzY2FwZTog
+QWRkDQo+IENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9FUCB0byBidWlsZCBFUC9SQyBzZXBhcmF0ZWx5
+DQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIEZyaSwgSnVuIDI4LCAyMDE5IGF0
+IDA5OjM4OjI2QU0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBDT05GSUdfUENJ
+X0xBWUVSU0NBUEVfRVAgdG8gYnVpbGQgRVAvUkMgc2VwYXJhdGVseS4NCj4gPg0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+
+IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2MzoNCj4gPiAgLSBtb2RpZnkgdGhlIGNvbW1p
+dCBtZXNzYWdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcg
+IHwgICAyMCArKysrKysrKysrKysrKysrKystLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+L2R3Yy9NYWtlZmlsZSB8ICAgIDMgKystDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0
+aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bj
+aS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
+Yy9LY29uZmlnDQo+ID4gaW5kZXggYTZjZTFlZS4uYTQxY2NmNSAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9kd2MvS2NvbmZpZw0KPiA+IEBAIC0xMzEsMTMgKzEzMSwyOSBAQCBjb25maWcg
+UENJX0tFWVNUT05FX0VQDQo+ID4gICAgICAgICBEZXNpZ25XYXJlIGNvcmUgZnVuY3Rpb25zIHRv
+IGltcGxlbWVudCB0aGUgZHJpdmVyLg0KPiA+DQo+ID4gIGNvbmZpZyBQQ0lfTEFZRVJTQ0FQRQ0K
+PiA+IC0gICAgIGJvb2wgIkZyZWVzY2FsZSBMYXllcnNjYXBlIFBDSWUgY29udHJvbGxlciINCj4g
+PiArICAgICBib29sICJGcmVlc2NhbGUgTGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgLSBIb3N0
+IG1vZGUiDQo+ID4gICAgICAgZGVwZW5kcyBvbiBPRiAmJiAoQVJNIHx8IEFSQ0hfTEFZRVJTQ0FQ
+RSB8fCBDT01QSUxFX1RFU1QpDQo+ID4gICAgICAgZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01B
+SU4NCj4gPiAgICAgICBzZWxlY3QgTUZEX1NZU0NPTg0KPiA+ICAgICAgIHNlbGVjdCBQQ0lFX0RX
+X0hPU1QNCj4gPiAgICAgICBoZWxwDQo+ID4gLSAgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50
+IFBDSWUgY29udHJvbGxlciBzdXBwb3J0IG9uIExheWVyc2NhcGUgU29Dcy4NCj4gPiArICAgICAg
+IFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFBDSWUgY29udHJvbGxlciBzdXBwb3J0
+IG9uDQo+IExheWVyc2NhcGUNCj4gPiArICAgICAgIFNvQ3MgdG8gd29yayBpbiBIb3N0IG1vZGUu
+DQo+ID4gKyAgICAgICBUaGlzIGNvbnRyb2xsZXIgY2FuIHdvcmsgZWl0aGVyIGFzIEVQIG9yIFJD
+LiBUaGUNCj4gPiArIFJDV1tIT1NUX0FHVF9QRVhdDQo+IA0KPiBXaGF0J3MgIlRoZSBSQ1ciID8g
+VGhpcyBlbnRyeSBzaG91bGQgZXhwbGFpbiB3aHkgYSBrZXJuZWwgY29uZmlndXJhdGlvbg0KPiBz
+aG91bGQgZW5hYmxlIGl0Lg0KW1hpYW93ZWkgQmFvXSBIaSBMb3JlbnpvLCB0aGUgUkNXIGZ1bGwg
+bmFtZSBpcyAicmVzZXQgY29uZmlndXJhdGlvbiB3b3JkIiwgaXQgY2FuIGJlIGJ1aWx0IHRvIGEg
+YmluIGZpbGUgYW5kIHByb2dyYW0gdG8gdGhlIGZsYXNoLCByYXRoZXIgdGhhbiBjb25maWd1cmUg
+Ynkga2VybmVsLCBhbG1vc3QgdGhlIE5YUCBMYXllcnNjYXBsZSBwbGF0Zm9ybSB1c2UgdGhpcyB3
+YXkuDQo+IA0KPiBMb3JlbnpvDQo+IA0KPiA+ICsgICAgICAgZGV0ZXJtaW5lcyB3aGljaCBQQ0ll
+IGNvbnRyb2xsZXIgd29ya3MgaW4gRVAgbW9kZSBhbmQgd2hpY2gNCj4gUENJZQ0KPiA+ICsgICAg
+ICAgY29udHJvbGxlciB3b3JrcyBpbiBSQyBtb2RlLg0KPiA+ICsNCj4gPiArY29uZmlnIFBDSV9M
+QVlFUlNDQVBFX0VQDQo+ID4gKyAgICAgYm9vbCAiRnJlZXNjYWxlIExheWVyc2NhcGUgUENJZSBj
+b250cm9sbGVyIC0gRW5kcG9pbnQgbW9kZSINCj4gPiArICAgICBkZXBlbmRzIG9uIE9GICYmIChB
+Uk0gfHwgQVJDSF9MQVlFUlNDQVBFIHx8IENPTVBJTEVfVEVTVCkNCj4gPiArICAgICBkZXBlbmRz
+IG9uIFBDSV9FTkRQT0lOVA0KPiA+ICsgICAgIHNlbGVjdCBQQ0lFX0RXX0VQDQo+ID4gKyAgICAg
+aGVscA0KPiA+ICsgICAgICAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCB0byBlbmFibGUgUENJZSBj
+b250cm9sbGVyIHN1cHBvcnQgb24NCj4gTGF5ZXJzY2FwZQ0KPiA+ICsgICAgICAgU29DcyB0byB3
+b3JrIGluIEVuZHBvaW50IG1vZGUuDQo+ID4gKyAgICAgICBUaGlzIGNvbnRyb2xsZXIgY2FuIHdv
+cmsgZWl0aGVyIGFzIEVQIG9yIFJDLiBUaGUNCj4gUkNXW0hPU1RfQUdUX1BFWF0NCj4gPiArICAg
+ICAgIGRldGVybWluZXMgd2hpY2ggUENJZSBjb250cm9sbGVyIHdvcmtzIGluIEVQIG1vZGUgYW5k
+IHdoaWNoDQo+IFBDSWUNCj4gPiArICAgICAgIGNvbnRyb2xsZXIgd29ya3MgaW4gUkMgbW9kZS4N
+Cj4gPg0KPiA+ICBjb25maWcgUENJX0hJU0kNCj4gPiAgICAgICBkZXBlbmRzIG9uIE9GICYmIChB
+Uk02NCB8fCBDT01QSUxFX1RFU1QpIGRpZmYgLS1naXQNCj4gPiBhL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvZHdjL01ha2VmaWxlDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9NYWtl
+ZmlsZQ0KPiA+IGluZGV4IGIwODVkZmQuLjgyNGZkZTcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
+cy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZpbGUNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPiA+IEBAIC04LDcgKzgsOCBAQCBvYmotJChDT05GSUdfUENJ
+X0VYWU5PUykgKz0gcGNpLWV4eW5vcy5vDQo+ID4gIG9iai0kKENPTkZJR19QQ0lfSU1YNikgKz0g
+cGNpLWlteDYubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9TUEVBUjEzWFgpICs9IHBjaWUtc3Bl
+YXIxM3h4Lm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSV9LRVlTVE9ORSkgKz0gcGNpLWtleXN0b25l
+Lm8NCj4gPiAtb2JqLSQoQ09ORklHX1BDSV9MQVlFUlNDQVBFKSArPSBwY2ktbGF5ZXJzY2FwZS5v
+IHBjaS1sYXllcnNjYXBlLWVwLm8NCj4gPiArb2JqLSQoQ09ORklHX1BDSV9MQVlFUlNDQVBFKSAr
+PSBwY2ktbGF5ZXJzY2FwZS5vDQo+ID4gK29iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9FUCkg
+Kz0gcGNpLWxheWVyc2NhcGUtZXAubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9RQ09NKSArPSBw
+Y2llLXFjb20ubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9BUk1BREFfOEspICs9IHBjaWUtYXJt
+YWRhOGsubw0KPiA+ICBvYmotJChDT05GSUdfUENJRV9BUlRQRUM2KSArPSBwY2llLWFydHBlYzYu
+bw0KPiA+IC0tDQo+ID4gMS43LjENCj4gPg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
