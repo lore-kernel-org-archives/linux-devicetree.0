@@ -1,34 +1,25 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 09/14] net: phy: adin: add EEE translation layer from
- Clause 45 to Clause 22
-Date: Mon, 12 Aug 2019 16:08:39 +0200
-Message-ID: <20190812140839.GO14290@lunn.ch>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-10-alexandru.ardelean@analog.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Add Thermal Monitor Unit node
+Date: Mon, 12 Aug 2019 16:11:38 +0200
+Message-ID: <20190812141137.GH27041@X250>
+References: <20190806053507.37069-1-andy.tang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812112350.15242-10-alexandru.ardelean@analog.com>
+In-Reply-To: <20190806053507.37069-1-andy.tang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
+To: Yuantian Tang <andy.tang@nxp.com>
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:23:45PM +0300, Alexandru Ardelean wrote:
-> The ADIN1200 & ADIN1300 PHYs support EEE by using standard Clause 45 access
-> to access MMD registers for EEE.
+On Tue, Aug 06, 2019 at 01:35:07PM +0800, Yuantian Tang wrote:
+> The Thermal Monitoring Unit (TMU) monitors and reports the
+> temperature from 2 remote temperature measurement sites
+> located on ls1028a chip.
+> Add TMU dts node to enable this feature.
 > 
-> The EEE register addresses (when using Clause 22) are available at
-> different addresses (than Clause 45), and since accessing these regs (via
-> Clause 22) needs a special mechanism, a translation table is required to
-> convert these addresses.
-> 
-> For Clause 45, this is not needed since the driver will likely never use
-> this access mode.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> Acked-by: Eduardo Valentin <edubezval@gmail.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Applied, thanks.
