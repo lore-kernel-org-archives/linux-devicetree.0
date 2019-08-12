@@ -1,74 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: fsl_esai: Add new compatible string for imx6ull" to the asoc tree
-Date: Mon, 12 Aug 2019 14:09:50 +0100 (BST)
-Message-ID: <20190812130950.DBD082740CB7@ypsilon.sirena.org.uk>
-References: <1565346467-5769-2-git-send-email-shengjiu.wang@nxp.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH v3 20/21] ARM: dts: imx6ull-colibri: Add touchscreen used
+ with Eval Board
+Date: Mon, 12 Aug 2019 13:14:42 +0000
+Message-ID: <f9bd4e174830600baadd4ad296bf48ba2561958f.camel@toradex.com>
+References: <20190807082556.5013-1-philippe.schenker@toradex.com>
+         <20190807082556.5013-21-philippe.schenker@toradex.com>
+         <c3eb930aa727067e3d5bbc62523feb6b032244c0.camel@toradex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565346467-5769-2-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <c3eb930aa727067e3d5bbc62523feb6b032244c0.camel@toradex.com>
+Content-Language: en-US
+Content-ID: <CCE1A75064B45A4EB792F2CE8FF81C0E@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, nicoleotsuka@gmail.comNicolin Chen <nicoleotsuka@gmail.com>, robh+dt@kernel.org, timur@kernel.org, Xiubo.Lee@gmail.com
+To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Max Krummenacher <max.krummenacher@toradex.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: fsl_esai: Add new compatible string for imx6ull
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 9ea08f2a6d27b6a26d33dae5c58e4099672d6bb3 Mon Sep 17 00:00:00 2001
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Date: Fri, 9 Aug 2019 18:27:47 +0800
-Subject: [PATCH] ASoC: fsl_esai: Add new compatible string for imx6ull
-
-Add new compatible string "fsl,imx6ull-esai" in the binding document.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/1565346467-5769-2-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/fsl,esai.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-index 5b9914367610..0e6e2166f76c 100644
---- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
-@@ -7,8 +7,11 @@ other DSPs. It has up to six transmitters and four receivers.
- 
- Required properties:
- 
--  - compatible		: Compatible list, must contain "fsl,imx35-esai" or
--			  "fsl,vf610-esai"
-+  - compatible		: Compatible list, should contain one of the following
-+			  compatibles:
-+			  "fsl,imx35-esai",
-+			  "fsl,vf610-esai",
-+			  "fsl,imx6ull-esai",
- 
-   - reg			: Offset and length of the register set for the device.
- 
--- 
-2.20.1
+T24gRnJpLCAyMDE5LTA4LTA5IGF0IDE1OjU0ICswMDAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6
+DQo+IEhpIFBoaWxpcHBlDQo+IA0KPiBPbiBXZWQsIDIwMTktMDgtMDcgYXQgMDg6MjYgKzAwMDAs
+IFBoaWxpcHBlIFNjaGVua2VyIHdyb3RlOg0KPiA+IFRoaXMgYWRkcyB0aGUgY29tbW9uIHRvdWNo
+c2NyZWVuIHRoYXQgaXMgdXNlZCB3aXRoIFRvcmFkZXgncw0KPiA+IEV2YWwgQm9hcmRzLg0KPiAN
+Cj4gSXMgdGhhdCByZWFsbHkgRXZhbCBCb2FyZCBzcGVjaWZpYz8NCg0KU2luY2Ugd2UgcHJvdmlk
+ZSB0aGUgbmVlZGVkIHNpZ25hbHMgYXMgc3RhbmRhcmQgb24gZXZlcnkgRXZhbCBCb2FyZCwNCnRo
+aXMgaXMgbm90IHNwZWNpZmljIHRvIHRoZSBFdmFsIEJvYXJkLg0KDQo+IA0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4N
+Cj4gPiANCj4gPiAtLS0NCj4gPiANCj4gPiBDaGFuZ2VzIGluIHYzOiBOb25lDQo+ID4gQ2hhbmdl
+cyBpbiB2MjoNCj4gPiAtIFJlbW92ZWQgZjA3MTBhLCB0aGF0IGlzIGRvd25zdHJlYW0gb25seQ0K
+PiA+IC0gQ2hhbmdlZCB0byBnZW5lcmljIG5vZGUgbmFtZQ0KPiA+IC0gQmV0dGVyIGNvbW1lbnQN
+Cj4gPiANCj4gPiAgLi4uL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNp
+IHwgMjQNCj4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNCBp
+bnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1
+bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gPiBpbmRleCBkM2M0ODA5ZjE0MGUuLjc4ZTc0YmZl
+Y2ExYiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmkt
+ZXZhbC12My5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJp
+LWV2YWwtdjMuZHRzaQ0KPiA+IEBAIC0xMTIsNiArMTEyLDIxIEBADQo+ID4gICZpMmMxIHsNCj4g
+PiAgCXN0YXR1cyA9ICJva2F5IjsNCj4gPiAgDQo+ID4gKwkvKg0KPiA+ICsJICogVG91Y2hzY3Jl
+ZW4gaXMgdXNpbmcgU09ESU1NIDI4LzMwLCBhbHNvIHVzZWQgZm9yIFBXTTxCPiwNCj4gPiBQV008
+Qz4sDQo+ID4gKwkgKiBha2EgcHdtMiwgcHdtMy4gc28gaWYgeW91IGVuYWJsZSB0b3VjaHNjcmVl
+biwgZGlzYWJsZSB0aGUNCj4gPiBwd21zDQo+ID4gKwkgKi8NCj4gPiArCXRvdWNoc2NyZWVuQDRh
+IHsNCj4gPiArCQljb21wYXRpYmxlID0gImF0bWVsLG1heHRvdWNoIjsNCj4gPiArCQlwaW5jdHJs
+LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvdG91
+Y2g+Ow0KPiA+ICsJCXJlZyA9IDwweDRhPjsNCj4gPiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZn
+cGlvND47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwxNiBJUlFfVFlQRV9FREdFX0ZBTExJTkc+Owkv
+KiBTT0RJTU0gMjgNCj4gPiAqLw0KPiA+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMiA1IEdQSU9f
+QUNUSVZFX0hJR0g+OwkvKg0KPiA+IFNPRElNTSAzMCAqLw0KPiA+ICsJCXN0YXR1cyA9ICJkaXNh
+YmxlZCI7DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgCS8qIE00MVQwTTYgcmVhbCB0aW1lIGNsb2Nr
+IG9uIGNhcnJpZXIgYm9hcmQgKi8NCj4gPiAgCW00MXQwbTY6IHJ0Y0A2OCB7DQo+ID4gIAkJY29t
+cGF0aWJsZSA9ICJzdCxtNDF0MCI7DQo+ID4gQEAgLTE4OCwzICsyMDMsMTIgQEANCj4gPiAgCXNk
+LXVocy1zZHIxMDQ7DQo+ID4gIAlzdGF0dXMgPSAib2theSI7DQo+ID4gIH07DQo+ID4gKw0KPiA+
+ICsmaW9tdXhjIHsNCj4gPiArCXBpbmN0cmxfZ3Bpb3RvdWNoOiB0b3VjaGdwaW9zIHsNCj4gPiAr
+CQlmc2wscGlucyA9IDwNCj4gPiArCQkJTVg2VUxfUEFEX05BTkRfRFFTX19HUElPNF9JTzE2CQkw
+eDc0DQo+ID4gKwkJCU1YNlVMX1BBRF9FTkVUMV9UWF9FTl9fR1BJTzJfSU8wNQkweDE0DQo+ID4g
+KwkJPjsNCj4gPiArCX07DQo+ID4gK307DQo+IA0KPiBJIGd1ZXNzIHRoYXQgY291bGQgYWxzbyBi
+ZSBtb3ZlZCB0byB0aGUgbW9kdWxlJ3MgZHRzaSBmb3IgYW55IGNhcnJpZXINCj4gYm9hcmQgdG8g
+cG90ZW50aWFsbHkgcHJvZml0IGZyb20uDQoNCkkgdGhpbmsgdGhpcyBjbGVhcmx5IGlzIHBoeXNp
+Y2FsbHkgbm90IHByZXNlbnQgb24gb3VyIG1vZHVsZSBzbyBJIHdvdWxkDQpub3QgZG8gdGhhdC4g
+SSBsaWtlIHRvIGxlYXZlIHRoYXQgaW4gaGVyZSBhcyBpcywgc28gaXQgb2ZmZXJzIGFuIGV4YW1w
+bGUNCm9mIGhvdyB0byBob29rIHRoaXMgdG91Y2hzY3JlZW4gdXAgaW4gRFQuDQoNClBoaWxpcHBl
+DQo+IA0KPiBDaGVlcnMNCj4gDQo+IE1hcmNlbA0K
