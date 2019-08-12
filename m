@@ -1,68 +1,130 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: Remove unused compatible strings
-Date: Mon, 12 Aug 2019 17:39:42 -0600
-Message-ID: <CAL_JsqJv8kv_xXwoOUa-avTZhq0NkkDHCUmA5HbQFydWKu=n-g@mail.gmail.com>
-References: <20190607154410.10633-1-paul@crapouillou.net> <20190607154410.10633-2-paul@crapouillou.net>
- <20190709020425.GA7984@bogus> <20190808082829.i6enaout5ozvdnwj@pengutronix.de>
+From: Frank Lee <tiny.windzz@gmail.com>
+Subject: Re: [PATCH v5 02/18] dt-bindings: thermal: add binding document for
+ h6 thermal controller
+Date: Tue, 13 Aug 2019 07:40:44 +0800
+Message-ID: <CAEExFWswLiFknVpBEKF9c5yoFvvA4np-ivWYkQLcteYoM8qjfg@mail.gmail.com>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com> <20190810052829.6032-3-tiny.windzz@gmail.com>
+ <20190812085604.ozhl35wwm3ehlvqn@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808082829.i6enaout5ozvdnwj@pengutronix.de>
+In-Reply-To: <20190812085604.ozhl35wwm3ehlvqn@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Paul Cercueil <paul@crapouillou.net>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, Linux PWM List <linux-pwm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan.Cameron@huawei.com, Nicolas Ferre <nicolas.ferre@microchip.com>, Linux PM <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 2:28 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Mon, Aug 12, 2019 at 4:56 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> On Mon, Jul 08, 2019 at 08:04:25PM -0600, Rob Herring wrote:
-> > On Fri, Jun 07, 2019 at 05:44:05PM +0200, Paul Cercueil wrote:
-> > > Right now none of the Ingenic-based boards probe this driver from
-> > > devicetree. This driver defined three compatible strings for the exac=
-t
-> > > same behaviour. Before these strings are used, we can remove two of
-> > > them.
-> > >
-> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > > ---
-> > >
-> > > Notes:
-> > >     v2: Rebase on v5.2-rc3
-> > >
-> > >  Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt | 5 +--=
---
-> > >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm=
-.txt b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > > index 7d9d3f90641b..493bec80d59b 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > > +++ b/Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
-> > > @@ -2,10 +2,7 @@ Ingenic JZ47xx PWM Controller
-> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > >  Required properties:
-> > > -- compatible: One of:
-> > > -  * "ingenic,jz4740-pwm"
-> > > -  * "ingenic,jz4770-pwm"
-> > > -  * "ingenic,jz4780-pwm"
-> > > +- compatible: Should be "ingenic,jz4740-pwm"
+> On Sat, Aug 10, 2019 at 05:28:13AM +0000, Yangtao Li wrote:
+> > This patch adds binding document for allwinner h6 thermal controller.
 > >
-> > Are you sure all 3 chips are exactly the same features and bugs?
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  .../bindings/thermal/sun8i-thermal.yaml       | 79 +++++++++++++++++++
+> >  1 file changed, 79 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
 > >
-> > The correct thing to do here generally is the 4770 and 4780 would also
-> > have ingenic,jz4740-pwm as a fallback compatible. Then the driver can
-> > match on that until you find some difference and can use the more
-> > specific compatible.
+> > diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> > new file mode 100644
+> > index 000000000000..e0973199ba3c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
 >
-> Note that Thierry already applied this patch before your concern reached
-> the mailing list. Is this bad enough to revert
-> 925488e8df4f396ad96ff008a84f5b14d8b73347?
+> We've used so far for the schemas the first compatible to introduce
+> that controller as the filename, we should be consistent here. In that
+> case that would be allwinner,sun8i-a23-ths.yaml
+>
+> > @@ -0,0 +1,79 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Yangtao Li <tiny.windzz@gmail.com>
+> > +
+> > +description: |-
+> > +  This describes the device tree binding for the Allwinner thermal
+> > +  controller which measures the on-SoC temperatures.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - allwinner,sun50i-h6-ths
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    const: bus
+> > +
+> > +  "#thermal-sensor-cells":
+> > +    const: 1
+> > +
+> > +  nvmem-cells:
+>
+> You need a maxItems here too
+>
+> > +    description: ths calibrate data
+>
+> What about something like this:
+>
+> Calibration data for the thermal sensor
+>
+> > +
+> > +  nvmem-cell-names:
+> > +    const: calib
+>
+> I'm not sure we need a abbreviation here, calibration would be more
+> explicit
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reset
+> > +  - clocks
+> > +  - clock-names
+> > +  - interrupts
+> > +  - "#thermal-sensor-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    ths: ths@5070400 {
+> > +        compatible = "allwinner,sun50i-h6-ths";
+> > +        reg = <0x05070400 0x100>;
+> > +        clocks = <&ccu CLK_BUS_THS>;
+> > +        clock-names = "bus";
+> > +        resets = <&ccu RST_BUS_THS>;
+> > +        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>
+> Those examples won't compile.
 
-It won't be my problem when you find and need to handle any of the
-differences in the driver.
+Emmm, I have some questions about this.
+I added this information and it can be compiled.
 
-Rob
+Yours,
+Yangtao
+
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
