@@ -1,52 +1,97 @@
-From: Harald Geyer <harald@ccbib.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Mon, 12 Aug 2019 20:22:20 +0200
-Message-ID: <E1hxExZ-0000O7-46@stardust.g4.wien.funkfeuer.at>
-References: <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
- <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
- <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
- <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea>
- <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea>
- <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
- <20190812080420.saelmqb36vkelxn4@flea>
- <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: [PATCH v12 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Mon, 12 Aug 2019 11:24:03 -0700
+Message-ID: <20190812182421.141150-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
-Content-ID: <1493.1565634140.1@stardust.g4.wien.funkfeuer.at>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-VmFzaWx5IEtob3J1emhpY2sgd3JpdGVzOgo+IE9LLCBzbyB3aGF0IHNob3VsZCB3ZSBkbz8gJ3Bl
-cmYgdG9wJy8ncGVyZiByZWNvcmQnIHdvcmsgZmluZSBpZiBQTVUKPiBub2RlIGlzIGRyb3BwZWQs
-IGJ1dCB0aGV5IGRvbid0IHdvcmsgaWYgUE1VIG5vZGUgaXMgcHJlc2VudCAoZXZlbiB3aXRoCj4g
-aW50ZXJydXB0cyBkcm9wcGVkKS4KClJlYWxseT8gRXZlbiBpZiB5b3UgdGVsbCBpdCB0byBvbmx5
-IGxpc3RlbiB0byBzb2Z0d2FyZSBldmVudHM/IChXaGljaAppcyB0aGUgb25seSB0aGluZyB5b3Ug
-Z2V0IHdpdGhvdXQgYSBQTVUgYW55d2F5LCBJIGJlbGlldmUuKQoKPiBJJ2QgcHJlZmVyIHRvIGhh
-dmUgJ3BlcmYgdG9wJyBhbmQgJ3BlcmYgcmVjb3JkJwo+IHdvcmtpbmcgaW5zdGVhZCBvZiAncGVy
-ZiBzdGF0JwoKSSB0aGluaywgaWYgYSBicm9rZW4gUE1VIGNvbmZ1c2VzICdwZXJmIHRvcCcgYmV5
-b25kIHVzYWJpbGl0eSwgaXQKc2hvdWxkIGJlIGZpeGVkLgoKSGFyYWxkCgotLSAKTmF0aW9uYWxy
-YXRzd2FobDogSWNoIHRyZXRlIGFscyB1bmFiaMOkbmdpZ2VyIEV4cGVydGUgZsO8ciBLbGltYXNj
-aHV0egp1bmQgZnJlaWUgU29mdHdhcmUgYW4hIEljaCB3aWxsIG1pdCBWb3J6dWdzc3RpbW1lbiBp
-bnMgUGFybGFtZW50IGtvbW1lbiwKd2VpbCB3ZW5uIGljaCBlcyBuaWNodCBtYWNoZSwga8O8bW1l
-cnQgc2ljaCB3b23DtmdsaWNoIG5pZW1hbmQgZGFydW0uCmh0dHBzOi8vaGFyYWxkZ2V5ZXIuYXQK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+## TL;DR
+
+This revision removes dependence on kunit_stream in favor of
+kunit_assert, as suggested by Stephen Boyd. kunit_assert provides a more
+structured interface for constructing messages and allows most required
+data to be stored on the stack for most expectations until it is
+determined that a failure message must be produced.
+
+As a part of introducing kunit_assert, expectations (KUNIT_EXPECT_*) and
+assertions (KUNIT_ASSERT_*) have been substantially refactored.
+Nevertheless, behavior should be the same.
+
+As this revision, adds a new patch, it, [PATCH v12 04/18], needs to be
+reviewed. All other patches have appropriate reviews and acks.
+
+I also rebased the patchset on v5.3-rc3.
+
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in about a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.3/v12 branch.
+
+## Changes Since Last Version
+
+- Dropped patch "[PATCH v11 04/18] kunit: test: add kunit_stream a
+  std::stream like logger" and replaced it with "[PATCH v12 04/18]
+  kunit: test: add assertion printing library", which provides a totally
+  new mechanism for constructing expectation/assertion failure messages.
+- Substantially refactored expectations and assertions definitions in
+  [PATCH 05/18] and [PATCH 11/18] respectively.
+- Rebased patchset on v5.3-rc3.
+- Fixed a minor documentation bug.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.3/v12
+
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
