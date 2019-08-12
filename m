@@ -1,51 +1,64 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3] ARM: dts: tegra30: Connect SMMU with Video Decoder
- Engine
-Date: Mon, 12 Aug 2019 19:42:29 +0300
-Message-ID: <e2dbeed2-7596-d687-d200-8f08dc267c83@gmail.com>
-References: <20190623170730.5095-1-digetx@gmail.com>
- <20190623170730.5095-2-digetx@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [v4 2/6] media: platform: dwc: Add MIPI CSI-2 controller driver
+Date: Mon, 12 Aug 2019 19:50:47 +0300
+Message-ID: <CAHp75VcgZjXj8PqBrm5pOxjQuhS-6=e7ZP9HnO9j+BbMEfb-9Q@mail.gmail.com>
+References: <1560280855-18085-1-git-send-email-luis.oliveira@synopsys.com>
+ <1560280855-18085-3-git-send-email-luis.oliveira@synopsys.com>
+ <20190809141000.GB864@valkosipuli.retiisi.org.uk> <CAHp75VeutP=W43GHtY+FKvVGjBnQrF+nKbdaq_QXy8ZCoS=k1g@mail.gmail.com>
+ <MN2PR12MB3710E54A1E4BA4FD3AD77B87CBD30@MN2PR12MB3710.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190623170730.5095-2-digetx@gmail.com>
-Content-Language: en-US
+In-Reply-To: <MN2PR12MB3710E54A1E4BA4FD3AD77B87CBD30@MN2PR12MB3710.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+To: Luis de Oliveira <Luis.Oliveira@synopsys.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Rob Herring <robh@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joao Pinto <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-23.06.2019 20:07, Dmitry Osipenko пишет:
-> Enable IOMMU support for the video decoder.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
-> 
-> No changes since v1.
-> 
->  arch/arm/boot/dts/tegra30.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-> index 934caa83c8db..ce162125e7bf 100644
-> --- a/arch/arm/boot/dts/tegra30.dtsi
-> +++ b/arch/arm/boot/dts/tegra30.dtsi
-> @@ -424,6 +424,7 @@
->  		clocks = <&tegra_car TEGRA30_CLK_VDE>;
->  		reset-names = "vde", "mc";
->  		resets = <&tegra_car 61>, <&mc TEGRA30_MC_RESET_VDE>;
-> +		iommus = <&mc TEGRA_SWGROUP_VDE>;
->  	};
->  
->  	apbmisc@70000800 {
-> 
+On Mon, Aug 12, 2019 at 12:45 PM Luis de Oliveira
+<Luis.Oliveira@synopsys.com> wrote:
+> From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Date: Sat, Aug 10, 2019 at 14:09:21
+> > On Fri, Aug 9, 2019 at 5:38 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > > On Tue, Jun 11, 2019 at 09:20:51PM +0200, Luis Oliveira wrote:
 
-Hello Thierry,
+> > > > +     of_id = of_match_node(dw_mipi_csi_of_match, dev->of_node);
+> > > > +     if (!of_id)
+> > > > +             return -EINVAL;
+> >
+> > Is it possible to have this asserted?
+> >
+>
+> I will remove it.
 
-Will be awesome if you could pick up this and [1][2] for v5.4. The rest of the VDE patches
-are already applied by the media maintainers in linux-next, please note that [2] is required
-to avoid problems caused by the notorious implicit IOMMU backing. Thanks in advance!
+But please double check that is really the case.
 
-[1] http://patchwork.ozlabs.org/patch/1120864/
-[2] http://patchwork.ozlabs.org/project/linux-tegra/list/?series=115608
+> > > > +     ret = devm_request_irq(dev, csi->ctrl_irq_number,
+> > > > +                            dw_mipi_csi_irq1, IRQF_SHARED,
+> > > > +                            dev_name(dev), csi);
+> > > > +     if (ret) {
+> > > > +             dev_err(dev, "irq csi %s failed\n", of_id->name);
+> > > > +
+> > > > +             goto end;
+> > > > +     }
+> >
+> > devm_*irq() might be a bad idea. Is it race free in your driver?
+> >
+>
+> I never thought about it like that. Should I use request_irq and
+> free_irq?
+
+It's you, author of the driver, who knows it better :-)
+
+
+> > I told once, can repeat again. Synopsys perhaps needs better reviews
+> > inside company. Each time I see the code, it repeats same mistakes
+> > over and over. Have you, guys, do something about it?
+>
+> We are working on it. It will get better, sorry.
+
+Thanks! Hope to see a progress!
+
+-- 
+With Best Regards,
+Andy Shevchenko
