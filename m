@@ -1,73 +1,117 @@
-From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [PATCH 06/14] serial: tegra: report error to upper tty layer
-Date: Mon, 12 Aug 2019 16:58:15 +0530
-Message-ID: <1565609303-27000-7-git-send-email-kyarlagadda@nvidia.com>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Date: Mon, 12 Aug 2019 12:35:43 +0100
+Message-ID: <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
+References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+ <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
+ <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, jslaby@suse.com
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Shardar Shariff Md <smohammed@nvidia.com>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: "kishon@ti.com" <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Report overrun/parity/frame/break errors to top tty layer. Add support
-to ignore break character if IGNBRK is set.
+On Mon, Aug 12, 2019 at 10:39:00AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Sent: 2019年8月12日 18:12
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>; kishon@ti.com
+> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; arnd@arndb.de;
+> > gregkh@linuxfoundation.org; M.h. Lian <minghuan.lian@nxp.com>; Mingkai
+> > Hu <mingkai.hu@nxp.com>; Roy Zang <roy.zang@nxp.com>;
+> > kstewart@linuxfoundation.org; pombredanne@nexb.com;
+> > shawn.lin@rock-chips.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
+> > property in EP driver.
+> > 
+> > Caution: EXT Email
+> > 
+> > First off:
+> > 
+> > Trim the CC list, you CC'ed maintainers (and mailing lists) for no reasons
+> > whatsover.
+> [Xiaowei Bao]Hi Lorenzo, I am not clear why the mail list is the CC, I use the command "git send-email --to", I will try to send the patch again, do I need to modify the version is v4 when I send this patch again?
 
-Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
-Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
----
- drivers/tty/serial/serial-tegra.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Yes you do.
 
-diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
-index f6a3f4e..7ab81bb 100644
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -374,13 +374,21 @@ static char tegra_uart_decode_rx_error(struct tegra_uart_port *tup,
- 			tup->uport.icount.frame++;
- 			dev_err(tup->uport.dev, "Got frame errors\n");
- 		} else if (lsr & UART_LSR_BI) {
--			dev_err(tup->uport.dev, "Got Break\n");
--			tup->uport.icount.brk++;
--			/* If FIFO read error without any data, reset Rx FIFO */
-+			/*
-+			 * Break error
-+			 * If FIFO read error without any data, reset Rx FIFO
-+			 */
- 			if (!(lsr & UART_LSR_DR) && (lsr & UART_LSR_FIFOE))
- 				tegra_uart_fifo_reset(tup, UART_FCR_CLEAR_RCVR);
-+			if (tup->uport.ignore_status_mask & UART_LSR_BI)
-+				return TTY_BREAK;
-+			flag = TTY_BREAK;
-+			tup->uport.icount.brk++;
-+			dev_err(tup->uport.dev, "Got Break\n");
- 		}
-+		uart_insert_char(&tup->uport, lsr, UART_LSR_OE, 0, flag);
- 	}
-+
- 	return flag;
- }
- 
-@@ -562,6 +570,9 @@ static void tegra_uart_handle_rx_pio(struct tegra_uart_port *tup,
- 			break;
- 
- 		flag = tegra_uart_decode_rx_error(tup, lsr);
-+		if (flag != TTY_NORMAL)
-+			continue;
-+
- 		ch = (unsigned char) tegra_uart_read(tup, UART_RX);
- 		tup->uport.icount.rx++;
- 
-@@ -1224,6 +1235,8 @@ static void tegra_uart_set_termios(struct uart_port *u,
- 	/* Ignore all characters if CREAD is not set */
- 	if ((termios->c_cflag & CREAD) == 0)
- 		tup->uport.ignore_status_mask |= UART_LSR_DR;
-+	if (termios->c_iflag & IGNBRK)
-+		tup->uport.ignore_status_mask |= UART_LSR_BI;
- 
- 	spin_unlock_irqrestore(&u->lock, flags);
- }
--- 
-2.7.4
+Wrap lines to max 80 characters. There is no need to add [Xiaowei Bao].
+
+1) Read, email etiquette
+
+https://kernelnewbies.org/PatchCulture
+
+2) get_maintainer.pl -f drivers/pci/controller/dwc/pci-layerscape.c
+
+Compare the output to the people in CC, trim it accordingly.
+
+3) The NXP maintainers in the MAINTAINERS file have not given a single
+   comment for this patchset. Either they show up or I will remove them
+   from the MAINTAINERS list.
+
+4) Before submitting patches, talk to someone at NXP who can help you
+   format them in preparation for posting, I do not have time to write
+   guidelines for everyone posting on linux-pci, sorry, the information
+   is out there if you care to read it.
+
+Thanks,
+Lorenzo
+
+> > 
+> > Then, read this:
+> > 
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.ke
+> > rnel.org%2Flinux-pci%2F20171026223701.GA25649%40bhelgaas-glaptop.roa
+> > m.corp.google.com%2F&amp;data=02%7C01%7Cxiaowei.bao%40nxp.com%7
+> > C1c586178e23c423a0e8808d71f0d8f6f%7C686ea1d3bc2b4c6fa92cd99c5c30
+> > 1635%7C0%7C0%7C637012015426788575&amp;sdata=3bx1bDFIzik8FnD0wl
+> > duAUv7wtLdD1J3hQ3xNH2xmFY%3D&amp;reserved=0
+> > 
+> > and make your patches compliant please.
+> > 
+> > On Fri, Jun 28, 2019 at 09:38:25AM +0800, Xiaowei Bao wrote:
+> > > The PCIe controller of layerscape just have 4 BARs, BAR0 and BAR1 is
+> > > 32bit, BAR3 and BAR4 is 64bit, this is determined by hardware, so set
+> > > the bar_fixed_64bit with 0x14.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - Replace value 0x14 with a macro.
+> > > v3:
+> > >  - No change.
+> > >
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c |    1 +
+> > >  1 files changed, 1 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index be61d96..227c33b 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -44,6 +44,7 @@ static int ls_pcie_establish_link(struct dw_pcie *pci)
+> > >       .linkup_notifier = false,
+> > >       .msi_capable = true,
+> > >       .msix_capable = false,
+> > > +     .bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > 
+> > I would appreciate Kishon's ACK on this.
+> > 
+> > Lorenzo
+> > 
+> > >  };
+> > >
+> > >  static const struct pci_epc_features*
+> > > --
+> > > 1.7.1
+> > >
