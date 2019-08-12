@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 01/21] ARM: dts: imx7-colibri: make sure module supplies
- are always on
-Date: Mon, 12 Aug 2019 14:21:15 +0000
-Message-ID: <20190812142105.1995-2-philippe.schenker@toradex.com>
+Subject: [PATCH v4 08/21] ARM: dts: imx7-colibri: Add touch controllers
+Date: Mon, 12 Aug 2019 14:21:26 +0000
+Message-ID: <20190812142105.1995-9-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,41 +14,66 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Add touch controller that is connected over an I2C bus.
 
-Prevent regulators from being switched off.
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
 ---
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Changes in v4:
+- Add Marcel Ziswiler's Ack
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v3:
+- Fix commit message
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
-olibri.dtsi
-index 895fbde4d433..f1c1971f2160 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -54,6 +54,7 @@
- 		regulator-name =3D "+V3.3";
- 		regulator-min-microvolt =3D <3300000>;
- 		regulator-max-microvolt =3D <3300000>;
-+		regulator-always-on;
- 	};
+Changes in v2:
+- Deleted touchrevolution downstream stuff
+- Use generic node name
+- Better comment
+
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 24 +++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
+s/imx7-colibri-eval-v3.dtsi
+index d4dbc4fc1adf..576dec9ff81c 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -145,6 +145,21 @@
+ &i2c4 {
+ 	status =3D "okay";
 =20
- 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
-@@ -61,6 +62,7 @@
- 		regulator-name =3D "+V3.3_AVDD_AUDIO";
- 		regulator-min-microvolt =3D <3300000>;
- 		regulator-max-microvolt =3D <3300000>;
-+		regulator-always-on;
- 	};
-=20
- 	sound {
++	/*
++	 * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
++	 * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
++	 */
++	touchscreen@4a {
++		compatible =3D "atmel,maxtouch";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpiotouch>;
++		reg =3D <0x4a>;
++		interrupt-parent =3D <&gpio1>;
++		interrupts =3D <9 IRQ_TYPE_EDGE_FALLING>;		/* SODIMM 28 */
++		reset-gpios =3D <&gpio1 10 GPIO_ACTIVE_HIGH>;	/* SODIMM 30 */
++		status =3D "disabled";
++	};
++
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc: m41t0m6@68 {
+ 		compatible =3D "st,m41t0";
+@@ -200,3 +215,12 @@
+ 	vmmc-supply =3D <&reg_3v3>;
+ 	status =3D "okay";
+ };
++
++&iomuxc {
++	pinctrl_gpiotouch: touchgpios {
++		fsl,pins =3D <
++			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x74
++			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x14
++		>;
++	};
++};
 --=20
 2.22.0
