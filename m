@@ -1,207 +1,39 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v9 04/18] kunit: test: add kunit_stream a std::stream
- like logger
-Date: Mon, 12 Aug 2019 14:12:11 -0700
-Message-ID: <20190812211211.GA197038@google.com>
-References: <CAFd5g46a7C1+R6ZcE_SkqaYqgrH5Rx3M=X7orFyaMgFLDbeYYA@mail.gmail.com>
- <20190719000834.GA3228@google.com>
- <20190722200347.261D3218C9@mail.kernel.org>
- <CAFd5g45hdCxEavSxirr0un_uLzo5Z-J4gHRA06qjzcQrTzmjVg@mail.gmail.com>
- <20190722235411.06C1320840@mail.kernel.org>
- <20190724073125.xyzfywctrcvg6fmh@pathway.suse.cz>
- <CAFd5g47v3Mr4GEGOjqyYy9Jwwm+ow7ypbu9j88rxEN06QCzdxQ@mail.gmail.com>
- <20190726083148.d4gf57w2nt5k7t6n@pathway.suse.cz>
- <CAFd5g46iAhDZ5C_chi7oYLVOkwcoj6+0nw+kPWuXhqWwWKd9jA@mail.gmail.com>
- <871ry4yq3y.fsf@linutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 13/19] dt-bindings: phy: Add Marvell COMPHY clocks
+Date: Mon, 12 Aug 2019 15:29:46 -0600
+Message-ID: <20190812212946.GA6120@bogus>
+References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
+ <20190731122126.3049-14-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <871ry4yq3y.fsf@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Jeff Dike <jdike@addtoit.com>, Kevin Hilman <khilman@baylibre.com>, Logan Gunthorpe <logang@deltatee.com>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Vetter <daniel@ffwll.ch>, Amir Goldstein <amir73il@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@google.com>, David Rientjes <rientjes@google.com>, kunit-dev@googlegroups.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>, Joel Stanley <joel@jms.id.au>, Luis Chamberlain <mcgrof@kernel.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, wfg@linux.intel.com, Greg KH <gregkh@linux>
+In-Reply-To: <20190731122126.3049-14-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:37:53AM +0200, John Ogness wrote:
-> On 2019-08-01, Brendan Higgins <brendanhiggins@google.com> wrote:
-> > On Fri, Jul 26, 2019 at 1:31 AM Petr Mladek <pmladek@suse.com> wrote:
-> >> On Thu 2019-07-25 13:21:12, Brendan Higgins wrote:
-> >>> On Wed, Jul 24, 2019 at 12:31 AM Petr Mladek <pmladek@suse.com> wrote:
-> >>>> On Mon 2019-07-22 16:54:10, Stephen Boyd wrote:
-> >>>>> Quoting Brendan Higgins (2019-07-22 15:30:49)
-> >>>>>> On Mon, Jul 22, 2019 at 1:03 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >>>>>>> What's the calling context of the assertions and expectations? I
-> >>>>>>> still don't like the fact that string stream needs to allocate
-> >>>>>>> buffers and throw them into a list somewhere because the calling
-> >>>>>>> context matters there.
-> >>>>>>
-> >>>>>> The calling context is the same as before, which is anywhere.
-> >>>>>
-> >>>>> Ok. That's concerning then.
-> >>>>>
-> >>>>>>> I'd prefer we just wrote directly to the console/log via printk
-> >>>>>>> instead. That way things are simple because we use the existing
-> >>>>>>> buffering path of printk, but maybe there's some benefit to the
-> >>>>>>> string stream that I don't see? Right now it looks like it
-> >>>>>>> builds a string and then dumps it to printk so I'm sort of lost
-> >>>>>>> what the benefit is over just writing directly with printk.
-> >>>>>>
-> >>>>>> It's just buffering it so the whole string gets printed
-> >>>>>> uninterrupted.  If we were to print out piecemeal to printk,
-> >>>>>> couldn't we have another call to printk come in causing it to
-> >>>>>> garble the KUnit message we are in the middle of printing?
-> >>>>>
-> >>>>> Yes, printing piecemeal by calling printk many times could lead to
-> >>>>> interleaving of messages if something else comes in such as an
-> >>>>> interrupt printing something. Printk has some support to hold
-> >>>>> "records" but I'm not sure how that would work here because
-> >>>>> KERN_CONT talks about only being used early on in boot code. I
-> >>>>> haven't looked at printk in detail though so maybe I'm all wrong
-> >>>>> and KERN_CONT just works?
-> >>>>
-> >>>> KERN_CONT does not guarantee that the message will get printed
-> >>>> together. The pieces get interleaved with messages printed in
-> >>>> parallel.
-> >>>>
-> >>>> Note that KERN_CONT was originally really meant to be used only
-> >>>> during boot. It was later used more widely and ended in the best
-> >>>> effort category.
-> >>>>
-> >>>> There were several attempts to make it more reliable. But it was
-> >>>> always either too complicated or error prone or both.
-> >>>>
-> >>>> You need to use your own buffering if you rely want perfect output.
-> >>>> The question is if it is really worth the complexity. Also note
-> >>>> that any buffering reduces the chance that the messages will reach
-> >>>> the console.
-> >>>
-> >>> Seems like that settles it then. Thanks!
-> >>>
-> >>>> BTW: There is a work in progress on a lockless printk ring buffer.
-> >>>> It will make printk() more secure regarding deadlocks. But it might
-> >>>> make transparent handling of continuous lines even more tricky.
-> >>>>
-> >>>> I guess that local buffering, before calling printk(), will be
-> >>>> even more important then. Well, it might really force us to create
-> >>>> an API for it.
-> >>>
-> >>> Cool! Can you CC me on that discussion?
-> >>
-> >> Adding John Oggness into CC.
-> >>
-> >> John, please CC Brendan Higgins on the patchsets eventually switching
-> >> printk() into the lockless buffer. The test framework is going to
-> >> do its own buffering to keep the related messages together.
-> >>
-> >> The lockless ringbuffer might make handling of related (partial)
-> >> lines worse or better. It might justify KUnit's extra buffering
-> >> or it might allow to get rid of it.
-> >
-> > Thanks for CC'ing me on the printk ringbuffer thread. It looks like it
-> > actually probably won't affect my needs for KUnit logging. The biggest
-> > reason I need some sort of buffering system is to be able to compose
-> > messages piece meal into a single message that will be printed out to
-> > the user as a single message with no messages from other printk
-> > callers printed out in the middle of mine.
+On Wed, 31 Jul 2019 14:21:20 +0200, Miquel Raynal wrote:
+> Marvell CP110 COMPHY block is fed by 3 clocks. Describe each of them in the
+> bindings.
 > 
-> printk has this same requirement for its CONT messages. You can read
-> about how I propose to implement that here[0], using a separate prb
-> ringbuffer for buffered storage until all the pieces are available.
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../devicetree/bindings/phy/phy-mvebu-comphy.txt       | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> It is not my goal that multiple subsystems start making use of the prb
-> ringbuffer. However, its features can be attractive if you don't want to
-> worry about multiple writers/readers or context (including NMI). Before
 
-That sounds like it might be useful down the road, but not to replace
-the string_stream.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-> writing "yet another ringbuffer" [1] it might be worth the effort to at
-> least see if one of the existing implementations can work (or be
-> extended to work) for you.
-
-In regards to the conversation here about string_stream/kunit_stream, I
-think Petr already answered that question. As I said previously:
-> [I]t appears that to get the
-> semantics that I need, I would have to put my entire message in a
-> single data block and would consequently need to know the size of my
-> message a priori, which is problematic. Consequently, it seems as
-> though I will probably need to compose my entire message using my own
-> buffering system.
-
-I could potentially use my own set of prbs for that buffering; however,
-I think this use case is probably closer to seq_buf than your prb.
-Really, I just want some kind of string builder, not a message queue.
-
-The place where I think your prb is relevant here is once I have
-composed the message and I just want to print it, having a way to print
-it without worrying about context is nice, but I think that is a
-separate discussion from the main topic here which was just figuring out
-the right way to compose that message in the first place.
-
-Cheers
-
-> John Ogness
-> 
-> [0] https://lkml.kernel.org/r/87imt2bl0k.fsf@linutronix.de
-> [1] https://lwn.net/Articles/789603/
-> 
-> > The prb does look interesting; however, it appears that to get the
-> > semantics that I need, I would have to put my entire message in a
-> > single data block and would consequently need to know the size of my
-> > message a priori, which is problematic. Consequently, it seems as
-> > though I will probably need to compose my entire message using my own
-> > buffering system.
-> >
-> >>>> Note that stroring the messages into the printk log is basically
-> >>>> safe in any context. It uses temporary per-CPU buffers for
-> >>>> recursive messages and in NMI. The only problem is panic() when
-> >>>> some CPU gets stuck with the lock taken. This will get solved by
-> >>>> the lockless ringbuffer. Also the temporary buffers will not be
-> >>>> necessary any longer.
-> >>>
-> >>> Sure, I think Stephen's concern is all the supporting code that is
-> >>> involved. Not printk specifically. It just means a lot more of KUnit
-> >>> has to be IRQ safe.
-> >>
-> >> I see.
-> >>
-> >> BTW: I wonder if KUnit could reuse the existing seq_buf
-> >> implementation for buffering messages.
-> >>
-> >> I am sorry if it has already been proposed and rejected for some
-> >> reason. I might have missed it. Feel free to just point me to
-> >> same older mail.
-> >
-> > Yeah, we discussed it briefly here:
-> >
-> > https://lkml.org/lkml/2019/5/17/497
-> >
-> > Looks like I forgot to include my reasoning in the commit text, sorry
-> > about that.
-> >
-> >>>> Much bigger problems are with consoles. There are many of them. It
-> >>>> means a lot of code and more locks involved, including scheduler
-> >>>> locks. Note that console lock is a semaphore.
-> >>>
-> >>> That shouldn't affect us though, right? As long as we continue to
-> >>> use the printk interface?
-> >>
-> >> I guess that it should not affect KUnit.
-> >>
-> >> The only problem might be if the testing framework calls printk()
-> >> inside scheduler or console code. And only when the tested code
-> >> uses the same locks that will be used by the called printk().
-> >
-> > Yeah, well printk will not be our only problem in those instances.
-> >
-> >> To be honest I do not fully understand KUnit design. I am not
-> >> completely sure how the tested code is isolated from the running
-> >> system. Namely, I do not know if the tested code shares
-> >> the same locks with the system running the test.
-> >
-> > No worries, I don't expect printk to be the hang up in those cases. It
-> > sounds like KUnit has a long way to evolve before printk is going to
-> > be a limitation.
-> >
-> > Thanks!
+If a tag was not added on purpose, please state why and what changed.
