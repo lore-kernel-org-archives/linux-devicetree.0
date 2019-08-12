@@ -1,174 +1,30 @@
-Return-Path: <SRS0=2AmA=WF=pengutronix.de=mfe@kernel.org>
-Date: Fri, 9 Aug 2019 09:20:28 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v6 02/13] media: v4l2-fwnode: add v4l2_fwnode_connector
-Message-ID: <20190809072028.tonmezl4zwg72fwv@pengutronix.de>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
- <20190415124413.18456-3-m.felsch@pengutronix.de>
- <c5c4b88d-7977-e253-1242-b9a86228a302@xs4all.nl>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 12 Aug 2019 16:52:28 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: resolver: Add of_node_put() before return and break
+Message-ID: <20190812225228.GA21794@bogus>
+References: <20190716054331.2775-1-nishkadg.linux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c5c4b88d-7977-e253-1242-b9a86228a302@xs4all.nl>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Jacopo Mondi <jacopo@jmondi.org>
+In-Reply-To: <20190716054331.2775-1-nishkadg.linux@gmail.com>
+To: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc: pantelis.antoniou@konsulko.com, frowand.list@gmail.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 19-05-06 11:50, Hans Verkuil wrote:
-> On 4/15/19 2:44 PM, Marco Felsch wrote:
-> > Currently every driver needs to parse the connector endpoints by it self.
-> > This is the initial work to make this generic. The generic connector has
-> > some common fields and some connector specific parts. The generic one
-> > includes:
-> >   - type
-> >   - label
-> >   - remote_port (the port where the connector is connected to)
-> >   - remote_id   (the endpoint where the connector is connected to)
-> > 
-> > The specific fields are within a union, since only one of them can be
-> > available at the time. Since this is the initial support the patch adds
-> > only the analog-connector specific ones.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-> > ---
-> > [1] https://patchwork.kernel.org/cover/10794703/
-> > 
-> > v6:
-> > - fix some spelling and style issues
-> > - rm unnecessary comments
-> > - drop vga and dvi connector
-> > 
-> > v2-v4:
-> > - nothing since the patch was squashed from series [1] into this
-> >   series.
-> > 
-> >  include/media/v4l2-connector.h | 30 ++++++++++++++++++++++++++++++
-> >  include/media/v4l2-fwnode.h    | 33 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 63 insertions(+)
-> >  create mode 100644 include/media/v4l2-connector.h
-> > 
-> > diff --git a/include/media/v4l2-connector.h b/include/media/v4l2-connector.h
-> > new file mode 100644
-> > index 000000000000..3a951c54f50e
-> > --- /dev/null
-> > +++ b/include/media/v4l2-connector.h
-> > @@ -0,0 +1,30 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * v4l2-connector.h
-> > + *
-> > + * V4L2 connector types.
-> > + *
-> > + * Copyright 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-> > + */
-> > +
-> > +#ifndef V4L2_CONNECTOR_H
-> > +#define V4L2_CONNECTOR_H
-> > +
-> > +#define V4L2_CONNECTOR_MAX_LABEL 41
+On Tue, 16 Jul 2019 11:13:30 +0530, Nishka Dasgupta wrote:
+> Each iteration of for_each_child_of_node puts the previous node, but in
+> the case of a return or break from the middle of the loop, there is no
+> put, thus causing a memory leak. Hence add an of_node_put before the
+> return or break in three places.
+> Issue found with Coccinelle.
 > 
-> Where does 41 come from? It's a weird number...
-
-What would you suggest?
-
-> 
-> > +
-> > +/**
-> > + * enum v4l2_connector_type - connector type
-> > + * @V4L2_CON_UNKNOWN:   unknown connector type, no V4L2 connetor configuration
-> 
-> typo: connetor -> connector
-> 
-> > + * @V4L2_CON_COMPOSITE: analog composite connector
-> > + * @V4L2_CON_SVIDEO:    analog svideo connector
-> > + * @V4L2_CON_HDMI:      digital hdmi connector
-> > + */
-> > +enum v4l2_connector_type {
-> > +	V4L2_CON_UNKNOWN,
-> > +	V4L2_CON_COMPOSITE,
-> > +	V4L2_CON_SVIDEO,
-> > +	V4L2_CON_HDMI,
-> > +};
-> > +
-> > +#endif /* V4L2_CONNECTOR_H */
-> > +
-> 
-> Is there a reason to create a new header for this? I think it is perfectly OK to
-> add this define + enum for v4l2-fwnode.h.
-
-Okay, I can squash it.
-
-> 
-> > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-> > index 6c07825e18b9..f4df1b95c5ef 100644
-> > --- a/include/media/v4l2-fwnode.h
-> > +++ b/include/media/v4l2-fwnode.h
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/list.h>
-> >  #include <linux/types.h>
-> >  
-> > +#include <media/v4l2-connector.h>
-> >  #include <media/v4l2-mediabus.h>
-> >  #include <media/v4l2-subdev.h>
-> >  
-> > @@ -126,6 +127,38 @@ struct v4l2_fwnode_link {
-> >  	unsigned int remote_port;
-> >  };
-> >  
-> > +/**
-> > + * struct v4l2_fwnode_connector_analog - analog connector data structure
-> > + * @supported_tvnorms: tv norms this connector supports, set to V4L2_STD_ALL
-> > + *                     if no restrictions are specified.
-> > + */
-> > +struct v4l2_fwnode_connector_analog {
-> > +	v4l2_std_id supported_tvnorms;
-> > +};
-> > +
-> > +/**
-> > + * struct v4l2_fwnode_connector - the connector data structure
-> > + * @remote_port: identifier of the remote endpoint port the connector connects
-> > + *		 to
-> > + * @remote_id: identifier of the remote endpoint the connector connects to
-> > + * @label: connetor label
-> 
-> Same typo. It's probably a good idea to grep for this typo in this patch series :-)
-
-I will grep it shortly before I send the new v7 ;-)
-
-Regards,
-  Marco
-
-> 
-> > + * @type: connector type
-> > + * @connector: connector configuration
-> > + * @connector.analog: analog connector configuration
-> > + *                    &struct v4l2_fwnode_connector_analog
-> > + */
-> > +struct v4l2_fwnode_connector {
-> > +	unsigned int remote_port;
-> > +	unsigned int remote_id;
-> > +	char label[V4L2_CONNECTOR_MAX_LABEL];
-> > +	enum v4l2_connector_type type;
-> > +
-> > +	union {
-> > +		struct v4l2_fwnode_connector_analog analog;
-> > +		/* future connectors */
-> > +	} connector;
-> > +};
-> > +
-> >  /**
-> >   * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
-> >   * @fwnode: pointer to the endpoint's fwnode handle
-> > 
-> 
-> Regards,
-> 
-> 	Hans
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/of/resolver.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Applied, thanks.
+
+Rob
