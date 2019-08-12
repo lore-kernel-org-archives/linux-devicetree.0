@@ -1,68 +1,98 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-Date: Mon, 12 Aug 2019 09:45:17 +0100
-Message-ID: <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v5 15/18] thermal: sun8i: allow to use custom temperature
+ calculation function
+Date: Mon, 12 Aug 2019 10:49:15 +0200
+Message-ID: <20190812084915.lasb4dh25bfeoigr@flea>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+ <20190810052829.6032-16-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f4uotbkobwqxzt7r"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190810052829.6032-16-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:22:16AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The num-lanes is not a mandatory property, e.g. on FSL
-> Layerscape SoCs, the PCIe link training is completed
-> automatically base on the selected SerDes protocol, it
-> doesn't need the num-lanes to set-up the link width.
-> 
-> It has been added in the Optional properties. This
-> patch is to remove it from the Required properties.
 
-For clarity, maybe this paragraph can be reworded to:
+--f4uotbkobwqxzt7r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-"It is previously in both Required and Optional properties,
- let's remove it from the Required properties".
+Hi,
 
-I don't understand why this property is previously in
-both required and optional...
+On Sat, Aug 10, 2019 at 05:28:26AM +0000, Yangtao Li wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> The H5 temperature calculation function is strange. Firstly, it's
+> segmented. Secondly, the formula of two sensors are different in the
+> second segment.
+>
+> Allow to use a custom temperature calculation function, in case of
+> the function is complex.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
-It looks like num-lanes was first made optional back in
-2015 and removed from the Required section (907fce090253).
-But then re-added back into the Required section in 2017
-with the adition of bindings for EP mode (b12befecd7de).
+When you send a patch on someone else's behalf, you need to put your
+Signed-off-by as well.
 
-Is num-lanes actually required for EP mode?
-
-Thanks,
-
-Andrew Murray
-
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..bd880df39a79 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  	     the ATU address space.
->      (The old way of getting the configuration address space from "ranges"
->      is deprecated and should be avoided.)
-> -- num-lanes: number of lanes to use
->  RC mode:
->  - #address-cells: set to <3>
->  - #size-cells: set to <2>
-> -- 
-> 2.17.1
-> 
+>  drivers/thermal/sun8i_thermal.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index 3259081da841..a761e2afda08 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -76,6 +76,7 @@ struct ths_thermal_chip {
+>  				     u16 *caldata, int callen);
+>  	int		(*init)(struct ths_device *tmdev);
+>  	int             (*irq_ack)(struct ths_device *tmdev);
+> +	int		(*calc_temp)(int id, int reg);
+>  };
+>
+>  struct ths_device {
+> @@ -90,9 +91,12 @@ struct ths_device {
+>
+>  /* Temp Unit: millidegree Celsius */
+>  static int sun8i_ths_reg2temp(struct ths_device *tmdev,
+> -			      int reg)
+> +			      int id, int reg)
+>  {
+> -	return (reg + tmdev->chip->offset) * tmdev->chip->scale;
+> +	if (tmdev->chip->calc_temp)
+> +		return tmdev->chip->calc_temp(id, reg);
+> +	else
+> +		return (reg + tmdev->chip->offset) * tmdev->chip->scale;
+
+You're not consistent here compared to the other callbacks you have
+introduced: calibrate, init and irq_ack all need to be set and will
+fail (hard) if you don't set them, yet this one will have a different
+behaviour (that behaviour being to use the H6 formula, which is the
+latest SoC, which is a bit odd in itself).
+
+I guess we should either make it mandatory as the rest of the
+callbacks, or document which callbacks are mandatory and which are
+optional (and the behaviour when it's optional).
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--f4uotbkobwqxzt7r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEoCwAKCRDj7w1vZxhR
+xfQmAP9xX6EXk3hDLg/bBSbrnJp6QkeJeiCQrfENROxox3MBTQD/Xm0PpUdxbQaF
+HD4uZ6W1In3fv39oufKd/j0DlKZ5Lwc=
+=i8aL
+-----END PGP SIGNATURE-----
+
+--f4uotbkobwqxzt7r--
