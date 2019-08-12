@@ -1,459 +1,184 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 6/8] PCI: al: Add support for DW based driver type
-Date: Mon, 12 Aug 2019 18:03:36 +0100
-Message-ID: <20190812170336.GA23142@e121166-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092711.11786-2-jonnyc@amazon.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
+Date: Mon, 12 Aug 2019 10:28:20 -0700
+Message-ID: <931b027d-fdf3-220b-167a-4177fa917781@nvidia.com>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+ <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+ <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+ <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
+ <cbe94f84-a17b-7e1a-811d-89db571784e1@nvidia.com>
+ <4397de5d-772d-2b04-5f87-b2988f6c96c8@gmail.com>
+ <805a825e-f19d-d056-83eb-8ed1cb1c089c@nvidia.com>
+ <ca90bd2b-8088-8b46-2816-95e58a4811b8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190723092711.11786-2-jonnyc@amazon.com>
+In-Reply-To: <ca90bd2b-8088-8b46-2816-95e58a4811b8@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Chocron <jonnyc@amazon.com>
-Cc: bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-"PCI: dwc: al: Add support for DW based driver type"
 
-Make $SUBJECT compliant with other host controllers patches.
+On 8/12/19 9:25 AM, Dmitry Osipenko wrote:
+> 11.08.2019 22:15, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/11/19 10:39 AM, Dmitry Osipenko wrote:
+>>> 09.08.2019 21:40, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 8/9/19 11:18 AM, Dmitry Osipenko wrote:
+>>>>> 09.08.2019 19:19, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
+>>>>>>> 09.08.2019 2:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>>>>>>
+>>>>>>>> All the CAR controller settings are lost on suspend when core
+>>>>>>>> power goes off.
+>>>>>>>>
+>>>>>>>> This patch has implementation for saving and restoring all PLLs
+>>>>>>>> and clocks context during system suspend and resume to have the
+>>>>>>>> clocks back to same state for normal operation.
+>>>>>>>>
+>>>>>>>> Clock driver suspend and resume are registered as syscore_ops as c=
+locks
+>>>>>>>> restore need to happen before the other drivers resume to have all=
+ their
+>>>>>>>> clocks back to the same state as before suspend.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>> ---
+>>>>>>>>  =C2=A0=C2=A0 drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++=
+++++++++++++++++++++++++--
+>>>>>>>>  =C2=A0=C2=A0 drivers/clk/tegra/clk.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 64 ++++++++++++++++++++++++
+>>>>>>>>  =C2=A0=C2=A0 drivers/clk/tegra/clk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 ++
+>>>>>>>>  =C2=A0=C2=A0 3 files changed, 166 insertions(+), 4 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/=
+clk-tegra210.c
+>>>>>>>> index 998bf60b219a..8dd6f4f4debb 100644
+>>>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>> @@ -9,13 +9,13 @@
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/clkdev.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/of.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/of_address.h>
+>>>>>>>> +#include <linux/syscore_ops.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/delay.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/export.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/mutex.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/clk/tegra.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/clock/tegra210-car.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <dt-bindings/reset/tegra210-car.h>
+>>>>>>>> -#include <linux/iopoll.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <linux/sizes.h>
+>>>>>>>>  =C2=A0=C2=A0 #include <soc/tegra/pmc.h>
+>>>>>>>>  =C2=A0=C2=A0 @@ -220,11 +220,15 @@
+>>>>>>>>  =C2=A0=C2=A0 #define CLK_M_DIVISOR_SHIFT 2
+>>>>>>>>  =C2=A0=C2=A0 #define CLK_M_DIVISOR_MASK 0x3
+>>>>>>>>  =C2=A0=C2=A0 +#define CLK_MASK_ARM=C2=A0=C2=A0=C2=A0 0x44
+>>>>>>>> +#define MISC_CLK_ENB=C2=A0=C2=A0=C2=A0 0x48
+>>>>>>>> +
+>>>>>>>>  =C2=A0=C2=A0 #define RST_DFLL_DVCO 0x2f4
+>>>>>>>>  =C2=A0=C2=A0 #define DVFS_DFLL_RESET_SHIFT 0
+>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a=
+8
+>>>>>>>>  =C2=A0=C2=A0 #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>>>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>>>>  =C2=A0=C2=A0 #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>>>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll_freq_ta=
+ble *fentry;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_clk_pll pllu;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 reg;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (fentry =3D pll_u=
+_freq_table; fentry->input_rate; fentry++) {
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (=
+fentry->input_rate =3D=3D pll_ref_freq)
+>>>>>>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg |=3D PLL_ENABLE;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 writel(reg, clk_base + PLLU_=
+BASE);
+>>>>>>>>  =C2=A0=C2=A0 -=C2=A0=C2=A0=C2=A0 readl_relaxed_poll_timeout_atomi=
+c(clk_base + PLLU_BASE, reg,
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg & PLL_B=
+ASE_LOCK, 2, 1000);
+>>>>>>>> -=C2=A0=C2=A0=C2=A0 if (!(reg & PLL_BASE_LOCK)) {
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 /*
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * During clocks resume, same PLLU init a=
+nd enable sequence get
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * executed. So, readx_poll_timeout_atomi=
+c can't be used here as it
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * uses ktime_get() and timekeeping resum=
+e doesn't happen by that
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * time. So, using tegra210_wait_for_mask=
+ for PLL LOCK.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D tegra210_wait_for_mask(&pllu, PLLU_BAS=
+E, PLL_BASE_LOCK);
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_e=
+rr("Timed out waiting for PLL_U to lock\n");
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 retu=
+rn -ETIMEDOUT;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 =
+cpu)
+>>>>>>>>  =C2=A0=C2=A0 }
+>>>>>>>>  =C2=A0=C2=A0 =C2=A0 #ifdef CONFIG_PM_SLEEP
+>>>>>>>> +/*
+>>>>>>>> + * This array lists mask values for each peripheral clk bank
+>>>>>>>> + * to mask out reserved bits during the clocks state restore
+>>>>>>>> + * on SC7 resume to prevent accidental writes to these reserved
+>>>>>>>> + * bits.
+>>>>>>>> + */
+>>>>>>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] =3D {
+>>>>>>> Should be more natural to have a "valid_mask" instead of "rsvd_mask=
+".
+>>>>>>>
+>>>>>>> What's actually wrong with touching of the reserved bits? They must=
+ be NO-OP.. or the
+>>>>>>> reserved bits are actually some kind of "secret" bits? If those bit=
+s have some use-case
+>>>>>>> outside of Silicon HW (like FPGA simulation), then this doesn't mat=
+ter for upstream
+>>>>>>> and you
+>>>>>>> have to keep the workaround locally in the downstream kernel or wha=
+tever.
+>>>>>> Will rename as valid_mask.
+>>>>>>
+>>>>>> some bits in these registers are undefined and is not good to write =
+to these bits as they
+>>>>>> can cause pslverr.
+>>>>> Okay, it should be explained in the comment.
+>>>>>
+>>>>> Is it possible to disable trapping of changing the undefined bits?
+>>>> No its internal to design
+>>> Okay.
+>>>
+>>> Also, what about to move the valid_mask into struct tegra_clk_periph_re=
+gs?
+>> No, we cannot move to tegra_clk_periph_regs as its in tegra/clk.c and is=
+ common for all tegra.
+>>
+>> Reserved bits are different on tegra chips so should come from Tegra chi=
+p specific clock
+>> driver like
+>>
+>> clk-tegra210 for Tegra210.
+> Could you please check whether the reserved bits are RAZ (read as zero)?
+>
+> [snip]
 
-On Tue, Jul 23, 2019 at 12:27:09PM +0300, Jonathan Chocron wrote:
-> This driver is DT based and utilizes the DesignWare APIs.
-> It allows using a smaller ECAM range for a larger bus range -
-> usually an entire bus uses 1MB of address space, but the driver
-> can use it for a larger number of buses.
+yes all reserved bits of clk_enb register is 0. This should not be set to 1=
+.
 
-I would appreciate if you can add a simple explanation of
-the mechanism for completeness.
-
-AFAIU, with ACPI you don't support all these variants.
-
-> All link initializations are handled by the boot FW.
-> 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig   |  12 +
->  drivers/pci/controller/dwc/pcie-al.c | 367 +++++++++++++++++++++++++++
->  2 files changed, 379 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 6ea778ae4877..3c6094cbcc3b 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -230,4 +230,16 @@ config PCIE_UNIPHIER
->  	  Say Y here if you want PCIe controller support on UniPhier SoCs.
->  	  This driver supports LD20 and PXs3 SoCs.
->  
-> +config PCIE_AL
-> +	bool "Amazon Annapurna Labs PCIe controller"
-> +	depends on OF && (ARM64 || COMPILE_TEST)
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
-> +	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
-> +	  core plus Annapurna Labs proprietary hardware wrappers. This is
-> +	  required only for DT-based platforms. ACPI platforms with the
-> +	  Annapurna Labs PCIe controller don't need to enable this.
-> +
->  endmenu
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> index 3ab58f0584a8..3ffdd3c97617 100644
-> --- a/drivers/pci/controller/dwc/pcie-al.c
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -91,3 +91,370 @@ struct pci_ecam_ops al_pcie_ops = {
->  };
->  
->  #endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> +
-> +#ifdef CONFIG_PCIE_AL
-> +
-> +#include <linux/of_pci.h>
-> +#include "pcie-designware.h"
-> +
-> +#define AL_PCIE_REV_ID_2	2
-> +#define AL_PCIE_REV_ID_3	3
-> +#define AL_PCIE_REV_ID_4	4
-> +
-> +#define AXI_BASE_OFFSET		0x0
-> +
-> +#define DEVICE_ID_OFFSET	0x16c
-> +
-> +#define DEVICE_REV_ID			0x0
-> +#define DEVICE_REV_ID_DEV_ID_MASK	GENMASK(31, 16)
-> +
-> +#define DEVICE_REV_ID_DEV_ID_X4		0
-> +#define DEVICE_REV_ID_DEV_ID_X8		2
-> +#define DEVICE_REV_ID_DEV_ID_X16	4
-> +
-> +#define OB_CTRL_REV1_2_OFFSET	0x0040
-> +#define OB_CTRL_REV3_5_OFFSET	0x0030
-> +
-> +#define CFG_TARGET_BUS			0x0
-> +#define CFG_TARGET_BUS_MASK_MASK	GENMASK(7, 0)
-> +#define CFG_TARGET_BUS_BUSNUM_MASK	GENMASK(15, 8)
-> +
-> +#define CFG_CONTROL			0x4
-> +#define CFG_CONTROL_SUBBUS_MASK		GENMASK(15, 8)
-> +#define CFG_CONTROL_SEC_BUS_MASK	GENMASK(23, 16)
-> +
-> +struct al_pcie_reg_offsets {
-> +	unsigned int ob_ctrl;
-> +};
-> +
-> +struct al_pcie_target_bus_cfg {
-> +	u8 reg_val;
-> +	u8 reg_mask;
-> +	u8 ecam_mask;
-> +};
-> +
-> +struct al_pcie {
-> +	struct dw_pcie *pci;
-> +	void __iomem *controller_base; /* base of PCIe unit (not DW core) */
-> +	struct device *dev;
-> +	resource_size_t ecam_size;
-> +	unsigned int controller_rev_id;
-> +	struct al_pcie_reg_offsets reg_offsets;
-> +	struct al_pcie_target_bus_cfg target_bus_cfg;
-> +};
-> +
-> +#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
-> +
-> +#define to_al_pcie(x)		dev_get_drvdata((x)->dev)
-> +
-> +static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
-> +{
-> +	return readl(pcie->controller_base + offset);
-> +}
-> +
-> +static inline void al_pcie_controller_writel(struct al_pcie *pcie, u32 offset,
-> +					     u32 val)
-> +{
-> +	writel(val, pcie->controller_base + offset);
-> +}
-
-You should be able to use the read/write{_relaxed} API.
-
-> +
-> +static int al_pcie_rev_id_get(struct al_pcie *pcie, unsigned int *rev_id)
-> +{
-> +	u32 dev_rev_id_val;
-> +	u32 dev_id_val;
-> +
-> +	dev_rev_id_val = al_pcie_controller_readl(pcie, AXI_BASE_OFFSET +
-> +						  DEVICE_ID_OFFSET +
-> +						  DEVICE_REV_ID);
-> +	dev_id_val = FIELD_GET(DEVICE_REV_ID_DEV_ID_MASK, dev_rev_id_val);
-> +
-> +	switch (dev_id_val) {
-> +	case DEVICE_REV_ID_DEV_ID_X4:
-> +		*rev_id = AL_PCIE_REV_ID_2;
-> +		break;
-> +	case DEVICE_REV_ID_DEV_ID_X8:
-> +		*rev_id = AL_PCIE_REV_ID_3;
-> +		break;
-> +	case DEVICE_REV_ID_DEV_ID_X16:
-> +		*rev_id = AL_PCIE_REV_ID_4;
-> +		break;
-> +	default:
-> +		dev_err(pcie->dev, "Unsupported dev_id_val (0x%x)\n",
-> +			dev_id_val);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(pcie->dev, "dev_id_val: 0x%x\n", dev_id_val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int al_pcie_reg_offsets_set(struct al_pcie *pcie)
-> +{
-> +	switch (pcie->controller_rev_id) {
-> +	case AL_PCIE_REV_ID_2:
-> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV1_2_OFFSET;
-> +		break;
-> +	case AL_PCIE_REV_ID_3:
-> +	case AL_PCIE_REV_ID_4:
-> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV3_5_OFFSET;
-> +		break;
-> +	default:
-> +		dev_err(pcie->dev, "Unsupported controller rev_id: 0x%x\n",
-> +			pcie->controller_rev_id);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void al_pcie_target_bus_set(struct al_pcie *pcie,
-> +					  u8 target_bus,
-> +					  u8 mask_target_bus)
-> +{
-> +	u32 reg;
-> +
-> +	reg = FIELD_PREP(CFG_TARGET_BUS_MASK_MASK, mask_target_bus) |
-> +	      FIELD_PREP(CFG_TARGET_BUS_BUSNUM_MASK, target_bus);
-> +
-> +	al_pcie_controller_writel(pcie, AXI_BASE_OFFSET +
-> +				  pcie->reg_offsets.ob_ctrl + CFG_TARGET_BUS,
-> +				  reg);
-> +}
-> +
-> +static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
-> +					   unsigned int busnr,
-> +					   unsigned int devfn)
-> +{
-> +	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
-> +	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
-> +	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
-> +	struct pcie_port *pp = &pcie->pci->pp;
-> +	void __iomem *pci_base_addr;
-> +
-> +	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
-> +					 (busnr_ecam << 20) +
-> +					 PCIE_ECAM_DEVFN(devfn));
-> +
-> +	if (busnr_reg != target_bus_cfg->reg_val) {
-> +		dev_dbg(pcie->pci->dev, "Changing target bus busnum val from 0x%x to 0x%x\n",
-> +			target_bus_cfg->reg_val, busnr_reg);
-> +		target_bus_cfg->reg_val = busnr_reg;
-> +		al_pcie_target_bus_set(pcie,
-> +				       target_bus_cfg->reg_val,
-> +				       target_bus_cfg->reg_mask);
-> +	}
-> +
-> +	return pci_base_addr;
-> +}
-> +
-> +static int al_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> +				 unsigned int devfn, int where, int size,
-> +				 u32 *val)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct al_pcie *pcie = to_al_pcie(pci);
-> +	unsigned int busnr = bus->number;
-> +	void __iomem *pci_addr;
-> +	int rc;
-> +
-> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
-> +
-> +	rc = dw_pcie_read(pci_addr + where, size, val);
-> +
-> +	dev_dbg(pci->dev, "%d-byte config read from %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
-> +		size, pci_domain_nr(bus), bus->number,
-> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
-> +		(pci_addr + where), *val);
-> +
-> +	return rc;
-> +}
-> +
-> +static int al_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> +				 unsigned int devfn, int where, int size,
-> +				 u32 val)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct al_pcie *pcie = to_al_pcie(pci);
-> +	unsigned int busnr = bus->number;
-> +	void __iomem *pci_addr;
-> +	int rc;
-> +
-> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
-> +
-> +	rc = dw_pcie_write(pci_addr + where, size, val);
-> +
-> +	dev_err(pci->dev, "%d-byte config write to %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
-> +		size, pci_domain_nr(bus), bus->number,
-> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
-> +		(pci_addr + where), val);
-
-dev_dbg() ?
-
-> +
-> +	return rc;
-> +}
-> +
-> +static void al_pcie_config_prepare(struct al_pcie *pcie)
-> +{
-> +	struct al_pcie_target_bus_cfg *target_bus_cfg;
-> +	struct pcie_port *pp = &pcie->pci->pp;
-> +	unsigned int ecam_bus_mask;
-> +	u32 cfg_control_offset;
-> +	u8 subordinate_bus;
-> +	u8 secondary_bus;
-> +	u32 cfg_control;
-> +	u32 reg;
-> +
-> +	target_bus_cfg = &pcie->target_bus_cfg;
-> +
-> +	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
-> +	if (ecam_bus_mask > 255) {
-> +		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
-> +		ecam_bus_mask = 255;
-> +	}
-> +
-> +	/* This portion is taken from the transaction address */
-> +	target_bus_cfg->ecam_mask = ecam_bus_mask;
-> +	/* This portion is taken from the cfg_target_bus reg */
-> +	target_bus_cfg->reg_mask = ~target_bus_cfg->ecam_mask;
-> +	target_bus_cfg->reg_val = pp->busn->start & target_bus_cfg->reg_mask;
-> +
-> +	al_pcie_target_bus_set(pcie, target_bus_cfg->reg_val,
-> +			       target_bus_cfg->reg_mask);
-> +
-> +	secondary_bus = pp->busn->start + 1;
-> +	subordinate_bus = pp->busn->end;
-> +
-> +	/* Set the valid values of secondary and subordinate buses */
-> +	cfg_control_offset = AXI_BASE_OFFSET + pcie->reg_offsets.ob_ctrl +
-> +			     CFG_CONTROL;
-> +
-> +	cfg_control = al_pcie_controller_readl(pcie, cfg_control_offset);
-> +
-> +	reg = cfg_control &
-> +	      ~(CFG_CONTROL_SEC_BUS_MASK | CFG_CONTROL_SUBBUS_MASK);
-> +
-> +	reg |= FIELD_PREP(CFG_CONTROL_SUBBUS_MASK, subordinate_bus) |
-> +	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
-> +
-> +	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
-> +}
-> +
-> +static int al_pcie_host_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct al_pcie *pcie = to_al_pcie(pci);
-> +	int link_up;
-> +	int rc;
-> +
-> +	rc = al_pcie_rev_id_get(pcie, &pcie->controller_rev_id);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = al_pcie_reg_offsets_set(pcie);
-> +	if (rc)
-> +		return rc;
-> +
-> +	al_pcie_config_prepare(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_host_ops al_pcie_host_ops = {
-> +	.rd_other_conf = al_pcie_rd_other_conf,
-> +	.wr_other_conf = al_pcie_wr_other_conf,
-> +	.host_init = al_pcie_host_init,
-> +};
-> +
-> +static int al_add_pcie_port(struct pcie_port *pp,
-> +			    struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	pp->ops = &al_pcie_host_ops;
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "failed to initialize host\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +};
-
-I understand you have to have it - probably we should improve
-the generic DW layer to check for a pointer before dereferencing
-so that we avoid this empty struct. Anyway, that's for another
-series.
-
-> +
-> +static int al_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *controller_res;
-> +	struct resource *ecam_res;
-> +	struct resource *dbi_res;
-> +	struct al_pcie *al_pcie;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-> +	if (!al_pcie)
-> +		return -ENOMEM;
-> +
-> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> +	if (!pci)
-> +		return -ENOMEM;
-> +
-> +	pci->dev = dev;
-> +	pci->ops = &dw_pcie_ops;
-> +
-> +	al_pcie->pci = pci;
-> +	al_pcie->dev = dev;
-> +
-> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
-> +	if (IS_ERR(pci->dbi_base)) {
-> +		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
-> +		return PTR_ERR(pci->dbi_base);
-> +	}
-> +
-> +	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> +	if (!ecam_res) {
-> +		dev_err(dev, "couldn't find 'config' reg in DT\n");
-> +		return -ENOENT;
-> +	}
-> +	al_pcie->ecam_size = resource_size(ecam_res);
-> +
-> +	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						      "controller");
-> +	al_pcie->controller_base = devm_ioremap_resource(dev, controller_res);
-> +	if (IS_ERR(al_pcie->controller_base)) {
-> +		dev_err(dev, "couldn't remap controller base %pR\n",
-> +			controller_res);
-> +		return PTR_ERR(al_pcie->controller_base);
-> +	}
-> +
-> +	dev_dbg(dev, "From DT: dbi_base: %pR, controller_base: %pR\n",
-> +		dbi_res, controller_res);
-> +
-> +	platform_set_drvdata(pdev, al_pcie);
-> +
-> +	ret = al_add_pcie_port(&pci->pp, pdev);
-> +
-> +	return ret;
-
-Nit:
-
-return al_add_pcie_port(&pci->pp, pdev);
-
-?
-
-Lorenzo
-
-> +}
-> +
-> +static const struct of_device_id al_pcie_of_match[] = {
-> +	{ .compatible = "amazon,al-pcie",
-> +	},
-> +	{},
-> +};
-> +
-> +static struct platform_driver al_pcie_driver = {
-> +	.driver = {
-> +		.name	= "al-pcie",
-> +		.of_match_table = al_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe = al_pcie_probe,
-> +};
-> +builtin_platform_driver(al_pcie_driver);
-> +
-> +#endif /* CONFIG_PCIE_AL*/
-> -- 
-> 2.17.1
-> 
+As I will be changing to variable name to valid_mask instead of reserved=20
+mask, will also change values to valid mask so it can be used directly=20
+to write to clk_enb for enabling all peripherals clks.
