@@ -1,118 +1,160 @@
-From: "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
- PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
-Date: Mon, 12 Aug 2019 18:05:07 +0000
-Message-ID: <6e2efdfb6d07526f934fcbeb0e6b9518c849b8a8.camel@amazon.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
-         <20190723092711.11786-4-jonnyc@amazon.com>
-         <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
-         <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
-         <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
+Date: Mon, 12 Aug 2019 21:19:32 +0300
+Message-ID: <1779e92b-fa4d-68ab-9218-51970eee1ec5@gmail.com>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
+ <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
+ <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
+ <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
+ <cbe94f84-a17b-7e1a-811d-89db571784e1@nvidia.com>
+ <4397de5d-772d-2b04-5f87-b2988f6c96c8@gmail.com>
+ <805a825e-f19d-d056-83eb-8ed1cb1c089c@nvidia.com>
+ <ca90bd2b-8088-8b46-2816-95e58a4811b8@gmail.com>
+ <931b027d-fdf3-220b-167a-4177fa917781@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
+In-Reply-To: <931b027d-fdf3-220b-167a-4177fa917781@nvidia.com>
 Content-Language: en-US
-Content-ID: <B6A4A488E9E42C4AB6B760FA7F1FB027@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "Chocron, Jonathan" <jo>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTA4IGF0IDExOjU4ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gU2lkZSBub3RlLCBydW46DQo+IA0KPiBnaXQgbG9nIC0tb25lbGluZSBvbiBkcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3YyBleGlzdGluZyBmaWxlcyBhbmQNCj4gbWFrZSBzdXJlIGNvbW1p
-dCBzdWJqZWN0cyBhcmUgaW4gbGluZSB3aXRoIHRob3NlLg0KPiANCj4gRWcgUENJOiBkdzogc2hv
-dWxkIGJlIFBDSTogZHdjOg0KPiANCkRvbmUuDQoNCj4gT24gVGh1LCBBdWcgMDgsIDIwMTkgYXQg
-MDk6MzA6MDVBTSArMDAwMCwgQ2hvY3JvbiwgSm9uYXRoYW4gd3JvdGU6DQo+ID4gT24gV2VkLCAy
-MDE5LTA4LTA3IGF0IDE3OjM2ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90ZToNCj4gPiA+
-IE9uIFR1ZSwgSnVsIDIzLCAyMDE5IGF0IDEyOjI3OjExUE0gKzAzMDAsIEpvbmF0aGFuIENob2Ny
-b24gd3JvdGU6DQo+ID4gPiA+IFRoaXMgYmFzaWNhbGx5IGFsaWducyB0aGUgdXNhZ2Ugb2YgUENJ
-X1BST0JFX09OTFkgYW5kDQo+ID4gPiA+IFBDSV9SRUFTU0lHTl9BTExfQlVTIGluIGR3X3BjaWVf
-aG9zdF9pbml0KCkgd2l0aCB0aGUgbG9naWMgaW4NCj4gPiA+ID4gcGNpX2hvc3RfY29tbW9uX3By
-b2JlKCkuDQo+ID4gPiA+IA0KPiA+ID4gPiBOb3cgaXQgd2lsbCBiZSBwb3NzaWJsZSB0byBjb250
-cm9sIHZpYSB0aGUgZGV2aWNldHJlZSB3aGV0aGVyDQo+ID4gPiA+IHRvDQo+ID4gPiA+IGp1c3QN
-Cj4gPiA+ID4gcHJvYmUgdGhlIFBDSSBidXMgKGluIGNhc2VzIHdoZXJlIEZXIGFscmVhZHkgY29u
-ZmlndXJlZCBpdCkgb3INCj4gPiA+ID4gdG8NCj4gPiA+ID4gZnVsbHkNCj4gPiA+ID4gY29uZmln
-dXJlIGl0Lg0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gQ2hvY3Jv
-biA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgLi4uL3BjaS9jb250
-cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIHwgMjMNCj4gPiA+ID4gKysrKysrKysr
-KysrKysrLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDQg
-ZGVsZXRpb25zKC0pDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4gPiBiL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+ID4gaW5kZXgg
-ZDJjYTc0OGU0Yzg1Li4wYTI5NGQ4YWEyMWEgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+ID4gKysrIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4g
-PiBAQCAtMzQyLDYgKzM0Miw4IEBAIGludCBkd19wY2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9w
-b3J0ICpwcCkNCj4gPiA+ID4gIAlpZiAoIWJyaWRnZSkNCj4gPiA+ID4gIAkJcmV0dXJuIC1FTk9N
-RU07DQo+ID4gPiA+ICANCj4gPiA+ID4gKwlvZl9wY2lfY2hlY2tfcHJvYmVfb25seSgpOw0KPiA+
-ID4gPiArDQo+ID4gPiA+ICAJcmV0ID0gZGV2bV9vZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291
-cmNlcyhkZXYsIDAsDQo+ID4gPiA+IDB4ZmYsDQo+ID4gPiA+ICAJCQkJCSZicmlkZ2UtPndpbmRv
-d3MsICZwcC0NCj4gPiA+ID4gPiBpb19iYXNlKTsNCj4gPiA+ID4gDQo+ID4gPiA+ICAJaWYgKHJl
-dCkNCj4gPiA+ID4gQEAgLTQ3NCw2ICs0NzYsMTAgQEAgaW50IGR3X3BjaWVfaG9zdF9pbml0KHN0
-cnVjdCBwY2llX3BvcnQNCj4gPiA+ID4gKnBwKQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJcHAtPnJv
-b3RfYnVzX25yID0gcHAtPmJ1c24tPnN0YXJ0Ow0KPiA+ID4gPiAgDQo+ID4gPiA+ICsJLyogRG8g
-bm90IHJlYXNzaWduIGJ1cyBudW1zIGlmIHByb2JlIG9ubHkgKi8NCj4gPiA+ID4gKwlpZiAoIXBj
-aV9oYXNfZmxhZyhQQ0lfUFJPQkVfT05MWSkpDQo+ID4gPiA+ICsJCXBjaV9hZGRfZmxhZ3MoUENJ
-X1JFQVNTSUdOX0FMTF9CVVMpOw0KPiA+ID4gDQo+ID4gPiBUaGlzIGNoYW5nZXMgdGhlIGRlZmF1
-bHQgZm9yIGJ1cyByZWFzc2lnbm1lbnQgb24gYWxsIERXQyBob3N0DQo+ID4gPiAodGhhdA0KPiA+
-ID4gYXJlDQo+ID4gPiAhUENJX1BST0JFX09OTFkpLCB3ZSBzaG91bGQgZHJvcCB0aGlzIGxpbmUs
-IGl0IGNhbiB0cmlnZ2VyDQo+ID4gPiByZWdyZXNzaW9ucy4NCj4gPiA+IA0KPiA+IA0KPiA+IFdp
-bGwgYmUgZHJvcHBlZCBhcyBwYXJ0IG9mIHY0LiBUaGVyZSBtaWdodCBhbHNvIGJlIGEgYmVoYXZp
-b3JhbA0KPiA+IGRpZmZlcmVuY2UgYmVsb3cgd2hlcmUgSSBhZGRlZCB0aGUgaWYNCj4gPiAocGNp
-X2hhc19mbGFnKFBDSV9QUk9CRV9PTkxZKSkuDQo+ID4gSXMgdGhhdCBzdGlsbCBvaz8NCj4gDQo+
-IFRoYXQncyB0cnVlIGJ1dCBJIGRvdWJ0IGFueSBEV0MgaG9zdCBoYXMgYSBEVCBmaXJtd2FyZSB3
-aXRoDQo+ICJsaW51eCxwY2ktcHJvYmUtb25seSIgaW4gaXQuDQo+IA0KPiBJdCBpcyB0cmlhbCBh
-bmQgZXJyb3IgSSBhbSBhZnJhaWQsIHBsZWFzZSBtYWtlIHN1cmUgYWxsIERXQw0KPiBtYWludGFp
-bmVycyBhcmUgY29waWVkIGluLg0KPiANCj4gPiBBcyBJIHBvaW50ZWQgb3V0IGluIHRoZSBjb3Zl
-ciBsZXR0ZXIsIHNpbmNlIFBDSV9QUk9CRV9PTkxZIGlzIGENCj4gPiBzeXN0ZW0NCj4gPiB3aWRl
-IGZsYWcsIGRvZXMgaXQgbWFrZSBzZW5zZSB0byBjYWxsIG9mX3BjaV9jaGVja19wcm9iZV9vbmx5
-KCkNCj4gPiBoZXJlLA0KPiA+IGluIHRoZSBjb250ZXh0IG9mIGEgc3BlY2lmaWMgZHJpdmVyIChp
-bmNsdWRpbmcgdGhlIGV4aXN0aW5nDQo+ID4gaW52b2NhdGlvbg0KPiA+IGluIHBjaV9ob3N0X2Nv
-bW1vbl9wcm9iZSgpKSwgYXMgb3Bwb3NlZCB0byBhIHBsYXRmb3JtL2FyY2ggY29udGV4dD8NCj4g
-DQo+IEl0IGlzIGFuIG9uZ29pbmcgZGlzY3Vzc2lvbiB0byBkZWZpbmUgaG93IHdlIHNob3VsZCBo
-YW5kbGUNCj4gUENJX1BST0JFX09OTFkuIEFkZGluZyB0aGlzIGNvZGUgaW50byBEV0MgSSBkbyBu
-b3QgdGhpbmsgaXQNCj4gd291bGQgaHVydCBidXQgaWYgd2UgY2FuIHBvc3Rwb25lIGl0IGZvciB0
-aGUgbmV4dCAodjUuNSkgbWVyZ2UNCj4gd2luZG93IGFmdGVyIHdlIGRlYmF0ZSB0aGlzIGF0IExQ
-QyB3aXRoaW4gdGhlIFBDSSBtaWNyb2NvbmZlcmVuY2UNCj4gaXQgd291bGQgYmUgZ3JlYXQuDQo+
-IA0KVGhlIHByZWNlZGluZyBwYXRjaGVzIGFyZSBtb3JlIHVyZ2VudCwgc28gSSdtIGZpbmUgd2l0
-aCBwb3N0cG9uaW5nIHRoaXMNCnBhdGNoIHRvIHRoZSBuZXh0IG1lcmdlIHdpbmRvdyAoSSdsbCBk
-cm9wIGl0IGZyb20gdjQpLg0KDQo+IFBsZWFzZSBzeW5jIHdpdGggQmVuamFtaW4gYXMgYSBmaXJz
-dCBzdGVwLCBJIHRydXN0IGhlIHdvdWxkIGFzaw0KPiB5b3UgdG8gZG8gdGhlIHJpZ2h0IHRoaW5n
-Lg0KPiANCk9mIGNvdXJzZSwgSSdsbCBzeW5jIHdpdGggaGltLiBCdXQgYWdhaW4sIGxldCdzIG5v
-dCBoYXZlIHRoaXMgcGF0Y2gNCmRlbGF5IHRoZSBvdGhlcnMgcGxlYXNlLg0KDQo+ID4gPiBJZiB3
-ZSBzdGlsbCB3YW50IHRvIG1lcmdlIGl0IGFzIGEgc2VwYXJhdGUgY2hhbmdlIHdlIG11c3QgdGVz
-dCBpdA0KPiA+ID4gb24NCj4gPiA+IGFsbA0KPiA+ID4gRFdDIGhvc3QgYnJpZGdlcyB0byBtYWtl
-IHN1cmUgaXQgZG9lcyBub3QgdHJpZ2dlciBhbnkgaXNzdWVzIHdpdGgNCj4gPiA+IGN1cnJlbnQg
-c2V0LXVwcywgdGhhdCdzIG5vdCBnb2luZyB0byBiZSBlYXN5IHRob3VnaC4NCj4gPiA+IA0KPiA+
-IA0KPiA+IEp1c3Qgb3V0IG9mIGN1cmlvc2l0eSwgaG93IGFyZSBzdWNoIGV4aGF1c3RpdmUgdGVz
-dHMgYWNoaWV2ZWQgd2hlbg0KPiA+IGENCj4gPiBwYXRjaCByZXF1aXJlcyB0aGVtPw0KPiANCj4g
-Q0MgRFdDIGhvc3QgYnJpZGdlIG1haW50YWluZXJzIGFuZCBhc2sgdGhlbSB0byB0ZXN0IGl0LiBJ
-IGRvIG5vdCBoYXZlDQo+IHRoZSBIVyAoYW5kIEZXKSByZXF1aXJlZCwgSSBhbSBzb3JyeSwgdGhh
-dCdzIHRoZSBvbmx5IG9wdGlvbiBJIGNhbg0KPiBnaXZlDQo+IHlvdS4gLW5leHQgY292ZXJhZ2Ug
-d291bGQgaGVscCB0b28gYnV0IHRvIGEgbWlub3IgZXh0ZW50Lg0KPiANClRoYW5rcyBmb3IgdGhl
-IGluZm8hDQoNCj4gVGhhbmtzLA0KPiBMb3JlbnpvDQo+IA0KPiA+IA0KPiA+ID4gTG9yZW56bw0K
-PiA+ID4gDQo+ID4gPiA+ICsNCj4gPiA+ID4gIAlicmlkZ2UtPmRldi5wYXJlbnQgPSBkZXY7DQo+
-ID4gPiA+ICAJYnJpZGdlLT5zeXNkYXRhID0gcHA7DQo+ID4gPiA+ICAJYnJpZGdlLT5idXNuciA9
-IHBwLT5yb290X2J1c19ucjsNCj4gPiA+ID4gQEAgLTQ5MCwxMSArNDk2LDIwIEBAIGludCBkd19w
-Y2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0DQo+ID4gPiA+ICpwcCkNCj4gPiA+ID4gIAlp
-ZiAocHAtPm9wcy0+c2Nhbl9idXMpDQo+ID4gPiA+ICAJCXBwLT5vcHMtPnNjYW5fYnVzKHBwKTsN
-Cj4gPiA+ID4gIA0KPiA+ID4gPiAtCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290X2J1cyk7
-DQo+ID4gPiA+IC0JcGNpX2J1c19hc3NpZ25fcmVzb3VyY2VzKHBwLT5yb290X2J1cyk7DQo+ID4g
-PiA+ICsJLyoNCj4gPiA+ID4gKwkgKiBXZSBpbnNlcnQgUENJIHJlc291cmNlcyBpbnRvIHRoZSBp
-b21lbV9yZXNvdXJjZSBhbmQNCj4gPiA+ID4gKwkgKiBpb3BvcnRfcmVzb3VyY2UgdHJlZXMgaW4g
-ZWl0aGVyDQo+ID4gPiA+IHBjaV9idXNfY2xhaW1fcmVzb3VyY2VzKCkNCj4gPiA+ID4gKwkgKiBv
-ciBwY2lfYnVzX2Fzc2lnbl9yZXNvdXJjZXMoKS4NCj4gPiA+ID4gKwkgKi8NCj4gPiA+ID4gKwlp
-ZiAocGNpX2hhc19mbGFnKFBDSV9QUk9CRV9PTkxZKSkgew0KPiA+ID4gPiArCQlwY2lfYnVzX2Ns
-YWltX3Jlc291cmNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4gPiA+
-ICsJCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290X2J1cyk7DQo+ID4gPiA+ICsJCXBjaV9i
-dXNfYXNzaWduX3Jlc291cmNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiAgDQo+ID4gPiA+IC0J
-bGlzdF9mb3JfZWFjaF9lbnRyeShjaGlsZCwgJnBwLT5yb290X2J1cy0+Y2hpbGRyZW4sDQo+ID4g
-PiA+IG5vZGUpDQo+ID4gPiA+IC0JCXBjaWVfYnVzX2NvbmZpZ3VyZV9zZXR0aW5ncyhjaGlsZCk7
-DQo+ID4gPiA+ICsJCWxpc3RfZm9yX2VhY2hfZW50cnkoY2hpbGQsICZwcC0+cm9vdF9idXMtDQo+
-ID4gPiA+ID5jaGlsZHJlbiwNCj4gPiA+ID4gbm9kZSkNCj4gPiA+ID4gKwkJCXBjaWVfYnVzX2Nv
-bmZpZ3VyZV9zZXR0aW5ncyhjaGlsZCk7DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiAgDQo+ID4gPiA+
-ICAJcGNpX2J1c19hZGRfZGV2aWNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiAgCXJldHVybiAw
-Ow0KPiA+ID4gPiAtLSANCj4gPiA+ID4gMi4xNy4xDQo+ID4gPiA+IA0K
+12.08.2019 20:28, Sowjanya Komatineni пишет:
+> 
+> On 8/12/19 9:25 AM, Dmitry Osipenko wrote:
+>> 11.08.2019 22:15, Sowjanya Komatineni пишет:
+>>> On 8/11/19 10:39 AM, Dmitry Osipenko wrote:
+>>>> 09.08.2019 21:40, Sowjanya Komatineni пишет:
+>>>>> On 8/9/19 11:18 AM, Dmitry Osipenko wrote:
+>>>>>> 09.08.2019 19:19, Sowjanya Komatineni пишет:
+>>>>>>> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
+>>>>>>>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
+>>>>>>>>> This patch adds support for clk: tegra210: suspend-resume.
+>>>>>>>>>
+>>>>>>>>> All the CAR controller settings are lost on suspend when core
+>>>>>>>>> power goes off.
+>>>>>>>>>
+>>>>>>>>> This patch has implementation for saving and restoring all PLLs
+>>>>>>>>> and clocks context during system suspend and resume to have the
+>>>>>>>>> clocks back to same state for normal operation.
+>>>>>>>>>
+>>>>>>>>> Clock driver suspend and resume are registered as syscore_ops as clocks
+>>>>>>>>> restore need to happen before the other drivers resume to have all their
+>>>>>>>>> clocks back to the same state as before suspend.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>> ---
+>>>>>>>>>     drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
+>>>>>>>>>     drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
+>>>>>>>>>     drivers/clk/tegra/clk.h          |   3 ++
+>>>>>>>>>     3 files changed, 166 insertions(+), 4 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>>> index 998bf60b219a..8dd6f4f4debb 100644
+>>>>>>>>> --- a/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>>>>>>>>> @@ -9,13 +9,13 @@
+>>>>>>>>>     #include <linux/clkdev.h>
+>>>>>>>>>     #include <linux/of.h>
+>>>>>>>>>     #include <linux/of_address.h>
+>>>>>>>>> +#include <linux/syscore_ops.h>
+>>>>>>>>>     #include <linux/delay.h>
+>>>>>>>>>     #include <linux/export.h>
+>>>>>>>>>     #include <linux/mutex.h>
+>>>>>>>>>     #include <linux/clk/tegra.h>
+>>>>>>>>>     #include <dt-bindings/clock/tegra210-car.h>
+>>>>>>>>>     #include <dt-bindings/reset/tegra210-car.h>
+>>>>>>>>> -#include <linux/iopoll.h>
+>>>>>>>>>     #include <linux/sizes.h>
+>>>>>>>>>     #include <soc/tegra/pmc.h>
+>>>>>>>>>     @@ -220,11 +220,15 @@
+>>>>>>>>>     #define CLK_M_DIVISOR_SHIFT 2
+>>>>>>>>>     #define CLK_M_DIVISOR_MASK 0x3
+>>>>>>>>>     +#define CLK_MASK_ARM    0x44
+>>>>>>>>> +#define MISC_CLK_ENB    0x48
+>>>>>>>>> +
+>>>>>>>>>     #define RST_DFLL_DVCO 0x2f4
+>>>>>>>>>     #define DVFS_DFLL_RESET_SHIFT 0
+>>>>>>>>>       #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>>>>>>>>     #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>>>>>>>>> +#define CPU_SOFTRST_CTRL 0x380
+>>>>>>>>>       #define LVL2_CLK_GATE_OVRA 0xf8
+>>>>>>>>>     #define LVL2_CLK_GATE_OVRC 0x3a0
+>>>>>>>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
+>>>>>>>>>         struct tegra_clk_pll_freq_table *fentry;
+>>>>>>>>>         struct tegra_clk_pll pllu;
+>>>>>>>>>         u32 reg;
+>>>>>>>>> +    int ret;
+>>>>>>>>>           for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>>>>>>>>>             if (fentry->input_rate == pll_ref_freq)
+>>>>>>>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
+>>>>>>>>>         reg |= PLL_ENABLE;
+>>>>>>>>>         writel(reg, clk_base + PLLU_BASE);
+>>>>>>>>>     -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>>>>>>>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
+>>>>>>>>> -    if (!(reg & PLL_BASE_LOCK)) {
+>>>>>>>>> +    /*
+>>>>>>>>> +     * During clocks resume, same PLLU init and enable sequence get
+>>>>>>>>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
+>>>>>>>>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
+>>>>>>>>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
+>>>>>>>>> +     */
+>>>>>>>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>>>>>>>>> +    if (ret) {
+>>>>>>>>>             pr_err("Timed out waiting for PLL_U to lock\n");
+>>>>>>>>>             return -ETIMEDOUT;
+>>>>>>>>>         }
+>>>>>>>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>>>>>>>>>     }
+>>>>>>>>>       #ifdef CONFIG_PM_SLEEP
+>>>>>>>>> +/*
+>>>>>>>>> + * This array lists mask values for each peripheral clk bank
+>>>>>>>>> + * to mask out reserved bits during the clocks state restore
+>>>>>>>>> + * on SC7 resume to prevent accidental writes to these reserved
+>>>>>>>>> + * bits.
+>>>>>>>>> + */
+>>>>>>>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
+>>>>>>>> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
+>>>>>>>>
+>>>>>>>> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
+>>>>>>>> reserved bits are actually some kind of "secret" bits? If those bits have some use-case
+>>>>>>>> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream
+>>>>>>>> and you
+>>>>>>>> have to keep the workaround locally in the downstream kernel or whatever.
+>>>>>>> Will rename as valid_mask.
+>>>>>>>
+>>>>>>> some bits in these registers are undefined and is not good to write to these bits as
+>>>>>>> they
+>>>>>>> can cause pslverr.
+>>>>>> Okay, it should be explained in the comment.
+>>>>>>
+>>>>>> Is it possible to disable trapping of changing the undefined bits?
+>>>>> No its internal to design
+>>>> Okay.
+>>>>
+>>>> Also, what about to move the valid_mask into struct tegra_clk_periph_regs?
+>>> No, we cannot move to tegra_clk_periph_regs as its in tegra/clk.c and is common for all
+>>> tegra.
+>>>
+>>> Reserved bits are different on tegra chips so should come from Tegra chip specific clock
+>>> driver like
+>>>
+>>> clk-tegra210 for Tegra210.
+>> Could you please check whether the reserved bits are RAZ (read as zero)?
+>>
+>> [snip]
+> 
+> yes all reserved bits of clk_enb register is 0. This should not be set to 1.
+> 
+> As I will be changing to variable name to valid_mask instead of reserved mask, will also
+> change values to valid mask so it can be used directly to write to clk_enb for enabling all
+> peripherals clks.
+> 
+
+It looks to me that the tegra_clk_periph_force_on() could be made local to the
+clk-tegra210.c and then the raw clk_enb values could be written directly instead of having
+the clk_enb[] array, probably that will be a bit cleaner.
