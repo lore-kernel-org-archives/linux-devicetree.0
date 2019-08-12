@@ -1,124 +1,46 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v5 02/18] dt-bindings: thermal: add binding document for
- h6 thermal controller
-Date: Mon, 12 Aug 2019 10:56:04 +0200
-Message-ID: <20190812085604.ozhl35wwm3ehlvqn@flea>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190810052829.6032-3-tiny.windzz@gmail.com>
+Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
+Date: Mon, 12 Aug 2019 10:58:05 +0200
+Message-ID: <20190812085805.qwjbsms6kktjkf45@flea>
+References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
+ <20190722081229.22422-3-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4zhzclyt6oncb76d"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190810052829.6032-3-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3492413607852525166=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722081229.22422-3-maxime.ripard@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---4zhzclyt6oncb76d
+--===============3492413607852525166==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ac53bymogihrt7bf"
+Content-Disposition: inline
+
+
+--ac53bymogihrt7bf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Aug 10, 2019 at 05:28:13AM +0000, Yangtao Li wrote:
-> This patch adds binding document for allwinner h6 thermal controller.
+Hi Daniel, Thomas,
+
+On Mon, Jul 22, 2019 at 10:12:21AM +0200, Maxime Ripard wrote:
+> Newer Allwinner SoCs have different number of interrupts, let's add
+> different compatibles for all of them to deal with this properly.
 >
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../bindings/thermal/sun8i-thermal.yaml       | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
->
-> diff --git a/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> new file mode 100644
-> index 000000000000..e0973199ba3c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-We've used so far for the schemas the first compatible to introduce
-that controller as the filename, we should be consistent here. In that
-case that would be allwinner,sun8i-a23-ths.yaml
-
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/sun8i-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner SUN8I Thermal Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Yangtao Li <tiny.windzz@gmail.com>
-> +
-> +description: |-
-> +  This describes the device tree binding for the Allwinner thermal
-> +  controller which measures the on-SoC temperatures.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun50i-h6-ths
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: bus
-> +
-> +  "#thermal-sensor-cells":
-> +    const: 1
-> +
-> +  nvmem-cells:
-
-You need a maxItems here too
-
-> +    description: ths calibrate data
-
-What about something like this:
-
-Calibration data for the thermal sensor
-
-> +
-> +  nvmem-cell-names:
-> +    const: calib
-
-I'm not sure we need a abbreviation here, calibration would be more
-explicit
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - "#thermal-sensor-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ths: ths@5070400 {
-> +        compatible = "allwinner,sun50i-h6-ths";
-> +        reg = <0x05070400 0x100>;
-> +        clocks = <&ccu CLK_BUS_THS>;
-> +        clock-names = "bus";
-> +        resets = <&ccu RST_BUS_THS>;
-> +        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-
-Those examples won't compile.
+Ping?
 
 Maxime
 
@@ -127,15 +49,29 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---4zhzclyt6oncb76d
+--ac53bymogihrt7bf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEppAAKCRDj7w1vZxhR
-xbePAQD4oGzekU98J4bCgNXtImN3X9EeDQ3DpYjvOJSUQtIlZgEAnRIw2ceIxFC7
-AomJrBOwFCYE3Ly30TnJfIXLEPZvYAU=
-=Si6e
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEqHQAKCRDj7w1vZxhR
+xcoeAQDX2OPSnyQP6fMTStReVJ7LbtqbCcnDfcxvducn1Y65JAEArH9kGf+VdAsI
+4xyZWrH+YOLr59ZbO6yyf/X1sDZ45wQ=
+=Thbx
 -----END PGP SIGNATURE-----
 
---4zhzclyt6oncb76d--
+--ac53bymogihrt7bf--
+
+
+--===============3492413607852525166==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3492413607852525166==--
