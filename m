@@ -1,79 +1,35 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
- property in EP driver.
-Date: Mon, 12 Aug 2019 10:39:00 +0000
-Message-ID: <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
- <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] mfd: madera: Update DT binding document to support
+ clock supplies
+Date: Mon, 12 Aug 2019 11:39:32 +0100
+Message-ID: <20190812103932.GN26727@dell>
+References: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "kishon@ti.com" <kishon@ti.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, Mingkai Hu <mingkai.hu@nxp>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190806151321.31137-1-ckeepax@opensource.cirrus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjEyyNUgMTg6
-MTINCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPjsga2lzaG9uQHRpLmNv
-bQ0KPiBDYzogYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxp
-QG54cC5jb20+OyBhcm5kQGFybmRiLmRlOw0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsg
-TS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpDQo+IEh1IDxtaW5na2Fp
-Lmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+IGtzdGV3YXJ0QGxp
-bnV4Zm91bmRhdGlvbi5vcmc7IHBvbWJyZWRhbm5lQG5leGIuY29tOw0KPiBzaGF3bi5saW5Acm9j
-ay1jaGlwcy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3Jn
-DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0h2MyAxLzJdIFBDSTogbGF5ZXJzY2FwZTogQWRk
-IHRoZSBiYXJfZml4ZWRfNjRiaXQNCj4gcHJvcGVydHkgaW4gRVAgZHJpdmVyLg0KPiANCj4gQ2F1
-dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBGaXJzdCBvZmY6DQo+IA0KPiBUcmltIHRoZSBDQyBsaXN0
-LCB5b3UgQ0MnZWQgbWFpbnRhaW5lcnMgKGFuZCBtYWlsaW5nIGxpc3RzKSBmb3Igbm8gcmVhc29u
-cw0KPiB3aGF0c292ZXIuDQpbWGlhb3dlaSBCYW9dSGkgTG9yZW56bywgSSBhbSBub3QgY2xlYXIg
-d2h5IHRoZSBtYWlsIGxpc3QgaXMgdGhlIENDLCBJIHVzZSB0aGUgY29tbWFuZCAiZ2l0IHNlbmQt
-ZW1haWwgLS10byIsIEkgd2lsbCB0cnkgdG8gc2VuZCB0aGUgcGF0Y2ggYWdhaW4sIGRvIEkgbmVl
-ZCB0byBtb2RpZnkgdGhlIHZlcnNpb24gaXMgdjQgd2hlbiBJIHNlbmQgdGhpcyBwYXRjaCBhZ2Fp
-bj8NCj4gDQo+IFRoZW4sIHJlYWQgdGhpczoNCj4gDQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtz
-LnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmxvcmUua2UNCj4gcm5l
-bC5vcmclMkZsaW51eC1wY2klMkYyMDE3MTAyNjIyMzcwMS5HQTI1NjQ5JTQwYmhlbGdhYXMtZ2xh
-cHRvcC5yb2ENCj4gbS5jb3JwLmdvb2dsZS5jb20lMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3hpYW93
-ZWkuYmFvJTQwbnhwLmNvbSU3DQo+IEMxYzU4NjE3OGUyM2M0MjNhMGU4ODA4ZDcxZjBkOGY2ZiU3
-QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzANCj4gMTYzNSU3QzAlN0MwJTdDNjM3MDEyMDE1
-NDI2Nzg4NTc1JmFtcDtzZGF0YT0zYngxYkRGSXppazhGbkQwd2wNCj4gZHVBVXY3d3RMZEQxSjNo
-UTN4TkgyeG1GWSUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gYW5kIG1ha2UgeW91ciBwYXRjaGVz
-IGNvbXBsaWFudCBwbGVhc2UuDQo+IA0KPiBPbiBGcmksIEp1biAyOCwgMjAxOSBhdCAwOTozODoy
-NUFNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiBUaGUgUENJZSBjb250cm9sbGVyIG9m
-IGxheWVyc2NhcGUganVzdCBoYXZlIDQgQkFScywgQkFSMCBhbmQgQkFSMSBpcw0KPiA+IDMyYml0
-LCBCQVIzIGFuZCBCQVI0IGlzIDY0Yml0LCB0aGlzIGlzIGRldGVybWluZWQgYnkgaGFyZHdhcmUs
-IHNvIHNldA0KPiA+IHRoZSBiYXJfZml4ZWRfNjRiaXQgd2l0aCAweDE0Lg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gLS0tDQo+
-ID4gdjI6DQo+ID4gIC0gUmVwbGFjZSB2YWx1ZSAweDE0IHdpdGggYSBtYWNyby4NCj4gPiB2MzoN
-Cj4gPiAgLSBObyBjaGFuZ2UuDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2Mv
-cGNpLWxheWVyc2NhcGUtZXAuYyB8ICAgIDEgKw0KPiA+ICAxIGZpbGVzIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gYi9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gaW5kZXggYmU2MWQ5Ni4u
-MjI3YzMzYiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2kt
-bGF5ZXJzY2FwZS1lcC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
-LWxheWVyc2NhcGUtZXAuYw0KPiA+IEBAIC00NCw2ICs0NCw3IEBAIHN0YXRpYyBpbnQgbHNfcGNp
-ZV9lc3RhYmxpc2hfbGluayhzdHJ1Y3QgZHdfcGNpZSAqcGNpKQ0KPiA+ICAgICAgIC5saW5rdXBf
-bm90aWZpZXIgPSBmYWxzZSwNCj4gPiAgICAgICAubXNpX2NhcGFibGUgPSB0cnVlLA0KPiA+ICAg
-ICAgIC5tc2l4X2NhcGFibGUgPSBmYWxzZSwNCj4gPiArICAgICAuYmFyX2ZpeGVkXzY0Yml0ID0g
-KDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQpLA0KPiANCj4gSSB3b3VsZCBhcHByZWNpYXRlIEtp
-c2hvbidzIEFDSyBvbiB0aGlzLg0KPiANCj4gTG9yZW56bw0KPiANCj4gPiAgfTsNCj4gPg0KPiA+
-ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMqDQo+ID4gLS0NCj4gPiAxLjcu
-MQ0KPiA+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On Tue, 06 Aug 2019, Charles Keepax wrote:
+
+> Add the 3 input clock sources for the chip into the device tree binding
+> document.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/madera.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
