@@ -1,263 +1,155 @@
 From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH 1/4] staging: iio: adc: ad7192: Add low_pass_3db_filter_frequency
-Date: Mon, 12 Aug 2019 12:03:38 +0300
-Message-ID: <20190812090341.27183-1-mircea.caprioru@analog.com>
+Subject: [PATCH 4/4] dt-bindings: iio: adc: ad7192: Add binding documentation for AD7192
+Date: Mon, 12 Aug 2019 12:03:41 +0300
+Message-ID: <20190812090341.27183-4-mircea.caprioru@analog.com>
+References: <20190812090341.27183-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="y"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812090341.27183-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org
 Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-By adding this option we are able to remove the sync3 field and dt binding.
-When setting the required cutoff frequency we also determine the ADC
-configuration for chop and sync filter.
+This patch add device tree binding documentation for AD7192 adc in YAML
+format.
 
 Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- drivers/staging/iio/adc/ad7192.c | 148 +++++++++++++++++++++++++++----
- 1 file changed, 132 insertions(+), 16 deletions(-)
+ .../bindings/iio/adc/adi,ad7192.yaml          | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index 81ea2639c67c..d58ce08f3693 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -143,6 +143,10 @@
- #define AD7192_EXT_FREQ_MHZ_MAX	5120000
- #define AD7192_INT_FREQ_MHZ	4915200
- 
-+#define AD7192_NO_SYNC_FILTER	1
-+#define AD7192_SYNC3_FILTER	3
-+#define AD7192_SYNC4_FILTER	4
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+new file mode 100644
+index 000000000000..a56ee391f6a8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7192.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- /* NOTE:
-  * The AD7190/2/5 features a dual use data out ready DOUT/RDY output.
-  * In order to avoid contentions on the SPI bus, it's therefore necessary
-@@ -250,7 +254,7 @@ static int ad7192_of_clock_select(struct ad7192_state *st)
- static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
- {
- 	struct iio_dev *indio_dev = spi_get_drvdata(st->sd.spi);
--	bool rej60_en, sinc3_en, refin2_en, chop_en;
-+	bool rej60_en, refin2_en;
- 	bool buf_en, bipolar, burnout_curr_en;
- 	unsigned long long scale_uv;
- 	int i, ret, id;
-@@ -282,24 +286,12 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
- 	if (rej60_en)
- 		st->mode |= AD7192_MODE_REJ60;
- 
--	sinc3_en = of_property_read_bool(np, "adi,sinc3-filter-enable");
--	if (sinc3_en)
--		st->mode |= AD7192_MODE_SINC3;
--
- 	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
- 	if (refin2_en && st->devid != ID_AD7195)
- 		st->conf |= AD7192_CONF_REFSEL;
- 
--	chop_en = of_property_read_bool(np, "adi,chop-enable");
--	if (chop_en) {
--		st->conf |= AD7192_CONF_CHOP;
--		if (sinc3_en)
--			st->f_order = 3; /* SINC 3rd order */
--		else
--			st->f_order = 4; /* SINC 4th order */
--	} else {
--		st->f_order = 1;
--	}
-+	st->conf &= ~AD7192_CONF_CHOP;
-+	st->f_order = AD7192_NO_SYNC_FILTER;
- 
- 	buf_en = of_property_read_bool(np, "adi,buffer-enable");
- 	if (buf_en)
-@@ -311,7 +303,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
- 
- 	burnout_curr_en = of_property_read_bool(np,
- 						"adi,burnout-currents-enable");
--	if (burnout_curr_en && buf_en && !chop_en) {
-+	if (burnout_curr_en && buf_en) {
- 		st->conf |= AD7192_CONF_BURN;
- 	} else if (burnout_curr_en) {
- 		dev_warn(&st->sd.spi->dev,
-@@ -409,6 +401,49 @@ static ssize_t ad7192_set(struct device *dev,
- 	return ret ? ret : len;
- }
- 
-+static void ad7192_get_available_filter_freq(struct ad7192_state *st,
-+						    int *freq)
-+{
-+	unsigned int fadc;
++title: Analog Devices AD7192 ADC device driver
 +
-+	/* Formulas for filter at page 25 of the datasheet */
-+	fadc = DIV_ROUND_CLOSEST(st->fclk,
-+				 AD7192_SYNC4_FILTER * AD7192_MODE_RATE(st->mode));
-+	freq[0] = DIV_ROUND_CLOSEST(fadc * 240, 1024);
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
 +
-+	fadc = DIV_ROUND_CLOSEST(st->fclk,
-+				 AD7192_SYNC3_FILTER * AD7192_MODE_RATE(st->mode));
-+	freq[1] = DIV_ROUND_CLOSEST(fadc * 240, 1024);
++description: |
++  Bindings for the Analog Devices AD7192 ADC device. Datasheet can be
++  found here:
++  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7192.pdf
 +
-+	fadc = DIV_ROUND_CLOSEST(st->fclk, AD7192_MODE_RATE(st->mode));
-+	freq[2] = DIV_ROUND_CLOSEST(fadc * 230, 1024);
-+	freq[3] = DIV_ROUND_CLOSEST(fadc * 272, 1024);
-+}
++properties:
++  compatible:
++    enum:
++      - adi,ad7190
++      - adi,ad7192
++      - adi,ad7193
++      - adi,ad7195
 +
-+static int ad7192_show_filter_avail(struct device *dev,
-+				    struct device_attribute *attr,
-+				    char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+	unsigned int freq_avail[4], i;
-+	size_t len = 0;
++  reg:
++    description: SPI chip select number for the device
++    maxItems: 1
 +
-+	ad7192_get_available_filter_freq(st, freq_avail);
++  spi-cpol: true
 +
-+	for (i = 0; i < ARRAY_SIZE(freq_avail); i++)
-+		len += scnprintf(buf + len, PAGE_SIZE - len,
-+				 "%d.%d ", freq_avail[i] / 1000,
-+				 freq_avail[i] % 1000);
++  spi-cpha: true
 +
-+	buf[len - 1] = '\n';
++  clocks:
++    maxItems: 1
++    description: phandle to the master clock (mclk)
 +
-+	return len;
-+}
++  clock-names:
++    items:
++      - const: mclk
 +
-+static IIO_DEVICE_ATTR(filter_low_pass_3db_frequency_available,
-+		       0444, ad7192_show_filter_avail, NULL, 0);
++  interrupts:
++    description: IRQ line for the ADC
++    maxItems: 1
 +
- static IIO_DEVICE_ATTR(bridge_switch_en, 0644,
- 		       ad7192_show_bridge_switch, ad7192_set,
- 		       AD7192_REG_GPOCON);
-@@ -418,6 +453,7 @@ static IIO_DEVICE_ATTR(ac_excitation_en, 0644,
- 		       AD7192_REG_MODE);
- 
- static struct attribute *ad7192_attributes[] = {
-+	&iio_dev_attr_filter_low_pass_3db_frequency_available.dev_attr.attr,
- 	&iio_dev_attr_bridge_switch_en.dev_attr.attr,
- 	&iio_dev_attr_ac_excitation_en.dev_attr.attr,
- 	NULL
-@@ -428,6 +464,7 @@ static const struct attribute_group ad7192_attribute_group = {
- };
- 
- static struct attribute *ad7195_attributes[] = {
-+	&iio_dev_attr_filter_low_pass_3db_frequency_available.dev_attr.attr,
- 	&iio_dev_attr_bridge_switch_en.dev_attr.attr,
- 	NULL
- };
-@@ -441,6 +478,74 @@ static unsigned int ad7192_get_temp_scale(bool unipolar)
- 	return unipolar ? 2815 * 2 : 2815;
- }
- 
-+static int ad7192_set_3db_filter_freq(struct ad7192_state *st,
-+				      int val, int val2)
-+{
-+	int freq_avail[4], i, ret, idx, freq;
-+	unsigned int diff_new, diff_old;
++  dvdd-supply:
++    description: DVdd voltage supply
++    items:
++      - const: dvdd
 +
-+	diff_old = U32_MAX;
-+	freq = val * 1000 + val2;
++  avdd-supply:
++    description: AVdd voltage supply
++    items:
++      - const: avdd
 +
-+	ad7192_get_available_filter_freq(st, freq_avail);
++  adi,rejection-60-Hz-enable:
++    description: |
++      This bit enables a notch at 60 Hz when the first notch of the sinc
++      filter is at 50 Hz. When REJ60 is set, a filter notch is placed at
++      60 Hz when the sinc filter first notch is at 50 Hz. This allows
++      simultaneous 50 Hz/ 60 Hz rejection.
++    type: boolean
 +
-+	for (i = 0; i < ARRAY_SIZE(freq_avail); i++) {
-+		diff_new = abs(freq - freq_avail[i]);
-+		if (diff_new < diff_old) {
-+			diff_old = diff_new;
-+			idx = i;
-+		}
-+	}
++  adi,refin2-pins-enable:
++    description: |
++      External reference applied between the P1/REFIN2(+) and P0/REFIN2(−) pins.
++    type: boolean
 +
-+	switch (idx) {
-+	case 0:
-+		st->f_order = AD7192_SYNC4_FILTER;
-+		st->mode &= ~AD7192_MODE_SINC3;
++  adi,buffer-enable:
++    description: |
++      Enables the buffer on the analog inputs. If cleared, the analog inputs
++      are unbuffered, lowering the power consumption of the device. If this
++      bit is set, the analog inputs are buffered, allowing the user to place
++      source impedances on the front end without contributing gain errors to
++      the system.
++    type: boolean
 +
-+		st->conf |= AD7192_CONF_CHOP;
-+		break;
-+	case 1:
-+		st->f_order = AD7192_SYNC3_FILTER;
-+		st->mode |= AD7192_MODE_SINC3;
++  adi,burnout-currents-enable:
++    description: |
++      When this bit is set to 1, the 500 nA current sources in the signal
++      path are enabled. When BURN = 0, the burnout currents are disabled.
++      The burnout currents can be enabled only when the buffer is active
++      and when chop is disabled.
++    type: boolean
 +
-+		st->conf |= AD7192_CONF_CHOP;
-+		break;
-+	case 2:
-+		st->f_order = AD7192_NO_SYNC_FILTER;
-+		st->mode &= ~AD7192_MODE_SINC3;
++  bipolar:
++    description: see Documentation/devicetree/bindings/iio/adc/adc.txt
++    type: boolean
 +
-+		st->conf &= ~AD7192_CONF_CHOP;
-+		break;
-+	case 3:
-+		st->f_order = AD7192_NO_SYNC_FILTER;
-+		st->mode |= AD7192_MODE_SINC3;
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dvdd-supply
++  - avdd-supply
++  - spi-cpol
++  - spi-cpha
 +
-+		st->conf &= ~AD7192_CONF_CHOP;
-+		break;
-+	}
++examples:
++  - |
++    spi0 {
++      ad7192@0 {
++        compatible = "adi,ad7192";
++        reg = <0>;
++        spi-max-frequency = <1000000>;
++        spi-cpol;
++        spi-cpha;
++        clocks = <&ad7192_mclk>;
++        clock-names = "mclk";
++        #interrupt-cells = <2>;
++        interrupts = <25 0x2>;
++        interrupt-parent = <&gpio>;
++        dvdd-supply = <&dvdd>;
++        avdd-supply = <&avdd>;
 +
-+	ret = ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ad_sd_write_reg(&st->sd, AD7192_REG_CONF, 3, st->conf);
-+}
-+
-+static int ad7192_get_3db_filter_freq(struct ad7192_state *st)
-+{
-+	unsigned int fadc;
-+
-+	fadc = DIV_ROUND_CLOSEST(st->fclk,
-+				 st->f_order * AD7192_MODE_RATE(st->mode));
-+
-+	if (st->conf & AD7192_CONF_CHOP)
-+		return DIV_ROUND_CLOSEST(fadc * 240, 1024);
-+	if (st->mode & AD7192_MODE_SINC3)
-+		return DIV_ROUND_CLOSEST(fadc * 272, 1024);
-+	else
-+		return DIV_ROUND_CLOSEST(fadc * 230, 1024);
-+}
-+
- static int ad7192_read_raw(struct iio_dev *indio_dev,
- 			   struct iio_chan_spec const *chan,
- 			   int *val,
-@@ -481,6 +586,10 @@ static int ad7192_read_raw(struct iio_dev *indio_dev,
- 		*val = st->fclk /
- 			(st->f_order * 1024 * AD7192_MODE_RATE(st->mode));
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		*val = ad7192_get_3db_filter_freq(st);
-+		*val2 = 1000;
-+		return IIO_VAL_FRACTIONAL;
- 	}
- 
- 	return -EINVAL;
-@@ -535,6 +644,9 @@ static int ad7192_write_raw(struct iio_dev *indio_dev,
- 		st->mode |= AD7192_MODE_RATE(div);
- 		ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
- 		break;
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		ret = ad7192_set_3db_filter_freq(st, val, val2 / 1000);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 	}
-@@ -553,6 +665,8 @@ static int ad7192_write_raw_get_fmt(struct iio_dev *indio_dev,
- 		return IIO_VAL_INT_PLUS_NANO;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		return IIO_VAL_INT_PLUS_MICRO;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -653,6 +767,8 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 
- 	for (i = 0; i < indio_dev->num_channels; i++) {
- 		*chan = channels[i];
-+		chan->info_mask_shared_by_all |=
-+			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
- 		if (chan->type != IIO_TEMP)
- 			chan->info_mask_shared_by_type_available |=
- 				BIT(IIO_CHAN_INFO_SCALE);
++        adi,refin2-pins-enable;
++        adi,rejection-60-Hz-enable;
++        adi,buffer-enable;
++        adi,burnout-currents-enable;
++        };
++    }
 -- 
 2.17.1
