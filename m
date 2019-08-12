@@ -1,45 +1,51 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: Update with Amlogic DRM bindings
- converted as YAML
-Date: Mon, 12 Aug 2019 18:31:05 +0200
-Message-ID: <CAMO6naxDkpjLTaByYBhkgP6i1YE1F1ATBAp8gPuVjDy9DAUM7g@mail.gmail.com>
-References: <20190808085522.21950-1-narmstrong@baylibre.com> <20190808085522.21950-4-narmstrong@baylibre.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: tegra30: Connect SMMU with Video Decoder
+ Engine
+Date: Mon, 12 Aug 2019 19:42:29 +0300
+Message-ID: <e2dbeed2-7596-d687-d200-8f08dc267c83@gmail.com>
+References: <20190623170730.5095-1-digetx@gmail.com>
+ <20190623170730.5095-2-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190808085522.21950-4-narmstrong@baylibre.com>
+In-Reply-To: <20190623170730.5095-2-digetx@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 8, 2019 at 10:55 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> The amlogic,meson-dw-hdmi.txt and amlogic,meson-vpu.txt has been
-> converted to YAML schemas, update MAINTAINERS to match them again.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+23.06.2019 20:07, Dmitry Osipenko пишет:
+> Enable IOMMU support for the video decoder.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  MAINTAINERS | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6426db5198f0..c55c18531cd1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5318,8 +5318,8 @@ L:        linux-amlogic@lists.infradead.org
->  W:     http://linux-meson.com/
->  S:     Supported
->  F:     drivers/gpu/drm/meson/
-> -F:     Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
-> -F:     Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-> +F:     Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
-> +F:     Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
->  F:     Documentation/gpu/meson.rst
->  T:     git git://anongit.freedesktop.org/drm/drm-misc
->
-> --
-> 2.22.0
->
+> 
+> No changes since v1.
+> 
+>  arch/arm/boot/dts/tegra30.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index 934caa83c8db..ce162125e7bf 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -424,6 +424,7 @@
+>  		clocks = <&tegra_car TEGRA30_CLK_VDE>;
+>  		reset-names = "vde", "mc";
+>  		resets = <&tegra_car 61>, <&mc TEGRA30_MC_RESET_VDE>;
+> +		iommus = <&mc TEGRA_SWGROUP_VDE>;
+>  	};
+>  
+>  	apbmisc@70000800 {
+> 
 
-Reviewed-by: Maxime Jourdan <mjourdan@baylibre.com>
+Hello Thierry,
+
+Will be awesome if you could pick up this and [1][2] for v5.4. The rest of the VDE patches
+are already applied by the media maintainers in linux-next, please note that [2] is required
+to avoid problems caused by the notorious implicit IOMMU backing. Thanks in advance!
+
+[1] http://patchwork.ozlabs.org/patch/1120864/
+[2] http://patchwork.ozlabs.org/project/linux-tegra/list/?series=115608
