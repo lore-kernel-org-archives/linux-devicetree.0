@@ -1,7 +1,7 @@
 From: Anson.Huang@nxp.com
-Subject: [PATCH V2 3/4] ARM: imx_v6_v7_defconfig: Enable CONFIG_IMX7ULP_WDT by default
-Date: Mon, 12 Aug 2019 16:53:20 +0800
-Message-ID: <20190812085321.13823-3-Anson.Huang@nxp.com>
+Subject: [PATCH V2 4/4] ARM: dts: imx7ulp: Add wdog1 node
+Date: Mon, 12 Aug 2019 16:53:21 +0800
+Message-ID: <20190812085321.13823-4-Anson.Huang@nxp.com>
 References: <20190812085321.13823-1-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190812085321.13823-1-Anson.Huang@nxp.com>
@@ -12,26 +12,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anson Huang <Anson.Huang@nxp.com>
 
-Select CONFIG_IMX7ULP_WDT by default to support i.MX7ULP watchdog.
+Add wdog1 node to support watchdog driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx7ulp.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index bd2e2f5..f69075b 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -235,6 +235,7 @@ CONFIG_DA9062_WATCHDOG=y
- CONFIG_DA9063_WATCHDOG=m
- CONFIG_RN5T618_WATCHDOG=y
- CONFIG_IMX2_WDT=y
-+CONFIG_IMX7ULP_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
- CONFIG_MFD_DA9063=y
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index 6859a3a..1fdb5a35 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -264,6 +264,16 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		wdog1: wdog@403d0000 {
++			compatible = "fsl,imx7ulp-wdt";
++			reg = <0x403d0000 0x10000>;
++			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
++			assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
++			assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
++			timeout-sec = <40>;
++		};
++
+ 		pcc2: clock-controller@403f0000 {
+ 			compatible = "fsl,imx7ulp-pcc2";
+ 			reg = <0x403f0000 0x10000>;
 -- 
 2.7.4
