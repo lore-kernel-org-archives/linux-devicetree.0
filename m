@@ -1,84 +1,134 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
-Date: Mon, 12 Aug 2019 11:16:31 +0200
-Message-ID: <20190812091631.j2pr7i2zeput3hrc@flea>
-References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
- <20190722081229.22422-3-maxime.ripard@bootlin.com>
- <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v8 1/4] arm64: dts: allwinner: orange-pi-3:
+ Enable ethernet
+Date: Mon, 12 Aug 2019 17:17:48 +0800
+Message-ID: <CAGb2v66+L6_QrL-05fLHQxqavBAmP-pEFp9RWT5XeTQ2rpGa3w@mail.gmail.com>
+References: <20190806155744.10263-1-megous@megous.com> <20190806155744.10263-2-megous@megous.com>
+Reply-To: wens-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0510354362183294010=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBS65YTVAKGQEPW4WH2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190806155744.10263-2-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0510354362183294010==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="37oa6uis2vruvc4i"
-Content-Disposition: inline
-
-
---37oa6uis2vruvc4i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Aug 12, 2019 at 10:59:51AM +0200, Daniel Lezcano wrote:
-> On 22/07/2019 10:12, Maxime Ripard wrote:
-> > Newer Allwinner SoCs have different number of interrupts, let's add
-> > different compatibles for all of them to deal with this properly.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+On Tue, Aug 6, 2019 at 11:57 PM <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org> wrote:
 >
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+>
+> Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+> to the phy datasheet, both regulators need to be enabled at the same time,
+> but we can only specify a single phy-supply in the DT.
+>
+> This can be achieved by making one regulator depedning on the other via
+> vin-supply. While it's not a technically correct description of the
+> hardware, it achieves the purpose.
+>
+> All values of RX/TX delay were tested exhaustively and a middle one of the
+> working values was chosen.
+>
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> index 17d496990108..2c6807b74ff6 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+> @@ -15,6 +15,7 @@
+>
+>         aliases {
+>                 serial0 = &uart0;
+> +               ethernet0 = &emac;
+>         };
+>
+>         chosen {
+> @@ -44,6 +45,27 @@
+>                 regulator-max-microvolt = <5000000>;
+>                 regulator-always-on;
+>         };
+> +
+> +       /*
+> +        * The board uses 2.5V RGMII signalling. Power sequence to enable
+> +        * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
+> +        * at the same time and to wait 100ms.
+> +        */
+> +       reg_gmac_2v5: gmac-2v5 {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "gmac-2v5";
+> +               regulator-min-microvolt = <2500000>;
+> +               regulator-max-microvolt = <2500000>;
+> +               startup-delay-us = <100000>;
+> +               enable-active-high;
+> +               gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+> +
+> +               /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
+> +                * enable two regulators to power the phy. This is one way
+> +                * to achieve that.
+> +                */
+> +               vin-supply = <&reg_aldo2>; /* GMAC-3V */
+> +       };
 
-Thanks!
+The RTL8211E datasheet I have says:
 
-Can you merge this through your tree (along with the bindings)? I'll
-merge the DT patches
+    2.5V (or 1.8/1.5V) RGMII power should be risen simultaneously or slightly
+    earlier than 3.3V power. Rising 2.5V (or 1.8/1.5V) power later than 3.3V
+    power may lead to errors.
 
-Maxime
+Since you can't reverse the parent relationship in your patch, maybe it's
+time to add a phy-io-supply property?
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+It also says the rise time for 3.3V must be between 1ms and 100ms. However
+the PMIC doesn't support voltage ramp control for the LDOs, nor does it list
+the ramp rate.
 
---37oa6uis2vruvc4i
-Content-Type: application/pgp-signature; name="signature.asc"
+ChenYu
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVEubwAKCRDj7w1vZxhR
-xSPiAQCGm7AfM7a9jZU20jV/mm4Uo+2m/txqIfeNeKqd6epxEgEAyI9mg/ROKQgY
-ucdSpdv22wOrVWgTyo3+PHHv0QX2KgA=
-=ZtgS
------END PGP SIGNATURE-----
-
---37oa6uis2vruvc4i--
-
-
---===============0510354362183294010==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0510354362183294010==--
+>  };
+>
+>  &cpu0 {
+> @@ -58,6 +80,28 @@
+>         status = "okay";
+>  };
+>
+> +&emac {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&ext_rgmii_pins>;
+> +       phy-mode = "rgmii";
+> +       phy-handle = <&ext_rgmii_phy>;
+> +       phy-supply = <&reg_gmac_2v5>;
+> +       allwinner,rx-delay-ps = <1500>;
+> +       allwinner,tx-delay-ps = <700>;
+> +       status = "okay";
+> +};
+> +
+> +&mdio {
+> +       ext_rgmii_phy: ethernet-phy@1 {
+> +               compatible = "ethernet-phy-ieee802.3-c22";
+> +               reg = <1>;
+> +
+> +               reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
+> +               reset-assert-us = <15000>;
+> +               reset-deassert-us = <40000>;
+> +       };
+> +};
+> +
+>  &mmc0 {
+>         vmmc-supply = <&reg_cldo1>;
+>         cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+> --
+> 2.22.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190806155744.10263-2-megous%40megous.com.
