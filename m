@@ -1,7 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to fec
-Date: Mon, 12 Aug 2019 14:21:36 +0000
-Message-ID: <20190812142105.1995-15-philippe.schenker@toradex.com>
+Subject: [PATCH v4 16/21] ARM: dts: imx6ull-colibri: Add watchdog
+Date: Mon, 12 Aug 2019 14:21:40 +0000
+Message-ID: <20190812142105.1995-17-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -14,8 +14,7 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Do not change the clock as the power for this phy is switched
-with that clock.
+This patch adds the watchdog to the imx6ull-colibri devicetree
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
@@ -28,46 +27,39 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6ull-colibri.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
 6ull-colibri.dtsi
-index d56728f03c35..1019ce69a242 100644
+index 1f112ec55e5c..e3220298dd6f 100644
 --- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -62,8 +62,9 @@
+@@ -199,6 +199,12 @@
+ 	assigned-clock-rates =3D <0>, <198000000>;
  };
 =20
- &fec2 {
--	pinctrl-names =3D "default";
-+	pinctrl-names =3D "default", "sleep";
- 	pinctrl-0 =3D <&pinctrl_enet2>;
-+	pinctrl-1 =3D <&pinctrl_enet2_sleep>;
- 	phy-mode =3D "rmii";
- 	phy-handle =3D <&ethphy1>;
- 	status =3D "okay";
-@@ -220,6 +221,21 @@
++&wdog1 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
++
+ &iomuxc {
+ 	pinctrl_can_int: canint-grp {
+ 		fsl,pins =3D <
+@@ -506,6 +512,12 @@
+ 			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT	0x14
  		>;
  	};
-=20
-+	pinctrl_enet2_sleep: enet2sleepgrp {
++
++	pinctrl_wdog: wdog-grp {
 +		fsl,pins =3D <
-+			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
-+			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
-+			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
-+			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
-+			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-+			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
-+			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
-+			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
++			MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
 +		>;
 +	};
-+
- 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
- 		fsl,pins =3D <
- 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
+ };
+=20
+ &iomuxc_snvs {
 --=20
 2.22.0
