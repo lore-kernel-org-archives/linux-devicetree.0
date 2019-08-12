@@ -1,197 +1,46 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] at91/dt: ariettag25: style cleanup
-Date: Mon, 12 Aug 2019 16:57:02 +0200
-Message-ID: <20190812145702.GO3600@piout.net>
-References: <20190731220045.3992-1-uwe@kleine-koenig.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 03/10] rtc: mt6397: move some common definitions into
+ rtc.h
+Date: Mon, 12 Aug 2019 16:11:29 +0100
+Message-ID: <20190812151128.GV26727@dell>
+References: <20190812121511.4169-1-frank-w@public-files.de>
+ <20190812121511.4169-4-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190731220045.3992-1-uwe@kleine-koenig.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190812121511.4169-4-frank-w@public-files.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@k>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 12 Aug 2019, Frank Wunderlich wrote:
 
-The subject prefix should be "ARM: dts: at91:"
-
-On 01/08/2019 00:00:45+0200, Uwe Kleine-K=F6nig wrote:
-> - newline between properties and sub-nodes
-> - use tags from included dtsi instead of duplicating the hierarchy
-> - status should be the last property
-> - drop duplicated alias
-> =
-
-> There are no differences in the generated .dtb
-> =
-
-> Signed-off-by: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
+> From: Josef Friedl <josef.friedl@speed.at>
+> 
+> move code to separate header-file to reuse definitions later
+> in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> 
+> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
-> Hello,
-> =
+> changes since v4: none
+> changes since v3: none
+> changes since v2: add missing commit-message
+> ---
+>  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
+>  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
 
-> these are the style rules I was teached when modifying imx dts files.
-> Do they apply to at91, too?
-> =
+include/linux/rtc/mt6397.h?
 
-> Best regards
-> Uwe
-> =
+>  2 files changed, 72 insertions(+), 54 deletions(-)
+>  create mode 100644 include/linux/mfd/mt6397/rtc.h
 
->  arch/arm/boot/dts/at91-ariettag25.dts | 87 +++++++++++++--------------
->  1 file changed, 43 insertions(+), 44 deletions(-)
-> =
-
-> diff --git a/arch/arm/boot/dts/at91-ariettag25.dts b/arch/arm/boot/dts/at=
-91-ariettag25.dts
-> index 7a34c4dc05d2..8f9f5a22cbf6 100644
-> --- a/arch/arm/boot/dts/at91-ariettag25.dts
-> +++ b/arch/arm/boot/dts/at91-ariettag25.dts
-> @@ -6,14 +6,11 @@
->   */
->  /dts-v1/;
->  #include "at91sam9g25.dtsi"
-> +
->  / {
->  	model =3D "Acme Systems Arietta G25";
->  	compatible =3D "acme,ariettag25", "atmel,at91sam9x5", "atmel,at91sam9";
->  =
-
-> -	aliases {
-> -		serial0 =3D &dbgu;
-> -	};
-> -
->  	chosen {
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> @@ -34,55 +31,16 @@
->  =
-
->  	ahb {
->  		apb {
-> -			mmc0: mmc@f0008000 {
-> -				pinctrl-0 =3D <
-> -				  &pinctrl_mmc0_slot0_clk_cmd_dat0
-> -				  &pinctrl_mmc0_slot0_dat1_3>;
-> -				status =3D "okay";
-> -
-> -				slot@0 {
-> -					reg =3D <0>;
-> -					bus-width =3D <4>;
-> -				};
-> -			};
-> -
-> -			tcb0: timer@f8008000 {
-> -				timer@0 {
-> -					compatible =3D "atmel,tcb-timer";
-> -					reg =3D <0>;
-> -				};
-> -
-> -				timer@1 {
-> -					compatible =3D "atmel,tcb-timer";
-> -					reg =3D <1>;
-> -				};
-> -			};
-> -
-> -			usb2: gadget@f803c000 {
-> -				status =3D "okay";
-> -			};
-> -
-> -			dbgu: serial@fffff200 {
-> -				status =3D "okay";
-> -			};
-> -
->  			rtc@fffffeb0 {
-
-You can had a label to the rtc in a preliminary patch so you can remove
-the hierarchy.
-
->  				status =3D "okay";
->  			};
->  		};
->  =
-
-> -		usb0: ohci@600000 {
-> -			status =3D "okay";
-> -			num-ports =3D <3>;
-> -		};
-> -
-> -		usb1: ehci@700000 {
-> -			status =3D "okay";
-> -		};
->  	};
->  =
-
->  	leds {
->  		compatible =3D "gpio-leds";
-> +
->  		arietta_led {
->  			label =3D "arietta_led";
->  			gpios =3D <&pioB 8 GPIO_ACTIVE_HIGH>; /* PB8 */
-> @@ -90,3 +48,44 @@
->  		};
->  	};
->  };
-> +
-> +&dbgu {
-> +	status =3D "okay";
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-0 =3D <
-> +		&pinctrl_mmc0_slot0_clk_cmd_dat0
-> +		&pinctrl_mmc0_slot0_dat1_3>;
-> +	status =3D "okay";
-> +
-> +	slot@0 {
-> +		reg =3D <0>;
-> +		bus-width =3D <4>;
-> +	};
-> +};
-> +
-> +&tcb0 {
-> +	timer@0 {
-> +		compatible =3D "atmel,tcb-timer";
-> +		reg =3D <0>;
-> +	};
-> +
-> +	timer@1 {
-> +		compatible =3D "atmel,tcb-timer";
-> +		reg =3D <1>;
-> +	};
-> +};
-> +
-> +&usb0 {
-> +	num-ports =3D <3>;
-> +	status =3D "okay";
-> +};
-> +
-> +&usb1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&usb2 {
-> +	status =3D "okay";
-> +};
-> -- =
-
-> 2.20.1
-> =
-
-
--- =
-
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
