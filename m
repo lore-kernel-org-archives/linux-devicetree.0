@@ -1,49 +1,84 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] pwm: sprd: Add Spreadtrum PWM support
-Date: Mon, 12 Aug 2019 11:46:07 +0200
-Message-ID: <20190812094607.yg7efmvefewxicke@pengutronix.de>
-References: <6a38a3655bc8100764d85cb04dea5c2546a311e1.1565168564.git.baolin.wang@linaro.org>
- <40127356a1acd1f2ff1be1d8a120b305a4e17af4.1565168564.git.baolin.wang@linaro.org>
- <20190809091013.vguj4wty7qiab64t@pengutronix.de>
- <CAMz4kuLQsrBWjta1s=ZRPgxUd0_+_f-GbJV138tccuMLg2XCLA@mail.gmail.com>
- <20190809144124.3as3rtctlywxkudr@pengutronix.de>
- <CAMz4ku+o6dCyxhR3-5yM+zr2nBpTQG5A8Pbnxpo7yRciwPbv3Q@mail.gmail.com>
- <20190812083556.dvprpwv6mjy3cjae@pengutronix.de>
- <CAMz4kuJA81ZP6Kc63dPV1jEn1ah=jow6tQBfO=UDCcTzSf3y-A@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 07/21] clk: Add API to get index of the clock parent
+Date: Mon, 12 Aug 2019 11:47:32 +0200
+Message-ID: <20190812094732.GF8903@ulmo>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
+ <1565308020-31952-8-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0hHDr/TIsw4o3iPK"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMz4kuJA81ZP6Kc63dPV1jEn1ah=jow6tQBfO=UDCcTzSf3y-A@mail.gmail.com>
+In-Reply-To: <1565308020-31952-8-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Baolin,
 
-On Mon, Aug 12, 2019 at 05:11:56PM +0800, Baolin Wang wrote:
-> On Mon, 12 Aug 2019 at 16:36, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Mon, Aug 12, 2019 at 03:29:07PM +0800, Baolin Wang wrote:
-> > > The clock framework supplies 'assigned-clocks' and
-> > > 'assigned-clock-parents' properties to set parent, but for our case we
-> > > still want to set a default clock rate if failed to set parent when
-> > > met some abnormal things.
-> >
-> > Without understanding the complete problem I'd say this is out of the
-> > area the driver should care about.
-> 
-> Fair enough, I will try to use 'assigned-clocks' and
-> 'assigned-clock-parents' to simplify the code.
+--0hHDr/TIsw4o3iPK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is also assigned-clock-rates if you need that.
+On Thu, Aug 08, 2019 at 04:46:46PM -0700, Sowjanya Komatineni wrote:
+> This patch adds an API clk_hw_get_parent_index to get index of the
+> clock parent to use during the clock restore operations on system
+> resume.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/clk.c            | 17 +++++++++++++++++
+>  include/linux/clk-provider.h |  1 +
+>  2 files changed, 18 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index c0990703ce54..f26252e48f73 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1643,6 +1643,23 @@ static int clk_fetch_parent_index(struct clk_core =
+*core,
+>  	return i;
+>  }
+> =20
+> +/**
+> + * clk_hw_get_parent_index - return the index of parent clock
+> + * @hw: clk_hw associated with the clk being consumed
+> + * @parent_hw: clk_hw associated with the parent of clk
+> + *
+> + * Fetches and returns the index of parent clock.
+> + * if hw or parent_hw is NULL, returns -EINVAL.
 
-Best regards
-Uwe
+"If" because it's at the beginning of a sentence. You may also want to
+turn this into a "Return:" section as described in:
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+	Documentation/doc-guide/kernel-doc.rst
+
+That said, other functions in this file don't use that construct either,
+so I suppose this is fine as-is, for consistency.
+
+So with the capitalization of "If" fixed, this is:
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--0hHDr/TIsw4o3iPK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1RNbIACgkQ3SOs138+
+s6FV1A//VN8FoQqHYUZDRFeTFLp0ScDoXoSuHZPsgTeHnWdfLuI6hjX0BwnBpuou
+xp0VC0KcQdVBw0mL+B/0aKRlYcTsXGB0Pk0qi786ZQ5HicqrF7ixVfWNns9TIbAC
+WQbjyPR0SoG0kBTfIXn36aSRfJh9ulnaPQjJ/SpoaT+pAsc4IUjCaGFVw+Eu2LNX
+Av3p5BKIcCIynHfmMFNgM4wh44PInWZ7KHqW8yVNk+yJV41rSYqzV0TO2ANg/a6b
+LaWziwn3XN+aPyuo5dB++g8xIATX2dQSfG6uYjZC4HDt08f3pCBkSEAfyup2xEIF
+epEcFzFYBuSqyrMZ587honAJ0a5AqzFDSGCxxZw2qd1MSiW5EaIIdQE1PEiY2zeC
+ldZGCn0iMPizacDQqkRrd96KwDsZ1s8oTGHyNya7z+6PHLRF36nb4EEg0OF1AJ95
+aj9EI5IfJlfKSN1RSuR1K7DaZzIunI9Ji7Ip3WlkNc4LIBL9duQ0WQ0D6ttFLpZ4
+cTcrkgo/uJ2DOaK84DCEt9w21jIkOoiSFstUKBCC/0+IPURVcHC+ByhHOJbjJMge
+oYq5uhB2pVscLpnzfjjy5XLBuVjYiapsuWy74tUm1YAyyRvJSLr9+6McvwLjQAHk
+hpiiENkRMsXAPGywAKTdlrIUK5JYRyXTR7rVHW2xI5M47aMJOdo=
+=fkP5
+-----END PGP SIGNATURE-----
+
+--0hHDr/TIsw4o3iPK--
