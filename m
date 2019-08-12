@@ -1,60 +1,70 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] Allwinner H6 SPDIF support
-Date: Mon, 12 Aug 2019 14:10:36 +0200
-Message-ID: <CAJiuCcdNFbKgo+oGZXKfBpyPKNOuUwpPbHdq-yBpcm3XYtPhEQ@mail.gmail.com>
-References: <20190527200627.8635-1-peron.clem@gmail.com> <CAJiuCcfUhBxEr=o7VVpPROQZadQh7z1QC0SkWSYt-53Sj3H2qw@mail.gmail.com>
- <CAJiuCcc3_1jZWV7G3+fFQYRZ8b6qcAbnH+K6pkRvww6_D=OMAw@mail.gmail.com>
- <20190715193842.GC4503@sirena.org.uk> <CAJiuCceYDnyxRLLLLy6Dn6DLTZ+NmSaUnoX1Vmzvgiy0XvF_Fw@mail.gmail.com>
- <20190812110103.GD4592@sirena.co.uk>
-Reply-To: peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v5 00/10] implement poweroff for mt6323 / bpi-r2
+Date: Mon, 12 Aug 2019 14:15:01 +0200
+Message-ID: <20190812121511.4169-1-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCELXIX7UICBBSNOYXVAKGQE3SEFYDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190812110103.GD4592-7j8lgAiuQgnQXOPxS62xeg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre>
+Cc: Frank Wunderlich <frank-w@public-files.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Mon, 12 Aug 2019 at 13:01, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> On Sat, Aug 10, 2019 at 10:45:23AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
->
-> > Hi,
->
-> Please don't top post, reply in line with needed context.  This allows
-> readers to readily follow the flow of conversation and understand what
-> you are talking about and also helps ensure that everything in the
-> discussion is being addressed.
->
-> > Sorry, I just discovered that the ASoC patches have been merged into
-> > the broonie and linus tree in 5.3.
->
-> > I'm still quite new in the sending of patches to the Kernel but
-> > souldn't be a ack or a mail sent to warn the sender when the series
-> > are accepted?
->
-> Not every maintainer will send those, I do but you might find they've
-> gone into your spam folder if you're using gmail.
-
-Thank you very much for the answer,
-Regards,
-Cl=C3=A9ment
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/CAJiuCcdNFbKgo%2BoGZXKfBpyPKNOuUwpPbHdq-yBpcm3XYtPhEQ%40mail.g=
-mail.com.
+bWFpbmxpbmUtZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgbXQ2MzIzCgp0aGlzIHNlcmllcyBtYWtl
+cyBzb21lIGNsZWFudXAgdG8gbXQ2Mzk3LXJ0Yy1kcml2ZXIsIGFkZHMgbXQ2MzIzIGFuZAppbXBs
+ZW1lbnQgcG93ZXItY29udHJvbGxlciBvbiBpdC4KCnRlc3RlZCBvbiBiYW5hbmFwaS1yMgoKT3Jp
+Z2luYWwgUGF0Y2ggZnJvbSBKb3NlZiBGcmllZGwKCmNoYW5nZXMgc2luY2UgdjQ6CgktIHJlbGF0
+aXZlIHBhdGggaW4gcGFydCAxKzIKCS0gZHJvcCBjaGFuZ2Ugb2YgY29weXJpZ2h0LXllYXIgaW4g
+cGFydCA1CmNoYW5nZXMgc2luY2UgdjM6CgktIG1vdmVkIFNPQiBpbiAyLzEwIGFuZCA5LzEwCgkt
+IG1vdmVkIHBhcnQgNSB0byA2IHRvIGJlIG5lYXIgZHJpdmVyLWNoYW5nZQoJLSBjaGFuZ2VoaXN0
+b3J5IG9mIHBhdGNoZXMgYmVsb3cgLS0tCgpjaGFuZ2VzIHNpbmNlIHYyOgoJLSBTcGxpdHRlZCBz
+b21lIHBhcnRzIGFuZCByZWJhc2VkIG9uIDUuMy1yYzI6CgoJdjIuMSBkdC1iaW5kaW5nczogYWRk
+IHBvd2VyY29udHJvbGxlciDigJMgdHJ5IHRvIG1ha2UgYmV0dGVyIHN1YmplY3QKCXYyLjIgc2Vw
+YXJhdGUgcnRjLW10NjM5Ny50eHQgKHN1Z2dlc3RlZCBieSBBbGV4YW5kcmUgQmVsbG9uaSkKCSAg
+ICAgYWRkIG1pc3NpbmcgY29tbWl0LW1lc3NhZ2UgKHN1Z2dlc3RlZCBieSBNYXR0aGlhcyBCcnVn
+Z2VyKQoJdjIuMyBmaXggYWxsb2MgYWZ0ZXIgSVJRIChzdWdnZXN0ZWQgYnkgQWxleGFuZHJlIEJl
+bGxvbmkpCgkgICAgIG5ldyBjb21wYXRpYmxlIChzcGxpdHRpbmcgc3VnZ2VzdGVkIGJ5IEFsZXhh
+bmRyZSBCZWxsb25pKQoJICAgICBuZWVkZWQgZHVlIHRvIGRpZmZlcmVudCBydGMtYmFzZS9zaXpl
+IHNlZSAjNwoJdjIuNCBzaW1wbGlmaWNhdGlvbnMgKERlZmluZS1yZXMtbWFjcm9zKQoJICAgICBh
+ZGQgbXQ2MzIzIHJ0Yytwd3JjCgl2Mi41IGFkZCBwb3dlcm9mZi1kcml2ZXIgKG5vIGNoYW5nZSkK
+CXYyLjYgTUFJTlRBSU5FUlMgKG5vIGNoYW5nZSkKCXYyLjcgRFRTLUNoYW5nZXMgKG5vIGNoYW5n
+ZSkKCgpKb3NlZiBGcmllZGwgKDEwKToKICBkdC1iaW5kaW5nczogYWRkIHBvd2VyY29udHJvbGxl
+cgogIGR0LWJpbmRpbmdzOiBhZGQgbWlzc2luZyBtdDYzOTcgcnRjCiAgcnRjOiBtdDYzOTc6IG1v
+dmUgc29tZSBjb21tb24gZGVmaW5pdGlvbnMgaW50byBydGMuaAogIHJ0YzogbXQ2Mzk3OiBpbXBy
+b3ZlbWVudHMgb2YgcnRjIGRyaXZlcgogIG1mZDogbXQ2MzIzOiBzb21lIGltcHJvdmVtZW50cyBv
+ZiBtdDYzOTctY29yZQogIHJ0YzogbXQ2Mzk3OiBhZGQgY29tcGF0aWJsZSBmb3IgbXQ2MzIzCiAg
+bWZkOiBtdDYzMjM6IGFkZCBtdDYzMjMgcnRjK3B3cmMKICBwb3dlcjogcmVzZXQ6IGFkZCBkcml2
+ZXIgZm9yIG10NjMyMyBwb3dlcm9mZgogIE1BSU5UQUlORVJTOiBhZGQgTWVkaWF0ZWsgc2h1dGRv
+d24gZHJpdmVycwogIGFybTogZHRzOiBtdDYzMjM6IGFkZCBrZXlzLCBwb3dlci1jb250cm9sbGVy
+LCBydGMgYW5kIGNvZGVjCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL210NjM5Ny50eHQg
+ICAgICAgIHwgIDIwICsrKy0KIC4uLi9iaW5kaW5ncy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJv
+ZmYudHh0ICB8ICAyMCArKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcnRjLW10NjM5
+Ny50eHQgICAgfCAgMjkgKysrKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgNyArKwogYXJjaC9hcm0vYm9vdC9kdHMvbXQ2MzIzLmR0c2kgICAgICAg
+ICAgICAgICAgIHwgIDI3ICsrKysrCiBkcml2ZXJzL21mZC9tdDYzOTctY29yZS5jICAgICAgICAg
+ICAgICAgICAgICAgfCAgMzggKysrKystLQogZHJpdmVycy9wb3dlci9yZXNldC9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgIHwgIDEwICsrCiBkcml2ZXJzL3Bvd2VyL3Jlc2V0L01ha2VmaWxlICAg
+ICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJv
+ZmYuYyAgICAgICAgIHwgIDk3ICsrKysrKysrKysrKysrKysKIGRyaXZlcnMvcnRjL3J0Yy1tdDYz
+OTcuYyAgICAgICAgICAgICAgICAgICAgICB8IDEwNyArKysrLS0tLS0tLS0tLS0tLS0KIGluY2x1
+ZGUvbGludXgvbWZkL210NjM5Ny9jb3JlLmggICAgICAgICAgICAgICB8ICAgMiArCiBpbmNsdWRl
+L2xpbnV4L21mZC9tdDYzOTcvcnRjLmggICAgICAgICAgICAgICAgfCAgNzEgKysrKysrKysrKysr
+CiAxMiBmaWxlcyBjaGFuZ2VkLCAzMjcgaW5zZXJ0aW9ucygrKSwgMTAyIGRlbGV0aW9ucygtKQog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dl
+ci9yZXNldC9tdDYzMjMtcG93ZXJvZmYudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtbXQ2Mzk3LnR4dAogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2ZmLmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBpbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvcnRjLmgKCi0tIAoyLjE3LjEKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
