@@ -1,789 +1,459 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v5 3/3] ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards
-Date: Mon, 12 Aug 2019 18:59:09 +0200
-Message-ID: <20190812165909.12387-3-krzk@kernel.org>
-References: <20190812165909.12387-1-krzk@kernel.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 6/8] PCI: al: Add support for DW based driver type
+Date: Mon, 12 Aug 2019 18:03:36 +0100
+Message-ID: <20190812170336.GA23142@e121166-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-2-jonnyc@amazon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812165909.12387-1-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190723092711.11786-2-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for i.MX6UL modules from Kontron Electronics GmbH (before
-acquisition: Exceet Electronics) and evalkit boards based on it:
+"PCI: dwc: al: Add support for DW based driver type"
 
-1. N6310 SOM: i.MX6 UL System-on-Module, a 25x25 mm solderable module
-   (LGA pads and pin castellations) with 256 MB RAM, 1 MB NOR-Flash,
-   256 MB NAND and other interfaces,
-2. N6310 S: evalkit, w/wo eMMC, without display,
-3. N6310 S 43: evalkit with 4.3" display,
+Make $SUBJECT compliant with other host controllers patches.
 
-The work is based on Exceet/Kontron source code (GPLv2) with numerous
-changes:
-1. Reorganize files,
-2. Rename Exceet -> Kontron,
-3. Rename models/compatibles to match newest Kontron product naming,
-4. Fix coding style errors and adjust to device tree coding guidelines,
-5. Fix DTC warnings,
-6. Extend compatibles so eval boards inherit the SoM compatible,
-7. Use defines instead of GPIO and interrupt flag values,
-8. Use proper vendor compatible for Macronix SPI NOR,
-9. Replace deprecated bindings with proper ones,
-10. Sort nodes alphabetically,
-11. Remove Admatec display nodes (not yet supported).
+On Tue, Jul 23, 2019 at 12:27:09PM +0300, Jonathan Chocron wrote:
+> This driver is DT based and utilizes the DesignWare APIs.
+> It allows using a smaller ECAM range for a larger bus range -
+> usually an entire bus uses 1MB of address space, but the driver
+> can use it for a larger number of buses.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+I would appreciate if you can add a simple explanation of
+the mechanism for completeness.
 
----
+AFAIU, with ACPI you don't support all these variants.
 
-Changes since v4:
-None
+> All link initializations are handled by the boot FW.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig   |  12 +
+>  drivers/pci/controller/dwc/pcie-al.c | 367 +++++++++++++++++++++++++++
+>  2 files changed, 379 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 6ea778ae4877..3c6094cbcc3b 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -230,4 +230,16 @@ config PCIE_UNIPHIER
+>  	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+>  	  This driver supports LD20 and PXs3 SoCs.
+>  
+> +config PCIE_AL
+> +	bool "Amazon Annapurna Labs PCIe controller"
+> +	depends on OF && (ARM64 || COMPILE_TEST)
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
+> +	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
+> +	  core plus Annapurna Labs proprietary hardware wrappers. This is
+> +	  required only for DT-based platforms. ACPI platforms with the
+> +	  Annapurna Labs PCIe controller don't need to enable this.
+> +
+>  endmenu
+> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
+> index 3ab58f0584a8..3ffdd3c97617 100644
+> --- a/drivers/pci/controller/dwc/pcie-al.c
+> +++ b/drivers/pci/controller/dwc/pcie-al.c
+> @@ -91,3 +91,370 @@ struct pci_ecam_ops al_pcie_ops = {
+>  };
+>  
+>  #endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> +
+> +#ifdef CONFIG_PCIE_AL
+> +
+> +#include <linux/of_pci.h>
+> +#include "pcie-designware.h"
+> +
+> +#define AL_PCIE_REV_ID_2	2
+> +#define AL_PCIE_REV_ID_3	3
+> +#define AL_PCIE_REV_ID_4	4
+> +
+> +#define AXI_BASE_OFFSET		0x0
+> +
+> +#define DEVICE_ID_OFFSET	0x16c
+> +
+> +#define DEVICE_REV_ID			0x0
+> +#define DEVICE_REV_ID_DEV_ID_MASK	GENMASK(31, 16)
+> +
+> +#define DEVICE_REV_ID_DEV_ID_X4		0
+> +#define DEVICE_REV_ID_DEV_ID_X8		2
+> +#define DEVICE_REV_ID_DEV_ID_X16	4
+> +
+> +#define OB_CTRL_REV1_2_OFFSET	0x0040
+> +#define OB_CTRL_REV3_5_OFFSET	0x0030
+> +
+> +#define CFG_TARGET_BUS			0x0
+> +#define CFG_TARGET_BUS_MASK_MASK	GENMASK(7, 0)
+> +#define CFG_TARGET_BUS_BUSNUM_MASK	GENMASK(15, 8)
+> +
+> +#define CFG_CONTROL			0x4
+> +#define CFG_CONTROL_SUBBUS_MASK		GENMASK(15, 8)
+> +#define CFG_CONTROL_SEC_BUS_MASK	GENMASK(23, 16)
+> +
+> +struct al_pcie_reg_offsets {
+> +	unsigned int ob_ctrl;
+> +};
+> +
+> +struct al_pcie_target_bus_cfg {
+> +	u8 reg_val;
+> +	u8 reg_mask;
+> +	u8 ecam_mask;
+> +};
+> +
+> +struct al_pcie {
+> +	struct dw_pcie *pci;
+> +	void __iomem *controller_base; /* base of PCIe unit (not DW core) */
+> +	struct device *dev;
+> +	resource_size_t ecam_size;
+> +	unsigned int controller_rev_id;
+> +	struct al_pcie_reg_offsets reg_offsets;
+> +	struct al_pcie_target_bus_cfg target_bus_cfg;
+> +};
+> +
+> +#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
+> +
+> +#define to_al_pcie(x)		dev_get_drvdata((x)->dev)
+> +
+> +static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
+> +{
+> +	return readl(pcie->controller_base + offset);
+> +}
+> +
+> +static inline void al_pcie_controller_writel(struct al_pcie *pcie, u32 offset,
+> +					     u32 val)
+> +{
+> +	writel(val, pcie->controller_base + offset);
+> +}
 
-Changes since v3, after Shawn's review:
-1. Split bindings update to patch 2/3,
-2. Remove unsupported displays from (Admatec),
-3. Remove N6310 S 50 board (same as N6310 S 43 since there is no Admatec
-   display),
-4. Order iomux nodes by name, minor cleanup,
-5. Use wakeup-source instead of enable-sdio-wakeup,
-6. Add review tags.
+You should be able to use the read/write{_relaxed} API.
 
-Changes since v2, after Fabio's review:
-1. Add "imx6ul" compatible to board name (that's what I understood from
-   review),
-2. Add vendor/device prefix to eeprom and document the compatible,
-3. Use "admatecde" as vendor compatible to avoid confusion with Admatec
-   AG in Switzerland (also making LCD panels),
-4. Use generic names for nodes,
-5. Use IRQ_TYPE_LEVEL_LOW,
-6. Move iomux to the end of files,
-7. Remove regulators node (include regulators in top level),
-8. Remove cpu clock-frequency,
-9. Other minor fixes pointed by Fabio.
+> +
+> +static int al_pcie_rev_id_get(struct al_pcie *pcie, unsigned int *rev_id)
+> +{
+> +	u32 dev_rev_id_val;
+> +	u32 dev_id_val;
+> +
+> +	dev_rev_id_val = al_pcie_controller_readl(pcie, AXI_BASE_OFFSET +
+> +						  DEVICE_ID_OFFSET +
+> +						  DEVICE_REV_ID);
+> +	dev_id_val = FIELD_GET(DEVICE_REV_ID_DEV_ID_MASK, dev_rev_id_val);
+> +
+> +	switch (dev_id_val) {
+> +	case DEVICE_REV_ID_DEV_ID_X4:
+> +		*rev_id = AL_PCIE_REV_ID_2;
+> +		break;
+> +	case DEVICE_REV_ID_DEV_ID_X8:
+> +		*rev_id = AL_PCIE_REV_ID_3;
+> +		break;
+> +	case DEVICE_REV_ID_DEV_ID_X16:
+> +		*rev_id = AL_PCIE_REV_ID_4;
+> +		break;
+> +	default:
+> +		dev_err(pcie->dev, "Unsupported dev_id_val (0x%x)\n",
+> +			dev_id_val);
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(pcie->dev, "dev_id_val: 0x%x\n", dev_id_val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int al_pcie_reg_offsets_set(struct al_pcie *pcie)
+> +{
+> +	switch (pcie->controller_rev_id) {
+> +	case AL_PCIE_REV_ID_2:
+> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV1_2_OFFSET;
+> +		break;
+> +	case AL_PCIE_REV_ID_3:
+> +	case AL_PCIE_REV_ID_4:
+> +		pcie->reg_offsets.ob_ctrl = OB_CTRL_REV3_5_OFFSET;
+> +		break;
+> +	default:
+> +		dev_err(pcie->dev, "Unsupported controller rev_id: 0x%x\n",
+> +			pcie->controller_rev_id);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void al_pcie_target_bus_set(struct al_pcie *pcie,
+> +					  u8 target_bus,
+> +					  u8 mask_target_bus)
+> +{
+> +	u32 reg;
+> +
+> +	reg = FIELD_PREP(CFG_TARGET_BUS_MASK_MASK, mask_target_bus) |
+> +	      FIELD_PREP(CFG_TARGET_BUS_BUSNUM_MASK, target_bus);
+> +
+> +	al_pcie_controller_writel(pcie, AXI_BASE_OFFSET +
+> +				  pcie->reg_offsets.ob_ctrl + CFG_TARGET_BUS,
+> +				  reg);
+> +}
+> +
+> +static void __iomem *al_pcie_conf_addr_map(struct al_pcie *pcie,
+> +					   unsigned int busnr,
+> +					   unsigned int devfn)
+> +{
+> +	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
+> +	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
+> +	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
+> +	struct pcie_port *pp = &pcie->pci->pp;
+> +	void __iomem *pci_base_addr;
+> +
+> +	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
+> +					 (busnr_ecam << 20) +
+> +					 PCIE_ECAM_DEVFN(devfn));
+> +
+> +	if (busnr_reg != target_bus_cfg->reg_val) {
+> +		dev_dbg(pcie->pci->dev, "Changing target bus busnum val from 0x%x to 0x%x\n",
+> +			target_bus_cfg->reg_val, busnr_reg);
+> +		target_bus_cfg->reg_val = busnr_reg;
+> +		al_pcie_target_bus_set(pcie,
+> +				       target_bus_cfg->reg_val,
+> +				       target_bus_cfg->reg_mask);
+> +	}
+> +
+> +	return pci_base_addr;
+> +}
+> +
+> +static int al_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 *val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	unsigned int busnr = bus->number;
+> +	void __iomem *pci_addr;
+> +	int rc;
+> +
+> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+> +
+> +	rc = dw_pcie_read(pci_addr + where, size, val);
+> +
+> +	dev_dbg(pci->dev, "%d-byte config read from %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+> +		size, pci_domain_nr(bus), bus->number,
+> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+> +		(pci_addr + where), *val);
+> +
+> +	return rc;
+> +}
+> +
+> +static int al_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	unsigned int busnr = bus->number;
+> +	void __iomem *pci_addr;
+> +	int rc;
+> +
+> +	pci_addr = al_pcie_conf_addr_map(pcie, busnr, devfn);
+> +
+> +	rc = dw_pcie_write(pci_addr + where, size, val);
+> +
+> +	dev_err(pci->dev, "%d-byte config write to %04x:%02x:%02x.%d offset 0x%x (pci_addr: 0x%px) - val:0x%x\n",
+> +		size, pci_domain_nr(bus), bus->number,
+> +		PCI_SLOT(devfn), PCI_FUNC(devfn), where,
+> +		(pci_addr + where), val);
 
-Changes since v1, after Frieder's review:
-1. Remove unneeded license notes,
-2. Add Kontron copyright (2018),
-3. Rename the files/models/compatibles to new naming - N6310,
-4. Remove unneeded CPU operating points override,
-5. Switch regulator nodes into simple children nodes without addresses
-   (so not simple bus),
-6. Use proper vendor compatible for Macronix SPI NOR.
----
- .../devicetree/bindings/arm/fsl.yaml          |   3 +
- arch/arm/boot/dts/Makefile                    |   2 +
- .../boot/dts/imx6ul-kontron-n6310-s-43.dts    | 102 +++++
- arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts  | 420 ++++++++++++++++++
- .../boot/dts/imx6ul-kontron-n6310-som.dtsi    | 134 ++++++
- 5 files changed, 661 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
- create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
- create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
+dev_dbg() ?
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 7294ac36f4c0..d07b3c06d7cf 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -161,6 +161,9 @@ properties:
-         items:
-           - enum:
-               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-+              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-+              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
-+              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
-           - const: fsl,imx6ul
- 
-       - description: i.MX6ULL based Boards
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9159fa2cea90..747eef501f95 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -569,6 +569,8 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-geam.dtb \
- 	imx6ul-isiot-emmc.dtb \
- 	imx6ul-isiot-nand.dtb \
-+	imx6ul-kontron-n6310-s.dtb \
-+	imx6ul-kontron-n6310-s-43.dtb \
- 	imx6ul-liteboard.dtb \
- 	imx6ul-opos6uldev.dtb \
- 	imx6ul-pico-hobbit.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-new file mode 100644
-index 000000000000..5bad29683cc3
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s-43.dts
-@@ -0,0 +1,102 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
-+ */
-+
-+#include "imx6ul-kontron-n6310-s.dts"
-+
-+/ {
-+	model = "Kontron N6310 S 43";
-+	compatible = "kontron,imx6ul-n6310-s-43", "kontron,imx6ul-n6310-s",
-+		     "kontron,imx6ul-n6310-som", "fsl,imx6ul";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm7 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+};
-+
-+&i2c4 {
-+	touchscreen@5d {
-+		compatible = "goodix,gt928";
-+		reg = <0x5d>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_cap_touch>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
-+		irq-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif_dat &pinctrl_lcdif_ctrl>;
-+	/* Leave status disabled because of missing display panel node */
-+};
-+
-+&pwm7 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm7>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_cap_touch: captouchgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER6__GPIO5_IO06	0x1b0b0 /* Touch Interrupt */
-+			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0 /* Touch Reset */
-+			MX6UL_PAD_SNVS_TAMPER8__GPIO5_IO08	0x1b0b0 /* Touch Wake */
-+		>;
-+	};
-+
-+	pinctrl_lcdif_ctrl: lcdifctrlgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
-+			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
-+			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC	0x79
-+			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC	0x79
-+			MX6UL_PAD_LCD_RESET__LCDIF_RESET	0x79
-+		>;
-+	};
-+
-+	pinctrl_lcdif_dat: lcdifdatgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00	0x79
-+			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01	0x79
-+			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
-+			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
-+			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
-+			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
-+			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
-+			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
-+			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08	0x79
-+			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09	0x79
-+			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
-+			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
-+			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
-+			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
-+			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
-+			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
-+			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16	0x79
-+			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17	0x79
-+			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
-+			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
-+			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
-+			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
-+			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
-+			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
-+		>;
-+	};
-+
-+	pinctrl_pwm7: pwm7grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_VSYNC__PWM7_OUT		0x110b0
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
-new file mode 100644
-index 000000000000..0205fd56d975
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
-@@ -0,0 +1,420 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6ul-kontron-n6310-som.dtsi"
-+
-+/ {
-+	model = "Kontron N6310 S";
-+	compatible = "kontron,imx6ul-n6310-s", "kontron,imx6ul-n6310-som",
-+		     "fsl,imx6ul";
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led1 {
-+			label = "debug-led1";
-+			gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led2 {
-+			label = "debug-led2";
-+			gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "debug-led3";
-+			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	pwm-beeper {
-+		compatible = "pwm-beeper";
-+		pwms = <&pwm8 0 5000>;
-+	};
-+
-+	reg_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_vref_adc: regulator-vref-adc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vref-adc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&adc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc1>;
-+	num-channels = <3>;
-+	vref-supply = <&reg_vref_adc>;
-+	status = "okay";
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	cs-gpios = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	status = "okay";
-+
-+	eeprom@0 {
-+		compatible = "anvo,anv32e61w", "atmel,at25";
-+		reg = <0>;
-+		spi-max-frequency = <20000000>;
-+		spi-cpha;
-+		spi-cpol;
-+		pagesize = <1>;
-+		size = <8192>;
-+		address-width = <16>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	/delete-node/ mdio;
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2 &pinctrl_enet2_mdio>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy2>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@1 {
-+			reg = <1>;
-+			micrel,led-mode = <0>;
-+			clocks = <&clks IMX6UL_CLK_ENET_REF>;
-+			clock-names = "rmii-ref";
-+		};
-+
-+		ethphy2: ethernet-phy@2 {
-+			reg = <2>;
-+			micrel,led-mode = <0>;
-+			clocks = <&clks IMX6UL_CLK_ENET2_REF>;
-+			clock-names = "rmii-ref";
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	status = "okay";
-+
-+	rtc@32 {
-+		compatible = "epson,rx8900";
-+		reg = <0x32>;
-+	};
-+};
-+
-+&pwm8 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm8>;
-+	status = "okay";
-+};
-+
-+&snvs_poweroff {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	linux,rs485-enabled-at-boot-time;
-+	rs485-rx-during-tx;
-+	rs485-rts-active-low;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	dr_mode = "otg";
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_3v3>;
-+	voltage-ranges = <3300 3300>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	non-removable;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	vmmc-supply = <&reg_3v3>;
-+	voltage-ranges = <3300 3300>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-0 = <&pinctrl_reset_out &pinctrl_gpio>;
-+
-+	pinctrl_adc1: adc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
-+			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
-+			MX6UL_PAD_GPIO1_IO08__GPIO1_IO08	0xb0
-+		>;
-+	};
-+
-+	/* FRAM */
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_DATA07__ECSPI1_MISO	0x100b1
-+			MX6UL_PAD_CSI_DATA06__ECSPI1_MOSI	0x100b1
-+			MX6UL_PAD_CSI_DATA04__ECSPI1_SCLK	0x100b1
-+			MX6UL_PAD_CSI_DATA05__GPIO4_IO26	0x100b1	/* ECSPI1-CS1 */
-+		>;
-+	};
-+
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b009
-+		>;
-+	};
-+
-+	pinctrl_enet2_mdio: enet2mdiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET2_MDC         0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp{
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
-+			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
-+		>;
-+	};
-+
-+	pinctrl_gpio: gpiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER5__GPIO5_IO05	0x1b0b0 /* DOUT1 */
-+			MX6UL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x1b0b0 /* DIN1 */
-+			MX6UL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x1b0b0 /* DOUT2 */
-+			MX6UL_PAD_SNVS_TAMPER0__GPIO5_IO00	0x1b0b0 /* DIN2 */
-+		>;
-+	};
-+
-+	pinctrl_gpio_leds: gpioledsgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART5_TX_DATA__GPIO1_IO30	0x1b0b0	/* LED H14 */
-+			MX6UL_PAD_SNVS_TAMPER3__GPIO5_IO03	0x1b0b0	/* LED H15 */
-+			MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0	/* LED H16 */
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_PIXCLK__I2C1_SCL		0x4001b8b0
-+			MX6UL_PAD_CSI_MCLK__I2C1_SDA		0x4001b8b0
-+		>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART2_TX_DATA__I2C4_SCL	0x4001f8b0
-+			MX6UL_PAD_UART2_RX_DATA__I2C4_SDA	0x4001f8b0
-+		>;
-+	};
-+
-+	pinctrl_pwm8: pwm8grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_HSYNC__PWM8_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_DATA04__UART2_DCE_TX	0x1b0b1
-+			MX6UL_PAD_NAND_DATA05__UART2_DCE_RX	0x1b0b1
-+			MX6UL_PAD_NAND_DATA06__UART2_DCE_CTS	0x1b0b1
-+			/*
-+			 * mux unused RTS to make sure it doesn't cause
-+			 * any interrupts when it is undefined
-+			 */
-+			MX6UL_PAD_NAND_DATA07__UART2_DCE_RTS	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
-+			MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
-+			MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART4_TX_DATA__UART4_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART4_RX_DATA__UART4_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1 {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10059
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x100b1	/* SD1_CD */
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x10059
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x17059
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x17059
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x17059
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x17059
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100b9
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170b9
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170b9
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170b9
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170b9
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY	0x30b0
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
-new file mode 100644
-index 000000000000..a896b2348dd2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-som.dtsi
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ * Copyright (c) 2019 Krzysztof Kozlowski <krzk@kernel.org>
-+ */
-+
-+#include "imx6ul.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "Kontron N6310 SOM";
-+	compatible = "kontron,imx6ul-n6310-som", "fsl,imx6ul";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x10000000>;
-+		device_type = "memory";
-+	};
-+};
-+
-+&ecspi2 {
-+	cs-gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		compatible = "mxicy,mx25v8035f", "jedec,spi-nor";
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1_mdio>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy1>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@1 {
-+			reg = <1>;
-+			micrel,led-mode = <0>;
-+			clocks = <&clks IMX6UL_CLK_ENET_REF>;
-+			clock-names = "rmii-ref";
-+		};
-+	};
-+};
-+
-+&fec2 {
-+	phy-mode = "rmii";
-+	status = "disabled";
-+};
-+
-+&qspi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi>;
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		spi-max-frequency = <108000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "ubi1";
-+			reg = <0x00000000 0x08000000>;
-+		};
-+
-+		partition@8000000 {
-+			label = "ubi2";
-+			reg = <0x08000000 0x08000000>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_reset_out>;
-+
-+	pinctrl_ecspi2: ecspi2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_CSI_DATA03__ECSPI2_MISO      0x100b1
-+			MX6UL_PAD_CSI_DATA02__ECSPI2_MOSI      0x100b1
-+			MX6UL_PAD_CSI_DATA00__ECSPI2_SCLK      0x100b1
-+			MX6UL_PAD_CSI_DATA01__GPIO4_IO22       0x100b1
-+		>;
-+	};
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN      0x1b0b0
-+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER      0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN      0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1  0x4001b009
-+		>;
-+	};
-+
-+	pinctrl_enet1_mdio: enet1mdiogrp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC         0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO        0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_qspi: qspigrp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_WP_B__QSPI_A_SCLK        0x70a1
-+			MX6UL_PAD_NAND_READY_B__QSPI_A_DATA00   0x70a1
-+			MX6UL_PAD_NAND_CE0_B__QSPI_A_DATA01     0x70a1
-+			MX6UL_PAD_NAND_CE1_B__QSPI_A_DATA02     0x70a1
-+			MX6UL_PAD_NAND_CLE__QSPI_A_DATA03       0x70a1
-+			MX6UL_PAD_NAND_DQS__QSPI_A_SS0_B        0x70a1
-+		>;
-+	};
-+
-+	pinctrl_reset_out: rstoutgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x1b0b0
-+		>;
-+	};
-+};
--- 
-2.17.1
+> +
+> +	return rc;
+> +}
+> +
+> +static void al_pcie_config_prepare(struct al_pcie *pcie)
+> +{
+> +	struct al_pcie_target_bus_cfg *target_bus_cfg;
+> +	struct pcie_port *pp = &pcie->pci->pp;
+> +	unsigned int ecam_bus_mask;
+> +	u32 cfg_control_offset;
+> +	u8 subordinate_bus;
+> +	u8 secondary_bus;
+> +	u32 cfg_control;
+> +	u32 reg;
+> +
+> +	target_bus_cfg = &pcie->target_bus_cfg;
+> +
+> +	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
+> +	if (ecam_bus_mask > 255) {
+> +		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
+> +		ecam_bus_mask = 255;
+> +	}
+> +
+> +	/* This portion is taken from the transaction address */
+> +	target_bus_cfg->ecam_mask = ecam_bus_mask;
+> +	/* This portion is taken from the cfg_target_bus reg */
+> +	target_bus_cfg->reg_mask = ~target_bus_cfg->ecam_mask;
+> +	target_bus_cfg->reg_val = pp->busn->start & target_bus_cfg->reg_mask;
+> +
+> +	al_pcie_target_bus_set(pcie, target_bus_cfg->reg_val,
+> +			       target_bus_cfg->reg_mask);
+> +
+> +	secondary_bus = pp->busn->start + 1;
+> +	subordinate_bus = pp->busn->end;
+> +
+> +	/* Set the valid values of secondary and subordinate buses */
+> +	cfg_control_offset = AXI_BASE_OFFSET + pcie->reg_offsets.ob_ctrl +
+> +			     CFG_CONTROL;
+> +
+> +	cfg_control = al_pcie_controller_readl(pcie, cfg_control_offset);
+> +
+> +	reg = cfg_control &
+> +	      ~(CFG_CONTROL_SEC_BUS_MASK | CFG_CONTROL_SUBBUS_MASK);
+> +
+> +	reg |= FIELD_PREP(CFG_CONTROL_SUBBUS_MASK, subordinate_bus) |
+> +	       FIELD_PREP(CFG_CONTROL_SEC_BUS_MASK, secondary_bus);
+> +
+> +	al_pcie_controller_writel(pcie, cfg_control_offset, reg);
+> +}
+> +
+> +static int al_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct al_pcie *pcie = to_al_pcie(pci);
+> +	int link_up;
+> +	int rc;
+> +
+> +	rc = al_pcie_rev_id_get(pcie, &pcie->controller_rev_id);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = al_pcie_reg_offsets_set(pcie);
+> +	if (rc)
+> +		return rc;
+> +
+> +	al_pcie_config_prepare(pcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_host_ops al_pcie_host_ops = {
+> +	.rd_other_conf = al_pcie_rd_other_conf,
+> +	.wr_other_conf = al_pcie_wr_other_conf,
+> +	.host_init = al_pcie_host_init,
+> +};
+> +
+> +static int al_add_pcie_port(struct pcie_port *pp,
+> +			    struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	pp->ops = &al_pcie_host_ops;
+> +
+> +	ret = dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize host\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +};
+
+I understand you have to have it - probably we should improve
+the generic DW layer to check for a pointer before dereferencing
+so that we avoid this empty struct. Anyway, that's for another
+series.
+
+> +
+> +static int al_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *controller_res;
+> +	struct resource *ecam_res;
+> +	struct resource *dbi_res;
+> +	struct al_pcie *al_pcie;
+> +	struct dw_pcie *pci;
+> +	int ret;
+> +
+> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
+> +	if (!al_pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	pci->dev = dev;
+> +	pci->ops = &dw_pcie_ops;
+> +
+> +	al_pcie->pci = pci;
+> +	al_pcie->dev = dev;
+> +
+> +	dbi_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_res);
+> +	if (IS_ERR(pci->dbi_base)) {
+> +		dev_err(dev, "couldn't remap dbi base %pR\n", dbi_res);
+> +		return PTR_ERR(pci->dbi_base);
+> +	}
+> +
+> +	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> +	if (!ecam_res) {
+> +		dev_err(dev, "couldn't find 'config' reg in DT\n");
+> +		return -ENOENT;
+> +	}
+> +	al_pcie->ecam_size = resource_size(ecam_res);
+> +
+> +	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						      "controller");
+> +	al_pcie->controller_base = devm_ioremap_resource(dev, controller_res);
+> +	if (IS_ERR(al_pcie->controller_base)) {
+> +		dev_err(dev, "couldn't remap controller base %pR\n",
+> +			controller_res);
+> +		return PTR_ERR(al_pcie->controller_base);
+> +	}
+> +
+> +	dev_dbg(dev, "From DT: dbi_base: %pR, controller_base: %pR\n",
+> +		dbi_res, controller_res);
+> +
+> +	platform_set_drvdata(pdev, al_pcie);
+> +
+> +	ret = al_add_pcie_port(&pci->pp, pdev);
+> +
+> +	return ret;
+
+Nit:
+
+return al_add_pcie_port(&pci->pp, pdev);
+
+?
+
+Lorenzo
+
+> +}
+> +
+> +static const struct of_device_id al_pcie_of_match[] = {
+> +	{ .compatible = "amazon,al-pcie",
+> +	},
+> +	{},
+> +};
+> +
+> +static struct platform_driver al_pcie_driver = {
+> +	.driver = {
+> +		.name	= "al-pcie",
+> +		.of_match_table = al_pcie_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.probe = al_pcie_probe,
+> +};
+> +builtin_platform_driver(al_pcie_driver);
+> +
+> +#endif /* CONFIG_PCIE_AL*/
+> -- 
+> 2.17.1
+> 
