@@ -1,7 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 04/21] ARM: dts: imx7-colibri: Add sleep mode to ethernet
-Date: Mon, 12 Aug 2019 14:21:19 +0000
-Message-ID: <20190812142105.1995-5-philippe.schenker@toradex.com>
+Subject: [PATCH v4 01/21] ARM: dts: imx7-colibri: make sure module supplies
+ are always on
+Date: Mon, 12 Aug 2019 14:21:15 +0000
+Message-ID: <20190812142105.1995-2-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -14,60 +15,41 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add sleep pinmux to the fec so it can properly sleep.
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
+Prevent regulators from being switched off.
+
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
 ---
 
-Changes in v4:
-- Added Marcel Ziswiler's Ack
-
+Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
 olibri.dtsi
-index 52046085ce6f..a8d992f3e897 100644
+index 895fbde4d433..f1c1971f2160 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -101,8 +101,9 @@
- };
-=20
- &fec1 {
--	pinctrl-names =3D "default";
-+	pinctrl-names =3D "default", "sleep";
- 	pinctrl-0 =3D <&pinctrl_enet1>;
-+	pinctrl-1 =3D <&pinctrl_enet1_sleep>;
- 	clocks =3D <&clks IMX7D_ENET_AXI_ROOT_CLK>,
- 		<&clks IMX7D_ENET_AXI_ROOT_CLK>,
- 		<&clks IMX7D_ENET1_TIME_ROOT_CLK>,
-@@ -463,6 +464,22 @@
- 		>;
+@@ -54,6 +54,7 @@
+ 		regulator-name =3D "+V3.3";
+ 		regulator-min-microvolt =3D <3300000>;
+ 		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
  	};
 =20
-+	pinctrl_enet1_sleep: enet1sleepgrp {
-+		fsl,pins =3D <
-+			MX7D_PAD_ENET1_RGMII_RX_CTL__GPIO7_IO4		0x0
-+			MX7D_PAD_ENET1_RGMII_RD0__GPIO7_IO0		0x0
-+			MX7D_PAD_ENET1_RGMII_RD1__GPIO7_IO1		0x0
-+			MX7D_PAD_ENET1_RGMII_RXC__GPIO7_IO5		0x0
-+
-+			MX7D_PAD_ENET1_RGMII_TX_CTL__GPIO7_IO10		0x0
-+			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6		0x0
-+			MX7D_PAD_ENET1_RGMII_TD1__GPIO7_IO7		0x0
-+			MX7D_PAD_GPIO1_IO12__GPIO1_IO12			0x0
-+			MX7D_PAD_SD2_CD_B__GPIO5_IO9			0x0
-+			MX7D_PAD_SD2_WP__GPIO5_IO10			0x0
-+		>;
-+	};
-+
- 	pinctrl_ecspi3_cs: ecspi3-cs-grp {
- 		fsl,pins =3D <
- 			MX7D_PAD_I2C2_SDA__GPIO4_IO11		0x14
+ 	reg_module_3v3_avdd: regulator-module-3v3-avdd {
+@@ -61,6 +62,7 @@
+ 		regulator-name =3D "+V3.3_AVDD_AUDIO";
+ 		regulator-min-microvolt =3D <3300000>;
+ 		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
+ 	};
+=20
+ 	sound {
 --=20
 2.22.0
