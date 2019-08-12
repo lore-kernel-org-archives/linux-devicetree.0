@@ -1,43 +1,49 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: Re: [PATCH v3 06/10] mfd: mt6323: some improvements of
- mt6397-core
-Date: Mon, 12 Aug 2019 12:27:31 +0100
-Message-ID: <20190812112731.GS26727@dell>
-References: <20190729174154.4335-1-frank-w@public-files.de>
- <20190729174154.4335-7-frank-w@public-files.de>
- <20190812102209.GI26727@dell>
- <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
+From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: [PATCH 00/14] serial: tegra: Tegra186 support and fixes
+Date: Mon, 12 Aug 2019 16:58:09 +0530
+Message-ID: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <trinity-0fa641df-f7bb-4627-a9ab-aac3cabc90ba-1565609115974@3c-app-gmx-bs80>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-rtc@vger.kernel.org, Allison Randal <allison@lohutok.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, "Tianping . Fang" <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@li
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, jslaby@suse.com
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Krishna Yarlagadda <kyarlagadda@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Aug 2019, Frank Wunderlich wrote:
+Series of patches adding enhancements to exising UART driver and adding
+support for new chip Tegra186 and Tegra194.
 
-> > Gesendet: Montag, 12. August 2019 um 12:22 Uhr
-> > Von: "Lee Jones" <lee.jones@linaro.org>
-> 
-> > > - * Copyright (c) 2014 MediaTek Inc.
-> > > + * Copyright (c) 2014-2018 MediaTek Inc.
-> >
-> > This is out of date.  Please update it.
-> 
-> maybe i should drop change of this line completely (else it needs to be adjusted every year)
+Tegra186 uses GPCDMA for dma transfers which is still not available in
+mainstream. However, it can work in PIO/FIFO mode and support added for it.
+Also Tegra186 has a hardware issue where it does not meet tolernace +/-4% and
+to work around it, device tree entries provided to adjust baud rate for a
+particular range.
 
-It only needs changing when the Copyright is changed.
+Ahung Cheng (2):
+  serial: tegra: avoid reg access when clk disabled
+  serial: tegra: protect IER against LCR.DLAB
 
-If you want to update it to 2014-2019, that's fine.
+Andreas Abel (1):
+  serial: tegra: add internal loopback functionality
 
-Or leaving it untouched, is also fine.
+Krishna Yarlagadda (7):
+  serial: tegra: report error to upper tty layer
+  serial: tegra: add compatible for new chips
+  serial: tegra: check for FIFO mode enabled status
+  serial: tegra: DT for Adjusted baud rates
+  serial: tegra: add support to adjust baud rate
+  serial: tegra: report clk rate errors
+  serial: tegra: Add PIO mode support
+
+Shardar Shariff Md (4):
+  serial: tegra: add support to ignore read
+  serial: tegra: flush the RX fifo on frame error
+  serial: tegra: set maximum num of uart ports to 8
+  serial: tegra: add support to use 8 bytes trigger
+
+ .../bindings/serial/nvidia,tegra20-hsuart.txt      |  35 +-
+ drivers/tty/serial/serial-tegra.c                  | 405 ++++++++++++++++++---
+ 2 files changed, 385 insertions(+), 55 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
