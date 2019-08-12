@@ -1,124 +1,89 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 05/14] net: phy: adin: configure RGMII/RMII/MII modes on config
-Date: Mon, 12 Aug 2019 14:23:41 +0300
-Message-ID: <20190812112350.15242-6-alexandru.ardelean@analog.com>
+Subject: [PATCH v4 07/14] net: phy: adin: make RMII fifo depth configurable
+Date: Mon, 12 Aug 2019 14:23:43 +0300
+Message-ID: <20190812112350.15242-8-alexandru.ardelean@analog.com>
 References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
-unconfigured) is RGMII.
-This change adds support for configuring these modes via the device
-registers.
-
-For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
-the default delay is 2 ns. This can be configurable and will be done in
-a subsequent change.
+The FIFO depth can be configured for the RMII mode. This change adds
+support for doing this via device-tree (or ACPI).
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 78 insertions(+), 1 deletion(-)
+ drivers/net/phy/adin.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index efbb732f0398..badca6881c6c 100644
+index c882fcd9ada5..4ca685780622 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -31,9 +31,86 @@
- 	(ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_HW_IRQ_EN)
- #define ADIN1300_INT_STATUS_REG			0x0019
+@@ -52,8 +52,19 @@
+ #define	ADIN1300_RGMII_2_40_NS			0x0007
  
-+#define ADIN1300_GE_RGMII_CFG_REG		0xff23
-+#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
-+#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
-+#define   ADIN1300_GE_RGMII_EN			BIT(0)
+ #define ADIN1300_GE_RMII_CFG_REG		0xff24
++#define   ADIN1300_GE_RMII_FIFO_DEPTH_MSK	GENMASK(6, 4)
++#define   ADIN1300_GE_RMII_FIFO_DEPTH_SEL(x)	\
++		FIELD_PREP(ADIN1300_GE_RMII_FIFO_DEPTH_MSK, x)
+ #define   ADIN1300_GE_RMII_EN			BIT(0)
+ 
++/* RMII fifo depth values */
++#define ADIN1300_RMII_4_BITS			0x0000
++#define ADIN1300_RMII_8_BITS			0x0001
++#define ADIN1300_RMII_12_BITS			0x0002
++#define ADIN1300_RMII_16_BITS			0x0003
++#define ADIN1300_RMII_20_BITS			0x0004
++#define ADIN1300_RMII_24_BITS			0x0005
 +
-+#define ADIN1300_GE_RMII_CFG_REG		0xff24
-+#define   ADIN1300_GE_RMII_EN			BIT(0)
+ /**
+  * struct adin_cfg_reg_map - map a config value to aregister value
+  * @cfg		value in device configuration
+@@ -73,6 +84,16 @@ static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
+ 	{ },
+ };
+ 
++static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
++	{ 4,  ADIN1300_RMII_4_BITS },
++	{ 8,  ADIN1300_RMII_8_BITS },
++	{ 12, ADIN1300_RMII_12_BITS },
++	{ 16, ADIN1300_RMII_16_BITS },
++	{ 20, ADIN1300_RMII_20_BITS },
++	{ 24, ADIN1300_RMII_24_BITS },
++	{ },
++};
 +
-+static int adin_config_rgmii_mode(struct phy_device *phydev)
-+{
-+	int reg;
-+
-+	if (!phy_interface_is_rgmii(phydev))
-+		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
-+					  ADIN1300_GE_RGMII_CFG_REG,
-+					  ADIN1300_GE_RGMII_EN);
-+
-+	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
-+	if (reg < 0)
-+		return reg;
-+
-+	reg |= ADIN1300_GE_RGMII_EN;
-+
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
-+		reg |= ADIN1300_GE_RGMII_RXID_EN;
-+	} else {
-+		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
-+	}
-+
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
-+		reg |= ADIN1300_GE_RGMII_TXID_EN;
-+	} else {
-+		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
-+	}
-+
-+	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-+			     ADIN1300_GE_RGMII_CFG_REG, reg);
-+}
-+
-+static int adin_config_rmii_mode(struct phy_device *phydev)
-+{
-+	int reg;
-+
-+	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
-+		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
-+					  ADIN1300_GE_RMII_CFG_REG,
-+					  ADIN1300_GE_RMII_EN);
-+
-+	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
-+	if (reg < 0)
-+		return reg;
-+
-+	reg |= ADIN1300_GE_RMII_EN;
-+
-+	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-+			     ADIN1300_GE_RMII_CFG_REG, reg);
-+}
-+
- static int adin_config_init(struct phy_device *phydev)
+ static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
  {
--	return genphy_config_init(phydev);
-+	int rc;
-+
-+	rc = genphy_config_init(phydev);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = adin_config_rgmii_mode(phydev);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = adin_config_rmii_mode(phydev);
-+	if (rc < 0)
-+		return rc;
-+
-+	phydev_dbg(phydev, "PHY is using mode '%s'\n",
-+		   phy_modes(phydev->interface));
-+
-+	return 0;
- }
+ 	size_t i;
+@@ -156,6 +177,7 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
  
- static int adin_phy_ack_intr(struct phy_device *phydev)
+ static int adin_config_rmii_mode(struct phy_device *phydev)
+ {
++	u32 val;
+ 	int reg;
+ 
+ 	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
+@@ -169,6 +191,13 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
+ 
+ 	reg |= ADIN1300_GE_RMII_EN;
+ 
++	val = adin_get_reg_value(phydev, "adi,fifo-depth-bits",
++				 adin_rmii_fifo_depths,
++				 ADIN1300_RMII_8_BITS);
++
++	reg &= ~ADIN1300_GE_RMII_FIFO_DEPTH_MSK;
++	reg |= ADIN1300_GE_RMII_FIFO_DEPTH_SEL(val);
++
+ 	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
+ 			     ADIN1300_GE_RMII_CFG_REG, reg);
+ }
 -- 
 2.20.1
