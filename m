@@ -1,91 +1,154 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
-Date: Mon, 12 Aug 2019 13:24:11 +0200
-Message-ID: <20190812112411.ty3npkq6ztbushhm@flea>
-References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
- <20190722081229.22422-3-maxime.ripard@bootlin.com>
- <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
- <20190812091631.j2pr7i2zeput3hrc@flea>
- <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v4 06/14] net: phy: adin: make RGMII internal delays configurable
+Date: Mon, 12 Aug 2019 14:23:42 +0300
+Message-ID: <20190812112350.15242-7-alexandru.ardelean@analog.com>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2267208261649099083=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
+The internal delays for the RGMII are configurable for both RX & TX. This
+change adds support for configuring them via device-tree (or ACPI).
 
---===============2267208261649099083==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="chbync4osl7cj5bo"
-Content-Disposition: inline
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/net/phy/adin.c | 82 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
-
---chbync4osl7cj5bo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Aug 12, 2019 at 11:21:50AM +0200, Daniel Lezcano wrote:
-> On 12/08/2019 11:16, Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Mon, Aug 12, 2019 at 10:59:51AM +0200, Daniel Lezcano wrote:
-> >> On 22/07/2019 10:12, Maxime Ripard wrote:
-> >>> Newer Allwinner SoCs have different number of interrupts, let's add
-> >>> different compatibles for all of them to deal with this properly.
-> >>>
-> >>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> >>
-> >> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >
-> > Thanks!
-> >
-> > Can you merge this through your tree (along with the bindings)? I'll
-> > merge the DT patches
->
-> patches 1-4 then ?
-
-Yep, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---chbync4osl7cj5bo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVFMWwAKCRDj7w1vZxhR
-xRg7AP9AGyLnuIz1tKYeJZXcdHCdmVcPwADY+KkLmegiEm4mkwD/R7lwmli2RLhK
-8NMsjP1LNwEklTeR3aMbTsfrI1uvTw4=
-=0T8v
------END PGP SIGNATURE-----
-
---chbync4osl7cj5bo--
-
-
---===============2267208261649099083==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2267208261649099083==--
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index badca6881c6c..c882fcd9ada5 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -5,11 +5,13 @@
+  * Copyright 2019 Analog Devices Inc.
+  */
+ #include <linux/kernel.h>
++#include <linux/bitfield.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mii.h>
+ #include <linux/phy.h>
++#include <linux/property.h>
+ 
+ #define PHY_ID_ADIN1200				0x0283bc20
+ #define PHY_ID_ADIN1300				0x0283bc30
+@@ -32,15 +34,83 @@
+ #define ADIN1300_INT_STATUS_REG			0x0019
+ 
+ #define ADIN1300_GE_RGMII_CFG_REG		0xff23
++#define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
++#define   ADIN1300_GE_RGMII_RX_SEL(x)		\
++		FIELD_PREP(ADIN1300_GE_RGMII_RX_MSK, x)
++#define   ADIN1300_GE_RGMII_GTX_MSK		GENMASK(5, 3)
++#define   ADIN1300_GE_RGMII_GTX_SEL(x)		\
++		FIELD_PREP(ADIN1300_GE_RGMII_GTX_MSK, x)
+ #define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
+ #define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
+ #define   ADIN1300_GE_RGMII_EN			BIT(0)
+ 
++/* RGMII internal delay settings for rx and tx for ADIN1300 */
++#define ADIN1300_RGMII_1_60_NS			0x0001
++#define ADIN1300_RGMII_1_80_NS			0x0002
++#define	ADIN1300_RGMII_2_00_NS			0x0000
++#define	ADIN1300_RGMII_2_20_NS			0x0006
++#define	ADIN1300_RGMII_2_40_NS			0x0007
++
+ #define ADIN1300_GE_RMII_CFG_REG		0xff24
+ #define   ADIN1300_GE_RMII_EN			BIT(0)
+ 
++/**
++ * struct adin_cfg_reg_map - map a config value to aregister value
++ * @cfg		value in device configuration
++ * @reg		value in the register
++ */
++struct adin_cfg_reg_map {
++	int cfg;
++	int reg;
++};
++
++static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
++	{ 1600, ADIN1300_RGMII_1_60_NS },
++	{ 1800, ADIN1300_RGMII_1_80_NS },
++	{ 2000, ADIN1300_RGMII_2_00_NS },
++	{ 2200, ADIN1300_RGMII_2_20_NS },
++	{ 2400, ADIN1300_RGMII_2_40_NS },
++	{ },
++};
++
++static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
++{
++	size_t i;
++
++	for (i = 0; tbl[i].cfg; i++) {
++		if (tbl[i].cfg == cfg)
++			return tbl[i].reg;
++	}
++
++	return -EINVAL;
++}
++
++static u32 adin_get_reg_value(struct phy_device *phydev,
++			      const char *prop_name,
++			      const struct adin_cfg_reg_map *tbl,
++			      u32 dflt)
++{
++	struct device *dev = &phydev->mdio.dev;
++	u32 val;
++	int rc;
++
++	if (device_property_read_u32(dev, prop_name, &val))
++		return dflt;
++
++	rc = adin_lookup_reg_value(tbl, val);
++	if (rc < 0) {
++		phydev_warn(phydev,
++			    "Unsupported value %u for %s using default (%u)\n",
++			    val, prop_name, dflt);
++		return dflt;
++	}
++
++	return rc;
++}
++
+ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ {
++	u32 val;
+ 	int reg;
+ 
+ 	if (!phy_interface_is_rgmii(phydev))
+@@ -57,6 +127,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+ 		reg |= ADIN1300_GE_RGMII_RXID_EN;
++
++		val = adin_get_reg_value(phydev, "adi,rx-internal-delay-ps",
++					 adin_rgmii_delays,
++					 ADIN1300_RGMII_2_00_NS);
++		reg &= ~ADIN1300_GE_RGMII_RX_MSK;
++		reg |= ADIN1300_GE_RGMII_RX_SEL(val);
+ 	} else {
+ 		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
+ 	}
+@@ -64,6 +140,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		reg |= ADIN1300_GE_RGMII_TXID_EN;
++
++		val = adin_get_reg_value(phydev, "adi,tx-internal-delay-ps",
++					 adin_rgmii_delays,
++					 ADIN1300_RGMII_2_00_NS);
++		reg &= ~ADIN1300_GE_RGMII_GTX_MSK;
++		reg |= ADIN1300_GE_RGMII_GTX_SEL(val);
+ 	} else {
+ 		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
+ 	}
+-- 
+2.20.1
