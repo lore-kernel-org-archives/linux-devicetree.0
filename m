@@ -1,8 +1,7 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 11/21] ARM: dts: imx6qdl-apalis: Add sleep state to can
- interfaces
-Date: Mon, 12 Aug 2019 14:21:31 +0000
-Message-ID: <20190812142105.1995-12-philippe.schenker@toradex.com>
+Subject: [PATCH v4 04/21] ARM: dts: imx7-colibri: Add sleep mode to ethernet
+Date: Mon, 12 Aug 2019 14:21:19 +0000
+Message-ID: <20190812142105.1995-5-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,9 +14,7 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch prepares the devicetree for the new Ixora V1.2 where we are
-able to turn off the supply of the can transceiver. This implies to use
-a sleep state on transmission pins in order to prevent backfeeding.
+Add sleep pinmux to the fec so it can properly sleep.
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
@@ -25,75 +22,52 @@ Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 ---
 
 Changes in v4:
-- Add Marcel Ziswiler's Ack
+- Added Marcel Ziswiler's Ack
 
 Changes in v3: None
-Changes in v2:
-- Changed commit title to '...imx6qdl-apalis:...'
+Changes in v2: None
 
- arch/arm/boot/dts/imx6qdl-apalis.dtsi | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6=
-qdl-apalis.dtsi
-index 7c4ad541c3f5..59ed2e4a1fd1 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -148,14 +148,16 @@
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index 52046085ce6f..a8d992f3e897 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -101,8 +101,9 @@
  };
 =20
- &can1 {
+ &fec1 {
 -	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&pinctrl_flexcan1>;
 +	pinctrl-names =3D "default", "sleep";
-+	pinctrl-0 =3D <&pinctrl_flexcan1_default>;
-+	pinctrl-1 =3D <&pinctrl_flexcan1_sleep>;
- 	status =3D "disabled";
- };
-=20
- &can2 {
--	pinctrl-names =3D "default";
--	pinctrl-0 =3D <&pinctrl_flexcan2>;
-+	pinctrl-names =3D "default", "sleep";
-+	pinctrl-0 =3D <&pinctrl_flexcan2_default>;
-+	pinctrl-1 =3D <&pinctrl_flexcan2_sleep>;
- 	status =3D "disabled";
- };
-=20
-@@ -599,19 +601,32 @@
+ 	pinctrl-0 =3D <&pinctrl_enet1>;
++	pinctrl-1 =3D <&pinctrl_enet1_sleep>;
+ 	clocks =3D <&clks IMX7D_ENET_AXI_ROOT_CLK>,
+ 		<&clks IMX7D_ENET_AXI_ROOT_CLK>,
+ 		<&clks IMX7D_ENET1_TIME_ROOT_CLK>,
+@@ -463,6 +464,22 @@
  		>;
  	};
 =20
--	pinctrl_flexcan1: flexcan1grp {
-+	pinctrl_flexcan1_default: flexcan1defgrp {
- 		fsl,pins =3D <
- 			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x1b0b0
- 			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX 0x1b0b0
- 		>;
- 	};
-=20
--	pinctrl_flexcan2: flexcan2grp {
-+	pinctrl_flexcan1_sleep: flexcan1slpgrp {
++	pinctrl_enet1_sleep: enet1sleepgrp {
 +		fsl,pins =3D <
-+			MX6QDL_PAD_GPIO_7__GPIO1_IO07 0x0
-+			MX6QDL_PAD_GPIO_8__GPIO1_IO08 0x0
++			MX7D_PAD_ENET1_RGMII_RX_CTL__GPIO7_IO4		0x0
++			MX7D_PAD_ENET1_RGMII_RD0__GPIO7_IO0		0x0
++			MX7D_PAD_ENET1_RGMII_RD1__GPIO7_IO1		0x0
++			MX7D_PAD_ENET1_RGMII_RXC__GPIO7_IO5		0x0
++
++			MX7D_PAD_ENET1_RGMII_TX_CTL__GPIO7_IO10		0x0
++			MX7D_PAD_ENET1_RGMII_TD0__GPIO7_IO6		0x0
++			MX7D_PAD_ENET1_RGMII_TD1__GPIO7_IO7		0x0
++			MX7D_PAD_GPIO1_IO12__GPIO1_IO12			0x0
++			MX7D_PAD_SD2_CD_B__GPIO5_IO9			0x0
++			MX7D_PAD_SD2_WP__GPIO5_IO10			0x0
 +		>;
 +	};
 +
-+	pinctrl_flexcan2_default: flexcan2defgrp {
+ 	pinctrl_ecspi3_cs: ecspi3-cs-grp {
  		fsl,pins =3D <
- 			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x1b0b0
- 			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x1b0b0
- 		>;
- 	};
-+	pinctrl_flexcan2_sleep: flexcan2slpgrp {
-+		fsl,pins =3D <
-+			MX6QDL_PAD_KEY_COL4__GPIO4_IO14 0x0
-+			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x0
-+		>;
-+	};
-=20
- 	pinctrl_gpio_bl_on: gpioblon {
- 		fsl,pins =3D <
+ 			MX7D_PAD_I2C2_SDA__GPIO4_IO11		0x14
 --=20
 2.22.0
