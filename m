@@ -1,92 +1,70 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v12 04/18] kunit: test: add assertion printing library
-Date: Mon, 12 Aug 2019 16:56:29 -0700
-Message-ID: <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v12 05/18] kunit: test: add the concept of expectations
+Date: Mon, 12 Aug 2019 16:57:00 -0700
+Message-ID: <20190812235701.533E82063F@mail.kernel.org>
 References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-5-brendanhiggins@google.com> <20190812234644.E054D20679@mail.kernel.org>
+ <20190812182421.141150-6-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812234644.E054D20679@mail.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190812182421.141150-6-brendanhiggins@google.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org, logang@deltatee.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:46 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-12 11:24:07)
-> > Add `struct kunit_assert` and friends which provide a structured way to
-> > capture data from an expectation or an assertion (introduced later in
-> > the series) so that it may be printed out in the event of a failure.
-> >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->
-> Just some minor nits below
->
-> > diff --git a/include/kunit/assert.h b/include/kunit/assert.h
-> > new file mode 100644
-> > index 0000000000000..55f1b88b0cb4d
-> > --- /dev/null
-> > +++ b/include/kunit/assert.h
-> > @@ -0,0 +1,183 @@
-> [...]
-> > +                           struct string_stream *stream);
-> > +
-> > +struct kunit_fail_assert {
-> > +       struct kunit_assert assert;
-> > +};
-> > +
-> > +void kunit_fail_assert_format(const struct kunit_assert *assert,
-> > +                             struct string_stream *stream);
-> > +
-> > +#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {                           \
-> > +               .assert = KUNIT_INIT_ASSERT_STRUCT(test,                       \
-> > +                                                  type,                       \
-> > +                                                  kunit_fail_assert_format)   \
->
-> This one got indented one too many times?
-
-Not unless I have been using the wrong formatting for multiline
-macros. You can see this commit applied here:
-https://kunit.googlesource.com/linux/+/870964da2990920030990dd1ffb647ef408e52df/include/kunit/assert.h#59
-
-I have test, type, and kunit_fail_assert_format all column aligned (it
-just doesn't render nicely in the patch format).
-
-> > +}
-> > +
-> > +struct kunit_unary_assert {
-> > +       struct kunit_assert assert;
-> > +       const char *condition;
-> > +       bool expected_true;
-> > +};
-> > +
-> > +void kunit_unary_assert_format(const struct kunit_assert *assert,
-> > +                              struct string_stream *stream);
-> > +
-> [...]
-> > +#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,                             \
-> > +                                           type,                              \
-> > +                                           op_str,                            \
-> > +                                           left_str,                          \
-> > +                                           left_val,                          \
-> > +                                           right_str,                         \
-> > +                                           right_val) {                       \
-> > +       .assert = KUNIT_INIT_ASSERT_STRUCT(test,                               \
-> > +                                          type,                               \
-> > +                                          kunit_binary_str_assert_format),    \
-> > +       .operation = op_str,                                                   \
-> > +       .left_text = left_str,                                                 \
-> > +       .left_value = left_val,                                                \
-> > +       .right_text = right_str,                                               \
-> > +       .right_value = right_val                                               \
-> > +}
->
-> It would be nice to have kernel doc on these macros so we know how to
-> use them.
-
-Sounds good. Will fix.
+UXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDgtMTIgMTE6MjQ6MDgpCj4gQWRkIHN1cHBv
+cnQgZm9yIGV4cGVjdGF0aW9ucywgd2hpY2ggYWxsb3cgcHJvcGVydGllcyB0byBiZSBzcGVjaWZp
+ZWQgYW5kCj4gdGhlbiB2ZXJpZmllZCBpbiB0ZXN0cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBCcmVu
+ZGFuIEhpZ2dpbnMgPGJyZW5kYW5oaWdnaW5zQGdvb2dsZS5jb20+Cj4gUmV2aWV3ZWQtYnk6IEdy
+ZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4gUmV2aWV3ZWQt
+Ynk6IExvZ2FuIEd1bnRob3JwZSA8bG9nYW5nQGRlbHRhdGVlLmNvbT4KClJldmlld2VkLWJ5OiBT
+dGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+CgpKdXN0IHNvbWUgbWlub3Igbml0cyBhZ2Fp
+bi4KCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUva3VuaXQvdGVzdC5oIGIvaW5jbHVkZS9rdW5pdC90
+ZXN0LmgKPiBpbmRleCBkMGJmMTEyOTEwY2FmLi4yNjI1YmNmZWIxOWFjIDEwMDY0NAo+IC0tLSBh
+L2luY2x1ZGUva3VuaXQvdGVzdC5oCj4gKysrIGIvaW5jbHVkZS9rdW5pdC90ZXN0LmgKPiBAQCAt
+OSw4ICs5LDEwIEBACj4gICNpZm5kZWYgX0tVTklUX1RFU1RfSAo+ICAjZGVmaW5lIF9LVU5JVF9U
+RVNUX0gKPiAgCj4gKyNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgI2luY2x1ZGUgPGxpbnV4
+L3R5cGVzLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4gKyNpbmNsdWRlIDxrdW5pdC9h
+c3NlcnQuaD4KCkNhbiB5b3UgYWxwaGFiZXQgc29ydCB0aGVzZT8KCj4gIAo+ICBzdHJ1Y3Qga3Vu
+aXRfcmVzb3VyY2U7Cj4gIAo+IEBAIC0zMTksNCArMzIxLDg0NSBAQCB2b2lkIF9fcHJpbnRmKDMs
+IDQpIGt1bml0X3ByaW50ayhjb25zdCBjaGFyICpsZXZlbCwKPiAgI2RlZmluZSBrdW5pdF9lcnIo
+dGVzdCwgZm10LCAuLi4pIFwKPiAgICAgICAgICAgICAgICAga3VuaXRfcHJpbnRrKEtFUk5fRVJS
+LCB0ZXN0LCBmbXQsICMjX19WQV9BUkdTX18pCj4gIAo+ICsvKgo+ICsgKiBHZW5lcmF0ZXMgYSBj
+b21waWxlLXRpbWUgd2FybmluZyBpbiBjYXNlIG9mIGNvbXBhcmluZyBpbmNvbXBhdGlibGUgdHlw
+ZXMuCj4gKyAqLwo+ICsjZGVmaW5lIF9fa3VuaXRfdHlwZWNoZWNrKGxocywgcmhzKSBcCj4gKyAg
+ICAgICAoKHZvaWQpIF9fdHlwZWNoZWNrKGxocywgcmhzKSkKCklzIHRoZXJlIGEgcmVhc29uIHdo
+eSB0aGlzIGNhbid0IGJlIGlubGluZWQgYW5kIHRoZSBfX2t1bml0X3R5cGVjaGVjaygpCm1hY3Jv
+IGNhbid0IGJlIHJlbW92ZWQ/Cgo+ICsKPiArLyoqCj4gKyAqIEtVTklUX1NVQ0NFRUQoKSAtIEEg
+bm8tb3AgZXhwZWN0YXRpb24uIE9ubHkgZXhpc3RzIGZvciBjb2RlIGNsYXJpdHkuCj4gKyAqIEB0
+ZXN0OiBUaGUgdGVzdCBjb250ZXh0IG9iamVjdC4KWy4uLl0KPiArICogQGNvbmRpdGlvbjogYW4g
+YXJiaXRyYXJ5IGJvb2xlYW4gZXhwcmVzc2lvbi4gVGhlIHRlc3QgZmFpbHMgd2hlbiB0aGlzIGRv
+ZXMKPiArICogbm90IGV2YWx1YXRlIHRvIHRydWUuCj4gKyAqCj4gKyAqIFRoaXMgYW5kIGV4cGVj
+dGF0aW9ucyBvZiB0aGUgZm9ybSBgS1VOSVRfRVhQRUNUXypgIHdpbGwgY2F1c2UgdGhlIHRlc3Qg
+Y2FzZQo+ICsgKiB0byBmYWlsIHdoZW4gdGhlIHNwZWNpZmllZCBjb25kaXRpb24gaXMgbm90IG1l
+dDsgaG93ZXZlciwgaXQgd2lsbCBub3QgcHJldmVudAo+ICsgKiB0aGUgdGVzdCBjYXNlIGZyb20g
+Y29udGludWluZyB0byBydW47IHRoaXMgaXMgb3RoZXJ3aXNlIGtub3duIGFzIGFuCj4gKyAqICpl
+eHBlY3RhdGlvbiBmYWlsdXJlKi4KPiArICovCj4gKyNkZWZpbmUgS1VOSVRfRVhQRUNUX1RSVUUo
+dGVzdCwgY29uZGl0aW9uKSBcCj4gKyAgICAgICAgICAgICAgIEtVTklUX1RSVUVfQVNTRVJUSU9O
+KHRlc3QsIEtVTklUX0VYUEVDVEFUSU9OLCBjb25kaXRpb24pCgpBIGxvdCBvZiB0aGVzZSBtYWNy
+b3Mgc2VlbSBkb3VibGUgaW5kZW50ZWQuCgo+ICsKPiArI2RlZmluZSBLVU5JVF9FWFBFQ1RfVFJV
+RV9NU0codGVzdCwgY29uZGl0aW9uLCBmbXQsIC4uLikgICAgICAgICAgICAgICAgICAgICAgXAo+
+ICsgICAgICAgICAgICAgICBLVU5JVF9UUlVFX01TR19BU1NFUlRJT04odGVzdCwgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBcCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBLVU5JVF9FWFBFQ1RBVElPTiwgICAgICAgICAgICAgICAgICAgIFwKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbmRpdGlvbiwgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgZm10LCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjI19fVkFfQVJHU19fKQo+ICsKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
