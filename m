@@ -1,42 +1,67 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4 2/3] dt-bindings: eeprom: at25: Add Anvo ANV32E61W
-Date: Mon, 12 Aug 2019 08:43:35 +0200
-Message-ID: <CAJKOXPf_uJUhNrciK1mFddN+gZ8vxtTEsz_uF7k60+EWYW94OA@mail.gmail.com>
-References: <20190808172616.11728-1-krzk@kernel.org>
- <20190808172616.11728-2-krzk@kernel.org>
- <de032954-2b6e-5aa9-0d91-c37417c8e162@kontron.de>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH] dt-bindings: mfd: rn5t618: Document optional property
+ system-power-controller
+Date: Mon, 12 Aug 2019 08:53:51 +0200
+Message-ID: <20190812065351.GE1966@latitude>
+References: <20190129135917.29521-1-j.neuschaefer@gmx.net>
+ <20190201092411.GG783@dell>
+ <20190808183924.GB1966@latitude>
+ <20190812062520.GB4594@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <de032954-2b6e-5aa9-0d91-c37417c8e162@kontron.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "notify@kernel.org" <notify@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="maH1Gajj2nflutpK"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190812062520.GB4594@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 20:09, Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
->
-> On 08.08.19 19:26, Krzysztof Kozlowski wrote:
-> > Document the compatible for ANV32E61W EEPROM chip.
->
-> This chip is actually not an EEPROM, but a SPI nvSRAM. It can be
-> interfaced by the at25 driver similar to an EEPROM. This is not the
-> ideal solution, but it works until there's a proper driver for such
-> chips. Maybe you can add some of these details to the commit message
-> here. Also there is more information on this topic here:
-> https://patchwork.ozlabs.org/patch/1043950/.
 
-Indeed, I'll correct the description of commit.
+--maH1Gajj2nflutpK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Mon, Aug 12, 2019 at 07:25:20AM +0100, Lee Jones wrote:
+> On Thu, 08 Aug 2019, Jonathan Neusch=C3=A4fer wrote:
+> > On Fri, Feb 01, 2019 at 09:24:11AM +0000, Lee Jones wrote:
+> > > On Tue, 29 Jan 2019, Jonathan Neusch=C3=A4fer wrote:
+> > > >  Documentation/devicetree/bindings/mfd/rn5t618.txt | 5 +++++
+> > > >  1 file changed, 5 insertions(+)
+> > >=20
+> > > Applied, thanks.
+> >=20
+> > Hi,
+> >=20
+> > apparently this patch got lost somehow (I can't find it in mainline or
+> > -next). Should I resend it?
+>=20
+> Yes, it appears that it did.
+>=20
+> I've applied it again.
+
+Thanks!
+
+--maH1Gajj2nflutpK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1RDPYACgkQCDBEmo7z
+X9shKw/+JZCAsjf1jIve1vL5EAHYyh19xmD6BTvCpIjinKKs3lspa2jQd34ePTCq
+4BhMRoisEjqvx5SqUlOccHAqT+WoU9gBAegDqkVUPTEUXFB2H0i2I8u6AoOWCQJ+
+tqltE/95fRn5oPxmk2rzF2hCPABRK94A1LQPEKr7YfLKqoA47tCmZ6CjWRqVzx+E
+mGo6aW/nChuMG5Sq1iZTJUOtJ1adSEL8I3h/S00UBumkd5XjXAu1fjBEBOX4l5Yg
+T5qV6LXxQppQLUV/UWS/025aSy1bYm9jBY526Tz9iHb0z8ZljlWY9Mn7oWLS9Ujo
+ExflAfx/QtiQ/45mwHYa/71xLz5rUhowbeo0dZfCfMTzDOB3e+gF83ss6eSOQ7sQ
+ehNbWYf1T5Ct/9AW/OBjuzChlP0UY02KfHPP/EpZV0VjsGo2PxV3C8qmnzYfrK5x
+wq4sblpFHdDIQHoJQPL7XgJwb12fhDgdmUCXkLJXrB1Hv2avEqmMBC30rJDeC1GL
+0YAZSMYEkW7FAYxYwiElKp8lKNd2hPM8zzwj6KnE9OOfuhvkE9TjtPSRTcmg6Cnu
+bxDH9iun1cy9MOIIJ2n3h0xeE3+Zf6YdC4hK0sRCPJnkNVS1o6+LKtpGEcyr1EFH
+SZoTweJD6Z2WOCvJ2a0iWIrY6893L8fCClafY+aEonYxmRYx+M0=
+=HJdh
+-----END PGP SIGNATURE-----
+
+--maH1Gajj2nflutpK--
