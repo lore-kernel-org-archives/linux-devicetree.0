@@ -1,22 +1,22 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: twl6030: use variable for device node" to the regulator tree
-Date: Mon, 12 Aug 2019 14:10:09 +0100 (BST)
-Message-ID: <20190812131009.3E5682740CBD@ypsilon.sirena.org.uk>
-References: <20190725094542.16547-3-gregory.clement@bootlin.com>
+Subject: Applied "ASoC: fsl_esai: Add new compatible string for imx6ull" to the asoc tree
+Date: Mon, 12 Aug 2019 14:09:50 +0100 (BST)
+Message-ID: <20190812130950.DBD082740CB7@ypsilon.sirena.org.uk>
+References: <1565346467-5769-2-git-send-email-shengjiu.wang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725094542.16547-3-gregory.clement@bootlin.com>
+In-Reply-To: <1565346467-5769-2-git-send-email-shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tony Lindgren <tony@atomide.com>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, nicoleotsuka@gmail.comNicolin Chen <nicoleotsuka@gmail.com>, robh+dt@kernel.org, timur@kernel.org, Xiubo.Lee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: twl6030: use variable for device node
+   ASoC: fsl_esai: Add new compatible string for imx6ull
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,49 +37,38 @@ to this mail.
 Thanks,
 Mark
 
->From 621d3ce830649d56ef1c9611e370d05ceaffd7fc Mon Sep 17 00:00:00 2001
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Thu, 25 Jul 2019 11:45:41 +0200
-Subject: [PATCH] regulator: twl6030: use variable for device node
+>From 9ea08f2a6d27b6a26d33dae5c58e4099672d6bb3 Mon Sep 17 00:00:00 2001
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Date: Fri, 9 Aug 2019 18:27:47 +0800
+Subject: [PATCH] ASoC: fsl_esai: Add new compatible string for imx6ull
 
-Instead of refering the full pdev->dev.of_node use a local variable.
+Add new compatible string "fsl,imx6ull-esai" in the binding document.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20190725094542.16547-3-gregory.clement@bootlin.com
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/1565346467-5769-2-git-send-email-shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/twl6030-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/sound/fsl,esai.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/twl6030-regulator.c b/drivers/regulator/twl6030-regulator.c
-index 5fe208b381eb..d73c81542ceb 100644
---- a/drivers/regulator/twl6030-regulator.c
-+++ b/drivers/regulator/twl6030-regulator.c
-@@ -665,14 +665,14 @@ static int twlreg_probe(struct platform_device *pdev)
- 	struct regulation_constraints	*c;
- 	struct regulator_dev		*rdev;
- 	struct regulator_config		config = { };
-+	struct device_node		*np = pdev->dev.of_node;
+diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+index 5b9914367610..0e6e2166f76c 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+@@ -7,8 +7,11 @@ other DSPs. It has up to six transmitters and four receivers.
  
- 	template = of_device_get_match_data(&pdev->dev);
- 	if (!template)
- 		return -ENODEV;
+ Required properties:
  
- 	id = template->desc.id;
--	initdata = of_get_regulator_init_data(&pdev->dev, pdev->dev.of_node,
--						&template->desc);
-+	initdata = of_get_regulator_init_data(&pdev->dev, np, &template->desc);
- 	if (!initdata)
- 		return -EINVAL;
+-  - compatible		: Compatible list, must contain "fsl,imx35-esai" or
+-			  "fsl,vf610-esai"
++  - compatible		: Compatible list, should contain one of the following
++			  compatibles:
++			  "fsl,imx35-esai",
++			  "fsl,vf610-esai",
++			  "fsl,imx6ull-esai",
  
-@@ -713,7 +713,7 @@ static int twlreg_probe(struct platform_device *pdev)
- 	config.dev = &pdev->dev;
- 	config.init_data = initdata;
- 	config.driver_data = info;
--	config.of_node = pdev->dev.of_node;
-+	config.of_node = np;
+   - reg			: Offset and length of the register set for the device.
  
- 	rdev = devm_regulator_register(&pdev->dev, &info->desc, &config);
- 	if (IS_ERR(rdev)) {
 -- 
 2.20.1
