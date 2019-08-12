@@ -1,15 +1,15 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/7] dt-bindings: devfreq: Add bindings for generic imx
- buses
-Date: Mon, 12 Aug 2019 13:46:50 -0600
-Message-ID: <CAL_JsqJWpQN2oTm8Q2_Gzd0GJ+YZoc9j-zh-U1s4eGhMxDEmEA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] dt-bindings: devfreq: Add bindings for imx ddr
+ controller
+Date: Mon, 12 Aug 2019 13:51:57 -0600
+Message-ID: <CAL_Jsq+5zp1nW=sNtU_+wdUO9KJ4ABWjdX=R9DHjBsgygTxV6g@mail.gmail.com>
 References: <cover.1565633880.git.leonard.crestez@nxp.com>
- <97b0bff95ddb85b06ef3d2f8079faa36562a956d.1565633880.git.leonard.crestez@nxp.com>
+ <4cbddd75652c63aab19866c93faa0b784b56d53f.1565633880.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <97b0bff95ddb85b06ef3d2f8079faa36562a956d.1565633880.git.leonard.crestez@nxp.com>
+In-Reply-To: <4cbddd75652c63aab19866c93faa0b784b56d53f.1565633880.git.leonard.crestez@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,95 +23,91 @@ To: Leonard Crestez <leonard.crestez@nxp.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "open list:THERMAL" <linux-pm@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <aisheng.dong@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 12:49 PM Leonard Crestez
+On Mon, Aug 12, 2019 at 12:50 PM Leonard Crestez
 <leonard.crestez@nxp.com> wrote:
 >
-> Add initial dt bindings for the interconnects inside i.MX chips.
-> Multiple external IPs are involved but SOC integration means the
-> software controllable interfaces are very similar.
->
-> This is initially only for imx8mm but add an "fsl,imx8m-nic" fallback
-> similar to exynos-bus.
+> Add devicetree bindings for the i.MX DDR Controller on imx8m series
+> chips. It supports dynamic frequency switching between multiple data
+> rates and this is exposed to Linux via the devfreq subsystem.
 >
 > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->  .../devicetree/bindings/devfreq/imx.yaml      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/imx.yaml
+>  .../devicetree/bindings/devfreq/imx-ddrc.yaml | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/devfreq/imx.yaml b/Documentation/devicetree/bindings/devfreq/imx.yaml
+> diff --git a/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml b/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
 > new file mode 100644
-> index 000000000000..0e2ee3a5205e
+> index 000000000000..fa20280a682f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/imx.yaml
-> @@ -0,0 +1,50 @@
+> +++ b/Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml
+> @@ -0,0 +1,53 @@
 > +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
 > +$id: http://devicetree.org/schemas/devfreq/imx.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Generic i.MX bus frequency device
+> +title: i.MX DDR Controller
 > +
 > +maintainers:
 > +  - Leonard Crestez <leonard.crestez@nxp.com>
 > +
-> +description: |
-> +  The i.MX SoC family has multiple buses for which clock frequency (and sometimes
-> +  voltage) can be adjusted.
-> +
-> +  Some of those buses expose register areas mentioned in the memory maps as GPV
-> +  ("Global Programmers View") but not all. Access to this area might be denied for
-> +  normal world.
-> +
-> +  The buses are based on externally licensed IPs such as ARM NIC-301 and Arteris
-> +  FlexNOC but DT bindings are specific to the integration of these bus
-> +  interconnect IPs into imx SOCs.
-
-No need to use the interconnect binding?
-
-> +
 > +properties:
 > +  compatible:
 > +    contains:
+
+Don't use 'contains'.
+
 > +      enum:
-> +       - fsl,imx8m-noc
-> +       - fsl,imx8m-nic
-
-This means any combination of these 2 strings is valid. I suspect you
-want a given node to have only one of them, so drop 'contains'
-
+> +       - fsl,imx8m-ddrc
 > +
 > +  reg:
 > +    maxItems: 1
-> +    description: GPV area
+> +    description: DDR Controller registers
+
+Don't really need a description for a standard property with a single item.
+
 > +
 > +  clocks:
-> +    maxItems: 1
+> +    minItems: 5
+
+Just maxItems is sufficient unless there's a variable number of items.
+
+> +    maxItems: 5
+> +
+> +  clock-names:
+> +    items:
+> +      - const: dram_core
+> +      - const: dram_pll
+> +      - const: dram_alt_root
+> +      - const: dram_alt
+> +      - const: dram_apb
 > +
 > +required:
+> +  - reg
 > +  - compatible
 > +  - clocks
+> +  - clock-names
 
-reg?
+You should add an 'additionalProperties: false' here.
 
 > +
 > +examples:
 > +  - |
 > +    #include <dt-bindings/clock/imx8mm-clock.h>
-> +    noc: noc@32700000 {
-> +            compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
+> +    ddrc: dram-controller@3d400000 {
+> +        compatible = "fsl,imx8mm-ddrc", "fsl,imx8m-ddrc";
+> +        reg = <0x3d400000 0x400000>;
+> +        clock-names = "dram_core", "dram_pll", "dram_alt_root", "dram_alt", "dram_apb";
+> +        clocks = <&clk IMX8MM_CLK_DRAM_CORE>,
+> +                 <&clk IMX8MM_DRAM_PLL>,
+> +                 <&clk IMX8MM_CLK_DRAM_ALT_ROOT>,
+> +                 <&clk IMX8MM_CLK_DRAM_ALT>,
+> +                 <&clk IMX8MM_CLK_DRAM_APB>;
+> +        operating-points-v2 = <&ddrc_opp_table>;
 
-Doesn't match the schema. (Well, it does with 'contains', but
-fsl,imx8mm-noc is not documented.)
+Not documented. You can assume a common property has a type definition
+already (this one doesn't yet), so just this is enough:
 
-> +            reg = <0x32700000 0x100000>;
-> +            clocks = <&clk IMX8MM_CLK_NOC>;
-> +            operating-points-v2 = <&noc_opp_table>;
-
-Not documented.
-
-> +    };
-> --
-> 2.17.1
->
+operating-points-v2: true
