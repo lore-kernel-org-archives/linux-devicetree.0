@@ -1,8 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 18/21] ARM: dts: imx6ull-colibri: Add general wakeup key
- used on Colibri
-Date: Mon, 12 Aug 2019 14:21:43 +0000
-Message-ID: <20190812142105.1995-19-philippe.schenker@toradex.com>
+Subject: [PATCH v4 20/21] ARM: dts: imx7-colibri: Add UHS support to eval
+ board
+Date: Mon, 12 Aug 2019 14:21:45 +0000
+Message-ID: <20190812142105.1995-21-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -15,48 +15,44 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This adds the possibility to wake the module with an external signal
-as defined in the Colibri standard
+This commit adds UHS capability to Toradex Eval Boards
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
 ---
 
-Changes in v4:
-- Add Marcel Ziswiler's Ack
+Changes in v4: None
+Changes in v3:
+- New patch to make use of ARM: dts: imx7-colibri: fix 1.8V/UHS support
 
-Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot=
-/dts/imx6ull-colibri-eval-v3.dtsi
-index b6147c76d159..a78849fd2afa 100644
---- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-@@ -8,6 +8,20 @@
- 		stdout-path =3D "serial0:115200n8";
- 	};
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
+s/imx7-colibri-eval-v3.dtsi
+index 576dec9ff81c..90121fbe561f 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -210,9 +210,16 @@
+ };
 =20
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_snvs_gpiokeys>;
-+
-+		power {
-+			label =3D "Wake-Up";
-+			gpios =3D <&gpio5 1 GPIO_ACTIVE_HIGH>;
-+			linux,code =3D <KEY_WAKEUP>;
-+			debounce-interval =3D <10>;
-+			wakeup-source;
-+		};
-+	};
-+
- 	/* fixed crystal dedicated to mcp2515 */
- 	clk16m: clk16m {
- 		compatible =3D "fixed-clock";
+ &usdhc1 {
+-	keep-power-in-suspend;
+-	wakeup-source;
++	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 =3D <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
++	pinctrl-1 =3D <&pinctrl_usdhc1_100mhz &pinctrl_cd_usdhc1>;
++	pinctrl-2 =3D <&pinctrl_usdhc1_200mhz &pinctrl_cd_usdhc1>;
+ 	vmmc-supply =3D <&reg_3v3>;
++	vqmmc-supply =3D <&reg_LDO2>;
++	cd-gpios =3D <&gpio1 0 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	enable-sdio-wakeup;
++	keep-power-in-suspend;
+ 	status =3D "okay";
+ };
+=20
 --=20
 2.22.0
