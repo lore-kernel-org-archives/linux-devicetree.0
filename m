@@ -1,70 +1,89 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v4 21/21] ARM: dts: imx6qdl-colibri.dtsi: UHS-I support for
- v1.1a hw
-Date: Mon, 12 Aug 2019 14:21:47 +0000
-Message-ID: <20190812142105.1995-22-philippe.schenker@toradex.com>
+Subject: [PATCH v4 06/21] ARM: dts: imx7-colibri: add GPIO wakeup key
+Date: Mon, 12 Aug 2019 14:21:23 +0000
+Message-ID: <20190812142105.1995-7-philippe.schenker@toradex.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190812142105.1995-1-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <5E152F845EAF2941B1550AFAB2D71F5C@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Igor Opaniuk <igor.opaniuk@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Stefan Agner <stefan.agner@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+DQoNClByb3ZpZGUg
-cHJvcGVyIGNvbmZpZ3VyYXRpb24gZm9yIFZHRU4zLCB0byBtYWtlIHN1cmUgaXQncyBpcyBhbHdh
-eXMgcG93ZXJlZA0Kd2hpY2ggYWxsb3dzIHRoYXQgcmFpbCB0byBiZSBhdXRvbWF0aWNhbGx5IHN3
-aXRjaGVkIHRvIDEuOCB2b2x0cw0KZm9yIHByb3BlciBVSFMtSSBvcGVyYXRpb24uIEJ5IGRlZmF1
-bHQgaXQncyBkaXNhYmxlZC4NCg0KV2l0aCBVSFMtSSBlbmFibGVkOg0KWyAgMTA0LjE1Mzg5OF0g
-bW1jMTogbmV3IHVsdHJhIGhpZ2ggc3BlZWQgU0RSMTA0IFNESEMgY2FyZCBhdCBhZGRyZXNzIDU5
-YjQNClsgIDEwNC4xNjYyMDJdIG1tY2JsazE6IG1tYzE6NTliNCBVU0QwMCAxNS4wIEdpQg0KWyAg
-MTA0LjE3MzkyM10gIG1tY2JsazE6IHAxDQoNCnJvb3RAY29saWJyaS1pbXg2On4jIGhkcGFybSAt
-dCAvZGV2L21tY2JsazENCi9kZXYvbW1jYmxrMToNClRpbWluZyBidWZmZXJlZCBkaXNrIHJlYWRz
-OiAyMjYgTUIgaW4gIDMuMDEgc2Vjb25kcyA9ICA3NS4wMSBNQi9zZWMNCg0KU2lnbmVkLW9mZi1i
-eTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+DQpTaWduZWQtb2ZmLWJ5
-OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQoNCi0t
-LQ0KDQpDaGFuZ2VzIGluIHY0Og0KLSBOZXcgcGF0Y2ggYXMgb2YgdGhlIHJlY29tbWVuZGF0aW9u
-IGZyb20gTWFyY2VsIG9uIE1MDQoNCkNoYW5nZXMgaW4gdjM6IE5vbmUNCkNoYW5nZXMgaW4gdjI6
-IE5vbmUNCg0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5kdHNpIHwgNDMgKysr
-KysrKysrKysrKysrKysrKysrKystLS0NCiAxIGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygr
-KSwgNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZx
-ZGwtY29saWJyaS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kN
-CmluZGV4IDlhNjNkZWJhYjBiNS4uMDI0MTYxM2I1ZTJiIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnFkbC1jb2xpYnJpLmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZxZGwtY29saWJyaS5kdHNpDQpAQCAtMjI2LDcgKzIyNiwxMiBAQA0KIAkJCQlyZWd1bGF0b3It
-YWx3YXlzLW9uOw0KIAkJCX07DQogDQotCQkJLyogdmdlbjM6IHVudXNlZCAqLw0KKwkJCXZnZW4z
-X3JlZzogdmdlbjMgew0KKwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsN
-CisJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQorCQkJCXJlZ3VsYXRv
-ci1ib290LW9uOw0KKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KKwkJCX07DQogDQogCQkJdmdl
-bjRfcmVnOiB2Z2VuNCB7DQogCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+
-Ow0KQEAgLTM5NCwxMyArMzk5LDIxIEBADQogDQogLyogQ29saWJyaSBNTUMgKi8NCiAmdXNkaGMx
-IHsNCi0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCisJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IiwgInN0YXRlXzEwMG1oeiIsICJzdGF0ZV8yMDBtaHoiOw0KIAlwaW5jdHJsLTAgPSA8JnBp
-bmN0cmxfdXNkaGMxICZwaW5jdHJsX21tY19jZD47DQorCXBpbmN0cmwtMSA9IDwmcGluY3RybF91
-c2RoYzFfMTAwbWh6ICZwaW5jdHJsX21tY19jZD47DQorCXBpbmN0cmwtMiA9IDwmcGluY3RybF91
-c2RoYzFfMjAwbWh6ICZwaW5jdHJsX21tY19jZD47DQorCXZxbW1jLXN1cHBseSA9IDwmdmdlbjNf
-cmVnPjsNCisJc2QtdWhzLXNkcjEyOw0KKwlzZC11aHMtc2RyMjU7DQorCXNkLXVocy1zZHI1MDsN
-CisJc2QtdWhzLXNkcjEwNDsNCisJbGFiZWwgPSAiTU1DMSI7DQogCWNkLWdwaW9zID0gPCZncGlv
-MiA1IEdQSU9fQUNUSVZFX0xPVz47IC8qIE1NQ0QgKi8NCiAJZGlzYWJsZS13cDsNCi0JdnFtbWMt
-c3VwcGx5ID0gPCZyZWdfbW9kdWxlXzN2Mz47DQorCWVuYWJsZS1zZGlvLXdha2V1cDsNCisJa2Vl
-cC1wb3dlci1pbi1zdXNwZW5kOw0KIAlidXMtd2lkdGggPSA8ND47DQotCW5vLTEtOC12Ow0KIAlz
-dGF0dXMgPSAiZGlzYWJsZWQiOw0KIH07DQogDQpAQCAtNzA2LDYgKzcxOSwyOCBAQA0KIAkJPjsN
-CiAJfTsNCiANCisJcGluY3RybF91c2RoYzFfMTAwbWh6OiB1c2RoYzFncnAxMDBtaHogew0KKwkJ
-ZnNsLHBpbnMgPSA8DQorCQkJTVg2UURMX1BBRF9TRDFfQ01EX19TRDFfQ01EICAgIDB4MTcwYjEN
-CisJCQlNWDZRRExfUEFEX1NEMV9DTEtfX1NEMV9DTEsgICAgMHgxMDBiMQ0KKwkJCU1YNlFETF9Q
-QURfU0QxX0RBVDBfX1NEMV9EQVRBMCAweDE3MGIxDQorCQkJTVg2UURMX1BBRF9TRDFfREFUMV9f
-U0QxX0RBVEExIDB4MTcwYjENCisJCQlNWDZRRExfUEFEX1NEMV9EQVQyX19TRDFfREFUQTIgMHgx
-NzBiMQ0KKwkJCU1YNlFETF9QQURfU0QxX0RBVDNfX1NEMV9EQVRBMyAweDE3MGIxDQorCQk+Ow0K
-Kwl9Ow0KKw0KKwlwaW5jdHJsX3VzZGhjMV8yMDBtaHo6IHVzZGhjMWdycDIwMG1oeiB7DQorCQlm
-c2wscGlucyA9IDwNCisJCQlNWDZRRExfUEFEX1NEMV9DTURfX1NEMV9DTUQgICAgMHgxNzBmMQ0K
-KwkJCU1YNlFETF9QQURfU0QxX0NMS19fU0QxX0NMSyAgICAweDEwMGYxDQorCQkJTVg2UURMX1BB
-RF9TRDFfREFUMF9fU0QxX0RBVEEwIDB4MTcwZjENCisJCQlNWDZRRExfUEFEX1NEMV9EQVQxX19T
-RDFfREFUQTEgMHgxNzBmMQ0KKwkJCU1YNlFETF9QQURfU0QxX0RBVDJfX1NEMV9EQVRBMiAweDE3
-MGYxDQorCQkJTVg2UURMX1BBRF9TRDFfREFUM19fU0QxX0RBVEEzIDB4MTcwZjENCisJCT47DQor
-CX07DQorDQogCXBpbmN0cmxfdXNkaGMzOiB1c2RoYzNncnAgew0KIAkJZnNsLHBpbnMgPSA8DQog
-CQkJTVg2UURMX1BBRF9TRDNfQ01EX19TRDNfQ01ECTB4MTcwNTkNCi0tIA0KMi4yMi4wDQoNCg==
+From: Stefan Agner <stefan.agner@toradex.com>
+
+Add wakeup GPIO key which is able to wake the system from sleep
+modes (e.g. Suspend-to-Memory).
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
+---
+
+Changes in v4:
+- Add Marcel Ziswiler's Ack
+
+Changes in v3: None
+Changes in v2: None
+
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 14 ++++++++++++++
+ arch/arm/boot/dts/imx7-colibri.dtsi         |  7 ++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
+s/imx7-colibri-eval-v3.dtsi
+index 3f2746169181..d4dbc4fc1adf 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -52,6 +52,20 @@
+ 		clock-frequency =3D <16000000>;
+ 	};
+=20
++	gpio-keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_gpiokeys>;
++
++		power {
++			label =3D "Wake-Up";
++			gpios =3D <&gpio1 1 GPIO_ACTIVE_HIGH>;
++			linux,code =3D <KEY_WAKEUP>;
++			debounce-interval =3D <10>;
++			gpio-key,wakeup;
++		};
++	};
++
+ 	panel: panel {
+ 		compatible =3D "edt,et057090dhu";
+ 		backlight =3D <&bl>;
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index cab40d22d24e..5347ed38acb2 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -741,12 +741,17 @@
+=20
+ 	pinctrl_gpio_lpsr: gpio1-grp {
+ 		fsl,pins =3D <
+-			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x59
+ 			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x59
+ 			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x59
+ 		>;
+ 	};
+=20
++	pinctrl_gpiokeys: gpiokeysgrp {
++		fsl,pins =3D <
++			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x19
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1-grp {
+ 		fsl,pins =3D <
+ 			MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA	0x4000007f
+--=20
+2.22.0
