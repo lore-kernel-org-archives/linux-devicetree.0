@@ -1,114 +1,118 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Mon, 12 Aug 2019 11:01:51 -0700
-Message-ID: <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
-References: <89402d22-d432-9551-e787-c8ede16dbe5f@arm.com>
- <CA+E=qVfh7mirJhRsDTeuAVgG55ia936uFSFVKR0N5Pn4GCF1UA@mail.gmail.com>
- <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
- <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea>
- <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea>
- <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
- <20190812080420.saelmqb36vkelxn4@flea>
+From: "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v3 8/8] PCI: dw: Add support for
+ PCI_PROBE_ONLY/PCI_REASSIGN_ALL_BUS flags
+Date: Mon, 12 Aug 2019 18:05:07 +0000
+Message-ID: <6e2efdfb6d07526f934fcbeb0e6b9518c849b8a8.camel@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+         <20190723092711.11786-4-jonnyc@amazon.com>
+         <20190807163654.GC16214@e121166-lin.cambridge.arm.com>
+         <67c58ded2177beca030450c25d742d35890eb48a.camel@amazon.com>
+         <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190812080420.saelmqb36vkelxn4@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190808105821.GB30230@e121166-lin.cambridge.arm.com>
+Content-Language: en-US
+Content-ID: <B6A4A488E9E42C4AB6B760FA7F1FB027@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "Chocron, Jonathan" <jo>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 1:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick wrote:
-> > On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruzhick wrote:
-> > > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruzhick wrote:
-> > > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > >
-> > > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
-> > > > > > > >>
-> > > > > > > >> Vasily Khoruzhick writes:
-> > > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > > >>>>
-> > > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> > > > > > > >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
-> > > > > > > >>>>> as result 'perf top' shows no events.
-> > > > > > > >>>>
-> > > > > > > >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
-> > > > > > > >>>> It could well just be that the interrupt numbers are wrong...
-> > > > > > > >>>
-> > > > > > > >>> Looks like it does, at least result looks plausible:
-> > > > > > > >>
-> > > > > > > >> I'm using perf stat regularly (cache benchmarks) and it works fine.
-> > > > > > > >>
-> > > > > > > >> Unfortunately I wasn't aware that perf stat is a poor test for
-> > > > > > > >> the interrupts part of the node, when I added it. So I'm not too
-> > > > > > > >> surprised I got it wrong.
-> > > > > > > >>
-> > > > > > > >> However, it would be unfortunate if the node got removed completely,
-> > > > > > > >> because perf stat would not work anymore. Maybe we can only remove
-> > > > > > > >> the interrupts or just fix them even if the HW doesn't work?
-> > > > > > > >
-> > > > > > > > I'm not familiar with PMU driver. Is it possible to get it working
-> > > > > > > > without interrupts?
-> > > > > > >
-> > > > > > > Yup - you get a grumpy message from the driver, it will refuse sampling
-> > > > > > > events (the ones which weren't working anyway), and if you measure
-> > > > > > > anything for long enough that a counter overflows you'll get wonky
-> > > > > > > results. But for counting hardware events over relatively short periods
-> > > > > > > it'll still do the job.
-> > > > > >
-> > > > > > I tried to drop interrupts completely from the node but 'perf top' is
-> > > > > > still broken. Though now in different way: it complains "cycles: PMU
-> > > > > > Hardware doesn't support sampling/overflow-interrupts. Try 'perf
-> > > > > > stat'"
-> > > > >
-> > > > > I have no idea if that's the culprit, but what is the state of the
-> > > > > 0x09010000 register?
-> > > >
-> > > > What register is that and how do I check it?
-> > >
-> > > It's in the CPUX Configuration block, and the bits are labelled as CPU
-> > > Debug Reset.
-> > >
-> > > And if you have busybox, you can use devmem.
-> >
-> > CPUX configuration block is at 0x01700000 according to A64 user
-> > manual, and particular register you're interested in is at 0x01700080,
-> > its value is 0x1110110F.
-> >
-> > Bits 16-19 are not defined in user manual and are not set.
->
-> Sorry, I somehow thought this was for the H6...
->
-> I don't have any idea then :/
-
-OK, so what should we do? 'perf top'/'perf record' work fine if PMU
-node is dropped, but they don't work if PMU node is present (even with
-interrupts dropped). I'd prefer to have 'perf top' and 'perf record'
-working instead of 'perf stat'
-
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+T24gVGh1LCAyMDE5LTA4LTA4IGF0IDExOjU4ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gU2lkZSBub3RlLCBydW46DQo+IA0KPiBnaXQgbG9nIC0tb25lbGluZSBvbiBkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL2R3YyBleGlzdGluZyBmaWxlcyBhbmQNCj4gbWFrZSBzdXJlIGNvbW1p
+dCBzdWJqZWN0cyBhcmUgaW4gbGluZSB3aXRoIHRob3NlLg0KPiANCj4gRWcgUENJOiBkdzogc2hv
+dWxkIGJlIFBDSTogZHdjOg0KPiANCkRvbmUuDQoNCj4gT24gVGh1LCBBdWcgMDgsIDIwMTkgYXQg
+MDk6MzA6MDVBTSArMDAwMCwgQ2hvY3JvbiwgSm9uYXRoYW4gd3JvdGU6DQo+ID4gT24gV2VkLCAy
+MDE5LTA4LTA3IGF0IDE3OjM2ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90ZToNCj4gPiA+
+IE9uIFR1ZSwgSnVsIDIzLCAyMDE5IGF0IDEyOjI3OjExUE0gKzAzMDAsIEpvbmF0aGFuIENob2Ny
+b24gd3JvdGU6DQo+ID4gPiA+IFRoaXMgYmFzaWNhbGx5IGFsaWducyB0aGUgdXNhZ2Ugb2YgUENJ
+X1BST0JFX09OTFkgYW5kDQo+ID4gPiA+IFBDSV9SRUFTU0lHTl9BTExfQlVTIGluIGR3X3BjaWVf
+aG9zdF9pbml0KCkgd2l0aCB0aGUgbG9naWMgaW4NCj4gPiA+ID4gcGNpX2hvc3RfY29tbW9uX3By
+b2JlKCkuDQo+ID4gPiA+IA0KPiA+ID4gPiBOb3cgaXQgd2lsbCBiZSBwb3NzaWJsZSB0byBjb250
+cm9sIHZpYSB0aGUgZGV2aWNldHJlZSB3aGV0aGVyDQo+ID4gPiA+IHRvDQo+ID4gPiA+IGp1c3QN
+Cj4gPiA+ID4gcHJvYmUgdGhlIFBDSSBidXMgKGluIGNhc2VzIHdoZXJlIEZXIGFscmVhZHkgY29u
+ZmlndXJlZCBpdCkgb3INCj4gPiA+ID4gdG8NCj4gPiA+ID4gZnVsbHkNCj4gPiA+ID4gY29uZmln
+dXJlIGl0Lg0KPiA+ID4gPiANCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gQ2hvY3Jv
+biA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgLi4uL3BjaS9jb250
+cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIHwgMjMNCj4gPiA+ID4gKysrKysrKysr
+KysrKysrLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDQg
+ZGVsZXRpb25zKC0pDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4gPiBiL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+ID4gaW5kZXgg
+ZDJjYTc0OGU0Yzg1Li4wYTI5NGQ4YWEyMWEgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiA+ID4gKysrIGIv
+ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+ID4g
+PiBAQCAtMzQyLDYgKzM0Miw4IEBAIGludCBkd19wY2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9w
+b3J0ICpwcCkNCj4gPiA+ID4gIAlpZiAoIWJyaWRnZSkNCj4gPiA+ID4gIAkJcmV0dXJuIC1FTk9N
+RU07DQo+ID4gPiA+ICANCj4gPiA+ID4gKwlvZl9wY2lfY2hlY2tfcHJvYmVfb25seSgpOw0KPiA+
+ID4gPiArDQo+ID4gPiA+ICAJcmV0ID0gZGV2bV9vZl9wY2lfZ2V0X2hvc3RfYnJpZGdlX3Jlc291
+cmNlcyhkZXYsIDAsDQo+ID4gPiA+IDB4ZmYsDQo+ID4gPiA+ICAJCQkJCSZicmlkZ2UtPndpbmRv
+d3MsICZwcC0NCj4gPiA+ID4gPiBpb19iYXNlKTsNCj4gPiA+ID4gDQo+ID4gPiA+ICAJaWYgKHJl
+dCkNCj4gPiA+ID4gQEAgLTQ3NCw2ICs0NzYsMTAgQEAgaW50IGR3X3BjaWVfaG9zdF9pbml0KHN0
+cnVjdCBwY2llX3BvcnQNCj4gPiA+ID4gKnBwKQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJcHAtPnJv
+b3RfYnVzX25yID0gcHAtPmJ1c24tPnN0YXJ0Ow0KPiA+ID4gPiAgDQo+ID4gPiA+ICsJLyogRG8g
+bm90IHJlYXNzaWduIGJ1cyBudW1zIGlmIHByb2JlIG9ubHkgKi8NCj4gPiA+ID4gKwlpZiAoIXBj
+aV9oYXNfZmxhZyhQQ0lfUFJPQkVfT05MWSkpDQo+ID4gPiA+ICsJCXBjaV9hZGRfZmxhZ3MoUENJ
+X1JFQVNTSUdOX0FMTF9CVVMpOw0KPiA+ID4gDQo+ID4gPiBUaGlzIGNoYW5nZXMgdGhlIGRlZmF1
+bHQgZm9yIGJ1cyByZWFzc2lnbm1lbnQgb24gYWxsIERXQyBob3N0DQo+ID4gPiAodGhhdA0KPiA+
+ID4gYXJlDQo+ID4gPiAhUENJX1BST0JFX09OTFkpLCB3ZSBzaG91bGQgZHJvcCB0aGlzIGxpbmUs
+IGl0IGNhbiB0cmlnZ2VyDQo+ID4gPiByZWdyZXNzaW9ucy4NCj4gPiA+IA0KPiA+IA0KPiA+IFdp
+bGwgYmUgZHJvcHBlZCBhcyBwYXJ0IG9mIHY0LiBUaGVyZSBtaWdodCBhbHNvIGJlIGEgYmVoYXZp
+b3JhbA0KPiA+IGRpZmZlcmVuY2UgYmVsb3cgd2hlcmUgSSBhZGRlZCB0aGUgaWYNCj4gPiAocGNp
+X2hhc19mbGFnKFBDSV9QUk9CRV9PTkxZKSkuDQo+ID4gSXMgdGhhdCBzdGlsbCBvaz8NCj4gDQo+
+IFRoYXQncyB0cnVlIGJ1dCBJIGRvdWJ0IGFueSBEV0MgaG9zdCBoYXMgYSBEVCBmaXJtd2FyZSB3
+aXRoDQo+ICJsaW51eCxwY2ktcHJvYmUtb25seSIgaW4gaXQuDQo+IA0KPiBJdCBpcyB0cmlhbCBh
+bmQgZXJyb3IgSSBhbSBhZnJhaWQsIHBsZWFzZSBtYWtlIHN1cmUgYWxsIERXQw0KPiBtYWludGFp
+bmVycyBhcmUgY29waWVkIGluLg0KPiANCj4gPiBBcyBJIHBvaW50ZWQgb3V0IGluIHRoZSBjb3Zl
+ciBsZXR0ZXIsIHNpbmNlIFBDSV9QUk9CRV9PTkxZIGlzIGENCj4gPiBzeXN0ZW0NCj4gPiB3aWRl
+IGZsYWcsIGRvZXMgaXQgbWFrZSBzZW5zZSB0byBjYWxsIG9mX3BjaV9jaGVja19wcm9iZV9vbmx5
+KCkNCj4gPiBoZXJlLA0KPiA+IGluIHRoZSBjb250ZXh0IG9mIGEgc3BlY2lmaWMgZHJpdmVyIChp
+bmNsdWRpbmcgdGhlIGV4aXN0aW5nDQo+ID4gaW52b2NhdGlvbg0KPiA+IGluIHBjaV9ob3N0X2Nv
+bW1vbl9wcm9iZSgpKSwgYXMgb3Bwb3NlZCB0byBhIHBsYXRmb3JtL2FyY2ggY29udGV4dD8NCj4g
+DQo+IEl0IGlzIGFuIG9uZ29pbmcgZGlzY3Vzc2lvbiB0byBkZWZpbmUgaG93IHdlIHNob3VsZCBo
+YW5kbGUNCj4gUENJX1BST0JFX09OTFkuIEFkZGluZyB0aGlzIGNvZGUgaW50byBEV0MgSSBkbyBu
+b3QgdGhpbmsgaXQNCj4gd291bGQgaHVydCBidXQgaWYgd2UgY2FuIHBvc3Rwb25lIGl0IGZvciB0
+aGUgbmV4dCAodjUuNSkgbWVyZ2UNCj4gd2luZG93IGFmdGVyIHdlIGRlYmF0ZSB0aGlzIGF0IExQ
+QyB3aXRoaW4gdGhlIFBDSSBtaWNyb2NvbmZlcmVuY2UNCj4gaXQgd291bGQgYmUgZ3JlYXQuDQo+
+IA0KVGhlIHByZWNlZGluZyBwYXRjaGVzIGFyZSBtb3JlIHVyZ2VudCwgc28gSSdtIGZpbmUgd2l0
+aCBwb3N0cG9uaW5nIHRoaXMNCnBhdGNoIHRvIHRoZSBuZXh0IG1lcmdlIHdpbmRvdyAoSSdsbCBk
+cm9wIGl0IGZyb20gdjQpLg0KDQo+IFBsZWFzZSBzeW5jIHdpdGggQmVuamFtaW4gYXMgYSBmaXJz
+dCBzdGVwLCBJIHRydXN0IGhlIHdvdWxkIGFzaw0KPiB5b3UgdG8gZG8gdGhlIHJpZ2h0IHRoaW5n
+Lg0KPiANCk9mIGNvdXJzZSwgSSdsbCBzeW5jIHdpdGggaGltLiBCdXQgYWdhaW4sIGxldCdzIG5v
+dCBoYXZlIHRoaXMgcGF0Y2gNCmRlbGF5IHRoZSBvdGhlcnMgcGxlYXNlLg0KDQo+ID4gPiBJZiB3
+ZSBzdGlsbCB3YW50IHRvIG1lcmdlIGl0IGFzIGEgc2VwYXJhdGUgY2hhbmdlIHdlIG11c3QgdGVz
+dCBpdA0KPiA+ID4gb24NCj4gPiA+IGFsbA0KPiA+ID4gRFdDIGhvc3QgYnJpZGdlcyB0byBtYWtl
+IHN1cmUgaXQgZG9lcyBub3QgdHJpZ2dlciBhbnkgaXNzdWVzIHdpdGgNCj4gPiA+IGN1cnJlbnQg
+c2V0LXVwcywgdGhhdCdzIG5vdCBnb2luZyB0byBiZSBlYXN5IHRob3VnaC4NCj4gPiA+IA0KPiA+
+IA0KPiA+IEp1c3Qgb3V0IG9mIGN1cmlvc2l0eSwgaG93IGFyZSBzdWNoIGV4aGF1c3RpdmUgdGVz
+dHMgYWNoaWV2ZWQgd2hlbg0KPiA+IGENCj4gPiBwYXRjaCByZXF1aXJlcyB0aGVtPw0KPiANCj4g
+Q0MgRFdDIGhvc3QgYnJpZGdlIG1haW50YWluZXJzIGFuZCBhc2sgdGhlbSB0byB0ZXN0IGl0LiBJ
+IGRvIG5vdCBoYXZlDQo+IHRoZSBIVyAoYW5kIEZXKSByZXF1aXJlZCwgSSBhbSBzb3JyeSwgdGhh
+dCdzIHRoZSBvbmx5IG9wdGlvbiBJIGNhbg0KPiBnaXZlDQo+IHlvdS4gLW5leHQgY292ZXJhZ2Ug
+d291bGQgaGVscCB0b28gYnV0IHRvIGEgbWlub3IgZXh0ZW50Lg0KPiANClRoYW5rcyBmb3IgdGhl
+IGluZm8hDQoNCj4gVGhhbmtzLA0KPiBMb3JlbnpvDQo+IA0KPiA+IA0KPiA+ID4gTG9yZW56bw0K
+PiA+ID4gDQo+ID4gPiA+ICsNCj4gPiA+ID4gIAlicmlkZ2UtPmRldi5wYXJlbnQgPSBkZXY7DQo+
+ID4gPiA+ICAJYnJpZGdlLT5zeXNkYXRhID0gcHA7DQo+ID4gPiA+ICAJYnJpZGdlLT5idXNuciA9
+IHBwLT5yb290X2J1c19ucjsNCj4gPiA+ID4gQEAgLTQ5MCwxMSArNDk2LDIwIEBAIGludCBkd19w
+Y2llX2hvc3RfaW5pdChzdHJ1Y3QgcGNpZV9wb3J0DQo+ID4gPiA+ICpwcCkNCj4gPiA+ID4gIAlp
+ZiAocHAtPm9wcy0+c2Nhbl9idXMpDQo+ID4gPiA+ICAJCXBwLT5vcHMtPnNjYW5fYnVzKHBwKTsN
+Cj4gPiA+ID4gIA0KPiA+ID4gPiAtCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290X2J1cyk7
+DQo+ID4gPiA+IC0JcGNpX2J1c19hc3NpZ25fcmVzb3VyY2VzKHBwLT5yb290X2J1cyk7DQo+ID4g
+PiA+ICsJLyoNCj4gPiA+ID4gKwkgKiBXZSBpbnNlcnQgUENJIHJlc291cmNlcyBpbnRvIHRoZSBp
+b21lbV9yZXNvdXJjZSBhbmQNCj4gPiA+ID4gKwkgKiBpb3BvcnRfcmVzb3VyY2UgdHJlZXMgaW4g
+ZWl0aGVyDQo+ID4gPiA+IHBjaV9idXNfY2xhaW1fcmVzb3VyY2VzKCkNCj4gPiA+ID4gKwkgKiBv
+ciBwY2lfYnVzX2Fzc2lnbl9yZXNvdXJjZXMoKS4NCj4gPiA+ID4gKwkgKi8NCj4gPiA+ID4gKwlp
+ZiAocGNpX2hhc19mbGFnKFBDSV9QUk9CRV9PTkxZKSkgew0KPiA+ID4gPiArCQlwY2lfYnVzX2Ns
+YWltX3Jlc291cmNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4gPiA+
+ICsJCXBjaV9idXNfc2l6ZV9icmlkZ2VzKHBwLT5yb290X2J1cyk7DQo+ID4gPiA+ICsJCXBjaV9i
+dXNfYXNzaWduX3Jlc291cmNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiAgDQo+ID4gPiA+IC0J
+bGlzdF9mb3JfZWFjaF9lbnRyeShjaGlsZCwgJnBwLT5yb290X2J1cy0+Y2hpbGRyZW4sDQo+ID4g
+PiA+IG5vZGUpDQo+ID4gPiA+IC0JCXBjaWVfYnVzX2NvbmZpZ3VyZV9zZXR0aW5ncyhjaGlsZCk7
+DQo+ID4gPiA+ICsJCWxpc3RfZm9yX2VhY2hfZW50cnkoY2hpbGQsICZwcC0+cm9vdF9idXMtDQo+
+ID4gPiA+ID5jaGlsZHJlbiwNCj4gPiA+ID4gbm9kZSkNCj4gPiA+ID4gKwkJCXBjaWVfYnVzX2Nv
+bmZpZ3VyZV9zZXR0aW5ncyhjaGlsZCk7DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiAgDQo+ID4gPiA+
+ICAJcGNpX2J1c19hZGRfZGV2aWNlcyhwcC0+cm9vdF9idXMpOw0KPiA+ID4gPiAgCXJldHVybiAw
+Ow0KPiA+ID4gPiAtLSANCj4gPiA+ID4gMi4xNy4xDQo+ID4gPiA+IA0K
