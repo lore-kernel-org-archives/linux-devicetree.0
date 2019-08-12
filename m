@@ -1,91 +1,46 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 03/14] net: phy: adin: add support for interrupts
-Date: Mon, 12 Aug 2019 14:23:39 +0300
-Message-ID: <20190812112350.15242-4-alexandru.ardelean@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: Re: [PATCH v3 01/10] dt-bindings: add powercontroller
+Date: Mon, 12 Aug 2019 12:25:07 +0100
+Message-ID: <20190812112507.GR26727@dell>
+References: <20190729174154.4335-1-frank-w@public-files.de>
+ <20190729174154.4335-2-frank-w@public-files.de>
+ <20190812102035.GH26727@dell>
+ <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <trinity-a6c06411-16d3-40ab-a4fb-3494131c8ed6-1565608221532@3c-app-gmx-bs80>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Allison Randal <allison@lohutok.net>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Fontana <rfontana@redhat.com>, Rob Herring <robh+dt@k>
 List-Id: devicetree@vger.kernel.org
 
-This change hooks link-status-change interrupts to phylib.
+On Mon, 12 Aug 2019, Frank Wunderlich wrote:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+> > Gesendet: Montag, 12. August 2019 um 12:20 Uhr
+> > Von: "Lee Jones" <lee.jones@linaro.org>
+> 
+> > > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> ...
+> > > +	For details, see Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+> >
+> > Please use relative paths.
+> >
+> > E.g: ../bindings/rtc/rtc-mt6397.txt
+> 
+> Hi,
+> 
+> as we are in Documentation/devicetree/bindings/mfd/ it should be
+> ../../bindings/..., right? or ../rtc/rtc-mt6397.txt ?
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index fc0148ba4b94..f4ee611e33df 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -14,11 +14,43 @@
- #define PHY_ID_ADIN1200				0x0283bc20
- #define PHY_ID_ADIN1300				0x0283bc30
- 
-+#define ADIN1300_INT_MASK_REG			0x0018
-+#define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
-+#define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
-+#define   ADIN1300_INT_ANEG_PAGE_RX_EN		BIT(6)
-+#define   ADIN1300_INT_IDLE_ERR_CNT_EN		BIT(5)
-+#define   ADIN1300_INT_MAC_FIFO_OU_EN		BIT(4)
-+#define   ADIN1300_INT_RX_STAT_CHNG_EN		BIT(3)
-+#define   ADIN1300_INT_LINK_STAT_CHNG_EN	BIT(2)
-+#define   ADIN1300_INT_SPEED_CHNG_EN		BIT(1)
-+#define   ADIN1300_INT_HW_IRQ_EN		BIT(0)
-+#define ADIN1300_INT_MASK_EN	\
-+	(ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_HW_IRQ_EN)
-+#define ADIN1300_INT_STATUS_REG			0x0019
-+
- static int adin_config_init(struct phy_device *phydev)
- {
- 	return genphy_config_init(phydev);
- }
- 
-+static int adin_phy_ack_intr(struct phy_device *phydev)
-+{
-+	/* Clear pending interrupts */
-+	int rc = phy_read(phydev, ADIN1300_INT_STATUS_REG);
-+
-+	return rc < 0 ? rc : 0;
-+}
-+
-+static int adin_phy_config_intr(struct phy_device *phydev)
-+{
-+	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
-+		return phy_set_bits(phydev, ADIN1300_INT_MASK_REG,
-+				    ADIN1300_INT_MASK_EN);
-+
-+	return phy_clear_bits(phydev, ADIN1300_INT_MASK_REG,
-+			      ADIN1300_INT_MASK_EN);
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
-@@ -26,6 +58,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
-@@ -35,6 +69,8 @@ static struct phy_driver adin_driver[] = {
- 		.config_init	= adin_config_init,
- 		.config_aneg	= genphy_config_aneg,
- 		.read_status	= genphy_read_status,
-+		.ack_interrupt	= adin_phy_ack_intr,
-+		.config_intr	= adin_phy_config_intr,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 	},
+It was an example (hence the "E.g.").
+
+You will need to adapt it depending on where the file ends up.
+
 -- 
-2.20.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
