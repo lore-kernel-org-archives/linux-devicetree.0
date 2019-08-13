@@ -1,147 +1,104 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 01/10] dt-bindings: add powercontroller
-Date: Tue, 13 Aug 2019 09:25:47 -0600
-Message-ID: <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
-References: <20190812121511.4169-1-frank-w@public-files.de>
- <20190812121511.4169-2-frank-w@public-files.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs
+ PCIe host bridge binding
+Date: Tue, 13 Aug 2019 09:30:46 -0600
+Message-ID: <20190813153046.GA31480@bogus>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092711.11786-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190812121511.4169-2-frank-w@public-files.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Richard Fontana <rfontana@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Lee Jones <lee.jones@linaro.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, "open list:THERMAL" <linux-pm@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>, "Tianping . Fang" <tianping.fang@mediatek.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, moderated list:ARM/FREESCALE IMX / M
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190723092711.11786-1-jonnyc@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 6:24 AM Frank Wunderlich
-<frank-w@public-files.de> wrote:
->
-> From: Josef Friedl <josef.friedl@speed.at>
->
-> add mt6323-rtc and mt6323-pwrc to mt6397 mfd DT bindings
-> an example is shown in mt6323-poweroff.txt
-
-How does this get to v5 with such a terrible subject? At least give
-some indication this is for some Mediatek chip.
-
-The recipient list needs some work too. Don't Cc git committers that
-get_maintainers.pl lists.
-
->
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+On Tue, Jul 23, 2019 at 12:27:08PM +0300, Jonathan Chocron wrote:
+> Document Amazon's Annapurna Labs PCIe host bridge.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
 > ---
-> changes since v4: use relative path
-> changes since v3: none
-> changes since v2: separated rtc-mt6397.txt to part 2
-> ---
->  .../devicetree/bindings/mfd/mt6397.txt        | 20 +++++++++++++------
->  .../bindings/power/reset/mt6323-poweroff.txt  | 20 +++++++++++++++++++
->  2 files changed, 34 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> index 0ebd08af777d..063f5fe1cace 100644
-> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> @@ -8,11 +8,12 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
->  - Clock
->  - LED
->  - Keys
-> +- Power controller
->
->  It is interfaced to host controller using SPI interface by a proprietary hardware
->  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
->  See the following for pwarp node definitions:
-> -Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +../../bindings/soc/mediatek/pwrap.txt
-
-Unrelated change to what the subject says. Clean-ups and new things in
-separate patches please.
-
->
->  This document describes the binding for MFD device and its sub module.
->
-> @@ -22,14 +23,16 @@ compatible: "mediatek,mt6397" or "mediatek,mt6323"
->  Optional subnodes:
->
->  - rtc
-> -       Required properties:
-> +       Required properties: Should be one of follows
-> +               - compatible: "mediatek,mt6323-rtc"
-
-How is this related to 'powercontroller'?
-
->                 - compatible: "mediatek,mt6397-rtc"
-> +       For details, see ../../bindings/rtc/rtc-mt6397.txt
->  - regulators
->         Required properties:
->                 - compatible: "mediatek,mt6397-regulator"
-> -       see Documentation/devicetree/bindings/regulator/mt6397-regulator.txt
-> +       see ../../bindings/regulator/mt6397-regulator.txt
->                 - compatible: "mediatek,mt6323-regulator"
-> -       see Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-> +       see ../../bindings/regulator/mt6323-regulator.txt
->  - codec
->         Required properties:
->                 - compatible: "mediatek,mt6397-codec"
-> @@ -39,12 +42,17 @@ Optional subnodes:
->  - led
->         Required properties:
->                 - compatible: "mediatek,mt6323-led"
-> -       see Documentation/devicetree/bindings/leds/leds-mt6323.txt
-> +       see ../../bindings/leds/leds-mt6323.txt
->
->  - keys
->         Required properties:
->                 - compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
-> -       see Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
-> +       see ../../bindings/input/mtk-pmic-keys.txt
-> +
-> +- power-controller
-> +       Required properties:
-> +               - compatible: "mediatek,mt6323-pwrc"
-> +       For details, see ../../bindings/power/reset/mt6323-poweroff.txt
->
->  Example:
->         pwrap: pwrap@1000f000 {
-> diff --git a/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
+>  .../devicetree/bindings/pci/pcie-al.txt       | 45 +++++++++++++++++++
+>  MAINTAINERS                                   |  3 +-
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
 > new file mode 100644
-> index 000000000000..933f0c48e887
+> index 000000000000..89876190eb5a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
-> @@ -0,0 +1,20 @@
-> +Device Tree Bindings for Power Controller on MediaTek PMIC
+> +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> @@ -0,0 +1,45 @@
+> +* Amazon Annapurna Labs PCIe host bridge
 > +
-> +The power controller which could be found on PMIC is responsible for externally
-> +powering off or on the remote MediaTek SoC through the circuit BBPU.
+> +Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
+> +PCI core.
+> +It shares common functions with the PCIe DesignWare core driver and inherits
+
+Driver details are irrelevant to the binding.
+
+> +common properties defined in Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +Properties of the host controller node that differ from it are:
 > +
-> +Required properties:
-> +- compatible: Should be one of follows
-> +       "mediatek,mt6323-pwrc": for MT6323 PMIC
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Value should contain
+> +			- "amazon,al-pcie"
+
+Needs to be SoC specific.
+
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Register ranges as listed in the reg-names property
+> +
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Must include the following entries
+> +			- "config"	PCIe ECAM space
+> +			- "controller"	AL proprietary registers
+> +			- "dbi"		Designware PCIe registers
 > +
 > +Example:
 > +
-> +       pmic {
-> +               compatible = "mediatek,mt6323";
-> +
-> +               ...
-> +
-> +               power-controller {
-> +                       compatible = "mediatek,mt6323-pwrc";
-> +               };
-> +       }
-> --
+> +	pcie-external0: pcie@fb600000 {
+> +		compatible = "amazon,al-pcie";
+> +		reg = <0x0 0xfb600000 0x0 0x00100000
+> +		       0x0 0xfd800000 0x0 0x00010000
+> +		       0x0 0xfd810000 0x0 0x00001000>;
+> +		reg-names = "config", "controller", "dbi";
+> +		bus-range = <0 255>;
+> +		device_type = "pci";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-map-mask = <0x00 0 0 7>;
+> +		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
+> +		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5a6137df3f0e..29cca14a05a6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12201,10 +12201,11 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+>  S:	Supported
+>  F:	drivers/pci/controller/
+>  
+> -PCIE DRIVER FOR ANNAPURNA LABS
+> +PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+>  M:	Jonathan Chocron <jonnyc@amazon.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+>  F:	drivers/pci/controller/dwc/pcie-al.c
+>  
+>  PCIE DRIVER FOR AMLOGIC MESON
+> -- 
 > 2.17.1
->
+> 
