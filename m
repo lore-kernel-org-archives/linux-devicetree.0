@@ -1,188 +1,48 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
-Date: Tue, 13 Aug 2019 11:36:56 -0500
-Message-ID: <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com> <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
- <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com> <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream like string builder
+Date: Tue, 13 Aug 2019 09:48:17 -0700
+Message-ID: <20190813164818.06A2D20842@mail.kernel.org>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org> <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org> <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com> <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com> <20190813053023.CC86120651@mail.kernel.org> <CAFd5g47v7410QRAizPV8zaHrKrc95-Sk-GNzRRVngN741OKnvg@mail.gmail.com> <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+In-Reply-To: <CAFd5g452+-6m1eiVK0ccTDkJ2wH8GBwxRDw5owwC8h3NscE1ag@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Morten Borup Petersen <morten_bp@live.dk>
-Cc: Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "nd@arm.com" <nd@arm.com>, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 2, 2019 at 5:41 AM Morten Borup Petersen <morten_bp@live.dk> wrote:
->
->
->
-> On 7/31/19 9:31 AM, Jassi Brar wrote:
-> > On Sun, Jul 28, 2019 at 4:28 PM Morten Borup Petersen <morten_bp@live.dk> wrote:
-> >>
-> >>
-> >>
-> >> On 7/25/19 7:49 AM, Jassi Brar wrote:
-> >>> On Sun, Jul 21, 2019 at 4:58 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> >>>>
-> >>>> On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
-> >>>> <tushar.khandelwal@arm.com> wrote:
-> >>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..3a05593414bc
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
-> >>>>> @@ -0,0 +1,108 @@
-> >>>>> +Arm MHUv2 Mailbox Driver
-> >>>>> +========================
-> >>>>> +
-> >>>>> +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
-> >>>>> +between 1 and 124 channel windows to provide unidirectional communication with
-> >>>>> +remote processor(s).
-> >>>>> +
-> >>>>> +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
-> >>>>> +written to or read from. If a pair of MHU devices is implemented between two
-> >>>>> +processing elements to provide bidirectional communication, these must be
-> >>>>> +specified as two separate mailboxes.
-> >>>>> +
-> >>>>> +A device tree node for an Arm MHUv2 device must specify either a receiver frame
-> >>>>> +or a sender frame, indicating which end of the unidirectional MHU device which
-> >>>>> +the device node entry describes.
-> >>>>> +
-> >>>>> +An MHU device must be specified with a transport protocol. The transport
-> >>>>> +protocol of an MHU device determines the method of data transmission as well as
-> >>>>> +the number of provided mailboxes.
-> >>>>> +Following are the possible transport protocol types:
-> >>>>> +- Single-word: An MHU device implements as many mailboxes as it
-> >>>>> +               provides channel windows. Data is transmitted through
-> >>>>> +               the MHU registers.
-> >>>>> +- Multi-word:  An MHU device implements a single mailbox. All channel windows
-> >>>>> +               will be used during transmission. Data is transmitted through
-> >>>>> +               the MHU registers.
-> >>>>> +- Doorbell:    An MHU device implements as many mailboxes as there are flag
-> >>>>> +               bits available in its channel windows. Optionally, data may
-> >>>>> +               be transmitted through a shared memory region, wherein the MHU
-> >>>>> +               is used strictly as an interrupt generation mechanism.
-> >>>>> +
-> >>>>> +Mailbox Device Node:
-> >>>>> +====================
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +--------------------
-> >>>>> +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
-> >>>>> +- reg:         Contains the mailbox register address range (base
-> >>>>> +               address and length)
-> >>>>> +- #mbox-cells  Shall be 1 - the index of the channel needed.
-> >>>>> +- mhu-frame    Frame type of the device.
-> >>>>> +               Shall be either "sender" or "receiver"
-> >>>>> +- mhu-protocol Transport protocol of the device. Shall be one of the
-> >>>>> +               following: "single-word", "multi-word", "doorbell"
-> >>>>> +
-> >>>>> +Required properties (receiver frame):
-> >>>>> +-------------------------------------
-> >>>>> +- interrupts:  Contains the interrupt information corresponding to the
-> >>>>> +               combined interrupt of the receiver frame
-> >>>>> +
-> >>>>> +Example:
-> >>>>> +--------
-> >>>>> +
-> >>>>> +       mbox_mw_tx: mhu@10000000 {
-> >>>>> +               compatible = "arm,mhuv2","arm,primecell";
-> >>>>> +               reg = <0x10000000 0x1000>;
-> >>>>> +               clocks = <&refclk100mhz>;
-> >>>>> +               clock-names = "apb_pclk";
-> >>>>> +               #mbox-cells = <1>;
-> >>>>> +               mhu-protocol = "multi-word";
-> >>>>> +               mhu-frame = "sender";
-> >>>>> +       };
-> >>>>> +
-> >>>>> +       mbox_sw_tx: mhu@10000000 {
-> >>>>> +               compatible = "arm,mhuv2","arm,primecell";
-> >>>>> +               reg = <0x11000000 0x1000>;
-> >>>>> +               clocks = <&refclk100mhz>;
-> >>>>> +               clock-names = "apb_pclk";
-> >>>>> +               #mbox-cells = <1>;
-> >>>>> +               mhu-protocol = "single-word";
-> >>>>> +               mhu-frame = "sender";
-> >>>>> +       };
-> >>>>> +
-> >>>>> +       mbox_db_rx: mhu@10000000 {
-> >>>>> +               compatible = "arm,mhuv2","arm,primecell";
-> >>>>> +               reg = <0x12000000 0x1000>;
-> >>>>> +               clocks = <&refclk100mhz>;
-> >>>>> +               clock-names = "apb_pclk";
-> >>>>> +               #mbox-cells = <1>;
-> >>>>> +               interrupts = <0 45 4>;
-> >>>>> +               interrupt-names = "mhu_rx";
-> >>>>> +               mhu-protocol = "doorbell";
-> >>>>> +               mhu-frame = "receiver";
-> >>>>> +       };
-> >>>>> +
-> >>>>> +       mhu_client: scb@2e000000 {
-> >>>>> +       compatible = "fujitsu,mb86s70-scb-1.0";
-> >>>>> +       reg = <0 0x2e000000 0x4000>;
-> >>>>> +       mboxes =
-> >>>>> +               // For multi-word frames, client may only instantiate a single
-> >>>>> +               // mailbox for a mailbox controller
-> >>>>> +               <&mbox_mw_tx 0>,
-> >>>>> +
-> >>>>> +               // For single-word frames, client may instantiate as many
-> >>>>> +               // mailboxes as there are channel windows in the MHU
-> >>>>> +                <&mbox_sw_tx 0>,
-> >>>>> +                <&mbox_sw_tx 1>,
-> >>>>> +                <&mbox_sw_tx 2>,
-> >>>>> +                <&mbox_sw_tx 3>,
-> >>>>> +
-> >>>>> +               // For doorbell frames, client may instantiate as many mailboxes
-> >>>>> +               // as there are bits available in the combined number of channel
-> >>>>> +               // windows ((channel windows * 32) mailboxes)
-> >>>>> +                <mbox_db_rx 0>,
-> >>>>> +                <mbox_db_rx 1>,
-> >>>>> +                ...
-> >>>>> +                <mbox_db_rx 17>;
-> >>>>> +       };
-> >>>>
-> >>>> If the mhuv2 instance implements, say, 3 channel windows between
-> >>>> sender (linux) and receiver (firmware), and Linux runs two protocols
-> >>>> each requiring 1 and 2-word sized messages respectively. The hardware
-> >>>> supports that by assigning windows [0] and [1,2] to each protocol.
-> >>>> However, I don't think the driver can support that. Or does it?
-> >>>>
-> >>> Thinking about it, IMO, the mbox-cell should carry a 128 (4x32) bit
-> >>> mask specifying the set of windows (corresponding to the bits set in
-> >>> the mask) associated with the channel.
-> >>> And the controller driver should see any channel as associated with
-> >>> variable number of windows 'N', where N is [0,124]
-> >>>
-> >>> mhu_client1: proto1@2e000000 {
-> >>>        .....
-> >>>        mboxes = <&mbox 0x0 0x0 0x0 0x1>
-> >>> }
-> >>>
-> >>> mhu_client2: proto2@2f000000 {
-> >>>        .....
-> >>>        mboxes = <&mbox 0x0 0x0 0x0 0x6>
-> >>> }
-> >>>
-> >>> Cheers!
-> >>>
-> >>
-> >> As mentioned in the response to your initial comment, the driver does
-> >> not currently support mixing protocols.
-> >>
-> > Thanks for acknowledging that limitation. But lets also address it.
+Quoting Brendan Higgins (2019-08-13 02:12:54)
+> On Tue, Aug 13, 2019 at 2:04 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
 > >
->
-> We are hesitant to dedicate time to developing mixing protocols given
-> that we don't have any current usecase nor any current platform which
-> would support this.
->
-Can you please share the client code against which you tested this driver?
->From my past experience, I realise it is much more efficient to tidyup
-the code myself, than endlessly trying to explain the benefits.
+> > On Mon, Aug 12, 2019 at 10:30 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-08-12 22:02:59)
+> > > > However, now that I added the kunit_resource_destroy, I thought it
+> > > > might be good to free the string_stream after I use it in each call=
+ to
+> > > > kunit_assert->format(...) in which case I will be using this logic.
+> > > >
+> > > > So I think the right thing to do is to expose string_stream_destroy=
+ so
+> > > > kunit_do_assert can clean up when it's done, and then demote
+> > > > string_stream_clear to static. Sound good?
+> > >
+> > > Ok, sure. I don't really see how clearing it explicitly when the
+> > > assertion prints vs. never allocating it to begin with is really any
+> > > different. Maybe I've missed something though.
+> >
+> > It's for the case that we *do* print something out. Once we are doing
+> > printing, we don't want the fragments anymore.
+>=20
+> Oops, sorry fat fingered: s/doing/done
 
-Thanks
+Yes, but when we print something out we've run into some sort of problem
+and then the test is over. So freeing the memory when it fails vs. when
+the test is over seems like a minor difference. Or is it also used to
+print other informational messages while the test is running?
+
+I'm not particularly worried here, just trying to see if less code is
+possible.
