@@ -1,33 +1,30 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
-Date: Tue, 13 Aug 2019 15:22:16 -0600
-Message-ID: <CAL_JsqJxQu1CYG3ZTFDME13cUwWgCt7hkQg41bdJKvY27JcCZQ@mail.gmail.com>
-References: <20190813125147.29605-1-dafna.hirschfeld@collabora.com> <20190813125147.29605-2-dafna.hirschfeld@collabora.com>
+Subject: Re: [PATCH 1/2] dt-bindings: media: Add YAML schemas for the generic
+ RC bindings
+Date: Tue, 13 Aug 2019 15:23:56 -0600
+Message-ID: <CAL_JsqLUfQdtXZMNTLJX9uMpdCY0NNN=AEDqGiemrdDazB8HeA@mail.gmail.com>
+References: <20190813124513.31413-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813125147.29605-2-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20190813124513.31413-1-mripard@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sean Young <sean@mess.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:51 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
+On Tue, Aug 13, 2019 at 6:45 AM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> From: Gary Bisson <gary.bisson@boundarydevices.com>
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 >
-> The Nitrogen8M is an ARM based single board computer (SBC)
-> designed to leverage the full capabilities of NXP=E2=80=99s i.MX8M
-> Quad processor.
+> The RC controllers have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
 >
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> [Dafna: porting vendor's code to mainline]
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/media/rc.txt          | 118 +--------------
+>  .../devicetree/bindings/media/rc.yaml         | 135 ++++++++++++++++++
+>  2 files changed, 136 insertions(+), 117 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/rc.yaml
 
 Reviewed-by: Rob Herring <robh@kernel.org>
