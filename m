@@ -1,36 +1,76 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
-Date: Mon, 12 Aug 2019 21:31:39 -0700
-Message-ID: <20190813043140.67FF320644@mail.kernel.org>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-13-brendanhiggins@google.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
+ properties
+Date: Tue, 13 Aug 2019 10:05:42 +0530
+Message-ID: <286ea8d2-5467-6cc2-07cb-7707db13ad1a@ti.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+ <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
+ <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812182421.141150-13-brendanhiggins@google.com>
+In-Reply-To: <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Avinash Kondareddy <akndr41@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, Andrew Murray <andrew.murray@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 11:24:15)
-> +
-> +static int kunit_resource_test_init(struct kunit *test)
-> +{
-> +       struct kunit_test_resource_context *ctx =3D
-> +                       kzalloc(sizeof(*ctx), GFP_KERNEL);
-> +
-> +       if (!ctx)
-> +               return -ENOMEM;
+Hi,
 
-Should this use the test assertion logic to make sure that it's not
-failing allocations during init? BTW, maybe kunit allocation APIs should
-fail the test if they fail to allocate in general. Unless we're unit
-testing failure to allocate problems.
+On 13/08/19 8:37 AM, Z.q. Hou wrote:
+> Hi Andrew,
+> 
+> Thanks a lot for your comments!
+> 
+>> -----Original Message-----
+>> From: Andrew Murray <andrew.murray@arm.com>
+>> Sent: 2019Äê8ÔÂ12ÈÕ 16:45
+>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; gustavo.pimentel@synopsys.com;
+>> jingoohan1@gmail.com; bhelgaas@google.com; robh+dt@kernel.org;
+>> mark.rutland@arm.com; shawnguo@kernel.org; Leo Li
+>> <leoyang.li@nxp.com>; lorenzo.pieralisi@arm.com; M.h. Lian
+>> <minghuan.lian@nxp.com>; Kishon Vijay Abraham I <kishon@ti.com>;
+>> Gabriele Paoloni <gabriele.paoloni@huawei.com>
+>> Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from
+>> Required properties
+>>
+>> On Mon, Aug 12, 2019 at 04:22:16AM +0000, Z.q. Hou wrote:
+>>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>>>
+>>> The num-lanes is not a mandatory property, e.g. on FSL Layerscape
+>>> SoCs, the PCIe link training is completed automatically base on the
+>>> selected SerDes protocol, it doesn't need the num-lanes to set-up the
+>>> link width.
+>>>
+>>> It has been added in the Optional properties. This patch is to remove
+>>> it from the Required properties.
+>>
+>> For clarity, maybe this paragraph can be reworded to:
+>>
+>> "It is previously in both Required and Optional properties,  let's remove it
+>> from the Required properties".
+> 
+> Agree and will change in v2.
+> 
+>>
+>> I don't understand why this property is previously in both required and
+>> optional...
+>>
+>> It looks like num-lanes was first made optional back in
+>> 2015 and removed from the Required section (907fce090253).
+>> But then re-added back into the Required section in 2017 with the adition of
+>> bindings for EP mode (b12befecd7de).
+>>
+>> Is num-lanes actually required for EP mode?
+> 
+> Kishon, please help to answer this query?
 
-> +
-> +       test->priv =3D ctx;
-> +
-> +       kunit_init_test(&ctx->test, "test_test_context");
-> +
-> +       return 0;
+It should be optional for EP too.
+
+Thanks
+Kishon
