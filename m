@@ -1,110 +1,36 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v12 04/18] kunit: test: add assertion printing library
-Date: Mon, 12 Aug 2019 21:27:05 -0700
-Message-ID: <CAFd5g44GxE-p+Jk_46GYA-WWVHLW7w=yE+K_tbbdiniDfrk-2w@mail.gmail.com>
-References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-5-brendanhiggins@google.com>
- <20190812234644.E054D20679@mail.kernel.org>
- <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
+Date: Mon, 12 Aug 2019 21:31:39 -0700
+Message-ID: <20190813043140.67FF320644@mail.kernel.org>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-13-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <CAFd5g44huOiR9B0H1C2TtiPy63BDuwi_Qpb_exF3zmT3ttV8eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TasMV2rI37PzA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812182421.141150-13-brendanhiggins@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Avinash Kondareddy <akndr41@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 4:56 PM Brendan Higgins
-<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->
-> On Mon, Aug 12, 2019 at 4:46 PM Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-08-12 11:24:07)
-> > > Add `struct kunit_assert` and friends which provide a structured way to
-> > > capture data from an expectation or an assertion (introduced later in
-> > > the series) so that it may be printed out in the event of a failure.
-> > >
-> > > Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> > > ---
-> >
-> > Reviewed-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >
-> > Just some minor nits below
-> >
-> > > diff --git a/include/kunit/assert.h b/include/kunit/assert.h
-> > > new file mode 100644
-> > > index 0000000000000..55f1b88b0cb4d
-> > > --- /dev/null
-> > > +++ b/include/kunit/assert.h
-> > > @@ -0,0 +1,183 @@
-> > [...]
-> > > +                           struct string_stream *stream);
-> > > +
-> > > +struct kunit_fail_assert {
-> > > +       struct kunit_assert assert;
-> > > +};
-> > > +
-> > > +void kunit_fail_assert_format(const struct kunit_assert *assert,
-> > > +                             struct string_stream *stream);
-> > > +
-> > > +#define KUNIT_INIT_FAIL_ASSERT_STRUCT(test, type) {                           \
-> > > +               .assert = KUNIT_INIT_ASSERT_STRUCT(test,                       \
-> > > +                                                  type,                       \
-> > > +                                                  kunit_fail_assert_format)   \
-> >
-> > This one got indented one too many times?
->
-> Not unless I have been using the wrong formatting for multiline
-> macros. You can see this commit applied here:
-> https://kunit.googlesource.com/linux/+/870964da2990920030990dd1ffb647ef408e52df/include/kunit/assert.h#59
->
-> I have test, type, and kunit_fail_assert_format all column aligned (it
-> just doesn't render nicely in the patch format).
+Quoting Brendan Higgins (2019-08-12 11:24:15)
+> +
+> +static int kunit_resource_test_init(struct kunit *test)
+> +{
+> +       struct kunit_test_resource_context *ctx =3D
+> +                       kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +
+> +       if (!ctx)
+> +               return -ENOMEM;
 
-Disregard that last comment. I just looked at the line immediately
-above your comment and thought it looked correct. Sorry about that
-(you were pointing out that the .assert line looked wrong, correct?).
+Should this use the test assertion logic to make sure that it's not
+failing allocations during init? BTW, maybe kunit allocation APIs should
+fail the test if they fail to allocate in general. Unless we're unit
+testing failure to allocate problems.
 
-> > > +}
-> > > +
-> > > +struct kunit_unary_assert {
-> > > +       struct kunit_assert assert;
-> > > +       const char *condition;
-> > > +       bool expected_true;
-> > > +};
-> > > +
-> > > +void kunit_unary_assert_format(const struct kunit_assert *assert,
-> > > +                              struct string_stream *stream);
-> > > +
-> > [...]
-> > > +#define KUNIT_INIT_BINARY_STR_ASSERT_STRUCT(test,                             \
-> > > +                                           type,                              \
-> > > +                                           op_str,                            \
-> > > +                                           left_str,                          \
-> > > +                                           left_val,                          \
-> > > +                                           right_str,                         \
-> > > +                                           right_val) {                       \
-> > > +       .assert = KUNIT_INIT_ASSERT_STRUCT(test,                               \
-> > > +                                          type,                               \
-> > > +                                          kunit_binary_str_assert_format),    \
-> > > +       .operation = op_str,                                                   \
-> > > +       .left_text = left_str,                                                 \
-> > > +       .left_value = left_val,                                                \
-> > > +       .right_text = right_str,                                               \
-> > > +       .right_value = right_val                                               \
-> > > +}
-> >
-> > It would be nice to have kernel doc on these macros so we know how to
-> > use them.
->
-> Sounds good. Will fix.
+> +
+> +       test->priv =3D ctx;
+> +
+> +       kunit_init_test(&ctx->test, "test_test_context");
+> +
+> +       return 0;
