@@ -1,56 +1,68 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 3/7] PM / devfreq: Add generic imx bus driver
-Date: Tue, 13 Aug 2019 03:02:31 +0000
-Message-ID: <VI1PR04MB7023485353FCBBD7F8BEE8F3EED20@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <dbdd1ae60993d5fe73ce5b446b2c7d559c981cf1.1565633880.git.leonard.crestez@nxp.com>
- <cover.1565633880.git.leonard.crestez@nxp.com>
- <CGME20190812185005epcas3p10a9a3dbb90489534222e093c63f27900@epcms1p3>
- <20190813023338epcms1p307caf6727399e9f3e320b965fb95a603@epcms1p3>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
+ properties
+Date: Tue, 13 Aug 2019 03:07:22 +0000
+Message-ID: <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+ <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Artur Swigon <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Georgi
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/13/2019 5:33 AM, MyungJoo Ham wrote:
-
->> Add initial support for dynamic frequency switching on pieces of the imx
->> interconnect fabric.
->>
->> All this driver actually does is set a clk rate based on an opp table.
->>
->> +config ARM_IMX_DEVFREQ
->> +	tristate "i.MX DEVFREQ Driver"
->> +	depends on ARCH_MXC || COMPILE_TEST
->> +	select DEVFREQ_GOV_PASSIVE
->> +	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> +	select DEVFREQ_GOV_USERSPACE
->> +	select PM_OPP
-> 
-> Does it support ALL ARCH_MXC SoCs?
-
-Only imx8m currently but out of tree we support bus+dram frequency 
-switching for ~10 imx6/7 SOCs, all other than imx7ulp.
-
-When imx8 was upstreamed as the first 64-bit imx chip the arm64 
-maintainers told us to drop stuff like ARCH_FSL_IMX8MM so there is no 
-per-soc kconfig more specific than "ARCH_MXC".
-
-I guess we could make it depend on (ARCH_MXC && ARM64) but the ARM64 
-would eventually be dropped anyway.
-
---
-Regards,
-Leonard
+SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJh
+eUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo41MIxMsjVIDE2OjQ1DQo+IFRvOiBaLnEuIEhvdSA8
+emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207DQo+IGppbmdvb2hhbjFAZ21haWwuY29t
+OyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhw
+LmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IE0uaC4gTGlhbg0KPiA8bWluZ2h1YW4u
+bGlhbkBueHAuY29tPjsgS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT47DQo+
+IEdhYnJpZWxlIFBhb2xvbmkgPGdhYnJpZWxlLnBhb2xvbmlAaHVhd2VpLmNvbT4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCAxLzRdIGR0LWJpbmdpbmdzOiBQQ0k6IFJlbW92ZSB0aGUgbnVtLWxhbmVz
+IGZyb20NCj4gUmVxdWlyZWQgcHJvcGVydGllcw0KPiANCj4gT24gTW9uLCBBdWcgMTIsIDIwMTkg
+YXQgMDQ6MjI6MTZBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFp
+YW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IFRoZSBudW0tbGFuZXMgaXMgbm90
+IGEgbWFuZGF0b3J5IHByb3BlcnR5LCBlLmcuIG9uIEZTTCBMYXllcnNjYXBlDQo+ID4gU29Dcywg
+dGhlIFBDSWUgbGluayB0cmFpbmluZyBpcyBjb21wbGV0ZWQgYXV0b21hdGljYWxseSBiYXNlIG9u
+IHRoZQ0KPiA+IHNlbGVjdGVkIFNlckRlcyBwcm90b2NvbCwgaXQgZG9lc24ndCBuZWVkIHRoZSBu
+dW0tbGFuZXMgdG8gc2V0LXVwIHRoZQ0KPiA+IGxpbmsgd2lkdGguDQo+ID4NCj4gPiBJdCBoYXMg
+YmVlbiBhZGRlZCBpbiB0aGUgT3B0aW9uYWwgcHJvcGVydGllcy4gVGhpcyBwYXRjaCBpcyB0byBy
+ZW1vdmUNCj4gPiBpdCBmcm9tIHRoZSBSZXF1aXJlZCBwcm9wZXJ0aWVzLg0KPiANCj4gRm9yIGNs
+YXJpdHksIG1heWJlIHRoaXMgcGFyYWdyYXBoIGNhbiBiZSByZXdvcmRlZCB0bzoNCj4gDQo+ICJJ
+dCBpcyBwcmV2aW91c2x5IGluIGJvdGggUmVxdWlyZWQgYW5kIE9wdGlvbmFsIHByb3BlcnRpZXMs
+ICBsZXQncyByZW1vdmUgaXQNCj4gZnJvbSB0aGUgUmVxdWlyZWQgcHJvcGVydGllcyIuDQoNCkFn
+cmVlIGFuZCB3aWxsIGNoYW5nZSBpbiB2Mi4NCg0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdo
+eSB0aGlzIHByb3BlcnR5IGlzIHByZXZpb3VzbHkgaW4gYm90aCByZXF1aXJlZCBhbmQNCj4gb3B0
+aW9uYWwuLi4NCj4gDQo+IEl0IGxvb2tzIGxpa2UgbnVtLWxhbmVzIHdhcyBmaXJzdCBtYWRlIG9w
+dGlvbmFsIGJhY2sgaW4NCj4gMjAxNSBhbmQgcmVtb3ZlZCBmcm9tIHRoZSBSZXF1aXJlZCBzZWN0
+aW9uICg5MDdmY2UwOTAyNTMpLg0KPiBCdXQgdGhlbiByZS1hZGRlZCBiYWNrIGludG8gdGhlIFJl
+cXVpcmVkIHNlY3Rpb24gaW4gMjAxNyB3aXRoIHRoZSBhZGl0aW9uIG9mDQo+IGJpbmRpbmdzIGZv
+ciBFUCBtb2RlIChiMTJiZWZlY2Q3ZGUpLg0KPiANCj4gSXMgbnVtLWxhbmVzIGFjdHVhbGx5IHJl
+cXVpcmVkIGZvciBFUCBtb2RlPw0KDQpLaXNob24sIHBsZWFzZSBoZWxwIHRvIGFuc3dlciB0aGlz
+IHF1ZXJ5Pw0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRy
+ZXcgTXVycmF5DQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlx
+aWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0IHwgMSAtDQo+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0DQo+ID4gYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4gPiBp
+bmRleCA1NTYxYTFjMDYwZDAuLmJkODgwZGYzOWE3OSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4gPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNp
+ZS50eHQNCj4gPiBAQCAtMTEsNyArMTEsNiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAJ
+ICAgICB0aGUgQVRVIGFkZHJlc3Mgc3BhY2UuDQo+ID4gICAgICAoVGhlIG9sZCB3YXkgb2YgZ2V0
+dGluZyB0aGUgY29uZmlndXJhdGlvbiBhZGRyZXNzIHNwYWNlIGZyb20NCj4gInJhbmdlcyINCj4g
+PiAgICAgIGlzIGRlcHJlY2F0ZWQgYW5kIHNob3VsZCBiZSBhdm9pZGVkLikNCj4gPiAtLSBudW0t
+bGFuZXM6IG51bWJlciBvZiBsYW5lcyB0byB1c2UNCj4gPiAgUkMgbW9kZToNCj4gPiAgLSAjYWRk
+cmVzcy1jZWxsczogc2V0IHRvIDwzPg0KPiA+ICAtICNzaXplLWNlbGxzOiBzZXQgdG8gPDI+DQo+
+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0K
