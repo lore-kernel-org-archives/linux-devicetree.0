@@ -1,32 +1,99 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH next v9 07/11] usb: roles: Add
- fwnode_usb_role_switch_get() function
-Date: Tue, 13 Aug 2019 16:01:10 +0300
-Message-ID: <20190813130110.GE4691@kuha.fi.intel.com>
-References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
- <1565695634-9711-8-git-send-email-chunfeng.yun@mediatek.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
+Date: Tue, 13 Aug 2019 09:05:59 -0400
+Message-ID: <20190813130559.16936-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565695634-9711-8-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
+To: jarkko.sakkinen@linux.intel.com, peterhuewe@gmx.de
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, jgg@ziepe.ca, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-integrity@vger.kernel.org, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:27:10PM +0800, Chunfeng Yun wrote:
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> The fwnode_usb_role_switch_get() function is exactly the
-> same as usb_role_switch_get(), except that it takes struct
-> fwnode_handle as parameter instead of struct device.
-> 
-> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Fixes a few checkpatch warnings (and ignores some), mostly around
+spaces/tabs and documentation.
 
-Why is my SoB replaced with Suggested-by tag in this patch?
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
+ drivers/char/tpm/Kconfig                               |  2 +-
+ drivers/char/tpm/tpm_ftpm_tee.c                        | 10 +++++-----
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
-thanks,
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6992bbbbffab6..d61a203138cbe 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -575,6 +575,8 @@ patternProperties:
+     description: Micro Crystal AG
+   "^micron,.*":
+     description: Micron Technology Inc.
++  "^microsoft,.*":
++    description: Microsoft Corporation
+   "^mikroe,.*":
+     description: MikroElektronika d.o.o.
+   "^miniand,.*":
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 17bfbf9f572fc..9c37047f4b562 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -167,7 +167,7 @@ config TCG_VTPM_PROXY
+ config TCG_FTPM_TEE
+ 	tristate "TEE based fTPM Interface"
+ 	depends on TEE && OPTEE
+-	---help---
++	help
+ 	  This driver proxies for firmware TPM running in TEE.
+ 
+ source "drivers/char/tpm/st33zp24/Kconfig"
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 5679a5af9a96a..6640a14dbe48c 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -38,7 +38,7 @@ static const uuid_t ftpm_ta_uuid =
+  * @count:	the number of bytes to read.
+  *
+  * Return:
+- * 	In case of success the number of bytes received.
++ *	In case of success the number of bytes received.
+  *	On failure, -errno.
+  */
+ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+@@ -67,7 +67,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+  * @len:	the number of bytes to send.
+  *
+  * Return:
+- * 	In case of success, returns 0.
++ *	In case of success, returns 0.
+  *	On failure, -errno
+  */
+ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
+@@ -212,7 +212,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+  * @pdev: the platform_device description.
+  *
+  * Return:
+- * 	On success, 0. On failure, -errno.
++ *	On success, 0. On failure, -errno.
+  */
+ static int ftpm_tee_probe(struct platform_device *pdev)
+ {
+@@ -302,7 +302,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+  * @pdev: the platform_device description.
+  *
+  * Return:
+- * 	0 always.
++ *	0 always.
+  */
+ static int ftpm_tee_remove(struct platform_device *pdev)
+ {
+@@ -323,7 +323,7 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+ 	/* close the context with TEE driver */
+ 	tee_client_close_context(pvt_data->ctx);
+ 
+-        /* memory allocated with devm_kzalloc() is freed automatically */
++	/* memory allocated with devm_kzalloc() is freed automatically */
+ 
+ 	return 0;
+ }
 -- 
-heikki
+2.20.1
