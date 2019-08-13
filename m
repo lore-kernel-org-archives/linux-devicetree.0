@@ -1,130 +1,52 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 11/14] serial: tegra: DT for Adjusted baud rates
-Date: Tue, 13 Aug 2019 12:24:48 +0200
-Message-ID: <20190813102448.GO1137@ulmo>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-12-git-send-email-kyarlagadda@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
+Date: Tue, 13 Aug 2019 11:30:22 +0100
+Message-ID: <20190813103022.GB26727@dell>
+References: <20190725220215.460-1-paul@crapouillou.net>
+ <20190725220215.460-11-paul@crapouillou.net>
+ <20190812081640.GA26727@dell>
+ <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
+ <1565690508.1856.0@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iEWWOZ/QYGWEaBRW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1565609303-27000-12-git-send-email-kyarlagadda@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com, jslaby@suse.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1565690508.1856.0@crapouillou.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, James Hogan <jhogan@kernel.org>, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>, od@zcrc.me, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Artur Rojek <contact@artur-rojek.eu>, Richard Weinberger <richard@nod.at>, linux-pm@vger.kernel.org, Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kerne>
 List-Id: devicetree@vger.kernel.org
 
-
---iEWWOZ/QYGWEaBRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 12, 2019 at 04:58:20PM +0530, Krishna Yarlagadda wrote:
-> Tegra186 chip has a hardware issue resulting in frame errors when
-> tolerance level for baud rate is negative. Provided entries to adjust
-> baud rate to be within acceptable range and work with devices that
-> can send negative baud rate. Also report error when baud rate set is
-> out of tolerance range of controller updated in device tree.
->=20
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  .../bindings/serial/nvidia,tegra20-hsuart.txt      | 32 ++++++++++++++++=
-++++++
->  1 file changed, 32 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsua=
-rt.txt b/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> index 187ec78..1ce3fd4 100644
-> --- a/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> +++ b/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> @@ -20,6 +20,37 @@ Required properties:
->  Optional properties:
->  - nvidia,enable-modem-interrupt: Enable modem interrupts. Should be enab=
-le
->  		only if all 8 lines of UART controller are pinmuxed.
-> +- nvidia,adjust-baud-rates: List of entries providing percentage of baud=
- rate
-> +  adjustment within a range.
-> +  Each entry contains sets of 3 values. Range low/high and adjusted rate.
-> +  <range_low range_high adjusted_rate>
-> +  When baud rate set on controller falls within the range mentioned in t=
-his
-> +  field, baud rate will be adjusted by percentage mentioned here.
-> +  Ex: <9600 115200 200>
-> +  Increase baud rate by 2% when set baud rate falls within range 9600 to=
- 115200
-> +
-> +Baud Rate tolerance:
-> +  Standard UART devices are expected to have tolerance for baud rate err=
-or by
-> +  -4 to +4 %. All Tegra devices till Tegra210 had this support. However,
-> +  Tegra186 chip has a known hardware issue. UART Rx baud rate tolerance =
-level
-> +  is 0% to +4% in 1-stop config. Otherwise, the received data will have
-> +  corruption/invalid framing errors. Parker errata suggests adjusting ba=
-ud
-> +  rate to be higher than the deviations observed in Tx.
-
-The above sounds like the tolerance deviation is a characteristic of the
-Tegra186 chip. If the board design does not influence the deviation, why
-can't we encode this in the driver? Why do we need a description of this
-in device tree?
-
-Thierry
-
-> +
-> +  Tx deviation of connected device can be captured over scope (or noted =
-=66rom
-> +  its spec) for valid range and Tegra baud rate has to be set above actu=
-al
-> +  Tx baud rate observed. To do this we use nvidia,adjust-baud-rates
-> +
-> +  As an example, consider there is deviation observed in Tx for baud rat=
-es as
-> +  listed below.
-> +  0 to 9600 has 1% deviation
-> +  9600 to 115200 2% deviation
-> +  This slight deviation is expcted and Tegra UART is expected to handle =
-it. Due
-> +  to the issue stated above, baud rate on Tegra UART should be set equal=
- to or
-> +  above deviation observed for avoiding frame errors.
-> +  Property should be set like this
-> +  nvidia,adjust-baud-rates =3D <0 9600 100>,
-> +  			     <9600 115200 200>;
-> =20
->  Example:
-> =20
-> @@ -34,4 +65,5 @@ serial@70006000 {
->  	reset-names =3D "serial";
->  	dmas =3D <&apbdma 8>, <&apbdma 8>;
->  	dma-names =3D "rx", "tx";
-> +	nvidia,adjust-baud-rates =3D <1000000 4000000 136>; /* 1.36% shift */
->  };
-> --=20
-> 2.7.4
->=20
-
---iEWWOZ/QYGWEaBRW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1Sj/AACgkQ3SOs138+
-s6HwExAAq7X5pSijSAZVzM3kGVoXrM6zoHfPFLRyd4hqd1TEMEdk3LlcLCEqaxco
-xsrdMOQ6BfT8b9wtoyG5EZ9t62cxPVo33W2gh2JjkLVdTtQdTJVN/OwDgLee8HQJ
-/CUuGrLeYKXrZZYxQPT3WzN1J4bIXBHAaLL7EfqvQ0FhppKonByUgUQf+YWt6dJY
-qw9qtbGHKE+4JA/xSOmZwoGXnkiNwEnEC/bXZnRuK2uNmj29J4rNDBS4JRWIb8g8
-W++rAIl4eowdahnnYjZvVknqNY7TfqYWqL19TN8zHHzkF0pINojWLgc5znQinRpV
-q/3FBSUnT7BwvAas+wvRAhS21xfpoComXMrdsrqN6IYjOL0OiKhf0W5oD14sM17F
-hU7GKLJZ86laLg7jCgkE5fq/7ZzGOnHkoxKPoLvIquJggJ+Iu8tSzDjLp7uhz3gf
-Dqxs8OeS+uuOzs1jB7kmlFWbvjY6sPCMEgyH5CrTe6vEkyH+ZtW/E9c7l7sS/B7v
-W58YDTu3un935rE77HLHNDa34pp63Oo9xqyeM8LPxCng6nRxloeEi0AnMd6xsa1N
-e7X5nDi8HuEyl5DOZPkCePuR36ItYzO1Tu+hAh9xp9faeGJTRJLpjB996nLjnSGR
-bATI3LKSg5edguc/APhLQmayQHgV/0r6urbbCW7jVeWDeGjL67k=
-=mBhj
------END PGP SIGNATURE-----
-
---iEWWOZ/QYGWEaBRW--
+T24gVHVlLCAxMyBBdWcgMjAxOSwgUGF1bCBDZXJjdWVpbCB3cm90ZToKCj4gSGkgUGhpbGlwcGUs
+Cj4gCj4gCj4gTGUgbWFyLiAxMyBhb8O7dCAyMDE5IMOgIDEwOjQ0LCBQaGlsaXBwZSA9P2lzby04
+ODU5LTE/cT9NYXRoaWV1LURhdWQ9RTk/PQo+IDxmNGJ1Z0BhbXNhdC5vcmc+IGEgw6ljcml0IDoK
+PiA+IEhpIExlZSwKPiA+IAo+ID4gT24gOC8xMi8xOSAxMDoxNiBBTSwgTGVlIEpvbmVzIHdyb3Rl
+Ogo+ID4gPiAgT24gVGh1LCAyNSBKdWwgMjAxOSwgUGF1bCBDZXJjdWVpbCB3cm90ZToKPiA+ID4g
+Cj4gPiA+ID4gIEl0IGhhcyBiZWVuIHJlcGxhY2VkIHdpdGggdGhlIGluZ2VuaWMtaWlvIGRyaXZl
+ciBmb3IgdGhlIEFEQy4KPiA+ID4gPiAKPiA+ID4gPiAgU2lnbmVkLW9mZi1ieTogUGF1bCBDZXJj
+dWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+Cj4gPiA+ID4gIFRlc3RlZC1ieTogQXJ0dXIgUm9q
+ZWsgPGNvbnRhY3RAYXJ0dXItcm9qZWsuZXU+Cj4gPiA+ID4gIC0tLQo+ID4gPiA+ICAgZHJpdmVy
+cy9tZmQvS2NvbmZpZyAgICAgIHwgICA5IC0tCj4gPiA+ID4gICBkcml2ZXJzL21mZC9NYWtlZmls
+ZSAgICAgfCAgIDEgLQo+ID4gPiA+ICAgZHJpdmVycy9tZmQvano0NzQwLWFkYy5jIHwgMzI0Cj4g
+PiA+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPiA+ID4gICAz
+IGZpbGVzIGNoYW5nZWQsIDMzNCBkZWxldGlvbnMoLSkKPiA+ID4gPiAgIGRlbGV0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL21mZC9qejQ3NDAtYWRjLmMKPiA+ID4gCj4gPiA+ICBBcHBsaWVkLCB0aGFu
+a3MuCj4gPiAKPiA+IEl0IHNlZW1zIHRoZSByZXBsYWNlbWVudCBpcyBkb25lIGluICJNSVBTOiBx
+aV9sYjYwOiBNaWdyYXRlIHRvCj4gPiBkZXZpY2V0cmVlIiB3aGljaCBpcyBub3QgeWV0IG1lcmdl
+ZC4KPiAKPiBJdCdzIG1lcmdlZCBpbiB0aGUgTUlQUyB0cmVlLCB0aG91Z2gsIHNvIGl0J2xsIGJs
+ZW5kIHRvZ2V0aGVyIGp1c3QKPiBmaW5lIGluIGxpbnV4LW5leHQuCgpXb25kZXJmdWwuICBUaGFu
+a3MgUGF1bC4KCi0tIApMZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2VzIFRlY2hu
+aWNhbCBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29D
+cwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
