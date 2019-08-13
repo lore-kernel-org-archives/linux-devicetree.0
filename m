@@ -1,7 +1,7 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 3/5] dt-bindings: watchdog: sun4i: Add the watchdog interrupts
-Date: Tue, 13 Aug 2019 14:47:42 +0200
-Message-ID: <20190813124744.32614-3-mripard@kernel.org>
+Subject: [PATCH 4/5] ARM: dts: sun8i: a83t: Remove the watchdog clock
+Date: Tue, 13 Aug 2019 14:47:43 +0200
+Message-ID: <20190813124744.32614-4-mripard@kernel.org>
 References: <20190813124744.32614-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,47 +14,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The Allwinner watchdog has an interrupt, either shared or dedicated
-depending on the SoC, that has been described in some DT, but not all of
-them.
+The watchdog binding doesn't define a clock, and it indeed looks like
+there's no explicit clock feeding it.
 
-The binding is also completely missing that description. Let's add that
-property to be consistent.
+Let's remove it from our DT.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-index 93df27ec1664..4ace89f129b4 100644
---- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-@@ -28,6 +28,9 @@ properties:
-   reg:
-     maxItems: 1
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 523be6611c50..15f8c80f69a5 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -817,7 +817,6 @@
+ 			compatible = "allwinner,sun6i-a31-wdt";
+ 			reg = <0x01c20ca0 0x20>;
+ 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&osc24M>;
+ 		};
  
-+  interrupts:
-+    maxItems: 1
-+
-   timeout-sec:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
-@@ -36,6 +39,7 @@ properties:
- required:
-   - compatible
-   - reg
-+  - interrupts
- 
- additionalProperties: false
- 
-@@ -44,6 +48,7 @@ examples:
-     wdt: watchdog@1c20c90 {
-         compatible = "allwinner,sun4i-a10-wdt";
-         reg = <0x01c20c90 0x10>;
-+        interrupts = <24>;
-         timeout-sec = <10>;
-     };
- 
+ 		spdif: spdif@1c21000 {
 -- 
 2.21.0
