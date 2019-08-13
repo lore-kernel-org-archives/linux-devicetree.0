@@ -1,92 +1,154 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 07/14] serial: tegra: add compatible for new chips
-Date: Tue, 13 Aug 2019 11:55:31 +0200
-Message-ID: <20190813095531.GL1137@ulmo>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-8-git-send-email-kyarlagadda@nvidia.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V5 1/3] mmc: mmci: add hardware busy timeout feature
+Date: Tue, 13 Aug 2019 11:59:49 +0200
+Message-ID: <20190813095951.26275-2-ludovic.Barre@st.com>
+References: <20190813095951.26275-1-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TnYVF1hk1c8rpHiF"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565609303-27000-8-git-send-email-kyarlagadda@nvidia.com>
+In-Reply-To: <20190813095951.26275-1-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com, jslaby@suse.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Ludovic Barre <ludovic.barre@st.com>
 
---TnYVF1hk1c8rpHiF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In some variants, the data timer starts and decrements
+when the DPSM enters in Wait_R or Busy state
+(while data transfer or MMC_RSP_BUSY), and generates a
+data timeout error if the counter reach 0.
 
-On Mon, Aug 12, 2019 at 04:58:16PM +0530, Krishna Yarlagadda wrote:
-> Add new compatible string for Tegra186. It differs from earlier chips
-> as it has fifo mode enable check and 8 byte dma buffer.
-> Add new compatible string for Tegra194. Tegra194 has different error
-> tolerance levels for baud rate compared to older chips.
->=20
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt | 3 +=
-+-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+-Define max_busy_timeout (in ms) according to clock.
+-Set data timer register if the command has rsp_busy flag.
+ If busy_timeout is not defined by framework, the busy
+ length after Data Burst is defined as 1 second
+ (refer: 4.6.2.2 Write of sd specification part1 v6-0).
+-Add MCI_DATATIMEOUT error management in mmci_cmd_irq.
 
-I think device tree binding patches are supposed to start with
-"dt-binding: ...".
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c | 37 ++++++++++++++++++++++++++++++++-----
+ drivers/mmc/host/mmci.h |  3 +++
+ 2 files changed, 35 insertions(+), 5 deletions(-)
 
-Also: "fifo" -> "FIFO" and "dma" -> "DMA" in the commit message.
-
->=20
-> diff --git a/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsua=
-rt.txt b/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> index d7edf73..187ec78 100644
-> --- a/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> +++ b/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> @@ -1,7 +1,8 @@
->  NVIDIA Tegra20/Tegra30 high speed (DMA based) UART controller driver.
-> =20
->  Required properties:
-> -- compatible : should be "nvidia,tegra30-hsuart", "nvidia,tegra20-hsuart=
-".
-> +- compatible : should be "nvidia,tegra30-hsuart", "nvidia,tegra20-hsuart=
-",
-> +  nvidia,tegra186-hsuart, nvidia,tegra194-hsuart.
-
-Please use quotes around the compatible strings like the existing ones.
-Also, I think it might be better to list these explicitly rather than
-just give a list of potential values. As it is right now, it's
-impossible to tell whether this is meant to say "should be all of these"
-or whether it is meant to say "should be one of these".
-
-Thierry
-
->  - reg: Should contain UART controller registers location and length.
->  - interrupts: Should contain UART controller interrupts.
->  - clocks: Must contain one entry, for the module clock.
-> --=20
-> 2.7.4
->=20
-
---TnYVF1hk1c8rpHiF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1SiRMACgkQ3SOs138+
-s6EJYw//YTnH42F/vn19weuxjELgdmwZkWjkvGeZf5gO2hiWgy5oR6J74ACsr87G
-7IK6eQxszcqOsXXu/f5bX3XiTG8Xpz/6dyfutm9xP0/slRtpHJSLHHKuUofs8HQL
-bHBAf9/ZG2mnrkWxm9q18AcZX4b9S7jAqnTI1gxMMZ+FvS2I8jL61dx+2S5bH9Jw
-mp4JErcdf+ofxhM7o39q6jHlWhZBRj/3KwauW9sKyiQCKm4b/Lj9JePyeXjiz0Bv
-Qs/H/k5GMqo5PqP6G1rw8m40V6hJtkUIdzKskOZJt94he1ULdMAFnXMlYwnK0OJU
-MlSfuEhbJajQ4yOSXH+ShUw2j+p/zn+fXpPyWGH/4ckhNQS03T5QRedmpTGUYrkV
-XlUyB9V26mYdyMtlNgozoWCHrkhSrmOCkPWDe0j9+F0LcoDNQGj4xvDT2wTAtmSu
-wEMQQ47JmPP2rZ5dJi+rEeEVEOBv6VOBiwNgywL+aXV6o/jV71gHICKe6c6PFGnU
-vqiRYWedvDtPhSFR9r6JCn7mZ77vgJfnkpSyQON1zupTAGXY+9dy/2m7no835gxe
-7nvl072qH3b8GRytLuETp7sAcKNvJvL9Zb1Zjsa4XlJJZ/5M9xKPOVXfajXxLtQU
-iEFehu7/BaMdggncN67Kb4s76xszM435j02l5m7aCxGM7eB65PU=
-=/lhB
------END PGP SIGNATURE-----
-
---TnYVF1hk1c8rpHiF--
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index c37e70dbe250..c50586540765 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1075,6 +1075,7 @@ static void
+ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+ {
+ 	void __iomem *base = host->base;
++	unsigned long long clks = 0;
+ 
+ 	dev_dbg(mmc_dev(host->mmc), "op %02x arg %08x flags %08x\n",
+ 	    cmd->opcode, cmd->arg, cmd->flags);
+@@ -1097,6 +1098,19 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+ 		else
+ 			c |= host->variant->cmdreg_srsp;
+ 	}
++
++	if (host->variant->busy_timeout && !host->mrq->data) {
++		if (cmd->flags & MMC_RSP_BUSY) {
++			if (!cmd->busy_timeout)
++				cmd->busy_timeout = 1000;
++
++			clks = (unsigned long long)cmd->busy_timeout;
++			clks *=	host->cclk;
++			do_div(clks, MSEC_PER_SEC);
++		}
++		writel_relaxed(clks, host->base + MMCIDATATIMER);
++	}
++
+ 	if (/*interrupt*/0)
+ 		c |= MCI_CPSM_INTERRUPT;
+ 
+@@ -1203,6 +1217,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ {
+ 	void __iomem *base = host->base;
+ 	bool sbc, busy_resp;
++	u32 err_msk;
+ 
+ 	if (!cmd)
+ 		return;
+@@ -1215,8 +1230,12 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 	 * handling. Note that we tag on any latent IRQs postponed
+ 	 * due to waiting for busy status.
+ 	 */
+-	if (!((status|host->busy_status) &
+-	      (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT|MCI_CMDSENT|MCI_CMDRESPEND)))
++	err_msk = MCI_CMDCRCFAIL | MCI_CMDTIMEOUT;
++	if (host->variant->busy_timeout && busy_resp)
++		err_msk |= MCI_DATATIMEOUT;
++
++	if (!((status | host->busy_status) &
++	      (err_msk | MCI_CMDSENT | MCI_CMDRESPEND)))
+ 		return;
+ 
+ 	/* Handle busy detection on DAT0 if the variant supports it. */
+@@ -1235,8 +1254,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 		 * while, to allow it to be set, but tests indicates that it
+ 		 * isn't needed.
+ 		 */
+-		if (!host->busy_status &&
+-		    !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
++		if (!host->busy_status && !(status & err_msk) &&
+ 		    (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+ 
+ 			writel(readl(base + MMCIMASK0) |
+@@ -1290,6 +1308,9 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 		cmd->error = -ETIMEDOUT;
+ 	} else if (status & MCI_CMDCRCFAIL && cmd->flags & MMC_RSP_CRC) {
+ 		cmd->error = -EILSEQ;
++	} else if (host->variant->busy_timeout && busy_resp &&
++		   status & MCI_DATATIMEOUT) {
++		cmd->error = -ETIMEDOUT;
+ 	} else {
+ 		cmd->resp[0] = readl(base + MMCIRESPONSE0);
+ 		cmd->resp[1] = readl(base + MMCIRESPONSE1);
+@@ -1948,6 +1969,8 @@ static int mmci_probe(struct amba_device *dev,
+ 	 * Enable busy detection.
+ 	 */
+ 	if (variant->busy_detect) {
++		u32 max_busy_timeout = 0;
++
+ 		mmci_ops.card_busy = mmci_card_busy;
+ 		/*
+ 		 * Not all variants have a flag to enable busy detection
+@@ -1957,7 +1980,11 @@ static int mmci_probe(struct amba_device *dev,
+ 			mmci_write_datactrlreg(host,
+ 					       host->variant->busy_dpsm_flag);
+ 		mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+-		mmc->max_busy_timeout = 0;
++
++		if (variant->busy_timeout)
++			max_busy_timeout = ~0UL / (mmc->f_max / MSEC_PER_SEC);
++
++		mmc->max_busy_timeout = max_busy_timeout;
+ 	}
+ 
+ 	/* Prepare a CMD12 - needed to clear the DPSM on some variants. */
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 833236ecb31e..d8b7f6774e8f 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -287,6 +287,8 @@ struct mmci_host;
+  * @signal_direction: input/out direction of bus signals can be indicated
+  * @pwrreg_clkgate: MMCIPOWER register must be used to gate the clock
+  * @busy_detect: true if the variant supports busy detection on DAT0.
++ * @busy_timeout: true if the variant starts data timer when the DPSM
++ *		  enter in Wait_R or Busy state.
+  * @busy_dpsm_flag: bitmask enabling busy detection in the DPSM
+  * @busy_detect_flag: bitmask identifying the bit in the MMCISTATUS register
+  *		      indicating that the card is busy
+@@ -333,6 +335,7 @@ struct variant_data {
+ 	u8			signal_direction:1;
+ 	u8			pwrreg_clkgate:1;
+ 	u8			busy_detect:1;
++	u8			busy_timeout:1;
+ 	u32			busy_dpsm_flag;
+ 	u32			busy_detect_flag;
+ 	u32			busy_detect_mask;
+-- 
+2.17.1
