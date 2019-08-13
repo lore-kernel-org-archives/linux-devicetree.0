@@ -1,82 +1,64 @@
-From: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-Subject: [v4, 2/8] cpufreq: mediatek: add clock enable for intermediate clock
-Date: Tue, 13 Aug 2019 21:31:47 +0800
-Message-ID: <1565703113-31479-3-git-send-email-andrew-sh.cheng@mediatek.com>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v3 3/9] dt-bindings: display: panel: Add bindings for NEC
+ NL8048HL11 panel
+Date: Tue, 13 Aug 2019 16:33:05 +0300
+Message-ID: <20190813133311.26441-4-laurent.pinchart@ideasonboard.com>
+References: <20190813133311.26441-1-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob
- Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen
- Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, fan.chen@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190813133311.26441-1-laurent.pinchart@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-
-Intermediate clock is not always enabled by ccf in different projects,
-so cpufreq should always enable it by itself.
-
-Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
----
- drivers/cpufreq/mediatek-cpufreq.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-index a370577ffc73..acd9539e95de 100644
---- a/drivers/cpufreq/mediatek-cpufreq.c
-+++ b/drivers/cpufreq/mediatek-cpufreq.c
-@@ -368,13 +368,17 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 		goto out_free_resources;
- 	}
- 
-+	ret = clk_prepare_enable(inter_clk);
-+	if (ret)
-+		goto out_free_opp_table;
-+
- 	/* Search a safe voltage for intermediate frequency. */
- 	rate = clk_get_rate(inter_clk);
- 	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
- 	if (IS_ERR(opp)) {
- 		pr_err("failed to get intermediate opp for cpu%d\n", cpu);
- 		ret = PTR_ERR(opp);
--		goto out_free_opp_table;
-+		goto out_disable_clock;
- 	}
- 	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
- 	dev_pm_opp_put(opp);
-@@ -393,6 +397,9 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
- 
- 	return 0;
- 
-+out_disable_clock:
-+	clk_disable_unprepare(inter_clk);
-+
- out_free_opp_table:
- 	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
- 
-@@ -419,6 +426,10 @@ static void mtk_cpu_dvfs_info_release(struct mtk_cpu_dvfs_info *info)
- 		clk_put(info->cpu_clk);
- 	if (!IS_ERR(info->inter_clk))
- 		clk_put(info->inter_clk);
-+	if (!IS_ERR(info->inter_clk)) {
-+		clk_disable_unprepare(info->inter_clk);
-+		clk_put(info->inter_clk);
-+	}
- 
- 	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
- }
--- 
-2.12.5
+VGhlIE5FQyBOTDgwNDhITDExIGlzIGEgMTAuNGNtIFdWR0EgKDgwMHg0ODApIHBhbmVsIHdpdGgg
+YSAyNC1iaXQgUkdCCnBhcmFsbGVsIGRhdGEgaW50ZXJmYWNlIGFuZCBhbiBTUEkgY29udHJvbCBp
+bnRlcmZhY2UuCgpTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNo
+YXJ0QGlkZWFzb25ib2FyZC5jb20+Ci0tLQpDaGFuZ2VzIHNpbmNlIHYyOgoKLSBBZGQgcmVnIGFu
+ZCBzcGktbWF4LWZyZXF1ZW5jeSBwcm9wZXJ0aWVzCi0gTWFrZSB0aGUgZXhhbXBsZSBwYXNzIHRo
+ZSBjaGVja3MKCkNoYW5nZXMgc2luY2UgdjE6CgotIENvbnZlcnQgdG8gWUFNTAotLS0KIC4uLi9k
+aXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwgICAgICAgICB8IDYyICsrKysrKysrKysr
+KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbmVj
+LG5sODA0OGhsMTEueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9uZWMsbmw4MDQ4aGwxMS55YW1sCm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYWE3ODhlYWEyZjcxCi0tLSAv
+ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvbmVjLG5sODA0OGhsMTEueWFtbApAQCAtMCwwICsxLDYyIEBACisjIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wCislWUFNTCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2aWNl
+dHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwjCiskc2No
+ZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKKwordGl0
+bGU6IE5FQyBOTDgwNDhITDExIDQuMSIgV1ZHQSBURlQgTENEIHBhbmVsCisKK2Rlc2NyaXB0aW9u
+OgorICBUaGUgTkVDIE5MODA0OEhMMTEgaXMgYSA0LjEiIFdWR0EgVEZUIExDRCBwYW5lbCB3aXRo
+IGEgMjQtYml0IFJHQiBwYXJhbGxlbAorICBkYXRhIGludGVyZmFjZSBhbmQgYW4gU1BJIGNvbnRy
+b2wgaW50ZXJmYWNlLgorCittYWludGFpbmVyczoKKyAgLSBMYXVyZW50IFBpbmNoYXJ0IDxsYXVy
+ZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+CisKK2FsbE9mOgorICAtICRyZWY6IHBhbmVs
+LWNvbW1vbi55YW1sIworCitwcm9wZXJ0aWVzOgorICBjb21wYXRpYmxlOgorICAgIGNvbnN0OiBu
+ZWMsbmw4MDQ4aGwxMQorCisgIGxhYmVsOiB0cnVlCisgIHBvcnQ6IHRydWUKKyAgcmVnOiB0cnVl
+CisgIHJlc2V0LWdwaW9zOiB0cnVlCisKKyAgc3BpLW1heC1mcmVxdWVuY3k6CisgICAgbWF4aW11
+bTogMTAwMDAwMDAKKworcmVxdWlyZWQ6CisgIC0gY29tcGF0aWJsZQorICAtIHJlZworICAtIHJl
+c2V0LWdwaW9zCisgIC0gcG9ydAorCithZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UKKworZXhh
+bXBsZXM6CisgIC0gfAorICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9ncGlvL2dwaW8uaD4KKwor
+ICAgIHNwaTAgeworICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47CisgICAgICAjc2l6ZS1jZWxs
+cyA9IDwwPjsKKworICAgICAgbGNkX3BhbmVsOiBwYW5lbEAwIHsKKyAgICAgICAgY29tcGF0aWJs
+ZSA9ICJuZWMsbmw4MDQ4aGwxMSI7CisgICAgICAgIHJlZyA9IDwwPjsKKyAgICAgICAgc3BpLW1h
+eC1mcmVxdWVuY3kgPSA8MTAwMDAwMDA+OworCisgICAgICAgIHJlc2V0LWdwaW9zID0gPCZncGlv
+NyA3IEdQSU9fQUNUSVZFX0xPVz47CisKKyAgICAgICAgcG9ydCB7CisgICAgICAgICAgbGNkX2lu
+OiBlbmRwb2ludCB7CisgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmRwaV9vdXQ+Owor
+ICAgICAgICAgIH07CisgICAgICAgIH07CisgICAgICB9OworICAgIH07CisKKy4uLgotLSAKUmVn
+YXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
