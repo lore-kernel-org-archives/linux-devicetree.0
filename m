@@ -1,78 +1,77 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH V2 00/13] ARM: Add minimal Raspberry Pi 4 support
-Date: Tue, 13 Aug 2019 13:42:35 -0700
-Message-ID: <87mugc7q6c.fsf@anholt.net>
-References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
+ host bridge binding
+Date: Tue, 13 Aug 2019 14:46:19 -0600
+Message-ID: <CAL_Jsq+ME-faxK8o7rq8gyYC8cjtr+yZOz8A47zKMrjYAtmumw@mail.gmail.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com> <20190723092711.11786-1-jonnyc@amazon.com>
+ <20190813153046.GA31480@bogus> <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5941243146857783418=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
---===============5941243146857783418==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Stefan Wahren <wahrenst@gmx.net> writes:
-
-> This series adds minimal support for the new Raspberry Pi 4, so we are able
-> to login via debug UART.
+On Tue, Aug 13, 2019 at 10:49 AM Chocron, Jonathan <jonnyc@amazon.com> wrote:
 >
-> Patch 1-2:   Prepare platform and DTS for the new SoC BMC2711
-> Patch 3-6:   Enable clock support for BCM2711
-> Patch 7-8:   Add I2C support for BCM2711
-> Patch 9-12:  Add Raspberry Pi 4 DTS support
-> Patch 13:    Update MAINTAINERS
+> On Tue, 2019-08-13 at 09:30 -0600, Rob Herring wrote:
+> > On Tue, Jul 23, 2019 at 12:27:08PM +0300, Jonathan Chocron wrote:
+> > > Document Amazon's Annapurna Labs PCIe host bridge.
+> > >
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > ---
+> > >  .../devicetree/bindings/pci/pcie-al.txt       | 45
+> > > +++++++++++++++++++
+> > >  MAINTAINERS                                   |  3 +-
+> > >  2 files changed, 47 insertions(+), 1 deletion(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/pcie-
+> > > al.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > > b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > > new file mode 100644
+> > > index 000000000000..89876190eb5a
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+> > > @@ -0,0 +1,45 @@
+> > > +* Amazon Annapurna Labs PCIe host bridge
+> > > +
+> > > +Amazon's Annapurna Labs PCIe Host Controller is based on the
+> > > Synopsys DesignWare
+> > > +PCI core.
+> > > +It shares common functions with the PCIe DesignWare core driver
+> > > and inherits
+> >
+> > Driver details are irrelevant to the binding.
+> >
+> Will remove.
+>
+> > > +common properties defined in
+> > > Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> > > +Properties of the host controller node that differ from it are:
+> > > +
+> > > +- compatible:
+> > > +   Usage: required
+> > > +   Value type: <stringlist>
+> > > +   Definition: Value should contain
+> > > +                   - "amazon,al-pcie"
+> >
+> > Needs to be SoC specific.
+> >
+> I'm not sure I follow. The PCIe controller can be implemented in
+> different SoCs. Could you please clarify?
 
-Series is:
+All the features, bugs, and integration will be exactly the same on
+all SoCs and you will never need to distinguish?
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+This is standard convention for compatible strings and how you avoid
+updating the DT (part of firmware) when you find some difference the
+OS needs to handle down the road.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+If the next SoC is 'the same', then you do:
 
------BEGIN PGP SIGNATURE-----
+compatible = "amazon,newsoc-pcie", "amazon,oldsoc-pcie";
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAl1TILsACgkQtdYpNtH8
-nuh8EQ/8CIWIRxuKEDNPwD+swJlhNQsyfP+MqfY6OENxoLeBv7u23S7jc6OEm9Si
-9vszx+5zyVzb33gGJv/Tg0XUwiIEWu8R2cEbLAi366056yJ8SrMH9ibaSKU+OsMT
-3uN+Px/ahVT1s6WFnmdsRCEwBdRoMjRztBpr4ssRKbXUxZGjjXFVYscOqXqCmu/+
-6Z+D9EMe2yL08QqyEK1151HDNgzAqh3kECGJorPBq2V3aL0dJ/sv5Mg62fFO8kKA
-kpqQfcEFwIhD3vbSlA6MNU6mC1tpLhhJTjMAcbwCXsE3A+TwUNioJva0L1OovsVH
-3HN/4S5O4bXKf6O14tU+FLWDzh61SmAui8hpOOM6yLusJ/NuULnEYx8PeAp7Nh8K
-4p0cXay44zdq47Jlt8fXc7MIhAeV5ofjqJvxj0par/mncrpOk6AonN13Ng8XjqGJ
-+8LLs+xOrT0wk5RYAMRIzxn5XALtaquHJDL5sb/Vi3Z4sb7QDA+z6+jeHKqPVLO3
-kbRmCAx0uE+yZrRXKlcmXTkP4z0pq0ZPC45zRwFR5iHQXdKQ5nvU1liJD1kE0UgL
-5viA8cds+hQNsYhKGQbQMdqztBv/dBE3ZHPZCZRkgsSysrPPX77MJSvJPNMs9v0A
-d8v2BZQXBmQqRtwaOc2yvjJ2K/w4uZhS1XOrWMyvir7kKDBgvZc=
-=TJWO
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============5941243146857783418==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5941243146857783418==--
+Rob
