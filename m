@@ -1,37 +1,57 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Date: Tue, 13 Aug 2019 13:46:34 -0700
-Message-ID: <20190813204634.GR250418@google.com>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190813201411.GL15047@lunn.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: pinctrl: stm32: Fix 'st,syscfg' schema
+Date: Tue, 13 Aug 2019 14:55:28 -0600
+Message-ID: <20190813205528.16651-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813201411.GL15047@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:14:11PM +0200, Andrew Lunn wrote:
-> > +static int rtl8211e_config_led(struct phy_device *phydev, int led,
-> > +			       struct phy_led_config *cfg)
-> > +{
-> > +	u16 lacr_bits = 0, lcr_bits = 0;
-> > +	int oldpage, ret;
-> > +
-> 
-> You should probably check that led is 0 or 1. 
+The proper way to add additional contraints to an existing json-schema
+is using 'allOf' to reference the base schema. Using just '$ref' doesn't
+work. Fix this for the 'st,syscfg' property.
 
-Actually this PHY has up to 3 LEDs, but yes, good point to validate
-the parameter. I'll wait a day or two for if there is other feedback
-and send a new version with the check.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+I've got some other fixes queued up and can take this via the DT tree.
 
-> Otherwise this looks good.
+Rob
 
-Thanks for the reviews!
+ .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Matthias
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+index 91d3e78b3395..400df2da018a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+@@ -37,7 +37,8 @@ properties:
+   hwlocks: true
+ 
+   st,syscfg:
+-    $ref: "/schemas/types.yaml#/definitions/phandle-array"
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+     description: Should be phandle/offset/mask
+     items:
+       - description: Phandle to the syscon node which includes IRQ mux selection.
+-- 
+2.20.1
