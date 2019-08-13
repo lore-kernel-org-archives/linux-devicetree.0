@@ -1,88 +1,49 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [EXT] Re: [v2 1/4] dt-bindings: display: Add DT bindings for
- LS1028A HDP-TX PHY.
-Date: Tue, 13 Aug 2019 02:34:55 +0000
-Message-ID: <DB7PR04MB51950BBAD5C2802D59A5C9B5E2D20@DB7PR04MB5195.eurprd04.prod.outlook.com>
-References: <20190719100942.12016-1-wen.he_1@nxp.com>
- <20190812232934.GA1219@bogus>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v10 01/15] clk: tegra20/30: Add custom EMC clock
+ implementation
+Date: Tue, 13 Aug 2019 05:36:41 +0300
+Message-ID: <8369884e-1bd7-063f-e053-5152378078e9@gmail.com>
+References: <20190811210043.20122-1-digetx@gmail.com>
+ <20190811210043.20122-2-digetx@gmail.com>
+ <20190812231258.GA31836@qmqm.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812232934.GA1219@bogus>
+In-Reply-To: <20190812231258.GA31836@qmqm.qmqm.pl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+To: =?UTF-8?B?TWljaGHFgsKgTWlyb3PFgmF3?= <mirq-linux@rere.qmqm.pl>
+Cc: Rob Herring <robh-dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqONTCMTPI1SA3OjMwDQo+IFRvOiBXZW4gSGUg
-PHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IExlbyBM
-aSA8bGVveWFuZy5saUBueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW3YyIDEvNF0gZHQt
-YmluZGluZ3M6IGRpc3BsYXk6IEFkZCBEVCBiaW5kaW5ncyBmb3IgTFMxMDI4QQ0KPiBIRFAtVFgg
-UEhZLg0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBGcmksIEp1bCAxOSwgMjAx
-OSBhdCAwNjowOTozOVBNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+ID4gQWRkIERUIGJpbmRpbmdz
-IGRvY3VtZW50bWF0aW9uIGZvciB0aGUgSERQLVRYIFBIWSBjb250cm9sbGVyLiBUaGUNCj4gPiBk
-ZXNjcmliZXMgd2hpY2ggY291bGQgYmUgZm91bmQgb24gTlhQIExheWVyc2NhcGUgbHMxMDI4YSBw
-bGF0Zm9ybS4NCj4gDQo+IE5vdCByZXF1aXJlZCwgYnV0IHBsZWFzZSBjb25zaWRlciBjb252ZXJ0
-aW5nIHRvIERUIHNjaGVtYSAoWUFNTCkgZm9ybWF0Lg0KDQpVbmRlcnN0YW5kLA0KDQo+IA0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiA+IC0tLQ0K
-PiA+IGNoYW5nZSBpbiB2MjoNCj4gPiAgICAgICAgIC0gY29ycmVjdGlvbiB0aGUgbm9kZSBuYW1l
-Lg0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQg
-ICB8IDU2ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDU2IGluc2Vy
-dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9mc2wsaGRwLnR4dA0K
-PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50
-eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uNTNj
-YTA4MzM3NTg3DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0DQo+ID4gQEAgLTAsMCArMSw1NiBA
-QA0KPiA+ICtOWFAgTGF5ZXJzY3BhZSBsczEwMjhhIEhEUC1UWCBQSFkgQ29udHJvbGxlcg0KPiAN
-Cj4gdHlwbw0KPiANCj4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT0NCj4gPiArDQo+ID4gK1RoZSBmb2xsb3dpbmcgYmluZGluZ3MgZGVzY3JpYmUgdGhlIENh
-ZGVuY2UgSERQIFRYIFBIWSBvbiBsczEwMjhhDQo+ID4gK3RoYXQgb2ZmZXIgbXVsdGktcHJvdG9j
-b2wgc3VwcG9ydCBvZiBzdGFuZGFycyBzdWNoIGFzIGVEUCBhbmQNCj4gPiArRGlzcGxheXBvcnQs
-DQo+IA0KPiBzL29mZmVyL29mZmVycy8NCj4gDQo+IGFuZCBhbm90aGVyIHR5cG8uDQo+IA0KPiA+
-ICtzdXBwb3J0cyBmb3IgMjUtNjAwTUh6IHBpeGVsIGNsb2NrIGFuZCB1cCB0byA0azJrIGF0IDYw
-TUh6IHJlc29sdXRpb24uDQo+ID4gK1RoZSBIRFAgdHJhbnNtaXR0ZXIgaXMgYSBDYWRlbmNlIEhE
-UCBUWCBjb250cm9sbGVyIElQIHdpdGggYQ0KPiA+ICtjb21wYW5pb24gUEhZIElQLg0KPiA+ICsN
-Cj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArICAtIGNvbXBhdGlibGU6ICAgU2hvdWxk
-IGJlICJmc2wsbHMxMDI4YS1kcCIgZm9yIGxzMTAyOGEuDQo+ID4gKyAgLSByZWc6ICAgICAgICAg
-IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgYmxvY2sgb2YgcmVnaXN0ZXJz
-DQo+IHVzZWQNCj4gPiArICBieSB0aGUgcHJvY2Vzc29yLg0KPiANCj4gVGhlIGV4YW1wbGUgc2hv
-d3MgMiByZWdpb25zLCB3aGF0IGFyZSB0aGV5Pw0KDQpPbmUgaXMgSERQIHRyYW5zbWl0dGVyIGNv
-bnRyb2xsZXIgYWRkcmVzcyByZWdpb24sIGFub3RoZXIgaXMgbXVsdGltZWRpYSBQTEwgYWRkcmVz
-cyByZWdpb24uDQpTb3JyeSwgaGVyZSBzaG91bGQgYmUgdXNlIHRoZSBIRFAgdHJhbnNtaXR0ZXIg
-Y29udHJvbGxlciByZWdpb24uIA0KDQpJJ3ZlIGFscmVhZHkgc2VuZCBjbG9jayBwYXRjaGVzIGlu
-Y2x1ZGVkIHRoZSBtdWx0aW1lZGlhIFBMTCBpbXBsZW1lbnRhdGlvbi4NCg0KPiANCj4gPiArICAt
-IGludGVycnVwdHM6ICAgSERQIGhvdHBsdWcgaW4vb3V0IGRldGVjdCBpbnRlcnJ1cHQgbnVtYmVy
-DQo+ID4gKyAgLSBjbG9ja3M6ICAgICAgIEEgbGlzdCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lm
-aWVyIHBhaXJzLCBvbmUgZm9yIGVhY2gNCj4gZW50cnkNCj4gPiArICBpbiAnY2xvY2stbmFtZXMn
-DQo+ID4gKyAgLSBjbG9jay1uYW1lczogIEEgbGlzdCBvZiBjbG9jayBuYW1lcy4gSXQgc2hvdWxk
-IGNvbnRhaW46DQo+ID4gKyAgICAgIC0gImNsa19pcGciOiBpbnRlci1JbnRlZ3JhdGVkIGNpcmN1
-aXQgY2xvY2sNCj4gPiArICAgICAgLSAiY2xrX2NvcmUiOiBmb3IgdGhlIE1haW4gRGlzcGxheSBU
-WCBjb250cm9sbGVyIGNsb2NrDQo+ID4gKyAgICAgIC0gImNsa19weGwiOiBmb3IgdGhlIHBpeGVs
-IGNsb2NrIGZlZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIHByb2Nlc3Nvcg0KPiA+ICsgICAg
-ICAtICJjbGtfcHhsX211eCI6IGZvciB0aGUgaGlnaCBQZXJmUExMIGJ5cGFzcyBjbG9jaw0KPiA+
-ICsgICAgICAtICJjbGtfcHhsX2xpbmsiOiBmb3IgdGhlIGxpbmsgcmF0ZSBwaXhlbCBjbG9jaw0K
-PiA+ICsgICAgICAtICJjbGtfYXBiIjogZm9yIHRoZSBBUEIgaW50ZXJmYWNlIGNsb2NrDQo+ID4g
-KyAgICAgIC0gImNsa192aWYiOiBmb3IgdGhlIFZpZGVvIHBpeGVsIGNsb2NrDQo+IA0KPiAnY2xr
-XycgaXMgcmVkdW5kYW50Lg0KPiANCg0KT0sNCg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgc3ViLW5v
-ZGVzOg0KPiA+ICsgIC0gcG9ydDogVGhlIEhEUCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgb3V0
-cHV0IHBvcnQuIFRoZSBjb25uZWN0aW9uDQo+ID4gKyAgICBpcyBtb2RlbGxlZCB1c2luZyB0aGUg
-T0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluDQo+ID4gKyAgICBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0DQo+IA0KPiBJJ20gc3RpbGwgY29uZnVzZWQgYXMg
-dG8gd2hhdCB0aGlzIGJsb2NrIGRvZXM/IFRoZSAnZW5jb2RlciBvdXRwdXQnIGlzDQo+IERpc3Bs
-YXlQb3J0PyBJZiB0aGlzIGlzIGp1c3QgYSBwaHksIHRoZW4gdXNlIHRoZSBwaHkgYmluZGluZy4N
-Cj4gDQo+IE5vcm1hbGx5LCBhIERpc3BsYXlQb3J0IGVuY29kZXIvYnJpZGdlIE9GIGdyYXBoIG91
-dHB1dCB3b3VsZCBiZSBjb25uZWN0ZWQNCj4gdG8gYSBEUCBjb25uZWN0b3Igbm9kZSBvciBhIHBh
-bmVsLg0KDQpZZXMsIHlvdSBhcmUgcmlnaHQsIGJ1dCANCkZvciBMUzEwMjhBLCBIRFAoQ2FkZW5j
-ZSBIRCBEaXNwbGF5IFRyYW5zbWl0dGVyKSBhcmUgaW5jbHVkZWQgZURQL0Rpc3BsYXkgcG9ydCBj
-b250cm9sbGVyIGFuZCBEaXNwbGF5IFBIWSBjb250cm9sbGVyLg0KSW4gb3RoZXIgd29yZCwgdGhl
-eSBhcmUgMSBJUCBibG9jayBvbiBMUzEwMjhBLg0KDQpBIGZ1bGwgZ3JhcGhpY3MgY29ubmVjdGlv
-biByZWxhdGlvbnNoaXAgb2YgdGhlIExTMTAyOEE6DQoNCkRQNTAwIC0tPiBlRFAvRFAgY29udHJv
-bGxlciAtLS0+IERQSFkgLS0tPiBEUC9lRFAgaW50ZXJmYWNlLg0KDQpCZXN0IFJlZ2FyZHMsDQpX
-ZW4NCg0KPiANCj4gUm9iDQo=
+13.08.2019 2:12, Michał Mirosław пишет:
+> On Mon, Aug 12, 2019 at 12:00:29AM +0300, Dmitry Osipenko wrote:
+>> A proper External Memory Controller clock rounding and parent selection
+>> functionality is required by the EMC drivers, it is not available using
+>> the generic clock implementation because only the Memory Controller driver
+>> is aware of what clock rates are actually available for a particular
+>> device. EMC drivers will have to register a Tegra-specific CLK-API
+>> callback which will perform rounding of a requested rate. EMC clock users
+>> won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
+>> driver is probed and the callback is set up.
+> [...]
+>> diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+>> index 4812e45c2214..df966ca06788 100644
+>> --- a/drivers/clk/tegra/Makefile
+>> +++ b/drivers/clk/tegra/Makefile
+>> @@ -17,7 +17,9 @@ obj-y					+= clk-tegra-fixed.o
+>>  obj-y					+= clk-tegra-super-gen4.o
+>>  obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+>>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
+>> +obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= clk-tegra20-emc.o
+>>  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
+>> +obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= clk-tegra20-emc.o
+>>  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
+>>  obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
+>>  obj-$(CONFIG_TEGRA_CLK_DFLL)		+= clk-tegra124-dfll-fcpu.o
+> 
+> Doesn't it complain when both CONFIG_ARCH_TEGRA_2x_SOC and
+> CONFIG_ARCH_TEGRA_3x_SOC are enabled at the same time?
+
+No, at least not with my toolchain setup. Are you getting some warning?
