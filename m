@@ -1,192 +1,135 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support for RTL8211E
-Date: Tue, 13 Aug 2019 12:11:47 -0700
-Message-ID: <20190813191147.19936-5-mka@chromium.org>
-References: <20190813191147.19936-1-mka@chromium.org>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Date: Tue, 13 Aug 2019 14:15:18 -0500
+Message-ID: <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813191147.19936-1-mka@chromium.org>
+In-Reply-To: <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, vkoul@kernel.org, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add a .config_led hook which is called by the PHY core when
-configuration data for a PHY LED is available. Each LED can be
-configured to be solid 'off, solid 'on' for certain (or all)
-link speeds or to blink on RX/TX activity.
+On 8/13/19 1:06 PM, Srinivas Kandagatla wrote:
+> 
+> 
+> On 13/08/2019 18:51, Pierre-Louis Bossart wrote:
+>> On 8/13/19 11:50 AM, Srinivas Kandagatla wrote:
+>>> Thanks for the review,
+>>>
+>>> On 13/08/2019 15:44, Pierre-Louis Bossart wrote:
+>>>> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
+>>>>> On platforms which have smart speaker amplifiers connected via
+>>>>> soundwire and modeled as aux devices in ASoC, in such usecases machine
+>>>>> driver should be able to get sdw master stream from dai so that it can
+>>>>> use the runtime stream to setup slave streams.
+>>>>
+>>>> using the _set_sdw_stream? I don't fully get the sequence with the 
+>>>> wording above.
+>>>
+>>> Yes, using set_sdw_stream().
+>>
+>> Maybe I am missing something here, but I don't see where the 
+>> set_sdw_stream() is called.
+> 
+> sorry for the confusion. It was too quick reply. :-)
+> I was suppose to say sdw_stream_add_slave() instead of set_sdw_stream().
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v6:
-- return -EOPNOTSUPP if trigger is not supported, don't log warning
-- don't log errors if MDIO ops fail, this is rare and the phy_device
-  will log a warning
-- added parentheses around macro argument used in arithmetics to
-  avoid possible operator precedence issues
-- minor formatting changes
+ok, so get_sdw_stream() and set_sdw_stream() are not meant to be mirrors 
+or both implemented. It's just a helper to respectively get a context or 
+set a context but a get-modify-set type of operation is not expected.
 
-Changes in v5:
-- use 'config_leds' driver callback instead of requesting the DT
-  configuration
-- added support for trigger 'none'
-- always disable EEE LED mode when a LED is configured. We have no
-  device data struct to keep track of its state, the number of LEDs
-  is limited, so the overhead of disabling it multiple times (once for
-  each LED that is configured) during initialization is negligible
-- print warning when disabling EEE LED mode fails
-- updated commit message (previous subject was 'net: phy: realtek:
-  configure RTL8211E LEDs')
+Do I get this right?
 
-Changes in v4:
-- use the generic PHY LED binding
-- keep default/current configuration if none is specified
-- added rtl8211e_disable_eee_led_mode()
-  - was previously in separate patch, however since we always want to
-    disable EEE LED mode when a LED configuration is specified it makes
-    sense to just add the function here.
-- don't call phy_restore_page() in rtl8211e_config_leds() if
-  selection of the extended page failed.
-- use phydev_warn() instead of phydev_err() if LED configuration
-  fails since we don't bail out
-- use hex number to specify page for consistency
-- add hex number to comment about ext page 44 to facilitate searching
-
-Changes in v3:
-- sanity check led-modes values
-- set LACR bits in a more readable way
-- use phydev_err() instead of dev_err()
-- log an error if LED configuration fails
-
-Changes in v2:
-- patch added to the series
----
- drivers/net/phy/realtek.c | 90 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 89 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index a5b3708dc4d8..2bca3b91d43d 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -9,8 +9,9 @@
-  * Copyright (c) 2004 Freescale Semiconductor, Inc.
-  */
- #include <linux/bitops.h>
--#include <linux/phy.h>
-+#include <linux/bits.h>
- #include <linux/module.h>
-+#include <linux/phy.h>
- 
- #define RTL821x_PHYSR				0x11
- #define RTL821x_PHYSR_DUPLEX			BIT(13)
-@@ -26,6 +27,19 @@
- #define RTL821x_EXT_PAGE_SELECT			0x1e
- #define RTL821x_PAGE_SELECT			0x1f
- 
-+/* RTL8211E page 5 */
-+#define RTL8211E_EEE_LED_MODE1			0x05
-+#define RTL8211E_EEE_LED_MODE2			0x06
-+
-+/* RTL8211E extension page 44 (0x2c) */
-+#define RTL8211E_LACR				0x1a
-+#define RLT8211E_LACR_LEDACTCTRL_SHIFT		4
-+#define RTL8211E_LCR				0x1c
-+
-+#define LACR_MASK(led)				BIT(4 + (led))
-+#define LCR_MASK(led)				GENMASK(((led) * 4) + 2,\
-+							(led) * 4)
-+
- #define RTL8211F_INSR				0x1d
- 
- #define RTL8211F_TX_DELAY			BIT(8)
-@@ -83,6 +97,79 @@ static int rtl8211x_modify_ext_paged(struct phy_device *phydev, int page,
- 	return phy_restore_page(phydev, oldpage, ret);
- }
- 
-+static void rtl8211e_disable_eee_led_mode(struct phy_device *phydev)
-+{
-+	int oldpage;
-+	int err = 0;
-+
-+	oldpage = phy_select_page(phydev, 5);
-+	if (oldpage < 0)
-+		goto out;
-+
-+	/* write magic values to disable EEE LED mode */
-+	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE1, 0x8b82);
-+	if (err)
-+		goto out;
-+
-+	err = __phy_write(phydev, RTL8211E_EEE_LED_MODE2, 0x052b);
-+
-+out:
-+	if (err)
-+		phydev_warn(phydev, "failed to disable EEE LED mode: %d\n",
-+			    err);
-+
-+	phy_restore_page(phydev, oldpage, err);
-+}
-+
-+static int rtl8211e_config_led(struct phy_device *phydev, int led,
-+			       struct phy_led_config *cfg)
-+{
-+	u16 lacr_bits = 0, lcr_bits = 0;
-+	int oldpage, ret;
-+
-+	switch (cfg->trigger.t) {
-+	case PHY_LED_TRIGGER_LINK:
-+		lcr_bits = 7 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_LINK_10M:
-+		lcr_bits = 1 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_LINK_100M:
-+		lcr_bits = 2 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_LINK_1G:
-+		lcr_bits |= 4 << (led * 4);
-+		break;
-+
-+	case PHY_LED_TRIGGER_NONE:
-+		break;
-+
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (cfg->trigger.activity)
-+		lacr_bits = BIT(RLT8211E_LACR_LEDACTCTRL_SHIFT + led);
-+
-+	rtl8211e_disable_eee_led_mode(phydev);
-+
-+	oldpage = rtl8211x_select_ext_page(phydev, 0x2c);
-+	if (oldpage < 0)
-+		return oldpage;
-+
-+	ret = __phy_modify(phydev, RTL8211E_LACR, LACR_MASK(led), lacr_bits);
-+	if (ret)
-+		goto err;
-+
-+	ret = __phy_modify(phydev, RTL8211E_LCR, LCR_MASK(led), lcr_bits);
-+
-+err:
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static int rtl8201_ack_interrupt(struct phy_device *phydev)
- {
- 	int err;
-@@ -330,6 +417,7 @@ static struct phy_driver realtek_drvs[] = {
- 		.config_init	= &rtl8211e_config_init,
- 		.ack_interrupt	= &rtl821x_ack_interrupt,
- 		.config_intr	= &rtl8211e_config_intr,
-+		.config_led	= &rtl8211e_config_led,
- 		.suspend	= genphy_suspend,
- 		.resume		= genphy_resume,
- 		.read_page	= rtl821x_read_page,
--- 
-2.23.0.rc1.153.gdeed80330f-goog
+> 
+> As Aux device is dailess there is no way to get hold of sdw stream 
+> runtime for slave device associated with it.
+> 
+> Having snd_soc_dai_get_sdw_stream() would help machine driver to get 
+> hold of sdw_stream_runtime from controller dai and setup slave streams 
+> using sdw_stream_add_slave().
+> 
+> 
+> thanks,
+> srini
+> 
+> 
+>>
+>> Also I don't fully get the rule. set_sdw_stream() looks required, 
+>> get_sdw_stream() is optional, is this what you are suggesting?
+>>
+>>>>
+>>>>>
+>>>>> soundwire already as a set function, get function would provide more
+>>>>> flexibility to above configurations.
+>>>>
+>>>> I am not clear if you are asking for both to be used, or get only or 
+>>>> set only?
+>>>
+>>> It depends on the usecase, in db845c usecase  [1] as Aux device is 
+>>> dai less, machine driver is using get function to get hold of master 
+>>> stream so that it can setup slave port config.
+>>>
+>>>
+>>> Looks like there is a typo in above like
+>>>
+>>> This was supposed to be "soundwire already has a set function, get 
+>>> function would provide more flexibility to above configurations"
+>>>
+>>> [1] 
+>>> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/tree/sound/soc/qcom/db845c.c?h=integration-linux-qcomlt 
+>>>
+>>>
+>>> thanks,
+>>> srini
+>>>
+>>>>
+>>>>>
+>>>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>>>> ---
+>>>>>   include/sound/soc-dai.h | 10 ++++++++++
+>>>>>   1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+>>>>> index dc48fe081a20..1e01f4a302e0 100644
+>>>>> --- a/include/sound/soc-dai.h
+>>>>> +++ b/include/sound/soc-dai.h
+>>>>> @@ -202,6 +202,7 @@ struct snd_soc_dai_ops {
+>>>>>       int (*set_sdw_stream)(struct snd_soc_dai *dai,
+>>>>>               void *stream, int direction);
+>>>>> +    void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
+>>>>>       /*
+>>>>>        * DAI digital mute - optional.
+>>>>>        * Called by soc-core to minimise any pops.
+>>>>> @@ -410,4 +411,13 @@ static inline int 
+>>>>> snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
+>>>>>           return -ENOTSUPP;
+>>>>>   }
+>>>>> +static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai 
+>>>>> *dai,
+>>>>> +                           int direction)
+>>>>> +{
+>>>>> +    if (dai->driver->ops->get_sdw_stream)
+>>>>> +        return dai->driver->ops->get_sdw_stream(dai, direction);
+>>>>> +    else
+>>>>> +        return ERR_PTR(-ENOTSUPP);
+>>>>> +}
+>>>>> +
+>>>>>   #endif
+>>>>>
+>>>>
+>>> _______________________________________________
+>>> Alsa-devel mailing list
+>>> Alsa-devel@alsa-project.org
+>>> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>>
