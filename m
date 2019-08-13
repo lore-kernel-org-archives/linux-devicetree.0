@@ -1,13 +1,11 @@
 From: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-Subject: [v4, 5/8] devfreq: add mediatek cci devfreq
-Date: Tue, 13 Aug 2019 21:31:50 +0800
-Message-ID: <1565703113-31479-6-git-send-email-andrew-sh.cheng@mediatek.com>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+Subject: [v4, 0/8] Add cpufreq and cci devfreq for mt8183, and SVS support
+Date: Tue, 13 Aug 2019 21:31:45 +0800
+Message-ID: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,307 +24,40 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 
-This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
-of the Mediatek MT8183.
+MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
+So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
 
-On the MT8183 the CCI is supplied by the same regulator as the LITTLE
-cores. The driver is notified when the regulator voltage changes
-(driven by cpufreq) and adjusts the CCI frequency to the maximum
-possible value.
+For SVS support, add OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
 
-Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
----
- drivers/devfreq/Kconfig              |  10 ++
- drivers/devfreq/Makefile             |   1 +
- drivers/devfreq/mt8183-cci-devfreq.c | 247 +++++++++++++++++++++++++++++++++++
- 3 files changed, 258 insertions(+)
+Change since v3:
+ - modify example of dt-binding
+ - change rcu implementation in Support adjusting OPP patch
+ - Add mutex init in cpufreq driver
+
+Andrew-sh.Cheng (7):
+  cpufreq: mediatek: change to regulator_get_optional
+  cpufreq: mediatek: add clock enable for intermediate clock
+  cpufreq: mediatek: Add support for mt8183
+  dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+  devfreq: add mediatek cci devfreq
+  cpufreq: mediatek: add opp notification for SVS support
+  devfreq: mediatek: cci devfreq register opp notification for SVS
+    support
+
+Stephen Boyd (1):
+  PM / OPP: Support adjusting OPP voltages at runtime
+
+ .../bindings/devfreq/mt8183-cci-devfreq.txt        |  20 ++
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
+ drivers/cpufreq/mediatek-cpufreq.c                 |  94 ++++++-
+ drivers/devfreq/Kconfig                            |  10 +
+ drivers/devfreq/Makefile                           |   1 +
+ drivers/devfreq/mt8183-cci-devfreq.c               | 309 +++++++++++++++++++++
+ drivers/opp/core.c                                 |  63 +++++
+ include/linux/pm_opp.h                             |  11 +
+ 8 files changed, 507 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
 
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index ba98a4e3ad33..0c8204d6b78a 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -92,6 +92,16 @@ config ARM_EXYNOS_BUS_DEVFREQ
- 	  and adjusts the operating frequencies and voltages with OPP support.
- 	  This does not yet operate with optimal voltages.
- 
-+config ARM_MT8183_CCI_DEVFREQ
-+	tristate "MT8183 CCI DEVFREQ Driver"
-+	depends on ARM_MEDIATEK_CPUFREQ
-+	help
-+		This adds a devfreq driver for Cache Coherent Interconnect
-+		of Mediatek MT8183, which is shared the same regulator
-+		with cpu cluster.
-+		It can track buck voltage and update a proper cci frequency.
-+		Use notification to get regulator status.
-+
- config ARM_TEGRA_DEVFREQ
- 	tristate "Tegra DEVFREQ Driver"
- 	depends on ARCH_TEGRA_124_SOC
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index 32b8d4d3f12c..817dde779f16 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
- 
- # DEVFREQ Drivers
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
-+obj-$(CONFIG_ARM_MT8183_CCI_DEVFREQ)    += mt8183-cci-devfreq.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
- obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
- 
-diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
-new file mode 100644
-index 000000000000..818a167c442f
---- /dev/null
-+++ b/drivers/devfreq/mt8183-cci-devfreq.c
-@@ -0,0 +1,247 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+
-+ * Author: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include "governor.h"
-+
-+struct cci_devfreq {
-+	struct devfreq *devfreq;
-+	struct regulator *proc_reg;
-+	unsigned long proc_reg_uV;
-+	struct clk *cci_clk;
-+	struct notifier_block nb;
-+};
-+
-+static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
-+					  unsigned long val, void *data)
-+{
-+	int ret;
-+	struct cci_devfreq *cci_df =
-+		container_of(nb, struct cci_devfreq, nb);
-+
-+	/* deal with reduce frequency */
-+	if (val & REGULATOR_EVENT_PRE_VOLTAGE_CHANGE) {
-+		struct pre_voltage_change_data *pvc_data = data;
-+
-+		if (pvc_data->min_uV < pvc_data->old_uV) {
-+			cci_df->proc_reg_uV =
-+				(unsigned long)(pvc_data->min_uV);
-+			mutex_lock(&cci_df->devfreq->lock);
-+			ret = update_devfreq(cci_df->devfreq);
-+			if (ret)
-+				pr_err("Fail to reduce cci frequency: %d\n",
-+				       ret);
-+			mutex_unlock(&cci_df->devfreq->lock);
-+		}
-+	} else if ((val & REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE) &&
-+	    ((unsigned long)data > cci_df->proc_reg_uV)) {
-+		cci_df->proc_reg_uV = (unsigned long)data;
-+		mutex_lock(&cci_df->devfreq->lock);
-+		ret = update_devfreq(cci_df->devfreq);
-+		if (ret)
-+			pr_err("Fail to raise cci frequency back: %d\n", ret);
-+		mutex_unlock(&cci_df->devfreq->lock);
-+	} else if ((val & REGULATOR_EVENT_VOLTAGE_CHANGE) &&
-+	    (cci_df->proc_reg_uV < (unsigned long)data)) {
-+		/* deal with increase frequency */
-+		cci_df->proc_reg_uV = (unsigned long)data;
-+		mutex_lock(&cci_df->devfreq->lock);
-+		ret = update_devfreq(cci_df->devfreq);
-+		if (ret)
-+			pr_err("Fail to raise cci frequency: %d\n", ret);
-+		mutex_unlock(&cci_df->devfreq->lock);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_cci_governor_get_target(struct devfreq *devfreq,
-+				       unsigned long *freq)
-+{
-+	struct cci_devfreq *cci_df;
-+	struct dev_pm_opp *opp;
-+
-+	cci_df = dev_get_drvdata(devfreq->dev.parent);
-+
-+	/* find available frequency */
-+	opp = dev_pm_opp_find_freq_ceil_by_volt(devfreq->dev.parent,
-+						cci_df->proc_reg_uV);
-+	*freq = dev_pm_opp_get_freq(opp);
-+
-+	return 0;
-+}
-+
-+static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
-+					  unsigned int event, void *data)
-+{
-+	int ret;
-+	struct cci_devfreq *cci_df;
-+	struct notifier_block *nb;
-+
-+	cci_df = dev_get_drvdata(devfreq->dev.parent);
-+	nb = &cci_df->nb;
-+
-+	switch (event) {
-+	case DEVFREQ_GOV_START:
-+	case DEVFREQ_GOV_RESUME:
-+		nb->notifier_call = cci_devfreq_regulator_notifier;
-+		ret = regulator_register_notifier(cci_df->proc_reg,
-+						  nb);
-+		if (ret)
-+			pr_err("%s: failed to add governor: %d\n", __func__,
-+			       ret);
-+		break;
-+
-+	case DEVFREQ_GOV_STOP:
-+	case DEVFREQ_GOV_SUSPEND:
-+		ret = regulator_unregister_notifier(cci_df->proc_reg,
-+						    nb);
-+		if (ret)
-+			pr_err("%s: failed to add governor: %d\n", __func__,
-+			       ret);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct devfreq_governor mtk_cci_devfreq_governor = {
-+	.name = "mtk_cci_vmon",
-+	.get_target_freq = mtk_cci_governor_get_target,
-+	.event_handler = mtk_cci_governor_event_handler,
-+	.immutable = true
-+};
-+
-+static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
-+				  u32 flags)
-+{
-+	int ret;
-+	struct cci_devfreq *cci_df = dev_get_drvdata(dev);
-+
-+	if (!cci_df)
-+		return -EINVAL;
-+
-+	ret = clk_set_rate(cci_df->cci_clk, *freq);
-+	if (ret) {
-+		pr_err("%s: failed cci to set rate: %d\n", __func__,
-+		       ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct devfreq_dev_profile cci_devfreq_profile = {
-+	.target = mtk_cci_devfreq_target,
-+};
-+
-+static int mtk_cci_devfreq_probe(struct platform_device *pdev)
-+{
-+	struct device *cci_dev = &pdev->dev;
-+	struct cci_devfreq *cci_df;
-+	int ret;
-+
-+	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
-+	if (!cci_df)
-+		return -ENOMEM;
-+
-+	cci_df->cci_clk = devm_clk_get(cci_dev, "cci_clock");
-+	ret = PTR_ERR_OR_ZERO(cci_df->cci_clk);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(cci_dev, "failed to get clock for CCI: %d\n",
-+				ret);
-+		return ret;
-+	}
-+	cci_df->proc_reg = devm_regulator_get_optional(cci_dev, "proc");
-+	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	ret = dev_pm_opp_of_add_table(cci_dev);
-+	if (ret) {
-+		dev_err(cci_dev, "Fail to init CCI OPP table: %d\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, cci_df);
-+
-+	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
-+						  &cci_devfreq_profile,
-+						  "mtk_cci_vmon",
-+						  NULL);
-+	if (IS_ERR(cci_df->devfreq)) {
-+		ret = PTR_ERR(cci_df->devfreq);
-+		dev_err(cci_dev, "cannot create cci devfreq device:%d\n", ret);
-+		dev_pm_opp_of_remove_table(cci_dev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const __maybe_unused struct of_device_id
-+	mediatek_cci_devfreq_of_match[] = {
-+	{ .compatible = "mediatek,mt8183-cci" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mediatek_cci_devfreq_of_match);
-+
-+static struct platform_driver cci_devfreq_driver = {
-+	.probe	= mtk_cci_devfreq_probe,
-+	.driver = {
-+		.name = "mediatek-cci-devfreq",
-+		.of_match_table = of_match_ptr(mediatek_cci_devfreq_of_match),
-+	},
-+};
-+
-+static int __init mtk_cci_devfreq_init(void)
-+{
-+	int ret;
-+
-+	ret = devfreq_add_governor(&mtk_cci_devfreq_governor);
-+	if (ret) {
-+		pr_err("%s: failed to add governor: %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	ret = platform_driver_register(&cci_devfreq_driver);
-+	if (ret)
-+		devfreq_remove_governor(&mtk_cci_devfreq_governor);
-+
-+	return ret;
-+}
-+module_init(mtk_cci_devfreq_init)
-+
-+static void __exit mtk_cci_devfreq_exit(void)
-+{
-+	int ret;
-+
-+	ret = devfreq_remove_governor(&mtk_cci_devfreq_governor);
-+	if (ret)
-+		pr_err("%s: failed to remove governor: %d\n", __func__, ret);
-+
-+	platform_driver_unregister(&cci_devfreq_driver);
-+}
-+module_exit(mtk_cci_devfreq_exit)
-+
-+MODULE_DESCRIPTION("Mediatek CCI devfreq driver");
-+MODULE_AUTHOR("Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>");
-+MODULE_LICENSE("GPL v2");
 -- 
 2.12.5
