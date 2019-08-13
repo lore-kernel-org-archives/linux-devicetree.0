@@ -1,199 +1,249 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 08/14] serial: tegra: check for FIFO mode enabled status
-Date: Tue, 13 Aug 2019 12:03:57 +0200
-Message-ID: <20190813100357.GM1137@ulmo>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-9-git-send-email-kyarlagadda@nvidia.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+Date: Tue, 13 Aug 2019 12:10:05 +0200
+Message-ID: <20190813101005.GA10751@bogon.m.sigxcpu.org>
+References: <cover.1565367567.git.agx@sigxcpu.org>
+ <9c906bb6592424acdb1a67447a482e010a113b49.1565367567.git.agx@sigxcpu.org>
+ <CAL_JsqK-5=WMZgNuJDTJ3Dm3YOJNw_9QCrPOOSe7MQzMV26pHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="C01fF7hLGvN0zd9s"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1565609303-27000-9-git-send-email-kyarlagadda@nvidia.com>
+In-Reply-To: <CAL_JsqK-5=WMZgNuJDTJ3Dm3YOJNw_9QCrPOOSe7MQzMV26pHw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com, ldewangan@nvidia.com, jslaby@suse.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Shardar Shariff Md <smohammed@nvidia.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+thanks for having a look!
 
---C01fF7hLGvN0zd9s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 09, 2019 at 02:41:03PM -0600, Rob Herring wrote:
+> On Fri, Aug 9, 2019 at 10:24 AM Guido Günther <agx@sigxcpu.org> wrote:
+> >
+> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+> >
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../bindings/display/bridge/nwl-dsi.yaml      | 155 ++++++++++++++++++
+> >  1 file changed, 155 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> > new file mode 100644
+> > index 000000000000..5ed8bc4a4d18
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> > @@ -0,0 +1,155 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/bridge/imx-nwl-dsi.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Northwest Logic MIPI-DSI on imx SoCs
+> > +
+> > +maintainers:
+> > +  - Guido Gúnther <agx@sigxcpu.org>
+> > +  - Robert Chiras <robert.chiras@nxp.com>
+> > +
+> > +description: |
+> > +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
+> > +  the SOCs NWL MIPI-DSI host controller.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +        - const: fsl,imx8mq-nwl-dsi
+> 
+> Don't need oneOf nor items here for a single possible value:
 
-On Mon, Aug 12, 2019 at 04:58:17PM +0530, Krishna Yarlagadda wrote:
-> Chips prior to Tegra186 needed delay of 3 UART clock cycles to avoid
-> data loss. This issue is fixed in Tegra186 and a new flag is added to
-> check if fifo mode is enabled. chip data updated to check if this flag
-> is available for a chip. Tegra186 has new compatible to enable this
-> flag.
->=20
-> Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/tty/serial/serial-tegra.c | 52 +++++++++++++++++++++++++++++++++=
-+-----
->  1 file changed, 46 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/seria=
-l-tegra.c
-> index 7ab81bb..e0379d9 100644
-> --- a/drivers/tty/serial/serial-tegra.c
-> +++ b/drivers/tty/serial/serial-tegra.c
-> @@ -72,6 +72,8 @@
->  #define TEGRA_TX_PIO				1
->  #define TEGRA_TX_DMA				2
-> =20
-> +#define TEGRA_UART_FCR_IIR_FIFO_EN		0x40
-> +
->  /**
->   * tegra_uart_chip_data: SOC specific data.
->   *
-> @@ -84,6 +86,7 @@ struct tegra_uart_chip_data {
->  	bool	tx_fifo_full_status;
->  	bool	allow_txfifo_reset_fifo_mode;
->  	bool	support_clk_src_div;
-> +	bool	fifo_mode_enable_status;
->  };
-> =20
->  struct tegra_uart_port {
-> @@ -263,6 +266,22 @@ static void tegra_uart_wait_sym_time(struct tegra_ua=
-rt_port *tup,
->  			tup->current_baud));
->  }
-> =20
-> +static int tegra_uart_is_fifo_mode_enabled(struct tegra_uart_port *tup)
+I wanted to prepare for adding other SoCs so there's less diff noise
+(other imx8 SoCs will be rather simple) but let's go with 'const' for
+now then.
 
-I think this is a bad name. "is" makes it sound like this will return a
-boolean value. Also, this doesn't really check whether FIFO mode is
-enabled, but rather it waits for the FIFO mode to become enabled.
-Perhaps, then, a better name would be
+> compatible:
+>   const: fsl,imx8mq-nwl-dsi
+> 
+> Or go ahead and add other compatibles because the 'if' below seems to
+> indicate you'll have more.
 
-	tegra_uart_wait_fifo_mode_enabled()
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: DSI core clock
+> > +      - description: RX_ESC clock (used in escape mode)
+> > +      - description: TX_ESC clock (used in escape mode)
+> > +      - description: PHY_REF clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: core
+> > +      - const: rx_esc
+> > +      - const: tx_esc
+> > +      - const: phy_ref
+> > +
+> > +  phys:
+> > +    maxItems: 1
+> > +    description:
+> > +      A phandle to the phy module representing the DPHY
+> > +
+> > +  phy-names:
+> > +    items:
+> > +      - const: dphy
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +    description:
+> > +      A phandle to the power domain
+> > +
+> > +  resets:
+> > +    maxItems: 4
+> > +    description:
+> > +      A phandle to the reset controller
+> 
+> Sounds like 4 phandles... This should look similar to 'clocks'.
 
-?
+Added them individually, will be soc specific too later on.
 
-> +{
-> +	unsigned long iir;
-> +	unsigned int tmout =3D 100;
-> +
-> +	do {
-> +		iir =3D tegra_uart_read(tup, UART_IIR);
-> +		if (iir & TEGRA_UART_FCR_IIR_FIFO_EN)
-> +			return 0;
-> +		udelay(1);
-> +	} while (--tmout);
-> +	dev_err(tup->uport.dev, "FIFO mode not enabled\n");
+> 
+> > +
+> > +  reset-names:
+> > +    items:
+> > +      - const: byte
+> > +      - const: dpi
+> > +      - const: esc
+> > +      - const: pclk
+> > +
+> > +  mux-sel:
+> 
+> Needs a vendor prefix and will need a $ref to the type.
 
-I'd push this out to callers. That way this function becomes useful in
-situations where you don't want to output an error.
+Made that fsl,mux-sel. This require me to add '$ref:
+/schemas/types.yaml#definitions/phandle' as well which
+I hope is correct.
 
-> +
-> +	return -EIO;
+> > +    maxItems: 1
+> > +    description:
+> > +      A phandle to the MUX register set
+> > +
+> > +  port:
+> > +    type: object
+> > +    description:
+> > +      A input put or output port node.
+> > +
+> > +  ports:
+> > +    type: object
+> > +    description:
+> > +      A node containing DSI input & output port nodes with endpoint
+> > +      definitions as documented in
+> > +      Documentation/devicetree/bindings/graph.txt.
+> 
+> You need to define what port@0 and port@1 are.
 
--ETIMEDOUT?
+Added.
 
-Thierry
+> 
+> > +
+> > +patternProperties:
+> > +  "^panel@[0-9]+$": true
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,imx8mq-nwl-dsi
+> 
+> This conditional isn't needed until you have more than one compatible.
 
-> +}
-> +
->  static void tegra_uart_fifo_reset(struct tegra_uart_port *tup, u8 fcr_bi=
-ts)
->  {
->  	unsigned long fcr =3D tup->fcr_shadow;
-> @@ -282,6 +301,8 @@ static void tegra_uart_fifo_reset(struct tegra_uart_p=
-ort *tup, u8 fcr_bits)
->  		tegra_uart_write(tup, fcr, UART_FCR);
->  		fcr |=3D UART_FCR_ENABLE_FIFO;
->  		tegra_uart_write(tup, fcr, UART_FCR);
-> +		if (tup->cdata->fifo_mode_enable_status)
-> +			tegra_uart_is_fifo_mode_enabled(tup);
->  	}
-> =20
->  	/* Dummy read to ensure the write is posted */
-> @@ -918,12 +939,19 @@ static int tegra_uart_hw_init(struct tegra_uart_por=
-t *tup)
->  	/* Dummy read to ensure the write is posted */
->  	tegra_uart_read(tup, UART_SCR);
-> =20
-> -	/*
-> -	 * For all tegra devices (up to t210), there is a hardware issue that
-> -	 * requires software to wait for 3 UART clock periods after enabling
-> -	 * the TX fifo, otherwise data could be lost.
-> -	 */
-> -	tegra_uart_wait_cycle_time(tup, 3);
-> +	if (tup->cdata->fifo_mode_enable_status) {
-> +		ret =3D tegra_uart_is_fifo_mode_enabled(tup);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else {
-> +		/*
-> +		 * For all tegra devices (up to t210), there is a hardware
-> +		 * issue that requires software to wait for 3 UART clock
-> +		 * periods after enabling the TX fifo, otherwise data could
-> +		 * be lost.
-> +		 */
-> +		tegra_uart_wait_cycle_time(tup, 3);
-> +	}
-> =20
->  	/*
->  	 * Initialize the UART with default configuration
-> @@ -1294,12 +1322,21 @@ static struct tegra_uart_chip_data tegra20_uart_c=
-hip_data =3D {
->  	.tx_fifo_full_status		=3D false,
->  	.allow_txfifo_reset_fifo_mode	=3D true,
->  	.support_clk_src_div		=3D false,
-> +	.fifo_mode_enable_status	=3D false,
->  };
-> =20
->  static struct tegra_uart_chip_data tegra30_uart_chip_data =3D {
->  	.tx_fifo_full_status		=3D true,
->  	.allow_txfifo_reset_fifo_mode	=3D false,
->  	.support_clk_src_div		=3D true,
-> +	.fifo_mode_enable_status	=3D false,
-> +};
-> +
-> +static struct tegra_uart_chip_data tegra186_uart_chip_data =3D {
-> +	.tx_fifo_full_status		=3D true,
-> +	.allow_txfifo_reset_fifo_mode	=3D false,
-> +	.support_clk_src_div		=3D true,
-> +	.fifo_mode_enable_status	=3D true,
->  };
-> =20
->  static const struct of_device_id tegra_uart_of_match[] =3D {
-> @@ -1310,6 +1347,9 @@ static const struct of_device_id tegra_uart_of_matc=
-h[] =3D {
->  		.compatible	=3D "nvidia,tegra20-hsuart",
->  		.data		=3D &tegra20_uart_chip_data,
->  	}, {
-> +		.compatible     =3D "nvidia,tegra186-hsuart",
-> +		.data		=3D &tegra186_uart_chip_data,
-> +	}, {
->  	},
->  };
->  MODULE_DEVICE_TABLE(of, tegra_uart_of_match);
-> --=20
-> 2.7.4
->=20
+Again intended for other upcoming SoCs but dropped for now.
 
---C01fF7hLGvN0zd9s
-Content-Type: application/pgp-signature; name="signature.asc"
+> > +      required:
+> > +        - resets
+> > +        - reset-names
+> > +        - mux-sel
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - phys
+> > +  - phy-names
+> 
+> ports should be required.
 
------BEGIN PGP SIGNATURE-----
+Added.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1Siw0ACgkQ3SOs138+
-s6EFOg/+LWtRSOg+mVM7nQcU6XMvsQ1U0AFkBAYZR5N2Lpcg+efsieA2UN9qrh8M
-SI9V6zG+yOxXUbNIH5ENYGbEijqZPuwA8js8W8keXAJ0GJRnYMPVnN6ydEAsTsyf
-Ywl+wuUrlMqqiGoz8zvYA7oiHVb/7MzzpAguyCZEWPWK7+3PNQp5dhUrKnFocEn0
-JjWBhaA8dELf8dCPPVjd683FvjuyJd7gvs2uZ9UYqImLz6gjis9Fo0tlNOgRgwgG
-wc/0uQ0euAI15HgToxbB55AtDtWvMtxQWbE+GuuhHumauKkB4MFjdn5vJ0gS0YUj
-Fq6fjBXquLhLdF5A2tC6RT3R0lEJqpSMaD1R+g0lE3D8fsTENG2e1KQb6n4pwZSf
-SPoQR59+VV1+ZcTdWjTFEqEQtVlt0mCEkdl5Qu/BQLpGk7f/+ZGcwH3wFigqD2RW
-mG0WB3Wic9fP3351zQLuxWz/V2+PeuneaU6rVa03/9RZocA6eCjvDZdH4vW8Mh8M
-hthAp/Dc9jTgFG3HCCVqc/lk+bTvKCnk7rd+AInx+4dkxTASfkYR7nFXlAVxHIya
-UnUp/RnfEHQeBR+gTljNPqIRVvpYLFp8+RotROh+OJRPeTCbOBRNJ8BFbqXfQA9h
-eI5mgv6QMLtGZSWibNGeMOupIE/2D2acUa0dBsAQ2tMwHB/PsR4=
-=qha6
------END PGP SIGNATURE-----
+> > +
+> > +examples:
+> > + - |
+> > +
+> > +   mipi_dsi: mipi_dsi@30a00000 {
+> > +              #address-cells = <1>;
+> > +              #size-cells = <0>;
+> > +              compatible = "fsl,imx8mq-nwl-dsi";
+> > +              reg = <0x30A00000 0x300>;
+> > +              clocks = <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
+> > +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> > +              interrupts = <0 34 4>;
+> > +              power-domains = <&pgc_mipi>;
+> > +              resets = <&src 0>, <&src 1>, <&src 2>, <&src 3>;
+> > +              reset-names = "byte", "dpi", "esc", "pclk";
+> > +              mux-sel = <&iomuxc_gpr>;
+> > +              phys = <&dphy>;
+> > +              phy-names = "dphy";
+> > +
+> > +              panel@0 {
+> > +                      compatible = "...";
+> 
+> Needs to be a valid compatible. Also need 'reg' here or drop the
+> unit-address.
 
---C01fF7hLGvN0zd9s--
+Fixed.
+
+> 
+> 
+> > +                      port@0 {
+> > +                           panel_in: endpoint {
+> > +                                     remote-endpoint = <&mipi_dsi_out>;
+> > +                           };
+> > +                      };
+> > +              };
+> > +
+> > +              ports {
+> > +                    #address-cells = <1>;
+> > +                    #size-cells = <0>;
+> > +
+> > +                    port@0 {
+> > +                           reg = <0>;
+> > +                           mipi_dsi_in: endpoint {
+> > +                                        remote-endpoint = <&lcdif_mipi_dsi>;
+> > +                           };
+> > +                    };
+> > +                    port@1 {
+> > +                           reg = <1>;
+> > +                           mipi_dsi_out: endpoint {
+> > +                                         remote-endpoint = <&panel_in>;
+> > +                           };
+> > +                    };
+> > +              };
+> > +      };
+> > --
+> > 2.20.1
+> >
+> 
+
+Cheers and thanks again for having a look!
+ -- Guido
