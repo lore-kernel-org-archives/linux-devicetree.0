@@ -1,64 +1,66 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 06/15] arm64: dts: msm8916: thermal: Fixup HW ids for cpu
- sensors
-Date: Tue, 13 Aug 2019 15:25:57 +0200
-Message-ID: <9dc8c3ba-bf96-967d-730a-243a903dd1e6@linaro.org>
-References: <cover.1564091601.git.amit.kucheria@linaro.org>
- <5d86bfcdfd118294122e2182f3328fe823bc985d.1564091601.git.amit.kucheria@linaro.org>
+From: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+Subject: [v4, 4/8] dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+Date: Tue, 13 Aug 2019 21:31:49 +0800
+Message-ID: <1565703113-31479-5-git-send-email-andrew-sh.cheng@mediatek.com>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d86bfcdfd118294122e2182f3328fe823bc985d.1564091601.git.amit.kucheria@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, Andy Gross <agross@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob
+ Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias
+ Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen
+ Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, fan.chen@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/07/2019 00:18, Amit Kucheria wrote:
-> msm8916 uses sensors 0, 1, 2, 4 and 5. Sensor 3 is NOT used. Fixup the
-> device tree so that the correct sensor ID is used and as a result we can
-> actually check the temperature for the cpu2_3 sensor.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 
-This change matches the documentation available in the Qcom website.
+This adds dt-binding documentation of cci devfreq
+for Mediatek MT8183 SoC platform.
 
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+---
+ .../bindings/devfreq/mt8183-cci-devfreq.txt          | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index 5ea9fb8f2f87..8686e101905c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -179,7 +179,7 @@
->  			polling-delay-passive = <250>;
->  			polling-delay = <1000>;
->  
-> -			thermal-sensors = <&tsens 4>;
-> +			thermal-sensors = <&tsens 5>;
->  
->  			trips {
->  				cpu0_1_alert0: trip-point@0 {
-> @@ -209,7 +209,7 @@
->  			polling-delay-passive = <250>;
->  			polling-delay = <1000>;
->  
-> -			thermal-sensors = <&tsens 3>;
-> +			thermal-sensors = <&tsens 4>;
->  
->  			trips {
->  				cpu2_3_alert0: trip-point@0 {
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+new file mode 100644
+index 000000000000..a65a70bb9f09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
+@@ -0,0 +1,20 @@
++* Mediatek Cache Coherent Interconnect(CCI) frequency device
++
++Required properties:
++- compatible: should contain "mediatek,mt8183-cci" for frequency scaling of CCI
++- clocks: for frequency scaling of CCI
++- clock-names: for frequency scaling of CCI driver to reference
++- regulator: for voltage scaling of CCI
++- operating-points-v2: for frequency scaling of CCI opp table
++
++Example:
++	cci: cci {
++		compatible = "mediatek,mt8183-cci";
++		clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
++		clock-names = "cci_clock";
++		operating-points-v2 = <&cci_opp>;
++	};
++
++	&cci {
++		proc-supply = <&mt6358_vproc12_reg>;
++	};
+\ No newline at end of file
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.12.5
