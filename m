@@ -1,118 +1,59 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Tue, 13 Aug 2019 07:39:05 +0200
-Message-ID: <20190813053905.hu2hyi7fah2vujzz@flea>
-References: <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
- <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea>
- <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea>
- <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
- <20190812080420.saelmqb36vkelxn4@flea>
- <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem
+ software reset
+Date: Tue, 13 Aug 2019 05:42:55 +0000
+Message-ID: <916a477bb97aef904bdd1d84e85c92f6318b30df.camel@analog.com>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+         <20190812112350.15242-11-alexandru.ardelean@analog.com>
+         <20190812141954.GP14290@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812141954.GP14290@lunn.ch>
+Content-Language: en-US
+Content-ID: <F0FF1E0F736A8B4389AC1EE977E5A777@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 11:01:51AM -0700, Vasily Khoruzhick wrote:
-> On Mon, Aug 12, 2019 at 1:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick wrote:
-> > > On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruzhick wrote:
-> > > > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruzhick wrote:
-> > > > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > > >
-> > > > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > > > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
-> > > > > > > > >>
-> > > > > > > > >> Vasily Khoruzhick writes:
-> > > > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > > > >>>>
-> > > > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> > > > > > > > >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
-> > > > > > > > >>>>> as result 'perf top' shows no events.
-> > > > > > > > >>>>
-> > > > > > > > >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
-> > > > > > > > >>>> It could well just be that the interrupt numbers are wrong...
-> > > > > > > > >>>
-> > > > > > > > >>> Looks like it does, at least result looks plausible:
-> > > > > > > > >>
-> > > > > > > > >> I'm using perf stat regularly (cache benchmarks) and it works fine.
-> > > > > > > > >>
-> > > > > > > > >> Unfortunately I wasn't aware that perf stat is a poor test for
-> > > > > > > > >> the interrupts part of the node, when I added it. So I'm not too
-> > > > > > > > >> surprised I got it wrong.
-> > > > > > > > >>
-> > > > > > > > >> However, it would be unfortunate if the node got removed completely,
-> > > > > > > > >> because perf stat would not work anymore. Maybe we can only remove
-> > > > > > > > >> the interrupts or just fix them even if the HW doesn't work?
-> > > > > > > > >
-> > > > > > > > > I'm not familiar with PMU driver. Is it possible to get it working
-> > > > > > > > > without interrupts?
-> > > > > > > >
-> > > > > > > > Yup - you get a grumpy message from the driver, it will refuse sampling
-> > > > > > > > events (the ones which weren't working anyway), and if you measure
-> > > > > > > > anything for long enough that a counter overflows you'll get wonky
-> > > > > > > > results. But for counting hardware events over relatively short periods
-> > > > > > > > it'll still do the job.
-> > > > > > >
-> > > > > > > I tried to drop interrupts completely from the node but 'perf top' is
-> > > > > > > still broken. Though now in different way: it complains "cycles: PMU
-> > > > > > > Hardware doesn't support sampling/overflow-interrupts. Try 'perf
-> > > > > > > stat'"
-> > > > > >
-> > > > > > I have no idea if that's the culprit, but what is the state of the
-> > > > > > 0x09010000 register?
-> > > > >
-> > > > > What register is that and how do I check it?
-> > > >
-> > > > It's in the CPUX Configuration block, and the bits are labelled as CPU
-> > > > Debug Reset.
-> > > >
-> > > > And if you have busybox, you can use devmem.
-> > >
-> > > CPUX configuration block is at 0x01700000 according to A64 user
-> > > manual, and particular register you're interested in is at 0x01700080,
-> > > its value is 0x1110110F.
-> > >
-> > > Bits 16-19 are not defined in user manual and are not set.
-> >
-> > Sorry, I somehow thought this was for the H6...
-> >
-> > I don't have any idea then :/
->
-> OK, so what should we do? 'perf top'/'perf record' work fine if PMU
-> node is dropped, but they don't work if PMU node is present (even with
-> interrupts dropped). I'd prefer to have 'perf top' and 'perf record'
-> working instead of 'perf stat'
-
-Well, it doesn't work so we should just remove the node, and if
-someone wants it back, they should figure it out.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+T24gTW9uLCAyMDE5LTA4LTEyIGF0IDE2OjE5ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gPiArc3RhdGljIGludCBhZGluX3Jlc2V0KHN0cnVjdCBwaHlfZGV2
+aWNlICpwaHlkZXYpDQo+ID4gK3sNCj4gPiArCS8qIElmIHRoZXJlIGlzIGEgcmVzZXQgR1BJTyBq
+dXN0IGV4aXQgKi8NCj4gPiArCWlmICghSVNfRVJSX09SX05VTEwocGh5ZGV2LT5tZGlvLnJlc2V0
+X2dwaW8pKQ0KPiA+ICsJCXJldHVybiAwOw0KPiANCj4gSSdtIG5vdCBzbyBoYXBweSB3aXRoIHRo
+aXMuDQo+IA0KPiBGaXJzdCBvZmYsIHRoZXJlIGFyZSB0d28gcG9zc2libGUgR1BJTyBjb25maWd1
+cmF0aW9ucy4gVGhlIEdQSU8gY2FuIGJlDQo+IGFwcGxpZWQgdG8gYWxsIFBIWXMgb24gdGhlIE1E
+SU8gYnVzLiBUaGF0IEdQSU8gaXMgdXNlZCB3aGVuIHRoZSBidXMgaXMNCj4gcHJvYmVkLiBUaGVy
+ZSBjYW4gYWxzbyBiZSBhIHBlciBQSFkgR1BJTywgd2hpY2ggaXMgd2hhdCB5b3UgYXJlDQo+IGxv
+b2tpbmcgYXQgaGVyZS4NCj4gDQo+IFRoZSBpZGVhIG9mIHB1dHRpbmcgdGhlIEdQSU8gaGFuZGxp
+bmcgaW4gdGhlIGNvcmUgaXMgdGhhdCBQSFlzIGRvbid0DQo+IG5lZWQgdG8gd29ycnkgYWJvdXQg
+aXQuIEhvdyBtdWNoIG9mIGEgZGlmZmVyZW5jZSBkb2VzIGl0IG1ha2UgaWYgdGhlDQo+IFBIWSBp
+cyBib3RoIHJlc2V0IHZpYSBHUElPIGFuZCB0aGVuIGFnYWluIGluIHNvZnR3YXJlPyBIb3cgc2xv
+dyBpcyB0aGUNCj4gc29mdHdhcmUgcmVzZXQ/IE1heWJlIGp1c3QgdW5jb25kaXRpb25hbGx5IGRv
+IHRoZSByZXNldCwgaWYgaXQgaXMgbm90DQo+IHRvbyBzbG93Lg0KPiANCg0KQWNrLg0KV2lsbCBk
+byBpdCB1bmNvbmRpdGlvbmFsbHkuDQpUaGUgcmVzZXQgaXMgbm90IHRvbyBzbG93Lg0KDQoNCj4g
+PiArDQo+ID4gKwkvKiBSZXNldCBQSFkgY29yZSByZWdzICYgc3Vic3lzdGVtIHJlZ3MgKi8NCj4g
+PiArCXJldHVybiBhZGluX3N1YnN5dGVtX3NvZnRfcmVzZXQocGh5ZGV2KTsNCj4gPiArfQ0KPiA+
+ICsNCj4gPiArc3RhdGljIGludCBhZGluX3Byb2JlKHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYp
+DQo+ID4gK3sNCj4gPiArCXJldHVybiBhZGluX3Jlc2V0KHBoeWRldik7DQo+ID4gK30NCj4gDQo+
+IFdoeSBkaWQgeW91IGRlY2lkZSB0byBkbyB0aGlzIGFzIHBhcnQgb2YgcHJvYmUsIGFuZCBub3Qg
+dXNlIHRoZQ0KPiAuc29mdF9yZXNldCBtZW1iZXIgb2YgcGh5X2RyaXZlcj8NCg0KSG1tbS4NClRo
+aXMgaXMgYSBsZWZ0LW92ZXIgZnJvbSB3aGVuIEkgaGFkIHRoZSBHUElPIGhhbmRsaW5nIGluIHRo
+aXMgUEhZIGRyaXZlci4NCkl0J3MgYWxzbyBhIGhhYml0IHBpY2tlZCB1cCBmcm9tIHdyaXRpbmcg
+SUlPIGRyaXZlcnMsIHdoZXJlIHRoZXJlIGlzIG5vIHtzb2Z0X31yZXNldCBob29rLg0KVHlwaWNh
+bGx5LCB0aGUgcmVzZXQgaXMgZG9uZSBpbiB0aGUgcHJvYmUuDQoNCj4gDQo+ID4gKw0KPiA+ICBz
+dGF0aWMgc3RydWN0IHBoeV9kcml2ZXIgYWRpbl9kcml2ZXJbXSA9IHsNCj4gPiAgCXsNCj4gPiAg
+CQlQSFlfSURfTUFUQ0hfTU9ERUwoUEhZX0lEX0FESU4xMjAwKSwNCj4gPiAgCQkubmFtZQkJPSAi
+QURJTjEyMDAiLA0KPiA+ICAJCS5jb25maWdfaW5pdAk9IGFkaW5fY29uZmlnX2luaXQsDQo+ID4g
+KwkJLnByb2JlCQk9IGFkaW5fcHJvYmUsDQo+ID4gIAkJLmNvbmZpZ19hbmVnCT0gYWRpbl9jb25m
+aWdfYW5lZywNCj4gPiAgCQkucmVhZF9zdGF0dXMJPSBhZGluX3JlYWRfc3RhdHVzLA0KPiA+ICAJ
+CS5hY2tfaW50ZXJydXB0CT0gYWRpbl9waHlfYWNrX2ludHIsDQo+ID4gQEAgLTQ2MSw2ICs1MDMs
+NyBAQCBzdGF0aWMgc3RydWN0IHBoeV9kcml2ZXIgYWRpbl9kcml2ZXJbXSA9IHsNCj4gPiAgCQlQ
+SFlfSURfTUFUQ0hfTU9ERUwoUEhZX0lEX0FESU4xMzAwKSwNCj4gPiAgCQkubmFtZQkJPSAiQURJ
+TjEzMDAiLA0KPiA+ICAJCS5jb25maWdfaW5pdAk9IGFkaW5fY29uZmlnX2luaXQsDQo+ID4gKwkJ
+LnByb2JlCQk9IGFkaW5fcHJvYmUsDQo+ID4gIAkJLmNvbmZpZ19hbmVnCT0gYWRpbl9jb25maWdf
+YW5lZywNCj4gPiAgCQkucmVhZF9zdGF0dXMJPSBhZGluX3JlYWRfc3RhdHVzLA0KPiA+ICAJCS5h
+Y2tfaW50ZXJydXB0CT0gYWRpbl9waHlfYWNrX2ludHIsDQo+IA0KPiBUaGFua3MNCj4gCUFuZHJl
+dw0K
