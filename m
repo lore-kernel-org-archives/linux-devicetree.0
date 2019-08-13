@@ -1,41 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
-Date: Tue, 13 Aug 2019 10:08:44 +0200
-Message-ID: <CAK8P3a3Vrd+sttJrQwD-jA9p_egG4x-hc41eGK8H-_aVm-uoYw@mail.gmail.com>
-References: <cover.1565367567.git.agx@sigxcpu.org> <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+From: Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH 3/4] dt-bindings: soc: qcom: Add RSC power domain specifier
+Date: Tue, 13 Aug 2019 13:54:41 +0530
+Message-ID: <20190813082442.25796-4-mkshah@codeaurora.org>
+References: <20190813082442.25796-1-mkshah@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+In-Reply-To: <20190813082442.25796-1-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel <dri-devel@lists.freedesktop.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: agross@kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org, Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 6:24 PM Guido Günther <agx@sigxcpu.org> wrote:
->
-> This adds all the gpr registers and the define needed for selecting
-> the input source in the imx-nwl drm bridge.
->
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> +
-> +#define IOMUXC_GPR0    0x00
-> +#define IOMUXC_GPR1    0x04
-> +#define IOMUXC_GPR2    0x08
-> +#define IOMUXC_GPR3    0x0c
-> +#define IOMUXC_GPR4    0x10
-> +#define IOMUXC_GPR5    0x14
-> +#define IOMUXC_GPR6    0x18
-> +#define IOMUXC_GPR7    0x1c
-(more of the same)
+In addition to transmitting resource state requests to the remote
+processor, the RSC is responsible for powering off/lowering the
+requirements from CPUs subsystem for the associated hardware like
+buses, clocks, and regulators when all CPUs and cluster is powered down.
 
-huh?
+The power domain is configured to a low power state and when all the
+CPUs are powered down, the RSC can lower resource state requirements
+and power down the rails that power the CPUs.
 
-> +/* i.MX8Mq iomux gpr register field defines */
-> +#define IMX8MQ_GPR13_MIPI_MUX_SEL              BIT(2)
+Add PM domain specifier property for RSC controller.
 
-I think this define should probably be local to the pinctrl driver, to
-ensure that no other drivers fiddle with the registers manually.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-     Arnd
+diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+index 9b86d1eff219..d0ab6e9b6745 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+@@ -83,6 +83,13 @@ Properties:
+ 	Value type: <string>
+ 	Definition: Name for the RSC. The name would be used in trace logs.
+ 
++- #power-domain-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: Number of cells in power domain specifier. Optional for
++		    controllers that may be in 'solver' state where they can
++		    be in autonomous mode executing low power modes.
++
+ Drivers that want to use the RSC to communicate with RPMH must specify their
+ bindings as child nodes of the RSC controllers they wish to communicate with.
+ 
+@@ -112,6 +119,7 @@ TCS-OFFSET: 0xD00
+ 				  <SLEEP_TCS   3>,
+ 				  <WAKE_TCS    3>,
+ 				  <CONTROL_TCS 1>;
++		#power-domain-cells = <0>;
+ 	};
+ 
+ Example 2:
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
