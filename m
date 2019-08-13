@@ -1,263 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
- deserializer
-Date: Tue, 13 Aug 2019 09:44:39 -0600
-Message-ID: <20190813154439.GA29515@bogus>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-4-luca@lucaceresoli.net>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Date: Tue, 13 Aug 2019 09:51:43 -0600
+Message-ID: <20190813155143.GA19830@bogus>
+References: <20190724022310.28010-1-gch981213@gmail.com>
+ <20190724022310.28010-5-gch981213@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190723203723.11730-4-luca@lucaceresoli.net>
+In-Reply-To: <20190724022310.28010-5-gch981213@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
+To: Chuanhong Guo <gch981213@gmail.com>
+Cc: "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, John Crispin <john@phrozen.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 10:37:20PM +0200, Luca Ceresoli wrote:
-> Describe the Texas Instruments DS90UB954-Q1, a 2-input video deserializer
-> with I2C Address Translator and remote GPIOs.
+On Wed, Jul 24, 2019 at 10:23:08AM +0800, Chuanhong Guo wrote:
+> This commit adds device tree binding documentation for MT7621
+> PLL controller.
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> 
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
 > ---
 > 
-> Changes RFCv1 -> RFCv2:
+> Change since v1:
+> drop useless syscon in compatible string
 > 
->  - add explicit aliases for the FPD-link RX ports (optional)
->  - add proper remote GPIO description
-> ---
->  .../bindings/media/i2c/ti,ds90ub954-q1.txt    | 194 ++++++++++++++++++
->  1 file changed, 194 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
+>  .../bindings/clock/mediatek,mt7621-pll.txt     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt b/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
+> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
 > new file mode 100644
-> index 000000000000..73ce21ecc3b6
+> index 000000000000..7dcfbd5283e3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
-> @@ -0,0 +1,194 @@
-> +Texas Instruments DS90UB954-Q1 dual video deserializer
-> +======================================================
+> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt7621-pll.txt
+> @@ -0,0 +1,18 @@
+> +Binding for Mediatek MT7621 PLL controller
 > +
-> +The TI DS90UB954-Q1 is a MIPI CSI-2 video deserializer that forwards video
-> +streams from up to two FPD-Link 3 connections to a MIPI CSI-2 output. It
-> +also allows access to remote I2C and GPIO.
+> +The PLL controller provides the 2 main clocks of the SoC: CPU and BUS.
 > +
-> +Required properties:
-> +
-> + - compatible: must be "ti,ds90ub954-q1"
-> +
-> + - reg: main I2C slave address; optionally aliases for RX port registers
-> +   and remote serializers. The main address is mandatory and must be the
-> +   first, others are optional and fall back to defaults if not
-> +   specified. See "reg-names".
-> +
-> + - reset-gpios: chip reset GPIO, active low (connected to PDB pin of the chip)
-> + - i2c-alias-pool: list of I2C addresses that are known to be available on the
-> +                   "local" (SoC-to-deser) I2C bus; they will be picked at
-> +		   runtime and used as aliases to reach remove I2C chips
-
-s/remove/remote/
-
-Needs a vendor prefix.
-
-> + - gpio-controller
-> + - #gpio-cells: must be 3: FPD-Link 3 RX port number, remote gpio number, flags
-
-We're pretty standardized on 2 cells for GPIO. Perhaps combine the port 
-and gpio number to 1 cell.
-
+> +Required Properties:
+> +- compatible: has to be "mediatek,mt7621-pll"
+> +- #clock-cells: has to be one
 > +
 > +Optional properties:
+> +- clock-output-names: should be "cpu", "bus"
 > +
-> + - reg-names: names of I2C address used to communicate with the chip, must
-> +              match the "reg" values; mandatory if there are 2 or more
-> +              addresses
-> +    - "main": the main I2C address, used to access shared registers
-> +    - "rxport0", "rxport1": I2C alias to access FPD-link RX port specific
-> +      registers; must not be used by other slaves on the same bus
-> +    - "ser0", "ser1": I2C alias to access the remote serializer connected
-> +      on each FPD-link RX port; must not be used by other slaves on the
-> +      same bus
-> + - interrupts: interrupt pin from the chip
-> +
-> +Required subnodes:
-> +
-> + - ports: A ports node with one port child node per device input and output
-> +          port, in accordance with the video interface bindings defined in
-> +          Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> +          port nodes are numbered as follows:
-> +
-> +          Port Description
-> +          ------------------------------------
-> +          0    Input from FPD-Link 3 RX port 0
-> +          1    Input from FPD-Link 3 RX port 1
-> +          2    CSI-2 output
-> +
-> +          Each port must have a "remote-chip" subnode that defines the remote
-> +	  chip (serializer) with at least a "compatible" property
+> +Example:
+> +	pll {
+> +		compatible = "mediatek,mt7621-pll";
 
-We don't allow other nodes within graph nodes. I'm not really clear what 
-you are trying to do here.
+You didn't answer Stephen's question on v1.
+
+Based on this binding, there is no way to control/program the PLL. Is 
+this part of some IP block?
 
 > +
-> + - i2c-atr: contains one child per RX port, each describes the I2C bus on
-> +            the remote side
-> +
-> +	    Required properties:
-> +	    - #address-cells = <1>;
-> +	    - #size-cells = <0>;
-> +
-> +	    Subnodes: one per each FPD-link RX port, each having:
-> +
-> +	    Required properties for "i2c-atr" child bus nodes:
-> +	    - reg: The number of the port where the remove chip is connected
-
-s/remove/remote/
-
-> +	    - #address-cells = <1>;
-> +	    - #size-cells = <0>;
-> +
-> +	    Optional properties for "i2c-atr" child bus nodes:
-> +	    - Other properties specific to the remote hardware
-
-Such as?
-
-> +	    - Child nodes conforming to i2c bus binding
-> +
-> +
-> +Device node example
-> +-------------------
-> +
-> +&i2c0 {
-> +	deser: deser@3d {
-> +		compatible = "ti,ds90ub954-q1";
-> +		reg-names = "main", "rxport0", "rxport1", "ser0", "ser1";
-> +		reg       = <0x3d>,  <0x40>,    <0x41>,   <0x44>, <0x45>;
-> +		clocks = <&clk_25M>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <3 1 IRQ_TYPE_LEVEL_HIGH>;
-> +		reset-gpios = <&gpio_ctl 4 GPIO_ACTIVE_LOW>;
-> +
-> +		i2c-alias-pool = /bits/ 16 <0x4a 0x4b 0x4c 0x4d 0x4e 0x4f>;
-> +
-> +		gpio-controller;
-> +		#gpio-cells = <3>; /* rxport, remote gpio num, flags */
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				ds90ub954_fpd3_in0: endpoint {
-> +					remote-endpoint = <&sensor_0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				ds90ub954_fpd3_in1: endpoint {
-> +					remote-endpoint = <&sensor_1_out>;
-> +				};
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				ds90ub954_mipi_out0: endpoint {
-> +					data-lanes = <1 2 3 4>;
-> +					/* Actually a REFCLK multiplier */
-> +					data-rate = <1600000000>;
-> +					remote-endpoint = <&csirx_0_in>;
-> +				};
-> +			};
-> +		};
-> +
-> +		i2c-atr {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			remote_i2c0: i2c@0 {
-> +				reg = <0>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-
-Presumably, there are child I2C devices here. Please show that in the 
-example.
-
-> +			};
-> +
-> +			remote_i2c1: i2c@1 {
-> +				reg = <1>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +			};
-> +		};
+> +		#clock-cells = <1>;
+> +		clock-output-names = "cpu", "bus";
 > +	};
-> +};
-> +
-> +&ds90ub954_fpd3_in0 {
-> +	remote-chip {
-> +		compatible = "ti,ds90ub953-q1";
-> +		gpio-functions = <DS90_GPIO_FUNC_OUTPUT_REMOTE
-
-Not documented.
-
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED>;
-> +	};
-> +};
-> +
-> +&ds90ub954_fpd3_in1 {
-> +	remote-chip {
-> +		compatible = "ti,ds90ub953-q1";
-> +		gpio-functions = <DS90_GPIO_FUNC_OUTPUT_REMOTE
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED
-> +				  DS90_GPIO_FUNC_UNUSED>;
-> +	};
-> +};
-> +
-> +&remote_i2c0 {
-> +	sensor_0@3c {
-> +		compatible = "sony,imx274";
-> +		reg = <0x3c>;
-> +
-> +		reset-gpios = <&deser 0 0 GPIO_ACTIVE_LOW>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			sensor_0_out: endpoint {
-> +				remote-endpoint = <&ds90ub954_fpd3_in0>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&remote_i2c1 {
-> +	sensor_0@3c {
-> +		compatible = "sony,imx274";
-> +		reg = <0x3c>;
-> +
-> +		reset-gpios = <&deser 1 0 GPIO_ACTIVE_LOW>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			sensor_1_out: endpoint {
-> +				remote-endpoint = <&ds90ub954_fpd3_in1>;
-> +			};
-> +		};
-> +	};
-> +};
 > -- 
-> 2.17.1
+> 2.21.0
 > 
