@@ -1,230 +1,172 @@
-From: Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH v4 2/3] iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9sd1
-Date: Tue, 13 Aug 2019 09:35:32 +0200
-Message-ID: <20190813073533.8007-3-martin.kepplinger@puri.sm>
-References: <20190813073533.8007-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813073533.8007-1-martin.kepplinger@puri.sm>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@puri.sm>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v12 09/18] kunit: test: add support for test abort
+Date: Tue, 13 Aug 2019 00:52:03 -0700
+Message-ID: <CAFd5g4415URtJBKPhsEw98GxiExJr-fstW6SQ6nmV9ts9ggK-g@mail.gmail.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-10-brendanhiggins@google.com>
+ <20190813042159.46814206C2@mail.kernel.org>
+ <CAFd5g44XyQi-oprPcdgx-EPboQYaHY6Ocz8Te6NX2SxV=mVhQA@mail.gmail.com>
+ <20190813055615.CA787206C2@mail.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190813055615.CA787206C2@mail.kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
+ Timothy" <Tim.Bird>
 List-Id: devicetree@vger.kernel.org
 
-The LSM9DS1's accelerometer / gyroscope unit and it's magnetometer (separately
-supported in iio/magnetometer/st_magn*) are located on a separate i2c addresses
-on the bus.
-
-For the datasheet, see https://www.st.com/resource/en/datasheet/lsm9ds1.pdf
-
-Treat it just like the LSM6* devices and, despite it's name, hook it up
-to the st_lsm6dsx driver, using it's basic functionality.
-
-accelerometer and gyroscope are not independently clocked. It runs at the gyro
-frequencies if both are enabled, see chapter 7.12 of the datasheet.
-We could have handled this as a single IIO device but we have split
-it up to be more consistent with the other more flexible devices.
-
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
- drivers/iio/imu/st_lsm6dsx/Kconfig           |  2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 87 ++++++++++++++++++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c  |  5 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c  |  5 ++
- 5 files changed, 100 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-index 939058b27746..77aa0e77212d 100644
---- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-+++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-@@ -12,7 +12,7 @@ config IIO_ST_LSM6DSX
- 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
- 	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
- 	  ism330dlc, lsm6dso, lsm6dsox, asm330lhh, lsm6dsr, lsm6ds3tr-c,
--	  ism330dhcx
-+	  ism330dhcx and the accelerometer/gyroscope of lsm9ds1.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called st_lsm6dsx.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index c8f333902eb7..d03b5a2d8549 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -24,6 +24,7 @@
- #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
- #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
- #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
-+#define ST_LSM9DS1_DEV_NAME	"lsm9ds1"
- 
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
-@@ -37,6 +38,7 @@ enum st_lsm6dsx_hw_id {
- 	ST_LSM6DSR_ID,
- 	ST_LSM6DS3TRC_ID,
- 	ST_ISM330DHCX_ID,
-+	ST_LSM9DS1_ID,
- 	ST_LSM6DSX_MAX_ID,
- };
- 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 56e1c5262a2c..f038bb06f635 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -10,6 +10,8 @@
-  * +-125/+-245/+-500/+-1000/+-2000 dps
-  * LSM6DSx series has an integrated First-In-First-Out (FIFO) buffer
-  * allowing dynamic batching of sensor data.
-+ * LSM9DSx series is similar but includes an additional magnetometer, handled
-+ * by a different driver.
-  *
-  * Supported sensors:
-  * - LSM6DS3:
-@@ -30,6 +32,13 @@
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-  *   - FIFO size: 3KB
-  *
-+ * - LSM9DS1:
-+ *   - Accelerometer supported ODR [Hz]: 10, 50, 119, 238, 476, 952
-+ *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-+ *   - Gyroscope supported ODR [Hz]: 15, 60, 119, 238, 476, 952
-+ *   - Gyroscope supported full-scale [dps]: +-245/+-500/+-2000
-+ *   - FIFO size: 32
-+ *
-  * Copyright 2016 STMicroelectronics Inc.
-  *
-  * Lorenzo Bianconi <lorenzo.bianconi@st.com>
-@@ -70,7 +79,85 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(3),
- };
- 
-+static const struct iio_chan_spec st_lsm9dsx_gyro_channels[] = {
-+	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x18, IIO_MOD_X, 0),
-+	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1a, IIO_MOD_Y, 1),
-+	ST_LSM6DSX_CHANNEL(IIO_ANGL_VEL, 0x1c, IIO_MOD_Z, 2),
-+	IIO_CHAN_SOFT_TIMESTAMP(3),
-+};
-+
- static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
-+	{
-+		.wai = 0x68,
-+		.int1_addr = 0x0c,
-+		.int2_addr = 0x0d,
-+		.reset_addr = 0x22,
-+		.max_fifo_size = 32,
-+		.id = {
-+			{
-+				.hw_id = ST_LSM9DS1_ID,
-+				.name = ST_LSM9DS1_DEV_NAME,
-+			},
-+		},
-+		.channels = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.chan = st_lsm6dsx_acc_channels,
-+				.len = ARRAY_SIZE(st_lsm6dsx_acc_channels),
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.chan = st_lsm9dsx_gyro_channels,
-+				.len = ARRAY_SIZE(st_lsm9dsx_gyro_channels),
-+			},
-+		},
-+		.odr_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x20,
-+					.mask = GENMASK(7, 5),
-+				},
-+				.odr_avl[0] = {  10, 0x01 },
-+				.odr_avl[1] = {  50, 0x02 },
-+				.odr_avl[2] = { 119, 0x03 },
-+				.odr_avl[3] = { 238, 0x04 },
-+				.odr_avl[4] = { 476, 0x05 },
-+				.odr_avl[5] = { 952, 0x06 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(7, 5),
-+				},
-+				.odr_avl[0] = {  15, 0x01 },
-+				.odr_avl[1] = {  60, 0x02 },
-+				.odr_avl[2] = { 119, 0x03 },
-+				.odr_avl[3] = { 238, 0x04 },
-+				.odr_avl[4] = { 476, 0x05 },
-+				.odr_avl[5] = { 952, 0x06 },
-+			},
-+		},
-+		.fs_table = {
-+			[ST_LSM6DSX_ID_ACC] = {
-+				.reg = {
-+					.addr = 0x20,
-+					.mask = GENMASK(4, 3),
-+				},
-+				.fs_avl[0] = {  599, 0x0 },
-+				.fs_avl[1] = { 1197, 0x2 },
-+				.fs_avl[2] = { 2394, 0x3 },
-+				.fs_avl[3] = { 4788, 0x1 },
-+			},
-+			[ST_LSM6DSX_ID_GYRO] = {
-+				.reg = {
-+					.addr = 0x10,
-+					.mask = GENMASK(4, 3),
-+				},
-+				.fs_avl[0] = { IIO_DEGREE_TO_RAD(245), 0x0 },
-+				.fs_avl[1] = { IIO_DEGREE_TO_RAD(500), 0x1 },
-+				.fs_avl[2] = { IIO_DEGREE_TO_RAD(0), 0x2 },
-+				.fs_avl[3] = { IIO_DEGREE_TO_RAD(2000), 0x3 },
-+			},
-+		},
-+	},
- 	{
- 		.wai = 0x69,
- 		.int1_addr = 0x0d,
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-index 15c6aa5b6caa..2f1b30ff083b 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-@@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
- 		.compatible = "st,ism330dhcx",
- 		.data = (void *)ST_ISM330DHCX_ID,
- 	},
-+	{
-+		.compatible = "st,lsm9ds1",
-+		.data = (void *)ST_LSM9DS1_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
-@@ -99,6 +103,7 @@ static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
- 	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
- 	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
- 	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
-+	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, st_lsm6dsx_i2c_id_table);
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-index a8430ee11310..421ce704f346 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-@@ -83,6 +83,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
- 		.compatible = "st,ism330dhcx",
- 		.data = (void *)ST_ISM330DHCX_ID,
- 	},
-+	{
-+		.compatible = "st,lsm9ds1",
-+		.data = (void *)ST_LSM9DS1_ID,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
-@@ -99,6 +103,7 @@ static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
- 	{ ST_LSM6DSR_DEV_NAME, ST_LSM6DSR_ID },
- 	{ ST_LSM6DS3TRC_DEV_NAME, ST_LSM6DS3TRC_ID },
- 	{ ST_ISM330DHCX_DEV_NAME, ST_ISM330DHCX_ID },
-+	{ ST_LSM9DS1_DEV_NAME, ST_LSM9DS1_ID },
- 	{},
- };
- MODULE_DEVICE_TABLE(spi, st_lsm6dsx_spi_id_table);
--- 
-2.20.1
+T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgMTA6NTYgUE0gU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJu
+ZWwub3JnPiB3cm90ZToKPgo+IFF1b3RpbmcgQnJlbmRhbiBIaWdnaW5zICgyMDE5LTA4LTEyIDIx
+OjU3OjU1KQo+ID4gT24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgOToyMiBQTSBTdGVwaGVuIEJveWQg
+PHNib3lkQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBRdW90aW5nIEJyZW5kYW4gSGln
+Z2lucyAoMjAxOS0wOC0xMiAxMToyNDoxMikKPiA+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9r
+dW5pdC90ZXN0LmggYi9pbmNsdWRlL2t1bml0L3Rlc3QuaAo+ID4gPiA+IGluZGV4IDI2MjViY2Zl
+YjE5YWMuLjkzMzgxZjg0MWUwOWYgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvaW5jbHVkZS9rdW5pdC90
+ZXN0LmgKPiA+ID4gPiArKysgYi9pbmNsdWRlL2t1bml0L3Rlc3QuaAo+ID4gPiA+IEBAIC0xNzYs
+NiArMTc4LDExIEBAIHN0cnVjdCBrdW5pdCB7Cj4gPiA+ID4gICAgICAgICAgKi8KPiA+ID4gPiAg
+ICAgICAgIGJvb2wgc3VjY2VzczsgLyogUmVhZCBvbmx5IGFmdGVyIHRlc3RfY2FzZSBmaW5pc2hl
+cyEgKi8KPiA+ID4gPiAgICAgICAgIHNwaW5sb2NrX3QgbG9jazsgLyogR2F1cmRzIGFsbCBtdXRh
+YmxlIHRlc3Qgc3RhdGUuICovCj4gPiA+ID4gKyAgICAgICAvKgo+ID4gPiA+ICsgICAgICAgICog
+ZGVhdGhfdGVzdCBtYXkgYmUgYm90aCBzZXQgYW5kIHVuc2V0IGZyb20gbXVsdGlwbGUgdGhyZWFk
+cyBpbiBhIHRlc3QKPiA+ID4gPiArICAgICAgICAqIGNhc2UuCj4gPiA+ID4gKyAgICAgICAgKi8K
+PiA+ID4gPiArICAgICAgIGJvb2wgZGVhdGhfdGVzdDsgLyogUHJvdGVjdGVkIGJ5IGxvY2suICov
+Cj4gPiA+ID4gICAgICAgICAvKgo+ID4gPiA+ICAgICAgICAgICogQmVjYXVzZSByZXNvdXJjZXMg
+aXMgYSBsaXN0IHRoYXQgbWF5IGJlIHVwZGF0ZWQgbXVsdGlwbGUgdGltZXMgKHdpdGgKPiA+ID4g
+PiAgICAgICAgICAqIG5ldyByZXNvdXJjZXMpIGZyb20gYW55IHRocmVhZCBhc3NvY2lhdGVkIHdp
+dGggYSB0ZXN0IGNhc2UsIHdlIG11c3QKPiA+ID4gPiBAQCAtMTg0LDYgKzE5MSwxMyBAQCBzdHJ1
+Y3Qga3VuaXQgewo+ID4gPiA+ICAgICAgICAgc3RydWN0IGxpc3RfaGVhZCByZXNvdXJjZXM7IC8q
+IFByb3RlY3RlZCBieSBsb2NrLiAqLwo+ID4gPiA+ICB9Owo+ID4gPiA+Cj4gPiA+ID4gK3N0YXRp
+YyBpbmxpbmUgdm9pZCBrdW5pdF9zZXRfZGVhdGhfdGVzdChzdHJ1Y3Qga3VuaXQgKnRlc3QsIGJv
+b2wgZGVhdGhfdGVzdCkKPiA+ID4gPiArewo+ID4gPiA+ICsgICAgICAgc3Bpbl9sb2NrKCZ0ZXN0
+LT5sb2NrKTsKPiA+ID4gPiArICAgICAgIHRlc3QtPmRlYXRoX3Rlc3QgPSBkZWF0aF90ZXN0Owo+
+ID4gPiA+ICsgICAgICAgc3Bpbl91bmxvY2soJnRlc3QtPmxvY2spOwo+ID4gPiA+ICt9Cj4gPiA+
+Cj4gPiA+IFRoZXNlIGdldHRlcnMgYW5kIHNldHRlcnMgYXJlIHVzaW5nIHNwaW5sb2NrcyBhZ2Fp
+bi4gSXQgZG9lc24ndCBtYWtlIGFueQo+ID4gPiBzZW5zZS4gSXQgcHJvYmFibHkgbmVlZHMgYSBy
+ZXdvcmsgbGlrZSB3YXMgZG9uZSBmb3IgdGhlIG90aGVyIGJvb2wKPiA+ID4gbWVtYmVyLCBzdWNj
+ZXNzLgo+ID4KPiA+IE5vLCB0aGlzIGlzIGludGVudGlvbmFsLiBkZWF0aF90ZXN0IGNhbiB0cmFu
+c2l0aW9uIGZyb20gZmFsc2UgdG8gdHJ1ZQo+ID4gYW5kIHRoZW4gYmFjayB0byBmYWxzZSB3aXRo
+aW4gdGhlIHNhbWUgdGVzdC4gTWF5YmUgdGhhdCBkZXNlcnZlcyBhCj4gPiBjb21tZW50Pwo+Cj4g
+WWVzLiBIb3cgZG9lcyBpdCB0cmFuc2l0aW9uIGZyb20gdHJ1ZSB0byBmYWxzZSBhZ2Fpbj8KClRo
+ZSBwdXJwb3NlIGlzIHRvIHRlbGwgdHJ5X2NhdGNoIHRoYXQgaXQgd2FzIGV4cGVjdGVkIGZvciB0
+aGUgdGVzdCB0bwpiYWlsIG91dC4gR2l2ZW4gdGhlIGRlZmF1bHQgaW1wbGVtZW50YXRpb24gdGhl
+cmUgaXMgbm8gd2F5IGZvciB0aGlzIHRvCmhhcHBlbiBhc2lkZSBmcm9tIGFib3J0KCkgYmVpbmcg
+Y2FsbGVkLCBidXQgaW4gc29tZSBpbXBsZW1lbnRhdGlvbnMgaXQKaXMgcG9zc2libGUgdG8gaW1w
+bGVtZW50IGEgZmF1bHQgY2F0Y2hlciB3aGljaCBhbGxvd3MgYSB0ZXN0IHN1aXRlIHRvCnJlY292
+ZXIgZnJvbSBhbiB1bmV4cGVjdGVkIGZhaWx1cmUuCgpNYXliZSBpdCB3b3VsZCBiZSBiZXN0IHRv
+IGRyb3AgdGhpcyB1bnRpbCBJIGFkZCBvbmUgb2YgdGhvc2UKYWx0ZXJuYXRpdmUgaW1wbGVtZW50
+YXRpb25zLgoKPiBFaXRoZXIgd2F5LCBoYXZpbmcgYSBzcGlubG9jayBhcm91bmQgYSByZWFkL3dy
+aXRlIEFQSSBkb2Vzbid0IG1ha2Ugc2Vuc2UKPiBiZWNhdXNlIGl0IGp1c3QgbWFrZXMgc3VyZSB0
+aGF0IHR3byB3cml0ZXMgZG9uJ3Qgb3ZlcmxhcCwgYnV0IG90aGVyd2lzZQo+IGRvZXMgbm90aGlu
+ZyB0byBrZWVwIHRoaW5ncyBzeW5jaHJvbml6ZWQuIEZvciBleGFtcGxlIGEgc2V0IHRvIHRydWUK
+PiBhZnRlciBhIHNldCB0byBmYWxzZSB3aGVuIHRoZSB0d28gY2FsbHMgdG8gc2V0IHRydWUgb3Ig
+ZmFsc2UgYXJlbid0Cj4gc3luY2hyb25pemVkIG1lYW5zIHRoZXkgY2FuIGhhcHBlbiBpbiBhbnkg
+b3JkZXIuIFNvIEkgZG9uJ3Qgc2VlIGhvdyBpdAo+IG5lZWRzIGEgc3BpbmxvY2suIFRoZSBsb2Nr
+IG5lZWRzIHRvIGJlIG9uZSBsZXZlbCBoaWdoZXIuCgpUaGVyZSBzaG91bGRuJ3QgYmUgYW55IGNh
+c2VzIHdoZXJlIG9uZSB0aHJlYWQgaXMgdHJ5aW5nIHRvIHNldCBpdAp3aGlsZSBhbm90aGVyIGlz
+IHRyeWluZyB0byB1bnNldCBpdC4gVGhlIHRoaW5nIEkgYW0gd29ycmllZCBhYm91dCBoZXJlCmlz
+IG1ha2luZyBzdXJlIGFsbCB0aGUgY29yZXMgc2VlIHRoZSB3cml0ZSwgYW5kIG1ha2luZyBzdXJl
+IG5vIHJlYWRzCm9yIHdyaXRlcyBnZXQgcmVvcmRlcmVkIGJlZm9yZSBpdC4gU28gSSBndWVzcyBJ
+IGp1c3Qgd2FudCBhIGZlbmNlLiBTbwpJIHRha2UgaXQgSSBzaG91bGQgcHJvYmFibHkgaGF2ZSBp
+cyBhIFdSSVRFX09OQ0UgaGVyZSBhbmQgUkVBRF9PTkNFIGluCnRoZSBnZXR0ZXI/Cgo+ID4KPiA+
+ID4gPiArCj4gPiA+ID4gIHZvaWQga3VuaXRfaW5pdF90ZXN0KHN0cnVjdCBrdW5pdCAqdGVzdCwg
+Y29uc3QgY2hhciAqbmFtZSk7Cj4gPiA+ID4KPiA+ID4gPiAgaW50IGt1bml0X3J1bl90ZXN0cyhz
+dHJ1Y3Qga3VuaXRfc3VpdGUgKnN1aXRlKTsKPiA+ID4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9r
+dW5pdC90cnktY2F0Y2guaCBiL2luY2x1ZGUva3VuaXQvdHJ5LWNhdGNoLmgKPiA+ID4gPiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAo+ID4gPiA+IGluZGV4IDAwMDAwMDAwMDAwMDAuLjhhNDE0YTlhZjBi
+NjQKPiA+ID4gPiAtLS0gL2Rldi9udWxsCj4gPiA+ID4gKysrIGIvaW5jbHVkZS9rdW5pdC90cnkt
+Y2F0Y2guaAo+IFsuLi5dCj4gPiA+ID4gKwo+ID4gPiA+ICsvKgo+ID4gPiA+ICsgKiBzdHJ1Y3Qg
+a3VuaXRfdHJ5X2NhdGNoIC0gcHJvdmlkZXMgYSBnZW5lcmljIHdheSB0byBydW4gY29kZSB3aGlj
+aCBtaWdodCBmYWlsLgo+ID4gPiA+ICsgKiBAY29udGV4dDogdXNlZCB0byBwYXNzIHVzZXIgZGF0
+YSB0byB0aGUgdHJ5IGFuZCBjYXRjaCBmdW5jdGlvbnMuCj4gPiA+ID4gKyAqCj4gPiA+ID4gKyAq
+IGt1bml0X3RyeV9jYXRjaCBwcm92aWRlcyBhIGdlbmVyaWMsIGFyY2hpdGVjdHVyZSBpbmRlcGVu
+ZGVudCB3YXkgdG8gZXhlY3V0ZQo+ID4gPiA+ICsgKiBhbiBhcmJpdHJhcnkgZnVuY3Rpb24gb2Yg
+dHlwZSBrdW5pdF90cnlfY2F0Y2hfZnVuY190IHdoaWNoIG1heSBiYWlsIG91dCBieQo+ID4gPiA+
+ICsgKiBjYWxsaW5nIGt1bml0X3RyeV9jYXRjaF90aHJvdygpLiBJZiBrdW5pdF90cnlfY2F0Y2hf
+dGhyb3coKSBpcyBjYWxsZWQsIEB0cnkKPiA+ID4gPiArICogaXMgc3RvcHBlZCBhdCB0aGUgc2l0
+ZSBvZiBpbnZvY2F0aW9uIGFuZCBAY2F0Y2ggaXMgY2F0Y2ggaXMgY2FsbGVkLgo+ID4gPiA+ICsg
+Kgo+ID4gPiA+ICsgKiBzdHJ1Y3Qga3VuaXRfdHJ5X2NhdGNoIHByb3ZpZGVzIGEgZ2VuZXJpYyBp
+bnRlcmZhY2UgZm9yIHRoZSBmdW5jdGlvbmFsaXR5Cj4gPiA+ID4gKyAqIG5lZWRlZCB0byBpbXBs
+ZW1lbnQga3VuaXQtPmFib3J0KCkgd2hpY2ggaW4gdHVybiBpcyBuZWVkZWQgZm9yIGltcGxlbWVu
+dGluZwo+ID4gPiA+ICsgKiBhc3NlcnRpb25zLiBBc3NlcnRpb25zIGFsbG93IHN0YXRpbmcgYSBw
+cmVjb25kaXRpb24gZm9yIGEgdGVzdCBzaW1wbGlmeWluZwo+ID4gPiA+ICsgKiBob3cgdGVzdCBj
+YXNlcyBhcmUgd3JpdHRlbiBhbmQgcHJlc2VudGVkLgo+ID4gPiA+ICsgKgo+ID4gPiA+ICsgKiBB
+c3NlcnRpb25zIGFyZSBsaWtlIGV4cGVjdGF0aW9ucywgZXhjZXB0IHRoZXkgYWJvcnQgKGNhbGwK
+PiA+ID4gPiArICoga3VuaXRfdHJ5X2NhdGNoX3Rocm93KCkpIHdoZW4gdGhlIHNwZWNpZmllZCBj
+b25kaXRpb24gaXMgbm90IG1ldC4gVGhpcyBpcwo+ID4gPiA+ICsgKiB1c2VmdWwgd2hlbiB5b3Ug
+bG9vayBhdCBhIHRlc3QgY2FzZSBhcyBhIGxvZ2ljYWwgc3RhdGVtZW50IGFib3V0IHNvbWUgcGll
+Y2UKPiA+ID4gPiArICogb2YgY29kZSwgd2hlcmUgYXNzZXJ0aW9ucyBhcmUgdGhlIHByZW1pc2Vz
+IGZvciB0aGUgdGVzdCBjYXNlLCBhbmQgdGhlCj4gPiA+ID4gKyAqIGNvbmNsdXNpb24gaXMgYSBz
+ZXQgb2YgcHJlZGljYXRlcywgcmF0aGVyIGV4cGVjdGF0aW9ucywgdGhhdCBtdXN0IGFsbCBiZQo+
+ID4gPiA+ICsgKiB0cnVlLiBJZiB5b3VyIHByZW1pc2VzIGFyZSB2aW9sYXRlZCwgaXQgZG9lcyBu
+b3QgbWFrZXMgc2Vuc2UgdG8gY29udGludWUuCj4gPiA+ID4gKyAqLwo+ID4gPiA+ICtzdHJ1Y3Qg
+a3VuaXRfdHJ5X2NhdGNoIHsKPiA+ID4gPiArICAgICAgIC8qIHByaXZhdGU6IGludGVybmFsIHVz
+ZSBvbmx5LiAqLwo+ID4gPiA+ICsgICAgICAgc3RydWN0IGt1bml0ICp0ZXN0Owo+ID4gPiA+ICsg
+ICAgICAgc3RydWN0IGNvbXBsZXRpb24gKnRyeV9jb21wbGV0aW9uOwo+ID4gPiA+ICsgICAgICAg
+aW50IHRyeV9yZXN1bHQ7Cj4gPiA+ID4gKyAgICAgICBrdW5pdF90cnlfY2F0Y2hfZnVuY190IHRy
+eTsKPiA+ID4gPiArICAgICAgIGt1bml0X3RyeV9jYXRjaF9mdW5jX3QgY2F0Y2g7Cj4gPiA+Cj4g
+PiA+IENhbiB0aGVzZSBvdGhlciB2YXJpYWJsZXMgYmUgZG9jdW1lbnRlZCBpbiB0aGUga2VybmVs
+IGRvYz8gQW5kIHNob3VsZAo+ID4gPiBjb250ZXh0IGJlIG1hcmtlZCBhcyAncHVibGljJz8KPiA+
+Cj4gPiBTdXJlLCBJIGNhbiBkb2N1bWVudCB0aGVtLgo+ID4KPiA+IEJ1dCBJIGRvbid0IHRoaW5r
+IGNvbnRleHQgc2hvdWxkIGJlIHB1YmxpYzsgaXQgc2hvdWxkIG9ubHkgYmUgYWNjZXNzZWQKPiA+
+IGJ5IGt1bml0X3RyeV9jYXRjaF8qIGZ1bmN0aW9ucy4gY29udGV4dCBzaG91bGQgb25seSBiZSBw
+b3B1bGF0ZWQgYnkKPiA+ICpfaW5pdCwgYW5kIHdpbGwgYmUgcGFzc2VkIGludG8gKnRyeSBhbmQg
+KmNhdGNoIHdoZW4gdGhleSBhcmUgY2FsbGVkCj4gPiBpbnRlcm5hbGx5Lgo+Cj4gT2suIFRoZW4g
+SSBndWVzcyBqdXN0IGRvY3VtZW50IHRoZW0gYWxsIGJ1dCBrZWVwIHRoZW0gYWxsIG1hcmtlZCBh
+cwo+IHByaXZhdGUuCgpXaWxsIGRvLgoKPiA+Cj4gPiA+ID4gKyAqLwo+ID4gPiA+ICt2b2lkIGt1
+bml0X2dlbmVyaWNfdHJ5X2NhdGNoX2luaXQoc3RydWN0IGt1bml0X3RyeV9jYXRjaCAqdHJ5X2Nh
+dGNoKTsKPiA+ID4gPiArCj4gPiA+ID4gKyNlbmRpZiAvKiBfS1VOSVRfVFJZX0NBVENIX0ggKi8K
+PiA+ID4gPiBkaWZmIC0tZ2l0IGEva3VuaXQvdGVzdC5jIGIva3VuaXQvdGVzdC5jCj4gPiA+ID4g
+aW5kZXggZTUwODBhMmM2YjI5Yy4uOTk1Y2I1M2ZlNGVlOSAxMDA2NDQKPiA+ID4gPiAtLS0gYS9r
+dW5pdC90ZXN0LmMKPiA+ID4gPiArKysgYi9rdW5pdC90ZXN0LmMKPiA+ID4gPiBAQCAtMTU4LDYg
+KzE3MSwyMSBAQCBzdGF0aWMgdm9pZCBrdW5pdF9mYWlsKHN0cnVjdCBrdW5pdCAqdGVzdCwgc3Ry
+dWN0IGt1bml0X2Fzc2VydCAqYXNzZXJ0KQo+ID4gPiA+ICAgICAgICAga3VuaXRfcHJpbnRfc3Ry
+aW5nX3N0cmVhbSh0ZXN0LCBzdHJlYW0pOwo+ID4gPiA+ICB9Cj4gPiA+ID4KPiA+ID4gPiArdm9p
+ZCBfX25vcmV0dXJuIGt1bml0X2Fib3J0KHN0cnVjdCBrdW5pdCAqdGVzdCkKPiA+ID4gPiArewo+
+ID4gPiA+ICsgICAgICAga3VuaXRfc2V0X2RlYXRoX3Rlc3QodGVzdCwgdHJ1ZSk7Cj4gPiA+ID4g
+Kwo+ID4gPiA+ICsgICAgICAga3VuaXRfdHJ5X2NhdGNoX3Rocm93KCZ0ZXN0LT50cnlfY2F0Y2gp
+Owo+ID4gPiA+ICsKPiA+ID4gPiArICAgICAgIC8qCj4gPiA+ID4gKyAgICAgICAgKiBUaHJvdyBj
+b3VsZCBub3QgYWJvcnQgZnJvbSB0ZXN0Lgo+ID4gPiA+ICsgICAgICAgICoKPiA+ID4gPiArICAg
+ICAgICAqIFhYWDogd2Ugc2hvdWxkIG5ldmVyIHJlYWNoIHRoaXMgbGluZSEgQXMga3VuaXRfdHJ5
+X2NhdGNoX3Rocm93IGlzCj4gPiA+ID4gKyAgICAgICAgKiBtYXJrZWQgX19ub3JldHVybi4KPiA+
+ID4gPiArICAgICAgICAqLwo+ID4gPiA+ICsgICAgICAgV0FSTl9PTkNFKHRydWUsICJUaHJvdyBj
+b3VsZCBub3QgYWJvcnQgZnJvbSB0ZXN0IVxuIik7Cj4gPiA+Cj4gPiA+IFNob3VsZCB0aGlzIGp1
+c3QgYmUgYSBCVUdfT04/IEl0J3Mgc3VwcG9zZWRseSBpbXBvc3NpYmxlLgo+ID4KPiA+IEl0IHNo
+b3VsZCBiZSBpbXBvc3NpYmxlOyBpdCB3aWxsIG9ubHkgcmVhY2ggdGhpcyBsaW5lIGlmIHRoZXJl
+IGlzIGEKPiA+IGJ1ZyBpbiBrdW5pdF90cnlfY2F0Y2hfdGhyb3cuIFRoZSByZWFzb24gSSBkaWRu
+J3QgdXNlIEJVR19PTiB3YXMKPiA+IGJlY2F1c2UgSSBwcmV2aW91c2x5IGdvdCB5ZWxsZWQgYXQg
+Zm9yIGhhdmluZyBCVUdfT04gaW4gdGhpcyBjb2RlCj4gPiBwYXRoLgo+ID4KPiA+IE5ldmVydGhl
+bGVzcywgSSB0aGluayBCVUdfT04gaXMgbW9yZSBjb3JyZWN0LCBzbyBpZiB5b3Ugd2lsbCBzdGFu
+ZCBieQo+ID4gaXQsIHRoZW4gdGhhdCdzIHdoYXQgSSB3aWxsIGRvLgo+Cj4gWWVhaCBCVUdfT04g
+aXMgYXBwcm9wcmlhdGUgaGVyZSBhbmQgc2VsZiBkb2N1bWVudGluZyBzbyBwbGVhc2UgdXNlIGl0
+LgoKQ29vbCwgd2lsbCBkby4KCj4gPgo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4g
+PiA+ID4gKyAgICAgICB9Cj4gPiA+ID4gKwo+ID4gPiA+ICsgICAgICAgaWYgKGt1bml0X2dldF9k
+ZWF0aF90ZXN0KHRlc3QpKSB7Cj4gPiA+ID4gKyAgICAgICAgICAgICAgIC8qCj4gPiA+ID4gKyAg
+ICAgICAgICAgICAgICAqIEVYUEVDVEVEIERFQVRIOiBrdW5pdF9ydW5fY2FzZV9pbnRlcm5hbCBl
+bmNvdW50ZXJlZAo+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiBhbnRpY2lwYXRlZCBmYXRhbCBl
+cnJvci4gRXZlcnl0aGluZyBzaG91bGQgYmUgaW4gYSBzYWZlCj4gPiA+ID4gKyAgICAgICAgICAg
+ICAgICAqIHN0YXRlLgo+ID4gPiA+ICsgICAgICAgICAgICAgICAgKi8KPiA+ID4gPiArICAgICAg
+ICAgICAgICAga3VuaXRfcnVuX2Nhc2VfY2xlYW51cCh0ZXN0LCBzdWl0ZSk7Cj4gPiA+ID4gKyAg
+ICAgICB9IGVsc2Ugewo+ID4gPiA+ICsgICAgICAgICAgICAgICAvKgo+ID4gPiA+ICsgICAgICAg
+ICAgICAgICAgKiBVTkVYUEVDVEVEIERFQVRIOiBrdW5pdF9ydW5fY2FzZV9pbnRlcm5hbCBlbmNv
+dW50ZXJlZCBhbgo+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiB1bmFudGljaXBhdGVkIGZhdGFs
+IGVycm9yLiBXZSBoYXZlIG5vIGlkZWEgd2hhdCB0aGUgc3RhdGUgb2YKPiA+ID4gPiArICAgICAg
+ICAgICAgICAgICogdGhlIHRlc3QgY2FzZSBpcyBpbi4KPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICovCj4gPiA+ID4gKyAgICAgICAgICAgICAgIGt1bml0X2hhbmRsZV90ZXN0X2NyYXNoKHRlc3Qs
+IHN1aXRlLCB0ZXN0X2Nhc2UpOwo+ID4gPiA+ICsgICAgICAgICAgICAgICBrdW5pdF9zZXRfZmFp
+bHVyZSh0ZXN0KTsKPiA+ID4KPiA+ID4gTGlrZSB3YXMgZG9uZSBoZXJlLgo+ID4KPiA+IFNvcnJ5
+LCBsaWtlIHdoYXQ/Cj4KPiBKdXN0IHNheWluZyB0aGlzIGhhcyBicmFjZXMgZm9yIHRoZSBpZi1l
+bHNlLgoKQWgsIGdvdGNoYS4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVs
