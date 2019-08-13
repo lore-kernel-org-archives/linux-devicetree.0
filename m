@@ -1,7 +1,7 @@
 From: Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: regulator: act8865 regulator modes and suspend states
-Date: Wed, 14 Aug 2019 00:02:56 +0530
-Message-ID: <1565721176-8955-3-git-send-email-raagjadav@gmail.com>
+Subject: [PATCH v2 1/2] regulator: act8865: operating mode and suspend state support
+Date: Wed, 14 Aug 2019 00:02:55 +0530
+Message-ID: <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
 References: <1565721176-8955-1-git-send-email-raagjadav@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1565721176-8955-1-git-send-email-raagjadav@gmail.com>
@@ -10,110 +10,275 @@ To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Raag Jadav <raagjadav@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for act8865 regulator modes and suspend states.
-Add active-semi,8865-regulator.h file for device tree binding constants
-for act8865 regulators.
+Implement ->set_mode(), ->get_mode() and ->set_suspend_xx() hooks
+for act8865 with unlocked expert registers.
+
+Based on work done by Borris Brezillon on [1].
+[1] https://www.spinics.net/lists/kernel/msg2942960.html
 
 Signed-off-by: Raag Jadav <raagjadav@gmail.com>
 ---
- .../bindings/regulator/act8865-regulator.txt       | 27 +++++++++++++++++++--
- .../regulator/active-semi,8865-regulator.h         | 28 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/regulator/active-semi,8865-regulator.h
+ drivers/regulator/act8865-regulator.c | 187 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 186 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-index 3ae9f10..b9f58e4 100644
---- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-@@ -34,6 +34,9 @@ Optional input supply properties:
-   - inl67-supply: The input supply for LDO_REG3 and LDO_REG4
- 
- Any standard regulator properties can be used to configure the single regulator.
-+regulator-initial-mode, regulator-allowed-modes and regulator-mode could be specified
-+for act8865 using mode values from dt-bindings/regulator/active-semi,8865-regulator.h
-+file.
- 
- The valid names for regulators are:
- 	- for act8846:
-@@ -47,6 +50,8 @@ The valid names for regulators are:
- Example:
- --------
- 
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 6a90d3c..0fa97f9 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -19,6 +19,7 @@
+ #include <linux/power_supply.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/regmap.h>
 +#include <dt-bindings/regulator/active-semi,8865-regulator.h>
-+
- 		i2c1: i2c@f0018000 {
- 			pmic: act8865@5b {
- 				compatible = "active-semi,act8865";
-@@ -65,9 +70,19 @@ Example:
- 						regulator-name = "VCC_1V2";
- 						regulator-min-microvolt = <1100000>;
- 						regulator-max-microvolt = <1300000>;
--						regulator-suspend-mem-microvolt = <1150000>;
--						regulator-suspend-standby-microvolt = <1150000>;
- 						regulator-always-on;
-+
-+						regulator-allowed-modes = <ACT8865_REGULATOR_MODE_FIXED>,
-+									  <ACT8865_REGULATOR_MODE_LOWPOWER>;
-+						regulator-initial-mode = <ACT8865_REGULATOR_MODE_FIXED>;
-+
-+						regulator-state-mem {
-+							regulator-on-in-suspend;
-+							regulator-suspend-min-microvolt = <1150000>;
-+							regulator-suspend-max-microvolt = <1150000>;
-+							regulator-changeable-in-suspend;
-+							regulator-mode = <ACT8865_REGULATOR_MODE_LOWPOWER>;
-+						};
- 					};
  
- 					vcc_3v3_reg: DCDC_REG3 {
-@@ -82,6 +97,14 @@ Example:
- 						regulator-min-microvolt = <3300000>;
- 						regulator-max-microvolt = <3300000>;
- 						regulator-always-on;
-+
-+						regulator-allowed-modes = <ACT8865_REGULATOR_MODE_NORMAL>,
-+									  <ACT8865_REGULATOR_MODE_LOWPOWER>;
-+						regulator-initial-mode = <ACT8865_REGULATOR_MODE_NORMAL>;
-+
-+						regulator-state-mem {
-+							regulator-off-in-suspend;
-+						};
- 					};
+ /*
+  * ACT8600 Global Register Map.
+@@ -90,23 +91,31 @@
+  */
+ #define	ACT8865_SYS_MODE	0x00
+ #define	ACT8865_SYS_CTRL	0x01
++#define	ACT8865_SYS_UNLK_REGS	0x0b
+ #define	ACT8865_DCDC1_VSET1	0x20
+ #define	ACT8865_DCDC1_VSET2	0x21
+ #define	ACT8865_DCDC1_CTRL	0x22
++#define	ACT8865_DCDC1_SUS	0x24
+ #define	ACT8865_DCDC2_VSET1	0x30
+ #define	ACT8865_DCDC2_VSET2	0x31
+ #define	ACT8865_DCDC2_CTRL	0x32
++#define	ACT8865_DCDC2_SUS	0x34
+ #define	ACT8865_DCDC3_VSET1	0x40
+ #define	ACT8865_DCDC3_VSET2	0x41
+ #define	ACT8865_DCDC3_CTRL	0x42
++#define	ACT8865_DCDC3_SUS	0x44
+ #define	ACT8865_LDO1_VSET	0x50
+ #define	ACT8865_LDO1_CTRL	0x51
++#define	ACT8865_LDO1_SUS	0x52
+ #define	ACT8865_LDO2_VSET	0x54
+ #define	ACT8865_LDO2_CTRL	0x55
++#define	ACT8865_LDO2_SUS	0x56
+ #define	ACT8865_LDO3_VSET	0x60
+ #define	ACT8865_LDO3_CTRL	0x61
++#define	ACT8865_LDO3_SUS	0x62
+ #define	ACT8865_LDO4_VSET	0x64
+ #define	ACT8865_LDO4_CTRL	0x65
++#define	ACT8865_LDO4_SUS	0x66
+ #define	ACT8865_MSTROFF		0x20
  
- 					vddfuse_reg: LDO_REG2 {
-diff --git a/include/dt-bindings/regulator/active-semi,8865-regulator.h b/include/dt-bindings/regulator/active-semi,8865-regulator.h
-new file mode 100644
-index 0000000..15473db
---- /dev/null
-+++ b/include/dt-bindings/regulator/active-semi,8865-regulator.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Device Tree binding constants for the ACT8865 PMIC regulators
-+ */
+ /*
+@@ -225,6 +234,171 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
+ };
+ 
++static int act8865_set_suspend_state(struct regulator_dev *rdev, bool enable)
++{
++	struct regmap *regmap = rdev->regmap;
++	int id = rdev->desc->id, reg, val;
 +
-+#ifndef _DT_BINDINGS_REGULATOR_ACT8865_H
-+#define _DT_BINDINGS_REGULATOR_ACT8865_H
++	switch (id) {
++	case ACT8865_ID_DCDC1:
++		reg = ACT8865_DCDC1_SUS;
++		val = 0xa8;
++		break;
++	case ACT8865_ID_DCDC2:
++		reg = ACT8865_DCDC2_SUS;
++		val = 0xa8;
++		break;
++	case ACT8865_ID_DCDC3:
++		reg = ACT8865_DCDC3_SUS;
++		val = 0xa8;
++		break;
++	case ACT8865_ID_LDO1:
++		reg = ACT8865_LDO1_SUS;
++		val = 0xe8;
++		break;
++	case ACT8865_ID_LDO2:
++		reg = ACT8865_LDO2_SUS;
++		val = 0xe8;
++		break;
++	case ACT8865_ID_LDO3:
++		reg = ACT8865_LDO3_SUS;
++		val = 0xe8;
++		break;
++	case ACT8865_ID_LDO4:
++		reg = ACT8865_LDO4_SUS;
++		val = 0xe8;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
-+/*
-+ * These constants should be used to specify regulator modes in device tree for
-+ * ACT8865 regulators as follows:
-+ * ACT8865_REGULATOR_MODE_FIXED:	It is specific to DCDC regulators and it
-+ *					specifies the usage of fixed-frequency
-+ *					PWM.
-+ *
-+ * ACT8865_REGULATOR_MODE_NORMAL:	It is specific to LDO regulators and it
-+ *					specifies the usage of normal mode.
-+ *
-+ * ACT8865_REGULATOR_MODE_LOWPOWER:	For DCDC and LDO regulators; it specify
-+ *					the usage of proprietary power-saving
-+ *					mode.
-+ */
++	if (enable)
++		val |= BIT(4);
 +
-+#define ACT8865_REGULATOR_MODE_FIXED		1
-+#define ACT8865_REGULATOR_MODE_NORMAL		2
-+#define ACT8865_REGULATOR_MODE_LOWPOWER	3
++	/*
++	 * Ask the PMIC to enable/disable this output when entering hibernate
++	 * mode.
++	 */
++	return regmap_write(regmap, reg, val);
++}
 +
-+#endif
++static int act8865_set_suspend_enable(struct regulator_dev *rdev)
++{
++	return act8865_set_suspend_state(rdev, true);
++}
++
++static int act8865_set_suspend_disable(struct regulator_dev *rdev)
++{
++	return act8865_set_suspend_state(rdev, false);
++}
++
++static unsigned int act8865_of_map_mode(unsigned int mode)
++{
++	switch (mode) {
++	case ACT8865_REGULATOR_MODE_FIXED:
++		return REGULATOR_MODE_FAST;
++	case ACT8865_REGULATOR_MODE_NORMAL:
++		return REGULATOR_MODE_NORMAL;
++	case ACT8865_REGULATOR_MODE_LOWPOWER:
++		return REGULATOR_MODE_STANDBY;
++	default:
++		return REGULATOR_MODE_INVALID;
++	}
++}
++
++static int act8865_set_mode(struct regulator_dev *rdev, unsigned int mode)
++{
++	struct regmap *regmap = rdev->regmap;
++	int id = rdev_get_id(rdev);
++	int reg, val = 0;
++
++	switch (id) {
++	case ACT8865_ID_DCDC1:
++		reg = ACT8865_DCDC1_CTRL;
++		break;
++	case ACT8865_ID_DCDC2:
++		reg = ACT8865_DCDC2_CTRL;
++		break;
++	case ACT8865_ID_DCDC3:
++		reg = ACT8865_DCDC3_CTRL;
++		break;
++	case ACT8865_ID_LDO1:
++		reg = ACT8865_LDO1_CTRL;
++		break;
++	case ACT8865_ID_LDO2:
++		reg = ACT8865_LDO2_CTRL;
++		break;
++	case ACT8865_ID_LDO3:
++		reg = ACT8865_LDO3_CTRL;
++		break;
++	case ACT8865_ID_LDO4:
++		reg = ACT8865_LDO4_CTRL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (mode) {
++	case REGULATOR_MODE_FAST:
++	case REGULATOR_MODE_NORMAL:
++		if (id <= ACT8865_ID_DCDC3)
++			val = BIT(5);
++		break;
++	case REGULATOR_MODE_STANDBY:
++		if (id > ACT8865_ID_DCDC3)
++			val = BIT(5);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return regmap_update_bits(regmap, reg, BIT(5), val);
++}
++
++static unsigned int act8865_get_mode(struct regulator_dev *rdev)
++{
++	struct regmap *regmap = rdev->regmap;
++	int id = rdev_get_id(rdev);
++	int reg, ret, val = 0;
++
++	switch (id) {
++	case ACT8865_ID_DCDC1:
++		reg = ACT8865_DCDC1_CTRL;
++		break;
++	case ACT8865_ID_DCDC2:
++		reg = ACT8865_DCDC2_CTRL;
++		break;
++	case ACT8865_ID_DCDC3:
++		reg = ACT8865_DCDC3_CTRL;
++		break;
++	case ACT8865_ID_LDO1:
++		reg = ACT8865_LDO1_CTRL;
++		break;
++	case ACT8865_ID_LDO2:
++		reg = ACT8865_LDO2_CTRL;
++		break;
++	case ACT8865_ID_LDO3:
++		reg = ACT8865_LDO3_CTRL;
++		break;
++	case ACT8865_ID_LDO4:
++		reg = ACT8865_LDO4_CTRL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = regmap_read(regmap, reg, &val);
++	if (ret)
++		return ret;
++
++	if (id <= ACT8865_ID_DCDC3 && (val & BIT(5)))
++		return REGULATOR_MODE_FAST;
++	else if	(id > ACT8865_ID_DCDC3 && !(val & BIT(5)))
++		return REGULATOR_MODE_NORMAL;
++	else
++		return REGULATOR_MODE_STANDBY;
++}
++
+ static const struct regulator_ops act8865_ops = {
+ 	.list_voltage		= regulator_list_voltage_linear_range,
+ 	.map_voltage		= regulator_map_voltage_linear_range,
+@@ -232,7 +406,11 @@ static const struct regulator_ops act8865_ops = {
+ 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
++	.set_mode		= act8865_set_mode,
++	.get_mode		= act8865_get_mode,
+ 	.is_enabled		= regulator_is_enabled_regmap,
++	.set_suspend_enable	= act8865_set_suspend_enable,
++	.set_suspend_disable	= act8865_set_suspend_disable,
+ };
+ 
+ static const struct regulator_ops act8865_ldo_ops = {
+@@ -242,7 +420,11 @@ static const struct regulator_ops act8865_ldo_ops = {
+ 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
+ 	.enable			= regulator_enable_regmap,
+ 	.disable		= regulator_disable_regmap,
++	.set_mode		= act8865_set_mode,
++	.get_mode		= act8865_get_mode,
+ 	.is_enabled		= regulator_is_enabled_regmap,
++	.set_suspend_enable	= act8865_set_suspend_enable,
++	.set_suspend_disable	= act8865_set_suspend_disable,
+ 	.set_pull_down		= regulator_set_pull_down_regmap,
+ };
+ 
+@@ -256,6 +438,7 @@ static const struct regulator_ops act8865_fixed_ldo_ops = {
+ 	[_family##_ID_##_id] = {					\
+ 		.name			= _name,			\
+ 		.of_match		= of_match_ptr(_name),		\
++		.of_map_mode		= act8865_of_map_mode,		\
+ 		.regulators_node	= of_match_ptr("regulators"),	\
+ 		.supply_name		= _supply,			\
+ 		.id			= _family##_ID_##_id,		\
+@@ -590,7 +773,9 @@ static int act8865_pmic_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, act8865);
+ 
+-	return 0;
++	/* Unlock expert registers for ACT8865. */
++	return type != ACT8865 ? 0 : regmap_write(act8865->regmap,
++						  ACT8865_SYS_UNLK_REGS, 0xef);
+ }
+ 
+ static const struct i2c_device_id act8865_ids[] = {
 -- 
 2.7.4
