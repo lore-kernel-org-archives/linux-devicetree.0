@@ -1,131 +1,111 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Date: Tue, 13 Aug 2019 19:22:09 +0530
-Message-ID: <20190813135209.GA30945@Mani-XPS-13-9360>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
- <20190813094526.GG835@valkosipuli.retiisi.org.uk>
- <20190813113358.GA28877@Mani-XPS-13-9360>
- <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
- <20190813121400.GA29378@Mani-XPS-13-9360>
- <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: irq: Convert Allwinner NMI Controller to
+ a schema
+Date: Tue, 13 Aug 2019 07:53:46 -0600
+Message-ID: <CAL_JsqLAA6v1BCFHGrDR7WzOE9ri6MNq6WCkvJ5NTDnhDcAqyg@mail.gmail.com>
+References: <20190723132658.5068-1-maxime.ripard@bootlin.com>
+ <20190723132658.5068-2-maxime.ripard@bootlin.com>
+ <CAL_JsqJkTrCuscnWgm5cDmQj5RPGnd3qXkzR40XWKB2skZFwXA@mail.gmail.com>
+ <20190813054738.ge2jdu6qn2vaoasd@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190813054738.ge2jdu6qn2vaoasd@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, maz@kernel.org, Chen-Yu Tsai <wens@csie.org>, Thomas Gleixner <tglx@linutronix.de>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Mon, Aug 12, 2019 at 11:47 PM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Jul 23, 2019 at 10:32:41AM -0600, Rob Herring wrote:
+> > On Tue, Jul 23, 2019 at 7:27 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > The Allwinner SoCs have an interrupt controller called NMI supported in
+> > > Linux, with a matching Device Tree binding.
+> > >
+> > > Now that we have the DT validation in place, let's convert the device tree
+> > > bindings for that controller over to a YAML schemas.
+> > >
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > ---
+> > >  .../allwinner,sun7i-a20-sc-nmi.yaml           | 83 +++++++++++++++++++
+> > >  .../allwinner,sunxi-nmi.txt                   | 29 -------
+> > >  2 files changed, 83 insertions(+), 29 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+> > > new file mode 100644
+> > > index 000000000000..cb8077b0c8dd
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
+> > > @@ -0,0 +1,83 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner A20 Non-Maskable Interrupt Controller Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Chen-Yu Tsai <wens@csie.org>
+> > > +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> > > +
+> > > +allOf:
+> > > +  - $ref: /schemas/interrupt-controller.yaml#
+> > > +
+> > > +select:
+> > > +  properties:
+> > > +    compatible:
+> > > +      contains:
+> > > +        enum:
+> > > +          - allwinner,sun6i-a31-r-intc
+> > > +          - allwinner,sun7i-a20-sc-nmi
+> > > +          - allwinner,sun9i-a80-sc-nmi
+> >
+> > This should have all the possible compatibles in case all are not
+> > listed.
+>
+> I'm sorry, but I'm not sure I understood what you meant here :/
 
-On Tue, Aug 13, 2019 at 03:22:12PM +0300, Sakari Ailus wrote:
-> Hi Manivannan,
-> 
-> On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
-> > Hi Sakari,
-> > 
-> > On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
-> > > Hi Manivannan,
-> > > 
-> > > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
-> > > > Hi Sakari,
-> > > > 
-> > > > Thanks for the review!
-> > > > 
-> > > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
-> > > > > Hi Manivannan,
-> > > > > 
-> > > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > Add devicetree binding for IMX290 CMOS image sensor.
-> > > > > > 
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
-> > > > > >  1 file changed, 51 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..7535b5b5b24b
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > > @@ -0,0 +1,51 @@
-> > > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
-> > > > > > +
-> > > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-> > > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-> > > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
-> > > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
-> > > > > 
-> > > > > If there are three to choose from, then you should specify which one is in
-> > > > > use. Given that I think chances remain slim we'd add support for the other
-> > > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
-> > > > > this needs to be documented.
-> > > > > 
-> > > > 
-> > > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
-> > > > limitations of the driver. Here as you said, the sensor can output frames
-> > > > in 3 different modes/formats but the driver only supports CSI2. I can add a
-> > > > note in the driver but not sure whether dt-binding is the right place or not!
-> > > 
-> > > I guess alternatively you could document the necessary bindings for the
-> > > other two busses.
-> > > 
-> > > But what I'm saying here is that it's highly unlikely they'll be ever
-> > > needed, and it'd be mostly a waste of time to implement that. (That said, I
-> > > have nothing against the use of these busses, but I've never seen anyone
-> > > using them.) Many other devices use defaults for more contentious settings.
-> > > 
-> > 
-> > Agree with you but my question was, whether I could document the supported
-> > mode in bindings or not! I have seen comments from Rob in the past that the
-> > binding should not document the limitations of the driver. But anyway, one
-> > can infer from the current binding that only CSI2 is supported for now, it's
-> > just stating it explicitly makes me doubtful!
-> 
-> I think it could be e.g.:
-> 
-> The CSI-2 bus is the default. No bindings have been defined for the other
-> busses.
-> 
+You are missing these from the list:
+allwinner,sun8i-a83t-r-intc
+allwinner,sun50i-a64-r-intc
+allwinner,sun50i-h6-r-intc
 
-Ack.
+We need them all to catch any DTs with only the above strings.
 
-> ...
-> 
-> > > > > I suppose you can't change the lane order, so clock-lanes is redundant
-> > > > > (don't use it in the example) and data-lanes should be monotonically
-> > > > > incrementing series from 1 to 4.
-> > > > > 
-> > > > 
-> > > > We can change the order and the example here illustrates how it has been
-> > > > wired in FRAMOS module. If I change the lane order like you said, it won't
-> > > > work.
-> > > 
-> > > I highly doubt that. Neither the driver nor the sensor uses the lane
-> > > ordering information.
-> > > 
-> > 
-> > Agree but CSI2 host will need this informtion, right? Please correct me if
-> > I'm wrong!
-> 
-> The CSI-2 receiver may need that configuration, but it's not addressed by a
-> sensor's binding documentation (it's configured in the endpoint on the
-> receiver's side).
-> 
+>
+> >
+> > > +
+> > > +          # Deprecated
+> > > +          - allwinner,sun6i-a31-sc-nmi
+> >
+> > I know we already did things this way before, but perhaps this should
+> > be listed below with the 'deprecated' property. The tools can include
+> > it in select, but then remove it from compatible property.
+>
+> Can we have more than just one of the choice for an enum?
+>
+> In this particular case, since we have oneOf it's not really too much
+> of an issue, but there's a significant amount of users of enum for the
+> compatibles.
 
-Yes but I thought that documenting the sensor lane configuration based on one
-example implementation might help interfacing w/ different hosts. Anyway, to be
-host agnostic, I can drop the clock lane and make data lane start from 1 as you
-suggested.
+I think we have to use oneOf here. There's not that many cases of
+deprecated compatibles.
 
-Thanks,
-Mani
-
-> -- 
-> Sakari Ailus
+Rob
