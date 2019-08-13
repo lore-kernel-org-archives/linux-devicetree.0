@@ -1,37 +1,41 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
-Date: Tue, 13 Aug 2019 16:14:22 -0600
-Message-ID: <CAL_JsqKXda7f43=ZdtTsyrdhdqn+H4L=7zQXtB_EEfHdi=rHLg@mail.gmail.com>
-References: <20190807003629.2974-1-andrew@aj.id.au> <20190807003629.2974-2-andrew@aj.id.au>
+Subject: Re: [PATCH] devicetree: Expose dtbs_check and dt_binding_check some more
+Date: Tue, 13 Aug 2019 16:32:48 -0600
+Message-ID: <CAL_JsqLivZNf9A2bVXKf8eqdmsywQV+KEh5dYVLywNQPfn0P=w@mail.gmail.com>
+References: <20190813183825.9605-1-sboyd@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807003629.2974-2-andrew@aj.id.au>
+In-Reply-To: <20190813183825.9605-1-sboyd@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Adrian Hunter <adrian.hunter@intel.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, devicetree@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 6, 2019 at 6:38 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Tue, Aug 13, 2019 at 12:38 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
-> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> data bus if only a single slot is enabled.
+> It wasn't obvious that this was a command to run based on 'make help',
+> so add it to the top-level help for devicetree builds. Also, add an
+> example to the documentation to show that db_binding_check can be run
+> with DT_SCHEMA_FILES= to only check one schema file instead of all of
+> them.
 >
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: <linux-kbuild@vger.kernel.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: <linux-doc@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
-> v4:
-> * Make use of mmc-controller.yaml
-> * Document sdhci,auto-cmd12
 >
-> v2:
-> * Fix compatible enums
-> * Add AST2600 compatibles
-> * Describe #address-cells / #size-cells
-> ---
->  .../devicetree/bindings/mmc/aspeed,sdhci.yaml | 105 ++++++++++++++++++
->  1 file changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> I didn't find this sent, so sending again!
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You had. :)
+
+>
+>  Documentation/devicetree/writing-schema.md | 1 +
+>  Makefile                                   | 6 ++++--
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+
+writing-schema.md got converted to rst, so I fixed up and applied.
+
+Rob
