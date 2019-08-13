@@ -1,43 +1,32 @@
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Subject: [PATCH v3 1/2] dt-bindings: arm: imx: add imx8mq nitrogen support
-Date: Tue, 13 Aug 2019 14:51:47 +0200
-Message-ID: <20190813125147.29605-2-dafna.hirschfeld@collabora.com>
-References: <20190813125147.29605-1-dafna.hirschfeld@collabora.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH next v9 07/11] usb: roles: Add
+ fwnode_usb_role_switch_get() function
+Date: Tue, 13 Aug 2019 16:01:10 +0300
+Message-ID: <20190813130110.GE4691@kuha.fi.intel.com>
+References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1565695634-9711-8-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813125147.29605-1-dafna.hirschfeld@collabora.com>
+Content-Disposition: inline
+In-Reply-To: <1565695634-9711-8-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dafna.hirschfeld@collabora.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Gary Bisson <gary.bisson@boundarydevices.com>
+On Tue, Aug 13, 2019 at 07:27:10PM +0800, Chunfeng Yun wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+> The fwnode_usb_role_switch_get() function is exactly the
+> same as usb_role_switch_get(), except that it takes struct
+> fwnode_handle as parameter instead of struct device.
+> 
+> Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-The Nitrogen8M is an ARM based single board computer (SBC)
-designed to leverage the full capabilities of NXP’s i.MX8M
-Quad processor.
+Why is my SoB replaced with Suggested-by tag in this patch?
 
-Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-[Dafna: porting vendor's code to mainline]
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+thanks,
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 362bf827cad1..16db1c699ba7 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -224,6 +224,7 @@ properties:
-       - description: i.MX8MQ based Boards
-         items:
-           - enum:
-+              - boundary,imx8mq-nitrogen8m # i.MX8MQ NITROGEN Board
-               - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-               - purism,librem5-devkit     # Purism Librem5 devkit
-               - technexion,pico-pi-imx8m  # TechNexion PICO-PI-8M evk
 -- 
-2.20.1
+heikki
