@@ -1,115 +1,290 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
- binding
-Date: Tue, 13 Aug 2019 15:22:12 +0300
-Message-ID: <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
- <20190813094526.GG835@valkosipuli.retiisi.org.uk>
- <20190813113358.GA28877@Mani-XPS-13-9360>
- <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
- <20190813121400.GA29378@Mani-XPS-13-9360>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: media: Add YAML schemas for the generic RC bindings
+Date: Tue, 13 Aug 2019 14:45:12 +0200
+Message-ID: <20190813124513.31413-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813121400.GA29378@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+To: mchehab@kernel.org, sean@mess.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
-> Hi Sakari,
-> 
-> On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
-> > Hi Manivannan,
-> > 
-> > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
-> > > Hi Sakari,
-> > > 
-> > > Thanks for the review!
-> > > 
-> > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
-> > > > Hi Manivannan,
-> > > > 
-> > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
-> > > > > Add devicetree binding for IMX290 CMOS image sensor.
-> > > > > 
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
-> > > > >  1 file changed, 51 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > new file mode 100644
-> > > > > index 000000000000..7535b5b5b24b
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
-> > > > > @@ -0,0 +1,51 @@
-> > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
-> > > > > +
-> > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
-> > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
-> > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
-> > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
-> > > > 
-> > > > If there are three to choose from, then you should specify which one is in
-> > > > use. Given that I think chances remain slim we'd add support for the other
-> > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
-> > > > this needs to be documented.
-> > > > 
-> > > 
-> > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
-> > > limitations of the driver. Here as you said, the sensor can output frames
-> > > in 3 different modes/formats but the driver only supports CSI2. I can add a
-> > > note in the driver but not sure whether dt-binding is the right place or not!
-> > 
-> > I guess alternatively you could document the necessary bindings for the
-> > other two busses.
-> > 
-> > But what I'm saying here is that it's highly unlikely they'll be ever
-> > needed, and it'd be mostly a waste of time to implement that. (That said, I
-> > have nothing against the use of these busses, but I've never seen anyone
-> > using them.) Many other devices use defaults for more contentious settings.
-> > 
-> 
-> Agree with you but my question was, whether I could document the supported
-> mode in bindings or not! I have seen comments from Rob in the past that the
-> binding should not document the limitations of the driver. But anyway, one
-> can infer from the current binding that only CSI2 is supported for now, it's
-> just stating it explicitly makes me doubtful!
+The RC controllers have a bunch of generic properties that are needed in a
+device tree. Add a YAML schemas for those.
 
-I think it could be e.g.:
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ .../devicetree/bindings/media/rc.txt          | 118 +--------------
+ .../devicetree/bindings/media/rc.yaml         | 135 ++++++++++++++++++
+ 2 files changed, 136 insertions(+), 117 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rc.yaml
 
-The CSI-2 bus is the default. No bindings have been defined for the other
-busses.
-
-...
-
-> > > > I suppose you can't change the lane order, so clock-lanes is redundant
-> > > > (don't use it in the example) and data-lanes should be monotonically
-> > > > incrementing series from 1 to 4.
-> > > > 
-> > > 
-> > > We can change the order and the example here illustrates how it has been
-> > > wired in FRAMOS module. If I change the lane order like you said, it won't
-> > > work.
-> > 
-> > I highly doubt that. Neither the driver nor the sensor uses the lane
-> > ordering information.
-> > 
-> 
-> Agree but CSI2 host will need this informtion, right? Please correct me if
-> I'm wrong!
-
-The CSI-2 receiver may need that configuration, but it's not addressed by a
-sensor's binding documentation (it's configured in the endpoint on the
-receiver's side).
-
+diff --git a/Documentation/devicetree/bindings/media/rc.txt b/Documentation/devicetree/bindings/media/rc.txt
+index d3e7a012bfda..be629f7fa77e 100644
+--- a/Documentation/devicetree/bindings/media/rc.txt
++++ b/Documentation/devicetree/bindings/media/rc.txt
+@@ -1,117 +1 @@
+-The following properties are common to the infrared remote controllers:
+-
+-- linux,rc-map-name: string, specifies the scancode/key mapping table
+-  defined in-kernel for the remote controller. Support values are:
+-  * "rc-adstech-dvb-t-pci"
+-  * "rc-alink-dtu-m"
+-  * "rc-anysee"
+-  * "rc-apac-viewcomp"
+-  * "rc-asus-pc39"
+-  * "rc-asus-ps3-100"
+-  * "rc-ati-tv-wonder-hd-600"
+-  * "rc-ati-x10"
+-  * "rc-avermedia-a16d"
+-  * "rc-avermedia-cardbus"
+-  * "rc-avermedia-dvbt"
+-  * "rc-avermedia-m135a"
+-  * "rc-avermedia-m733a-rm-k6"
+-  * "rc-avermedia-rm-ks"
+-  * "rc-avermedia"
+-  * "rc-avertv-303"
+-  * "rc-azurewave-ad-tu700"
+-  * "rc-behold-columbus"
+-  * "rc-behold"
+-  * "rc-budget-ci-old"
+-  * "rc-cec"
+-  * "rc-cinergy-1400"
+-  * "rc-cinergy"
+-  * "rc-delock-61959"
+-  * "rc-dib0700-nec"
+-  * "rc-dib0700-rc5"
+-  * "rc-digitalnow-tinytwin"
+-  * "rc-digittrade"
+-  * "rc-dm1105-nec"
+-  * "rc-dntv-live-dvbt-pro"
+-  * "rc-dntv-live-dvb-t"
+-  * "rc-dtt200u"
+-  * "rc-dvbsky"
+-  * "rc-empty"
+-  * "rc-em-terratec"
+-  * "rc-encore-enltv2"
+-  * "rc-encore-enltv-fm53"
+-  * "rc-encore-enltv"
+-  * "rc-evga-indtube"
+-  * "rc-eztv"
+-  * "rc-flydvb"
+-  * "rc-flyvideo"
+-  * "rc-fusionhdtv-mce"
+-  * "rc-gadmei-rm008z"
+-  * "rc-geekbox"
+-  * "rc-genius-tvgo-a11mce"
+-  * "rc-gotview7135"
+-  * "rc-hauppauge"
+-  * "rc-imon-mce"
+-  * "rc-imon-pad"
+-  * "rc-iodata-bctv7e"
+-  * "rc-it913x-v1"
+-  * "rc-it913x-v2"
+-  * "rc-kaiomy"
+-  * "rc-kworld-315u"
+-  * "rc-kworld-pc150u"
+-  * "rc-kworld-plus-tv-analog"
+-  * "rc-leadtek-y04g0051"
+-  * "rc-lirc"
+-  * "rc-lme2510"
+-  * "rc-manli"
+-  * "rc-medion-x10"
+-  * "rc-medion-x10-digitainer"
+-  * "rc-medion-x10-or2x"
+-  * "rc-msi-digivox-ii"
+-  * "rc-msi-digivox-iii"
+-  * "rc-msi-tvanywhere-plus"
+-  * "rc-msi-tvanywhere"
+-  * "rc-nebula"
+-  * "rc-nec-terratec-cinergy-xs"
+-  * "rc-norwood"
+-  * "rc-npgtech"
+-  * "rc-pctv-sedna"
+-  * "rc-pinnacle-color"
+-  * "rc-pinnacle-grey"
+-  * "rc-pinnacle-pctv-hd"
+-  * "rc-pixelview-new"
+-  * "rc-pixelview"
+-  * "rc-pixelview-002t"
+-  * "rc-pixelview-mk12"
+-  * "rc-powercolor-real-angel"
+-  * "rc-proteus-2309"
+-  * "rc-purpletv"
+-  * "rc-pv951"
+-  * "rc-hauppauge"
+-  * "rc-rc5-tv"
+-  * "rc-rc6-mce"
+-  * "rc-real-audio-220-32-keys"
+-  * "rc-reddo"
+-  * "rc-snapstream-firefly"
+-  * "rc-streamzap"
+-  * "rc-tbs-nec"
+-  * "rc-technisat-ts35"
+-  * "rc-technisat-usb2"
+-  * "rc-terratec-cinergy-c-pci"
+-  * "rc-terratec-cinergy-s2-hd"
+-  * "rc-terratec-cinergy-xs"
+-  * "rc-terratec-slim"
+-  * "rc-terratec-slim-2"
+-  * "rc-tevii-nec"
+-  * "rc-tivo"
+-  * "rc-total-media-in-hand"
+-  * "rc-total-media-in-hand-02"
+-  * "rc-trekstor"
+-  * "rc-tt-1500"
+-  * "rc-twinhan-dtv-cab-ci"
+-  * "rc-twinhan1027"
+-  * "rc-videomate-k100"
+-  * "rc-videomate-s350"
+-  * "rc-videomate-tv-pvr"
+-  * "rc-winfast"
+-  * "rc-winfast-usbii-deluxe"
+-  * "rc-su3000"
++This file has been moved to rc.yaml.
+diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
+new file mode 100644
+index 000000000000..19b28e7edf9c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rc.yaml
+@@ -0,0 +1,135 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/rc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic Infrared Remote Controller Device Tree Bindings
++
++maintainers:
++  - Mauro Carvalho Chehab <mchehab@kernel.org>
++  - Sean Young <sean@mess.org>
++
++properties:
++  $nodename:
++    pattern: "^ir(@[a-f0-9]+)?$"
++
++  linux,rc-map-name:
++    description:
++      Specifies the scancode/key mapping table defined in-kernel for
++      the remote controller.
++    allOf:
++      - $ref: '/schemas/types.yaml#/definitions/string'
++      - enum:
++          - rc-adstech-dvb-t-pci
++          - rc-alink-dtu-m
++          - rc-anysee
++          - rc-apac-viewcomp
++          - rc-asus-pc39
++          - rc-asus-ps3-100
++          - rc-ati-tv-wonder-hd-600
++          - rc-ati-x10
++          - rc-avermedia
++          - rc-avermedia-a16d
++          - rc-avermedia-cardbus
++          - rc-avermedia-dvbt
++          - rc-avermedia-m135a
++          - rc-avermedia-m733a-rm-k6
++          - rc-avermedia-rm-ks
++          - rc-avertv-303
++          - rc-azurewave-ad-tu700
++          - rc-behold
++          - rc-behold-columbus
++          - rc-budget-ci-old
++          - rc-cec
++          - rc-cinergy
++          - rc-cinergy-1400
++          - rc-delock-61959
++          - rc-dib0700-nec
++          - rc-dib0700-rc5
++          - rc-digitalnow-tinytwin
++          - rc-digittrade
++          - rc-dm1105-nec
++          - rc-dntv-live-dvb-t
++          - rc-dntv-live-dvbt-pro
++          - rc-dtt200u
++          - rc-dvbsky
++          - rc-em-terratec
++          - rc-empty
++          - rc-encore-enltv
++          - rc-encore-enltv-fm53
++          - rc-encore-enltv2
++          - rc-evga-indtube
++          - rc-eztv
++          - rc-flydvb
++          - rc-flyvideo
++          - rc-fusionhdtv-mce
++          - rc-gadmei-rm008z
++          - rc-geekbox
++          - rc-genius-tvgo-a11mce
++          - rc-gotview7135
++          - rc-hauppauge
++          - rc-imon-mce
++          - rc-imon-pad
++          - rc-iodata-bctv7e
++          - rc-it913x-v1
++          - rc-it913x-v2
++          - rc-kaiomy
++          - rc-kworld-315u
++          - rc-kworld-pc150u
++          - rc-kworld-plus-tv-analog
++          - rc-leadtek-y04g0051
++          - rc-lirc
++          - rc-lme2510
++          - rc-manli
++          - rc-medion-x10
++          - rc-medion-x10-digitainer
++          - rc-medion-x10-or2x
++          - rc-msi-digivox-ii
++          - rc-msi-digivox-iii
++          - rc-msi-tvanywhere
++          - rc-msi-tvanywhere-plus
++          - rc-nebula
++          - rc-nec-terratec-cinergy-xs
++          - rc-norwood
++          - rc-npgtech
++          - rc-pctv-sedna
++          - rc-pinnacle-color
++          - rc-pinnacle-grey
++          - rc-pinnacle-pctv-hd
++          - rc-pixelview
++          - rc-pixelview-002t
++          - rc-pixelview-mk12
++          - rc-pixelview-new
++          - rc-powercolor-real-angel
++          - rc-proteus-2309
++          - rc-purpletv
++          - rc-pv951
++          - rc-rc5-tv
++          - rc-rc6-mce
++          - rc-real-audio-220-32-keys
++          - rc-reddo
++          - rc-snapstream-firefly
++          - rc-streamzap
++          - rc-su3000
++          - rc-tbs-nec
++          - rc-technisat-ts35
++          - rc-technisat-usb2
++          - rc-terratec-cinergy-c-pci
++          - rc-terratec-cinergy-s2-hd
++          - rc-terratec-cinergy-xs
++          - rc-terratec-slim
++          - rc-terratec-slim-2
++          - rc-tevii-nec
++          - rc-tivo
++          - rc-total-media-in-hand
++          - rc-total-media-in-hand-02
++          - rc-trekstor
++          - rc-tt-1500
++          - rc-twinhan-dtv-cab-ci
++          - rc-twinhan1027
++          - rc-videomate-k100
++          - rc-videomate-s350
++          - rc-videomate-tv-pvr
++          - rc-winfast
++          - rc-winfast-usbii-deluxe
 -- 
-Sakari Ailus
+2.21.0
