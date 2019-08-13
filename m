@@ -1,174 +1,93 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: ad7192: Add binding
- documentation for AD7192
-Date: Tue, 13 Aug 2019 15:34:42 -0600
-Message-ID: <CAL_JsqJo-LMmG8B6mitr38TdSj7ejrbGvcsy6TQAtvi6MoemOg@mail.gmail.com>
-References: <20190813075544.9122-1-mircea.caprioru@analog.com> <20190813075544.9122-4-mircea.caprioru@analog.com>
+Subject: Re: [PATCHv3] drivers/amba: add reset control to amba bus probe
+Date: Tue, 13 Aug 2019 15:49:58 -0600
+Message-ID: <CAL_JsqLJN3n6A3NWX=pEYSPfnvQFsdBYwqr9iREHWGFwL2wHYQ@mail.gmail.com>
+References: <20190808140153.9156-1-dinguyen@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813075544.9122-4-mircea.caprioru@analog.com>
+In-Reply-To: <20190808140153.9156-1-dinguyen@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 1:56 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
++Russell
+
+On Thu, Aug 8, 2019 at 8:02 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
 >
-> This patch add device tree binding documentation for AD7192 adc in YAML
-> format.
+> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+> default. Until recently, the DMA controller was brought out of reset by the
+> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals that
+> are not used are held in reset and are left to Linux to bring them out of
+> reset.
 >
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> Add a mechanism for getting the reset property and de-assert the primecell
+> module from reset if found. This is a not a hard fail if the reset property
+> is not present in the device tree node, so the driver will continue to probe.
+>
+> Because there are different variants of the controller that may have multiple
+> reset signals, the code will find all reset(s) specified and de-assert them.
+>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > ---
-> Changelog V2:
-> - remove description from spi and interrupt properties
-> - changed the name of the device from ad7192 to adc in the example
+> v3: add a reset_control_put()
+>     add error handling for -EPROBE_DEFER
+> v2: move reset control to bus code
+>     find all reset properties and de-assert them
+> ---
+>  drivers/amba/bus.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 >
->  .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.=
-yaml
+> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> index 100e798a5c82..00e68ea416ca 100644
+> --- a/drivers/amba/bus.c
+> +++ b/drivers/amba/bus.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/limits.h>
+>  #include <linux/clk/clk-conf.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset.h>
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> new file mode 100644
-> index 000000000000..2d83724cb4d6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> @@ -0,0 +1,121 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7192.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  #include <asm/irq.h>
+>
+> @@ -401,6 +402,28 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>         ret = amba_get_enable_pclk(dev);
+>         if (ret == 0) {
+>                 u32 pid, cid;
+> +               int count;
+> +               struct reset_control *rstc;
 > +
-> +title: Analog Devices AD7192 ADC device driver
-> +
-> +maintainers:
-> +  - Michael Hennerich <michael.hennerich@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD7192 ADC device. Datasheet can be
-> +  found here:
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
-7192.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7190
-> +      - adi,ad7192
-> +      - adi,ad7193
-> +      - adi,ad7195
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-cpol: true
-> +
-> +  spi-cpha: true
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: phandle to the master clock (mclk)
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mclk
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  dvdd-supply:
-> +    description: DVdd voltage supply
-> +    items:
-> +      - const: dvdd
-> +
-> +  avdd-supply:
-> +    description: AVdd voltage supply
-> +    items:
-> +      - const: avdd
-> +
-> +  adi,rejection-60-Hz-enable:
-> +    description: |
-> +      This bit enables a notch at 60 Hz when the first notch of the sinc
-> +      filter is at 50 Hz. When REJ60 is set, a filter notch is placed at
-> +      60 Hz when the sinc filter first notch is at 50 Hz. This allows
-> +      simultaneous 50 Hz/ 60 Hz rejection.
-> +    type: boolean
-> +
-> +  adi,refin2-pins-enable:
-> +    description: |
-> +      External reference applied between the P1/REFIN2(+) and P0/REFIN2(=
-=E2=88=92) pins.
-> +    type: boolean
-> +
-> +  adi,buffer-enable:
-> +    description: |
-> +      Enables the buffer on the analog inputs. If cleared, the analog in=
-puts
-> +      are unbuffered, lowering the power consumption of the device. If t=
-his
-> +      bit is set, the analog inputs are buffered, allowing the user to p=
-lace
-> +      source impedances on the front end without contributing gain error=
-s to
-> +      the system.
-> +    type: boolean
-> +
-> +  adi,burnout-currents-enable:
-> +    description: |
-> +      When this bit is set to 1, the 500 nA current sources in the signa=
-l
-> +      path are enabled. When BURN =3D 0, the burnout currents are disabl=
-ed.
-> +      The burnout currents can be enabled only when the buffer is active
-> +      and when chop is disabled.
-> +    type: boolean
-> +
-> +  bipolar:
-> +    description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - dvdd-supply
-> +  - avdd-supply
-> +  - spi-cpol
-> +  - spi-cpha
-> +
-> +examples:
-> +  - |
-> +    spi0 {
-> +      adc@0 {
-> +        compatible =3D "adi,ad7192";
-> +        reg =3D <0>;
-> +        spi-max-frequency =3D <1000000>;
-> +        spi-cpol;
-> +        spi-cpha;
-> +        clocks =3D <&ad7192_mclk>;
-> +        clock-names =3D "mclk";
-> +        #interrupt-cells =3D <2>;
-> +        interrupts =3D <25 0x2>;
-> +        interrupt-parent =3D <&gpio>;
-> +        dvdd-supply =3D <&dvdd>;
-> +        avdd-supply =3D <&avdd>;
-> +
-> +        adi,refin2-pins-enable;
-> +        adi,rejection-60-Hz-enable;
-> +        adi,buffer-enable;
-> +        adi,burnout-currents-enable;
-> +        };
-> +    }
+> +               /*
+> +                * Find reset control(s) of the amba bus and de-assert them.
+> +                */
+> +               count = reset_control_get_count(&dev->dev);
+> +               while (count > 0) {
+> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
+> +                       if (IS_ERR(rstc)) {
+> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER) {
+> +                                       ret = -EPROBE_DEFER;
+> +                               } else {
+> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
+> +                               }
+> +                               break;
+> +                       } else {
 
-You didn't build this with 'make dt_binding_check'. Please do so and
-fix the error here.
+You can remove the else here and save some indentation on the rest.
 
-Rob
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+
+> +                               reset_control_deassert(rstc);
+> +                               reset_control_put(rstc);
+> +                               count--;
+> +                       }
+> +               }
+>
+>                 /*
+>                  * Read pid and cid based on size of resource
+> --
+> 2.20.0
+>
