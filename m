@@ -1,69 +1,136 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
- documentation
-Date: Tue, 13 Aug 2019 16:12:56 +0200
-Message-ID: <20190813141256.jnbrfld42rtigek3@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Date: Tue, 13 Aug 2019 17:18:08 +0300
+Message-ID: <20190813141808.GF2527@valkosipuli.retiisi.org.uk>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+ <20190813113358.GA28877@Mani-XPS-13-9360>
+ <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
+ <20190813121400.GA29378@Mani-XPS-13-9360>
+ <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
+ <20190813135209.GA30945@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+In-Reply-To: <20190813135209.GA30945@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, vincent.guittot@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> Add Spreadtrum PWM controller documentation.
+Hi Mani,
+
+On Tue, Aug 13, 2019 at 07:22:09PM +0530, Manivannan Sadhasivam wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v1:
->  - Use assigned-clock-parents and assigned-clocks to set PWM clock parent.
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-sprd.txt |   38 ++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.txt
+> On Tue, Aug 13, 2019 at 03:22:12PM +0300, Sakari Ailus wrote:
+> > Hi Manivannan,
+> > 
+> > On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
+> > > Hi Sakari,
+> > > 
+> > > On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
+> > > > Hi Manivannan,
+> > > > 
+> > > > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
+> > > > > Hi Sakari,
+> > > > > 
+> > > > > Thanks for the review!
+> > > > > 
+> > > > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
+> > > > > > Hi Manivannan,
+> > > > > > 
+> > > > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > Add devicetree binding for IMX290 CMOS image sensor.
+> > > > > > > 
+> > > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > > > ---
+> > > > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+> > > > > > >  1 file changed, 51 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > > 
+> > > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..7535b5b5b24b
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > > @@ -0,0 +1,51 @@
+> > > > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+> > > > > > > +
+> > > > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> > > > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> > > > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> > > > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
+> > > > > > 
+> > > > > > If there are three to choose from, then you should specify which one is in
+> > > > > > use. Given that I think chances remain slim we'd add support for the other
+> > > > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
+> > > > > > this needs to be documented.
+> > > > > > 
+> > > > > 
+> > > > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
+> > > > > limitations of the driver. Here as you said, the sensor can output frames
+> > > > > in 3 different modes/formats but the driver only supports CSI2. I can add a
+> > > > > note in the driver but not sure whether dt-binding is the right place or not!
+> > > > 
+> > > > I guess alternatively you could document the necessary bindings for the
+> > > > other two busses.
+> > > > 
+> > > > But what I'm saying here is that it's highly unlikely they'll be ever
+> > > > needed, and it'd be mostly a waste of time to implement that. (That said, I
+> > > > have nothing against the use of these busses, but I've never seen anyone
+> > > > using them.) Many other devices use defaults for more contentious settings.
+> > > > 
+> > > 
+> > > Agree with you but my question was, whether I could document the supported
+> > > mode in bindings or not! I have seen comments from Rob in the past that the
+> > > binding should not document the limitations of the driver. But anyway, one
+> > > can infer from the current binding that only CSI2 is supported for now, it's
+> > > just stating it explicitly makes me doubtful!
+> > 
+> > I think it could be e.g.:
+> > 
+> > The CSI-2 bus is the default. No bindings have been defined for the other
+> > busses.
+> > 
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sprd.txt b/Documentation/devicetree/bindings/pwm/pwm-sprd.txt
-> new file mode 100644
-> index 0000000..e6cf312
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sprd.txt
-> @@ -0,0 +1,38 @@
-> +Spreadtrum PWM controller
-> +
-> +Spreadtrum SoCs PWM controller provides 4 PWM channels.
-> +
-> +Required porperties:
+> Ack.
+> 
+> > ...
+> > 
+> > > > > > I suppose you can't change the lane order, so clock-lanes is redundant
+> > > > > > (don't use it in the example) and data-lanes should be monotonically
+> > > > > > incrementing series from 1 to 4.
+> > > > > > 
+> > > > > 
+> > > > > We can change the order and the example here illustrates how it has been
+> > > > > wired in FRAMOS module. If I change the lane order like you said, it won't
+> > > > > work.
+> > > > 
+> > > > I highly doubt that. Neither the driver nor the sensor uses the lane
+> > > > ordering information.
+> > > > 
+> > > 
+> > > Agree but CSI2 host will need this informtion, right? Please correct me if
+> > > I'm wrong!
+> > 
+> > The CSI-2 receiver may need that configuration, but it's not addressed by a
+> > sensor's binding documentation (it's configured in the endpoint on the
+> > receiver's side).
+> > 
+> 
+> Yes but I thought that documenting the sensor lane configuration based on one
+> example implementation might help interfacing w/ different hosts. Anyway, to be
+> host agnostic, I can drop the clock lane and make data lane start from 1 as you
+> suggested.
 
-s/porperties/properties/
-
-> +- compatible : Should be "sprd,ums512-pwm".
-> +- reg: Physical base address and length of the controller's registers.
-> +- clocks: The phandle and specifier referencing the controller's clocks.
-> +- clock-names: Should contain following entries:
-> +  "pwmn": used to derive the functional clock for PWM channel n (n range: 0 ~ 3).
-> +  "enablen": for PWM channel n enable clock (n range: 0 ~ 3).
-> +- assigned-clocks: Reference to the PWM clock entroes.
-
-s/entroes/entries/
-
-> +- assigned-clock-parents: The phandle of the parent clock of PWM clock.
-
-I'm not sure you need to point out assigned-clocks and
-assigned-clock-parents as this is general clk stuff. Also I wonder if
-these should be "required properties".
-
-> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
-> +  the cells format.
-
-Best regards
-Uwe
+You could well have a different configuration from the default in an
+example. But my point is that this is simply the wrong place for
+configuring the lane mapping on the host.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Sakari Ailus
