@@ -1,43 +1,40 @@
-From: Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 2/3] macb: Update compatibility string for SiFive
- FU540-C000
-Date: Tue, 13 Aug 2019 11:42:49 -0700 (PDT)
-Message-ID: <alpine.DEB.2.21.9999.1908131142150.5033@viisi.sifive.com>
-References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com> <1563534631-15897-2-git-send-email-yash.shah@sifive.com> <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com> <CAJ2_jOEHoh+D76VpAoVq3XnpAZEQxdQtaVX5eiKw5X4r+ypKVw@mail.gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH v2 1/5] soundwire: Add compute_params callback
+Date: Tue, 13 Aug 2019 14:08:35 -0500
+Message-ID: <3fd3c98c-eb25-7040-3089-f5e5bc9d24ee@linux.intel.com>
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
+ <20190813083550.5877-2-srinivas.kandagatla@linaro.org>
+ <7e462330-a357-698a-b259-5ff136963a57@linux.intel.com>
+ <1a02f190-0aab-d512-ceb0-4a21014705e8@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ2_jOEHoh+D76VpAoVq3XnpAZEQxdQtaVX5eiKw5X4r+ypKVw@mail.gmail.com>
+In-Reply-To: <1a02f190-0aab-d512-ceb0-4a21014705e8@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <Nicolas.Ferre@microchip.com>, David Miller <davem@davemloft.net>
-Cc: Yash Shah <yash.shah@sifive.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, =?ISO-8859-15?Q?Petr_=A6tetiar?= <ynezz@true.cz>, Sachin Ghadi <sachin.ghadi@sifive.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, vkoul@kernel.org, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Dave, Nicolas,
-
-On Mon, 22 Jul 2019, Yash Shah wrote:
-
-> On Fri, Jul 19, 2019 at 5:36 PM <Nicolas.Ferre@microchip.com> wrote:
-> >
-> > On 19/07/2019 at 13:10, Yash Shah wrote:
-> > > Update the compatibility string for SiFive FU540-C000 as per the new
-> > > string updated in the binding doc.
-> > > Reference: https://lkml.org/lkml/2019/7/17/200
-> >
-> > Maybe referring to lore.kernel.org is better:
-> > https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5KA-+rgww@mail.gmail.com/
+On 8/13/19 1:17 PM, Srinivas Kandagatla wrote:
 > 
-> Sure. Will keep that in mind for future reference.
 > 
-> >
-> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> >
-> > Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> On 13/08/2019 15:34, Pierre-Louis Bossart wrote:
+>> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
+>>> From: Vinod Koul <vkoul@kernel.org>
+>>>
+>>> This callback allows masters to compute the bus parameters required.
+>>
+>> This looks like a partial use of the patch ('soundwire: Add Intel 
+>> resource management algorithm')? see comments below
+>>
 > 
-> Thanks.
+> Yes it duplicate indeed!
+> 
+> I will use that patch!
 
-Am assuming you'll pick this up for the -net tree for v5.4-rc1 or earlier.
-If not, please let us know.
-
-
-- Paul
+Actually please don't...
+we found issues with the Intel allocation so I'd rather have the big 
+Intel patch split into two parts, with callbacks+prepare/deprepare 
+changes going in first. It'll be much faster/nicer for everyone.
