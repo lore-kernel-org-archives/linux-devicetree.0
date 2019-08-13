@@ -1,82 +1,138 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH next v9 01/11] dt-binding: usb: add usb-role-switch property
-Date: Tue, 13 Aug 2019 19:27:04 +0800
-Message-ID: <1565695634-9711-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Date: Tue, 13 Aug 2019 17:03:58 +0530
+Message-ID: <20190813113358.GA28877@Mani-XPS-13-9360>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813094526.GG835@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Badhri Jagan Sridharan <badhri@google.com>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, Yu Chen <chenyu56@huawei.com>, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Nagarjuna Kristam <nkristam@nvidia.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
 List-Id: devicetree@vger.kernel.org
 
-Add a property usb-role-switch to tell the driver that use
-USB Role Switch framework to handle the role switch,
-it's useful when the driver has already supported other ways,
-such as extcon framework etc.
+Hi Sakari,
 
-Cc: Biju Das <biju.das@bp.renesas.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
-v7~v9: no changes
+Thanks for the review!
 
-v6:
-    1. merge into this series patch
-    2. add Reviewed-by
+On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
+> Hi Manivannan,
+> 
+> On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> > Add devicetree binding for IMX290 CMOS image sensor.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > new file mode 100644
+> > index 000000000000..7535b5b5b24b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > @@ -0,0 +1,51 @@
+> > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+> > +
+> > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> > +Low voltage LVDS DDR output and CSI-2 serial data output.
+> 
+> If there are three to choose from, then you should specify which one is in
+> use. Given that I think chances remain slim we'd add support for the other
+> two (it's certainly not ruled out though), CSI-2 could be the default. But
+> this needs to be documented.
+> 
 
-(no v4, v5)
+Hmm... I'm not sure here. Bindings should describe the hardware and not the
+limitations of the driver. Here as you said, the sensor can output frames
+in 3 different modes/formats but the driver only supports CSI2. I can add a
+note in the driver but not sure whether dt-binding is the right place or not!
 
-v3:
-    add property type, modify description suggested by Heikki
+> > +
+> > +Required Properties:
+> > +- compatible: Should be "sony,imx290"
+> > +- reg: I2C bus address of the device
+> > +- clocks: Reference to the xclk clock.
+> > +- clock-names: Should be "xclk".
+> > +- clock-frequency: Frequency of the xclk clock.
+> 
+> ...in Hz.
+> 
 
-v2:
-    describe it in terms of h/w functionality suggested by Rob
+Ack.
 
-v1:
-    the property is discussed in:
-    [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
-    https://patchwork.kernel.org/patch/10852497/
+> > +- vdddo-supply: Sensor digital IO regulator.
+> > +- vdda-supply: Sensor analog regulator.
+> > +- vddd-supply: Sensor digital core regulator.
+> > +
+> > +Optional Properties:
+> > +- reset-gpios: Sensor reset GPIO
+> > +
+> > +The imx290 device node should contain one 'port' child node with
+> > +an 'endpoint' subnode. For further reading on port node refer to
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> 
+> Which other properties are relevant for the device?
 
-    Mediatek and Hisilicon also try to use it:
-    [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-    https://patchwork.kernel.org/patch/10918385/
-    [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
-    https://patchwork.kernel.org/patch/10918367/
+Not much other than, clock/data lanes.
 
-    [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
-    https://patchwork.kernel.org/patch/10909981/
----
- Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+> I suppose you can't change the lane order, so clock-lanes is redundant
+> (don't use it in the example) and data-lanes should be monotonically
+> incrementing series from 1 to 4.
+> 
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index 0a74ab8dfdc2..cf5a1ad456e6 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -30,6 +30,10 @@ Optional properties:
- 			optional for OTG device.
-  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
- 			optional for OTG device.
-+ - usb-role-switch: boolean, indicates that the device is capable of assigning
-+			the USB data role (USB host or USB device) for a given
-+			USB connector, such as Type-C, Type-B(micro).
-+			see connector/usb-connector.txt.
- 
- This is an attribute to a USB controller such as:
- 
--- 
-2.22.0
+We can change the order and the example here illustrates how it has been
+wired in FRAMOS module. If I change the lane order like you said, it won't
+work.
+
+> > +
+> > +Example:
+> > +	&i2c1 {
+> > +		...
+> > +		imx290: imx290@1a {
+> 
+> imx290: camera-sensor@1a {
+
+Ack.
+
+Thanks,
+Mani
+
+> 
+> > +			compatible = "sony,imx290";
+> > +			reg = <0x1a>;
+> > +
+> > +			reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&camera_rear_default>;
+> > +
+> > +			clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> > +			clock-names = "xclk";
+> > +			clock-frequency = <37125000>;
+> > +
+> > +			vdddo-supply = <&camera_vdddo_1v8>;
+> > +			vdda-supply = <&camera_vdda_2v8>;
+> > +			vddd-supply = <&camera_vddd_1v5>;
+> > +
+> > +			port {
+> > +				imx290_ep: endpoint {
+> > +					clock-lanes = <1>;
+> > +					data-lanes = <0 2 3 4>;
+> > +					remote-endpoint = <&csiphy0_ep>;
+> > +				};
+> > +			};
+> > +		};
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
