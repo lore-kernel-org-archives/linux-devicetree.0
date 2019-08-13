@@ -1,115 +1,50 @@
-From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V2 3/4] staging: iio: adc: ad7192: Add system calibration support
-Date: Tue, 13 Aug 2019 10:55:43 +0300
-Message-ID: <20190813075544.9122-3-mircea.caprioru@analog.com>
-References: <20190813075544.9122-1-mircea.caprioru@analog.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
+Date: Tue, 13 Aug 2019 00:57:33 -0700
+Message-ID: <CAFd5g44Es4emKyQSxUkqckGJ02_o3sAcDLwUCW8ZFGX14j5=xg@mail.gmail.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-13-brendanhiggins@google.com> <20190813043140.67FF320644@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813075544.9122-1-mircea.caprioru@analog.com>
+In-Reply-To: <20190813043140.67FF320644@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-This patch will add a system calibration attribute for each channel. Using
-this option the user will have the ability to calibrate each channel for
-zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
-to implement the functionality.
+On Mon, Aug 12, 2019 at 9:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-08-12 11:24:15)
+> > +
+> > +static int kunit_resource_test_init(struct kunit *test)
+> > +{
+> > +       struct kunit_test_resource_context *ctx =
+> > +                       kzalloc(sizeof(*ctx), GFP_KERNEL);
+> > +
+> > +       if (!ctx)
+> > +               return -ENOMEM;
+>
+> Should this use the test assertion logic to make sure that it's not
+> failing allocations during init?
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
-Changelog V2:
-- no changes here
+Yep. Will fix.
 
- drivers/staging/iio/adc/ad7192.c | 55 +++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
+> BTW, maybe kunit allocation APIs should
+> fail the test if they fail to allocate in general. Unless we're unit
+> testing failure to allocate problems.
 
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index d58ce08f3693..731072830f30 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -155,6 +155,11 @@
-  * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
-  */
- 
-+enum {
-+   AD7192_SYSCALIB_ZERO_SCALE,
-+   AD7192_SYSCALIB_FULL_SCALE,
-+};
-+
- struct ad7192_state {
- 	struct regulator		*avdd;
- 	struct regulator		*dvdd;
-@@ -169,10 +174,56 @@ struct ad7192_state {
- 	u8				devid;
- 	u8				clock_sel;
- 	struct mutex			lock;	/* protect sensor state */
-+	u8				syscalib_mode[8];
- 
- 	struct ad_sigma_delta		sd;
- };
- 
-+static const char * const ad7192_syscalib_modes[] = {
-+	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
-+	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
-+};
-+
-+static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    unsigned int mode)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	st->syscalib_mode[chan->channel] = mode;
-+
-+	if (mode == AD7192_SYSCALIB_ZERO_SCALE)
-+		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
-+				      chan->address);
-+	else
-+		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
-+				      chan->address);
-+
-+	return ret;
-+}
-+
-+static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+
-+	return st->syscalib_mode[chan->channel];
-+}
-+
-+static const struct iio_enum ad7192_syscalib_mode_enum = {
-+	.items = ad7192_syscalib_modes,
-+	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
-+	.set = ad7192_set_syscalib_mode,
-+	.get = ad7192_get_syscalib_mode
-+};
-+
-+static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
-+	IIO_ENUM("system_calibration", IIO_SEPARATE, &ad7192_syscalib_mode_enum),
-+	IIO_ENUM_AVAILABLE("system_calibration", &ad7192_syscalib_mode_enum),
-+	{}
-+};
-+
- static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
- {
- 	return container_of(sd, struct ad7192_state, sd);
-@@ -769,9 +820,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 		*chan = channels[i];
- 		chan->info_mask_shared_by_all |=
- 			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
--		if (chan->type != IIO_TEMP)
-+		if (chan->type != IIO_TEMP) {
- 			chan->info_mask_shared_by_type_available |=
- 				BIT(IIO_CHAN_INFO_SCALE);
-+			chan->ext_info = ad7192_calibsys_ext_info;
-+		}
- 		chan++;
- 	}
- 
--- 
-2.17.1
+Yeah, I thought about that. I wasn't sure how people would feel about
+it, and I thought it would be a pain to tease out all the issues
+arising from aborting in different contexts when someone might not
+expect it.
+
+I am thinking later we can have kunit_kmalloc_or_abort variants? And
+then we can punt this issue to a later time?
+
+> > +
+> > +       test->priv = ctx;
+> > +
+> > +       kunit_init_test(&ctx->test, "test_test_context");
+> > +
+> > +       return 0;
