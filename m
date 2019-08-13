@@ -1,385 +1,131 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
-Date: Tue, 13 Aug 2019 21:46:41 +0800
-Message-ID: <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
+ binding
+Date: Tue, 13 Aug 2019 19:22:09 +0530
+Message-ID: <20190813135209.GA30945@Mani-XPS-13-9360>
+References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
+ <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
+ <20190813094526.GG835@valkosipuli.retiisi.org.uk>
+ <20190813113358.GA28877@Mani-XPS-13-9360>
+ <20190813114643.GA2527@valkosipuli.retiisi.org.uk>
+ <20190813121400.GA29378@Mani-XPS-13-9360>
+ <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
-In-Reply-To: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190813122212.GE2527@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: u.kleine-koenig@pengutronix.de, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, vincent.guittot@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the Spreadtrum PWM support, which provides maximum 4
-channels.
+Hi Sakari,
 
-Signed-off-by: Neo Hou <neo.hou@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
-Changes from v1:
- - Add depending on HAS_IOMEM.
- - Rename parameters' names.
- - Implement .apply() instead of .config(), .enable() and .disable().
- - Use NSEC_PER_SEC instead of 1000000000ULL.
- - Add some comments to make code more readable.
- - Remove some redundant operation.
- - Use standard clock properties to set clock parent.
- - Other coding style optimization.
----
- drivers/pwm/Kconfig    |   11 ++
- drivers/pwm/Makefile   |    1 +
- drivers/pwm/pwm-sprd.c |  307 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 319 insertions(+)
- create mode 100644 drivers/pwm/pwm-sprd.c
+On Tue, Aug 13, 2019 at 03:22:12PM +0300, Sakari Ailus wrote:
+> Hi Manivannan,
+> 
+> On Tue, Aug 13, 2019 at 05:44:00PM +0530, Manivannan Sadhasivam wrote:
+> > Hi Sakari,
+> > 
+> > On Tue, Aug 13, 2019 at 02:46:43PM +0300, Sakari Ailus wrote:
+> > > Hi Manivannan,
+> > > 
+> > > On Tue, Aug 13, 2019 at 05:03:58PM +0530, Manivannan Sadhasivam wrote:
+> > > > Hi Sakari,
+> > > > 
+> > > > Thanks for the review!
+> > > > 
+> > > > On Tue, Aug 13, 2019 at 12:45:26PM +0300, Sakari Ailus wrote:
+> > > > > Hi Manivannan,
+> > > > > 
+> > > > > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > Add devicetree binding for IMX290 CMOS image sensor.
+> > > > > > 
+> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/media/i2c/imx290.txt  | 51 +++++++++++++++++++
+> > > > > >  1 file changed, 51 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx290.txt b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..7535b5b5b24b
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > > > > > @@ -0,0 +1,51 @@
+> > > > > > +* Sony IMX290 1/2.8-Inch CMOS Image Sensor
+> > > > > > +
+> > > > > > +The Sony IMX290 is a 1/2.8-Inch CMOS Solid-state image sensor with
+> > > > > > +Square Pixel for Color Cameras. It is programmable through I2C and 4-wire
+> > > > > > +interfaces. The sensor output is available via CMOS logic parallel SDR output,
+> > > > > > +Low voltage LVDS DDR output and CSI-2 serial data output.
+> > > > > 
+> > > > > If there are three to choose from, then you should specify which one is in
+> > > > > use. Given that I think chances remain slim we'd add support for the other
+> > > > > two (it's certainly not ruled out though), CSI-2 could be the default. But
+> > > > > this needs to be documented.
+> > > > > 
+> > > > 
+> > > > Hmm... I'm not sure here. Bindings should describe the hardware and not the
+> > > > limitations of the driver. Here as you said, the sensor can output frames
+> > > > in 3 different modes/formats but the driver only supports CSI2. I can add a
+> > > > note in the driver but not sure whether dt-binding is the right place or not!
+> > > 
+> > > I guess alternatively you could document the necessary bindings for the
+> > > other two busses.
+> > > 
+> > > But what I'm saying here is that it's highly unlikely they'll be ever
+> > > needed, and it'd be mostly a waste of time to implement that. (That said, I
+> > > have nothing against the use of these busses, but I've never seen anyone
+> > > using them.) Many other devices use defaults for more contentious settings.
+> > > 
+> > 
+> > Agree with you but my question was, whether I could document the supported
+> > mode in bindings or not! I have seen comments from Rob in the past that the
+> > binding should not document the limitations of the driver. But anyway, one
+> > can infer from the current binding that only CSI2 is supported for now, it's
+> > just stating it explicitly makes me doubtful!
+> 
+> I think it could be e.g.:
+> 
+> The CSI-2 bus is the default. No bindings have been defined for the other
+> busses.
+> 
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a7e5751..31dfc88 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -423,6 +423,17 @@ config PWM_SPEAR
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-spear.
- 
-+config PWM_SPRD
-+	tristate "Spreadtrum PWM support"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  Generic PWM framework driver for the PWM controller on
-+	  Spreadtrum SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sprd.
-+
- config PWM_STI
- 	tristate "STiH4xx PWM support"
- 	depends on ARCH_STI
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 76b555b..26326ad 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
-+obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
- obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
-diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-new file mode 100644
-index 0000000..067e711
---- /dev/null
-+++ b/drivers/pwm/pwm-sprd.c
-@@ -0,0 +1,307 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Spreadtrum Communications Inc.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+#define SPRD_PWM_PRESCALE	0x0
-+#define SPRD_PWM_MOD		0x4
-+#define SPRD_PWM_DUTY		0x8
-+#define SPRD_PWM_ENABLE		0x18
-+
-+#define SPRD_PWM_MOD_MAX	GENMASK(7, 0)
-+#define SPRD_PWM_DUTY_MSK	GENMASK(15, 0)
-+#define SPRD_PWM_PRESCALE_MSK	GENMASK(7, 0)
-+#define SPRD_PWM_ENABLE_BIT	BIT(0)
-+
-+#define SPRD_PWM_NUM		4
-+#define SPRD_PWM_REGS_SHIFT	5
-+#define SPRD_PWM_NUM_CLKS	2
-+#define SPRD_PWM_OUTPUT_CLK	1
-+
-+struct sprd_pwm_chn {
-+	struct clk_bulk_data clks[SPRD_PWM_NUM_CLKS];
-+	u32 clk_rate;
-+};
-+
-+struct sprd_pwm_chip {
-+	void __iomem *base;
-+	struct device *dev;
-+	struct pwm_chip chip;
-+	int num_pwms;
-+	struct sprd_pwm_chn chn[SPRD_PWM_NUM];
-+};
-+
-+/*
-+ * The list of clocks required by PWM channels, and each channel has 2 clocks:
-+ * enable clock and pwm clock.
-+ */
-+static const char * const sprd_pwm_clks[] = {
-+	"enable0", "pwm0",
-+	"enable1", "pwm1",
-+	"enable2", "pwm2",
-+	"enable3", "pwm3",
-+};
-+
-+static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32 hwid, u32 reg)
-+{
-+	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
-+
-+	return readl_relaxed(spc->base + offset);
-+}
-+
-+static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
-+			   u32 reg, u32 val)
-+{
-+	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
-+
-+	writel_relaxed(val, spc->base + offset);
-+}
-+
-+static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       struct pwm_state *state)
-+{
-+	struct sprd_pwm_chip *spc =
-+		container_of(chip, struct sprd_pwm_chip, chip);
-+	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-+	u32 val, duty, prescale;
-+	u64 tmp;
-+	int ret;
-+
-+	/*
-+	 * The clocks to PWM channel has to be enabled first before
-+	 * reading to the registers.
-+	 */
-+	ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS, chn->clks);
-+	if (ret) {
-+		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
-+			pwm->hwpwm);
-+		return;
-+	}
-+
-+	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE);
-+	if (val & SPRD_PWM_ENABLE_BIT)
-+		state->enabled = true;
-+	else
-+		state->enabled = false;
-+
-+	/*
-+	 * The hardware provides a counter that is feed by the source clock.
-+	 * The period length is (PRESCALE + 1) * MOD counter steps.
-+	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-+	 * Thus the period_ns and duty_ns calculation formula should be:
-+	 * period_ns = NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
-+	 * duty_ns = NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
-+	 */
-+	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
-+	prescale = val & SPRD_PWM_PRESCALE_MSK;
-+	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
-+	state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-+
-+	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
-+	duty = val & SPRD_PWM_DUTY_MSK;
-+	tmp = (prescale + 1) * NSEC_PER_SEC * duty;
-+	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-+
-+	/* Disable PWM clocks if the PWM channel is not in enable state. */
-+	if (!state->enabled)
-+		clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-+}
-+
-+static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
-+			   int duty_ns, int period_ns)
-+{
-+	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-+	u64 div, tmp;
-+	u32 prescale, duty;
-+
-+	/*
-+	 * The hardware provides a counter that is feed by the source clock.
-+	 * The period length is (PRESCALE + 1) * MOD counter steps.
-+	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-+	 *
-+	 * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
-+	 * The value for PRESCALE is selected such that the resulting period
-+	 * gets the maximal length not bigger than the requested one with the
-+	 * given settings (MOD = SPRD_PWM_MOD_MAX and input clock).
-+	 */
-+	duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-+
-+	tmp = (u64)chn->clk_rate * period_ns;
-+	div = NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
-+	prescale = div64_u64(tmp, div) - 1;
-+	if (prescale > SPRD_PWM_PRESCALE_MSK)
-+		prescale = SPRD_PWM_PRESCALE_MSK;
-+
-+	/*
-+	 * Note: The MOD must be configured before DUTY, and the hardware can
-+	 * ensure current running period is completed before changing a new
-+	 * configuration to avoid mixed settings.
-+	 */
-+	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
-+	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
-+	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
-+
-+	return 0;
-+}
-+
-+static int sprd_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			  struct pwm_state *state)
-+{
-+	struct sprd_pwm_chip *spc =
-+		container_of(chip, struct sprd_pwm_chip, chip);
-+	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-+	struct pwm_state cstate;
-+	int ret;
-+
-+	pwm_get_state(pwm, &cstate);
-+
-+	if (state->enabled) {
-+		if (!cstate.enabled) {
-+			/*
-+			 * The clocks to PWM channel has to be enabled first
-+			 * before writing to the registers.
-+			 */
-+			ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS,
-+						      chn->clks);
-+			if (ret) {
-+				dev_err(spc->dev,
-+					"failed to enable pwm%u clocks\n",
-+					pwm->hwpwm);
-+				return ret;
-+			}
-+		}
-+
-+		if (state->period != cstate.period ||
-+		    state->duty_cycle != cstate.duty_cycle) {
-+			ret = sprd_pwm_config(spc, pwm, state->duty_cycle,
-+					      state->period);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 1);
-+	} else if (cstate.enabled) {
-+		sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 0);
-+
-+		clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops sprd_pwm_ops = {
-+	.apply = sprd_pwm_apply,
-+	.get_state = sprd_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
-+{
-+	struct clk *clk_pwm;
-+	int ret, i, clk_index = 0;
-+
-+	for (i = 0; i < SPRD_PWM_NUM; i++) {
-+		struct sprd_pwm_chn *chn = &spc->chn[i];
-+		int j;
-+
-+		for (j = 0; j < SPRD_PWM_NUM_CLKS; ++j)
-+			chn->clks[j].id = sprd_pwm_clks[clk_index++];
-+
-+		ret = devm_clk_bulk_get(spc->dev, SPRD_PWM_NUM_CLKS, chn->clks);
-+		if (ret) {
-+			if (ret == -ENOENT)
-+				break;
-+
-+			dev_err(spc->dev, "failed to get channel clocks\n");
-+			return ret;
-+		}
-+
-+		clk_pwm = chn->clks[SPRD_PWM_OUTPUT_CLK].clk;
-+		chn->clk_rate = clk_get_rate(clk_pwm);
-+	}
-+
-+	if (!i) {
-+		dev_err(spc->dev, "no available PWM channels\n");
-+		return -EINVAL;
-+	}
-+
-+	spc->num_pwms = i;
-+
-+	return 0;
-+}
-+
-+static int sprd_pwm_probe(struct platform_device *pdev)
-+{
-+	struct sprd_pwm_chip *spc;
-+	int ret;
-+
-+	spc = devm_kzalloc(&pdev->dev, sizeof(*spc), GFP_KERNEL);
-+	if (!spc)
-+		return -ENOMEM;
-+
-+	spc->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(spc->base))
-+		return PTR_ERR(spc->base);
-+
-+	spc->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, spc);
-+
-+	ret = sprd_pwm_clk_init(spc);
-+	if (ret)
-+		return ret;
-+
-+	spc->chip.dev = &pdev->dev;
-+	spc->chip.ops = &sprd_pwm_ops;
-+	spc->chip.base = -1;
-+	spc->chip.npwm = spc->num_pwms;
-+
-+	ret = pwmchip_add(&spc->chip);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to add PWM chip\n");
-+
-+	return ret;
-+}
-+
-+static int sprd_pwm_remove(struct platform_device *pdev)
-+{
-+	struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
-+	int ret, i;
-+
-+	ret = pwmchip_remove(&spc->chip);
-+
-+	for (i = 0; i < spc->num_pwms; i++) {
-+		struct sprd_pwm_chn *chn = &spc->chn[i];
-+
-+		clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id sprd_pwm_of_match[] = {
-+	{ .compatible = "sprd,ums512-pwm", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sprd_pwm_of_match);
-+
-+static struct platform_driver sprd_pwm_driver = {
-+	.driver = {
-+		.name = "sprd-pwm",
-+		.of_match_table = sprd_pwm_of_match,
-+	},
-+	.probe = sprd_pwm_probe,
-+	.remove = sprd_pwm_remove,
-+};
-+
-+module_platform_driver(sprd_pwm_driver);
-+
-+MODULE_DESCRIPTION("Spreadtrum PWM Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+Ack.
+
+> ...
+> 
+> > > > > I suppose you can't change the lane order, so clock-lanes is redundant
+> > > > > (don't use it in the example) and data-lanes should be monotonically
+> > > > > incrementing series from 1 to 4.
+> > > > > 
+> > > > 
+> > > > We can change the order and the example here illustrates how it has been
+> > > > wired in FRAMOS module. If I change the lane order like you said, it won't
+> > > > work.
+> > > 
+> > > I highly doubt that. Neither the driver nor the sensor uses the lane
+> > > ordering information.
+> > > 
+> > 
+> > Agree but CSI2 host will need this informtion, right? Please correct me if
+> > I'm wrong!
+> 
+> The CSI-2 receiver may need that configuration, but it's not addressed by a
+> sensor's binding documentation (it's configured in the endpoint on the
+> receiver's side).
+> 
+
+Yes but I thought that documenting the sensor lane configuration based on one
+example implementation might help interfacing w/ different hosts. Anyway, to be
+host agnostic, I can drop the clock lane and make data lane start from 1 as you
+suggested.
+
+Thanks,
+Mani
+
+> -- 
+> Sakari Ailus
