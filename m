@@ -1,35 +1,174 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/5] dt-bindings: watchdog: sun4i: Add the watchdog interrupts
-Date: Tue, 13 Aug 2019 15:32:31 -0600
-Message-ID: <CAL_JsqL5v1nd85FuuU1aHDDvojnWqs-4aDZAUDm0iCR0akhF9g@mail.gmail.com>
-References: <20190813124744.32614-1-mripard@kernel.org> <20190813124744.32614-3-mripard@kernel.org>
+Subject: Re: [PATCH V2 4/4] dt-bindings: iio: adc: ad7192: Add binding
+ documentation for AD7192
+Date: Tue, 13 Aug 2019 15:34:42 -0600
+Message-ID: <CAL_JsqJo-LMmG8B6mitr38TdSj7ejrbGvcsy6TQAtvi6MoemOg@mail.gmail.com>
+References: <20190813075544.9122-1-mircea.caprioru@analog.com> <20190813075544.9122-4-mircea.caprioru@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813124744.32614-3-mripard@kernel.org>
+In-Reply-To: <20190813075544.9122-4-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Mircea Caprioru <mircea.caprioru@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:47 AM Maxime Ripard <mripard@kernel.org> wrote:
+On Tue, Aug 13, 2019 at 1:56 AM Mircea Caprioru
+<mircea.caprioru@analog.com> wrote:
 >
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
+> This patch add device tree binding documentation for AD7192 adc in YAML
+> format.
 >
-> The Allwinner watchdog has an interrupt, either shared or dedicated
-> depending on the SoC, that has been described in some DT, but not all of
-> them.
->
-> The binding is also completely missing that description. Let's add that
-> property to be consistent.
-
-I'm fine with fixing errors like this in the conversion patch.
-
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 > ---
->  .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
->  1 file changed, 5 insertions(+)
+> Changelog V2:
+> - remove description from spi and interrupt properties
+> - changed the name of the device from ad7192 to adc in the example
+>
+>  .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.=
+yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> new file mode 100644
+> index 000000000000..2d83724cb4d6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> @@ -0,0 +1,121 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7192.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7192 ADC device driver
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD7192 ADC device. Datasheet can be
+> +  found here:
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
+7192.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7190
+> +      - adi,ad7192
+> +      - adi,ad7193
+> +      - adi,ad7195
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-cpol: true
+> +
+> +  spi-cpha: true
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: phandle to the master clock (mclk)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dvdd-supply:
+> +    description: DVdd voltage supply
+> +    items:
+> +      - const: dvdd
+> +
+> +  avdd-supply:
+> +    description: AVdd voltage supply
+> +    items:
+> +      - const: avdd
+> +
+> +  adi,rejection-60-Hz-enable:
+> +    description: |
+> +      This bit enables a notch at 60 Hz when the first notch of the sinc
+> +      filter is at 50 Hz. When REJ60 is set, a filter notch is placed at
+> +      60 Hz when the sinc filter first notch is at 50 Hz. This allows
+> +      simultaneous 50 Hz/ 60 Hz rejection.
+> +    type: boolean
+> +
+> +  adi,refin2-pins-enable:
+> +    description: |
+> +      External reference applied between the P1/REFIN2(+) and P0/REFIN2(=
+=E2=88=92) pins.
+> +    type: boolean
+> +
+> +  adi,buffer-enable:
+> +    description: |
+> +      Enables the buffer on the analog inputs. If cleared, the analog in=
+puts
+> +      are unbuffered, lowering the power consumption of the device. If t=
+his
+> +      bit is set, the analog inputs are buffered, allowing the user to p=
+lace
+> +      source impedances on the front end without contributing gain error=
+s to
+> +      the system.
+> +    type: boolean
+> +
+> +  adi,burnout-currents-enable:
+> +    description: |
+> +      When this bit is set to 1, the 500 nA current sources in the signa=
+l
+> +      path are enabled. When BURN =3D 0, the burnout currents are disabl=
+ed.
+> +      The burnout currents can be enabled only when the buffer is active
+> +      and when chop is disabled.
+> +    type: boolean
+> +
+> +  bipolar:
+> +    description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - dvdd-supply
+> +  - avdd-supply
+> +  - spi-cpol
+> +  - spi-cpha
+> +
+> +examples:
+> +  - |
+> +    spi0 {
+> +      adc@0 {
+> +        compatible =3D "adi,ad7192";
+> +        reg =3D <0>;
+> +        spi-max-frequency =3D <1000000>;
+> +        spi-cpol;
+> +        spi-cpha;
+> +        clocks =3D <&ad7192_mclk>;
+> +        clock-names =3D "mclk";
+> +        #interrupt-cells =3D <2>;
+> +        interrupts =3D <25 0x2>;
+> +        interrupt-parent =3D <&gpio>;
+> +        dvdd-supply =3D <&dvdd>;
+> +        avdd-supply =3D <&avdd>;
+> +
+> +        adi,refin2-pins-enable;
+> +        adi,rejection-60-Hz-enable;
+> +        adi,buffer-enable;
+> +        adi,burnout-currents-enable;
+> +        };
+> +    }
 
-Either way:
+You didn't build this with 'make dt_binding_check'. Please do so and
+fix the error here.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Rob
