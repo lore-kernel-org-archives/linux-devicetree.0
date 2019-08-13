@@ -1,45 +1,118 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream like string builder
-Date: Mon, 12 Aug 2019 22:30:22 -0700
-Message-ID: <20190813053023.CC86120651@mail.kernel.org>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-4-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org> <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org> <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com> <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
+Date: Tue, 13 Aug 2019 07:39:05 +0200
+Message-ID: <20190813053905.hu2hyi7fah2vujzz@flea>
+References: <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
+ <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
+ <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
+ <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
+ <20190807115614.phm7sbyae6yajkug@flea>
+ <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
+ <20190808162628.pthvy3tgf3naj76s@flea>
+ <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
+ <20190812080420.saelmqb36vkelxn4@flea>
+ <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 22:02:59)
-> On Mon, Aug 12, 2019 at 9:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
+On Mon, Aug 12, 2019 at 11:01:51AM -0700, Vasily Khoruzhick wrote:
+> On Mon, Aug 12, 2019 at 1:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > >
-> > Quoting Brendan Higgins (2019-08-12 17:41:05)
-> > > On Mon, Aug 12, 2019 at 4:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick wrote:
+> > > On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 > > > >
-> > > > > kunit_resource_destroy (respective equivalents to devm_kfree, and
-> > > > > devres_destroy) and use kunit_kfree here?
+> > > > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruzhick wrote:
+> > > > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > >
+> > > > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruzhick wrote:
+> > > > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > > > > >
+> > > > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
+> > > > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
+> > > > > > > > >>
+> > > > > > > > >> Vasily Khoruzhick writes:
+> > > > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > > > > > >>>>
+> > > > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
+> > > > > > > > >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
+> > > > > > > > >>>>> as result 'perf top' shows no events.
+> > > > > > > > >>>>
+> > > > > > > > >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
+> > > > > > > > >>>> It could well just be that the interrupt numbers are wrong...
+> > > > > > > > >>>
+> > > > > > > > >>> Looks like it does, at least result looks plausible:
+> > > > > > > > >>
+> > > > > > > > >> I'm using perf stat regularly (cache benchmarks) and it works fine.
+> > > > > > > > >>
+> > > > > > > > >> Unfortunately I wasn't aware that perf stat is a poor test for
+> > > > > > > > >> the interrupts part of the node, when I added it. So I'm not too
+> > > > > > > > >> surprised I got it wrong.
+> > > > > > > > >>
+> > > > > > > > >> However, it would be unfortunate if the node got removed completely,
+> > > > > > > > >> because perf stat would not work anymore. Maybe we can only remove
+> > > > > > > > >> the interrupts or just fix them even if the HW doesn't work?
+> > > > > > > > >
+> > > > > > > > > I'm not familiar with PMU driver. Is it possible to get it working
+> > > > > > > > > without interrupts?
+> > > > > > > >
+> > > > > > > > Yup - you get a grumpy message from the driver, it will refuse sampling
+> > > > > > > > events (the ones which weren't working anyway), and if you measure
+> > > > > > > > anything for long enough that a counter overflows you'll get wonky
+> > > > > > > > results. But for counting hardware events over relatively short periods
+> > > > > > > > it'll still do the job.
+> > > > > > >
+> > > > > > > I tried to drop interrupts completely from the node but 'perf top' is
+> > > > > > > still broken. Though now in different way: it complains "cycles: PMU
+> > > > > > > Hardware doesn't support sampling/overflow-interrupts. Try 'perf
+> > > > > > > stat'"
+> > > > > >
+> > > > > > I have no idea if that's the culprit, but what is the state of the
+> > > > > > 0x09010000 register?
 > > > > >
+> > > > > What register is that and how do I check it?
 > > > >
-> > > > Yes, or drop the API entirely? Does anything need this functionalit=
-y?
+> > > > It's in the CPUX Configuration block, and the bits are labelled as CPU
+> > > > Debug Reset.
+> > > >
+> > > > And if you have busybox, you can use devmem.
 > > >
-> > > Drop the kunit_resource API? I would strongly prefer not to.
+> > > CPUX configuration block is at 0x01700000 according to A64 user
+> > > manual, and particular register you're interested in is at 0x01700080,
+> > > its value is 0x1110110F.
+> > >
+> > > Bits 16-19 are not defined in user manual and are not set.
 > >
-> > No. I mean this API, string_stream_clear(). Does anything use it?
->=20
-> Oh, right. No.
->=20
-> However, now that I added the kunit_resource_destroy, I thought it
-> might be good to free the string_stream after I use it in each call to
-> kunit_assert->format(...) in which case I will be using this logic.
->=20
-> So I think the right thing to do is to expose string_stream_destroy so
-> kunit_do_assert can clean up when it's done, and then demote
-> string_stream_clear to static. Sound good?
+> > Sorry, I somehow thought this was for the H6...
+> >
+> > I don't have any idea then :/
+>
+> OK, so what should we do? 'perf top'/'perf record' work fine if PMU
+> node is dropped, but they don't work if PMU node is present (even with
+> interrupts dropped). I'd prefer to have 'perf top' and 'perf record'
+> working instead of 'perf stat'
 
-Ok, sure. I don't really see how clearing it explicitly when the
-assertion prints vs. never allocating it to begin with is really any
-different. Maybe I've missed something though.
+Well, it doesn't work so we should just remove the node, and if
+someone wants it back, they should figure it out.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
