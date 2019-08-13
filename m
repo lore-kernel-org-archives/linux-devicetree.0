@@ -1,59 +1,69 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v4 10/14] net: phy: adin: implement PHY subsystem
- software reset
-Date: Tue, 13 Aug 2019 05:42:55 +0000
-Message-ID: <916a477bb97aef904bdd1d84e85c92f6318b30df.camel@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-         <20190812112350.15242-11-alexandru.ardelean@analog.com>
-         <20190812141954.GP14290@lunn.ch>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: How to add multiple example with conflicting includes
+Date: Tue, 13 Aug 2019 07:44:26 +0200
+Message-ID: <20190813054426.73ret73tmkrkyqfo@flea>
+References: <20190726181108.GA17767@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812141954.GP14290@lunn.ch>
-Content-Language: en-US
-Content-ID: <F0FF1E0F736A8B4389AC1EE977E5A777@analog.com>
+Content-Disposition: inline
+In-Reply-To: <20190726181108.GA17767@Red>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTEyIGF0IDE2OjE5ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gPiArc3RhdGljIGludCBhZGluX3Jlc2V0KHN0cnVjdCBwaHlfZGV2
-aWNlICpwaHlkZXYpDQo+ID4gK3sNCj4gPiArCS8qIElmIHRoZXJlIGlzIGEgcmVzZXQgR1BJTyBq
-dXN0IGV4aXQgKi8NCj4gPiArCWlmICghSVNfRVJSX09SX05VTEwocGh5ZGV2LT5tZGlvLnJlc2V0
-X2dwaW8pKQ0KPiA+ICsJCXJldHVybiAwOw0KPiANCj4gSSdtIG5vdCBzbyBoYXBweSB3aXRoIHRo
-aXMuDQo+IA0KPiBGaXJzdCBvZmYsIHRoZXJlIGFyZSB0d28gcG9zc2libGUgR1BJTyBjb25maWd1
-cmF0aW9ucy4gVGhlIEdQSU8gY2FuIGJlDQo+IGFwcGxpZWQgdG8gYWxsIFBIWXMgb24gdGhlIE1E
-SU8gYnVzLiBUaGF0IEdQSU8gaXMgdXNlZCB3aGVuIHRoZSBidXMgaXMNCj4gcHJvYmVkLiBUaGVy
-ZSBjYW4gYWxzbyBiZSBhIHBlciBQSFkgR1BJTywgd2hpY2ggaXMgd2hhdCB5b3UgYXJlDQo+IGxv
-b2tpbmcgYXQgaGVyZS4NCj4gDQo+IFRoZSBpZGVhIG9mIHB1dHRpbmcgdGhlIEdQSU8gaGFuZGxp
-bmcgaW4gdGhlIGNvcmUgaXMgdGhhdCBQSFlzIGRvbid0DQo+IG5lZWQgdG8gd29ycnkgYWJvdXQg
-aXQuIEhvdyBtdWNoIG9mIGEgZGlmZmVyZW5jZSBkb2VzIGl0IG1ha2UgaWYgdGhlDQo+IFBIWSBp
-cyBib3RoIHJlc2V0IHZpYSBHUElPIGFuZCB0aGVuIGFnYWluIGluIHNvZnR3YXJlPyBIb3cgc2xv
-dyBpcyB0aGUNCj4gc29mdHdhcmUgcmVzZXQ/IE1heWJlIGp1c3QgdW5jb25kaXRpb25hbGx5IGRv
-IHRoZSByZXNldCwgaWYgaXQgaXMgbm90DQo+IHRvbyBzbG93Lg0KPiANCg0KQWNrLg0KV2lsbCBk
-byBpdCB1bmNvbmRpdGlvbmFsbHkuDQpUaGUgcmVzZXQgaXMgbm90IHRvbyBzbG93Lg0KDQoNCj4g
-PiArDQo+ID4gKwkvKiBSZXNldCBQSFkgY29yZSByZWdzICYgc3Vic3lzdGVtIHJlZ3MgKi8NCj4g
-PiArCXJldHVybiBhZGluX3N1YnN5dGVtX3NvZnRfcmVzZXQocGh5ZGV2KTsNCj4gPiArfQ0KPiA+
-ICsNCj4gPiArc3RhdGljIGludCBhZGluX3Byb2JlKHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYp
-DQo+ID4gK3sNCj4gPiArCXJldHVybiBhZGluX3Jlc2V0KHBoeWRldik7DQo+ID4gK30NCj4gDQo+
-IFdoeSBkaWQgeW91IGRlY2lkZSB0byBkbyB0aGlzIGFzIHBhcnQgb2YgcHJvYmUsIGFuZCBub3Qg
-dXNlIHRoZQ0KPiAuc29mdF9yZXNldCBtZW1iZXIgb2YgcGh5X2RyaXZlcj8NCg0KSG1tbS4NClRo
-aXMgaXMgYSBsZWZ0LW92ZXIgZnJvbSB3aGVuIEkgaGFkIHRoZSBHUElPIGhhbmRsaW5nIGluIHRo
-aXMgUEhZIGRyaXZlci4NCkl0J3MgYWxzbyBhIGhhYml0IHBpY2tlZCB1cCBmcm9tIHdyaXRpbmcg
-SUlPIGRyaXZlcnMsIHdoZXJlIHRoZXJlIGlzIG5vIHtzb2Z0X31yZXNldCBob29rLg0KVHlwaWNh
-bGx5LCB0aGUgcmVzZXQgaXMgZG9uZSBpbiB0aGUgcHJvYmUuDQoNCj4gDQo+ID4gKw0KPiA+ICBz
-dGF0aWMgc3RydWN0IHBoeV9kcml2ZXIgYWRpbl9kcml2ZXJbXSA9IHsNCj4gPiAgCXsNCj4gPiAg
-CQlQSFlfSURfTUFUQ0hfTU9ERUwoUEhZX0lEX0FESU4xMjAwKSwNCj4gPiAgCQkubmFtZQkJPSAi
-QURJTjEyMDAiLA0KPiA+ICAJCS5jb25maWdfaW5pdAk9IGFkaW5fY29uZmlnX2luaXQsDQo+ID4g
-KwkJLnByb2JlCQk9IGFkaW5fcHJvYmUsDQo+ID4gIAkJLmNvbmZpZ19hbmVnCT0gYWRpbl9jb25m
-aWdfYW5lZywNCj4gPiAgCQkucmVhZF9zdGF0dXMJPSBhZGluX3JlYWRfc3RhdHVzLA0KPiA+ICAJ
-CS5hY2tfaW50ZXJydXB0CT0gYWRpbl9waHlfYWNrX2ludHIsDQo+ID4gQEAgLTQ2MSw2ICs1MDMs
-NyBAQCBzdGF0aWMgc3RydWN0IHBoeV9kcml2ZXIgYWRpbl9kcml2ZXJbXSA9IHsNCj4gPiAgCQlQ
-SFlfSURfTUFUQ0hfTU9ERUwoUEhZX0lEX0FESU4xMzAwKSwNCj4gPiAgCQkubmFtZQkJPSAiQURJ
-TjEzMDAiLA0KPiA+ICAJCS5jb25maWdfaW5pdAk9IGFkaW5fY29uZmlnX2luaXQsDQo+ID4gKwkJ
-LnByb2JlCQk9IGFkaW5fcHJvYmUsDQo+ID4gIAkJLmNvbmZpZ19hbmVnCT0gYWRpbl9jb25maWdf
-YW5lZywNCj4gPiAgCQkucmVhZF9zdGF0dXMJPSBhZGluX3JlYWRfc3RhdHVzLA0KPiA+ICAJCS5h
-Y2tfaW50ZXJydXB0CT0gYWRpbl9waHlfYWNrX2ludHIsDQo+IA0KPiBUaGFua3MNCj4gCUFuZHJl
-dw0K
+Hi Rob,
+
+On Fri, Jul 26, 2019 at 08:11:08PM +0200, Corentin Labbe wrote:
+> When I try to check the following examples of a devicetree schema:
+> examples:
+>   - |
+>     #include <dt-bindings/interrupt-controller/arm-gic.h>
+>     #include <dt-bindings/clock/sun50i-a64-ccu.h>
+>     #include <dt-bindings/reset/sun50i-a64-ccu.h>
+>
+>     crypto: crypto@1c15000 {
+>       compatible = "allwinner,sun8i-h3-crypto";
+>       reg = <0x01c15000 0x1000>;
+>       interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+>       clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
+>       clock-names = "ahb", "mod";
+>       resets = <&ccu RST_BUS_CE>;
+>       reset-names = "ahb";
+>     };
+>
+>   - |
+>     #include <dt-bindings/interrupt-controller/arm-gic.h>
+>     #include <dt-bindings/clock/sun50i-h6-ccu.h>
+>     #include <dt-bindings/reset/sun50i-h6-ccu.h>
+>
+>     crypto: crypto@1904000 {
+>       compatible = "allwinner,sun50i-h6-crypto";
+>       reg = <0x01904000 0x1000>;
+>       interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+>       clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>, <&ccu CLK_MBUS_CE>;
+>       clock-names = "ahb", "mod", "mbus";
+>       resets = <&ccu RST_BUS_CE>;
+>       reset-names = "ahb";
+>     };
+>
+> I get:
+> In file included from Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.example.dts:42:
+> /linux-next/scripts/dtc/include-prefixes/dt-bindings/clock/sun50i-h6-ccu.h:9: warning: "CLK_PLL_PERIPH0" redefined
+>  #define CLK_PLL_PERIPH0  3
+> [...]
+>
+> So how can I add multiple examples which need somes conflicting
+> #include to be validated.
+
+I'm having the same issue right now, is there a proper fix /
+workaround?
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
