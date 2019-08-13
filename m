@@ -1,8 +1,8 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
 Subject: Re: [PATCH v2 1/3] dt-bindings: media: i2c: Add IMX290 CMOS sensor
  binding
-Date: Tue, 13 Aug 2019 17:21:47 +0530
-Message-ID: <20190813115147.GB28877@Mani-XPS-13-9360>
+Date: Tue, 13 Aug 2019 14:52:04 +0300
+Message-ID: <20190813115204.GB2527@valkosipuli.retiisi.org.uk>
 References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
  <20190806130938.19916-2-manivannan.sadhasivam@linaro.org>
  <20190813113846.GG13294@shell.armlinux.org.uk>
@@ -13,10 +13,10 @@ Content-Disposition: inline
 In-Reply-To: <20190813113846.GG13294@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, c.barrett@framos.com, linux-kernel@vger.kernel.org, a.brela@framos.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, mchehab@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, c.barrett@framos.com, linux-kernel@vger.kernel.org, a.brela@framos.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russel,
+Hi Russell,
 
 On Tue, Aug 13, 2019 at 12:38:46PM +0100, Russell King - ARM Linux admin wrote:
 > On Tue, Aug 06, 2019 at 06:39:36PM +0530, Manivannan Sadhasivam wrote:
@@ -44,23 +44,18 @@ On Tue, Aug 13, 2019 at 12:38:46PM +0100, Russell King - ARM Linux admin wrote:
 > So, only 37125000 is supported - is that not worth mentioning in this
 > description?  Is this a hard requirement of the sensor?  If so, why
 > does it need to be mentioned in the DT binding?
-> 
 
-Actually, sensor supports only 2 clock frequencies: 37.125 MHz and 74.25 MHz.
-And the driver currently supports only 37.125, because that's what I can test
-with my setup.
+The driver only supports a particular frequency, but the sensor is not
+limited to that. Unfortunately this is not uncommon for camera sensors, for
+the vendors often provide register settings for a given configuration only
+(external clock frequency, number of CSI-2 lanes, CSI-2 bus frequency,
+image cropping, binning etc.).
 
-So how about below:
+That still doesn't mean there are no alternative configurations for
+different external clock frequencies, or that there could not be a driver
+that was able to configure the sensor to use a given frequency.
 
-clock-frequency: Frequency of the xclk clock in Hz. It should be one of the
-		 following:
-		 - 37125000
-		 - 74250000
+-- 
+Regards,
 
-Thanks,
-Mani
-
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+Sakari Ailus
