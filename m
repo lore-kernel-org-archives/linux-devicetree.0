@@ -1,50 +1,52 @@
 From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v12 12/18] kunit: test: add tests for KUnit managed resources
-Date: Tue, 13 Aug 2019 00:57:33 -0700
-Message-ID: <CAFd5g44Es4emKyQSxUkqckGJ02_o3sAcDLwUCW8ZFGX14j5=xg@mail.gmail.com>
+Subject: Re: [PATCH v12 14/18] kunit: defconfig: add defconfigs for building
+ KUnit tests
+Date: Tue, 13 Aug 2019 00:59:18 -0700
+Message-ID: <CAFd5g44wUOhmxr3r+-LR_igePMjtaRrtT5jGdqPJgb0xPdf+Ag@mail.gmail.com>
 References: <20190812182421.141150-1-brendanhiggins@google.com>
- <20190812182421.141150-13-brendanhiggins@google.com> <20190813043140.67FF320644@mail.kernel.org>
+ <20190812182421.141150-15-brendanhiggins@google.com>
+ <20190813043859.661F82054F@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813043140.67FF320644@mail.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190813043859.661F82054F@mail.kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Stephen Boyd <sboyd@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, Frank Rowand <frowand.list@gmail.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>, "Bird,
+ Timothy" <Tim.Bird>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 9:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-08-12 11:24:15)
-> > +
-> > +static int kunit_resource_test_init(struct kunit *test)
-> > +{
-> > +       struct kunit_test_resource_context *ctx =
-> > +                       kzalloc(sizeof(*ctx), GFP_KERNEL);
-> > +
-> > +       if (!ctx)
-> > +               return -ENOMEM;
->
-> Should this use the test assertion logic to make sure that it's not
-> failing allocations during init?
-
-Yep. Will fix.
-
-> BTW, maybe kunit allocation APIs should
-> fail the test if they fail to allocate in general. Unless we're unit
-> testing failure to allocate problems.
-
-Yeah, I thought about that. I wasn't sure how people would feel about
-it, and I thought it would be a pain to tease out all the issues
-arising from aborting in different contexts when someone might not
-expect it.
-
-I am thinking later we can have kunit_kmalloc_or_abort variants? And
-then we can punt this issue to a later time?
-
-> > +
-> > +       test->priv = ctx;
-> > +
-> > +       kunit_init_test(&ctx->test, "test_test_context");
-> > +
-> > +       return 0;
+T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgOTozOSBQTSBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5l
+bC5vcmc+IHdyb3RlOgo+Cj4gUXVvdGluZyBCcmVuZGFuIEhpZ2dpbnMgKDIwMTktMDgtMTIgMTE6
+MjQ6MTcpCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC91bS9jb25maWdzL2t1bml0X2RlZmNvbmZpZyBi
+L2FyY2gvdW0vY29uZmlncy9rdW5pdF9kZWZjb25maWcKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAwLi5iZmU0OTY4OTAzOGYxCj4gPiAtLS0gL2Rldi9udWxs
+Cj4gPiArKysgYi9hcmNoL3VtL2NvbmZpZ3Mva3VuaXRfZGVmY29uZmlnCj4gPiBAQCAtMCwwICsx
+LDggQEAKPiA+ICtDT05GSUdfT0Y9eQo+ID4gK0NPTkZJR19PRl9VTklUVEVTVD15Cj4gPiArQ09O
+RklHX09GX09WRVJMQVk9eQo+ID4gK0NPTkZJR19JMkM9eQo+ID4gK0NPTkZJR19JMkNfTVVYPXkK
+PiA+ICtDT05GSUdfS1VOSVQ9eQo+ID4gK0NPTkZJR19LVU5JVF9URVNUPXkKPiA+ICtDT05GSUdf
+S1VOSVRfRVhBTVBMRV9URVNUPXkKPiA+IGRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0
+L2NvbmZpZ3MvYWxsX3Rlc3RzLmNvbmZpZyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvY29uZmlncy9h
+bGxfdGVzdHMuY29uZmlnCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAw
+MDAwMDAwMC4uYmZlNDk2ODkwMzhmMQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvdG9vbHMv
+dGVzdGluZy9rdW5pdC9jb25maWdzL2FsbF90ZXN0cy5jb25maWcKPiA+IEBAIC0wLDAgKzEsOCBA
+QAo+ID4gK0NPTkZJR19PRj15Cj4gPiArQ09ORklHX09GX1VOSVRURVNUPXkKPiA+ICtDT05GSUdf
+T0ZfT1ZFUkxBWT15Cj4gPiArQ09ORklHX0kyQz15Cj4gPiArQ09ORklHX0kyQ19NVVg9eQo+Cj4g
+QXJlIHRoZXNlIGFib3ZlIGNvbmZpZyBvcHRpb25zIG5lY2Vzc2FyeT8gSSBkb24ndCB0aGluayB0
+aGV5J3JlIHBhcnQgb2YKPiB0aGUgcGF0Y2ggc2VyaWVzIGFueW1vcmUgc28gaXQgbG9va3Mgb2Rk
+IHRvIGVuYWJsZSB0aGUgT0YgdW5pdHRlc3RzIGFuZAo+IGkyYyBjb25maWdzLgoKT2ggd2hvb3Bz
+LCBJIGZvcmdvdCB0aGF0IHdlIGRyb3BwZWQgdGhlIE9GX1VOSVRURVNUIGZyb20gdGhpcwpwYXRj
+aHNldC4gV2lsbCBmaXguCgo+ID4gK0NPTkZJR19LVU5JVD15Cj4gPiArQ09ORklHX0tVTklUX1RF
+U1Q9eQo+ID4gK0NPTkZJR19LVU5JVF9FWEFNUExFX1RFU1Q9eQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
