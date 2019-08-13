@@ -1,45 +1,31 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [v1 2/3] dt/bindings: clk: Add DT bindings for LS1028A Display output interface
-Date: Tue, 13 Aug 2019 11:30:05 -0700
-Message-ID: <20190813183005.EC13020665@mail.kernel.org>
-References: <20190812100216.34459-1-wen.he_1@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Raag Jadav <raagjadav@gmail.com>
+Subject: [PATCH v2 0/2] act8865 regulator modes and suspend states
+Date: Wed, 14 Aug 2019 00:02:54 +0530
+Message-ID: <1565721176-8955-1-git-send-email-raagjadav@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812100216.34459-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Raag Jadav <raagjadav@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Wen He (2019-08-12 03:02:16)
-> diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.txt b/Doc=
-umentation/devicetree/bindings/clock/fsl,plldig.txt
-> new file mode 100644
-> index 000000000000..29c5a6117809
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/fsl,plldig.txt
-> @@ -0,0 +1,26 @@
-> +NXP QorIQ Layerscape LS1028A Display output interface Clock
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+This series implements operating mode and suspend state support for act8865.
 
-Can you convert this to YAML?
+Changes since v1:
+- Added REGULATOR_MODE_FAST for DCDC regulators.
+- get_mode() hook now reads values from the hardware.
+- Removed op_mode[] from act8865 structure as it is no longer needed.
+- Fixed ldo register addresses in set_mode() hook.
+- Reverted act8865.h changes.
 
-> +
-> +Required properties:
-> +    - compatible: shall contain "fsl,ls1028a-plldig"
-> +    - reg: Physical base address and size of the block registers
-> +    - #clock-cells: shall contain 1.
+Raag Jadav (2):
+  regulator: act8865: operating mode and suspend state support
+  dt-bindings: regulator: act8865 regulator modes and suspend states
 
-As I said in the previous patch, this should probably be 0. Also, please
-order this before the driver in the patch series and thread your
-messages please. If you use git-send-email this is done for you pretty
-easily.
+ .../bindings/regulator/act8865-regulator.txt       |  27 ++-
+ drivers/regulator/act8865-regulator.c              | 187 ++++++++++++++++++++-
+ .../regulator/active-semi,8865-regulator.h         |  28 +++
+ 3 files changed, 239 insertions(+), 3 deletions(-)
+ create mode 100644 include/dt-bindings/regulator/active-semi,8865-regulator.h
 
-> +    - clocks: a phandle + clock-specifier pairs, here should be
-> +    specify the reference clock of the system
-> +
-> +
+-- 
+2.7.4
