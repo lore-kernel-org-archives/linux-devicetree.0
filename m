@@ -1,68 +1,86 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-Date: Tue, 13 Aug 2019 03:07:22 +0000
-Message-ID: <DB8PR04MB67476309D3F7E30FE35C47DF84D20@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
- <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [v7,2/2] dt-bindings: rtc: add bindings for FlexTimer Module
+Date: Tue, 13 Aug 2019 11:01:57 +0800
+Message-ID: <20190813030157.48590-2-biwen.li@nxp.com>
+References: <20190813030157.48590-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812084517.GW56241@e119886-lin.cambridge.arm.com>
-Content-Language: en-US
+In-Reply-To: <20190813030157.48590-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, leoyang.li@nxp.com, robh+dt@kernel.org
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com, mark.rutland@arm.com, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMhDQoNCj4gLS0tLS1P
-cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJh
-eUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo41MIxMsjVIDE2OjQ1DQo+IFRvOiBaLnEuIEhvdSA8
-emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207DQo+IGppbmdvb2hhbjFAZ21haWwuY29t
-OyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFu
-ZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhw
-LmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IE0uaC4gTGlhbg0KPiA8bWluZ2h1YW4u
-bGlhbkBueHAuY29tPjsgS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT47DQo+
-IEdhYnJpZWxlIFBhb2xvbmkgPGdhYnJpZWxlLnBhb2xvbmlAaHVhd2VpLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCAxLzRdIGR0LWJpbmdpbmdzOiBQQ0k6IFJlbW92ZSB0aGUgbnVtLWxhbmVz
-IGZyb20NCj4gUmVxdWlyZWQgcHJvcGVydGllcw0KPiANCj4gT24gTW9uLCBBdWcgMTIsIDIwMTkg
-YXQgMDQ6MjI6MTZBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFp
-YW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IFRoZSBudW0tbGFuZXMgaXMgbm90
-IGEgbWFuZGF0b3J5IHByb3BlcnR5LCBlLmcuIG9uIEZTTCBMYXllcnNjYXBlDQo+ID4gU29Dcywg
-dGhlIFBDSWUgbGluayB0cmFpbmluZyBpcyBjb21wbGV0ZWQgYXV0b21hdGljYWxseSBiYXNlIG9u
-IHRoZQ0KPiA+IHNlbGVjdGVkIFNlckRlcyBwcm90b2NvbCwgaXQgZG9lc24ndCBuZWVkIHRoZSBu
-dW0tbGFuZXMgdG8gc2V0LXVwIHRoZQ0KPiA+IGxpbmsgd2lkdGguDQo+ID4NCj4gPiBJdCBoYXMg
-YmVlbiBhZGRlZCBpbiB0aGUgT3B0aW9uYWwgcHJvcGVydGllcy4gVGhpcyBwYXRjaCBpcyB0byBy
-ZW1vdmUNCj4gPiBpdCBmcm9tIHRoZSBSZXF1aXJlZCBwcm9wZXJ0aWVzLg0KPiANCj4gRm9yIGNs
-YXJpdHksIG1heWJlIHRoaXMgcGFyYWdyYXBoIGNhbiBiZSByZXdvcmRlZCB0bzoNCj4gDQo+ICJJ
-dCBpcyBwcmV2aW91c2x5IGluIGJvdGggUmVxdWlyZWQgYW5kIE9wdGlvbmFsIHByb3BlcnRpZXMs
-ICBsZXQncyByZW1vdmUgaXQNCj4gZnJvbSB0aGUgUmVxdWlyZWQgcHJvcGVydGllcyIuDQoNCkFn
-cmVlIGFuZCB3aWxsIGNoYW5nZSBpbiB2Mi4NCg0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHdo
-eSB0aGlzIHByb3BlcnR5IGlzIHByZXZpb3VzbHkgaW4gYm90aCByZXF1aXJlZCBhbmQNCj4gb3B0
-aW9uYWwuLi4NCj4gDQo+IEl0IGxvb2tzIGxpa2UgbnVtLWxhbmVzIHdhcyBmaXJzdCBtYWRlIG9w
-dGlvbmFsIGJhY2sgaW4NCj4gMjAxNSBhbmQgcmVtb3ZlZCBmcm9tIHRoZSBSZXF1aXJlZCBzZWN0
-aW9uICg5MDdmY2UwOTAyNTMpLg0KPiBCdXQgdGhlbiByZS1hZGRlZCBiYWNrIGludG8gdGhlIFJl
-cXVpcmVkIHNlY3Rpb24gaW4gMjAxNyB3aXRoIHRoZSBhZGl0aW9uIG9mDQo+IGJpbmRpbmdzIGZv
-ciBFUCBtb2RlIChiMTJiZWZlY2Q3ZGUpLg0KPiANCj4gSXMgbnVtLWxhbmVzIGFjdHVhbGx5IHJl
-cXVpcmVkIGZvciBFUCBtb2RlPw0KDQpLaXNob24sIHBsZWFzZSBoZWxwIHRvIGFuc3dlciB0aGlz
-IHF1ZXJ5Pw0KDQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRy
-ZXcgTXVycmF5DQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlx
-aWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0IHwgMSAtDQo+ID4gIDEgZmlsZSBjaGFu
-Z2VkLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0DQo+ID4gYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4gPiBp
-bmRleCA1NTYxYTFjMDYwZDAuLmJkODgwZGYzOWE3OSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4gPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNp
-ZS50eHQNCj4gPiBAQCAtMTEsNyArMTEsNiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAJ
-ICAgICB0aGUgQVRVIGFkZHJlc3Mgc3BhY2UuDQo+ID4gICAgICAoVGhlIG9sZCB3YXkgb2YgZ2V0
-dGluZyB0aGUgY29uZmlndXJhdGlvbiBhZGRyZXNzIHNwYWNlIGZyb20NCj4gInJhbmdlcyINCj4g
-PiAgICAgIGlzIGRlcHJlY2F0ZWQgYW5kIHNob3VsZCBiZSBhdm9pZGVkLikNCj4gPiAtLSBudW0t
-bGFuZXM6IG51bWJlciBvZiBsYW5lcyB0byB1c2UNCj4gPiAgUkMgbW9kZToNCj4gPiAgLSAjYWRk
-cmVzcy1jZWxsczogc2V0IHRvIDwzPg0KPiA+ICAtICNzaXplLWNlbGxzOiBzZXQgdG8gPDI+DQo+
-ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0K
+The patch adds bindings for FlexTimer Module
+
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v7:
+    - delete aliases
+
+Change in v6:
+    - correct subject
+    - delete note
+    - remove reg property about IP Powerdown exception register
+
+Change in v5:
+    - None
+
+Change in v4:
+    - add note about dts and kernel options
+    - add aliases in example
+
+Change in v3:
+	- remove reg-names property
+	- correct cells number
+
+Change in v2:
+	- replace ls1043a with ls1088a as example
+	- add rcpm node and fsl,rcpm-wakeup property
+
+ .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+new file mode 100644
+index 000000000000..4bbb97da904c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+@@ -0,0 +1,35 @@
++Freescale FlexTimer Module (FTM) Alarm
++
++Required properties:
++- compatible : Should be "fsl,<chip>-ftm-alarm", the
++	       supported chips include
++	       "fsl,ls1012a-ftm-alarm"
++	       "fsl,ls1021a-ftm-alarm"
++	       "fsl,ls1028a-ftm-alarm"
++	       "fsl,ls1043a-ftm-alarm"
++	       "fsl,ls1046a-ftm-alarm"
++	       "fsl,ls1088a-ftm-alarm"
++	       "fsl,ls208xa-ftm-alarm"
++- reg : Specifies base physical address and size of the register sets for the
++  FlexTimer Module.
++- interrupts : Should be the FlexTimer Module interrupt.
++- fsl,rcpm-wakeup property and rcpm node : Please refer
++	Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++
++Optional properties:
++- big-endian: If the host controller is big-endian mode, specify this property.
++  The default endian mode is little-endian.
++
++Example:
++rcpm: rcpm@1e34040 {
++	compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
++	reg = <0x0 0x1e34040 0x0 0x18>;
++	#fsl,rcpm-wakeup-cells = <6>;
++};
++
++ftm_alarm0: timer@2800000 {
++	compatible = "fsl,ls1088a-ftm-alarm";
++	reg = <0x0 0x2800000 0x0 0x10000>;
++	fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
++	interrupts = <0 44 4>;
++};
+-- 
+2.17.1
