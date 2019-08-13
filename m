@@ -1,159 +1,188 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V16 00/13] PCI: tegra: Add Tegra194 PCIe support
-Date: Tue, 13 Aug 2019 17:33:18 +0100
-Message-ID: <20190813163318.GB5070@e121166-lin.cambridge.arm.com>
-References: <20190813113627.27251-1-vidyas@nvidia.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+Date: Tue, 13 Aug 2019 11:36:56 -0500
+Message-ID: <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com> <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+ <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com> <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813113627.27251-1-vidyas@nvidia.com>
+In-Reply-To: <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Morten Borup Petersen <morten_bp@live.dk>
+Cc: Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "nd@arm.com" <nd@arm.com>, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:06:14PM +0530, Vidya Sagar wrote:
-> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
-> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
-> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
-> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
-> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
-> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
-> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
-> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
-> to PCIe controller
-> This patch series
-> - Adds support for P2U PHY driver
-> - Adds support for PCIe host controller
-> - Adds device tree nodes each PCIe controllers
-> - Enables nodes applicable to p2972-0000 platform
-> - Adds helper APIs in Designware core driver to get capability regs offset
-> - Adds defines for new feature registers of PCIe spec revision 4
-> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
-> 
-> Testing done on P2972-0000 platform
-> - Able to get PCIe link up with on-board Marvel eSATA controller
-> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
-> - Able to do data transfers with both SATA drives and NVMe cards
-> - Able to perform suspend-resume sequence
-> 
-> Note
-> - Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
->   It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
->   disabled in this patch series. A future patch series would enable this.
-> - This series is based on top of the following series
->   Jisheng's patches to add support to .remove() in Designware sub-system
->   https://patchwork.kernel.org/project/linux-pci/list/?series=98559
->   (Update: Jisheng's patches are now accepted and applied for v5.2)
->   My patches made on top of Jisheng's patches to export various symbols
->   http://patchwork.ozlabs.org/project/linux-pci/list/?series=115671
->   (Update: My above patch series is accepted and applied for v5.3)
->   Another patch of mine to enable BPMP-FW resume in noirq phase
->   http://patchwork.ozlabs.org/patch/1140973/
->   (This is already accepted)
-> 
-> V16:
-> * Added empty lines (cosmetic changes) where required in pcie-tegra194.c file
->   to address Lorenzo's review comments.
-> 
-> V15:
-> * Refactored pcie-tegra194.c code to call only tegra_bpmp_transfer() API
->   in both .probe() path and .resume_noirq() path.
-> 
-> V14:
-> * Addressed Lorenzo's review comments in pcie-tegra194.c file (Patch 13/13)
-> * Added a new patch to export dw_pcie_wait_for_link() API
-> 
-> V13:
-> * Addressed Bjorn's review comments for adding Gen-4 specific defines to pci_regs.h header file
-> 
-> V12:
-> * Modified the commit message of patch-3 in this series to address review
->   comments from Lorenzo
-> 
-> V11:
-> * Removed device-tree patches from the series as they are applied to relevant
->   Tegra specific trees by Thierry Reding.
-> * Included older Tegra chips to extend quirk that disables MSI interrupt being
->   used for Tegra PCIe root ports.
-> * Addressed review comments in P2U driver file.
-> 
-> V10:
-> * Used _relaxed() versions of readl() & writel()
-> 
-> V9:
-> * Made the drivers dependent on ARCH_TEGRA_194_SOC directly
-> * Addressed review comments from Dmitry
-> 
-> V8:
-> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
-> * Addressed review comments from Thierry and Rob
-> 
-> V7:
-> * Took care of review comments from Rob
-> * Added a quirk to disable MSI for root ports
-> * Removed using pcie_pme_disable_msi() API in host controller driver
-> 
-> V6:
-> * Removed patch that exports pcie_bus_config symbol
-> * Took care of review comments from Thierry and Rob
-> 
-> V5:
-> * Removed redundant APIs in pcie-designware-ep.c file after moving them
->   to pcie-designware.c file based on Bjorn's review comments
-> 
-> V4:
-> * Rebased on top of linux-next top of the tree
-> * Addressed Gustavo's comments and added his Ack for some of the changes.
-> 
-> V3:
-> * Addressed review comments from Thierry
-> 
-> V2:
-> * Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
-> * Added more patches in v2 series
-> 
-> Vidya Sagar (13):
->   PCI: Add #defines for some of PCIe spec r4.0 features
->   PCI: Disable MSI for Tegra root ports
->   PCI: dwc: Perform dbi regs write lock towards the end
->   PCI: dwc: Move config space capability search API
->   PCI: dwc: Add ext config space capability search API
->   PCI: dwc: Export dw_pcie_wait_for_link() API
->   dt-bindings: PCI: designware: Add binding for CDM register check
->   PCI: dwc: Add support to enable CDM register check
->   dt-bindings: Add PCIe supports-clkreq property
->   dt-bindings: PCI: tegra: Add device tree support for Tegra194
->   dt-bindings: PHY: P2U: Add Tegra194 P2U block
->   phy: tegra: Add PCIe PIPE2UPHY support
->   PCI: tegra: Add Tegra194 PCIe support
-> 
->  .../bindings/pci/designware-pcie.txt          |    5 +
->  .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
->  Documentation/devicetree/bindings/pci/pci.txt |    5 +
->  .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
->  drivers/pci/controller/dwc/Kconfig            |   10 +
->  drivers/pci/controller/dwc/Makefile           |    1 +
->  .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
->  .../pci/controller/dwc/pcie-designware-host.c |   14 +-
->  drivers/pci/controller/dwc/pcie-designware.c  |   88 +
->  drivers/pci/controller/dwc/pcie-designware.h  |   12 +
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 1631 +++++++++++++++++
->  drivers/pci/quirks.c                          |   53 +
->  drivers/phy/tegra/Kconfig                     |    7 +
->  drivers/phy/tegra/Makefile                    |    1 +
->  drivers/phy/tegra/phy-tegra194-p2u.c          |  120 ++
->  include/uapi/linux/pci_regs.h                 |   14 +-
->  16 files changed, 2139 insertions(+), 42 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
->  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
->  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
-> 
+On Fri, Aug 2, 2019 at 5:41 AM Morten Borup Petersen <morten_bp@live.dk> wrote:
+>
+>
+>
+> On 7/31/19 9:31 AM, Jassi Brar wrote:
+> > On Sun, Jul 28, 2019 at 4:28 PM Morten Borup Petersen <morten_bp@live.dk> wrote:
+> >>
+> >>
+> >>
+> >> On 7/25/19 7:49 AM, Jassi Brar wrote:
+> >>> On Sun, Jul 21, 2019 at 4:58 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> >>>>
+> >>>> On Wed, Jul 17, 2019 at 2:26 PM Tushar Khandelwal
+> >>>> <tushar.khandelwal@arm.com> wrote:
+> >>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+> >>>>> new file mode 100644
+> >>>>> index 000000000000..3a05593414bc
+> >>>>> --- /dev/null
+> >>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv2.txt
+> >>>>> @@ -0,0 +1,108 @@
+> >>>>> +Arm MHUv2 Mailbox Driver
+> >>>>> +========================
+> >>>>> +
+> >>>>> +The Arm Message-Handling-Unit (MHU) Version 2 is a mailbox controller that has
+> >>>>> +between 1 and 124 channel windows to provide unidirectional communication with
+> >>>>> +remote processor(s).
+> >>>>> +
+> >>>>> +Given the unidirectional nature of the device, an MHUv2 mailbox may only be
+> >>>>> +written to or read from. If a pair of MHU devices is implemented between two
+> >>>>> +processing elements to provide bidirectional communication, these must be
+> >>>>> +specified as two separate mailboxes.
+> >>>>> +
+> >>>>> +A device tree node for an Arm MHUv2 device must specify either a receiver frame
+> >>>>> +or a sender frame, indicating which end of the unidirectional MHU device which
+> >>>>> +the device node entry describes.
+> >>>>> +
+> >>>>> +An MHU device must be specified with a transport protocol. The transport
+> >>>>> +protocol of an MHU device determines the method of data transmission as well as
+> >>>>> +the number of provided mailboxes.
+> >>>>> +Following are the possible transport protocol types:
+> >>>>> +- Single-word: An MHU device implements as many mailboxes as it
+> >>>>> +               provides channel windows. Data is transmitted through
+> >>>>> +               the MHU registers.
+> >>>>> +- Multi-word:  An MHU device implements a single mailbox. All channel windows
+> >>>>> +               will be used during transmission. Data is transmitted through
+> >>>>> +               the MHU registers.
+> >>>>> +- Doorbell:    An MHU device implements as many mailboxes as there are flag
+> >>>>> +               bits available in its channel windows. Optionally, data may
+> >>>>> +               be transmitted through a shared memory region, wherein the MHU
+> >>>>> +               is used strictly as an interrupt generation mechanism.
+> >>>>> +
+> >>>>> +Mailbox Device Node:
+> >>>>> +====================
+> >>>>> +
+> >>>>> +Required properties:
+> >>>>> +--------------------
+> >>>>> +- compatible:  Shall be "arm,mhuv2" & "arm,primecell"
+> >>>>> +- reg:         Contains the mailbox register address range (base
+> >>>>> +               address and length)
+> >>>>> +- #mbox-cells  Shall be 1 - the index of the channel needed.
+> >>>>> +- mhu-frame    Frame type of the device.
+> >>>>> +               Shall be either "sender" or "receiver"
+> >>>>> +- mhu-protocol Transport protocol of the device. Shall be one of the
+> >>>>> +               following: "single-word", "multi-word", "doorbell"
+> >>>>> +
+> >>>>> +Required properties (receiver frame):
+> >>>>> +-------------------------------------
+> >>>>> +- interrupts:  Contains the interrupt information corresponding to the
+> >>>>> +               combined interrupt of the receiver frame
+> >>>>> +
+> >>>>> +Example:
+> >>>>> +--------
+> >>>>> +
+> >>>>> +       mbox_mw_tx: mhu@10000000 {
+> >>>>> +               compatible = "arm,mhuv2","arm,primecell";
+> >>>>> +               reg = <0x10000000 0x1000>;
+> >>>>> +               clocks = <&refclk100mhz>;
+> >>>>> +               clock-names = "apb_pclk";
+> >>>>> +               #mbox-cells = <1>;
+> >>>>> +               mhu-protocol = "multi-word";
+> >>>>> +               mhu-frame = "sender";
+> >>>>> +       };
+> >>>>> +
+> >>>>> +       mbox_sw_tx: mhu@10000000 {
+> >>>>> +               compatible = "arm,mhuv2","arm,primecell";
+> >>>>> +               reg = <0x11000000 0x1000>;
+> >>>>> +               clocks = <&refclk100mhz>;
+> >>>>> +               clock-names = "apb_pclk";
+> >>>>> +               #mbox-cells = <1>;
+> >>>>> +               mhu-protocol = "single-word";
+> >>>>> +               mhu-frame = "sender";
+> >>>>> +       };
+> >>>>> +
+> >>>>> +       mbox_db_rx: mhu@10000000 {
+> >>>>> +               compatible = "arm,mhuv2","arm,primecell";
+> >>>>> +               reg = <0x12000000 0x1000>;
+> >>>>> +               clocks = <&refclk100mhz>;
+> >>>>> +               clock-names = "apb_pclk";
+> >>>>> +               #mbox-cells = <1>;
+> >>>>> +               interrupts = <0 45 4>;
+> >>>>> +               interrupt-names = "mhu_rx";
+> >>>>> +               mhu-protocol = "doorbell";
+> >>>>> +               mhu-frame = "receiver";
+> >>>>> +       };
+> >>>>> +
+> >>>>> +       mhu_client: scb@2e000000 {
+> >>>>> +       compatible = "fujitsu,mb86s70-scb-1.0";
+> >>>>> +       reg = <0 0x2e000000 0x4000>;
+> >>>>> +       mboxes =
+> >>>>> +               // For multi-word frames, client may only instantiate a single
+> >>>>> +               // mailbox for a mailbox controller
+> >>>>> +               <&mbox_mw_tx 0>,
+> >>>>> +
+> >>>>> +               // For single-word frames, client may instantiate as many
+> >>>>> +               // mailboxes as there are channel windows in the MHU
+> >>>>> +                <&mbox_sw_tx 0>,
+> >>>>> +                <&mbox_sw_tx 1>,
+> >>>>> +                <&mbox_sw_tx 2>,
+> >>>>> +                <&mbox_sw_tx 3>,
+> >>>>> +
+> >>>>> +               // For doorbell frames, client may instantiate as many mailboxes
+> >>>>> +               // as there are bits available in the combined number of channel
+> >>>>> +               // windows ((channel windows * 32) mailboxes)
+> >>>>> +                <mbox_db_rx 0>,
+> >>>>> +                <mbox_db_rx 1>,
+> >>>>> +                ...
+> >>>>> +                <mbox_db_rx 17>;
+> >>>>> +       };
+> >>>>
+> >>>> If the mhuv2 instance implements, say, 3 channel windows between
+> >>>> sender (linux) and receiver (firmware), and Linux runs two protocols
+> >>>> each requiring 1 and 2-word sized messages respectively. The hardware
+> >>>> supports that by assigning windows [0] and [1,2] to each protocol.
+> >>>> However, I don't think the driver can support that. Or does it?
+> >>>>
+> >>> Thinking about it, IMO, the mbox-cell should carry a 128 (4x32) bit
+> >>> mask specifying the set of windows (corresponding to the bits set in
+> >>> the mask) associated with the channel.
+> >>> And the controller driver should see any channel as associated with
+> >>> variable number of windows 'N', where N is [0,124]
+> >>>
+> >>> mhu_client1: proto1@2e000000 {
+> >>>        .....
+> >>>        mboxes = <&mbox 0x0 0x0 0x0 0x1>
+> >>> }
+> >>>
+> >>> mhu_client2: proto2@2f000000 {
+> >>>        .....
+> >>>        mboxes = <&mbox 0x0 0x0 0x0 0x6>
+> >>> }
+> >>>
+> >>> Cheers!
+> >>>
+> >>
+> >> As mentioned in the response to your initial comment, the driver does
+> >> not currently support mixing protocols.
+> >>
+> > Thanks for acknowledging that limitation. But lets also address it.
+> >
+>
+> We are hesitant to dedicate time to developing mixing protocols given
+> that we don't have any current usecase nor any current platform which
+> would support this.
+>
+Can you please share the client code against which you tested this driver?
+>From my past experience, I realise it is much more efficient to tidyup
+the code myself, than endlessly trying to explain the benefits.
 
-I have applied it to pci/tegra, subject to kbuild test validation,
-for v5.4.
-
-Thanks,
-Lorenzo
+Thanks
