@@ -1,67 +1,88 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH 3/7] PM / devfreq: Add generic imx bus driver
-Date: Tue, 13 Aug 2019 11:33:38 +0900
-Message-ID: <20190813023338epcms1p307caf6727399e9f3e320b965fb95a603@epcms1p3>
-References: <dbdd1ae60993d5fe73ce5b446b2c7d559c981cf1.1565633880.git.leonard.crestez@nxp.com>
- <cover.1565633880.git.leonard.crestez@nxp.com>
- <CGME20190812185005epcas3p10a9a3dbb90489534222e093c63f27900@epcms1p3>
-Reply-To: myungjoo.ham@samsung.com
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v2 1/4] dt-bindings: display: Add DT bindings for
+ LS1028A HDP-TX PHY.
+Date: Tue, 13 Aug 2019 02:34:55 +0000
+Message-ID: <DB7PR04MB51950BBAD5C2802D59A5C9B5E2D20@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190719100942.12016-1-wen.he_1@nxp.com>
+ <20190812232934.GA1219@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <dbdd1ae60993d5fe73ce5b446b2c7d559c981cf1.1565633880.git.leonard.crestez@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Artur Swigon <a.swigon@partner.samsung.com>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Anson Huang <Anson.Huang@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Will Deacon <will@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jacky Bai <ping.bai@nxp.co>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812232934.GA1219@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
->Add initial support for dynamic frequency switching on pieces of the imx
->interconnect fabric.
->
->All this driver actually does is set a clk rate based on an opp table.
->
->No attempt is made to map registers or anything clever.
->
->Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
->---
-> drivers/devfreq/Kconfig       |  12 +++
-> drivers/devfreq/Makefile      |   1 +
-> drivers/devfreq/imx-devfreq.c | 148 ++++++++++++++++++++++++++++++++++
-> 3 files changed, 161 insertions(+)
-> create mode 100644 drivers/devfreq/imx-devfreq.c
->
->diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->index defe1d438710..9088a151bafe 100644
->--- a/drivers/devfreq/Kconfig
->+++ b/drivers/devfreq/Kconfig
->@@ -90,10 +90,22 @@ config ARM_EXYNOS_BUS_DEVFREQ
-> 	  Each memory bus group could contain many memoby bus block. It reads
-> 	  PPMU counters of memory controllers by using DEVFREQ-event device
-> 	  and adjusts the operating frequencies and voltages with OPP support.
-> 	  This does not yet operate with optimal voltages.
-> 
->+config ARM_IMX_DEVFREQ
->+	tristate "i.MX DEVFREQ Driver"
->+	depends on ARCH_MXC || COMPILE_TEST
->+	select DEVFREQ_GOV_PASSIVE
->+	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->+	select DEVFREQ_GOV_USERSPACE
->+	select PM_OPP
-
-Hello,
-
-I have a simple question:
-
-Does it support ALL ARCH_MXC SoCs?
-
-Cheers,
-MyungJoo
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqONTCMTPI1SA3OjMwDQo+IFRvOiBXZW4gSGUg
+PHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IExlbyBM
+aSA8bGVveWFuZy5saUBueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW3YyIDEvNF0gZHQt
+YmluZGluZ3M6IGRpc3BsYXk6IEFkZCBEVCBiaW5kaW5ncyBmb3IgTFMxMDI4QQ0KPiBIRFAtVFgg
+UEhZLg0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBGcmksIEp1bCAxOSwgMjAx
+OSBhdCAwNjowOTozOVBNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+ID4gQWRkIERUIGJpbmRpbmdz
+IGRvY3VtZW50bWF0aW9uIGZvciB0aGUgSERQLVRYIFBIWSBjb250cm9sbGVyLiBUaGUNCj4gPiBk
+ZXNjcmliZXMgd2hpY2ggY291bGQgYmUgZm91bmQgb24gTlhQIExheWVyc2NhcGUgbHMxMDI4YSBw
+bGF0Zm9ybS4NCj4gDQo+IE5vdCByZXF1aXJlZCwgYnV0IHBsZWFzZSBjb25zaWRlciBjb252ZXJ0
+aW5nIHRvIERUIHNjaGVtYSAoWUFNTCkgZm9ybWF0Lg0KDQpVbmRlcnN0YW5kLA0KDQo+IA0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiA+IC0tLQ0K
+PiA+IGNoYW5nZSBpbiB2MjoNCj4gPiAgICAgICAgIC0gY29ycmVjdGlvbiB0aGUgbm9kZSBuYW1l
+Lg0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQg
+ICB8IDU2ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDU2IGluc2Vy
+dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9mc2wsaGRwLnR4dA0K
+PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGhkcC50
+eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uNTNj
+YTA4MzM3NTg3DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxoZHAudHh0DQo+ID4gQEAgLTAsMCArMSw1NiBA
+QA0KPiA+ICtOWFAgTGF5ZXJzY3BhZSBsczEwMjhhIEhEUC1UWCBQSFkgQ29udHJvbGxlcg0KPiAN
+Cj4gdHlwbw0KPiANCj4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT0NCj4gPiArDQo+ID4gK1RoZSBmb2xsb3dpbmcgYmluZGluZ3MgZGVzY3JpYmUgdGhlIENh
+ZGVuY2UgSERQIFRYIFBIWSBvbiBsczEwMjhhDQo+ID4gK3RoYXQgb2ZmZXIgbXVsdGktcHJvdG9j
+b2wgc3VwcG9ydCBvZiBzdGFuZGFycyBzdWNoIGFzIGVEUCBhbmQNCj4gPiArRGlzcGxheXBvcnQs
+DQo+IA0KPiBzL29mZmVyL29mZmVycy8NCj4gDQo+IGFuZCBhbm90aGVyIHR5cG8uDQo+IA0KPiA+
+ICtzdXBwb3J0cyBmb3IgMjUtNjAwTUh6IHBpeGVsIGNsb2NrIGFuZCB1cCB0byA0azJrIGF0IDYw
+TUh6IHJlc29sdXRpb24uDQo+ID4gK1RoZSBIRFAgdHJhbnNtaXR0ZXIgaXMgYSBDYWRlbmNlIEhE
+UCBUWCBjb250cm9sbGVyIElQIHdpdGggYQ0KPiA+ICtjb21wYW5pb24gUEhZIElQLg0KPiA+ICsN
+Cj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArICAtIGNvbXBhdGlibGU6ICAgU2hvdWxk
+IGJlICJmc2wsbHMxMDI4YS1kcCIgZm9yIGxzMTAyOGEuDQo+ID4gKyAgLSByZWc6ICAgICAgICAg
+IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgYmxvY2sgb2YgcmVnaXN0ZXJz
+DQo+IHVzZWQNCj4gPiArICBieSB0aGUgcHJvY2Vzc29yLg0KPiANCj4gVGhlIGV4YW1wbGUgc2hv
+d3MgMiByZWdpb25zLCB3aGF0IGFyZSB0aGV5Pw0KDQpPbmUgaXMgSERQIHRyYW5zbWl0dGVyIGNv
+bnRyb2xsZXIgYWRkcmVzcyByZWdpb24sIGFub3RoZXIgaXMgbXVsdGltZWRpYSBQTEwgYWRkcmVz
+cyByZWdpb24uDQpTb3JyeSwgaGVyZSBzaG91bGQgYmUgdXNlIHRoZSBIRFAgdHJhbnNtaXR0ZXIg
+Y29udHJvbGxlciByZWdpb24uIA0KDQpJJ3ZlIGFscmVhZHkgc2VuZCBjbG9jayBwYXRjaGVzIGlu
+Y2x1ZGVkIHRoZSBtdWx0aW1lZGlhIFBMTCBpbXBsZW1lbnRhdGlvbi4NCg0KPiANCj4gPiArICAt
+IGludGVycnVwdHM6ICAgSERQIGhvdHBsdWcgaW4vb3V0IGRldGVjdCBpbnRlcnJ1cHQgbnVtYmVy
+DQo+ID4gKyAgLSBjbG9ja3M6ICAgICAgIEEgbGlzdCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lm
+aWVyIHBhaXJzLCBvbmUgZm9yIGVhY2gNCj4gZW50cnkNCj4gPiArICBpbiAnY2xvY2stbmFtZXMn
+DQo+ID4gKyAgLSBjbG9jay1uYW1lczogIEEgbGlzdCBvZiBjbG9jayBuYW1lcy4gSXQgc2hvdWxk
+IGNvbnRhaW46DQo+ID4gKyAgICAgIC0gImNsa19pcGciOiBpbnRlci1JbnRlZ3JhdGVkIGNpcmN1
+aXQgY2xvY2sNCj4gPiArICAgICAgLSAiY2xrX2NvcmUiOiBmb3IgdGhlIE1haW4gRGlzcGxheSBU
+WCBjb250cm9sbGVyIGNsb2NrDQo+ID4gKyAgICAgIC0gImNsa19weGwiOiBmb3IgdGhlIHBpeGVs
+IGNsb2NrIGZlZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIHByb2Nlc3Nvcg0KPiA+ICsgICAg
+ICAtICJjbGtfcHhsX211eCI6IGZvciB0aGUgaGlnaCBQZXJmUExMIGJ5cGFzcyBjbG9jaw0KPiA+
+ICsgICAgICAtICJjbGtfcHhsX2xpbmsiOiBmb3IgdGhlIGxpbmsgcmF0ZSBwaXhlbCBjbG9jaw0K
+PiA+ICsgICAgICAtICJjbGtfYXBiIjogZm9yIHRoZSBBUEIgaW50ZXJmYWNlIGNsb2NrDQo+ID4g
+KyAgICAgIC0gImNsa192aWYiOiBmb3IgdGhlIFZpZGVvIHBpeGVsIGNsb2NrDQo+IA0KPiAnY2xr
+XycgaXMgcmVkdW5kYW50Lg0KPiANCg0KT0sNCg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgc3ViLW5v
+ZGVzOg0KPiA+ICsgIC0gcG9ydDogVGhlIEhEUCBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgb3V0
+cHV0IHBvcnQuIFRoZSBjb25uZWN0aW9uDQo+ID4gKyAgICBpcyBtb2RlbGxlZCB1c2luZyB0aGUg
+T0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluDQo+ID4gKyAgICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0DQo+IA0KPiBJJ20gc3RpbGwgY29uZnVzZWQgYXMg
+dG8gd2hhdCB0aGlzIGJsb2NrIGRvZXM/IFRoZSAnZW5jb2RlciBvdXRwdXQnIGlzDQo+IERpc3Bs
+YXlQb3J0PyBJZiB0aGlzIGlzIGp1c3QgYSBwaHksIHRoZW4gdXNlIHRoZSBwaHkgYmluZGluZy4N
+Cj4gDQo+IE5vcm1hbGx5LCBhIERpc3BsYXlQb3J0IGVuY29kZXIvYnJpZGdlIE9GIGdyYXBoIG91
+dHB1dCB3b3VsZCBiZSBjb25uZWN0ZWQNCj4gdG8gYSBEUCBjb25uZWN0b3Igbm9kZSBvciBhIHBh
+bmVsLg0KDQpZZXMsIHlvdSBhcmUgcmlnaHQsIGJ1dCANCkZvciBMUzEwMjhBLCBIRFAoQ2FkZW5j
+ZSBIRCBEaXNwbGF5IFRyYW5zbWl0dGVyKSBhcmUgaW5jbHVkZWQgZURQL0Rpc3BsYXkgcG9ydCBj
+b250cm9sbGVyIGFuZCBEaXNwbGF5IFBIWSBjb250cm9sbGVyLg0KSW4gb3RoZXIgd29yZCwgdGhl
+eSBhcmUgMSBJUCBibG9jayBvbiBMUzEwMjhBLg0KDQpBIGZ1bGwgZ3JhcGhpY3MgY29ubmVjdGlv
+biByZWxhdGlvbnNoaXAgb2YgdGhlIExTMTAyOEE6DQoNCkRQNTAwIC0tPiBlRFAvRFAgY29udHJv
+bGxlciAtLS0+IERQSFkgLS0tPiBEUC9lRFAgaW50ZXJmYWNlLg0KDQpCZXN0IFJlZ2FyZHMsDQpX
+ZW4NCg0KPiANCj4gUm9iDQo=
