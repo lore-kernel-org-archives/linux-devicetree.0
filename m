@@ -1,115 +1,56 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [v6,2/2] dt-bindings: rtc: add bindings for FlexTimer
- Module
-Date: Tue, 13 Aug 2019 02:59:12 +0000
-Message-ID: <DB7PR04MB44902C6FDEC187F11B6E98718FD20@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190719035400.9800-1-biwen.li@nxp.com>
- <20190719035400.9800-2-biwen.li@nxp.com> <20190812231607.GA21242@bogus>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 3/7] PM / devfreq: Add generic imx bus driver
+Date: Tue, 13 Aug 2019 03:02:31 +0000
+Message-ID: <VI1PR04MB7023485353FCBBD7F8BEE8F3EED20@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <dbdd1ae60993d5fe73ce5b446b2c7d559c981cf1.1565633880.git.leonard.crestez@nxp.com>
+ <cover.1565633880.git.leonard.crestez@nxp.com>
+ <CGME20190812185005epcas3p10a9a3dbb90489534222e093c63f27900@epcms1p3>
+ <20190813023338epcms1p307caf6727399e9f3e320b965fb95a603@epcms1p3>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812231607.GA21242@bogus>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Leo Li <leoyang.li@nxp.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Artur Swigon <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Georgi
 List-Id: devicetree@vger.kernel.org
 
->=20
-> On Fri, Jul 19, 2019 at 11:54:00AM +0800, Biwen Li wrote:
-> > The patch adds bindings for FlexTimer Module
-> >
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> > Change in v6:
-> >     - correct subject
-> >     - delete note
-> >     - remove reg property about IP Powerdown exception register
-> >
-> > Change in v5:
-> >     - None
-> >
-> > Change in v4:
-> >     - add note about dts and kernel options
-> >     - add aliases in example
-> >
-> > Change in v3:
-> >       - remove reg-names property
-> >       - correct cells number
-> >
-> > Change in v2:
-> >       - replace ls1043a with ls1088a as example
-> >       - add rcpm node and fsl,rcpm-wakeup property
-> >
-> >  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 41 +++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > new file mode 100644
-> > index 000000000000..9291b022ffc7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> > @@ -0,0 +1,41 @@
-> > +Freescale FlexTimer Module (FTM) Alarm
-> > +
-> > +Required properties:
-> > +- compatible : Should be "fsl,<chip>-ftm-alarm", the
-> > +            supported chips include
-> > +            "fsl,ls1012a-ftm-alarm"
-> > +            "fsl,ls1021a-ftm-alarm"
-> > +            "fsl,ls1028a-ftm-alarm"
-> > +            "fsl,ls1043a-ftm-alarm"
-> > +            "fsl,ls1046a-ftm-alarm"
-> > +            "fsl,ls1088a-ftm-alarm"
-> > +            "fsl,ls208xa-ftm-alarm"
-> > +- reg : Specifies base physical address and size of the register sets
-> > +for the
-> > +  FlexTimer Module.
-> > +- interrupts : Should be the FlexTimer Module interrupt.
-> > +- fsl,rcpm-wakeup property and rcpm node : Please refer
-> > +     Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > +
-> > +Optional properties:
-> > +- big-endian: If the host controller is big-endian mode, specify this =
-property.
-> > +  The default endian mode is little-endian.
-> > +
-> > +Example:
-> > +aliases {
-> > +     ...
-> > +     rtc1 =3D ftm_alarm0; // Use FlexTimer Module as /dev/rtc1
-> > +     ...
-> > +};
->=20
-> As I said before, drop this. It's not going to work when this is converte=
-d to
-> schema and the example is compiled. Feel free to convert this to schema a=
-nd
-> see...
-Ok, got it. I will drop this in v7.
->=20
-> > +
-> > +rcpm: rcpm@1e34040 {
-> > +     compatible =3D "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> > +     reg =3D <0x0 0x1e34040 0x0 0x18>;
-> > +     #fsl,rcpm-wakeup-cells =3D <6>;
-> > +};
-> > +
-> > +ftm_alarm0: timer@2800000 {
->=20
-> If this is an RTC, then rtc@...
-This is not an RTC.
->=20
-> > +     compatible =3D "fsl,ls1088a-ftm-alarm";
-> > +     reg =3D <0x0 0x2800000 0x0 0x10000>;
-> > +     fsl,rcpm-wakeup =3D <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-> > +     interrupts =3D <0 44 4>;
-> > +};
-> > --
-> > 2.17.1
-> >
+On 8/13/2019 5:33 AM, MyungJoo Ham wrote:
+
+>> Add initial support for dynamic frequency switching on pieces of the imx
+>> interconnect fabric.
+>>
+>> All this driver actually does is set a clk rate based on an opp table.
+>>
+>> +config ARM_IMX_DEVFREQ
+>> +	tristate "i.MX DEVFREQ Driver"
+>> +	depends on ARCH_MXC || COMPILE_TEST
+>> +	select DEVFREQ_GOV_PASSIVE
+>> +	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+>> +	select DEVFREQ_GOV_USERSPACE
+>> +	select PM_OPP
+> 
+> Does it support ALL ARCH_MXC SoCs?
+
+Only imx8m currently but out of tree we support bus+dram frequency 
+switching for ~10 imx6/7 SOCs, all other than imx7ulp.
+
+When imx8 was upstreamed as the first 64-bit imx chip the arm64 
+maintainers told us to drop stuff like ARCH_FSL_IMX8MM so there is no 
+per-soc kconfig more specific than "ARCH_MXC".
+
+I guess we could make it depend on (ARCH_MXC && ARM64) but the ARM64 
+would eventually be dropped anyway.
+
+--
+Regards,
+Leonard
