@@ -1,41 +1,55 @@
-From: John Wang <wangzqbj@inspur.com>
-Subject: [PATCH v4 1/2] dt-bindings: Add ipsps1 as a trivial device
-Date: Tue, 13 Aug 2019 16:33:46 +0800
-Message-ID: <20190813083346.8558-1-wangzqbj@inspur.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 3/5] ASoC: core: add support to snd_soc_dai_get_sdw_stream()
+Date: Tue, 13 Aug 2019 09:35:48 +0100
+Message-ID: <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, trivial@kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, duanzhijia01@inspur.com, mine260309@gmail.com, joel@jms.id.au
+To: vkoul@kernel.org, broonie@kernel.org
+Cc: bgoswami@codeaurora.org, plai@codeaurora.org, pierre-louis.bossart@linux.intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, spapothi@codeaurora.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The ipsps1 is an Inspur Power System power supply unit
+On platforms which have smart speaker amplifiers connected via
+soundwire and modeled as aux devices in ASoC, in such usecases machine
+driver should be able to get sdw master stream from dai so that it can
+use the runtime stream to setup slave streams.
 
-Signed-off-by: John Wang <wangzqbj@inspur.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v4:
-    - Rebased on 5.3-rc4 instead of 5.2, No changes
-v3:
-    - Fix adding entry to the inappropriate line
-v2:
-    - No changes.
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+soundwire already as a set function, get function would provide more
+flexibility to above configurations.
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 2e742d399e87..870ac52d2225 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -104,6 +104,8 @@ properties:
-           - infineon,slb9645tt
-             # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
-           - infineon,tlv493d-a1b6
-+            # Inspur Power System power supply unit version 1
-+          - inspur,ipsps1
-             # Intersil ISL29028 Ambient Light and Proximity Sensor
-           - isil,isl29028
-             # Intersil ISL29030 Ambient Light and Proximity Sensor
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ include/sound/soc-dai.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
+index dc48fe081a20..1e01f4a302e0 100644
+--- a/include/sound/soc-dai.h
++++ b/include/sound/soc-dai.h
+@@ -202,6 +202,7 @@ struct snd_soc_dai_ops {
+ 
+ 	int (*set_sdw_stream)(struct snd_soc_dai *dai,
+ 			void *stream, int direction);
++	void *(*get_sdw_stream)(struct snd_soc_dai *dai, int direction);
+ 	/*
+ 	 * DAI digital mute - optional.
+ 	 * Called by soc-core to minimise any pops.
+@@ -410,4 +411,13 @@ static inline int snd_soc_dai_set_sdw_stream(struct snd_soc_dai *dai,
+ 		return -ENOTSUPP;
+ }
+ 
++static inline void *snd_soc_dai_get_sdw_stream(struct snd_soc_dai *dai,
++					       int direction)
++{
++	if (dai->driver->ops->get_sdw_stream)
++		return dai->driver->ops->get_sdw_stream(dai, direction);
++	else
++		return ERR_PTR(-ENOTSUPP);
++}
++
+ #endif
 -- 
-2.17.1
+2.21.0
