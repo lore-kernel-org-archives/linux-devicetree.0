@@ -1,50 +1,105 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v4 13/14] net: phy: adin: add ethtool get_stats support
-Date: Tue, 13 Aug 2019 06:07:42 +0000
-Message-ID: <3d020fd22f253f32622b6d150a4387ed0707f587.camel@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-         <20190812112350.15242-14-alexandru.ardelean@analog.com>
-         <20190812142637.GR14290@lunn.ch>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC PATCH 00/11] Simple QoS for exynos-bus driver using
+ interconnect
+Date: Tue, 13 Aug 2019 15:17:29 +0900
+Message-ID: <6be31199-a93d-c440-e0cd-7453e3ac1648@samsung.com>
+References: <CGME20190723122022eucas1p2f568f74f981f9de9012eb693c3b446d5@eucas1p2.samsung.com>
+        <20190723122016.30279-1-a.swigon@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812142637.GR14290@lunn.ch>
+In-Reply-To: <20190723122016.30279-1-a.swigon@partner.samsung.com>
 Content-Language: en-US
-Content-ID: <5D338A71FCC7B44D874882A971DDBE26@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: krzk@kernel.org, myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTEyIGF0IDE2OjI2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gPiArLyogTmFtZWQganVzdCBsaWtlIGluIHRoZSBkYXRhc2hlZXQg
-Ki8NCj4gPiArc3RhdGljIHN0cnVjdCBhZGluX2h3X3N0YXQgYWRpbl9od19zdGF0c1tdID0gew0K
-PiA+ICsJeyAiUnhFcnJDbnQiLAkJMHgwMDE0LAl9LA0KPiA+ICsJeyAiTXNlQSIsCQkweDg0MDIs
-CTAsCXRydWUgfSwNCj4gPiArCXsgIk1zZUIiLAkJMHg4NDAzLAkwLAl0cnVlIH0sDQo+ID4gKwl7
-ICJNc2VDIiwJCTB4ODQwNCwJMCwJdHJ1ZSB9LA0KPiA+ICsJeyAiTXNlRCIsCQkweDg0MDUsCTAs
-CXRydWUgfSwNCj4gPiArCXsgIkZjRnJtQ250IiwJCTB4OTQwQSwgMHg5NDBCIH0sIC8qIEZjRnJt
-Q250SCArIEZjRnJtQ250TCAqLw0KPiA+ICsJeyAiRmNMZW5FcnJDbnQiLAkweDk0MEMgfSwNCj4g
-PiArCXsgIkZjQWxnbkVyckNudCIsCTB4OTQwRCB9LA0KPiA+ICsJeyAiRmNTeW1iRXJyQ250IiwJ
-MHg5NDBFIH0sDQo+ID4gKwl7ICJGY09zekNudCIsCQkweDk0MEYgfSwNCj4gPiArCXsgIkZjVXN6
-Q250IiwJCTB4OTQxMCB9LA0KPiA+ICsJeyAiRmNPZGRDbnQiLAkJMHg5NDExIH0sDQo+ID4gKwl7
-ICJGY09kZFByZUNudCIsCTB4OTQxMiB9LA0KPiA+ICsJeyAiRmNEcmliYmxlQml0c0NudCIsCTB4
-OTQxMyB9LA0KPiA+ICsJeyAiRmNGYWxzZUNhcnJpZXJDbnQiLAkweDk0MTQgfSwNCj4gDQo+IEkg
-c2VlIHNvbWUgdmFsdWUgaW4gdXNpbmcgdGhlIG5hbWVzIGZyb20gdGhlIGRhdGFzaGVldC4gSG93
-ZXZlciwgaQ0KPiBmb3VuZCBpdCBxdWl0ZSBoYXJkIHRvIG5vdyB3aGF0IHRoZXNlIGNvdW50ZXJz
-IHJlcHJlc2VudCBnaXZlbiB0aGVyZQ0KPiBjdXJyZW50IG5hbWUuIFdoYXQgaXMgTXNlPyBIb3cg
-ZG9lcyBNc2VBIGRpZmZlciBmcm9tIE1zZUI/IFlvdSBoYXZlIHVwDQo+IHRvIEVUSF9HU1RSSU5H
-X0xFTiBjaGFyYWN0ZXJzLCBzbyBtYXliZSBsb25nZXIgbmFtZXMgd291bGQgYmUgYmV0dGVyPw0K
-DQpJJ2xsIGV4cGFuZCB0aGUgbmFtZXMuDQoNClJlZ2FyZGluZyBNc2VBL0IvQy9ELCBJJ2xsIGFk
-bWl0IEkgYW0gYWxzbyBhIGJpdCBmdXp6eSBhYm91dCB0aGVtLg0KVGhleSBkZXNjcmliZSBsaW5r
-LXF1YWxpdHkgc2V0dGluZ3MsIGFuZCB0aGUgdmFsdWVzIGhhdmUgc29tZSBtZWFuaW5nIHRvIHRo
-ZSBjaGlwIGd1eXMgW3doZW4gSSB0YWxrZWQgd2l0aHQgdGhlbSBhYm91dA0KaXRdLCBidXQgSSBk
-aWQgbm90IGluc2lzdCBvbiBnZXR0aW5nIGEgZGVlcCBleHBsYW5hdGlvbiBhYm91dCB0aGVtIFth
-bmQgd2hhdCB0aGVpciB2YWx1ZXMgcmVwcmVzZW50XS4NCkkgZ3Vlc3MgZm9yIHRoaXMgUEhZIGRy
-aXZlciwgd2UgY291bGQgZHJvcCB0aGVtLCBhbmQgaWYgdGhleSdyZSBuZWVkZWQgdGhleSBjYW4g
-YmUgYWNjZXNzZWQgdmlhIHBoeXRvb2wsIGFuZCBpZiB0aGV5J3JlDQpyZWFsbHkgbmVlZGVkLCBJ
-IGNhbiB0cnkgdG8gYWRkIHRoZW0gbGF0ZXIgd2l0aCBtb3JlIGNvbXBsZXRlIGRldGFpbCBbYWJv
-dXQgdGhlbSBhbmQgdGhlaXIgdXNlL3ZhbHVlXS4NCg0KSSBpbmNsdWRlZCB0aGVtIGhlcmUsIGJl
-Y2F1c2UgdGhleSBhcmUgbGlzdGVkIGluIHRoZSBlcnJvci1jb3VudGVyIHJlZ2lzdGVyICJncm91
-cCIgW2luIHRoZSBkYXRhc2hlZXRdLCBhbmQgSSBpbmVydGlhbGx5DQphZGRlZCB0aGVtLg0KDQo+
-IA0KPiAgICBBbmRyZXcNCg==
+Hi Artur.
+
+The patch1-4 in this series depend on other patches[1] on mainline.
+On next v2 version, please make some patches based on patches[1]
+in order to prevent the merge conflict. 
+
+[1] [RESEND PATCH v5 0/4] add coupled regulators for Exynos5422/5800
+- https://lkml.org/lkml/2019/8/8/217
+
+Also, as I commented, we better to discuss it before sending the v2.
+
+On 19. 7. 23. 오후 9:20, Artur Świgoń wrote:
+> The following patchset adds interconnect[1][2] framework support to the
+> exynos-bus devfreq driver. Extending the devfreq driver with interconnect
+> capabilities started as a response to the issue referenced in [3]. The
+> patches can be subdivided into four logical groups:
+> 
+> (a) Refactoring the existing devfreq driver in order to improve readability
+> and accommodate for adding new code (patches 01--04/11).
+> 
+> (b) Tweaking the interconnect framework to support the exynos-bus use case
+> (patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
+> avoid hardcoding every single graph edge in the DT or driver source, and
+> relaxing the requirement contained in that function removes the need to
+> provide dummy node IDs in the DT. Adjusting the logic in
+> apply_constraints() (drivers/interconnect/core.c) accounts for the fact
+> that every bus is a separate entity and therefore a separate interconnect
+> provider, albeit constituting a part of a larger hierarchy.
+> 
+> (c) Implementing interconnect providers in the exynos-bus devfreq driver
+> and adding required DT properties for one selected platform, namely
+> Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
+> generic driver for various Exynos SoCs, node IDs are generated dynamically
+> rather than hardcoded. This has been determined to be a simpler approach,
+> but depends on changes described in (b).
+> 
+> (d) Implementing a sample interconnect consumer for exynos-mixer targeted
+> at the issue referenced in [3], again with DT info only for Exynos4412
+> (patches 10--11/11).
+> 
+> Integration of devfreq and interconnect functionalities comes down to one
+> extra line in the devfreq target() callback, which selects either the
+> frequency calculated by the devfreq governor, or the one requested with the
+> interconnect API, whichever is higher. All new code works equally well when
+> CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
+> interconnect API functions are no-ops.
+> 
+> ---
+> Artur Świgoń
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> ---
+> References:
+> [1] Documentation/interconnect/interconnect.rst
+> [2] Documentation/devicetree/bindings/interconnect/interconnect.txt
+> [3] https://patchwork.kernel.org/patch/10861757
+> 
+> Artur Świgoń (10):
+>   devfreq: exynos-bus: Extract exynos_bus_profile_init()
+>   devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
+>   devfreq: exynos-bus: Change goto-based logic to if-else logic
+>   devfreq: exynos-bus: Clean up code
+>   icc: Export of_icc_get_from_provider()
+>   icc: Relax requirement in of_icc_get_from_provider()
+>   icc: Relax condition in apply_constraints()
+>   arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
+>   devfreq: exynos-bus: Add interconnect functionality to exynos-bus
+>   arm: dts: exynos: Add interconnects to Exynos4412 mixer
+> 
+> Marek Szyprowski (1):
+>   drm: exynos: mixer: Add interconnect support
+> 
+>  .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
+>  arch/arm/boot/dts/exynos4412.dtsi             |  10 +
+>  drivers/devfreq/exynos-bus.c                  | 296 ++++++++++++++----
+>  drivers/gpu/drm/exynos/exynos_mixer.c         |  68 +++-
+>  drivers/interconnect/core.c                   |  12 +-
+>  include/linux/interconnect-provider.h         |   6 +
+>  6 files changed, 314 insertions(+), 79 deletions(-)
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
