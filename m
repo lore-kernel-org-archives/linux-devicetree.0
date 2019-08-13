@@ -1,77 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/8] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe
- host bridge binding
-Date: Tue, 13 Aug 2019 14:46:19 -0600
-Message-ID: <CAL_Jsq+ME-faxK8o7rq8gyYC8cjtr+yZOz8A47zKMrjYAtmumw@mail.gmail.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com> <20190723092711.11786-1-jonnyc@amazon.com>
- <20190813153046.GA31480@bogus> <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
+ for RTL8211E
+Date: Tue, 13 Aug 2019 13:46:34 -0700
+Message-ID: <20190813204634.GR250418@google.com>
+References: <20190813191147.19936-1-mka@chromium.org>
+ <20190813191147.19936-5-mka@chromium.org>
+ <20190813201411.GL15047@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <06c198ff2f8f9b1b29283a7b8764ab776c1e574b.camel@amazon.com>
+Content-Disposition: inline
+In-Reply-To: <20190813201411.GL15047@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:49 AM Chocron, Jonathan <jonnyc@amazon.com> wrote:
->
-> On Tue, 2019-08-13 at 09:30 -0600, Rob Herring wrote:
-> > On Tue, Jul 23, 2019 at 12:27:08PM +0300, Jonathan Chocron wrote:
-> > > Document Amazon's Annapurna Labs PCIe host bridge.
-> > >
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > ---
-> > >  .../devicetree/bindings/pci/pcie-al.txt       | 45
-> > > +++++++++++++++++++
-> > >  MAINTAINERS                                   |  3 +-
-> > >  2 files changed, 47 insertions(+), 1 deletion(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/pcie-
-> > > al.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt
-> > > b/Documentation/devicetree/bindings/pci/pcie-al.txt
-> > > new file mode 100644
-> > > index 000000000000..89876190eb5a
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
-> > > @@ -0,0 +1,45 @@
-> > > +* Amazon Annapurna Labs PCIe host bridge
-> > > +
-> > > +Amazon's Annapurna Labs PCIe Host Controller is based on the
-> > > Synopsys DesignWare
-> > > +PCI core.
-> > > +It shares common functions with the PCIe DesignWare core driver
-> > > and inherits
-> >
-> > Driver details are irrelevant to the binding.
-> >
-> Will remove.
->
-> > > +common properties defined in
-> > > Documentation/devicetree/bindings/pci/designware-pcie.txt.
-> > > +Properties of the host controller node that differ from it are:
-> > > +
-> > > +- compatible:
-> > > +   Usage: required
-> > > +   Value type: <stringlist>
-> > > +   Definition: Value should contain
-> > > +                   - "amazon,al-pcie"
-> >
-> > Needs to be SoC specific.
-> >
-> I'm not sure I follow. The PCIe controller can be implemented in
-> different SoCs. Could you please clarify?
+On Tue, Aug 13, 2019 at 10:14:11PM +0200, Andrew Lunn wrote:
+> > +static int rtl8211e_config_led(struct phy_device *phydev, int led,
+> > +			       struct phy_led_config *cfg)
+> > +{
+> > +	u16 lacr_bits = 0, lcr_bits = 0;
+> > +	int oldpage, ret;
+> > +
+> 
+> You should probably check that led is 0 or 1. 
 
-All the features, bugs, and integration will be exactly the same on
-all SoCs and you will never need to distinguish?
+Actually this PHY has up to 3 LEDs, but yes, good point to validate
+the parameter. I'll wait a day or two for if there is other feedback
+and send a new version with the check.
 
-This is standard convention for compatible strings and how you avoid
-updating the DT (part of firmware) when you find some difference the
-OS needs to handle down the road.
+> Otherwise this looks good.
 
-If the next SoC is 'the same', then you do:
+Thanks for the reviews!
 
-compatible = "amazon,newsoc-pcie", "amazon,oldsoc-pcie";
-
-Rob
+Matthias
