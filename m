@@ -1,52 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
-Date: Tue, 13 Aug 2019 11:30:22 +0100
-Message-ID: <20190813103022.GB26727@dell>
-References: <20190725220215.460-1-paul@crapouillou.net>
- <20190725220215.460-11-paul@crapouillou.net>
- <20190812081640.GA26727@dell>
- <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
- <1565690508.1856.0@crapouillou.net>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 00/10] Improvements and fixes for mxsfb DRM
+ driver
+Date: Tue, 13 Aug 2019 10:36:41 +0000
+Message-ID: <1565692600.3209.43.camel@nxp.com>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+         <20190813102307.GA22623@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1565690508.1856.0@crapouillou.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, James Hogan <jhogan@kernel.org>, alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org, Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>, od@zcrc.me, linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, Artur Rojek <contact@artur-rojek.eu>, Richard Weinberger <richard@nod.at>, linux-pm@vger.kernel.org, Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kerne>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190813102307.GA22623@bogon.m.sigxcpu.org>
+Content-Language: en-US
+Content-ID: <AFA2B89B03FD444FBEABF1AE1F1FD100@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "agx@sigxcpu.org" <agx@sigxcpu.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "airlied@linux.ie" <airlied@linux.ie>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxMyBBdWcgMjAxOSwgUGF1bCBDZXJjdWVpbCB3cm90ZToKCj4gSGkgUGhpbGlwcGUs
-Cj4gCj4gCj4gTGUgbWFyLiAxMyBhb8O7dCAyMDE5IMOgIDEwOjQ0LCBQaGlsaXBwZSA9P2lzby04
-ODU5LTE/cT9NYXRoaWV1LURhdWQ9RTk/PQo+IDxmNGJ1Z0BhbXNhdC5vcmc+IGEgw6ljcml0IDoK
-PiA+IEhpIExlZSwKPiA+IAo+ID4gT24gOC8xMi8xOSAxMDoxNiBBTSwgTGVlIEpvbmVzIHdyb3Rl
-Ogo+ID4gPiAgT24gVGh1LCAyNSBKdWwgMjAxOSwgUGF1bCBDZXJjdWVpbCB3cm90ZToKPiA+ID4g
-Cj4gPiA+ID4gIEl0IGhhcyBiZWVuIHJlcGxhY2VkIHdpdGggdGhlIGluZ2VuaWMtaWlvIGRyaXZl
-ciBmb3IgdGhlIEFEQy4KPiA+ID4gPiAKPiA+ID4gPiAgU2lnbmVkLW9mZi1ieTogUGF1bCBDZXJj
-dWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5uZXQ+Cj4gPiA+ID4gIFRlc3RlZC1ieTogQXJ0dXIgUm9q
-ZWsgPGNvbnRhY3RAYXJ0dXItcm9qZWsuZXU+Cj4gPiA+ID4gIC0tLQo+ID4gPiA+ICAgZHJpdmVy
-cy9tZmQvS2NvbmZpZyAgICAgIHwgICA5IC0tCj4gPiA+ID4gICBkcml2ZXJzL21mZC9NYWtlZmls
-ZSAgICAgfCAgIDEgLQo+ID4gPiA+ICAgZHJpdmVycy9tZmQvano0NzQwLWFkYy5jIHwgMzI0Cj4g
-PiA+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPiA+ID4gICAz
-IGZpbGVzIGNoYW5nZWQsIDMzNCBkZWxldGlvbnMoLSkKPiA+ID4gPiAgIGRlbGV0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL21mZC9qejQ3NDAtYWRjLmMKPiA+ID4gCj4gPiA+ICBBcHBsaWVkLCB0aGFu
-a3MuCj4gPiAKPiA+IEl0IHNlZW1zIHRoZSByZXBsYWNlbWVudCBpcyBkb25lIGluICJNSVBTOiBx
-aV9sYjYwOiBNaWdyYXRlIHRvCj4gPiBkZXZpY2V0cmVlIiB3aGljaCBpcyBub3QgeWV0IG1lcmdl
-ZC4KPiAKPiBJdCdzIG1lcmdlZCBpbiB0aGUgTUlQUyB0cmVlLCB0aG91Z2gsIHNvIGl0J2xsIGJs
-ZW5kIHRvZ2V0aGVyIGp1c3QKPiBmaW5lIGluIGxpbnV4LW5leHQuCgpXb25kZXJmdWwuICBUaGFu
-a3MgUGF1bC4KCi0tIApMZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2VzIFRlY2hu
-aWNhbCBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29D
-cwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+T24gTWEsIDIwMTktMDgtMTMgYXQgMTI6MjMgKzAyMDAsIEd1aWRvIEfDvG50aGVyIHdyb3RlOg0K
+PiBIaSBSb2JlcnQsDQo+IE9uIFdlZCwgSnVuIDI2LCAyMDE5IGF0IDA0OjMyOjA4UE0gKzAzMDAs
+IFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+ID4gDQo+ID4gVGhpcyBwYXRjaC1zZXQgaW1wcm92ZXMg
+dGhlIHVzZSBvZiBlTENESUYgYmxvY2sgb24gaU1YIDggU29DcyAobGlrZQ0KPiA+IDhNUSwgOE1N
+DQo+ID4gYW5kIDhRWFApLiBGb2xsb3dpbmcsIGFyZSB0aGUgbmV3IGZlYXR1cmVzIGFkZGVkIGFu
+ZCBmaXhlcyBmcm9tDQo+ID4gdGhpcw0KPiA+IHBhdGNoLXNldDoNCj4gVGhlcmUgd2FzIHNvbWUg
+ZmVlZGJhY2sgb24gdmFyaW91cyBwYXRjaGVzLCBkbyB5b3UgaW50ZW5kIHRvIHBpY2sNCj4gdGhh
+dA0KPiB1cCBhZ2Fpbj8gVGhhdCB3b3VsZCBiZSBjb29sIHNpbmNlIHRoZXJlJ3Mgc29tZSBvdmVy
+bGFwcGluZyB3b3JrDQo+IHBvcHBpbmcNCj4gdXAgYWxyZWFkeSBlLmcuIGluDQo+IA0KPiDCoMKg
+wqDCoGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
+dHRwcyUzQSUyRiUyDQo+IEZwYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnJTJGc2VyaWVzJTJGNjQ1
+OTUlMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3JvYg0KPiBlcnQuY2hpcmFzJTQwbnhwLmNvbSU3QzZj
+YTY3MjRhNjU2YjQxOTEyZjA0MDhkNzFmZDgzZGEwJTdDNjg2ZWExZDNiYzINCj4gYjRjNmZhOTJj
+ZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzcwMTI4ODU5MTg2MzExOTYmYW1wO3NkYXRhPWIzQ3Ji
+TnUlDQo+IDJGY3NXQk9BJTJCY2FRTFglMkJybHJLNyUyRmhmMiUyRjF2WlMzZVFHTjdhTSUzRCZh
+bXA7cmVzZXJ2ZWQ9MA0KPiANCj4gc2hvd2luZyB1cCBhbmQgaXQncyB0aGUgYmFzZSBmb3IgdGhl
+IHRpbnkNCj4gDQo+IMKgwqDCoMKgaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5v
+dXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTINCj4gRnBhdGNod29yay5mcmVlZGVza3RvcC5v
+cmclMkZzZXJpZXMlMkY2NDMwMCUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDcm9iDQo+IGVydC5jaGly
+YXMlNDBueHAuY29tJTdDNmNhNjcyNGE2NTZiNDE5MTJmMDQwOGQ3MWZkODNkYTAlN0M2ODZlYTFk
+M2JjMg0KPiBiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzAxMjg4NTkxODY0MTE5
+NiZhbXA7c2RhdGE9aDZLTFZuU3gNCj4geEJ3dkslMkZ2UEY5enQ0RFFSNlduRjFweVFTd0tCVE80
+clFUZyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiANCj4gQ2hlZXJzLA0KPiDCoC0tIEd1aWRvDQoNCkhp
+IEd1aWRvLA0KDQpZZXMsIEkgcGxhbiB0byBzdWJtaXQgYSBuZXh0IHJldmlzaW9uLCBidXQgZmly
+c3QgSSB3YW50ZWQgdG8gdHJ5IGl0IHdpdGggeW91ciBwYXRjaC1zZXQgZm9yIHRoZSBud2wtZHNp
+IGRyaXZlci4NClRoYW5rcyBmb3IgdGhlIGhlYWRzLXVwLg0KDQpCZXN0IHJlZ2FyZHMsDQpSb2Jl
+cnQ=
