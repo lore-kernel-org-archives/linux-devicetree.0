@@ -1,110 +1,109 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 2/7] dt-bindings: devfreq: Add bindings for generic imx
- buses
-Date: Tue, 13 Aug 2019 01:32:36 +0000
-Message-ID: <VI1PR04MB702300C8C78BC033D16EDB85EED20@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1565633880.git.leonard.crestez@nxp.com>
- <97b0bff95ddb85b06ef3d2f8079faa36562a956d.1565633880.git.leonard.crestez@nxp.com>
- <CAL_JsqJWpQN2oTm8Q2_Gzd0GJ+YZoc9j-zh-U1s4eGhMxDEmEA@mail.gmail.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
+ property in EP driver.
+Date: Tue, 13 Aug 2019 02:10:54 +0000
+Message-ID: <AM5PR04MB3299D91F9886FA45EF0ABB9EF5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
+ <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
+ <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Jacky Bai <ping.bai@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open
- list:THERMAL" <linux-pm@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC
- ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>Sascha Hauer <ke>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "kishon@ti.com" <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/12/2019 10:47 PM, Rob Herring wrote:
-> On Mon, Aug 12, 2019 at 12:49 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
-
->> Add initial dt bindings for the interconnects inside i.MX chips.
->> Multiple external IPs are involved but SOC integration means the
->> software controllable interfaces are very similar.
->>
->> +description: |
->> +  The i.MX SoC family has multiple buses for which clock frequency (and sometimes
->> +  voltage) can be adjusted.
->> +
->> +  Some of those buses expose register areas mentioned in the memory maps as GPV
->> +  ("Global Programmers View") but not all. Access to this area might be denied for
->> +  normal world.
->> +
->> +  The buses are based on externally licensed IPs such as ARM NIC-301 and Arteris
->> +  FlexNOC but DT bindings are specific to the integration of these bus
->> +  interconnect IPs into imx SOCs.
-> 
-> No need to use the interconnect binding?
-
-Separate RFC: https://patchwork.kernel.org/patch/11078673/
-
-The interconnect is represented by a separate "virtual" node which might 
-not be OK. There was also a recent RFC from samsung which turns devfreq 
-nodes into interconnect providers:
-     https://patchwork.kernel.org/cover/11054417/
-
-Is that preferable?
-
->> +required:
->> +  - compatible
->> +  - clocks
-> 
-> reg?
-
-This is deliberately optional: for some NICs the GPV register area is 
-not exposed in the memory map. This is unusual but an accurate 
-description of the hardware.
-
-The current driver doesn't even attempt to map registers, it only 
-adjusts the clock.
-
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/imx8mm-clock.h>
->> +    noc: noc@32700000 {
->> +            compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
-> 
-> Doesn't match the schema. (Well, it does with 'contains', but
-> fsl,imx8mm-noc is not documented.)
-
-I'm confused about how per-SOC compatible strings works with validation. 
-There is a rule that every SOC dtsi needs to add soc prefix to all 
-device nodes but of_device_id in driver code doesn't need to be updated.
-
-Without using "contains" on the "compatible" property then all 
-SOC-specific compatible strings would need to be mentioned in every yaml 
-files. Unless I'm missing something this means updating update every 
-binding file for each new SOC?
-
-I guess it can be useful because it also validates the compatible 
-sequence itself.
-
-For this current example something like this seems to work:
-
-   compatible:
-     oneOf:
-       - items:
-         - enum:
-           - fsl,imx8mm-nic
-           - fsl,imx8mq-nic
-         - const: fsl,imx8m-nic
-       - items:
-         - enum:
-           - fsl,imx8mm-noc
-           - fsl,imx8mq-noc
-         - const: fsl,imx8m-noc
-
---
-Regards,
-Leonard
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnlubQ45pyIMTLml6Ug
+MTk6MzYNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzoga2lz
+aG9uQHRpLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBt
+YXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95
+YW5nLmxpQG54cC5jb20+OyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
+ZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5n
+a2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0
+QGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5A
+cm9jay1jaGlwcy5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxh
+YnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIdjMgMS8yXSBQQ0k6IGxheWVy
+c2NhcGU6IEFkZCB0aGUgYmFyX2ZpeGVkXzY0Yml0DQo+IHByb3BlcnR5IGluIEVQIGRyaXZlci4N
+Cj4gDQo+IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gTW9uLCBBdWcgMTIsIDIwMTkgYXQg
+MTA6Mzk6MDBBTSArMDAwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxs
+b3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPg0KPiA+ID4gU2VudDogMjAxOeW5tDjmnIgxMuaXpSAx
+ODoxMg0KPiA+ID4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPjsga2lzaG9u
+QHRpLmNvbQ0KPiA+ID4gQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9y
+ZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8g
+TGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGFybmRAYXJuZGIuZGU7DQo+ID4gPiBncmVna2hAbGlu
+dXhmb3VuZGF0aW9uLm9yZzsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+Ow0KPiA+
+ID4gTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54
+cC5jb20+Ow0KPiA+ID4ga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsgcG9tYnJlZGFubmVA
+bmV4Yi5jb207DQo+ID4gPiBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IGxpbnV4LXBjaUB2Z2Vy
+Lmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gPiA+IFN1YmplY3Q6IFtF
+WFRdIFJlOiBbUEFUQ0h2MyAxLzJdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZQ0KPiA+ID4gYmFy
+X2ZpeGVkXzY0Yml0IHByb3BlcnR5IGluIEVQIGRyaXZlci4NCj4gPiA+DQo+ID4gPiBDYXV0aW9u
+OiBFWFQgRW1haWwNCj4gPiA+DQo+ID4gPiBGaXJzdCBvZmY6DQo+ID4gPg0KPiA+ID4gVHJpbSB0
+aGUgQ0MgbGlzdCwgeW91IENDJ2VkIG1haW50YWluZXJzIChhbmQgbWFpbGluZyBsaXN0cykgZm9y
+IG5vDQo+ID4gPiByZWFzb25zIHdoYXRzb3Zlci4NCj4gPiBbWGlhb3dlaSBCYW9dSGkgTG9yZW56
+bywgSSBhbSBub3QgY2xlYXIgd2h5IHRoZSBtYWlsIGxpc3QgaXMgdGhlIENDLCBJIHVzZSB0aGUN
+Cj4gY29tbWFuZCAiZ2l0IHNlbmQtZW1haWwgLS10byIsIEkgd2lsbCB0cnkgdG8gc2VuZCB0aGUg
+cGF0Y2ggYWdhaW4sIGRvIEkgbmVlZCB0bw0KPiBtb2RpZnkgdGhlIHZlcnNpb24gaXMgdjQgd2hl
+biBJIHNlbmQgdGhpcyBwYXRjaCBhZ2Fpbj8NCj4gDQo+IFllcyB5b3UgZG8uDQo+IA0KPiBXcmFw
+IGxpbmVzIHRvIG1heCA4MCBjaGFyYWN0ZXJzLiBUaGVyZSBpcyBubyBuZWVkIHRvIGFkZCBbWGlh
+b3dlaSBCYW9dLg0KT0ssIHRoYW5rcyBhIGxvdC4NCj4gDQo+IDEpIFJlYWQsIGVtYWlsIGV0aXF1
+ZXR0ZQ0KPiANCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
+bS8/dXJsPWh0dHBzJTNBJTJGJTJGa2VybmVsDQo+IG5ld2JpZXMub3JnJTJGUGF0Y2hDdWx0dXJl
+JmFtcDtkYXRhPTAyJTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jDQo+IG9tJTdDNzNhM2I2MTYw
+YWFkNDAxYjcyZDIwOGQ3MWYxOTNhZTElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2QNCj4gOTljNWMz
+MDE2MzUlN0MwJTdDMCU3QzYzNzAxMjA2NTU0ODM1MTIyNiZhbXA7c2RhdGE9eTZ4YTVuTWtCDQo+
+IHFrV3o3U0JGZGMlMkYwbGNRdnpJJTJGOUhqRXlDNSUyQmswUnhjekklM0QmYW1wO3Jlc2VydmVk
+PTANCj4gDQo+IDIpIGdldF9tYWludGFpbmVyLnBsIC1mIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gDQo+IENvbXBhcmUgdGhlIG91dHB1dCB0byB0aGUgcGVv
+cGxlIGluIENDLCB0cmltIGl0IGFjY29yZGluZ2x5Lg0KPiANCj4gMykgVGhlIE5YUCBtYWludGFp
+bmVycyBpbiB0aGUgTUFJTlRBSU5FUlMgZmlsZSBoYXZlIG5vdCBnaXZlbiBhIHNpbmdsZQ0KPiAg
+ICBjb21tZW50IGZvciB0aGlzIHBhdGNoc2V0LiBFaXRoZXIgdGhleSBzaG93IHVwIG9yIEkgd2ls
+bCByZW1vdmUgdGhlbQ0KPiAgICBmcm9tIHRoZSBNQUlOVEFJTkVSUyBsaXN0Lg0KPiANCj4gNCkg
+QmVmb3JlIHN1Ym1pdHRpbmcgcGF0Y2hlcywgdGFsayB0byBzb21lb25lIGF0IE5YUCB3aG8gY2Fu
+IGhlbHAgeW91DQo+ICAgIGZvcm1hdCB0aGVtIGluIHByZXBhcmF0aW9uIGZvciBwb3N0aW5nLCBJ
+IGRvIG5vdCBoYXZlIHRpbWUgdG8gd3JpdGUNCj4gICAgZ3VpZGVsaW5lcyBmb3IgZXZlcnlvbmUg
+cG9zdGluZyBvbiBsaW51eC1wY2ksIHNvcnJ5LCB0aGUgaW5mb3JtYXRpb24NCj4gICAgaXMgb3V0
+IHRoZXJlIGlmIHlvdSBjYXJlIHRvIHJlYWQgaXQuDQo+IA0KPiBUaGFua3MsDQo+IExvcmVuem8N
+Cj4gDQo+ID4gPg0KPiA+ID4gVGhlbiwgcmVhZCB0aGlzOg0KPiA+ID4NCj4gPiA+IGh0dHBzOi8v
+bG9yZS5rZQ0KPiA+ID4NCj4gcm5lbC5vcmclMkZsaW51eC1wY2klMkYyMDE3MTAyNjIyMzcwMS5H
+QTI1NjQ5JTQwYmhlbGdhYXMtZ2xhcHRvcC5yb2ENCj4gPiA+DQo+IG0uY29ycC5nb29nbGUuY29t
+JTJGJmFtcDtkYXRhPTAyJTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jb20lNw0KPiA+ID4NCj4g
+QzFjNTg2MTc4ZTIzYzQyM2EwZTg4MDhkNzFmMGQ4ZjZmJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNk
+OTljNWMzMA0KPiA+ID4NCj4gMTYzNSU3QzAlN0MwJTdDNjM3MDEyMDE1NDI2Nzg4NTc1JmFtcDtz
+ZGF0YT0zYngxYkRGSXppazhGbkQwd2wNCj4gPiA+IGR1QVV2N3d0TGREMUozaFEzeE5IMnhtRlkl
+M0QmYW1wO3Jlc2VydmVkPTANCj4gPiA+DQo+ID4gPiBhbmQgbWFrZSB5b3VyIHBhdGNoZXMgY29t
+cGxpYW50IHBsZWFzZS4NCj4gPiA+DQo+ID4gPiBPbiBGcmksIEp1biAyOCwgMjAxOSBhdCAwOToz
+ODoyNUFNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+ID4gVGhlIFBDSWUgY29udHJv
+bGxlciBvZiBsYXllcnNjYXBlIGp1c3QgaGF2ZSA0IEJBUnMsIEJBUjAgYW5kIEJBUjENCj4gPiA+
+ID4gaXMgMzJiaXQsIEJBUjMgYW5kIEJBUjQgaXMgNjRiaXQsIHRoaXMgaXMgZGV0ZXJtaW5lZCBi
+eSBoYXJkd2FyZSwNCj4gPiA+ID4gc28gc2V0IHRoZSBiYXJfZml4ZWRfNjRiaXQgd2l0aCAweDE0
+Lg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
+YW9AbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IHYyOg0KPiA+ID4gPiAgLSBSZXBsYWNl
+IHZhbHVlIDB4MTQgd2l0aCBhIG1hY3JvLg0KPiA+ID4gPiB2MzoNCj4gPiA+ID4gIC0gTm8gY2hh
+bmdlLg0KPiA+ID4gPg0KPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxh
+eWVyc2NhcGUtZXAuYyB8ICAgIDEgKw0KPiA+ID4gPiAgMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+IGIv
+ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+ID4gPiBp
+bmRleCBiZTYxZDk2Li4yMjdjMzNiIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9j
+b250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4gQEAgLTQ0LDYg
+KzQ0LDcgQEAgc3RhdGljIGludCBsc19wY2llX2VzdGFibGlzaF9saW5rKHN0cnVjdCBkd19wY2ll
+DQo+ICpwY2kpDQo+ID4gPiA+ICAgICAgIC5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4gPiA+
+ID4gICAgICAgLm1zaV9jYXBhYmxlID0gdHJ1ZSwNCj4gPiA+ID4gICAgICAgLm1zaXhfY2FwYWJs
+ZSA9IGZhbHNlLA0KPiA+ID4gPiArICAgICAuYmFyX2ZpeGVkXzY0Yml0ID0gKDEgPDwgQkFSXzIp
+IHwgKDEgPDwgQkFSXzQpLA0KPiA+ID4NCj4gPiA+IEkgd291bGQgYXBwcmVjaWF0ZSBLaXNob24n
+cyBBQ0sgb24gdGhpcy4NCj4gPiA+DQo+ID4gPiBMb3JlbnpvDQo+ID4gPg0KPiA+ID4gPiAgfTsN
+Cj4gPiA+ID4NCj4gPiA+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyoN
+Cj4gPiA+ID4gLS0NCj4gPiA+ID4gMS43LjENCj4gPiA+ID4NCg==
