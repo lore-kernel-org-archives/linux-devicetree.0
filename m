@@ -1,25 +1,45 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v12 16/18] MAINTAINERS: add entry for KUnit the unit testing framework
-Date: Mon, 12 Aug 2019 22:26:19 -0700
-Message-ID: <20190813052620.3343520651@mail.kernel.org>
-References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-17-brendanhiggins@google.com>
+Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream like string builder
+Date: Mon, 12 Aug 2019 22:30:22 -0700
+Message-ID: <20190813053023.CC86120651@mail.kernel.org>
+References: <20190812182421.141150-1-brendanhiggins@google.com> <20190812182421.141150-4-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org> <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org> <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com> <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812182421.141150-17-brendanhiggins@google.com>
+In-Reply-To: <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-12 11:24:19)
-> Add myself as maintainer of KUnit, the Linux kernel's unit testing
-> framework.
+Quoting Brendan Higgins (2019-08-12 22:02:59)
+> On Mon, Aug 12, 2019 at 9:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Brendan Higgins (2019-08-12 17:41:05)
+> > > On Mon, Aug 12, 2019 at 4:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > >
+> > > > > kunit_resource_destroy (respective equivalents to devm_kfree, and
+> > > > > devres_destroy) and use kunit_kfree here?
+> > > > >
+> > > >
+> > > > Yes, or drop the API entirely? Does anything need this functionalit=
+y?
+> > >
+> > > Drop the kunit_resource API? I would strongly prefer not to.
+> >
+> > No. I mean this API, string_stream_clear(). Does anything use it?
 >=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
+> Oh, right. No.
+>=20
+> However, now that I added the kunit_resource_destroy, I thought it
+> might be good to free the string_stream after I use it in each call to
+> kunit_assert->format(...) in which case I will be using this logic.
+>=20
+> So I think the right thing to do is to expose string_stream_destroy so
+> kunit_do_assert can clean up when it's done, and then demote
+> string_stream_clear to static. Sound good?
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Ok, sure. I don't really see how clearing it explicitly when the
+assertion prints vs. never allocating it to begin with is really any
+different. Maybe I've missed something though.
