@@ -1,109 +1,79 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [EXT] Re: [PATCHv3 1/2] PCI: layerscape: Add the bar_fixed_64bit
- property in EP driver.
-Date: Tue, 13 Aug 2019 02:10:54 +0000
-Message-ID: <AM5PR04MB3299D91F9886FA45EF0ABB9EF5D20@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190628013826.4705-1-xiaowei.bao@nxp.com>
- <20190812101213.GB20861@e121166-lin.cambridge.arm.com>
- <AM5PR04MB329929A0B046F6BEB94B0120F5D30@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Hui Song <hui.song_1@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1088a: fix gpio node
+Date: Tue, 13 Aug 2019 10:04:57 +0800
+Message-ID: <20190813020457.45370-1-hui.song_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812113543.GA25040@e121166-lin.cambridge.arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "kishon@ti.com" <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnlubQ45pyIMTLml6Ug
-MTk6MzYNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzoga2lz
-aG9uQHRpLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95
-YW5nLmxpQG54cC5jb20+OyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
-ZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5n
-a2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0
-QGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5A
-cm9jay1jaGlwcy5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxh
-YnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIdjMgMS8yXSBQQ0k6IGxheWVy
-c2NhcGU6IEFkZCB0aGUgYmFyX2ZpeGVkXzY0Yml0DQo+IHByb3BlcnR5IGluIEVQIGRyaXZlci4N
-Cj4gDQo+IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gTW9uLCBBdWcgMTIsIDIwMTkgYXQg
-MTA6Mzk6MDBBTSArMDAwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxs
-b3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPg0KPiA+ID4gU2VudDogMjAxOeW5tDjmnIgxMuaXpSAx
-ODoxMg0KPiA+ID4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPjsga2lzaG9u
-QHRpLmNvbQ0KPiA+ID4gQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8g
-TGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGFybmRAYXJuZGIuZGU7DQo+ID4gPiBncmVna2hAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+Ow0KPiA+
-ID4gTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54
-cC5jb20+Ow0KPiA+ID4ga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsgcG9tYnJlZGFubmVA
-bmV4Yi5jb207DQo+ID4gPiBzaGF3bi5saW5Acm9jay1jaGlwcy5jb207IGxpbnV4LXBjaUB2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gPiA+IFN1YmplY3Q6IFtF
-WFRdIFJlOiBbUEFUQ0h2MyAxLzJdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZQ0KPiA+ID4gYmFy
-X2ZpeGVkXzY0Yml0IHByb3BlcnR5IGluIEVQIGRyaXZlci4NCj4gPiA+DQo+ID4gPiBDYXV0aW9u
-OiBFWFQgRW1haWwNCj4gPiA+DQo+ID4gPiBGaXJzdCBvZmY6DQo+ID4gPg0KPiA+ID4gVHJpbSB0
-aGUgQ0MgbGlzdCwgeW91IENDJ2VkIG1haW50YWluZXJzIChhbmQgbWFpbGluZyBsaXN0cykgZm9y
-IG5vDQo+ID4gPiByZWFzb25zIHdoYXRzb3Zlci4NCj4gPiBbWGlhb3dlaSBCYW9dSGkgTG9yZW56
-bywgSSBhbSBub3QgY2xlYXIgd2h5IHRoZSBtYWlsIGxpc3QgaXMgdGhlIENDLCBJIHVzZSB0aGUN
-Cj4gY29tbWFuZCAiZ2l0IHNlbmQtZW1haWwgLS10byIsIEkgd2lsbCB0cnkgdG8gc2VuZCB0aGUg
-cGF0Y2ggYWdhaW4sIGRvIEkgbmVlZCB0bw0KPiBtb2RpZnkgdGhlIHZlcnNpb24gaXMgdjQgd2hl
-biBJIHNlbmQgdGhpcyBwYXRjaCBhZ2Fpbj8NCj4gDQo+IFllcyB5b3UgZG8uDQo+IA0KPiBXcmFw
-IGxpbmVzIHRvIG1heCA4MCBjaGFyYWN0ZXJzLiBUaGVyZSBpcyBubyBuZWVkIHRvIGFkZCBbWGlh
-b3dlaSBCYW9dLg0KT0ssIHRoYW5rcyBhIGxvdC4NCj4gDQo+IDEpIFJlYWQsIGVtYWlsIGV0aXF1
-ZXR0ZQ0KPiANCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
-bS8/dXJsPWh0dHBzJTNBJTJGJTJGa2VybmVsDQo+IG5ld2JpZXMub3JnJTJGUGF0Y2hDdWx0dXJl
-JmFtcDtkYXRhPTAyJTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jDQo+IG9tJTdDNzNhM2I2MTYw
-YWFkNDAxYjcyZDIwOGQ3MWYxOTNhZTElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2QNCj4gOTljNWMz
-MDE2MzUlN0MwJTdDMCU3QzYzNzAxMjA2NTU0ODM1MTIyNiZhbXA7c2RhdGE9eTZ4YTVuTWtCDQo+
-IHFrV3o3U0JGZGMlMkYwbGNRdnpJJTJGOUhqRXlDNSUyQmswUnhjekklM0QmYW1wO3Jlc2VydmVk
-PTANCj4gDQo+IDIpIGdldF9tYWludGFpbmVyLnBsIC1mIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-ZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gDQo+IENvbXBhcmUgdGhlIG91dHB1dCB0byB0aGUgcGVv
-cGxlIGluIENDLCB0cmltIGl0IGFjY29yZGluZ2x5Lg0KPiANCj4gMykgVGhlIE5YUCBtYWludGFp
-bmVycyBpbiB0aGUgTUFJTlRBSU5FUlMgZmlsZSBoYXZlIG5vdCBnaXZlbiBhIHNpbmdsZQ0KPiAg
-ICBjb21tZW50IGZvciB0aGlzIHBhdGNoc2V0LiBFaXRoZXIgdGhleSBzaG93IHVwIG9yIEkgd2ls
-bCByZW1vdmUgdGhlbQ0KPiAgICBmcm9tIHRoZSBNQUlOVEFJTkVSUyBsaXN0Lg0KPiANCj4gNCkg
-QmVmb3JlIHN1Ym1pdHRpbmcgcGF0Y2hlcywgdGFsayB0byBzb21lb25lIGF0IE5YUCB3aG8gY2Fu
-IGhlbHAgeW91DQo+ICAgIGZvcm1hdCB0aGVtIGluIHByZXBhcmF0aW9uIGZvciBwb3N0aW5nLCBJ
-IGRvIG5vdCBoYXZlIHRpbWUgdG8gd3JpdGUNCj4gICAgZ3VpZGVsaW5lcyBmb3IgZXZlcnlvbmUg
-cG9zdGluZyBvbiBsaW51eC1wY2ksIHNvcnJ5LCB0aGUgaW5mb3JtYXRpb24NCj4gICAgaXMgb3V0
-IHRoZXJlIGlmIHlvdSBjYXJlIHRvIHJlYWQgaXQuDQo+IA0KPiBUaGFua3MsDQo+IExvcmVuem8N
-Cj4gDQo+ID4gPg0KPiA+ID4gVGhlbiwgcmVhZCB0aGlzOg0KPiA+ID4NCj4gPiA+IGh0dHBzOi8v
-bG9yZS5rZQ0KPiA+ID4NCj4gcm5lbC5vcmclMkZsaW51eC1wY2klMkYyMDE3MTAyNjIyMzcwMS5H
-QTI1NjQ5JTQwYmhlbGdhYXMtZ2xhcHRvcC5yb2ENCj4gPiA+DQo+IG0uY29ycC5nb29nbGUuY29t
-JTJGJmFtcDtkYXRhPTAyJTdDMDElN0N4aWFvd2VpLmJhbyU0MG54cC5jb20lNw0KPiA+ID4NCj4g
-QzFjNTg2MTc4ZTIzYzQyM2EwZTg4MDhkNzFmMGQ4ZjZmJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNk
-OTljNWMzMA0KPiA+ID4NCj4gMTYzNSU3QzAlN0MwJTdDNjM3MDEyMDE1NDI2Nzg4NTc1JmFtcDtz
-ZGF0YT0zYngxYkRGSXppazhGbkQwd2wNCj4gPiA+IGR1QVV2N3d0TGREMUozaFEzeE5IMnhtRlkl
-M0QmYW1wO3Jlc2VydmVkPTANCj4gPiA+DQo+ID4gPiBhbmQgbWFrZSB5b3VyIHBhdGNoZXMgY29t
-cGxpYW50IHBsZWFzZS4NCj4gPiA+DQo+ID4gPiBPbiBGcmksIEp1biAyOCwgMjAxOSBhdCAwOToz
-ODoyNUFNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+ID4gVGhlIFBDSWUgY29udHJv
-bGxlciBvZiBsYXllcnNjYXBlIGp1c3QgaGF2ZSA0IEJBUnMsIEJBUjAgYW5kIEJBUjENCj4gPiA+
-ID4gaXMgMzJiaXQsIEJBUjMgYW5kIEJBUjQgaXMgNjRiaXQsIHRoaXMgaXMgZGV0ZXJtaW5lZCBi
-eSBoYXJkd2FyZSwNCj4gPiA+ID4gc28gc2V0IHRoZSBiYXJfZml4ZWRfNjRiaXQgd2l0aCAweDE0
-Lg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5i
-YW9AbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IHYyOg0KPiA+ID4gPiAgLSBSZXBsYWNl
-IHZhbHVlIDB4MTQgd2l0aCBhIG1hY3JvLg0KPiA+ID4gPiB2MzoNCj4gPiA+ID4gIC0gTm8gY2hh
-bmdlLg0KPiA+ID4gPg0KPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxh
-eWVyc2NhcGUtZXAuYyB8ICAgIDEgKw0KPiA+ID4gPiAgMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2Vy
-dGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+IGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+ID4gPiBp
-bmRleCBiZTYxZDk2Li4yMjdjMzNiIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4gQEAgLTQ0LDYg
-KzQ0LDcgQEAgc3RhdGljIGludCBsc19wY2llX2VzdGFibGlzaF9saW5rKHN0cnVjdCBkd19wY2ll
-DQo+ICpwY2kpDQo+ID4gPiA+ICAgICAgIC5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4gPiA+
-ID4gICAgICAgLm1zaV9jYXBhYmxlID0gdHJ1ZSwNCj4gPiA+ID4gICAgICAgLm1zaXhfY2FwYWJs
-ZSA9IGZhbHNlLA0KPiA+ID4gPiArICAgICAuYmFyX2ZpeGVkXzY0Yml0ID0gKDEgPDwgQkFSXzIp
-IHwgKDEgPDwgQkFSXzQpLA0KPiA+ID4NCj4gPiA+IEkgd291bGQgYXBwcmVjaWF0ZSBLaXNob24n
-cyBBQ0sgb24gdGhpcy4NCj4gPiA+DQo+ID4gPiBMb3JlbnpvDQo+ID4gPg0KPiA+ID4gPiAgfTsN
-Cj4gPiA+ID4NCj4gPiA+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyoN
-Cj4gPiA+ID4gLS0NCj4gPiA+ID4gMS43LjENCj4gPiA+ID4NCg==
+From: Song Hui <hui.song_1@nxp.com>
+
+Update the nodes to include little-endian
+property to be consistent with the hardware
+and add ls1088a gpio specify compatible.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 20f5ebd..d58d203 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -269,43 +269,47 @@
+ 		};
+ 
+ 		gpio0: gpio@2300000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2300000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio1: gpio@2310000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2310000 0x0 0x10000>;
+ 			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio2: gpio@2320000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2320000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		gpio3: gpio@2330000 {
+-			compatible = "fsl,qoriq-gpio";
++			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+ 			reg = <0x0 0x2330000 0x0 0x10000>;
+ 			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			little-endian;
+ 		};
+ 
+ 		ifc: ifc@2240000 {
+-- 
+2.9.5
