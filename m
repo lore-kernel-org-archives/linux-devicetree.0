@@ -1,99 +1,78 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
-Date: Tue, 13 Aug 2019 09:05:59 -0400
-Message-ID: <20190813130559.16936-1-sashal@kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/9] dt-bindings: display: panel: Add bindings for NEC
+ NL8048HL11 panel
+Date: Tue, 13 Aug 2019 16:09:43 +0300
+Message-ID: <20190813130943.GF5009@pendragon.ideasonboard.com>
+References: <20190810231048.1921-1-laurent.pinchart@ideasonboard.com>
+ <20190810231048.1921-4-laurent.pinchart@ideasonboard.com>
+ <CAL_Jsq+NO+s1Wz5AYKzVqC=ki0mHtK8dr3namdt82DvnDebeyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jarkko.sakkinen@linux.intel.com, peterhuewe@gmx.de
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, jgg@ziepe.ca, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-integrity@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+NO+s1Wz5AYKzVqC=ki0mHtK8dr3namdt82DvnDebeyw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixes a few checkpatch warnings (and ignores some), mostly around
-spaces/tabs and documentation.
-
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
- drivers/char/tpm/Kconfig                               |  2 +-
- drivers/char/tpm/tpm_ftpm_tee.c                        | 10 +++++-----
- 3 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6992bbbbffab6..d61a203138cbe 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -575,6 +575,8 @@ patternProperties:
-     description: Micro Crystal AG
-   "^micron,.*":
-     description: Micron Technology Inc.
-+  "^microsoft,.*":
-+    description: Microsoft Corporation
-   "^mikroe,.*":
-     description: MikroElektronika d.o.o.
-   "^miniand,.*":
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 17bfbf9f572fc..9c37047f4b562 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -167,7 +167,7 @@ config TCG_VTPM_PROXY
- config TCG_FTPM_TEE
- 	tristate "TEE based fTPM Interface"
- 	depends on TEE && OPTEE
--	---help---
-+	help
- 	  This driver proxies for firmware TPM running in TEE.
- 
- source "drivers/char/tpm/st33zp24/Kconfig"
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index 5679a5af9a96a..6640a14dbe48c 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -38,7 +38,7 @@ static const uuid_t ftpm_ta_uuid =
-  * @count:	the number of bytes to read.
-  *
-  * Return:
-- * 	In case of success the number of bytes received.
-+ *	In case of success the number of bytes received.
-  *	On failure, -errno.
-  */
- static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-@@ -67,7 +67,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-  * @len:	the number of bytes to send.
-  *
-  * Return:
-- * 	In case of success, returns 0.
-+ *	In case of success, returns 0.
-  *	On failure, -errno
-  */
- static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
-@@ -212,7 +212,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
-  * @pdev: the platform_device description.
-  *
-  * Return:
-- * 	On success, 0. On failure, -errno.
-+ *	On success, 0. On failure, -errno.
-  */
- static int ftpm_tee_probe(struct platform_device *pdev)
- {
-@@ -302,7 +302,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
-  * @pdev: the platform_device description.
-  *
-  * Return:
-- * 	0 always.
-+ *	0 always.
-  */
- static int ftpm_tee_remove(struct platform_device *pdev)
- {
-@@ -323,7 +323,7 @@ static int ftpm_tee_remove(struct platform_device *pdev)
- 	/* close the context with TEE driver */
- 	tee_client_close_context(pvt_data->ctx);
- 
--        /* memory allocated with devm_kzalloc() is freed automatically */
-+	/* memory allocated with devm_kzalloc() is freed automatically */
- 
- 	return 0;
- }
--- 
-2.20.1
+SGkgUm9iLAoKT24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgMDE6MTg6MzlQTSAtMDYwMCwgUm9iIEhl
+cnJpbmcgd3JvdGU6Cj4gT24gU2F0LCBBdWcgMTAsIDIwMTkgYXQgNToxMCBQTSBMYXVyZW50IFBp
+bmNoYXJ0IHdyb3RlOgo+ID4KPiA+IFRoZSBORUMgTkw4MDQ4SEwxMSBpcyBhIDEwLjRjbSBXVkdB
+ICg4MDB4NDgwKSBwYW5lbCB3aXRoIGEgMjQtYml0IFJHQgo+ID4gcGFyYWxsZWwgZGF0YSBpbnRl
+cmZhY2UgYW5kIGFuIFNQSSBjb250cm9sIGludGVyZmFjZS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5
+OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4g
+PiAtLS0KPiA+IENoYW5nZXMgc2luY2UgdjE6Cj4gPgo+ID4gLSBDb252ZXJ0IHRvIFlBTUwKPiA+
+IC0tLQo+ID4gIC4uLi9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwgICAgICAgICB8
+IDQ5ICsrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDkgaW5zZXJ0aW9u
+cygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9uZWMsbmw4MDQ4aGwxMS55YW1sCj4gPgo+ID4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL25lYyxu
+bDgwNDhobDExLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9uZWMsbmw4MDQ4aGwxMS55YW1sCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4g
+aW5kZXggMDAwMDAwMDAwMDAwLi5jYzNkNDA5NzU4MjgKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL25lYyxu
+bDgwNDhobDExLnlhbWwKPiA+IEBAIC0wLDAgKzEsNDkgQEAKPiA+ICsjIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiBHUEwtMi4wCj4gPiArJVlBTUwgMS4yCj4gPiArLS0tCj4gPiArJGlkOiBodHRw
+Oi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlh
+bWwjCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3Jl
+LnlhbWwjCj4gPiArCj4gPiArdGl0bGU6IE5FQyBOTDgwNDhITDExIDQuMSIgV1ZHQSBURlQgTENE
+IHBhbmVsCj4gPiArCj4gPiArZGVzY3JpcHRpb246Cj4gPiArICBUaGUgTkVDIE5MODA0OEhMMTEg
+aXMgYSA0LjEiIFdWR0EgVEZUIExDRCBwYW5lbCB3aXRoIGEgMjQtYml0IFJHQiBwYXJhbGxlbAo+
+ID4gKyAgZGF0YSBpbnRlcmZhY2UgYW5kIGFuIFNQSSBjb250cm9sIGludGVyZmFjZS4KPiA+ICsK
+PiA+ICttYWludGFpbmVyczoKPiA+ICsgIC0gTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5j
+aGFydEBpZGVhc29uYm9hcmQuY29tPgo+ID4gKwo+ID4gK2FsbE9mOgo+ID4gKyAgLSAkcmVmOiBw
+YW5lbC1jb21tb24ueWFtbCMKPiA+ICsKPiA+ICtwcm9wZXJ0aWVzOgo+ID4gKyAgY29tcGF0aWJs
+ZToKPiA+ICsgICAgY29uc3Q6IG5lYyxubDgwNDhobDExCj4gPiArCj4gPiArICBsYWJlbDogdHJ1
+ZQo+ID4gKyAgcmVzZXQtZ3Bpb3M6IHRydWUKPiA+ICsgIHBvcnQ6IHRydWUKPiA+ICsKPiA+ICty
+ZXF1aXJlZDoKPiA+ICsgIC0gY29tcGF0aWJsZQo+ID4gKyAgLSByZXNldC1ncGlvcwo+ID4gKyAg
+LSBwb3J0Cj4gPiArCj4gPiArYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlCj4gPiArCj4gPiAr
+ZXhhbXBsZXM6Cj4gCj4gWW91ciBleGFtcGxlIHdpbGwgZmFpbCBvbiAnbWFrZSBkdF9iaW5kaW5n
+X2NoZWNrJy4uLgoKSSB3YXNuJ3QgYXdhcmUgb2YgdGhpcy4gSSd2ZSBub3cgcmVhZCB3cml0aW5n
+LXNjaGVtYS5tZCBhbmQgd2lsbCBtYWtlCnN1cmUgdG8gc3VibWl0IGJpbmRpbmdzIHRoYXQgcGFz
+cyB0aGUgY2hlY2tzLiBJJ2xsIGFkZHJlc3MgdGhlIGlzc3Vlcwp5b3VyIHBvaW50ZWQgb3V0IGJl
+bG93IGZvciB0aGUgbmV4dCB2ZXJzaW9uLgoKPiA+ICsgIC0gfAo+ID4gKyAgICBsY2RfcGFuZWw6
+IHBhbmVsIHsKPiAKPiBTUEkgZGV2aWNlcyBoYXZlIHRvIGhhdmUgYSBtaW5pbWFsIFNQSSBjb250
+cm9sbGVyIHBhcmVudC4gUHJpbWFyaWx5Cj4ganVzdCAjc2l6ZS1jZWxscyBhbmQgI2FkZHJlc3Mt
+Y2VsbHMgYXJlIG5lZWRlZC4KPiAKPiAncmVnJyBpcyBtaXNzaW5nIGhlcmUgdG9vLgo+IAo+ID4g
+KyAgICAgIGNvbXBhdGlibGUgPSAibmVjLG5sODA0OGhsMTEiOwo+ID4gKyAgICAgIHNwaS1tYXgt
+ZnJlcXVlbmN5ID0gPDEwMDAwMDAwPjsKPiAKPiBUaGlzIG5lZWRzIHRvIGJlIGxpc3RlZCBpbiBw
+cm9wZXJ0aWVzIGlkZWFsbHkgd2l0aCBzb21lIGNvbnN0cmFpbnRzLgo+IAo+ID4gKwo+ID4gKyAg
+ICAgIHJlc2V0LWdwaW9zID0gPCZncGlvNyA3IEdQSU9fQUNUSVZFX0xPVz47Cj4gCj4gQW5kIEdQ
+SU9fQUNUSVZFX0xPVy4gWW91IGhhdmUgdG8gYWRkIGluY2x1ZGVzIHlvdSBuZWVkLgo+IAo+ID4g
+Kwo+ID4gKyAgICAgIHBvcnQgewo+ID4gKyAgICAgICAgbGNkX2luOiBlbmRwb2ludCB7Cj4gPiAr
+ICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZHBpX291dD47Cj4gPiArICAgICAgICB9Owo+
+ID4gKyAgICAgIH07Cj4gPiArICAgIH07Cj4gPiArCj4gPiArLi4uCgotLSAKUmVnYXJkcywKCkxh
+dXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVs
