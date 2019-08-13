@@ -1,91 +1,73 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 2/7] dt-bindings: devfreq: Add bindings for generic imx
- buses
-Date: Tue, 13 Aug 2019 14:59:56 +0000
-Message-ID: <VI1PR04MB70237460E84C4F8AC9EBE582EED20@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1565633880.git.leonard.crestez@nxp.com>
- <97b0bff95ddb85b06ef3d2f8079faa36562a956d.1565633880.git.leonard.crestez@nxp.com>
- <CAL_JsqJWpQN2oTm8Q2_Gzd0GJ+YZoc9j-zh-U1s4eGhMxDEmEA@mail.gmail.com>
- <VI1PR04MB702300C8C78BC033D16EDB85EED20@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <CAL_Jsq+BDO-J12BddWw-KbhjTx95p58qqpUhhKzUHED6vFK2TA@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v3 0/9] Exynos Adaptive Supply Voltage support
+Date: Tue, 13 Aug 2019 17:08:18 +0200
+Message-ID: <20190813150827.31972-1-s.nawrocki@samsung.com>
+References: <CGME20190813150842eucas1p2c248537d9cd593073e12abeac2cacab5@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jacky Bai <ping.bai@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open
- list:THERMAL" <linux-pm@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC
- ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>, Anson Huang <anson.huang@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: krzk@kernel.org
+Cc: robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13.08.2019 17:06, Rob Herring wrote:
-> On Mon, Aug 12, 2019 at 7:32 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->> On 8/12/2019 10:47 PM, Rob Herring wrote:
->>> On Mon, Aug 12, 2019 at 12:49 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+This is third iteration of my patch series adding ASV (Adaptive Supply 
+Voltage) support for Exynos SoCs. The previous one can be found at:
+https://lore.kernel.org/lkml/20190718143044.25066-1-s.nawrocki@samsung.com
 
->>>> Add initial dt bindings for the interconnects inside i.MX chips.
->>>> Multiple external IPs are involved but SOC integration means the
->>>> software controllable interfaces are very similar.
->>>>
->>>> +description: |
->>>> +  The i.MX SoC family has multiple buses for which clock frequency (and sometimes
->>>> +  voltage) can be adjusted.
->>>> +
->>>> +  Some of those buses expose register areas mentioned in the memory maps as GPV
->>>> +  ("Global Programmers View") but not all. Access to this area might be denied for
->>>> +  normal world.
->>>> +
->>>> +  The buses are based on externally licensed IPs such as ARM NIC-301 and Arteris
->>>> +  FlexNOC but DT bindings are specific to the integration of these bus
->>>> +  interconnect IPs into imx SOCs.
->>>
->>> No need to use the interconnect binding?
->>
->> The interconnect is represented by a separate "virtual" node which might
->> not be OK. There was also a recent RFC from samsung which turns devfreq
->> nodes into interconnect providers:
->>
->> Is that preferable?
-> 
-> Virtual nodes are not OK.
+There is no major changes in this series comparing to v2, only minor
+corrections addressing review comments.
 
-Then I'll try to make the "interconnect" device probe from a soc driver 
-and turn devfreq nodes into interconnect providers backed by this same 
-singleton device.
+I was not sure it was a good idea to try to extend the OPP binding 
+so as to include the ASV data tables in DT, so the tables are left
+in the driver.
 
-Still separate from this series.
+This patch set includes Exynos CHIPID driver posted by Pankaj Dubey and
+futher improved by Bartłomiej Żołnierkiewicz [1].
 
->>>> +required:
->>>> +  - compatible
->>>> +  - clocks
->>>
->>> reg?
->>
->> This is deliberately optional: for some NICs the GPV register area is
->> not exposed in the memory map. This is unusual but an accurate
->> description of the hardware.
-> 
-> Different h/w blocks should have different compatibles. GPV is an Arm
-> thing and I'd expect FlexNOC to be different.
+Tested on Odroid XU3, XU3 Lite, XU4.
 
-The imx reference manuals call them both "GPV" though layout is indeed 
-quite different (and for FlexNoC it's not even documented).
+One of the things on TODO list is support for the Adaptive Body Bias.
+This will require modifications on the cpufreq driver side in order to 
+support multiple voltage regulators and changes in the OPP framework 
+to support adding OPPs with multiple voltages.
 
-The h/w blocks do have different compat strings (imx8m-nic and 
-imx8m-noc). They have a single binding document because didn't want to 
-create two nearly-identical bindings, I assume it would be fine to split 
-later if needed.
+[1] https://lkml.org/lkml/2018/11/15/908
 
---
-Regards,
-Leonard
+Pankaj Dubey (3):
+  soc: samsung: Add exynos chipid driver support
+  ARM: EXYNOS: enable exynos_chipid for ARCH_EXYNOS
+  ARM64: EXYNOS: enable exynos_chipid for ARCH_EXYNOS
+
+Sylwester Nawrocki (6):
+  soc: samsung: Convert exynos-chipid driver to use the regmap API
+  soc: samsung: Add Exynos Adaptive Supply Voltage driver
+  ARM: EXYNOS: Enable exynos-asv driver for ARCH_EXYNOS
+  soc: samsung: Update the CHIP ID DT binding documentation
+  ARM: dts: Add "syscon" compatible string to chipid node
+  ARM: dts: Add samsung,asv-bin property for odroidxu3-lite
+
+ .../bindings/arm/samsung/exynos-chipid.txt    |  10 +-
+ arch/arm/boot/dts/exynos5.dtsi                |   4 +-
+ .../boot/dts/exynos5422-odroidxu3-lite.dts    |   4 +
+ arch/arm/mach-exynos/Kconfig                  |   2 +
+ arch/arm64/Kconfig.platforms                  |   1 +
+ drivers/soc/samsung/Kconfig                   |  15 +
+ drivers/soc/samsung/Makefile                  |   5 +
+ drivers/soc/samsung/exynos-asv.c              | 184 +++++++
+ drivers/soc/samsung/exynos-asv.h              |  82 +++
+ drivers/soc/samsung/exynos-chipid.c           | 101 ++++
+ drivers/soc/samsung/exynos5422-asv.c          | 498 ++++++++++++++++++
+ drivers/soc/samsung/exynos5422-asv.h          |  25 +
+ include/linux/soc/samsung/exynos-chipid.h     |  52 ++
+ 13 files changed, 979 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/soc/samsung/exynos-asv.c
+ create mode 100644 drivers/soc/samsung/exynos-asv.h
+ create mode 100644 drivers/soc/samsung/exynos-chipid.c
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.c
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.h
+ create mode 100644 include/linux/soc/samsung/exynos-chipid.h
+
+-- 
+2.17.1
