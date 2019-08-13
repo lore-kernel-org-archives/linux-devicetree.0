@@ -1,893 +1,159 @@
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V2 12/13] ARM: dts: Add minimal Raspberry Pi 4 support
-Date: Tue, 13 Aug 2019 18:20:47 +0200
-Message-ID: <1565713248-4906-13-git-send-email-wahrenst@gmx.net>
-References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH V16 00/13] PCI: tegra: Add Tegra194 PCIe support
+Date: Tue, 13 Aug 2019 17:33:18 +0100
+Message-ID: <20190813163318.GB5070@e121166-lin.cambridge.arm.com>
+References: <20190813113627.27251-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190813113627.27251-1-vidyas@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This adds minimal support for the new Raspberry Pi 4 without the
-fancy stuff like GENET, PCIe, xHCI, 40 bit DMA and V3D. The RPi 4 is
-available in 3 different variants (1, 2 and 4 GB RAM), so leave the memory
-size to zero and let the bootloader take care of it. The DWC2 is still
-usable as peripheral via the USB-C port.
+On Tue, Aug 13, 2019 at 05:06:14PM +0530, Vidya Sagar wrote:
+> Tegra194 has six PCIe controllers based on Synopsys DesignWare core.
+> There are two Universal PHY (UPHY) blocks with each supporting 12(HSIO:
+> Hisg Speed IO) and 8(NVHS: NVIDIA High Speed) lanes respectively.
+> Controllers:0~4 use UPHY lanes from HSIO brick whereas Controller:5 uses
+> UPHY lanes from NVHS brick. Lane mapping in HSIO UPHY brick to each PCIe
+> controller (0~4) is controlled in XBAR module by BPMP-FW. Since PCIe
+> core has PIPE interface, a glue module called PIPE-to-UPHY (P2U) is used
+> to connect each UPHY lane (applicable to both HSIO and NVHS UPHY bricks)
+> to PCIe controller
+> This patch series
+> - Adds support for P2U PHY driver
+> - Adds support for PCIe host controller
+> - Adds device tree nodes each PCIe controllers
+> - Enables nodes applicable to p2972-0000 platform
+> - Adds helper APIs in Designware core driver to get capability regs offset
+> - Adds defines for new feature registers of PCIe spec revision 4
+> - Makes changes in DesignWare core driver to get Tegra194 PCIe working
+> 
+> Testing done on P2972-0000 platform
+> - Able to get PCIe link up with on-board Marvel eSATA controller
+> - Able to get PCIe link up with NVMe cards connected to M.2 Key-M slot
+> - Able to do data transfers with both SATA drives and NVMe cards
+> - Able to perform suspend-resume sequence
+> 
+> Note
+> - Enabling x8 slot on P2972-0000 platform requires pinmux driver for Tegra194.
+>   It is being worked on currently and hence Controller:5 (i.e. x8 slot) is
+>   disabled in this patch series. A future patch series would enable this.
+> - This series is based on top of the following series
+>   Jisheng's patches to add support to .remove() in Designware sub-system
+>   https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+>   (Update: Jisheng's patches are now accepted and applied for v5.2)
+>   My patches made on top of Jisheng's patches to export various symbols
+>   http://patchwork.ozlabs.org/project/linux-pci/list/?series=115671
+>   (Update: My above patch series is accepted and applied for v5.3)
+>   Another patch of mine to enable BPMP-FW resume in noirq phase
+>   http://patchwork.ozlabs.org/patch/1140973/
+>   (This is already accepted)
+> 
+> V16:
+> * Added empty lines (cosmetic changes) where required in pcie-tegra194.c file
+>   to address Lorenzo's review comments.
+> 
+> V15:
+> * Refactored pcie-tegra194.c code to call only tegra_bpmp_transfer() API
+>   in both .probe() path and .resume_noirq() path.
+> 
+> V14:
+> * Addressed Lorenzo's review comments in pcie-tegra194.c file (Patch 13/13)
+> * Added a new patch to export dw_pcie_wait_for_link() API
+> 
+> V13:
+> * Addressed Bjorn's review comments for adding Gen-4 specific defines to pci_regs.h header file
+> 
+> V12:
+> * Modified the commit message of patch-3 in this series to address review
+>   comments from Lorenzo
+> 
+> V11:
+> * Removed device-tree patches from the series as they are applied to relevant
+>   Tegra specific trees by Thierry Reding.
+> * Included older Tegra chips to extend quirk that disables MSI interrupt being
+>   used for Tegra PCIe root ports.
+> * Addressed review comments in P2U driver file.
+> 
+> V10:
+> * Used _relaxed() versions of readl() & writel()
+> 
+> V9:
+> * Made the drivers dependent on ARCH_TEGRA_194_SOC directly
+> * Addressed review comments from Dmitry
+> 
+> V8:
+> * Changed P2U driver file name from pcie-p2u-tegra194.c to phy-tegra194-p2u.c
+> * Addressed review comments from Thierry and Rob
+> 
+> V7:
+> * Took care of review comments from Rob
+> * Added a quirk to disable MSI for root ports
+> * Removed using pcie_pme_disable_msi() API in host controller driver
+> 
+> V6:
+> * Removed patch that exports pcie_bus_config symbol
+> * Took care of review comments from Thierry and Rob
+> 
+> V5:
+> * Removed redundant APIs in pcie-designware-ep.c file after moving them
+>   to pcie-designware.c file based on Bjorn's review comments
+> 
+> V4:
+> * Rebased on top of linux-next top of the tree
+> * Addressed Gustavo's comments and added his Ack for some of the changes.
+> 
+> V3:
+> * Addressed review comments from Thierry
+> 
+> V2:
+> * Addressed review comments from Bjorn, Thierry, Jonathan, Rob & Kishon
+> * Added more patches in v2 series
+> 
+> Vidya Sagar (13):
+>   PCI: Add #defines for some of PCIe spec r4.0 features
+>   PCI: Disable MSI for Tegra root ports
+>   PCI: dwc: Perform dbi regs write lock towards the end
+>   PCI: dwc: Move config space capability search API
+>   PCI: dwc: Add ext config space capability search API
+>   PCI: dwc: Export dw_pcie_wait_for_link() API
+>   dt-bindings: PCI: designware: Add binding for CDM register check
+>   PCI: dwc: Add support to enable CDM register check
+>   dt-bindings: Add PCIe supports-clkreq property
+>   dt-bindings: PCI: tegra: Add device tree support for Tegra194
+>   dt-bindings: PHY: P2U: Add Tegra194 P2U block
+>   phy: tegra: Add PCIe PIPE2UPHY support
+>   PCI: tegra: Add Tegra194 PCIe support
+> 
+>  .../bindings/pci/designware-pcie.txt          |    5 +
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     |  155 ++
+>  Documentation/devicetree/bindings/pci/pci.txt |    5 +
+>  .../bindings/phy/phy-tegra194-p2u.txt         |   28 +
+>  drivers/pci/controller/dwc/Kconfig            |   10 +
+>  drivers/pci/controller/dwc/Makefile           |    1 +
+>  .../pci/controller/dwc/pcie-designware-ep.c   |   37 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |   14 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  |   88 +
+>  drivers/pci/controller/dwc/pcie-designware.h  |   12 +
+>  drivers/pci/controller/dwc/pcie-tegra194.c    | 1631 +++++++++++++++++
+>  drivers/pci/quirks.c                          |   53 +
+>  drivers/phy/tegra/Kconfig                     |    7 +
+>  drivers/phy/tegra/Makefile                    |    1 +
+>  drivers/phy/tegra/phy-tegra194-p2u.c          |  120 ++
+>  include/uapi/linux/pci_regs.h                 |   14 +-
+>  16 files changed, 2139 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+>  create mode 100644 drivers/phy/tegra/phy-tegra194-p2u.c
+> 
 
-Other differences to the Raspberry Pi 3:
-- additional GIC 400 Interrupt controller
-- new thermal IP and HWRNG
-- additional MMC interface (emmc2)
-- additional UART, I2C, SPI and PWM interfaces
-- clock stretching bug in I2C IP has been fixed
+I have applied it to pci/tegra, subject to kbuild test validation,
+for v5.4.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Eric Anholt <eric@anholt.net>
----
- arch/arm/boot/dts/Makefile                        |   1 +
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts             | 121 ++++
- arch/arm/boot/dts/bcm2711.dtsi                    | 662 ++++++++++++++++++++++
- arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi |   7 +
- arch/arm/boot/dts/bcm283x.dtsi                    |   4 +-
- 5 files changed, 793 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/bcm2711-rpi-4-b.dts
- create mode 100644 arch/arm/boot/dts/bcm2711.dtsi
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9159fa2..031ca32 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -83,6 +83,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2837-rpi-3-b.dtb \
- 	bcm2837-rpi-3-b-plus.dtb \
- 	bcm2837-rpi-cm3-io3.dtb \
-+	bcm2711-rpi-4-b.dtb \
- 	bcm2835-rpi-zero.dtb \
- 	bcm2835-rpi-zero-w.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-new file mode 100644
-index 0000000..3825273
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+#include "bcm2711.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-usb-peripheral.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,4-model-b", "brcm,bcm2711";
-+	model = "Raspberry Pi 4 Model B";
-+
-+	chosen {
-+		/* 8250 auxiliary UART instead of pl011 */
-+		stdout-path = "serial1:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0 0 0x00000000>;
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		pwr {
-+			label = "PWR";
-+			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	sd_io_1v8_reg: sd_io_1v8_reg {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vdd-sd-io";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-settling-time-us = <5000>;
-+		gpios = <&expgpio 4 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0x1
-+			  3300000 0x0>;
-+		status = "okay";
-+	};
-+};
-+
-+&firmware {
-+	expgpio: gpio {
-+		compatible = "raspberrypi,firmware-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names = "BT_ON",
-+				  "WL_ON",
-+				  "PWR_LED_OFF",
-+				  "GLOBAL_RESET",
-+				  "VDD_SD_IO_SEL",
-+				  "CAM_GPIO",
-+				  "",
-+				  "";
-+		status = "okay";
-+	};
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm1_0_gpio40 &pwm1_1_gpio41>;
-+	status = "okay";
-+};
-+
-+/* SDHCI is used to control the SDIO for wireless */
-+&sdhci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_gpio34>;
-+	bus-width = <4>;
-+	non-removable;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+/* EMMC2 is used to drive the SD card */
-+&emmc2 {
-+	vqmmc-supply = <&sd_io_1v8_reg>;
-+	broken-cd;
-+	status = "okay";
-+};
-+
-+/* uart0 communicates with the BT module */
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		max-speed = <2000000>;
-+		shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+/* uart1 is mapped to the pin header */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_gpio14>;
-+	status = "okay";
-+};
-+
-+&vchiq {
-+	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+};
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-new file mode 100644
-index 0000000..023ff27
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -0,0 +1,662 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "bcm283x.dtsi"
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/soc/bcm2835-pm.h>
-+
-+/ {
-+	compatible = "brcm,bcm2711";
-+
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+
-+	interrupt-parent = <&gicv2>;
-+
-+	soc {
-+		ranges = <0x7e000000  0x0 0xfe000000  0x01800000>,
-+			 <0x7c000000  0x0 0xfc000000  0x02000000>,
-+			 <0x40000000  0x0 0xff800000  0x00800000>;
-+		/* Emulate a contiguous 30-bit address range for DMA */
-+		dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
-+
-+		local_intc: local_intc@40000000 {
-+			compatible = "brcm,bcm2836-l1-intc";
-+			reg = <0x40000000 0x100>;
-+		};
-+
-+		gicv2: gic400@40041000 {
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			compatible = "arm,gic-400";
-+			reg =	<0x40041000 0x1000>,
-+				<0x40042000 0x2000>,
-+				<0x40044000 0x2000>,
-+				<0x40046000 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
-+						 IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+
-+		dma: dma@7e007000 {
-+			compatible = "brcm,bcm2835-dma";
-+			reg = <0x7e007000 0xb00>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				     /* DMA lite 7 - 10 */
-+				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "dma0",
-+					  "dma1",
-+					  "dma2",
-+					  "dma3",
-+					  "dma4",
-+					  "dma5",
-+					  "dma6",
-+					  "dma7",
-+					  "dma8",
-+					  "dma9",
-+					  "dma10";
-+			#dma-cells = <1>;
-+			brcm,dma-channel-mask = <0x07f5>;
-+		};
-+
-+		pm: watchdog@7e100000 {
-+			compatible = "brcm,bcm2835-pm", "brcm,bcm2835-pm-wdt";
-+			#power-domain-cells = <1>;
-+			#reset-cells = <1>;
-+			reg = <0x7e100000 0x114>,
-+			      <0x7e00a000 0x24>,
-+			      <0x7ec11000 0x20>;
-+			clocks = <&clocks BCM2835_CLOCK_V3D>,
-+				 <&clocks BCM2835_CLOCK_PERI_IMAGE>,
-+				 <&clocks BCM2835_CLOCK_H264>,
-+				 <&clocks BCM2835_CLOCK_ISP>;
-+			clock-names = "v3d", "peri_image", "h264", "isp";
-+			system-power-controller;
-+		};
-+
-+		rng@7e104000 {
-+			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			/* RNG is incompatible to brcm,bcm2835-rng */
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@7e201400 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x7e201400 0x200>;
-+			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_UART>,
-+				 <&clocks BCM2835_CLOCK_VPU>;
-+			clock-names = "uartclk", "apb_pclk";
-+			arm,primecell-periphid = <0x00241011>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@7e201600 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x7e201600 0x200>;
-+			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_UART>,
-+				 <&clocks BCM2835_CLOCK_VPU>;
-+			clock-names = "uartclk", "apb_pclk";
-+			arm,primecell-periphid = <0x00241011>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@7e201800 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x7e201800 0x200>;
-+			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_UART>,
-+				 <&clocks BCM2835_CLOCK_VPU>;
-+			clock-names = "uartclk", "apb_pclk";
-+			arm,primecell-periphid = <0x00241011>;
-+			status = "disabled";
-+		};
-+
-+		uart5: serial@7e201a00 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x7e201a00 0x200>;
-+			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_UART>,
-+				 <&clocks BCM2835_CLOCK_VPU>;
-+			clock-names = "uartclk", "apb_pclk";
-+			arm,primecell-periphid = <0x00241011>;
-+			status = "disabled";
-+		};
-+
-+		spi@7e204000 {
-+			reg = <0x7e204000 0x0200>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		spi3: spi@7e204600 {
-+			compatible = "brcm,bcm2835-spi";
-+			reg = <0x7e204600 0x0200>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi4: spi@7e204800 {
-+			compatible = "brcm,bcm2835-spi";
-+			reg = <0x7e204800 0x0200>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi5: spi@7e204a00 {
-+			compatible = "brcm,bcm2835-spi";
-+			reg = <0x7e204a00 0x0200>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		spi6: spi@7e204c00 {
-+			compatible = "brcm,bcm2835-spi";
-+			reg = <0x7e204c00 0x0200>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@7e205600 {
-+			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+			reg = <0x7e205600 0x200>;
-+			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@7e205800 {
-+			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+			reg = <0x7e205800 0x200>;
-+			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@7e205a00 {
-+			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+			reg = <0x7e205a00 0x200>;
-+			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c6: i2c@7e205c00 {
-+			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+			reg = <0x7e205c00 0x200>;
-+			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@7e20c800 {
-+			compatible = "brcm,bcm2835-pwm";
-+			reg = <0x7e20c800 0x28>;
-+			clocks = <&clocks BCM2835_CLOCK_PWM>;
-+			assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
-+			assigned-clock-rates = <10000000>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		emmc2: emmc2@7e340000 {
-+			compatible = "brcm,bcm2711-emmc2";
-+			reg = <0x7e340000 0x100>;
-+			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clocks BCM2711_CLOCK_EMMC2>;
-+			status = "disabled";
-+		};
-+
-+		hvs@7e400000 {
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a72-pmu", "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
-+					  IRQ_TYPE_LEVEL_LOW)>;
-+		/* This only applies to the ARMv7 stub */
-+		arm,cpu-registers-not-fw-configured;
-+
-+		/* The ARM cores doesn't enter deep enough states */
-+		always-on;
-+	};
-+
-+	cpus: cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm2836-smp"; // for ARM 32-bit
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x0 0x000000d8>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <1>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x0 0x000000e0>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <2>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x0 0x000000e8>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <3>;
-+			enable-method = "spin-table";
-+			cpu-release-addr = <0x0 0x000000f0>;
-+		};
-+	};
-+};
-+
-+&clk_osc {
-+	clock-frequency = <54000000>;
-+};
-+
-+&clocks {
-+	compatible = "brcm,bcm2711-cprman";
-+};
-+
-+&cpu_thermal {
-+	coefficients = <(-487) 410040>;
-+};
-+
-+&dsi0 {
-+	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&dsi1 {
-+	interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&gpio {
-+	compatible = "brcm,bcm2711-gpio";
-+	interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+
-+	gpclk0_gpio49: gpclk0_gpio49 {
-+		brcm,pins = <49>;
-+		brcm,function = <BCM2835_FSEL_ALT1>;
-+		brcm,pull = <BCM2835_PUD_OFF>;
-+	};
-+	gpclk1_gpio50: gpclk1_gpio50 {
-+		brcm,pins = <50>;
-+		brcm,function = <BCM2835_FSEL_ALT1>;
-+		brcm,pull = <BCM2835_PUD_OFF>;
-+	};
-+	gpclk2_gpio51: gpclk2_gpio51 {
-+		brcm,pins = <51>;
-+		brcm,function = <BCM2835_FSEL_ALT1>;
-+		brcm,pull = <BCM2835_PUD_OFF>;
-+	};
-+
-+	i2c0_gpio46: i2c0_gpio46 {
-+		brcm,pins = <46 47>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+	i2c1_gpio46: i2c1_gpio46 {
-+		brcm,pins = <46 47>;
-+		brcm,function = <BCM2835_FSEL_ALT1>;
-+	};
-+	i2c3_gpio2: i2c3_gpio2 {
-+		brcm,pins = <2 3>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c3_gpio4: i2c3_gpio4 {
-+		brcm,pins = <4 5>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c4_gpio6: i2c4_gpio6 {
-+		brcm,pins = <6 7>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c4_gpio8: i2c4_gpio8 {
-+		brcm,pins = <8 9>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c5_gpio10: i2c5_gpio10 {
-+		brcm,pins = <10 11>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c5_gpio12: i2c5_gpio12 {
-+		brcm,pins = <12 13>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c6_gpio0: i2c6_gpio0 {
-+		brcm,pins = <0 1>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c6_gpio22: i2c6_gpio22 {
-+		brcm,pins = <22 23>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	i2c_slave_gpio8: i2c_slave_gpio8 {
-+		brcm,pins = <8 9 10 11>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
-+	};
-+
-+	jtag_gpio48: jtag_gpio48 {
-+		brcm,pins = <48 49 50 51 52 53>;
-+		brcm,function = <BCM2835_FSEL_ALT4>;
-+	};
-+
-+	mii_gpio28: mii_gpio28 {
-+		brcm,pins = <28 29 30 31>;
-+		brcm,function = <BCM2835_FSEL_ALT4>;
-+	};
-+	mii_gpio36: mii_gpio36 {
-+		brcm,pins = <36 37 38 39>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+
-+	pcm_gpio50: pcm_gpio50 {
-+		brcm,pins = <50 51 52 53>;
-+		brcm,function = <BCM2835_FSEL_ALT2>;
-+	};
-+
-+	pwm0_0_gpio12: pwm0_0_gpio12 {
-+		brcm,pins = <12>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+	pwm0_0_gpio18: pwm0_0_gpio18 {
-+		brcm,pins = <18>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	pwm1_0_gpio40: pwm1_0_gpio40 {
-+		brcm,pins = <40>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+	pwm0_1_gpio13: pwm0_1_gpio13 {
-+		brcm,pins = <13>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+	pwm0_1_gpio19: pwm0_1_gpio19 {
-+		brcm,pins = <19>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	pwm1_1_gpio41: pwm1_1_gpio41 {
-+		brcm,pins = <41>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+	pwm0_1_gpio45: pwm0_1_gpio45 {
-+		brcm,pins = <45>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+	pwm0_0_gpio52: pwm0_0_gpio52 {
-+		brcm,pins = <52>;
-+		brcm,function = <BCM2835_FSEL_ALT1>;
-+		brcm,pull = <BCM2835_PUD_OFF>;
-+	};
-+	pwm0_1_gpio53: pwm0_1_gpio53 {
-+		brcm,pins = <53>;
-+		brcm,function = <BCM2835_FSEL_ALT1>;
-+		brcm,pull = <BCM2835_PUD_OFF>;
-+	};
-+
-+	/* The following group consists of:
-+	 *  RGMII_START_STOP
-+	 *  RGMII_RX_OK
-+	 */
-+	rgmii_gpio35: rgmii_gpio35 {
-+		brcm,pins = <35 36>;
-+		brcm,function = <BCM2835_FSEL_ALT4>;
-+	};
-+	rgmii_irq_gpio34: rgmii_irq_gpio34 {
-+		brcm,pins = <34>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	rgmii_irq_gpio39: rgmii_irq_gpio39 {
-+		brcm,pins = <39>;
-+		brcm,function = <BCM2835_FSEL_ALT4>;
-+	};
-+	rgmii_mdio_gpio28: rgmii_mdio_gpio28 {
-+		brcm,pins = <28 29>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	rgmii_mdio_gpio37: rgmii_mdio_gpio37 {
-+		brcm,pins = <37 38>;
-+		brcm,function = <BCM2835_FSEL_ALT4>;
-+	};
-+
-+	spi0_gpio46: spi0_gpio46 {
-+		brcm,pins = <46 47 48 49>;
-+		brcm,function = <BCM2835_FSEL_ALT2>;
-+	};
-+	spi2_gpio46: spi2_gpio46 {
-+		brcm,pins = <46 47 48 49 50>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
-+	};
-+	spi3_gpio0: spi3_gpio0 {
-+		brcm,pins = <0 1 2 3>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
-+	};
-+	spi4_gpio4: spi4_gpio4 {
-+		brcm,pins = <4 5 6 7>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
-+	};
-+	spi5_gpio12: spi5_gpio12 {
-+		brcm,pins = <12 13 14 15>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
-+	};
-+	spi6_gpio18: spi6_gpio18 {
-+		brcm,pins = <18 19 20 21>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
-+	};
-+
-+	uart2_gpio0: uart2_gpio0 {
-+		pin-tx {
-+			brcm,pins = <0>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+		pin-rx {
-+			brcm,pins = <1>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+	};
-+	uart2_ctsrts_gpio2: uart2_ctsrts_gpio2 {
-+		pin-cts {
-+			brcm,pins = <2>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+		pin-rts {
-+			brcm,pins = <3>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+	};
-+	uart3_gpio4: uart3_gpio4 {
-+		pin-tx {
-+			brcm,pins = <4>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+		pin-rx {
-+			brcm,pins = <5>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+	};
-+	uart3_ctsrts_gpio6: uart3_ctsrts_gpio6 {
-+		pin-cts {
-+			brcm,pins = <6>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+		pin-rts {
-+			brcm,pins = <7>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+	};
-+	uart4_gpio8: uart4_gpio8 {
-+		pin-tx {
-+			brcm,pins = <8>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+		pin-rx {
-+			brcm,pins = <9>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+	};
-+	uart4_ctsrts_gpio10: uart4_ctsrts_gpio10 {
-+		pin-cts {
-+			brcm,pins = <10>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+		pin-rts {
-+			brcm,pins = <11>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+	};
-+	uart5_gpio12: uart5_gpio12 {
-+		pin-tx {
-+			brcm,pins = <12>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+		pin-rx {
-+			brcm,pins = <13>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+	};
-+	uart5_ctsrts_gpio14: uart5_ctsrts_gpio14 {
-+		pin-cts {
-+			brcm,pins = <14>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_UP>;
-+		};
-+		pin-rts {
-+			brcm,pins = <15>;
-+			brcm,function = <BCM2835_FSEL_ALT4>;
-+			brcm,pull = <BCM2835_PUD_OFF>;
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&i2c1 {
-+	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&i2c2 {
-+	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
-+	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&mailbox {
-+	interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&sdhci {
-+	interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&sdhost {
-+	interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&spi1 {
-+	interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&spi2 {
-+	interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&system_timer {
-+	interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&txp {
-+	interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&uart0 {
-+	interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&uart1 {
-+	interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&usb {
-+	interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+};
-+
-+&vec {
-+	interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
-+};
-diff --git a/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
-new file mode 100644
-index 0000000..0ff0e9e
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
-+&usb {
-+	dr_mode = "peripheral";
-+	g-rx-fifo-size = <256>;
-+	g-np-tx-fifo-size = <32>;
-+	g-tx-fifo-size = <256 256 512 512 512 768 768>;
-+};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index cbc9422..5655ae4 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -53,7 +53,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-
--		timer@7e003000 {
-+		system_timer: timer@7e003000 {
- 			compatible = "brcm,bcm2835-system-timer";
- 			reg = <0x7e003000 0x1000>;
- 			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
-@@ -64,7 +64,7 @@
- 			clock-frequency = <1000000>;
- 		};
-
--		txp@7e004000 {
-+		txp: txp@7e004000 {
- 			compatible = "brcm,bcm2835-txp";
- 			reg = <0x7e004000 0x20>;
- 			interrupts = <1 11>;
---
-2.7.4
+Thanks,
+Lorenzo
