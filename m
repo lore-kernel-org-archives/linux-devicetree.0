@@ -1,35 +1,45 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/5] soundwire: Add compute_params callback
-Date: Tue, 13 Aug 2019 19:17:10 +0100
-Message-ID: <1a02f190-0aab-d512-ceb0-4a21014705e8@linaro.org>
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-2-srinivas.kandagatla@linaro.org>
- <7e462330-a357-698a-b259-5ff136963a57@linux.intel.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [v1 2/3] dt/bindings: clk: Add DT bindings for LS1028A Display output interface
+Date: Tue, 13 Aug 2019 11:30:05 -0700
+Message-ID: <20190813183005.EC13020665@mail.kernel.org>
+References: <20190812100216.34459-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7e462330-a357-698a-b259-5ff136963a57@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20190812100216.34459-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, vkoul@kernel.org, broonie@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, spapothi@codeaurora.org
+To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Wen He (2019-08-12 03:02:16)
+> diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.txt b/Doc=
+umentation/devicetree/bindings/clock/fsl,plldig.txt
+> new file mode 100644
+> index 000000000000..29c5a6117809
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/fsl,plldig.txt
+> @@ -0,0 +1,26 @@
+> +NXP QorIQ Layerscape LS1028A Display output interface Clock
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
+Can you convert this to YAML?
 
-On 13/08/2019 15:34, Pierre-Louis Bossart wrote:
-> On 8/13/19 3:35 AM, Srinivas Kandagatla wrote:
->> From: Vinod Koul <vkoul@kernel.org>
->>
->> This callback allows masters to compute the bus parameters required.
-> 
-> This looks like a partial use of the patch ('soundwire: Add Intel 
-> resource management algorithm')? see comments below
-> 
+> +
+> +Required properties:
+> +    - compatible: shall contain "fsl,ls1028a-plldig"
+> +    - reg: Physical base address and size of the block registers
+> +    - #clock-cells: shall contain 1.
 
-Yes it duplicate indeed!
+As I said in the previous patch, this should probably be 0. Also, please
+order this before the driver in the patch series and thread your
+messages please. If you use git-send-email this is done for you pretty
+easily.
 
-I will use that patch!
-
---srini
+> +    - clocks: a phandle + clock-specifier pairs, here should be
+> +    specify the reference clock of the system
+> +
+> +
