@@ -1,44 +1,54 @@
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Subject: Re: [PATCH 10/11] mfd: Drop obsolete JZ4740 driver
-Date: Tue, 13 Aug 2019 10:44:30 +0200
-Message-ID: <4b48e597-951e-45fd-dfb2-4a1292a8b067@amsat.org>
-References: <20190725220215.460-1-paul@crapouillou.net>
- <20190725220215.460-11-paul@crapouillou.net> <20190812081640.GA26727@dell>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v12 03/18] kunit: test: add string_stream a std::stream
+ like string builder
+Date: Tue, 13 Aug 2019 02:04:44 -0700
+Message-ID: <CAFd5g47v7410QRAizPV8zaHrKrc95-Sk-GNzRRVngN741OKnvg@mail.gmail.com>
+References: <20190812182421.141150-1-brendanhiggins@google.com>
+ <20190812182421.141150-4-brendanhiggins@google.com> <20190812225520.5A67C206A2@mail.kernel.org>
+ <20190812233336.GA224410@google.com> <20190812235940.100842063F@mail.kernel.org>
+ <CAFd5g44xciLPBhH_J3zUcY3TedWTijdnWgF055qffF+dAguhPQ@mail.gmail.com>
+ <20190813045623.F3D9520842@mail.kernel.org> <CAFd5g46PJNTOUAA4GOOrW==74Zy7u1sRESTanL_BXBn6QykscA@mail.gmail.com>
+ <20190813053023.CC86120651@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812081640.GA26727@dell>
-Content-Language: en-US
+In-Reply-To: <20190813053023.CC86120651@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Sebastian Reichel <sre@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Mon, Aug 12, 2019 at 10:30 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-08-12 22:02:59)
+> > On Mon, Aug 12, 2019 at 9:56 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Brendan Higgins (2019-08-12 17:41:05)
+> > > > On Mon, Aug 12, 2019 at 4:59 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > >
+> > > > > > kunit_resource_destroy (respective equivalents to devm_kfree, and
+> > > > > > devres_destroy) and use kunit_kfree here?
+> > > > > >
+> > > > >
+> > > > > Yes, or drop the API entirely? Does anything need this functionality?
+> > > >
+> > > > Drop the kunit_resource API? I would strongly prefer not to.
+> > >
+> > > No. I mean this API, string_stream_clear(). Does anything use it?
+> >
+> > Oh, right. No.
+> >
+> > However, now that I added the kunit_resource_destroy, I thought it
+> > might be good to free the string_stream after I use it in each call to
+> > kunit_assert->format(...) in which case I will be using this logic.
+> >
+> > So I think the right thing to do is to expose string_stream_destroy so
+> > kunit_do_assert can clean up when it's done, and then demote
+> > string_stream_clear to static. Sound good?
+>
+> Ok, sure. I don't really see how clearing it explicitly when the
+> assertion prints vs. never allocating it to begin with is really any
+> different. Maybe I've missed something though.
 
-On 8/12/19 10:16 AM, Lee Jones wrote:
-> On Thu, 25 Jul 2019, Paul Cercueil wrote:
-> 
->> It has been replaced with the ingenic-iio driver for the ADC.
->>
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> Tested-by: Artur Rojek <contact@artur-rojek.eu>
->> ---
->>  drivers/mfd/Kconfig      |   9 --
->>  drivers/mfd/Makefile     |   1 -
->>  drivers/mfd/jz4740-adc.c | 324 ---------------------------------------
->>  3 files changed, 334 deletions(-)
->>  delete mode 100644 drivers/mfd/jz4740-adc.c
-> 
-> Applied, thanks.
-
-It seems the replacement is done in "MIPS: qi_lb60: Migrate to
-devicetree" which is not yet merged.
-
-Probably easier if this patch goes thru the MIPS tree as part of the
-"JZ4740 SoC cleanup" series.
-
-Regards,
-
-Phil.
+It's for the case that we *do* print something out. Once we are doing
+printing, we don't want the fragments anymore.
