@@ -1,170 +1,41 @@
-From: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-Subject: [v4,
- 8/8] devfreq: mediatek: cci devfreq register opp notification for SVS
- support
-Date: Tue, 13 Aug 2019 21:31:53 +0800
-Message-ID: <1565703113-31479-9-git-send-email-andrew-sh.cheng@mediatek.com>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 3/9] dt-bindings: display: panel: Add bindings for NEC
+ NL8048HL11 panel
+Date: Tue, 13 Aug 2019 07:36:05 -0600
+Message-ID: <CAL_JsqLaUrYOrn2hq8Lhb-7muf5rQOTMo=CgHPrM=LDHodPHWA@mail.gmail.com>
+References: <20190813133311.26441-1-laurent.pinchart@ideasonboard.com>
+ <20190813133311.26441-4-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob
- Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen
- Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, srv_heupstream@mediatek.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, fan.chen@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190813133311.26441-4-laurent.pinchart@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-
-SVS will change the voltage of opp item.
-CCI devfreq need to react to change frequency.
-
-Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
----
- drivers/devfreq/mt8183-cci-devfreq.c | 62 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
-
-diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
-index 818a167c442f..bc5c75d55c03 100644
---- a/drivers/devfreq/mt8183-cci-devfreq.c
-+++ b/drivers/devfreq/mt8183-cci-devfreq.c
-@@ -19,7 +19,10 @@ struct cci_devfreq {
- 	struct regulator *proc_reg;
- 	unsigned long proc_reg_uV;
- 	struct clk *cci_clk;
-+	unsigned long freq;
- 	struct notifier_block nb;
-+	struct notifier_block opp_nb;
-+	int cci_min_freq;
- };
- 
- static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
-@@ -65,17 +68,61 @@ static int cci_devfreq_regulator_notifier(struct notifier_block *nb,
- 	return 0;
- }
- 
-+static int ccidevfreq_opp_notifier(struct notifier_block *nb,
-+unsigned long event, void *data)
-+{
-+	int ret;
-+	struct dev_pm_opp *opp = data;
-+	struct cci_devfreq *cci_df = container_of(nb, struct cci_devfreq,
-+						  opp_nb);
-+	unsigned long	freq, volt, cur_volt;
-+
-+	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
-+		freq = dev_pm_opp_get_freq(opp);
-+		/* current opp item is changed */
-+		if (freq == cci_df->freq) {
-+			volt = dev_pm_opp_get_voltage(opp);
-+			cur_volt = regulator_get_voltage(cci_df->proc_reg);
-+
-+			if (volt > cur_volt) {
-+				/* need reduce freq */
-+				mutex_lock(&cci_df->devfreq->lock);
-+				ret = update_devfreq(cci_df->devfreq);
-+				if (ret)
-+					pr_err("Fail to reduce cci frequency by opp notification: %d\n",
-+					       ret);
-+				mutex_unlock(&cci_df->devfreq->lock);
-+			}
-+		}
-+
-+		if (freq == cci_df->cci_min_freq) {
-+			volt = dev_pm_opp_get_voltage(opp);
-+			regulator_set_voltage(cci_df->proc_reg, volt, INT_MAX);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+
- static int mtk_cci_governor_get_target(struct devfreq *devfreq,
- 				       unsigned long *freq)
- {
- 	struct cci_devfreq *cci_df;
- 	struct dev_pm_opp *opp;
-+	int ret;
- 
- 	cci_df = dev_get_drvdata(devfreq->dev.parent);
- 
- 	/* find available frequency */
- 	opp = dev_pm_opp_find_freq_ceil_by_volt(devfreq->dev.parent,
- 						cci_df->proc_reg_uV);
-+	ret = PTR_ERR_OR_ZERO(opp);
-+	if (ret) {
-+		pr_err("%s[%d], cannot find opp with voltage=%d: %d\n",
-+		       __func__, __LINE__, cci_df->proc_reg_uV, ret);
-+		return ret;
-+	}
- 	*freq = dev_pm_opp_get_freq(opp);
- 
- 	return 0;
-@@ -87,9 +134,11 @@ static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
- 	int ret;
- 	struct cci_devfreq *cci_df;
- 	struct notifier_block *nb;
-+	struct notifier_block *opp_nb;
- 
- 	cci_df = dev_get_drvdata(devfreq->dev.parent);
- 	nb = &cci_df->nb;
-+	opp_nb = &cci_df->opp_nb;
- 
- 	switch (event) {
- 	case DEVFREQ_GOV_START:
-@@ -100,6 +149,8 @@ static int mtk_cci_governor_event_handler(struct devfreq *devfreq,
- 		if (ret)
- 			pr_err("%s: failed to add governor: %d\n", __func__,
- 			       ret);
-+		opp_nb->notifier_call = ccidevfreq_opp_notifier;
-+		dev_pm_opp_register_notifier(devfreq->dev.parent, opp_nb);
- 		break;
- 
- 	case DEVFREQ_GOV_STOP:
-@@ -141,6 +192,8 @@ static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
- 		return ret;
- 	}
- 
-+	cci_df->freq = *freq;
-+
- 	return 0;
- }
- 
-@@ -152,6 +205,8 @@ static int mtk_cci_devfreq_probe(struct platform_device *pdev)
- {
- 	struct device *cci_dev = &pdev->dev;
- 	struct cci_devfreq *cci_df;
-+	unsigned long freq, volt;
-+	struct dev_pm_opp *opp;
- 	int ret;
- 
- 	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
-@@ -181,6 +236,13 @@ static int mtk_cci_devfreq_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/* set voltage lower bound */
-+	freq = 1;
-+	opp = dev_pm_opp_find_freq_ceil(cci_dev, &freq);
-+	cci_df->cci_min_freq = dev_pm_opp_get_freq(opp);
-+	volt = dev_pm_opp_get_voltage(opp);
-+	dev_pm_opp_put(opp);
-+
- 	platform_set_drvdata(pdev, cci_df);
- 
- 	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
--- 
-2.12.5
+T24gVHVlLCBBdWcgMTMsIDIwMTkgYXQgNzozMyBBTSBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+Cj4gVGhlIE5FQyBOTDgwNDhITDEx
+IGlzIGEgMTAuNGNtIFdWR0EgKDgwMHg0ODApIHBhbmVsIHdpdGggYSAyNC1iaXQgUkdCCj4gcGFy
+YWxsZWwgZGF0YSBpbnRlcmZhY2UgYW5kIGFuIFNQSSBjb250cm9sIGludGVyZmFjZS4KPgo+IFNp
+Z25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJv
+YXJkLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIHNpbmNlIHYyOgo+Cj4gLSBBZGQgcmVnIGFuZCBzcGkt
+bWF4LWZyZXF1ZW5jeSBwcm9wZXJ0aWVzCj4gLSBNYWtlIHRoZSBleGFtcGxlIHBhc3MgdGhlIGNo
+ZWNrcwo+Cj4gQ2hhbmdlcyBzaW5jZSB2MToKPgo+IC0gQ29udmVydCB0byBZQU1MCj4gLS0tCj4g
+IC4uLi9kaXNwbGF5L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwgICAgICAgICB8IDYyICsrKysr
+KysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDYyIGluc2VydGlvbnMoKykKPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3BhbmVsL25lYyxubDgwNDhobDExLnlhbWwKClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
+aEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWw=
