@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH next v9 10/11] usb: common: add USB GPIO based connection detection driver
-Date: Tue, 13 Aug 2019 19:27:13 +0800
-Message-ID: <1565695634-9711-11-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v9 08/11] usb: roles: get usb-role-switch from parent
+Date: Tue, 13 Aug 2019 19:27:11 +0800
+Message-ID: <1565695634-9711-9-git-send-email-chunfeng.yun@mediatek.com>
 References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,375 +12,77 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Due to the requirement of usb-connector.txt binding, the old way
-using extcon to support USB Dual-Role switch is now deprecated
-when use Type-B connector.
-This patch introduces a USB GPIO based connection detection driver,
-used to support Type-B connector which typically uses an input GPIO
-to detect USB ID pin, and try to replace the function provided
-by the extcon-usb-gpio driver
+when the USB host controller is the parent of the connector,
+usually type-B, sometimes don't need the graph, so we should
+check whether it's parent registers usb-role-switch or not
+firstly, and get it if exists.
 
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Tested-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-v9 changes:
-  1. add reviewed-by Linus
+v9:
+  1. replace signed-off-by by suggested-by Heikki
+  2. use class_find_device_by_fwnode()
 
-v8 changes:
-  1. rename the driver name and usb new compatible suggested by Heikki
-  2. move the driver into usb/common from usb/roles suggested by Heikki
+v8: no changes
+v7:
+  add signed-off-by Chunfeng
 
-v7 changes:
-  1. remove macro DEV_PMS_OPS suggested by Andy
-  2. add tested-by Nagarjuna
-
-v6 changes:
-  1. get usb-role-swtich by usb_role_switch_get()
-
-v5 changes:
-  1. put usb_role_switch when error happens suggested by Biju
-  2. don't treat bype-B connector as a virtual device suggested by Rob
-
-v4 changes:
-  1. remove linux/gpio.h suggested by Linus
-  2. put node when error happens
-
-v3 changes:
-  1. treat bype-B connector as a virtual device;
-  2. change file name again
-
-v2 changes:
-  1. file name is changed
-  2. use new compatible
+v6:
+  new patch
 ---
- drivers/usb/common/Kconfig         |  13 ++
- drivers/usb/common/Makefile        |   1 +
- drivers/usb/common/usb-conn-gpio.c | 284 +++++++++++++++++++++++++++++
- 3 files changed, 298 insertions(+)
- create mode 100644 drivers/usb/common/usb-conn-gpio.c
+ drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
-index 848545b099cf..d611477aae41 100644
---- a/drivers/usb/common/Kconfig
-+++ b/drivers/usb/common/Kconfig
-@@ -36,3 +36,16 @@ config USB_ULPI_BUS
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called ulpi.
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 2abb6fe384ca..94b4e7db2b94 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -102,6 +102,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+ }
  
-+config USB_CONN_GPIO
-+	tristate "USB GPIO Based Connection Detection Driver"
-+	depends on GPIOLIB
-+	select USB_ROLE_SWITCH
-+	help
-+	  The driver supports USB role switch between host and device via GPIO
-+	  based USB cable detection, used typically if an input GPIO is used
-+	  to detect USB ID pin, and another input GPIO may be also used to detect
-+	  Vbus pin at the same time, it also can be used to enable/disable
-+	  device if an input GPIO is only used to detect Vbus pin.
-+
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called usb-conn-gpio.ko
-diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
-index 0a7c45e85481..8227ffc2cf0b 100644
---- a/drivers/usb/common/Makefile
-+++ b/drivers/usb/common/Makefile
-@@ -7,5 +7,6 @@ obj-$(CONFIG_USB_COMMON)	  += usb-common.o
- usb-common-y			  += common.o
- usb-common-$(CONFIG_USB_LED_TRIG) += led.o
- 
-+obj-$(CONFIG_USB_CONN_GPIO)	+= usb-conn-gpio.o
- obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
- obj-$(CONFIG_USB_ULPI_BUS)	+= ulpi.o
-diff --git a/drivers/usb/common/usb-conn-gpio.c b/drivers/usb/common/usb-conn-gpio.c
-new file mode 100644
-index 000000000000..e4935e99f295
---- /dev/null
-+++ b/drivers/usb/common/usb-conn-gpio.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * USB GPIO Based Connection Detection Driver
-+ *
-+ * Copyright (C) 2019 MediaTek Inc.
-+ *
-+ * Author: Chunfeng Yun <chunfeng.yun@mediatek.com>
-+ *
-+ * Some code borrowed from drivers/extcon/extcon-usb-gpio.c
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/usb/role.h>
-+
-+#define USB_GPIO_DEB_MS		20	/* ms */
-+#define USB_GPIO_DEB_US		((USB_GPIO_DEB_MS) * 1000)	/* us */
-+
-+#define USB_CONN_IRQF	\
-+	(IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT)
-+
-+struct usb_conn_info {
++static struct usb_role_switch *
++usb_role_switch_is_parent(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
 +	struct device *dev;
-+	struct usb_role_switch *role_sw;
-+	enum usb_role last_role;
-+	struct regulator *vbus;
-+	struct delayed_work dw_det;
-+	unsigned long debounce_jiffies;
 +
-+	struct gpio_desc *id_gpiod;
-+	struct gpio_desc *vbus_gpiod;
-+	int id_irq;
-+	int vbus_irq;
-+};
++	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
++		return NULL;
 +
-+/**
-+ * "DEVICE" = VBUS and "HOST" = !ID, so we have:
-+ * Both "DEVICE" and "HOST" can't be set as active at the same time
-+ * so if "HOST" is active (i.e. ID is 0)  we keep "DEVICE" inactive
-+ * even if VBUS is on.
-+ *
-+ *  Role          |   ID  |  VBUS
-+ * ------------------------------------
-+ *  [1] DEVICE    |   H   |   H
-+ *  [2] NONE      |   H   |   L
-+ *  [3] HOST      |   L   |   H
-+ *  [4] HOST      |   L   |   L
-+ *
-+ * In case we have only one of these signals:
-+ * - VBUS only - we want to distinguish between [1] and [2], so ID is always 1
-+ * - ID only - we want to distinguish between [1] and [4], so VBUS = ID
-+ */
-+static void usb_conn_detect_cable(struct work_struct *work)
-+{
-+	struct usb_conn_info *info;
-+	enum usb_role role;
-+	int id, vbus, ret;
-+
-+	info = container_of(to_delayed_work(work),
-+			    struct usb_conn_info, dw_det);
-+
-+	/* check ID and VBUS */
-+	id = info->id_gpiod ?
-+		gpiod_get_value_cansleep(info->id_gpiod) : 1;
-+	vbus = info->vbus_gpiod ?
-+		gpiod_get_value_cansleep(info->vbus_gpiod) : id;
-+
-+	if (!id)
-+		role = USB_ROLE_HOST;
-+	else if (vbus)
-+		role = USB_ROLE_DEVICE;
-+	else
-+		role = USB_ROLE_NONE;
-+
-+	dev_dbg(info->dev, "role %d/%d, gpios: id %d, vbus %d\n",
-+		info->last_role, role, id, vbus);
-+
-+	if (info->last_role == role) {
-+		dev_warn(info->dev, "repeated role: %d\n", role);
-+		return;
-+	}
-+
-+	if (info->last_role == USB_ROLE_HOST)
-+		regulator_disable(info->vbus);
-+
-+	ret = usb_role_switch_set_role(info->role_sw, role);
-+	if (ret)
-+		dev_err(info->dev, "failed to set role: %d\n", ret);
-+
-+	if (role == USB_ROLE_HOST) {
-+		ret = regulator_enable(info->vbus);
-+		if (ret)
-+			dev_err(info->dev, "enable vbus regulator failed\n");
-+	}
-+
-+	info->last_role = role;
-+
-+	dev_dbg(info->dev, "vbus regulator is %s\n",
-+		regulator_is_enabled(info->vbus) ? "enabled" : "disabled");
++	dev = class_find_device_by_fwnode(role_class, parent);
++	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
 +}
 +
-+static void usb_conn_queue_dwork(struct usb_conn_info *info,
-+				 unsigned long delay)
-+{
-+	queue_delayed_work(system_power_efficient_wq, &info->dw_det, delay);
-+}
-+
-+static irqreturn_t usb_conn_isr(int irq, void *dev_id)
-+{
-+	struct usb_conn_info *info = dev_id;
-+
-+	usb_conn_queue_dwork(info, info->debounce_jiffies);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int usb_conn_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct usb_conn_info *info;
-+	int ret = 0;
-+
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	info->dev = dev;
-+	info->id_gpiod = devm_gpiod_get_optional(dev, "id", GPIOD_IN);
-+	if (IS_ERR(info->id_gpiod))
-+		return PTR_ERR(info->id_gpiod);
-+
-+	info->vbus_gpiod = devm_gpiod_get_optional(dev, "vbus", GPIOD_IN);
-+	if (IS_ERR(info->vbus_gpiod))
-+		return PTR_ERR(info->vbus_gpiod);
-+
-+	if (!info->id_gpiod && !info->vbus_gpiod) {
-+		dev_err(dev, "failed to get gpios\n");
-+		return -ENODEV;
-+	}
-+
-+	if (info->id_gpiod)
-+		ret = gpiod_set_debounce(info->id_gpiod, USB_GPIO_DEB_US);
-+	if (!ret && info->vbus_gpiod)
-+		ret = gpiod_set_debounce(info->vbus_gpiod, USB_GPIO_DEB_US);
-+	if (ret < 0)
-+		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEB_MS);
-+
-+	INIT_DELAYED_WORK(&info->dw_det, usb_conn_detect_cable);
-+
-+	info->vbus = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(info->vbus)) {
-+		dev_err(dev, "failed to get vbus\n");
-+		return PTR_ERR(info->vbus);
-+	}
-+
-+	info->role_sw = usb_role_switch_get(dev);
-+	if (IS_ERR(info->role_sw)) {
-+		if (PTR_ERR(info->role_sw) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get role switch\n");
-+
-+		return PTR_ERR(info->role_sw);
-+	}
-+
-+	if (info->id_gpiod) {
-+		info->id_irq = gpiod_to_irq(info->id_gpiod);
-+		if (info->id_irq < 0) {
-+			dev_err(dev, "failed to get ID IRQ\n");
-+			ret = info->id_irq;
-+			goto put_role_sw;
-+		}
-+
-+		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-+						usb_conn_isr, USB_CONN_IRQF,
-+						pdev->name, info);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to request ID IRQ\n");
-+			goto put_role_sw;
-+		}
-+	}
-+
-+	if (info->vbus_gpiod) {
-+		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
-+		if (info->vbus_irq < 0) {
-+			dev_err(dev, "failed to get VBUS IRQ\n");
-+			ret = info->vbus_irq;
-+			goto put_role_sw;
-+		}
-+
-+		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
-+						usb_conn_isr, USB_CONN_IRQF,
-+						pdev->name, info);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to request VBUS IRQ\n");
-+			goto put_role_sw;
-+		}
-+	}
-+
-+	platform_set_drvdata(pdev, info);
-+
-+	/* Perform initial detection */
-+	usb_conn_queue_dwork(info, 0);
-+
-+	return 0;
-+
-+put_role_sw:
-+	usb_role_switch_put(info->role_sw);
-+	return ret;
-+}
-+
-+static int usb_conn_remove(struct platform_device *pdev)
-+{
-+	struct usb_conn_info *info = platform_get_drvdata(pdev);
-+
-+	cancel_delayed_work_sync(&info->dw_det);
-+
-+	if (info->last_role == USB_ROLE_HOST)
-+		regulator_disable(info->vbus);
-+
-+	usb_role_switch_put(info->role_sw);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused usb_conn_suspend(struct device *dev)
-+{
-+	struct usb_conn_info *info = dev_get_drvdata(dev);
-+
-+	if (info->id_gpiod)
-+		disable_irq(info->id_irq);
-+	if (info->vbus_gpiod)
-+		disable_irq(info->vbus_irq);
-+
-+	pinctrl_pm_select_sleep_state(dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused usb_conn_resume(struct device *dev)
-+{
-+	struct usb_conn_info *info = dev_get_drvdata(dev);
-+
-+	pinctrl_pm_select_default_state(dev);
-+
-+	if (info->id_gpiod)
-+		enable_irq(info->id_irq);
-+	if (info->vbus_gpiod)
-+		enable_irq(info->vbus_irq);
-+
-+	usb_conn_queue_dwork(info, 0);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(usb_conn_pm_ops,
-+			 usb_conn_suspend, usb_conn_resume);
-+
-+static const struct of_device_id usb_conn_dt_match[] = {
-+	{ .compatible = "linux,usb-conn-gpio", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, usb_conn_dt_match);
-+
-+static struct platform_driver usb_conn_driver = {
-+	.probe		= usb_conn_probe,
-+	.remove		= usb_conn_remove,
-+	.driver		= {
-+		.name	= "usb-conn-gpio",
-+		.pm	= &usb_conn_pm_ops,
-+		.of_match_table = usb_conn_dt_match,
-+	},
-+};
-+
-+module_platform_driver(usb_conn_driver);
-+
-+MODULE_AUTHOR("Chunfeng Yun <chunfeng.yun@mediatek.com>");
-+MODULE_DESCRIPTION("USB GPIO based connection detection driver");
-+MODULE_LICENSE("GPL v2");
+ /**
+  * usb_role_switch_get - Find USB role switch linked with the caller
+  * @dev: The caller device
+@@ -113,8 +126,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ {
+ 	struct usb_role_switch *sw;
+ 
+-	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(dev_fwnode(dev));
++	if (!sw)
++		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
++						  usb_role_switch_match);
+ 
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+@@ -134,8 +149,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+ {
+ 	struct usb_role_switch *sw;
+ 
+-	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(fwnode);
++	if (!sw)
++		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
++						  NULL, usb_role_switch_match);
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+ 
 -- 
 2.22.0
