@@ -1,73 +1,143 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
-Date: Tue, 13 Aug 2019 13:07:52 +0200
-Message-ID: <CAK8P3a1q9G8VKgNKh+6khzoW3bFTVR_Zorygy=Qqsq-PYzM4=g@mail.gmail.com>
-References: <cover.1565367567.git.agx@sigxcpu.org> <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
- <CAK8P3a3Vrd+sttJrQwD-jA9p_egG4x-hc41eGK8H-_aVm-uoYw@mail.gmail.com> <20190813101057.GB10751@bogon.m.sigxcpu.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH next v9 00/11] add USB GPIO based connection detection driver
+Date: Tue, 13 Aug 2019 19:27:03 +0800
+Message-ID: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813101057.GB10751@bogon.m.sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel <dri-devel@lists.freedesktop.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:10 PM Guido Günther <agx@sigxcpu.org> wrote:
-> On Tue, Aug 13, 2019 at 10:08:44AM +0200, Arnd Bergmann wrote:
-> > On Fri, Aug 9, 2019 at 6:24 PM Guido Günther <agx@sigxcpu.org> wrote:
-> > >
-> > > This adds all the gpr registers and the define needed for selecting
-> > > the input source in the imx-nwl drm bridge.
-> > >
-> > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > > +
-> > > +#define IOMUXC_GPR0    0x00
-> > > +#define IOMUXC_GPR1    0x04
-> > > +#define IOMUXC_GPR2    0x08
-> > > +#define IOMUXC_GPR3    0x0c
-> > > +#define IOMUXC_GPR4    0x10
-> > > +#define IOMUXC_GPR5    0x14
-> > > +#define IOMUXC_GPR6    0x18
-> > > +#define IOMUXC_GPR7    0x1c
-> > (more of the same)
-> >
-> > huh?
->
-> These are the names from the imx8MQ reference manual (general purpose
-> registers, they lump together all sorts of things), it's the same on
-> imx6/imx7):
->
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
->
-> > > +/* i.MX8Mq iomux gpr register field defines */
-> > > +#define IMX8MQ_GPR13_MIPI_MUX_SEL              BIT(2)
-> >
-> > I think this define should probably be local to the pinctrl driver, to
-> > ensure that no other drivers fiddle with the registers manually.
->
-> The purpose of these bits is for a driver to fiddle with them to select
-> the input source. Similar on imx7 it's already used for e.g. the phy
-> refclk in the pci controller:
->
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-imx6.c#n638
+Because the USB Connector is introduced and the requirement of
+usb-connector.txt binding, the old way using extcon to support
+USB Dual-Role switch is now deprecated, meanwhile there is no
+available common driver when use Type-B connector, typically
+using an input GPIO to detect USB ID pin.
+This patch series introduce a USB GPIO based connection detection
+driver and try to replace the function provided by extcon-usb-gpio
+driver.
 
-That one should likely use either the clk interface or the phy
-interface instead.
+v9 changes:
+  1. replace signed-off-by by suggested-by Heikki
+  2. add reviewed-by Linus
+  3. use class_find_device_by_fwnode() introduced by series [1]
 
-> The GPRs are not about pad configuration but gather all sorts of things
-> (section 8.2.4 of the imx8mq reference manual): pcie setup, dsi related
-> bits so I don't think this should be done via a pinctrl
-> driver. Should we handle that differently than on imx6/7?
+[1]:
+ https://lore.kernel.org/patchwork/patch/1103630/
+ [v3,1/7] drivers: Introduce device lookup variants by name
 
-It would be nice to fix the existing code as well, but for the moment,
-I only think we should not add more of that.
+ they are already in:
+ https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/log/drivers/base/core.c?h=driver-core-next
 
-Generally speaking, we can use syscon to do random things that don't
-have a subsystem of their own, but we should not use it to do things
-that have an existing driver framework like pinctrl, clock, reset, phy
-etc.
+v8 changes:
+  1. rename the driver's name suggested by Heikki
+  2. move the driver from usb/roles/ into usb/common/ suggested by Heikki
+  3. introduce Kconfig for usb common core to add the new driver
+  4. modify binding of the driver 
+  5. rename the subject title
 
-       Arnd
+v7 changes:
+  1. [5/10]: add signed-off-by Chunfeng
+  2. [6/10]: add signed-off-by Chunfeng
+  3. [6/10]: depends on linux-next of Rafael's tree [1]
+  4. [7/10]: add signed-off-by Chunfeng and tested-by Biju
+  5. [9/10]: add tested-by Nagarjuna, and remove DEV_PMS_OPS suggested by Andy
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
+
+v6 changes:
+  1. merge [1] and [2] into this series
+  2. don't use graph anymore to find usb-role-switch
+  3. abandon [3] and introduce three patches (6, 7, 8 in this series)
+     to rebuild APIs getting usb-role-switch
+
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
+
+  [3]: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+
+v5 changes:
+  1. remove linux/of.h and put usb_role_switch when error happens,
+     suggested by Biju
+  2. treat Type-B connector as USB controller's child, but not as
+     a virtual device, suggested by Rob
+  3. provide and use generic property "usb-role-switch", see [1],
+     suggested by Rob
+
+  Note: this series still depends on [2]
+
+  [1]: [v3] dt-binding: usb: add usb-role-switch property
+       https://patchwork.kernel.org/patch/10934835/
+  [2]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+       https://patchwork.kernel.org/patch/10909971/
+
+v4 changes:
+  1. use switch_fwnode_match() to find fwnode suggested by Heikki
+  2. assign fwnode member of usb_role_switch struct suggested by Heikki
+  3. make [4/6] depend on [2]
+  3. remove linux/gpio.h suggested by Linus
+  4. put node when error happens
+
+  [4/6] usb: roles: add API to get usb_role_switch by node
+  [2] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+    https://patchwork.kernel.org/patch/10909971/
+
+v3 changes:
+  1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+  2. rebuild fwnode_usb_role_switch_get() suggested by Andy and Heikki
+  3. treat the type-B connector as a virtual device;
+  4. change file name of driver again
+  5. select USB_ROLE_SWITCH in mtu3/Kconfig suggested by Heikki
+  6. rename ssusb_mode_manual_switch() to ssusb_mode_switch()
+
+v2 changes:
+ 1. make binding clear, and add a extra compatible suggested by Hans
+
+Chunfeng Yun (8):
+  dt-binding: usb: add usb-role-switch property
+  dt-bindings: connector: add optional properties for Type-B
+  dt-bindings: usb: add binding for USB GPIO based connection detection
+    driver
+  dt-bindings: usb: mtu3: add properties about USB Role Switch
+  usb: roles: get usb-role-switch from parent
+  usb: common: create Kconfig file
+  usb: common: add USB GPIO based connection detection driver
+  usb: mtu3: register a USB Role Switch for dual role mode
+
+Heikki Krogerus (2):
+  device connection: Add fwnode_connection_find_match()
+  usb: roles: Add fwnode_usb_role_switch_get() function
+
+Yu Chen (1):
+  usb: roles: Introduce stubs for the exiting functions in role.h
+
+ .../bindings/connector/usb-connector.txt      |  14 +
+ .../devicetree/bindings/usb/generic.txt       |   4 +
+ .../devicetree/bindings/usb/mediatek,mtu3.txt |  10 +
+ .../devicetree/bindings/usb/usb-conn-gpio.txt |  31 ++
+ drivers/base/devcon.c                         |  43 ++-
+ drivers/usb/Kconfig                           |  35 +--
+ drivers/usb/common/Kconfig                    |  51 ++++
+ drivers/usb/common/Makefile                   |   1 +
+ drivers/usb/common/usb-conn-gpio.c            | 284 ++++++++++++++++++
+ drivers/usb/mtu3/Kconfig                      |   1 +
+ drivers/usb/mtu3/mtu3.h                       |   5 +
+ drivers/usb/mtu3/mtu3_debugfs.c               |   4 +-
+ drivers/usb/mtu3/mtu3_dr.c                    |  48 ++-
+ drivers/usb/mtu3/mtu3_dr.h                    |   6 +-
+ drivers/usb/mtu3/mtu3_plat.c                  |   3 +-
+ drivers/usb/roles/class.c                     |  41 ++-
+ include/linux/device.h                        |  10 +-
+ include/linux/usb/role.h                      |  37 +++
+ 18 files changed, 570 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+ create mode 100644 drivers/usb/common/Kconfig
+ create mode 100644 drivers/usb/common/usb-conn-gpio.c
+
+-- 
+2.22.0
