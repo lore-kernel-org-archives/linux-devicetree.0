@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 12/14] arm64: dts: meson-gxbb-nanopi-k2: add missing model
-Date: Wed, 14 Aug 2019 16:29:16 +0200
-Message-ID: <20190814142918.11636-13-narmstrong@baylibre.com>
+Subject: [PATCH 13/14] arm64: dts: meson-gxbb-p201: fix snps,reset-delays-us format
+Date: Wed, 14 Aug 2019 16:29:17 +0200
+Message-ID: <20190814142918.11636-14-narmstrong@baylibre.com>
 References: <20190814142918.11636-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,24 +13,24 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxbb-nanopi-k2.dt.yaml: /: 'model' is a required property
+meson-gxbb-p201.dt.yaml: ethernet@c9410000: snps,reset-delays-us: [[0, 10000, 1000000]] is too short
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index c34c1c90ccb6..1a36d2bd2d21 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -10,6 +10,7 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+index 56e0dd1ff55c..150a82f3b2d7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+@@ -21,6 +21,6 @@
+ 	phy-mode = "rmii";
  
- / {
- 	compatible = "friendlyarm,nanopi-k2", "amlogic,meson-gxbb";
-+	model = "Nanopi K2";
- 
- 	aliases {
- 		serial0 = &uart_AO;
+ 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+-	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-delays-us = <0>, <10000>, <1000000>;
+ 	snps,reset-active-low;
+ };
 -- 
 2.22.0
