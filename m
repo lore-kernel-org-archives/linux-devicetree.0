@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
-Date: Wed, 14 Aug 2019 16:29:15 +0200
-Message-ID: <20190814142918.11636-12-narmstrong@baylibre.com>
+Subject: [PATCH 05/14] arm64: dts: meson-gx: fix watchdog compatible
+Date: Wed, 14 Aug 2019 16:29:09 +0200
+Message-ID: <20190814142918.11636-6-narmstrong@baylibre.com>
 References: <20190814142918.11636-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,25 +13,26 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
+meson-gxbb-nanopi-k2.dt.yaml: watchdog@98d0: compatible:0: 'amlogic,meson-gx-wdt' is not one of ['amlogic,meson-gxbb-wdt']
+meson-gxl-s805x-libretech-ac.dt.yaml: watchdog@98d0: compatible:0: 'amlogic,meson-gx-wdt' is not one of ['amlogic,meson-gxbb-wdt']
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index fe4013cca876..acb931cf3e7c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -11,7 +11,7 @@
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index e2cdc9fce21c..00215ece17c8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -325,7 +325,7 @@
+ 			};
  
- / {
--	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-+	compatible = "amediatech,x96-max", "amlogic,g12a";
- 	model = "Shenzhen Amediatech Technology Co., Ltd X96 Max";
- 
- 	aliases {
+ 			watchdog@98d0 {
+-				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
++				compatible = "amlogic,meson-gxbb-wdt";
+ 				reg = <0x0 0x098d0 0x0 0x10>;
+ 				clocks = <&xtal>;
+ 			};
 -- 
 2.22.0
