@@ -1,30 +1,30 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
-Date: Wed, 14 Aug 2019 10:50:26 -0700
-Message-ID: <20190814175026.GF6167@minitux>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-2-vkoul@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 06/14] net: phy: adin: make RGMII internal delays
+ configurable
+Date: Wed, 14 Aug 2019 10:52:36 -0700
+Message-ID: <b591cc5b-9511-2223-ae34-088eaec0ba03@gmail.com>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-7-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190814125012.8700-2-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190812112350.15242-7-alexandru.ardelean@analog.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, hkallweit1@gmail.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Aug 05:49 PDT 2019, Vinod Koul wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-[..]
-> +	soc: soc@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0 0xffffffff>;
 
-I'm expecting that we'll run into the same problems as we saw on 845
-when bringing in the smmu nodes, so please make the cells 2 - and ranges
-should likely be the same 36 bits.
 
-Regards,
-Bjorn
+On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
+> The internal delays for the RGMII are configurable for both RX & TX. This
+> change adds support for configuring them via device-tree (or ACPI).
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
