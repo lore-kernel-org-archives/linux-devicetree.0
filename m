@@ -1,105 +1,48 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 10/22] arm64: dts: qcom: pm8150b: Add pon and adc nodes
-Date: Wed, 14 Aug 2019 10:08:02 -0700
-Message-ID: <20190814170803.DEFCC214DA@mail.kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-11-vkoul@kernel.org>
+From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit,
+ the Linux kernel unit testing framework
+Date: Wed, 14 Aug 2019 10:23:00 -0700
+Message-ID: <20190814172301.9246520665@mail.kernel.org>
+References: <20190814055108.214253-1-brendanhiggins@google.com>
+ <CAFd5g45NdQEcP0JQpZc3HYYgNZfsBsHL+ByXRK+OupWObwMuqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814125012.8700-11-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAFd5g45NdQEcP0JQpZc3HYYgNZfsBsHL+ByXRK+OupWObwMuqg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Josh Poimboeuf <jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kees Cook <keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Luis Chamberlain <mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, at-y27Ovi1pjclAfugRpC6u6w@public.gmane.org, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kbuild <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Bird,  Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.orgR
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-14 05:50:00)
-> Add the pon and adc nodes found in pm8150b PMIC.
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 54 +++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+Quoting Brendan Higgins (2019-08-14 03:03:47)
+> On Tue, Aug 13, 2019 at 10:52 PM Brendan Higgins
+> <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> > ## TL;DR
+> >
+> > This revision addresses comments from Stephen and Bjorn Helgaas. Most
+> > changes are pretty minor stuff that doesn't affect the API in anyway.
+> > One significant change, however, is that I added support for freeing
+> > kunit_resource managed resources before the test case is finished via
+> > kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+> > KUnit on certain configurations (like the default one for x86, whoops).
+> >
+> > Based on Stephen's feedback on the previous change, I think we are
+> > pretty close. I am not expecting any significant changes from here on
+> > out.
+> 
+> Stephen, it looks like you have just replied with "Reviewed-bys" on
+> all the remaining emails that you looked at. Is there anything else
+> that we are missing? Or is this ready for Shuah to apply?
+> 
 
-Squash?
-
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/=
-qcom/pm8150b.dtsi
-> index c0a678b0f159..846197bd65cd 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -2,6 +2,7 @@
->  // Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
->  // Copyright (c) 2019, Linaro Limited
-> =20
-> +#include <dt-bindings/iio/qcom,spmi-vadc.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/spmi/spmi.h>
-> =20
-> @@ -11,6 +12,59 @@
->                 reg =3D <0x2 SPMI_USID>;
->                 #address-cells =3D <1>;
->                 #size-cells =3D <0>;
-> +
-> +               pon@800 {
-
-Maybe pon node name should be 'key' or 'power-on'?
-
-> +                       compatible =3D "qcom,pm8916-pon";
-> +                       reg =3D <0x0800>;
-> +               };
-> +
-> +               adc@3100 {
-> +                       compatible =3D "qcom,spmi-adc5";
-> +                       reg =3D <0x3100>;
-> +                       #address-cells =3D <1>;
-> +                       #size-cells =3D <0>;
-> +                       #io-channel-cells =3D <1>;
-> +                       interrupts =3D <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING=
->;
-> +
-> +                       ref-gnd@0 {
-> +                               reg =3D <ADC5_REF_GND>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "ref_gnd";
-> +                       };
-> +
-> +                       vref-1p25@1 {
-> +                               reg =3D <ADC5_1P25VREF>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "vref_1p25";
-> +                       };
-> +
-> +                       die-temp@6 {
-> +                               reg =3D <ADC5_DIE_TEMP>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "die_temp";
-> +                       };
-> +
-> +                       chg-temp@9 {
-> +                               reg =3D <ADC5_CHG_TEMP>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "chg_temp";
-> +                       };
-> +
-> +                       smb1390-therm@14 {
-> +                               reg =3D <ADC5_AMUX_THM2>;
-> +                               qcom,hw-settle-time =3D <200>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "smb1390_therm";
-> +                       };
-> +
-> +                       smb1355-therm@78 {
-> +                               reg =3D <ADC5_AMUX_THM2_100K_PU>;
-> +                               qcom,ratiometric;
-> +                               qcom,hw-settle-time =3D <200>;
-> +                               qcom,pre-scaling =3D <1 1>;
-> +                               label =3D "smb1355_therm";
-> +                       };
-
-Again, are these board level details? Maybe should be provided here with
-status =3D "disabled" and then added by the boards that use these ADCs.
-
-> +               };
->         };
+I think it's good to go! Thanks for the persistence.
