@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 20/22] arm64: dts: qcom: sm8150: Add pmu node to SM8150 SoC
-Date: Wed, 14 Aug 2019 18:20:10 +0530
-Message-ID: <20190814125012.8700-21-vkoul@kernel.org>
+Subject: [PATCH 22/22] arm64: dts: qcom: sm8150: Add APSS shared mailbox
+Date: Wed, 14 Aug 2019 18:20:12 +0530
+Message-ID: <20190814125012.8700-23-vkoul@kernel.org>
 References: <20190814125012.8700-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,29 +14,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sibi Sankar <sibis@codeaurora.org>
 
-Add the CPU PMU on SM8150 to get perf support for hardware events.
+Add APSS shared mailbox support to SM8150 SoC.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 7111e1f092f4..19be87dc893f 100644
+index 5df3f335272a..88cbab4a9297 100644
 --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -148,6 +148,11 @@
- 		reg = <0 0x80000000 0 0>;
- 	};
+@@ -5,6 +5,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-sm8150.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
++#include <dt-bindings/clock/qcom,rpmh.h>
  
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+	};
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -338,6 +339,16 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		aoss_qmp: qmp@c300000 {
++			compatible = "qcom,sm8150-aoss-qmp";
++			reg = <0x0c300000 0x100000>;
++			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++			mboxes = <&apss_shared 0>;
 +
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
++			#clock-cells = <0>;
++			#power-domain-cells = <1>;
++		};
++
+ 		intc: interrupt-controller@17a00000 {
+ 			compatible = "arm,gic-v3";
+ 			interrupt-controller;
 -- 
 2.20.1
