@@ -1,420 +1,157 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH 2/2] interconnect: qcom: Add OSM L3 interconnect provider
- support
-Date: Wed, 14 Aug 2019 09:21:16 -0600
-Message-ID: <20190814152116.GB28465@jcrouse1-lnx.qualcomm.com>
-References: <20190807112432.26521-1-sibis@codeaurora.org>
- <20190807112432.26521-3-sibis@codeaurora.org>
- <CAGETcx8JgigJpRgjXsG+xChLUPrASRO7BapkYaSrvvTdQKfEuQ@mail.gmail.com>
- <9ea6ab4c-6357-653b-f91c-9b649205f0ab@codeaurora.org>
- <CAGETcx-+h0MOfSsR2Kf3kE4+8rDhnjBr_fRH5U0URgJPDQCyzQ@mail.gmail.com>
- <fdd87f381f3d7d179ff07aedeeec1385@codeaurora.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Are the requirements of the PWM API sensible?
+Date: Wed, 14 Aug 2019 18:17:27 +0200
+Message-ID: <20190814161727.ahfh6mlcbaozle3v@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
+ <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
+ <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
+ <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+ <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fdd87f381f3d7d179ff07aedeeec1385@codeaurora.org>
+In-Reply-To: <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Evan Green <evgreen@chromium.org>, David Dai <daidavid1@codeaurora.org>, linux-kernel-owner@vger.kernel.org
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 05:00:49PM +0530, Sibi Sankar wrote:
-> On 2019-08-14 06:13, Saravana Kannan wrote:
-> >On Thu, Aug 8, 2019 at 10:37 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >>
-> >>Hey Saravana,
-> >>
-> >>Thanks for the review!
-> >>
-> >>On 8/8/19 2:51 AM, Saravana Kannan wrote:
-> >>> On Wed, Aug 7, 2019 at 4:24 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >>>>
-> >>>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-> >>>> resources of scaling L3 caches. Add a driver to handle bandwidth
-> >>>> requests to OSM L3 from CPU/GPU.
-> >>>>
-> >>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >>>> ---
-> >>>>   drivers/interconnect/qcom/Kconfig  |   7 +
-> >>>>   drivers/interconnect/qcom/Makefile |   2 +
-> >>>>   drivers/interconnect/qcom/osm-l3.c | 292 +++++++++++++++++++++++++++++
-> >>>>   3 files changed, 301 insertions(+)
-> >>>>   create mode 100644 drivers/interconnect/qcom/osm-l3.c
-> >>>>
-> >>>> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-> >>>> index d5e70ebc24108..f6c2a11a1a2c9 100644
-> >>>> --- a/drivers/interconnect/qcom/Kconfig
-> >>>> +++ b/drivers/interconnect/qcom/Kconfig
-> >>>> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
-> >>>>          help
-> >>>>            Support for Qualcomm's Network-on-Chip interconnect hardware.
-> >>>>
-> >>>> +config INTERCONNECT_QCOM_OSM_L3
-> >>>> +       tristate "Qualcomm OSM L3 interconnect driver"
-> >>>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
-> >>>> +       help
-> >>>> +         Say y here to support the Operating State Manager (OSM) interconnect
-> >>>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
-> >>>> +
-> >>>>   config INTERCONNECT_QCOM_SDM845
-> >>>>          tristate "Qualcomm SDM845 interconnect driver"
-> >>>>          depends on INTERCONNECT_QCOM
-> >>>> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-> >>>> index 1c1cea690f922..9078af5fed109 100644
-> >>>> --- a/drivers/interconnect/qcom/Makefile
-> >>>> +++ b/drivers/interconnect/qcom/Makefile
-> >>>> @@ -1,5 +1,7 @@
-> >>>>   # SPDX-License-Identifier: GPL-2.0
-> >>>>
-> >>>> +icc-osm-l3-objs                                := osm-l3.o
-> >>>>   qnoc-sdm845-objs                       := sdm845.o
-> >>>>
-> >>>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
-> >>>>   obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-> >>>> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-> >>>> new file mode 100644
-> >>>> index 0000000000000..1e7dfce6f4f9b
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/interconnect/qcom/osm-l3.c
-> >>>> @@ -0,0 +1,292 @@
-> >>>> +// SPDX-License-Identifier: GPL-2.0
-> >>>> +/*
-> >>>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >>>> + *
-> >>>> + */
-> >>>> +
-> >>>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
-> >>>> +#include <dt-bindings/interconnect/qcom,sdm845.h>
-> >>>> +#include <linux/bitfield.h>
-> >>>> +#include <linux/clk.h>
-> >>>> +#include <linux/interconnect-provider.h>
-> >>>> +#include <linux/io.h>
-> >>>> +#include <linux/kernel.h>
-> >>>> +#include <linux/module.h>
-> >>>> +#include <linux/of_device.h>
-> >>>> +#include <linux/of_platform.h>
-> >>>> +#include <linux/platform_device.h>
-> >>>> +
-> >>>> +#define LUT_MAX_ENTRIES                        40U
-> >>>> +#define LUT_SRC                                GENMASK(31, 30)
-> >>>> +#define LUT_L_VAL                      GENMASK(7, 0)
-> >>>> +#define LUT_ROW_SIZE                   32
-> >>>> +#define CLK_HW_DIV                     2
-> >>>> +
-> >>>> +/* Register offsets */
-> >>>> +#define REG_ENABLE                     0x0
-> >>>> +#define REG_FREQ_LUT                   0x110
-> >>>> +#define REG_PERF_STATE                 0x920
-> >>>> +
-> >>>> +#define OSM_L3_MAX_LINKS               1
-> >>>> +
-> >>>> +#define to_qcom_provider(_provider) \
-> >>>> +       container_of(_provider, struct qcom_icc_provider, provider)
-> >>>> +
-> >>>> +enum {
-> >>>> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-> >>>> +       SDM845_MASTER_OSM_L3_GPU,
-> >>>> +       SDM845_SLAVE_OSM_L3,
-> >>>> +};
-> >>>> +
-> >>>> +struct qcom_icc_provider {
-> >>>> +       void __iomem *base;
-> >>>> +       unsigned int max_state;
-> >>>> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
-> >>>> +       struct icc_provider provider;
-> >>>> +};
-> >>>> +
-> >>>> +/**
-> >>>> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
-> >>>> + * @name: the node name used in debugfs
-> >>>> + * @links: an array of nodes where we can go next while traversing
-> >>>> + * @id: a unique node identifier
-> >>>> + * @num_links: the total number of @links
-> >>>> + * @buswidth: width of the interconnect between a node and the bus
-> >>>> + */
-> >>>> +struct qcom_icc_node {
-> >>>> +       const char *name;
-> >>>> +       u16 links[OSM_L3_MAX_LINKS];
-> >>>> +       u16 id;
-> >>>> +       u16 num_links;
-> >>>> +       u16 buswidth;
-> >>>> +};
-> >>>> +
-> >>>> +struct qcom_icc_desc {
-> >>>> +       struct qcom_icc_node **nodes;
-> >>>> +       size_t num_nodes;
-> >>>> +};
-> >>>> +
-> >>>> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                       \
-> >>>> +               static struct qcom_icc_node _name = {                   \
-> >>>> +               .name = #_name,                                         \
-> >>>> +               .id = _id,                                              \
-> >>>> +               .buswidth = _buswidth,                                  \
-> >>>> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),      \
-> >>>> +               .links = { __VA_ARGS__ },                               \
-> >>>> +       }
-> >>>> +
-> >>>> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-> >>>> +DEFINE_QNODE(osm_gpu_l3, SDM845_MASTER_OSM_L3_GPU, 16, SDM845_SLAVE_OSM_L3);
-> >>>> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-> >>>> +
-> >>>> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-> >>>> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
-> >>>> +       [MASTER_OSM_L3_GPU] = &osm_gpu_l3,
-> >>>> +       [SLAVE_OSM_L3] = &osm_l3,
-> >>>> +};
-> >>>> +
-> >>>> +static struct qcom_icc_desc sdm845_osm_l3 = {
-> >>>> +       .nodes = sdm845_osm_l3_nodes,
-> >>>> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-> >>>> +};
-> >>>> +
-> >>>> +static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> >>>> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> >>>> +{
-> >>>> +       *agg_avg += avg_bw;
-> >>>> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
-> >>>> +
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-> >>>> +{
-> >>>> +       struct icc_provider *provider;
-> >>>> +       struct qcom_icc_provider *qp;
-> >>>> +       struct qcom_icc_node *qn;
-> >>>> +       struct icc_node *n;
-> >>>> +       unsigned int index;
-> >>>> +       u32 agg_peak = 0;
-> >>>> +       u32 agg_avg = 0;
-> >>>> +       u64 rate;
-> >>>> +
-> >>>> +       qn = src->data;
-> >>>> +       provider = src->provider;
-> >>>> +       qp = to_qcom_provider(provider);
-> >>>> +
-> >>>> +       list_for_each_entry(n, &provider->nodes, node_list)
-> >>>> +               qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-> >>>> +                                  &agg_avg, &agg_peak);
-> >>>> +
-> >>>> +       rate = max(agg_avg, agg_peak);
-> >>>> +       rate = icc_units_to_bps(rate);
-> >>>> +       do_div(rate, qn->buswidth);
-> >>>> +
-> >>>> +       for (index = 0; index < qp->max_state; index++) {
-> >>>> +               if (qp->lut_tables[index] >= rate)
-> >>>> +                       break;
-> >>>> +       }
-> >>>> +
-> >>>> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
-> >>>> +
-> >>>> +       return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int qcom_osm_l3_probe(struct platform_device *pdev)
-> >>>> +{
-> >>>> +       u32 info, src, lval, i, prev_freq = 0, freq;
-> >>>> +       static unsigned long hw_rate, xo_rate;
-> >>>> +       const struct qcom_icc_desc *desc;
-> >>>> +       struct icc_onecell_data *data;
-> >>>> +       struct icc_provider *provider;
-> >>>> +       struct qcom_icc_node **qnodes;
-> >>>> +       struct qcom_icc_provider *qp;
-> >>>> +       struct icc_node *node;
-> >>>> +       size_t num_nodes;
-> >>>> +       struct clk *clk;
-> >>>> +       int ret;
-> >>>> +
-> >>>> +       clk = clk_get(&pdev->dev, "xo");
-> >>>> +       if (IS_ERR(clk))
-> >>>> +               return PTR_ERR(clk);
-> >>>> +
-> >>>> +       xo_rate = clk_get_rate(clk);
-> >>>> +       clk_put(clk);
-> >>>> +
-> >>>> +       clk = clk_get(&pdev->dev, "alternate");
-> >>>> +       if (IS_ERR(clk))
-> >>>> +               return PTR_ERR(clk);
-> >>>> +
-> >>>> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
-> >>>> +       clk_put(clk);
-> >>>> +
-> >>>> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-> >>>> +       if (!qp)
-> >>>> +               return -ENOMEM;
-> >>>> +
-> >>>> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
-> >>>> +       if (IS_ERR(qp->base))
-> >>>> +               return PTR_ERR(qp->base);
-> >>>> +
-> >>>> +       /* HW should be in enabled state to proceed */
-> >>>> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-> >>>> +               dev_err(&pdev->dev, "error hardware not enabled\n");
-> >>>> +               return -ENODEV;
-> >>>> +       }
-> >>>> +
-> >>>> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> >>>> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
-> >>>> +                                    i * LUT_ROW_SIZE);
-> >>>> +               src = FIELD_GET(LUT_SRC, info);
-> >>>> +               lval = FIELD_GET(LUT_L_VAL, info);
-> >>>> +               if (src)
-> >>>> +                       freq = xo_rate * lval;
-> >>>> +               else
-> >>>> +                       freq = hw_rate;
-> >>>> +
-> >>>> +               /*
-> >>>> +                * Two of the same frequencies with the same core counts means
-> >>>> +                * end of table
-> >>>> +                */
-> >>>> +               if (i > 0 && prev_freq == freq)
-> >>>> +                       break;
-> >>>> +
-> >>>> +               qp->lut_tables[i] = freq;
-> >>>> +               prev_freq = freq;
-> >>>> +       }
-> >>>> +       qp->max_state = i;
-> >>>> +
-> >>>> +       desc = of_device_get_match_data(&pdev->dev);
-> >>>> +       if (!desc)
-> >>>> +               return -EINVAL;
-> >>>> +
-> >>>> +       qnodes = desc->nodes;
-> >>>> +       num_nodes = desc->num_nodes;
-> >>>> +
-> >>>> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> >>>> +       if (!data)
-> >>>> +               return -ENOMEM;
-> >>>> +
-> >>>> +       provider = &qp->provider;
-> >>>> +       provider->dev = &pdev->dev;
-> >>>> +       provider->set = qcom_icc_set;
-> >>>> +       provider->aggregate = qcom_icc_aggregate;
-> >>>> +       provider->xlate = of_icc_xlate_onecell;
-> >>>> +       INIT_LIST_HEAD(&provider->nodes);
-> >>>> +       provider->data = data;
-> >>>> +
-> >>>> +       ret = icc_provider_add(provider);
-> >>>> +       if (ret) {
-> >>>> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
-> >>>> +               return ret;
-> >>>> +       }
-> >>>> +
-> >>>> +       for (i = 0; i < num_nodes; i++) {
-> >>>> +               size_t j;
-> >>>> +
-> >>>> +               node = icc_node_create(qnodes[i]->id);
-> >>>> +               if (IS_ERR(node)) {
-> >>>> +                       ret = PTR_ERR(node);
-> >>>> +                       goto err;
-> >>>> +               }
-> >>>> +
-> >>>> +               node->name = qnodes[i]->name;
-> >>>> +               node->data = qnodes[i];
-> >>>> +               icc_node_add(node, provider);
-> >>>> +
-> >>>> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-> >>>> +                       qnodes[i]->name, node->id);
-> >>>> +
-> >>>> +               /* populate links */
-> >>>> +               for (j = 0; j < qnodes[i]->num_links; j++)
-> >>>> +                       icc_link_create(node, qnodes[i]->links[j]);
-> >>>> +
-> >>>> +               data->nodes[i] = node;
-> >>>> +       }
-> >>>> +       data->num_nodes = num_nodes;
-> >>>> +
-> >>>> +       platform_set_drvdata(pdev, qp);
-> >>>> +
-> >>>> +       return ret;
-> >>>> +err:
-> >>>> +       list_for_each_entry(node, &provider->nodes, node_list) {
-> >>>> +               icc_node_del(node);
-> >>>> +               icc_node_destroy(node->id);
-> >>>> +       }
-> >>>> +
-> >>>> +       icc_provider_del(provider);
-> >>>> +       return ret;
-> >>>> +}
-> >>>> +
-> >>>> +static int qcom_osm_l3_remove(struct platform_device *pdev)
-> >>>> +{
-> >>>> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
-> >>>> +       struct icc_provider *provider = &qp->provider;
-> >>>> +       struct icc_node *n;
-> >>>> +
-> >>>> +       list_for_each_entry(n, &provider->nodes, node_list) {
-> >>>> +               icc_node_del(n);
-> >>>> +               icc_node_destroy(n->id);
-> >>>> +       }
-> >>>> +
-> >>>> +       return icc_provider_del(provider);
-> >>>> +}
-> >>>> +
-> >>>> +static const struct of_device_id osm_l3_of_match[] = {
-> >>>> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-> >>>> +       { },
-> >>>> +};
-> >>>> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-> >>>> +
-> >>>> +static struct platform_driver osm_l3_driver = {
-> >>>> +       .probe = qcom_osm_l3_probe,
-> >>>> +       .remove = qcom_osm_l3_remove,
-> >>>> +       .driver = {
-> >>>> +               .name = "osm-l3",
-> >>>> +               .of_match_table = osm_l3_of_match,
-> >>>> +       },
-> >>>> +};
-> >>>> +module_platform_driver(osm_l3_driver);
-> >>>> +
-> >>>> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-> >>>> +MODULE_LICENSE("GPL v2");
-> >>>
-> >>> Did a quick scan of the code and it's not clear how you connect the L3
-> >>> interconnect provider to the rest of the interconnect. I don't see any
-> >>> DT or code references to the rest of the interconnects in the system.
-> >>> If GPU is making a bandwidth request all the way to L3, how do you
-> >>> make sure the interconnects between GPU and L3 also scale up properly.
-> >>
-> >>For SDM845 OSM L3 provider the icc nodes endpoints are isolated from
-> >>rsc icc node endpoints i.e GPU would need to vote on this path in
-> >>addition to voting for DDR. On future SoCs if the need to scale
-> >>interconnect between GPU rsc nodes along with the OSM l3 nodes arises,
-> >>it can be trivially extended by linking the osm icc nodes with global
-> >>icc node ids of the gpu rsc nodes.
-> >
-> >Sorry, I'm not sure we are talking about the same thing. To keep the
-> >discussion focused, let's completely ignore GPU's DDR needs for now.
-> >
-> >Talking about GPU <-> L3 traffic, unless the GPU is directly connected
-> >to the L3 with no additional interconnects in between (unlikely), this
-> >L3 provider need to connect the L3 icc node with the rest of the
-> >interconnect nodes. Otherwise, even if the L3 itself is provisioned to
-> >handle, say 10 GB/s, the interconnects connecting the GPU to L3 might
-> >be left at 1 GB/s.
-> >
-> >So, can we please connect this node to the rest of the interconnect
-> >nodes in SDM845?
+Hello Michal,
+
+[adapted the Subject to the actual topic of this mail]
+
+On Wed, Aug 14, 2019 at 04:07:21PM +0200, Michal Vokáč wrote:
+> > Honestly I think most pwm users won't mind and they should get the
+> > possibility to tell they prefer pwm_apply_state to return immediately
+> > even if this could result in a spike. But we're not there yet.
+> > (Actually there are three things a PWM consumer might want:
+> > 
+> >   a) stop immediately;
+> >   b) complete the currently running period, then stop and return
+> >   only
+> >      when the period is completed; or
+> >   c) complete the currently running period and then stop, return
+> >   immediately if
+> >      possible.
+> > 
+> > Currently the expected semantic is b).
 > 
-> Sure I'll double check if GPU has a l3
-> scaling requirement on SDM845 SoCs and
-> drop/link it to the rsc nodes appropriately.
+> I am sorry for interrupting your discussion. From my (last year or so)
+> observation of the PWM mailing list I see this as a common pattern in
+> almost every submission of a new PWM driver. That is PWM driver authors
+> keep submitting solution a) and you tell them the expected behavior
+> is b).
 
-GPU doesn't use I/O coherency at the moment and I don't think we would need an
-independent connection if we did.
+The history is that there was a discussion about something related to
+the pwm-imx27 or the pwm-mxs driver between Thierry and me. I don't
+remember the exact issue though. My impression back then was that
+Thierry had a conception of how a PWM should work that was idealised and
+hard to implement with a big part of the actually available hardware
+implementations. In the end Thierry ended the discussion saying
+something like: "I'm not aware that the available drivers don't fulfill
+the requirements so I must assume they are right. If you know otherwise,
+please tell us. I'm not willing to change the API's requirements just
+because of one or two drivers having problems." (I didn't look up the
+mail thread, so this is not an exact quote.)
 
-Jordan
+One of these requirements was b) from above. So if you notice a common
+pattern here on the list that most new drivers have problems to
+implement b) I'm happy. I let you decide what this probably means for
+the existing drivers.
 
-> >
-> >Thanks,
-> >Saravana
-> 
-> -- 
-> -- Sibi Sankar --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project.
+> Why is that? I hope that the fact that implementing a) is simpler
+> than b) is not the main reason. I believe that people think a)
+> is the correct solution.
+
+Honestly I think people are not aware of the requirements and/or don't
+care enough about these details instead of actively being convinced that
+a) is right. Their test cases are most of the time quite limited and if
+the LED's brightness reacts according to the expectations the driver is
+considered done.
+
+And I agree with Thierry that in some situations it is sane to require
+that periods are completed to prevent spikes. (I'm not a hardware guy,
+but I think controlling a step motor is such a situation where you'd want
+to prevent spikes.)
+
+> I agree that smooth transition from one period/duty setting to
+> different setting makes sense. But I also believe the expected
+> behavior of setting enabled=0 is different. That is to stop
+> immediately the technology that is fed by the PWM signal.
+> Otherwise the concept of enabled/disabled does not make sense
+> because setting duty=0 would have the same effect.
+
+That's approximately my argumentation from back then. I asked several
+times what was the difference between duty=0 and enabled=0. Thierry was
+unable to come up with a better explanation but insisted there was a
+difference. (Later I became aware that there is a difference, i.e. with
+duty=0 the inactive time still has to be a multiple of the configured
+period. So disabled is actually equivalent to duty=0 with an
+infinitesimal period. Unless I missed something of course.)
+
+I even questioned if consumers really care about a PWM going to it's
+inactive level on disable and suggested to introduce something to the
+PWM API to let consumers express they don't care. But the discussion
+led nowhere. In my eyes the PWM framework would become better if
+consumers were able to specify their intentions in a more detailed way.
+Thierry didn't agree.
+
+I think allowing lowlevel drivers to act immediately on enabled=0 would
+be fine. Consumers who'd want to disable only after completion of the
+currently running period could then do:
+
+	pwm_apply(pwm, duty=0, period=dontcare, enabled=1);
+	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
+
+to achieve this completion. So after all consumers are converted the API
+is more powerful than before because consumers have the choice between
+the above and a single
+
+	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
+
+The net benefit is that consumers don't have to wait if they don't
+actually care about completing the period. The downside is that all
+consumers must be reviewed and maybe fixed and maybe that people's
+expectations are not met anymore. (But I doubt the latter a bit because
+I'm not sure that most people actually expect that pwm_apply() blocks
+until the output reached its disabled state.)
+
+And we could even go further and tell consumers who care about the
+output's level should not disable the pwm but instead do
+
+	pwm_apply(pwm, duty=0, period=1, enabled=1);
+
+which has effectively the same semantic as enabled=0 today. This would
+give at least two (probably more) PWM drivers the freedom to really
+disable the hardware which might result in something different than
+"inactive level" without taking the possibility from consumers to
+actually request what they want.
+
+> So I still wonder where the expectation for b) is coming from.
+> What would be the physical/electrical reasoning for b)?
+> Why/how it can be dangerous/harmful for any device to stop the
+> PWM signal immediately?
+
+Maybe you can get Thierry to answer this. He is the source of this
+requirement.
+
+> Would be great to finally reach consensus on that so the expected
+> behavior can be documented. I know you already attempted that [1].
+> I think you have done a great job but I still consider the part
+> about state changes little controversial and unresolved.
+
+I'm completely open to document the expectations. I'm also open to shift
+the expectations to something that is saner and/or gives consumers more
+possibilities. But it's Thierry's responsibility to go forward here or
+at least stop the blockade.
+
+Best regards
+Uwe
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
