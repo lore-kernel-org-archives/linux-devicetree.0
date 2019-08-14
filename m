@@ -1,79 +1,420 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [EXT] Re: [PATCH v2 09/15] dt-bindings: display: Add max-res
- property for mxsfb
-Date: Wed, 14 Aug 2019 13:25:05 +0200
-Message-ID: <33feedd20e0fc154c5b736f882d24569@agner.ch>
-References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
- <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
- <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
- <1565781243.3209.55.camel@nxp.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH 2/2] interconnect: qcom: Add OSM L3 interconnect provider
+ support
+Date: Wed, 14 Aug 2019 16:57:53 +0530
+Message-ID: <5c9c3e1ff70b4a80a2b97ded8aa2f0e7@codeaurora.org>
+References: <20190807112432.26521-1-sibis@codeaurora.org>
+ <20190807112432.26521-3-sibis@codeaurora.org>
+ <CAE=gft45QSLyTG0Vi-ZHjbtu4d7vY51-trfLQhswVVrS3NNHew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1565781243.3209.55.camel@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: mark.rutland@arm.com, marex@denx.de, kernel@pengutronix.de, devicetree@vger.kernel.org, airlied@linux.ie, shawnguo@kernel.org, agx@sigxcpu.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, dl-linux-imx <linux-imx@nxp.com>, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAE=gft45QSLyTG0Vi-ZHjbtu4d7vY51-trfLQhswVVrS3NNHew@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Dai <daidavid1@codeaurora.org>, Saravana Kannan <saravanak@google.com>, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wOC0xNCAxMzoxNCwgUm9iZXJ0IENoaXJhcyB3cm90ZToKPiBIaSBTdGVmYW4sCj4g
-T24gTWksIDIwMTktMDgtMTQgYXQgMTM6MDMgKzAyMDAsIFN0ZWZhbiBBZ25lciB3cm90ZToKPj4g
-T24gMjAxOS0wOC0xNCAxMjo0OCwgUm9iZXJ0IENoaXJhcyB3cm90ZToKPj4gPgo+PiA+IEFkZCBu
-ZXcgb3B0aW9uYWwgcHJvcGVydHkgJ21heC1yZXMnLCB0byBsaW1pdCB0aGUgbWF4aW11bSBzdXBw
-b3J0ZWQKPj4gPiByZXNvbHV0aW9uIGJ5IHRoZSBNWFNGQl9EUk0gZHJpdmVyLgo+PiBJIHdvdWxk
-IGFsc28gbWVudGlvbiB0aGUgcmVhc29uIHdoeSB3ZSBuZWVkIHRoaXMuCj4+Cj4+IEkgZ3Vlc3Mg
-dGhpcyBuZWVkcyBhIHZlbmRvciBwcmVmaXggYXMgd2VsbCAoZnNsLG1heC1yZXMpLiBJIGFsc28K
-Pj4gd291bGQKPj4gbGlrZSB0byBoYXZlIHRoZSBhY2sgb2YgdGhlIGRldmljZSB0cmVlIGZvbGtz
-IGhlcmUuCj4gUm9iIEhlcnJpbmcgYWxzbyBha2VkIGJlIGFib3V0IHRoaXMsIGFuZCBJJ2xsIGNv
-cHkgaGVyZSB0aGUgcmVwbHksIHdpdGgKPiBleHBsYW5hdGlvbnM6Cj4gCj4gSW5kZWVkLCB0aGlz
-IGxpbWl0YXRpb24gaXMgYWN0dWFsbHkgZHVlIHRvIGJhbmR3aWR0aCBsaW1pdGF0aW9uLCBidXQK
-PiB0aGUgcHJvYmxlbSBpcyB0aGF0IHRoaXMgbGltaXRhdGlvbiBjb21lcyBvbiBpLk1YOE0gKGtu
-b3duIGFzIG1TY2FsZQo+IDg1MEQpLCB3aGVyZSB0aGUgbWVtb3J5IGJhbmR3aWR0aCBjYW5ub3Qg
-c3VwcG9ydDogR1BVL1ZQVSB3b3JrbG9hZCBpbgo+IHRoZSBzYW1lIHRpbWUgd2l0aCBib3RoIERD
-U1MgZHJpdmluZyA0a0A2MCBhbmQgZUxDRElGIGRyaXZpbmcgMTA4MHBANjAuCj4gU2luY2UgZUxD
-RElGIGlzIGEgc2Vjb25kYXJ5IGRpc3BsYXkgd2UgdGhvdWdoIHRvIGFkZCB0aGUgcG9zaWJpbGl0
-eSB0bwo+IGxpbWl0IGl0J3MgYmFuZHdpZHRoIGJ5IGxpbWl0aW5nIHRoZSByZXNvbHV0aW9uLgo+
-IElmIHlvdSBzYXkgdGhhdCBtb3JlIGRldGFpbHMgYXJlIG5lZWRlZCwgSSBjYW4gYWRkIHRoZW0g
-aW4gdGhlCj4gZGVzY3JpcHRpb24uCgpPaCBzb3JyeSBJIG1pc3NlZCB0aGF0LgoKUm9iIEhlcnJp
-bmcgYWxzbyB3cm90ZToKPiBJIHN1cHBvc2Ugd2hhdCB5b3UgYXJlIGFmdGVyIGlzIGJhbmR3aWR0
-aCBsaW1pdHM/IElJUkMsIHRoZXJlJ3MgYWxyZWFkeSAKPiBzb21lIGJpbmRpbmdzIGV4cHJlc3Np
-bmcgc3VjaCBsaW1pdHMuIEFsc28sIHdvdWxkbid0IHlvdSBuZWVkIHRvIGFjY291bnQgCj4gZm9y
-IGJwcCBhbmQgdXNpbmcgdGhlIDJuZCBwbGFuZSAoSUlSQyB0aGF0IHRoZXJlIGlzIG9uZSkuCgpJ
-IGd1ZXNzIHRoZSBiaW5kaW5nIGhlIHJlZmVycyB0byBpcyBtYXgtbWVtb3J5LWJhbmR3aWR0aCwg
-d2hpY2ggaXMgdXNlZAppbiBtdWx0aXBsZSBkcml2ZXIgYWxyZWFkeS4gSXQgbWFrZXMgc2Vuc2Ug
-dG8gcmV1c2UgdGhpcyBwcm9wZXJ0eQppbnN0ZWFkIG9mIGludmVudGluZyBhIG5ldyBzZXQgb2Yg
-cHJvcGVydHkgd2hpY2ggaXMgYWxzbyBub3QgdGFraW5nIGJwcAppbnRvIGFjY291bnQuLi4KClRo
-ZSBwbDExMSBkcml2ZXIgaW1wbGVtZW50cyB0aGlzIHByb3BlcnR5LCBpdCBzaG91bGQgYmUgZmFp
-cmx5IGVhc3kgdG8KYWRvcHQgdGhhdCBjb2RlLgoKLS0KU3RlZmFuCgoKCj4+Cj4+IC0tCj4+IFN0
-ZWZhbgo+Pgo+PiA+Cj4+ID4KPj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JlcnQgQ2hpcmFzIDxyb2Jl
-cnQuY2hpcmFzQG54cC5jb20+Cj4+ID4gLS0tCj4+ID4gwqBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQgfCA2ICsrKysrKwo+PiA+IMKgMSBmaWxlIGNo
-YW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+PiA+Cj4+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L214c2ZiLnR4dAo+PiA+IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0Cj4+ID4gaW5kZXggNDcy
-ZTFlYS4uNTVlMjJlZCAxMDA2NDQKPj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQKPj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQKPj4gPiBAQCAtMTcsNiArMTcsMTIgQEAg
-UmVxdWlyZWQgcHJvcGVydGllczoKPj4gPiDCoFJlcXVpcmVkIHN1Yi1ub2RlczoKPj4gPiDCoMKg
-wqAtIHBvcnQ6IFRoZSBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4KPj4gPgo+PiA+ICtP
-cHRpb25hbCBwcm9wZXJ0aWVzOgo+PiA+ICstIG1heC1yZXM6wqDCoMKgYW4gYXJyYXkgd2l0aCBh
-IG1heGltdW0gb2YgdHdvIGludGVnZXJzLCByZXByZXNlbnRpbmcKPj4gPiB0aGUKPj4gPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtYXhpbXVtIHN1cHBvcnRlZCByZXNvbHV0aW9uLCBpbiB0
-aGUgZm9ybSBvZgo+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDxtYXhYPiwgPG1heFk+
-OyBpZiBvbmUgb2YgdGhlIGl0ZW0gaXMgPDA+LCB0aGUKPj4gPiBkZWZhdWx0Cj4+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgZHJpdmVyLWRlZmluZWQgbWF4aW11bSByZXNvbHV0aW9uIGZv
-ciB0aGF0IGF4aXMgaXMKPj4gPiB1c2VkCj4+ID4gKwo+PiA+IMKgRXhhbXBsZToKPj4gPgo+PiA+
-IMKgwqDCoMKgwqDCoGxjZGlmMTogZGlzcGxheS1jb250cm9sbGVyQDIyMjAwMDAgewo+IAo+IFRo
-YW5rcywKPiBSb2JlcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVs
+Hey Evan,
+
+Thanks for the review!
+
+On 2019-08-14 02:02, Evan Green wrote:
+> Hi Sibi,
+> 
+> On Wed, Aug 7, 2019 at 4:24 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
+>> resources of scaling L3 caches. Add a driver to handle bandwidth
+>> requests to OSM L3 from CPU/GPU.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> 
+> This looks good to me, just a couple minor comments below.
+> 
+>> ---
+>>  drivers/interconnect/qcom/Kconfig  |   7 +
+>>  drivers/interconnect/qcom/Makefile |   2 +
+>>  drivers/interconnect/qcom/osm-l3.c | 292 
+>> +++++++++++++++++++++++++++++
+>>  3 files changed, 301 insertions(+)
+>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
+>> 
+>> diff --git a/drivers/interconnect/qcom/Kconfig 
+>> b/drivers/interconnect/qcom/Kconfig
+>> index d5e70ebc24108..f6c2a11a1a2c9 100644
+>> --- a/drivers/interconnect/qcom/Kconfig
+>> +++ b/drivers/interconnect/qcom/Kconfig
+>> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
+>>         help
+>>           Support for Qualcomm's Network-on-Chip interconnect 
+>> hardware.
+>> 
+>> +config INTERCONNECT_QCOM_OSM_L3
+>> +       tristate "Qualcomm OSM L3 interconnect driver"
+>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
+>> +       help
+>> +         Say y here to support the Operating State Manager (OSM) 
+>> interconnect
+>> +         driver which controls the scaling of L3 caches on Qualcomm 
+>> SoCs.
+>> +
+>>  config INTERCONNECT_QCOM_SDM845
+>>         tristate "Qualcomm SDM845 interconnect driver"
+>>         depends on INTERCONNECT_QCOM
+>> diff --git a/drivers/interconnect/qcom/Makefile 
+>> b/drivers/interconnect/qcom/Makefile
+>> index 1c1cea690f922..9078af5fed109 100644
+>> --- a/drivers/interconnect/qcom/Makefile
+>> +++ b/drivers/interconnect/qcom/Makefile
+>> @@ -1,5 +1,7 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>> 
+>> +icc-osm-l3-objs                                := osm-l3.o
+>>  qnoc-sdm845-objs                       := sdm845.o
+>> 
+>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
+>>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+>> diff --git a/drivers/interconnect/qcom/osm-l3.c 
+>> b/drivers/interconnect/qcom/osm-l3.c
+>> new file mode 100644
+>> index 0000000000000..1e7dfce6f4f9b
+>> --- /dev/null
+>> +++ b/drivers/interconnect/qcom/osm-l3.c
+>> @@ -0,0 +1,292 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + *
+>> + */
+>> +
+>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
+>> +#include <dt-bindings/interconnect/qcom,sdm845.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/interconnect-provider.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define LUT_MAX_ENTRIES                        40U
+>> +#define LUT_SRC                                GENMASK(31, 30)
+>> +#define LUT_L_VAL                      GENMASK(7, 0)
+>> +#define LUT_ROW_SIZE                   32
+>> +#define CLK_HW_DIV                     2
+>> +
+>> +/* Register offsets */
+>> +#define REG_ENABLE                     0x0
+>> +#define REG_FREQ_LUT                   0x110
+>> +#define REG_PERF_STATE                 0x920
+>> +
+>> +#define OSM_L3_MAX_LINKS               1
+>> +
+>> +#define to_qcom_provider(_provider) \
+>> +       container_of(_provider, struct qcom_icc_provider, provider)
+>> +
+>> +enum {
+>> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
+>> +       SDM845_MASTER_OSM_L3_GPU,
+>> +       SDM845_SLAVE_OSM_L3,
+>> +};
+>> +
+>> +struct qcom_icc_provider {
+> 
+> Maybe we should rename this and the ones below to avoid collisions
+> with drivers/interconnect/qcom/sdm845.c, even though those structures
+> are currently local.
+
+sure I'll do that
+
+> 
+>> +       void __iomem *base;
+>> +       unsigned int max_state;
+>> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
+>> +       struct icc_provider provider;
+>> +};
+>> +
+>> +/**
+>> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
+>> + * @name: the node name used in debugfs
+>> + * @links: an array of nodes where we can go next while traversing
+>> + * @id: a unique node identifier
+>> + * @num_links: the total number of @links
+>> + * @buswidth: width of the interconnect between a node and the bus
+>> + */
+>> +struct qcom_icc_node {
+>> +       const char *name;
+>> +       u16 links[OSM_L3_MAX_LINKS];
+>> +       u16 id;
+>> +       u16 num_links;
+>> +       u16 buswidth;
+>> +};
+>> +
+>> +struct qcom_icc_desc {
+>> +       struct qcom_icc_node **nodes;
+>> +       size_t num_nodes;
+>> +};
+>> +
+>> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                      
+>>  \
+>> +               static struct qcom_icc_node _name = {                  
+>>  \
+>> +               .name = #_name,                                        
+>>  \
+>> +               .id = _id,                                             
+>>  \
+>> +               .buswidth = _buswidth,                                 
+>>  \
+>> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),     
+>>  \
+>> +               .links = { __VA_ARGS__ },                              
+>>  \
+>> +       }
+>> +
+>> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, 
+>> SDM845_SLAVE_OSM_L3);
+>> +DEFINE_QNODE(osm_gpu_l3, SDM845_MASTER_OSM_L3_GPU, 16, 
+>> SDM845_SLAVE_OSM_L3);
+>> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
+>> +
+>> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
+>> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
+>> +       [MASTER_OSM_L3_GPU] = &osm_gpu_l3,
+>> +       [SLAVE_OSM_L3] = &osm_l3,
+>> +};
+>> +
+>> +static struct qcom_icc_desc sdm845_osm_l3 = {
+>> +       .nodes = sdm845_osm_l3_nodes,
+>> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
+>> +};
+>> +
+>> +static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
+>> +                             u32 peak_bw, u32 *agg_avg, u32 
+>> *agg_peak)
+>> +{
+>> +       *agg_avg += avg_bw;
+>> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+>> +{
+>> +       struct icc_provider *provider;
+>> +       struct qcom_icc_provider *qp;
+>> +       struct qcom_icc_node *qn;
+>> +       struct icc_node *n;
+>> +       unsigned int index;
+>> +       u32 agg_peak = 0;
+>> +       u32 agg_avg = 0;
+>> +       u64 rate;
+>> +
+>> +       qn = src->data;
+>> +       provider = src->provider;
+>> +       qp = to_qcom_provider(provider);
+>> +
+>> +       list_for_each_entry(n, &provider->nodes, node_list)
+>> +               qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
+>> +                                  &agg_avg, &agg_peak);
+>> +
+>> +       rate = max(agg_avg, agg_peak);
+>> +       rate = icc_units_to_bps(rate);
+>> +       do_div(rate, qn->buswidth);
+>> +
+>> +       for (index = 0; index < qp->max_state; index++) {
+>> +               if (qp->lut_tables[index] >= rate)
+>> +                       break;
+>> +       }
+>> +
+>> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int qcom_osm_l3_probe(struct platform_device *pdev)
+>> +{
+>> +       u32 info, src, lval, i, prev_freq = 0, freq;
+>> +       static unsigned long hw_rate, xo_rate;
+>> +       const struct qcom_icc_desc *desc;
+>> +       struct icc_onecell_data *data;
+>> +       struct icc_provider *provider;
+>> +       struct qcom_icc_node **qnodes;
+>> +       struct qcom_icc_provider *qp;
+>> +       struct icc_node *node;
+>> +       size_t num_nodes;
+>> +       struct clk *clk;
+>> +       int ret;
+>> +
+>> +       clk = clk_get(&pdev->dev, "xo");
+>> +       if (IS_ERR(clk))
+>> +               return PTR_ERR(clk);
+>> +
+>> +       xo_rate = clk_get_rate(clk);
+>> +       clk_put(clk);
+>> +
+>> +       clk = clk_get(&pdev->dev, "alternate");
+>> +       if (IS_ERR(clk))
+>> +               return PTR_ERR(clk);
+>> +
+>> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
+>> +       clk_put(clk);
+>> +
+>> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
+>> +       if (!qp)
+>> +               return -ENOMEM;
+>> +
+>> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
+>> +       if (IS_ERR(qp->base))
+>> +               return PTR_ERR(qp->base);
+>> +
+>> +       /* HW should be in enabled state to proceed */
+>> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
+>> +               dev_err(&pdev->dev, "error hardware not enabled\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+>> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
+>> +                                    i * LUT_ROW_SIZE);
+>> +               src = FIELD_GET(LUT_SRC, info);
+>> +               lval = FIELD_GET(LUT_L_VAL, info);
+>> +               if (src)
+>> +                       freq = xo_rate * lval;
+>> +               else
+>> +                       freq = hw_rate;
+>> +
+>> +               /*
+>> +                * Two of the same frequencies with the same core 
+>> counts means
+>> +                * end of table
+>> +                */
+>> +               if (i > 0 && prev_freq == freq)
+>> +                       break;
+>> +
+>> +               qp->lut_tables[i] = freq;
+>> +               prev_freq = freq;
+>> +       }
+>> +       qp->max_state = i;
+>> +
+>> +       desc = of_device_get_match_data(&pdev->dev);
+>> +       if (!desc)
+>> +               return -EINVAL;
+>> +
+>> +       qnodes = desc->nodes;
+>> +       num_nodes = desc->num_nodes;
+>> +
+>> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), 
+>> GFP_KERNEL);
+>> +       if (!data)
+>> +               return -ENOMEM;
+>> +
+>> +       provider = &qp->provider;
+>> +       provider->dev = &pdev->dev;
+>> +       provider->set = qcom_icc_set;
+>> +       provider->aggregate = qcom_icc_aggregate;
+>> +       provider->xlate = of_icc_xlate_onecell;
+>> +       INIT_LIST_HEAD(&provider->nodes);
+>> +       provider->data = data;
+>> +
+>> +       ret = icc_provider_add(provider);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "error adding interconnect 
+>> provider\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       for (i = 0; i < num_nodes; i++) {
+>> +               size_t j;
+>> +
+>> +               node = icc_node_create(qnodes[i]->id);
+>> +               if (IS_ERR(node)) {
+>> +                       ret = PTR_ERR(node);
+>> +                       goto err;
+>> +               }
+>> +
+>> +               node->name = qnodes[i]->name;
+>> +               node->data = qnodes[i];
+>> +               icc_node_add(node, provider);
+>> +
+>> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", 
+>> node,
+>> +                       qnodes[i]->name, node->id);
+>> +
+>> +               /* populate links */
+>> +               for (j = 0; j < qnodes[i]->num_links; j++)
+>> +                       icc_link_create(node, qnodes[i]->links[j]);
+>> +
+>> +               data->nodes[i] = node;
+>> +       }
+>> +       data->num_nodes = num_nodes;
+>> +
+>> +       platform_set_drvdata(pdev, qp);
+>> +
+>> +       return ret;
+>> +err:
+>> +       list_for_each_entry(node, &provider->nodes, node_list) {
+>> +               icc_node_del(node);
+>> +               icc_node_destroy(node->id);
+>> +       }
+>> +
+>> +       icc_provider_del(provider);
+> 
+> I looks like you could just call qcom_osm_l3_remove() here instead of 
+> the above.
+
+yeah
+
+> 
+> 
+>> +       return ret;
+>> +}
+>> +
+>> +static int qcom_osm_l3_remove(struct platform_device *pdev)
+>> +{
+>> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
+>> +       struct icc_provider *provider = &qp->provider;
+>> +       struct icc_node *n;
+>> +
+>> +       list_for_each_entry(n, &provider->nodes, node_list) {
+>> +               icc_node_del(n);
+>> +               icc_node_destroy(n->id);
+>> +       }
+>> +
+>> +       return icc_provider_del(provider);
+>> +}
+>> +
+>> +static const struct of_device_id osm_l3_of_match[] = {
+>> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 
+>> },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
+>> +
+>> +static struct platform_driver osm_l3_driver = {
+>> +       .probe = qcom_osm_l3_probe,
+>> +       .remove = qcom_osm_l3_remove,
+>> +       .driver = {
+>> +               .name = "osm-l3",
+>> +               .of_match_table = osm_l3_of_match,
+>> +       },
+>> +};
+>> +module_platform_driver(osm_l3_driver);
+>> +
+>> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
+>> +MODULE_LICENSE("GPL v2");
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
