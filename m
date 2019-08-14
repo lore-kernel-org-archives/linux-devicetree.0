@@ -1,52 +1,58 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
- snd_soc_dai_get_sdw_stream()
-Date: Wed, 14 Aug 2019 09:09:04 -0500
-Message-ID: <99d35a9d-cbd8-f0da-4701-92ef650afe5a@linux.intel.com>
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
- <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
- <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
- <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
- <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
- <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
- <20190813191827.GI5093@sirena.co.uk>
- <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
- <20190813195804.GL5093@sirena.co.uk>
- <20190814041142.GU12733@vkoul-mobl.Dlink>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
+Date: Wed, 14 Aug 2019 16:29:04 +0200
+Message-ID: <20190814142918.11636-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814041142.GU12733@vkoul-mobl.Dlink>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, spapothi@codeaurora.org
+To: khilman@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+This is the first set of DT fixes following the first YAML bindings conversion
+at [1], [2] and [3].
 
+After this set of fixes, the remaining errors are :
+meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
+meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
 
-On 8/13/19 11:11 PM, Vinod Koul wrote:
-> On 13-08-19, 20:58, Mark Brown wrote:
->> On Tue, Aug 13, 2019 at 02:38:53PM -0500, Pierre-Louis Bossart wrote:
->>
->>> Indeed. I don't have a full understanding of that part to be honest, nor why
->>> we need something SoundWire-specific. We already abused the set_tdm_slot API
->>> to store an HDaudio stream, now we have a rather confusing stream
->>> information for SoundWire and I have about 3 other 'stream' contexts in
->>> SOF... I am still doing basic cleanups but this has been on my radar for a
->>> while.
->>
->> There is something to be said for not abusing the TDM slot API if it can
->> make things clearer by using bus-idiomatic mechanisms, but it does mean
->> everything needs to know about each individual bus :/ .
-> 
-> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
-> helps in the case for him to get the stream context and set the stream
-> context from the machine driver.
-> 
-> Nothing else is expected to be done from this API. We already do a set
-> using snd_soc_dai_set_sdw_stream(). Here we add the snd_soc_dai_get_sdw_stream() to query
+These are only cosmetic changes, and should not break drivers implementation
+following the bindings.
 
-I didn't see a call to snd_soc_dai_set_sdw_stream() in Srini's code?
+Neil Armstrong (14):
+  arm64: dts: meson: fix ethernet mac reg format
+  arm64: dts: meson-gx: drop the vpu dmc memory cell
+  arm64: dts: meson-gx: fix reset controller compatible
+  arm64: dts: meson-gx: fix spifc compatible
+  arm64: dts: meson-gx: fix watchdog compatible
+  arm64: dts: meson-gx: fix mhu compatible
+  arm64: dts: meson-gx: fix periphs bus node name
+  arm64: dts: meson-gxl: fix internal phy compatible
+  arm64: dts: meson-axg: fix MHU compatible
+  arm64: dts: meson-g12a: fix reset controller compatible
+  arm64: dts: meson-g12a-x96-max: fix compatible
+  arm64: dts: meson-gxbb-nanopi-k2: add missing model
+  arm64: dts: meson-gxbb-p201: fix snps,reset-delays-us format
+  arm64: dts: meson: fix boards regulators states format
+
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  6 +++---
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  7 +++----
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     | 19 +++++++++----------
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |  1 +
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++--
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  |  4 ++--
+ .../boot/dts/amlogic/meson-gxbb-p201.dts      |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  4 ++--
+ .../meson-gxl-s905x-hwacom-amazetv.dts        |  4 ++--
+ .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  5 +----
+ 13 files changed, 31 insertions(+), 35 deletions(-)
+
+-- 
+2.22.0
