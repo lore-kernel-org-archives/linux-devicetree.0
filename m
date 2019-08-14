@@ -1,7 +1,7 @@
 From: Michael Kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/4] arm64: dts: mt8183: Add #cooling-cells to CPU nodes
-Date: Wed, 14 Aug 2019 18:06:48 +0800
-Message-ID: <1565777209-21869-4-git-send-email-michael.kao@mediatek.com>
+Subject: [PATCH 1/4] arm64: dts: mt8183: add thermal zone node
+Date: Wed, 14 Aug 2019 18:06:46 +0800
+Message-ID: <1565777209-21869-2-git-send-email-michael.kao@mediatek.com>
 References: <1565777209-21869-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,89 +23,97 @@ List-Id: devicetree@vger.kernel.org
 
 From: "michael.kao" <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-The #cooling-cells property needs to be specified to allow a CPU
-to be used as cooling device.
+Add thermal zone node to Mediatek MT8183 dts file.
 
-Signed-off-by: michael.kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Michael Kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 67 ++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 9de706a..bc42b82 100644
+index c2749c4..47bde49 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include "mt8183-pinfunc.h"
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	compatible = "mediatek,mt8183";
-@@ -59,6 +60,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <741>;
- 			dynamic-power-coefficient = <84>;
-+			#cooling-cells = <2>;
+@@ -372,6 +372,70 @@
+ 			status = "disabled";
  		};
  
- 		cpu1: cpu@1 {
-@@ -68,6 +70,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <741>;
- 			dynamic-power-coefficient = <84>;
-+			#cooling-cells = <2>;
++		thermal: thermal@1100b000 {
++			#thermal-sensor-cells = <1>;
++			compatible = "mediatek,mt8183-thermal";
++			reg = <0 0x1100b000 0 0x1000>;
++			interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&infracfg CLK_INFRA_THERM>,
++				 <&infracfg CLK_INFRA_AUXADC>;
++			clock-names = "therm", "auxadc";
++			resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
++			mediatek,auxadc = <&auxadc>;
++			mediatek,apmixedsys = <&apmixedsys>;
++			mediatek,hw-reset-temp = <117000>;
++			nvmem-cells = <&thermal_calibration>;
++			nvmem-cell-names = "calibration-data";
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu_thermal {
++				polling-delay-passive = <100>;
++				polling-delay = <500>;
++				thermal-sensors = <&thermal 0>;
++				sustainable-power = <4500>;
++			};
++
++			/* The tzts1 ~ tzts6 don't need to polling */
++			/* The tzts1 ~ tzts6 don't need to thermal throttle */
++
++			tzts1: tzts1 {
++				polling-delay-passive = <0>;
++				polling-delay = <0>;
++				thermal-sensors = <&thermal 1>;
++			};
++
++			tzts2: tzts2 {
++				polling-delay-passive = <0>;
++				polling-delay = <0>;
++				thermal-sensors = <&thermal 2>;
++			};
++
++			tzts3: tzts3 {
++				polling-delay-passive = <0>;
++				polling-delay = <0>;
++				thermal-sensors = <&thermal 3>;
++			};
++
++			tzts4: tzts4 {
++				polling-delay-passive = <0>;
++				polling-delay = <0>;
++				thermal-sensors = <&thermal 4>;
++			};
++
++			tzts5: tzts5 {
++				polling-delay-passive = <0>;
++				polling-delay = <0>;
++				thermal-sensors = <&thermal 5>;
++			};
++
++			tztsABB: tztsABB {
++				polling-delay-passive = <0>;
++				polling-delay = <0>;
++				thermal-sensors = <&thermal 6>;
++			};
++		};
++
+ 		audiosys: syscon@11220000 {
+ 			compatible = "mediatek,mt8183-audiosys", "syscon";
+ 			reg = <0 0x11220000 0 0x1000>;
+@@ -382,6 +446,9 @@
+ 			compatible = "mediatek,mt8183-efuse",
+ 				     "mediatek,efuse";
+ 			reg = <0 0x11f10000 0 0x1000>;
++			thermal_calibration: calib@180 {
++				reg = <0x180 0xc>;
++			};
  		};
  
- 		cpu2: cpu@2 {
-@@ -77,6 +80,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <741>;
- 			dynamic-power-coefficient = <84>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -86,6 +90,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <741>;
- 			dynamic-power-coefficient = <84>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu4: cpu@100 {
-@@ -95,6 +100,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <211>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -104,6 +110,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <211>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu6: cpu@102 {
-@@ -113,6 +120,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <211>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu7: cpu@103 {
-@@ -122,6 +130,7 @@
- 			enable-method = "psci";
- 			capacity-dmips-mhz = <1024>;
- 			dynamic-power-coefficient = <211>;
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
+ 		mfgcfg: syscon@13000000 {
 -- 
 1.9.1
