@@ -1,336 +1,420 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
-Date: Wed, 14 Aug 2019 17:03:04 +0200
-Message-ID: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
-References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
- <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH 2/2] interconnect: qcom: Add OSM L3 interconnect provider
+ support
+Date: Wed, 14 Aug 2019 09:21:16 -0600
+Message-ID: <20190814152116.GB28465@jcrouse1-lnx.qualcomm.com>
+References: <20190807112432.26521-1-sibis@codeaurora.org>
+ <20190807112432.26521-3-sibis@codeaurora.org>
+ <CAGETcx8JgigJpRgjXsG+xChLUPrASRO7BapkYaSrvvTdQKfEuQ@mail.gmail.com>
+ <9ea6ab4c-6357-653b-f91c-9b649205f0ab@codeaurora.org>
+ <CAGETcx-+h0MOfSsR2Kf3kE4+8rDhnjBr_fRH5U0URgJPDQCyzQ@mail.gmail.com>
+ <fdd87f381f3d7d179ff07aedeeec1385@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+In-Reply-To: <fdd87f381f3d7d179ff07aedeeec1385@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, vincent.guittot@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Evan Green <evgreen@chromium.org>, David Dai <daidavid1@codeaurora.org>, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
-> This patch adds the Spreadtrum PWM support, which provides maximum 4
-> channels.
+On Wed, Aug 14, 2019 at 05:00:49PM +0530, Sibi Sankar wrote:
+> On 2019-08-14 06:13, Saravana Kannan wrote:
+> >On Thu, Aug 8, 2019 at 10:37 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+> >>
+> >>Hey Saravana,
+> >>
+> >>Thanks for the review!
+> >>
+> >>On 8/8/19 2:51 AM, Saravana Kannan wrote:
+> >>> On Wed, Aug 7, 2019 at 4:24 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+> >>>>
+> >>>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
+> >>>> resources of scaling L3 caches. Add a driver to handle bandwidth
+> >>>> requests to OSM L3 from CPU/GPU.
+> >>>>
+> >>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> >>>> ---
+> >>>>   drivers/interconnect/qcom/Kconfig  |   7 +
+> >>>>   drivers/interconnect/qcom/Makefile |   2 +
+> >>>>   drivers/interconnect/qcom/osm-l3.c | 292 +++++++++++++++++++++++++++++
+> >>>>   3 files changed, 301 insertions(+)
+> >>>>   create mode 100644 drivers/interconnect/qcom/osm-l3.c
+> >>>>
+> >>>> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> >>>> index d5e70ebc24108..f6c2a11a1a2c9 100644
+> >>>> --- a/drivers/interconnect/qcom/Kconfig
+> >>>> +++ b/drivers/interconnect/qcom/Kconfig
+> >>>> @@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
+> >>>>          help
+> >>>>            Support for Qualcomm's Network-on-Chip interconnect hardware.
+> >>>>
+> >>>> +config INTERCONNECT_QCOM_OSM_L3
+> >>>> +       tristate "Qualcomm OSM L3 interconnect driver"
+> >>>> +       depends on INTERCONNECT_QCOM || COMPILE_TEST
+> >>>> +       help
+> >>>> +         Say y here to support the Operating State Manager (OSM) interconnect
+> >>>> +         driver which controls the scaling of L3 caches on Qualcomm SoCs.
+> >>>> +
+> >>>>   config INTERCONNECT_QCOM_SDM845
+> >>>>          tristate "Qualcomm SDM845 interconnect driver"
+> >>>>          depends on INTERCONNECT_QCOM
+> >>>> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> >>>> index 1c1cea690f922..9078af5fed109 100644
+> >>>> --- a/drivers/interconnect/qcom/Makefile
+> >>>> +++ b/drivers/interconnect/qcom/Makefile
+> >>>> @@ -1,5 +1,7 @@
+> >>>>   # SPDX-License-Identifier: GPL-2.0
+> >>>>
+> >>>> +icc-osm-l3-objs                                := osm-l3.o
+> >>>>   qnoc-sdm845-objs                       := sdm845.o
+> >>>>
+> >>>> +obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
+> >>>>   obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+> >>>> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+> >>>> new file mode 100644
+> >>>> index 0000000000000..1e7dfce6f4f9b
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/interconnect/qcom/osm-l3.c
+> >>>> @@ -0,0 +1,292 @@
+> >>>> +// SPDX-License-Identifier: GPL-2.0
+> >>>> +/*
+> >>>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> >>>> + *
+> >>>> + */
+> >>>> +
+> >>>> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
+> >>>> +#include <dt-bindings/interconnect/qcom,sdm845.h>
+> >>>> +#include <linux/bitfield.h>
+> >>>> +#include <linux/clk.h>
+> >>>> +#include <linux/interconnect-provider.h>
+> >>>> +#include <linux/io.h>
+> >>>> +#include <linux/kernel.h>
+> >>>> +#include <linux/module.h>
+> >>>> +#include <linux/of_device.h>
+> >>>> +#include <linux/of_platform.h>
+> >>>> +#include <linux/platform_device.h>
+> >>>> +
+> >>>> +#define LUT_MAX_ENTRIES                        40U
+> >>>> +#define LUT_SRC                                GENMASK(31, 30)
+> >>>> +#define LUT_L_VAL                      GENMASK(7, 0)
+> >>>> +#define LUT_ROW_SIZE                   32
+> >>>> +#define CLK_HW_DIV                     2
+> >>>> +
+> >>>> +/* Register offsets */
+> >>>> +#define REG_ENABLE                     0x0
+> >>>> +#define REG_FREQ_LUT                   0x110
+> >>>> +#define REG_PERF_STATE                 0x920
+> >>>> +
+> >>>> +#define OSM_L3_MAX_LINKS               1
+> >>>> +
+> >>>> +#define to_qcom_provider(_provider) \
+> >>>> +       container_of(_provider, struct qcom_icc_provider, provider)
+> >>>> +
+> >>>> +enum {
+> >>>> +       SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
+> >>>> +       SDM845_MASTER_OSM_L3_GPU,
+> >>>> +       SDM845_SLAVE_OSM_L3,
+> >>>> +};
+> >>>> +
+> >>>> +struct qcom_icc_provider {
+> >>>> +       void __iomem *base;
+> >>>> +       unsigned int max_state;
+> >>>> +       unsigned long lut_tables[LUT_MAX_ENTRIES];
+> >>>> +       struct icc_provider provider;
+> >>>> +};
+> >>>> +
+> >>>> +/**
+> >>>> + * struct qcom_icc_node - Qualcomm specific interconnect nodes
+> >>>> + * @name: the node name used in debugfs
+> >>>> + * @links: an array of nodes where we can go next while traversing
+> >>>> + * @id: a unique node identifier
+> >>>> + * @num_links: the total number of @links
+> >>>> + * @buswidth: width of the interconnect between a node and the bus
+> >>>> + */
+> >>>> +struct qcom_icc_node {
+> >>>> +       const char *name;
+> >>>> +       u16 links[OSM_L3_MAX_LINKS];
+> >>>> +       u16 id;
+> >>>> +       u16 num_links;
+> >>>> +       u16 buswidth;
+> >>>> +};
+> >>>> +
+> >>>> +struct qcom_icc_desc {
+> >>>> +       struct qcom_icc_node **nodes;
+> >>>> +       size_t num_nodes;
+> >>>> +};
+> >>>> +
+> >>>> +#define DEFINE_QNODE(_name, _id, _buswidth, ...)                       \
+> >>>> +               static struct qcom_icc_node _name = {                   \
+> >>>> +               .name = #_name,                                         \
+> >>>> +               .id = _id,                                              \
+> >>>> +               .buswidth = _buswidth,                                  \
+> >>>> +               .num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),      \
+> >>>> +               .links = { __VA_ARGS__ },                               \
+> >>>> +       }
+> >>>> +
+> >>>> +DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
+> >>>> +DEFINE_QNODE(osm_gpu_l3, SDM845_MASTER_OSM_L3_GPU, 16, SDM845_SLAVE_OSM_L3);
+> >>>> +DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
+> >>>> +
+> >>>> +static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
+> >>>> +       [MASTER_OSM_L3_APPS] = &osm_apps_l3,
+> >>>> +       [MASTER_OSM_L3_GPU] = &osm_gpu_l3,
+> >>>> +       [SLAVE_OSM_L3] = &osm_l3,
+> >>>> +};
+> >>>> +
+> >>>> +static struct qcom_icc_desc sdm845_osm_l3 = {
+> >>>> +       .nodes = sdm845_osm_l3_nodes,
+> >>>> +       .num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
+> >>>> +};
+> >>>> +
+> >>>> +static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
+> >>>> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> >>>> +{
+> >>>> +       *agg_avg += avg_bw;
+> >>>> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
+> >>>> +
+> >>>> +       return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+> >>>> +{
+> >>>> +       struct icc_provider *provider;
+> >>>> +       struct qcom_icc_provider *qp;
+> >>>> +       struct qcom_icc_node *qn;
+> >>>> +       struct icc_node *n;
+> >>>> +       unsigned int index;
+> >>>> +       u32 agg_peak = 0;
+> >>>> +       u32 agg_avg = 0;
+> >>>> +       u64 rate;
+> >>>> +
+> >>>> +       qn = src->data;
+> >>>> +       provider = src->provider;
+> >>>> +       qp = to_qcom_provider(provider);
+> >>>> +
+> >>>> +       list_for_each_entry(n, &provider->nodes, node_list)
+> >>>> +               qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
+> >>>> +                                  &agg_avg, &agg_peak);
+> >>>> +
+> >>>> +       rate = max(agg_avg, agg_peak);
+> >>>> +       rate = icc_units_to_bps(rate);
+> >>>> +       do_div(rate, qn->buswidth);
+> >>>> +
+> >>>> +       for (index = 0; index < qp->max_state; index++) {
+> >>>> +               if (qp->lut_tables[index] >= rate)
+> >>>> +                       break;
+> >>>> +       }
+> >>>> +
+> >>>> +       writel_relaxed(index, qp->base + REG_PERF_STATE);
+> >>>> +
+> >>>> +       return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int qcom_osm_l3_probe(struct platform_device *pdev)
+> >>>> +{
+> >>>> +       u32 info, src, lval, i, prev_freq = 0, freq;
+> >>>> +       static unsigned long hw_rate, xo_rate;
+> >>>> +       const struct qcom_icc_desc *desc;
+> >>>> +       struct icc_onecell_data *data;
+> >>>> +       struct icc_provider *provider;
+> >>>> +       struct qcom_icc_node **qnodes;
+> >>>> +       struct qcom_icc_provider *qp;
+> >>>> +       struct icc_node *node;
+> >>>> +       size_t num_nodes;
+> >>>> +       struct clk *clk;
+> >>>> +       int ret;
+> >>>> +
+> >>>> +       clk = clk_get(&pdev->dev, "xo");
+> >>>> +       if (IS_ERR(clk))
+> >>>> +               return PTR_ERR(clk);
+> >>>> +
+> >>>> +       xo_rate = clk_get_rate(clk);
+> >>>> +       clk_put(clk);
+> >>>> +
+> >>>> +       clk = clk_get(&pdev->dev, "alternate");
+> >>>> +       if (IS_ERR(clk))
+> >>>> +               return PTR_ERR(clk);
+> >>>> +
+> >>>> +       hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
+> >>>> +       clk_put(clk);
+> >>>> +
+> >>>> +       qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
+> >>>> +       if (!qp)
+> >>>> +               return -ENOMEM;
+> >>>> +
+> >>>> +       qp->base = devm_platform_ioremap_resource(pdev, 0);
+> >>>> +       if (IS_ERR(qp->base))
+> >>>> +               return PTR_ERR(qp->base);
+> >>>> +
+> >>>> +       /* HW should be in enabled state to proceed */
+> >>>> +       if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
+> >>>> +               dev_err(&pdev->dev, "error hardware not enabled\n");
+> >>>> +               return -ENODEV;
+> >>>> +       }
+> >>>> +
+> >>>> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> >>>> +               info = readl_relaxed(qp->base + REG_FREQ_LUT +
+> >>>> +                                    i * LUT_ROW_SIZE);
+> >>>> +               src = FIELD_GET(LUT_SRC, info);
+> >>>> +               lval = FIELD_GET(LUT_L_VAL, info);
+> >>>> +               if (src)
+> >>>> +                       freq = xo_rate * lval;
+> >>>> +               else
+> >>>> +                       freq = hw_rate;
+> >>>> +
+> >>>> +               /*
+> >>>> +                * Two of the same frequencies with the same core counts means
+> >>>> +                * end of table
+> >>>> +                */
+> >>>> +               if (i > 0 && prev_freq == freq)
+> >>>> +                       break;
+> >>>> +
+> >>>> +               qp->lut_tables[i] = freq;
+> >>>> +               prev_freq = freq;
+> >>>> +       }
+> >>>> +       qp->max_state = i;
+> >>>> +
+> >>>> +       desc = of_device_get_match_data(&pdev->dev);
+> >>>> +       if (!desc)
+> >>>> +               return -EINVAL;
+> >>>> +
+> >>>> +       qnodes = desc->nodes;
+> >>>> +       num_nodes = desc->num_nodes;
+> >>>> +
+> >>>> +       data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
+> >>>> +       if (!data)
+> >>>> +               return -ENOMEM;
+> >>>> +
+> >>>> +       provider = &qp->provider;
+> >>>> +       provider->dev = &pdev->dev;
+> >>>> +       provider->set = qcom_icc_set;
+> >>>> +       provider->aggregate = qcom_icc_aggregate;
+> >>>> +       provider->xlate = of_icc_xlate_onecell;
+> >>>> +       INIT_LIST_HEAD(&provider->nodes);
+> >>>> +       provider->data = data;
+> >>>> +
+> >>>> +       ret = icc_provider_add(provider);
+> >>>> +       if (ret) {
+> >>>> +               dev_err(&pdev->dev, "error adding interconnect provider\n");
+> >>>> +               return ret;
+> >>>> +       }
+> >>>> +
+> >>>> +       for (i = 0; i < num_nodes; i++) {
+> >>>> +               size_t j;
+> >>>> +
+> >>>> +               node = icc_node_create(qnodes[i]->id);
+> >>>> +               if (IS_ERR(node)) {
+> >>>> +                       ret = PTR_ERR(node);
+> >>>> +                       goto err;
+> >>>> +               }
+> >>>> +
+> >>>> +               node->name = qnodes[i]->name;
+> >>>> +               node->data = qnodes[i];
+> >>>> +               icc_node_add(node, provider);
+> >>>> +
+> >>>> +               dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
+> >>>> +                       qnodes[i]->name, node->id);
+> >>>> +
+> >>>> +               /* populate links */
+> >>>> +               for (j = 0; j < qnodes[i]->num_links; j++)
+> >>>> +                       icc_link_create(node, qnodes[i]->links[j]);
+> >>>> +
+> >>>> +               data->nodes[i] = node;
+> >>>> +       }
+> >>>> +       data->num_nodes = num_nodes;
+> >>>> +
+> >>>> +       platform_set_drvdata(pdev, qp);
+> >>>> +
+> >>>> +       return ret;
+> >>>> +err:
+> >>>> +       list_for_each_entry(node, &provider->nodes, node_list) {
+> >>>> +               icc_node_del(node);
+> >>>> +               icc_node_destroy(node->id);
+> >>>> +       }
+> >>>> +
+> >>>> +       icc_provider_del(provider);
+> >>>> +       return ret;
+> >>>> +}
+> >>>> +
+> >>>> +static int qcom_osm_l3_remove(struct platform_device *pdev)
+> >>>> +{
+> >>>> +       struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
+> >>>> +       struct icc_provider *provider = &qp->provider;
+> >>>> +       struct icc_node *n;
+> >>>> +
+> >>>> +       list_for_each_entry(n, &provider->nodes, node_list) {
+> >>>> +               icc_node_del(n);
+> >>>> +               icc_node_destroy(n->id);
+> >>>> +       }
+> >>>> +
+> >>>> +       return icc_provider_del(provider);
+> >>>> +}
+> >>>> +
+> >>>> +static const struct of_device_id osm_l3_of_match[] = {
+> >>>> +       { .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
+> >>>> +       { },
+> >>>> +};
+> >>>> +MODULE_DEVICE_TABLE(of, osm_l3_of_match);
+> >>>> +
+> >>>> +static struct platform_driver osm_l3_driver = {
+> >>>> +       .probe = qcom_osm_l3_probe,
+> >>>> +       .remove = qcom_osm_l3_remove,
+> >>>> +       .driver = {
+> >>>> +               .name = "osm-l3",
+> >>>> +               .of_match_table = osm_l3_of_match,
+> >>>> +       },
+> >>>> +};
+> >>>> +module_platform_driver(osm_l3_driver);
+> >>>> +
+> >>>> +MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
+> >>>> +MODULE_LICENSE("GPL v2");
+> >>>
+> >>> Did a quick scan of the code and it's not clear how you connect the L3
+> >>> interconnect provider to the rest of the interconnect. I don't see any
+> >>> DT or code references to the rest of the interconnects in the system.
+> >>> If GPU is making a bandwidth request all the way to L3, how do you
+> >>> make sure the interconnects between GPU and L3 also scale up properly.
+> >>
+> >>For SDM845 OSM L3 provider the icc nodes endpoints are isolated from
+> >>rsc icc node endpoints i.e GPU would need to vote on this path in
+> >>addition to voting for DDR. On future SoCs if the need to scale
+> >>interconnect between GPU rsc nodes along with the OSM l3 nodes arises,
+> >>it can be trivially extended by linking the osm icc nodes with global
+> >>icc node ids of the gpu rsc nodes.
+> >
+> >Sorry, I'm not sure we are talking about the same thing. To keep the
+> >discussion focused, let's completely ignore GPU's DDR needs for now.
+> >
+> >Talking about GPU <-> L3 traffic, unless the GPU is directly connected
+> >to the L3 with no additional interconnects in between (unlikely), this
+> >L3 provider need to connect the L3 icc node with the rest of the
+> >interconnect nodes. Otherwise, even if the L3 itself is provisioned to
+> >handle, say 10 GB/s, the interconnects connecting the GPU to L3 might
+> >be left at 1 GB/s.
+> >
+> >So, can we please connect this node to the rest of the interconnect
+> >nodes in SDM845?
 > 
-> Signed-off-by: Neo Hou <neo.hou@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v2:
->  - Optimize some macors' name.
->  - Improve some comments.
->  - Optimize the calculation of prescale.
->  - Do not print error log if error numeber is EPROBE_DEFER.
->  - Return -ENODEV if no available PWM channels.
->  - Simplify the logics in sprd_pwm_clk_init().
->  - Remove disabling PWM clocks in sprd_pwm_remove().
->  - Remove pwm_get_state().
+> Sure I'll double check if GPU has a l3
+> scaling requirement on SDM845 SoCs and
+> drop/link it to the rsc nodes appropriately.
+
+GPU doesn't use I/O coherency at the moment and I don't think we would need an
+independent connection if we did.
+
+Jordan
+
+> >
+> >Thanks,
+> >Saravana
 > 
-> Changes from v1:
->  - Add depending on HAS_IOMEM.
->  - Rename parameters' names.
->  - Implement .apply() instead of .config(), .enable() and .disable().
->  - Use NSEC_PER_SEC instead of 1000000000ULL.
->  - Add some comments to make code more readable.
->  - Remove some redundant operation.
->  - Use standard clock properties to set clock parent.
->  - Other coding style optimization.
-> ---
->  drivers/pwm/Kconfig    |   11 ++
->  drivers/pwm/Makefile   |    1 +
->  drivers/pwm/pwm-sprd.c |  309 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 321 insertions(+)
->  create mode 100644 drivers/pwm/pwm-sprd.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index a7e5751..31dfc88 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -423,6 +423,17 @@ config PWM_SPEAR
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-spear.
->  
-> +config PWM_SPRD
-> +	tristate "Spreadtrum PWM support"
-> +	depends on ARCH_SPRD || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	help
-> +	  Generic PWM framework driver for the PWM controller on
-> +	  Spreadtrum SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-sprd.
-> +
->  config PWM_STI
->  	tristate "STiH4xx PWM support"
->  	depends on ARCH_STI
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 76b555b..26326ad 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
->  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
->  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
->  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
-> +obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
->  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
->  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
->  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> new file mode 100644
-> index 0000000..68c2d9f
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -0,0 +1,309 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Spreadtrum Communications Inc.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/math64.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +
-> +#define SPRD_PWM_PRESCALE	0x0
-> +#define SPRD_PWM_MOD		0x4
-> +#define SPRD_PWM_DUTY		0x8
-> +#define SPRD_PWM_ENABLE		0x18
-> +
-> +#define SPRD_PWM_MOD_MAX	GENMASK(7, 0)
-> +#define SPRD_PWM_DUTY_MSK	GENMASK(15, 0)
-> +#define SPRD_PWM_PRESCALE_MSK	GENMASK(7, 0)
-> +#define SPRD_PWM_ENABLE_BIT	BIT(0)
-> +
-> +#define SPRD_PWM_CHN_NUM	4
-> +#define SPRD_PWM_REGS_SHIFT	5
-> +#define SPRD_PWM_CHN_CLKS_NUM	2
-> +#define SPRD_PWM_CHN_OUTPUT_CLK	1
-> +
-> +struct sprd_pwm_chn {
-> +	struct clk_bulk_data clks[SPRD_PWM_CHN_CLKS_NUM];
-> +	u32 clk_rate;
-> +};
-> +
-> +struct sprd_pwm_chip {
-> +	void __iomem *base;
-> +	struct device *dev;
-> +	struct pwm_chip chip;
-> +	int num_pwms;
-> +	struct sprd_pwm_chn chn[SPRD_PWM_CHN_NUM];
-> +};
-> +
-> +/*
-> + * The list of clocks required by PWM channels, and each channel has 2 clocks:
-> + * enable clock and pwm clock.
-> + */
-> +static const char * const sprd_pwm_clks[] = {
-> +	"enable0", "pwm0",
-> +	"enable1", "pwm1",
-> +	"enable2", "pwm2",
-> +	"enable3", "pwm3",
-> +};
-> +
-> +static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32 hwid, u32 reg)
-> +{
-> +	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
-> +
-> +	return readl_relaxed(spc->base + offset);
-> +}
-> +
-> +static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
-> +			   u32 reg, u32 val)
-> +{
-> +	u32 offset = reg + (hwid << SPRD_PWM_REGS_SHIFT);
-> +
-> +	writel_relaxed(val, spc->base + offset);
-> +}
-> +
-> +static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			       struct pwm_state *state)
-> +{
-> +	struct sprd_pwm_chip *spc =
-> +		container_of(chip, struct sprd_pwm_chip, chip);
-> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> +	u32 val, duty, prescale;
-> +	u64 tmp;
-> +	int ret;
-> +
-> +	/*
-> +	 * The clocks to PWM channel has to be enabled first before
-> +	 * reading to the registers.
-> +	 */
-> +	ret = clk_bulk_prepare_enable(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
-> +	if (ret) {
-> +		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
-> +			pwm->hwpwm);
-> +		return;
-> +	}
-> +
-> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE);
-> +	if (val & SPRD_PWM_ENABLE_BIT)
-> +		state->enabled = true;
-> +	else
-> +		state->enabled = false;
-> +
-> +	/*
-> +	 * The hardware provides a counter that is feed by the source clock.
-> +	 * The period length is (PRESCALE + 1) * MOD counter steps.
-> +	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-> +	 * Thus the period_ns and duty_ns calculation formula should be:
-> +	 * period_ns = NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
-> +	 * duty_ns = NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
-> +	 */
-> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
-> +	prescale = val & SPRD_PWM_PRESCALE_MSK;
-> +	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
-> +	state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-> +
-> +	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
-> +	duty = val & SPRD_PWM_DUTY_MSK;
-> +	tmp = (prescale + 1) * NSEC_PER_SEC * duty;
-> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
-> +
-> +	/* Disable PWM clocks if the PWM channel is not in enable state. */
-> +	if (!state->enabled)
-> +		clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
-> +}
-> +
-> +static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
-> +			   int duty_ns, int period_ns)
-> +{
-> +	struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
-> +	u32 prescale, duty;
-> +	u64 tmp;
-> +
-> +	/*
-> +	 * The hardware provides a counter that is feed by the source clock.
-> +	 * The period length is (PRESCALE + 1) * MOD counter steps.
-> +	 * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
-> +	 *
-> +	 * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
-
-Did you spend some thoughts about how wrong your period can get because
-of that "lazyness"?
-
-Let's assume a clk rate of 100/3 MHz. Then the available period lengths
-are:
-
-	PRESCALE =  0  ->  period =   7.65 µs
-	PRESCALE =  1  ->  period =  15.30 µs
-	...
-	PRESCALE = 17  ->  period = 137.70 µs
-	PRESCALE = 18  ->  period = 145.35 µs
-
-So the error can be up to (nearly) 7.65 µs (or in general 
-255 / clk_rate) because if 145.34 µs is requested you configure
-PRESCALE = 17 and so yield a period of 137.70 µs. If however you'd pick
-PRESCALE = 18 and MOD = 254 you get a period of 144.78 µs and so the
-error is only 0.56 µs which is a factor of 13 better.
-
-Hmm.
-
-> +	 * The value for PRESCALE is selected such that the resulting period
-> +	 * gets the maximal length not bigger than the requested one with the
-> +	 * given settings (MOD = SPRD_PWM_MOD_MAX and input clock).
-> +	 */
-> +	duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
-
-I wonder if you loose some precision here as you use period_ns but might
-actually implement a shorter period.
-
-Quick example, again consider clk_rate = 100 / 3 MHz,
-period_ns = 145340, duty_ns = 72670. Then you end up with
-
-	PRESCALE = 17
-	MOD = 255
-	DUTY = 127
-
-That corresponds to period_ns = 137700, duty_ns = 68580. With DUTY = 134
-you get 72360 ns which is still smaller than the requested 72670 ns.
-(But then again it is not obvious which of the two is the "better"
-approximation because Thierry doesn't seem to see the necessity to
-discuss or define a policy here.)
-
-(And to pick up the thoughts about not using SPRD_PWM_MOD_MAX
-unconditionally, you could also use
-
-	PRESCALE = 18
-	MOD = 254
-	DUTY = 127
-
-yielding period_ns = 144780 and duty_ns = 72390. Summary:
-
-	Request:                 72670 / 145340
-	your result:             68580 / 137700
-	also possible:           72390 / 144780
-
-Judge yourself.)
-
-> +	tmp = (u64)chn->clk_rate * period_ns;
-> +	do_div(tmp, NSEC_PER_SEC);
-> +	prescale = DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
-
-Now that you use DIV_ROUND_CLOSEST_ULL the comment is wrong because you
-might provide a period bigger than the requested one. Also you divide
-twice instead of once before. (I don't know what architecture your SoC
-uses, but compared to a multiplication a division is usually expensive.)
-Also the math is more complicated now as you have a round-down div and a
-round-closest div.
-
-My preference for how to fix that is to restore the behaviour of v2 that
-matches the comment and adapt .get_state() instead.
-
-For .get_state() this should then be:
-
-	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
-	prescale = FIELD_GET(SPRD_PWM_PRESCALE_MSK, val);
-
-	tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
-	state->period = DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
-
-> +	if (prescale > SPRD_PWM_PRESCALE_MSK)
-> +		prescale = SPRD_PWM_PRESCALE_MSK;
-> +
-> +	/*
-> +	 * Note: Writing DUTY triggers the hardware to actually apply the
-> +	 * values written to MOD and DUTY to the output, so must keep writing
-> +	 * DUTY last.
-> +	 *
-> +	 * The hardware can ensures that current running period is completed
-> +	 * before changing a new configuration to avoid mixed settings.
-
-I'm not a native English speaker, but I would write:
-
-	* The hardware ensures that currently running period is
-	* completed before changing to the new configuration to avoid
-	* mixed settings.
-
-Does this mechanism also apply to PRESCALE? If yes, please include it in
-your description. If not there is still a possibility for a wrong
-period.
-
-> +	 */
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
-> +	sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
-> +
-> +	return 0;
-> +}
-
-Best regards
-Uwe
+> -- 
+> -- Sibi Sankar --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
