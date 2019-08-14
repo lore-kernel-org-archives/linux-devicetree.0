@@ -1,204 +1,54 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 09/13] dt-bindings: arm: Convert BCM2835 board/soc
- bindings to json-schema
-Date: Wed, 14 Aug 2019 17:06:35 -0600
-Message-ID: <CAL_Jsq+=0Jvz+xx8sn9v_Q-WYCn5fACBhwSGORcMNXXxocCkpQ@mail.gmail.com>
-References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
- <1565713248-4906-10-git-send-email-wahrenst@gmx.net>
- <CAL_Jsq+01vXQpf_ZuAvetWvcGLhK4EiiB1qFqhRkM3PQWAzdsA@mail.gmail.com>
- <f9acf678-854d-720d-3c84-d9a05766c02e@gmx.net>
+Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
+Date: Wed, 14 Aug 2019 17:41:19 -0600
+Message-ID: <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
+References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
+ <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com> <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f9acf678-854d-720d-3c84-d9a05766c02e@gmx.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@kernel.org>, Ray Jui <rjui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Eric Anholt <eric@anholt.net>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Linux I2C <linux-i2c@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Android Kernel Team <kernel-team@android.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 1:21 PM Stefan Wahren <wahrenst@gmx.net> wrote:
+On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> Hi Rob,
->
-> Am 13.08.19 um 19:22 schrieb Rob Herring:
-> > On Tue, Aug 13, 2019 at 10:21 AM Stefan Wahren <wahrenst@gmx.net> wrote:
-> >> Convert the BCM2835/6/7 SoC bindings to DT schema format using json-schema.
-> >> All the other Broadcom boards are maintained by Florian Fainelli.
-> >>
-> >> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> >> Acked-by: Eric Anholt <eric@anholt.net>
-> >> ---
-> >>  .../devicetree/bindings/arm/bcm/bcm2835.yaml       | 46 +++++++++++++++
-> >>  .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   | 67 ----------------------
-> >>  2 files changed, 46 insertions(+), 67 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-> >>  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-> >> new file mode 100644
-> >> index 0000000..1a4be26
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-> >> @@ -0,0 +1,46 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/arm/bcm/bcm2835.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Broadcom BCM2711/BCM2835 Platforms Device Tree Bindings
-> >> +
-> >> +maintainers:
-> >> +  - Eric Anholt <eric@anholt.net>
-> >> +  - Stefan Wahren <wahrenst@gmx.net>
-> >> +
-> >> +properties:
-> >> +  $nodename:
-> >> +    const: '/'
-> >> +  compatible:
-> >> +    oneOf:
-> >> +      - description: BCM2835 based Boards
-> >> +        items:
-> >> +          - enum:
-> >> +              - raspberrypi,model-a
-> >> +              - raspberrypi,model-a-plus
-> >> +              - raspberrypi,model-b
-> >> +              - raspberrypi,model-b-i2c0  # Raspberry Pi Model B (no P5)
-> >> +              - raspberrypi,model-b-rev2
-> >> +              - raspberrypi,model-b-plus
-> >> +              - raspberrypi,compute-module
-> >> +              - raspberrypi,model-zero
-> >> +              - raspberrypi,model-zero-w
-> >> +          - const: brcm,bcm2835
-> >> +
-> >> +      - description: BCM2836 based Boards
-> >> +        items:
-> >> +          - enum:
-> >> +              - raspberrypi,2-model-b
-> > Don't you need brcm,bcm2836 here?
+> On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
 > >
-> >> +
-> >> +      - description: BCM2837 based Boards
-> >> +        items:
-> >> +          - enum:
-> >> +              - raspberrypi,3-model-a-plus
-> >> +              - raspberrypi,3-model-b
-> >> +              - raspberrypi,3-model-b-plus
-> >> +              - raspberrypi,3-compute-module
-> >> +              - raspberrypi,3-compute-module-lite
-> > Don't you need brcm,bcm2837 here?
+> > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > PowerPC platforms don't use the generic of/platform code to populate the
+> > > devices from DT.
 > >
-> > Please run 'dtbs_check' and make sure there aren't warnings (in the root node).
+> > Yes, they do.
 >
-> thanks, after addressing your comments the root node doesn't have
-> warnings anymore.
->
-> Beside that there a lot of other warnings:
->
->   DTC     arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml
->   CHECK   arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> arm-pmu: compatible: ['arm,cortex-a72-pmu', 'arm,armv8-pmuv3'] is too long
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> arm-pmu: compatible: Additional items are not allowed ('arm,armv8-pmuv3'
-> was unexpected)
->
-> I think the schema is a little bit too strict by prohibit a fallback
-> compatible.
+> No they don't. My wording could be better, but they don't use
+> of_platform_default_populate_init()
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
 
-IIRC, Will Deacon said there wasn't any point to fallbacks as every
-cpu has its own list of events. Or if we want a fallback, then add it
-to the schema.
+Right, but the rest of the of/platform code is used (guess where it
+got moved here from?).
 
+> > > Therefore the generic device linking code is never used
+> > > in PowerPC.  Compile it out to avoid warning about unused functions.
+> >
+> > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
+> > return' rather than #ifdefs.
 >
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> serial@7e201800: Additional properties are not allowed
-> ('arm,primecell-periphid' was unexpected)
->
-> In the old txt version this was an allowed property.
+> I'm just moving the existing ifndef some lines above. I don't want to
+> go change existing #ifndef in this patch. Maybe that should be a
+> separate patch series that goes and fixes all such code in drivers/of/
+> or driver/
 
-You really need an override? Haven't seen that in a while. We can drop
-'additionalProperties: false' in the pl011 schema.
+So the initcall was originally just supposed to call
+of_platform_default_populate(), but it's grown beyond that. That could
+make things fragile as it is possible for platforms to call
+of_platform_populate() (directly or indirectly) before
+of_platform_default_populate_init(). That was supposed to work, but
+now I think it's getting more fragile.
 
->
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> firmware: $nodename:0: 'firmware' does not match
-> '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> firmware: '#address-cells' is a required property
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> firmware: '#size-cells' is a required property
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> firmware: 'ranges' is a required property
->
-> I suggest to fix this by removing the "simple-bus".
-
-Probably. 'firmware' doesn't sound like a bus.
-
->
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> serial@7e201a00: Additional properties are not allowed
-> ('arm,primecell-periphid' was unexpected)
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> gpio@7e200000: 'pinctrl-0' is a dependency of 'pinctrl-names'
->
-> This could be fixed by removing pinctrl-names.
->
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> serial@7e201600: Additional properties are not allowed
-> ('arm,primecell-periphid' was unexpected)
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> gic400@40041000: $nodename:0: 'gic400@40041000' does not match
-> '^interrupt-controller(@[0-9a-f,]+)*$'
->
-> I will rename gic400 to interrupt-controller.
->
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> serial@7e201400: Additional properties are not allowed
-> ('arm,primecell-periphid' was unexpected)
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> serial@7e201000: compatible: ['brcm,bcm2835-pl011', 'arm,pl011',
-> 'arm,primecell'] is not valid under any of the given schemas
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> serial@7e201000: Additional properties are not allowed ('bluetooth',
-> 'arm,primecell-periphid' were unexpected)
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> sd_io_1v8_reg: states:0: [1800000, 1, 3300000, 0] is too long
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> sd_io_1v8_reg: states:0: Additional items are not allowed (3300000, 0
-> were unexpected)
->
-> No idea what is wrong here
-
-The schema is stricter about <> groupings is my guess. Looks like this
-should be 2 entries with 2 cells each.
-
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml: clocks:
-> #size-cells:0:0: 0 is not one of [1, 2]
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml: clocks:
-> $nodename:0: 'clocks' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml: clocks:
-> clock@3:reg:0: [3] is too short
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml: clocks:
-> clock@4:reg:0: [4] is too short
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml: clocks:
-> 'ranges' is a required property
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> clock@3: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
-> /home/stefan/torvalds/arch/arm/boot/dts/bcm2711-rpi-4-b.dt.yaml:
-> clock@4: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
->
-> This could be fixed by avoiding a simple-bus for the fixed clocks.
-
-Right, they are not a bus.
+Anyways, I guess this patch is fine for now.
 
 Rob
