@@ -1,225 +1,86 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 14/15] drm/mxsfb: Add support for horizontal stride
-Date: Wed, 14 Aug 2019 13:48:50 +0300
-Message-ID: <1565779731-1300-15-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 03/15] drm/mxsfb: Add defines for the rest of registers
+Date: Wed, 14 Aug 2019 13:48:39 +0300
+Message-ID: <1565779731-1300-4-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Besides the eLCDIF block, there is another IP block, used in the past
-for EPDC panels. Since the iMX.8mq doesn't have an EPDC connector, this
-block is not documented, but we can use it to do additional operations
-on the frame buffer.
-In this case, we can use the pigeon registers from this IP block in
-order to do horizontal crop on the frame buffer processed by the eLCDIF
-block.
+Some of the existing registers in this controller are not defined, but
+also not used. Add them to the register definitions, so that they can be
+easily used in future improvements or fixes.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 79 ++++++++++++++++++++++++++++++++++++--
- drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 26 ++++++++++++-
- drivers/gpu/drm/mxsfb/mxsfb_regs.h | 16 ++++++++
- 3 files changed, 115 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index a12f53d..317575e 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -15,6 +15,7 @@
- 
- #include <video/videomode.h>
- 
-+#include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_fb_cma_helper.h>
-@@ -435,13 +436,66 @@ void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
- 	clk_disable_unprepare(mxsfb->clk_axi);
- }
- 
-+void mxsfb_set_fb_hcrop(struct mxsfb_drm_private *mxsfb, u32 src_w, u32 fb_w)
-+{
-+	u32 mask_cnt, htotal, hcount;
-+	u32 vdctrl2, vdctrl3, vdctrl4, transfer_count;
-+	u32 pigeon_12_0, pigeon_12_1, pigeon_12_2;
-+
-+	if (src_w == fb_w) {
-+		writel(0x0, mxsfb->base + HW_EPDC_PIGEON_12_0);
-+		writel(0x0, mxsfb->base + HW_EPDC_PIGEON_12_1);
-+
-+		return;
-+	}
-+
-+	transfer_count = readl(mxsfb->base + LCDC_V4_TRANSFER_COUNT);
-+	hcount = TRANSFER_COUNT_GET_HCOUNT(transfer_count);
-+
-+	transfer_count &= ~TRANSFER_COUNT_SET_HCOUNT(0xffff);
-+	transfer_count |= TRANSFER_COUNT_SET_HCOUNT(fb_w);
-+	writel(transfer_count, mxsfb->base + LCDC_V4_TRANSFER_COUNT);
-+
-+	vdctrl2 = readl(mxsfb->base + LCDC_VDCTRL2);
-+	htotal  = VDCTRL2_GET_HSYNC_PERIOD(vdctrl2);
-+	htotal  += fb_w - hcount;
-+	vdctrl2 &= ~VDCTRL2_SET_HSYNC_PERIOD(0x3ffff);
-+	vdctrl2 |= VDCTRL2_SET_HSYNC_PERIOD(htotal);
-+	writel(vdctrl2, mxsfb->base + LCDC_VDCTRL2);
-+
-+	vdctrl4 = readl(mxsfb->base + LCDC_VDCTRL4);
-+	vdctrl4 &= ~SET_DOTCLK_H_VALID_DATA_CNT(0x3ffff);
-+	vdctrl4 |= SET_DOTCLK_H_VALID_DATA_CNT(fb_w);
-+	writel(vdctrl4, mxsfb->base + LCDC_VDCTRL4);
-+
-+	/* configure related pigeon registers */
-+	vdctrl3  = readl(mxsfb->base + LCDC_VDCTRL3);
-+	mask_cnt = GET_HOR_WAIT_CNT(vdctrl3) - 5;
-+
-+	pigeon_12_0 = PIGEON_12_0_SET_STATE_MASK(0x24)		|
-+		      PIGEON_12_0_SET_MASK_CNT(mask_cnt)	|
-+		      PIGEON_12_0_SET_MASK_CNT_SEL(0x6)		|
-+		      PIGEON_12_0_POL_ACTIVE_LOW		|
-+		      PIGEON_12_0_EN;
-+	writel(pigeon_12_0, mxsfb->base + HW_EPDC_PIGEON_12_0);
-+
-+	pigeon_12_1 = PIGEON_12_1_SET_CLR_CNT(src_w) |
-+		      PIGEON_12_1_SET_SET_CNT(0x0);
-+	writel(pigeon_12_1, mxsfb->base + HW_EPDC_PIGEON_12_1);
-+
-+	pigeon_12_2 = 0x0;
-+	writel(pigeon_12_2, mxsfb->base + HW_EPDC_PIGEON_12_2);
-+}
-+
- void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
- 			       struct drm_plane_state *state)
- {
- 	struct drm_simple_display_pipe *pipe = &mxsfb->pipe;
- 	struct drm_crtc *crtc = &pipe->crtc;
-+	struct drm_plane_state *new_state = pipe->plane.state;
-+	struct drm_framebuffer *fb = pipe->plane.state->fb;
- 	struct drm_pending_vblank_event *event;
--	dma_addr_t paddr;
-+	u32 fb_addr, src_off, src_w, stride, cpp = 0;
- 
- 	spin_lock_irq(&crtc->dev->event_lock);
- 	event = crtc->state->event;
-@@ -456,10 +510,27 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
- 	}
- 	spin_unlock_irq(&crtc->dev->event_lock);
- 
--	paddr = mxsfb_get_fb_paddr(mxsfb);
--	if (paddr) {
-+	if (!fb)
-+		return;
-+
-+	fb_addr = mxsfb_get_fb_paddr(mxsfb);
-+	if (mxsfb->devdata->ipversion >= 4) {
-+		cpp = fb->format->cpp[0];
-+		src_off = (new_state->src_y >> 16) * fb->pitches[0] +
-+			  (new_state->src_x >> 16) * cpp;
-+		fb_addr += fb->offsets[0] + src_off;
-+	}
-+
-+	if (fb_addr) {
- 		clk_prepare_enable(mxsfb->clk_axi);
--		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
-+		writel(fb_addr, mxsfb->base + mxsfb->devdata->next_buf);
- 		clk_disable_unprepare(mxsfb->clk_axi);
- 	}
-+
-+	if (mxsfb->devdata->ipversion >= 4 &&
-+	    unlikely(drm_atomic_crtc_needs_modeset(new_state->crtc->state))) {
-+		stride = DIV_ROUND_UP(fb->pitches[0], cpp);
-+		src_w = new_state->src_w >> 16;
-+		mxsfb_set_fb_hcrop(mxsfb, src_w, stride);
-+	}
- }
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 694b287..cc9c14f 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -136,6 +136,7 @@ static int mxsfb_atomic_helper_check(struct drm_device *dev,
- 		if (old_bpp != new_bpp)
- 			new_state->mode_changed = true;
- 	}
-+
- 	return ret;
- }
- 
-@@ -149,6 +150,25 @@ static const struct drm_mode_config_helper_funcs mxsfb_mode_config_helpers = {
- 	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
- };
- 
-+static int mxsfb_pipe_check(struct drm_simple_display_pipe *pipe,
-+			    struct drm_plane_state *plane_state,
-+			    struct drm_crtc_state *crtc_state)
-+{
-+	struct drm_framebuffer *fb = plane_state->fb;
-+	struct drm_framebuffer *old_fb = pipe->plane.state->fb;
-+
-+	/* force 'mode_changed' when fb pitches changed, since
-+	 * the pitch related registers configuration of LCDIF
-+	 * can not be done when LCDIF is running.
-+	 */
-+	if (old_fb && likely(!crtc_state->mode_changed)) {
-+		if (old_fb->pitches[0] != fb->pitches[0])
-+			crtc_state->mode_changed = true;
-+	}
-+
-+	return 0;
-+}
-+
- static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
- 			      struct drm_crtc_state *crtc_state,
- 			      struct drm_plane_state *plane_state)
-@@ -245,6 +265,7 @@ static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
- }
- 
- static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
-+	.check          = mxsfb_pipe_check,
- 	.enable		= mxsfb_pipe_enable,
- 	.disable	= mxsfb_pipe_disable,
- 	.update		= mxsfb_pipe_update,
-@@ -348,8 +369,9 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 
- 	drm->mode_config.min_width	= MXSFB_MIN_XRES;
- 	drm->mode_config.min_height	= MXSFB_MIN_YRES;
--	drm->mode_config.max_width	= max_res[0];
--	drm->mode_config.max_height	= max_res[1];
-+	/* Add additional 16 pixels for possible strides */
-+	drm->mode_config.max_width	= max_res[0] + 16;
-+	drm->mode_config.max_height	= max_res[1] + 16;
- 	drm->mode_config.funcs		= &mxsfb_mode_config_funcs;
- 	drm->mode_config.helper_private	= &mxsfb_mode_config_helpers;
- 
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-index 0f63ba1..df3279b 100644
+index 932d7ea..71426aa 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-@@ -145,6 +145,22 @@
- #define DEBUG0_HSYNC			BIT(26)
- #define DEBUG0_VSYNC			BIT(25)
+@@ -14,19 +14,31 @@
  
-+/* pigeon registers for crop */
-+#define HW_EPDC_PIGEON_12_0		0xb00
-+#define HW_EPDC_PIGEON_12_1		0xb10
-+#define HW_EPDC_PIGEON_12_2		0xb20
+ #define LCDC_CTRL			0x00
+ #define LCDC_CTRL1			0x10
++#define LCDC_V4_CTRL2			0x20
+ #define LCDC_V3_TRANSFER_COUNT		0x20
+ #define LCDC_V4_TRANSFER_COUNT		0x30
+ #define LCDC_V4_CUR_BUF			0x40
+ #define LCDC_V4_NEXT_BUF		0x50
+ #define LCDC_V3_CUR_BUF			0x30
+ #define LCDC_V3_NEXT_BUF		0x40
++#define LCDC_TIMING			0x60
+ #define LCDC_VDCTRL0			0x70
+ #define LCDC_VDCTRL1			0x80
+ #define LCDC_VDCTRL2			0x90
+ #define LCDC_VDCTRL3			0xa0
+ #define LCDC_VDCTRL4			0xb0
++#define LCDC_DVICTRL0			0xc0
++#define LCDC_DVICTRL1			0xd0
++#define LCDC_DVICTRL2			0xe0
++#define LCDC_DVICTRL3			0xf0
++#define LCDC_DVICTRL4			0x100
++#define LCDC_V4_DATA			0x180
++#define LCDC_V3_DATA			0x1b0
+ #define LCDC_V4_DEBUG0			0x1d0
+ #define LCDC_V3_DEBUG0			0x1f0
++#define LCDC_AS_CTRL			0x210
++#define LCDC_AS_BUF			0x220
++#define LCDC_AS_NEXT_BUF		0x230
+ 
+ #define CTRL_SFTRST			(1 << 31)
+ #define CTRL_CLKGATE			(1 << 30)
+@@ -45,12 +57,15 @@
+ #define CTRL_DF24			(1 << 1)
+ #define CTRL_RUN			(1 << 0)
+ 
++#define CTRL1_RECOVERY_ON_UNDERFLOW	(1 << 24)
+ #define CTRL1_FIFO_CLEAR		(1 << 21)
+ #define CTRL1_SET_BYTE_PACKAGING(x)	(((x) & 0xf) << 16)
+ #define CTRL1_GET_BYTE_PACKAGING(x)	(((x) >> 16) & 0xf)
+ #define CTRL1_CUR_FRAME_DONE_IRQ_EN	(1 << 13)
+ #define CTRL1_CUR_FRAME_DONE_IRQ	(1 << 9)
+ 
++#define CTRL2_OUTSTANDING_REQS__REQ_16		(4 << 21)
 +
-+#define PIGEON_12_0_SET_STATE_MASK(x)	REG_PUT((x), 31, 24)
-+#define PIGEON_12_0_SET_MASK_CNT(x)	REG_PUT((x), 23, 12)
-+#define PIGEON_12_0_SET_MASK_CNT_SEL(x)	REG_PUT((x), 11,  8)
-+#define PIGEON_12_0_SET_OFFSET(x)	REG_PUT((x),  7,  4)
-+#define PIGEON_12_0_SET_INC_SEL(x)	REG_PUT((x),  3,  2)
-+#define PIGEON_12_0_POL_ACTIVE_LOW	BIT(1)
-+#define PIGEON_12_0_EN			BIT(0)
-+
-+#define PIGEON_12_1_SET_CLR_CNT(x)	REG_PUT((x), 31, 16)
-+#define PIGEON_12_1_SET_SET_CNT(x)	REG_PUT((x), 15,  0)
-+
- #define MXSFB_MIN_XRES			120
- #define MXSFB_MIN_YRES			120
- #define MXSFB_MAX_XRES			0xffff
+ #define TRANSFER_COUNT_SET_VCOUNT(x)	(((x) & 0xffff) << 16)
+ #define TRANSFER_COUNT_GET_VCOUNT(x)	(((x) >> 16) & 0xffff)
+ #define TRANSFER_COUNT_SET_HCOUNT(x)	((x) & 0xffff)
 -- 
 2.7.4
