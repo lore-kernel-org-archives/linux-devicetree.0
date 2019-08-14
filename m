@@ -1,33 +1,61 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: [PATCH v1 4/4] mmc: sdhci-of-esdhc: add erratum A011334 support in ls1028a 1.0 SoC
-Date: Wed, 14 Aug 2019 15:26:49 +0800
-Message-ID: <20190814072649.8237-4-yinbo.zhu@nxp.com>
-References: <20190814072649.8237-1-yinbo.zhu@nxp.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM documentation
+Date: Wed, 14 Aug 2019 15:25:53 +0800
+Message-ID: <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de> <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+ <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814072649.8237-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Li Yang <leoyang.li@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, Alison Wang <alison.wang@nxp.com>, Alex Marginean <alexandru.marginean@nxp.com>, Catalin Horghidan <catalin.horghidan@nxp.com>, Rajat Srivastava <rajat.srivastava@nxp.com>, linuxppc-dev@lists.ozlabs.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add erratum A011334 support in ls1028a 1.0 SoC
+Hi Uwe,
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
- drivers/mmc/host/sdhci-of-esdhc.c | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Baolin,
+>
+> On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> > > > +- assigned-clock-parents: The phandle of the parent clock of PWM c=
+lock.
+> > >
+> > > I'm not sure you need to point out assigned-clocks and
+> > > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> > > these should be "required properties".
+> >
+> > I think I should describe any properties used by PWM node, like
+> > 'clocks' and 'clock-names' properties, though they are common clock
+> > properties.
+>
+> Then you might want to describe also "status", "assigned-clock-rates",
+> "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
+> probably another dozen I'm not aware of.
 
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index b16f7d440f78..eb2b290447fc 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -1006,6 +1006,7 @@ static struct soc_device_attribute soc_incorrect_hostver[] = {
- static struct soc_device_attribute soc_fixup_sdhc_clkdivs[] = {
- 	{ .family = "QorIQ LX2160A", .revision = "1.0", },
- 	{ .family = "QorIQ LX2160A", .revision = "2.0", },
-+	{ .family = "QorIQ LS1028A", .revision = "1.0", },
- 	{ },
- };
- 
--- 
-2.17.1
+We usually do not describe 'status', but if your device node used
+"pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
+describe them to let users know what is the purpose of these
+properties. That's also asked by DT maintainer Rob.
+
+>
+> > Yes, they are required. Thanks for your comments.
+>
+> required in which sense? Why can a Spreadtrum PWM not work when the
+> clock parents are unspecified?
+
+On some Spreadtrum platforms, the default source clock of PWM may not
+be enabled, so we should force users to select one available source
+clock for PWM output clock.
+
+--=20
+Baolin Wang
+Best Regards
