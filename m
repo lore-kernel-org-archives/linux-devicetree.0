@@ -1,58 +1,41 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
-Date: Wed, 14 Aug 2019 16:29:04 +0200
-Message-ID: <20190814142918.11636-1-narmstrong@baylibre.com>
+Subject: [PATCH 02/14] arm64: dts: meson-gx: drop the vpu dmc memory cell
+Date: Wed, 14 Aug 2019 16:29:06 +0200
+Message-ID: <20190814142918.11636-3-narmstrong@baylibre.com>
+References: <20190814142918.11636-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190814142918.11636-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: khilman@baylibre.com
 Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the first set of DT fixes following the first YAML bindings conversion
-at [1], [2] and [3].
+This fixes the following DT schemas check errors:
+meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: Additional items are not allowed ('dmc' was unexpected)
+meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: ['vpu', 'hhi', 'dmc'] is too long
 
-After this set of fixes, the remaining errors are :
-meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
-meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-These are only cosmetic changes, and should not break drivers implementation
-following the bindings.
-
-Neil Armstrong (14):
-  arm64: dts: meson: fix ethernet mac reg format
-  arm64: dts: meson-gx: drop the vpu dmc memory cell
-  arm64: dts: meson-gx: fix reset controller compatible
-  arm64: dts: meson-gx: fix spifc compatible
-  arm64: dts: meson-gx: fix watchdog compatible
-  arm64: dts: meson-gx: fix mhu compatible
-  arm64: dts: meson-gx: fix periphs bus node name
-  arm64: dts: meson-gxl: fix internal phy compatible
-  arm64: dts: meson-axg: fix MHU compatible
-  arm64: dts: meson-g12a: fix reset controller compatible
-  arm64: dts: meson-g12a-x96-max: fix compatible
-  arm64: dts: meson-gxbb-nanopi-k2: add missing model
-  arm64: dts: meson-gxbb-p201: fix snps,reset-delays-us format
-  arm64: dts: meson: fix boards regulators states format
-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  6 +++---
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  2 +-
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  7 +++----
- .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  4 ++--
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi     | 19 +++++++++----------
- .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |  1 +
- .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++--
- .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  |  4 ++--
- .../boot/dts/amlogic/meson-gxbb-p201.dts      |  2 +-
- .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  4 ++--
- .../meson-gxl-s905x-hwacom-amazetv.dts        |  4 ++--
- .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |  4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  5 +----
- 13 files changed, 31 insertions(+), 35 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index faff77175486..c2d3fffea8a7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -528,9 +528,8 @@
+ 		vpu: vpu@d0100000 {
+ 			compatible = "amlogic,meson-gx-vpu";
+ 			reg = <0x0 0xd0100000 0x0 0x100000>,
+-			      <0x0 0xc883c000 0x0 0x1000>,
+-			      <0x0 0xc8838000 0x0 0x1000>;
+-			reg-names = "vpu", "hhi", "dmc";
++			      <0x0 0xc883c000 0x0 0x1000>;
++			reg-names = "vpu", "hhi";
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.22.0
