@@ -1,233 +1,148 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 1/2] venus: use on-chip interconnect API
-Date: Wed, 14 Aug 2019 11:47:00 +0300
-Message-ID: <20190814084701.25455-2-stanimir.varbanov@linaro.org>
-References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
+ documentation
+Date: Wed, 14 Aug 2019 10:49:29 +0200
+Message-ID: <20190814084929.q3uy7cpf4ullpevo@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de>
+ <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+ <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+ <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
+ <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
+ <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Vikash Garodia <vgarodia@codeaurora.org>, Andy Gross <agross@kernel.org>, Aniket Masule <amasule@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This aims to add a requests for bandwidth scaling depending
-on the resolution and framerate (macroblocks per second). The
-exact value ff the requested bandwidth is get from a
-pre-calculated tables for encoder and decoder.
+Hello,
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
- drivers/media/platform/qcom/venus/core.h    | 14 +++++
- drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
- 3 files changed, 114 insertions(+), 1 deletion(-)
+On Wed, Aug 14, 2019 at 03:52:08PM +0800, Baolin Wang wrote:
+> On 14/08/2019, Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+> > On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
+> >> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-König
+> >> <u.kleine-koenig@pengutronix.de> wrote:
+> >> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> >> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
+> >> > > <u.kleine-koenig@pengutronix.de> wrote:
+> >> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> >> > > > > +- assigned-clock-parents: The phandle of the parent clock of PWM
+> >> > > > > clock.
+> >> > > >
+> >> > > > I'm not sure you need to point out assigned-clocks and
+> >> > > > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> >> > > > these should be "required properties".
+> >> > >
+> >> > > I think I should describe any properties used by PWM node, like
+> >> > > 'clocks' and 'clock-names' properties, though they are common clock
+> >> > > properties.
+> >> >
+> >> > Then you might want to describe also "status", "assigned-clock-rates",
+> >> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names"
+> >> > and
+> >> > probably another dozen I'm not aware of.
+> >>
+> >> We usually do not describe 'status', but if your device node used
+> >> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
+> >> describe them to let users know what is the purpose of these
+> >> properties. That's also asked by DT maintainer Rob.
+> >
+> > Does this convince you that you should also describe "pinctrl-$n" and
+> > the others? If not, why not? We also usually don't describe
+> 
+> Our PWM device node did not use "pinctrl-$n" things, why I should
+> describe "pinctrl-$n"?
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 0acc7576cc58..19cbe9d5d028 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/clk.h>
- #include <linux/init.h>
-+#include <linux/interconnect.h>
- #include <linux/ioctl.h>
- #include <linux/list.h>
- #include <linux/module.h>
-@@ -239,6 +240,14 @@ static int venus_probe(struct platform_device *pdev)
- 	if (IS_ERR(core->base))
- 		return PTR_ERR(core->base);
- 
-+	core->video_path = of_icc_get(dev, "video-mem");
-+	if (IS_ERR(core->video_path))
-+		return PTR_ERR(core->video_path);
-+
-+	core->cpucfg_path = of_icc_get(dev, "cpu-cfg");
-+	if (IS_ERR(core->cpucfg_path))
-+		return PTR_ERR(core->cpucfg_path);
-+
- 	core->irq = platform_get_irq(pdev, 0);
- 	if (core->irq < 0)
- 		return core->irq;
-@@ -273,6 +282,10 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
-+	if (ret)
-+		return ret;
-+
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
- 		return ret;
-@@ -355,6 +368,9 @@ static int venus_remove(struct platform_device *pdev)
- 	pm_runtime_put_sync(dev);
- 	pm_runtime_disable(dev);
- 
-+	icc_put(core->video_path);
-+	icc_put(core->cpucfg_path);
-+
- 	v4l2_device_unregister(&core->v4l2_dev);
- 
- 	return ret;
-@@ -464,9 +480,27 @@ static const struct freq_tbl sdm845_freq_table[] = {
- 	{  244800, 100000000 },	/* 1920x1080@30 */
- };
- 
-+static const struct bw_tbl sdm845_bw_table_enc[] = {
-+	{ 1944000, 1612000, 0, 2416000, 0 },	/* 3840x2160@60 */
-+	{  972000,  951000, 0, 1434000, 0 },	/* 3840x2160@30 */
-+	{  489600,  723000, 0,  973000, 0 },	/* 1920x1080@60 */
-+	{  244800,  370000, 0,	495000, 0 },	/* 1920x1080@30 */
-+};
-+
-+static const struct bw_tbl sdm845_bw_table_dec[] = {
-+	{ 2073600, 3929000, 0, 5551000, 0 },	/* 4096x2160@60 */
-+	{ 1036800, 1987000, 0, 2797000, 0 },	/* 4096x2160@30 */
-+	{  489600, 1040000, 0, 1298000, 0 },	/* 1920x1080@60 */
-+	{  244800,  530000, 0,  659000, 0 },	/* 1920x1080@30 */
-+};
-+
- static const struct venus_resources sdm845_res = {
- 	.freq_tbl = sdm845_freq_table,
- 	.freq_tbl_size = ARRAY_SIZE(sdm845_freq_table),
-+	.bw_tbl_enc = sdm845_bw_table_enc,
-+	.bw_tbl_enc_size = ARRAY_SIZE(sdm845_bw_table_enc),
-+	.bw_tbl_dec = sdm845_bw_table_dec,
-+	.bw_tbl_dec_size = ARRAY_SIZE(sdm845_bw_table_dec),
- 	.clks = {"core", "iface", "bus" },
- 	.clks_num = 3,
- 	.max_load = 3110400,	/* 4096x2160@90 */
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 959eaa550f4e..4b0eb4627ba0 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -26,10 +26,22 @@ struct reg_val {
- 	u32 value;
- };
- 
-+struct bw_tbl {
-+	u32 mbs_per_sec;
-+	u32 avg;
-+	u32 peak;
-+	u32 avg_10bit;
-+	u32 peak_10bit;
-+};
-+
- struct venus_resources {
- 	u64 dma_mask;
- 	const struct freq_tbl *freq_tbl;
- 	unsigned int freq_tbl_size;
-+	const struct bw_tbl *bw_tbl_enc;
-+	unsigned int bw_tbl_enc_size;
-+	const struct bw_tbl *bw_tbl_dec;
-+	unsigned int bw_tbl_dec_size;
- 	const struct reg_val *reg_tbl;
- 	unsigned int reg_tbl_size;
- 	const char * const clks[VIDC_CLKS_NUM_MAX];
-@@ -114,6 +126,8 @@ struct venus_core {
- 	struct clk *core1_clk;
- 	struct clk *core0_bus_clk;
- 	struct clk *core1_bus_clk;
-+	struct icc_path *video_path;
-+	struct icc_path *cpucfg_path;
- 	struct video_device *vdev_dec;
- 	struct video_device *vdev_enc;
- 	struct v4l2_device v4l2_dev;
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 1ad96c25ab09..f18458921f5d 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/clk.h>
- #include <linux/iopoll.h>
-+#include <linux/interconnect.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/pm_runtime.h>
-@@ -388,6 +389,65 @@ static u32 load_per_type(struct venus_core *core, u32 session_type)
- 	return mbs_per_sec;
- }
- 
-+static void mbs_to_bw(struct venus_inst *inst, u32 mbs, u32 *avg, u32 *peak)
-+{
-+	const struct venus_resources *res = inst->core->res;
-+	const struct bw_tbl *bw_tbl;
-+	unsigned int num_rows, i;
-+
-+	*avg = 0;
-+	*peak = 0;
-+
-+	if (mbs == 0)
-+		return;
-+
-+	if (inst->session_type == VIDC_SESSION_TYPE_ENC) {
-+		num_rows = res->bw_tbl_enc_size;
-+		bw_tbl = res->bw_tbl_enc;
-+	} else if (inst->session_type == VIDC_SESSION_TYPE_DEC) {
-+		num_rows = res->bw_tbl_dec_size;
-+		bw_tbl = res->bw_tbl_dec;
-+	} else {
-+		return;
-+	}
-+
-+	if (!bw_tbl || num_rows == 0)
-+		return;
-+
-+	for (i = 0; i < num_rows; i++) {
-+		if (mbs > bw_tbl[i].mbs_per_sec)
-+			break;
-+
-+		if (inst->dpb_fmt & HFI_COLOR_FORMAT_10_BIT_BASE) {
-+			*avg = bw_tbl[i].avg_10bit;
-+			*peak = bw_tbl[i].peak_10bit;
-+		} else {
-+			*avg = bw_tbl[i].avg;
-+			*peak = bw_tbl[i].peak;
-+		}
-+	}
-+}
-+
-+static int load_scale_bw(struct venus_core *core)
-+{
-+	struct venus_inst *inst = NULL;
-+	u32 mbs_per_sec, avg, peak, total_avg = 0, total_peak = 0;
-+
-+	mutex_lock(&core->lock);
-+	list_for_each_entry(inst, &core->instances, list) {
-+		mbs_per_sec = load_per_instance(inst);
-+		mbs_to_bw(inst, mbs_per_sec, &avg, &peak);
-+		total_avg += avg;
-+		total_peak += peak;
-+	}
-+	mutex_unlock(&core->lock);
-+
-+	dev_dbg(core->dev, "total: avg_bw: %u, peak_bw: %u\n",
-+		total_avg, total_peak);
-+
-+	return icc_set_bw(core->video_path, total_avg, total_peak);
-+}
-+
- int venus_helper_load_scale_clocks(struct venus_core *core)
- {
- 	const struct freq_tbl *table = core->res->freq_tbl;
-@@ -431,10 +491,15 @@ int venus_helper_load_scale_clocks(struct venus_core *core)
- 	if (ret)
- 		goto err;
- 
-+	ret = load_scale_bw(core);
-+	if (ret)
-+		goto err;
-+
- 	return 0;
- 
- err:
--	dev_err(dev, "failed to set clock rate %lu (%d)\n", freq, ret);
-+	dev_err(dev, "failed to set clock rate %lu or bandwidth (%d)\n",
-+		freq, ret);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(venus_helper_load_scale_clocks);
+The binding you implemented supports "pinctrl-$n". And this is described
+somewhere in the generic pinctrl binding docs. The same applies to
+"assigned-clock-parents".
+
+That you happen to use assigned-clock-parents but not pinctrl-$n on the
+board you used to develop your driver is a detail that IMHO shouldn't
+decide about being listed in the binding doc for your PWM type.
+
+> If some devices use pinctrl, yes, they should describe what is the
+> purpose of pinctrl, see:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mmc/sdhci-sprd.txt
+
+I agree that if the driver assumes special pinctrl names this is worth
+mentioning. If however there is nothing special and just some generic
+stuff is used that is described in some other location then I'd chose to
+not add this redundant information to the binding document. So if I
+reviewed the patch that created
+Documentation/devicetree/bindings/mmc/sdhci-sprd.txt I would have
+suggested to drop "assigned-clocks" and "assigned-clock-parents" there,
+too.
+
+> > assigned-clock-parents. For me these are all in the same catagory:
+> 
+> Lots of dt bindings describe 'assigned-clock-parents',:
+> ./Documentation/devicetree/bindings/display/msm/dsi.txt
+> ./Documentation/devicetree/bindings/display/msm/dsi.txt
+> ./Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
+> ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> ./Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
+> ./Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
+> ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+> ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+> ......
+
+I didn't check each of them, but I assume the same applies here, too.
+Please don't copy blindly but think before using other people's stuff as
+reference. Even in the Linux kernel where reviews seem and are told to
+catch non-optimal stuff, there are places where this doesn't work. IMHO
+the key question is: Does it add value to describe "assigned-clocks" in
+the binding for your PWM device given that you're only using this
+generic and well documented construct?
+
+> > Common properties supported for each devicetree node that represents a
+> > device. The only difference is that on your board you make use of some
+> > but not some others.
+> 
+> Fine, let's decide this by PWM maintainer or DT maintainer Rob.
+
+Fine for me.
+
+> >> > > Yes, they are required. Thanks for your comments.
+> >> >
+> >> > required in which sense? Why can a Spreadtrum PWM not work when the
+> >> > clock parents are unspecified?
+> >>
+> >> On some Spreadtrum platforms, the default source clock of PWM may not
+> >> be enabled, so we should force users to select one available source
+> >> clock for PWM output clock.
+> >
+> > Sounds like a bug in the clk tree of your SoC that shouldn't affect how
+> > the PWM is described in the device tree. After all a parent of a clock
+> > is supposed to become enabled when the clock gets enabled.
+> 
+> That's not a bug, that's like a MUX, the default source clock of PWM
+> can be disabled, since we usually do not use the default source clock.
+> Then we can select a available source clock by the MUX.
+
+In my eyes there is a difference between a) The way the clocks are
+implemented in the XZ SoC implies that to actually use the PWM you need
+to reparent some clock; and b) Each "sprd,ums512-pwm" device really
+needs an "assigned-clock" property, otherwise it cannot work.
+
+If you write "required" in the binding doc the semantic should be b) but
+the motivation here seems to be a). Legal questions aside someone could
+implement a PWM that has the same register layout and behaviour as the
+PWM in your SoC but with a different clock tree. Should they use a
+different compatible just because they don't need "assigned-clock"?
+
+Best regards
+Uwe
+
 -- 
-2.17.1
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
