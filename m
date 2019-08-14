@@ -1,36 +1,30 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 2/2] ASoC: dt-bindings: Introduce compatible string for imx8qm
-Date: Wed, 14 Aug 2019 11:29:11 +0300
-Message-ID: <20190814082911.665-3-daniel.baluta@nxp.com>
-References: <20190814082911.665-1-daniel.baluta@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v8 01/21] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date: Wed, 14 Aug 2019 10:32:28 +0200
+Message-ID: <CACRpkdasx8AooB_bhUpVhU9ig_ztri3hbryiO_FEGEO+eUXwkg@mail.gmail.com>
+References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com> <1565308020-31952-2-git-send-email-skomatineni@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814082911.665-1-daniel.baluta@nxp.com>
+In-Reply-To: <1565308020-31952-2-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com, perex@perex.cz, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, festevam@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, shengjiu.wang@nxp.com, viorel.suman@nxp.com, linux-imx@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
 List-Id: devicetree@vger.kernel.org
 
-Register map for i.MX8QM is similar with i.MX6 series. Integration
-of SAI IP into i.MX8QM SOC features a FIFO size of 64 X 32 bits samples.
+On Fri, Aug 9, 2019 at 1:47 AM Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> pmx_writel uses writel which inserts write barrier before the
+> register write rather.
+>
+> This patch has fix to replace writel with writel_relaxed followed
+> by a write barrier to ensure write operation before the barrier
+> is completed for successful pinctrl change.
+>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index e61c0dc1fc0b..0dc83cc4a236 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -9,7 +9,8 @@ Required properties:
- 
-   - compatible		: Compatible list, contains "fsl,vf610-sai",
- 			  "fsl,imx6sx-sai", "fsl,imx6ul-sai",
--			  "fsl,imx7ulp-sai" or "fsl,imx8mq-sai".
-+			  "fsl,imx7ulp-sai", "fsl,imx8mq-sai" or
-+			  "fsl,imx8qm-sai".
- 
-   - reg			: Offset and length of the register set for the device.
- 
--- 
-2.17.1
+Patch applied with the ACKs.
+
+Yours,
+Linus Walleij
