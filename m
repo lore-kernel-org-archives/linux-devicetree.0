@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 02/14] arm64: dts: meson-gx: drop the vpu dmc memory cell
-Date: Wed, 14 Aug 2019 16:29:06 +0200
-Message-ID: <20190814142918.11636-3-narmstrong@baylibre.com>
+Subject: [PATCH 07/14] arm64: dts: meson-gx: fix periphs bus node name
+Date: Wed, 14 Aug 2019 16:29:11 +0200
+Message-ID: <20190814142918.11636-8-narmstrong@baylibre.com>
 References: <20190814142918.11636-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,29 +13,26 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: Additional items are not allowed ('dmc' was unexpected)
-meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: ['vpu', 'hhi', 'dmc'] is too long
+meson-gxbb-nanopi-k2.dt.yaml: periphs@c8834000: $nodename:0: 'periphs@c8834000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+meson-gxl-s805x-libretech-ac.dt.yaml: periphs@c8834000: $nodename:0: 'periphs@c8834000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index faff77175486..c2d3fffea8a7 100644
+index d8127f863b55..a7735d2f0037 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -528,9 +528,8 @@
- 		vpu: vpu@d0100000 {
- 			compatible = "amlogic,meson-gx-vpu";
- 			reg = <0x0 0xd0100000 0x0 0x100000>,
--			      <0x0 0xc883c000 0x0 0x1000>,
--			      <0x0 0xc8838000 0x0 0x1000>;
--			reg-names = "vpu", "hhi", "dmc";
-+			      <0x0 0xc883c000 0x0 0x1000>;
-+			reg-names = "vpu", "hhi";
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+@@ -437,7 +437,7 @@
+ 			};
+ 		};
+ 
+-		periphs: periphs@c8834000 {
++		periphs: bus@c8834000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xc8834000 0x0 0x2000>;
+ 			#address-cells = <2>;
 -- 
 2.22.0
