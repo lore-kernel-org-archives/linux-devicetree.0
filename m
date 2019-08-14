@@ -1,14 +1,13 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/3] CP115 pinctrl support
-Date: Wed, 14 Aug 2019 10:12:36 +0200
-Message-ID: <CACRpkdbEw5eCKb=nTCK4wuMsPEadEQdGx62cGRhk7F78p5X2CA@mail.gmail.com>
-References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
- <CACRpkdar5jE116CcywYxLR9JKWunRusJjNw7f3C0SFK4-4+dNQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: Fix 'st,syscfg' schema
+Date: Wed, 14 Aug 2019 10:14:00 +0200
+Message-ID: <CACRpkdZztpUBWnUtJiZY030qVJMEB7gNstyXQeTYWUZ6LMwx+A@mail.gmail.com>
+References: <20190813205528.16651-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdar5jE116CcywYxLR9JKWunRusJjNw7f3C0SFK4-4+dNQ@mail.gmail.com>
+In-Reply-To: <20190813205528.16651-1-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,26 +17,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 2:47 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Aug 5, 2019 at 12:16 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> > This is the second batch of changes (out of three) to support the brand
-> > new Marvell CN9130 SoCs which are made of one AP807 and one CP115.
-> >
-> > We add a new compatible (and the relevant support in the pinctrl
-> > driver) before the addition in batch 3/3 of CN9130 SoCs DT using it.
->
-> Waiting for review from the Mvebu maintainers.
->
-> If it takes too long just nudge me, it looks good to me.
+On Tue, Aug 13, 2019 at 10:55 PM Rob Herring <robh@kernel.org> wrote:
 
-So if the other MVEBU maintainers don't really look much at MVEBU
-patches anymore while Miquel is working a lot on the platform,
-what about listing Miquel as maintainer under the SoC entry, hm?
+> The proper way to add additional contraints to an existing json-schema
+> is using 'allOf' to reference the base schema. Using just '$ref' doesn't
+> work. Fix this for the 'st,syscfg' property.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> I've got some other fixes queued up and can take this via the DT tree.
+
+OK!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
