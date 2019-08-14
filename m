@@ -1,27 +1,37 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 02/21] pinctrl: tegra: Add write barrier after all
- pinctrl register writes
-Date: Wed, 14 Aug 2019 10:33:39 +0200
-Message-ID: <CACRpkdZ6--v6bdmn7=fjPDxiza0cbuHQN93_fyu+fTCkJpq_Gg@mail.gmail.com>
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com> <1565308020-31952-3-git-send-email-skomatineni@nvidia.com>
+Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated compatibles
+Date: Wed, 14 Aug 2019 10:41:17 +0200
+Message-ID: <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
+References: <20190724081313.12934-1-andrew@aj.id.au> <20190724081313.12934-4-andrew@aj.id.au>
+ <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com> <20190812101504.GF26727@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565308020-31952-3-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190812101504.GF26727@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 1:47 AM Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
-
-> This patch adds write barrier after all pinctrl register writes
-> during resume to make sure all pinctrl changes are complete.
+On Mon, Aug 12, 2019 at 12:15 PM Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 05 Aug 2019, Linus Walleij wrote:
 >
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > > Guide readers away from using the aspeed,g[45].* compatible patterns.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> >
+> > Patch applied to the pinctrl tree.
+>
+> With my Ack?
 
-Patch applied with the ACKs.
+Sorry no. :( Was I too trigger-happy?
+
+Usually I take Rob's ACK as authoritative for anything under
+Documentation/devicetree but if you have concerns about the
+patch from an MFD point of view I will revert it pending further
+discussion.
 
 Yours,
 Linus Walleij
