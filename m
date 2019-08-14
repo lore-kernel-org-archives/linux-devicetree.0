@@ -1,130 +1,51 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
- Mode
-Date: Wed, 14 Aug 2019 15:41:00 +0100
-Message-ID: <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
-References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
- <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding documentation
+Date: Wed, 14 Aug 2019 09:52:25 -0500
+Message-ID: <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com> <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+ <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
+ <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com> <20190814100518.GA21898@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20190814100518.GA21898@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Morten Borup Petersen <morten_bp@live.dk>, Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "nd@arm.com" <nd@arm.com>, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong Wu,
+On Wed, Aug 14, 2019 at 5:05 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
+> [...]
+>
+> > > >>
+> > > >> As mentioned in the response to your initial comment, the driver does
+> > > >> not currently support mixing protocols.
+> > > >>
+> > > > Thanks for acknowledging that limitation. But lets also address it.
+> > > >
+> > >
+> > > We are hesitant to dedicate time to developing mixing protocols given
+> > > that we don't have any current usecase nor any current platform which
+> > > would support this.
+> > >
+> > Can you please share the client code against which you tested this driver?
+> > From my past experience, I realise it is much more efficient to tidyup
+> > the code myself, than endlessly trying to explain the benefits.
+> >
+>
+> Thanks for the patience and offer.
+>
+Ok, but the offer is to Morten for MHUv2 driver.
 
-Sorry, but I'm still deeply confused by this patch.
-
-On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
-> MediaTek extend the arm v7s descriptor to support the dram over 4GB.
-> 
-> In the mt2712 and mt8173, it's called "4GB mode", the physical address
-> is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
-> is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
-> bit32 is always enabled. thus, in the M4U, we always enable the bit9
-> for all PTEs which means to enable bit32 of physical address. Here is
-> the detailed remap relationship in the "4GB mode":
-> CPU PA         ->    HW PA
-> 0x4000_0000          0x1_4000_0000 (Add bit32)
-> 0x8000_0000          0x1_8000_0000 ...
-> 0xc000_0000          0x1_c000_0000 ...
-> 0x1_0000_0000        0x1_0000_0000 (No change)
-
-So in this example, there are no PAs below 0x4000_0000 yet you later
-add code to deal with that:
-
-> +	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
-> +	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
-> +		paddr |= BIT_ULL(32);
-
-Why? Mainline currently doesn't do anything like this for the "4gb mode"
-support as far as I can tell. In fact, we currently unconditionally set
-bit 32 in the physical address returned by iova_to_phys() which wouldn't
-match your CPU PAs listed above, so I'm confused about how this is supposed
-to work.
-
-The way I would like this quirk to work is that the io-pgtable code
-basically sets bit 9 in the pte when bit 32 is set in the physical address,
-and sets bit 4 in the pte when bit 33 is set in the physical address. It
-would then do the opposite when converting a pte to a physical address.
-
-That way, your driver can call the page table code directly with the high
-addresses and we don't have to do any manual offsetting or range checking
-in the page table code.
-
-Please can you explain to me why the diff below doesn't work on top of
-this series? I'm happy to chat on IRC if you think it would be easier,
-because I have a horrible feeling that we've been talking past each other
-and I'd like to see this support merged for 5.4.
-
-Will
-
---->8
-
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index ab12ef5f8b03..d8d84617c822 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -184,7 +184,7 @@ static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
- 	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
- 
- 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
--		if ((paddr & BIT_ULL(32)) || cfg->oas == ARM_V7S_MTK_4GB_OAS)
-+		if (paddr & BIT_ULL(32))
- 			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
- 		if (paddr & BIT_ULL(33))
- 			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
-@@ -206,17 +206,14 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
- 		mask = ARM_V7S_LVL_MASK(lvl);
- 
- 	paddr = pte & mask;
--	if (cfg->oas == 32 || !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT))
--		return paddr;
- 
--	if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
--		paddr |= BIT_ULL(33);
-+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
-+		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-+			paddr |= BIT_ULL(32);
-+		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
-+			paddr |= BIT_ULL(33);
-+	}
- 
--	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
--	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
--		paddr |= BIT_ULL(32);
--	else if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
--		paddr |= BIT_ULL(32);
- 	return paddr;
- }
- 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index d5b9454352fd..3ae54dedede0 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -286,7 +286,7 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
- 	if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
- 		dom->cfg.oas = 32;
- 	else if (data->enable_4GB)
--		dom->cfg.oas = ARM_V7S_MTK_4GB_OAS;
-+		dom->cfg.oas = 33;
- 	else
- 		dom->cfg.oas = 34;
- 
-diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index 27337395bd42..a2a52c349fe4 100644
---- a/include/linux/io-pgtable.h
-+++ b/include/linux/io-pgtable.h
-@@ -113,8 +113,6 @@ struct io_pgtable_cfg {
- 	};
- };
- 
--#define ARM_V7S_MTK_4GB_OAS			33
--
- /**
-  * struct io_pgtable_ops - Page table manipulation API for IOMMU drivers.
-  *
+> Can we try the same with MHUv1 and SCMI
+> upstream driver.
+>
+MHUv1 driver is fine as it is.
+I did try my best to keep you from messing the SCMI driver, without success
+https://lkml.org/lkml/2017/8/7/924
