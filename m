@@ -1,100 +1,61 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 07/15] drm/mxsfb: Fix the vblank events
-Date: Wed, 14 Aug 2019 19:31:55 +0200
-Message-ID: <20190814173155.GR7444@phenom.ffwll.local>
-References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
- <1565779731-1300-8-git-send-email-robert.chiras@nxp.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
+Date: Wed, 14 Aug 2019 10:44:39 -0700
+Message-ID: <20190814174439.GE6167@minitux>
+References: <20190814125012.8700-1-vkoul@kernel.org>
+ <20190814125012.8700-2-vkoul@kernel.org>
+ <20190814165855.098FD2063F@mail.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1565779731-1300-8-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <20190814165855.098FD2063F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 01:48:43PM +0300, Robert Chiras wrote:
-> Currently, the vblank support is not correctly implemented in MXSFB_DRM
-> driver. The call to drm_vblank_init is made with mode_config.num_crtc
-> which at that time is 0. Because of this, vblank is not activated, so
-> there won't be any vblank event submitted.
-> For example, when running modetest with the '-v' parameter will result
-> in an astronomical refresh rate (10000+ Hz), because of that.
+On Wed 14 Aug 09:58 PDT 2019, Stephen Boyd wrote:
 
-Uh, that sounds a bit like a bug somewhere. If vblank doesn't work, we
-should give userspace an error back.
-
-Maybe we need more checks in drm_vblank_init()? Can you pls look into
-that?
-
+> Quoting Vinod Koul (2019-08-14 05:49:51)
+> > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+[..]
+> > +       clocks {
+> > +               xo_board: xo-board {
+> > +                       compatible = "fixed-clock";
+> > +                       #clock-cells = <0>;
+> > +                       clock-frequency = <19200000>;
 > 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> ---
->  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> index 2743975..829abec 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-> @@ -38,6 +38,9 @@
->  #include "mxsfb_drv.h"
->  #include "mxsfb_regs.h"
->  
-> +/* The eLCDIF max possible CRTCs */
-> +#define MAX_CRTCS 1
-> +
->  enum mxsfb_devtype {
->  	MXSFB_V3,
->  	MXSFB_V4,
-> @@ -138,6 +141,8 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
->  		mxsfb->connector = &mxsfb->panel_connector;
->  	}
->  
-> +	drm_crtc_vblank_on(&pipe->crtc);
-> +
->  	pm_runtime_get_sync(drm->dev);
->  	drm_panel_prepare(mxsfb->panel);
->  	mxsfb_crtc_enable(mxsfb);
-> @@ -164,6 +169,8 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
->  	}
->  	spin_unlock_irq(&drm->event_lock);
->  
-> +	drm_crtc_vblank_off(&pipe->crtc);
-> +
->  	if (mxsfb->connector != &mxsfb->panel_connector)
->  		mxsfb->connector = NULL;
->  }
-> @@ -246,7 +253,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
->  
->  	pm_runtime_enable(drm->dev);
->  
-> -	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
-> +	ret = drm_vblank_init(drm, MAX_CRTCS);
->  	if (ret < 0) {
->  		dev_err(drm->dev, "Failed to initialise vblank\n");
->  		goto err_vblank;
-> @@ -269,6 +276,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
->  		goto err_vblank;
->  	}
->  
-> +	drm_crtc_vblank_off(&mxsfb->pipe.crtc);
-
-Are you sure you need this one here? vblanks should be off after
-drm_vblank_init() is called.
-
-Thanks, Daniel
-
-> +
->  	/*
->  	 * Attach panel only if there is one.
->  	 * If there is no panel attach, it must be a bridge. In this case, we
-> -- 
-> 2.7.4
+> Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
+> guess it doesn't really matter in the end.
 > 
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+As with previous platforms, the board's XO feeds the PMIC at 38.4MHz and
+the SoC's CXO_IN pin (i.e. bi_tcxo) is fed from the PMIC's LNBBCLK1,
+which is ticking at 19.2MHz.
+
+[..]
+> > +               gcc: clock-controller@100000 {
+> > +                       compatible = "qcom,gcc-sm8150";
+> > +                       reg = <0x00100000 0x1f0000>;
+> > +                       #clock-cells = <1>;
+> > +                       #reset-cells = <1>;
+> > +                       #power-domain-cells = <1>;
+> > +                       clock-names = "bi_tcxo", "sleep_clk";
+> > +                       clocks = <&xo_board>, <&sleep_clk>;
+
+So this first one should actually be <&rpmhcc LNBBCLK1>.
+
+But while we now should handle this gracefully in the clock driver I
+think we still have problems with the cascading probe deferral that
+follows - last time I tried to do this the serial driver probe deferred
+past user space initialization and the system crashed as we didn't have
+a /dev/console.
+
+
+So, I think we should s/xo_board/lnbbclk1/ (at 19.2MHz) to make it
+represent the schematics and then once we have rpmhcc and validated that
+the system handles this gracefully we can switch it out.
+
+Regards,
+Bjorn
