@@ -1,148 +1,152 @@
 Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57620 "EHLO muru.com"
+Received: from muru.com ([72.249.23.125]:57550 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfHNNOU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:14:20 -0400
+        id S1727524AbfHNKUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:20:05 -0400
 From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 1/6] ARM: OMAP2+: Drop legacy platform data for omap4 gpu
-Date: Wed, 14 Aug 2019 06:14:03 -0700
-Message-Id: <20190814131408.57162-2-tony@atomide.com>
-In-Reply-To: <20190814131408.57162-1-tony@atomide.com>
-References: <20190814131408.57162-1-tony@atomide.com>
+Subject: [PATCH 3/3] ARM: OMAP2+: Drop legacy platform data for cpsw on dra7
+Date: Wed, 14 Aug 2019 03:19:49 -0700
+Message-Id: <20190814101949.50006-4-tony@atomide.com>
+In-Reply-To: <20190814101949.50006-1-tony@atomide.com>
+References: <20190814101949.50006-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Keerthy <j-keerthy@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-I've tested that the interconnect target module enables and idles
-just fine when probed with ti-sysc with PM runtime control via sys:
+We can now probe cpsw with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property for am3 and am4.
 
-# echo on > $(find /sys -name control | grep \/5601)
-# rwmem 0x56000024
-0x56000024 = 0x00010200		# SGX540 CORE_REVISION
-# echo auto > $(find /sys -name control | grep \/5601)
-# rwmem 0x56000024
-And when idled, it will produce "Bus error" as expected.
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
 
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: moaz korena <moaz@korena.xyz>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Philipp Rossak <embed3d@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/omap4.dtsi               |  1 -
- arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 53 ----------------------
- 2 files changed, 54 deletions(-)
+ arch/arm/boot/dts/dra7-l4.dtsi            |  2 -
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 65 -----------------------
+ 2 files changed, 67 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -330,7 +330,6 @@
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3045,7 +3045,6 @@
  
- 		target-module@56000000 {
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			ti,hwmods = "gpu";
- 			reg = <0x5601fc00 0x4>,
- 			      <0x5601fc10 0x4>;
- 			reg-names = "rev", "sysc";
-diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-@@ -1085,41 +1085,6 @@ static struct omap_hwmod omap44xx_gpmc_hwmod = {
+ 		target-module@84000 {			/* 0x48484000, ap 3 10.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "gmac";
+ 			reg = <0x85200 0x4>,
+ 			      <0x85208 0x4>,
+ 			      <0x85204 0x4>;
+@@ -3107,7 +3106,6 @@
+ 					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+-					ti,hwmods = "davinci_mdio";
+ 					bus_freq = <1000000>;
+ 					reg = <0x1000 0x100>;
+ 				};
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -284,56 +284,6 @@ static struct omap_hwmod dra7xx_ctrl_module_wkup_hwmod = {
  	},
  };
  
 -/*
-- * 'gpu' class
-- * 2d/3d graphics accelerator
+- * 'gmac' class
+- * cpsw/gmac sub system
 - */
--
--static struct omap_hwmod_class_sysconfig omap44xx_gpu_sysc = {
--	.rev_offs	= 0x1fc00,
--	.sysc_offs	= 0x1fc10,
--	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
--			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type2,
+-static struct omap_hwmod_class_sysconfig dra7xx_gmac_sysc = {
+-	.rev_offs	= 0x0,
+-	.sysc_offs	= 0x8,
+-	.syss_offs	= 0x4,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
+-			   SYSS_HAS_RESET_STATUS),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
+-			   MSTANDBY_NO),
+-	.sysc_fields	= &omap_hwmod_sysc_type3,
 -};
 -
--static struct omap_hwmod_class omap44xx_gpu_hwmod_class = {
--	.name	= "gpu",
--	.sysc	= &omap44xx_gpu_sysc,
+-static struct omap_hwmod_class dra7xx_gmac_hwmod_class = {
+-	.name		= "gmac",
+-	.sysc		= &dra7xx_gmac_sysc,
 -};
 -
--/* gpu */
--static struct omap_hwmod omap44xx_gpu_hwmod = {
--	.name		= "gpu",
--	.class		= &omap44xx_gpu_hwmod_class,
--	.clkdm_name	= "l3_gfx_clkdm",
--	.main_clk	= "sgx_clk_mux",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = OMAP4_CM_GFX_GFX_CLKCTRL_OFFSET,
--			.context_offs = OMAP4_RM_GFX_GFX_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
+-static struct omap_hwmod dra7xx_gmac_hwmod = {
+-	.name		= "gmac",
+-	.class		= &dra7xx_gmac_hwmod_class,
+-	.clkdm_name	= "gmac_clkdm",
+-	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY),
+-	.main_clk	= "dpll_gmac_ck",
+-	.mpu_rt_idx	= 1,
+-	.prcm		= {
+-		.omap4	= {
+-			.clkctrl_offs	= DRA7XX_CM_GMAC_GMAC_CLKCTRL_OFFSET,
+-			.context_offs	= DRA7XX_RM_GMAC_GMAC_CONTEXT_OFFSET,
+-			.modulemode	= MODULEMODE_SWCTRL,
 -		},
 -	},
 -};
 -
+-/*
+- * 'mdio' class
+- */
+-static struct omap_hwmod_class dra7xx_mdio_hwmod_class = {
+-	.name		= "davinci_mdio",
+-};
+-
+-static struct omap_hwmod dra7xx_mdio_hwmod = {
+-	.name		= "davinci_mdio",
+-	.class		= &dra7xx_mdio_hwmod_class,
+-	.clkdm_name	= "gmac_clkdm",
+-	.main_clk	= "dpll_gmac_ck",
+-};
+-
  /*
-  * 'hdq1w' class
-  * hdq / 1-wire serial interface controller
-@@ -2596,14 +2561,6 @@ static struct omap_hwmod_ocp_if omap44xx_fdif__l3_main_2 = {
+  * 'dcan' class
+  *
+@@ -2303,19 +2253,6 @@ static struct omap_hwmod_ocp_if dra7xx_l4_wkup__ctrl_module_wkup = {
  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
  };
  
--/* gpu -> l3_main_2 */
--static struct omap_hwmod_ocp_if omap44xx_gpu__l3_main_2 = {
--	.master		= &omap44xx_gpu_hwmod,
--	.slave		= &omap44xx_l3_main_2_hwmod,
--	.clk		= "l3_div_ck",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-static struct omap_hwmod_ocp_if dra7xx_l4_per2__cpgmac0 = {
+-	.master		= &dra7xx_l4_per2_hwmod,
+-	.slave		= &dra7xx_gmac_hwmod,
+-	.clk		= "dpll_gmac_ck",
+-	.user		= OCP_USER_MPU,
 -};
 -
- /* hsi -> l3_main_2 */
- static struct omap_hwmod_ocp_if omap44xx_hsi__l3_main_2 = {
- 	.master		= &omap44xx_hsi_hwmod,
-@@ -3028,14 +2985,6 @@ static struct omap_hwmod_ocp_if omap44xx_l3_main_2__gpmc = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* l3_main_2 -> gpu */
--static struct omap_hwmod_ocp_if omap44xx_l3_main_2__gpu = {
--	.master		= &omap44xx_l3_main_2_hwmod,
--	.slave		= &omap44xx_gpu_hwmod,
--	.clk		= "l3_div_ck",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-static struct omap_hwmod_ocp_if dra7xx_gmac__mdio = {
+-	.master		= &dra7xx_gmac_hwmod,
+-	.slave		= &dra7xx_mdio_hwmod,
+-	.user		= OCP_USER_MPU,
 -};
 -
- /* l4_per -> hdq1w */
- static struct omap_hwmod_ocp_if omap44xx_l4_per__hdq1w = {
- 	.master		= &omap44xx_l4_per_hwmod,
-@@ -3450,7 +3399,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
- 	&omap44xx_debugss__l3_main_2,
- 	&omap44xx_dma_system__l3_main_2,
- 	&omap44xx_fdif__l3_main_2,
--	&omap44xx_gpu__l3_main_2,
- 	&omap44xx_hsi__l3_main_2,
- 	&omap44xx_ipu__l3_main_2,
- 	&omap44xx_iss__l3_main_2,
-@@ -3503,7 +3451,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
- 	&omap44xx_l4_per__elm,
- 	&omap44xx_l4_cfg__fdif,
- 	&omap44xx_l3_main_2__gpmc,
--	&omap44xx_l3_main_2__gpu,
- 	&omap44xx_l4_per__hdq1w,
- 	&omap44xx_l4_cfg__hsi,
- 	&omap44xx_l3_main_2__ipu,
+ /* l4_wkup -> dcan1 */
+ static struct omap_hwmod_ocp_if dra7xx_l4_wkup__dcan1 = {
+ 	.master		= &dra7xx_l4_wkup_hwmod,
+@@ -3021,7 +2958,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+ 	&dra7xx_l4_wkup__ctrl_module_wkup,
+ 	&dra7xx_l4_wkup__dcan1,
+ 	&dra7xx_l4_per2__dcan2,
+-	&dra7xx_l4_per2__cpgmac0,
+ 	&dra7xx_l4_per2__mcasp1,
+ 	&dra7xx_l3_main_1__mcasp1,
+ 	&dra7xx_l4_per2__mcasp2,
+@@ -3033,7 +2969,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+ 	&dra7xx_l4_per2__mcasp6,
+ 	&dra7xx_l4_per2__mcasp7,
+ 	&dra7xx_l4_per2__mcasp8,
+-	&dra7xx_gmac__mdio,
+ 	&dra7xx_l4_cfg__dma_system,
+ 	&dra7xx_l3_main_1__tpcc,
+ 	&dra7xx_l3_main_1__tptc0,
 -- 
 2.21.0
