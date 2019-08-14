@@ -1,30 +1,79 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 07/14] net: phy: adin: make RMII fifo depth
- configurable
-Date: Wed, 14 Aug 2019 10:53:01 -0700
-Message-ID: <653e9be4-dde0-4d50-b2d1-fc7b5c5118b9@gmail.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-8-alexandru.ardelean@analog.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 02/22] arm64: dts: qcom: sm8150-mtp: add base dts file
+Date: Wed, 14 Aug 2019 10:53:32 -0700
+Message-ID: <20190814175332.GG6167@minitux>
+References: <20190814125012.8700-1-vkoul@kernel.org>
+ <20190814125012.8700-3-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812112350.15242-8-alexandru.ardelean@analog.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190814125012.8700-3-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, hkallweit1@gmail.com, andrew@lunn.ch
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed 14 Aug 05:49 PDT 2019, Vinod Koul wrote:
 
-
-On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
-> The FIFO depth can be configured for the RMII mode. This change adds
-> support for doing this via device-tree (or ACPI).
+> This add base DTS file for sm8150-mtp and enables
+> boot to console
 > 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile       |  1 +
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 28 +++++++++++++++++++++++++
+>  2 files changed, 29 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0a7e5dfce6f7..1964dacaf19b 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> new file mode 100644
+> index 000000000000..df08ee50510d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -0,0 +1,28 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2019, Linaro Limited
+> +
+> +/dts-v1/;
+> +
+> +#include "sm8150.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. SM8150 MTP";
+> +	compatible = "qcom,sm8150-mtp";
+> +
+> +	aliases {
+> +		serial0 = &uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&qupv3_id_1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> -- 
+> 2.20.1
+> 
