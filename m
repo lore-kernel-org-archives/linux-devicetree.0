@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 22/22] arm64: dts: qcom: sm8150: Add APSS shared mailbox
-Date: Wed, 14 Aug 2019 18:20:12 +0530
-Message-ID: <20190814125012.8700-23-vkoul@kernel.org>
+Subject: [PATCH 21/22] arm64: dts: qcom: sm8150: Add SMEM nodes
+Date: Wed, 14 Aug 2019 18:20:11 +0530
+Message-ID: <20190814125012.8700-22-vkoul@kernel.org>
 References: <20190814125012.8700-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,42 +14,55 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sibi Sankar <sibis@codeaurora.org>
 
-Add APSS shared mailbox support to SM8150 SoC.
+Add the necessary dt nodes to support SMEM on SM8150 SoC.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 5df3f335272a..88cbab4a9297 100644
+index 19be87dc893f..5df3f335272a 100644
 --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -5,6 +5,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-sm8150.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/clock/qcom,rpmh.h>
+@@ -142,6 +142,12 @@
+ 		};
+ 	};
  
- / {
- 	interrupt-parent = <&intc>;
-@@ -338,6 +339,16 @@
- 			#interrupt-cells = <2>;
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x1000>;
++		#hwlock-cells = <1>;
++	};
++
+ 	memory@80000000 {
+ 		device_type = "memory";
+ 		/* We expect the bootloader to fill in the size */
+@@ -269,6 +275,12 @@
+ 		};
+ 	};
+ 
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_mem>;
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
+ 	soc: soc@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -306,6 +318,11 @@
+ 			};
  		};
  
-+		aoss_qmp: qmp@c300000 {
-+			compatible = "qcom,sm8150-aoss-qmp";
-+			reg = <0x0c300000 0x100000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+			mboxes = <&apss_shared 0>;
-+
-+			#clock-cells = <0>;
-+			#power-domain-cells = <1>;
++		tcsr_mutex_regs: syscon@1f40000 {
++			compatible = "syscon";
++			reg = <0x01f40000 0x40000>;
 +		};
 +
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			interrupt-controller;
+ 		tlmm: pinctrl@3100000 {
+ 			compatible = "qcom,sm8150-pinctrl";
+ 			reg = <0x03100000 0x300000>,
 -- 
 2.20.1
