@@ -1,91 +1,130 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 01/14] arm64: dts: meson: fix ethernet mac reg format
-Date: Wed, 14 Aug 2019 16:29:05 +0200
-Message-ID: <20190814142918.11636-2-narmstrong@baylibre.com>
-References: <20190814142918.11636-1-narmstrong@baylibre.com>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+Date: Wed, 14 Aug 2019 15:41:00 +0100
+Message-ID: <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
+References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
+ <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814142918.11636-1-narmstrong@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-axg-s400.dt.yaml: soc: ethernet@ff3f0000:reg:0: [0, 4282318848, 0, 65536, 0, 4284695872, 0, 8] is too long
-meson-axg-s400.dt.yaml: ethernet@ff3f0000: reg: [[0, 4282318848, 0, 65536, 0, 4284695872, 0, 8]] is too short
-meson-g12a-u200.dt.yaml: soc: ethernet@ff3f0000:reg:0: [0, 4282318848, 0, 65536, 0, 4284695872, 0, 8] is too long
-meson-g12a-u200.dt.yaml: ethernet@ff3f0000: reg: [[0, 4282318848, 0, 65536, 0, 4284695872, 0, 8]] is too short
-meson-gxbb-nanopi-k2.dt.yaml: soc: ethernet@c9410000:reg:0: [0, 3376480256, 0, 65536, 0, 3364046144, 0, 4] is too long
-meson-gxl-s805x-libretech-ac.dt.yaml: soc: ethernet@c9410000:reg:0: [0, 3376480256, 0, 65536, 0, 3364046144, 0, 4] is too lon
+Hi Yong Wu,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi  | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 3 ---
- 4 files changed, 6 insertions(+), 9 deletions(-)
+Sorry, but I'm still deeply confused by this patch.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 6219337033a0..4a134d29491d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -174,8 +174,8 @@
- 			compatible = "amlogic,meson-axg-dwmac",
- 				     "snps,dwmac-3.70a",
- 				     "snps,dwmac";
--			reg = <0x0 0xff3f0000 0x0 0x10000
--			       0x0 0xff634540 0x0 0x8>;
-+			reg = <0x0 0xff3f0000 0x0 0x10000>,
-+			      <0x0 0xff634540 0x0 0x8>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index f8d43e3dcf20..465106d37289 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -141,8 +141,8 @@
- 			compatible = "amlogic,meson-axg-dwmac",
- 				     "snps,dwmac-3.70a",
- 				     "snps,dwmac";
--			reg = <0x0 0xff3f0000 0x0 0x10000
--			       0x0 0xff634540 0x0 0x8>;
-+			reg = <0x0 0xff3f0000 0x0 0x10000>,
-+			      <0x0 0xff634540 0x0 0x8>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			clocks = <&clkc CLKID_ETH>,
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 74d03fc706be..faff77175486 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -489,8 +489,8 @@
- 			compatible = "amlogic,meson-gxbb-dwmac",
- 				     "snps,dwmac-3.70a",
- 				     "snps,dwmac";
--			reg = <0x0 0xc9410000 0x0 0x10000
--			       0x0 0xc8834540 0x0 0x4>;
-+			reg = <0x0 0xc9410000 0x0 0x10000>,
-+			      <0x0 0xc8834540 0x0 0x4>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index c959456bacc6..ee1ecdbcc958 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -80,9 +80,6 @@
+On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
+> MediaTek extend the arm v7s descriptor to support the dram over 4GB.
+> 
+> In the mt2712 and mt8173, it's called "4GB mode", the physical address
+> is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
+> is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
+> bit32 is always enabled. thus, in the M4U, we always enable the bit9
+> for all PTEs which means to enable bit32 of physical address. Here is
+> the detailed remap relationship in the "4GB mode":
+> CPU PA         ->    HW PA
+> 0x4000_0000          0x1_4000_0000 (Add bit32)
+> 0x8000_0000          0x1_8000_0000 ...
+> 0xc000_0000          0x1_c000_0000 ...
+> 0x1_0000_0000        0x1_0000_0000 (No change)
+
+So in this example, there are no PAs below 0x4000_0000 yet you later
+add code to deal with that:
+
+> +	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
+> +	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
+> +		paddr |= BIT_ULL(32);
+
+Why? Mainline currently doesn't do anything like this for the "4gb mode"
+support as far as I can tell. In fact, we currently unconditionally set
+bit 32 in the physical address returned by iova_to_phys() which wouldn't
+match your CPU PAs listed above, so I'm confused about how this is supposed
+to work.
+
+The way I would like this quirk to work is that the io-pgtable code
+basically sets bit 9 in the pte when bit 32 is set in the physical address,
+and sets bit 4 in the pte when bit 33 is set in the physical address. It
+would then do the opposite when converting a pte to a physical address.
+
+That way, your driver can call the page table code directly with the high
+addresses and we don't have to do any manual offsetting or range checking
+in the page table code.
+
+Please can you explain to me why the diff below doesn't work on top of
+this series? I'm happy to chat on IRC if you think it would be easier,
+because I have a horrible feeling that we've been talking past each other
+and I'd like to see this support merged for 5.4.
+
+Will
+
+--->8
+
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index ab12ef5f8b03..d8d84617c822 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -184,7 +184,7 @@ static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
+ 	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
+ 
+ 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
+-		if ((paddr & BIT_ULL(32)) || cfg->oas == ARM_V7S_MTK_4GB_OAS)
++		if (paddr & BIT_ULL(32))
+ 			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
+ 		if (paddr & BIT_ULL(33))
+ 			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
+@@ -206,17 +206,14 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 		mask = ARM_V7S_LVL_MASK(lvl);
+ 
+ 	paddr = pte & mask;
+-	if (cfg->oas == 32 || !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT))
+-		return paddr;
+ 
+-	if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
+-		paddr |= BIT_ULL(33);
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
++			paddr |= BIT_ULL(32);
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
++			paddr |= BIT_ULL(33);
++	}
+ 
+-	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
+-	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
+-		paddr |= BIT_ULL(32);
+-	else if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
+-		paddr |= BIT_ULL(32);
+ 	return paddr;
+ }
+ 
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index d5b9454352fd..3ae54dedede0 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -286,7 +286,7 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
+ 	if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+ 		dom->cfg.oas = 32;
+ 	else if (data->enable_4GB)
+-		dom->cfg.oas = ARM_V7S_MTK_4GB_OAS;
++		dom->cfg.oas = 33;
+ 	else
+ 		dom->cfg.oas = 34;
+ 
+diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+index 27337395bd42..a2a52c349fe4 100644
+--- a/include/linux/io-pgtable.h
++++ b/include/linux/io-pgtable.h
+@@ -113,8 +113,6 @@ struct io_pgtable_cfg {
+ 	};
  };
  
- &ethmac {
--	reg = <0x0 0xc9410000 0x0 0x10000
--	       0x0 0xc8834540 0x0 0x4>;
+-#define ARM_V7S_MTK_4GB_OAS			33
 -
- 	clocks = <&clkc CLKID_ETH>,
- 		 <&clkc CLKID_FCLK_DIV2>,
- 		 <&clkc CLKID_MPLL2>;
--- 
-2.22.0
+ /**
+  * struct io_pgtable_ops - Page table manipulation API for IOMMU drivers.
+  *
