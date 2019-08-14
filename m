@@ -1,77 +1,133 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 1/3] ARM: dts: imx6ul: Add csi node
-Date: Wed, 14 Aug 2019 12:42:37 +0300
-Message-ID: <20190814094237.GJ2527@valkosipuli.retiisi.org.uk>
-References: <20190731163257.32448-1-sebastien.szymanski@armadeus.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
+ documentation
+Date: Wed, 14 Aug 2019 11:46:09 +0200
+Message-ID: <20190814094609.pm7ulg57e37pphrs@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de>
+ <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+ <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+ <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
+ <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
+ <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
+ <20190814084929.q3uy7cpf4ullpevo@pengutronix.de>
+ <CAMz4kuLFeg2OyzgxZLp4Ks5ucTptOBTrxod5yVFXQ+q8ttKjcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190731163257.32448-1-sebastien.szymanski@armadeus.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, devel@driverdev.osuosl.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+In-Reply-To: <CAMz4kuLFeg2OyzgxZLp4Ks5ucTptOBTrxod5yVFXQ+q8ttKjcw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi S=E9bastien,
+Hello,
 
-On Wed, Jul 31, 2019 at 06:32:57PM +0200, S=E9bastien Szymanski wrote:
-> Add csi node for i.MX6UL SoC.
-> =
+On Wed, Aug 14, 2019 at 05:33:25PM +0800, Baolin Wang wrote:
+> On Wed, 14 Aug 2019 at 16:49, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Wed, Aug 14, 2019 at 03:52:08PM +0800, Baolin Wang wrote:
+> > > On 14/08/2019, Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
+> > > >> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-König
+> > > >> <u.kleine-koenig@pengutronix.de> wrote:
+> > > >> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> > > >> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
+> > > >> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > >> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> > > >> > > > > +- assigned-clock-parents: The phandle of the parent clock of PWM
+> > > >> > > > > clock.
+> > > >> > > >
+> > > >> > > > I'm not sure you need to point out assigned-clocks and
+> > > >> > > > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> > > >> > > > these should be "required properties".
+> > > >> > >
+> > > >> > > I think I should describe any properties used by PWM node, like
+> > > >> > > 'clocks' and 'clock-names' properties, though they are common clock
+> > > >> > > properties.
+> > > >> >
+> > > >> > Then you might want to describe also "status", "assigned-clock-rates",
+> > > >> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names"
+> > > >> > and
+> > > >> > probably another dozen I'm not aware of.
+> > > >>
+> > > >> We usually do not describe 'status', but if your device node used
+> > > >> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
+> > > >> describe them to let users know what is the purpose of these
+> > > >> properties. That's also asked by DT maintainer Rob.
+> > > >
+> > > > Does this convince you that you should also describe "pinctrl-$n" and
+> > > > the others? If not, why not? We also usually don't describe
+> > >
+> > > Our PWM device node did not use "pinctrl-$n" things, why I should
+> > > describe "pinctrl-$n"?
+> >
+> > The binding you implemented supports "pinctrl-$n". And this is described
+> > somewhere in the generic pinctrl binding docs. The same applies to
+> > "assigned-clock-parents".
+> >
+> > That you happen to use assigned-clock-parents but not pinctrl-$n on the
+> > board you used to develop your driver is a detail that IMHO shouldn't
+> > decide about being listed in the binding doc for your PWM type.
+> >
+> > > If some devices use pinctrl, yes, they should describe what is the
+> > > purpose of pinctrl, see:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mmc/sdhci-sprd.txt
+> >
+> > I agree that if the driver assumes special pinctrl names this is worth
+> > mentioning. If however there is nothing special and just some generic
+> > stuff is used that is described in some other location then I'd chose to
+> > not add this redundant information to the binding document. So if I
+> > reviewed the patch that created
+> > Documentation/devicetree/bindings/mmc/sdhci-sprd.txt I would have
+> > suggested to drop "assigned-clocks" and "assigned-clock-parents" there,
+> > too.
+> >
+> > > > assigned-clock-parents. For me these are all in the same catagory:
+> > >
+> > > Lots of dt bindings describe 'assigned-clock-parents',:
+> > > ./Documentation/devicetree/bindings/display/msm/dsi.txt
+> > > ./Documentation/devicetree/bindings/display/msm/dsi.txt
+> > > ./Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
+> > > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> > > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> > > ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+> > > ./Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
+> > > ./Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
+> > > ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+> > > ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+> > > ......
+> >
+> > I didn't check each of them, but I assume the same applies here, too.
+> > Please don't copy blindly but think before using other people's stuff as
+> 
+> I did not  copy blindly.
 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.com>
+OK, there was no offence intended.
 
-This should be probably merged through the ARM tree.
+> > reference. Even in the Linux kernel where reviews seem and are told to
+> > catch non-optimal stuff, there are places where this doesn't work. IMHO
+> > the key question is: Does it add value to describe "assigned-clocks" in
+> > the binding for your PWM device given that you're only using this
+> > generic and well documented construct?
+> 
+> I just want to remind users that they should set the parent clock for
+> PWMs, otherwise the PWM source clock can be not available.
 
-I can take the other two.
+Probably it is just subjective where to draw the line here. There are a
+thousand and one things that can go wrong when the PWM should be used.
+To me it seems artificial to pick one of these and mention it in a
+document that is supposed to describe how to formalize such a device.
 
-> ---
-> =
+But given that we're going in cycles, I will stop trying to convince you
+now.
 
-> Changes for v3:
->  - none
-> =
+Best regards
+Uwe
 
-> Changes for v2:
->  - only "mclk" clock is required now.
-> =
-
->  arch/arm/boot/dts/imx6ul.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> =
-
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index 81d4b4925127..56cfcf0e5084 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -957,6 +957,15 @@
->  				};
->  			};
->  =
-
-> +			csi: csi@21c4000 {
-> +				compatible =3D "fsl,imx6ul-csi", "fsl,imx7-csi";
-> +				reg =3D <0x021c4000 0x4000>;
-> +				interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks =3D <&clks IMX6UL_CLK_CSI>;
-> +				clock-names =3D "mclk";
-> +				status =3D "disabled";
-> +			};
-> +
->  			lcdif: lcdif@21c8000 {
->  				compatible =3D "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
->  				reg =3D <0x021c8000 0x4000>;
-
--- =
-
-Sakari Ailus
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
