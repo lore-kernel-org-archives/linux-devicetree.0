@@ -1,72 +1,85 @@
-From: Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v2 10/10] arm: dts: mediatek: add mt7629 pwm support
-Date: Wed, 14 Aug 2019 18:43:40 +0800
-Message-ID: <1565779497-23621-3-git-send-email-sam.shih@mediatek.com>
-References: <621e49c01b943edb6ddac9182f34719eb0727f01.1548313019.git.ryder.lee@mediatek.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH v2 00/15] Improvements and fixes for mxsfb DRM driver
+Date: Wed, 14 Aug 2019 13:48:36 +0300
+Message-ID: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <621e49c01b943edb6ddac9182f34719eb0727f01.1548313019.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, sam shih <sam.shih@mediatek.com>
+To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: sam shih <sam.shih@mediatek.com>
+This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
+and 8QXP). Following, are the new features added and fixes from this
+patch-set:
 
-This adds pwm support for MT7629.
+1. Add support for drm_bridge
+On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
+display connector, where an LCD panel can be attached, but instead it is
+connected to DSI controller. Since this DSI stands between the display
+controller (eLCDIF) and the physical connector, the DSI can be implemented
+as a DRM bridge. So, in order to be able to connect the mxsfb driver to
+the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
+driver (the actual driver for the eLCDIF block).
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm/boot/dts/mt7629.dtsi | 14 ++++++++++++++
- drivers/pwm/pwm-mediatek.c    |  7 +++++++
- 2 files changed, 21 insertions(+)
+2. Add support for additional pixel formats
+Some of the pixel formats needed by Android were not implemented in this
+driver, but they were actually supported. So, add support for them.
 
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..352df8d61788 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -241,6 +241,18 @@
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm@11006000 {
-+			compatible = "mediatek,mt7629-pwm";
-+			reg = <0 0x11006000 0 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+				 <&pericfg CLK_PERI_PWM_PD>,
-+				 <&pericfg CLK_PERI_PWM1_PD>;
-+			clock-names = "top", "main", "pwm1";
-+			num-pwms = <1>;
-+			status = "disabled";
-+		};
-+
- 		i2c: i2c@11007000 {
- 			compatible = "mediatek,mt7629-i2c",
- 				     "mediatek,mt2712-i2c";
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 922a7543a2b1..d2352ca7792e 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -327,11 +327,18 @@ static const struct pwm_mediatek_of_data mt7628_pwm_data = {
- 	.has_clks = false,
- };
- 
-+static const struct pwm_mediatek_of_data mt7629_pwm_data = {
-+	.fallback_npwms = 1,
-+	.pwm45_fixup = false,
-+	.has_clks = true,
-+};
-+
- static const struct of_device_id pwm_mediatek_of_match[] = {
- 	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
- 	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
- 	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
- 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
-+	{ .compatible = "mediatek,mt7629-pwm", .data = &mt7629_pwm_data },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, pwm_mediatek_of_match);
+3. Add support for horizontal stride
+Having support for horizontal stride allows the use of eLCDIF with a GPU
+(for example) that can only output resolution sizes multiple of a power of
+8. For example, 1080 is not a power of 16, so in order to support 1920x1080
+output from GPUs that can produce linear buffers only in sizes multiple to 16,
+this feature is needed.
+
+3. Few minor features and bug-fixing
+The addition of max-res DT property was actually needed in order to limit
+the bandwidth usage of the eLCDIF block. This is need on systems where
+multiple display controllers are presend and the memory bandwidth is not
+enough to handle all of them at maximum capacity (like it is the case on
+8MQ, where there are two display controllers: DCSS and eLCDIF).
+The rest of the patches are bug-fixes.
+
+v2:
+- Collected Tested-by from Guido
+- Split the first patch, which added more than one feature into relevant
+  patches, explaining each feature added
+- Also split the second patch into more patches, to differentiate between
+  the feature itself (additional pixel formats support) and the cleanup
+  of the register definitions for a better representation (guido)
+- Included a patch submitted by Guido, while he was testing my patch-set
+
+Guido Günther (1):
+  drm/mxsfb: Read bus flags from bridge if present
+
+Mirela Rabulea (1):
+  drm/mxsfb: Signal mode changed when bpp changed
+
+Robert Chiras (13):
+  drm/mxsfb: Update mxsfb to support a bridge
+  drm/mxsfb: Add defines for the rest of registers
+  drm/mxsfb: Reset vital register for a proper initialization
+  drm/mxsfb: Update register definitions using bit manipulation defines
+  drm/mxsfb: Update mxsfb with additional pixel formats
+  drm/mxsfb: Fix the vblank events
+  dt-bindings: display: Add max-res property for mxsfb
+  drm/mxsfb: Add max-res property for MXSFB
+  drm/mxsfb: Update mxsfb to support LCD reset
+  drm/mxsfb: Improve the axi clock usage
+  drm/mxsfb: Clear OUTSTANDING_REQS bits
+  drm/mxsfb: Add support for horizontal stride
+  drm/mxsfb: Add support for live pixel format change
+
+ .../devicetree/bindings/display/mxsfb.txt          |   6 +
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 190 +++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  10 +-
+ drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
+ 6 files changed, 573 insertions(+), 139 deletions(-)
+
 -- 
-2.17.1
+2.7.4
