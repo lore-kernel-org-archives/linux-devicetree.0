@@ -1,151 +1,168 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v2 2/2] mfd: madera: Add support for requesting the supply clocks
-Date: Wed, 14 Aug 2019 10:21:40 +0100
-Message-ID: <20190814092140.30995-2-ckeepax@opensource.cirrus.com>
-References: <20190814092140.30995-1-ckeepax@opensource.cirrus.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
+Date: Wed, 14 Aug 2019 11:23:39 +0200
+Message-ID: <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
+ <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
+ <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814092140.30995-1-ckeepax@opensource.cirrus.com>
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add the ability to get the clock for each clock input pin of the chip
-and enable MCLK2 since that is expected to be a permanently enabled
-32kHz clock.
+Hello Baolin,
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
+> On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
+> > [...]
+> Not really, our hardware's method is, when you changed a new
+> configuration (MOD or duty is changed) , the hardware will wait for a
+> while to complete current period, then change to the new period.
 
-Changes since v1:
- - Fail probe if we encounter a clock error
- - Print a warning if MCLK2 is not specified
+Can you describe that in more detail? This doesn't explain why MOD must be
+configured before DUTY. Is there another reason for that?
 
-Thanks,
-Charles
+> > > +static int sprd_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > +                       struct pwm_state *state)
+> > > +{
+> > > +     struct sprd_pwm_chip *spc =
+> > > +             container_of(chip, struct sprd_pwm_chip, chip);
+> > > +     struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> > > +     struct pwm_state cstate;
+> > > +     int ret;
+> > > +
+> > > +     pwm_get_state(pwm, &cstate);
+> >
+> > I don't like it when pwm drivers call pwm_get_state(). If ever
+> > pwm_get_state would take a lock, this would deadlock as the lock is
+> > probably already taken when your .apply() callback is running. Moreover
+> > the (expensive) calculations are not used appropriately. See below.
+> 
+> I do not think so, see:
+> 
+> static inline void pwm_get_state(const struct pwm_device *pwm, struct
+> pwm_state *state)
+> {
+>         *state = pwm->state;
+> }
 
- drivers/mfd/madera-core.c       | 29 ++++++++++++++++++++++++++++-
- include/linux/mfd/madera/core.h | 11 +++++++++++
- 2 files changed, 39 insertions(+), 1 deletion(-)
+OK, the PWM framework currently caches this for you. Still I would
+prefer if you didn't call PWM API functions in your lowlevel driver.
+There is (up to now) nothing bad that will happen if you do it anyhow,
+but when the PWM framework evolves it might (and I want to work on such
+an evolution). You must not call clk_get_rate() in a .set_rate()
+callback of a clock either.
+ 
+> > > +     if (state->enabled) {
+> > > +             if (!cstate.enabled) {
+> >
+> > To just know the value of cstate.enabled you only need to read the
+> > register with the ENABLE flag. That is cheaper than calling get_state.
+> >
+> > > +                     /*
+> > > +                      * The clocks to PWM channel has to be enabled first
+> > > +                      * before writing to the registers.
+> > > +                      */
+> > > +                     ret = clk_bulk_prepare_enable(SPRD_PWM_NUM_CLKS,
+> > > +                                                   chn->clks);
+> > > +                     if (ret) {
+> > > +                             dev_err(spc->dev,
+> > > +                                     "failed to enable pwm%u clocks\n",
+> > > +                                     pwm->hwpwm);
+> > > +                             return ret;
+> > > +                     }
+> > > +             }
+> > > +
+> > > +             if (state->period != cstate.period ||
+> > > +                 state->duty_cycle != cstate.duty_cycle) {
+> >
+> > This is a coarse check. If state->period and cstate.period only differ
+> > by one calling sprd_pwm_config(spc, pwm, state->duty_cycle,
+> > state->period) probably results in a noop. So you're doing an expensive
+> > division to get an unreliable check. It would be better to calculate the
+> > register values from the requested state and compare the register
+> > values. The costs are more or less the same than calling .get_state and
+> > the check is reliable. And you don't need to spend another division to
+> > calculate the new register values.
+> 
+> Same as above comment.
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 29540cbf75934..9a0dee9400dd8 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -428,6 +428,7 @@ static void madera_set_micbias_info(struct madera *madera)
+When taking the caching into account (which I wouldn't) the check is
+still incomplete. OK, you could argue avoiding the recalculation in 90%
+(to just say some number) of the cases where it is unnecessary is good.
  
- int madera_dev_init(struct madera *madera)
- {
-+	static const char * const mclk_name[] = { "mclk1", "mclk2", "mclk3" };
- 	struct device *dev = madera->dev;
- 	unsigned int hwid;
- 	int (*patch_fn)(struct madera *) = NULL;
-@@ -450,6 +451,22 @@ int madera_dev_init(struct madera *madera)
- 		       sizeof(madera->pdata));
- 	}
- 
-+	BUILD_BUG_ON(ARRAY_SIZE(madera->mclk) != ARRAY_SIZE(mclk_name));
-+	for (i = 0; i < ARRAY_SIZE(madera->mclk); i++) {
-+		madera->mclk[i] = devm_clk_get_optional(madera->dev,
-+							mclk_name[i]);
-+		if (IS_ERR(madera->mclk[i])) {
-+			ret = PTR_ERR(madera->mclk[i]);
-+			dev_err(madera->dev, "Failed to get %s: %d\n",
-+				mclk_name[i], ret);
-+			return ret;
-+		}
-+	}
-+
-+	/* Not using devm_clk_get to prevent breakage of existing DTs */
-+	if (!madera->mclk[MADERA_MCLK2])
-+		dev_warn(madera->dev, "Missing MCLK2, requires 32kHz clock\n");
-+
- 	ret = madera_get_reset_gpio(madera);
- 	if (ret)
- 		return ret;
-@@ -660,13 +677,19 @@ int madera_dev_init(struct madera *madera)
- 	}
- 
- 	/* Init 32k clock sourced from MCLK2 */
-+	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2]);
-+	if (ret != 0) {
-+		dev_err(madera->dev, "Failed to enable 32k clock: %d\n", ret);
-+		goto err_reset;
-+	}
-+
- 	ret = regmap_update_bits(madera->regmap,
- 			MADERA_CLOCK_32K_1,
- 			MADERA_CLK_32K_ENA_MASK | MADERA_CLK_32K_SRC_MASK,
- 			MADERA_CLK_32K_ENA | MADERA_32KZ_MCLK2);
- 	if (ret) {
- 		dev_err(madera->dev, "Failed to init 32k clock: %d\n", ret);
--		goto err_reset;
-+		goto err_clock;
- 	}
- 
- 	pm_runtime_set_active(madera->dev);
-@@ -687,6 +710,8 @@ int madera_dev_init(struct madera *madera)
- 
- err_pm_runtime:
- 	pm_runtime_disable(madera->dev);
-+err_clock:
-+	clk_disable_unprepare(madera->mclk[MADERA_MCLK2]);
- err_reset:
- 	madera_enable_hard_reset(madera);
- 	regulator_disable(madera->dcvdd);
-@@ -713,6 +738,8 @@ int madera_dev_exit(struct madera *madera)
- 	 */
- 	pm_runtime_disable(madera->dev);
- 
-+	clk_disable_unprepare(madera->mclk[MADERA_MCLK2]);
-+
- 	regulator_disable(madera->dcvdd);
- 	regulator_put(madera->dcvdd);
- 
-diff --git a/include/linux/mfd/madera/core.h b/include/linux/mfd/madera/core.h
-index 7ffa696cce7ca..2b6c83fe221dc 100644
---- a/include/linux/mfd/madera/core.h
-+++ b/include/linux/mfd/madera/core.h
-@@ -8,6 +8,7 @@
- #ifndef MADERA_CORE_H
- #define MADERA_CORE_H
- 
-+#include <linux/clk.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/madera/pdata.h>
-@@ -29,6 +30,13 @@ enum madera_type {
- 	CS42L92 = 9,
- };
- 
-+enum {
-+	MADERA_MCLK1,
-+	MADERA_MCLK2,
-+	MADERA_MCLK3,
-+	MADERA_NUM_MCLK
-+};
-+
- #define MADERA_MAX_CORE_SUPPLIES	2
- #define MADERA_MAX_GPIOS		40
- 
-@@ -155,6 +163,7 @@ struct snd_soc_dapm_context;
-  * @irq_dev:		the irqchip child driver device
-  * @irq_data:		pointer to irqchip data for the child irqchip driver
-  * @irq:		host irq number from SPI or I2C configuration
-+ * @mclk:		pointers to clock supplies
-  * @out_clamp:		indicates output clamp state for each analogue output
-  * @out_shorted:	indicates short circuit state for each analogue output
-  * @hp_ena:		bitflags of enable state for the headphone outputs
-@@ -184,6 +193,8 @@ struct madera {
- 	struct regmap_irq_chip_data *irq_data;
- 	int irq;
- 
-+	struct clk *mclk[MADERA_NUM_MCLK];
-+
- 	unsigned int num_micbias;
- 	unsigned int num_childbias[MADERA_MAX_MICBIAS];
- 
+> >
+> > > +                     ret = sprd_pwm_config(spc, pwm, state->duty_cycle,
+> > > +                                           state->period);
+> > > +                     if (ret)
+> > > +                             return ret;
+> > > +             }
+> > > +
+> > > +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 1);
+> > > +     } else if (cstate.enabled) {
+> > > +             sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_ENABLE, 0);
+> > > +
+> > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
+> >
+> > Assuming writing SPRD_PWM_ENABLE = 0 to the hardware completes the
+> > currently running period and the write doesn't block that long: Does
+> > disabling the clocks interfere with completing the period?
+> 
+> Writing SPRD_PWM_ENABLE = 0 will stop the PWM immediately, will not
+> waiting for completing the currently period.
+
+The currently active period is supposed to be completed. If you cannot
+implement this please point this out as limitation at the top of the
+driver.
+
+Honestly I think most pwm users won't mind and they should get the
+possibility to tell they prefer pwm_apply_state to return immediately
+even if this could result in a spike. But we're not there yet.
+(Actually there are three things a PWM consumer might want:
+
+ a) stop immediately;
+ b) complete the currently running period, then stop and return only
+    when the period is completed; or
+ c) complete the currently running period and then stop, return immediately if
+    possible.
+
+Currently the expected semantic is b).
+
+> > > +static int sprd_pwm_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
+> > > +     int ret, i;
+> > > +
+> > > +     ret = pwmchip_remove(&spc->chip);
+> > > +
+> > > +     for (i = 0; i < spc->num_pwms; i++) {
+> > > +             struct sprd_pwm_chn *chn = &spc->chn[i];
+> > > +
+> > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
+> >
+> > If a PWM was still running you're effectively stopping it here, right?
+> > Are you sure you don't disable once more than you enabled?
+> 
+> Yes, you are right. I should check current enable status of the PWM channel.
+> Thanks for your comments.
+
+I didn't recheck, but I think the right approach is to not fiddle with
+the clocks at all and rely on the PWM framework to not let someone call
+sprd_pwm_remove when a PWM is still in use.
+
+Best regards
+Uwe
+
 -- 
-2.11.0
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
