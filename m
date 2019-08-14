@@ -1,66 +1,174 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 04/15] drm/mxsfb: Reset vital register for a proper initialization
-Date: Wed, 14 Aug 2019 13:48:40 +0300
-Message-ID: <1565779731-1300-5-git-send-email-robert.chiras@nxp.com>
-References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [RESEND PATCH] ARM: dts: Add stmpe-adc DT node to Toradex T30 modules
+Date: Wed, 14 Aug 2019 10:53:38 +0000
+Message-ID: <20190814105318.21902-1-philippe.schenker@toradex.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Some of the regiters need, like LCDC_CTRL and CTRL2_OUTSTANDING_REQS
-needs to be properly cleared and initialized for a better start and stop
-routine.
+Add the stmpe-adc DT node as found on Toradex T30 modules
 
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index b69ace8..5e44f57 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -127,6 +127,10 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
- 		clk_prepare_enable(mxsfb->clk_disp_axi);
- 	clk_prepare_enable(mxsfb->clk);
- 
-+	if (mxsfb->devdata->ipversion >= 4)
-+		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
-+		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+ arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi | 22 ++++++++++++++--------
+ arch/arm/boot/dts/tegra30-apalis.dtsi      | 22 ++++++++++++++--------
+ arch/arm/boot/dts/tegra30-colibri.dtsi     | 22 ++++++++++++++--------
+ 3 files changed, 42 insertions(+), 24 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi b/arch/arm/boot/dts=
+/tegra30-apalis-v1.1.dtsi
+index 02f8126481a2..8b7a827d604d 100644
+--- a/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi
+@@ -994,11 +994,17 @@
+ 			id =3D <0>;
+ 			blocks =3D <0x5>;
+ 			irq-trigger =3D <0x1>;
++			/* 3.25 MHz ADC clock speed */
++			st,adc-freq =3D <1>;
++			/* 12-bit ADC */
++			st,mod-12b =3D <1>;
++			/* internal ADC reference */
++			st,ref-sel =3D <0>;
++			/* ADC converstion time: 80 clocks */
++			st,sample-time =3D <4>;
+=20
+ 			stmpe_touchscreen {
+ 				compatible =3D "st,stmpe-ts";
+-				/* 3.25 MHz ADC clock speed */
+-				st,adc-freq =3D <1>;
+ 				/* 8 sample average control */
+ 				st,ave-ctrl =3D <3>;
+ 				/* 7 length fractional part in z */
+@@ -1008,17 +1014,17 @@
+ 				 * current limit value
+ 				 */
+ 				st,i-drive =3D <1>;
+-				/* 12-bit ADC */
+-				st,mod-12b =3D <1>;
+-				/* internal ADC reference */
+-				st,ref-sel =3D <0>;
+-				/* ADC converstion time: 80 clocks */
+-				st,sample-time =3D <4>;
+ 				/* 1 ms panel driver settling time */
+ 				st,settling =3D <3>;
+ 				/* 5 ms touch detect interrupt delay */
+ 				st,touch-det-delay =3D <5>;
+ 			};
 +
- 	/* If it was disabled, re-enable the mode again */
- 	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
- 
-@@ -136,12 +140,19 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
- 	writel(reg, mxsfb->base + LCDC_VDCTRL4);
- 
- 	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_SET);
-+	writel(CTRL1_RECOVERY_ON_UNDERFLOW, mxsfb->base + LCDC_CTRL1 + REG_SET);
- }
- 
- static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
- {
- 	u32 reg;
- 
-+	if (mxsfb->devdata->ipversion >= 4)
-+		writel(CTRL2_OUTSTANDING_REQS(0x7),
-+		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
++			stmpe_adc {
++				compatible =3D "st,stmpe-adc";
++				/* forbid to use ADC channels 3-0 (touch) */
++				st,norequest-mask =3D <0x0F>;
++			};
+ 		};
+=20
+ 		/*
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegr=
+a30-apalis.dtsi
+index 7f112f192fe9..c18f6f61d764 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -976,11 +976,17 @@
+ 			id =3D <0>;
+ 			blocks =3D <0x5>;
+ 			irq-trigger =3D <0x1>;
++			/* 3.25 MHz ADC clock speed */
++			st,adc-freq =3D <1>;
++			/* 12-bit ADC */
++			st,mod-12b =3D <1>;
++			/* internal ADC reference */
++			st,ref-sel =3D <0>;
++			/* ADC converstion time: 80 clocks */
++			st,sample-time =3D <4>;
+=20
+ 			stmpe_touchscreen {
+ 				compatible =3D "st,stmpe-ts";
+-				/* 3.25 MHz ADC clock speed */
+-				st,adc-freq =3D <1>;
+ 				/* 8 sample average control */
+ 				st,ave-ctrl =3D <3>;
+ 				/* 7 length fractional part in z */
+@@ -990,17 +996,17 @@
+ 				 * current limit value
+ 				 */
+ 				st,i-drive =3D <1>;
+-				/* 12-bit ADC */
+-				st,mod-12b =3D <1>;
+-				/* internal ADC reference */
+-				st,ref-sel =3D <0>;
+-				/* ADC converstion time: 80 clocks */
+-				st,sample-time =3D <4>;
+ 				/* 1 ms panel driver settling time */
+ 				st,settling =3D <3>;
+ 				/* 5 ms touch detect interrupt delay */
+ 				st,touch-det-delay =3D <5>;
+ 			};
 +
-+	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
++			stmpe_adc {
++				compatible =3D "st,stmpe-adc";
++				/* forbid to use ADC channels 3-0 (touch) */
++				st,norequest-mask =3D <0x0F>;
++			};
+ 		};
+=20
+ 		/*
+diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/teg=
+ra30-colibri.dtsi
+index 35af03ca9e90..1f9198bb24ff 100644
+--- a/arch/arm/boot/dts/tegra30-colibri.dtsi
++++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
+@@ -845,11 +845,18 @@
+ 			id =3D <0>;
+ 			blocks =3D <0x5>;
+ 			irq-trigger =3D <0x1>;
++			/* 3.25 MHz ADC clock speed */
++			st,adc-freq =3D <1>;
++			/* 12-bit ADC */
++			st,mod-12b =3D <1>;
++			/* internal ADC reference */
++			st,ref-sel =3D <0>;
++			/* ADC converstion time: 80 clocks */
++			st,sample-time =3D <4>;
++			/* forbid to use ADC channels 3-0 (touch) */
+=20
+ 			stmpe_touchscreen {
+ 				compatible =3D "st,stmpe-ts";
+-				/* 3.25 MHz ADC clock speed */
+-				st,adc-freq =3D <1>;
+ 				/* 8 sample average control */
+ 				st,ave-ctrl =3D <3>;
+ 				/* 7 length fractional part in z */
+@@ -859,17 +866,16 @@
+ 				 * current limit value
+ 				 */
+ 				st,i-drive =3D <1>;
+-				/* 12-bit ADC */
+-				st,mod-12b =3D <1>;
+-				/* internal ADC reference */
+-				st,ref-sel =3D <0>;
+-				/* ADC converstion time: 80 clocks */
+-				st,sample-time =3D <4>;
+ 				/* 1 ms panel driver settling time */
+ 				st,settling =3D <3>;
+ 				/* 5 ms touch detect interrupt delay */
+ 				st,touch-det-delay =3D <5>;
+ 			};
 +
- 	/*
- 	 * Even if we disable the controller here, it will still continue
- 	 * until its FIFOs are running out of data
-@@ -295,6 +306,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
- 	dma_addr_t paddr;
- 
- 	mxsfb_enable_axi_clk(mxsfb);
-+	writel(0, mxsfb->base + LCDC_CTRL);
- 	mxsfb_crtc_mode_set_nofb(mxsfb);
- 
- 	/* Write cur_buf as well to avoid an initial corrupt frame */
--- 
-2.7.4
++			stmpe_adc {
++				compatible =3D "st,stmpe-adc";
++				st,norequest-mask =3D <0x0F>;
++			};
+ 		};
+=20
+ 		/*
+--=20
+2.22.0
