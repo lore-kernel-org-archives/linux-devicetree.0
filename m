@@ -1,122 +1,268 @@
-Return-Path: <SRS0=3ErU=WB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52765 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbfHEKD0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2019 06:03:26 -0400
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 6/8] clk: mvebu: ap806: add AP-DCLK (hclk) to system controller driver
-Date: Mon,  5 Aug 2019 12:03:08 +0200
-Message-Id: <20190805100310.29048-7-miquel.raynal@bootlin.com>
-In-Reply-To: <20190805100310.29048-1-miquel.raynal@bootlin.com>
-References: <20190805100310.29048-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=MmDl=WK=analog.com=Mircea.Caprioru@kernel.org>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V3 1/4] staging: iio: adc: ad7192: Add low_pass_3db_filter_frequency
+Date: Wed, 14 Aug 2019 10:31:47 +0300
+Message-ID: <20190814073150.4602-1-mircea.caprioru@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Marcin Wojtas <mw@semihalf.com>, Stefan Chulski <stefanc@marvell.com>, Yan Markman <ymarkman@marvell.com>, Omri Itach <omrii@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain
+To: jic23@kernel.org
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Omri Itach <omrii@marvell.com>
+By adding this option we are able to remove the sync3 field and dt binding.
+When setting the required cutoff frequency we also determine the ADC
+configuration for chop and sync filter.
 
-Add dynamic AP-DCLK clock (hclk) to system controller driver. AP-DCLK
-is half the rate of DDR clock, so its derrived from Sample At Reset
-configuration. The clock frequency is required for AP806 AXI monitor
-profiling feature.
-
-Signed-off-by: Omri Itach <omrii@marvell.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- drivers/clk/mvebu/ap806-system-controller.c | 48 ++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 2 deletions(-)
+Changelog V2:
+- no changes here
 
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-index 2cf874f01394..bc43adff02e0 100644
---- a/drivers/clk/mvebu/ap806-system-controller.c
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -21,7 +21,7 @@
- #define AP806_SAR_REG			0x400
- #define AP806_SAR_CLKFREQ_MODE_MASK	0x1f
+Changelog V3:
+- no changes here
+
+ drivers/staging/iio/adc/ad7192.c | 148 +++++++++++++++++++++++++++----
+ 1 file changed, 132 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+index 81ea2639c67c..d58ce08f3693 100644
+--- a/drivers/staging/iio/adc/ad7192.c
++++ b/drivers/staging/iio/adc/ad7192.c
+@@ -143,6 +143,10 @@
+ #define AD7192_EXT_FREQ_MHZ_MAX	5120000
+ #define AD7192_INT_FREQ_MHZ	4915200
  
--#define AP806_CLK_NUM			5
-+#define AP806_CLK_NUM			6
- 
- static struct clk *ap806_clks[AP806_CLK_NUM];
- 
-@@ -33,7 +33,7 @@ static struct clk_onecell_data ap806_clk_data = {
- static int ap806_syscon_common_probe(struct platform_device *pdev,
- 				     struct device_node *syscon_node)
++#define AD7192_NO_SYNC_FILTER	1
++#define AD7192_SYNC3_FILTER	3
++#define AD7192_SYNC4_FILTER	4
++
+ /* NOTE:
+  * The AD7190/2/5 features a dual use data out ready DOUT/RDY output.
+  * In order to avoid contentions on the SPI bus, it's therefore necessary
+@@ -250,7 +254,7 @@ static int ad7192_of_clock_select(struct ad7192_state *st)
+ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
  {
--	unsigned int freq_mode, cpuclk_freq;
-+	unsigned int freq_mode, cpuclk_freq, dclk_freq;
- 	const char *name, *fixedclk_name;
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
-@@ -93,8 +93,42 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
+ 	struct iio_dev *indio_dev = spi_get_drvdata(st->sd.spi);
+-	bool rej60_en, sinc3_en, refin2_en, chop_en;
++	bool rej60_en, refin2_en;
+ 	bool buf_en, bipolar, burnout_curr_en;
+ 	unsigned long long scale_uv;
+ 	int i, ret, id;
+@@ -282,24 +286,12 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+ 	if (rej60_en)
+ 		st->mode |= AD7192_MODE_REJ60;
+ 
+-	sinc3_en = of_property_read_bool(np, "adi,sinc3-filter-enable");
+-	if (sinc3_en)
+-		st->mode |= AD7192_MODE_SINC3;
+-
+ 	refin2_en = of_property_read_bool(np, "adi,refin2-pins-enable");
+ 	if (refin2_en && st->devid != ID_AD7195)
+ 		st->conf |= AD7192_CONF_REFSEL;
+ 
+-	chop_en = of_property_read_bool(np, "adi,chop-enable");
+-	if (chop_en) {
+-		st->conf |= AD7192_CONF_CHOP;
+-		if (sinc3_en)
+-			st->f_order = 3; /* SINC 3rd order */
+-		else
+-			st->f_order = 4; /* SINC 4th order */
+-	} else {
+-		st->f_order = 1;
+-	}
++	st->conf &= ~AD7192_CONF_CHOP;
++	st->f_order = AD7192_NO_SYNC_FILTER;
+ 
+ 	buf_en = of_property_read_bool(np, "adi,buffer-enable");
+ 	if (buf_en)
+@@ -311,7 +303,7 @@ static int ad7192_setup(struct ad7192_state *st, struct device_node *np)
+ 
+ 	burnout_curr_en = of_property_read_bool(np,
+ 						"adi,burnout-currents-enable");
+-	if (burnout_curr_en && buf_en && !chop_en) {
++	if (burnout_curr_en && buf_en) {
+ 		st->conf |= AD7192_CONF_BURN;
+ 	} else if (burnout_curr_en) {
+ 		dev_warn(&st->sd.spi->dev,
+@@ -409,6 +401,49 @@ static ssize_t ad7192_set(struct device *dev,
+ 	return ret ? ret : len;
+ }
+ 
++static void ad7192_get_available_filter_freq(struct ad7192_state *st,
++						    int *freq)
++{
++	unsigned int fadc;
++
++	/* Formulas for filter at page 25 of the datasheet */
++	fadc = DIV_ROUND_CLOSEST(st->fclk,
++				 AD7192_SYNC4_FILTER * AD7192_MODE_RATE(st->mode));
++	freq[0] = DIV_ROUND_CLOSEST(fadc * 240, 1024);
++
++	fadc = DIV_ROUND_CLOSEST(st->fclk,
++				 AD7192_SYNC3_FILTER * AD7192_MODE_RATE(st->mode));
++	freq[1] = DIV_ROUND_CLOSEST(fadc * 240, 1024);
++
++	fadc = DIV_ROUND_CLOSEST(st->fclk, AD7192_MODE_RATE(st->mode));
++	freq[2] = DIV_ROUND_CLOSEST(fadc * 230, 1024);
++	freq[3] = DIV_ROUND_CLOSEST(fadc * 272, 1024);
++}
++
++static int ad7192_show_filter_avail(struct device *dev,
++				    struct device_attribute *attr,
++				    char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct ad7192_state *st = iio_priv(indio_dev);
++	unsigned int freq_avail[4], i;
++	size_t len = 0;
++
++	ad7192_get_available_filter_freq(st, freq_avail);
++
++	for (i = 0; i < ARRAY_SIZE(freq_avail); i++)
++		len += scnprintf(buf + len, PAGE_SIZE - len,
++				 "%d.%d ", freq_avail[i] / 1000,
++				 freq_avail[i] % 1000);
++
++	buf[len - 1] = '\n';
++
++	return len;
++}
++
++static IIO_DEVICE_ATTR(filter_low_pass_3db_frequency_available,
++		       0444, ad7192_show_filter_avail, NULL, 0);
++
+ static IIO_DEVICE_ATTR(bridge_switch_en, 0644,
+ 		       ad7192_show_bridge_switch, ad7192_set,
+ 		       AD7192_REG_GPOCON);
+@@ -418,6 +453,7 @@ static IIO_DEVICE_ATTR(ac_excitation_en, 0644,
+ 		       AD7192_REG_MODE);
+ 
+ static struct attribute *ad7192_attributes[] = {
++	&iio_dev_attr_filter_low_pass_3db_frequency_available.dev_attr.attr,
+ 	&iio_dev_attr_bridge_switch_en.dev_attr.attr,
+ 	&iio_dev_attr_ac_excitation_en.dev_attr.attr,
+ 	NULL
+@@ -428,6 +464,7 @@ static const struct attribute_group ad7192_attribute_group = {
+ };
+ 
+ static struct attribute *ad7195_attributes[] = {
++	&iio_dev_attr_filter_low_pass_3db_frequency_available.dev_attr.attr,
+ 	&iio_dev_attr_bridge_switch_en.dev_attr.attr,
+ 	NULL
+ };
+@@ -441,6 +478,74 @@ static unsigned int ad7192_get_temp_scale(bool unipolar)
+ 	return unipolar ? 2815 * 2 : 2815;
+ }
+ 
++static int ad7192_set_3db_filter_freq(struct ad7192_state *st,
++				      int val, int val2)
++{
++	int freq_avail[4], i, ret, idx, freq;
++	unsigned int diff_new, diff_old;
++
++	diff_old = U32_MAX;
++	freq = val * 1000 + val2;
++
++	ad7192_get_available_filter_freq(st, freq_avail);
++
++	for (i = 0; i < ARRAY_SIZE(freq_avail); i++) {
++		diff_new = abs(freq - freq_avail[i]);
++		if (diff_new < diff_old) {
++			diff_old = diff_new;
++			idx = i;
++		}
++	}
++
++	switch (idx) {
++	case 0:
++		st->f_order = AD7192_SYNC4_FILTER;
++		st->mode &= ~AD7192_MODE_SINC3;
++
++		st->conf |= AD7192_CONF_CHOP;
++		break;
++	case 1:
++		st->f_order = AD7192_SYNC3_FILTER;
++		st->mode |= AD7192_MODE_SINC3;
++
++		st->conf |= AD7192_CONF_CHOP;
++		break;
++	case 2:
++		st->f_order = AD7192_NO_SYNC_FILTER;
++		st->mode &= ~AD7192_MODE_SINC3;
++
++		st->conf &= ~AD7192_CONF_CHOP;
++		break;
++	case 3:
++		st->f_order = AD7192_NO_SYNC_FILTER;
++		st->mode |= AD7192_MODE_SINC3;
++
++		st->conf &= ~AD7192_CONF_CHOP;
++		break;
++	}
++
++	ret = ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
++	if (ret < 0)
++		return ret;
++
++	return ad_sd_write_reg(&st->sd, AD7192_REG_CONF, 3, st->conf);
++}
++
++static int ad7192_get_3db_filter_freq(struct ad7192_state *st)
++{
++	unsigned int fadc;
++
++	fadc = DIV_ROUND_CLOSEST(st->fclk,
++				 st->f_order * AD7192_MODE_RATE(st->mode));
++
++	if (st->conf & AD7192_CONF_CHOP)
++		return DIV_ROUND_CLOSEST(fadc * 240, 1024);
++	if (st->mode & AD7192_MODE_SINC3)
++		return DIV_ROUND_CLOSEST(fadc * 272, 1024);
++	else
++		return DIV_ROUND_CLOSEST(fadc * 230, 1024);
++}
++
+ static int ad7192_read_raw(struct iio_dev *indio_dev,
+ 			   struct iio_chan_spec const *chan,
+ 			   int *val,
+@@ -481,6 +586,10 @@ static int ad7192_read_raw(struct iio_dev *indio_dev,
+ 		*val = st->fclk /
+ 			(st->f_order * 1024 * AD7192_MODE_RATE(st->mode));
+ 		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++		*val = ad7192_get_3db_filter_freq(st);
++		*val2 = 1000;
++		return IIO_VAL_FRACTIONAL;
+ 	}
+ 
+ 	return -EINVAL;
+@@ -535,6 +644,9 @@ static int ad7192_write_raw(struct iio_dev *indio_dev,
+ 		st->mode |= AD7192_MODE_RATE(div);
+ 		ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
+ 		break;
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++		ret = ad7192_set_3db_filter_freq(st, val, val2 / 1000);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 	}
+@@ -553,6 +665,8 @@ static int ad7192_write_raw_get_fmt(struct iio_dev *indio_dev,
+ 		return IIO_VAL_INT_PLUS_NANO;
+ 	case IIO_CHAN_INFO_SAMP_FREQ:
+ 		return IIO_VAL_INT;
++	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
++		return IIO_VAL_INT_PLUS_MICRO;
+ 	default:
  		return -EINVAL;
  	}
+@@ -653,6 +767,8 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
  
-+	/* Get DCLK frequency (DCLK = DDR_CLK / 2) */
-+	switch (freq_mode) {
-+	case 0x0:
-+	case 0x6:
-+		/* DDR_CLK = 1200Mhz */
-+		dclk_freq = 600;
-+		break;
-+	case 0x1:
-+	case 0x7:
-+	case 0xD:
-+		/* DDR_CLK = 1050Mhz */
-+		dclk_freq = 525;
-+		break;
-+	case 0x13:
-+	case 0x17:
-+		/* DDR_CLK = 650Mhz */
-+		dclk_freq = 325;
-+		break;
-+	case 0x4:
-+	case 0x14:
-+	case 0x19:
-+	case 0x1A:
-+	case 0x1B:
-+	case 0x1C:
-+	case 0x1D:
-+		/* DDR_CLK = 800Mhz */
-+		dclk_freq = 400;
-+		break;
-+	default:
-+		dclk_freq = 0;
-+		dev_err(dev, "invalid Sample at Reset value\n");
-+	}
-+
- 	/* Convert to hertz */
- 	cpuclk_freq *= 1000 * 1000;
-+	dclk_freq *= 1000 * 1000;
- 
- 	/* CPU clocks depend on the Sample At Reset configuration */
- 	name = ap_cp_unique_name(dev, syscon_node, "pll-cluster-0");
-@@ -141,6 +175,14 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 		goto fail4;
- 	}
- 
-+	/* AP-DCLK(HCLK) Clock is DDR clock divided by 2 */
-+	name = ap_cp_unique_name(dev, syscon_node, "ap-dclk");
-+	ap806_clks[5] = clk_register_fixed_rate(dev, name, NULL, 0, dclk_freq);
-+	if (IS_ERR(ap806_clks[5])) {
-+		ret = PTR_ERR(ap806_clks[5]);
-+		goto fail5;
-+	}
-+
- 	ret = of_clk_add_provider(np, of_clk_src_onecell_get, &ap806_clk_data);
- 	if (ret)
- 		goto fail_clk_add;
-@@ -148,6 +190,8 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 	return 0;
- 
- fail_clk_add:
-+	clk_unregister_fixed_factor(ap806_clks[5]);
-+fail5:
- 	clk_unregister_fixed_factor(ap806_clks[4]);
- fail4:
- 	clk_unregister_fixed_factor(ap806_clks[3]);
+ 	for (i = 0; i < indio_dev->num_channels; i++) {
+ 		*chan = channels[i];
++		chan->info_mask_shared_by_all |=
++			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
+ 		if (chan->type != IIO_TEMP)
+ 			chan->info_mask_shared_by_type_available |=
+ 				BIT(IIO_CHAN_INFO_SCALE);
 -- 
-2.20.1
+2.17.1
