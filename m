@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 08/15] drm/mxsfb: Signal mode changed when bpp changed
-Date: Wed, 14 Aug 2019 13:48:44 +0300
-Message-ID: <1565779731-1300-9-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 11/15] drm/mxsfb: Update mxsfb to support LCD reset
+Date: Wed, 14 Aug 2019 13:48:47 +0300
+Message-ID: <1565779731-1300-12-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
@@ -10,82 +10,64 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mirela Rabulea <mirela.rabulea@nxp.com>
+The eLCDIF controller has control pin for the external LCD reset pin.
+Add support for it and assert this pin in enable and de-assert it in
+disable.
 
-Add mxsfb_atomic_helper_check to signal mode changed when bpp changed.
-This will trigger the execution of disable/enable on
-a modeset with different bpp than the current one.
-
-Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 45 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 14 ++++++++++----
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h |  2 ++
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 829abec..59c8ba7 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -26,6 +26,7 @@
- #include <drm/drm_drv.h>
- #include <drm/drm_fb_cma_helper.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_fourcc.h>
- #include <drm/drm_gem_cma_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_irq.h>
-@@ -108,9 +109,51 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
- 		clk_disable_unprepare(mxsfb->clk_axi);
- }
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+index 1be29f5..a4ba368 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+@@ -224,9 +224,12 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+ 		clk_prepare_enable(mxsfb->clk_disp_axi);
+ 	clk_prepare_enable(mxsfb->clk);
  
-+/**
-+ * mxsfb_atomic_helper_check - validate state object
-+ * @dev: DRM device
-+ * @state: the driver state object
-+ *
-+ * On top of the drm imlementation drm_atomic_helper_check,
-+ * check if the bpp is changed, if so, signal mode_changed,
-+ * this will trigger disable/enable
-+ *
-+ * RETURNS:
-+ * Zero for success or -errno
-+ */
-+static int mxsfb_atomic_helper_check(struct drm_device *dev,
-+				     struct drm_atomic_state *state)
-+{
-+	struct drm_crtc *crtc;
-+	struct drm_crtc_state *new_state;
-+	int i, ret;
-+
-+	ret = drm_atomic_helper_check(dev, state);
-+	if (ret)
-+		return ret;
-+
-+	for_each_new_crtc_in_state(state, crtc, new_state, i) {
-+		struct drm_plane_state *primary_state;
-+		int old_bpp = 0;
-+		int new_bpp = 0;
-+
-+		if (!crtc->primary || !crtc->primary->old_fb)
-+			continue;
-+		primary_state =
-+			drm_atomic_get_plane_state(state, crtc->primary);
-+		if (!primary_state || !primary_state->fb)
-+			continue;
-+		old_bpp = crtc->primary->old_fb->format->depth;
-+		new_bpp = primary_state->fb->format->depth;
-+		if (old_bpp != new_bpp)
-+			new_state->mode_changed = true;
+-	if (mxsfb->devdata->ipversion >= 4)
++	if (mxsfb->devdata->ipversion >= 4) {
+ 		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
+ 		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
++		/* Assert LCD Reset bit */
++		writel(CTRL2_LCD_RESET, mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
 +	}
-+	return ret;
-+}
-+
- static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
- 	.fb_create		= drm_gem_fb_create,
--	.atomic_check		= drm_atomic_helper_check,
-+	.atomic_check		= mxsfb_atomic_helper_check,
- 	.atomic_commit		= drm_atomic_helper_commit,
- };
  
+ 	/* If it was disabled, re-enable the mode again */
+ 	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
+@@ -244,11 +247,14 @@ static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
+ {
+ 	u32 reg;
+ 
+-	if (mxsfb->devdata->ipversion >= 4)
++	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
++
++	if (mxsfb->devdata->ipversion >= 4) {
+ 		writel(CTRL2_OUTSTANDING_REQS(0x7),
+ 		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
+-
+-	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
++		/* De-assert LCD Reset bit */
++		writel(CTRL2_LCD_RESET, mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
++	}
+ 
+ 	/*
+ 	 * Even if we disable the controller here, it will still continue
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+index dc4daa0..0f63ba1 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+@@ -108,6 +108,8 @@
+ #define CTRL2_LINE_PATTERN_BGR	5
+ #define CTRL2_LINE_PATTERN_CLR	7
+ 
++#define CTRL2_LCD_RESET			BIT(0)
++
+ #define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
+ #define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
+ #define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
 -- 
 2.7.4
