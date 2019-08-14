@@ -1,26 +1,35 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v13 14/18] kunit: defconfig: add defconfigs for building KUnit tests
-Date: Wed, 14 Aug 2019 00:18:59 -0700
-Message-ID: <20190814071859.EB2312084F@mail.kernel.org>
-References: <20190814055108.214253-1-brendanhiggins@google.com> <20190814055108.214253-15-brendanhiggins@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH v1 1/4] arm64: dts: ls1028a-rdb: enable emmc hs400 mode
+Date: Wed, 14 Aug 2019 15:26:46 +0800
+Message-ID: <20190814072649.8237-1-yinbo.zhu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814055108.214253-15-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Li Yang <leoyang.li@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, Alison Wang <alison.wang@nxp.com>, Alex Marginean <alexandru.marginean@nxp.com>, Catalin Horghidan <catalin.horghidan@nxp.com>, Rajat Srivastava <rajat.srivastava@nxp.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-08-13 22:51:04)
-> Add defconfig for UML and a fragment that can be used to configure other
-> architectures for building KUnit tests. Add option to kunit_tool to use
-> a defconfig to create the kunitconfig.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
+This patch is to enable emmc hs400 mode for ls1028ardb
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index 8a725409e881..f1e46cc4cea1 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -92,8 +92,10 @@
+ 	};
+ 
+ &esdhc1 {
+-	status = "okay";
+ 	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
++	bus-width = <8>;
++	status = "okay";
+ 	};
+ 
+ &i2c0 {
+-- 
+2.17.1
