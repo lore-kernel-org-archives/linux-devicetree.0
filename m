@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 10/15] drm/mxsfb: Add max-res property for MXSFB
-Date: Wed, 14 Aug 2019 13:48:46 +0300
-Message-ID: <1565779731-1300-11-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 07/15] drm/mxsfb: Fix the vblank events
+Date: Wed, 14 Aug 2019 13:48:43 +0300
+Message-ID: <1565779731-1300-8-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
@@ -10,47 +10,67 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Because of stability issues, we may want to limit the maximum resolution
-supported by the MXSFB (eLCDIF) driver.
-This patch add support for a new property which we can use to impose such
-limitation.
+Currently, the vblank support is not correctly implemented in MXSFB_DRM
+driver. The call to drm_vblank_init is made with mode_config.num_crtc
+which at that time is 0. Because of this, vblank is not activated, so
+there won't be any vblank event submitted.
+For example, when running modetest with the '-v' parameter will result
+in an astronomical refresh rate (10000+ Hz), because of that.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 59c8ba7..6dae2bd 100644
+index 2743975..829abec 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -264,6 +264,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 	struct platform_device *pdev = to_platform_device(drm->dev);
- 	struct mxsfb_drm_private *mxsfb;
- 	struct resource *res;
-+	u32 max_res[2] = {0, 0};
- 	int ret;
+@@ -38,6 +38,9 @@
+ #include "mxsfb_drv.h"
+ #include "mxsfb_regs.h"
  
- 	mxsfb = devm_kzalloc(&pdev->dev, sizeof(*mxsfb), GFP_KERNEL);
-@@ -344,10 +345,17 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 		}
++/* The eLCDIF max possible CRTCs */
++#define MAX_CRTCS 1
++
+ enum mxsfb_devtype {
+ 	MXSFB_V3,
+ 	MXSFB_V4,
+@@ -138,6 +141,8 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 		mxsfb->connector = &mxsfb->panel_connector;
  	}
  
-+	of_property_read_u32_array(drm->dev->of_node, "max-res",
-+				   &max_res[0], 2);
-+	if (!max_res[0])
-+		max_res[0] = MXSFB_MAX_XRES;
-+	if (!max_res[1])
-+		max_res[1] = MXSFB_MAX_YRES;
++	drm_crtc_vblank_on(&pipe->crtc);
 +
- 	drm->mode_config.min_width	= MXSFB_MIN_XRES;
- 	drm->mode_config.min_height	= MXSFB_MIN_YRES;
--	drm->mode_config.max_width	= MXSFB_MAX_XRES;
--	drm->mode_config.max_height	= MXSFB_MAX_YRES;
-+	drm->mode_config.max_width	= max_res[0];
-+	drm->mode_config.max_height	= max_res[1];
- 	drm->mode_config.funcs		= &mxsfb_mode_config_funcs;
- 	drm->mode_config.helper_private	= &mxsfb_mode_config_helpers;
+ 	pm_runtime_get_sync(drm->dev);
+ 	drm_panel_prepare(mxsfb->panel);
+ 	mxsfb_crtc_enable(mxsfb);
+@@ -164,6 +169,8 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
+ 	}
+ 	spin_unlock_irq(&drm->event_lock);
  
++	drm_crtc_vblank_off(&pipe->crtc);
++
+ 	if (mxsfb->connector != &mxsfb->panel_connector)
+ 		mxsfb->connector = NULL;
+ }
+@@ -246,7 +253,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+ 
+ 	pm_runtime_enable(drm->dev);
+ 
+-	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
++	ret = drm_vblank_init(drm, MAX_CRTCS);
+ 	if (ret < 0) {
+ 		dev_err(drm->dev, "Failed to initialise vblank\n");
+ 		goto err_vblank;
+@@ -269,6 +276,8 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+ 		goto err_vblank;
+ 	}
+ 
++	drm_crtc_vblank_off(&mxsfb->pipe.crtc);
++
+ 	/*
+ 	 * Attach panel only if there is one.
+ 	 * If there is no panel attach, it must be a bridge. In this case, we
 -- 
 2.7.4
