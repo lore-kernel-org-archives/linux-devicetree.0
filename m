@@ -1,102 +1,148 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
-Date: Wed, 14 Aug 2019 12:02:57 -0700
-Message-ID: <20190814190257.GI6167@minitux>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-2-vkoul@kernel.org>
- <20190814165855.098FD2063F@mail.kernel.org>
- <20190814174439.GE6167@minitux>
- <20190814183552.5FF062133F@mail.kernel.org>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH V2 09/13] dt-bindings: arm: Convert BCM2835 board/soc
+ bindings to json-schema
+Date: Wed, 14 Aug 2019 21:21:00 +0200
+Message-ID: <f9acf678-854d-720d-3c84-d9a05766c02e@gmx.net>
+References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
+ <1565713248-4906-10-git-send-email-wahrenst@gmx.net>
+ <CAL_Jsq+01vXQpf_ZuAvetWvcGLhK4EiiB1qFqhRkM3PQWAzdsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190814183552.5FF062133F@mail.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+01vXQpf_ZuAvetWvcGLhK4EiiB1qFqhRkM3PQWAzdsA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@kernel.org>, Ray Jui <rjui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Eric Anholt <eric@anholt.net>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Linux I2C <linux-i2c@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Aug 11:35 PDT 2019, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2019-08-14 10:44:39)
-> > On Wed 14 Aug 09:58 PDT 2019, Stephen Boyd wrote:
-> > 
-> > > Quoting Vinod Koul (2019-08-14 05:49:51)
-> > > > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> > [..]
-> > > > +       clocks {
-> > > > +               xo_board: xo-board {
-> > > > +                       compatible = "fixed-clock";
-> > > > +                       #clock-cells = <0>;
-> > > > +                       clock-frequency = <19200000>;
-> > > 
-> > > Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
-> > > guess it doesn't really matter in the end.
-> > > 
-> > 
-> > As with previous platforms, the board's XO feeds the PMIC at 38.4MHz and
-> > the SoC's CXO_IN pin (i.e. bi_tcxo) is fed from the PMIC's LNBBCLK1,
-> > which is ticking at 19.2MHz.
-> > 
-> > [..]
-> > > > +               gcc: clock-controller@100000 {
-> > > > +                       compatible = "qcom,gcc-sm8150";
-> > > > +                       reg = <0x00100000 0x1f0000>;
-> > > > +                       #clock-cells = <1>;
-> > > > +                       #reset-cells = <1>;
-> > > > +                       #power-domain-cells = <1>;
-> > > > +                       clock-names = "bi_tcxo", "sleep_clk";
-> > > > +                       clocks = <&xo_board>, <&sleep_clk>;
-> > 
-> > So this first one should actually be <&rpmhcc LNBBCLK1>.
-> 
-> Hrmm LNBBCLK1 doesn't make any sense to me. That's a buffer that is
-> technically the net connected to the XO pin on the Soc, but it isn't
-> really supposed to be used by anything from what I recall. Last time I
-> tried to use the buffers the RPM team told me I was using the wrong
-> resource and I should just use the XO resource instead. Doesn't RPMh
-> expose the other "XO" resource that is supposed to prevent XO shutdown?
-
-So while it's the LNBBCLK1 pin we're referring to, it's the RPMH_CXO_CLK
-which has some level of magic involved that we should actually use in
-the software.
-
-> Just mark it critical for now so that XO isn't turned off at runtime.
-> 
-> > 
-> > But while we now should handle this gracefully in the clock driver I
-> > think we still have problems with the cascading probe deferral that
-> > follows - last time I tried to do this the serial driver probe deferred
-> > past user space initialization and the system crashed as we didn't have
-> > a /dev/console.
-> 
-> Does the serial driver probe eventually? Maybe you can run agetty when
-> the device appears based on some uevent for /dev/console. Or we have a
-> bug where /dev/console is created by devtmpfs when there isn't actually
-> a console?
-> 
-
-I don't remember the exact outcome, but presume it would depend on the
-implementation details of early user space (e.g. my regression test
-suite would not deal with this).
-
-> > 
-> > 
-> > So, I think we should s/xo_board/lnbbclk1/ (at 19.2MHz) to make it
-> > represent the schematics and then once we have rpmhcc and validated that
-> > the system handles this gracefully we can switch it out.
-> > 
-> 
-> Sure, some sort of approach that switches it later on is fine, just want
-> to make sure that the board clk frequency is accurately reflected in the
-> DT.
-> 
-
-We introduced the xo_board fixed clock to have a parent of gcc, but
-given that there is a clock named "XO" and it is not the clock being
-connected to gcc, nor is it ticking at the right frequency I think it
-should at least have a different name.
-
-Regards,
-Bjorn
+SGkgUm9iLAoKQW0gMTMuMDguMTkgdW0gMTk6MjIgc2NocmllYiBSb2IgSGVycmluZzoKPiBPbiBU
+dWUsIEF1ZyAxMywgMjAxOSBhdCAxMDoyMSBBTSBTdGVmYW4gV2FocmVuIDx3YWhyZW5zdEBnbXgu
+bmV0PiB3cm90ZToKPj4gQ29udmVydCB0aGUgQkNNMjgzNS82LzcgU29DIGJpbmRpbmdzIHRvIERU
+IHNjaGVtYSBmb3JtYXQgdXNpbmcganNvbi1zY2hlbWEuCj4+IEFsbCB0aGUgb3RoZXIgQnJvYWRj
+b20gYm9hcmRzIGFyZSBtYWludGFpbmVkIGJ5IEZsb3JpYW4gRmFpbmVsbGkuCj4+Cj4+IFNpZ25l
+ZC1vZmYtYnk6IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+Cj4+IEFja2VkLWJ5OiBF
+cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+PiAtLS0KPj4gIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9iY20vYmNtMjgzNS55YW1sICAgICAgIHwgNDYgKysrKysrKysrKysrKysrCj4+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYmNtL2JyY20sYmNtMjgzNS50eHQgICB8IDY3
+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gIDIgZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0aW9u
+cygrKSwgNjcgZGVsZXRpb25zKC0pCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9iY20vYmNtMjgzNS55YW1sCj4+ICBkZWxldGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9iY20vYnJjbSxi
+Y20yODM1LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9iY20vYmNtMjgzNS55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2FybS9iY20vYmNtMjgzNS55YW1sCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGlu
+ZGV4IDAwMDAwMDAuLjFhNGJlMjYKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2JjbS9iY20yODM1LnlhbWwKPj4gQEAgLTAsMCAr
+MSw0NiBAQAo+PiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+PiArJVlBTUwg
+MS4yCj4+ICstLS0KPj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvYXJtL2Jj
+bS9iY20yODM1LnlhbWwjCj4+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1z
+Y2hlbWFzL2NvcmUueWFtbCMKPj4gKwo+PiArdGl0bGU6IEJyb2FkY29tIEJDTTI3MTEvQkNNMjgz
+NSBQbGF0Zm9ybXMgRGV2aWNlIFRyZWUgQmluZGluZ3MKPj4gKwo+PiArbWFpbnRhaW5lcnM6Cj4+
+ICsgIC0gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPj4gKyAgLSBTdGVmYW4gV2FocmVu
+IDx3YWhyZW5zdEBnbXgubmV0Pgo+PiArCj4+ICtwcm9wZXJ0aWVzOgo+PiArICAkbm9kZW5hbWU6
+Cj4+ICsgICAgY29uc3Q6ICcvJwo+PiArICBjb21wYXRpYmxlOgo+PiArICAgIG9uZU9mOgo+PiAr
+ICAgICAgLSBkZXNjcmlwdGlvbjogQkNNMjgzNSBiYXNlZCBCb2FyZHMKPj4gKyAgICAgICAgaXRl
+bXM6Cj4+ICsgICAgICAgICAgLSBlbnVtOgo+PiArICAgICAgICAgICAgICAtIHJhc3BiZXJyeXBp
+LG1vZGVsLWEKPj4gKyAgICAgICAgICAgICAgLSByYXNwYmVycnlwaSxtb2RlbC1hLXBsdXMKPj4g
+KyAgICAgICAgICAgICAgLSByYXNwYmVycnlwaSxtb2RlbC1iCj4+ICsgICAgICAgICAgICAgIC0g
+cmFzcGJlcnJ5cGksbW9kZWwtYi1pMmMwICAjIFJhc3BiZXJyeSBQaSBNb2RlbCBCIChubyBQNSkK
+Pj4gKyAgICAgICAgICAgICAgLSByYXNwYmVycnlwaSxtb2RlbC1iLXJldjIKPj4gKyAgICAgICAg
+ICAgICAgLSByYXNwYmVycnlwaSxtb2RlbC1iLXBsdXMKPj4gKyAgICAgICAgICAgICAgLSByYXNw
+YmVycnlwaSxjb21wdXRlLW1vZHVsZQo+PiArICAgICAgICAgICAgICAtIHJhc3BiZXJyeXBpLG1v
+ZGVsLXplcm8KPj4gKyAgICAgICAgICAgICAgLSByYXNwYmVycnlwaSxtb2RlbC16ZXJvLXcKPj4g
+KyAgICAgICAgICAtIGNvbnN0OiBicmNtLGJjbTI4MzUKPj4gKwo+PiArICAgICAgLSBkZXNjcmlw
+dGlvbjogQkNNMjgzNiBiYXNlZCBCb2FyZHMKPj4gKyAgICAgICAgaXRlbXM6Cj4+ICsgICAgICAg
+ICAgLSBlbnVtOgo+PiArICAgICAgICAgICAgICAtIHJhc3BiZXJyeXBpLDItbW9kZWwtYgo+IERv
+bid0IHlvdSBuZWVkIGJyY20sYmNtMjgzNiBoZXJlPwo+Cj4+ICsKPj4gKyAgICAgIC0gZGVzY3Jp
+cHRpb246IEJDTTI4MzcgYmFzZWQgQm9hcmRzCj4+ICsgICAgICAgIGl0ZW1zOgo+PiArICAgICAg
+ICAgIC0gZW51bToKPj4gKyAgICAgICAgICAgICAgLSByYXNwYmVycnlwaSwzLW1vZGVsLWEtcGx1
+cwo+PiArICAgICAgICAgICAgICAtIHJhc3BiZXJyeXBpLDMtbW9kZWwtYgo+PiArICAgICAgICAg
+ICAgICAtIHJhc3BiZXJyeXBpLDMtbW9kZWwtYi1wbHVzCj4+ICsgICAgICAgICAgICAgIC0gcmFz
+cGJlcnJ5cGksMy1jb21wdXRlLW1vZHVsZQo+PiArICAgICAgICAgICAgICAtIHJhc3BiZXJyeXBp
+LDMtY29tcHV0ZS1tb2R1bGUtbGl0ZQo+IERvbid0IHlvdSBuZWVkIGJyY20sYmNtMjgzNyBoZXJl
+Pwo+Cj4gUGxlYXNlIHJ1biAnZHRic19jaGVjaycgYW5kIG1ha2Ugc3VyZSB0aGVyZSBhcmVuJ3Qg
+d2FybmluZ3MgKGluIHRoZSByb290IG5vZGUpLgoKdGhhbmtzLCBhZnRlciBhZGRyZXNzaW5nIHlv
+dXIgY29tbWVudHMgdGhlIHJvb3Qgbm9kZSBkb2Vzbid0IGhhdmUKd2FybmluZ3MgYW55bW9yZS4K
+CkJlc2lkZSB0aGF0IHRoZXJlIGEgbG90IG9mIG90aGVyIHdhcm5pbmdzOgoKwqAgRFRDwqDCoMKg
+wqAgYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWwKwqAgQ0hFQ0vCoMKg
+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI3MTEtcnBpLTQtYi5kdC55YW1sCi9ob21lL3N0ZWZhbi90
+b3J2YWxkcy9hcmNoL2FybS9ib290L2R0cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDoKYXJtLXBt
+dTogY29tcGF0aWJsZTogWydhcm0sY29ydGV4LWE3Mi1wbXUnLCAnYXJtLGFybXY4LXBtdXYzJ10g
+aXMgdG9vIGxvbmcKL2hvbWUvc3RlZmFuL3RvcnZhbGRzL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI3
+MTEtcnBpLTQtYi5kdC55YW1sOgphcm0tcG11OiBjb21wYXRpYmxlOiBBZGRpdGlvbmFsIGl0ZW1z
+IGFyZSBub3QgYWxsb3dlZCAoJ2FybSxhcm12OC1wbXV2MycKd2FzIHVuZXhwZWN0ZWQpCgpJIHRo
+aW5rIHRoZSBzY2hlbWEgaXMgYSBsaXR0bGUgYml0IHRvbyBzdHJpY3QgYnkgcHJvaGliaXQgYSBm
+YWxsYmFjawpjb21wYXRpYmxlLgoKL2hvbWUvc3RlZmFuL3RvcnZhbGRzL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2JjbTI3MTEtcnBpLTQtYi5kdC55YW1sOgpzZXJpYWxAN2UyMDE4MDA6IEFkZGl0aW9uYWwg
+cHJvcGVydGllcyBhcmUgbm90IGFsbG93ZWQKKCdhcm0scHJpbWVjZWxsLXBlcmlwaGlkJyB3YXMg
+dW5leHBlY3RlZCkKCkluIHRoZSBvbGQgdHh0IHZlcnNpb24gdGhpcyB3YXMgYW4gYWxsb3dlZCBw
+cm9wZXJ0eS4KCi9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9ib290L2R0cy9iY20yNzEx
+LXJwaS00LWIuZHQueWFtbDoKZmlybXdhcmU6ICRub2RlbmFtZTowOiAnZmlybXdhcmUnIGRvZXMg
+bm90IG1hdGNoCideKGJ1c3xzb2N8YXhpfGFoYnxhcGIpKEBbMC05YS1mXSspPyQnCi9ob21lL3N0
+ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9ib290L2R0cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDoK
+ZmlybXdhcmU6ICcjYWRkcmVzcy1jZWxscycgaXMgYSByZXF1aXJlZCBwcm9wZXJ0eQovaG9tZS9z
+dGVmYW4vdG9ydmFsZHMvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWw6
+CmZpcm13YXJlOiAnI3NpemUtY2VsbHMnIGlzIGEgcmVxdWlyZWQgcHJvcGVydHkKL2hvbWUvc3Rl
+ZmFuL3RvcnZhbGRzL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI3MTEtcnBpLTQtYi5kdC55YW1sOgpm
+aXJtd2FyZTogJ3JhbmdlcycgaXMgYSByZXF1aXJlZCBwcm9wZXJ0eQoKSSBzdWdnZXN0IHRvIGZp
+eCB0aGlzIGJ5IHJlbW92aW5nIHRoZSAic2ltcGxlLWJ1cyIuCgovaG9tZS9zdGVmYW4vdG9ydmFs
+ZHMvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWw6CnNlcmlhbEA3ZTIw
+MWEwMDogQWRkaXRpb25hbCBwcm9wZXJ0aWVzIGFyZSBub3QgYWxsb3dlZAooJ2FybSxwcmltZWNl
+bGwtcGVyaXBoaWQnIHdhcyB1bmV4cGVjdGVkKQovaG9tZS9zdGVmYW4vdG9ydmFsZHMvYXJjaC9h
+cm0vYm9vdC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWw6CmdwaW9AN2UyMDAwMDA6ICdwaW5j
+dHJsLTAnIGlzIGEgZGVwZW5kZW5jeSBvZiAncGluY3RybC1uYW1lcycKClRoaXMgY291bGQgYmUg
+Zml4ZWQgYnkgcmVtb3ZpbmcgcGluY3RybC1uYW1lcy4KCi9ob21lL3N0ZWZhbi90b3J2YWxkcy9h
+cmNoL2FybS9ib290L2R0cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDoKc2VyaWFsQDdlMjAxNjAw
+OiBBZGRpdGlvbmFsIHByb3BlcnRpZXMgYXJlIG5vdCBhbGxvd2VkCignYXJtLHByaW1lY2VsbC1w
+ZXJpcGhpZCcgd2FzIHVuZXhwZWN0ZWQpCi9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9i
+b290L2R0cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDoKZ2ljNDAwQDQwMDQxMDAwOiAkbm9kZW5h
+bWU6MDogJ2dpYzQwMEA0MDA0MTAwMCcgZG9lcyBub3QgbWF0Y2gKJ15pbnRlcnJ1cHQtY29udHJv
+bGxlcihAWzAtOWEtZixdKykqJCcKCkkgd2lsbCByZW5hbWUgZ2ljNDAwIHRvIGludGVycnVwdC1j
+b250cm9sbGVyLgoKL2hvbWUvc3RlZmFuL3RvcnZhbGRzL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI3
+MTEtcnBpLTQtYi5kdC55YW1sOgpzZXJpYWxAN2UyMDE0MDA6IEFkZGl0aW9uYWwgcHJvcGVydGll
+cyBhcmUgbm90IGFsbG93ZWQKKCdhcm0scHJpbWVjZWxsLXBlcmlwaGlkJyB3YXMgdW5leHBlY3Rl
+ZCkKL2hvbWUvc3RlZmFuL3RvcnZhbGRzL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI3MTEtcnBpLTQt
+Yi5kdC55YW1sOgpzZXJpYWxAN2UyMDEwMDA6IGNvbXBhdGlibGU6IFsnYnJjbSxiY20yODM1LXBs
+MDExJywgJ2FybSxwbDAxMScsCidhcm0scHJpbWVjZWxsJ10gaXMgbm90IHZhbGlkIHVuZGVyIGFu
+eSBvZiB0aGUgZ2l2ZW4gc2NoZW1hcwovaG9tZS9zdGVmYW4vdG9ydmFsZHMvYXJjaC9hcm0vYm9v
+dC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWw6CnNlcmlhbEA3ZTIwMTAwMDogQWRkaXRpb25h
+bCBwcm9wZXJ0aWVzIGFyZSBub3QgYWxsb3dlZCAoJ2JsdWV0b290aCcsCidhcm0scHJpbWVjZWxs
+LXBlcmlwaGlkJyB3ZXJlIHVuZXhwZWN0ZWQpCi9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2Fy
+bS9ib290L2R0cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDoKc2RfaW9fMXY4X3JlZzogc3RhdGVz
+OjA6IFsxODAwMDAwLCAxLCAzMzAwMDAwLCAwXSBpcyB0b28gbG9uZwovaG9tZS9zdGVmYW4vdG9y
+dmFsZHMvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWw6CnNkX2lvXzF2
+OF9yZWc6IHN0YXRlczowOiBBZGRpdGlvbmFsIGl0ZW1zIGFyZSBub3QgYWxsb3dlZCAoMzMwMDAw
+MCwgMAp3ZXJlIHVuZXhwZWN0ZWQpCgpObyBpZGVhIHdoYXQgaXMgd3JvbmcgaGVyZQoKL2hvbWUv
+c3RlZmFuL3RvcnZhbGRzL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI3MTEtcnBpLTQtYi5kdC55YW1s
+OiBjbG9ja3M6CiNzaXplLWNlbGxzOjA6MDogMCBpcyBub3Qgb25lIG9mIFsxLCAyXQovaG9tZS9z
+dGVmYW4vdG9ydmFsZHMvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjcxMS1ycGktNC1iLmR0LnlhbWw6
+IGNsb2NrczoKJG5vZGVuYW1lOjA6ICdjbG9ja3MnIGRvZXMgbm90IG1hdGNoICdeKGJ1c3xzb2N8
+YXhpfGFoYnxhcGIpKEBbMC05YS1mXSspPyQnCi9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2Fy
+bS9ib290L2R0cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDogY2xvY2tzOgpjbG9ja0AzOnJlZzow
+OiBbM10gaXMgdG9vIHNob3J0Ci9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9ib290L2R0
+cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDogY2xvY2tzOgpjbG9ja0A0OnJlZzowOiBbNF0gaXMg
+dG9vIHNob3J0Ci9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9ib290L2R0cy9iY20yNzEx
+LXJwaS00LWIuZHQueWFtbDogY2xvY2tzOgoncmFuZ2VzJyBpcyBhIHJlcXVpcmVkIHByb3BlcnR5
+Ci9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9ib290L2R0cy9iY20yNzExLXJwaS00LWIu
+ZHQueWFtbDoKY2xvY2tAMzogJ3JlZycgZG9lcyBub3QgbWF0Y2ggYW55IG9mIHRoZSByZWdleGVz
+OiAncGluY3RybC1bMC05XSsnCi9ob21lL3N0ZWZhbi90b3J2YWxkcy9hcmNoL2FybS9ib290L2R0
+cy9iY20yNzExLXJwaS00LWIuZHQueWFtbDoKY2xvY2tANDogJ3JlZycgZG9lcyBub3QgbWF0Y2gg
+YW55IG9mIHRoZSByZWdleGVzOiAncGluY3RybC1bMC05XSsnCgpUaGlzIGNvdWxkIGJlIGZpeGVk
+IGJ5IGF2b2lkaW5nIGEgc2ltcGxlLWJ1cyBmb3IgdGhlIGZpeGVkIGNsb2Nrcy4KClN0ZWZhbgoK
+Pgo+IFJvYgo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
