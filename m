@@ -1,50 +1,50 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [EXT] Re: [v1 2/3] dt/bindings: clk: Add DT bindings for LS1028A
- Display output interface
-Date: Wed, 14 Aug 2019 09:49:29 +0000
-Message-ID: <DB7PR04MB51950A726D59F17EE269F2F3E2AD0@DB7PR04MB5195.eurprd04.prod.outlook.com>
-References: <20190812100216.34459-1-wen.he_1@nxp.com>
- <20190813183005.EC13020665@mail.kernel.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 0/3] drm/meson: convert bindings to YAML schemas
+Date: Wed, 14 Aug 2019 11:54:45 +0200
+Message-ID: <b0363e6e-4d73-a483-41b7-7849f48a9ff3@baylibre.com>
+References: <20190808085522.21950-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813183005.EC13020665@mail.kernel.org>
+In-Reply-To: <20190808085522.21950-1-narmstrong@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>
+To: robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
-Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE55bm0OOaciDE05pelIDI6MzANCj4gVG86IE1h
-cmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBNaWNoYWVsIFR1cnF1ZXR0ZQ0KPiA8
-bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3Jn
-PjsgU2hhd24gR3VvDQo+IDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgV2VuIEhlIDx3ZW4uaGVfMUBu
-eHAuY29tPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWNsa0B2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsgbGl2aXUuZHVkYXVAYXJtLmNvbTsgV2VuIEhlDQo+IDx3ZW4u
-aGVfMUBueHAuY29tPg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW3YxIDIvM10gZHQvYmluZGluZ3M6
-IGNsazogQWRkIERUIGJpbmRpbmdzIGZvciBMUzEwMjhBDQo+IERpc3BsYXkgb3V0cHV0IGludGVy
-ZmFjZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBRdW90aW5nIFdlbiBIZSAoMjAx
-OS0wOC0xMiAwMzowMjoxNikNCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Nsb2NrL2ZzbCxwbGxkaWcudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvY2xvY2svZnNsLHBsbGRpZy50eHQNCj4gPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMjljNWE2MTE3ODA5DQo+ID4gLS0tIC9k
-ZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
-ay9mc2wscGxsZGlnLnR4dA0KPiA+IEBAIC0wLDAgKzEsMjYgQEANCj4gPiArTlhQIFFvcklRIExh
-eWVyc2NhcGUgTFMxMDI4QSBEaXNwbGF5IG91dHB1dCBpbnRlcmZhY2UgQ2xvY2sNCj4gPiArPT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
-Cj4gDQo+IENhbiB5b3UgY29udmVydCB0aGlzIHRvIFlBTUw/DQoNClN1cmUsIG5vIHByb2JsZW0u
-DQoNCj4gDQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgLSBjb21w
-YXRpYmxlOiBzaGFsbCBjb250YWluICJmc2wsbHMxMDI4YS1wbGxkaWciDQo+ID4gKyAgICAtIHJl
-ZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBibG9jayByZWdpc3RlcnMN
-Cj4gPiArICAgIC0gI2Nsb2NrLWNlbGxzOiBzaGFsbCBjb250YWluIDEuDQo+IA0KPiBBcyBJIHNh
-aWQgaW4gdGhlIHByZXZpb3VzIHBhdGNoLCB0aGlzIHNob3VsZCBwcm9iYWJseSBiZSAwLiBBbHNv
-LCBwbGVhc2Ugb3JkZXINCj4gdGhpcyBiZWZvcmUgdGhlIGRyaXZlciBpbiB0aGUgcGF0Y2ggc2Vy
-aWVzIGFuZCB0aHJlYWQgeW91ciBtZXNzYWdlcyBwbGVhc2UuIElmDQo+IHlvdSB1c2UgZ2l0LXNl
-bmQtZW1haWwgdGhpcyBpcyBkb25lIGZvciB5b3UgcHJldHR5IGVhc2lseS4NCg0KVW5kZXJzdGFu
-ZCwgV2lsbCBwcmVwYXJlIGFuZCBzZW5kIG5leHQgdmVyc2lvbiBwYXRjaC4NCg0KQmVzdCBSZWdh
-cmRzLA0KV2VuDQoNCj4gDQo+ID4gKyAgICAtIGNsb2NrczogYSBwaGFuZGxlICsgY2xvY2stc3Bl
-Y2lmaWVyIHBhaXJzLCBoZXJlIHNob3VsZCBiZQ0KPiA+ICsgICAgc3BlY2lmeSB0aGUgcmVmZXJl
-bmNlIGNsb2NrIG9mIHRoZSBzeXN0ZW0NCj4gPiArDQo+ID4gKw0K
+On 08/08/2019 10:55, Neil Armstrong wrote:
+> This patchset converts the existing text bindings to YAML schemas.
+> 
+> Those bindings have a lot of texts, thus is interesting to convert.
+> 
+> All have been tested using :
+> $ make ARCH=arm64 dtbs_check
+> 
+> Issues with the amlogic arm64 DTs has already been identified thanks
+> to the validation scripts. The DT fixes will be pushed once these yaml
+> bindings are acked.
+> 
+> Changes since v2:
+> - Added review tag on amlogic,meson-dw-hdmi.yaml
+> - Removed power-domains type from amlogic,meson-vpu.yaml
+> 
+> Neil Armstrong (3):
+>   dt-bindings: display: amlogic,meson-dw-hdmi: convert to yaml
+>   dt-bindings: display: amlogic,meson-vpu: convert to yaml
+>   MAINTAINERS: Update with Amlogic DRM bindings converted as YAML
+> 
+>  .../display/amlogic,meson-dw-hdmi.txt         | 119 --------------
+>  .../display/amlogic,meson-dw-hdmi.yaml        | 150 ++++++++++++++++++
+>  .../bindings/display/amlogic,meson-vpu.txt    | 121 --------------
+>  .../bindings/display/amlogic,meson-vpu.yaml   | 137 ++++++++++++++++
+>  MAINTAINERS                                   |   4 +-
+>  5 files changed, 289 insertions(+), 242 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+> 
+
+Applied to drm-misc-next
