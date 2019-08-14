@@ -1,63 +1,58 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Add mdio bus sub-node to GMAC
-Date: Wed, 14 Aug 2019 08:17:17 +0200
-Message-ID: <20190814061717.54uuat3cypxjucfq@flea>
-References: <20190814042208.9646-1-wens@kernel.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v2 2/3] dt/bindings: display: Add optional property
+ node defined for Mali DP500
+Date: Wed, 14 Aug 2019 06:35:39 +0000
+Message-ID: <DB7PR04MB51957AD439A537C44A24BB45E2AD0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190719095842.11683-1-wen.he_1@nxp.com>
+ <20190812231946.GA31179@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ca47qifq3uyu2lgr"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190814042208.9646-1-wens@kernel.org>
+In-Reply-To: <20190812231946.GA31179@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "brian.starkey@arm.com" <brian.starkey@arm.com>, "airlied@linux.ie" <airlied@linux.ie>, "daniel@ffwll.ch" <daniel@ffwll.ch>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---ca47qifq3uyu2lgr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Aug 14, 2019 at 12:22:08PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> The DWMAC binding never supported having the Ethernet PHY node as a
-> direct child to the controller, nor did it support the "phy" property
-> as a way to specify which Ethernet PHY to use. What seemed to work
-> was simply the implementation ignoring the "phy" property and instead
-> probing all addresses on the MDIO bus and using the first available
-> one.
->
-> The recent switch from "phy" to "phy-handle" breaks the assumptions
-> of the implementation, and does not match what the binding requires.
-> The binding requires that if an MDIO bus is described, it shall be
-> a sub-node with the "snps,dwmac-mdio" compatible string.
->
-> Add a device node for the MDIO bus, and move the Ethernet PHY node
-> under it. Also fix up the #address-cells and #size-cells properties
-> where needed.
->
-> Fixes: de332de26d19 ("ARM: dts: sunxi: Switch from phy to phy-handle")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
-Applied, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ca47qifq3uyu2lgr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVOnbQAKCRDj7w1vZxhR
-xdDUAQCnpVdT3KpOHMNy0ph4E404oIUBtZ6WuuLwZ9M2kNjwgQEAlByupn0xScxl
-omeoaNbOWFWe22TFHJ0najT2LdaC2Q0=
-=LPlq
------END PGP SIGNATURE-----
-
---ca47qifq3uyu2lgr--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqONTCMTPI1SA3OjIwDQo+IFRvOiBXZW4gSGUg
+PHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpdml1LmR1ZGF1QGFybS5jb207DQo+IGJyaWFu
+LnN0YXJrZXlAYXJtLmNvbTsgYWlybGllZEBsaW51eC5pZTsgZGFuaWVsQGZmd2xsLmNoOyBMZW8g
+TGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gU3ViamVjdDogW0VYVF0gUmU6IFt2MiAyLzNd
+IGR0L2JpbmRpbmdzOiBkaXNwbGF5OiBBZGQgb3B0aW9uYWwgcHJvcGVydHkgbm9kZQ0KPiBkZWZp
+bmVkIGZvciBNYWxpIERQNTAwDQo+IA0KPiANCj4gT24gRnJpLCBKdWwgMTksIDIwMTkgYXQgMDU6
+NTg6NDJQTSArMDgwMCwgV2VuIEhlIHdyb3RlOg0KPiA+IEFkZCBvcHRpb25hbCBwcm9wZXJ0eSBu
+b2RlICdhcm0sbWFsaWRwLWFycW9zLXZhbHVlJyBmb3IgdGhlIE1hbGkgRFA1MDAuDQo+ID4gVGhp
+cyBwcm9wZXJ0eSBkZXNjcmliZSB0aGUgQVJRb1MgbGV2ZWxzIG9mIERQNTAwJ3MgUW9TIHNpZ25h
+bGluZy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4N
+Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YXJtLG1hbGlkcC50eHQgfCAzICsrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
+KCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dA0KPiA+IGluZGV4IDJmNzg3MDk4M2VmMS4u
+NzZhMGU3MjUxMjUxIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQNCj4gPiBAQCAtMzcsNiAr
+MzcsOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+DQo+IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvcmVzZXJ2ZWQtbWVtb3J5LnR4dCkNCj4gPiAg
+ICAgIHRvIGJlIHVzZWQgZm9yIHRoZSBmcmFtZWJ1ZmZlcjsgaWYgbm90IHByZXNlbnQsIHRoZSBm
+cmFtZWJ1ZmZlciBtYXkNCj4gPiAgICAgIGJlIGxvY2F0ZWQgYW55d2hlcmUgaW4gbWVtb3J5Lg0K
+PiA+ICsgIC0gYXJtLG1hbGlkcC1hcnFvcy1oaWdoLWxldmVsOiBpbnRlZ2VyIG9mIHUzMiB2YWx1
+ZSBkZXNjcmliaW5nIHRoZSBBUlFvUw0KPiA+ICsgICAgbGV2ZWxzIG9mIERQNTAwJ3MgUW9TIHNp
+Z25hbGluZy4NCj4gDQo+IHUzMiBoZXJlLCBhbmQuLi4NCg0KSGkgUm9iLA0KDQpTb3JyeSwgc2hv
+dWxkIGJlIHdyaXR0ZW4gYXMiIHBoYW5kbGUgdG8gYSBub2RlIGRlc2NyaWJpbmcgdGhlIEFRUm9T
+IGxldmVscyBvZiBEUDUwMCdzIFFvUyBzaWduYWxpbmciLi4NCklzIHRoYXQgb2s/DQoNCkJlc3Qg
+UmVnYXJkcywNCldlbg0KDQo+IA0KPiA+DQo+ID4NCj4gPiAgRXhhbXBsZToNCj4gPiBAQCAtNTQs
+NiArNTYsNyBAQCBFeGFtcGxlOg0KPiA+ICAgICAgICAgICAgICAgY2xvY2tzID0gPCZvc2NjbGsy
+PiwgPCZmcGdhb3NjMD4sIDwmZnBnYW9zYzE+LA0KPiA8JmZwZ2Fvc2MxPjsNCj4gPiAgICAgICAg
+ICAgICAgIGNsb2NrLW5hbWVzID0gInB4bGNsayIsICJtY2xrIiwgImFjbGsiLCAicGNsayI7DQo+
+ID4gICAgICAgICAgICAgICBhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzID0gL2JpdHMvIDgg
+PDggOCA4PjsNCj4gPiArICAgICAgICAgICAgIGFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbCA9
+IDwmcnFvc3ZhbHVlPjsNCj4gDQo+IHBoYW5kbGUgaGVyZT8NCj4gDQo+ID4gICAgICAgICAgICAg
+ICBwb3J0IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgZHAwX291dHB1dDogZW5kcG9pbnQg
+ew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwm
+dGRhOTk4eF8yX2lucHV0PjsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
