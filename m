@@ -1,148 +1,422 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
- documentation
-Date: Wed, 14 Aug 2019 10:49:29 +0200
-Message-ID: <20190814084929.q3uy7cpf4ullpevo@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de>
- <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
- <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
- <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
- <20190814073939.ubgzysmkmmel5h4y@pengutronix.de>
- <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: Add YAML schemas for the generic
+ RC bindings
+Date: Wed, 14 Aug 2019 10:03:17 +0100
+Message-ID: <20190814090316.q7ilx63h63a6wgih@gofer.mess.org>
+References: <20190813124513.31413-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMz4ku+Q7CV+0dP1P0hAPJR7KiG0HOkZbT_LPXY4Q03hMuvS8A@mail.gmail.com>
+In-Reply-To: <20190813124513.31413-1-mripard@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+To: Maxime Ripard <mripard@kernel.org>
+Cc: mchehab@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Wed, Aug 14, 2019 at 03:52:08PM +0800, Baolin Wang wrote:
-> On 14/08/2019, Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
-> > On Wed, Aug 14, 2019 at 03:25:53PM +0800, Baolin Wang wrote:
-> >> On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-König
-> >> <u.kleine-koenig@pengutronix.de> wrote:
-> >> > On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
-> >> > > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
-> >> > > <u.kleine-koenig@pengutronix.de> wrote:
-> >> > > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> >> > > > > +- assigned-clock-parents: The phandle of the parent clock of PWM
-> >> > > > > clock.
-> >> > > >
-> >> > > > I'm not sure you need to point out assigned-clocks and
-> >> > > > assigned-clock-parents as this is general clk stuff. Also I wonder if
-> >> > > > these should be "required properties".
-> >> > >
-> >> > > I think I should describe any properties used by PWM node, like
-> >> > > 'clocks' and 'clock-names' properties, though they are common clock
-> >> > > properties.
-> >> >
-> >> > Then you might want to describe also "status", "assigned-clock-rates",
-> >> > "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names"
-> >> > and
-> >> > probably another dozen I'm not aware of.
-> >>
-> >> We usually do not describe 'status', but if your device node used
-> >> "pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
-> >> describe them to let users know what is the purpose of these
-> >> properties. That's also asked by DT maintainer Rob.
-> >
-> > Does this convince you that you should also describe "pinctrl-$n" and
-> > the others? If not, why not? We also usually don't describe
+On Tue, Aug 13, 2019 at 02:45:12PM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> Our PWM device node did not use "pinctrl-$n" things, why I should
-> describe "pinctrl-$n"?
-
-The binding you implemented supports "pinctrl-$n". And this is described
-somewhere in the generic pinctrl binding docs. The same applies to
-"assigned-clock-parents".
-
-That you happen to use assigned-clock-parents but not pinctrl-$n on the
-board you used to develop your driver is a detail that IMHO shouldn't
-decide about being listed in the binding doc for your PWM type.
-
-> If some devices use pinctrl, yes, they should describe what is the
-> purpose of pinctrl, see:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/mmc/sdhci-sprd.txt
-
-I agree that if the driver assumes special pinctrl names this is worth
-mentioning. If however there is nothing special and just some generic
-stuff is used that is described in some other location then I'd chose to
-not add this redundant information to the binding document. So if I
-reviewed the patch that created
-Documentation/devicetree/bindings/mmc/sdhci-sprd.txt I would have
-suggested to drop "assigned-clocks" and "assigned-clock-parents" there,
-too.
-
-> > assigned-clock-parents. For me these are all in the same catagory:
+> The RC controllers have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
 > 
-> Lots of dt bindings describe 'assigned-clock-parents',:
-> ./Documentation/devicetree/bindings/display/msm/dsi.txt
-> ./Documentation/devicetree/bindings/display/msm/dsi.txt
-> ./Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
-> ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> ./Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-> ./Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-> ./Documentation/devicetree/bindings/sound/mt2701-afe-pcm.txt
-> ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-> ./Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
-> ......
-
-I didn't check each of them, but I assume the same applies here, too.
-Please don't copy blindly but think before using other people's stuff as
-reference. Even in the Linux kernel where reviews seem and are told to
-catch non-optimal stuff, there are places where this doesn't work. IMHO
-the key question is: Does it add value to describe "assigned-clocks" in
-the binding for your PWM device given that you're only using this
-generic and well documented construct?
-
-> > Common properties supported for each devicetree node that represents a
-> > device. The only difference is that on your board you make use of some
-> > but not some others.
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  .../devicetree/bindings/media/rc.txt          | 118 +--------------
+>  .../devicetree/bindings/media/rc.yaml         | 135 ++++++++++++++++++
+>  2 files changed, 136 insertions(+), 117 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/rc.yaml
 > 
-> Fine, let's decide this by PWM maintainer or DT maintainer Rob.
+> diff --git a/Documentation/devicetree/bindings/media/rc.txt b/Documentation/devicetree/bindings/media/rc.txt
+> index d3e7a012bfda..be629f7fa77e 100644
+> --- a/Documentation/devicetree/bindings/media/rc.txt
+> +++ b/Documentation/devicetree/bindings/media/rc.txt
+> @@ -1,117 +1 @@
+> -The following properties are common to the infrared remote controllers:
+> -
+> -- linux,rc-map-name: string, specifies the scancode/key mapping table
+> -  defined in-kernel for the remote controller. Support values are:
+> -  * "rc-adstech-dvb-t-pci"
+> -  * "rc-alink-dtu-m"
+> -  * "rc-anysee"
+> -  * "rc-apac-viewcomp"
+> -  * "rc-asus-pc39"
+> -  * "rc-asus-ps3-100"
+> -  * "rc-ati-tv-wonder-hd-600"
+> -  * "rc-ati-x10"
+> -  * "rc-avermedia-a16d"
+> -  * "rc-avermedia-cardbus"
+> -  * "rc-avermedia-dvbt"
+> -  * "rc-avermedia-m135a"
+> -  * "rc-avermedia-m733a-rm-k6"
+> -  * "rc-avermedia-rm-ks"
+> -  * "rc-avermedia"
+> -  * "rc-avertv-303"
+> -  * "rc-azurewave-ad-tu700"
+> -  * "rc-behold-columbus"
+> -  * "rc-behold"
+> -  * "rc-budget-ci-old"
+> -  * "rc-cec"
+> -  * "rc-cinergy-1400"
+> -  * "rc-cinergy"
+> -  * "rc-delock-61959"
+> -  * "rc-dib0700-nec"
+> -  * "rc-dib0700-rc5"
+> -  * "rc-digitalnow-tinytwin"
+> -  * "rc-digittrade"
+> -  * "rc-dm1105-nec"
+> -  * "rc-dntv-live-dvbt-pro"
+> -  * "rc-dntv-live-dvb-t"
+> -  * "rc-dtt200u"
+> -  * "rc-dvbsky"
+> -  * "rc-empty"
+> -  * "rc-em-terratec"
+> -  * "rc-encore-enltv2"
+> -  * "rc-encore-enltv-fm53"
+> -  * "rc-encore-enltv"
+> -  * "rc-evga-indtube"
+> -  * "rc-eztv"
+> -  * "rc-flydvb"
+> -  * "rc-flyvideo"
+> -  * "rc-fusionhdtv-mce"
+> -  * "rc-gadmei-rm008z"
+> -  * "rc-geekbox"
+> -  * "rc-genius-tvgo-a11mce"
+> -  * "rc-gotview7135"
+> -  * "rc-hauppauge"
+> -  * "rc-imon-mce"
+> -  * "rc-imon-pad"
+> -  * "rc-iodata-bctv7e"
+> -  * "rc-it913x-v1"
+> -  * "rc-it913x-v2"
+> -  * "rc-kaiomy"
+> -  * "rc-kworld-315u"
+> -  * "rc-kworld-pc150u"
+> -  * "rc-kworld-plus-tv-analog"
+> -  * "rc-leadtek-y04g0051"
+> -  * "rc-lirc"
+> -  * "rc-lme2510"
+> -  * "rc-manli"
+> -  * "rc-medion-x10"
+> -  * "rc-medion-x10-digitainer"
+> -  * "rc-medion-x10-or2x"
+> -  * "rc-msi-digivox-ii"
+> -  * "rc-msi-digivox-iii"
+> -  * "rc-msi-tvanywhere-plus"
+> -  * "rc-msi-tvanywhere"
+> -  * "rc-nebula"
+> -  * "rc-nec-terratec-cinergy-xs"
+> -  * "rc-norwood"
+> -  * "rc-npgtech"
+> -  * "rc-pctv-sedna"
+> -  * "rc-pinnacle-color"
+> -  * "rc-pinnacle-grey"
+> -  * "rc-pinnacle-pctv-hd"
+> -  * "rc-pixelview-new"
+> -  * "rc-pixelview"
+> -  * "rc-pixelview-002t"
+> -  * "rc-pixelview-mk12"
+> -  * "rc-powercolor-real-angel"
+> -  * "rc-proteus-2309"
+> -  * "rc-purpletv"
+> -  * "rc-pv951"
+> -  * "rc-hauppauge"
+> -  * "rc-rc5-tv"
+> -  * "rc-rc6-mce"
+> -  * "rc-real-audio-220-32-keys"
+> -  * "rc-reddo"
+> -  * "rc-snapstream-firefly"
+> -  * "rc-streamzap"
+> -  * "rc-tbs-nec"
+> -  * "rc-technisat-ts35"
+> -  * "rc-technisat-usb2"
+> -  * "rc-terratec-cinergy-c-pci"
+> -  * "rc-terratec-cinergy-s2-hd"
+> -  * "rc-terratec-cinergy-xs"
+> -  * "rc-terratec-slim"
+> -  * "rc-terratec-slim-2"
+> -  * "rc-tevii-nec"
+> -  * "rc-tivo"
+> -  * "rc-total-media-in-hand"
+> -  * "rc-total-media-in-hand-02"
+> -  * "rc-trekstor"
+> -  * "rc-tt-1500"
+> -  * "rc-twinhan-dtv-cab-ci"
+> -  * "rc-twinhan1027"
+> -  * "rc-videomate-k100"
+> -  * "rc-videomate-s350"
+> -  * "rc-videomate-tv-pvr"
+> -  * "rc-winfast"
+> -  * "rc-winfast-usbii-deluxe"
+> -  * "rc-su3000"
+> +This file has been moved to rc.yaml.
+> diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
+> new file mode 100644
+> index 000000000000..19b28e7edf9c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rc.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/rc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic Infrared Remote Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Mauro Carvalho Chehab <mchehab@kernel.org>
+> +  - Sean Young <sean@mess.org>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^ir(@[a-f0-9]+)?$"
+> +
+> +  linux,rc-map-name:
+> +    description:
+> +      Specifies the scancode/key mapping table defined in-kernel for
+> +      the remote controller.
+> +    allOf:
+> +      - $ref: '/schemas/types.yaml#/definitions/string'
+> +      - enum:
+> +          - rc-adstech-dvb-t-pci
+> +          - rc-alink-dtu-m
+> +          - rc-anysee
+> +          - rc-apac-viewcomp
+> +          - rc-asus-pc39
+> +          - rc-asus-ps3-100
+> +          - rc-ati-tv-wonder-hd-600
+> +          - rc-ati-x10
+> +          - rc-avermedia
+> +          - rc-avermedia-a16d
+> +          - rc-avermedia-cardbus
+> +          - rc-avermedia-dvbt
+> +          - rc-avermedia-m135a
+> +          - rc-avermedia-m733a-rm-k6
+> +          - rc-avermedia-rm-ks
+> +          - rc-avertv-303
+> +          - rc-azurewave-ad-tu700
+> +          - rc-behold
+> +          - rc-behold-columbus
+> +          - rc-budget-ci-old
+> +          - rc-cec
+> +          - rc-cinergy
+> +          - rc-cinergy-1400
+> +          - rc-delock-61959
+> +          - rc-dib0700-nec
+> +          - rc-dib0700-rc5
+> +          - rc-digitalnow-tinytwin
+> +          - rc-digittrade
+> +          - rc-dm1105-nec
+> +          - rc-dntv-live-dvb-t
+> +          - rc-dntv-live-dvbt-pro
+> +          - rc-dtt200u
+> +          - rc-dvbsky
+> +          - rc-em-terratec
+> +          - rc-empty
+> +          - rc-encore-enltv
+> +          - rc-encore-enltv-fm53
+> +          - rc-encore-enltv2
+> +          - rc-evga-indtube
+> +          - rc-eztv
+> +          - rc-flydvb
+> +          - rc-flyvideo
+> +          - rc-fusionhdtv-mce
+> +          - rc-gadmei-rm008z
+> +          - rc-geekbox
+> +          - rc-genius-tvgo-a11mce
+> +          - rc-gotview7135
+> +          - rc-hauppauge
+> +          - rc-imon-mce
+> +          - rc-imon-pad
+> +          - rc-iodata-bctv7e
+> +          - rc-it913x-v1
+> +          - rc-it913x-v2
+> +          - rc-kaiomy
+> +          - rc-kworld-315u
+> +          - rc-kworld-pc150u
+> +          - rc-kworld-plus-tv-analog
+> +          - rc-leadtek-y04g0051
+> +          - rc-lirc
+> +          - rc-lme2510
+> +          - rc-manli
+> +          - rc-medion-x10
+> +          - rc-medion-x10-digitainer
+> +          - rc-medion-x10-or2x
+> +          - rc-msi-digivox-ii
+> +          - rc-msi-digivox-iii
+> +          - rc-msi-tvanywhere
+> +          - rc-msi-tvanywhere-plus
+> +          - rc-nebula
+> +          - rc-nec-terratec-cinergy-xs
+> +          - rc-norwood
+> +          - rc-npgtech
+> +          - rc-pctv-sedna
+> +          - rc-pinnacle-color
+> +          - rc-pinnacle-grey
+> +          - rc-pinnacle-pctv-hd
+> +          - rc-pixelview
+> +          - rc-pixelview-002t
+> +          - rc-pixelview-mk12
+> +          - rc-pixelview-new
+> +          - rc-powercolor-real-angel
+> +          - rc-proteus-2309
+> +          - rc-purpletv
+> +          - rc-pv951
+> +          - rc-rc5-tv
+> +          - rc-rc6-mce
+> +          - rc-real-audio-220-32-keys
+> +          - rc-reddo
+> +          - rc-snapstream-firefly
+> +          - rc-streamzap
+> +          - rc-su3000
+> +          - rc-tbs-nec
+> +          - rc-technisat-ts35
+> +          - rc-technisat-usb2
+> +          - rc-terratec-cinergy-c-pci
+> +          - rc-terratec-cinergy-s2-hd
+> +          - rc-terratec-cinergy-xs
+> +          - rc-terratec-slim
+> +          - rc-terratec-slim-2
+> +          - rc-tevii-nec
+> +          - rc-tivo
+> +          - rc-total-media-in-hand
+> +          - rc-total-media-in-hand-02
+> +          - rc-trekstor
+> +          - rc-tt-1500
+> +          - rc-twinhan-dtv-cab-ci
+> +          - rc-twinhan1027
+> +          - rc-videomate-k100
+> +          - rc-videomate-s350
+> +          - rc-videomate-tv-pvr
+> +          - rc-winfast
+> +          - rc-winfast-usbii-deluxe
 
-Fine for me.
+The list of keymaps is out of date. Might as well fix it up at now?
 
-> >> > > Yes, they are required. Thanks for your comments.
-> >> >
-> >> > required in which sense? Why can a Spreadtrum PWM not work when the
-> >> > clock parents are unspecified?
-> >>
-> >> On some Spreadtrum platforms, the default source clock of PWM may not
-> >> be enabled, so we should force users to select one available source
-> >> clock for PWM output clock.
-> >
-> > Sounds like a bug in the clk tree of your SoC that shouldn't affect how
-> > the PWM is described in the device tree. After all a parent of a clock
-> > is supposed to become enabled when the clock gets enabled.
-> 
-> That's not a bug, that's like a MUX, the default source clock of PWM
-> can be disabled, since we usually do not use the default source clock.
-> Then we can select a available source clock by the MUX.
+Thanks
+Sean
 
-In my eyes there is a difference between a) The way the clocks are
-implemented in the XZ SoC implies that to actually use the PWM you need
-to reparent some clock; and b) Each "sprd,ums512-pwm" device really
-needs an "assigned-clock" property, otherwise it cannot work.
-
-If you write "required" in the binding doc the semantic should be b) but
-the motivation here seems to be a). Legal questions aside someone could
-implement a PWM that has the same register layout and behaviour as the
-PWM in your SoC but with a different clock tree. Should they use a
-different compatible just because they don't need "assigned-clock"?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+          # awk -F ' ' '/define RC_MAP_/ { gsub(/"/, "", $3); print "          - " $3 }' < include/media/rc-map.h
+          - rc-adstech-dvb-t-pci
+          - rc-alink-dtu-m
+          - rc-anysee
+          - rc-apac-viewcomp
+          - rc-astrometa-t2hybrid
+          - rc-asus-pc39
+          - rc-asus-ps3-100
+          - rc-ati-tv-wonder-hd-600
+          - rc-ati-x10
+          - rc-avermedia-a16d
+          - rc-avermedia-cardbus
+          - rc-avermedia-dvbt
+          - rc-avermedia-m135a
+          - rc-avermedia-m733a-rm-k6
+          - rc-avermedia-rm-ks
+          - rc-avermedia
+          - rc-avertv-303
+          - rc-azurewave-ad-tu700
+          - rc-behold-columbus
+          - rc-behold
+          - rc-budget-ci-old
+          - rc-cec
+          - rc-cinergy-1400
+          - rc-cinergy
+          - rc-d680-dmb
+          - rc-delock-61959
+          - rc-dib0700-nec
+          - rc-dib0700-rc5
+          - rc-digitalnow-tinytwin
+          - rc-digittrade
+          - rc-dm1105-nec
+          - rc-dntv-live-dvbt-pro
+          - rc-dntv-live-dvb-t
+          - rc-dtt200u
+          - rc-dvbsky
+          - rc-dvico-mce
+          - rc-dvico-portable
+          - rc-empty
+          - rc-em-terratec
+          - rc-encore-enltv2
+          - rc-encore-enltv-fm53
+          - rc-encore-enltv
+          - rc-evga-indtube
+          - rc-eztv
+          - rc-flydvb
+          - rc-flyvideo
+          - rc-fusionhdtv-mce
+          - rc-gadmei-rm008z
+          - rc-geekbox
+          - rc-genius-tvgo-a11mce
+          - rc-gotview7135
+          - rc-hauppauge
+          - rc-hisi-poplar
+          - rc-hisi-tv-demo
+          - rc-imon-mce
+          - rc-imon-pad
+          - rc-imon-rsc
+          - rc-iodata-bctv7e
+          - rc-it913x-v1
+          - rc-it913x-v2
+          - rc-kaiomy
+          - rc-kworld-315u
+          - rc-kworld-pc150u
+          - rc-kworld-plus-tv-analog
+          - rc-leadtek-y04g0051
+          - rc-lme2510
+          - rc-manli
+          - rc-medion-x10
+          - rc-medion-x10-digitainer
+          - rc-medion-x10-or2x
+          - rc-msi-digivox-ii
+          - rc-msi-digivox-iii
+          - rc-msi-tvanywhere-plus
+          - rc-msi-tvanywhere
+          - rc-nebula
+          - rc-nec-terratec-cinergy-xs
+          - rc-norwood
+          - rc-npgtech
+          - rc-pctv-sedna
+          - rc-pinnacle-color
+          - rc-pinnacle-grey
+          - rc-pinnacle-pctv-hd
+          - rc-pixelview-new
+          - rc-pixelview
+          - rc-pixelview-002t
+          - rc-pixelview-mk12
+          - rc-powercolor-real-angel
+          - rc-proteus-2309
+          - rc-purpletv
+          - rc-pv951
+          - rc-hauppauge
+          - rc-rc5-tv
+          - rc-rc6-mce
+          - rc-real-audio-220-32-keys
+          - rc-reddo
+          - rc-snapstream-firefly
+          - rc-streamzap
+          - rc-tango
+          - rc-tbs-nec
+          - rc-technisat-ts35
+          - rc-technisat-usb2
+          - rc-terratec-cinergy-c-pci
+          - rc-terratec-cinergy-s2-hd
+          - rc-terratec-cinergy-xs
+          - rc-terratec-slim
+          - rc-terratec-slim-2
+          - rc-tevii-nec
+          - rc-tivo
+          - rc-total-media-in-hand
+          - rc-total-media-in-hand-02
+          - rc-trekstor
+          - rc-tt-1500
+          - rc-twinhan-dtv-cab-ci
+          - rc-twinhan1027
+          - rc-videomate-k100
+          - rc-videomate-s350
+          - rc-videomate-tv-pvr
+          - rc-winfast
+          - rc-winfast-usbii-deluxe
+          - rc-su3000
+          - rc-xbox-dvd
+          - rc-zx-irdec
