@@ -1,27 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [v7 1/2] dt-bindings: gpio: aspeed: Add SGPIO support
-Date: Wed, 14 Aug 2019 09:59:22 +0200
-Message-ID: <CACRpkdaGe4G17Pv0+X=zcgfwikv8sr+m55NZNZu5JMtLOYjaAQ@mail.gmail.com>
-References: <1564603297-1391-1-git-send-email-hongweiz@ami.com> <1564603297-1391-2-git-send-email-hongweiz@ami.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 05/10] dt-bindings: display: Add max-res
+ property for mxsfb
+Date: Wed, 14 Aug 2019 08:05:09 +0000
+Message-ID: <1565769908.3209.51.camel@nxp.com>
+References: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+         <1561555938-21595-6-git-send-email-robert.chiras@nxp.com>
+         <20190722174853.GA31795@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1564603297-1391-2-git-send-email-hongweiz@ami.com>
+In-Reply-To: <20190722174853.GA31795@bogus>
+Content-Language: en-US
+Content-ID: <B8F60CC76CEA6D43B646C80F09DD0708@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hongwei Zhang <hongweiz@ami.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "airlied@linux.ie" <airlied@linux.ie>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:01 PM Hongwei Zhang <hongweiz@ami.com> wrote:
-
-> Add bindings to support SGPIO on AST2400 or AST2500.
->
-> Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
-> Reviewed-by:   Andrew Jeffery <andrew@aj.id.au>
-
-OK timeout for further DT binding review. I adjusted a bunch
-of things like whitespace and referencing other files when
-applying.
-
-Yours,
-Linus Walleij
+T24gTHUsIDIwMTktMDctMjIgYXQgMTE6NDggLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBXZWQsIEp1biAyNiwgMjAxOSBhdCAwNDozMjoxM1BNICswMzAwLCBSb2JlcnQgQ2hpcmFzIHdy
+b3RlOg0KPiA+IA0KPiA+IEFkZCBuZXcgb3B0aW9uYWwgcHJvcGVydHkgJ21heC1yZXMnLCB0byBs
+aW1pdCB0aGUgbWF4aW11bSBzdXBwb3J0ZWQNCj4gPiByZXNvbHV0aW9uIGJ5IHRoZSBNWFNGQl9E
+Uk0gZHJpdmVyLg0KPiBCaW5kaW5ncyBhcmUgZm9yIGgvdyBkZXNjcmlwdGlvbiwgbm90IGRyaXZl
+ciBjb25maWcuDQo+IA0KPiA+IA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBDaGly
+YXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiDCoERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L214c2ZiLnR4dCB8IDYgKysrKysrDQo+ID4gwqAx
+IGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L214c2ZiLnR4dA0KPiA+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4g
+aW5kZXggNDcyZTFlYS4uNTVlMjJlZCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiBAQCAtMTcsNiAr
+MTcsMTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiDCoFJlcXVpcmVkIHN1Yi1ub2RlczoN
+Cj4gPiDCoMKgwqAtIHBvcnQ6IFRoZSBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4NCj4g
+PiANCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSBtYXgtcmVzOsKgwqDCoGFuIGFy
+cmF5IHdpdGggYSBtYXhpbXVtIG9mIHR3byBpbnRlZ2VycywgcmVwcmVzZW50aW5nDQo+ID4gdGhl
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWF4aW11bSBzdXBwb3J0ZWQgcmVzb2x1
+dGlvbiwgaW4gdGhlIGZvcm0gb2YNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8bWF4
+WD4sIDxtYXhZPjsgaWYgb25lIG9mIHRoZSBpdGVtIGlzIDwwPiwgdGhlDQo+ID4gZGVmYXVsdA0K
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRyaXZlci1kZWZpbmVkIG1heGltdW0gcmVz
+b2x1dGlvbiBmb3IgdGhhdCBheGlzIGlzDQo+ID4gdXNlZA0KPiBJIHN1cHBvc2Ugd2hhdCB5b3Ug
+YXJlIGFmdGVyIGlzIGJhbmR3aWR0aCBsaW1pdHM/IElJUkMsIHRoZXJlJ3MNCj4gYWxyZWFkeQ0K
+PiBzb21lIGJpbmRpbmdzIGV4cHJlc3Npbmcgc3VjaCBsaW1pdHMuIEFsc28sIHdvdWxkbid0IHlv
+dSBuZWVkIHRvDQo+IGFjY291bnQNCj4gZm9yIGJwcCBhbmQgdXNpbmcgdGhlIDJuZCBwbGFuZSAo
+SUlSQyB0aGF0IHRoZXJlIGlzIG9uZSkuDQpJIGFtIHNvcnJ5IGZvciB0aGlzIGxhdGUgcmVwbHks
+IGJ1dCBJIHdhcyBsb29raW5nIGFmdGVyIHRoZSBleGlzdGluZw0KYmluZGluZ3MgZXhwcmVzc2lu
+ZyBzdWNoIGxpbWl0cy4gSSBkaWRuJ3QgZmluZCBzdWNoIGJpbmRpbmdzIHJlbGF0ZWQgdG8NCnRo
+aXMgZHJpdmVyIHRob3VnaCwgSSBmb3VuZCBzb21lIGxpbWl0cyBwcmVzZW50IGluIHNvbWUgb3Ro
+ZXIgZHJpdmVycy4NCkluZGVlZCwgdGhpcyBsaW1pdGF0aW9uIGlzIGFjdHVhbGx5IGR1ZSB0byBi
+YW5kd2lkdGggbGltaXRhdGlvbiwgYnV0DQp0aGUgcHJvYmxlbSBpcyB0aGF0IHRoaXMgbGltaXRh
+dGlvbiBjb21lcyBpLk1YOE0gKGtub3duIGFzIG1TY2FsZQ0KODUwRCksIHdoZXJlIHRoZSBtZW1v
+cnkgYmFuZHdpZHRoIGNhbm5vdCBzdXBwb3J0OiBHUFUvVlBVIHdvcmtsb2FkIGluDQp0aGUgc2Ft
+ZSB0aW1lIHdpdGggYm90aCBEQ1NTIGRyaXZpbmcgNGtANjDCoGFuZCBlTENESUYgZHJpdmluZyAx
+MDgwcEA2MC4NClNpbmNlIGVMQ0RJRiBpcyBhIHNlY29uZGFyeSBkaXNwbGF5IHdlIHRob3VnaCB0
+byBhZGQgdGhlIHBvc2liaWxpdHkgdG8NCmxpbWl0IGl0J3MgYmFuZHdpZHRoIGJ5IGxpbWl0aW5n
+IHRoZSByZXNvbHV0aW9uLg0KSW5kZWVkLCB0aGVyZSBpcyBhbHNvIGEgc2Vjb25kIHBsYW5lLCBi
+dXQgY3VycmVudGx5IG5vdCB5ZXQgc3VwcG9ydGVkDQoodGhlcmUgaXMgbm8gc3VwcG9ydCBmb3Ig
+c2Vjb25kIHBsYW5lIGluIE1YU0ZCIGluIHRoZSB1cHN0cmVhbSBkcml2ZXINCm9yIGluIG91ciBp
+bnRlcm5hbCB0cmVlKS4NCklmIHlvdSB0aGluayB0aGlzIGxpbWl0YXRpb24gZG9lc24ndCBtYWtl
+IHNlbnNlLCBJIGNhbiBqdXN0IGRyb3AgaXQuDQo+IA0KPiBSb2INCg0KVGhhbmtzLA0KUm9iZXJ0
