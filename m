@@ -1,422 +1,80 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH 1/2] dt-bindings: media: Add YAML schemas for the generic
- RC bindings
-Date: Wed, 14 Aug 2019 10:03:17 +0100
-Message-ID: <20190814090316.q7ilx63h63a6wgih@gofer.mess.org>
-References: <20190813124513.31413-1-mripard@kernel.org>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v4 13/14] net: phy: adin: add ethtool get_stats support
+Date: Wed, 14 Aug 2019 09:08:00 +0000
+Message-ID: <2175a95d818172153e839f6bcf6d3d61a3e23dd8.camel@analog.com>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+         <20190812112350.15242-14-alexandru.ardelean@analog.com>
+         <20190812143315.GS14290@lunn.ch>
+         <c3fdb21c40900dae0e52b02b98fe27924a76c256.camel@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813124513.31413-1-mripard@kernel.org>
+In-Reply-To: <c3fdb21c40900dae0e52b02b98fe27924a76c256.camel@analog.com>
+Content-Language: en-US
+Content-ID: <801D42DBC9E2284CA5C33AF41B7E129C@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: mchehab@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 02:45:12PM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
-> The RC controllers have a bunch of generic properties that are needed in a
-> device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../devicetree/bindings/media/rc.txt          | 118 +--------------
->  .../devicetree/bindings/media/rc.yaml         | 135 ++++++++++++++++++
->  2 files changed, 136 insertions(+), 117 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/rc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rc.txt b/Documentation/devicetree/bindings/media/rc.txt
-> index d3e7a012bfda..be629f7fa77e 100644
-> --- a/Documentation/devicetree/bindings/media/rc.txt
-> +++ b/Documentation/devicetree/bindings/media/rc.txt
-> @@ -1,117 +1 @@
-> -The following properties are common to the infrared remote controllers:
-> -
-> -- linux,rc-map-name: string, specifies the scancode/key mapping table
-> -  defined in-kernel for the remote controller. Support values are:
-> -  * "rc-adstech-dvb-t-pci"
-> -  * "rc-alink-dtu-m"
-> -  * "rc-anysee"
-> -  * "rc-apac-viewcomp"
-> -  * "rc-asus-pc39"
-> -  * "rc-asus-ps3-100"
-> -  * "rc-ati-tv-wonder-hd-600"
-> -  * "rc-ati-x10"
-> -  * "rc-avermedia-a16d"
-> -  * "rc-avermedia-cardbus"
-> -  * "rc-avermedia-dvbt"
-> -  * "rc-avermedia-m135a"
-> -  * "rc-avermedia-m733a-rm-k6"
-> -  * "rc-avermedia-rm-ks"
-> -  * "rc-avermedia"
-> -  * "rc-avertv-303"
-> -  * "rc-azurewave-ad-tu700"
-> -  * "rc-behold-columbus"
-> -  * "rc-behold"
-> -  * "rc-budget-ci-old"
-> -  * "rc-cec"
-> -  * "rc-cinergy-1400"
-> -  * "rc-cinergy"
-> -  * "rc-delock-61959"
-> -  * "rc-dib0700-nec"
-> -  * "rc-dib0700-rc5"
-> -  * "rc-digitalnow-tinytwin"
-> -  * "rc-digittrade"
-> -  * "rc-dm1105-nec"
-> -  * "rc-dntv-live-dvbt-pro"
-> -  * "rc-dntv-live-dvb-t"
-> -  * "rc-dtt200u"
-> -  * "rc-dvbsky"
-> -  * "rc-empty"
-> -  * "rc-em-terratec"
-> -  * "rc-encore-enltv2"
-> -  * "rc-encore-enltv-fm53"
-> -  * "rc-encore-enltv"
-> -  * "rc-evga-indtube"
-> -  * "rc-eztv"
-> -  * "rc-flydvb"
-> -  * "rc-flyvideo"
-> -  * "rc-fusionhdtv-mce"
-> -  * "rc-gadmei-rm008z"
-> -  * "rc-geekbox"
-> -  * "rc-genius-tvgo-a11mce"
-> -  * "rc-gotview7135"
-> -  * "rc-hauppauge"
-> -  * "rc-imon-mce"
-> -  * "rc-imon-pad"
-> -  * "rc-iodata-bctv7e"
-> -  * "rc-it913x-v1"
-> -  * "rc-it913x-v2"
-> -  * "rc-kaiomy"
-> -  * "rc-kworld-315u"
-> -  * "rc-kworld-pc150u"
-> -  * "rc-kworld-plus-tv-analog"
-> -  * "rc-leadtek-y04g0051"
-> -  * "rc-lirc"
-> -  * "rc-lme2510"
-> -  * "rc-manli"
-> -  * "rc-medion-x10"
-> -  * "rc-medion-x10-digitainer"
-> -  * "rc-medion-x10-or2x"
-> -  * "rc-msi-digivox-ii"
-> -  * "rc-msi-digivox-iii"
-> -  * "rc-msi-tvanywhere-plus"
-> -  * "rc-msi-tvanywhere"
-> -  * "rc-nebula"
-> -  * "rc-nec-terratec-cinergy-xs"
-> -  * "rc-norwood"
-> -  * "rc-npgtech"
-> -  * "rc-pctv-sedna"
-> -  * "rc-pinnacle-color"
-> -  * "rc-pinnacle-grey"
-> -  * "rc-pinnacle-pctv-hd"
-> -  * "rc-pixelview-new"
-> -  * "rc-pixelview"
-> -  * "rc-pixelview-002t"
-> -  * "rc-pixelview-mk12"
-> -  * "rc-powercolor-real-angel"
-> -  * "rc-proteus-2309"
-> -  * "rc-purpletv"
-> -  * "rc-pv951"
-> -  * "rc-hauppauge"
-> -  * "rc-rc5-tv"
-> -  * "rc-rc6-mce"
-> -  * "rc-real-audio-220-32-keys"
-> -  * "rc-reddo"
-> -  * "rc-snapstream-firefly"
-> -  * "rc-streamzap"
-> -  * "rc-tbs-nec"
-> -  * "rc-technisat-ts35"
-> -  * "rc-technisat-usb2"
-> -  * "rc-terratec-cinergy-c-pci"
-> -  * "rc-terratec-cinergy-s2-hd"
-> -  * "rc-terratec-cinergy-xs"
-> -  * "rc-terratec-slim"
-> -  * "rc-terratec-slim-2"
-> -  * "rc-tevii-nec"
-> -  * "rc-tivo"
-> -  * "rc-total-media-in-hand"
-> -  * "rc-total-media-in-hand-02"
-> -  * "rc-trekstor"
-> -  * "rc-tt-1500"
-> -  * "rc-twinhan-dtv-cab-ci"
-> -  * "rc-twinhan1027"
-> -  * "rc-videomate-k100"
-> -  * "rc-videomate-s350"
-> -  * "rc-videomate-tv-pvr"
-> -  * "rc-winfast"
-> -  * "rc-winfast-usbii-deluxe"
-> -  * "rc-su3000"
-> +This file has been moved to rc.yaml.
-> diff --git a/Documentation/devicetree/bindings/media/rc.yaml b/Documentation/devicetree/bindings/media/rc.yaml
-> new file mode 100644
-> index 000000000000..19b28e7edf9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/rc.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/rc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic Infrared Remote Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Mauro Carvalho Chehab <mchehab@kernel.org>
-> +  - Sean Young <sean@mess.org>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^ir(@[a-f0-9]+)?$"
-> +
-> +  linux,rc-map-name:
-> +    description:
-> +      Specifies the scancode/key mapping table defined in-kernel for
-> +      the remote controller.
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/string'
-> +      - enum:
-> +          - rc-adstech-dvb-t-pci
-> +          - rc-alink-dtu-m
-> +          - rc-anysee
-> +          - rc-apac-viewcomp
-> +          - rc-asus-pc39
-> +          - rc-asus-ps3-100
-> +          - rc-ati-tv-wonder-hd-600
-> +          - rc-ati-x10
-> +          - rc-avermedia
-> +          - rc-avermedia-a16d
-> +          - rc-avermedia-cardbus
-> +          - rc-avermedia-dvbt
-> +          - rc-avermedia-m135a
-> +          - rc-avermedia-m733a-rm-k6
-> +          - rc-avermedia-rm-ks
-> +          - rc-avertv-303
-> +          - rc-azurewave-ad-tu700
-> +          - rc-behold
-> +          - rc-behold-columbus
-> +          - rc-budget-ci-old
-> +          - rc-cec
-> +          - rc-cinergy
-> +          - rc-cinergy-1400
-> +          - rc-delock-61959
-> +          - rc-dib0700-nec
-> +          - rc-dib0700-rc5
-> +          - rc-digitalnow-tinytwin
-> +          - rc-digittrade
-> +          - rc-dm1105-nec
-> +          - rc-dntv-live-dvb-t
-> +          - rc-dntv-live-dvbt-pro
-> +          - rc-dtt200u
-> +          - rc-dvbsky
-> +          - rc-em-terratec
-> +          - rc-empty
-> +          - rc-encore-enltv
-> +          - rc-encore-enltv-fm53
-> +          - rc-encore-enltv2
-> +          - rc-evga-indtube
-> +          - rc-eztv
-> +          - rc-flydvb
-> +          - rc-flyvideo
-> +          - rc-fusionhdtv-mce
-> +          - rc-gadmei-rm008z
-> +          - rc-geekbox
-> +          - rc-genius-tvgo-a11mce
-> +          - rc-gotview7135
-> +          - rc-hauppauge
-> +          - rc-imon-mce
-> +          - rc-imon-pad
-> +          - rc-iodata-bctv7e
-> +          - rc-it913x-v1
-> +          - rc-it913x-v2
-> +          - rc-kaiomy
-> +          - rc-kworld-315u
-> +          - rc-kworld-pc150u
-> +          - rc-kworld-plus-tv-analog
-> +          - rc-leadtek-y04g0051
-> +          - rc-lirc
-> +          - rc-lme2510
-> +          - rc-manli
-> +          - rc-medion-x10
-> +          - rc-medion-x10-digitainer
-> +          - rc-medion-x10-or2x
-> +          - rc-msi-digivox-ii
-> +          - rc-msi-digivox-iii
-> +          - rc-msi-tvanywhere
-> +          - rc-msi-tvanywhere-plus
-> +          - rc-nebula
-> +          - rc-nec-terratec-cinergy-xs
-> +          - rc-norwood
-> +          - rc-npgtech
-> +          - rc-pctv-sedna
-> +          - rc-pinnacle-color
-> +          - rc-pinnacle-grey
-> +          - rc-pinnacle-pctv-hd
-> +          - rc-pixelview
-> +          - rc-pixelview-002t
-> +          - rc-pixelview-mk12
-> +          - rc-pixelview-new
-> +          - rc-powercolor-real-angel
-> +          - rc-proteus-2309
-> +          - rc-purpletv
-> +          - rc-pv951
-> +          - rc-rc5-tv
-> +          - rc-rc6-mce
-> +          - rc-real-audio-220-32-keys
-> +          - rc-reddo
-> +          - rc-snapstream-firefly
-> +          - rc-streamzap
-> +          - rc-su3000
-> +          - rc-tbs-nec
-> +          - rc-technisat-ts35
-> +          - rc-technisat-usb2
-> +          - rc-terratec-cinergy-c-pci
-> +          - rc-terratec-cinergy-s2-hd
-> +          - rc-terratec-cinergy-xs
-> +          - rc-terratec-slim
-> +          - rc-terratec-slim-2
-> +          - rc-tevii-nec
-> +          - rc-tivo
-> +          - rc-total-media-in-hand
-> +          - rc-total-media-in-hand-02
-> +          - rc-trekstor
-> +          - rc-tt-1500
-> +          - rc-twinhan-dtv-cab-ci
-> +          - rc-twinhan1027
-> +          - rc-videomate-k100
-> +          - rc-videomate-s350
-> +          - rc-videomate-tv-pvr
-> +          - rc-winfast
-> +          - rc-winfast-usbii-deluxe
-
-The list of keymaps is out of date. Might as well fix it up at now?
-
-Thanks
-Sean
-
-          # awk -F ' ' '/define RC_MAP_/ { gsub(/"/, "", $3); print "          - " $3 }' < include/media/rc-map.h
-          - rc-adstech-dvb-t-pci
-          - rc-alink-dtu-m
-          - rc-anysee
-          - rc-apac-viewcomp
-          - rc-astrometa-t2hybrid
-          - rc-asus-pc39
-          - rc-asus-ps3-100
-          - rc-ati-tv-wonder-hd-600
-          - rc-ati-x10
-          - rc-avermedia-a16d
-          - rc-avermedia-cardbus
-          - rc-avermedia-dvbt
-          - rc-avermedia-m135a
-          - rc-avermedia-m733a-rm-k6
-          - rc-avermedia-rm-ks
-          - rc-avermedia
-          - rc-avertv-303
-          - rc-azurewave-ad-tu700
-          - rc-behold-columbus
-          - rc-behold
-          - rc-budget-ci-old
-          - rc-cec
-          - rc-cinergy-1400
-          - rc-cinergy
-          - rc-d680-dmb
-          - rc-delock-61959
-          - rc-dib0700-nec
-          - rc-dib0700-rc5
-          - rc-digitalnow-tinytwin
-          - rc-digittrade
-          - rc-dm1105-nec
-          - rc-dntv-live-dvbt-pro
-          - rc-dntv-live-dvb-t
-          - rc-dtt200u
-          - rc-dvbsky
-          - rc-dvico-mce
-          - rc-dvico-portable
-          - rc-empty
-          - rc-em-terratec
-          - rc-encore-enltv2
-          - rc-encore-enltv-fm53
-          - rc-encore-enltv
-          - rc-evga-indtube
-          - rc-eztv
-          - rc-flydvb
-          - rc-flyvideo
-          - rc-fusionhdtv-mce
-          - rc-gadmei-rm008z
-          - rc-geekbox
-          - rc-genius-tvgo-a11mce
-          - rc-gotview7135
-          - rc-hauppauge
-          - rc-hisi-poplar
-          - rc-hisi-tv-demo
-          - rc-imon-mce
-          - rc-imon-pad
-          - rc-imon-rsc
-          - rc-iodata-bctv7e
-          - rc-it913x-v1
-          - rc-it913x-v2
-          - rc-kaiomy
-          - rc-kworld-315u
-          - rc-kworld-pc150u
-          - rc-kworld-plus-tv-analog
-          - rc-leadtek-y04g0051
-          - rc-lme2510
-          - rc-manli
-          - rc-medion-x10
-          - rc-medion-x10-digitainer
-          - rc-medion-x10-or2x
-          - rc-msi-digivox-ii
-          - rc-msi-digivox-iii
-          - rc-msi-tvanywhere-plus
-          - rc-msi-tvanywhere
-          - rc-nebula
-          - rc-nec-terratec-cinergy-xs
-          - rc-norwood
-          - rc-npgtech
-          - rc-pctv-sedna
-          - rc-pinnacle-color
-          - rc-pinnacle-grey
-          - rc-pinnacle-pctv-hd
-          - rc-pixelview-new
-          - rc-pixelview
-          - rc-pixelview-002t
-          - rc-pixelview-mk12
-          - rc-powercolor-real-angel
-          - rc-proteus-2309
-          - rc-purpletv
-          - rc-pv951
-          - rc-hauppauge
-          - rc-rc5-tv
-          - rc-rc6-mce
-          - rc-real-audio-220-32-keys
-          - rc-reddo
-          - rc-snapstream-firefly
-          - rc-streamzap
-          - rc-tango
-          - rc-tbs-nec
-          - rc-technisat-ts35
-          - rc-technisat-usb2
-          - rc-terratec-cinergy-c-pci
-          - rc-terratec-cinergy-s2-hd
-          - rc-terratec-cinergy-xs
-          - rc-terratec-slim
-          - rc-terratec-slim-2
-          - rc-tevii-nec
-          - rc-tivo
-          - rc-total-media-in-hand
-          - rc-total-media-in-hand-02
-          - rc-trekstor
-          - rc-tt-1500
-          - rc-twinhan-dtv-cab-ci
-          - rc-twinhan1027
-          - rc-videomate-k100
-          - rc-videomate-s350
-          - rc-videomate-tv-pvr
-          - rc-winfast
-          - rc-winfast-usbii-deluxe
-          - rc-su3000
-          - rc-xbox-dvd
-          - rc-zx-irdec
+T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA4OjQ4ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
+dGU6DQo+IE9uIE1vbiwgMjAxOS0wOC0xMiBhdCAxNjozMyArMDIwMCwgQW5kcmV3IEx1bm4gd3Jv
+dGU6DQo+ID4gW0V4dGVybmFsXQ0KPiA+IA0KPiA+ID4gK3N0YXRpYyBpbnQgYWRpbl9yZWFkX21t
+ZF9zdGF0X3JlZ3Moc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldiwNCj4gPiA+ICsJCQkJICAgc3Ry
+dWN0IGFkaW5faHdfc3RhdCAqc3RhdCwNCj4gPiA+ICsJCQkJICAgdTMyICp2YWwpDQo+ID4gPiAr
+ew0KPiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwlyZXQgPSBwaHlfcmVhZF9tbWQo
+cGh5ZGV2LCBNRElPX01NRF9WRU5EMSwgc3RhdC0+cmVnMSk7DQo+ID4gPiArCWlmIChyZXQgPCAw
+KQ0KPiA+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiA+ICsNCj4gPiA+ICsJKnZhbCA9IChyZXQgJiAw
+eGZmZmYpOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAoc3RhdC0+cmVnMiA9PSAwKQ0KPiA+ID4gKwkJ
+cmV0dXJuIDA7DQo+ID4gPiArDQo+ID4gPiArCXJldCA9IHBoeV9yZWFkX21tZChwaHlkZXYsIE1E
+SU9fTU1EX1ZFTkQxLCBzdGF0LT5yZWcyKTsNCj4gPiA+ICsJaWYgKHJldCA8IDApDQo+ID4gPiAr
+CQlyZXR1cm4gcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwkqdmFsIDw8PSAxNjsNCj4gPiA+ICsJKnZh
+bCB8PSAocmV0ICYgMHhmZmZmKTsNCj4gPiA+ICsNCj4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiAr
+fQ0KPiA+IA0KPiA+IEl0IHN0aWxsIGxvb2tzIGxpa2UgeW91IGhhdmUgbm90IGRlYWx0IHdpdGgg
+b3ZlcmZsb3cgZnJvbSB0aGUgTFNCIGludG8NCj4gPiB0aGUgTVNCIGJldHdlZW4gdGhlIHR3byBy
+ZWFkcy4NCj4gDQo+IEFwb2xvZ2llcyBmb3IgZm9yZ2V0dGluZyB0byBhZGRyZXNzIHRoaXMuDQo+
+IEkgZGlkIG5vdCBpbnRlbnRpb25hbGx5IGxlYXZlIGl0IG91dDsgdGhpcyBpdGVtIGdvdCBsb3N0
+IGFmdGVyIFYxIFt3aGljaCBoYWQgdGhlIG1vc3QgcmVtYXJrc10uDQo+IENoYW5nZWxvZyBWMSAt
+PiBWMiB3YXMgcXVpdGUgYnVsa3ksIGFuZCBJIGRpZCBub3QgbG9vayBhdCBWMSByZW1hcmtzIGFm
+dGVyIEkgZmluaXNoZWQgVjIuDQo+IA0KPiBUaGFua3MgZm9yIHNuaXBwZXQuDQoNClNvLCBJIGhh
+dmUgdG8gYXBvbG9naXplIGFnYWluIGhlcmUuDQpJIGd1ZXNzIEkgd2FzIGFuIGlkaW90L24wMGIg
+YWJvdXQgdGhpcy4NCg0KVGhlIFBIWSBzdGF0cyBkbyBzdXBwb3J0IHNuYXBzaG90LCBhbmQgSSBz
+eW5jLWVkIHdpdGggc29tZW9uZSBmcm9tIHRoZSBjaGlwLXRlYW0gdG8gY29uZmlybS4NCg0KQWxz
+bywgZnJvbSB0aGUgZGF0YXNoZWV0WzFdIChwYWdlIDI5IC0gRlJBTUUgR0VORVJBVE9SIEFORCBD
+SEVDS0VSIC0gNXRoIHBhcmFncmFwaCk6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KVGhlIGZyYW1lIGNoZWNrZXIgY291bnRz
+IHRoZSBudW1iZXIgb2YgQ1JDIGVycm9ycyBhbmQgdGhlc2UgDQphcmUgcmVwb3J0ZWQgaW4gdGhl
+IHJlY2VpdmUgZXJyb3IgY291bnRlciByZWdpc3RlciAoUnhFcnJDbnQgDQpyZWdpc3RlciwgIGFk
+ZHJlc3MgMHgwMDE0KS4gVG8gZW5zdXJlIHN5bmNocm9uaXphdGlvbiBiZXR3ZWVuIA0KdGhlIGZy
+YW1lIGNoZWNrZXIgZXJyb3IgY291bnRlciBhbmQgZnJhbWUgY2hlY2tlciBmcmFtZSBjb3VudGVy
+cywNCmFsbCBvZiB0aGUgY291bnRlcnMgYXJlIGxhdGNoZWQgb25jZSB0aGUgcmVjZWl2ZSBlcnJv
+ciBjb3VudGVyDQpyZWdpc3RlciBpcyByZWFkLiBIZW5jZSB3aGVuIHVzaW5nIHRoZSBmcmFtZSBj
+aGVja2VyLCB0aGUNCnJlY2VpdmUgZXJyb3IgY291bnRlciBzaG91bGQgYmUgcmVhZCBmaXJzdCBh
+bmQgdGhlbiBhbGwgdGhlIG90aGVyDQpmcmFtZSBjb3VudGVycyBhbmQgZXJyb3IgY291bnRlcnMg
+c2hvdWxkIGJlIHJlYWQuIEEgbGF0Y2hlZCBjb3B5DQpvZiB0aGUgcmVjZWl2ZSBmcmFtZSBjb3Vu
+dGVyIHJlZ2lzdGVyIGlzIGF2YWlsYWJsZSBpbiB0aGUNCkZjRnJtQ250SCBhbmQgRmNGcm1DbnRM
+IHJlZ2lzdGVycyAocmVnaXN0ZXIgYWRkcmVzc2VzIDB4MUUuMHg5NDBBDQphbmQgMHgxRS4weDk0
+MEIpLg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQ0KDQpUaGVuIGluIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGVzZSByZWdzLCBpdCBt
+ZW50aW9ucyAocmVwZXRlYWRseSk6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUaGlzIHJlZ2lzdGVyIGlzIGEgbGF0Y2hlZCBj
+b3B5IG9mIGJpdHMgMzE6MTYgb2YgdGhlIDMyLWJpdA0KcmVjZWl2ZSBmcmFtZSBjb3VudGVyIHJl
+Z2lzdGVyLiBXaGVuIHRoZSByZWNlaXZlIGVycm9yIGNvdW50ZXINCihSeEVyckNudCByZWdpc3Rl
+ciBhZGRyZXNzIDB4MDAxNCkgaXMgcmVhZCwgdGhlIHJlY2VpdmUNCmZyYW1lDQpjb3VudGVyIHJl
+Z2lzdGVyIGlzIGxhdGNoZWQuIEEgY29weSBvZiB0aGUgcmVjZWl2ZSBmcmFtZSBjb3VudGVyDQpy
+ZWdpc3RlciBpcyBsYXRjaGVkIHdoZW4gUnhFcnJDbnQgaXMgcmVhZCBzbyB0aGF0DQp0aGUgZXJy
+b3IgY291bnQNCmFuZCByZWNlaXZlIGZyYW1lIGNvdW50IGFyZSBzeW5jaHJvbml6ZWQNCi0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
+Cg0KSSdsbCByZS1zcGluIHRoaXMgd2l0aCB0aGUgcmVuYW1lIG9mIHRoZSBzdHJpbmdzLCBhbmQg
+bWF5YmUgZG8gYSBtaW5vciBwb2xpc2ggb2YgdGhlIGNvZGUuDQoNClRoYW5rcyAmIHNvcnJ5IGZv
+ciB0aGUgbm9pc2UvdHJvdWJsZQ0KQWxleA0KDQpbMV0gaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9t
+ZWRpYS9lbi90ZWNobmljYWwtZG9jdW1lbnRhdGlvbi9kYXRhLXNoZWV0cy9BRElOMTMwMC5wZGYN
+Cg0KDQo+IA0KPiA+IAlkbyB7DQo+ID4gCQloaTEgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBNRElP
+X01NRF9WRU5EMSwgc3RhdC0+cmVnMik7DQo+ID4gCQlpZiAoaGkxIDwgMCkNCj4gPiAJCQlyZXR1
+cm4gaGkxOw0KPiA+IAkJDQo+ID4gCQlsb3cgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBNRElPX01N
+RF9WRU5EMSwgc3RhdC0+cmVnMSk7DQo+ID4gCQlpZiAobG93IDwgMCkNCj4gPiAJCQlyZXR1cm4g
+bG93Ow0KPiA+IA0KPiA+IAkJaGkyID0gcGh5X3JlYWRfbW1kKHBoeWRldiwgTURJT19NTURfVkVO
+RDEsIHN0YXQtPnJlZzIpOw0KPiA+IAkJaWYgKGhpMiA8IDApDQo+ID4gCQkJcmV0dXJuIGhpMTsN
+Cj4gPiAJfSB3aGlsZSAoaGkxICE9IGhpMikNCj4gPiANCj4gPiAJcmV0dXJuIGxvdyB8IChoaSA8
+PCAxNik7DQo+ID4gDQo+ID4gCUFuZHJldw0K
