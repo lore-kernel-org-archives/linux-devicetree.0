@@ -1,80 +1,67 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v4 13/14] net: phy: adin: add ethtool get_stats support
-Date: Wed, 14 Aug 2019 09:08:00 +0000
-Message-ID: <2175a95d818172153e839f6bcf6d3d61a3e23dd8.camel@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-         <20190812112350.15242-14-alexandru.ardelean@analog.com>
-         <20190812143315.GS14290@lunn.ch>
-         <c3fdb21c40900dae0e52b02b98fe27924a76c256.camel@analog.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/5] ASoC: core: add support to
+ snd_soc_dai_get_sdw_stream()
+Date: Wed, 14 Aug 2019 10:08:56 +0100
+Message-ID: <20190814090856.GA4640@sirena.co.uk>
+References: <20190813083550.5877-4-srinivas.kandagatla@linaro.org>
+ <ba88e0f9-ae7d-c26e-d2dc-83bf910c2c01@linux.intel.com>
+ <c2eecd44-f06a-7287-2862-0382bf697f8d@linaro.org>
+ <d2b7773b-d52a-7769-aa5b-ef8c8845d447@linux.intel.com>
+ <d7c1fdb2-602f-ecb1-9b32-91b893e7f408@linaro.org>
+ <f0228cb4-0a6f-17f3-fe03-9be7f5f2e59d@linux.intel.com>
+ <20190813191827.GI5093@sirena.co.uk>
+ <cc360858-571a-6a46-1789-1020bcbe4bca@linux.intel.com>
+ <20190813195804.GL5093@sirena.co.uk>
+ <20190814041142.GU12733@vkoul-mobl.Dlink>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c3fdb21c40900dae0e52b02b98fe27924a76c256.camel@analog.com>
-Content-Language: en-US
-Content-ID: <801D42DBC9E2284CA5C33AF41B7E129C@analog.com>
+Content-Disposition: inline
+In-Reply-To: <20190814041142.GU12733@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "andrew@lunn.ch" <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, spapothi@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTEzIGF0IDA4OjQ4ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IE9uIE1vbiwgMjAxOS0wOC0xMiBhdCAxNjozMyArMDIwMCwgQW5kcmV3IEx1bm4gd3Jv
-dGU6DQo+ID4gW0V4dGVybmFsXQ0KPiA+IA0KPiA+ID4gK3N0YXRpYyBpbnQgYWRpbl9yZWFkX21t
-ZF9zdGF0X3JlZ3Moc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldiwNCj4gPiA+ICsJCQkJICAgc3Ry
-dWN0IGFkaW5faHdfc3RhdCAqc3RhdCwNCj4gPiA+ICsJCQkJICAgdTMyICp2YWwpDQo+ID4gPiAr
-ew0KPiA+ID4gKwlpbnQgcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwlyZXQgPSBwaHlfcmVhZF9tbWQo
-cGh5ZGV2LCBNRElPX01NRF9WRU5EMSwgc3RhdC0+cmVnMSk7DQo+ID4gPiArCWlmIChyZXQgPCAw
-KQ0KPiA+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiA+ICsNCj4gPiA+ICsJKnZhbCA9IChyZXQgJiAw
-eGZmZmYpOw0KPiA+ID4gKw0KPiA+ID4gKwlpZiAoc3RhdC0+cmVnMiA9PSAwKQ0KPiA+ID4gKwkJ
-cmV0dXJuIDA7DQo+ID4gPiArDQo+ID4gPiArCXJldCA9IHBoeV9yZWFkX21tZChwaHlkZXYsIE1E
-SU9fTU1EX1ZFTkQxLCBzdGF0LT5yZWcyKTsNCj4gPiA+ICsJaWYgKHJldCA8IDApDQo+ID4gPiAr
-CQlyZXR1cm4gcmV0Ow0KPiA+ID4gKw0KPiA+ID4gKwkqdmFsIDw8PSAxNjsNCj4gPiA+ICsJKnZh
-bCB8PSAocmV0ICYgMHhmZmZmKTsNCj4gPiA+ICsNCj4gPiA+ICsJcmV0dXJuIDA7DQo+ID4gPiAr
-fQ0KPiA+IA0KPiA+IEl0IHN0aWxsIGxvb2tzIGxpa2UgeW91IGhhdmUgbm90IGRlYWx0IHdpdGgg
-b3ZlcmZsb3cgZnJvbSB0aGUgTFNCIGludG8NCj4gPiB0aGUgTVNCIGJldHdlZW4gdGhlIHR3byBy
-ZWFkcy4NCj4gDQo+IEFwb2xvZ2llcyBmb3IgZm9yZ2V0dGluZyB0byBhZGRyZXNzIHRoaXMuDQo+
-IEkgZGlkIG5vdCBpbnRlbnRpb25hbGx5IGxlYXZlIGl0IG91dDsgdGhpcyBpdGVtIGdvdCBsb3N0
-IGFmdGVyIFYxIFt3aGljaCBoYWQgdGhlIG1vc3QgcmVtYXJrc10uDQo+IENoYW5nZWxvZyBWMSAt
-PiBWMiB3YXMgcXVpdGUgYnVsa3ksIGFuZCBJIGRpZCBub3QgbG9vayBhdCBWMSByZW1hcmtzIGFm
-dGVyIEkgZmluaXNoZWQgVjIuDQo+IA0KPiBUaGFua3MgZm9yIHNuaXBwZXQuDQoNClNvLCBJIGhh
-dmUgdG8gYXBvbG9naXplIGFnYWluIGhlcmUuDQpJIGd1ZXNzIEkgd2FzIGFuIGlkaW90L24wMGIg
-YWJvdXQgdGhpcy4NCg0KVGhlIFBIWSBzdGF0cyBkbyBzdXBwb3J0IHNuYXBzaG90LCBhbmQgSSBz
-eW5jLWVkIHdpdGggc29tZW9uZSBmcm9tIHRoZSBjaGlwLXRlYW0gdG8gY29uZmlybS4NCg0KQWxz
-bywgZnJvbSB0aGUgZGF0YXNoZWV0WzFdIChwYWdlIDI5IC0gRlJBTUUgR0VORVJBVE9SIEFORCBD
-SEVDS0VSIC0gNXRoIHBhcmFncmFwaCk6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KVGhlIGZyYW1lIGNoZWNrZXIgY291bnRz
-IHRoZSBudW1iZXIgb2YgQ1JDIGVycm9ycyBhbmQgdGhlc2UgDQphcmUgcmVwb3J0ZWQgaW4gdGhl
-IHJlY2VpdmUgZXJyb3IgY291bnRlciByZWdpc3RlciAoUnhFcnJDbnQgDQpyZWdpc3RlciwgIGFk
-ZHJlc3MgMHgwMDE0KS4gVG8gZW5zdXJlIHN5bmNocm9uaXphdGlvbiBiZXR3ZWVuIA0KdGhlIGZy
-YW1lIGNoZWNrZXIgZXJyb3IgY291bnRlciBhbmQgZnJhbWUgY2hlY2tlciBmcmFtZSBjb3VudGVy
-cywNCmFsbCBvZiB0aGUgY291bnRlcnMgYXJlIGxhdGNoZWQgb25jZSB0aGUgcmVjZWl2ZSBlcnJv
-ciBjb3VudGVyDQpyZWdpc3RlciBpcyByZWFkLiBIZW5jZSB3aGVuIHVzaW5nIHRoZSBmcmFtZSBj
-aGVja2VyLCB0aGUNCnJlY2VpdmUgZXJyb3IgY291bnRlciBzaG91bGQgYmUgcmVhZCBmaXJzdCBh
-bmQgdGhlbiBhbGwgdGhlIG90aGVyDQpmcmFtZSBjb3VudGVycyBhbmQgZXJyb3IgY291bnRlcnMg
-c2hvdWxkIGJlIHJlYWQuIEEgbGF0Y2hlZCBjb3B5DQpvZiB0aGUgcmVjZWl2ZSBmcmFtZSBjb3Vu
-dGVyIHJlZ2lzdGVyIGlzIGF2YWlsYWJsZSBpbiB0aGUNCkZjRnJtQ250SCBhbmQgRmNGcm1DbnRM
-IHJlZ2lzdGVycyAocmVnaXN0ZXIgYWRkcmVzc2VzIDB4MUUuMHg5NDBBDQphbmQgMHgxRS4weDk0
-MEIpLg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KDQpUaGVuIGluIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGVzZSByZWdzLCBpdCBt
-ZW50aW9ucyAocmVwZXRlYWRseSk6DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUaGlzIHJlZ2lzdGVyIGlzIGEgbGF0Y2hlZCBj
-b3B5IG9mIGJpdHMgMzE6MTYgb2YgdGhlIDMyLWJpdA0KcmVjZWl2ZSBmcmFtZSBjb3VudGVyIHJl
-Z2lzdGVyLiBXaGVuIHRoZSByZWNlaXZlIGVycm9yIGNvdW50ZXINCihSeEVyckNudCByZWdpc3Rl
-ciBhZGRyZXNzIDB4MDAxNCkgaXMgcmVhZCwgdGhlIHJlY2VpdmUNCmZyYW1lDQpjb3VudGVyIHJl
-Z2lzdGVyIGlzIGxhdGNoZWQuIEEgY29weSBvZiB0aGUgcmVjZWl2ZSBmcmFtZSBjb3VudGVyDQpy
-ZWdpc3RlciBpcyBsYXRjaGVkIHdoZW4gUnhFcnJDbnQgaXMgcmVhZCBzbyB0aGF0DQp0aGUgZXJy
-b3IgY291bnQNCmFuZCByZWNlaXZlIGZyYW1lIGNvdW50IGFyZSBzeW5jaHJvbml6ZWQNCi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
-Cg0KSSdsbCByZS1zcGluIHRoaXMgd2l0aCB0aGUgcmVuYW1lIG9mIHRoZSBzdHJpbmdzLCBhbmQg
-bWF5YmUgZG8gYSBtaW5vciBwb2xpc2ggb2YgdGhlIGNvZGUuDQoNClRoYW5rcyAmIHNvcnJ5IGZv
-ciB0aGUgbm9pc2UvdHJvdWJsZQ0KQWxleA0KDQpbMV0gaHR0cHM6Ly93d3cuYW5hbG9nLmNvbS9t
-ZWRpYS9lbi90ZWNobmljYWwtZG9jdW1lbnRhdGlvbi9kYXRhLXNoZWV0cy9BRElOMTMwMC5wZGYN
-Cg0KDQo+IA0KPiA+IAlkbyB7DQo+ID4gCQloaTEgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBNRElP
-X01NRF9WRU5EMSwgc3RhdC0+cmVnMik7DQo+ID4gCQlpZiAoaGkxIDwgMCkNCj4gPiAJCQlyZXR1
-cm4gaGkxOw0KPiA+IAkJDQo+ID4gCQlsb3cgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBNRElPX01N
-RF9WRU5EMSwgc3RhdC0+cmVnMSk7DQo+ID4gCQlpZiAobG93IDwgMCkNCj4gPiAJCQlyZXR1cm4g
-bG93Ow0KPiA+IA0KPiA+IAkJaGkyID0gcGh5X3JlYWRfbW1kKHBoeWRldiwgTURJT19NTURfVkVO
-RDEsIHN0YXQtPnJlZzIpOw0KPiA+IAkJaWYgKGhpMiA8IDApDQo+ID4gCQkJcmV0dXJuIGhpMTsN
-Cj4gPiAJfSB3aGlsZSAoaGkxICE9IGhpMikNCj4gPiANCj4gPiAJcmV0dXJuIGxvdyB8IChoaSA8
-PCAxNik7DQo+ID4gDQo+ID4gCUFuZHJldw0K
+
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Aug 14, 2019 at 09:41:42AM +0530, Vinod Koul wrote:
+> On 13-08-19, 20:58, Mark Brown wrote:
+
+> > There is something to be said for not abusing the TDM slot API if it can
+> > make things clearer by using bus-idiomatic mechanisms, but it does mean
+> > everything needs to know about each individual bus :/ .
+
+> Here ASoC doesn't need to know about sdw bus. As Srini explained, this
+> helps in the case for him to get the stream context and set the stream
+> context from the machine driver.
+
+Other drivers interoperating with the Soundwire DAI might want to do
+something, it looks like that's the case for SOF.
+
+> Nothing else is expected to be done from this API. We already do a set
+> using snd_soc_dai_set_sdw_stream(). Here we add the snd_soc_dai_get_sdw_stream() to query
+
+Well, if the API is not expected to do anything we can optimize it and
+just remove it!
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1Tz6UACgkQJNaLcl1U
+h9B7fgf+PvYlFGtuBj37wZOpu/dVlS5vmQbNkNVdhUbDbjO5oYTemRTIB5PukA4R
+tO6idhVUsIlMWCvN6MZKJXPGgZfB7Heu84YAn3GvBmIFmY3J4c3QwsD1pIf1gmGH
+X+xV//bbiewRLrA7LvbQalQanUpCVVlCrjsJ8FeDg+PFs4wPO9gE2N7pevVhzknu
+tIaB6HO88+eAx0FfUUvXjWKo5qov/1LjhsI8Z2DJuKfpi9zfBatUz+/Q75d2WEJS
+0G8ATi/5aZueU+YB1T6xdQtkS/lPIFRYN7dyMZrLyidtwkttiii8UzStBh64F6QO
+MSoasP9IToaTUPdzqxcH3bIYBg2R3Q==
+=pxWA
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
