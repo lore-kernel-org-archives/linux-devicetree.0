@@ -1,120 +1,86 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
-Date: Wed, 14 Aug 2019 20:23:37 +0800
-Message-ID: <CAMz4ku+H1++pzZ9pAw2N6Z342j3NMBwfRj9VZTdsihtZYzuFOw@mail.gmail.com>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de> <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de> <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
- <20190814105535.svslc57qp3wx5lub@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH v3 0/6] Add support of New Amlogic temperature sensor for
+ G12 SoCs
+Date: Wed, 14 Aug 2019 16:24:51 +0400
+Message-ID: <357FACA6-6EAC-4E9D-B6F7-4D8D0D59A20A@gmail.com>
+References: <20190806130506.8753-1-glaroque@baylibre.com>
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Content-Type: text/plain;
+        charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814105535.svslc57qp3wx5lub@pengutronix.de>
+In-Reply-To: <20190806130506.8753-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+On 6 Aug 2019, at 5:05 pm, Guillaume La Roque <glaroque@baylibre.com> =
+wrote:
+>=20
+> This patchs series add support of New Amlogic temperature sensor and =
+minimal
+> thermal zone for SEI510 and ODROID-N2 boards.
+>=20
+> First implementation was doing on IIO[1] but after comments i move on =
+thermal framework.
+> Formulas and calibration values come from amlogic.
+>=20
+> Changes since v2:
+>  - fix yaml documention=20
+>  - remove unneeded status variable for temperature-sensor node
+>  - rework driver after Martin review
+>  - add some information in commit message
+>=20
+> Changes since v1:
+>  - fix enum vs const in documentation
+>  - fix error with thermal-sensor-cells value set to 1 instead of 0
+>  - add some dependencies needed to add cooling-maps
+>=20
+> Dependencies :
+> - patch 3,4 & 5: depends on Neil's patch and series :
+>              - missing dwc2 phy-names[2]
+>              - patchsets to add DVFS on G12a[3] which have deps on [4] =
+and [5]
+>=20
+> [1] =
+https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@bayli=
+bre.com/
+> [2] =
+https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@ba=
+ylibre.com/
+> [3] =
+https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@bay=
+libre.com/
+> [4] =
+https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@bay=
+libre.com/
+> [5] =
+https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@bay=
+libre.com/
+>=20
+> Guillaume La Roque (6):
+>  dt-bindings: thermal: Add DT bindings documentation for Amlogic
+>    Thermal
+>  thermal: amlogic: Add thermal driver to support G12 SoCs
+>  arm64: dts: amlogic: g12: add temperature sensor
+>  arm64: dts: meson: sei510: Add minimal thermal zone
+>  arm64: dts: amlogic: odroid-n2: add minimal thermal zone
+>  MAINTAINERS: add entry for Amlogic Thermal driver
 
-On Wed, 14 Aug 2019 at 18:55, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello Baolin,
->
-> On Wed, Aug 14, 2019 at 06:01:50PM +0800, Baolin Wang wrote:
-> > On Wed, 14 Aug 2019 at 17:23, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
-> > > > On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-K=C3=B6nig
-> > > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
-> > > > > [...]
-> > > > Not really, our hardware's method is, when you changed a new
-> > > > configuration (MOD or duty is changed) , the hardware will wait for=
- a
-> > > > while to complete current period, then change to the new period.
-> > >
-> > > Can you describe that in more detail? This doesn't explain why MOD mu=
-st be
-> > > configured before DUTY. Is there another reason for that?
-> >
-> > Sorry, I did not explain this explicitly. When we change a new PWM
-> > configuration, the PWM controller will make sure the current period is
-> > completed before changing to a new period. Once setting the MOD
-> > register (since we always set MOD firstly), that will tell the
-> > hardware that a new period need to change.
->
-> So if the current period just ended after you reconfigured MOD but
-> before you wrote to DUTY we'll see a bogus period, right? I assume the
-> same holds true for writing the prescale value?
+Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 
-I confirmed again, I am sorry I missed something before. Yes, like you
-said before, writing DUTY triggers the hardware to actually apply the
-values written to MOD and DUTY to the output. So write DUTY last. I
-will update the comments and change the PWM configure like:
+I=E2=80=99ve tested this series with Odroid N2 and Khadas VIM3, X96-Max. =
+Patches to add
+support for VIM3/X96-max will be submitted once the driver is merged.
 
-sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
-sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
-sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+VIM3:~ # dmesg | grep thermal
+[    0.046375] thermal_sys: Registered thermal governor 'step_wise'
 
->
-> > The reason MOD must be configured before DUTY is that, if we
-> > configured DUTY firstly, the PWM can work abnormally if the current
-> > DUTY is larger than previous MOD. That is also our hardware's
-> > limitation.
->
-> OK, so you must not get into a situation where DUTY > MOD, right?
->
-> Now if the hardware was configured for
->
->         period =3D 8s, duty =3D 4s
->
-> and now you are supposed to change to
->
->         period =3D 2s, duty =3D 1s
->
-> you'd need to write DUTY first, don't you?
->
-> > > > > > +static int sprd_pwm_remove(struct platform_device *pdev)
-> > > > > > +{
-> > > > > > +     struct sprd_pwm_chip *spc =3D platform_get_drvdata(pdev);
-> > > > > > +     int ret, i;
-> > > > > > +
-> > > > > > +     ret =3D pwmchip_remove(&spc->chip);
-> > > > > > +
-> > > > > > +     for (i =3D 0; i < spc->num_pwms; i++) {
-> > > > > > +             struct sprd_pwm_chn *chn =3D &spc->chn[i];
-> > > > > > +
-> > > > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn=
-->clks);
-> > > > >
-> > > > > If a PWM was still running you're effectively stopping it here, r=
-ight?
-> > > > > Are you sure you don't disable once more than you enabled?
-> > > >
-> > > > Yes, you are right. I should check current enable status of the PWM=
- channel.
-> > > > Thanks for your comments.
-> > >
-> > > I didn't recheck, but I think the right approach is to not fiddle wit=
-h
-> > > the clocks at all and rely on the PWM framework to not let someone ca=
-ll
-> > > sprd_pwm_remove when a PWM is still in use.
-> >
-> > So you mean just return pwmchip_remove(&spc->chip); ?
->
-> right.
->
-> I just rechecked: If there is still a pwm in use, pwmchip_remove returns
-> -EBUSY. So this should be safe.
+VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone0/temp
+51300
 
-Yes. Thanks for your comments.
+VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone1/temp
+52800
 
-
---
-Baolin Wang
-Best Regards
+Christian=
