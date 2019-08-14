@@ -1,61 +1,160 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM documentation
-Date: Wed, 14 Aug 2019 15:25:53 +0800
-Message-ID: <CAMz4ku+55O6ORVM9xDv4R954QG4PXV8EkcGypSTB5wKni+Dq+Q@mail.gmail.com>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de> <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
- <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V3 4/4] dt-bindings: iio: adc: ad7192: Add binding documentation for AD7192
+Date: Wed, 14 Aug 2019 10:31:50 +0300
+Message-ID: <20190814073150.4602-4-mircea.caprioru@analog.com>
+References: <20190814073150.4602-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="y"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+In-Reply-To: <20190814073150.4602-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: jic23@kernel.org
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+This patch add device tree binding documentation for AD7192 adc in YAML
+format.
 
-On Wed, 14 Aug 2019 at 15:01, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello Baolin,
->
-> On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
-> > On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> > > > +- assigned-clock-parents: The phandle of the parent clock of PWM c=
-lock.
-> > >
-> > > I'm not sure you need to point out assigned-clocks and
-> > > assigned-clock-parents as this is general clk stuff. Also I wonder if
-> > > these should be "required properties".
-> >
-> > I think I should describe any properties used by PWM node, like
-> > 'clocks' and 'clock-names' properties, though they are common clock
-> > properties.
->
-> Then you might want to describe also "status", "assigned-clock-rates",
-> "pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
-> probably another dozen I'm not aware of.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+Changelog V2:
+- remove description from spi and interrupt properties
+- changed the name of the device from ad7192 to adc in the example
 
-We usually do not describe 'status', but if your device node used
-"pinctrl-$n", "pinctrl-names" ... common properties, yes, you should
-describe them to let users know what is the purpose of these
-properties. That's also asked by DT maintainer Rob.
+Changelog V3:
+- added semicolon at the end of the dt example
 
->
-> > Yes, they are required. Thanks for your comments.
->
-> required in which sense? Why can a Spreadtrum PWM not work when the
-> clock parents are unspecified?
+ .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
 
-On some Spreadtrum platforms, the default source clock of PWM may not
-be enabled, so we should force users to select one available source
-clock for PWM output clock.
-
---=20
-Baolin Wang
-Best Regards
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+new file mode 100644
+index 000000000000..676ec42e1438
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7192.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7192 ADC device driver
++
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++
++description: |
++  Bindings for the Analog Devices AD7192 ADC device. Datasheet can be
++  found here:
++  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7192.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7190
++      - adi,ad7192
++      - adi,ad7193
++      - adi,ad7195
++
++  reg:
++    maxItems: 1
++
++  spi-cpol: true
++
++  spi-cpha: true
++
++  clocks:
++    maxItems: 1
++    description: phandle to the master clock (mclk)
++
++  clock-names:
++    items:
++      - const: mclk
++
++  interrupts:
++    maxItems: 1
++
++  dvdd-supply:
++    description: DVdd voltage supply
++    items:
++      - const: dvdd
++
++  avdd-supply:
++    description: AVdd voltage supply
++    items:
++      - const: avdd
++
++  adi,rejection-60-Hz-enable:
++    description: |
++      This bit enables a notch at 60 Hz when the first notch of the sinc
++      filter is at 50 Hz. When REJ60 is set, a filter notch is placed at
++      60 Hz when the sinc filter first notch is at 50 Hz. This allows
++      simultaneous 50 Hz/ 60 Hz rejection.
++    type: boolean
++
++  adi,refin2-pins-enable:
++    description: |
++      External reference applied between the P1/REFIN2(+) and P0/REFIN2(−) pins.
++    type: boolean
++
++  adi,buffer-enable:
++    description: |
++      Enables the buffer on the analog inputs. If cleared, the analog inputs
++      are unbuffered, lowering the power consumption of the device. If this
++      bit is set, the analog inputs are buffered, allowing the user to place
++      source impedances on the front end without contributing gain errors to
++      the system.
++    type: boolean
++
++  adi,burnout-currents-enable:
++    description: |
++      When this bit is set to 1, the 500 nA current sources in the signal
++      path are enabled. When BURN = 0, the burnout currents are disabled.
++      The burnout currents can be enabled only when the buffer is active
++      and when chop is disabled.
++    type: boolean
++
++  bipolar:
++    description: see Documentation/devicetree/bindings/iio/adc/adc.txt
++    type: boolean
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dvdd-supply
++  - avdd-supply
++  - spi-cpol
++  - spi-cpha
++
++examples:
++  - |
++    spi0 {
++      adc@0 {
++        compatible = "adi,ad7192";
++        reg = <0>;
++        spi-max-frequency = <1000000>;
++        spi-cpol;
++        spi-cpha;
++        clocks = <&ad7192_mclk>;
++        clock-names = "mclk";
++        #interrupt-cells = <2>;
++        interrupts = <25 0x2>;
++        interrupt-parent = <&gpio>;
++        dvdd-supply = <&dvdd>;
++        avdd-supply = <&avdd>;
++
++        adi,refin2-pins-enable;
++        adi,rejection-60-Hz-enable;
++        adi,buffer-enable;
++        adi,burnout-currents-enable;
++        };
++    };
+-- 
+2.17.1
