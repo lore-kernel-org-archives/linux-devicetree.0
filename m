@@ -1,168 +1,242 @@
-Return-Path: <SRS0=YRqP=WF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36283 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfHIF6R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2019 01:58:17 -0400
-Date: Fri, 9 Aug 2019 07:58:09 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v6 01/13] dt-bindings: connector: analog: add tv norms
- property
-Message-ID: <20190809055809.fm47nllixxfievre@pengutronix.de>
-References: <20190415124413.18456-1-m.felsch@pengutronix.de>
- <20190415124413.18456-2-m.felsch@pengutronix.de>
- <20190516162755.GN14820@pendragon.ideasonboard.com>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57542 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727453AbfHNKUE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:20:04 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 2/3] ARM: OMAP2+: Drop legacy platform data for cpsw on am3 and am4
+Date: Wed, 14 Aug 2019 03:19:48 -0700
+Message-Id: <20190814101949.50006-3-tony@atomide.com>
+In-Reply-To: <20190814101949.50006-1-tony@atomide.com>
+References: <20190814101949.50006-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516162755.GN14820@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Keerthy <j-keerthy@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Laurent,
+We can now probe cpsw with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property for am3 and am4.
 
-On 19-05-16 19:27, Laurent Pinchart wrote:
-> Hi Marco,
-> 
-> Thank you for the patch.
-> 
-> On Mon, Apr 15, 2019 at 02:44:01PM +0200, Marco Felsch wrote:
-> > Some connectors no matter if in- or output supports only a limited
-> > range of tv norms. It doesn't matter if the hardware behind that
-> > connector supports more than the listed formats since the users are
-> > restriced by a label e.g. to plug only a camera into this connector
-> > which uses the PAL format.
-> > 
-> > This patch adds the capability to describe such limitation within the
-> > firmware. There are no format restrictions if the property isn't
-> > present, so it's completely backward compatible.
-> 
-> Why is this needed ? It's not really a hardware property, is it ? What's
-> the use case ?
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
 
-Cause some hardware only support a limited range of formats to that
-connector. Of course it is a hardware property. For example if a
-customer wants to limit a connector to a specifc norm because the
-hardware behind that connector only supports that format or is
-restricted to that format.
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/am33xx-l4.dtsi              |  2 -
+ arch/arm/boot/dts/am437x-l4.dtsi              |  2 -
+ .../omap_hwmod_33xx_43xx_common_data.h        |  3 --
+ .../omap_hwmod_33xx_43xx_interconnect_data.c  |  6 ---
+ .../omap_hwmod_33xx_43xx_ipblock_data.c       | 50 -------------------
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  9 ----
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  9 ----
+ 7 files changed, 81 deletions(-)
 
-Regards,
-  Marco
-
-> 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > [1] https://patchwork.kernel.org/cover/10794703/
-> > 
-> > v6:
-> > - tvnorms.h: use tabs instead of spaces
-> > - tvnorms.h: add TVNORM_PAL and TVNORM_SECAM
-> > - tvnorms.h: drop rarely used TVNORM_ATSC_* norms
-> > 
-> > v2-v4:
-> > - nothing since the patch was squashed from series [1] into this
-> >   series.
-> > 
-> >  .../display/connector/analog-tv-connector.txt |  4 ++
-> >  include/dt-bindings/media/tvnorms.h           | 56 +++++++++++++++++++
-> >  2 files changed, 60 insertions(+)
-> >  create mode 100644 include/dt-bindings/media/tvnorms.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> > index 0c0970c210ab..346f8937a0b7 100644
-> > --- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> > +++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> > @@ -6,6 +6,9 @@ Required properties:
-> >  
-> >  Optional properties:
-> >  - label: a symbolic name for the connector
-> > +- tvnorms: limit the supported tv norms on a connector to the given ones else
-> > +           all tv norms are allowed. Possible video standards are defined in
-> > +           include/dt-bindings/media/tvnorms.h.
-> >  
-> >  Required nodes:
-> >  - Video port for TV input
-> > @@ -16,6 +19,7 @@ Example
-> >  tv: connector {
-> >  	compatible = "composite-video-connector";
-> >  	label = "tv";
-> > +	tvnorms = <(TVNORM_PAL_M | TVNORM_NTSC_M)>;
-> >  
-> >  	port {
-> >  		tv_connector_in: endpoint {
-> > diff --git a/include/dt-bindings/media/tvnorms.h b/include/dt-bindings/media/tvnorms.h
-> > new file mode 100644
-> > index 000000000000..058ab8414145
-> > --- /dev/null
-> > +++ b/include/dt-bindings/media/tvnorms.h
-> > @@ -0,0 +1,56 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only or X11 */
-> > +/*
-> > + * Copyright 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_MEDIA_TVNORMS_H
-> > +#define _DT_BINDINGS_MEDIA_TVNORMS_H
-> > +
-> > +/* one bit for each */
-> > +#define TVNORM_PAL_B		0x00000001
-> > +#define TVNORM_PAL_B1		0x00000002
-> > +#define TVNORM_PAL_G		0x00000004
-> > +#define TVNORM_PAL_H		0x00000008
-> > +#define TVNORM_PAL_I		0x00000010
-> > +#define TVNORM_PAL_D		0x00000020
-> > +#define TVNORM_PAL_D1		0x00000040
-> > +#define TVNORM_PAL_K		0x00000080
-> > +
-> > +#define TVNORM_PAL		(TVNORM_PAL_B  | \
-> > +				 TVNORM_PAL_B1 | \
-> > +				 TVNORM_PAL_G  | \
-> > +				 TVNORM_PAL_H  | \
-> > +				 TVNORM_PAL_I  | \
-> > +				 TVNORM_PAL_D  | \
-> > +				 TVNORM_PAL_D1 | \
-> > +				 TVNORM_PAL_K)
-> > +
-> > +#define TVNORM_PAL_M		0x00000100
-> > +#define TVNORM_PAL_N		0x00000200
-> > +#define TVNORM_PAL_Nc		0x00000400
-> > +#define TVNORM_PAL_60		0x00000800
-> > +
-> > +#define TVNORM_NTSC_M		0x00001000	/* BTSC */
-> > +#define TVNORM_NTSC_M_JP	0x00002000	/* EIA-J */
-> > +#define TVNORM_NTSC_443		0x00004000
-> > +#define TVNORM_NTSC_M_KR	0x00008000	/* FM A2 */
-> > +
-> > +#define TVNORM_SECAM_B		0x00010000
-> > +#define TVNORM_SECAM_D		0x00020000
-> > +#define TVNORM_SECAM_G		0x00040000
-> > +#define TVNORM_SECAM_H		0x00080000
-> > +#define TVNORM_SECAM_K		0x00100000
-> > +#define TVNORM_SECAM_K1		0x00200000
-> > +#define TVNORM_SECAM_L		0x00400000
-> > +#define TVNORM_SECAM_LC		0x00800000
-> > +
-> > +#define TVNORM_SECAM		(TVNORM_SECAM_B  | \
-> > +				 TVNORM_SECAM_D  | \
-> > +				 TVNORM_SECAM_G  | \
-> > +				 TVNORM_SECAM_H  | \
-> > +				 TVNORM_SECAM_K  | \
-> > +				 TVNORM_SECAM_K1 | \
-> > +				 TVNORM_SECAM_L  | \
-> > +				 TVNORM_SECAM_LC)
-> > +
-> > +#endif /* _DT_BINDINGS_MEDIA_TVNORMS_H */
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -673,7 +673,6 @@
+ 
+ 		target-module@100000 {			/* 0x4a100000, ap 3 08.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "cpgmac0";
+ 			reg = <0x101200 0x4>,
+ 			      <0x101208 0x4>,
+ 			      <0x101204 0x4>;
+@@ -723,7 +722,6 @@
+ 					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+-					ti,hwmods = "davinci_mdio";
+ 					bus_freq = <1000000>;
+ 					reg = <0x1000 0x100>;
+ 					status = "disabled";
+diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+--- a/arch/arm/boot/dts/am437x-l4.dtsi
++++ b/arch/arm/boot/dts/am437x-l4.dtsi
+@@ -512,7 +512,6 @@
+ 
+ 		target-module@100000 {			/* 0x4a100000, ap 3 04.0 */
+ 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+-			ti,hwmods = "cpgmac0";
+ 			reg = <0x101200 0x4>,
+ 			      <0x101208 0x4>,
+ 			      <0x101204 0x4>;
+@@ -563,7 +562,6 @@
+ 					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+-					ti,hwmods = "davinci_mdio";
+ 					bus_freq = <1000000>;
+ 					status = "disabled";
+ 				};
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_common_data.h
+@@ -30,7 +30,6 @@ extern struct omap_hwmod_ocp_if am33xx_l3_main__gfx;
+ extern struct omap_hwmod_ocp_if am33xx_l4_wkup__rtc;
+ extern struct omap_hwmod_ocp_if am33xx_l4_per__dcan0;
+ extern struct omap_hwmod_ocp_if am33xx_l4_per__dcan1;
+-extern struct omap_hwmod_ocp_if am33xx_cpgmac0__mdio;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__elm;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss0;
+ extern struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss1;
+@@ -72,8 +71,6 @@ extern struct omap_hwmod am33xx_rng_hwmod;
+ extern struct omap_hwmod am33xx_ocmcram_hwmod;
+ extern struct omap_hwmod am33xx_smartreflex0_hwmod;
+ extern struct omap_hwmod am33xx_smartreflex1_hwmod;
+-extern struct omap_hwmod am33xx_cpgmac0_hwmod;
+-extern struct omap_hwmod am33xx_mdio_hwmod;
+ extern struct omap_hwmod am33xx_dcan0_hwmod;
+ extern struct omap_hwmod am33xx_dcan1_hwmod;
+ extern struct omap_hwmod am33xx_elm_hwmod;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_interconnect_data.c
+@@ -122,12 +122,6 @@ struct omap_hwmod_ocp_if am33xx_l4_per__dcan1 = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-struct omap_hwmod_ocp_if am33xx_cpgmac0__mdio = {
+-	.master		= &am33xx_cpgmac0_hwmod,
+-	.slave		= &am33xx_mdio_hwmod,
+-	.user		= OCP_USER_MPU,
+-};
+-
+ struct omap_hwmod_ocp_if am33xx_l4_ls__elm = {
+ 	.master		= &am33xx_l4_ls_hwmod,
+ 	.slave		= &am33xx_elm_hwmod,
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c
+@@ -349,54 +349,6 @@ struct omap_hwmod_class am33xx_control_hwmod_class = {
+ 	.name		= "control",
+ };
+ 
+-/*
+- * 'cpgmac' class
+- * cpsw/cpgmac sub system
+- */
+-static struct omap_hwmod_class_sysconfig am33xx_cpgmac_sysc = {
+-	.rev_offs	= 0x0,
+-	.sysc_offs	= 0x8,
+-	.syss_offs	= 0x4,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
+-			   SYSS_HAS_RESET_STATUS),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
+-			   MSTANDBY_NO),
+-	.sysc_fields	= &omap_hwmod_sysc_type3,
+-};
+-
+-static struct omap_hwmod_class am33xx_cpgmac0_hwmod_class = {
+-	.name		= "cpgmac0",
+-	.sysc		= &am33xx_cpgmac_sysc,
+-};
+-
+-struct omap_hwmod am33xx_cpgmac0_hwmod = {
+-	.name		= "cpgmac0",
+-	.class		= &am33xx_cpgmac0_hwmod_class,
+-	.clkdm_name	= "cpsw_125mhz_clkdm",
+-	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY),
+-	.main_clk	= "cpsw_125mhz_gclk",
+-	.mpu_rt_idx	= 1,
+-	.prcm		= {
+-		.omap4	= {
+-			.modulemode	= MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+-
+-/*
+- * mdio class
+- */
+-static struct omap_hwmod_class am33xx_mdio_hwmod_class = {
+-	.name		= "davinci_mdio",
+-};
+-
+-struct omap_hwmod am33xx_mdio_hwmod = {
+-	.name		= "davinci_mdio",
+-	.class		= &am33xx_mdio_hwmod_class,
+-	.clkdm_name	= "cpsw_125mhz_clkdm",
+-	.main_clk	= "cpsw_125mhz_gclk",
+-};
+-
+ /*
+  * dcan class
+  */
+@@ -1072,7 +1024,6 @@ static void omap_hwmod_am33xx_clkctrl(void)
+ 	CLKCTRL(am33xx_tptc1_hwmod, AM33XX_CM_PER_TPTC1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_tptc2_hwmod, AM33XX_CM_PER_TPTC2_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_gfx_hwmod, AM33XX_CM_GFX_GFX_CLKCTRL_OFFSET);
+-	CLKCTRL(am33xx_cpgmac0_hwmod, AM33XX_CM_PER_CPGMAC0_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_pruss_hwmod, AM33XX_CM_PER_PRUSS_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_mpu_hwmod , AM33XX_CM_MPU_MPU_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_l3_instr_hwmod , AM33XX_CM_PER_L3_INSTR_CLKCTRL_OFFSET);
+@@ -1134,7 +1085,6 @@ static void omap_hwmod_am43xx_clkctrl(void)
+ 	CLKCTRL(am33xx_tptc1_hwmod, AM43XX_CM_PER_TPTC1_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_tptc2_hwmod, AM43XX_CM_PER_TPTC2_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_gfx_hwmod, AM43XX_CM_GFX_GFX_CLKCTRL_OFFSET);
+-	CLKCTRL(am33xx_cpgmac0_hwmod, AM43XX_CM_PER_CPGMAC0_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_pruss_hwmod, AM43XX_CM_PER_PRUSS_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_mpu_hwmod , AM43XX_CM_MPU_MPU_CLKCTRL_OFFSET);
+ 	CLKCTRL(am33xx_l3_instr_hwmod , AM43XX_CM_PER_L3_INSTR_CLKCTRL_OFFSET);
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+@@ -372,13 +372,6 @@ static struct omap_hwmod_ocp_if am33xx_l4_wkup__adc_tsc = {
+ 	.user		= OCP_USER_MPU,
+ };
+ 
+-static struct omap_hwmod_ocp_if am33xx_l4_hs__cpgmac0 = {
+-	.master		= &am33xx_l4_hs_hwmod,
+-	.slave		= &am33xx_cpgmac0_hwmod,
+-	.clk		= "cpsw_125mhz_gclk",
+-	.user		= OCP_USER_MPU,
+-};
+-
+ static struct omap_hwmod_ocp_if am33xx_l3_main__lcdc = {
+ 	.master		= &am33xx_l3_main_hwmod,
+ 	.slave		= &am33xx_lcdc_hwmod,
+@@ -462,8 +455,6 @@ static struct omap_hwmod_ocp_if *am33xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am33xx_l3_main__tptc2,
+ 	&am33xx_l3_main__ocmc,
+ 	&am33xx_l3_s__usbss,
+-	&am33xx_l4_hs__cpgmac0,
+-	&am33xx_cpgmac0__mdio,
+ 	&am33xx_l3_main__sha0,
+ 	&am33xx_l3_main__aes0,
+ 	&am33xx_l4_per__rng,
+diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+@@ -597,13 +597,6 @@ static struct omap_hwmod_ocp_if am43xx_l4_wkup__adc_tsc = {
+ 	.user           = OCP_USER_MPU,
+ };
+ 
+-static struct omap_hwmod_ocp_if am43xx_l4_hs__cpgmac0 = {
+-	.master		= &am43xx_l4_hs_hwmod,
+-	.slave		= &am33xx_cpgmac0_hwmod,
+-	.clk		= "cpsw_125mhz_gclk",
+-	.user		= OCP_USER_MPU,
+-};
+-
+ static struct omap_hwmod_ocp_if am43xx_l4_wkup__timer1 = {
+ 	.master		= &am33xx_l4_wkup_hwmod,
+ 	.slave		= &am33xx_timer1_hwmod,
+@@ -859,8 +852,6 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am33xx_l3_main__tptc1,
+ 	&am33xx_l3_main__tptc2,
+ 	&am33xx_l3_main__ocmc,
+-	&am43xx_l4_hs__cpgmac0,
+-	&am33xx_cpgmac0__mdio,
+ 	&am33xx_l3_main__sha0,
+ 	&am33xx_l3_main__aes0,
+ 	&am43xx_l3_main__des,
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.21.0
