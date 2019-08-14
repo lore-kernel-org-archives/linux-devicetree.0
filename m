@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 06/15] drm/mxsfb: Update mxsfb with additional pixel formats
-Date: Wed, 14 Aug 2019 13:48:42 +0300
-Message-ID: <1565779731-1300-7-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 12/15] drm/mxsfb: Improve the axi clock usage
+Date: Wed, 14 Aug 2019 13:48:48 +0300
+Message-ID: <1565779731-1300-13-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
@@ -10,362 +10,146 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since version 4 of eLCDIF, there are some registers that can do
-transformations on the input data, like re-arranging the pixel
-components. By doing that, we can support more pixel formats.
-This patch adds support for X/ABGR and RGBX/A. Although, the local alpha
-is not supported by eLCDIF, the alpha pixel formats were added to the
-supported pixel formats but it will be ignored. This was necessary since
-there are systems (like Android) that requires such pixel formats.
-
-Also, add support for the following pixel formats:
-            16 bpp: RG16 ,BG16, XR15, XB15, AR15, AB15
-
-Set the bus format based on input from the user and panel
-capabilities.
-Save the bus format in crtc->mode.private_flags, so the bridge can
-use it.
+Currently, the enable of the axi clock return status is ignored, causing
+issues when the enable fails then we try to disable it. Therefore, it is
+better to check the return status and disable it only when enable
+succeeded.
+Also, remove the helper functions around clk_axi, since we can directly
+use the clk API function for enable/disable the clock. Those functions
+are already checking for NULL clk and returning 0 if that's the case.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+Acked-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 147 ++++++++++++++++++++++++++++++-------
- drivers/gpu/drm/mxsfb/mxsfb_drv.c  |  30 ++++++--
- drivers/gpu/drm/mxsfb/mxsfb_drv.h  |   3 +-
- drivers/gpu/drm/mxsfb/mxsfb_regs.h |  15 ++++
- 4 files changed, 163 insertions(+), 32 deletions(-)
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c |  8 ++++----
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 32 +++++++++++++-------------------
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  3 ---
+ 3 files changed, 17 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index 5e44f57..1be29f5 100644
+index a4ba368..e727f5e 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -43,14 +43,17 @@ static u32 set_hsync_pulse_width(struct mxsfb_drm_private *mxsfb, u32 val)
- }
- 
- /* Setup the MXSFB registers for decoding the pixels out of the framebuffer */
--static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
-+static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb, bool update)
+@@ -408,7 +408,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
  {
- 	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
- 	struct drm_device *drm = crtc->dev;
- 	const u32 format = crtc->primary->state->fb->format->format;
--	u32 ctrl, ctrl1;
-+	u32 ctrl = 0, ctrl1 = 0;
-+	bool bgr_format = true;
-+	struct drm_format_name_buf format_name_buf;
+ 	dma_addr_t paddr;
  
--	ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
-+	if (!update)
-+		ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
+-	mxsfb_enable_axi_clk(mxsfb);
++	clk_prepare_enable(mxsfb->clk_axi);
+ 	writel(0, mxsfb->base + LCDC_CTRL);
+ 	mxsfb_crtc_mode_set_nofb(mxsfb);
  
- 	/*
- 	 * WARNING: The bus width, CTRL_SET_BUS_WIDTH(), is configured to
-@@ -59,64 +62,158 @@ static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
- 	 * to arbitrary value. This limitation should not pose an issue.
- 	 */
- 
--	/* CTRL1 contains IRQ config and status bits, preserve those. */
--	ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
--	ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
-+	if (!update) {
-+		/* CTRL1 contains IRQ config and status bits, preserve those. */
-+		ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
-+		ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
-+	}
-+
-+	DRM_DEV_DEBUG_DRIVER(drm->dev, "Setting up %s mode\n",
-+			     drm_get_format_name(format, &format_name_buf));
-+
-+	/* Do some clean-up that we might have from a previous mode */
-+	ctrl &= ~CTRL_SHIFT_DIR(1);
-+	ctrl &= ~CTRL_SHIFT_NUM(0x3f);
-+	if (mxsfb->devdata->ipversion >= 4)
-+		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_CLR) |
-+		       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_CLR),
-+		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
- 
- 	switch (format) {
--	case DRM_FORMAT_RGB565:
--		dev_dbg(drm->dev, "Setting up RGB565 mode\n");
-+	case DRM_FORMAT_BGR565: /* BG16 */
-+		if (mxsfb->devdata->ipversion < 4)
-+			goto err;
-+		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-+			CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-+			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-+		/* Fall through */
-+	case DRM_FORMAT_RGB565: /* RG16 */
-+		ctrl |= CTRL_SET_WORD_LENGTH(0);
-+		ctrl &= ~CTRL_DF16;
-+		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
-+		break;
-+	case DRM_FORMAT_XBGR1555: /* XB15 */
-+	case DRM_FORMAT_ABGR1555: /* AB15 */
-+		if (mxsfb->devdata->ipversion < 4)
-+			goto err;
-+		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-+			CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-+			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-+		/* Fall through */
-+	case DRM_FORMAT_XRGB1555: /* XR15 */
-+	case DRM_FORMAT_ARGB1555: /* AR15 */
- 		ctrl |= CTRL_SET_WORD_LENGTH(0);
-+		ctrl |= CTRL_DF16;
- 		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
- 		break;
--	case DRM_FORMAT_XRGB8888:
--		dev_dbg(drm->dev, "Setting up XRGB8888 mode\n");
-+	case DRM_FORMAT_RGBX8888: /* RX24 */
-+	case DRM_FORMAT_RGBA8888: /* RA24 */
-+		/* RGBX - > 0RGB */
-+		ctrl |= CTRL_SHIFT_DIR(1);
-+		ctrl |= CTRL_SHIFT_NUM(8);
-+		bgr_format = false;
-+		/* Fall through */
-+	case DRM_FORMAT_XBGR8888: /* XB24 */
-+	case DRM_FORMAT_ABGR8888: /* AB24 */
-+		if (bgr_format) {
-+			if (mxsfb->devdata->ipversion < 4)
-+				goto err;
-+			writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
-+			       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
-+			       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-+		}
-+		/* Fall through */
-+	case DRM_FORMAT_XRGB8888: /* XR24 */
-+	case DRM_FORMAT_ARGB8888: /* AR24 */
- 		ctrl |= CTRL_SET_WORD_LENGTH(3);
- 		/* Do not use packed pixels = one pixel per word instead. */
- 		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0x7);
- 		break;
- 	default:
--		dev_err(drm->dev, "Unhandled pixel format %08x\n", format);
--		return -EINVAL;
-+		goto err;
- 	}
- 
--	writel(ctrl1, mxsfb->base + LCDC_CTRL1);
--	writel(ctrl, mxsfb->base + LCDC_CTRL);
-+	if (update) {
-+		writel(ctrl, mxsfb->base + LCDC_CTRL + REG_SET);
-+		writel(ctrl1, mxsfb->base + LCDC_CTRL1 + REG_SET);
-+	} else {
-+		writel(ctrl, mxsfb->base + LCDC_CTRL);
-+		writel(ctrl1, mxsfb->base + LCDC_CTRL1);
-+	}
- 
- 	return 0;
-+
-+err:
-+	DRM_DEV_ERROR(drm->dev, "Unhandled pixel format: %s\n",
-+		      drm_get_format_name(format, &format_name_buf));
-+
-+	return -EINVAL;
-+}
-+
-+static u32 get_bus_format_from_bpp(u32 bpp)
-+{
-+	switch (bpp) {
-+	case 16:
-+		return MEDIA_BUS_FMT_RGB565_1X16;
-+	case 18:
-+		return MEDIA_BUS_FMT_RGB666_1X18;
-+	case 24:
-+		return MEDIA_BUS_FMT_RGB888_1X24;
-+	default:
-+		return MEDIA_BUS_FMT_RGB888_1X24;
-+	}
- }
- 
- static void mxsfb_set_bus_fmt(struct mxsfb_drm_private *mxsfb)
+@@ -425,7 +425,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+ void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
  {
- 	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
-+	unsigned int bits_per_pixel = crtc->primary->state->fb->format->depth;
- 	struct drm_device *drm = crtc->dev;
- 	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
--	u32 reg;
--
--	reg = readl(mxsfb->base + LCDC_CTRL);
-+	int num_bus_formats = mxsfb->connector->display_info.num_bus_formats;
-+	const u32 *bus_formats = mxsfb->connector->display_info.bus_formats;
-+	u32 reg = 0;
-+	int i = 0;
-+
-+	/* match the user requested bus_format to one supported by the panel */
-+	if (num_bus_formats) {
-+		u32 user_bus_format = get_bus_format_from_bpp(bits_per_pixel);
-+
-+		bus_format = bus_formats[0];
-+		for (i = 0; i < num_bus_formats; i++) {
-+			if (user_bus_format == bus_formats[i]) {
-+				bus_format = user_bus_format;
-+				break;
-+			}
-+		}
-+	}
- 
--	if (mxsfb->connector->display_info.num_bus_formats)
--		bus_format = mxsfb->connector->display_info.bus_formats[0];
-+	/*
-+	 * CRTC will dictate the bus format via private_flags[16:1]
-+	 * and private_flags[0] will signal a bus format change
-+	 */
-+	crtc->mode.private_flags &= ~0x1FFFF; /* clear bus format */
-+	crtc->mode.private_flags |= (bus_format << 1); /* set bus format */
-+	crtc->mode.private_flags |= 0x1; /* bus format change indication*/
- 
- 	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
- 			     bus_format);
- 
--	reg &= ~CTRL_BUS_WIDTH_MASK;
- 	switch (bus_format) {
- 	case MEDIA_BUS_FMT_RGB565_1X16:
--		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
-+		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
- 		break;
- 	case MEDIA_BUS_FMT_RGB666_1X18:
--		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
-+		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
- 		break;
- 	case MEDIA_BUS_FMT_RGB888_1X24:
--		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
-+		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
- 		break;
- 	default:
- 		dev_err(drm->dev, "Unknown media bus format %d\n", bus_format);
- 		break;
- 	}
--	writel(reg, mxsfb->base + LCDC_CTRL);
-+	writel(reg, mxsfb->base + LCDC_CTRL + REG_SET);
+ 	mxsfb_disable_controller(mxsfb);
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
  }
  
- static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
-@@ -238,7 +335,7 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
- 	/* Clear the FIFOs */
- 	writel(CTRL1_FIFO_CLEAR, mxsfb->base + LCDC_CTRL1 + REG_SET);
+ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+@@ -451,8 +451,8 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
  
--	err = mxsfb_set_pixel_fmt(mxsfb);
-+	err = mxsfb_set_pixel_fmt(mxsfb, false);
- 	if (err)
- 		return;
- 
+ 	paddr = mxsfb_get_fb_paddr(mxsfb);
+ 	if (paddr) {
+-		mxsfb_enable_axi_clk(mxsfb);
++		clk_prepare_enable(mxsfb->clk_axi);
+ 		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
+-		mxsfb_disable_axi_clk(mxsfb);
++		clk_disable_unprepare(mxsfb->clk_axi);
+ 	}
+ }
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 9dc69b7..2743975 100644
+index 6dae2bd..694b287 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -43,6 +43,27 @@ enum mxsfb_devtype {
- 	MXSFB_V4,
- };
+@@ -97,18 +97,6 @@ drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
+ 	return container_of(pipe, struct mxsfb_drm_private, pipe);
+ }
  
-+/*
-+ * When adding new formats, make sure to update the num_formats from
-+ * mxsfb_devdata below.
-+ */
-+static const u32 mxsfb_formats[] = {
-+	/* MXSFB_V3 */
-+	DRM_FORMAT_XRGB8888,
-+	DRM_FORMAT_ARGB8888,
-+	DRM_FORMAT_RGB565,
-+	/* MXSFB_V4 */
-+	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_ABGR8888,
-+	DRM_FORMAT_RGBX8888,
-+	DRM_FORMAT_RGBA8888,
-+	DRM_FORMAT_ARGB1555,
-+	DRM_FORMAT_XRGB1555,
-+	DRM_FORMAT_ABGR1555,
-+	DRM_FORMAT_XBGR1555,
-+	DRM_FORMAT_BGR565
-+};
-+
- static const struct mxsfb_devdata mxsfb_devdata[] = {
- 	[MXSFB_V3] = {
- 		.transfer_count	= LCDC_V3_TRANSFER_COUNT,
-@@ -52,6 +73,7 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
- 		.hs_wdth_mask	= 0xff,
- 		.hs_wdth_shift	= 24,
- 		.ipversion	= 3,
-+		.num_formats	= 3,
- 	},
- 	[MXSFB_V4] = {
- 		.transfer_count	= LCDC_V4_TRANSFER_COUNT,
-@@ -61,14 +83,10 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
- 		.hs_wdth_mask	= 0x3fff,
- 		.hs_wdth_shift	= 18,
- 		.ipversion	= 4,
-+		.num_formats	= ARRAY_SIZE(mxsfb_formats),
- 	},
- };
- 
--static const uint32_t mxsfb_formats[] = {
--	DRM_FORMAT_XRGB8888,
--	DRM_FORMAT_RGB565
--};
+-void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb)
+-{
+-	if (mxsfb->clk_axi)
+-		clk_prepare_enable(mxsfb->clk_axi);
+-}
 -
- static struct mxsfb_drm_private *
- drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
+-void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+-{
+-	if (mxsfb->clk_axi)
+-		clk_disable_unprepare(mxsfb->clk_axi);
+-}
+-
+ /**
+  * mxsfb_atomic_helper_check - validate state object
+  * @dev: DRM device
+@@ -229,25 +217,31 @@ static void mxsfb_pipe_update(struct drm_simple_display_pipe *pipe,
+ static int mxsfb_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
  {
-@@ -244,7 +262,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 	}
+ 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
++	int ret = 0;
++
++	ret = clk_prepare_enable(mxsfb->clk_axi);
++	if (ret)
++		return ret;
  
- 	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
--			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
-+			mxsfb_formats, mxsfb->devdata->num_formats, NULL,
- 			mxsfb->connector);
- 	if (ret < 0) {
- 		dev_err(drm->dev, "Cannot setup simple display pipe\n");
+ 	/* Clear and enable VBLANK IRQ */
+-	mxsfb_enable_axi_clk(mxsfb);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_SET);
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
+ {
+ 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+ 
++	if (clk_prepare_enable(mxsfb->clk_axi))
++		return;
++
+ 	/* Disable and clear VBLANK IRQ */
+-	mxsfb_enable_axi_clk(mxsfb);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ }
+ 
+ static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
+@@ -413,7 +407,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+ 	struct mxsfb_drm_private *mxsfb = drm->dev_private;
+ 	u32 reg;
+ 
+-	mxsfb_enable_axi_clk(mxsfb);
++	clk_prepare_enable(mxsfb->clk_axi);
+ 
+ 	reg = readl(mxsfb->base + LCDC_CTRL1);
+ 
+@@ -422,7 +416,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+ 
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+ 
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ 
+ 	return IRQ_HANDLED;
+ }
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-index 0b65b51..8fb65d3 100644
+index 8fb65d3..d6df8fe 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-@@ -16,6 +16,7 @@ struct mxsfb_devdata {
- 	unsigned int	 hs_wdth_mask;
- 	unsigned int	 hs_wdth_shift;
- 	unsigned int	 ipversion;
-+	unsigned int	 num_formats;
- };
+@@ -37,9 +37,6 @@ struct mxsfb_drm_private {
+ int mxsfb_setup_crtc(struct drm_device *dev);
+ int mxsfb_create_output(struct drm_device *dev);
  
- struct mxsfb_drm_private {
-@@ -42,6 +43,6 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+-void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb);
+-void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+-
  void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
--			       struct drm_plane_state *state);
-+			       struct drm_plane_state *old_state);
- 
- #endif /* __MXSFB_DRV_H__ */
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-index 9fcb1db..dc4daa0 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-@@ -44,6 +44,11 @@
- #define REG_PUT(x, h, l) (((x) << (l)) & GENMASK(h, l))
- #define REG_GET(x, h, l) (((x) & GENMASK(h, l)) >> (l))
- 
-+#define SWIZZLE_LE		0 /* Little-Endian or No swap */
-+#define SWIZZLE_BE		1 /* Big-Endian or swap all */
-+#define SWIZZLE_HWD		2 /* Swap half-words */
-+#define SWIZZLE_HWD_BYTE	3 /* Swap bytes within each half-word */
-+
- #define CTRL_SFTRST			BIT(31)
- #define CTRL_CLKGATE			BIT(30)
- #define CTRL_SHIFT_DIR(x)		REG_PUT((x), 26, 26)
-@@ -93,6 +98,16 @@
- #define REQ_8	3
- #define REQ_16	4
- 
-+#define CTRL2_ODD_LINE_PATTERN(x)	REG_PUT((x), 18, 16)
-+#define CTRL2_EVEN_LINE_PATTERN(x)	REG_PUT((x), 14, 12)
-+#define CTRL2_LINE_PATTERN_RGB	0
-+#define CTRL2_LINE_PATTERN_RBG	1
-+#define CTRL2_LINE_PATTERN_GBR	2
-+#define CTRL2_LINE_PATTERN_GRB	3
-+#define CTRL2_LINE_PATTERN_BRG	4
-+#define CTRL2_LINE_PATTERN_BGR	5
-+#define CTRL2_LINE_PATTERN_CLR	7
-+
- #define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
- #define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
- #define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
 -- 
 2.7.4
