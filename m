@@ -1,46 +1,90 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: qcs404-evb: Mark WCSS clocks protected
-Date: Tue, 13 Aug 2019 20:09:42 -0700
-Message-ID: <20190814030942.2638-1-bjorn.andersson@linaro.org>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+Date: Wed, 14 Aug 2019 03:34:46 +0000
+Message-ID: <DB8PR04MB6826356AD0413999AE65BD23F1AD0@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190712064206.48249-1-ran.wang_1@nxp.com>
+ <20190724204222.GA1234@bogus>
+ <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+ <DB8PR04MB68263E97EAF455751DB8506BF1C00@DB8PR04MB6826.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB8PR04MB68263E97EAF455751DB8506BF1C00@DB8PR04MB6826.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-'7d0c76bdf227 ("clk: qcom: Add WCSS gcc clock control for QCS404")'
-introduces two new clocks to gcc. These are not used before
-clk_disable_unused() and as such the clock framework tries to disable
-them.
-
-But on the EVB these registers are only accessible through TrustZone, so
-these clocks must be marked as "protected" to prevent the clock code
-from touching them.
-
-Numerical values are used as the constants are not yet available in a
-common tree.
-
-Reported-by: Mark Brown <broonie@kernel.org>
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 2289b01ee9f0..501a7330dbc8 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -61,7 +61,9 @@
- 	protected-clocks = <GCC_BIMC_CDSP_CLK>,
- 			   <GCC_CDSP_CFG_AHB_CLK>,
- 			   <GCC_CDSP_BIMC_CLK_SRC>,
--			   <GCC_CDSP_TBU_CLK>;
-+			   <GCC_CDSP_TBU_CLK>,
-+			   <141>, /* GCC_WCSS_Q6_AHB_CLK */
-+			   <142>; /* GCC_WCSS_Q6_AXIM_CLK */
- };
- 
- &pms405_spmi_regulators {
--- 
-2.18.0
+SGkgRmVsaXBlDQoNCk9uIEZyaWRheSwgSnVseSAyNiwgMjAxOSAxMTozMCBSYW4gV2FuZyB3cm90
+ZToNCj4gDQo+IEhpIEZlbGlwZSwNCj4gDQo+IE9uIEZyaWRheSwgSnVseSAyNiwgMjAxOSAwNTo1
+NiwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBPbiBXZWQs
+IEp1bCAyNCwgMjAxOSBhdCA4OjI5IFBNIFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+IHdy
+b3RlOg0KPiA+ID4NCj4gPiA+IEhpIFJvYiwNCj4gPiA+DQo+ID4gPiBPbiBUaHVyc2RheSwgSnVs
+eSAyNSwgMjAxOSAwNDo0MiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToNCj4g
+PiA+ID4NCj4gPiA+ID4gT24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMDI6NDI6MDVQTSArMDgwMCwg
+UmFuIFdhbmcgd3JvdGU6DQo+ID4gPiA+ID4gU29tZSBMYXllcnNjYXBlIHBhbHRmb3JtcyAoc3Vj
+aCBhcyBMUzEwODhBLCBMUzIwODhBLCBldGMpDQo+ID4gPiA+ID4gZW5jb3VudGVyIFVTQiBkZXRl
+Y3QgZmFpbHVlcyB3aGVuIGFkZGluZyBkbWEtY29oZXJlbnQgdG8gRFdDMw0KPiA+ID4gPiA+IG5v
+ZGUuIFRoaXMgaXMgYmVjYXVzZSB0aGUgSFcgZGVmYXVsdCBjYWNoZSB0eXBlIGNvbmZpZ3VyYXRp
+b24gb2YNCj4gPiA+ID4gPiB0aG9zZSBTb0MgYXJlIG5vdCByaWdodCwgbmVlZCB0byBiZSB1cGRh
+dGVkIGluIERUUy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJhbiBXYW5n
+IDxyYW4ud2FuZ18xQG54cC5jb20+DQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+ID4gQ2hhbmdlIGlu
+IHYyOg0KPiA+ID4gPiA+ICAgICAtIE5ldyBmaWxlLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQgfCA0Mw0KPiA+ID4g
+PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCA0MyBpbnNlcnRpb25zKCspDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+
+IGluZGV4IDhlNTI2NWUuLjdiYzFjZWYgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9kd2MzLnR4dA0KPiA+ID4gPiA+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4gPiA+ID4gPiBA
+QCAtMTEwLDYgKzExMCw0MyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiA+ICAgLSBp
+biBhZGRpdGlvbiBhbGwgcHJvcGVydGllcyBmcm9tIHVzYi14aGNpLnR4dCBmcm9tIHRoZSBjdXJy
+ZW50IGRpcmVjdG9yeQ0KPiBhcmUNCj4gPiA+ID4gPiAgICAgc3VwcG9ydGVkIGFzIHdlbGwNCj4g
+PiA+ID4gPg0KPiA+ID4gPiA+ICsqIENhY2hlIHR5cGUgbm9kZXMgKG9wdGlvbmFsKQ0KPiA+ID4g
+PiA+ICsNCj4gPiA+ID4gPiArVGhlIENhY2hlIHR5cGUgbm9kZSBpcyB1c2VkIHRvIHRlbGwgaG93
+IHRvIGNvbmZpZ3VyZSBjYWNoZSB0eXBlDQo+ID4gPiA+ID4gK29uIDQgZGlmZmVyZW50IHRyYW5z
+ZmVyIHR5cGVzOiBEYXRhIFJlYWQsIERlc2MgUmVhZCwgRGF0YSBXcml0ZQ0KPiA+ID4gPiA+ICth
+bmQgRGVzYyB3cml0ZS4gRm9yIGVhY2ggdHJlYXNmZXIgdHlwZSwgY29udHJvbGxlciBoYXMgYSA0
+LWJpdA0KPiA+ID4gPiA+ICtyZWdpc3RlciBmaWVsZCB0byBlbmFibGUgZGlmZmVyZW50IGNhY2hl
+IHR5cGUuIFF1b3RlZCBmcm9tIERXQzMNCj4gPiA+ID4gPiArZGF0YSBib29rIFRhYmxlIDYtNQ0K
+PiA+ID4gPiBDYWNoZSBUeXBlIEJpdCBBc3NpZ25tZW50czoNCj4gPiA+ID4gPiArLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+PiA+ID4gPiA+ICtNQlVTX1RZUEV8IGJpdFszXSAgICAgICB8Yml0WzJdICAgICAgIHxiaXRbMV0g
+ICAgIHxiaXRbMF0NCj4gPiA+ID4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiA+ICtBSEIgICAgICB8Q2Fj
+aGVhYmxlICAgICB8QnVmZmVyYWJsZSAgIHxQcml2aWxlZ2dlIHxEYXRhDQo+ID4gPiA+ID4gK0FY
+STMgICAgIHxXcml0ZSBBbGxvY2F0ZXxSZWFkIEFsbG9jYXRlfENhY2hlYWJsZSAgfEJ1ZmZlcmFi
+bGUNCj4gPiA+ID4gPiArQVhJNCAgICAgfEFsbG9jYXRlIE90aGVyfEFsbG9jYXRlICAgICB8TW9k
+aWZpYWJsZSB8QnVmZmVyYWJsZQ0KPiA+ID4gPiA+ICtBWEk0ICAgICB8T3RoZXIgQWxsb2NhdGV8
+QWxsb2NhdGUgICAgIHxNb2RpZmlhYmxlIHxCdWZmZXJhYmxlDQo+ID4gPiA+ID4gK05hdGl2ZSAg
+IHxTYW1lIGFzIEFYSSAgIHxTYW1lIGFzIEFYSSAgfFNhbWUgYXMgQVhJfFNhbWUgYXMgQVhJDQo+
+ID4gPiA+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiA+ICstDQo+ID4gPiA+ID4gK05vdGU6IFRoZSBBSEIs
+IEFYSTMsIEFYSTQsIGFuZCBQQ0llIGJ1c3NlcyB1c2UgZGlmZmVyZW50IG5hbWVzDQo+ID4gPiA+
+ID4gK2ZvciBjZXJ0YWluIHNpZ25hbHMsIHdoaWNoIGhhdmUgdGhlIHNhbWUgbWVhbmluZzoNCj4g
+PiA+ID4gPiArICBCdWZmZXJhYmxlID0gUG9zdGVkDQo+ID4gPiA+ID4gKyAgQ2FjaGVhYmxlID0g
+TW9kaWZpYWJsZSA9IFNub29wIChuZWdhdGlvbiBvZiBObyBTbm9vcCkNCj4gPiA+ID4NCj4gPiA+
+ID4gVGhpcyBzaG91bGQgYWxsIGJlIGltcGxpZWQgZnJvbSB0aGUgU29DIHNwZWNpZmljIGNvbXBh
+dGlibGUgc3RyaW5ncy4NCj4gPiA+DQo+ID4gPiBEaWQgeW91IG1lYW4gSSBjb3VsZCBpbXBsZW1l
+bnQgYSBzb2MgZHJpdmVyIHdoaWNoIGNhbiBiZSBtYXRjaGVkIGJ5DQo+ID4gY29tcGF0aWJsZSBv
+ZiAnZnNsLGxzMTA4OGEtZHdjMycgd2hpY2ggd2lsbCBwYXNzIGtub3duIGJ1cyB0eXBlIHRvIERX
+QzMNCj4gZHJpdmVyPw0KPiA+IElmIHllcywgaG93IHRvIHBhc3M/DQo+ID4NCj4gPiBZZXMuIFRo
+ZSBEVCBtYXRjaCB0YWJsZSBjYW4gaGF2ZSBkYXRhIGFzc29jaWF0ZWQgd2l0aCB0aGF0IGNvbXBh
+dGlibGUgc3RyaW5nLg0KPiA+IEJleW9uZCB0aGF0LCBJJ20gbm90IHJlYWxseSBmYW1pbGlhciB3
+aXRoIHRoZSBEV0MzIGRyaXZlci4NCj4gDQo+IERvIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9uIGhl
+cmU/DQo+IElmIEkgYWRkIGEgZ2x1ZSBkcml2ZXIgb24gRFdDMyBjb3JlIGRyaXZlciAoSSBrbm93
+IHlvdSBhcmUgbm90IGhhcHB5IG9uIHRoaXMgd2F5KSwNCj4gSSBkb24ndCBrbm93IGhvdyB0byBw
+YXNzIHRoZSBNQlVTX1RZUEUgaW5mby4gZnJvbSBteSBnbHVlIGRyaXZlciB0byBEV0MzDQo+IGNv
+cmUgZHJpdmVyIChJIHRoaW5rIGNhY2hlIHR5cGUgcmVsYXRlZCBwcm9ncmFtbWluZyBzaG91bGQg
+YmUgZG9uZSBieSBEV0MzDQo+IGNvcmUgZHJpdmVyLCBhbSBJIHJpZ2h0PykNCg0KT3IgSSBhZGQg
+U29DIHNwZWNpZmljIGhhbmRsaW5nIGNvZGUgaW4gRFdDMyBkcml2ZXIgdG8gZG8gdGhpcyBjYWNo
+ZSB0eXBlIHNldHRpbmcNCmFjY29yZGluZyB0byBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJp
+bmdzIA0KKHN1Y2ggYXMgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1kd2MzIiwgInNucHMsZHdj
+MyI7KSA/DQoNCkkga25vdyB0aGF0IHNvIGZhciBEV0MzIGRyaXZlciBkb2Vzbid0IGhhdmUgYW55
+IFNvQyBzcGVjaWZpYyBoYW5kbGluZyBjb2RlLCB0aGlzIG1pZ2h0IGJlDQp0aGUgZmlyc3Qgb25l
+LiBBbnkgY29tbWVudCBvciBzdWdnZXN0aW9uIGFyZSB3ZWxjb21lLCB0aGFua3MuDQoNClJlZ2Fy
+ZHMsDQpSYW4NCg==
