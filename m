@@ -1,60 +1,84 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v2 9/10] dt-bindings: pwm: update bindings for MT7628 SoC
-Date: Wed, 14 Aug 2019 19:52:23 +0800
-Message-ID: <1565783543.7006.8.camel@mtkswgap22>
-References: <621e49c01b943edb6ddac9182f34719eb0727f01.1548313019.git.ryder.lee@mediatek.com>
-         <1565779497-23621-2-git-send-email-sam.shih@mediatek.com>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 09/15] dt-bindings: display: Add max-res
+ property for mxsfb
+Date: Wed, 14 Aug 2019 12:03:51 +0000
+Message-ID: <1565784231.3209.74.camel@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+         <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+         <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
+         <1565781243.3209.55.camel@nxp.com>
+         <33feedd20e0fc154c5b736f882d24569@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565779497-23621-2-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <33feedd20e0fc154c5b736f882d24569@agner.ch>
+Content-Language: en-US
+Content-ID: <4CB1B8C993E68742BADA05B1ABF60A5A@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Shih <sam.shih@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: "stefan@agner.ch" <stefan@agner.ch>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "airlied@linux.ie" <airlied@linux.ie>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-08-14 at 18:43 +0800, Sam Shih wrote:
-> From: sam shih <sam.shih@mediatek.com>
-> 
-> This updates bindings for MT7628 pwm controller.
-> 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-mediatek.txt       | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> index c7bd5633d1eb..9d2d893a07ff 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> @@ -21,6 +21,8 @@ Required properties:
->   - pinctrl-0: One property must exist for each entry in pinctrl-names.
->     See pinctrl/pinctrl-bindings.txt for details of the property values.
->   - num-pwms: the number of PWM channels.
-> + - clock-frequency: fix clock frequency, this is an optional property, only use in MT7628 SoC
-> +                    for period calculation. This SoC has no complex clock tree.
-
-Optional properties:
-
-- clock-frequency: ...
-
->  Example:
->  	pwm0: pwm@11006000 {
-> @@ -40,3 +42,13 @@ Example:
->  		pinctrl-0 = <&pwm0_pins>;
->  		num-pwms = <5>;
->  	};
-
-Add a blank here
-
-> +MT7628 Example:
-> +	pwm: pwm@5000 {
-> +		compatible = "mediatek,mt7628-pwm";
-> +		reg = <0x5000 0x1000>;
-> +		#pwm-cells = <2>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pwm0_pins>, <&pwm1_pins>;
-> +		num-pwms = <4>;
-> +		clock-frequency = <100000>;
-> +	};
+SGkgU3RlZmFubiwNCk9uIE1pLCAyMDE5LTA4LTE0IGF0IDEzOjI1ICswMjAwLCBTdGVmYW4gQWdu
+ZXIgd3JvdGU6DQo+IE9uIDIwMTktMDgtMTQgMTM6MTQsIFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+
+ID4gDQo+ID4gSGkgU3RlZmFuLA0KPiA+IE9uIE1pLCAyMDE5LTA4LTE0IGF0IDEzOjAzICswMjAw
+LCBTdGVmYW4gQWduZXIgd3JvdGU6DQo+ID4gPiANCj4gPiA+IE9uIDIwMTktMDgtMTQgMTI6NDgs
+IFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gQWRkIG5l
+dyBvcHRpb25hbCBwcm9wZXJ0eSAnbWF4LXJlcycsIHRvIGxpbWl0IHRoZSBtYXhpbXVtDQo+ID4g
+PiA+IHN1cHBvcnRlZA0KPiA+ID4gPiByZXNvbHV0aW9uIGJ5IHRoZSBNWFNGQl9EUk0gZHJpdmVy
+Lg0KPiA+ID4gSSB3b3VsZCBhbHNvIG1lbnRpb24gdGhlIHJlYXNvbiB3aHkgd2UgbmVlZCB0aGlz
+Lg0KPiA+ID4gDQo+ID4gPiBJIGd1ZXNzIHRoaXMgbmVlZHMgYSB2ZW5kb3IgcHJlZml4IGFzIHdl
+bGwgKGZzbCxtYXgtcmVzKS4gSSBhbHNvDQo+ID4gPiB3b3VsZA0KPiA+ID4gbGlrZSB0byBoYXZl
+IHRoZSBhY2sgb2YgdGhlIGRldmljZSB0cmVlIGZvbGtzIGhlcmUuDQo+ID4gUm9iIEhlcnJpbmcg
+YWxzbyBha2VkIGJlIGFib3V0IHRoaXMsIGFuZCBJJ2xsIGNvcHkgaGVyZSB0aGUgcmVwbHksDQo+
+ID4gd2l0aA0KPiA+IGV4cGxhbmF0aW9uczoNCj4gPiANCj4gPiBJbmRlZWQsIHRoaXMgbGltaXRh
+dGlvbiBpcyBhY3R1YWxseSBkdWUgdG8gYmFuZHdpZHRoIGxpbWl0YXRpb24sDQo+ID4gYnV0DQo+
+ID4gdGhlIHByb2JsZW0gaXMgdGhhdCB0aGlzIGxpbWl0YXRpb24gY29tZXMgb24gaS5NWDhNIChr
+bm93biBhcw0KPiA+IG1TY2FsZQ0KPiA+IDg1MEQpLCB3aGVyZSB0aGUgbWVtb3J5IGJhbmR3aWR0
+aCBjYW5ub3Qgc3VwcG9ydDogR1BVL1ZQVSB3b3JrbG9hZA0KPiA+IGluDQo+ID4gdGhlIHNhbWUg
+dGltZSB3aXRoIGJvdGggRENTUyBkcml2aW5nIDRrQDYwIGFuZCBlTENESUYgZHJpdmluZyAxMDgw
+cA0KPiA+IEA2MC4NCj4gPiBTaW5jZSBlTENESUYgaXMgYSBzZWNvbmRhcnkgZGlzcGxheSB3ZSB0
+aG91Z2ggdG8gYWRkIHRoZSBwb3NpYmlsaXR5DQo+ID4gdG8NCj4gPiBsaW1pdCBpdCdzIGJhbmR3
+aWR0aCBieSBsaW1pdGluZyB0aGUgcmVzb2x1dGlvbi4NCj4gPiBJZiB5b3Ugc2F5IHRoYXQgbW9y
+ZSBkZXRhaWxzIGFyZSBuZWVkZWQsIEkgY2FuIGFkZCB0aGVtIGluIHRoZQ0KPiA+IGRlc2NyaXB0
+aW9uLg0KPiBPaCBzb3JyeSBJIG1pc3NlZCB0aGF0Lg0KPiANCj4gUm9iIEhlcnJpbmcgYWxzbyB3
+cm90ZToNCj4gPiANCj4gPiBJIHN1cHBvc2Ugd2hhdCB5b3UgYXJlIGFmdGVyIGlzIGJhbmR3aWR0
+aCBsaW1pdHM/IElJUkMsIHRoZXJlJ3MNCj4gPiBhbHJlYWR5DQo+ID4gc29tZSBiaW5kaW5ncyBl
+eHByZXNzaW5nIHN1Y2ggbGltaXRzLiBBbHNvLCB3b3VsZG4ndCB5b3UgbmVlZCB0bw0KPiA+IGFj
+Y291bnQNCj4gPiBmb3IgYnBwIGFuZCB1c2luZyB0aGUgMm5kIHBsYW5lIChJSVJDIHRoYXQgdGhl
+cmUgaXMgb25lKS4NCj4gSSBndWVzcyB0aGUgYmluZGluZyBoZSByZWZlcnMgdG8gaXMgbWF4LW1l
+bW9yeS1iYW5kd2lkdGgsIHdoaWNoIGlzDQo+IHVzZWQNCj4gaW4gbXVsdGlwbGUgZHJpdmVyIGFs
+cmVhZHkuIEl0IG1ha2VzIHNlbnNlIHRvIHJldXNlIHRoaXMgcHJvcGVydHkNCj4gaW5zdGVhZCBv
+ZiBpbnZlbnRpbmcgYSBuZXcgc2V0IG9mIHByb3BlcnR5IHdoaWNoIGlzIGFsc28gbm90IHRha2lu
+Zw0KPiBicHANCj4gaW50byBhY2NvdW50Li4uDQpBY3R1YWxseSBJIHNhdyB0aGlzIGJpbmRpbmcs
+IGJ1dCBJIHRob3VnaHQgaXQgaXMgc3RyaWN0bHkgcmVsYXRlZCB0bw0KdGhhdCBkcml2ZXIsIHdo
+ZXJlIGl0IGlzIGRvY3VtZW50ZWQuIE5vdywgdGhhdCB5b3Ugc2F5IHRoaXMgb25lIGlzIHVzZWQN
+CmluIG1hbnkgZHJpdmVycyAoYW5kIHJlY2FsbGluZyB0aGF0IHlvdSBzdWdnZXN0ZWQgZm9yIG15
+ICdtYXgtcmVzJyB0bw0KYWRkIGEgcHJlZml4KSwgSSBnZXQgaXQgbm93Lg0KPiANCj4gVGhlIHBs
+MTExIGRyaXZlciBpbXBsZW1lbnRzIHRoaXMgcHJvcGVydHksIGl0IHNob3VsZCBiZSBmYWlybHkg
+ZWFzeQ0KPiB0bw0KPiBhZG9wdCB0aGF0IGNvZGUuDQpTdXJlLCBJIHdpbGwgZG8gc29tZXRoaW5n
+IHNpbWlsYXIgaGVyZSwgdG9vLg0KPiANCj4gLS0NCj4gU3RlZmFuDQo+IA0KPiANCj4gDQo+ID4g
+DQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gLS0NCj4gPiA+IFN0ZWZhbg0KPiA+ID4gDQo+ID4gPiA+
+IA0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBDaGly
+YXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IMKgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0IHwgNiArKysrKysN
+Cj4gPiA+ID4gwqAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspDQo+ID4gPiA+IA0KPiA+
+ID4gPiBkaWZmIC0tZ2l0DQo+ID4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4gPiA+IGluZGV4IDQ3MmUxZWEuLjU1ZTIy
+ZWQgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L214c2ZiLnR4dA0KPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiA+ID4gQEAgLTE3LDYgKzE3LDEyIEBA
+IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gPiA+IMKgUmVxdWlyZWQgc3ViLW5vZGVzOg0KPiA+
+ID4gPiDCoMKgwqAtIHBvcnQ6IFRoZSBjb25uZWN0aW9uIHRvIGFuIGVuY29kZXIgY2hpcC4NCj4g
+PiA+ID4gDQo+ID4gPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ID4gPiArLSBtYXgtcmVz
+OsKgwqDCoGFuIGFycmF5IHdpdGggYSBtYXhpbXVtIG9mIHR3byBpbnRlZ2VycywNCj4gPiA+ID4g
+cmVwcmVzZW50aW5nDQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBtYXhpbXVtIHN1cHBvcnRlZCByZXNvbHV0aW9uLCBpbiB0aGUgZm9ybSBvZg0KPiA+ID4g
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8bWF4WD4sIDxtYXhZPjsgaWYgb25lIG9mIHRo
+ZSBpdGVtIGlzIDwwPiwgdGhlDQo+ID4gPiA+IGRlZmF1bHQNCj4gPiA+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgZHJpdmVyLWRlZmluZWQgbWF4aW11bSByZXNvbHV0aW9uIGZvciB0aGF0
+IGF4aXMNCj4gPiA+ID4gaXMNCj4gPiA+ID4gdXNlZA0KPiA+ID4gPiArDQo+ID4gPiA+IMKgRXhh
+bXBsZToNCj4gPiA+ID4gDQo+ID4gPiA+IMKgwqDCoMKgwqDCoGxjZGlmMTogZGlzcGxheS1jb250
+cm9sbGVyQDIyMjAwMDAgew0KPiA+IFRoYW5rcywNCj4gPiBSb2JlcnQ=
