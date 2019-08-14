@@ -1,58 +1,51 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [EXT] Re: [v2 2/3] dt/bindings: display: Add optional property
- node defined for Mali DP500
-Date: Wed, 14 Aug 2019 06:35:39 +0000
-Message-ID: <DB7PR04MB51957AD439A537C44A24BB45E2AD0@DB7PR04MB5195.eurprd04.prod.outlook.com>
-References: <20190719095842.11683-1-wen.he_1@nxp.com>
- <20190812231946.GA31179@bogus>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
+ documentation
+Date: Wed, 14 Aug 2019 09:01:21 +0200
+Message-ID: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <20190813141256.jnbrfld42rtigek3@pengutronix.de>
+ <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812231946.GA31179@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "brian.starkey@arm.com" <brian.starkey@arm.com>, "airlied@linux.ie" <airlied@linux.ie>, "daniel@ffwll.ch" <daniel@ffwll.ch>, Leo Li <leoyang.li@nxp.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOcTqONTCMTPI1SA3OjIwDQo+IFRvOiBXZW4gSGUg
-PHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpdml1LmR1ZGF1QGFybS5jb207DQo+IGJyaWFu
-LnN0YXJrZXlAYXJtLmNvbTsgYWlybGllZEBsaW51eC5pZTsgZGFuaWVsQGZmd2xsLmNoOyBMZW8g
-TGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gU3ViamVjdDogW0VYVF0gUmU6IFt2MiAyLzNd
-IGR0L2JpbmRpbmdzOiBkaXNwbGF5OiBBZGQgb3B0aW9uYWwgcHJvcGVydHkgbm9kZQ0KPiBkZWZp
-bmVkIGZvciBNYWxpIERQNTAwDQo+IA0KPiANCj4gT24gRnJpLCBKdWwgMTksIDIwMTkgYXQgMDU6
-NTg6NDJQTSArMDgwMCwgV2VuIEhlIHdyb3RlOg0KPiA+IEFkZCBvcHRpb25hbCBwcm9wZXJ0eSBu
-b2RlICdhcm0sbWFsaWRwLWFycW9zLXZhbHVlJyBmb3IgdGhlIE1hbGkgRFA1MDAuDQo+ID4gVGhp
-cyBwcm9wZXJ0eSBkZXNjcmliZSB0aGUgQVJRb1MgbGV2ZWxzIG9mIERQNTAwJ3MgUW9TIHNpZ25h
-bGluZy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4N
-Cj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YXJtLG1hbGlkcC50eHQgfCAzICsrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dA0KPiA+IGluZGV4IDJmNzg3MDk4M2VmMS4u
-NzZhMGU3MjUxMjUxIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQNCj4gPiBAQCAtMzcsNiAr
-MzcsOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+DQo+IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvcmVzZXJ2ZWQtbWVtb3J5LnR4dCkNCj4gPiAg
-ICAgIHRvIGJlIHVzZWQgZm9yIHRoZSBmcmFtZWJ1ZmZlcjsgaWYgbm90IHByZXNlbnQsIHRoZSBm
-cmFtZWJ1ZmZlciBtYXkNCj4gPiAgICAgIGJlIGxvY2F0ZWQgYW55d2hlcmUgaW4gbWVtb3J5Lg0K
-PiA+ICsgIC0gYXJtLG1hbGlkcC1hcnFvcy1oaWdoLWxldmVsOiBpbnRlZ2VyIG9mIHUzMiB2YWx1
-ZSBkZXNjcmliaW5nIHRoZSBBUlFvUw0KPiA+ICsgICAgbGV2ZWxzIG9mIERQNTAwJ3MgUW9TIHNp
-Z25hbGluZy4NCj4gDQo+IHUzMiBoZXJlLCBhbmQuLi4NCg0KSGkgUm9iLA0KDQpTb3JyeSwgc2hv
-dWxkIGJlIHdyaXR0ZW4gYXMiIHBoYW5kbGUgdG8gYSBub2RlIGRlc2NyaWJpbmcgdGhlIEFRUm9T
-IGxldmVscyBvZiBEUDUwMCdzIFFvUyBzaWduYWxpbmciLi4NCklzIHRoYXQgb2s/DQoNCkJlc3Qg
-UmVnYXJkcywNCldlbg0KDQo+IA0KPiA+DQo+ID4NCj4gPiAgRXhhbXBsZToNCj4gPiBAQCAtNTQs
-NiArNTYsNyBAQCBFeGFtcGxlOg0KPiA+ICAgICAgICAgICAgICAgY2xvY2tzID0gPCZvc2NjbGsy
-PiwgPCZmcGdhb3NjMD4sIDwmZnBnYW9zYzE+LA0KPiA8JmZwZ2Fvc2MxPjsNCj4gPiAgICAgICAg
-ICAgICAgIGNsb2NrLW5hbWVzID0gInB4bGNsayIsICJtY2xrIiwgImFjbGsiLCAicGNsayI7DQo+
-ID4gICAgICAgICAgICAgICBhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzID0gL2JpdHMvIDgg
-PDggOCA4PjsNCj4gPiArICAgICAgICAgICAgIGFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbCA9
-IDwmcnFvc3ZhbHVlPjsNCj4gDQo+IHBoYW5kbGUgaGVyZT8NCj4gDQo+ID4gICAgICAgICAgICAg
-ICBwb3J0IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgZHAwX291dHB1dDogZW5kcG9pbnQg
-ew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwm
-dGRhOTk4eF8yX2lucHV0PjsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
+Hello Baolin,
+
+On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
+> On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
+> > > +- assigned-clock-parents: The phandle of the parent clock of PWM clock.
+> >
+> > I'm not sure you need to point out assigned-clocks and
+> > assigned-clock-parents as this is general clk stuff. Also I wonder if
+> > these should be "required properties".
+> 
+> I think I should describe any properties used by PWM node, like
+> 'clocks' and 'clock-names' properties, though they are common clock
+> properties.
+
+Then you might want to describe also "status", "assigned-clock-rates",
+"pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
+probably another dozen I'm not aware of.
+
+> Yes, they are required. Thanks for your comments.
+
+required in which sense? Why can a Spreadtrum PWM not work when the
+clock parents are unspecified?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
