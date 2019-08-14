@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 06/14] arm64: dts: meson-gx: fix mhu compatible
-Date: Wed, 14 Aug 2019 16:29:10 +0200
-Message-ID: <20190814142918.11636-7-narmstrong@baylibre.com>
+Subject: [PATCH 04/14] arm64: dts: meson-gx: fix spifc compatible
+Date: Wed, 14 Aug 2019 16:29:08 +0200
+Message-ID: <20190814142918.11636-5-narmstrong@baylibre.com>
 References: <20190814142918.11636-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,8 +13,7 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxbb-nanopi-k2.dt.yaml: mailbox@404: compatible:0: 'amlogic,meson-gx-mhu' is not one of ['amlogic,meson-gxbb-mhu']
-meson-gxl-s805x-libretech-ac.dt.yaml: mailbox@404: compatible:0: 'amlogic,meson-gx-mhu' is not one of ['amlogic,meson-gxbb-mhu']
+meson-gxl-s805x-libretech-ac.dt.yaml: spi@8c80: compatible:0: 'amlogic,meson-gx-spifc' is not one of ['amlogic,meson6-spifc', 'amlogic,meson-gxbb-spifc']
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
@@ -22,17 +21,17 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 00215ece17c8..d8127f863b55 100644
+index 5b3dfd03c3d3..e2cdc9fce21c 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -476,7 +476,7 @@
+@@ -317,7 +317,7 @@
  			};
  
- 			mailbox: mailbox@404 {
--				compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
-+				compatible = "amlogic,meson-gxbb-mhu";
- 				reg = <0 0x404 0 0x4c>;
- 				interrupts = <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
- 					     <GIC_SPI 209 IRQ_TYPE_EDGE_RISING>,
+ 			spifc: spi@8c80 {
+-				compatible = "amlogic,meson-gx-spifc", "amlogic,meson-gxbb-spifc";
++				compatible = "amlogic,meson-gxbb-spifc";
+ 				reg = <0x0 0x08c80 0x0 0x80>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
 -- 
 2.22.0
