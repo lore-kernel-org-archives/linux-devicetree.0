@@ -1,58 +1,117 @@
-Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v7 11/13] media: dt-bindings: tvp5150: add optional tvnorms documentation
-Date: Thu, 15 Aug 2019 13:57:45 +0200
-Message-Id: <20190815115747.24018-12-m.felsch@pengutronix.de>
-In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
-References: <20190815115747.24018-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=MmDl=WK=analog.com=Mircea.Caprioru@kernel.org>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V3 3/4] staging: iio: adc: ad7192: Add system calibration support
+Date: Wed, 14 Aug 2019 10:31:49 +0300
+Message-ID: <20190814073150.4602-3-mircea.caprioru@analog.com>
+In-Reply-To: <20190814073150.4602-1-mircea.caprioru@analog.com>
+References: <20190814073150.4602-1-mircea.caprioru@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+Content-Type: text/plain
+To: jic23@kernel.org
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the optional binding to limit the possible tv-norms on the
-input connectors.
+This patch will add a system calibration attribute for each channel. Using
+this option the user will have the ability to calibrate each channel for
+zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
+to implement the functionality.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 ---
- Documentation/devicetree/bindings/media/i2c/tvp5150.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changelog V2:
+- no changes here
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-index cc98b38c7e73..93731638b509 100644
---- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -49,6 +49,13 @@ Required Endpoint Properties for parallel synchronization on output port:
- Note: Do not specify any of these properties if you want to use the embedded
-       BT.656 synchronization.
+Changelog V3:
+- no changes here
+
+ drivers/staging/iio/adc/ad7192.c | 55 +++++++++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+index d58ce08f3693..731072830f30 100644
+--- a/drivers/staging/iio/adc/ad7192.c
++++ b/drivers/staging/iio/adc/ad7192.c
+@@ -155,6 +155,11 @@
+  * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
+  */
  
-+Optional Connector Properties:
-+==============================
++enum {
++   AD7192_SYSCALIB_ZERO_SCALE,
++   AD7192_SYSCALIB_FULL_SCALE,
++};
 +
-+- tvnorms: Set the possible signals to which the hardware tries to lock instead
-+	   of using the autodetection mechnism. Please look at [1] for more
-+	   information.
+ struct ad7192_state {
+ 	struct regulator		*avdd;
+ 	struct regulator		*dvdd;
+@@ -169,10 +174,56 @@ struct ad7192_state {
+ 	u8				devid;
+ 	u8				clock_sel;
+ 	struct mutex			lock;	/* protect sensor state */
++	u8				syscalib_mode[8];
+ 
+ 	struct ad_sigma_delta		sd;
+ };
+ 
++static const char * const ad7192_syscalib_modes[] = {
++	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
++	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
++};
 +
- [1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
++static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
++				    const struct iio_chan_spec *chan,
++				    unsigned int mode)
++{
++	struct ad7192_state *st = iio_priv(indio_dev);
++	int ret;
++
++	st->syscalib_mode[chan->channel] = mode;
++
++	if (mode == AD7192_SYSCALIB_ZERO_SCALE)
++		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
++				      chan->address);
++	else
++		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
++				      chan->address);
++
++	return ret;
++}
++
++static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
++				    const struct iio_chan_spec *chan)
++{
++	struct ad7192_state *st = iio_priv(indio_dev);
++
++	return st->syscalib_mode[chan->channel];
++}
++
++static const struct iio_enum ad7192_syscalib_mode_enum = {
++	.items = ad7192_syscalib_modes,
++	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
++	.set = ad7192_set_syscalib_mode,
++	.get = ad7192_get_syscalib_mode
++};
++
++static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
++	IIO_ENUM("system_calibration", IIO_SEPARATE, &ad7192_syscalib_mode_enum),
++	IIO_ENUM_AVAILABLE("system_calibration", &ad7192_syscalib_mode_enum),
++	{}
++};
++
+ static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
+ {
+ 	return container_of(sd, struct ad7192_state, sd);
+@@ -769,9 +820,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+ 		*chan = channels[i];
+ 		chan->info_mask_shared_by_all |=
+ 			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
+-		if (chan->type != IIO_TEMP)
++		if (chan->type != IIO_TEMP) {
+ 			chan->info_mask_shared_by_type_available |=
+ 				BIT(IIO_CHAN_INFO_SCALE);
++			chan->ext_info = ad7192_calibsys_ext_info;
++		}
+ 		chan++;
+ 	}
  
- Example - three input sources:
-@@ -56,6 +63,7 @@ Example - three input sources:
- comp_connector_0 {
- 	compatible = "composite-video-connector";
- 	label = "Composite0";
-+	tvnorms = <TVNORM_PAL_M>; /* limit to pal-m signals */
- 
- 	port {
- 		composite0_to_tvp5150: endpoint {
-@@ -67,6 +75,7 @@ comp_connector_0 {
- comp_connector_1 {
- 	compatible = "composite-video-connector";
- 	label = "Composite1";
-+	tvnorms = <TVNORM_NTSC_M>; /* limit to ntsc-m signals */
- 
- 	port {
- 		composite1_to_tvp5150: endpoint {
 -- 
-2.20.1
+2.17.1
