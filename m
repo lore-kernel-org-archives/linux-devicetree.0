@@ -1,66 +1,86 @@
-Return-Path: <SRS0=I2AB=V5=verge.net.au=horms@kernel.org>
-Date: Thu, 1 Aug 2019 11:14:22 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/2] dt-bindings: usb: renesas_gen3: Rename bindings
- documentation file
-Message-ID: <20190801091421.4gf3xggg3eko6wql@verge.net.au>
-References: <20190703083514.32385-1-horms+renesas@verge.net.au>
- <20190703083514.32385-3-horms+renesas@verge.net.au>
- <CAMuHMdVgx9N0yeeei5qcg1yz2WEdDf0gQ6GcwUOAz7u09S_D4A@mail.gmail.com>
- <20190711080302.qeotxueyvlr7pvhe@verge.net.au>
- <20190725090946.GA3311@kroah.com>
- <TYAPR01MB4544F226C06730C5611EB025D8C00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <20190729081440.ftgchumfoszlht4q@verge.net.au>
- <TYAPR01MB4544A8358DE51BFB1193287CD8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57690 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfHNNOd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:14:33 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 6/6] ARM: dts: Configure rstctrl reset for SGX
+Date: Wed, 14 Aug 2019 06:14:08 -0700
+Message-Id: <20190814131408.57162-7-tony@atomide.com>
+In-Reply-To: <20190814131408.57162-1-tony@atomide.com>
+References: <20190814131408.57162-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB4544A8358DE51BFB1193287CD8DD0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 29, 2019 at 08:25:24AM +0000, Yoshihiro Shimoda wrote:
-> Hi Simon-san,
-> 
-> > From: Simon Horman, Sent: Monday, July 29, 2019 5:15 PM
-> <snip>
-> > > > > > Unfortunately the previous version has already made it into usb-next
-> > > > > > 23c46801d14cb647 dt-bindings: usb: renesas_gen3: Rename bindings
-> > > > > > documentation file
-> > > > >
-> > > > > Ok, I guess we should go with that version.
-> > > >
-> > > > So can you resend this series based on 5.3-rc1 so I know what to apply?
-> > >
-> > > Since your usb-testing branch already has it which is merged from Felipe's usb-next branch,
-> > > I don't think Simon has to resend this series.
-> > >
-> > > https://www.spinics.net/lists/linux-usb/msg182103.html
-> > 
-> > Thanks and sorry for the confusion.
-> > 
-> > In v5.2-rc1 we had:
-> > 
-> >   devicetree/bindings/usb/renesas_usb3.txt
-> >   devicetree/bindings/usb/renesas_usbhs.txt
-> > 
-> > 
-> > In v5.3-rc1 we have:
-> > 
-> >   devicetree/bindings/usb/renesas,usb3.txt
-> >   devicetree/bindings/usb/renesas,usbhs.txt
-> > 
-> > Which reflects v1 of this patchset. And I think this is an improvement.
-> > 
-> > Shimoda-san, can you let me know if you would like me to rebase v2
-> > on v5.3-rc1? That would would give us:
-> > 
-> >   devicetree/bindings/usb/renesas,usb3-peri.txt
-> >   devicetree/bindings/usb/renesas,usbhs.txt		[unchanged]
-> 
-> Thank you for the detail. I would like you to rebase v2 like that, if possible.
+The following can be tested via sysfs with the following to ensure the SGX
+module gets enabled and disabled properly:
 
-Thanks, I have posted this as:
+# echo on > /sys/bus/platform/devices/5600fe00.target-module/power/control
+# rwmem 0x5600fe00		# revision register
+0x5600fe00 = 0x40000000
+# echo auto > /sys/bus/platform/devices/5600fe00.target-module/power/control
+# rwmem 0x5000fe00
+Bus error
 
-[PATCH] dt-bindings: usb: renesas_gen3: Rename bindings documentation file to reflect IP block
+Note that this patch depends on the PRM rstctrl driver that has
+been recently posted. If the child device driver(s) need to prevent
+rstctrl reset on PM runtime suspend, the drivers need to increase
+the usecount for the shared rstctrl reset that can be mapped also
+for the child device(s) or accessed via dev->parent.
+
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: moaz korena <moaz@korena.xyz>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: Philipp Rossak <embed3d@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -460,6 +460,31 @@
+ 			       <&edma 5 0>;
+ 			dma-names = "tx", "rx";
+ 		};
++
++		target-module@56000000 {
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x5600fe00 0x4>,
++			      <0x5600fe10 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&gfx_l3_clkctrl AM3_GFX_L3_GFX_CLKCTRL 0>;
++			clock-names = "fck";
++			resets = <&prm_gfx 0>;
++			reset-names = "rstctrl";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x56000000 0x1000000>;
++
++			/*
++			 * Closed source PowerVR driver, no child device
++			 * binding or driver in mainline
++			 */
++		};
+ 	};
+ };
+ 
+-- 
+2.21.0
