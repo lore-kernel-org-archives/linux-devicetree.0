@@ -1,50 +1,101 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/3] dt-bindings: aspeed: Remove mention of deprecated
- compatibles
-Date: Wed, 14 Aug 2019 11:54:37 +0100
-Message-ID: <20190814105437.GE26727@dell>
-References: <20190724081313.12934-1-andrew@aj.id.au>
- <20190724081313.12934-4-andrew@aj.id.au>
- <CACRpkdZCJWeZO6CFvkq4uhnX+o_q_AfkDZ=a2kmUgbS3JtDqfA@mail.gmail.com>
- <20190812101504.GF26727@dell>
- <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] pwm: sprd: Add Spreadtrum PWM support
+Date: Wed, 14 Aug 2019 12:55:35 +0200
+Message-ID: <20190814105535.svslc57qp3wx5lub@pengutronix.de>
+References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
+ <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
+ <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
+ <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
+ <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
+ <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdapA_-yp4ihY3S+CHMmDMKU2b0u=sj2UhJ-cvv39Dji_g@mail.gmail.com>
+In-Reply-To: <CAMz4ku+3txx5kO-u_+_pxFwoovnX81WFF-moNBasUUgEpvQb+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Aug 2019, Linus Walleij wrote:
+Hello Baolin,
 
-> On Mon, Aug 12, 2019 at 12:15 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Mon, 05 Aug 2019, Linus Walleij wrote:
+On Wed, Aug 14, 2019 at 06:01:50PM +0800, Baolin Wang wrote:
+> On Wed, 14 Aug 2019 at 17:23, Uwe Kleine-Kˆnig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Wed, Aug 14, 2019 at 04:42:28PM +0800, Baolin Wang wrote:
+> > > On Tue, 13 Aug 2019 at 23:16, Uwe Kleine-Kˆnig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Tue, Aug 13, 2019 at 09:46:41PM +0800, Baolin Wang wrote:
+> > > > [...]
+> > > Not really, our hardware's method is, when you changed a new
+> > > configuration (MOD or duty is changed) , the hardware will wait for a
+> > > while to complete current period, then change to the new period.
 > >
-> > > On Wed, Jul 24, 2019 at 10:13 AM Andrew Jeffery <andrew@aj.id.au> wrote:
-> > >
-> > > > Guide readers away from using the aspeed,g[45].* compatible patterns.
+> > Can you describe that in more detail? This doesn't explain why MOD must be
+> > configured before DUTY. Is there another reason for that?
+> 
+> Sorry, I did not explain this explicitly. When we change a new PWM
+> configuration, the PWM controller will make sure the current period is
+> completed before changing to a new period. Once setting the MOD
+> register (since we always set MOD firstly), that will tell the
+> hardware that a new period need to change.
+
+So if the current period just ended after you reconfigured MOD but
+before you wrote to DUTY we'll see a bogus period, right? I assume the
+same holds true for writing the prescale value?
+
+> The reason MOD must be configured before DUTY is that, if we
+> configured DUTY firstly, the PWM can work abnormally if the current
+> DUTY is larger than previous MOD. That is also our hardware's
+> limitation.
+
+OK, so you must not get into a situation where DUTY > MOD, right?
+
+Now if the hardware was configured for
+
+	period = 8s, duty = 4s
+
+and now you are supposed to change to
+
+	period = 2s, duty = 1s
+
+you'd need to write DUTY first, don't you?
+
+> > > > > +static int sprd_pwm_remove(struct platform_device *pdev)
+> > > > > +{
+> > > > > +     struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
+> > > > > +     int ret, i;
+> > > > > +
+> > > > > +     ret = pwmchip_remove(&spc->chip);
+> > > > > +
+> > > > > +     for (i = 0; i < spc->num_pwms; i++) {
+> > > > > +             struct sprd_pwm_chn *chn = &spc->chn[i];
+> > > > > +
+> > > > > +             clk_bulk_disable_unprepare(SPRD_PWM_NUM_CLKS, chn->clks);
 > > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > > If a PWM was still running you're effectively stopping it here, right?
+> > > > Are you sure you don't disable once more than you enabled?
 > > >
-> > > Patch applied to the pinctrl tree.
+> > > Yes, you are right. I should check current enable status of the PWM channel.
+> > > Thanks for your comments.
 > >
-> > With my Ack?
+> > I didn't recheck, but I think the right approach is to not fiddle with
+> > the clocks at all and rely on the PWM framework to not let someone call
+> > sprd_pwm_remove when a PWM is still in use.
 > 
-> Sorry no. :( Was I too trigger-happy?
-> 
-> Usually I take Rob's ACK as authoritative for anything under
-> Documentation/devicetree but if you have concerns about the
-> patch from an MFD point of view I will revert it pending further
-> discussion.
+> So you mean just return pwmchip_remove(&spc->chip); ?
 
-No need.  I would have Acked it.
+right.
+
+I just rechecked: If there is still a pwm in use, pwmchip_remove returns
+-EBUSY. So this should be safe.
+
+Best regards
+Uwe
 
 -- 
-Lee Jones [ÊùéÁêºÊñØ]
-Linaro Services Technical Lead
-Linaro.org ‚îÇ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           | Uwe Kleine-Kˆnig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
