@@ -1,36 +1,30 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 05/14] net: phy: adin: configure RGMII/RMII/MII modes
- on config
-Date: Wed, 14 Aug 2019 10:50:23 -0700
-Message-ID: <ef79d47f-9d93-1c95-4359-cbd9a95b8964@gmail.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-6-alexandru.ardelean@analog.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
+Date: Wed, 14 Aug 2019 10:50:26 -0700
+Message-ID: <20190814175026.GF6167@minitux>
+References: <20190814125012.8700-1-vkoul@kernel.org>
+ <20190814125012.8700-2-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812112350.15242-6-alexandru.ardelean@analog.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190814125012.8700-2-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, hkallweit1@gmail.com, andrew@lunn.ch
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed 14 Aug 05:49 PDT 2019, Vinod Koul wrote:
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+[..]
+> +	soc: soc@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
 
+I'm expecting that we'll run into the same problems as we saw on 845
+when bringing in the smmu nodes, so please make the cells 2 - and ranges
+should likely be the same 36 bits.
 
-On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
-> The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
-> unconfigured) is RGMII.
-> This change adds support for configuring these modes via the device
-> registers.
-> 
-> For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
-> the default delay is 2 ns. This can be configurable and will be done in
-> a subsequent change.
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Regards,
+Bjorn
