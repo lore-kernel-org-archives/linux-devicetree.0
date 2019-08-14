@@ -1,36 +1,65 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH next v9 07/11] usb: roles: Add
- fwnode_usb_role_switch_get() function
-Date: Wed, 14 Aug 2019 12:33:35 +0800
-Message-ID: <1565757215.7317.15.camel@mhfsdcap03>
-References: <1565695634-9711-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1565695634-9711-8-git-send-email-chunfeng.yun@mediatek.com>
-         <20190813130110.GE4691@kuha.fi.intel.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 4/5] ARM: dts: sun8i: a83t: Remove the watchdog clock
+Date: Wed, 14 Aug 2019 12:38:51 +0800
+Message-ID: <CAGb2v66mp-=T=-zDYMf6Qw-vaiR3OB5Xhxie39jeKWS+Kvmecw@mail.gmail.com>
+References: <20190813124744.32614-1-mripard@kernel.org>
+ <20190813124744.32614-4-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813130110.GE4691@kuha.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190813124744.32614-4-mripard@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-08-13 at 16:01 +0300, Heikki Krogerus wrote:
-> On Tue, Aug 13, 2019 at 07:27:10PM +0800, Chunfeng Yun wrote:
-> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > 
-> > The fwnode_usb_role_switch_get() function is exactly the
-> > same as usb_role_switch_get(), except that it takes struct
-> > fwnode_handle as parameter instead of struct device.
-> > 
-> > Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> Why is my SoB replaced with Suggested-by tag in this patch?
-Sorry, my mistake, I misunderstand what you mean, you suggest use
-Suggested-by in [v8 08/11], but I replaced it all for [06, 07, 08], 
-will abandon the changes of [06,07] in next version.
+On Tue, Aug 13, 2019 at 8:47 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> The watchdog binding doesn't define a clock, and it indeed looks like
+> there's no explicit clock feeding it.
 
-> 
-> thanks,
-> 
+The diagram on page 133 of the manual shows OSC24M / 750 feeding the watchdog.
+
+Other manuals, such as the A10 one, mention:
+
+    Watchdog clock source is OSC24M. if the OSC24M is turned off, the watchdog
+    will not work.
+
+So in fact it does use a clock signal. It's just that we've been lazy, since
+the clock rate is fixed and is always on.
+
+ChenYu
+
+> Let's remove it from our DT.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 523be6611c50..15f8c80f69a5 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -817,7 +817,6 @@
+>                         compatible = "allwinner,sun6i-a31-wdt";
+>                         reg = <0x01c20ca0 0x20>;
+>                         interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> -                       clocks = <&osc24M>;
+>                 };
+>
+>                 spdif: spdif@1c21000 {
+> --
+> 2.21.0
+>
