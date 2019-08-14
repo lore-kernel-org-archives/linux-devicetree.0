@@ -1,7 +1,7 @@
 From: Michael Kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/4] arm64: dts: mt8183: add dynamic power coefficients
-Date: Wed, 14 Aug 2019 18:06:47 +0800
-Message-ID: <1565777209-21869-3-git-send-email-michael.kao@mediatek.com>
+Subject: [PATCH 3/4] arm64: dts: mt8183: Add #cooling-cells to CPU nodes
+Date: Wed, 14 Aug 2019 18:06:48 +0800
+Message-ID: <1565777209-21869-4-git-send-email-michael.kao@mediatek.com>
 References: <1565777209-21869-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,78 +23,87 @@ List-Id: devicetree@vger.kernel.org
 
 From: "michael.kao" <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Add dynamic power coefficients for all cores.
+The #cooling-cells property needs to be specified to allow a CPU
+to be used as cooling device.
 
 Signed-off-by: michael.kao <michael.kao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 47bde49..9de706a 100644
+index 9de706a..bc42b82 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -58,6 +58,7 @@
- 			reg = <0x000>;
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include "mt8183-pinfunc.h"
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	compatible = "mediatek,mt8183";
+@@ -59,6 +60,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <741>;
-+			dynamic-power-coefficient = <84>;
+ 			dynamic-power-coefficient = <84>;
++			#cooling-cells = <2>;
  		};
  
  		cpu1: cpu@1 {
-@@ -66,6 +67,7 @@
- 			reg = <0x001>;
+@@ -68,6 +70,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <741>;
-+			dynamic-power-coefficient = <84>;
+ 			dynamic-power-coefficient = <84>;
++			#cooling-cells = <2>;
  		};
  
  		cpu2: cpu@2 {
-@@ -74,6 +76,7 @@
- 			reg = <0x002>;
+@@ -77,6 +80,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <741>;
-+			dynamic-power-coefficient = <84>;
+ 			dynamic-power-coefficient = <84>;
++			#cooling-cells = <2>;
  		};
  
  		cpu3: cpu@3 {
-@@ -82,6 +85,7 @@
- 			reg = <0x003>;
+@@ -86,6 +90,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <741>;
-+			dynamic-power-coefficient = <84>;
+ 			dynamic-power-coefficient = <84>;
++			#cooling-cells = <2>;
  		};
  
  		cpu4: cpu@100 {
-@@ -90,6 +94,7 @@
- 			reg = <0x100>;
+@@ -95,6 +100,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <1024>;
-+			dynamic-power-coefficient = <211>;
+ 			dynamic-power-coefficient = <211>;
++			#cooling-cells = <2>;
  		};
  
  		cpu5: cpu@101 {
-@@ -98,6 +103,7 @@
- 			reg = <0x101>;
+@@ -104,6 +110,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <1024>;
-+			dynamic-power-coefficient = <211>;
+ 			dynamic-power-coefficient = <211>;
++			#cooling-cells = <2>;
  		};
  
  		cpu6: cpu@102 {
-@@ -106,6 +112,7 @@
- 			reg = <0x102>;
+@@ -113,6 +120,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <1024>;
-+			dynamic-power-coefficient = <211>;
+ 			dynamic-power-coefficient = <211>;
++			#cooling-cells = <2>;
  		};
  
  		cpu7: cpu@103 {
-@@ -114,6 +121,7 @@
- 			reg = <0x103>;
+@@ -122,6 +130,7 @@
  			enable-method = "psci";
  			capacity-dmips-mhz = <1024>;
-+			dynamic-power-coefficient = <211>;
+ 			dynamic-power-coefficient = <211>;
++			#cooling-cells = <2>;
  		};
  	};
  
