@@ -1,55 +1,88 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] ARM64: dts: allwinner: Add devicetree for
  pine H64 modelA evaluation board
-Date: Wed, 14 Aug 2019 15:07:52 +0200
-Message-ID: <20190814130752.GA24324@Red>
+Date: Wed, 14 Aug 2019 15:17:41 +0200
+Message-ID: <20190814131741.GB24324@Red>
 References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
- <CAJiuCccEQFvKemTodJbuEDzDy9j6-M4SYskxPFJ5DpsbQDnvkA@mail.gmail.com>
+ <20190812094000.ebdmhyxx7xzbevef@flea>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBK4P2DVAKGQEV6XOUII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB6MT2DVAKGQEAQDMM5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAJiuCccEQFvKemTodJbuEDzDy9j6-M4SYskxPFJ5DpsbQDnvkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20190812094000.ebdmhyxx7xzbevef@flea>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:50:35PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> Hi,
->=20
-> On Thu, 8 Aug 2019 at 10:42, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
-rote:
-> >
+On Mon, Aug 12, 2019 at 11:40:00AM +0200, Maxime Ripard wrote:
+> On Thu, Aug 08, 2019 at 10:42:53AM +0200, Corentin Labbe wrote:
 > > This patch adds the evaluation variant of the model A of the PineH64.
 > > The model A has the same size of the pine64 and has a PCIE slot.
 > >
 > > The only devicetree difference with current pineH64, is the PHY
 > > regulator.
->=20
-> You also need to add the board in
-> "Documentation/devicetree/bindings/arm/sunxi.yaml"
->=20
-> Regards,
-> Cl=C3=A9ment
->=20
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
+> >  .../sun50i-h6-pine-h64-modelA-eval.dts        | 26 +++++++++++++++++++
+> >  2 files changed, 27 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> > index f6db0611cb85..9a02166cbf72 100644
+> > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > @@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+> >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+> > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelA-eval.dtb
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> > new file mode 100644
+> > index 000000000000..d8ff02747efe
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
+> > @@ -0,0 +1,26 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > +/*
+> > + * Copyright (C) 2019 Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > + */
+> > +
+> > +#include "sun50i-h6-pine-h64.dts"
+> > +
+> > +/ {
+> > +	model = "Pine H64 model A evaluation board";
+> > +	compatible = "pine64,pine-h64-modelA-eval", "allwinner,sun50i-h6";
+> > +
+> > +	reg_gmac_3v3: gmac-3v3 {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "vcc-gmac-3v3";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		startup-delay-us = <100000>;
+> > +		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
+> > +		enable-active-high;
+> > +	};
+> > +
+> > +};
+> > +
+> > +&emac {
+> > +	phy-supply = <&reg_gmac_3v3>;
+> > +};
+> 
+> I might be missing some context here, but I'm pretty sure that the
+> initial intent of the pine h64 DTS was to support the model A all
+> along.
+> 
 
-Done, thanks
-
-Regards
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190814130752.GA24324%40Red.
+The regulator changed between modelA and B.
+See this old patchset (supporting modelA) https://patchwork.kernel.org/patch/10539149/ for example.
