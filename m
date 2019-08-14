@@ -1,320 +1,87 @@
-Return-Path: <SRS0=BPCO=WJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:44104 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbfHMNKL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2019 09:10:11 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [v2 2/2] clk: qcom: Add Q6SSTOP clock controller for QCS404
-Date: Tue, 13 Aug 2019 18:39:46 +0530
-Message-Id: <20190813130946.16448-3-govinds@codeaurora.org>
-In-Reply-To: <20190813130946.16448-1-govinds@codeaurora.org>
-References: <20190813130946.16448-1-govinds@codeaurora.org>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57532 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfHNKUB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 06:20:01 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/3] ARM: dts: Add fck for cpsw mdio for omap variants
+Date: Wed, 14 Aug 2019 03:19:47 -0700
+Message-Id: <20190814101949.50006-2-tony@atomide.com>
+In-Reply-To: <20190814101949.50006-1-tony@atomide.com>
+References: <20190814101949.50006-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: sboyd@kernel.org
-Cc: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, andy.gross@linaro.org, linux-remoteproc@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Keerthy <j-keerthy@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for the Q6SSTOP clock control used on qcs404
-based devices. This would allow wcss remoteproc driver to
-control the required WCSS Q6SSTOP clock/reset controls to
-bring the subsystem out of reset and shutdown the WCSS Q6DSP.
+In preparation for dropping legacy platform data and custom ti,hwmods
+property, we need to make functional clock available for mdio for the
+SoCs so the the mdio driver can find it.
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
+The mdio hardware currently relies on a mdio_hwmod to manage the clock
+for omap variants. This is wrong though as there are no separate
+sysconfig registers for mdio. All the cpsw related components are just
+children of the gmac module.
+
+Note that since mdio is a child of cpsw, just doing pm_runtime_get()
+in the mdio driver enables the clock. However, since mdio is also used
+by davinci that does not implement runtime PM, let's just add the fck
+for now.
+
+Also note that am437x mdio already has a clock, let's update it to
+not use the legacy clock naming to unify things further.
+
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/clk/qcom/Kconfig                      |   8 +
- drivers/clk/qcom/Makefile                     |   1 +
- drivers/clk/qcom/q6sstop-qcs404.c             | 223 ++++++++++++++++++
- .../dt-bindings/clock/qcom,q6sstopcc-qcs404.h |  18 ++
- 4 files changed, 250 insertions(+)
- create mode 100644 drivers/clk/qcom/q6sstop-qcs404.c
- create mode 100644 include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
+ arch/arm/boot/dts/am33xx-l4.dtsi | 2 ++
+ arch/arm/boot/dts/am437x-l4.dtsi | 4 ++--
+ arch/arm/boot/dts/dra7-l4.dtsi   | 2 ++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index e1ff83cc361e..1b3c87a97521 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -250,6 +250,14 @@ config QCS_TURING_404
- 	  Support for the Turing Clock Controller on QCS404, provides clocks
- 	  and resets for the Turing subsystem.
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -719,6 +719,8 @@
  
-+config QCS_Q6SSTOP_404
-+	tristate "QCS404 Q6SSTOP Clock Controller"
-+	select QCS_GCC_404
-+	help
-+	  Support for the Q6SSTOP clock controller on QCS404 devices.
-+	  Say Y if you want to use the Q6SSTOP branch clocks of the WCSS clock
-+	  controller to reset the Q6SSTOP subsystem.
-+
- config SDM_GCC_845
- 	tristate "SDM845 Global Clock Controller"
- 	select QCOM_GDSC
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index f0768fb1f037..086c053e0e03 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
- obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
- obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
- obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
-+obj-$(CONFIG_QCS_Q6SSTOP_404) += q6sstop-qcs404.o
- obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
- obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
- obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
-diff --git a/drivers/clk/qcom/q6sstop-qcs404.c b/drivers/clk/qcom/q6sstop-qcs404.c
-new file mode 100644
-index 000000000000..b0f54a4c9365
---- /dev/null
-+++ b/drivers/clk/qcom/q6sstop-qcs404.c
-@@ -0,0 +1,223 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,q6sstopcc-qcs404.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "common.h"
-+#include "reset.h"
-+
-+static struct clk_branch lcc_ahbfabric_cbc_clk = {
-+	.halt_reg = 0x1b004,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x1b004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lcc_ahbfabric_cbc_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lcc_q6ss_ahbs_cbc_clk = {
-+	.halt_reg = 0x22000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x22000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lcc_q6ss_ahbs_cbc_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lcc_q6ss_tcm_slave_cbc_clk = {
-+	.halt_reg = 0x1c000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1c000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lcc_q6ss_tcm_slave_cbc_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lcc_q6ss_ahbm_cbc_clk = {
-+	.halt_reg = 0x22004,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x22004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lcc_q6ss_ahbm_cbc_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lcc_q6ss_axim_cbc_clk = {
-+	.halt_reg = 0x1c004,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1c004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lcc_q6ss_axim_cbc_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lcc_q6ss_bcr_sleep_clk = {
-+	.halt_reg = 0x6004,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x6004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lcc_q6ss_bcr_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* TCSR clock */
-+static struct clk_branch tcsr_lcc_csr_cbcr_clk = {
-+	.halt_reg = 0x8008,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x8008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "tcsr_lcc_csr_cbcr_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct regmap_config q6sstop_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.fast_io	= true,
-+};
-+
-+static struct clk_regmap *q6sstop_qcs404_clocks[] = {
-+	[LCC_AHBFABRIC_CBC_CLK] = &lcc_ahbfabric_cbc_clk.clkr,
-+	[LCC_Q6SS_AHBS_CBC_CLK] = &lcc_q6ss_ahbs_cbc_clk.clkr,
-+	[LCC_Q6SS_TCM_SLAVE_CBC_CLK] = &lcc_q6ss_tcm_slave_cbc_clk.clkr,
-+	[LCC_Q6SS_AHBM_CBC_CLK] = &lcc_q6ss_ahbm_cbc_clk.clkr,
-+	[LCC_Q6SS_AXIM_CBC_CLK] = &lcc_q6ss_axim_cbc_clk.clkr,
-+	[LCC_Q6SS_BCR_SLEEP_CLK] = &lcc_q6ss_bcr_sleep_clk.clkr,
-+};
-+
-+static const struct qcom_reset_map q6sstop_qcs404_resets[] = {
-+	[Q6SSTOP_BCR_RESET] = { 0x6000 },
-+};
-+
-+static const struct qcom_cc_desc q6sstop_qcs404_desc = {
-+	.config = &q6sstop_regmap_config,
-+	.clks = q6sstop_qcs404_clocks,
-+	.num_clks = ARRAY_SIZE(q6sstop_qcs404_clocks),
-+	.resets = q6sstop_qcs404_resets,
-+	.num_resets = ARRAY_SIZE(q6sstop_qcs404_resets),
-+};
-+
-+static struct clk_regmap *tcsr_qcs404_clocks[] = {
-+	[TCSR_Q6SS_LCC_CBCR_CLK] = &tcsr_lcc_csr_cbcr_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc tcsr_qcs404_desc = {
-+	.config = &q6sstop_regmap_config,
-+	.clks = tcsr_qcs404_clocks,
-+	.num_clks = ARRAY_SIZE(tcsr_qcs404_clocks),
-+};
-+
-+static const struct of_device_id q6sstopcc_qcs404_match_table[] = {
-+	{ .compatible = "qcom,qcs404-q6sstopcc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, q6sstopcc_qcs404_match_table);
-+
-+static int q6sstopcc_qcs404_probe(struct platform_device *pdev)
-+{
-+	const struct qcom_cc_desc *desc;
-+	int ret;
-+
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_clk_create(&pdev->dev);
-+	if (ret)
-+		goto disable_pm_runtime;
-+
-+	ret = pm_clk_add(&pdev->dev, NULL);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to acquire iface clock\n");
-+		goto destroy_pm_clk;
-+	}
-+
-+	q6sstop_regmap_config.name = "q6sstop_tcsr";
-+	desc = &tcsr_qcs404_desc;
-+
-+	ret = qcom_cc_probe_by_index(pdev, 1, desc);
-+	if (ret)
-+		goto destroy_pm_clk;
-+
-+	q6sstop_regmap_config.name = "q6sstop_cc";
-+	desc = &q6sstop_qcs404_desc;
-+
-+	ret = qcom_cc_probe_by_index(pdev, 0, desc);
-+	if (ret)
-+		goto destroy_pm_clk;
-+
-+	return 0;
-+
-+destroy_pm_clk:
-+	pm_clk_destroy(&pdev->dev);
-+
-+disable_pm_runtime:
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int q6sstopcc_qcs404_remove(struct platform_device *pdev)
-+{
-+	pm_clk_destroy(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops q6sstopcc_pm_ops = {
-+	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
-+};
-+
-+static struct platform_driver q6sstopcc_qcs404_driver = {
-+	.probe		= q6sstopcc_qcs404_probe,
-+	.remove		= q6sstopcc_qcs404_remove,
-+	.driver		= {
-+		.name	= "qcs404-q6sstopcc",
-+		.of_match_table = q6sstopcc_qcs404_match_table,
-+		.pm = &q6sstopcc_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(q6sstopcc_qcs404_driver);
-+
-+MODULE_DESCRIPTION("QTI QCS404 Q6SSTOP Clock Controller Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h b/include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
-new file mode 100644
-index 000000000000..c6f5290f0914
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_Q6SSTOP_QCS404_H
-+#define _DT_BINDINGS_CLK_Q6SSTOP_QCS404_H
-+
-+#define LCC_AHBFABRIC_CBC_CLK			0
-+#define LCC_Q6SS_AHBS_CBC_CLK			1
-+#define LCC_Q6SS_TCM_SLAVE_CBC_CLK		2
-+#define LCC_Q6SS_AHBM_CBC_CLK			3
-+#define LCC_Q6SS_AXIM_CBC_CLK			4
-+#define LCC_Q6SS_BCR_SLEEP_CLK			5
-+#define TCSR_Q6SS_LCC_CBCR_CLK			6
-+
-+#define Q6SSTOP_BCR_RESET			1
-+#endif
+ 				davinci_mdio: mdio@1000 {
+ 					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++					clocks = <&cpsw_125mhz_clkctrl AM3_CPSW_125MHZ_CPGMAC0_CLKCTRL 0>;
++					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					ti,hwmods = "davinci_mdio";
+diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
+--- a/arch/arm/boot/dts/am437x-l4.dtsi
++++ b/arch/arm/boot/dts/am437x-l4.dtsi
+@@ -559,10 +559,10 @@
+ 				davinci_mdio: mdio@1000 {
+ 					compatible = "ti,am4372-mdio","ti,cpsw-mdio","ti,davinci_mdio";
+ 					reg = <0x1000 0x100>;
++					clocks = <&cpsw_125mhz_clkctrl AM4_CPSW_125MHZ_CPGMAC0_CLKCTRL 0>;
++					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+-					clocks = <&cpsw_125mhz_gclk>;
+-					clock-names = "fck";
+ 					ti,hwmods = "davinci_mdio";
+ 					bus_freq = <1000000>;
+ 					status = "disabled";
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3103,6 +3103,8 @@
+ 
+ 				davinci_mdio: mdio@1000 {
+ 					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
++					clock-names = "fck";
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					ti,hwmods = "davinci_mdio";
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.21.0
