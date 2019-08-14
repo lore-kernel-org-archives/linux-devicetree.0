@@ -1,41 +1,46 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: [RFC 1/5] media: dt-bindings: Document 'location' property
-Date: Wed, 14 Aug 2019 22:28:11 +0200
-Message-ID: <20190814202815.32491-2-jacopo@jmondi.org>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
+Date: Wed, 14 Aug 2019 14:02:41 -0700
+Message-ID: <CAGETcx89sjoT0OWjhJyWtCfB_dBFTzwS9+bSSSXEbTUFygmuvw@mail.gmail.com>
+References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
+ <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com> <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814202815.32491-1-jacopo@jmondi.org>
+In-Reply-To: <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jacopo Mondi <jacopo@jmondi.org>, "open list:MEDIA INPUT INFRASTRUCTURE
-        V4L/DVB" <linux-media@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Android Kernel Team <kernel-team@android.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the 'location' device property, used to specify the camera device
-mounting position. The property is particularly meaningful for mobile
-devices with a well defined usage orientation.
+On Tue, Aug 6, 2019 at 3:04 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > PowerPC platforms don't use the generic of/platform code to populate the
+> > > devices from DT.
+> >
+> > Yes, they do.
+>
+> No they don't. My wording could be better, but they don't use
+> of_platform_default_populate_init()
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+>
+> >
+> > > Therefore the generic device linking code is never used
+> > > in PowerPC.  Compile it out to avoid warning about unused functions.
+> >
+> > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
+> > return' rather than #ifdefs.
+>
+> I'm just moving the existing ifndef some lines above. I don't want to
+> go change existing #ifndef in this patch. Maybe that should be a
+> separate patch series that goes and fixes all such code in drivers/of/
+> or driver/
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
----
- Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Bump. Thoughts? I don't think changing the existing if(n)defs should
+be part of this patch series.
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index f884ada0bffc..819077b2649c 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -89,6 +89,10 @@ Optional properties
-   but a number of degrees counter clockwise. Typical values are 0 and 180
-   (upside down).
-
-+- location: The camera device mounting position, relative to the device
-+  usage orientation. Possible values are:
-+  0 - Front camera. The image sensor is mounted on the front side of the device.
-+  1 - Back camera. The image sensor is mounted on the back side of the device.
-
- Optional endpoint properties
- ----------------------------
---
-2.22.0
+-Saravana
