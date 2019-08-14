@@ -1,51 +1,33 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: sprd: Add Spreadtrum PWM
- documentation
-Date: Wed, 14 Aug 2019 09:01:21 +0200
-Message-ID: <20190814070121.o53tj2mtky4hcy3n@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <20190813141256.jnbrfld42rtigek3@pengutronix.de>
- <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 09/18] kunit: test: add support for test abort
+Date: Wed, 14 Aug 2019 00:16:57 -0700
+Message-ID: <20190814071658.066412054F@mail.kernel.org>
+References: <20190814055108.214253-1-brendanhiggins@google.com> <20190814055108.214253-10-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuJA+a=nzFRja4wRkfJu3Gzb0wnvaM8H4Ek9X5u8CNegPg@mail.gmail.com>
+In-Reply-To: <20190814055108.214253-10-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Baolin,
+Quoting Brendan Higgins (2019-08-13 22:50:59)
+> Add support for aborting/bailing out of test cases, which is needed for
+> implementing assertions.
+>=20
+> An assertion is like an expectation, but bails out of the test case
+> early if the assertion is not met. The idea with assertions is that you
+> use them to state all the preconditions for your test. Logically
+> speaking, these are the premises of the test case, so if a premise isn't
+> true, there is no point in continuing the test case because there are no
+> conclusions that can be drawn without the premises. Whereas, the
+> expectation is the thing you are trying to prove.
+>=20
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
 
-On Wed, Aug 14, 2019 at 09:51:34AM +0800, Baolin Wang wrote:
-> On Tue, 13 Aug 2019 at 22:13, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Aug 13, 2019 at 09:46:40PM +0800, Baolin Wang wrote:
-> > > +- assigned-clock-parents: The phandle of the parent clock of PWM clock.
-> >
-> > I'm not sure you need to point out assigned-clocks and
-> > assigned-clock-parents as this is general clk stuff. Also I wonder if
-> > these should be "required properties".
-> 
-> I think I should describe any properties used by PWM node, like
-> 'clocks' and 'clock-names' properties, though they are common clock
-> properties.
-
-Then you might want to describe also "status", "assigned-clock-rates",
-"pinctrl-$n", "pinctrl-names", "power-domains", "power-domain-names" and
-probably another dozen I'm not aware of.
-
-> Yes, they are required. Thanks for your comments.
-
-required in which sense? Why can a Spreadtrum PWM not work when the
-clock parents are unspecified?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
