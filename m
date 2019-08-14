@@ -1,157 +1,66 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Are the requirements of the PWM API sensible?
-Date: Wed, 14 Aug 2019 18:17:27 +0200
-Message-ID: <20190814161727.ahfh6mlcbaozle3v@pengutronix.de>
-References: <f9d2c7cb01cbf31bf75c4160611fa1d37d99f355.1565703607.git.baolin.wang@linaro.org>
- <4f6e3110b4d7e0a2f7ab317bba98a933de12e5da.1565703607.git.baolin.wang@linaro.org>
- <20190813151612.v6x6e6kzxflkpu7b@pengutronix.de>
- <CAMz4kuJURx=fPE6+0gP4ukzMcXr_z3t1ZH0K3Gv6=o4Od4uc7w@mail.gmail.com>
- <20190814092339.73ybj5mycklvpnrq@pengutronix.de>
- <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
+ documentation
+Date: Wed, 14 Aug 2019 17:51:33 +0100
+Message-ID: <20190814165133.GA8346@e107155-lin>
+References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
+ <20190717192616.1731-2-tushar.khandelwal@arm.com>
+ <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
+ <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
+ <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
+ <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
+ <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
+ <20190814100518.GA21898@e107155-lin>
+ <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3181509c-a167-28c8-fb8b-947b7c72a65c@ysoft.com>
+In-Reply-To: <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Morten Borup Petersen <morten_bp@live.dk>, Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "nd@arm.com" <nd@arm.com>, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Michal,
-
-[adapted the Subject to the actual topic of this mail]
-
-On Wed, Aug 14, 2019 at 04:07:21PM +0200, Michal Vokáč wrote:
-> > Honestly I think most pwm users won't mind and they should get the
-> > possibility to tell they prefer pwm_apply_state to return immediately
-> > even if this could result in a spike. But we're not there yet.
-> > (Actually there are three things a PWM consumer might want:
-> > 
-> >   a) stop immediately;
-> >   b) complete the currently running period, then stop and return
-> >   only
-> >      when the period is completed; or
-> >   c) complete the currently running period and then stop, return
-> >   immediately if
-> >      possible.
-> > 
-> > Currently the expected semantic is b).
+On Wed, Aug 14, 2019 at 09:52:25AM -0500, Jassi Brar wrote:
+> On Wed, Aug 14, 2019 at 5:05 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
+> > [...]
+> >
+> > > > >>
+> > > > >> As mentioned in the response to your initial comment, the driver does
+> > > > >> not currently support mixing protocols.
+> > > > >>
+> > > > > Thanks for acknowledging that limitation. But lets also address it.
+> > > > >
+> > > >
+> > > > We are hesitant to dedicate time to developing mixing protocols given
+> > > > that we don't have any current usecase nor any current platform which
+> > > > would support this.
+> > > >
+> > > Can you please share the client code against which you tested this driver?
+> > > From my past experience, I realise it is much more efficient to tidyup
+> > > the code myself, than endlessly trying to explain the benefits.
+> > >
+> >
+> > Thanks for the patience and offer.
+> >
+> Ok, but the offer is to Morten for MHUv2 driver.
 > 
-> I am sorry for interrupting your discussion. From my (last year or so)
-> observation of the PWM mailing list I see this as a common pattern in
-> almost every submission of a new PWM driver. That is PWM driver authors
-> keep submitting solution a) and you tell them the expected behavior
-> is b).
+> > Can we try the same with MHUv1 and SCMI
+> > upstream driver.
+> >
+> MHUv1 driver is fine as it is.
+> I did try my best to keep you from messing the SCMI driver, without success
+> https://lkml.org/lkml/2017/8/7/924
 
-The history is that there was a discussion about something related to
-the pwm-imx27 or the pwm-mxs driver between Thierry and me. I don't
-remember the exact issue though. My impression back then was that
-Thierry had a conception of how a PWM should work that was idealised and
-hard to implement with a big part of the actually available hardware
-implementations. In the end Thierry ended the discussion saying
-something like: "I'm not aware that the available drivers don't fulfill
-the requirements so I must assume they are right. If you know otherwise,
-please tell us. I'm not willing to change the API's requirements just
-because of one or two drivers having problems." (I didn't look up the
-mail thread, so this is not an exact quote.)
+I disagree, you haven't told me how to address the usecase which I mentioned
+with the abstraction/multiplexer on top of MHU as you have been suggesting.
 
-One of these requirements was b) from above. So if you notice a common
-pattern here on the list that most new drivers have problems to
-implement b) I'm happy. I let you decide what this probably means for
-the existing drivers.
+I am sure MHUv2 will have the same usecase.
 
-> Why is that? I hope that the fact that implementing a) is simpler
-> than b) is not the main reason. I believe that people think a)
-> is the correct solution.
-
-Honestly I think people are not aware of the requirements and/or don't
-care enough about these details instead of actively being convinced that
-a) is right. Their test cases are most of the time quite limited and if
-the LED's brightness reacts according to the expectations the driver is
-considered done.
-
-And I agree with Thierry that in some situations it is sane to require
-that periods are completed to prevent spikes. (I'm not a hardware guy,
-but I think controlling a step motor is such a situation where you'd want
-to prevent spikes.)
-
-> I agree that smooth transition from one period/duty setting to
-> different setting makes sense. But I also believe the expected
-> behavior of setting enabled=0 is different. That is to stop
-> immediately the technology that is fed by the PWM signal.
-> Otherwise the concept of enabled/disabled does not make sense
-> because setting duty=0 would have the same effect.
-
-That's approximately my argumentation from back then. I asked several
-times what was the difference between duty=0 and enabled=0. Thierry was
-unable to come up with a better explanation but insisted there was a
-difference. (Later I became aware that there is a difference, i.e. with
-duty=0 the inactive time still has to be a multiple of the configured
-period. So disabled is actually equivalent to duty=0 with an
-infinitesimal period. Unless I missed something of course.)
-
-I even questioned if consumers really care about a PWM going to it's
-inactive level on disable and suggested to introduce something to the
-PWM API to let consumers express they don't care. But the discussion
-led nowhere. In my eyes the PWM framework would become better if
-consumers were able to specify their intentions in a more detailed way.
-Thierry didn't agree.
-
-I think allowing lowlevel drivers to act immediately on enabled=0 would
-be fine. Consumers who'd want to disable only after completion of the
-currently running period could then do:
-
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=1);
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
-
-to achieve this completion. So after all consumers are converted the API
-is more powerful than before because consumers have the choice between
-the above and a single
-
-	pwm_apply(pwm, duty=0, period=dontcare, enabled=0);
-
-The net benefit is that consumers don't have to wait if they don't
-actually care about completing the period. The downside is that all
-consumers must be reviewed and maybe fixed and maybe that people's
-expectations are not met anymore. (But I doubt the latter a bit because
-I'm not sure that most people actually expect that pwm_apply() blocks
-until the output reached its disabled state.)
-
-And we could even go further and tell consumers who care about the
-output's level should not disable the pwm but instead do
-
-	pwm_apply(pwm, duty=0, period=1, enabled=1);
-
-which has effectively the same semantic as enabled=0 today. This would
-give at least two (probably more) PWM drivers the freedom to really
-disable the hardware which might result in something different than
-"inactive level" without taking the possibility from consumers to
-actually request what they want.
-
-> So I still wonder where the expectation for b) is coming from.
-> What would be the physical/electrical reasoning for b)?
-> Why/how it can be dangerous/harmful for any device to stop the
-> PWM signal immediately?
-
-Maybe you can get Thierry to answer this. He is the source of this
-requirement.
-
-> Would be great to finally reach consensus on that so the expected
-> behavior can be documented. I know you already attempted that [1].
-> I think you have done a great job but I still consider the part
-> about state changes little controversial and unresolved.
-
-I'm completely open to document the expectations. I'm also open to shift
-the expectations to something that is saner and/or gives consumers more
-possibilities. But it's Thierry's responsibility to go forward here or
-at least stop the blockade.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--
+Regards,
+Sudeep
