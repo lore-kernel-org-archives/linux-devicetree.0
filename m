@@ -1,66 +1,256 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Date: Wed, 14 Aug 2019 17:51:33 +0100
-Message-ID: <20190814165133.GA8346@e107155-lin>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
- <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
- <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
- <20190814100518.GA21898@e107155-lin>
- <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
+Date: Wed, 14 Aug 2019 09:58:54 -0700
+Message-ID: <20190814165855.098FD2063F@mail.kernel.org>
+References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-2-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1jZs0OU-oi86iNNHiqBTjaY6ixFPMoUPkU6MCH_YrwLg@mail.gmail.com>
+In-Reply-To: <20190814125012.8700-2-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Morten Borup Petersen <morten_bp@live.dk>, Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "nd@arm.com" <nd@arm.com>, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, sibis@codeaurora.org, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 09:52:25AM -0500, Jassi Brar wrote:
-> On Wed, Aug 14, 2019 at 5:05 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
-> > [...]
-> >
-> > > > >>
-> > > > >> As mentioned in the response to your initial comment, the driver does
-> > > > >> not currently support mixing protocols.
-> > > > >>
-> > > > > Thanks for acknowledging that limitation. But lets also address it.
-> > > > >
-> > > >
-> > > > We are hesitant to dedicate time to developing mixing protocols given
-> > > > that we don't have any current usecase nor any current platform which
-> > > > would support this.
-> > > >
-> > > Can you please share the client code against which you tested this driver?
-> > > From my past experience, I realise it is much more efficient to tidyup
-> > > the code myself, than endlessly trying to explain the benefits.
-> > >
-> >
-> > Thanks for the patience and offer.
-> >
-> Ok, but the offer is to Morten for MHUv2 driver.
-> 
-> > Can we try the same with MHUv1 and SCMI
-> > upstream driver.
-> >
-> MHUv1 driver is fine as it is.
-> I did try my best to keep you from messing the SCMI driver, without success
-> https://lkml.org/lkml/2017/8/7/924
+Quoting Vinod Koul (2019-08-14 05:49:51)
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/q=
+com/sm8150.dtsi
+> new file mode 100644
+> index 000000000000..cd9fcadaeacb
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -0,0 +1,269 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> +// Copyright (c) 2019, Linaro Limited
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/qcom,gcc-sm8150.h>
+> +
+> +/ {
+> +       interrupt-parent =3D <&intc>;
+> +
+> +       #address-cells =3D <2>;
+> +       #size-cells =3D <2>;
+> +
+> +       chosen { };
+> +
+> +       clocks {
+> +               xo_board: xo-board {
+> +                       compatible =3D "fixed-clock";
+> +                       #clock-cells =3D <0>;
+> +                       clock-frequency =3D <19200000>;
 
-I disagree, you haven't told me how to address the usecase which I mentioned
-with the abstraction/multiplexer on top of MHU as you have been suggesting.
+Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
+guess it doesn't really matter in the end.
 
-I am sure MHUv2 will have the same usecase.
+> +                       clock-output-names =3D "xo_board";
+> +               };
+> +
+> +               sleep_clk: sleep-clk {
+> +                       compatible =3D "fixed-clock";
+> +                       #clock-cells =3D <0>;
+> +                       clock-frequency =3D <32764>;
+> +                       clock-output-names =3D "sleep_clk";
 
---
-Regards,
-Sudeep
+Does it matter to have this property anymore? Presumably it's OK if the
+name is now sleep-clk instead of sleep_clk because the name doesn't
+matter to connect clk tree.
+
+> +               };
+> +       };
+> +
+> +       cpus {
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <0>;
+> +
+> +               CPU0: cpu@0 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x0>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_0>;
+> +                       L2_0: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                               L3_0: l3-cache {
+> +                                     compatible =3D "cache";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               CPU1: cpu@100 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x100>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_100>;
+> +                       L2_100: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +
+> +               };
+> +
+> +               CPU2: cpu@200 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x200>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_200>;
+> +                       L2_200: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU3: cpu@300 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x300>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_300>;
+> +                       L2_300: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU4: cpu@400 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x400>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_400>;
+> +                       L2_400: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU5: cpu@500 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x500>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_500>;
+> +                       L2_500: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU6: cpu@600 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+> +                       reg =3D <0x0 0x600>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_600>;
+> +                       L2_600: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +               };
+> +
+> +               CPU7: cpu@700 {
+> +                       device_type =3D "cpu";
+> +                       compatible =3D "qcom,kryo485";
+
+Is this compatible documented?
+
+> +                       reg =3D <0x0 0x700>;
+> +                       enable-method =3D "psci";
+> +                       next-level-cache =3D <&L2_700>;
+> +                       L2_700: l2-cache {
+> +                               compatible =3D "cache";
+> +                               next-level-cache =3D <&L3_0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       firmware {
+> +               scm: scm {
+> +                       compatible =3D "qcom,scm-sm8150", "qcom,scm";
+> +                       #reset-cells =3D <1>;
+> +               };
+> +       };
+> +
+> +       memory@80000000 {
+> +               device_type =3D "memory";
+> +               /* We expect the bootloader to fill in the size */
+> +               reg =3D <0 0x80000000 0 0>;
+> +       };
+> +
+> +       psci {
+> +               compatible =3D "arm,psci-1.0";
+> +               method =3D "smc";
+> +       };
+> +
+> +       soc: soc@0 {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               ranges =3D <0 0 0 0xffffffff>;
+> +               compatible =3D "simple-bus";
+> +
+> +               gcc: clock-controller@100000 {
+> +                       compatible =3D "qcom,gcc-sm8150";
+> +                       reg =3D <0x00100000 0x1f0000>;
+> +                       #clock-cells =3D <1>;
+> +                       #reset-cells =3D <1>;
+> +                       #power-domain-cells =3D <1>;
+> +                       clock-names =3D "bi_tcxo", "sleep_clk";
+> +                       clocks =3D <&xo_board>, <&sleep_clk>;
+> +               };
+> +
+> +               qupv3_id_1: geniqup@ac0000 {
+> +                       compatible =3D "qcom,geni-se-qup";
+> +                       reg =3D <0x00ac0000 0x6000>;
+> +                       clock-names =3D "m-ahb", "s-ahb";
+> +                       clocks =3D <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
+> +                                <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <1>;
+> +                       ranges;
+> +                       status =3D "disabled";
+> +
+> +                       uart2: serial@a90000 {
+> +                               compatible =3D "qcom,geni-debug-uart";
+> +                               reg =3D <0x00a90000 0x4000>;
+> +                               clock-names =3D "se";
+> +                               clocks =3D <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+> +                               interrupts =3D <GIC_SPI 357 IRQ_TYPE_LEVE=
+L_HIGH>;
+> +                               status =3D "disabled";
+> +                       };
+> +               };
+> +
+> +               intc: interrupt-controller@17a00000 {
+> +                       compatible =3D "arm,gic-v3";
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <3>;
+> +                       reg =3D <0x17a00000 0x10000>,     /* GICD */
+> +                             <0x17a60000 0x100000>;    /* GICR * 8 */
+> +                       interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+
+Is there an its node? Probably the same as sdm845?
+
+> +               };
+> +
+> +               timer@17c20000 {
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <1>;
+> +                       ranges;
+> +                       compatible =3D "arm,armv7-timer-mem";
+> +                       reg =3D <0x17c20000 0x1000>;
+> +                       clock-frequency =3D <19200000>;
+
+This property shouldn't be necessary. Please remove.
+
+> +
+> +                       frame@17c21000{
+> +                               frame-number =3D <0>;
+> +                               interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_=
+HIGH>,
+> +                                            <GIC_SPI 6 IRQ_TYPE_LEVEL_HI=
+GH>;
