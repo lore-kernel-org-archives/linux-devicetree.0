@@ -1,66 +1,148 @@
-Return-Path: <SRS0=c+xj=WJ=public-files.de=frank-w@kernel.org>
-Date: Tue, 13 Aug 2019 22:51:32 +0200
-In-Reply-To: <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
-References: <20190812121511.4169-1-frank-w@public-files.de> <20190812121511.4169-2-frank-w@public-files.de> <CAL_Jsq+fW=x8MoL3GMj6+ZKC3fd6F6+8Rtx=j5R9vEuL9UHCuQ@mail.gmail.com>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57620 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfHNNOU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:14:20 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/6] ARM: OMAP2+: Drop legacy platform data for omap4 gpu
+Date: Wed, 14 Aug 2019 06:14:03 -0700
+Message-Id: <20190814131408.57162-2-tony@atomide.com>
+In-Reply-To: <20190814131408.57162-1-tony@atomide.com>
+References: <20190814131408.57162-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 01/10] dt-bindings: add powercontroller
-Reply-to: frank-w@public-files.de
-Message-Id: <20190813205302.4E56020651@mail.kernel.org>
-From: SRS0=c+xj=WJ=public-files.de=frank-w@kernel.org
-To: linux-mediatek@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Richard Fontana <rfontana@redhat.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Lee Jones <lee.jones@linaro.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, Allison Randal <allison@lohutok.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, "open list:THERMAL" <linux-pm@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>, "Tianping . Fang" <tianping.fang@mediatek.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Alessandro
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-<a.zummo@towertech.it>,Josef Friedl <josef.friedl@speed.at>,Greg Kroah-Hartman <gregkh@linuxfoundation.org>,Sebastian Reichel <sre@kernel.org>,"David S. Miller" <davem@davemloft.net>
-From: Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <CB9E3020-413C-44CA-AE4D-7EDA8B94C8A8@public-files.de>
-X-Provags-ID: V03:K1:uA6kSvGsj3SKdMEWtqkIQlmYd51Bk43Q94sXnUFEdaBr+gBwRVB
- 1WQTE6xl14d0MeByGohEyiU+VF8ZqTAz1v+uOmeXFfD39CT/Mcz19brWFJ61U8nHF/sIXiI
- cz1Xz+Hglc+JdoBD8bCl36GFHJixb1BjArDLJKzwBW5rfqGhE2JMeqKrdd5gpUyhbnMIdDm
- qR3dBPe/6riX16145sAdQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7zBJDoC1bE8=:7UVCCF8OF9pB7vNiGKRHKn
- 4+Ujji+Sa/h5WkXTbobz8l+Or/NaufDCf4l4mgXIr4f69ax0jxj4jKg2CzPkMDpnReS8yzJg/
- xDToD3tplPlmkskGjeuGk3WP7/pl7UcQ0au5gAGsTiS7a3HQ0vgnNWunAhIni9nJ5Ps19de+3
- RM1uusHg2n4DDOGCKNQGhIiIV1pDDPW6PduGI7wsCNRQRc2TXFQ+8tNo5dRW05GADCkceDcxh
- RRSN80F+Fuc/5nJUtSvGiItpPvkQpeIWdkKPWL2VUfKgSMNBC754s9wQHmdhY/C1PNBoRpQRU
- nwl+T2C7cNEN9RA3sDl0fLtpEHtRNXpCL2L23+lEnDCOTyr7Ve5YIU6wDHWMk21VDu8Tfrjik
- YEPllnVRJ/dQUbycrWG2S5ZxBwh9EdlyjZUPqoCrm/y9h9L4ZzfG0W654Hi77aSTVNeutyBv6
- Uda5P3V+Uof6xTzdexVJkz+xiHVwLlqQZa0ajxp9p01vviWvYTRTY3c5kvv45LXReCIriT6uo
- Tyo3hpKjdI9p0d7y1qfpARDfmGJzj+XnnxTEdNmg6625j1eQYEDW9kv1KlmL4azI+A+cDYh8V
- 7e/ecqozjp2aUjizmlZXBGbJqqvMBN/NJuIQF8t679bBXQQK37qgunVxgZZz16f1YyX+dUqLM
- dAu1WnvEW3fUyIHhC2IK7kFrhTmYgTrGxJvOSkeHv/fTdvzygOEPbBJs+aUW8iPQ9F/FJk/WS
- FQJEm11qRAwWQAEbxRrwq1DP7+ZrZi2GJ4iblo4p4QZTlK1ZrO57zdyKUnLOqLLELtzoW+szv
- Tw9iPQZCup2OF3Q2gscWOP/zQPUdKEnMI53mtZMjdWtev2Fm8q3CmYYjltnBWs+95AL0v43wf
- eT6Jv6TcGIDEaAZzLSc4a6UJiynvyvco8x4I/lTi3nfVdiVLjNGx2ibmTY85ZjVnJd+sED0gE
- ZfjgDIjneVqK7IOHsGZqgKRSI/yHpCPY4e4ej5KSE6g/7tpgN9pVdE/I99xNJWsOIGUh1PTel
- e4nEJuFhq+/romjuS83hhjurdae00fwQ+GGR5tpaOD+H2B0VJQUivyBl5fNq/ssAqDz9UOkb8
- G/qKABTZhCAkTUeRUNm2ErSX+0AcsPfV7guG871zxAOcmXjXJMSdx3WLdcYwIdjgHKZXBvdhS
- 5BxWcnU8dh33tmAqCMt+F23wytcC8LcOu907Mei7m6tlymMw==
+I've tested that the interconnect target module enables and idles
+just fine when probed with ti-sysc with PM runtime control via sys:
 
-Thank you for review
+# echo on > $(find /sys -name control | grep \/5601)
+# rwmem 0x56000024
+0x56000024 = 0x00010200		# SGX540 CORE_REVISION
+# echo auto > $(find /sys -name control | grep \/5601)
+# rwmem 0x56000024
+And when idled, it will produce "Bus error" as expected.
 
-Am 13=2E August 2019 17:25:47 MESZ schrieb Rob Herring <robh+dt@kernel=2Eo=
-rg>:
->How does this get to v5 with such a terrible subject? At least give
->some indication this is for some Mediatek chip=2E
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: moaz korena <moaz@korena.xyz>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: Philipp Rossak <embed3d@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4.dtsi               |  1 -
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 53 ----------------------
+ 2 files changed, 54 deletions(-)
 
-I try to make a better one :)
-
->The recipient list needs some work too=2E Don't Cc git committers that
->get_maintainers=2Epl lists=2E
-
-I thought it should be send to all listed by this script=2E=2E=2Ewhich hav=
-e to be adressed?
-
->Unrelated change to what the subject says=2E Clean-ups and new things in
->separate patches please=2E
-=2E=2E=2E
->How is this related to 'powercontroller'?
-
-I will split changes into separate commits=2E
-
-Regards Frank
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -330,7 +330,6 @@
+ 
+ 		target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+-			ti,hwmods = "gpu";
+ 			reg = <0x5601fc00 0x4>,
+ 			      <0x5601fc10 0x4>;
+ 			reg-names = "rev", "sysc";
+diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+@@ -1085,41 +1085,6 @@ static struct omap_hwmod omap44xx_gpmc_hwmod = {
+ 	},
+ };
+ 
+-/*
+- * 'gpu' class
+- * 2d/3d graphics accelerator
+- */
+-
+-static struct omap_hwmod_class_sysconfig omap44xx_gpu_sysc = {
+-	.rev_offs	= 0x1fc00,
+-	.sysc_offs	= 0x1fc10,
+-	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+-			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
+-			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
+-	.sysc_fields	= &omap_hwmod_sysc_type2,
+-};
+-
+-static struct omap_hwmod_class omap44xx_gpu_hwmod_class = {
+-	.name	= "gpu",
+-	.sysc	= &omap44xx_gpu_sysc,
+-};
+-
+-/* gpu */
+-static struct omap_hwmod omap44xx_gpu_hwmod = {
+-	.name		= "gpu",
+-	.class		= &omap44xx_gpu_hwmod_class,
+-	.clkdm_name	= "l3_gfx_clkdm",
+-	.main_clk	= "sgx_clk_mux",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM_GFX_GFX_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_GFX_GFX_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+-
+ /*
+  * 'hdq1w' class
+  * hdq / 1-wire serial interface controller
+@@ -2596,14 +2561,6 @@ static struct omap_hwmod_ocp_if omap44xx_fdif__l3_main_2 = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* gpu -> l3_main_2 */
+-static struct omap_hwmod_ocp_if omap44xx_gpu__l3_main_2 = {
+-	.master		= &omap44xx_gpu_hwmod,
+-	.slave		= &omap44xx_l3_main_2_hwmod,
+-	.clk		= "l3_div_ck",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /* hsi -> l3_main_2 */
+ static struct omap_hwmod_ocp_if omap44xx_hsi__l3_main_2 = {
+ 	.master		= &omap44xx_hsi_hwmod,
+@@ -3028,14 +2985,6 @@ static struct omap_hwmod_ocp_if omap44xx_l3_main_2__gpmc = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* l3_main_2 -> gpu */
+-static struct omap_hwmod_ocp_if omap44xx_l3_main_2__gpu = {
+-	.master		= &omap44xx_l3_main_2_hwmod,
+-	.slave		= &omap44xx_gpu_hwmod,
+-	.clk		= "l3_div_ck",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /* l4_per -> hdq1w */
+ static struct omap_hwmod_ocp_if omap44xx_l4_per__hdq1w = {
+ 	.master		= &omap44xx_l4_per_hwmod,
+@@ -3450,7 +3399,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap44xx_debugss__l3_main_2,
+ 	&omap44xx_dma_system__l3_main_2,
+ 	&omap44xx_fdif__l3_main_2,
+-	&omap44xx_gpu__l3_main_2,
+ 	&omap44xx_hsi__l3_main_2,
+ 	&omap44xx_ipu__l3_main_2,
+ 	&omap44xx_iss__l3_main_2,
+@@ -3503,7 +3451,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap44xx_l4_per__elm,
+ 	&omap44xx_l4_cfg__fdif,
+ 	&omap44xx_l3_main_2__gpmc,
+-	&omap44xx_l3_main_2__gpu,
+ 	&omap44xx_l4_per__hdq1w,
+ 	&omap44xx_l4_cfg__hsi,
+ 	&omap44xx_l3_main_2__ipu,
+-- 
+2.21.0
