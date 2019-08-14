@@ -1,34 +1,89 @@
-Return-Path: <SRS0=uCLo=WE=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V6 8/8] arm64: defconfig: Enable tegra XUDC driver
-Date: Thu, 8 Aug 2019 15:07:26 +0530
-Message-ID: <1565257046-9890-9-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
-References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57580 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfHNNCv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:02:51 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4/5] ARM: OMAP2+: Drop legacy platform data for omap4 d2d
+Date: Wed, 14 Aug 2019 06:02:39 -0700
+Message-Id: <20190814130240.56202-5-tony@atomide.com>
+In-Reply-To: <20190814130240.56202-1-tony@atomide.com>
+References: <20190814130240.56202-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Enable support for Nvidia XUSB device mode controller driver.
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 32 ----------------------
+ 1 file changed, 32 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 97c5078..89afd5c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -598,6 +598,7 @@ CONFIG_USB_ULPI=y
- CONFIG_USB_GADGET=y
- CONFIG_USB_RENESAS_USBHS_UDC=m
- CONFIG_USB_RENESAS_USB3=m
-+CONFIG_USB_TEGRA_XUDC=m
- CONFIG_TYPEC=m
- CONFIG_TYPEC_HD3SS3220=m
- CONFIG_MMC=y
+diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+@@ -274,29 +274,6 @@ static struct omap_hwmod omap44xx_aess_hwmod = {
+ 	},
+ };
+ 
+-/*
+- * 'c2c' class
+- * chip 2 chip interface used to plug the ape soc (omap) with an external modem
+- * soc
+- */
+-
+-static struct omap_hwmod_class omap44xx_c2c_hwmod_class = {
+-	.name	= "c2c",
+-};
+-
+-/* c2c */
+-static struct omap_hwmod omap44xx_c2c_hwmod = {
+-	.name		= "c2c",
+-	.class		= &omap44xx_c2c_hwmod_class,
+-	.clkdm_name	= "d2d_clkdm",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM_D2D_SAD2D_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_D2D_SAD2D_CONTEXT_OFFSET,
+-		},
+-	},
+-};
+-
+ /*
+  * 'counter' class
+  * 32-bit ordinary counter, clocked by the falling edge of the 32 khz clock
+@@ -2732,14 +2709,6 @@ static struct omap_hwmod_ocp_if __maybe_unused omap44xx_l4_abe__aess_dma = {
+ 	.user		= OCP_USER_SDMA,
+ };
+ 
+-/* l3_main_2 -> c2c */
+-static struct omap_hwmod_ocp_if omap44xx_l3_main_2__c2c = {
+-	.master		= &omap44xx_l3_main_2_hwmod,
+-	.slave		= &omap44xx_c2c_hwmod,
+-	.clk		= "l3_div_ck",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /* l4_wkup -> counter_32k */
+ static struct omap_hwmod_ocp_if omap44xx_l4_wkup__counter_32k = {
+ 	.master		= &omap44xx_l4_wkup_hwmod,
+@@ -3394,7 +3363,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap44xx_l4_cfg__ocp_wp_noc,
+ 	&omap44xx_l4_abe__aess,
+ 	&omap44xx_l4_abe__aess_dma,
+-	&omap44xx_l3_main_2__c2c,
+ 	&omap44xx_l4_wkup__counter_32k,
+ 	&omap44xx_l4_cfg__ctrl_module_core,
+ 	&omap44xx_l4_cfg__ctrl_module_pad_core,
 -- 
-2.7.4
+2.21.0
