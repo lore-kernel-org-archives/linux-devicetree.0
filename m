@@ -1,86 +1,37 @@
-From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: Re: [PATCH v3 0/6] Add support of New Amlogic temperature sensor for
- G12 SoCs
-Date: Wed, 14 Aug 2019 16:24:51 +0400
-Message-ID: <357FACA6-6EAC-4E9D-B6F7-4D8D0D59A20A@gmail.com>
-References: <20190806130506.8753-1-glaroque@baylibre.com>
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: clock: Document SM8150 rpmh-clock compatible
+Date: Wed, 14 Aug 2019 17:59:57 +0530
+Message-ID: <20190814122958.4981-1-vkoul@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806130506.8753-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 Aug 2019, at 5:05 pm, Guillaume La Roque <glaroque@baylibre.com> =
-wrote:
->=20
-> This patchs series add support of New Amlogic temperature sensor and =
-minimal
-> thermal zone for SEI510 and ODROID-N2 boards.
->=20
-> First implementation was doing on IIO[1] but after comments i move on =
-thermal framework.
-> Formulas and calibration values come from amlogic.
->=20
-> Changes since v2:
->  - fix yaml documention=20
->  - remove unneeded status variable for temperature-sensor node
->  - rework driver after Martin review
->  - add some information in commit message
->=20
-> Changes since v1:
->  - fix enum vs const in documentation
->  - fix error with thermal-sensor-cells value set to 1 instead of 0
->  - add some dependencies needed to add cooling-maps
->=20
-> Dependencies :
-> - patch 3,4 & 5: depends on Neil's patch and series :
->              - missing dwc2 phy-names[2]
->              - patchsets to add DVFS on G12a[3] which have deps on [4] =
-and [5]
->=20
-> [1] =
-https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@bayli=
-bre.com/
-> [2] =
-https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@ba=
-ylibre.com/
-> [3] =
-https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@bay=
-libre.com/
-> [4] =
-https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@bay=
-libre.com/
-> [5] =
-https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@bay=
-libre.com/
->=20
-> Guillaume La Roque (6):
->  dt-bindings: thermal: Add DT bindings documentation for Amlogic
->    Thermal
->  thermal: amlogic: Add thermal driver to support G12 SoCs
->  arm64: dts: amlogic: g12: add temperature sensor
->  arm64: dts: meson: sei510: Add minimal thermal zone
->  arm64: dts: amlogic: odroid-n2: add minimal thermal zone
->  MAINTAINERS: add entry for Amlogic Thermal driver
+Document the SM8150 rpmh-clock compatible for rpmh clock controller
+found on SM8150 platforms.
 
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I=E2=80=99ve tested this series with Odroid N2 and Khadas VIM3, X96-Max. =
-Patches to add
-support for VIM3/X96-max will be submitted once the driver is merged.
-
-VIM3:~ # dmesg | grep thermal
-[    0.046375] thermal_sys: Registered thermal governor 'step_wise'
-
-VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone0/temp
-51300
-
-VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone1/temp
-52800
-
-Christian=
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+index 3c007653da31..82dee80cdbf3 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+@@ -6,7 +6,9 @@ some Qualcomm Technologies Inc. SoCs. It accepts clock requests from
+ other hardware subsystems via RSC to control clocks.
+ 
+ Required properties :
+-- compatible : shall contain "qcom,sdm845-rpmh-clk"
++- compatible : must be one of:
++	       "qcom,sdm845-rpmh-clk"
++	       "qcom,sm8150-rpmh-clk"
+ 
+ - #clock-cells : must contain 1
+ 
+-- 
+2.20.1
