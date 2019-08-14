@@ -1,135 +1,148 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
-Date: Wed, 14 Aug 2019 17:04:43 +0530
-Message-ID: <8d32736068a35e250e42e2d70f07dd28@codeaurora.org>
-References: <20190807112432.26521-1-sibis@codeaurora.org>
- <20190807112432.26521-2-sibis@codeaurora.org>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 12/15] drm/mxsfb: Improve the axi clock usage
+Date: Wed, 14 Aug 2019 11:35:15 +0000
+Message-ID: <1565782514.3209.68.camel@nxp.com>
+References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
+         <1565779731-1300-13-git-send-email-robert.chiras@nxp.com>
+         <425a854f41248b083ff0c6c93673d696@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807112432.26521-2-sibis@codeaurora.org>
+In-Reply-To: <425a854f41248b083ff0c6c93673d696@agner.ch>
+Content-Language: en-US
+Content-ID: <D6E7F220169E0944A6EC992CD2A31A51@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc: bjorn.andersson@linaro.org, agross@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, evgreen@chromium.org, daidavid1@codeaurora.org, saravanak@google.com
+To: "stefan@agner.ch" <stefan@agner.ch>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "festevam@gmail.com" <festevam@gmail.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "airlied@linux.ie" <airlied@linux.ie>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-on running dt_binding_check found a
-few errors which I'll fix in the next
-re-spin.
-
-
-On 2019-08-07 16:54, Sibi Sankar wrote:
-> Add bindings for Operating State Manager (OSM) L3 interconnect provider
-> on SDM845 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../bindings/interconnect/qcom,osm-l3.yaml    | 55 +++++++++++++++++++
->  .../dt-bindings/interconnect/qcom,osm-l3.h    | 13 +++++
->  2 files changed, 68 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-> b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-> new file mode 100644
-> index 0000000000000..51a4722e1a69f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect Provider
-> +
-> +maintainers:
-> +  - Sibi Sankar <sibis@codeaurora.org>
-> +
-> +description:
-> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the 
-> OSM.
-> +  The OSM L3 interconnect provider aggregates the L3 bandwidth 
-> requests
-> +  from CPU/GPU and relays it to the OSM.
-> +
-> +properties:
-> +  compatible:
-> +    const: "qcom,sdm845-osm-l3"
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: OSM L3 registers
-
-will correct the error ^^
-
-> +
-> +  clocks:
-> +    items:
-> +      - description: xo clock
-> +      - description: alternate clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xo
-> +      - const: alternate
-> +
-> +  '#interconnect-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clocks-names
-
-s/clocks-names/clock-names
-
-> +  - '#interconnect-cells'
-> +
-> +examples:
-> +  - |
-> +    osm_l3: interconnect@17d41000 {
-> +      compatible = "qcom,sdm845-osm-l3";
-> +      reg = <0 0x17d41000 0 0x1400>;
-> +
-> +      clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-
-will replace rpmh_cxo_clk with 0
-and GPLL0 with 165
-
-> +      clock-names = "xo", "alternate";
-> +
-> +      #interconnect-cells = <1>;
-> +    };
-> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h
-> b/include/dt-bindings/interconnect/qcom,osm-l3.h
-> new file mode 100644
-> index 0000000000000..6662134c84248
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-> +
-> +#define MASTER_OSM_L3_APPS	0
-> +#define MASTER_OSM_L3_GPU	1
-> +#define SLAVE_OSM_L3		2
-> +
-> +#endif
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+SGkgU3RlZmFuLA0KDQpPbiBNaSwgMjAxOS0wOC0xNCBhdCAxMzowNiArMDIwMCwgU3RlZmFuIEFn
+bmVyIHdyb3RlOg0KPiBPbiAyMDE5LTA4LTE0IDEyOjQ4LCBSb2JlcnQgQ2hpcmFzIHdyb3RlOg0K
+PiA+IA0KPiA+IEN1cnJlbnRseSwgdGhlIGVuYWJsZSBvZiB0aGUgYXhpIGNsb2NrIHJldHVybiBz
+dGF0dXMgaXMgaWdub3JlZCwNCj4gPiBjYXVzaW5nDQo+ID4gaXNzdWVzIHdoZW4gdGhlIGVuYWJs
+ZSBmYWlscyB0aGVuIHdlIHRyeSB0byBkaXNhYmxlIGl0LiBUaGVyZWZvcmUsDQo+ID4gaXQgaXMN
+Cj4gPiBiZXR0ZXIgdG8gY2hlY2sgdGhlIHJldHVybiBzdGF0dXMgYW5kIGRpc2FibGUgaXQgb25s
+eSB3aGVuIGVuYWJsZQ0KPiA+IHN1Y2NlZWRlZC4NCj4gSXMgdGhpcyBhY3R1YWxseSB0aGUgY2Fz
+ZSBpbiByZWFsIHdvcmxkIHNvbWV0aW1lcz8gV2h5IGlzIGl0IGZhaWxpbmc/DQpXaGVuIEkgbm90
+aWNlZCB0aGF0IGZhaWwsIHdlIGhhZCBzb21lIHJlc3RyaWN0aW9ucyBpbiBTQ1UgZmlybXdhcmUs
+IHNvDQp0aGF0IHRoZSBjbG9jayBjYW5ub3QgYmUgZW5hYmxlZCBpZiB0aGUgcG93ZXIgZG9tYWlu
+IHdhcyBkb3duLiBTdGlsbCwNCmF0IHRoYXQgdGltZSBJIG5vdGljZWQgaXQgaXMgcmVkdW5kYW50
+IHRvIGhhdmUgZnVuY3Rpb25zIHRoYXQgY2hlY2tzIGlmDQphIGNsb2NrIGlzIE5VTEwgb3Igbm90
+LCBzaW5jZSB0aGUgY2xrXyogZnVuY3Rpb25zIGFyZSBhbHJlYWR5IGRvaW5nDQp0aGlzLg0KPiAN
+Cj4gSSBndWVzcyBpZiB3ZSBkbyB0aGlzIGluIG9uZSBwbGFjZSwgd2Ugc2hvdWxkIGRvIGl0IGlu
+IGFsbCBwbGFjZXMNCj4gKGUuZy4NCj4gYWxzbyBpbiBteHNmYl9jcnRjX2VuYWJsZSwgbXhzZmJf
+cGxhbmVfYXRvbWljX3VwZGF0ZS4uKQ0KSSBhZGQgc3BlY2lmaWMgY2hlY2tzIG9ubHkgaW4gdGhl
+IHZibGFuayBmdW5jdGlvbnMsIGJlY2F1c2UgdGhvc2UNCmZ1bmN0aW9ucyBjYW4gYmUgY2FsbGVk
+IGJlZm9yZSBjYWxsaW5nIHRoZSBwaXBlIGVuYWJsZS9kaXNhYmxlDQpmdW5jdGlvbnMgd2hpY2gg
+ZW5hYmxlcyB0aGUgc3BlZmljIHBvd2VyIGRvbWFpbiBhbmQsIGF0IHRoaXMgcG9pbnQsIHRoZQ0K
+Y2xvY2sgZW5hYmxlL2Rpc2FibGUgY2FsbHMgc2hvdWxkIG5vdCBmYWlsLg0KPiANCj4gLS0NCj4g
+U3RlZmFuDQo+IA0KPiA+IA0KPiA+IEFsc28sIHJlbW92ZSB0aGUgaGVscGVyIGZ1bmN0aW9ucyBh
+cm91bmQgY2xrX2F4aSwgc2luY2Ugd2UgY2FuDQo+ID4gZGlyZWN0bHkNCj4gPiB1c2UgdGhlIGNs
+ayBBUEkgZnVuY3Rpb24gZm9yIGVuYWJsZS9kaXNhYmxlIHRoZSBjbG9jay4gVGhvc2UNCj4gPiBm
+dW5jdGlvbnMNCj4gPiBhcmUgYWxyZWFkeSBjaGVja2luZyBmb3IgTlVMTCBjbGsgYW5kIHJldHVy
+bmluZyAwIGlmIHRoYXQncyB0aGUNCj4gPiBjYXNlLg0KPiANCj4gPiANCj4gPiANCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20+DQo+ID4gQWNr
+ZWQtYnk6IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+DQo+ID4gLS0t
+DQo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5jIHzCoMKgOCArKysrLS0t
+LQ0KPiA+IMKgZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2Rydi5jwqDCoHwgMzIgKysrKysr
+KysrKysrKy0tLS0tLS0tLS0tLS0NCj4gPiAtLS0tLS0NCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9t
+eHNmYi9teHNmYl9kcnYuaMKgwqB8wqDCoDMgLS0tDQo+ID4gwqAzIGZpbGVzIGNoYW5nZWQsIDE3
+IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5jDQo+ID4gYi9kcml2ZXJzL2dwdS9kcm0v
+bXhzZmIvbXhzZmJfY3J0Yy5jDQo+ID4gaW5kZXggYTRiYTM2OC4uZTcyN2Y1ZSAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfY3J0Yy5jDQo+ID4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2NydGMuYw0KPiA+IEBAIC00MDgsNyArNDA4LDcgQEAg
+dm9pZCBteHNmYl9jcnRjX2VuYWJsZShzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUNCj4gPiAqbXhz
+ZmIpDQo+ID4gwqB7DQo+ID4gwqDCoMKgwqDCoMKgZG1hX2FkZHJfdCBwYWRkcjsNCj4gPiANCj4g
+PiAtwqDCoMKgwqDCoG14c2ZiX2VuYWJsZV9heGlfY2xrKG14c2ZiKTsNCj4gPiArwqDCoMKgwqDC
+oGNsa19wcmVwYXJlX2VuYWJsZShteHNmYi0+Y2xrX2F4aSk7DQo+ID4gwqDCoMKgwqDCoMKgd3Jp
+dGVsKDAsIG14c2ZiLT5iYXNlICsgTENEQ19DVFJMKTsNCj4gPiDCoMKgwqDCoMKgwqBteHNmYl9j
+cnRjX21vZGVfc2V0X25vZmIobXhzZmIpOw0KPiA+IA0KPiA+IEBAIC00MjUsNyArNDI1LDcgQEAg
+dm9pZCBteHNmYl9jcnRjX2VuYWJsZShzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUNCj4gPiAqbXhz
+ZmIpDQo+ID4gwqB2b2lkIG14c2ZiX2NydGNfZGlzYWJsZShzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZh
+dGUgKm14c2ZiKQ0KPiA+IMKgew0KPiA+IMKgwqDCoMKgwqDCoG14c2ZiX2Rpc2FibGVfY29udHJv
+bGxlcihteHNmYik7DQo+ID4gLcKgwqDCoMKgwqBteHNmYl9kaXNhYmxlX2F4aV9jbGsobXhzZmIp
+Ow0KPiA+ICvCoMKgwqDCoMKgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG14c2ZiLT5jbGtfYXhpKTsN
+Cj4gPiDCoH0NCj4gPiANCj4gPiDCoHZvaWQgbXhzZmJfcGxhbmVfYXRvbWljX3VwZGF0ZShzdHJ1
+Y3QgbXhzZmJfZHJtX3ByaXZhdGUgKm14c2ZiLA0KPiA+IEBAIC00NTEsOCArNDUxLDggQEAgdm9p
+ZCBteHNmYl9wbGFuZV9hdG9taWNfdXBkYXRlKHN0cnVjdA0KPiA+IG14c2ZiX2RybV9wcml2YXRl
+ICpteHNmYiwNCj4gPiANCj4gPiDCoMKgwqDCoMKgwqBwYWRkciA9IG14c2ZiX2dldF9mYl9wYWRk
+cihteHNmYik7DQo+ID4gwqDCoMKgwqDCoMKgaWYgKHBhZGRyKSB7DQo+ID4gLcKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgbXhzZmJfZW5hYmxlX2F4aV9jbGsobXhzZmIpOw0KPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGNsa19wcmVwYXJlX2VuYWJsZShteHNmYi0+Y2xrX2F4aSk7DQo+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHdyaXRlbChwYWRkciwgbXhzZmItPmJhc2Ug
+KyBteHNmYi0+ZGV2ZGF0YS0NCj4gPiA+bmV4dF9idWYpOw0KPiA+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoG14c2ZiX2Rpc2FibGVfYXhpX2NsayhteHNmYik7DQo+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG14c2ZiLT5jbGtfYXhpKTsNCj4g
+PiDCoMKgwqDCoMKgwqB9DQo+ID4gwqB9DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9teHNmYi9teHNmYl9kcnYuYw0KPiA+IGIvZHJpdmVycy9ncHUvZHJtL214c2ZiL214c2ZiX2Ry
+di5jDQo+ID4gaW5kZXggNmRhZTJiZC4uNjk0YjI4NyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmMNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXhz
+ZmIvbXhzZmJfZHJ2LmMNCj4gPiBAQCAtOTcsMTggKzk3LDYgQEAgZHJtX3BpcGVfdG9fbXhzZmJf
+ZHJtX3ByaXZhdGUoc3RydWN0DQo+ID4gZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGUgKnBpcGUpDQo+
+ID4gwqDCoMKgwqDCoMKgcmV0dXJuIGNvbnRhaW5lcl9vZihwaXBlLCBzdHJ1Y3QgbXhzZmJfZHJt
+X3ByaXZhdGUsIHBpcGUpOw0KPiA+IMKgfQ0KPiA+IA0KPiA+IC12b2lkIG14c2ZiX2VuYWJsZV9h
+eGlfY2xrKHN0cnVjdCBteHNmYl9kcm1fcHJpdmF0ZSAqbXhzZmIpDQo+ID4gLXsNCj4gPiAtwqDC
+oMKgwqDCoGlmIChteHNmYi0+Y2xrX2F4aSkNCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBjbGtfcHJlcGFyZV9lbmFibGUobXhzZmItPmNsa19heGkpOw0KPiA+IC19DQo+ID4gLQ0KPiA+
+IC12b2lkIG14c2ZiX2Rpc2FibGVfYXhpX2NsayhzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUgKm14
+c2ZiKQ0KPiA+IC17DQo+ID4gLcKgwqDCoMKgwqBpZiAobXhzZmItPmNsa19heGkpDQo+ID4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG14c2ZiLT5jbGtf
+YXhpKTsNCj4gPiAtfQ0KPiA+IC0NCj4gPiDCoC8qKg0KPiA+IMKgICogbXhzZmJfYXRvbWljX2hl
+bHBlcl9jaGVjayAtIHZhbGlkYXRlIHN0YXRlIG9iamVjdA0KPiA+IMKgICogQGRldjogRFJNIGRl
+dmljZQ0KPiA+IEBAIC0yMjksMjUgKzIxNywzMSBAQCBzdGF0aWMgdm9pZCBteHNmYl9waXBlX3Vw
+ZGF0ZShzdHJ1Y3QNCj4gPiBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSAqcGlwZSwNCj4gPiDCoHN0
+YXRpYyBpbnQgbXhzZmJfcGlwZV9lbmFibGVfdmJsYW5rKHN0cnVjdCBkcm1fc2ltcGxlX2Rpc3Bs
+YXlfcGlwZQ0KPiA+ICpwaXBlKQ0KPiA+IMKgew0KPiA+IMKgwqDCoMKgwqDCoHN0cnVjdCBteHNm
+Yl9kcm1fcHJpdmF0ZSAqbXhzZmIgPQ0KPiA+IGRybV9waXBlX3RvX214c2ZiX2RybV9wcml2YXRl
+KHBpcGUpOw0KPiA+ICvCoMKgwqDCoMKgaW50IHJldCA9IDA7DQo+ID4gKw0KPiA+ICvCoMKgwqDC
+oMKgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKG14c2ZiLT5jbGtfYXhpKTsNCj4gPiArwqDCoMKg
+wqDCoGlmIChyZXQpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsN
+Cj4gPiANCj4gPiDCoMKgwqDCoMKgwqAvKiBDbGVhciBhbmQgZW5hYmxlIFZCTEFOSyBJUlEgKi8N
+Cj4gPiAtwqDCoMKgwqDCoG14c2ZiX2VuYWJsZV9heGlfY2xrKG14c2ZiKTsNCj4gPiDCoMKgwqDC
+oMKgwqB3cml0ZWwoQ1RSTDFfQ1VSX0ZSQU1FX0RPTkVfSVJRLCBteHNmYi0+YmFzZSArIExDRENf
+Q1RSTDEgKw0KPiA+IFJFR19DTFIpOw0KPiA+IMKgwqDCoMKgwqDCoHdyaXRlbChDVFJMMV9DVVJf
+RlJBTUVfRE9ORV9JUlFfRU4sIG14c2ZiLT5iYXNlICsgTENEQ19DVFJMMQ0KPiA+ICsgUkVHX1NF
+VCk7DQo+ID4gLcKgwqDCoMKgwqBteHNmYl9kaXNhYmxlX2F4aV9jbGsobXhzZmIpOw0KPiA+ICvC
+oMKgwqDCoMKgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG14c2ZiLT5jbGtfYXhpKTsNCj4gPiANCj4g
+PiAtwqDCoMKgwqDCoHJldHVybiAwOw0KPiA+ICvCoMKgwqDCoMKgcmV0dXJuIHJldDsNCj4gPiDC
+oH0NCj4gPiANCj4gPiDCoHN0YXRpYyB2b2lkIG14c2ZiX3BpcGVfZGlzYWJsZV92Ymxhbmsoc3Ry
+dWN0DQo+ID4gZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGUgKnBpcGUpDQo+ID4gwqB7DQo+ID4gwqDC
+oMKgwqDCoMKgc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYiA9DQo+ID4gZHJtX3BpcGVf
+dG9fbXhzZmJfZHJtX3ByaXZhdGUocGlwZSk7DQo+ID4gDQo+ID4gK8KgwqDCoMKgwqBpZiAoY2xr
+X3ByZXBhcmVfZW5hYmxlKG14c2ZiLT5jbGtfYXhpKSkNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqByZXR1cm47DQo+ID4gKw0KPiA+IMKgwqDCoMKgwqDCoC8qIERpc2FibGUgYW5kIGNs
+ZWFyIFZCTEFOSyBJUlEgKi8NCj4gPiAtwqDCoMKgwqDCoG14c2ZiX2VuYWJsZV9heGlfY2xrKG14
+c2ZiKTsNCj4gPiDCoMKgwqDCoMKgwqB3cml0ZWwoQ1RSTDFfQ1VSX0ZSQU1FX0RPTkVfSVJRX0VO
+LCBteHNmYi0+YmFzZSArIExDRENfQ1RSTDENCj4gPiArIFJFR19DTFIpOw0KPiA+IMKgwqDCoMKg
+wqDCoHdyaXRlbChDVFJMMV9DVVJfRlJBTUVfRE9ORV9JUlEsIG14c2ZiLT5iYXNlICsgTENEQ19D
+VFJMMSArDQo+ID4gUkVHX0NMUik7DQo+ID4gLcKgwqDCoMKgwqBteHNmYl9kaXNhYmxlX2F4aV9j
+bGsobXhzZmIpOw0KPiA+ICvCoMKgwqDCoMKgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG14c2ZiLT5j
+bGtfYXhpKTsNCj4gPiDCoH0NCj4gPiANCj4gPiDCoHN0YXRpYyBzdHJ1Y3QgZHJtX3NpbXBsZV9k
+aXNwbGF5X3BpcGVfZnVuY3MgbXhzZmJfZnVuY3MgPSB7DQo+ID4gQEAgLTQxMyw3ICs0MDcsNyBA
+QCBzdGF0aWMgaXJxcmV0dXJuX3QgbXhzZmJfaXJxX2hhbmRsZXIoaW50IGlycSwNCj4gPiB2b2lk
+ICpkYXRhKQ0KPiA+IMKgwqDCoMKgwqDCoHN0cnVjdCBteHNmYl9kcm1fcHJpdmF0ZSAqbXhzZmIg
+PSBkcm0tPmRldl9wcml2YXRlOw0KPiA+IMKgwqDCoMKgwqDCoHUzMiByZWc7DQo+ID4gDQo+ID4g
+LcKgwqDCoMKgwqBteHNmYl9lbmFibGVfYXhpX2NsayhteHNmYik7DQo+ID4gK8KgwqDCoMKgwqBj
+bGtfcHJlcGFyZV9lbmFibGUobXhzZmItPmNsa19heGkpOw0KPiA+IA0KPiA+IMKgwqDCoMKgwqDC
+oHJlZyA9IHJlYWRsKG14c2ZiLT5iYXNlICsgTENEQ19DVFJMMSk7DQo+ID4gDQo+ID4gQEAgLTQy
+Miw3ICs0MTYsNyBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgbXhzZmJfaXJxX2hhbmRsZXIoaW50IGly
+cSwNCj4gPiB2b2lkICpkYXRhKQ0KPiA+IA0KPiA+IMKgwqDCoMKgwqDCoHdyaXRlbChDVFJMMV9D
+VVJfRlJBTUVfRE9ORV9JUlEsIG14c2ZiLT5iYXNlICsgTENEQ19DVFJMMSArDQo+ID4gUkVHX0NM
+Uik7DQo+ID4gDQo+ID4gLcKgwqDCoMKgwqBteHNmYl9kaXNhYmxlX2F4aV9jbGsobXhzZmIpOw0K
+PiA+ICvCoMKgwqDCoMKgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG14c2ZiLT5jbGtfYXhpKTsNCj4g
+PiANCj4gPiDCoMKgwqDCoMKgwqByZXR1cm4gSVJRX0hBTkRMRUQ7DQo+ID4gwqB9DQo+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9teHNmYi9teHNmYl9kcnYuaA0KPiA+IGIvZHJpdmVy
+cy9ncHUvZHJtL214c2ZiL214c2ZiX2Rydi5oDQo+ID4gaW5kZXggOGZiNjVkMy4uZDZkZjhmZSAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmgNCj4gPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vbXhzZmIvbXhzZmJfZHJ2LmgNCj4gPiBAQCAtMzcsOSArMzcs
+NiBAQCBzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUgew0KPiA+IMKgaW50IG14c2ZiX3NldHVwX2Ny
+dGMoc3RydWN0IGRybV9kZXZpY2UgKmRldik7DQo+ID4gwqBpbnQgbXhzZmJfY3JlYXRlX291dHB1
+dChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KTsNCj4gPiANCj4gPiAtdm9pZCBteHNmYl9lbmFibGVf
+YXhpX2NsayhzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUgKm14c2ZiKTsNCj4gPiAtdm9pZCBteHNm
+Yl9kaXNhYmxlX2F4aV9jbGsoc3RydWN0IG14c2ZiX2RybV9wcml2YXRlICpteHNmYik7DQo+ID4g
+LQ0KPiA+IMKgdm9pZCBteHNmYl9jcnRjX2VuYWJsZShzdHJ1Y3QgbXhzZmJfZHJtX3ByaXZhdGUg
+Km14c2ZiKTsNCj4gPiDCoHZvaWQgbXhzZmJfY3J0Y19kaXNhYmxlKHN0cnVjdCBteHNmYl9kcm1f
+cHJpdmF0ZSAqbXhzZmIpOw0KPiA+IMKgdm9pZCBteHNmYl9wbGFuZV9hdG9taWNfdXBkYXRlKHN0
+cnVjdCBteHNmYl9kcm1fcHJpdmF0ZSAqbXhzZmIsDQoNClRoYW5rcywNClJvYmVydA==
