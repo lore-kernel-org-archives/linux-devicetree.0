@@ -1,61 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 01/22] arm64: dts: qcom: sm8150: add base dts file
-Date: Wed, 14 Aug 2019 10:44:39 -0700
-Message-ID: <20190814174439.GE6167@minitux>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-2-vkoul@kernel.org>
- <20190814165855.098FD2063F@mail.kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 01/14] net: phy: adin: add support for Analog Devices
+ PHYs
+Date: Wed, 14 Aug 2019 10:47:24 -0700
+Message-ID: <06de7e05-e3b5-6003-acc5-63f45d8ce9e8@gmail.com>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+ <20190812112350.15242-2-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190814165855.098FD2063F@mail.kernel.org>
+In-Reply-To: <20190812112350.15242-2-alexandru.ardelean@analog.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, hkallweit1@gmail.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Aug 09:58 PDT 2019, Stephen Boyd wrote:
 
-> Quoting Vinod Koul (2019-08-14 05:49:51)
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-[..]
-> > +       clocks {
-> > +               xo_board: xo-board {
-> > +                       compatible = "fixed-clock";
-> > +                       #clock-cells = <0>;
-> > +                       clock-frequency = <19200000>;
+
+On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
+> This change adds support for Analog Devices Industrial Ethernet PHYs.
+> Particularly the PHYs this driver adds support for:
+>  * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+>  * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+>    Ethernet PHY
 > 
-> Is it 19.2 or 38.4 MHz? It seems like lately there are dividers, but I
-> guess it doesn't really matter in the end.
+> The 2 chips are register compatible with one another. The main difference
+> being that ADIN1200 doesn't operate in gigabit mode.
 > 
+> The chips can be operated by the Generic PHY driver as well via the
+> standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+> kernel as well. This assumes that configuration of the PHY has been done
+> completely in HW, according to spec.
+> 
+> Configuration can also be done via registers, which will be supported by
+> this driver.
+> 
+> Datasheets:
+>   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+>   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-As with previous platforms, the board's XO feeds the PMIC at 38.4MHz and
-the SoC's CXO_IN pin (i.e. bi_tcxo) is fed from the PMIC's LNBBCLK1,
-which is ticking at 19.2MHz.
-
-[..]
-> > +               gcc: clock-controller@100000 {
-> > +                       compatible = "qcom,gcc-sm8150";
-> > +                       reg = <0x00100000 0x1f0000>;
-> > +                       #clock-cells = <1>;
-> > +                       #reset-cells = <1>;
-> > +                       #power-domain-cells = <1>;
-> > +                       clock-names = "bi_tcxo", "sleep_clk";
-> > +                       clocks = <&xo_board>, <&sleep_clk>;
-
-So this first one should actually be <&rpmhcc LNBBCLK1>.
-
-But while we now should handle this gracefully in the clock driver I
-think we still have problems with the cascading probe deferral that
-follows - last time I tried to do this the serial driver probe deferred
-past user space initialization and the system crashed as we didn't have
-a /dev/console.
-
-
-So, I think we should s/xo_board/lnbbclk1/ (at 19.2MHz) to make it
-represent the schematics and then once we have rpmhcc and validated that
-the system handles this gracefully we can switch it out.
-
-Regards,
-Bjorn
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
