@@ -1,12 +1,12 @@
 Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57572 "EHLO muru.com"
+Received: from muru.com ([72.249.23.125]:57584 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727558AbfHNNCs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:02:48 -0400
+        id S1727850AbfHNNCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:02:52 -0400
 From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 2/5] ARM: OMAP2+: Drop legacy watchdog platform data for omap4
-Date: Wed, 14 Aug 2019 06:02:37 -0700
-Message-Id: <20190814130240.56202-3-tony@atomide.com>
+Subject: [PATCH 5/5] bus: ti-sysc: Detect d2d when debug is enabled
+Date: Wed, 14 Aug 2019 06:02:40 -0700
+Message-Id: <20190814130240.56202-6-tony@atomide.com>
 In-Reply-To: <20190814130240.56202-1-tony@atomide.com>
 References: <20190814130240.56202-1-tony@atomide.com>
 MIME-Version: 1.0
@@ -16,156 +16,24 @@ To: linux-omap@vger.kernel.org
 Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-We can now probe devices with ti-sysc interconnect driver and dts
-data. Let's drop the related platform data and custom ti,hwmods
-dts property.
-
-As we're just dropping data, and the early platform data init
-is based on the custom ti,hwmods property, we want to drop both
-the platform data and ti,hwmods property in a single patch.
+We want to see what modules probe when debug is enabled.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/omap4-l4-abe.dtsi        |  1 -
- arch/arm/boot/dts/omap4-l4.dtsi            |  1 -
- arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 83 ----------------------
- 3 files changed, 85 deletions(-)
+ drivers/bus/ti-sysc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap4-l4-abe.dtsi b/arch/arm/boot/dts/omap4-l4-abe.dtsi
---- a/arch/arm/boot/dts/omap4-l4-abe.dtsi
-+++ b/arch/arm/boot/dts/omap4-l4-abe.dtsi
-@@ -255,7 +255,6 @@
- 
- 		target-module@30000 {			/* 0x40130000, ap 14 0e.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "wd_timer3";
- 			reg = <0x30000 0x4>,
- 			      <0x30010 0x4>,
- 			      <0x30014 0x4>;
-diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
---- a/arch/arm/boot/dts/omap4-l4.dtsi
-+++ b/arch/arm/boot/dts/omap4-l4.dtsi
-@@ -1094,7 +1094,6 @@
- 
- 		target-module@4000 {			/* 0x4a314000, ap 7 18.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "wd_timer2";
- 			reg = <0x4000 0x4>,
- 			      <0x4010 0x4>,
- 			      <0x4014 0x4>;
-diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-@@ -28,7 +28,6 @@
- #include "cm2_44xx.h"
- #include "prm44xx.h"
- #include "prm-regbits-44xx.h"
--#include "wd_timer.h"
- 
- /* Base offset for all OMAP4 interrupts external to MPUSS */
- #define OMAP44XX_IRQ_GIC_START	32
-@@ -2433,61 +2432,6 @@ static struct omap_hwmod omap44xx_usb_tll_hs_hwmod = {
- 	},
- };
- 
--/*
-- * 'wd_timer' class
-- * 32-bit watchdog upward counter that generates a pulse on the reset pin on
-- * overflow condition
-- */
--
--static struct omap_hwmod_class_sysconfig omap44xx_wd_timer_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0010,
--	.syss_offs	= 0x0014,
--	.sysc_flags	= (SYSC_HAS_EMUFREE | SYSC_HAS_SIDLEMODE |
--			   SYSC_HAS_SOFTRESET | SYSS_HAS_RESET_STATUS),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			   SIDLE_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type1,
--};
--
--static struct omap_hwmod_class omap44xx_wd_timer_hwmod_class = {
--	.name		= "wd_timer",
--	.sysc		= &omap44xx_wd_timer_sysc,
--	.pre_shutdown	= &omap2_wd_timer_disable,
--	.reset		= &omap2_wd_timer_reset,
--};
--
--/* wd_timer2 */
--static struct omap_hwmod omap44xx_wd_timer2_hwmod = {
--	.name		= "wd_timer2",
--	.class		= &omap44xx_wd_timer_hwmod_class,
--	.clkdm_name	= "l4_wkup_clkdm",
--	.main_clk	= "sys_32k_ck",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = OMAP4_CM_WKUP_WDT2_CLKCTRL_OFFSET,
--			.context_offs = OMAP4_RM_WKUP_WDT2_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/* wd_timer3 */
--static struct omap_hwmod omap44xx_wd_timer3_hwmod = {
--	.name		= "wd_timer3",
--	.class		= &omap44xx_wd_timer_hwmod_class,
--	.clkdm_name	= "abe_clkdm",
--	.main_clk	= "sys_32k_ck",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = OMAP4_CM1_ABE_WDT3_CLKCTRL_OFFSET,
--			.context_offs = OMAP4_RM_ABE_WDT3_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--
- /*
-  * interfaces
-  */
-@@ -3396,30 +3340,6 @@ static struct omap_hwmod_ocp_if omap44xx_l4_cfg__usb_tll_hs = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* l4_wkup -> wd_timer2 */
--static struct omap_hwmod_ocp_if omap44xx_l4_wkup__wd_timer2 = {
--	.master		= &omap44xx_l4_wkup_hwmod,
--	.slave		= &omap44xx_wd_timer2_hwmod,
--	.clk		= "l4_wkup_clk_mux_ck",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l4_abe -> wd_timer3 */
--static struct omap_hwmod_ocp_if omap44xx_l4_abe__wd_timer3 = {
--	.master		= &omap44xx_l4_abe_hwmod,
--	.slave		= &omap44xx_wd_timer3_hwmod,
--	.clk		= "ocp_abe_iclk",
--	.user		= OCP_USER_MPU,
--};
--
--/* l4_abe -> wd_timer3 (dma) */
--static struct omap_hwmod_ocp_if omap44xx_l4_abe__wd_timer3_dma = {
--	.master		= &omap44xx_l4_abe_hwmod,
--	.slave		= &omap44xx_wd_timer3_hwmod,
--	.clk		= "ocp_abe_iclk",
--	.user		= OCP_USER_SDMA,
--};
--
- /* mpu -> emif1 */
- static struct omap_hwmod_ocp_if omap44xx_mpu__emif1 = {
- 	.master		= &omap44xx_mpu_hwmod,
-@@ -3551,9 +3471,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
- 	&omap44xx_l4_cfg__usb_host_hs,
- 	&omap44xx_l4_cfg__usb_otg_hs,
- 	&omap44xx_l4_cfg__usb_tll_hs,
--	&omap44xx_l4_wkup__wd_timer2,
--	&omap44xx_l4_abe__wd_timer3,
--	&omap44xx_l4_abe__wd_timer3_dma,
- 	&omap44xx_mpu__emif1,
- 	&omap44xx_mpu__emif2,
- 	&omap44xx_l3_main_2__aes1,
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1266,6 +1266,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0x4edb1902, 0xffffffff, 0),
+ 	SYSC_QUIRK("dmic", 0, 0, 0x10, -1, 0x50010000, 0xffffffff, 0),
+ 	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
++	SYSC_QUIRK("d2d", 0x4a0b6000, 0, 0x10, 0x14, 0x00000010, 0xffffffff, 0),
++	SYSC_QUIRK("d2d", 0x4a0cd000, 0, 0x10, 0x14, 0x00000010, 0xffffffff, 0),
+ 	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
+ 	SYSC_QUIRK("gpu", 0, 0x1fc00, 0x1fc10, -1, 0, 0, 0),
+ 	SYSC_QUIRK("hsi", 0, 0, 0x10, 0x14, 0x50043101, 0xffffffff, 0),
 -- 
 2.21.0
