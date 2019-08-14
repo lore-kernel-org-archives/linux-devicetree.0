@@ -1,74 +1,171 @@
-Return-Path: <SRS0=+0hH=WS=codeaurora.org=sibis@kernel.org>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57572 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727558AbfHNNCs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:02:48 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 2/5] ARM: OMAP2+: Drop legacy watchdog platform data for omap4
+Date: Wed, 14 Aug 2019 06:02:37 -0700
+Message-Id: <20190814130240.56202-3-tony@atomide.com>
+In-Reply-To: <20190814130240.56202-1-tony@atomide.com>
+References: <20190814130240.56202-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Thu, 22 Aug 2019 12:09:46 +0530
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH 1/4] dt-bindings: reset: aoss: Add AOSS reset binding for
- SC7180 SoCs
-In-Reply-To: <1566383523.4193.5.camel@pengutronix.de>
-References: <20190821095442.24495-1-sibis@codeaurora.org>
- <20190821095442.24495-2-sibis@codeaurora.org>
- <1566383523.4193.5.camel@pengutronix.de>
-Message-ID: <f6f36181660057325742318519e541ad@codeaurora.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hey Philipp,
-Thanks for the review!
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the related platform data and custom ti,hwmods
+dts property.
 
-On 2019-08-21 16:02, Philipp Zabel wrote:
-> On Wed, 2019-08-21 at 15:24 +0530, Sibi Sankar wrote:
->> Add SC7180 AOSS reset to the list of possible bindings.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt 
->> b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> index 510c748656ec5..8f0bbdc6afd91 100644
->> --- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> @@ -8,7 +8,8 @@ Required properties:
->>  - compatible:
->>  	Usage: required
->>  	Value type: <string>
->> -	Definition: must be:
->> +	Definition: must be one of:
->> +		    "qcom,sc7180-aoss-cc"
->>  		    "qcom,sdm845-aoss-cc"
->> 
->>  - reg:
-> 
-> Does sc7180 have exactly the same resets (mss, camss, venus, gpu,
-> dispss, wcss, and lpass) as sdm845? If so, it could be considered
-> compatible, and the driver changes wouldn't be needed at all:
+As we're just dropping data, and the early platform data init
+is based on the custom ti,hwmods property, we want to drop both
+the platform data and ti,hwmods property in a single patch.
 
-Yes they are identical both
-AOSS and PDC resets.
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4-l4-abe.dtsi        |  1 -
+ arch/arm/boot/dts/omap4-l4.dtsi            |  1 -
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c | 83 ----------------------
+ 3 files changed, 85 deletions(-)
 
-> 
-> -	Definition: must be:
-> +	Definition: must be one of:
-> +		    "qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
-> 
-> 	    "qcom,sdm845-aoss-cc"
-> 
-> Is there a reason not to do this?
-
-I am fine with ^^, will change
-them in v2.
-
-> 
-> regards
-> Philipp
-
+diff --git a/arch/arm/boot/dts/omap4-l4-abe.dtsi b/arch/arm/boot/dts/omap4-l4-abe.dtsi
+--- a/arch/arm/boot/dts/omap4-l4-abe.dtsi
++++ b/arch/arm/boot/dts/omap4-l4-abe.dtsi
+@@ -255,7 +255,6 @@
+ 
+ 		target-module@30000 {			/* 0x40130000, ap 14 0e.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "wd_timer3";
+ 			reg = <0x30000 0x4>,
+ 			      <0x30010 0x4>,
+ 			      <0x30014 0x4>;
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -1094,7 +1094,6 @@
+ 
+ 		target-module@4000 {			/* 0x4a314000, ap 7 18.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "wd_timer2";
+ 			reg = <0x4000 0x4>,
+ 			      <0x4010 0x4>,
+ 			      <0x4014 0x4>;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+--- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+@@ -28,7 +28,6 @@
+ #include "cm2_44xx.h"
+ #include "prm44xx.h"
+ #include "prm-regbits-44xx.h"
+-#include "wd_timer.h"
+ 
+ /* Base offset for all OMAP4 interrupts external to MPUSS */
+ #define OMAP44XX_IRQ_GIC_START	32
+@@ -2433,61 +2432,6 @@ static struct omap_hwmod omap44xx_usb_tll_hs_hwmod = {
+ 	},
+ };
+ 
+-/*
+- * 'wd_timer' class
+- * 32-bit watchdog upward counter that generates a pulse on the reset pin on
+- * overflow condition
+- */
+-
+-static struct omap_hwmod_class_sysconfig omap44xx_wd_timer_sysc = {
+-	.rev_offs	= 0x0000,
+-	.sysc_offs	= 0x0010,
+-	.syss_offs	= 0x0014,
+-	.sysc_flags	= (SYSC_HAS_EMUFREE | SYSC_HAS_SIDLEMODE |
+-			   SYSC_HAS_SOFTRESET | SYSS_HAS_RESET_STATUS),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+-			   SIDLE_SMART_WKUP),
+-	.sysc_fields	= &omap_hwmod_sysc_type1,
+-};
+-
+-static struct omap_hwmod_class omap44xx_wd_timer_hwmod_class = {
+-	.name		= "wd_timer",
+-	.sysc		= &omap44xx_wd_timer_sysc,
+-	.pre_shutdown	= &omap2_wd_timer_disable,
+-	.reset		= &omap2_wd_timer_reset,
+-};
+-
+-/* wd_timer2 */
+-static struct omap_hwmod omap44xx_wd_timer2_hwmod = {
+-	.name		= "wd_timer2",
+-	.class		= &omap44xx_wd_timer_hwmod_class,
+-	.clkdm_name	= "l4_wkup_clkdm",
+-	.main_clk	= "sys_32k_ck",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM_WKUP_WDT2_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_WKUP_WDT2_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+-
+-/* wd_timer3 */
+-static struct omap_hwmod omap44xx_wd_timer3_hwmod = {
+-	.name		= "wd_timer3",
+-	.class		= &omap44xx_wd_timer_hwmod_class,
+-	.clkdm_name	= "abe_clkdm",
+-	.main_clk	= "sys_32k_ck",
+-	.prcm = {
+-		.omap4 = {
+-			.clkctrl_offs = OMAP4_CM1_ABE_WDT3_CLKCTRL_OFFSET,
+-			.context_offs = OMAP4_RM_ABE_WDT3_CONTEXT_OFFSET,
+-			.modulemode   = MODULEMODE_SWCTRL,
+-		},
+-	},
+-};
+-
+-
+ /*
+  * interfaces
+  */
+@@ -3396,30 +3340,6 @@ static struct omap_hwmod_ocp_if omap44xx_l4_cfg__usb_tll_hs = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* l4_wkup -> wd_timer2 */
+-static struct omap_hwmod_ocp_if omap44xx_l4_wkup__wd_timer2 = {
+-	.master		= &omap44xx_l4_wkup_hwmod,
+-	.slave		= &omap44xx_wd_timer2_hwmod,
+-	.clk		= "l4_wkup_clk_mux_ck",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+-/* l4_abe -> wd_timer3 */
+-static struct omap_hwmod_ocp_if omap44xx_l4_abe__wd_timer3 = {
+-	.master		= &omap44xx_l4_abe_hwmod,
+-	.slave		= &omap44xx_wd_timer3_hwmod,
+-	.clk		= "ocp_abe_iclk",
+-	.user		= OCP_USER_MPU,
+-};
+-
+-/* l4_abe -> wd_timer3 (dma) */
+-static struct omap_hwmod_ocp_if omap44xx_l4_abe__wd_timer3_dma = {
+-	.master		= &omap44xx_l4_abe_hwmod,
+-	.slave		= &omap44xx_wd_timer3_hwmod,
+-	.clk		= "ocp_abe_iclk",
+-	.user		= OCP_USER_SDMA,
+-};
+-
+ /* mpu -> emif1 */
+ static struct omap_hwmod_ocp_if omap44xx_mpu__emif1 = {
+ 	.master		= &omap44xx_mpu_hwmod,
+@@ -3551,9 +3471,6 @@ static struct omap_hwmod_ocp_if *omap44xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap44xx_l4_cfg__usb_host_hs,
+ 	&omap44xx_l4_cfg__usb_otg_hs,
+ 	&omap44xx_l4_cfg__usb_tll_hs,
+-	&omap44xx_l4_wkup__wd_timer2,
+-	&omap44xx_l4_abe__wd_timer3,
+-	&omap44xx_l4_abe__wd_timer3_dma,
+ 	&omap44xx_mpu__emif1,
+ 	&omap44xx_mpu__emif2,
+ 	&omap44xx_l3_main_2__aes1,
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.21.0
