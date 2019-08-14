@@ -1,100 +1,32 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/4] mailbox: arm_mhuv2: add device tree binding
- documentation
-Date: Wed, 14 Aug 2019 11:05:18 +0100
-Message-ID: <20190814100518.GA21898@e107155-lin>
-References: <20190717192616.1731-1-tushar.khandelwal@arm.com>
- <20190717192616.1731-2-tushar.khandelwal@arm.com>
- <CABb+yY04vW-i35N6P57KSKgmMAYkrA2CDyUvA-bLCZMxiZaocw@mail.gmail.com>
- <CABb+yY1SeHTgZQNAHJW+dZG=khah5c5igtKy+MrjADnZF29Aow@mail.gmail.com>
- <VI1PR0601MB21113C48E719B2C79EC2FE508FC20@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3yMWbUiQnJgfQhwnW1OM3aoFL3ZFc018E-fxGichi-4Q@mail.gmail.com>
- <VI1PR0601MB2111A5A4E951F011D389A8978FD90@VI1PR0601MB2111.eurprd06.prod.outlook.com>
- <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
+From: Michael Kao <michael.kao@mediatek.com>
+Subject: [PATCH 0/4] add dts for Mediatek MT8183 thermal functions
+Date: Wed, 14 Aug 2019 18:06:45 +0800
+Message-ID: <1565777209-21869-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY3Ni7wV+ui1LO7TERWQH_BoakZbPq961wdRPB4X-nwS2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Morten Borup Petersen <morten_bp@live.dk>, Tushar Khandelwal <tushar.khandelwal@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "tushar.2nov@gmail.com" <tushar.2nov@gmail.com>, "nd@arm.com" <nd@arm.com>, Morten Borup Petersen <morten.petersen@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:36:56AM -0500, Jassi Brar wrote:
-[...]
+Splitting the dtsi part from [1] and sending it again.
 
-> > >>
-> > >> As mentioned in the response to your initial comment, the driver does
-> > >> not currently support mixing protocols.
-> > >>
-> > > Thanks for acknowledging that limitation. But lets also address it.
-> > >
-> >
-> > We are hesitant to dedicate time to developing mixing protocols given
-> > that we don't have any current usecase nor any current platform which
-> > would support this.
-> >
-> Can you please share the client code against which you tested this driver?
-> From my past experience, I realise it is much more efficient to tidyup
-> the code myself, than endlessly trying to explain the benefits.
->
+Add tzts1~5 and tztsABB from thermal sensor in SoC for
+another get temperatrue. They don't need to thermal throttle.
+And we bind coolers for thermal zone nodes of cpu_thermal.
 
-Thanks for the patience and offer. Can we try the same with MHUv1 and SCMI
-upstream driver.
+Refernece:
+[1] [v2,0/8] Add Mediatek thermal dirver and dtsi (https://patchwork.kernel.org/cover/10938809/)
 
-The firmware just uses High Priority physical channel bit 0 and 2 as Tx
-and bit 1 and 3 as Rx. Bit 2 and 3 are for perf which shouldn't get blocked
-by bit 0 and 1. I mean I can have 10 requests covering clocks/sensors and
-others on bit 0 and 1, but the bits 2 and 3 are dedicated for DVFS and
-shouldn't be blocked because of other non DVFS requests.
+Matthias Kaehlcke (1):
+  arm64: dts: mt8183: Configure CPU cooling
 
-The DT looks something like this(modified MHU binding for 2 cells)
+michael.kao (3):
+  arm64: dts: mt8183: add thermal zone node
+  arm64: dts: mt8183: add dynamic power coefficients
+  arm64: dts: mt8183: Add #cooling-cells to CPU nodes
 
-	mailbox: mhu@2b1f0000 {
-		compatible = "arm,primecell";
-		reg = <0x0 0x2b1f0000 0x0 0x1000>;
-		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
-			     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-		interrupt-names = "mhu_lpri_rx",
-				  "mhu_hpri_rx";
-		#mbox-cells = <2>;
-		mbox-name = "ARM-MHU";
-		clocks = <&soc_refclk100mhz>;
-		clock-names = "apb_pclk";
-	};
-	firmware {
-		scmi {
-			compatible = "arm,scmi";
-			mbox-names = "tx", "rx";
-			mboxes = <&mailbox 0 0 &mailbox 0 1>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			scmi_devpd: protocol@11 {
-				reg = <0x11>;
-				#power-domain-cells = <1>;
-			};
-
-			scmi_dvfs: protocol@13 {
-				reg = <0x13>;
-				#clock-cells = <1>;
-				mbox-names = "tx", "rx";
-				mboxes = <&mailbox 0 2 &mailbox 0 3>;
-			};
-
-			scmi_clk: protocol@14 {
-				reg = <0x14>;
-				#clock-cells = <1>;
-			};
-
-			scmi_sensors0: protocol@15 {
-				reg = <0x15>;
-				#thermal-sensor-cells = <1>;
-			};
-		};
-	};
-
---
-Regards,
-Sudeep
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 139 +++++++++++++++++++++++++++++++
+ 1 file changed, 139 insertions(+)
