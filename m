@@ -1,116 +1,65 @@
-Return-Path: <SRS0=gJgO=WW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:58726 "EHLO muru.com"
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57570 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387588AbfHZSCs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:02:48 -0400
+        id S1726721AbfHNNCr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:02:47 -0400
 From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 3/6] ARM: dts: Drop legacy custom hwmods property for dra7 uart
-Date: Mon, 26 Aug 2019 11:02:34 -0700
-Message-Id: <20190826180237.31571-4-tony@atomide.com>
-In-Reply-To: <20190826180237.31571-1-tony@atomide.com>
-References: <20190826180237.31571-1-tony@atomide.com>
+Subject: [PATCH 1/5] ARM: dts: Drop custom hwmod property for omap4 i2c
+Date: Wed, 14 Aug 2019 06:02:36 -0700
+Message-Id: <20190814130240.56202-2-tony@atomide.com>
+In-Reply-To: <20190814130240.56202-1-tony@atomide.com>
+References: <20190814130240.56202-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Vignesh R <vigneshr@ti.com>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-With recent ti-sysc driver changes, we can probe most devices with device
-tree data only and drop the custom "ti,hwmods" property.
-
-We have already added the related device tree data earlier, and have
-already dropped the platform data. But we have been still dynamically
-allocating the platform data based on "ti,hwmods" property. With recent
-ti-sysc driver changes this is no longer needed.
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's drop the custom ti,hwmods dts property. We have already
+dropped the platform data earlier and have been allocating it
+dynamically.
 
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 10 ----------
- 1 file changed, 10 deletions(-)
+ arch/arm/boot/dts/omap4-l4.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -1118,7 +1118,6 @@
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -1695,7 +1695,6 @@
  
- 		target-module@20000 {			/* 0x48020000, ap 3 04.0 */
+ 		target-module@60000 {			/* 0x48060000, ap 25 1e.0 */
  			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart3";
- 			reg = <0x20050 0x4>,
- 			      <0x20054 0x4>,
- 			      <0x20058 0x4>;
-@@ -1534,7 +1533,6 @@
+-			ti,hwmods = "i2c3";
+ 			reg = <0x60000 0x8>,
+ 			      <0x60010 0x8>,
+ 			      <0x60090 0x8>;
+@@ -1814,7 +1813,6 @@
  
- 		target-module@66000 {			/* 0x48066000, ap 63 14.0 */
+ 		target-module@70000 {			/* 0x48070000, ap 32 28.0 */
  			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart5";
- 			reg = <0x66050 0x4>,
- 			      <0x66054 0x4>,
- 			      <0x66058 0x4>;
-@@ -1567,7 +1565,6 @@
+-			ti,hwmods = "i2c1";
+ 			reg = <0x70000 0x8>,
+ 			      <0x70010 0x8>,
+ 			      <0x70090 0x8>;
+@@ -1846,7 +1844,6 @@
  
- 		target-module@68000 {			/* 0x48068000, ap 53 1c.0 */
+ 		target-module@72000 {			/* 0x48072000, ap 34 30.0 */
  			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart6";
- 			reg = <0x68050 0x4>,
- 			      <0x68054 0x4>,
- 			      <0x68058 0x4>;
-@@ -1600,7 +1597,6 @@
+-			ti,hwmods = "i2c2";
+ 			reg = <0x72000 0x8>,
+ 			      <0x72010 0x8>,
+ 			      <0x72090 0x8>;
+@@ -2401,7 +2398,6 @@
  
- 		target-module@6a000 {			/* 0x4806a000, ap 24 24.0 */
+ 		target-module@150000 {			/* 0x48350000, ap 77 4c.0 */
  			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart1";
- 			reg = <0x6a050 0x4>,
- 			      <0x6a054 0x4>,
- 			      <0x6a058 0x4>;
-@@ -1633,7 +1629,6 @@
- 
- 		target-module@6c000 {			/* 0x4806c000, ap 26 2c.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart2";
- 			reg = <0x6c050 0x4>,
- 			      <0x6c054 0x4>,
- 			      <0x6c058 0x4>;
-@@ -1666,7 +1661,6 @@
- 
- 		target-module@6e000 {			/* 0x4806e000, ap 28 0c.1 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart4";
- 			reg = <0x6e050 0x4>,
- 			      <0x6e054 0x4>,
- 			      <0x6e058 0x4>;
-@@ -2380,7 +2374,6 @@
- 
- 		target-module@20000 {			/* 0x48420000, ap 47 02.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart7";
- 			reg = <0x20050 0x4>,
- 			      <0x20054 0x4>,
- 			      <0x20058 0x4>;
-@@ -2411,7 +2404,6 @@
- 
- 		target-module@22000 {			/* 0x48422000, ap 49 0a.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart8";
- 			reg = <0x22050 0x4>,
- 			      <0x22054 0x4>,
- 			      <0x22058 0x4>;
-@@ -2442,7 +2434,6 @@
- 
- 		target-module@24000 {			/* 0x48424000, ap 51 12.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart9";
- 			reg = <0x24050 0x4>,
- 			      <0x24054 0x4>,
- 			      <0x24058 0x4>;
-@@ -4467,7 +4458,6 @@
- 
- 		target-module@b000 {			/* 0x4ae2b000, ap 28 02.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "uart10";
- 			reg = <0xb050 0x4>,
- 			      <0xb054 0x4>,
- 			      <0xb058 0x4>;
+-			ti,hwmods = "i2c4";
+ 			reg = <0x150000 0x8>,
+ 			      <0x150010 0x8>,
+ 			      <0x150090 0x8>;
 -- 
-2.23.0
+2.21.0
