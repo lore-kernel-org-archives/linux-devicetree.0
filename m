@@ -1,89 +1,69 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 04/15] drm/mxsfb: Reset vital register for a proper
- initialization
-Date: Wed, 14 Aug 2019 13:11:03 +0200
-Message-ID: <18d5f58deba8044042ab7b8d98a72803@agner.ch>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 09/15] dt-bindings: display: Add max-res
+ property for mxsfb
+Date: Wed, 14 Aug 2019 11:14:03 +0000
+Message-ID: <1565781243.3209.55.camel@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
- <1565779731-1300-5-git-send-email-robert.chiras@nxp.com>
+ <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+ <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565779731-1300-5-git-send-email-robert.chiras@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
+Content-Language: en-US
+Content-ID: <F9C4CA47FB2C2D4F9A249683358F1BBF@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "stefan@agner.ch" <stefan@agner.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "airlied@linux.ie" <airlied@linux.ie>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-08-14 12:48, Robert Chiras wrote:
-> Some of the regiters need, like LCDC_CTRL and CTRL2_OUTSTANDING_REQS
-
-Typo in registers, and there is a need to many.
-
-> needs to be properly cleared and initialized for a better start and stop
-> routine.
-
-
-
-> 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> ---
->  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> index b69ace8..5e44f57 100644
-> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-> @@ -127,6 +127,10 @@ static void mxsfb_enable_controller(struct
-> mxsfb_drm_private *mxsfb)
->  		clk_prepare_enable(mxsfb->clk_disp_axi);
->  	clk_prepare_enable(mxsfb->clk);
->  
-> +	if (mxsfb->devdata->ipversion >= 4)
-> +		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
-> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-> +
->  	/* If it was disabled, re-enable the mode again */
->  	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
->  
-> @@ -136,12 +140,19 @@ static void mxsfb_enable_controller(struct
-> mxsfb_drm_private *mxsfb)
->  	writel(reg, mxsfb->base + LCDC_VDCTRL4);
->  
->  	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_SET);
-> +	writel(CTRL1_RECOVERY_ON_UNDERFLOW, mxsfb->base + LCDC_CTRL1 + REG_SET);
-
-This seems not to be accounted for in the commit message. Can you do
-this in a separate commit?
-
-Also I suggest to introduce CTRL1_RECOVERY_ON_UNDERFLOW in that same
-commit.
-
---
-Stefan
-
->  }
->  
->  static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
->  {
->  	u32 reg;
->  
-> +	if (mxsfb->devdata->ipversion >= 4)
-> +		writel(CTRL2_OUTSTANDING_REQS(0x7),
-> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
-> +
-> +	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
-> +
->  	/*
->  	 * Even if we disable the controller here, it will still continue
->  	 * until its FIFOs are running out of data
-> @@ -295,6 +306,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
->  	dma_addr_t paddr;
->  
->  	mxsfb_enable_axi_clk(mxsfb);
-> +	writel(0, mxsfb->base + LCDC_CTRL);
->  	mxsfb_crtc_mode_set_nofb(mxsfb);
->  
->  	/* Write cur_buf as well to avoid an initial corrupt frame */
+SGkgU3RlZmFuLA0KT24gTWksIDIwMTktMDgtMTQgYXQgMTM6MDMgKzAyMDAsIFN0ZWZhbiBBZ25l
+ciB3cm90ZToNCj4gT24gMjAxOS0wOC0xNCAxMjo0OCwgUm9iZXJ0IENoaXJhcyB3cm90ZToNCj4g
+PiANCj4gPiBBZGQgbmV3IG9wdGlvbmFsIHByb3BlcnR5ICdtYXgtcmVzJywgdG8gbGltaXQgdGhl
+IG1heGltdW0gc3VwcG9ydGVkDQo+ID4gcmVzb2x1dGlvbiBieSB0aGUgTVhTRkJfRFJNIGRyaXZl
+ci4NCj4gSSB3b3VsZCBhbHNvIG1lbnRpb24gdGhlIHJlYXNvbiB3aHkgd2UgbmVlZCB0aGlzLg0K
+PiANCj4gSSBndWVzcyB0aGlzIG5lZWRzIGEgdmVuZG9yIHByZWZpeCBhcyB3ZWxsIChmc2wsbWF4
+LXJlcykuIEkgYWxzbw0KPiB3b3VsZA0KPiBsaWtlIHRvIGhhdmUgdGhlIGFjayBvZiB0aGUgZGV2
+aWNlIHRyZWUgZm9sa3MgaGVyZS4NClJvYiBIZXJyaW5nIGFsc28gYWtlZCBiZSBhYm91dCB0aGlz
+LCBhbmQgSSdsbCBjb3B5IGhlcmUgdGhlIHJlcGx5LCB3aXRoDQpleHBsYW5hdGlvbnM6DQoNCklu
+ZGVlZCwgdGhpcyBsaW1pdGF0aW9uIGlzIGFjdHVhbGx5IGR1ZSB0byBiYW5kd2lkdGggbGltaXRh
+dGlvbiwgYnV0DQp0aGUgcHJvYmxlbSBpcyB0aGF0IHRoaXMgbGltaXRhdGlvbiBjb21lcyBvbiBp
+Lk1YOE0gKGtub3duIGFzIG1TY2FsZQ0KODUwRCksIHdoZXJlIHRoZSBtZW1vcnkgYmFuZHdpZHRo
+IGNhbm5vdCBzdXBwb3J0OiBHUFUvVlBVIHdvcmtsb2FkIGluDQp0aGUgc2FtZSB0aW1lIHdpdGgg
+Ym90aCBEQ1NTIGRyaXZpbmcgNGtANjAgYW5kIGVMQ0RJRiBkcml2aW5nIDEwODBwQDYwLg0KU2lu
+Y2UgZUxDRElGIGlzIGEgc2Vjb25kYXJ5IGRpc3BsYXkgd2UgdGhvdWdoIHRvIGFkZCB0aGUgcG9z
+aWJpbGl0eSB0bw0KbGltaXQgaXQncyBiYW5kd2lkdGggYnkgbGltaXRpbmcgdGhlIHJlc29sdXRp
+b24uDQpJZiB5b3Ugc2F5IHRoYXQgbW9yZSBkZXRhaWxzIGFyZSBuZWVkZWQsIEkgY2FuIGFkZCB0
+aGVtIGluIHRoZQ0KZGVzY3JpcHRpb24uDQo+IA0KPiAtLQ0KPiBTdGVmYW4NCj4gDQo+ID4gDQo+
+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUm9iZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAu
+Y29tPg0KPiA+IC0tLQ0KPiA+IMKgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvbXhzZmIudHh0IHwgNiArKysrKysNCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCA2IGluc2Vy
+dGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9teHNmYi50eHQNCj4gPiBpbmRleCA0NzJlMWVhLi41NWUyMmVk
+IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L214c2ZiLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L214c2ZiLnR4dA0KPiA+IEBAIC0xNyw2ICsxNywxMiBAQCBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPiA+IMKgUmVxdWlyZWQgc3ViLW5vZGVzOg0KPiA+IMKgwqDCoC0gcG9ydDogVGhl
+IGNvbm5lY3Rpb24gdG8gYW4gZW5jb2RlciBjaGlwLg0KPiA+IA0KPiA+ICtPcHRpb25hbCBwcm9w
+ZXJ0aWVzOg0KPiA+ICstIG1heC1yZXM6wqDCoMKgYW4gYXJyYXkgd2l0aCBhIG1heGltdW0gb2Yg
+dHdvIGludGVnZXJzLCByZXByZXNlbnRpbmcNCj4gPiB0aGUNCj4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBtYXhpbXVtIHN1cHBvcnRlZCByZXNvbHV0aW9uLCBpbiB0aGUgZm9ybSBvZg0K
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDxtYXhYPiwgPG1heFk+OyBpZiBvbmUgb2Yg
+dGhlIGl0ZW0gaXMgPDA+LCB0aGUNCj4gPiBkZWZhdWx0DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgZHJpdmVyLWRlZmluZWQgbWF4aW11bSByZXNvbHV0aW9uIGZvciB0aGF0IGF4aXMg
+aXMNCj4gPiB1c2VkDQo+ID4gKw0KPiA+IMKgRXhhbXBsZToNCj4gPiANCj4gPiDCoMKgwqDCoMKg
+wqBsY2RpZjE6IGRpc3BsYXktY29udHJvbGxlckAyMjIwMDAwIHsNCg0KVGhhbmtzLA0KUm9iZXJ0
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
