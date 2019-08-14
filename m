@@ -1,63 +1,80 @@
-Return-Path: <SRS0=RUCv=V6=the-dreams.de=wsa@kernel.org>
-Date: Fri, 2 Aug 2019 15:36:56 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/4] dt-bindings: i2c: rcar: Rename bindings
- documentation file
-Message-ID: <20190802133656.GA23542@kunai>
-References: <20190724121559.19079-1-horms+renesas@verge.net.au>
- <20190724121559.19079-3-horms+renesas@verge.net.au>
- <CAMuHMdUYTo1_zz4sCv5=PRL90EyFSU_b5WgUJoc4Oii08F_tww@mail.gmail.com>
+Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57576 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfHNNCu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 14 Aug 2019 09:02:50 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 3/5] ARM: dts: Configure d2d dts data for omap4
+Date: Wed, 14 Aug 2019 06:02:38 -0700
+Message-Id: <20190814130240.56202-4-tony@atomide.com>
+In-Reply-To: <20190814130240.56202-1-tony@atomide.com>
+References: <20190814130240.56202-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUYTo1_zz4sCv5=PRL90EyFSU_b5WgUJoc4Oii08F_tww@mail.gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+We can now probe devices with ti-sysc interconnect driver and dts
+data. Let's configure the related dts data based on what we have
+defined in the legacy platform data.
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4-l4.dtsi | 34 +++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
-Hi Geert,
-
-> With the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Now I understand why I applied this patch despite your request for a
-change. Patchwork picked up the tag, and so I it looked to me in the
-patchwork summary that this patch series was completely reviewed.
-
-Would it be OK for you to not give the formal tag in advance but rather
-describe it like "you may add my rev-by tag like in patch 1"? Or just
-wait for v2 and tag?
-
-Workflows aside, thanks for your continued reviews of patches!
-
-Best regards,
-
-   Wolfram
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1EPHMACgkQFA3kzBSg
-KbZ7RhAAlCroZhSd5jTgDALjGRyID5fY13IsztvuZnprWKyFazvBExSaXA1UCyPX
-VKMrdS0wStW2XkD1ub1vSt9AwEiIoOi/xjNj2/KplcZlNybArQxvl0KlcYQSt/lT
-49zfXC+Mq3JtHQ620a2gkydYhdtW3V3kVf+jrmDN6E40/5GmQ8mXww172IbzR8xz
-m6V3JKn/LUX3RYceLNJOU92SIiO9zi+xWrGDZ+py/7GR0S7r2Vay8CZ6ODyaPU8v
-n9JdZDWqUCeFwsaiv5rAjTAVVaon5kCkowxYihzbq1CiWYVKVsWEZejX03XjuDiu
-vwiNyQou86Wrn4hWAZKdWvGBf2TcKmK4DoE2XVGLlOJw7U7s0D9xepzZYDFQn7kM
-GVkQDZl7WU2IXaah4NfsXljMMaTXU00+eH+A2kfjz0vXHv7JIy285jR0VH6aZxzB
-UPl8hJCOxVYi1TuuwRXl5zd3KIwoWJDOmGUYKBFVUSuvxIoRE8ERK7DdC2aeOAK7
-9Lc7ggneN4RynDfU1vo8JQk/gF2zBuCOQtlZ98Vh+sQXbhjlLp5SRVvcSW8YCgjZ
-/LHn8/8fDFaVzZ2Kx4dMvpoTb2kHI+cVCu9INgBmRd+7M2/D4nD5p76NWGsiG5vb
-7Xyc1/zgsg3iXjFNuFNr4moVyv77I51WWvdHCHX/muYLUMl/vqc=
-=bVeD
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
+--- a/arch/arm/boot/dts/omap4-l4.dtsi
++++ b/arch/arm/boot/dts/omap4-l4.dtsi
+@@ -456,17 +456,43 @@
+ 			};
+ 		};
+ 
++		/* d2d mdm */
+ 		target-module@36000 {			/* 0x4a0b6000, ap 69 60.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x36000 0x4>,
++			      <0x36010 0x4>,
++			      <0x36014 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_SOFTRESET | SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>,
++					<SYSC_IDLE_SMART_WKUP>;
++			ti,syss-mask = <1>;
++			/* Domains (V, P, C): core, core_pwrdm, d2d_clkdm */
++			clocks = <&d2d_clkctrl OMAP4_C2C_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x36000 0x1000>;
+ 		};
+ 
++		/* d2d mpu */
+ 		target-module@4d000 {			/* 0x4a0cd000, ap 78 58.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x4d000 0x4>,
++			      <0x4d010 0x4>,
++			      <0x4d014 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_SOFTRESET | SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>,
++					<SYSC_IDLE_SMART_WKUP>;
++			ti,syss-mask = <1>;
++			/* Domains (V, P, C): core, core_pwrdm, d2d_clkdm */
++			clocks = <&d2d_clkctrl OMAP4_C2C_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x4d000 0x1000>;
+-- 
+2.21.0
