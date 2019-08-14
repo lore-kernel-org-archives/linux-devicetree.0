@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 09/15] dt-bindings: display: Add max-res property for mxsfb
-Date: Wed, 14 Aug 2019 13:48:45 +0300
-Message-ID: <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v2 04/15] drm/mxsfb: Reset vital register for a proper initialization
+Date: Wed, 14 Aug 2019 13:48:40 +0300
+Message-ID: <1565779731-1300-5-git-send-email-robert.chiras@nxp.com>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
@@ -10,30 +10,57 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new optional property 'max-res', to limit the maximum supported
-resolution by the MXSFB_DRM driver.
+Some of the regiters need, like LCDC_CTRL and CTRL2_OUTSTANDING_REQS
+needs to be properly cleared and initialized for a better start and stop
+routine.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 ---
- Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
-index 472e1ea..55e22ed 100644
---- a/Documentation/devicetree/bindings/display/mxsfb.txt
-+++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-@@ -17,6 +17,12 @@ Required properties:
- Required sub-nodes:
-   - port: The connection to an encoder chip.
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+index b69ace8..5e44f57 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+@@ -127,6 +127,10 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+ 		clk_prepare_enable(mxsfb->clk_disp_axi);
+ 	clk_prepare_enable(mxsfb->clk);
  
-+Optional properties:
-+- max-res:	an array with a maximum of two integers, representing the
-+		maximum supported resolution, in the form of
-+		<maxX>, <maxY>; if one of the item is <0>, the default
-+		driver-defined maximum resolution for that axis is used
++	if (mxsfb->devdata->ipversion >= 4)
++		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
++		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
 +
- Example:
+ 	/* If it was disabled, re-enable the mode again */
+ 	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
  
- 	lcdif1: display-controller@2220000 {
+@@ -136,12 +140,19 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+ 	writel(reg, mxsfb->base + LCDC_VDCTRL4);
+ 
+ 	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_SET);
++	writel(CTRL1_RECOVERY_ON_UNDERFLOW, mxsfb->base + LCDC_CTRL1 + REG_SET);
+ }
+ 
+ static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
+ {
+ 	u32 reg;
+ 
++	if (mxsfb->devdata->ipversion >= 4)
++		writel(CTRL2_OUTSTANDING_REQS(0x7),
++		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
++
++	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
++
+ 	/*
+ 	 * Even if we disable the controller here, it will still continue
+ 	 * until its FIFOs are running out of data
+@@ -295,6 +306,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+ 	dma_addr_t paddr;
+ 
+ 	mxsfb_enable_axi_clk(mxsfb);
++	writel(0, mxsfb->base + LCDC_CTRL);
+ 	mxsfb_crtc_mode_set_nofb(mxsfb);
+ 
+ 	/* Write cur_buf as well to avoid an initial corrupt frame */
 -- 
 2.7.4
