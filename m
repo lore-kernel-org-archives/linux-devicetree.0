@@ -1,53 +1,175 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 09/15] dt-bindings: display: Add max-res property for
- mxsfb
-Date: Wed, 14 Aug 2019 13:03:49 +0200
-Message-ID: <491aff3d08f24ab4d79a4f8c139d2e44@agner.ch>
+Subject: Re: [PATCH v2 12/15] drm/mxsfb: Improve the axi clock usage
+Date: Wed, 14 Aug 2019 13:06:30 +0200
+Message-ID: <425a854f41248b083ff0c6c93673d696@agner.ch>
 References: <1565779731-1300-1-git-send-email-robert.chiras@nxp.com>
- <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+ <1565779731-1300-13-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565779731-1300-10-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <1565779731-1300-13-git-send-email-robert.chiras@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>
-Cc: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 2019-08-14 12:48, Robert Chiras wrote:
-> Add new optional property 'max-res', to limit the maximum supported
-> resolution by the MXSFB_DRM driver.
+> Currently, the enable of the axi clock return status is ignored, causing
+> issues when the enable fails then we try to disable it. Therefore, it is
+> better to check the return status and disable it only when enable
+> succeeded.
 
-I would also mention the reason why we need this.
+Is this actually the case in real world sometimes? Why is it failing?
 
-I guess this needs a vendor prefix as well (fsl,max-res). I also would
-like to have the ack of the device tree folks here.
+I guess if we do this in one place, we should do it in all places (e.g.
+also in mxsfb_crtc_enable, mxsfb_plane_atomic_update..)
 
 --
 Stefan
 
+> Also, remove the helper functions around clk_axi, since we can directly
+> use the clk API function for enable/disable the clock. Those functions
+> are already checking for NULL clk and returning 0 if that's the case.
+
+
 > 
 > Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Acked-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->  Documentation/devicetree/bindings/display/mxsfb.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c |  8 ++++----
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 32 +++++++++++++-------------------
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  3 ---
+>  3 files changed, 17 insertions(+), 26 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt
-> b/Documentation/devicetree/bindings/display/mxsfb.txt
-> index 472e1ea..55e22ed 100644
-> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
-> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-> @@ -17,6 +17,12 @@ Required properties:
->  Required sub-nodes:
->    - port: The connection to an encoder chip.
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index a4ba368..e727f5e 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -408,7 +408,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	dma_addr_t paddr;
 >  
-> +Optional properties:
-> +- max-res:	an array with a maximum of two integers, representing the
-> +		maximum supported resolution, in the form of
-> +		<maxX>, <maxY>; if one of the item is <0>, the default
-> +		driver-defined maximum resolution for that axis is used
+> -	mxsfb_enable_axi_clk(mxsfb);
+> +	clk_prepare_enable(mxsfb->clk_axi);
+>  	writel(0, mxsfb->base + LCDC_CTRL);
+>  	mxsfb_crtc_mode_set_nofb(mxsfb);
+>  
+> @@ -425,7 +425,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+>  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	mxsfb_disable_controller(mxsfb);
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  }
+>  
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+> @@ -451,8 +451,8 @@ void mxsfb_plane_atomic_update(struct
+> mxsfb_drm_private *mxsfb,
+>  
+>  	paddr = mxsfb_get_fb_paddr(mxsfb);
+>  	if (paddr) {
+> -		mxsfb_enable_axi_clk(mxsfb);
+> +		clk_prepare_enable(mxsfb->clk_axi);
+>  		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
+> -		mxsfb_disable_axi_clk(mxsfb);
+> +		clk_disable_unprepare(mxsfb->clk_axi);
+>  	}
+>  }
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 6dae2bd..694b287 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -97,18 +97,6 @@ drm_pipe_to_mxsfb_drm_private(struct
+> drm_simple_display_pipe *pipe)
+>  	return container_of(pipe, struct mxsfb_drm_private, pipe);
+>  }
+>  
+> -void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb)
+> -{
+> -	if (mxsfb->clk_axi)
+> -		clk_prepare_enable(mxsfb->clk_axi);
+> -}
+> -
+> -void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+> -{
+> -	if (mxsfb->clk_axi)
+> -		clk_disable_unprepare(mxsfb->clk_axi);
+> -}
+> -
+>  /**
+>   * mxsfb_atomic_helper_check - validate state object
+>   * @dev: DRM device
+> @@ -229,25 +217,31 @@ static void mxsfb_pipe_update(struct
+> drm_simple_display_pipe *pipe,
+>  static int mxsfb_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
+>  {
+>  	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+> +	int ret = 0;
 > +
->  Example:
+> +	ret = clk_prepare_enable(mxsfb->clk_axi);
+> +	if (ret)
+> +		return ret;
 >  
->  	lcdif1: display-controller@2220000 {
+>  	/* Clear and enable VBLANK IRQ */
+> -	mxsfb_enable_axi_clk(mxsfb);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_SET);
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
+>  {
+>  	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+>  
+> +	if (clk_prepare_enable(mxsfb->clk_axi))
+> +		return;
+> +
+>  	/* Disable and clear VBLANK IRQ */
+> -	mxsfb_enable_axi_clk(mxsfb);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  }
+>  
+>  static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
+> @@ -413,7 +407,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+>  	struct mxsfb_drm_private *mxsfb = drm->dev_private;
+>  	u32 reg;
+>  
+> -	mxsfb_enable_axi_clk(mxsfb);
+> +	clk_prepare_enable(mxsfb->clk_axi);
+>  
+>  	reg = readl(mxsfb->base + LCDC_CTRL1);
+>  
+> @@ -422,7 +416,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+>  
+>  	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+>  
+> -	mxsfb_disable_axi_clk(mxsfb);
+> +	clk_disable_unprepare(mxsfb->clk_axi);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> index 8fb65d3..d6df8fe 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> @@ -37,9 +37,6 @@ struct mxsfb_drm_private {
+>  int mxsfb_setup_crtc(struct drm_device *dev);
+>  int mxsfb_create_output(struct drm_device *dev);
+>  
+> -void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb);
+> -void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+> -
+>  void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
