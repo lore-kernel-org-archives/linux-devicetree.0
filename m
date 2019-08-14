@@ -1,15 +1,15 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 08/14] net: phy: adin: add support MDI/MDIX/Auto-MDI
- selection
-Date: Wed, 14 Aug 2019 10:54:25 -0700
-Message-ID: <ff2c2af9-fc13-e10a-896c-3ede55346203@gmail.com>
+Subject: Re: [PATCH v4 09/14] net: phy: adin: add EEE translation layer from
+ Clause 45 to Clause 22
+Date: Wed, 14 Aug 2019 10:55:17 -0700
+Message-ID: <14ef4f7c-74d9-f8ce-a146-5c5f8777d5ed@gmail.com>
 References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
- <20190812112350.15242-9-alexandru.ardelean@analog.com>
+ <20190812112350.15242-10-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812112350.15242-9-alexandru.ardelean@analog.com>
+In-Reply-To: <20190812112350.15242-10-alexandru.ardelean@analog.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -19,35 +19,16 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 8/12/2019 4:23 AM, Alexandru Ardelean wrote:
-> The ADIN PHYs support automatic MDI/MDIX negotiation. By default this is
-> disabled, so this is enabled at `config_init`.
+> The ADIN1200 & ADIN1300 PHYs support EEE by using standard Clause 45 access
+> to access MMD registers for EEE.
 > 
-> This is controlled via the PHY Control 1 register.
-> The supported modes are:
->   1. Manual MDI
->   2. Manual MDIX
->   3. Auto MDIX - prefer MDIX
->   4. Auto MDIX - prefer MDI
+> The EEE register addresses (when using Clause 22) are available at
+> different addresses (than Clause 45), and since accessing these regs (via
+> Clause 22) needs a special mechanism, a translation table is required to
+> convert these addresses.
 > 
-> The phydev mdix & mdix_ctrl fields include modes 3 & 4 into a single
-> auto-mode. So, the default mode this driver enables is 4 when Auto-MDI mode
-> is used.
-> 
-> When detecting MDI/MDIX mode, a combination of the PHY Control 1 register
-> and PHY Status 1 register is used to determine the correct MDI/MDIX mode.
-> 
-> If Auto-MDI mode is not set, then the manual MDI/MDIX mode is returned.
-> If Auto-MDI mode is set, then MDIX mode is returned differs from the
-> preferred MDI/MDIX mode.
-> This covers all cases where:
->   1. MDI preferred  & Pair01Swapped   == MDIX
->   2. MDIX preferred & Pair01Swapped   == MDI
->   3. MDI preferred  & ! Pair01Swapped == MDIX
->   4. MDIX preferred & ! Pair01Swapped == MDI
-> 
-> The preferred MDI/MDIX mode is not configured via SW, but can be configured
-> via HW pins. Note that the `Pair01Swapped` is the Green-Yellow physical
-> pairs.
+> For Clause 45, this is not needed since the driver will likely never use
+> this access mode.
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
