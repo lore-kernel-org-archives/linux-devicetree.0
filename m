@@ -1,54 +1,49 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v1 2/4] soc: fsl: guts: Add definition for LS1028A
-Date: Thu, 15 Aug 2019 17:40:09 -0500
-Message-ID: <CADRPPNSW4A0gkbzcPD=y-J_YHSnbAgP7p=RQnS6i0U-Ze=L6qA@mail.gmail.com>
-References: <20190814072649.8237-1-yinbo.zhu@nxp.com> <20190814072649.8237-2-yinbo.zhu@nxp.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 09/11] ARM: dts: qcom: pm8941: add 5vs2 regulator node
+Date: Thu, 15 Aug 2019 18:44:17 -0400
+Message-ID: <20190815224417.GA32072@onstation.org>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <20190815004854.19860-10-masneyb@onstation.org>
+ <CACRpkdYU-6LvFKRkj0yMMCmAnX0XtGe7rMwbXbhf2GCp77Ciyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814072649.8237-2-yinbo.zhu@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYU-6LvFKRkj0yMMCmAnX0XtGe7rMwbXbhf2GCp77Ciyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@n>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>M
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 2:26 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> Adding compatible string "ls1028a-dcfg" to initialize guts driver
-> for ls1028 and SoC die attribute definition for LS1028A
->
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+On Thu, Aug 15, 2019 at 10:34:17AM +0200, Linus Walleij wrote:
+> On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
+> 
+> > pm8941 is missing the 5vs2 regulator node so let's add it since its
+> > needed to get the external display working. This regulator was already
+> > configured in the interrupts property on the parent node.
+> >
+> > Note that this regulator is referred to as mvs2 in the downstream MSM
+> > kernel sources.
+> 
+> When I looked at it it seemed like this convention is used for power
+> supplies that appear on both the main PMIC and the "extra (boot? basic?
+> low power?) PMIC that the main 80xx PMIC has mvs1 and the
+> other 89xx PMIC has mvs2.
 
-Applied for next.
+According to the downstream MSM sources, the 5vs1 and 5vs2 rails are
+both on the second pm8941 PMIC:
 
-> ---
->  drivers/soc/fsl/guts.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
-> index 1ef8068c8dd3..34810f9bb2ee 100644
-> --- a/drivers/soc/fsl/guts.c
-> +++ b/drivers/soc/fsl/guts.c
-> @@ -102,6 +102,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] = {
->           .svr          = 0x87360000,
->           .mask         = 0xff3f0000,
->         },
-> +       /* Die: LS1028A, SoC: LS1028A */
-> +       { .die          = "LS1028A",
-> +         .svr          = 0x870b0000,
-> +         .mask         = 0xff3f0000,
-> +       },
->         { },
->  };
->
-> @@ -224,6 +229,7 @@ static const struct of_device_id fsl_guts_of_match[] = {
->         { .compatible = "fsl,ls1012a-dcfg", },
->         { .compatible = "fsl,ls1046a-dcfg", },
->         { .compatible = "fsl,lx2160a-dcfg", },
-> +       { .compatible = "fsl,ls1028a-dcfg", },
->         {}
->  };
->  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
-> --
-> 2.17.1
->
+https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm8974-regulator.dtsi#L18
+
+> I suppose it is named "mvs" on both PMICs and this is just a rail
+> name so as not to confuse the schematic?
+
+That sounds reasonable.
+
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thank you!
+
+Brian
