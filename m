@@ -1,66 +1,235 @@
-From: Anson.Huang@nxp.com
-Subject: [PATCH] arm64: dts: imx8mn: Add gpio-ranges property
-Date: Wed, 14 Aug 2019 22:57:30 -0400
-Message-ID: <1565837850-1373-1-git-send-email-Anson.Huang@nxp.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+Date: Thu, 15 Aug 2019 11:34:27 +0800
+Message-ID: <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
+References: <65a34dd943b0260bfe45ec76dcf414a67e5d8343.1565785291.git.baolin.wang@linaro.org>
+ <446eb284a096a1fd8998765669b1c9a2f78d7d22.1565785291.git.baolin.wang@linaro.org>
+ <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, abel.vesa@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pwm@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hi Uwe,
 
-Add "gpio-ranges" property to establish connections between GPIOs
-and PINs on i.MX8MN pinctrl driver.
+On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+> > +
+> > +     /*
+> > +      * The hardware provides a counter that is feed by the source clo=
+ck.
+> > +      * The period length is (PRESCALE + 1) * MOD counter steps.
+> > +      * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> > +      * Thus the period_ns and duty_ns calculation formula should be:
+> > +      * period_ns =3D NSEC_PER_SEC * (prescale + 1) * mod / clk_rate
+> > +      * duty_ns =3D NSEC_PER_SEC * (prescale + 1) * duty / clk_rate
+> > +      */
+> > +     val =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+> > +     prescale =3D val & SPRD_PWM_PRESCALE_MSK;
+> > +     tmp =3D (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+> > +     state->period =3D DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> > +
+> > +     val =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
+> > +     duty =3D val & SPRD_PWM_DUTY_MSK;
+> > +     tmp =3D (prescale + 1) * NSEC_PER_SEC * duty;
+> > +     state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+> > +
+> > +     /* Disable PWM clocks if the PWM channel is not in enable state. =
+*/
+> > +     if (!state->enabled)
+> > +             clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->cl=
+ks);
+> > +}
+> > +
+> > +static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_devic=
+e *pwm,
+> > +                        int duty_ns, int period_ns)
+> > +{
+> > +     struct sprd_pwm_chn *chn =3D &spc->chn[pwm->hwpwm];
+> > +     u32 prescale, duty;
+> > +     u64 tmp;
+> > +
+> > +     /*
+> > +      * The hardware provides a counter that is feed by the source clo=
+ck.
+> > +      * The period length is (PRESCALE + 1) * MOD counter steps.
+> > +      * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+> > +      *
+> > +      * To keep the maths simple we're always using MOD =3D SPRD_PWM_M=
+OD_MAX.
+>
+> Did you spend some thoughts about how wrong your period can get because
+> of that "lazyness"?
+>
+> Let's assume a clk rate of 100/3 MHz. Then the available period lengths
+> are:
+>
+>         PRESCALE =3D  0  ->  period =3D   7.65 =C2=B5s
+>         PRESCALE =3D  1  ->  period =3D  15.30 =C2=B5s
+>         ...
+>         PRESCALE =3D 17  ->  period =3D 137.70 =C2=B5s
+>         PRESCALE =3D 18  ->  period =3D 145.35 =C2=B5s
+>
+> So the error can be up to (nearly) 7.65 =C2=B5s (or in general
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index f5eff35..1d8899b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -173,6 +173,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 10 30>;
- 			};
- 
- 			gpio2: gpio@30210000 {
-@@ -185,6 +186,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 40 21>;
- 			};
- 
- 			gpio3: gpio@30220000 {
-@@ -197,6 +199,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 61 26>;
- 			};
- 
- 			gpio4: gpio@30230000 {
-@@ -209,6 +212,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 21 108 11>;
- 			};
- 
- 			gpio5: gpio@30240000 {
-@@ -221,6 +225,7 @@
- 				#gpio-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
-+				gpio-ranges = <&iomuxc 0 119 30>;
- 			};
- 
- 			wdog1: watchdog@30280000 {
--- 
-2.7.4
+Yes, but for our use case (pwm backlight), the precision can meet our
+requirement. Moreover, we usually do not change the period, just
+adjust the duty to change the back light.
+
+> 255 / clk_rate) because if 145.34 =C2=B5s is requested you configure
+> PRESCALE =3D 17 and so yield a period of 137.70 =C2=B5s. If however you'd=
+ pick
+
+I did not get you here, if period is 145.34, we still get the
+corresponding PRESCALE =3D 18 by below formula:
+
+tmp =3D (u64)chn->clk_rate * period_ns;
+do_div(tmp, NSEC_PER_SEC);
+prescale =3D DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+
+> PRESCALE =3D 18 and MOD =3D 254 you get a period of 144.78 =C2=B5s and so=
+ the
+> error is only 0.56 =C2=B5s which is a factor of 13 better.
+>
+> Hmm.
+>
+> > +      * The value for PRESCALE is selected such that the resulting per=
+iod
+> > +      * gets the maximal length not bigger than the requested one with=
+ the
+> > +      * given settings (MOD =3D SPRD_PWM_MOD_MAX and input clock).
+> > +      */
+> > +     duty =3D duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+>
+> I wonder if you loose some precision here as you use period_ns but might
+> actually implement a shorter period.
+>
+> Quick example, again consider clk_rate =3D 100 / 3 MHz,
+> period_ns =3D 145340, duty_ns =3D 72670. Then you end up with
+>
+>         PRESCALE =3D 17
+>         MOD =3D 255
+>         DUTY =3D 127
+
+Incorrect, we will get PRESCALE =3D 18,  MOD =3D 255, DUTY =3D 127.
+
+> That corresponds to period_ns =3D 137700, duty_ns =3D 68580. With DUTY =
+=3D 134
+> you get 72360 ns which is still smaller than the requested 72670 ns.
+
+Incorrect, with DUTY =3D 134 (PRESCALE =3D 18  ->  period =3D 145.35 =C2=B5=
+s),
+duty_ns =3D 76380ns
+
+> (But then again it is not obvious which of the two is the "better"
+> approximation because Thierry doesn't seem to see the necessity to
+> discuss or define a policy here.)
+
+Like I said, this is the simple calculation formula which can meet our
+requirement (we limit our DUTY value can only be 0 - 254).
+duty =3D duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+
+>
+> (And to pick up the thoughts about not using SPRD_PWM_MOD_MAX
+> unconditionally, you could also use
+>
+>         PRESCALE =3D 18
+>         MOD =3D 254
+>         DUTY =3D 127
+>
+> yielding period_ns =3D 144780 and duty_ns =3D 72390. Summary:
+>
+>         Request:                 72670 / 145340
+>         your result:             68580 / 137700
+>         also possible:           72390 / 144780
+>
+> Judge yourself.)
+>
+> > +     tmp =3D (u64)chn->clk_rate * period_ns;
+> > +     do_div(tmp, NSEC_PER_SEC);
+> > +     prescale =3D DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+>
+> Now that you use DIV_ROUND_CLOSEST_ULL the comment is wrong because you
+> might provide a period bigger than the requested one. Also you divide
+
+Again, that's the precision can meet our requirement.
+
+> twice instead of once before. (I don't know what architecture your SoC
+> uses, but compared to a multiplication a division is usually expensive.)
+> Also the math is more complicated now as you have a round-down div and a
+> round-closest div.
+>
+> My preference for how to fix that is to restore the behaviour of v2 that
+> matches the comment and adapt .get_state() instead.
+
+Using DIV_ROUND_CLOSEST_ULL can get a same prescale which matches with
+.get_state().
+
+>
+> For .get_state() this should then be:
+>
+>         val =3D sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+>         prescale =3D FIELD_GET(SPRD_PWM_PRESCALE_MSK, val);
+>
+>         tmp =3D (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+>         state->period =3D DIV_ROUND_UP_ULL(tmp, chn->clk_rate);
+>
+> > +     if (prescale > SPRD_PWM_PRESCALE_MSK)
+> > +             prescale =3D SPRD_PWM_PRESCALE_MSK;
+> > +
+> > +     /*
+> > +      * Note: Writing DUTY triggers the hardware to actually apply the
+> > +      * values written to MOD and DUTY to the output, so must keep wri=
+ting
+> > +      * DUTY last.
+> > +      *
+> > +      * The hardware can ensures that current running period is comple=
+ted
+> > +      * before changing a new configuration to avoid mixed settings.
+>
+> I'm not a native English speaker, but I would write:
+>
+>         * The hardware ensures that currently running period is
+>         * completed before changing to the new configuration to avoid
+>         * mixed settings.
+
+Sure
+
+>
+> Does this mechanism also apply to PRESCALE? If yes, please include it in
+
+Yes.
+
+> your description. If not there is still a possibility for a wrong
+> period.
+>
+> > +      */
+> > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
+> > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
+> > +     sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
+> > +
+> > +     return 0;
+> > +}
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
+
+
+
+--=20
+Baolin Wang
+Best Regards
