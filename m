@@ -1,318 +1,621 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: act8865: operating mode and suspend state support" to the regulator tree
-Date: Thu, 15 Aug 2019 18:14:33 +0100 (BST)
-Message-ID: <20190815171433.E2AC82742B9E@ypsilon.sirena.org.uk>
-References: <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v8 04/14] media: rkisp1: add Rockchip MIPI Synopsys DPHY
+ driver
+Date: Thu, 15 Aug 2019 20:54:40 +0300
+Message-ID: <20190815175440.GW5011@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-5-helen.koike@collabora.com>
+ <20190807130558.GF822@valkosipuli.retiisi.org.uk>
+ <c61498b0-dd4c-53af-db82-169f8dfdc6bd@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <c61498b0-dd4c-53af-db82-169f8dfdc6bd@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raag Jadav <raagjadav@gmail.com>
-Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Helen Koike <helen.koike@collabora.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Helen,
 
-   regulator: act8865: operating mode and suspend state support
+Thank you for the patch.
 
-has been applied to the regulator tree at
+On Wed, Aug 07, 2019 at 10:37:55AM -0300, Helen Koike wrote:
+> On 8/7/19 10:05 AM, Sakari Ailus wrote:
+> > On Tue, Jul 30, 2019 at 03:42:46PM -0300, Helen Koike wrote:
+> >> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> >>
+> >> This commit adds a subdev driver for Rockchip MIPI Synopsys DPHY driver
+> >>
+> >> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> >> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+> >> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> >> [migrate to phy framework]
+> >> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> >> [update for upstream]
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >>
+> >> Changes in v8:
+> >> - Remove boiler plate license text
+> >>
+> >> Changes in v7:
+> >> - Migrate dphy specific code from
+> >> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
+> >> to drivers/phy/rockchip/phy-rockchip-dphy.c
+> >> - Drop support for rk3288
+> >> - Drop support for dphy txrx
+> >> - code styling and checkpatch fixes
+> >>
+> >>  drivers/phy/rockchip/Kconfig             |   8 +
+> >>  drivers/phy/rockchip/Makefile            |   1 +
+> >>  drivers/phy/rockchip/phy-rockchip-dphy.c | 408 +++++++++++++++++++++++
+> >>  3 files changed, 417 insertions(+)
+> >>  create mode 100644 drivers/phy/rockchip/phy-rockchip-dphy.c
+> >>
+> >> diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
+> >> index c454c90cd99e..afd072f135e6 100644
+> >> --- a/drivers/phy/rockchip/Kconfig
+> >> +++ b/drivers/phy/rockchip/Kconfig
+> >> @@ -9,6 +9,14 @@ config PHY_ROCKCHIP_DP
+> >>  	help
+> >>  	  Enable this to support the Rockchip Display Port PHY.
+> >>  
+> >> +config PHY_ROCKCHIP_DPHY
+> >> +	tristate "Rockchip MIPI Synopsys DPHY driver"
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+How much of this PHY is Rockchip-specific ? Would it make sense to turn
+it into a Synopsys DPHY driver, with some Rockchip glue ? I suppose this
+could always be done later, if needed (and I also suppose there's no
+existing driver in drivers/phy/ that support the same Synopsys IP).
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> >> +	depends on ARCH_ROCKCHIP && OF
+> > 
+> > How about (...) || COMPILE_TEST ?
+> > 
+> >> +	select GENERIC_PHY_MIPI_DPHY
+> >> +	select GENERIC_PHY
+> >> +	help
+> >> +	  Enable this to support the Rockchip MIPI Synopsys DPHY.
+> >> +
+> >>  config PHY_ROCKCHIP_EMMC
+> >>  	tristate "Rockchip EMMC PHY Driver"
+> >>  	depends on ARCH_ROCKCHIP && OF
+> >> diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
+> >> index fd21cbaf40dd..f62e9010bcaf 100644
+> >> --- a/drivers/phy/rockchip/Makefile
+> >> +++ b/drivers/phy/rockchip/Makefile
+> >> @@ -1,5 +1,6 @@
+> >>  # SPDX-License-Identifier: GPL-2.0
+> >>  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+> >> +obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy.o
+> >>  obj-$(CONFIG_PHY_ROCKCHIP_EMMC)		+= phy-rockchip-emmc.o
+> >>  obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
+> >>  obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
+> >> diff --git a/drivers/phy/rockchip/phy-rockchip-dphy.c b/drivers/phy/rockchip/phy-rockchip-dphy.c
+> >> new file mode 100644
+> >> index 000000000000..3a29976c2dff
+> >> --- /dev/null
+> >> +++ b/drivers/phy/rockchip/phy-rockchip-dphy.c
+> >> @@ -0,0 +1,408 @@
+> >> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> +/*
+> >> + * Rockchip MIPI Synopsys DPHY driver
+> >> + *
+> >> + * Based on:
+> >> + *
+> >> + * Copyright (C) 2016 FuZhou Rockchip Co., Ltd.
+> >> + * Author: Yakir Yang <ykk@@rock-chips.com>
+> >> + */
+> >> +
+> >> +#include <linux/clk.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/mfd/syscon.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/phy/phy.h>
+> >> +#include <linux/phy/phy-mipi-dphy.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/regmap.h>
+> >> +
+> >> +#define RK3399_GRF_SOC_CON9	0x6224
+> >> +#define RK3399_GRF_SOC_CON21	0x6254
+> >> +#define RK3399_GRF_SOC_CON22	0x6258
+> >> +#define RK3399_GRF_SOC_CON23	0x625c
+> >> +#define RK3399_GRF_SOC_CON24	0x6260
+> >> +#define RK3399_GRF_SOC_CON25	0x6264
+> >> +#define RK3399_GRF_SOC_STATUS1	0xe2a4
+> >> +
+> >> +#define CLOCK_LANE_HS_RX_CONTROL		0x34
+> >> +#define LANE0_HS_RX_CONTROL			0x44
+> >> +#define LANE1_HS_RX_CONTROL			0x54
+> >> +#define LANE2_HS_RX_CONTROL			0x84
+> >> +#define LANE3_HS_RX_CONTROL			0x94
+> >> +#define HS_RX_DATA_LANES_THS_SETTLE_CONTROL	0x75
+> >> +
+> >> +#define MAX_DPHY_CLK 8
+> >> +
+> >> +#define PHY_TESTEN_ADDR			(0x1 << 16)
+> >> +#define PHY_TESTEN_DATA			(0x0 << 16)
+> >> +#define PHY_TESTCLK			(0x1 << 1)
+> >> +#define PHY_TESTCLR			(0x1 << 0)
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Maybe s/0x// for the previous four lines ?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> >> +#define THS_SETTLE_COUNTER_THRESHOLD	0x04
+> >> +
+> >> +#define HIWORD_UPDATE(val, mask, shift) \
+> >> +	((val) << (shift) | (mask) << ((shift) + 16))
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+As you use this in a single place, I would inline it, possibly with a
+small comment that explains what's happening.
 
-Thanks,
-Mark
+> >> +
+> >> +#define GRF_SOC_CON12                           0x0274
+> >> +
+> >> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(20)
+> >> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
+> >> +
+> >> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
+> >> +#define GRF_EDP_PHY_SIDDQ_ON                    0
+> >> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
 
->From 955741a5120bb1ed19d3b12da90bb947d3a0cb99 Mon Sep 17 00:00:00 2001
-From: Raag Jadav <raagjadav@gmail.com>
-Date: Wed, 14 Aug 2019 00:02:55 +0530
-Subject: [PATCH] regulator: act8865: operating mode and suspend state support
+I would recommend aligning the value of of all macros in the same way.
 
-Implement ->set_mode(), ->get_mode() and ->set_suspend_xx() hooks
-for act8865 with unlocked expert registers.
+> >> +
+> >> +struct hsfreq_range {
+> >> +	u32 range_h;
 
-Based on work done by Borris Brezillon on [1].
-[1] https://www.spinics.net/lists/kernel/msg2942960.html
+The structure would be more compact if you turned this into a u16.
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
-Link: https://lore.kernel.org/r/1565721176-8955-2-git-send-email-raagjadav@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/act8865-regulator.c | 187 +++++++++++++++++++++++++-
- 1 file changed, 186 insertions(+), 1 deletion(-)
+> >> +	u8 cfg_bit;
+> >> +};
+> >> +
+> >> +static const struct hsfreq_range rk3399_mipidphy_hsfreq_ranges[] = {
+> >> +	{  89, 0x00}, {  99, 0x10}, { 109, 0x20}, { 129, 0x01},
+> >> +	{ 139, 0x11}, { 149, 0x21}, { 169, 0x02}, { 179, 0x12},
+> >> +	{ 199, 0x22}, { 219, 0x03}, { 239, 0x13}, { 249, 0x23},
+> >> +	{ 269, 0x04}, { 299, 0x14}, { 329, 0x05}, { 359, 0x15},
+> >> +	{ 399, 0x25}, { 449, 0x06}, { 499, 0x16}, { 549, 0x07},
+> >> +	{ 599, 0x17}, { 649, 0x08}, { 699, 0x18}, { 749, 0x09},
+> >> +	{ 799, 0x19}, { 849, 0x29}, { 899, 0x39}, { 949, 0x0a},
+> >> +	{ 999, 0x1a}, {1049, 0x2a}, {1099, 0x3a}, {1149, 0x0b},
+> >> +	{1199, 0x1b}, {1249, 0x2b}, {1299, 0x3b}, {1349, 0x0c},
+> >> +	{1399, 0x1c}, {1449, 0x2c}, {1500, 0x3c}
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index 6a90d3c7a452..0fa97f934df4 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -19,6 +19,7 @@
- #include <linux/power_supply.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regmap.h>
-+#include <dt-bindings/regulator/active-semi,8865-regulator.h>
- 
- /*
-  * ACT8600 Global Register Map.
-@@ -90,23 +91,31 @@
-  */
- #define	ACT8865_SYS_MODE	0x00
- #define	ACT8865_SYS_CTRL	0x01
-+#define	ACT8865_SYS_UNLK_REGS	0x0b
- #define	ACT8865_DCDC1_VSET1	0x20
- #define	ACT8865_DCDC1_VSET2	0x21
- #define	ACT8865_DCDC1_CTRL	0x22
-+#define	ACT8865_DCDC1_SUS	0x24
- #define	ACT8865_DCDC2_VSET1	0x30
- #define	ACT8865_DCDC2_VSET2	0x31
- #define	ACT8865_DCDC2_CTRL	0x32
-+#define	ACT8865_DCDC2_SUS	0x34
- #define	ACT8865_DCDC3_VSET1	0x40
- #define	ACT8865_DCDC3_VSET2	0x41
- #define	ACT8865_DCDC3_CTRL	0x42
-+#define	ACT8865_DCDC3_SUS	0x44
- #define	ACT8865_LDO1_VSET	0x50
- #define	ACT8865_LDO1_CTRL	0x51
-+#define	ACT8865_LDO1_SUS	0x52
- #define	ACT8865_LDO2_VSET	0x54
- #define	ACT8865_LDO2_CTRL	0x55
-+#define	ACT8865_LDO2_SUS	0x56
- #define	ACT8865_LDO3_VSET	0x60
- #define	ACT8865_LDO3_CTRL	0x61
-+#define	ACT8865_LDO3_SUS	0x62
- #define	ACT8865_LDO4_VSET	0x64
- #define	ACT8865_LDO4_CTRL	0x65
-+#define	ACT8865_LDO4_SUS	0x66
- #define	ACT8865_MSTROFF		0x20
- 
- /*
-@@ -225,6 +234,171 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
- };
- 
-+static int act8865_set_suspend_state(struct regulator_dev *rdev, bool enable)
-+{
-+	struct regmap *regmap = rdev->regmap;
-+	int id = rdev->desc->id, reg, val;
-+
-+	switch (id) {
-+	case ACT8865_ID_DCDC1:
-+		reg = ACT8865_DCDC1_SUS;
-+		val = 0xa8;
-+		break;
-+	case ACT8865_ID_DCDC2:
-+		reg = ACT8865_DCDC2_SUS;
-+		val = 0xa8;
-+		break;
-+	case ACT8865_ID_DCDC3:
-+		reg = ACT8865_DCDC3_SUS;
-+		val = 0xa8;
-+		break;
-+	case ACT8865_ID_LDO1:
-+		reg = ACT8865_LDO1_SUS;
-+		val = 0xe8;
-+		break;
-+	case ACT8865_ID_LDO2:
-+		reg = ACT8865_LDO2_SUS;
-+		val = 0xe8;
-+		break;
-+	case ACT8865_ID_LDO3:
-+		reg = ACT8865_LDO3_SUS;
-+		val = 0xe8;
-+		break;
-+	case ACT8865_ID_LDO4:
-+		reg = ACT8865_LDO4_SUS;
-+		val = 0xe8;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (enable)
-+		val |= BIT(4);
-+
-+	/*
-+	 * Ask the PMIC to enable/disable this output when entering hibernate
-+	 * mode.
-+	 */
-+	return regmap_write(regmap, reg, val);
-+}
-+
-+static int act8865_set_suspend_enable(struct regulator_dev *rdev)
-+{
-+	return act8865_set_suspend_state(rdev, true);
-+}
-+
-+static int act8865_set_suspend_disable(struct regulator_dev *rdev)
-+{
-+	return act8865_set_suspend_state(rdev, false);
-+}
-+
-+static unsigned int act8865_of_map_mode(unsigned int mode)
-+{
-+	switch (mode) {
-+	case ACT8865_REGULATOR_MODE_FIXED:
-+		return REGULATOR_MODE_FAST;
-+	case ACT8865_REGULATOR_MODE_NORMAL:
-+		return REGULATOR_MODE_NORMAL;
-+	case ACT8865_REGULATOR_MODE_LOWPOWER:
-+		return REGULATOR_MODE_STANDBY;
-+	default:
-+		return REGULATOR_MODE_INVALID;
-+	}
-+}
-+
-+static int act8865_set_mode(struct regulator_dev *rdev, unsigned int mode)
-+{
-+	struct regmap *regmap = rdev->regmap;
-+	int id = rdev_get_id(rdev);
-+	int reg, val = 0;
-+
-+	switch (id) {
-+	case ACT8865_ID_DCDC1:
-+		reg = ACT8865_DCDC1_CTRL;
-+		break;
-+	case ACT8865_ID_DCDC2:
-+		reg = ACT8865_DCDC2_CTRL;
-+		break;
-+	case ACT8865_ID_DCDC3:
-+		reg = ACT8865_DCDC3_CTRL;
-+		break;
-+	case ACT8865_ID_LDO1:
-+		reg = ACT8865_LDO1_CTRL;
-+		break;
-+	case ACT8865_ID_LDO2:
-+		reg = ACT8865_LDO2_CTRL;
-+		break;
-+	case ACT8865_ID_LDO3:
-+		reg = ACT8865_LDO3_CTRL;
-+		break;
-+	case ACT8865_ID_LDO4:
-+		reg = ACT8865_LDO4_CTRL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_FAST:
-+	case REGULATOR_MODE_NORMAL:
-+		if (id <= ACT8865_ID_DCDC3)
-+			val = BIT(5);
-+		break;
-+	case REGULATOR_MODE_STANDBY:
-+		if (id > ACT8865_ID_DCDC3)
-+			val = BIT(5);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return regmap_update_bits(regmap, reg, BIT(5), val);
-+}
-+
-+static unsigned int act8865_get_mode(struct regulator_dev *rdev)
-+{
-+	struct regmap *regmap = rdev->regmap;
-+	int id = rdev_get_id(rdev);
-+	int reg, ret, val = 0;
-+
-+	switch (id) {
-+	case ACT8865_ID_DCDC1:
-+		reg = ACT8865_DCDC1_CTRL;
-+		break;
-+	case ACT8865_ID_DCDC2:
-+		reg = ACT8865_DCDC2_CTRL;
-+		break;
-+	case ACT8865_ID_DCDC3:
-+		reg = ACT8865_DCDC3_CTRL;
-+		break;
-+	case ACT8865_ID_LDO1:
-+		reg = ACT8865_LDO1_CTRL;
-+		break;
-+	case ACT8865_ID_LDO2:
-+		reg = ACT8865_LDO2_CTRL;
-+		break;
-+	case ACT8865_ID_LDO3:
-+		reg = ACT8865_LDO3_CTRL;
-+		break;
-+	case ACT8865_ID_LDO4:
-+		reg = ACT8865_LDO4_CTRL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_read(regmap, reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (id <= ACT8865_ID_DCDC3 && (val & BIT(5)))
-+		return REGULATOR_MODE_FAST;
-+	else if	(id > ACT8865_ID_DCDC3 && !(val & BIT(5)))
-+		return REGULATOR_MODE_NORMAL;
-+	else
-+		return REGULATOR_MODE_STANDBY;
-+}
-+
- static const struct regulator_ops act8865_ops = {
- 	.list_voltage		= regulator_list_voltage_linear_range,
- 	.map_voltage		= regulator_map_voltage_linear_range,
-@@ -232,7 +406,11 @@ static const struct regulator_ops act8865_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
-+	.set_mode		= act8865_set_mode,
-+	.get_mode		= act8865_get_mode,
- 	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_suspend_enable	= act8865_set_suspend_enable,
-+	.set_suspend_disable	= act8865_set_suspend_disable,
- };
- 
- static const struct regulator_ops act8865_ldo_ops = {
-@@ -242,7 +420,11 @@ static const struct regulator_ops act8865_ldo_ops = {
- 	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
-+	.set_mode		= act8865_set_mode,
-+	.get_mode		= act8865_get_mode,
- 	.is_enabled		= regulator_is_enabled_regmap,
-+	.set_suspend_enable	= act8865_set_suspend_enable,
-+	.set_suspend_disable	= act8865_set_suspend_disable,
- 	.set_pull_down		= regulator_set_pull_down_regmap,
- };
- 
-@@ -256,6 +438,7 @@ static const struct regulator_ops act8865_fixed_ldo_ops = {
- 	[_family##_ID_##_id] = {					\
- 		.name			= _name,			\
- 		.of_match		= of_match_ptr(_name),		\
-+		.of_map_mode		= act8865_of_map_mode,		\
- 		.regulators_node	= of_match_ptr("regulators"),	\
- 		.supply_name		= _supply,			\
- 		.id			= _family##_ID_##_id,		\
-@@ -590,7 +773,9 @@ static int act8865_pmic_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, act8865);
- 
--	return 0;
-+	/* Unlock expert registers for ACT8865. */
-+	return type != ACT8865 ? 0 : regmap_write(act8865->regmap,
-+						  ACT8865_SYS_UNLK_REGS, 0xef);
- }
- 
- static const struct i2c_device_id act8865_ids[] = {
+Maybe s/{/{ / and s/}/ }/ to give it a bit more air ? :-)
+
+> >> +};
+> >> +
+> >> +static const char * const rk3399_mipidphy_clks[] = {
+> >> +	"dphy-ref",
+> >> +	"dphy-cfg",
+> >> +	"grf",
+> >> +};
+> >> +
+> >> +enum dphy_reg_id {
+> >> +	GRF_DPHY_RX0_TURNDISABLE = 0,
+> >> +	GRF_DPHY_RX0_FORCERXMODE,
+> >> +	GRF_DPHY_RX0_FORCETXSTOPMODE,
+> >> +	GRF_DPHY_RX0_ENABLE,
+> >> +	GRF_DPHY_RX0_TESTCLR,
+> >> +	GRF_DPHY_RX0_TESTCLK,
+> >> +	GRF_DPHY_RX0_TESTEN,
+> >> +	GRF_DPHY_RX0_TESTDIN,
+> >> +	GRF_DPHY_RX0_TURNREQUEST,
+> >> +	GRF_DPHY_RX0_TESTDOUT,
+> >> +	GRF_DPHY_TX0_TURNDISABLE,
+> >> +	GRF_DPHY_TX0_FORCERXMODE,
+> >> +	GRF_DPHY_TX0_FORCETXSTOPMODE,
+> >> +	GRF_DPHY_TX0_TURNREQUEST,
+> >> +	GRF_DPHY_TX1RX1_TURNDISABLE,
+> >> +	GRF_DPHY_TX1RX1_FORCERXMODE,
+> >> +	GRF_DPHY_TX1RX1_FORCETXSTOPMODE,
+> >> +	GRF_DPHY_TX1RX1_ENABLE,
+> >> +	GRF_DPHY_TX1RX1_MASTERSLAVEZ,
+> >> +	GRF_DPHY_TX1RX1_BASEDIR,
+> >> +	GRF_DPHY_TX1RX1_ENABLECLK,
+> >> +	GRF_DPHY_TX1RX1_TURNREQUEST,
+> >> +	GRF_DPHY_RX1_SRC_SEL,
+> >> +	/* rk3288 only */
+> >> +	GRF_CON_DISABLE_ISP,
+> >> +	GRF_CON_ISP_DPHY_SEL,
+> >> +	GRF_DSI_CSI_TESTBUS_SEL,
+> >> +	GRF_DVP_V18SEL,
+> >> +	/* below is for rk3399 only */
+> >> +	GRF_DPHY_RX0_CLK_INV_SEL,
+> >> +	GRF_DPHY_RX1_CLK_INV_SEL,
+> >> +};
+> >> +
+> >> +struct dphy_reg {
+> >> +	u32 offset;
+> >> +	u32 mask;
+> >> +	u32 shift;
+
+The offset should hold in 16 bits and the mask and shift in 8 bits. That
+would save space in the table below.
+
+> >> +};
+> >> +
+> >> +#define PHY_REG(_offset, _width, _shift) \
+> >> +	{ .offset = _offset, .mask = BIT(_width) - 1, .shift = _shift, }
+> >> +
+> >> +static const struct dphy_reg rk3399_grf_dphy_regs[] = {
+> >> +	[GRF_DPHY_RX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON9, 4, 0),
+> >> +	[GRF_DPHY_RX0_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 10),
+> >> +	[GRF_DPHY_RX1_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 11),
+> >> +	[GRF_DPHY_RX0_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 0),
+> >> +	[GRF_DPHY_RX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 4),
+> >> +	[GRF_DPHY_RX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 8),
+> >> +	[GRF_DPHY_RX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 12),
+> >> +	[GRF_DPHY_TX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 0),
+> >> +	[GRF_DPHY_TX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 4),
+> >> +	[GRF_DPHY_TX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 8),
+> >> +	[GRF_DPHY_TX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 12),
+> >> +	[GRF_DPHY_TX1RX1_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 0),
+> >> +	[GRF_DPHY_TX1RX1_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 4),
+> >> +	[GRF_DPHY_TX1RX1_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 8),
+> >> +	[GRF_DPHY_TX1RX1_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 12),
+> >> +	[GRF_DPHY_TX1RX1_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON24, 4, 0),
+> >> +	[GRF_DPHY_RX1_SRC_SEL] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 4),
+> >> +	[GRF_DPHY_TX1RX1_BASEDIR] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 5),
+> >> +	[GRF_DPHY_TX1RX1_ENABLECLK] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 6),
+> >> +	[GRF_DPHY_TX1RX1_MASTERSLAVEZ] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 7),
+> >> +	[GRF_DPHY_RX0_TESTDIN] = PHY_REG(RK3399_GRF_SOC_CON25, 8, 0),
+> >> +	[GRF_DPHY_RX0_TESTEN] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 8),
+> >> +	[GRF_DPHY_RX0_TESTCLK] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 9),
+> >> +	[GRF_DPHY_RX0_TESTCLR] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 10),
+> >> +	[GRF_DPHY_RX0_TESTDOUT] = PHY_REG(RK3399_GRF_SOC_STATUS1, 8, 0),
+
+The annoying part with such an indirection is that you can't really
+write multiple fields in a single register with a single operation. Is
+the register mapping completely different between the rk3288 and the
+rk3399, or are the fields grouped in registers in a similar way ? In the
+latter case we could possibly optimise it.
+
+> >> +};
+> >> +
+> >> +struct dphy_drv_data {
+> >> +	const char * const *clks;
+> >> +	int num_clks;
+
+This is never negative, you can make it an unsigned int.
+
+> >> +	const struct hsfreq_range *hsfreq_ranges;
+> >> +	int num_hsfreq_ranges;
+
+Same here.
+
+> >> +	const struct dphy_reg *regs;
+> >> +};
+> >> +
+> >> +struct rockchip_dphy {
+> >> +	struct device *dev;
+> >> +	struct regmap *grf;
+> >> +	const struct dphy_reg *grf_regs;
+> >> +	struct clk_bulk_data clks[MAX_DPHY_CLK];
+> >> +
+> >> +	const struct dphy_drv_data *drv_data;
+> >> +	struct phy_configure_opts_mipi_dphy config;
+> >> +};
+> >> +
+> >> +static inline void write_grf_reg(struct rockchip_dphy *priv,
+> >> +				 int index, u8 value)
+
+Maybe unsigned int index ?
+
+> >> +{
+> >> +	const struct dphy_reg *reg = &priv->grf_regs[index];
+> >> +	unsigned int val = HIWORD_UPDATE(value, reg->mask, reg->shift);
+> >> +
+> >> +	WARN_ON(!reg->offset);
+> >> +	regmap_write(priv->grf, reg->offset, val);
+> >> +}
+> >> +
+> >> +static void mipidphy0_wr_reg(struct rockchip_dphy *priv,
+> >> +			     u8 test_code, u8 test_data)
+
+Function (and structure) names have different prefixes, would it make
+sense to standardise them ? Maybe rockchip_dphy_ ? Or rk_dphy_ for a
+shorter version ? This could become rk_dphy_write_dphy(), and the
+previous function rk_dphy_write_grf().
+
+> >> +{
+> >> +	/*
+> >> +	 * With the falling edge on TESTCLK, the TESTDIN[7:0] signal content
+> >> +	 * is latched internally as the current test code. Test data is
+> >> +	 * programmed internally by rising edge on TESTCLK.
+> >> +	 */
+
+I've never understood why PHYs tend to have a register named TEST that
+contains way more than test data :-)
+
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTDIN, test_code);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTEN, 1);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 0);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTEN, 0);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTDIN, test_data);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
+> >> +}
+> >> +
+> >> +/* should be move to power_on */
+
+s/move/moved/
+
+Do you mean merging the two functions together ? What prevents from
+doing so ? 
+
+> >> +static int mipidphy_rx_stream_on(struct rockchip_dphy *priv)
+> >> +{
+> >> +	const struct dphy_drv_data *drv_data = priv->drv_data;
+> >> +	const struct hsfreq_range *hsfreq_ranges = drv_data->hsfreq_ranges;
+> >> +	struct phy_configure_opts_mipi_dphy *config = &priv->config;
+> >> +	unsigned int i, hsfreq = 0, data_rate_mbps = config->hs_clk_rate;
+> >> +	int num_hsfreq_ranges = drv_data->num_hsfreq_ranges;
+> >> +
+> >> +	do_div(data_rate_mbps, 1000 * 1000);
+> >> +
+> >> +	dev_dbg(priv->dev, "%s: lanes %d - data_rate_mbps %u\n",
+> >> +		__func__, config->lanes, data_rate_mbps);
+> >> +
+> >> +	for (i = 0; i < num_hsfreq_ranges; i++) {
+> >> +		if (hsfreq_ranges[i].range_h >= data_rate_mbps) {
+> >> +			hsfreq = hsfreq_ranges[i].cfg_bit;
+> >> +			break;
+> >> +		}
+> >> +	}
+
+As num_hsfreq_ranges and hsfreq_ranges are only used in this loop, I
+would remove the local variables.
+
+> >> +
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_FORCERXMODE, 0);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_FORCETXSTOPMODE, 0);
+> >> +
+> >> +	/* Disable lan turn around, which is ignored in receive mode */
+
+Is it "lan turn around", or "lane turn around" ?
+
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TURNREQUEST, 0);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TURNDISABLE, 0xf);
+> >> +
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_ENABLE, GENMASK(config->lanes - 1, 0));
+> >> +
+> >> +	/* dphy start */
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLR, 1);
+> >> +	usleep_range(100, 150);
+> >> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLR, 0);
+> >> +	usleep_range(100, 150);
+> >> +
+> >> +	/* set clock lane */
+> >> +	/* HS hsfreq_range & lane 0  settle bypass */
+> >> +	mipidphy0_wr_reg(priv, CLOCK_LANE_HS_RX_CONTROL, 0);
+> >> +	/* HS RX Control of lane0 */
+> >> +	mipidphy0_wr_reg(priv, LANE0_HS_RX_CONTROL, hsfreq << 1);
+> >> +	/* HS RX Control of lane1 */
+> >> +	mipidphy0_wr_reg(priv, LANE1_HS_RX_CONTROL, 0);
+> >> +	/* HS RX Control of lane2 */
+> >> +	mipidphy0_wr_reg(priv, LANE2_HS_RX_CONTROL, 0);
+> >> +	/* HS RX Control of lane3 */
+> >> +	mipidphy0_wr_reg(priv, LANE3_HS_RX_CONTROL, 0);
+
+Does this hardcode usage of a single lane ?
+
+> >> +	/* HS RX Data Lanes Settle State Time Control */
+> >> +	mipidphy0_wr_reg(priv, HS_RX_DATA_LANES_THS_SETTLE_CONTROL,
+> >> +			 THS_SETTLE_COUNTER_THRESHOLD);
+> >> +
+> >> +	/* Normal operation */
+> >> +	mipidphy0_wr_reg(priv, 0x0, 0);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rockchip_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+> >> +{
+> >> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >> +	int ret;
+> >> +
+> >> +	/* pass with phy_mipi_dphy_get_default_config (with pixel rate?) */
+
+I'm not sure to understand what this means.
+
+> >> +	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	memcpy(&priv->config, opts, sizeof(priv->config));
+> > 
+> > You could to:
+> > 
+> > 	priv->config = *opts;
+> > 
+> > Up to you. Some people like memcpy(). :-)
+> 
+> your way is better thanks!
+> 
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rockchip_dphy_power_on(struct phy *phy)
+> >> +{
+> >> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >> +	int ret;
+> >> +
+> >> +	ret = clk_bulk_enable(priv->drv_data->num_clks, priv->clks);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	return mipidphy_rx_stream_on(priv);
+
+Should you call clk_bulk_disable() if mipidphy_rx_stream_on() fails ?
+Actually that function never fails, so I'd make it a void function, and
+return 0 here.
+
+What happens if the clock rate is higher than the maximum supported by
+the PHY ? Shouldn't rockchip_dphy_configure() fail in that case ?
+
+> >> +}
+> >> +
+> >> +static int rockchip_dphy_power_off(struct phy *phy)
+> >> +{
+> >> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >> +
+
+No need to write any register ? That's scary, what will happen on the
+next power on, when the clocks gets enabled ?
+
+> >> +	clk_bulk_disable(priv->drv_data->num_clks, priv->clks);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rockchip_dphy_init(struct phy *phy)
+> >> +{
+> >> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >> +	int ret;
+> >> +
+> >> +	ret = clk_bulk_prepare(priv->drv_data->num_clks, priv->clks);
+> > 
+> > return ...;
+> > 
+> >> +	if (ret)
+> >> +		return ret;
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rockchip_dphy_exit(struct phy *phy)
+> >> +{
+> >> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >> +
+> >> +	clk_bulk_unprepare(priv->drv_data->num_clks, priv->clks);
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static const struct phy_ops rockchip_dphy_ops = {
+> >> +	.power_on	= rockchip_dphy_power_on,
+> >> +	.power_off	= rockchip_dphy_power_off,
+> >> +	.init		= rockchip_dphy_init,
+> >> +	.exit		= rockchip_dphy_exit,
+> >> +	.configure	= rockchip_dphy_configure,
+> >> +	.owner		= THIS_MODULE,
+> >> +};
+> >> +
+> >> +static const struct dphy_drv_data rk3399_mipidphy_drv_data = {
+> >> +	.clks = rk3399_mipidphy_clks,
+> >> +	.num_clks = ARRAY_SIZE(rk3399_mipidphy_clks),
+> >> +	.hsfreq_ranges = rk3399_mipidphy_hsfreq_ranges,
+> >> +	.num_hsfreq_ranges = ARRAY_SIZE(rk3399_mipidphy_hsfreq_ranges),
+> >> +	.regs = rk3399_grf_dphy_regs,
+> > 
+> > Do you expect to support more of the similar PHY(s) --- are there such? If
+> > not, you could put these in the code that uses them.
+> 
+> Yes, for rk3288 in the future.
+> 
+> >> +};
+> >> +
+> >> +static const struct of_device_id rockchip_dphy_dt_ids[] = {
+> >> +	{
+> >> +		.compatible = "rockchip,rk3399-mipi-dphy",
+> >> +		.data = &rk3399_mipidphy_drv_data,
+> >> +	},
+> >> +	{}
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, rockchip_dphy_dt_ids);
+> >> +
+> >> +static int rockchip_dphy_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct device *dev = &pdev->dev;
+> >> +	struct device_node *np = dev->of_node;
+> >> +	const struct dphy_drv_data *drv_data;
+> >> +	struct phy_provider *phy_provider;
+> >> +	const struct of_device_id *of_id;
+> >> +	struct rockchip_dphy *priv;
+> >> +	struct regmap *grf;
+> >> +	struct phy *phy;
+> >> +	unsigned int i;
+> >> +	int ret;
+> >> +
+> >> +	if (!dev->parent || !dev->parent->of_node)
+> >> +		return -ENODEV;
+> >> +
+> >> +	if (platform_get_resource(pdev, IORESOURCE_MEM, 0)) {
+> >> +		dev_err(&pdev->dev, "Rockchip DPHY driver only suports rx\n");
+
+You can replace pdev->dev with dev here and below.
+
+s/rx/RX mode/ ?
+
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >> +	if (!priv)
+> >> +		return -ENOMEM;
+> >> +	priv->dev = dev;
+> >> +
+> >> +	grf = syscon_node_to_regmap(dev->parent->of_node);
+> >> +	if (IS_ERR(grf)) {
+> >> +		grf = syscon_regmap_lookup_by_phandle(dev->of_node,
+> >> +						      "rockchip,grf");
+> >> +		if (IS_ERR(grf)) {
+> >> +			dev_err(dev, "Can't find GRF syscon\n");
+> >> +			return -ENODEV;
+> >> +		}
+> >> +	}
+> >> +	priv->grf = grf;
+> >> +
+> >> +	of_id = of_match_device(rockchip_dphy_dt_ids, dev);
+> >> +	if (!of_id)
+> >> +		return -EINVAL;
+> >> +
+> >> +	drv_data = of_id->data;
+> >> +	priv->grf_regs = drv_data->regs;
+
+Do you have to store grf_regs in priv, or could it be accessed through
+priv->drv_data->regs ?
+
+> >> +	priv->drv_data = drv_data;
+> >> +	for (i = 0; i < drv_data->num_clks; i++)
+> >> +		priv->clks[i].id = drv_data->clks[i];
+> >> +	ret = devm_clk_bulk_get(&pdev->dev, drv_data->num_clks, priv->clks);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	phy = devm_phy_create(dev, np, &rockchip_dphy_ops);
+> >> +	if (IS_ERR(phy)) {
+> >> +		dev_err(dev, "failed to create phy\n");
+> >> +		return PTR_ERR(phy);
+> >> +	}
+> >> +	phy_set_drvdata(phy, priv);
+> >> +
+> >> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> >> +
+> >> +	return PTR_ERR_OR_ZERO(phy_provider);
+> >> +}
+> >> +
+> >> +static struct platform_driver rockchip_dphy_driver = {
+> >> +	.probe = rockchip_dphy_probe,
+> >> +	.driver = {
+> >> +		.name	= "rockchip-mipi-dphy",
+> >> +		.of_match_table = rockchip_dphy_dt_ids,
+> >> +	},
+> >> +};
+> >> +module_platform_driver(rockchip_dphy_driver);
+> >> +
+> >> +MODULE_AUTHOR("Ezequiel Garcia <ezequiel@collabora.com>");
+> >> +MODULE_DESCRIPTION("Rockchip MIPI Synopsys DPHY driver");
+> >> +MODULE_LICENSE("Dual MIT/GPL");
+
+Overall this is quite good, there are only small issues.
+
 -- 
-2.20.1
+Regards,
+
+Laurent Pinchart
