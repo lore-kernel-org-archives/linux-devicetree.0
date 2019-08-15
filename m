@@ -1,25 +1,42 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH 1/6] arm64: dts: imx8mn-ddr4-evk: Add i2c1 support
-Date: Thu, 15 Aug 2019 14:12:32 +0000
-Message-ID: <VI1PR04MB702358167ACAFDEA83F64D17EEAC0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 0/9] Add dual-LVDS panel support to EK874
+Date: Thu, 15 Aug 2019 16:15:59 +0200
+Message-ID: <20190815141559.GB2437@ravnborg.org>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Abel Vesa <abel.vesa@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Eric Anholt <eric@anholt.net>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renes>
 List-Id: devicetree@vger.kernel.org
 
-On 15.08.2019 14:18, Anson.Huang@nxp.com wrote:=0A=
-> From: Anson Huang <Anson.Huang@nxp.com>=0A=
-> =0A=
-> Enable i2c1 on i.MX8MN DDR4 EVK board.=0A=
-> =0A=
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
-=0A=
-Didn't see a cover letter but all 6 patches look good:=0A=
-=0A=
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+Hi Fabrizio
+
+> it appears that Rob has been busy converting the dt-bindings relevant to this
+> series, and his changes are now found in linux-next. Most notably
+> Documentation/devicetree/bindings/display/panel/panel-lvds.txt has now become
+> Documentation/devicetree/bindings/display/panel/lvds.yaml
+> 
+> You have already taken patch:
+> https://patchwork.kernel.org/patch/11072749/
+> 
+> as such the patch I am sending you is still related to:
+> Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+> 
+> Patch "dt-bindings: display: Add bindings for Advantech IDK-2121WR" is still
+> assuming the format is .txt, as I am not too sure about what the protocol is in
+> this case? Shall we take this patch and convert it later to .yaml or shall I
+> convert it to .yaml straight away?
+> 
+> Please, let me know what's the best course of action.
+
+It is preferred that all new display and panel bindings uses the new
+meta-schema format.
+And that the writers uses the available tools to verify the bindings
+submission.
+This is one way to avoid simple mistakes in examples.
+
+	Sam
