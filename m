@@ -1,117 +1,107 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 05/10] PCI: layerscape: Modify the way of getting
- capability with different PEX
-Date: Thu, 15 Aug 2019 13:51:03 +0100
-Message-ID: <20190815125103.GH43882@e119886-lin.cambridge.arm.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-5-xiaowei.bao@nxp.com>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
+Date: Thu, 15 Aug 2019 14:55:48 +0200
+Message-ID: <20190815125548.kh2pdxzysafltswc@uno.localdomain>
+References: <20190814202815.32491-1-jacopo@jmondi.org>
+ <20190814202815.32491-2-jacopo@jmondi.org>
+ <20190815065635.GJ6133@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="guiyz7n4y2542mup"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190815083716.4715-5-xiaowei.bao@nxp.com>
+In-Reply-To: <20190815065635.GJ6133@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" <linux-media@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 04:37:11PM +0800, Xiaowei Bao wrote:
-> The different PCIe controller in one board may be have different
-> capability of MSI or MSIX, so change the way of getting the MSI
-> capability, make it more flexible.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 28 +++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index be61d96..9404ca0 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -22,6 +22,7 @@
->  
->  struct ls_pcie_ep {
->  	struct dw_pcie		*pci;
-> +	struct pci_epc_features	*ls_epc;
->  };
->  
->  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> @@ -40,25 +41,26 @@ static const struct of_device_id ls_pcie_ep_of_match[] = {
->  	{ },
->  };
->  
-> -static const struct pci_epc_features ls_pcie_epc_features = {
-> -	.linkup_notifier = false,
-> -	.msi_capable = true,
-> -	.msix_capable = false,
-> -};
-> -
->  static const struct pci_epc_features*
->  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
->  {
-> -	return &ls_pcie_epc_features;
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> +
-> +	return pcie->ls_epc;
->  }
->  
->  static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
->  	enum pci_barno bar;
->  
->  	for (bar = BAR_0; bar <= BAR_5; bar++)
->  		dw_pcie_ep_reset_bar(pci, bar);
-> +
-> +	pcie->ls_epc->msi_capable = ep->msi_cap ? true : false;
-> +	pcie->ls_epc->msix_capable = ep->msix_cap ? true : false;
->  }
->  
->  static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> @@ -118,6 +120,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct dw_pcie *pci;
->  	struct ls_pcie_ep *pcie;
-> +	struct pci_epc_features *ls_epc;
->  	struct resource *dbi_base;
->  	int ret;
->  
-> @@ -129,6 +132,10 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	if (!pci)
->  		return -ENOMEM;
->  
-> +	ls_epc = devm_kzalloc(dev, sizeof(*ls_epc), GFP_KERNEL);
-> +	if (!ls_epc)
-> +		return -ENOMEM;
-> +
->  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
->  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
->  	if (IS_ERR(pci->dbi_base))
-> @@ -139,6 +146,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	pci->ops = &ls_pcie_ep_ops;
->  	pcie->pci = pci;
->  
-> +	ls_epc->linkup_notifier = false,
-> +	ls_epc->msi_capable = true,
-> +	ls_epc->msix_capable = true,
 
-As [msi,msix]_capable is shortly set from ls_pcie_ep_init - is there any
-reason to set them here (to potentially incorrect values)?
+--guiyz7n4y2542mup
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Thanks,
+Hi Sakari,
 
-Andrew Murray
+On Thu, Aug 15, 2019 at 09:56:35AM +0300, Sakari Ailus wrote:
+> Hi Jacopo,
+>
+> On Wed, Aug 14, 2019 at 10:28:11PM +0200, Jacopo Mondi wrote:
+> > Add the 'location' device property, used to specify the camera device
+> > mounting position. The property is particularly meaningful for mobile
+> > devices with a well defined usage orientation.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> > ---
+> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index f884ada0bffc..819077b2649c 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -89,6 +89,10 @@ Optional properties
+> >    but a number of degrees counter clockwise. Typical values are 0 and 180
+> >    (upside down).
+> >
+> > +- location: The camera device mounting position, relative to the device
+> > +  usage orientation. Possible values are:
+> > +  0 - Front camera. The image sensor is mounted on the front side of the device.
+> > +  1 - Back camera. The image sensor is mounted on the back side of the device.
+>
+> Would it make sense to make this a little more generic? Such as s/image
+> sensor/ device/, for instance?
 
-> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> +
-> +	pcie->ls_epc = ls_epc;
-> +
->  	platform_set_drvdata(pdev, pcie);
->  
->  	ret = ls_add_pcie_ep(pcie, pdev);
-> -- 
-> 2.9.5
-> 
+Laurent seems to be of the opposite opinion, but i think staying as
+generic as possible might be a good idea. Now I have a linguistic
+problem though.
+
+ +- location: The device mounting position, relative to the device
+ +  usage orientation. Possible values are:
+ +  0 - Front. The device is mounted on the front side of the device.
+ +  1 - Back. The device is mounted on the back side of the device.
+
+So I need one "device" to indicate the lens/flash/image sensor and one
+to indicate the device they're installed on :) Any idea?
+
+>
+> Is this also relevant for flash or lens devices?
+>
+> Flash (torch) devices could be present, at least principle, without a
+> camera. There once was even such a Nokia phone, 1100 unless I'm mistaken.
+> :-)
+
+Not to mention that lenses are indeed installed in the same package as
+the camera sensor, but they're described as separate device nodes as
+flash leds are, so the mounting location might need to be specified in their
+device node properties too, even if it would be the same as the image
+sensor one.
+
+>
+> --
+> Regards,
+>
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+--guiyz7n4y2542mup
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1VVlMACgkQcjQGjxah
+Vjzusg//X9PG4Cmjuk3pVya27qa6x9ghMPj/jf4z/DUsywmOUgyZ5iVpmOzJBCL0
+FwHslnBZ03WbUjBVIvqnYNbLzd6yIbSE1EyTnjBDfhmeJ8iqTjN+qetPc1hM804S
+5dKlthkP7UFG3PShJbFJoU+26eGfQi3rt94jtpX4I4WawodSCLf6neueow56V/O7
+CBjH5d2oqkk0+gyXNwn8YZyeaUPaFlN7wKuGQqg/O7OgbuV0LZJCoFFEaKZNhJcJ
+gzDXFk7I9ywmlySZ340gLNH3GUiCSqUQYTVkv0vUxihagAtA1HpYEeRde75DOe/4
+1bCrHrb75K0AYOjza0sKoMo6qI6yulSkGepWU9QNwjinWV/3Z/g7GkTABVwCSBNH
+wVOiwxqj834941oqb5vxCAKWrg4i3pA6YWgCJ5oMFuxrCE4FjjQm7V0kCyErSFUL
+QFlt+KhM8AhQETJ/uS5u/nwh70WFpVpcI0A4yAbgbCIZLl7Ta4SaOJOiqDZs1XQU
+c1nTGXbXOjo2bHqGRabHupNF876E38CHUYB+ubvjkzJEzczvk94gTFNfqeaEdiOq
+XB17wFZT7UHTKaKrIEOnKvPdJd5hMp0fTkNoDM6g0is8m1vqXixf+aHQcJEpIA7S
+i4IiRb6s4ipRLI9ymsmNBysjXJZ9z1SsHhUFbaJy6WbbhBKA668=
+=+0WF
+-----END PGP SIGNATURE-----
+
+--guiyz7n4y2542mup--
