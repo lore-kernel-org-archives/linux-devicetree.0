@@ -1,87 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 UL/ULL
- devicetree bindings
-Date: Thu, 15 Aug 2019 07:43:56 -0600
-Message-ID: <CAL_JsqJHfVDfpC9Yr7o3HO4wU7QR+sp0mxFLkxwVcGXXLeAyJw@mail.gmail.com>
-References: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
- <20190813160448.GA27548@bogus> <073f9466-9dd3-a22c-e000-e9f4c60f90a0@phytec.de>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: Re: [PATCH v4 18/21] ARM: dts: imx6ull-colibri: Add general wakeup
+ key used on Colibri
+Date: Thu, 15 Aug 2019 13:44:14 +0000
+Message-ID: <CAGgjyvFSUCYUxbCU2fOXNH6gBOpw5gay+T8eyk=AKHB0OTornA@mail.gmail.com>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-19-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <073f9466-9dd3-a22c-e000-e9f4c60f90a0@phytec.de>
+In-Reply-To: <20190812142105.1995-19-philippe.schenker@toradex.com>
+Content-Language: en-US
+Content-ID: <41F6EBF36EABB04D96823C2145A359AF@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Stefan_Riedm=C3=BCller?= <s.riedmueller@phytec.de>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrew Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 4:55 AM Stefan Riedm=C3=BCller
-<s.riedmueller@phytec.de> wrote:
->
-> Hi Rob,
->
-> On 13.08.19 18:04, Rob Herring wrote:
-> > On Wed, Jul 24, 2019 at 09:49:32AM +0200, Stefan Riedmueller wrote:
-> >> Add devicetree bindings for i.MX6 UL/ULL based phyCORE-i.MX6 UL/ULL an=
-d
-> >> phyBOARD-Segin.
-> >>
-> >> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> >> ---
-> >>   Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
-> >>   1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Document=
-ation/devicetree/bindings/arm/fsl.yaml
-> >> index 7294ac36f4c0..40f007859092 100644
-> >> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> >> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> >> @@ -161,12 +161,20 @@ properties:
-> >>           items:
-> >>             - enum:
-> >>                 - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EV=
-K Board
-> >> +              - phytec,imx6ul-pbacd10     # PHYTEC phyBOARD-Segin wit=
-h i.MX6 UL
-> >> +              - phytec,imx6ul-pbacd10-emmc  # PHYTEC phyBOARD-Segin e=
-MMC Kit
-> >> +              - phytec,imx6ul-pbacd10-nand  # PHYTEC phyBOARD-Segin N=
-AND Kit
-> >> +              - phytec,imx6ul-pcl063      # PHYTEC phyCORE-i.MX 6UL
-> >
-> > This doesn't match what is in the dts files:
-> >
-> > arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi:    compatible =3D "phytec,=
-imx6ul-pcl063", "fsl,imx6ul";
-> > arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts:      compatibl=
-e =3D "phytec,imx6ul-pbacd10", "phytec,imx6ul-pcl063",
-> > "fsl,imx6ul";
-> > arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi:    compatible =3D =
-"phytec,imx6ul-pbacd-10", "phytec,imx6ul-pcl063",
-> > "fsl,imx6ul";
->
-> Shawn already applied my patches which rename the compatibles, see
-> https://lkml.org/lkml/2019/7/23/42
-
-In any case, it still doesn't match. For example, from those patches:
-
-+ model =3D "PHYTEC phyBOARD-Segin i.MX6 ULL Full Featured with eMMC";
-+ compatible =3D "phytec,imx6ull-pbacd10-emmc", "phytec,imx6ull-pbacd10",
-+     "phytec,imx6ull-pcl063","fsl,imx6ull";
-
-The correct schema for this would be:
-
-items:
-  - const: phytec,imx6ull-pbacd10-emmc
-  - const: phytec,imx6ull-pbacd10
-  - const: phytec,imx6ull-pcl063
-  - const: fsl,imx6ull
-
-This defines how many entries (4), what they are, and the order of
-them. Maybe the first entry can be an enum with the -nand compatible
-if those are 2 options.
-
-Run 'make dtbs_check' and make sure there aren't warnings for the root node=
-.
-
-Rob
+T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgNToyMyBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
+cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gVGhpcyBhZGRzIHRoZSBwb3Nz
+aWJpbGl0eSB0byB3YWtlIHRoZSBtb2R1bGUgd2l0aCBhbiBleHRlcm5hbCBzaWduYWwNCj4gYXMg
+ZGVmaW5lZCBpbiB0aGUgQ29saWJyaSBzdGFuZGFyZA0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBQaGls
+aXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQo+IEFja2VkLWJ5
+OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCg0KUmV2aWV3
+ZWQtYnk6IE9sZWtzYW5kciBTdXZvcm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4N
+Cg0KPg0KPiAtLS0NCj4NCj4gQ2hhbmdlcyBpbiB2NDoNCj4gLSBBZGQgTWFyY2VsIFppc3dpbGVy
+J3MgQWNrDQo+DQo+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0K
+Pg0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDE0
+ICsrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQ0KPg0K
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMu
+ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCj4g
+aW5kZXggYjYxNDdjNzZkMTU5Li5hNzg4NDlmZDJhZmEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KPiBAQCAtOCw2ICs4LDIwIEBA
+DQo+ICAgICAgICAgICAgICAgICBzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsNCj4g
+ICAgICAgICB9Ow0KPg0KPiArICAgICAgIGdwaW8ta2V5cyB7DQo+ICsgICAgICAgICAgICAgICBj
+b21wYXRpYmxlID0gImdwaW8ta2V5cyI7DQo+ICsgICAgICAgICAgICAgICBwaW5jdHJsLW5hbWVz
+ID0gImRlZmF1bHQiOw0KPiArICAgICAgICAgICAgICAgcGluY3RybC0wID0gPCZwaW5jdHJsX3Nu
+dnNfZ3Bpb2tleXM+Ow0KPiArDQo+ICsgICAgICAgICAgICAgICBwb3dlciB7DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIGxhYmVsID0gIldha2UtVXAiOw0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICBncGlvcyA9IDwmZ3BpbzUgMSBHUElPX0FDVElWRV9ISUdIPjsNCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgbGludXgsY29kZSA9IDxLRVlfV0FLRVVQPjsNCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgZGVib3VuY2UtaW50ZXJ2YWwgPSA8MTA+Ow0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICB3YWtldXAtc291cmNlOw0KPiArICAgICAgICAgICAgICAgfTsNCj4gKyAgICAgICB9Ow0K
+PiArDQo+ICAgICAgICAgLyogZml4ZWQgY3J5c3RhbCBkZWRpY2F0ZWQgdG8gbWNwMjUxNSAqLw0K
+PiAgICAgICAgIGNsazE2bTogY2xrMTZtIHsNCj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
+PSAiZml4ZWQtY2xvY2siOw0KPiAtLQ0KPiAyLjIyLjANCj4NCg0KDQotLSANCkJlc3QgcmVnYXJk
+cw0KT2xla3NhbmRyIFN1dm9yb3YNCg0KVG9yYWRleCBBRw0KQWx0c2FnZW5zdHJhc3NlIDUgfCA2
+MDQ4IEhvcncvTHV6ZXJuIHwgU3dpdHplcmxhbmQgfCBUOiArNDEgNDEgNTAwDQo0ODAwIChtYWlu
+IGxpbmUpDQo=
