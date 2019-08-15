@@ -1,97 +1,153 @@
-From: Oshri Alkobi <oshrialkoby85@gmail.com>
-Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
-Date: Thu, 15 Aug 2019 20:03:56 +0300
-Message-ID: <CAM9mBwL=5+pGTYUKbSdw5F6soR=tW-cqfbEQ9_NmCQTO=fSVZQ@mail.gmail.com>
-References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
- <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
- <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com> <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
- <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
- <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com> <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
- <20190715094541.zjqxainggjuvjxd2@linux.intel.com> <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
- <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: act8865 regulator modes and suspend states" to the regulator tree
+Date: Thu, 15 Aug 2019 18:14:34 +0100 (BST)
+Message-ID: <20190815171434.A604C2742B9E@ypsilon.sirena.org.uk>
+References: <1565721176-8955-3-git-send-email-raagjadav@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
+In-Reply-To: <1565721176-8955-3-git-send-email-raagjadav@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc: Eyal.Cohen@nuvoton.com, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, tmaimon77@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com, amir.mizinski@nuvoton.com
+To: Raag Jadav <raagjadav@gmail.com>
+Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 8:10 PM Alexander Steffen
-<Alexander.Steffen@infineon.com> wrote:
->
-> On 18.07.2019 14:51, Eyal.Cohen@nuvoton.com wrote:
-> > Hi Jarkko and Alexander,
-> >
-> > We have made an additional code review on the TPM TIS core driver, it looks quite good and we can connect our new I2C driver to this layer.
->
-> Great :) In the meantime, I've done some experiments creating an I2C
-> driver based on tpm_tis_core, see
-> https://patchwork.kernel.org/patch/11049363/ Please have a look at that
-> and provide your feedback (and/or use it as a basis for further
-> implementations).
->
+The patch
 
-Sorry for the late response.
+   regulator: act8865 regulator modes and suspend states
 
-Thanks Alexander, indeed it looks much simpler.
-I've checked it with Nuvoton's TPM - basic TPM commands work, I only
-had to remove the first msg from the read/write I2C transmitting
-(from/to TPM_LOC_SEL), the TPM couldn't handle two register writes in
-a sequence.
-Actually it is more efficient to set TPM_LOC_SEL only before locality
-check/request/relinquish - it is sticky.
-I still didn't manage to work with interrupts, will debug it.
+has been applied to the regulator tree at
 
-We weren't aware to the implementation of Christophe/ST which looks
-good and can be complement to yours.
-If no one is currently working on that, we can prepare a new patch
-that is based on both.
-Please let us know.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
-> > However, there are several differences between the SPI interface and the I2C interface that will require changes to the TIS core.
-> > At a minimum we thought of:
-> > 1. Handling TPM Localities in I2C is different
->
-> It turned out not to be that different in the end, see the code
-> mentioned above and my comment here:
-> https://patchwork.kernel.org/cover/11049365/
->
-> > 2. Handling I2C CRC - relevant only to I2C bus hence not supported today by TIS core
->
-> That is completely optional, so there is no need to implement it in the
-> beginning. Also, do you expect a huge benefit from that functionality?
-> Are bit flips that much more likely on I2C compared to SPI, which has no
-> CRC at all, but still works fine?
->
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-I2C is noisy bus with potentially more devices with larger variety
-than SPI. I2C may have more than one master and may have collisions
-and/or arbitration.
-Still we can start w/o CRC for the first stage and add it later.
-BTW, Christophe already did most of the work
-(https://patchwork.kernel.org/patch/8628661/)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> > 3. Handling Chip specific issues, since I2C implementation might be slightly different across the various TPM vendors
->
-> Right, that seems similar to the cr50 issues
-> (https://lkml.org/lkml/2019/7/17/677), so there should probably be a
-> similar way to do it.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Got it. We hope things will work for us without having another driver,
-but it's an option.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->
-> > 4. Modify tpm_tis_send_data and tpm_tis_recv_data to work according the TCG Device Driver Guide (optimization on TPM_STS access and send/recv retry)
->
-> Optimizations are always welcome, but I'd expect basic communication to
-> work already with the current code (though maybe not as efficiently as
-> possible).
->
-> > Besides this, during development we might encounter additional differences between SPI and I2C.
-> >
-> > We currently target to allocate an eng. to work on this on the second half of August with a goal to have the driver ready for the next kernel merge window.
-> >
-> > Regards,
-> > Eyal.
+Thanks,
+Mark
+
+>From ff461ebfd4b7051d9b79ca023741e6c2d960a912 Mon Sep 17 00:00:00 2001
+From: Raag Jadav <raagjadav@gmail.com>
+Date: Wed, 14 Aug 2019 00:02:56 +0530
+Subject: [PATCH] regulator: act8865 regulator modes and suspend states
+
+Add documentation for act8865 regulator modes and suspend states.
+Add active-semi,8865-regulator.h file for device tree binding constants
+for act8865 regulators.
+
+Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+Link: https://lore.kernel.org/r/1565721176-8955-3-git-send-email-raagjadav@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/regulator/act8865-regulator.txt  | 27 ++++++++++++++++--
+ .../regulator/active-semi,8865-regulator.h    | 28 +++++++++++++++++++
+ 2 files changed, 53 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/regulator/active-semi,8865-regulator.h
+
+diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+index 3ae9f1088845..b9f58e480349 100644
+--- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
+@@ -34,6 +34,9 @@ Optional input supply properties:
+   - inl67-supply: The input supply for LDO_REG3 and LDO_REG4
+ 
+ Any standard regulator properties can be used to configure the single regulator.
++regulator-initial-mode, regulator-allowed-modes and regulator-mode could be specified
++for act8865 using mode values from dt-bindings/regulator/active-semi,8865-regulator.h
++file.
+ 
+ The valid names for regulators are:
+ 	- for act8846:
+@@ -47,6 +50,8 @@ The valid names for regulators are:
+ Example:
+ --------
+ 
++#include <dt-bindings/regulator/active-semi,8865-regulator.h>
++
+ 		i2c1: i2c@f0018000 {
+ 			pmic: act8865@5b {
+ 				compatible = "active-semi,act8865";
+@@ -65,9 +70,19 @@ Example:
+ 						regulator-name = "VCC_1V2";
+ 						regulator-min-microvolt = <1100000>;
+ 						regulator-max-microvolt = <1300000>;
+-						regulator-suspend-mem-microvolt = <1150000>;
+-						regulator-suspend-standby-microvolt = <1150000>;
+ 						regulator-always-on;
++
++						regulator-allowed-modes = <ACT8865_REGULATOR_MODE_FIXED>,
++									  <ACT8865_REGULATOR_MODE_LOWPOWER>;
++						regulator-initial-mode = <ACT8865_REGULATOR_MODE_FIXED>;
++
++						regulator-state-mem {
++							regulator-on-in-suspend;
++							regulator-suspend-min-microvolt = <1150000>;
++							regulator-suspend-max-microvolt = <1150000>;
++							regulator-changeable-in-suspend;
++							regulator-mode = <ACT8865_REGULATOR_MODE_LOWPOWER>;
++						};
+ 					};
+ 
+ 					vcc_3v3_reg: DCDC_REG3 {
+@@ -82,6 +97,14 @@ Example:
+ 						regulator-min-microvolt = <3300000>;
+ 						regulator-max-microvolt = <3300000>;
+ 						regulator-always-on;
++
++						regulator-allowed-modes = <ACT8865_REGULATOR_MODE_NORMAL>,
++									  <ACT8865_REGULATOR_MODE_LOWPOWER>;
++						regulator-initial-mode = <ACT8865_REGULATOR_MODE_NORMAL>;
++
++						regulator-state-mem {
++							regulator-off-in-suspend;
++						};
+ 					};
+ 
+ 					vddfuse_reg: LDO_REG2 {
+diff --git a/include/dt-bindings/regulator/active-semi,8865-regulator.h b/include/dt-bindings/regulator/active-semi,8865-regulator.h
+new file mode 100644
+index 000000000000..15473dbeaf38
+--- /dev/null
++++ b/include/dt-bindings/regulator/active-semi,8865-regulator.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Device Tree binding constants for the ACT8865 PMIC regulators
++ */
++
++#ifndef _DT_BINDINGS_REGULATOR_ACT8865_H
++#define _DT_BINDINGS_REGULATOR_ACT8865_H
++
++/*
++ * These constants should be used to specify regulator modes in device tree for
++ * ACT8865 regulators as follows:
++ * ACT8865_REGULATOR_MODE_FIXED:	It is specific to DCDC regulators and it
++ *					specifies the usage of fixed-frequency
++ *					PWM.
++ *
++ * ACT8865_REGULATOR_MODE_NORMAL:	It is specific to LDO regulators and it
++ *					specifies the usage of normal mode.
++ *
++ * ACT8865_REGULATOR_MODE_LOWPOWER:	For DCDC and LDO regulators; it specify
++ *					the usage of proprietary power-saving
++ *					mode.
++ */
++
++#define ACT8865_REGULATOR_MODE_FIXED		1
++#define ACT8865_REGULATOR_MODE_NORMAL		2
++#define ACT8865_REGULATOR_MODE_LOWPOWER	3
++
++#endif
+-- 
+2.20.1
