@@ -1,30 +1,141 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [v2 1/3] dt/bindings: clk: Add YAML schemas for LS1028A Display
- Clock bindings
-Date: Thu, 15 Aug 2019 07:49:23 -0600
-Message-ID: <CAL_JsqLp4BB+=kdGkMuH+-QQWHt8vRB_DSxjDYBFHLcHUg5V=A@mail.gmail.com>
-References: <20190815101613.22872-1-wen.he_1@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v8 02/14] media: doc: add document for rkisp1 meta buffer
+ format
+Date: Thu, 15 Aug 2019 16:51:43 +0300
+Message-ID: <20190815135143.GU5011@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-3-helen.koike@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190815101613.22872-1-wen.he_1@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190730184256.30338-3-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: linux-devel@linux.nxdi.nxp.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, Liviu Dudau <liviu.dudau@arm.com>
+To: Helen Koike <helen.koike@collabora.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com, Jacob Chen <jacob-chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 4:26 AM Wen He <wen.he_1@nxp.com> wrote:
->
-> LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
-> output interface. Add a YAML schema for this.
->
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> ---
-> change in v2:
->         - Convert bindings to YAML format
->
->  .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+Hi Helen,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thank you for the patch.
+
+On Tue, Jul 30, 2019 at 03:42:44PM -0300, Helen Koike wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> 
+> This commit add document for rkisp1 meta buffer format
+> 
+> Signed-off-by: Jacob Chen <jacob-chen@rock-chips.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> [update for upstream]
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v8:
+> - Add SPDX in the header
+> - Remove emacs configs
+> - Fix doc style
+> 
+> Changes in v7:
+> - s/correspond/corresponding
+> - s/use/uses
+> - s/docuemnt/document
+> 
+>  Documentation/media/uapi/v4l/meta-formats.rst |  2 ++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
+>  .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
+>  3 files changed, 47 insertions(+)
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> 
+> diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
+> index b10ca9ee3968..5de621fea3cc 100644
+> --- a/Documentation/media/uapi/v4l/meta-formats.rst
+> +++ b/Documentation/media/uapi/v4l/meta-formats.rst
+> @@ -24,3 +24,5 @@ These formats are used for the :ref:`metadata` interface only.
+>      pixfmt-meta-uvc
+>      pixfmt-meta-vsp1-hgo
+>      pixfmt-meta-vsp1-hgt
+> +    pixfmt-meta-rkisp1-params
+> +    pixfmt-meta-rkisp1-stat
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> new file mode 100644
+> index 000000000000..103b5cb79b7c
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> @@ -0,0 +1,23 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-params:
+> +
+> +============================
+> +V4L2_META_FMT_RK_ISP1_PARAMS
+> +============================
+> +
+> +Rockchip ISP1 Parameters Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes input parameters for the Rockchip ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
+
+I would say that
+
+"The buffer contains a single instance of the C structure
+:c:type:`rkisp1_isp_params_cfg`, defined in the
+``linux/rkisp1-config.h`` header file."
+
+And add a sentence to explain what the alignment requirements are.
+
+> +
+> +The parameters consist of multiple modules.
+> +The module won't be updated if the corresponding bit was not set in module_*_update.
+
+Doesn't this belong to rkisp1-config.h ? I would group all the
+information related to fields of the structure in the header file, and
+only have here the information related to the buffer layout (this mainly
+referencing the structure and talking about alignment/padding).
+
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_isp_params_cfg
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> new file mode 100644
+> index 000000000000..4ad303f96421
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> @@ -0,0 +1,22 @@
+> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +.. _v4l2-meta-fmt-rkisp1-stat:
+> +
+> +=============================
+> +V4L2_META_FMT_RK_ISP1_STAT_3A
+> +=============================
+> +
+> +
+> +Rockchip ISP1 Statistics Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes image color statistics information generated by the Rockchip
+> +ISP1.
+> +
+> +It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file.
+
+Same comment here, I think we need to document alignment/padding
+constraints.
+
+> +
+> +.. kernel-doc:: include/uapi/linux/rkisp1-config.h
+> +   :functions: rkisp1_stat_buffer
+
+-- 
+Regards,
+
+Laurent Pinchart
