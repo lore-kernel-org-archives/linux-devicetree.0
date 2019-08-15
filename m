@@ -1,42 +1,56 @@
-Return-Path: <SRS0=gJgO=WW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:58656 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbfHZPTM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Aug 2019 11:19:12 -0400
-Date: Mon, 26 Aug 2019 08:19:08 -0700
-From: Tony Lindgren <tony@atomide.com>
+Return-Path: <SRS0=dP36=WL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57598 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729507AbfHOQoL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2019 12:44:11 -0400
 Subject: Re: [PATCH 0/3] Drop platform data for cpsw for am3/4 and dra7
-Message-ID: <20190826151908.GU52127@atomide.com>
 References: <20190814101949.50006-1-tony@atomide.com>
- <a4467e6c-88f3-eac8-322a-c0e40360ba36@ti.com>
+From: grygorii <grygorii.strashko@ti.com>
+Message-ID: <a4467e6c-88f3-eac8-322a-c0e40360ba36@ti.com>
+Date: Thu, 15 Aug 2019 19:44:03 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4467e6c-88f3-eac8-322a-c0e40360ba36@ti.com>
+In-Reply-To: <20190814101949.50006-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: grygorii <grygorii.strashko@ti.com>
-Cc: linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Keerthy <j-keerthy@ti.com>
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Keerthy <j-keerthy@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-* grygorii <grygorii.strashko@ti.com> [190815 16:44]:
-> Hi Tony,
-> 
-> On 14/08/2019 13:19, Tony Lindgren wrote:
-> > Hi all,
-> > 
-> > Here are changes to drop legacy platform data for cpsw for am3, am4
-> > and dra7. Please review and test, I was not able to boot my beagle
-> > x15 as it seems to have a power supply problem and have only tested
-> > on am3 and 4.
-> 
-> 
-> Thank you.
-> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Hi Tony,
 
-Just to update the beagle x15 status, the issue I was seeing turned
-out to be hung ftdi serial driver on my PC instead of a power supply
-problem. Reloading USB modules fixed that.
+On 14/08/2019 13:19, Tony Lindgren wrote:
+> Hi all,
+> 
+> Here are changes to drop legacy platform data for cpsw for am3, am4
+> and dra7. Please review and test, I was not able to boot my beagle
+> x15 as it seems to have a power supply problem and have only tested
+> on am3 and 4.
 
-Regards,
 
-Tony
+Thank you.
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+> 
+> 
+> Tony Lindgren (3):
+>    ARM: dts: Add fck for cpsw mdio for omap variants
+>    ARM: OMAP2+: Drop legacy platform data for cpsw on am3 and am4
+>    ARM: OMAP2+: Drop legacy platform data for cpsw on dra7
+> 
+>   arch/arm/boot/dts/am33xx-l4.dtsi              |  4 +-
+>   arch/arm/boot/dts/am437x-l4.dtsi              |  6 +-
+>   arch/arm/boot/dts/dra7-l4.dtsi                |  4 +-
+>   .../omap_hwmod_33xx_43xx_common_data.h        |  3 -
+>   .../omap_hwmod_33xx_43xx_interconnect_data.c  |  6 --
+>   .../omap_hwmod_33xx_43xx_ipblock_data.c       | 50 --------------
+>   arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |  9 ---
+>   arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |  9 ---
+>   arch/arm/mach-omap2/omap_hwmod_7xx_data.c     | 65 -------------------
+>   9 files changed, 6 insertions(+), 150 deletions(-)
+> 
+
+-- 
+Best regards,
+grygorii
