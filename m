@@ -1,156 +1,155 @@
 From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: Re: [RESEND PATCH] ARM: dts: Add stmpe-adc DT node to Toradex T30
- modules
-Date: Thu, 15 Aug 2019 07:37:21 +0000
-Message-ID: <CAGgjyvG-g7tHjQGAvd6_19+XhzaZTRVdj5CBRUxbvTHx2y5i=A@mail.gmail.com>
-References: <20190814105318.21902-1-philippe.schenker@toradex.com>
+Subject: Re: [PATCH v4 17/21] ARM: dts: imx6ull: improve can templates
+Date: Thu, 15 Aug 2019 07:42:37 +0000
+Message-ID: <CAGgjyvHi=DhUFE_6e_iPn91RNqJgDbGAEvZodji6OME9x5crrw@mail.gmail.com>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-18-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814105318.21902-1-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190812142105.1995-18-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <1AB25D4339390B4FAA2A1A07B5FBE6EC@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-ID: <E4FA979EF7ED3C41B14CE8144F7E4A6C@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Max Krummenacher <max.krummenacher@toradex.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMTQsIDIwMTkgYXQgMTo1NCBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
-cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gQWRkIHRoZSBzdG1wZS1hZGMg
-RFQgbm9kZSBhcyBmb3VuZCBvbiBUb3JhZGV4IFQzMCBtb2R1bGVzDQo+DQo+IFNpZ25lZC1vZmYt
-Ynk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCg0K
-UmV2aWV3ZWQtYnk6IE9sZWtzYW5kciBTdXZvcm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4
-LmNvbT4NCg0KPg0KPiAtLS0NCj4NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBhbGlz
-LXYxLjEuZHRzaSB8IDIyICsrKysrKysrKysrKysrLS0tLS0tLS0NCj4gIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3RlZ3JhMzAtYXBhbGlzLmR0c2kgICAgICB8IDIyICsrKysrKysrKysrKysrLS0tLS0tLS0N
-Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtY29saWJyaS5kdHNpICAgICB8IDIyICsrKysr
-KysrKysrKysrLS0tLS0tLS0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKSwg
-MjQgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy90ZWdy
-YTMwLWFwYWxpcy12MS4xLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWFwYWxpcy12
-MS4xLmR0c2kNCj4gaW5kZXggMDJmODEyNjQ4MWEyLi44YjdhODI3ZDYwNGQgMTAwNjQ0DQo+IC0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBhbGlzLXYxLjEuZHRzaQ0KPiArKysgYi9h
-cmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWFwYWxpcy12MS4xLmR0c2kNCj4gQEAgLTk5NCwxMSAr
-OTk0LDE3IEBADQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGlkID0gPDA+Ow0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICBibG9ja3MgPSA8MHg1PjsNCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgaXJxLXRyaWdnZXIgPSA8MHgxPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgLyogMy4y
-NSBNSHogQURDIGNsb2NrIHNwZWVkICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0LGFk
-Yy1mcmVxID0gPDE+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAvKiAxMi1iaXQgQURDICov
-DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0LG1vZC0xMmIgPSA8MT47DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIC8qIGludGVybmFsIEFEQyByZWZlcmVuY2UgKi8NCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgc3QscmVmLXNlbCA9IDwwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgLyogQURDIGNvbnZlcnN0aW9uIHRpbWU6IDgwIGNsb2NrcyAqLw0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICBzdCxzYW1wbGUtdGltZSA9IDw0PjsNCj4NCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgc3RtcGVfdG91Y2hzY3JlZW4gew0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAic3Qsc3RtcGUtdHMiOw0KPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIC8qIDMuMjUgTUh6IEFEQyBjbG9jayBzcGVlZCAqLw0KPiAtICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHN0LGFkYy1mcmVxID0gPDE+Ow0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIC8qIDggc2FtcGxlIGF2ZXJhZ2UgY29udHJvbCAqLw0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHN0LGF2ZS1jdHJsID0gPDM+Ow0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC8qIDcgbGVuZ3RoIGZyYWN0aW9uYWwgcGFydCBpbiB6ICov
-DQo+IEBAIC0xMDA4LDE3ICsxMDE0LDE3IEBADQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICogY3VycmVudCBsaW1pdCB2YWx1ZQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAqLw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0LGktZHJpdmUg
-PSA8MT47DQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogMTItYml0IEFEQyAq
-Lw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0LG1vZC0xMmIgPSA8MT47DQo+
-IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogaW50ZXJuYWwgQURDIHJlZmVyZW5j
-ZSAqLw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0LHJlZi1zZWwgPSA8MD47
-DQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogQURDIGNvbnZlcnN0aW9uIHRp
-bWU6IDgwIGNsb2NrcyAqLw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0LHNh
-bXBsZS10aW1lID0gPDQ+Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIDEg
-bXMgcGFuZWwgZHJpdmVyIHNldHRsaW5nIHRpbWUgKi8NCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBzdCxzZXR0bGluZyA9IDwzPjsNCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAvKiA1IG1zIHRvdWNoIGRldGVjdCBpbnRlcnJ1cHQgZGVsYXkgKi8NCj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBzdCx0b3VjaC1kZXQtZGVsYXkgPSA8NT47DQo+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-c3RtcGVfYWRjIHsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gInN0LHN0bXBlLWFkYyI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyog
-Zm9yYmlkIHRvIHVzZSBBREMgY2hhbm5lbHMgMy0wICh0b3VjaCkgKi8NCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBzdCxub3JlcXVlc3QtbWFzayA9IDwweDBGPjsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgfTsNCj4gICAgICAgICAgICAgICAgIH07DQo+DQo+ICAgICAgICAg
-ICAgICAgICAvKg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1hcGFs
-aXMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBhbGlzLmR0c2kNCj4gaW5kZXgg
-N2YxMTJmMTkyZmU5Li5jMThmNmY2MWQ3NjQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3RlZ3JhMzAtYXBhbGlzLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEz
-MC1hcGFsaXMuZHRzaQ0KPiBAQCAtOTc2LDExICs5NzYsMTcgQEANCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgaWQgPSA8MD47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGJsb2NrcyA9IDww
-eDU+Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICBpcnEtdHJpZ2dlciA9IDwweDE+Ow0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAvKiAzLjI1IE1IeiBBREMgY2xvY2sgc3BlZWQgKi8NCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgc3QsYWRjLWZyZXEgPSA8MT47DQo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIC8qIDEyLWJpdCBBREMgKi8NCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-c3QsbW9kLTEyYiA9IDwxPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgLyogaW50ZXJuYWwg
-QURDIHJlZmVyZW5jZSAqLw0KPiArICAgICAgICAgICAgICAgICAgICAgICBzdCxyZWYtc2VsID0g
-PDA+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAvKiBBREMgY29udmVyc3Rpb24gdGltZTog
-ODAgY2xvY2tzICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0LHNhbXBsZS10aW1lID0g
-PDQ+Ow0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBzdG1wZV90b3VjaHNjcmVlbiB7DQo+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxzdG1wZS10
-cyI7DQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogMy4yNSBNSHogQURDIGNs
-b2NrIHNwZWVkICovDQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3QsYWRjLWZy
-ZXEgPSA8MT47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogOCBzYW1wbGUg
-YXZlcmFnZSBjb250cm9sICovDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3Qs
-YXZlLWN0cmwgPSA8Mz47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogNyBs
-ZW5ndGggZnJhY3Rpb25hbCBwYXJ0IGluIHogKi8NCj4gQEAgLTk5MCwxNyArOTk2LDE3IEBADQo+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICogY3VycmVudCBsaW1pdCB2YWx1ZQ0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqLw0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHN0LGktZHJpdmUgPSA8MT47DQo+IC0gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgLyogMTItYml0IEFEQyAqLw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHN0LG1vZC0xMmIgPSA8MT47DQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgLyogaW50ZXJuYWwgQURDIHJlZmVyZW5jZSAqLw0KPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHN0LHJlZi1zZWwgPSA8MD47DQo+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgLyogQURDIGNvbnZlcnN0aW9uIHRpbWU6IDgwIGNsb2NrcyAqLw0KPiAtICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHN0LHNhbXBsZS10aW1lID0gPDQ+Ow0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC8qIDEgbXMgcGFuZWwgZHJpdmVyIHNldHRsaW5nIHRpbWUg
-Ki8NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdCxzZXR0bGluZyA9IDwzPjsN
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiA1IG1zIHRvdWNoIGRldGVjdCBp
-bnRlcnJ1cHQgZGVsYXkgKi8NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdCx0
-b3VjaC1kZXQtZGVsYXkgPSA8NT47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ICsN
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgc3RtcGVfYWRjIHsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN0LHN0bXBlLWFkYyI7DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLyogZm9yYmlkIHRvIHVzZSBBREMgY2hhbm5lbHMgMy0w
-ICh0b3VjaCkgKi8NCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdCxub3JlcXVl
-c3QtbWFzayA9IDwweDBGPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4gICAgICAg
-ICAgICAgICAgIH07DQo+DQo+ICAgICAgICAgICAgICAgICAvKg0KPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvdGVncmEzMC1jb2xpYnJpLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy90
-ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiBpbmRleCAzNWFmMDNjYTllOTAuLjFmOTE5OGJiMjRmZiAx
-MDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1jb2xpYnJpLmR0c2kNCj4g
-KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1jb2xpYnJpLmR0c2kNCj4gQEAgLTg0NSwx
-MSArODQ1LDE4IEBADQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGlkID0gPDA+Ow0KPiAgICAg
-ICAgICAgICAgICAgICAgICAgICBibG9ja3MgPSA8MHg1PjsNCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgaXJxLXRyaWdnZXIgPSA8MHgxPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgLyog
-My4yNSBNSHogQURDIGNsb2NrIHNwZWVkICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0
-LGFkYy1mcmVxID0gPDE+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAvKiAxMi1iaXQgQURD
-ICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0LG1vZC0xMmIgPSA8MT47DQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIC8qIGludGVybmFsIEFEQyByZWZlcmVuY2UgKi8NCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgc3QscmVmLXNlbCA9IDwwPjsNCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgLyogQURDIGNvbnZlcnN0aW9uIHRpbWU6IDgwIGNsb2NrcyAqLw0KPiArICAgICAgICAg
-ICAgICAgICAgICAgICBzdCxzYW1wbGUtdGltZSA9IDw0PjsNCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgLyogZm9yYmlkIHRvIHVzZSBBREMgY2hhbm5lbHMgMy0wICh0b3VjaCkgKi8NCj4NCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgc3RtcGVfdG91Y2hzY3JlZW4gew0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3Qsc3RtcGUtdHMiOw0KPiAtICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIDMuMjUgTUh6IEFEQyBjbG9jayBzcGVlZCAq
-Lw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0LGFkYy1mcmVxID0gPDE+Ow0K
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIDggc2FtcGxlIGF2ZXJhZ2UgY29u
-dHJvbCAqLw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0LGF2ZS1jdHJsID0g
-PDM+Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIDcgbGVuZ3RoIGZyYWN0
-aW9uYWwgcGFydCBpbiB6ICovDQo+IEBAIC04NTksMTcgKzg2NiwxNiBAQA0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAqIGN1cnJlbnQgbGltaXQgdmFsdWUNCj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgKi8NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBzdCxpLWRyaXZlID0gPDE+Ow0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IC8qIDEyLWJpdCBBREMgKi8NCj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdCxt
-b2QtMTJiID0gPDE+Ow0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIGludGVy
-bmFsIEFEQyByZWZlcmVuY2UgKi8NCj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBz
-dCxyZWYtc2VsID0gPDA+Ow0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIEFE
-QyBjb252ZXJzdGlvbiB0aW1lOiA4MCBjbG9ja3MgKi8NCj4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBzdCxzYW1wbGUtdGltZSA9IDw0PjsNCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAvKiAxIG1zIHBhbmVsIGRyaXZlciBzZXR0bGluZyB0aW1lICovDQo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgc3Qsc2V0dGxpbmcgPSA8Mz47DQo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLyogNSBtcyB0b3VjaCBkZXRlY3QgaW50ZXJydXB0IGRl
-bGF5ICovDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3QsdG91Y2gtZGV0LWRl
-bGF5ID0gPDU+Ow0KPiAgICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiArDQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHN0bXBlX2FkYyB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJzdCxzdG1wZS1hZGMiOw0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHN0LG5vcmVxdWVzdC1tYXNrID0gPDB4MEY+Ow0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICB9Ow0KPiAgICAgICAgICAgICAgICAgfTsNCj4NCj4gICAgICAgICAgICAgICAg
-IC8qDQo+IC0tDQo+IDIuMjIuMA0KPg0KDQoNCi0tIA0KQmVzdCByZWdhcmRzDQpPbGVrc2FuZHIg
-U3V2b3Jvdg0KDQpUb3JhZGV4IEFHDQpBbHRzYWdlbnN0cmFzc2UgNSB8IDYwNDggSG9ydy9MdXpl
-cm4gfCBTd2l0emVybGFuZCB8IFQ6ICs0MSA0MSA1MDANCjQ4MDAgKG1haW4gbGluZSkNCg==
+On Mon, Aug 12, 2019 at 5:24 PM Philippe Schenker
+<philippe.schenker@toradex.com> wrote:
+>
+> From: Max Krummenacher <max.krummenacher@toradex.com>
+>
+> Add the pinmuxing and a inactive node for flexcan1 on SODIMM 55/63
+> and move the inactive flexcan nodes to imx6ull-colibri-eval-v3.dtsi
+> where they belong.
+>
+> Note that this commit does not enable flexcan functionality, but rather
+> eases the effort needed to do so.
+>
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+
+>
+> ---
+>
+> Changes in v4:
+> - Move can nodes to module deviceteree include imx6ull-colibri.dtsi
+>
+> Changes in v3: None
+> Changes in v2: None
+>
+>  .../arm/boot/dts/imx6ull-colibri-nonwifi.dtsi |  2 +-
+>  arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi   |  2 +-
+>  arch/arm/boot/dts/imx6ull-colibri.dtsi        | 28 +++++++++++++++++--
+>  3 files changed, 28 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
+> index fb213bec4654..95a11b8bcbdb 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri-nonwifi.dtsi
+> @@ -15,7 +15,7 @@
+>  &iomuxc {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3
+> -               &pinctrl_gpio4 &pinctrl_gpio5 &pinctrl_gpio6>;
+> +               &pinctrl_gpio4 &pinctrl_gpio5 &pinctrl_gpio6 &pinctrl_gpio7>;
+>  };
+>
+>  &iomuxc_snvs {
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+> index 038d8c90f6df..a0545431b3dc 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri-wifi.dtsi
+> @@ -26,7 +26,7 @@
+>  &iomuxc {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3
+> -               &pinctrl_gpio4 &pinctrl_gpio5>;
+> +               &pinctrl_gpio4 &pinctrl_gpio5 &pinctrl_gpio7>;
+>
+>  };
+>
+> diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> index e3220298dd6f..6d850d997e1e 100644
+> --- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+> @@ -54,6 +54,18 @@
+>         vref-supply = <&reg_module_3v3_avdd>;
+>  };
+>
+> +&can1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_flexcan1>;
+> +       status = "disabled";
+> +};
+> +
+> +&can2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_flexcan2>;
+> +       status = "disabled";
+> +};
+> +
+>  /* Colibri SPI */
+>  &ecspi1 {
+>         cs-gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>;
+> @@ -256,6 +268,13 @@
+>                 >;
+>         };
+>
+> +       pinctrl_flexcan1: flexcan1-grp {
+> +               fsl,pins = <
+> +                       MX6UL_PAD_ENET1_RX_DATA0__FLEXCAN1_TX   0x1b020
+> +                       MX6UL_PAD_ENET1_RX_DATA1__FLEXCAN1_RX   0x1b020
+> +               >;
+> +       };
+> +
+>         pinctrl_flexcan2: flexcan2-grp {
+>                 fsl,pins = <
+>                         MX6UL_PAD_ENET1_TX_DATA0__FLEXCAN2_RX   0x1b020
+> @@ -271,8 +290,6 @@
+>
+>         pinctrl_gpio1: gpio1-grp {
+>                 fsl,pins = <
+> -                       MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00    0x74 /* SODIMM 55 */
+> -                       MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01    0x74 /* SODIMM 63 */
+>                         MX6UL_PAD_UART3_RX_DATA__GPIO1_IO25     0X14 /* SODIMM 77 */
+>                         MX6UL_PAD_JTAG_TCK__GPIO1_IO14          0x14 /* SODIMM 99 */
+>                         MX6UL_PAD_NAND_CE1_B__GPIO4_IO14        0x14 /* SODIMM 133 */
+> @@ -325,6 +342,13 @@
+>                 >;
+>         };
+>
+> +       pinctrl_gpio7: gpio7-grp { /* CAN1 */
+> +               fsl,pins = <
+> +                       MX6UL_PAD_ENET1_RX_DATA0__GPIO2_IO00    0x74 /* SODIMM 55 */
+> +                       MX6UL_PAD_ENET1_RX_DATA1__GPIO2_IO01    0x74 /* SODIMM 63 */
+> +               >;
+> +       };
+> +
+>         pinctrl_gpmi_nand: gpmi-nand-grp {
+>                 fsl,pins = <
+>                         MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00   0x100a9
+> --
+> 2.22.0
+>
+
+
+-- 
+Best regards
+Oleksandr Suvorov
+
+Toradex AG
+Altsagenstrasse 5 | 6048 Horw/Luzern | Switzerland | T: +41 41 500
+4800 (main line)
