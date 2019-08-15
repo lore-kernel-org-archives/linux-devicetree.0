@@ -1,47 +1,97 @@
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: Re: [PATCH v4 13/21] ARM: dts: imx6-colibri: Add missing pinmuxing to
- Toradex eval board
-Date: Thu, 15 Aug 2019 11:00:34 +0000
-Message-ID: <CAGgjyvGX2y8jxyWeFAPqo-q4y0p47Wrcsxh67aw-0UyaShvQ2g@mail.gmail.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-14-philippe.schenker@toradex.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 0/9] Add dual-LVDS panel support to EK874
+Date: Thu, 15 Aug 2019 12:04:24 +0100
+Message-ID: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812142105.1995-14-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <37954B5DB7D46C468C941201897E8E4B@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Eric Anholt <eric@anholt.net>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgNToyMyBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
-cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gVGhpcyBwYXRjaCBhZGRzIHNv
-bWUgbWlzc2luZyBwaW5tdXhpbmcgdGhhdCBpcyBpbiB0aGUgY29saWJyaQ0KPiBzdGFuZGFyZCB0
-byB0aGUgZHRzLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlw
-cGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQo+IEFja2VkLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1h
-cmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCg0KUmV2aWV3ZWQtYnk6IE9sZWtzYW5kciBTdXZv
-cm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4NCg0KPg0KPiAtLS0NCj4NCj4gQ2hh
-bmdlcyBpbiB2NDoNCj4gLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQo+DQo+IENoYW5nZXMg
-aW4gdjM6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2MjoNCj4gLSBDb21taXQgdGl0bGUNCj4NCj4gIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZkbC1jb2xpYnJpLWV2YWwtdjMuZHRzIHwgOCArKysrKysrKw0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmktZXZhbC12My5kdHMgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg2ZGwtY29saWJyaS1ldmFsLXYzLmR0cw0KPiBpbmRleCA3NjNmYjVlOTBiZDMuLmU3
-YTJkOGMzYjJkNCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGli
-cmktZXZhbC12My5kdHMNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLWNvbGlicmkt
-ZXZhbC12My5kdHMNCj4gQEAgLTE5MSw2ICsxOTEsMTQgQEANCj4gIH07DQo+DQo+ICAmaW9tdXhj
-IHsNCj4gKyAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiArICAgICAgIHBpbmN0
-cmwtMCA9IDwNCj4gKyAgICAgICAgICAgICAgICZwaW5jdHJsX3dlaW1fZ3Bpb18xICZwaW5jdHJs
-X3dlaW1fZ3Bpb18yDQo+ICsgICAgICAgICAgICAgICAmcGluY3RybF93ZWltX2dwaW9fMyAmcGlu
-Y3RybF93ZWltX2dwaW9fNA0KPiArICAgICAgICAgICAgICAgJnBpbmN0cmxfd2VpbV9ncGlvXzUg
-JnBpbmN0cmxfd2VpbV9ncGlvXzYNCj4gKyAgICAgICAgICAgICAgICZwaW5jdHJsX3VzYmhfb2Nf
-MSAmcGluY3RybF91c2JjX2lkXzENCj4gKyAgICAgICA+Ow0KPiArDQo+ICAgICAgICAgcGluY3Ry
-bF9wY2FwXzE6IHBjYXAtMSB7DQo+ICAgICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgTVg2UURMX1BBRF9HUElPXzlfX0dQSU8xX0lPMDkgICAweDFi
-MGIwIC8qIFNPRElNTSAyOCAqLw0KPiAtLQ0KPiAyLjIyLjANCj4NCg0KDQotLSANCkJlc3QgcmVn
-YXJkcw0KT2xla3NhbmRyIFN1dm9yb3YNCg0KVG9yYWRleCBBRw0KQWx0c2FnZW5zdHJhc3NlIDUg
-fCA2MDQ4IEhvcncvTHV6ZXJuIHwgU3dpdHplcmxhbmQgfCBUOiArNDEgNDEgNTAwDQo0ODAwICht
-YWluIGxpbmUpDQo=
+Dear All,
+
+this series adds support for dual-LVDS panel IDK-2121WR
+from Advantech:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+Dual link support is very recent for R-Car Gen3, and I couldn't
+find much on dual link panels in the kernel either, therefore
+comments are very welcome to get this right.
+
+The panel doesn't come with the EK874 kit, but it's advertised as
+supported, therefore this series adds a new dts file to support
+the configuration of the EK874 + IDK-2121WR.
+
+Laurent,
+
+it appears that Rob has been busy converting the dt-bindings relevant to this
+series, and his changes are now found in linux-next. Most notably
+Documentation/devicetree/bindings/display/panel/panel-lvds.txt has now become
+Documentation/devicetree/bindings/display/panel/lvds.yaml
+
+You have already taken patch:
+https://patchwork.kernel.org/patch/11072749/
+
+as such the patch I am sending you is still related to:
+Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+
+Patch "dt-bindings: display: Add bindings for Advantech IDK-2121WR" is still
+assuming the format is .txt, as I am not too sure about what the protocol is in
+this case? Shall we take this patch and convert it later to .yaml or shall I
+convert it to .yaml straight away?
+
+Please, let me know what's the best course of action.
+
+v1->v2:
+* dt-bindings: display: renesas: lvds: Document renesas,swap-data - dropped
+* drm: rcar-du: lvds: Add data swap support - dropped
+* drm: rcar-du: lvds: Do not look at ports for identifying bridges - dropped
+* drm: rcar-du: lvds: Add support for dual link panels - dropped
+* dt-bindings: display: renesas: lvds: RZ/G2E needs renesas,companion too - taken
+* drm: rcar-du: lvds: Fix bridge_to_rcar_lvds - taken
+* arm64: dts: renesas: r8a774c0: Point LVDS0 to its companion LVDS1 - taken
+* arm64: dts: renesas: cat874: Add definition for 12V regulator -taken
+* dt-bindings: panel: lvds: Add dual-link LVDS display support - reworked according to Laurent's feedback
+* dt-bindings: display: Add bindings for Advantech IDK-2121WR - reworked according to Laurent's feedback
+* drm: Rename drm_bridge_timings to drm_timings - new patch
+* drm/timings: Add link flags - new patch
+* drm/panel: Add timings field to drm_panel - new patch
+* drm: rcar-du: lvds: Fix companion's mode - reworked according to Laurent's feedback
+* drm: rcar-du: lvds: Add dual-LVDS panels support - new patch
+* drm/panel: lvds: Add support for the IDK-2121WR - new patch
+* arm64: dts: renesas: Add EK874 board with idk-2121wr display support - Made some changes
+
+Thanks,
+Fab
+
+Fabrizio Castro (9):
+  dt-bindings: panel: lvds: Add dual-link LVDS display support
+  dt-bindings: display: Add bindings for Advantech IDK-2121WR
+  drm: Rename drm_bridge_timings to drm_timings
+  drm/timings: Add link flags
+  drm/panel: Add timings field to drm_panel
+  drm: rcar-du: lvds: Fix companion's mode
+  drm: rcar-du: lvds: Add dual-LVDS panels support
+  drm/panel: lvds: Add support for the IDK-2121WR
+  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+
+ .../display/panel/advantech,idk-2121wr.txt         |  56 +++++++++
+ .../bindings/display/panel/panel-lvds.txt          |  95 ++++++++++++----
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++
+ drivers/gpu/drm/bridge/dumb-vga-dac.c              |   6 +-
+ drivers/gpu/drm/bridge/sii902x.c                   |   2 +-
+ drivers/gpu/drm/bridge/thc63lvd1024.c              |   2 +-
+ drivers/gpu/drm/bridge/ti-tfp410.c                 |   6 +-
+ drivers/gpu/drm/panel/panel-lvds.c                 |   8 ++
+ drivers/gpu/drm/pl111/pl111_display.c              |   2 +-
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 126 ++++++++++++++-------
+ include/drm/drm_bridge.h                           |  40 +------
+ include/drm/drm_panel.h                            |   3 +
+ include/drm/drm_timings.h                          |  86 ++++++++++++++
+ 14 files changed, 439 insertions(+), 112 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+ create mode 100644 include/drm/drm_timings.h
+
+-- 
+2.7.4
