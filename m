@@ -1,41 +1,56 @@
-Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
-Date: Wed, 21 Aug 2019 09:36:13 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 3/4] dt-bindings: input: ads7846: replace vendor-bindings
- by general ones
-Message-ID: <20190821073613.nh5oyyvahb3i6nf6@pengutronix.de>
-References: <20190327133927.1340-1-m.felsch@pengutronix.de>
- <20190327133927.1340-4-m.felsch@pengutronix.de>
- <5ca06167.1c69fb81.6e121.c248@mx.google.com>
+Return-Path: <SRS0=dP36=WL=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46905 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfHOFgY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2019 01:36:24 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ca06167.1c69fb81.6e121.c248@mx.google.com>
-To: Rob Herring <robh@kernel.org>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+References: <20190807003629.2974-1-andrew@aj.id.au> <20190807003629.2974-2-andrew@aj.id.au>
+In-Reply-To: <20190807003629.2974-2-andrew@aj.id.au>
+From: Joel Stanley <joel@jms.id.au>
+Date: Thu, 15 Aug 2019 05:36:11 +0000
+Message-ID: <CACPK8Xe6Zp1uOqEffEc0b6oGa7portEAifGPRqb876HmA+oZeg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, adrian.hunter@intel.com, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dmitry,
+On Wed, 7 Aug 2019 at 00:38, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
+> SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
+> data bus if only a single slot is enabled.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-On 19-03-31 01:42, Rob Herring wrote:
-> On Wed, 27 Mar 2019 14:39:26 +0100, Marco Felsch wrote:
-> > Mark the vendor-bindings as deprecated and replace them by the general
-> > ones. All deprecated bindings are used as default and gets overwritten by
-> > the general ones if the user supplies both. This ensures the backward
-> > compatibility with old dt's.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  .../bindings/input/touchscreen/ads7846.txt    | 29 ++++++++++++++-----
-> >  1 file changed, 21 insertions(+), 8 deletions(-)
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-How about this patch?
+Two minor comments below.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+
+No "Copyright IBM" ?
+
+> +%YAML 1.2
+> +---
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/aspeed-clock.h>
+> +    sdc@1e740000 {
+> +            compatible = "aspeed,ast2500-sd-controller";
+> +            reg = <0x1e740000 0x100>;
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+> +            ranges = <0 0x1e740000 0x10000>;
+
+According to the datasheet this could be 0x20000. It does not matter
+though, as there's nothing in it past 0x300.
+
+Cheers,
+
+Joel
