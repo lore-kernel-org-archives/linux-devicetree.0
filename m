@@ -1,65 +1,54 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57570 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbfHNNCr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:02:47 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 1/5] ARM: dts: Drop custom hwmod property for omap4 i2c
-Date: Wed, 14 Aug 2019 06:02:36 -0700
-Message-Id: <20190814130240.56202-2-tony@atomide.com>
-In-Reply-To: <20190814130240.56202-1-tony@atomide.com>
-References: <20190814130240.56202-1-tony@atomide.com>
+Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v7 08/13] media: tvp5150: initialize subdev before parsing device tree
+Date: Thu, 15 Aug 2019 13:57:42 +0200
+Message-Id: <20190815115747.24018-9-m.felsch@pengutronix.de>
+In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
+References: <20190815115747.24018-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-We can now probe devices with ti-sysc interconnect driver and dts
-data. Let's drop the custom ti,hwmods dts property. We have already
-dropped the platform data earlier and have been allocating it
-dynamically.
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+There are several debug prints in the tvp5150_parse_dt() function, which
+do not print the prefix, because the v4l2_subdev is not initialized, yet.
+
+Initialize the v4l2_subdev before parsing the device tree to fix the
+debug messages.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm/boot/dts/omap4-l4.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/media/i2c/tvp5150.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-l4.dtsi b/arch/arm/boot/dts/omap4-l4.dtsi
---- a/arch/arm/boot/dts/omap4-l4.dtsi
-+++ b/arch/arm/boot/dts/omap4-l4.dtsi
-@@ -1695,7 +1695,6 @@
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index ad59e65e6771..26a156da3ab4 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1959,6 +1959,9 @@ static int tvp5150_probe(struct i2c_client *c)
  
- 		target-module@60000 {			/* 0x48060000, ap 25 1e.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c3";
- 			reg = <0x60000 0x8>,
- 			      <0x60010 0x8>,
- 			      <0x60090 0x8>;
-@@ -1814,7 +1813,6 @@
+ 	core->regmap = map;
+ 	sd = &core->sd;
++	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
++	sd->internal_ops = &tvp5150_internal_ops;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
  
- 		target-module@70000 {			/* 0x48070000, ap 32 28.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c1";
- 			reg = <0x70000 0x8>,
- 			      <0x70010 0x8>,
- 			      <0x70090 0x8>;
-@@ -1846,7 +1844,6 @@
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
+@@ -1971,10 +1974,6 @@ static int tvp5150_probe(struct i2c_client *c)
+ 		core->mbus_type = V4L2_MBUS_BT656;
+ 	}
  
- 		target-module@72000 {			/* 0x48072000, ap 34 30.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c2";
- 			reg = <0x72000 0x8>,
- 			      <0x72010 0x8>,
- 			      <0x72090 0x8>;
-@@ -2401,7 +2398,6 @@
- 
- 		target-module@150000 {			/* 0x48350000, ap 77 4c.0 */
- 			compatible = "ti,sysc-omap2", "ti,sysc";
--			ti,hwmods = "i2c4";
- 			reg = <0x150000 0x8>,
- 			      <0x150010 0x8>,
- 			      <0x150090 0x8>;
+-	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+-	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-
+ 	res = tvp5150_mc_init(core);
+ 	if (res)
+ 		return res;
 -- 
-2.21.0
+2.20.1
