@@ -1,26 +1,81 @@
-Return-Path: <sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v7 09/13] media: tvp5150: add s_power callback
+Date: Thu, 15 Aug 2019 13:57:43 +0200
+Message-Id: <20190815115747.24018-10-m.felsch@pengutronix.de>
+In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
+References: <20190815115747.24018-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190710134346.30239-4-gregory.clement@bootlin.com>
-References: <20190710134346.30239-1-gregory.clement@bootlin.com> <20190710134346.30239-4-gregory.clement@bootlin.com>
-Subject: Re: [PATCH v7 3/6] clk: mvebu: add CPU clock driver for Armada 7K/8K
-From: Stephen Boyd <sboyd@kernel.org>
-Date: Thu, 08 Aug 2019 09:12:16 -0700
-Message-Id: <20190808161217.6280721743@mail.kernel.org>
-To: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Gregory CLEMENT (2019-07-10 06:43:43)
-> The CPU frequency is managed at the AP level for the Armada 7K/8K. The
-> CPU frequency is modified by cluster: the CPUs of the same cluster have
-> the same frequency.
->=20
-> This patch adds the clock driver that will be used by CPUFreq, it is
-> based on the work of Omri Itach <omrii@marvell.com>.
->=20
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
+Don't en-/disable the interrupts during s_stream because someone can
+disable the stream but wants to get informed if the stream is locked
+again. So keep the interrupts enabled the whole time the pipeline is
+opened.
 
-Applied to clk-next
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 26a156da3ab4..9a812d5f45d7 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1354,11 +1354,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
+ /****************************************************************************
+ 			I2C Command
+  ****************************************************************************/
++static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
++{
++	struct tvp5150 *decoder = to_tvp5150(sd);
++	unsigned int val = 0;
++
++	if (on)
++		val = TVP5150_INT_A_LOCK;
++
++	if (decoder->irq)
++		/* Enable / Disable lock interrupt */
++		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
++				   TVP5150_INT_A_LOCK, val);
++
++	return 0;
++}
+ 
+ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
+-	unsigned int mask, val = 0, int_val = 0;
++	unsigned int mask, val = 0;
+ 
+ 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
+ 	       TVP5150_MISC_CTL_CLOCK_OE;
+@@ -1371,15 +1386,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ 			val = decoder->lock ? decoder->oe : 0;
+ 		else
+ 			val = decoder->oe;
+-		int_val = TVP5150_INT_A_LOCK;
+ 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+ 	}
+ 
+ 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
+-	if (decoder->irq)
+-		/* Enable / Disable lock interrupt */
+-		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
+-				   TVP5150_INT_A_LOCK, int_val);
+ 
+ 	return 0;
+ }
+@@ -1575,6 +1585,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
+ 	.g_register = tvp5150_g_register,
+ 	.s_register = tvp5150_s_register,
+ #endif
++	.s_power = tvp5150_s_power,
+ };
+ 
+ static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+-- 
+2.20.1
