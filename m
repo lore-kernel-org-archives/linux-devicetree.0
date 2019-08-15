@@ -1,50 +1,111 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v1 4/4] mmc: sdhci-of-esdhc: add erratum A011334 support
- in ls1028a 1.0 SoC
-Date: Thu, 15 Aug 2019 14:48:51 +0300
-Message-ID: <eeaf2862-8f05-e813-917b-a8358e6d90ab@intel.com>
-References: <20190814072649.8237-1-yinbo.zhu@nxp.com>
- <20190814072649.8237-4-yinbo.zhu@nxp.com>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
+ Mode
+Date: Thu, 15 Aug 2019 12:50:21 +0100
+Message-ID: <20190815115021.7pbv5s2qbgsuitvh@willie-the-truck>
+References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
+ <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
+ <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
+ <1565858869.12818.51.camel@mhfsdcap03>
+ <20190815095123.rzgtpklvhtjlqir4@willie-the-truck>
+ <1565864318.14278.4.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190814072649.8237-4-yinbo.zhu@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Li Yang <leoyang.li@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: Alison Wang <alison.wang@nxp.com>, Alex Marginean <alexandru.marginean@nxp.com>, xiaobo.xie@nxp.com, Catalin Horghidan <catalin.horghidan@nxp.com>, Rajat Srivastava <rajat.srivastava@nxp.com>, jiafei.pan@nxp.com, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1565864318.14278.4.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/08/19 10:26 AM, Yinbo Zhu wrote:
-> This patch is to add erratum A011334 support in ls1028a 1.0 SoC
-> 
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Ok, I think speaking to Robin helped me a bit with this...
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On Thu, Aug 15, 2019 at 06:18:38PM +0800, Yong Wu wrote:
+> On Thu, 2019-08-15 at 10:51 +0100, Will Deacon wrote:
+> > On Thu, Aug 15, 2019 at 04:47:49PM +0800, Yong Wu wrote:
+> > > On Wed, 2019-08-14 at 15:41 +0100, Will Deacon wrote:
+> > > > On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
+> > > > > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
+> > > > > 
+> > > > > In the mt2712 and mt8173, it's called "4GB mode", the physical address
+> > > > > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
+> > > > > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
+> > > > > bit32 is always enabled. thus, in the M4U, we always enable the bit9
+> > > > > for all PTEs which means to enable bit32 of physical address. Here is
+> > > > > the detailed remap relationship in the "4GB mode":
+> > > > > CPU PA         ->    HW PA
+> > > > > 0x4000_0000          0x1_4000_0000 (Add bit32)
+> > > > > 0x8000_0000          0x1_8000_0000 ...
+> > > > > 0xc000_0000          0x1_c000_0000 ...
+> > > > > 0x1_0000_0000        0x1_0000_0000 (No change)
 
-> ---
->  drivers/mmc/host/sdhci-of-esdhc.c | 1 +
->  1 file changed, 1 insertion(+)
+[...]
+
+> > > > The way I would like this quirk to work is that the io-pgtable code
+> > > > basically sets bit 9 in the pte when bit 32 is set in the physical address,
+> > > > and sets bit 4 in the pte when bit 33 is set in the physical address. It
+> > > > would then do the opposite when converting a pte to a physical address.
+> > > > 
+> > > > That way, your driver can call the page table code directly with the high
+> > > > addresses and we don't have to do any manual offsetting or range checking
+> > > > in the page table code.
+> > > 
+> > > In this case, the mt8183 can work successfully while the "4gb
+> > > mode"(mt8173/mt2712) can not.
+> > > 
+> > > In the "4gb mode", As the remap relationship above, we should always add
+> > > bit32 in pte as we did in [2]. and need add bit32 in the
+> > > "iova_to_phys"(Not always add.). That means the "4gb mode" has a special
+> > > flow:
+> > > a. Always add bit32 in paddr_to_iopte.
+> > > b. Add bit32 only when PA < 0x40000000 in iopte_to_paddr.
+> > 
+> > I think this is probably at the heart of my misunderstanding. What is so
+> > special about PAs (is this HW PA or CPU PA?) below 0x40000000? Is this RAM
+> > or something else?
 > 
-> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-> index b16f7d440f78..eb2b290447fc 100644
-> --- a/drivers/mmc/host/sdhci-of-esdhc.c
-> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
-> @@ -1006,6 +1006,7 @@ static struct soc_device_attribute soc_incorrect_hostver[] = {
->  static struct soc_device_attribute soc_fixup_sdhc_clkdivs[] = {
->  	{ .family = "QorIQ LX2160A", .revision = "1.0", },
->  	{ .family = "QorIQ LX2160A", .revision = "2.0", },
-> +	{ .family = "QorIQ LS1028A", .revision = "1.0", },
->  	{ },
->  };
->  
-> 
+> SRAM and HW register that IOMMU can not access.
+
+Ok, so redrawing your table from above, I think we can say something like:
+
+
+CPU Physical address
+====================
+
+0G	1G	2G	3G	4G	5G
+|---A---|---B---|---C---|---D---|---E---|
++--I/O--+------------Memory-------------+
+
+
+IOMMU output physical address
+=============================
+
+				4G	5G	6G	7G	8G
+				|---E---|---B---|---C---|---D---|
+				+------------Memory-------------+
+
+
+Do you agree? If so, what happens to region 'A' (the I/O region) in the
+IOMMU output physical address space. Is it accessible?
+
+Anyway, I think it's the job of the driver to convert between the two
+address spaces, so that:
+
+  - On ->map(), bit 32 of the CPU physical address is set before calling
+    into the iopgtable code
+
+  - The result from ->iova_to_phys() should be the result from the
+    iopgtable code, but with the top bit cleared for addresses over
+    5G.
+
+This assumes that:
+
+  1. We're ok setting bit 9 in the ptes mapping region 'E'.
+  2. The IOMMU page-table walker uses CPU physical addresses
+
+Are those true?
+
+Thanks,
+
+Will
