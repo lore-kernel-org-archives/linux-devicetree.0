@@ -1,73 +1,50 @@
 From: Wen He <wen.he_1@nxp.com>
-Subject: [v2 1/3] dt/bindings: clk: Add YAML schemas for LS1028A Display Clock bindings
-Date: Thu, 15 Aug 2019 18:16:11 +0800
-Message-ID: <20190815101613.22872-1-wen.he_1@nxp.com>
+Subject: [v2 3/3] arm64: dts: ls1028a: Add properties node for Display output pixel clock
+Date: Thu, 15 Aug 2019 18:16:13 +0800
+Message-ID: <20190815101613.22872-3-wen.he_1@nxp.com>
+References: <20190815101613.22872-1-wen.he_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190815101613.22872-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
-output interface. Add a YAML schema for this.
+The LS1028A has a clock domain PXLCLK0 used for the Display output
+interface in the display core, independent of the system bus frequency,
+for flexible clock design. This display core has its own pixel clock.
+
+This patch enable the pixel clock provider on the LS1028A.
 
 Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
-change in v2:
-        - Convert bindings to YAML format
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
-
-diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
-new file mode 100644
-index 000000000000..32274e94aafc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2d31e1c09e74..5218d65588c3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -70,11 +70,18 @@
+ 		clock-output-names = "sysclk";
+ 	};
+ 
+-	dpclk: clock-dp {
++	osc_27m: clock-osc-27m {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <27000000>;
+-		clock-output-names= "dpclk";
++		clock-output-names = "phy_27m";
++	};
 +
-+title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
-+
-+maintainers:
-+  - Wen He <wen.he_1@nxp.com>
-+
-+description: |
-+  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
-+  interface in the display core, as implemented in TSMC CLN28HPM PLL.
-+  which generate and offers pixel clocks to Display.
-+
-+properties:
-+  compatible:
-+    const: fsl,ls1028a-plldig
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+
-+examples:
-+  # Display PIXEL Clock node:
-+  - |
-+    dpclk: clock-display@f1f0000 {
-+        compatible = "fsl,ls1028a-plldig";
-+        reg = <0x0 0xf1f0000 0x0 0xffff>;
-+        #clock-cells = <0>;
-+        clocks = <&osc_27m>;
-+    };
-+
-+...
++	dpclk: clock-display@f1f0000 {
++		compatible = "fsl,ls1028a-plldig";
++		reg = <0x0 0xf1f0000 0x0 0xffff>;
++		#clock-cells = <0>;
++		clocks = <&osc_27m>;
+ 	};
+ 
+ 	aclk: clock-axi {
 -- 
 2.17.1
