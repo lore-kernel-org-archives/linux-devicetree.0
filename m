@@ -1,17 +1,16 @@
 From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: Re: [PATCH v4 12/21] ARM: dts: imx6-apalis: Add touchscreens used on
- Toradex eval boards
-Date: Thu, 15 Aug 2019 10:57:28 +0000
-Message-ID: <CAGgjyvF+53CdYUB4QNJWfDqUigDyTi9G06i9wXW_3tmWM8ra=A@mail.gmail.com>
+Subject: Re: [PATCH v4 08/21] ARM: dts: imx7-colibri: Add touch controllers
+Date: Thu, 15 Aug 2019 10:59:01 +0000
+Message-ID: <CAGgjyvEGqZ5qKeN9rOUQDWbb7X=LbeTAU4s01t18+B396Df_Lg@mail.gmail.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-13-philippe.schenker@toradex.com>
+ <20190812142105.1995-9-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190812142105.1995-13-philippe.schenker@toradex.com>
+In-Reply-To: <20190812142105.1995-9-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <AD923A0843BFDF43AE34C7C81C95479F@eurprd05.prod.outlook.com>
+Content-ID: <5EF4315B158F6A4D97BD31DA60DC4498@eurprd05.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,7 +27,7 @@ List-Id: devicetree@vger.kernel.org
 On Mon, Aug 12, 2019 at 5:23 PM Philippe Schenker
 <philippe.schenker@toradex.com> wrote:
 >
-> This commit adds the touchscreens from Toradex so one can enable it.
+> Add touch controller that is connected over an I2C bus.
 >
 > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 > Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
@@ -42,25 +41,22 @@ Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 > - Add Marcel Ziswiler's Ack
 >
 > Changes in v3:
-> - Fix commit title to "...imx6-apalis:..."
+> - Fix commit message
 >
 > Changes in v2:
 > - Deleted touchrevolution downstream stuff
 > - Use generic node name
-> - Put a better comment in there
+> - Better comment
 >
->  arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 31 +++++++++++++++++++
->  arch/arm/boot/dts/imx6q-apalis-eval.dts       | 13 ++++++++
->  arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 13 ++++++++
->  arch/arm/boot/dts/imx6q-apalis-ixora.dts      | 13 ++++++++
->  4 files changed, 70 insertions(+)
+>  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 24 +++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> index 9a5d6c94cca4..763fb5e90bd3 100644
-> --- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-> @@ -168,6 +168,21 @@
->  &i2c3 {
+> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> index d4dbc4fc1adf..576dec9ff81c 100644
+> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> @@ -145,6 +145,21 @@
+>  &i2c4 {
 >         status = "okay";
 >
 > +       /*
@@ -70,112 +66,30 @@ Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 > +       touchscreen@4a {
 > +               compatible = "atmel,maxtouch";
 > +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_pcap_1>;
+> +               pinctrl-0 = <&pinctrl_gpiotouch>;
 > +               reg = <0x4a>;
 > +               interrupt-parent = <&gpio1>;
 > +               interrupts = <9 IRQ_TYPE_EDGE_FALLING>;         /* SODIMM 28 */
-> +               reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;     /* SODIMM 30 */
+> +               reset-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;     /* SODIMM 30 */
 > +               status = "disabled";
 > +       };
 > +
 >         /* M41T0M6 real time clock on carrier board */
->         rtc_i2c: rtc@68 {
+>         rtc: m41t0m6@68 {
 >                 compatible = "st,m41t0";
-> @@ -175,6 +190,22 @@
->         };
+> @@ -200,3 +215,12 @@
+>         vmmc-supply = <&reg_3v3>;
+>         status = "okay";
 >  };
->
-> +&iomuxc {
-> +       pinctrl_pcap_1: pcap-1 {
-> +               fsl,pins = <
-> +                       MX6QDL_PAD_GPIO_9__GPIO1_IO09   0x1b0b0 /* SODIMM 28 */
-> +                       MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x1b0b0 /* SODIMM 30 */
-> +               >;
-> +       };
 > +
-> +       pinctrl_mxt_ts: mxt-ts {
+> +&iomuxc {
+> +       pinctrl_gpiotouch: touchgpios {
 > +               fsl,pins = <
-> +                       MX6QDL_PAD_EIM_CS1__GPIO2_IO24  0x130b0 /* SODIMM 107 */
-> +                       MX6QDL_PAD_SD2_DAT1__GPIO1_IO14 0x130b0 /* SODIMM 106 */
+> +                       MX7D_PAD_GPIO1_IO09__GPIO1_IO9          0x74
+> +                       MX7D_PAD_GPIO1_IO10__GPIO1_IO10         0x14
 > +               >;
 > +       };
 > +};
-> +
->  &ipu1_di0_disp0 {
->         remote-endpoint = <&lcd_display_in>;
->  };
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-> index 0edd3043d9c1..4665e15b196d 100644
-> --- a/arch/arm/boot/dts/imx6q-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-> @@ -167,6 +167,19 @@
->  &i2c1 {
->         status = "okay";
->
-> +       /*
-> +        * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +        * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +        */
-> +       touchscreen@4a {
-> +               compatible = "atmel,maxtouch";
-> +               reg = <0x4a>;
-> +               interrupt-parent = <&gpio6>;
-> +               interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-> +               reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
-> +               status = "disabled";
-> +       };
-> +
->         pcie-switch@58 {
->                 compatible = "plx,pex8605";
->                 reg = <0x58>;
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-> index b94bb687be6b..a3fa04a97d81 100644
-> --- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-> @@ -172,6 +172,19 @@
->  &i2c1 {
->         status = "okay";
->
-> +       /*
-> +        * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +        * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +        */
-> +       touchscreen@4a {
-> +               compatible = "atmel,maxtouch";
-> +               reg = <0x4a>;
-> +               interrupt-parent = <&gpio6>;
-> +               interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-> +               reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
-> +               status = "disabled";
-> +       };
-> +
->         /* M41T0M6 real time clock on carrier board */
->         rtc_i2c: rtc@68 {
->                 compatible = "st,m41t0";
-> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> index 302fd6adc8a7..5ba49d0f4880 100644
-> --- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-> @@ -171,6 +171,19 @@
->  &i2c1 {
->         status = "okay";
->
-> +       /*
-> +        * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
-> +        * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
-> +        */
-> +       touchscreen@4a {
-> +               compatible = "atmel,maxtouch";
-> +               reg = <0x4a>;
-> +               interrupt-parent = <&gpio6>;
-> +               interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
-> +               reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
-> +               status = "disabled";
-> +       };
-> +
->         eeprom@50 {
->                 compatible = "atmel,24c02";
->                 reg = <0x50>;
 > --
 > 2.22.0
 >
