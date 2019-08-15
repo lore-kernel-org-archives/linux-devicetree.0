@@ -1,17 +1,17 @@
 From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: Re: [PATCH v4 19/21] ARM: dts: imx6ull-colibri: Add touchscreen used
- with Eval Board
-Date: Thu, 15 Aug 2019 10:55:37 +0000
-Message-ID: <CAGgjyvGggWwOy91gdhqrZ6TRaeQCox8_bCfMK7GCrPywUzqRJQ@mail.gmail.com>
+Subject: Re: [PATCH v4 12/21] ARM: dts: imx6-apalis: Add touchscreens used on
+ Toradex eval boards
+Date: Thu, 15 Aug 2019 10:57:28 +0000
+Message-ID: <CAGgjyvF+53CdYUB4QNJWfDqUigDyTi9G06i9wXW_3tmWM8ra=A@mail.gmail.com>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-20-philippe.schenker@toradex.com>
+ <20190812142105.1995-13-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190812142105.1995-20-philippe.schenker@toradex.com>
+In-Reply-To: <20190812142105.1995-13-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <1D4979EA38C811428CB1F5D084206C5C@eurprd05.prod.outlook.com>
+Content-ID: <AD923A0843BFDF43AE34C7C81C95479F@eurprd05.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,32 +28,39 @@ List-Id: devicetree@vger.kernel.org
 On Mon, Aug 12, 2019 at 5:23 PM Philippe Schenker
 <philippe.schenker@toradex.com> wrote:
 >
-> This adds the common touchscreen that is used with Toradex's
-> Eval Boards.
+> This commit adds the touchscreens from Toradex so one can enable it.
 >
 > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
 Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
 >
 > ---
 >
-> Changes in v4: None
-> Changes in v3: None
+> Changes in v4:
+> - Add Marcel Ziswiler's Ack
+>
+> Changes in v3:
+> - Fix commit title to "...imx6-apalis:..."
+>
 > Changes in v2:
-> - Removed f0710a, that is downstream only
-> - Changed to generic node name
-> - Better comment
+> - Deleted touchrevolution downstream stuff
+> - Use generic node name
+> - Put a better comment in there
 >
->  .../arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 31 +++++++++++++++++++
+>  arch/arm/boot/dts/imx6q-apalis-eval.dts       | 13 ++++++++
+>  arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 13 ++++++++
+>  arch/arm/boot/dts/imx6q-apalis-ixora.dts      | 13 ++++++++
+>  4 files changed, 70 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> index a78849fd2afa..458a4084e53c 100644
-> --- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
-> @@ -100,6 +100,21 @@
->  &i2c1 {
+> diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+> index 9a5d6c94cca4..763fb5e90bd3 100644
+> --- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+> +++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+> @@ -168,6 +168,21 @@
+>  &i2c3 {
 >         status = "okay";
 >
 > +       /*
@@ -63,30 +70,112 @@ Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 > +       touchscreen@4a {
 > +               compatible = "atmel,maxtouch";
 > +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_gpiotouch>;
+> +               pinctrl-0 = <&pinctrl_pcap_1>;
 > +               reg = <0x4a>;
-> +               interrupt-parent = <&gpio4>;
-> +               interrupts = <16 IRQ_TYPE_EDGE_FALLING>;        /* SODIMM 28 */
-> +               reset-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;      /* SODIMM 30 */
+> +               interrupt-parent = <&gpio1>;
+> +               interrupts = <9 IRQ_TYPE_EDGE_FALLING>;         /* SODIMM 28 */
+> +               reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;     /* SODIMM 30 */
 > +               status = "disabled";
 > +       };
 > +
 >         /* M41T0M6 real time clock on carrier board */
->         m41t0m6: rtc@68 {
+>         rtc_i2c: rtc@68 {
 >                 compatible = "st,m41t0";
-> @@ -176,3 +191,12 @@
->         sd-uhs-sdr104;
->         status = "okay";
+> @@ -175,6 +190,22 @@
+>         };
 >  };
-> +
+>
 > +&iomuxc {
-> +       pinctrl_gpiotouch: touchgpios {
+> +       pinctrl_pcap_1: pcap-1 {
 > +               fsl,pins = <
-> +                       MX6UL_PAD_NAND_DQS__GPIO4_IO16          0x74
-> +                       MX6UL_PAD_ENET1_TX_EN__GPIO2_IO05       0x14
+> +                       MX6QDL_PAD_GPIO_9__GPIO1_IO09   0x1b0b0 /* SODIMM 28 */
+> +                       MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x1b0b0 /* SODIMM 30 */
+> +               >;
+> +       };
+> +
+> +       pinctrl_mxt_ts: mxt-ts {
+> +               fsl,pins = <
+> +                       MX6QDL_PAD_EIM_CS1__GPIO2_IO24  0x130b0 /* SODIMM 107 */
+> +                       MX6QDL_PAD_SD2_DAT1__GPIO1_IO14 0x130b0 /* SODIMM 106 */
 > +               >;
 > +       };
 > +};
+> +
+>  &ipu1_di0_disp0 {
+>         remote-endpoint = <&lcd_display_in>;
+>  };
+> diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
+> index 0edd3043d9c1..4665e15b196d 100644
+> --- a/arch/arm/boot/dts/imx6q-apalis-eval.dts
+> +++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
+> @@ -167,6 +167,19 @@
+>  &i2c1 {
+>         status = "okay";
+>
+> +       /*
+> +        * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
+> +        * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
+> +        */
+> +       touchscreen@4a {
+> +               compatible = "atmel,maxtouch";
+> +               reg = <0x4a>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
+> +               reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
+> +               status = "disabled";
+> +       };
+> +
+>         pcie-switch@58 {
+>                 compatible = "plx,pex8605";
+>                 reg = <0x58>;
+> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+> index b94bb687be6b..a3fa04a97d81 100644
+> --- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+> @@ -172,6 +172,19 @@
+>  &i2c1 {
+>         status = "okay";
+>
+> +       /*
+> +        * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
+> +        * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
+> +        */
+> +       touchscreen@4a {
+> +               compatible = "atmel,maxtouch";
+> +               reg = <0x4a>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
+> +               reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
+> +               status = "disabled";
+> +       };
+> +
+>         /* M41T0M6 real time clock on carrier board */
+>         rtc_i2c: rtc@68 {
+>                 compatible = "st,m41t0";
+> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+> index 302fd6adc8a7..5ba49d0f4880 100644
+> --- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+> @@ -171,6 +171,19 @@
+>  &i2c1 {
+>         status = "okay";
+>
+> +       /*
+> +        * Touchscreen is using SODIMM 28/30, also used for PWM<B>, PWM<C>,
+> +        * aka pwm2, pwm3. so if you enable touchscreen, disable the pwms
+> +        */
+> +       touchscreen@4a {
+> +               compatible = "atmel,maxtouch";
+> +               reg = <0x4a>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <10 IRQ_TYPE_EDGE_FALLING>;
+> +               reset-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* SODIMM 13 */
+> +               status = "disabled";
+> +       };
+> +
+>         eeprom@50 {
+>                 compatible = "atmel,24c02";
+>                 reg = <0x50>;
 > --
 > 2.22.0
 >
