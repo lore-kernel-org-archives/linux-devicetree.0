@@ -1,41 +1,48 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 01/11] dt-bindings: drm/bridge: analogix-anx78xx: add new variants
-Date: Wed, 14 Aug 2019 20:48:44 -0400
-Message-ID: <20190815004854.19860-2-masneyb@onstation.org>
+From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Subject: [PATCH 03/11] drm/bridge: analogix-anx78xx: silence
+ -EPROBE_DEFER warnings
+Date: Wed, 14 Aug 2019 20:48:46 -0400
+Message-ID: <20190815004854.19860-4-masneyb@onstation.org>
 References: <20190815004854.19860-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190815004854.19860-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, a.hajda@samsung.com, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run
-Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190815004854.19860-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, jonas-uIzNG4q0ceqzQB+pC5nmwQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the analogix,anx7808, analogix,anx7812, and
-analogix,anx7818 variants.
-
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- .../devicetree/bindings/display/bridge/anx7814.txt          | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-index dbd7c84ee584..17258747fff6 100644
---- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-@@ -6,7 +6,11 @@ designed for portable devices.
- 
- Required properties:
- 
-- - compatible		: "analogix,anx7814"
-+ - compatible		: Must be one of:
-+			  "analogix,anx7808"
-+			  "analogix,anx7812"
-+			  "analogix,anx7814"
-+			  "analogix,anx7818"
-  - reg			: I2C address of the device
-  - interrupts		: Should contain the INTP interrupt
-  - hpd-gpios		: Which GPIO to use for hpd
--- 
-2.21.0
+U2lsZW5jZSB0d28gd2FybmluZyBtZXNzYWdlcyB0aGF0IG9jY3VyIGR1ZSB0byAtRVBST0JFX0RF
+RkVSIGVycm9ycyB0bwpoZWxwIGNsZWFudXAgdGhlIHN5c3RlbSBib290IGxvZy4KClNpZ25lZC1v
+ZmYtYnk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0YXRpb24ub3JnPgotLS0KIGRyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvYW5hbG9naXgtYW54Nzh4eC5jIHwgOCArKysrKystLQogMSBmaWxlIGNo
+YW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4LWFueDc4eHguYyBiL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvYW5hbG9naXgtYW54Nzh4eC5jCmluZGV4IDlhY2RiZWRmMTI0NS4uNjJkZmNlZDkxMzg0
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4LWFueDc4eHguYwor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4LWFueDc4eHguYwpAQCAtNzE1LDcg
+KzcxNSw5IEBAIHN0YXRpYyBpbnQgYW54Nzh4eF9pbml0X3BkYXRhKHN0cnVjdCBhbng3OHh4ICph
+bng3OHh4KQogCS8qIDEuMFYgZGlnaXRhbCBjb3JlIHBvd2VyIHJlZ3VsYXRvciAgKi8KIAlwZGF0
+YS0+ZHZkZDEwID0gZGV2bV9yZWd1bGF0b3JfZ2V0KGRldiwgImR2ZGQxMCIpOwogCWlmIChJU19F
+UlIocGRhdGEtPmR2ZGQxMCkpIHsKLQkJRFJNX0VSUk9SKCJEVkREMTAgcmVndWxhdG9yIG5vdCBm
+b3VuZFxuIik7CisJCWlmIChQVFJfRVJSKHBkYXRhLT5kdmRkMTApICE9IC1FUFJPQkVfREVGRVIp
+CisJCQlEUk1fRVJST1IoIkRWREQxMCByZWd1bGF0b3Igbm90IGZvdW5kXG4iKTsKKwogCQlyZXR1
+cm4gUFRSX0VSUihwZGF0YS0+ZHZkZDEwKTsKIAl9CiAKQEAgLTEzMzMsNyArMTMzNSw5IEBAIHN0
+YXRpYyBpbnQgYW54Nzh4eF9pMmNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwKIAog
+CWVyciA9IGFueDc4eHhfaW5pdF9wZGF0YShhbng3OHh4KTsKIAlpZiAoZXJyKSB7Ci0JCURSTV9F
+UlJPUigiRmFpbGVkIHRvIGluaXRpYWxpemUgcGRhdGE6ICVkXG4iLCBlcnIpOworCQlpZiAoZXJy
+ICE9IC1FUFJPQkVfREVGRVIpCisJCQlEUk1fRVJST1IoIkZhaWxlZCB0byBpbml0aWFsaXplIHBk
+YXRhOiAlZFxuIiwgZXJyKTsKKwogCQlyZXR1cm4gZXJyOwogCX0KIAotLSAKMi4yMS4wCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
+bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8=
