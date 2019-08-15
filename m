@@ -1,49 +1,56 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 09/11] ARM: dts: qcom: pm8941: add 5vs2 regulator node
-Date: Thu, 15 Aug 2019 18:44:17 -0400
-Message-ID: <20190815224417.GA32072@onstation.org>
+Subject: Re: [PATCH RFC 06/11] drm/bridge: analogix-anx78xx: add support for
+ avdd33 regulator
+Date: Thu, 15 Aug 2019 18:51:04 -0400
+Message-ID: <20190815225104.GB32072@onstation.org>
 References: <20190815004854.19860-1-masneyb@onstation.org>
- <20190815004854.19860-10-masneyb@onstation.org>
- <CACRpkdYU-6LvFKRkj0yMMCmAnX0XtGe7rMwbXbhf2GCp77Ciyw@mail.gmail.com>
+ <20190815004854.19860-7-masneyb@onstation.org>
+ <CACRpkdYdQa+FVfpSjLi0SsBMDT4QC667z1P1dnapz7PXgRoB5Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYU-6LvFKRkj0yMMCmAnX0XtGe7rMwbXbhf2GCp77Ciyw@mail.gmail.com>
+In-Reply-To: <CACRpkdYdQa+FVfpSjLi0SsBMDT4QC667z1P1dnapz7PXgRoB5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Dave Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>M
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:34:17AM +0200, Linus Walleij wrote:
+On Thu, Aug 15, 2019 at 10:22:45AM +0200, Linus Walleij wrote:
 > On Thu, Aug 15, 2019 at 2:49 AM Brian Masney <masneyb@onstation.org> wrote:
 > 
-> > pm8941 is missing the 5vs2 regulator node so let's add it since its
-> > needed to get the external display working. This regulator was already
-> > configured in the interrupts property on the parent node.
+> > Add support for the avdd33 regulator to the analogix-anx78xx driver.
+> > Note that the regulator is currently enabled during driver probe and
+> > disabled when the driver is removed. This is currently how the
+> > downstream MSM kernel sources do this.
 > >
-> > Note that this regulator is referred to as mvs2 in the downstream MSM
-> > kernel sources.
-> 
-> When I looked at it it seemed like this convention is used for power
-> supplies that appear on both the main PMIC and the "extra (boot? basic?
-> low power?) PMIC that the main 80xx PMIC has mvs1 and the
-> other 89xx PMIC has mvs2.
-
-According to the downstream MSM sources, the 5vs1 and 5vs2 rails are
-both on the second pm8941 PMIC:
-
-https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/arch/arm/boot/dts/msm8974-regulator.dtsi#L18
-
-> I suppose it is named "mvs" on both PMICs and this is just a rail
-> name so as not to confuse the schematic?
-
-That sounds reasonable.
-
+> > Let's not merge this upstream for the mean time until I get the external
+> > display fully working on the Nexus 5 and then I can submit proper
+> > support then that powers down this regulator in the power off function.
+> >
 > > Signed-off-by: Brian Masney <masneyb@onstation.org>
 > 
+> > +static void anx78xx_disable_regulator_action(void *_data)
+> > +{
+> > +       struct anx78xx_platform_data *pdata = _data;
+> > +
+> > +       regulator_disable(pdata->avdd33);
+> > +}
+> (...)
+> > +       err = devm_add_action(dev, anx78xx_disable_regulator_action,
+> > +                             pdata);
+> 
+> Clever idea. Good for initial support, probably later on it would
+> need to be reworked using runtime PM so it's not constantly
+> powered up.
+
+Yes, that's my plan. I suspect that I may have a regulator disabled
+somewhere so I was planning to leave this on all the time for the time
+being to match the downstream behavior until I get the hot plug detect
+GPIO working.
+
 > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thank you!
+Thanks,
 
 Brian
