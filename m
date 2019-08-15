@@ -1,66 +1,113 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V5 5/5] arm64: dts: imx8mm: Enable cpu-idle driver
-Date: Thu, 15 Aug 2019 18:12:50 +0200
-Message-ID: <34c03d76-ae61-63b4-153f-3f9911cc962e@linaro.org>
-References: <20190710063056.35689-1-Anson.Huang@nxp.com>
- <20190710063056.35689-5-Anson.Huang@nxp.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v5 0/3] Introduce Bandwidth OPPs for interconnects
+Date: Thu, 15 Aug 2019 19:19:44 +0300
+Message-ID: <b8a6020f-eda5-0c3d-b365-a294c28b9650@linaro.org>
+References: <20190807223111.230846-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190710063056.35689-5-Anson.Huang@nxp.com>
+In-Reply-To: <20190807223111.230846-1-saravanak@google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson.Huang@nxp.com, catalin.marinas@arm.com, will@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, tglx@linutronix.de, leonard.crestez@nxp.com, aisheng.dong@nxp.com, daniel.baluta@nxp.com, ping.bai@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, ccaione@baylibre.com, angus@akkea.ca, agx@sigxcpu.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-Hi Anson,
+On 8/8/19 01:31, Saravana Kannan wrote:
+> Interconnects and interconnect paths quantify their performance levels in
+> terms of bandwidth and not in terms of frequency. So similar to how we have
+> frequency based OPP tables in DT and in the OPP framework, we need
+> bandwidth OPP table support in DT and in the OPP framework.
+> 
+> So with the DT bindings added in this patch series, the DT for a GPU
+> that does bandwidth voting from GPU to Cache and GPU to DDR would look
+> something like this:
+> 
+> gpu_cache_opp_table: gpu_cache_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_cache_3000: opp-3000 {
+> 		opp-peak-KBps = <3000000>;
+> 		opp-avg-KBps = <1000000>;
+> 	};
+> 	gpu_cache_6000: opp-6000 {
+> 		opp-peak-KBps = <6000000>;
+> 		opp-avg-KBps = <2000000>;
+> 	};
+> 	gpu_cache_9000: opp-9000 {
+> 		opp-peak-KBps = <9000000>;
+> 		opp-avg-KBps = <9000000>;
+> 	};
+> };
+> 
+> gpu_ddr_opp_table: gpu_ddr_opp_table {
+> 	compatible = "operating-points-v2";
+> 
+> 	gpu_ddr_1525: opp-1525 {
+> 		opp-peak-KBps = <1525000>;
+> 		opp-avg-KBps = <452000>;
+> 	};
+> 	gpu_ddr_3051: opp-3051 {
+> 		opp-peak-KBps = <3051000>;
+> 		opp-avg-KBps = <915000>;
+> 	};
+> 	gpu_ddr_7500: opp-7500 {
+> 		opp-peak-KBps = <7500000>;
+> 		opp-avg-KBps = <3000000>;
+> 	};
+> };
+> 
+> gpu_opp_table: gpu_opp_table {
+> 	compatible = "operating-points-v2";
+> 	opp-shared;
+> 
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 	};
+> 	opp-400000000 {
+> 		opp-hz = /bits/ 64 <400000000>;
+> 	};
+> };
+> 
+> gpu@7864000 {
+> 	...
+> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+> 	...
+> };
+> 
+> v1 -> v3:
+> - Lots of patch additions that were later dropped
+> v3 -> v4:
+> - Fixed typo bugs pointed out by Sibi.
+> - Fixed bug that incorrectly reset rate to 0 all the time
+> - Added units documentation
+> - Dropped interconnect-opp-table property and related changes
+> v4->v5:
+> - Replaced KBps with kBps
+> - Minor documentation fix
+> 
+> Cheers,
+> Saravana
+> 
+> Saravana Kannan (3):
+>   dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
+>   OPP: Add support for bandwidth OPP tables
+>   OPP: Add helper function for bandwidth OPP tables
+> 
+>  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++--
+>  .../devicetree/bindings/property-units.txt    |  4 ++
+>  drivers/opp/core.c                            | 51 +++++++++++++++++++
+>  drivers/opp/of.c                              | 41 +++++++++++----
+>  drivers/opp/opp.h                             |  4 +-
+>  include/linux/pm_opp.h                        | 19 +++++++
+>  6 files changed, 121 insertions(+), 13 deletions(-)
+> 
 
-sorry for the late review, I've been pretty busy.
+For the series:
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-If Shawn is ok, I can pick the patches 1-4 in my tree and then this one
-after you fix the comments below.
-
-On 10/07/2019 08:30, Anson.Huang@nxp.com wrote:
-
-[ ... ]
-
-> +		idle-states {
-> +			entry-method = "psci";
-> +
-> +			cpu_sleep_wait: cpu-sleep-wait {
-
-Is that a retention state or a powerdown? It is preferable to change the
-name to the idle state naming convention given in the PSCI documentation
-[1] page 16-17
-
-
-> +				compatible = "arm,idle-state";
-> +				arm,psci-suspend-param = <0x0010033>;
-> +				local-timer-stop;
-> +				entry-latency-us = <1000>;
-> +				exit-latency-us = <700>;
-> +				min-residency-us = <2700>;
-> +				wakeup-latency-us = <1500>;
-
-It is pointless to specify the entry + exit *and* the wakeup-latency [2].
-
-Thanks
-
-  -- Daniel
-
-[1]
-http://infocenter.arm.com/help/topic/com.arm.doc.den0022d/Power_State_Coordination_Interface_PDD_v1_1_DEN0022D.pdf
-
-[2]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/cpuidle/dt_idle_states.c#n41
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Georgi
