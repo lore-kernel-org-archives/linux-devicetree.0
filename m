@@ -1,42 +1,54 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 2/2] uio: Documentation: Add information on using uio_pdrv_genirq with DT
-Date: Thu, 15 Aug 2019 23:28:07 +0200
-Message-ID: <20190815212807.25058-2-daniel@zonque.org>
-References: <20190815212807.25058-1-daniel@zonque.org>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v1 2/4] soc: fsl: guts: Add definition for LS1028A
+Date: Thu, 15 Aug 2019 17:40:09 -0500
+Message-ID: <CADRPPNSW4A0gkbzcPD=y-J_YHSnbAgP7p=RQnS6i0U-Ze=L6qA@mail.gmail.com>
+References: <20190814072649.8237-1-yinbo.zhu@nxp.com> <20190814072649.8237-2-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190815212807.25058-1-daniel@zonque.org>
+In-Reply-To: <20190814072649.8237-2-yinbo.zhu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@n>
 List-Id: devicetree@vger.kernel.org
 
-Add a paragraph to describe the use of the "of_id" module parameter,
-along with the new DT property.
+On Wed, Aug 14, 2019 at 2:26 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
+>
+> Adding compatible string "ls1028a-dcfg" to initialize guts driver
+> for ls1028 and SoC die attribute definition for LS1028A
+>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- Documentation/driver-api/uio-howto.rst | 7 +++++++
- 1 file changed, 7 insertions(+)
+Applied for next.
 
-diff --git a/Documentation/driver-api/uio-howto.rst b/Documentation/driver-api/uio-howto.rst
-index 25f50eace28b..b9f28641ddf0 100644
---- a/Documentation/driver-api/uio-howto.rst
-+++ b/Documentation/driver-api/uio-howto.rst
-@@ -408,6 +408,13 @@ handler code. You also do not need to know anything about the chip's
- internal registers to create the kernel part of the driver. All you need
- to know is the irq number of the pin the chip is connected to.
- 
-+When used in a device-tree enabled system, the driver needs to be
-+probed with the ``"of_id"`` module parameter set to the ``"compatible"``
-+string of the node the driver is supposed to handle. By default, the
-+node's name (without the unit address) is exposed as name for the
-+UIO device in userspace. To set a custom name, a property named
-+``"linux,uio-name"`` may be specified in the DT node.
-+
- Using uio_dmem_genirq for platform devices
- ------------------------------------------
- 
--- 
-2.21.0
+> ---
+>  drivers/soc/fsl/guts.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+> index 1ef8068c8dd3..34810f9bb2ee 100644
+> --- a/drivers/soc/fsl/guts.c
+> +++ b/drivers/soc/fsl/guts.c
+> @@ -102,6 +102,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] = {
+>           .svr          = 0x87360000,
+>           .mask         = 0xff3f0000,
+>         },
+> +       /* Die: LS1028A, SoC: LS1028A */
+> +       { .die          = "LS1028A",
+> +         .svr          = 0x870b0000,
+> +         .mask         = 0xff3f0000,
+> +       },
+>         { },
+>  };
+>
+> @@ -224,6 +229,7 @@ static const struct of_device_id fsl_guts_of_match[] = {
+>         { .compatible = "fsl,ls1012a-dcfg", },
+>         { .compatible = "fsl,ls1046a-dcfg", },
+>         { .compatible = "fsl,lx2160a-dcfg", },
+> +       { .compatible = "fsl,ls1028a-dcfg", },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
+> --
+> 2.17.1
+>
