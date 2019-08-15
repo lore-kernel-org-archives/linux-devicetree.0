@@ -1,120 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/9] dt-bindings: display: Add bindings for Advantech
- IDK-2121WR
-Date: Thu, 15 Aug 2019 14:47:19 +0300
-Message-ID: <20190815114719.GI5011@pendragon.ideasonboard.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v1 4/4] mmc: sdhci-of-esdhc: add erratum A011334 support
+ in ls1028a 1.0 SoC
+Date: Thu, 15 Aug 2019 14:48:51 +0300
+Message-ID: <eeaf2862-8f05-e813-917b-a8358e6d90ab@intel.com>
+References: <20190814072649.8237-1-yinbo.zhu@nxp.com>
+ <20190814072649.8237-4-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190814072649.8237-4-yinbo.zhu@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yinbo Zhu <yinbo.zhu@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Li Yang <leoyang.li@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: Alison Wang <alison.wang@nxp.com>, Alex Marginean <alexandru.marginean@nxp.com>, xiaobo.xie@nxp.com, Catalin Horghidan <catalin.horghidan@nxp.com>, Rajat Srivastava <rajat.srivastava@nxp.com>, jiafei.pan@nxp.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+On 14/08/19 10:26 AM, Yinbo Zhu wrote:
+> This patch is to add erratum A011334 support in ls1028a 1.0 SoC
+> 
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-On Thu, Aug 15, 2019 at 12:04:26PM +0100, Fabrizio Castro wrote:
-> This panel is handled through the generic lvds-panel bindings,
-> so only needs its additional compatible specified.
-> 
-> Some panel-specific documentation can be found here:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
-> v1->v2:
-> * Reworked according to Laurent's feedback
-> * Renamed lvds0_panel_in to panel_in0
-> * Renamed lvds1_panel_in to panel_in1
+>  drivers/mmc/host/sdhci-of-esdhc.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Laurent,
+> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+> index b16f7d440f78..eb2b290447fc 100644
+> --- a/drivers/mmc/host/sdhci-of-esdhc.c
+> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
+> @@ -1006,6 +1006,7 @@ static struct soc_device_attribute soc_incorrect_hostver[] = {
+>  static struct soc_device_attribute soc_fixup_sdhc_clkdivs[] = {
+>  	{ .family = "QorIQ LX2160A", .revision = "1.0", },
+>  	{ .family = "QorIQ LX2160A", .revision = "2.0", },
+> +	{ .family = "QorIQ LS1028A", .revision = "1.0", },
+>  	{ },
+>  };
+>  
 > 
-> Should this be a .yaml file already?
-
-It's not a strict requirement, but I'm sure Rob would really appreciate.
-I've converted a DT binding to yaml recently (for a panel too), and I
-have to say I'm impressed by the validation yaml brings, both for DT
-sources and for DT bindings. It even validates the example in the
-bindings, which is great. Documentation/devicetree/writing-schema.md
-should give you a few pointers to get started (in particular make sure
-you run make dt_binding_check for your new bindings).
-
->  .../display/panel/advantech,idk-2121wr.txt         | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> new file mode 100644
-> index 0000000..6ee1d1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
-> @@ -0,0 +1,56 @@
-> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
-> +===============================================
-> +
-> +Required properties:
-> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
-> +
-> +This binding is compatible with the lvds-panel binding, which is specified
-> +in panel-lvds.txt in this directory.
-> +The panel operates in dual-link mode and thus requires two port nodes,
-> +the first port node expects odd pixels (1, 3, 5, etc.) and the second port
-> +expects even pixels (0, 2, 4, etc.).
-> +
-> +Example
-> +-------
-> +
-> +	panel {
-> +		compatible = "advantech,idk-2121wr", "panel-lvds";
-> +
-> +		width-mm = <476>;
-> +		height-mm = <268>;
-> +
-> +		data-mapping = "vesa-24";
-> +
-> +		panel-timing {
-> +			clock-frequency = <148500000>;
-> +			hactive = <1920>;
-> +			vactive = <1080>;
-> +			hsync-len = <44>;
-> +			hfront-porch = <88>;
-> +			hback-porch = <148>;
-> +			vfront-porch = <4>;
-> +			vback-porch = <36>;
-> +			vsync-len = <5>;
-> +		};
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				/* Odd pixels */
-> +				reg = <0>;
-> +				panel_in0: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				/* Even pixels */
-> +				reg = <1>;
-> +				panel_in1: endpoint {
-> +					remote-endpoint = <&lvds1_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
-
--- 
-Regards,
-
-Laurent Pinchart
