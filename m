@@ -1,46 +1,61 @@
-Return-Path: <SRS0=bx8a=WK=pengutronix.de=mfe@kernel.org>
+Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 2/2] ARM: dts: imx6: drop gpmi-nand address and size cells
-Date: Wed, 14 Aug 2019 09:55:58 +0200
-Message-Id: <20190814075558.2319-2-m.felsch@pengutronix.de>
-In-Reply-To: <20190814075558.2319-1-m.felsch@pengutronix.de>
-References: <20190814075558.2319-1-m.felsch@pengutronix.de>
+Subject: [PATCH v7 00/13] Add TVP5150 features
+Date: Thu, 15 Aug 2019 13:57:34 +0200
+Message-Id: <20190815115747.24018-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Since commit fe2585e9c29a ("doc: dt: mtd: support partitions in a
-special 'partitions' subnode") and commit 5cfdedb7b9a0 ("mtd: ofpart:
-move ofpart partitions to a dedicated dt node") the partitioning should
-be within a partitions sub-node.
+Hi,
 
-Baseboard device trees following that scheme will get a dtc warning due
-to the predefined #address-cells and #size-cells properties:
+many thanks to Mauro, Hans, Jacopo and Laurent for the
+feedack :)
+Hopefully I got all the comments and concerns and fixed those
+with this v7.
 
-arch/arm/boot/dts/imx6qdl.dtsi:171.26-189.5: Warning (avoid_unnecessary_addr_size): /soc/gpmi-nand@112000: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+In short:
+ - v4l2-connector label isn't set anymore if not specified
+ - tvp5150 connectors are now static
+   -> reduces code and is easier to review and maintain
 
-I found no upstream imx6 baseboard using the old partitioning scheme, so
-we can drop the two properties to avoid such warnings.
+Each changed patch contains a more detailed changelog.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+Hopefully we get this series done :)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e51d72f044e2..e6b4b8525f98 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -171,8 +171,6 @@
- 
- 		gpmi: gpmi-nand@112000 {
- 			compatible = "fsl,imx6q-gpmi-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
- 			reg = <0x00112000 0x2000>, <0x00114000 0x2000>;
- 			reg-names = "gpmi-nand", "bch";
- 			interrupts = <0 15 IRQ_TYPE_LEVEL_HIGH>;
+Regards,
+  Marco
+
+Javier Martinez Canillas (1):
+  partial revert of "[media] tvp5150: add HW input connectors support"
+
+Marco Felsch (11):
+  dt-bindings: connector: analog: add tv norms property
+  media: v4l2-fwnode: add v4l2_fwnode_connector
+  media: v4l2-fwnode: add initial connector parsing support
+  media: tvp5150: add input source selection of_graph support
+  media: dt-bindings: tvp5150: Add input port connectors DT bindings
+  media: tvp5150: add FORMAT_TRY support for get/set selection handlers
+  media: tvp5150: add s_power callback
+  media: dt-bindings: tvp5150: cleanup bindings stlye
+  media: dt-bindings: tvp5150: add optional tvnorms documentation
+  media: tvp5150: add support to limit tv norms on connector
+  media: tvp5150: make debug output more readable
+
+Michael Tretter (1):
+  media: tvp5150: initialize subdev before parsing device tree
+
+ .../display/connector/analog-tv-connector.txt |   4 +
+ .../devicetree/bindings/media/i2c/tvp5150.txt | 145 +++-
+ drivers/media/i2c/tvp5150.c                   | 644 +++++++++++++-----
+ drivers/media/v4l2-core/v4l2-fwnode.c         | 137 ++++
+ include/dt-bindings/media/tvnorms.h           |  72 ++
+ include/dt-bindings/media/tvp5150.h           |   2 -
+ include/media/v4l2-fwnode.h                   |  83 +++
+ 7 files changed, 895 insertions(+), 192 deletions(-)
+ create mode 100644 include/dt-bindings/media/tvnorms.h
+
 -- 
 2.20.1
