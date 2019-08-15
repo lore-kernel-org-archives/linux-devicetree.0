@@ -1,50 +1,97 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] regulator: act8865: operating mode and suspend
- state support
-Date: Thu, 15 Aug 2019 17:52:44 +0100
-Message-ID: <20190815165244.GA54921@sirena.co.uk>
-References: <1565721176-8955-1-git-send-email-raagjadav@gmail.com>
- <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
+From: Oshri Alkobi <oshrialkoby85@gmail.com>
+Subject: Re: [PATCH v2 0/2] char: tpm: add new driver for tpm i2c ptp
+Date: Thu, 15 Aug 2019 20:03:56 +0300
+Message-ID: <CAM9mBwL=5+pGTYUKbSdw5F6soR=tW-cqfbEQ9_NmCQTO=fSVZQ@mail.gmail.com>
+References: <20190628151327.206818-1-oshrialkoby85@gmail.com>
+ <8e6ca8796f229c5dc94355437351d7af323f0c56.camel@linux.intel.com>
+ <79e8bfd2-2ed1-cf48-499c-5122229beb2e@infineon.com> <CAM9mBwJC2QD5-gV1eJUDzC2Fnnugr-oCZCoaH2sT_7ktFDkS-Q@mail.gmail.com>
+ <45603af2fc8374a90ef9e81a67083395cc9c7190.camel@linux.intel.com>
+ <6e7ff1b958d84f6e8e585fd3273ef295@NTILML02.nuvoton.com> <CAP6Zq1hPo9dG71YFyr7z9rjmi-DvoUZJOme4+2uqsfO+7nH+HQ@mail.gmail.com>
+ <20190715094541.zjqxainggjuvjxd2@linux.intel.com> <9c8e216dbc4f43dbaa1701dc166b05e0@NTILML02.nuvoton.com>
+ <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
+In-Reply-To: <548d3727-4a8f-38d4-2193-8a09cbae1e64@infineon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raag Jadav <raagjadav@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>
+To: Alexander Steffen <Alexander.Steffen@infineon.com>
+Cc: Eyal.Cohen@nuvoton.com, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, tmaimon77@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, gcwilson@us.ibm.com, kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com, Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com, amir.mizinski@nuvoton.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 18, 2019 at 8:10 PM Alexander Steffen
+<Alexander.Steffen@infineon.com> wrote:
+>
+> On 18.07.2019 14:51, Eyal.Cohen@nuvoton.com wrote:
+> > Hi Jarkko and Alexander,
+> >
+> > We have made an additional code review on the TPM TIS core driver, it looks quite good and we can connect our new I2C driver to this layer.
+>
+> Great :) In the meantime, I've done some experiments creating an I2C
+> driver based on tpm_tis_core, see
+> https://patchwork.kernel.org/patch/11049363/ Please have a look at that
+> and provide your feedback (and/or use it as a basis for further
+> implementations).
+>
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry for the late response.
 
-On Wed, Aug 14, 2019 at 12:02:55AM +0530, Raag Jadav wrote:
-> Implement ->set_mode(), ->get_mode() and ->set_suspend_xx() hooks
-> for act8865 with unlocked expert registers.
+Thanks Alexander, indeed it looks much simpler.
+I've checked it with Nuvoton's TPM - basic TPM commands work, I only
+had to remove the first msg from the read/write I2C transmitting
+(from/to TPM_LOC_SEL), the TPM couldn't handle two register writes in
+a sequence.
+Actually it is more efficient to set TPM_LOC_SEL only before locality
+check/request/relinquish - it is sticky.
+I still didn't manage to work with interrupts, will debug it.
 
-This breaks the build because it depends on patch 2:
+We weren't aware to the implementation of Christophe/ST which looks
+good and can be complement to yours.
+If no one is currently working on that, we can prepare a new patch
+that is based on both.
+Please let us know.
 
-drivers/regulator/act8865-regulator.c:22:10: fatal error: dt-bindings/regulator/active-semi,8865-regulator.h: No such file or directory
- #include <dt-bindings/regulator/active-semi,8865-regulator.h>
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
+> > However, there are several differences between the SPI interface and the I2C interface that will require changes to the TIS core.
+> > At a minimum we thought of:
+> > 1. Handling TPM Localities in I2C is different
+>
+> It turned out not to be that different in the end, see the code
+> mentioned above and my comment here:
+> https://patchwork.kernel.org/cover/11049365/
+>
+> > 2. Handling I2C CRC - relevant only to I2C bus hence not supported today by TIS core
+>
+> That is completely optional, so there is no need to implement it in the
+> beginning. Also, do you expect a huge benefit from that functionality?
+> Are bit flips that much more likely on I2C compared to SPI, which has no
+> CRC at all, but still works fine?
+>
 
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
+I2C is noisy bus with potentially more devices with larger variety
+than SPI. I2C may have more than one master and may have collisions
+and/or arbitration.
+Still we can start w/o CRC for the first stage and add it later.
+BTW, Christophe already did most of the work
+(https://patchwork.kernel.org/patch/8628661/)
 
------BEGIN PGP SIGNATURE-----
+> > 3. Handling Chip specific issues, since I2C implementation might be slightly different across the various TPM vendors
+>
+> Right, that seems similar to the cr50 issues
+> (https://lkml.org/lkml/2019/7/17/677), so there should probably be a
+> similar way to do it.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1VjdsACgkQJNaLcl1U
-h9DGoQf/U7SNQL5EaBGBy7/X3RqNXsOh5/zVXWrjoxsQb7s9IYT7DrN5ESS491h0
-muZWo1k9R3SrDXao8/mxE9V+k7Jv9tF4Rw/5SCHT9lYE71aUMrFlWQ2Rn5yqRaXu
-/eEyoKkjkqRFo75iK5TR5zBw1ae7mC3leSeUxbTGspKxFrsJKcVNausaIF60/M9Z
-VPKfVbisLdSZD8GuXW3WAY/vpI7EuXuMBqHsiJXqv9LD1GrTbpVRaaAQr7BKHoMe
-OJqLTYg+Dne7YF7jCnh29v6plsyOnRgkTWHPSTL9r55WcGL1gSD+WwspvJU+XFTU
-1QXbYjANxj2DF2TXIQv26F/WgeBIrA==
-=MsMV
------END PGP SIGNATURE-----
+Got it. We hope things will work for us without having another driver,
+but it's an option.
 
---envbJBWh7q8WU6mo--
+>
+> > 4. Modify tpm_tis_send_data and tpm_tis_recv_data to work according the TCG Device Driver Guide (optimization on TPM_STS access and send/recv retry)
+>
+> Optimizations are always welcome, but I'd expect basic communication to
+> work already with the current code (though maybe not as efficiently as
+> possible).
+>
+> > Besides this, during development we might encounter additional differences between SPI and I2C.
+> >
+> > We currently target to allocate an eng. to work on this on the second half of August with a goal to have the driver ready for the next kernel merge window.
+> >
+> > Regards,
+> > Eyal.
