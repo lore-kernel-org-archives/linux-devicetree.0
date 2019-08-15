@@ -1,83 +1,87 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 2/9] dt-bindings: display: Add bindings for Advantech
- IDK-2121WR
-Date: Thu, 15 Aug 2019 13:38:35 +0000
-Message-ID: <TY1PR01MB1770F0B8363364D4A9315577C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190815114719.GI5011@pendragon.ideasonboard.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 UL/ULL
+ devicetree bindings
+Date: Thu, 15 Aug 2019 07:43:56 -0600
+Message-ID: <CAL_JsqJHfVDfpC9Yr7o3HO4wU7QR+sp0mxFLkxwVcGXXLeAyJw@mail.gmail.com>
+References: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
+ <20190813160448.GA27548@bogus> <073f9466-9dd3-a22c-e000-e9f4c60f90a0@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190815114719.GI5011@pendragon.ideasonboard.com>
-Content-Language: en-US
+In-Reply-To: <073f9466-9dd3-a22c-e000-e9f4c60f90a0@phytec.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: =?UTF-8?Q?Stefan_Riedm=C3=BCller?= <s.riedmueller@phytec.de>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrew Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IExh
-dXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4NCj4gU2Vu
-dDogMTUgQXVndXN0IDIwMTkgMTI6NDcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzldIGR0
-LWJpbmRpbmdzOiBkaXNwbGF5OiBBZGQgYmluZGluZ3MgZm9yIEFkdmFudGVjaCBJREstMjEyMVdS
-DQo+IA0KPiBIaSBGYWJyaXppbywNCj4gDQo+IE9uIFRodSwgQXVnIDE1LCAyMDE5IGF0IDEyOjA0
-OjI2UE0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToNCj4gPiBUaGlzIHBhbmVsIGlzIGhh
-bmRsZWQgdGhyb3VnaCB0aGUgZ2VuZXJpYyBsdmRzLXBhbmVsIGJpbmRpbmdzLA0KPiA+IHNvIG9u
-bHkgbmVlZHMgaXRzIGFkZGl0aW9uYWwgY29tcGF0aWJsZSBzcGVjaWZpZWQuDQo+ID4NCj4gPiBT
-b21lIHBhbmVsLXNwZWNpZmljIGRvY3VtZW50YXRpb24gY2FuIGJlIGZvdW5kIGhlcmU6DQo+ID4g
-aHR0cHM6Ly9idXkuYWR2YW50ZWNoLmV1L0Rpc3BsYXlzL0VtYmVkZGVkLUxDRC1LaXRzLUhpZ2gt
-QnJpZ2h0bmVzcy9tb2RlbC1JREstMjEyMVdSLUsyRkhBMkUuaHRtDQo+ID4NCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4N
-Cj4gPg0KPiA+IC0tLQ0KPiA+IHYxLT52MjoNCj4gPiAqIFJld29ya2VkIGFjY29yZGluZyB0byBM
-YXVyZW50J3MgZmVlZGJhY2sNCj4gPiAqIFJlbmFtZWQgbHZkczBfcGFuZWxfaW4gdG8gcGFuZWxf
-aW4wDQo+ID4gKiBSZW5hbWVkIGx2ZHMxX3BhbmVsX2luIHRvIHBhbmVsX2luMQ0KPiA+DQo+ID4g
-TGF1cmVudCwNCj4gPg0KPiA+IFNob3VsZCB0aGlzIGJlIGEgLnlhbWwgZmlsZSBhbHJlYWR5Pw0K
-PiANCj4gSXQncyBub3QgYSBzdHJpY3QgcmVxdWlyZW1lbnQsIGJ1dCBJJ20gc3VyZSBSb2Igd291
-bGQgcmVhbGx5IGFwcHJlY2lhdGUuDQo+IEkndmUgY29udmVydGVkIGEgRFQgYmluZGluZyB0byB5
-YW1sIHJlY2VudGx5IChmb3IgYSBwYW5lbCB0b28pLCBhbmQgSQ0KPiBoYXZlIHRvIHNheSBJJ20g
-aW1wcmVzc2VkIGJ5IHRoZSB2YWxpZGF0aW9uIHlhbWwgYnJpbmdzLCBib3RoIGZvciBEVA0KPiBz
-b3VyY2VzIGFuZCBmb3IgRFQgYmluZGluZ3MuIEl0IGV2ZW4gdmFsaWRhdGVzIHRoZSBleGFtcGxl
-IGluIHRoZQ0KPiBiaW5kaW5ncywgd2hpY2ggaXMgZ3JlYXQuIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS93cml0aW5nLXNjaGVtYS5tZA0KPiBzaG91bGQgZ2l2ZSB5b3UgYSBmZXcgcG9pbnRlcnMg
-dG8gZ2V0IHN0YXJ0ZWQgKGluIHBhcnRpY3VsYXIgbWFrZSBzdXJlDQo+IHlvdSBydW4gbWFrZSBk
-dF9iaW5kaW5nX2NoZWNrIGZvciB5b3VyIG5ldyBiaW5kaW5ncykuDQoNCldpbGwgZ2l2ZSB0aGlz
-IGEgdHJ5Lg0KDQpUaGFua3MsDQpGYWINCg0KPiANCj4gPiAgLi4uL2Rpc3BsYXkvcGFuZWwvYWR2
-YW50ZWNoLGlkay0yMTIxd3IudHh0ICAgICAgICAgfCA1NiArKysrKysrKysrKysrKysrKysrKysr
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9h
-ZHZhbnRlY2gsaWRrLTIxMjF3ci50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hZHZhbnRlY2gsaWRrLTIxMjF3
-ci50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9hZHZhbnRlY2gsaWRrLTIxMjF3ci50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+
-IGluZGV4IDAwMDAwMDAuLjZlZTFkMWINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYWR2YW50ZWNoLGlk
-ay0yMTIxd3IudHh0DQo+ID4gQEAgLTAsMCArMSw1NiBAQA0KPiA+ICtBZHZhbnRlY2ggQ28uLCBM
-dGQuIElESy0yMTIxV1IgMjEuNSIgTFZEUyBwYW5lbA0KPiA+ICs9PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVy
-dGllczoNCj4gPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgImFkdmFudGVjaCxpZGstMjEyMXdy
-IiBmb2xsb3dlZCBieSAicGFuZWwtbHZkcyINCj4gPiArDQo+ID4gK1RoaXMgYmluZGluZyBpcyBj
-b21wYXRpYmxlIHdpdGggdGhlIGx2ZHMtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVk
-DQo+ID4gK2luIHBhbmVsLWx2ZHMudHh0IGluIHRoaXMgZGlyZWN0b3J5Lg0KPiA+ICtUaGUgcGFu
-ZWwgb3BlcmF0ZXMgaW4gZHVhbC1saW5rIG1vZGUgYW5kIHRodXMgcmVxdWlyZXMgdHdvIHBvcnQg
-bm9kZXMsDQo+ID4gK3RoZSBmaXJzdCBwb3J0IG5vZGUgZXhwZWN0cyBvZGQgcGl4ZWxzICgxLCAz
-LCA1LCBldGMuKSBhbmQgdGhlIHNlY29uZCBwb3J0DQo+ID4gK2V4cGVjdHMgZXZlbiBwaXhlbHMg
-KDAsIDIsIDQsIGV0Yy4pLg0KPiA+ICsNCj4gPiArRXhhbXBsZQ0KPiA+ICstLS0tLS0tDQo+ID4g
-Kw0KPiA+ICsJcGFuZWwgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAiYWR2YW50ZWNoLGlkay0yMTIx
-d3IiLCAicGFuZWwtbHZkcyI7DQo+ID4gKw0KPiA+ICsJCXdpZHRoLW1tID0gPDQ3Nj47DQo+ID4g
-KwkJaGVpZ2h0LW1tID0gPDI2OD47DQo+ID4gKw0KPiA+ICsJCWRhdGEtbWFwcGluZyA9ICJ2ZXNh
-LTI0IjsNCj4gPiArDQo+ID4gKwkJcGFuZWwtdGltaW5nIHsNCj4gPiArCQkJY2xvY2stZnJlcXVl
-bmN5ID0gPDE0ODUwMDAwMD47DQo+ID4gKwkJCWhhY3RpdmUgPSA8MTkyMD47DQo+ID4gKwkJCXZh
-Y3RpdmUgPSA8MTA4MD47DQo+ID4gKwkJCWhzeW5jLWxlbiA9IDw0ND47DQo+ID4gKwkJCWhmcm9u
-dC1wb3JjaCA9IDw4OD47DQo+ID4gKwkJCWhiYWNrLXBvcmNoID0gPDE0OD47DQo+ID4gKwkJCXZm
-cm9udC1wb3JjaCA9IDw0PjsNCj4gPiArCQkJdmJhY2stcG9yY2ggPSA8MzY+Ow0KPiA+ICsJCQl2
-c3luYy1sZW4gPSA8NT47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJcG9ydHMgew0KPiA+ICsJ
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4g
-Kw0KPiA+ICsJCQlwb3J0QDAgew0KPiA+ICsJCQkJLyogT2RkIHBpeGVscyAqLw0KPiA+ICsJCQkJ
-cmVnID0gPDA+Ow0KPiA+ICsJCQkJcGFuZWxfaW4wOiBlbmRwb2ludCB7DQo+ID4gKwkJCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZsdmRzMF9vdXQ+Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsNCj4g
-PiArDQo+ID4gKwkJCXBvcnRAMSB7DQo+ID4gKwkJCQkvKiBFdmVuIHBpeGVscyAqLw0KPiA+ICsJ
-CQkJcmVnID0gPDE+Ow0KPiA+ICsJCQkJcGFuZWxfaW4xOiBlbmRwb2ludCB7DQo+ID4gKwkJCQkJ
-cmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzMV9vdXQ+Ow0KPiA+ICsJCQkJfTsNCj4gPiArCQkJfTsN
-Cj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCj4gDQo+IC0tDQo+
-IFJlZ2FyZHMsDQo+IA0KPiBMYXVyZW50IFBpbmNoYXJ0DQo=
+On Thu, Aug 15, 2019 at 4:55 AM Stefan Riedm=C3=BCller
+<s.riedmueller@phytec.de> wrote:
+>
+> Hi Rob,
+>
+> On 13.08.19 18:04, Rob Herring wrote:
+> > On Wed, Jul 24, 2019 at 09:49:32AM +0200, Stefan Riedmueller wrote:
+> >> Add devicetree bindings for i.MX6 UL/ULL based phyCORE-i.MX6 UL/ULL an=
+d
+> >> phyBOARD-Segin.
+> >>
+> >> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+> >> ---
+> >>   Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
+> >>   1 file changed, 8 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Document=
+ation/devicetree/bindings/arm/fsl.yaml
+> >> index 7294ac36f4c0..40f007859092 100644
+> >> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> >> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> >> @@ -161,12 +161,20 @@ properties:
+> >>           items:
+> >>             - enum:
+> >>                 - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EV=
+K Board
+> >> +              - phytec,imx6ul-pbacd10     # PHYTEC phyBOARD-Segin wit=
+h i.MX6 UL
+> >> +              - phytec,imx6ul-pbacd10-emmc  # PHYTEC phyBOARD-Segin e=
+MMC Kit
+> >> +              - phytec,imx6ul-pbacd10-nand  # PHYTEC phyBOARD-Segin N=
+AND Kit
+> >> +              - phytec,imx6ul-pcl063      # PHYTEC phyCORE-i.MX 6UL
+> >
+> > This doesn't match what is in the dts files:
+> >
+> > arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi:    compatible =3D "phytec,=
+imx6ul-pcl063", "fsl,imx6ul";
+> > arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts:      compatibl=
+e =3D "phytec,imx6ul-pbacd10", "phytec,imx6ul-pcl063",
+> > "fsl,imx6ul";
+> > arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi:    compatible =3D =
+"phytec,imx6ul-pbacd-10", "phytec,imx6ul-pcl063",
+> > "fsl,imx6ul";
+>
+> Shawn already applied my patches which rename the compatibles, see
+> https://lkml.org/lkml/2019/7/23/42
+
+In any case, it still doesn't match. For example, from those patches:
+
++ model =3D "PHYTEC phyBOARD-Segin i.MX6 ULL Full Featured with eMMC";
++ compatible =3D "phytec,imx6ull-pbacd10-emmc", "phytec,imx6ull-pbacd10",
++     "phytec,imx6ull-pcl063","fsl,imx6ull";
+
+The correct schema for this would be:
+
+items:
+  - const: phytec,imx6ull-pbacd10-emmc
+  - const: phytec,imx6ull-pbacd10
+  - const: phytec,imx6ull-pcl063
+  - const: fsl,imx6ull
+
+This defines how many entries (4), what they are, and the order of
+them. Maybe the first entry can be an enum with the -nand compatible
+if those are 2 options.
+
+Run 'make dtbs_check' and make sure there aren't warnings for the root node=
+.
+
+Rob
