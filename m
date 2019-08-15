@@ -1,35 +1,50 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V3 4/4] dt-bindings: iio: adc: ad7192: Add binding
- documentation for AD7192
-Date: Wed, 14 Aug 2019 20:39:04 -0600
-Message-ID: <CAL_JsqKONxFbS-nUMc1c=-9HcXCrOVmOOfn9htKOJOjAS6HCKg@mail.gmail.com>
-References: <20190814073150.4602-1-mircea.caprioru@analog.com> <20190814073150.4602-4-mircea.caprioru@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH] arm: dts: rockchip: fix vcc_host_5v regulator for usb3 host
+Date: Thu, 15 Aug 2019 10:59:19 +0800
+Message-ID: <20190815025919.5194-1-kever.yang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814073150.4602-4-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mircea Caprioru <mircea.caprioru@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>, Stefan Popa <stefan.popa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>, Jonas Karlman <jonas@kwiboo.se>, Katsuhiro Suzuki <katsuhiro@katsuster.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomohiro Mayama <parly-gh@iris.mystia.org>, Vasily Khoruzhick <anarsoul@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 1:32 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
->
-> This patch add device tree binding documentation for AD7192 adc in YAML
-> format.
->
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> ---
-> Changelog V2:
-> - remove description from spi and interrupt properties
-> - changed the name of the device from ad7192 to adc in the example
->
-> Changelog V3:
-> - added semicolon at the end of the dt example
->
->  .../bindings/iio/adc/adi,ad7192.yaml          | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+According to rock64 schemetic V2 and V3, the VCC_HOST_5V output is
+controlled by USB_20_HOST_DRV, which is the same as VCC_HOST1_5V.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
+
+ arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 7cfd5ca6cc85..bd4ad1635e0b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -35,9 +35,9 @@
+ 	vcc_host_5v: vcc-host-5v-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&usb30_host_drv>;
++		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host_5v";
+ 		regulator-always-on;
+ 		regulator-boot-on;
+@@ -320,12 +320,6 @@
+ 			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+-
+-	usb3 {
+-		usb30_host_drv: usb30-host-drv {
+-			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+-		};
+-	};
+ };
+ 
+ &sdmmc {
+-- 
+2.17.1
