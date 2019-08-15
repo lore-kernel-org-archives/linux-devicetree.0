@@ -1,379 +1,60 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v6 5/8] clk: mediatek: Add MT6765 clock support
-Date: Wed, 14 Aug 2019 17:27:20 -0700
-Message-ID: <20190815002721.A71C72083B@mail.kernel.org>
-References: <1562924653-10056-1-git-send-email-macpaul.lin@mediatek.com> <1562924653-10056-6-git-send-email-macpaul.lin@mediatek.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH 00/11] ARM: dts: qcom: msm8974: add support for external display
+Date: Wed, 14 Aug 2019 20:48:43 -0400
+Message-ID: <20190815004854.19860-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1562924653-10056-6-git-send-email-macpaul.lin@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Owen Chen <owen.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-clk@vger.kernel.org, Macpaul Lin <macpaul.lin@mediatek.com>
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, a.hajda@samsung.com, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run
+Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Macpaul Lin (2019-07-12 02:43:41)
-> diff --git a/drivers/clk/mediatek/clk-mt6765-audio.c b/drivers/clk/mediat=
-ek/clk-mt6765-audio.c
-> new file mode 100644
-> index 000000000000..41f19343dfb9
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6765-audio.c
-> @@ -0,0 +1,109 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <owen.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+This patch series begins to add support for the external display over
+HDMI that is supported on msm8974 SoCs. I'm testing this series on the
+Nexus 5, and I'm able to communicate with the HDMI bridge via the
+analogix-anx78xx driver, however the external display is not working
+yet.
 
-Please use SPDX tags.
+When I plug in the HDMI cable, the monitor detects that a device is
+hooked up, but nothing is shown on the external monitor. The hot plug
+detect GPIO (hpd-gpios) on the analogix-anx78xx bridge and MSM HDMI
+drivers do not change state when the slimport adapter or HDMI cable is
+plugged in or removed. I wonder if a regulator is not enabled somewhere?
+I have a comment in patch 10 regarding 'hpd-gdsc-supply' that may
+potentially be an issue.
 
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "clk-mtk.h"
-> +#include "clk-gate.h"
-> +
-> diff --git a/drivers/clk/mediatek/clk-mt6765-vcodec.c b/drivers/clk/media=
-tek/clk-mt6765-vcodec.c
-> new file mode 100644
-> index 000000000000..eb9ae1c2c99c
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6765-vcodec.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <owen.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+I'm still digging in on this, however I'd appreciate any feedback if
+anyone has time. Most of these patches are ready now, so I marked the
+ones that aren't ready with 'PATCH RFC'.
 
-SPDX tags.
+I'm using an Analogix Semiconductor SP6001 SlimPort Micro-USB to 4K HDMI
+Adapter to connect my phone to an external display via a standard HDMI
+cable. This works just fine with the downstream MSM kernel using
+Android.
 
-> diff --git a/drivers/clk/mediatek/clk-mt6765.c b/drivers/clk/mediatek/clk=
--mt6765.c
-> new file mode 100644
-> index 000000000000..f716a48a926d
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt6765.c
-> @@ -0,0 +1,961 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + * Author: Owen Chen <owen.chen@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+Brian Masney (11):
+  dt-bindings: drm/bridge: analogix-anx78xx: add new variants
+  drm/bridge: analogix-anx78xx: add new variants
+  drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+  drm/bridge: analogix-anx78xx: convert to i2c_new_dummy_device
+  drm/bridge: analogix-anx78xx: correct value of TX_P0
+  drm/bridge: analogix-anx78xx: add support for avdd33 regulator
+  ARM: qcom_defconfig: add CONFIG_DRM_ANALOGIX_ANX78XX
+  drm/msm/hdmi: silence -EPROBE_DEFER warning
+  ARM: dts: qcom: pm8941: add 5vs2 regulator node
+  ARM: dts: qcom: msm8974: add HDMI nodes
+  ARM: dts: qcom: msm8974-hammerhead: add support for external display
 
-SPDX tags.
+ .../bindings/display/bridge/anx7814.txt       |   6 +-
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 140 ++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  80 ++++++++++
+ arch/arm/boot/dts/qcom-pm8941.dtsi            |  10 ++
+ arch/arm/configs/qcom_defconfig               |   1 +
+ drivers/gpu/drm/bridge/analogix-anx78xx.c     |  60 +++++++-
+ drivers/gpu/drm/bridge/analogix-anx78xx.h     |   2 +-
+ drivers/gpu/drm/msm/hdmi/hdmi_phy.c           |   8 +-
+ 8 files changed, 295 insertions(+), 12 deletions(-)
 
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include <linux/mfd/syscon.h>
-
-Is this used? Maybe I deleted it.
-
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-[...]
-> +
-> +static const char * const axi_parents[] =3D {
-> +       "clk26m",
-> +       "syspll_d7",
-> +       "syspll1_d4",
-> +       "syspll3_d2"
-> +};
-> +
-> +static const char * const mem_parents[] =3D {
-> +       "clk26m",
-> +       "dmpll_ck",
-> +       "apll1_ck"
-> +};
-> +
-> +static const char * const mm_parents[] =3D {
-> +       "clk26m",
-> +       "mmpll_ck",
-> +       "syspll1_d2",
-> +       "syspll_d5",
-> +       "syspll1_d4",
-> +       "univpll_d5",
-> +       "univpll1_d2",
-> +       "mmpll_d2"
-> +};
-> +
-> +static const char * const scp_parents[] =3D {
-> +       "clk26m",
-> +       "syspll4_d2",
-> +       "univpll2_d2",
-> +       "syspll1_d2",
-> +       "univpll1_d2",
-> +       "syspll_d3",
-> +       "univpll_d3"
-> +};
-> +
-> +static const char * const mfg_parents[] =3D {
-> +       "clk26m",
-> +       "mfgpll_ck",
-> +       "syspll_d3",
-> +       "univpll_d3"
-> +};
-> +
-> +static const char * const atb_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d4",
-> +       "syspll1_d2"
-> +};
-> +
-> +static const char * const camtg_parents[] =3D {
-> +       "clk26m",
-> +       "usb20_192m_d8",
-> +       "univpll2_d8",
-> +       "usb20_192m_d4",
-> +       "univpll2_d32",
-> +       "usb20_192m_d16",
-> +       "usb20_192m_d32"
-> +};
-> +
-> +static const char * const uart_parents[] =3D {
-> +       "clk26m",
-> +       "univpll2_d8"
-> +};
-> +
-> +static const char * const spi_parents[] =3D {
-> +       "clk26m",
-> +       "syspll3_d2",
-> +       "syspll4_d2",
-> +       "syspll2_d4"
-> +};
-> +
-> +static const char * const msdc5hclk_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d2",
-> +       "univpll1_d4",
-> +       "syspll2_d2"
-> +};
-> +
-> +static const char * const msdc50_0_parents[] =3D {
-> +       "clk26m",
-> +       "msdcpll_ck",
-> +       "syspll2_d2",
-> +       "syspll4_d2",
-> +       "univpll1_d2",
-> +       "syspll1_d2",
-> +       "univpll_d5",
-> +       "univpll1_d4"
-> +};
-> +
-> +static const char * const msdc30_1_parents[] =3D {
-> +       "clk26m",
-> +       "msdcpll_d2",
-> +       "univpll2_d2",
-> +       "syspll2_d2",
-> +       "syspll1_d4",
-> +       "univpll1_d4",
-> +       "usb20_192m_d4",
-> +       "syspll2_d4"
-> +};
-> +
-> +static const char * const audio_parents[] =3D {
-> +       "clk26m",
-> +       "syspll3_d4",
-> +       "syspll4_d4",
-> +       "syspll1_d16"
-> +};
-> +
-> +static const char * const aud_intbus_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d4",
-> +       "syspll4_d2"
-> +};
-> +
-> +static const char * const aud_1_parents[] =3D {
-> +       "clk26m",
-> +       "apll1_ck"
-> +};
-> +
-> +static const char * const aud_engen1_parents[] =3D {
-> +       "clk26m",
-> +       "apll1_d2",
-> +       "apll1_d4",
-> +       "apll1_d8"
-> +};
-> +
-> +static const char * const disp_pwm_parents[] =3D {
-> +       "clk26m",
-> +       "univpll2_d4",
-> +       "ulposc1_d2",
-> +       "ulposc1_d8"
-> +};
-> +
-> +static const char * const sspm_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d2",
-> +       "syspll_d3"
-> +};
-> +
-> +static const char * const dxcc_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d2",
-> +       "syspll1_d4",
-> +       "syspll1_d8"
-> +};
-> +
-> +static const char * const usb_top_parents[] =3D {
-> +       "clk26m",
-> +       "univpll3_d4"
-> +};
-> +
-> +static const char * const spm_parents[] =3D {
-> +       "clk26m",
-> +       "syspll1_d8"
-> +};
-> +
-> +static const char * const i2c_parents[] =3D {
-> +       "clk26m",
-> +       "univpll3_d4",
-> +       "univpll3_d2",
-> +       "syspll1_d8",
-> +       "syspll2_d8"
-> +};
-> +
-> +static const char * const pwm_parents[] =3D {
-> +       "clk26m",
-> +       "univpll3_d4",
-> +       "syspll1_d8"
-> +};
-> +
-> +static const char * const seninf_parents[] =3D {
-> +       "clk26m",
-> +       "univpll1_d4",
-> +       "univpll1_d2",
-> +       "univpll2_d2"
-> +};
-> +
-> +static const char * const aes_fde_parents[] =3D {
-> +       "clk26m",
-> +       "msdcpll_ck",
-> +       "univpll_d3",
-> +       "univpll2_d2",
-> +       "univpll1_d2",
-> +       "syspll1_d2"
-> +};
-> +
-> +static const char * const ulposc_parents[] =3D {
-> +       "clk26m",
-> +       "ulposc1_d4",
-> +       "ulposc1_d8",
-> +       "ulposc1_d16",
-> +       "ulposc1_d32"
-> +};
-> +
-> +static const char * const camtm_parents[] =3D {
-> +       "clk26m",
-> +       "univpll1_d4",
-> +       "univpll1_d2",
-> +       "univpll2_d2"
-> +};
-> +
-
-Can you migrate this driver to the new way of specifying clk parents?
-That way we don't just have lists of strings.
-
-> +#define INVALID_UPDATE_REG 0xFFFFFFFF
-> +#define INVALID_UPDATE_SHIFT -1
-> +#define INVALID_MUX_GATE -1
-> +
-> +static const struct mtk_mux top_muxes[] =3D {
-> +       /* CLK_CFG_0 */
-> +       MUX_GATE_CLR_SET_UPD_FLAGS(CLK_TOP_AXI_SEL, "axi_sel", axi_parent=
-s,
-> +                             CLK_CFG_0, CLK_CFG_0_SET, CLK_CFG_0_CLR,
-> +                             0, 2, 7, CLK_CFG_UPDATE, 0, CLK_IS_CRITICAL=
-),
-
-Please add a comment why CLK_IS_CRITICAL flag is used in each place.
-
-> +       MUX_GATE_CLR_SET_UPD_FLAGS(CLK_TOP_MEM_SEL, "mem_sel", mem_parent=
-s,
-> +                             CLK_CFG_0, CLK_CFG_0_SET, CLK_CFG_0_CLR,
-> +                             8, 2, 15, CLK_CFG_UPDATE, 1, CLK_IS_CRITICA=
-L),
-> +       MUX_GATE_CLR_SET_UPD(CLK_TOP_MM_SEL, "mm_sel", mm_parents, CLK_CF=
-G_0,
-> +                       CLK_CFG_0_SET, CLK_CFG_0_CLR, 16, 3, 23,
-> +                       CLK_CFG_UPDATE, 2),
-> +       MUX_GATE_CLR_SET_UPD(CLK_TOP_SCP_SEL, "scp_sel", scp_parents, CLK=
-_CFG_0,
-> +                       CLK_CFG_0_SET, CLK_CFG_0_CLR, 24, 3, 31,
-> +                       CLK_CFG_UPDATE, 3),
-[...]
-> +       }, {
-> +               .compatible =3D "mediatek,mt6765-topckgen",
-> +               .data =3D clk_mt6765_top_probe,
-> +       }, {
-> +               .compatible =3D "mediatek,mt6765-infracfg",
-> +               .data =3D clk_mt6765_ifr_probe,
-> +       }, {
-> +               /* sentinel */
-> +       }
-> +};
-> +
-> +static int clk_mt6765_probe(struct platform_device *pdev)
-> +{
-> +       int (*clk_probe)(struct platform_device *d);
-> +       int r;
-> +
-> +       clk_probe =3D of_device_get_match_data(&pdev->dev);
-> +       if (!clk_probe)
-> +               return -EINVAL;
-> +
-> +       r =3D clk_probe(pdev);
-> +       if (r)
-> +               dev_err(&pdev->dev,
-> +                       "could not register clock provider: %s: %d\n",
-> +                       pdev->name, r);
-> +
-> +       return r;
-> +}
-> +
-> +static struct platform_driver clk_mt6765_drv =3D {
-> +       .probe =3D clk_mt6765_probe,
-> +       .driver =3D {
-> +               .name =3D "clk-mt6765",
-> +               .owner =3D THIS_MODULE,
-
-Remove this line, platform_driver_register() should take care of it.
-
-> +               .of_match_table =3D of_match_clk_mt6765,
-> +       },
-> +};
-> +
+-- 
+2.21.0
