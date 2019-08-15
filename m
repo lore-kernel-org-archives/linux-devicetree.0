@@ -1,88 +1,99 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v8 01/14] media: videodev2.h, v4l2-ioctl: add rkisp1 meta
- buffer format
-Date: Thu, 15 Aug 2019 16:30:51 +0300
-Message-ID: <20190815133051.GT5011@pendragon.ideasonboard.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-2-helen.koike@collabora.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v2 1/9] dt-bindings: panel: lvds: Add dual-link LVDS
+ display support
+Date: Thu, 15 Aug 2019 13:37:38 +0000
+Message-ID: <TY1PR01MB1770B076A94B922978E54341C0AC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190815114515.GH5011@pendragon.ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190730184256.30338-2-helen.koike@collabora.com>
+In-Reply-To: <20190815114515.GH5011@pendragon.ideasonboard.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Helen Koike <helen.koike@collabora.com>
-Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, kernel@collabora.com, ezequiel@collabora.com, linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Helen,
-
-Thank you for the patch.
-
-On Tue, Jul 30, 2019 at 03:42:43PM -0300, Helen Koike wrote:
-> From: Shunqian Zheng <zhengsq@rock-chips.com>
-> 
-> Add the Rockchip ISP1 specific processing parameter format
-> V4L2_META_FMT_RK_ISP1_PARAMS and metadata format
-> V4L2_META_FMT_RK_ISP1_STAT_3A for 3A.
-
-I don't like V4L2_META_FMT_RK_ISP1_PARAMS much, as the parameters are
-not passed to the hardware through a buffer, but instead written to
-registers by the kernel driver. This is an area where V4L2 controls are
-traditionally used. I do however understand that it's easier for driver
-authors to pass a large set of controls this way when they have to be
-applied atomically, but it's clearly a hack in my opinion. I won't
-oppose to it though, as I know there's no way we can support this kind
-of feature in V4L2 at the moment without an extensive amount of work, so
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> [update for upstream]
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
-> ---
-> 
-> Changes in v8: None
-> Changes in v7:
-> - s/IPU3/RK_ISP1
-> 
->  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
->  include/uapi/linux/videodev2.h       | 4 ++++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index bb5b4926538a..2df20801a299 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1330,6 +1330,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->  	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
->  	case V4L2_META_FMT_UVC:		descr = "UVC Payload Header Metadata"; break;
->  	case V4L2_META_FMT_D4XX:	descr = "Intel D4xx UVC Metadata"; break;
-> +	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr = "Rockchip ISP1 3A params"; break;
-> +	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr = "Rockchip ISP1 3A statistics"; break;
->  
->  	default:
->  		/* Compressed formats */
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 2427bc4d8eba..ae1e375a10d7 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -756,6 +756,10 @@ struct v4l2_pix_format {
->  #define V4L2_META_FMT_UVC         v4l2_fourcc('U', 'V', 'C', 'H') /* UVC Payload Header metadata */
->  #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
->  
-> +/* Vendor specific - used for RK_ISP1 camera sub-system */
-> +#define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 params */
-> +#define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A statistics */
-> +
->  /* priv field value to indicates that subsequent fields are valid. */
->  #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
->  
-
--- 
-Regards,
-
-Laurent Pinchart
+SGkgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IGxp
+bnV4LWtlcm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWtlcm5lbC1vd25lckB2Z2Vy
+Lmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBMYXVyZW50IFBpbmNoYXJ0DQo+IFNlbnQ6IDE1IEF1
+Z3VzdCAyMDE5IDEyOjQ1DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS85XSBkdC1iaW5kaW5n
+czogcGFuZWw6IGx2ZHM6IEFkZCBkdWFsLWxpbmsgTFZEUyBkaXNwbGF5IHN1cHBvcnQNCj4gDQo+
+IEhpIEZhYnJpemlvLA0KPiANCj4gT24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMTI6MDQ6MjVQTSAr
+MDEwMCwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPiA+IER1YWwtbGluayBMVkRTIGRpc3BsYXlz
+IGhhdmUgdHdvIHBvcnRzLCB0aGVyZWZvcmUgZG9jdW1lbnQgdGhpcw0KPiA+IHdpdGggdGhlIGJp
+bmRpbmdzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXpp
+by5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2MS0+djI6DQo+ID4g
+KiBSZXdvcmtlZCB0aGUgZGVzY3JpcHRpb24gb2YgdGhlIHBvcnRzIHByb3BlcnR5DQo+ID4gKiBs
+dmRzMF9wYW5lbF9pbiBpbiB0aGUgZXhhbXBsZSBoYXMgYmVlbiByZW5hbWVkIHRvIHBhbmVsX2lu
+MA0KPiA+ICogbHZkczFfcGFuZWxfaW4gaW4gdGhlIGV4YW1wbGUgaGFzIGJlZW4gcmVuYW1lZCB0
+byBwYW5lbF9pbjENCj4gPg0KPiA+IExhdXJlbnQsDQo+ID4NCj4gPiBpbiBsaW51eC1uZXh0IHRo
+ZXkgYXJlIG5vdyB3b3JraW5nIHdpdGg6DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvbHZkcy55YW1sDQo+IA0KPiBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9sdmRzLnlhbWwgaXMgaW4NCj4gZHJtLW1pc2Mt
+bmV4dCwgc28gSSB3b3VsZCBhZHZpc2UgcmViYXNpbmcgb24gdG9wIG9mIHRoYXQuDQoNCldpbGwg
+ZG8uDQoNClRoYW5rcywNCkZhYg0KDQo+IA0KPiA+IFdoYXQgc2hvdWxkIEkgZG8gaGVyZT8NCj4g
+Pg0KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1sdmRzLnR4dCAgICAgICAg
+ICB8IDk1ICsrKysrKysrKysrKysrKystLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDcxIGlu
+c2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2ZHMudHh0
+DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFu
+ZWwtbHZkcy50eHQNCj4gPiBpbmRleCAyNTA4NTBhLi41MjMxMjQzIDEwMDY0NA0KPiA+IC0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWx2
+ZHMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvcGFuZWwtbHZkcy50eHQNCj4gPiBAQCAtNDEsNyArNDEsMTIgQEAgUmVxdWlyZWQg
+bm9kZXM6DQo+ID4NCj4gPiAgLSBwYW5lbC10aW1pbmc6IFNlZSBwYW5lbC1jb21tb24udHh0Lg0K
+PiA+ICAtIHBvcnRzOiBTZWUgcGFuZWwtY29tbW9uLnR4dC4gVGhlc2UgYmluZGluZ3MgcmVxdWly
+ZSBhIHNpbmdsZSBwb3J0IHN1Ym5vZGUNCj4gPiAtICBjb3JyZXNwb25kaW5nIHRvIHRoZSBwYW5l
+bCBMVkRTIGlucHV0Lg0KPiA+ICsgIChmb3IgYSBzaW5nbGUgbGluayBwYW5lbCkgY29ycmVzcG9u
+ZGluZyB0byB0aGUgcGFuZWwgTFZEUyBpbnB1dCwgb3IgdHdvIHBvcnQNCj4gPiArICBzdWJub2Rl
+cyAoZm9yIGEgZHVhbCBsaW5rIHBhbmVsKSBjb3JyZXNwb25kaW5nIHRvIHRoZSBwYW5lbCBMVkRT
+IGlucHV0cy4NCj4gPiArICBEdWFsLWxpbmsgTFZEUyBwYW5lbHMgZXhwZWN0IGV2ZW4gcGl4ZWxz
+ICgwLCAyLCA0LCBldGMuKSBhbmQgb2RkIHBpeGVscyAoMSwgMywNCj4gPiArICA1LCBldGMuKSBv
+biBkaWZmZXJlbnQgaW5wdXQgcG9ydHMsIGl0J3MgdXAgdG8gdGhlIHBhbmVsLXNwZWNpZmljIGJp
+bmRpbmdzIHRvDQo+ID4gKyAgc3BlY2lmeSB3aGF0IHBvcnQgaXMgZXhwZWN0aW5nIGV2ZW4gcGl4
+ZWxzLCBhbmQgd2hhdCBwb3J0IGlzIGV4cGVjdGluZyBvZGQNCj4gPiArICBwaXhlbHMuDQo+ID4N
+Cj4gPg0KPiA+ICBMVkRTIGRhdGEgbWFwcGluZ3MgYXJlIGRlZmluZWQgYXMgZm9sbG93cy4NCj4g
+PiBAQCAtOTIsMzAgKzk3LDcyIEBAIENUTDM6IDANCj4gPiAgRXhhbXBsZQ0KPiA+ICAtLS0tLS0t
+DQo+ID4NCj4gPiAtcGFuZWwgew0KPiA+IC0JY29tcGF0aWJsZSA9ICJtaXRzdWJpc2hpLGFhMTIx
+dGQwMSIsICJwYW5lbC1sdmRzIjsNCj4gPiAtDQo+ID4gLQl3aWR0aC1tbSA9IDwyNjE+Ow0KPiA+
+IC0JaGVpZ2h0LW1tID0gPDE2Mz47DQo+ID4gLQ0KPiA+IC0JZGF0YS1tYXBwaW5nID0gImplaWRh
+LTI0IjsNCj4gPiAtDQo+ID4gLQlwYW5lbC10aW1pbmcgew0KPiA+IC0JCS8qIDEyODB4ODAwIEA2
+MEh6ICovDQo+ID4gLQkJY2xvY2stZnJlcXVlbmN5ID0gPDcxMDAwMDAwPjsNCj4gPiAtCQloYWN0
+aXZlID0gPDEyODA+Ow0KPiA+IC0JCXZhY3RpdmUgPSA8ODAwPjsNCj4gPiAtCQloc3luYy1sZW4g
+PSA8NzA+Ow0KPiA+IC0JCWhmcm9udC1wb3JjaCA9IDwyMD47DQo+ID4gLQkJaGJhY2stcG9yY2gg
+PSA8NzA+Ow0KPiA+IC0JCXZzeW5jLWxlbiA9IDw1PjsNCj4gPiAtCQl2ZnJvbnQtcG9yY2ggPSA8
+Mz47DQo+ID4gLQkJdmJhY2stcG9yY2ggPSA8MTU+Ow0KPiA+ICtTaW5nbGUgcG9ydDoNCj4gPiAr
+CXBhbmVsIHsNCj4gPiArCQljb21wYXRpYmxlID0gIm1pdHN1YmlzaGksYWExMjF0ZDAxIiwgInBh
+bmVsLWx2ZHMiOw0KPiA+ICsNCj4gPiArCQl3aWR0aC1tbSA9IDwyNjE+Ow0KPiA+ICsJCWhlaWdo
+dC1tbSA9IDwxNjM+Ow0KPiA+ICsNCj4gPiArCQlkYXRhLW1hcHBpbmcgPSAiamVpZGEtMjQiOw0K
+PiA+ICsNCj4gPiArCQlwYW5lbC10aW1pbmcgew0KPiA+ICsJCQkvKiAxMjgweDgwMCBANjBIeiAq
+Lw0KPiA+ICsJCQljbG9jay1mcmVxdWVuY3kgPSA8NzEwMDAwMDA+Ow0KPiA+ICsJCQloYWN0aXZl
+ID0gPDEyODA+Ow0KPiA+ICsJCQl2YWN0aXZlID0gPDgwMD47DQo+ID4gKwkJCWhzeW5jLWxlbiA9
+IDw3MD47DQo+ID4gKwkJCWhmcm9udC1wb3JjaCA9IDwyMD47DQo+ID4gKwkJCWhiYWNrLXBvcmNo
+ID0gPDcwPjsNCj4gPiArCQkJdnN5bmMtbGVuID0gPDU+Ow0KPiA+ICsJCQl2ZnJvbnQtcG9yY2gg
+PSA8Mz47DQo+ID4gKwkJCXZiYWNrLXBvcmNoID0gPDE1PjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4g
+PiArCQlwb3J0IHsNCj4gPiArCQkJcGFuZWxfaW46IGVuZHBvaW50IHsNCj4gPiArCQkJCXJlbW90
+ZS1lbmRwb2ludCA9IDwmbHZkc19lbmNvZGVyPjsNCj4gPiArCQkJfTsNCj4gPiArCQl9Ow0KPiA+
+ICAJfTsNCj4gPg0KPiA+IC0JcG9ydCB7DQo+ID4gLQkJcGFuZWxfaW46IGVuZHBvaW50IHsNCj4g
+PiAtCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX2VuY29kZXI+Ow0KPiA+ICtUd28gcG9ydHM6
+DQo+ID4gKwlwYW5lbCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJhZHZhbnRlY2gsaWRrLTIxMjF3
+ciIsICJwYW5lbC1sdmRzIjsNCj4gPiArDQo+ID4gKwkJd2lkdGgtbW0gPSA8NDc2PjsNCj4gPiAr
+CQloZWlnaHQtbW0gPSA8MjY4PjsNCj4gPiArDQo+ID4gKwkJZGF0YS1tYXBwaW5nID0gInZlc2Et
+MjQiOw0KPiA+ICsNCj4gPiArCQlwYW5lbC10aW1pbmcgew0KPiA+ICsJCQljbG9jay1mcmVxdWVu
+Y3kgPSA8MTQ4NTAwMDAwPjsNCj4gPiArCQkJaGFjdGl2ZSA9IDwxOTIwPjsNCj4gPiArCQkJdmFj
+dGl2ZSA9IDwxMDgwPjsNCj4gPiArCQkJaHN5bmMtbGVuID0gPDQ0PjsNCj4gPiArCQkJaGZyb250
+LXBvcmNoID0gPDg4PjsNCj4gPiArCQkJaGJhY2stcG9yY2ggPSA8MTQ4PjsNCj4gPiArCQkJdmZy
+b250LXBvcmNoID0gPDQ+Ow0KPiA+ICsJCQl2YmFjay1wb3JjaCA9IDwzNj47DQo+ID4gKwkJCXZz
+eW5jLWxlbiA9IDw1PjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlwb3J0cyB7DQo+ID4gKwkJ
+CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiAr
+DQo+ID4gKwkJCXBvcnRAMCB7DQo+ID4gKwkJCQlyZWcgPSA8MD47DQo+ID4gKwkJCQlwYW5lbF9p
+bjA6IGVuZHBvaW50IHsNCj4gPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHMwX291dD47
+DQo+ID4gKwkJCQl9Ow0KPiA+ICsJCQl9Ow0KPiA+ICsNCj4gPiArCQkJcG9ydEAxIHsNCj4gPiAr
+CQkJCXJlZyA9IDwxPjsNCj4gPiArCQkJCXBhbmVsX2luMTogZW5kcG9pbnQgew0KPiA+ICsJCQkJ
+CXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczFfb3V0PjsNCj4gPiArCQkJCX07DQo+ID4gKwkJCX07
+DQo+ID4gIAkJfTsNCj4gPiAgCX07DQo+ID4gLX07DQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiAN
+Cj4gTGF1cmVudCBQaW5jaGFydA0K
