@@ -1,24 +1,50 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] Devicetree fixes for 5.3-rc, take 3
-Date: Thu, 15 Aug 2019 16:25:05 +0000
-Message-ID: <156588630528.19165.11370971071369925979.pr-tracker-bot@kernel.org>
-References: <CAL_JsqJRJp8a_sytr2C_18muxt4ehGQRdfu8n8J70HdRz-gFHw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/2] regulator: act8865: operating mode and suspend
+ state support
+Date: Thu, 15 Aug 2019 17:52:44 +0100
+Message-ID: <20190815165244.GA54921@sirena.co.uk>
+References: <1565721176-8955-1-git-send-email-raagjadav@gmail.com>
+ <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJRJp8a_sytr2C_18muxt4ehGQRdfu8n8J70HdRz-gFHw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1565721176-8955-2-git-send-email-raagjadav@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Raag Jadav <raagjadav@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The pull request you sent on Wed, 14 Aug 2019 20:34:37 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.3-3
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2b245b8b033a90c6373400a29ec93a8713601eff
+On Wed, Aug 14, 2019 at 12:02:55AM +0530, Raag Jadav wrote:
+> Implement ->set_mode(), ->get_mode() and ->set_suspend_xx() hooks
+> for act8865 with unlocked expert registers.
 
-Thank you!
+This breaks the build because it depends on patch 2:
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+drivers/regulator/act8865-regulator.c:22:10: fatal error: dt-bindings/regulator/active-semi,8865-regulator.h: No such file or directory
+ #include <dt-bindings/regulator/active-semi,8865-regulator.h>
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1VjdsACgkQJNaLcl1U
+h9DGoQf/U7SNQL5EaBGBy7/X3RqNXsOh5/zVXWrjoxsQb7s9IYT7DrN5ESS491h0
+muZWo1k9R3SrDXao8/mxE9V+k7Jv9tF4Rw/5SCHT9lYE71aUMrFlWQ2Rn5yqRaXu
+/eEyoKkjkqRFo75iK5TR5zBw1ae7mC3leSeUxbTGspKxFrsJKcVNausaIF60/M9Z
+VPKfVbisLdSZD8GuXW3WAY/vpI7EuXuMBqHsiJXqv9LD1GrTbpVRaaAQr7BKHoMe
+OJqLTYg+Dne7YF7jCnh29v6plsyOnRgkTWHPSTL9r55WcGL1gSD+WwspvJU+XFTU
+1QXbYjANxj2DF2TXIQv26F/WgeBIrA==
+=MsMV
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
