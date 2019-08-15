@@ -1,46 +1,58 @@
-Return-Path: <SRS0=5k37=WP=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH] dt-bindings: iio: light: isl29501: Rename bindings documentation file
-Date: Mon, 19 Aug 2019 16:01:05 +0200
-Message-Id: <20190819140105.18800-1-horms+renesas@verge.net.au>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v7 11/13] media: dt-bindings: tvp5150: add optional tvnorms documentation
+Date: Thu, 15 Aug 2019 13:57:45 +0200
+Message-Id: <20190815115747.24018-12-m.felsch@pengutronix.de>
+In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
+References: <20190815115747.24018-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Rename the bindings documentation file for Renesas ISL29501 Time-of-flight
-sensor from isl29501.txt to renesas,isl29501.txt.
+Document the optional binding to limit the possible tv-norms on the
+input connectors.
 
-This is part of an ongoing effort to name bindings documentation files for
-Renesas IP blocks consistently, in line with the compat strings they
-document.
-
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Based on v5.3-rc1
----
- .../bindings/iio/light/{isl29501.txt => renesas,isl29501.txt}         | 0
- Makefile                                                              | 4 ++--
- 2 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/iio/light/{isl29501.txt => renesas,isl29501.txt} (100%)
+ Documentation/devicetree/bindings/media/i2c/tvp5150.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/isl29501.txt b/Documentation/devicetree/bindings/iio/light/renesas,isl29501.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/iio/light/isl29501.txt
-rename to Documentation/devicetree/bindings/iio/light/renesas,isl29501.txt
-diff --git a/Makefile b/Makefile
-index fd6f7949bc1a..9be5834073f8 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
--PATCHLEVEL = 2
-+PATCHLEVEL = 3
- SUBLEVEL = 0
--EXTRAVERSION =
-+EXTRAVERSION = -rc1
- NAME = Bobtail Squid
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index cc98b38c7e73..93731638b509 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -49,6 +49,13 @@ Required Endpoint Properties for parallel synchronization on output port:
+ Note: Do not specify any of these properties if you want to use the embedded
+       BT.656 synchronization.
  
- # *DOCUMENTATION*
++Optional Connector Properties:
++==============================
++
++- tvnorms: Set the possible signals to which the hardware tries to lock instead
++	   of using the autodetection mechnism. Please look at [1] for more
++	   information.
++
+ [1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
+ 
+ Example - three input sources:
+@@ -56,6 +63,7 @@ Example - three input sources:
+ comp_connector_0 {
+ 	compatible = "composite-video-connector";
+ 	label = "Composite0";
++	tvnorms = <TVNORM_PAL_M>; /* limit to pal-m signals */
+ 
+ 	port {
+ 		composite0_to_tvp5150: endpoint {
+@@ -67,6 +75,7 @@ comp_connector_0 {
+ comp_connector_1 {
+ 	compatible = "composite-video-connector";
+ 	label = "Composite1";
++	tvnorms = <TVNORM_NTSC_M>; /* limit to ntsc-m signals */
+ 
+ 	port {
+ 		composite1_to_tvp5150: endpoint {
 -- 
-2.11.0
+2.20.1
