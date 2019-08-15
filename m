@@ -1,87 +1,73 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v9 08/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB
- Mode
-Date: Thu, 15 Aug 2019 18:18:38 +0800
-Message-ID: <1565864318.14278.4.camel@mhfsdcap03>
-References: <1565423901-17008-1-git-send-email-yong.wu@mediatek.com>
-         <1565423901-17008-9-git-send-email-yong.wu@mediatek.com>
-         <20190814144059.ruyc45yoqkwpbuga@willie-the-truck>
-         <1565858869.12818.51.camel@mhfsdcap03>
-         <20190815095123.rzgtpklvhtjlqir4@willie-the-truck>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v2 1/3] dt/bindings: clk: Add YAML schemas for LS1028A Display Clock bindings
+Date: Thu, 15 Aug 2019 18:16:11 +0800
+Message-ID: <20190815101613.22872-1-wen.he_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190815095123.rzgtpklvhtjlqir4@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+To: linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-15 at 10:51 +0100, Will Deacon wrote:
-> On Thu, Aug 15, 2019 at 04:47:49PM +0800, Yong Wu wrote:
-> > On Wed, 2019-08-14 at 15:41 +0100, Will Deacon wrote:
-> > > On Sat, Aug 10, 2019 at 03:58:08PM +0800, Yong Wu wrote:
-> > > > MediaTek extend the arm v7s descriptor to support the dram over 4GB.
-> > > > 
-> > > > In the mt2712 and mt8173, it's called "4GB mode", the physical address
-> > > > is from 0x4000_0000 to 0x1_3fff_ffff, but from EMI point of view, it
-> > > > is remapped to high address from 0x1_0000_0000 to 0x1_ffff_ffff, the
-> > > > bit32 is always enabled. thus, in the M4U, we always enable the bit9
-> > > > for all PTEs which means to enable bit32 of physical address. Here is
-> > > > the detailed remap relationship in the "4GB mode":
-> > > > CPU PA         ->    HW PA
-> > > > 0x4000_0000          0x1_4000_0000 (Add bit32)
-> > > > 0x8000_0000          0x1_8000_0000 ...
-> > > > 0xc000_0000          0x1_c000_0000 ...
-> > > > 0x1_0000_0000        0x1_0000_0000 (No change)
-> > > 
-> > > So in this example, there are no PAs below 0x4000_0000 yet you later
-> > > add code to deal with that:
-> > > 
-> > > > +	/* Workaround for MTK 4GB Mode: Add BIT32 only when PA < 0x4000_0000.*/
-> > > > +	if (cfg->oas == ARM_V7S_MTK_4GB_OAS && paddr < 0x40000000UL)
-> > > > +		paddr |= BIT_ULL(32);
-> > > 
-> > > Why? Mainline currently doesn't do anything like this for the "4gb mode"
-> > > support as far as I can tell. In fact, we currently unconditionally set
-> > > bit 32 in the physical address returned by iova_to_phys() which wouldn't
-> > > match your CPU PAs listed above, so I'm confused about how this is supposed
-> > > to work.
-> > 
-> > Actually current mainline have a bug for this. So I tried to use another
-> > special patch[1] for it in v8.
-> 
-> If you're fixing a bug in mainline, I'd prefer to see that as a separate
-> patch.
-> 
-> > But the issue is not critical since MediaTek multimedia consumer(v4l2
-> > and drm) don't call iommu_iova_to_phys currently.
-> > 
-> > > 
-> > > The way I would like this quirk to work is that the io-pgtable code
-> > > basically sets bit 9 in the pte when bit 32 is set in the physical address,
-> > > and sets bit 4 in the pte when bit 33 is set in the physical address. It
-> > > would then do the opposite when converting a pte to a physical address.
-> > > 
-> > > That way, your driver can call the page table code directly with the high
-> > > addresses and we don't have to do any manual offsetting or range checking
-> > > in the page table code.
-> > 
-> > In this case, the mt8183 can work successfully while the "4gb
-> > mode"(mt8173/mt2712) can not.
-> > 
-> > In the "4gb mode", As the remap relationship above, we should always add
-> > bit32 in pte as we did in [2]. and need add bit32 in the
-> > "iova_to_phys"(Not always add.). That means the "4gb mode" has a special
-> > flow:
-> > a. Always add bit32 in paddr_to_iopte.
-> > b. Add bit32 only when PA < 0x40000000 in iopte_to_paddr.
-> 
-> I think this is probably at the heart of my misunderstanding. What is so
-> special about PAs (is this HW PA or CPU PA?) below 0x40000000? Is this RAM
-> or something else?
+LS1028A has a clock domain PXLCLK0 used for provide pixel clocks to Display
+output interface. Add a YAML schema for this.
 
-SRAM and HW register that IOMMU can not access.
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+change in v2:
+        - Convert bindings to YAML format
 
-(sorry, My mailbox has something wrong.)
+ .../devicetree/bindings/clock/fsl,plldig.yaml | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+
+diff --git a/Documentation/devicetree/bindings/clock/fsl,plldig.yaml b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+new file mode 100644
+index 000000000000..32274e94aafc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fsl,plldig.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/fsl,plldig.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP QorIQ Layerscape LS1028A Display PIXEL Clock Binding
++
++maintainers:
++  - Wen He <wen.he_1@nxp.com>
++
++description: |
++  NXP LS1028A has a clock domain PXLCLK0 used for the Display output
++  interface in the display core, as implemented in TSMC CLN28HPM PLL.
++  which generate and offers pixel clocks to Display.
++
++properties:
++  compatible:
++    const: fsl,ls1028a-plldig
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - '#clock-cells'
++
++examples:
++  # Display PIXEL Clock node:
++  - |
++    dpclk: clock-display@f1f0000 {
++        compatible = "fsl,ls1028a-plldig";
++        reg = <0x0 0xf1f0000 0x0 0xffff>;
++        #clock-cells = <0>;
++        clocks = <&osc_27m>;
++    };
++
++...
+-- 
+2.17.1
