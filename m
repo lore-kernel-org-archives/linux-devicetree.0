@@ -1,86 +1,257 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57690 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfHNNOd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:14:33 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 6/6] ARM: dts: Configure rstctrl reset for SGX
-Date: Wed, 14 Aug 2019 06:14:08 -0700
-Message-Id: <20190814131408.57162-7-tony@atomide.com>
-In-Reply-To: <20190814131408.57162-1-tony@atomide.com>
-References: <20190814131408.57162-1-tony@atomide.com>
+Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v7 03/13] media: v4l2-fwnode: add initial connector parsing support
+Date: Thu, 15 Aug 2019 13:57:37 +0200
+Message-Id: <20190815115747.24018-4-m.felsch@pengutronix.de>
+In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
+References: <20190815115747.24018-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-The following can be tested via sysfs with the following to ensure the SGX
-module gets enabled and disabled properly:
+The patch adds the initial connector parsing code, so we can move from a
+driver specific parsing code to a generic one. Currently only the
+generic fields and the analog-connector specific fields are parsed. Parsing
+the other connector specific fields can be added by a simple callbacks.
 
-# echo on > /sys/bus/platform/devices/5600fe00.target-module/power/control
-# rwmem 0x5600fe00		# revision register
-0x5600fe00 = 0x40000000
-# echo auto > /sys/bus/platform/devices/5600fe00.target-module/power/control
-# rwmem 0x5000fe00
-Bus error
-
-Note that this patch depends on the PRM rstctrl driver that has
-been recently posted. If the child device driver(s) need to prevent
-rstctrl reset on PM runtime suspend, the drivers need to increase
-the usecount for the shared rstctrl reset that can be mapped also
-for the child device(s) or accessed via dev->parent.
-
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: moaz korena <moaz@korena.xyz>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Philipp Rossak <embed3d@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm/boot/dts/am33xx.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+[1] https://patchwork.kernel.org/cover/10794703/
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -460,6 +460,31 @@
- 			       <&edma 5 0>;
- 			dma-names = "tx", "rx";
- 		};
-+
-+		target-module@56000000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x5600fe00 0x4>,
-+			      <0x5600fe10 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&gfx_l3_clkctrl AM3_GFX_L3_GFX_CLKCTRL 0>;
-+			clock-names = "fck";
-+			resets = <&prm_gfx 0>;
-+			reset-names = "rstctrl";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x56000000 0x1000000>;
-+
-+			/*
-+			 * Closed source PowerVR driver, no child device
-+			 * binding or driver in mainline
-+			 */
-+		};
- 	};
- };
+v7:
+@Jacopo: I dropped your r b tag becuase of the amount of changes I
+made..
+
+- drop unnecessary comments
+- fix commet style
+- s/v4l2_fwnode_connector_conv.name/v4l2_fwnode_connector_conv.compatible/
+- make label size variable and drop V4L2_CONNECTOR_MAX_LABEL usage
+- do not assign a default label in case of no label was specified
+- remove useless /* fall through */ comments
+- add support for N connector links
+- rename local variables to be more meaningful
+- adjust kernedoc
+- add v4l2_fwnode_connector_free()
+- improve error handling (use different error values)
+- make use of pr_warn_once()
+
+v6:
+- use unsigned count var
+- fix comment and style issues
+- place '/* fall through */' to correct places
+- fix error handling and cleanup by releasing fwnode
+- drop vga and dvi parsing support as those connectors are rarely used
+  these days
+
+v5:
+- s/strlcpy/strscpy/
+
+v2-v4:
+- nothing since the patch was squashed from series [1] into this
+  series.
+---
+ drivers/media/v4l2-core/v4l2-fwnode.c | 137 ++++++++++++++++++++++++++
+ include/media/v4l2-fwnode.h           |  38 +++++++
+ 2 files changed, 175 insertions(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 3bd1888787eb..c6eb8a8105cc 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -595,6 +595,143 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
  
++static const struct v4l2_fwnode_connector_conv {
++	enum v4l2_connector_type type;
++	const char *compatible;
++} connectors[] = {
++	{
++		.type = V4L2_CON_COMPOSITE,
++		.compatible = "composite-video-connector",
++	}, {
++		.type = V4L2_CON_SVIDEO,
++		.compatible = "svideo-connector",
++	}, {
++		.type = V4L2_CON_HDMI,
++		.compatible = "hdmi-connector",
++	},
++};
++
++static enum v4l2_connector_type
++v4l2_fwnode_string_to_connector_type(const char *con_str)
++{
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(connectors); i++)
++		if (!strcmp(con_str, connectors[i].compatible))
++			return connectors[i].type;
++
++	return V4L2_CON_UNKNOWN;
++}
++
++static int
++v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
++				   struct v4l2_fwnode_connector *vc)
++{
++	u32 tvnorms;
++	int ret;
++
++	ret = fwnode_property_read_u32(fwnode, "tvnorms", &tvnorms);
++
++	/* The tvnorms property is optional. */
++	vc->connector.analog.supported_tvnorms = ret ? V4L2_STD_ALL : tvnorms;
++
++	return 0;
++}
++
++void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector)
++{
++	unsigned int i;
++
++	if (IS_ERR_OR_NULL(connector))
++		return;
++
++	for (i = 0; i < connector->nr_of_links; i++)
++		v4l2_fwnode_put_link(&connector->links[i]);
++	kfree(connector->links);
++}
++EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_free);
++
++int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
++				      struct v4l2_fwnode_connector *connector)
++{
++	struct fwnode_handle *remote_pp, *remote_ep;
++	const char *type_name;
++	unsigned int i = 0, ep_num = 0;
++	int err;
++
++	memset(connector, 0, sizeof(*connector));
++
++	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
++	if (!remote_pp)
++		return -ENOLINK;
++
++	/* Parse all common properties first. */
++	fwnode_graph_for_each_endpoint(remote_pp, remote_ep)
++		ep_num++;
++
++	connector->nr_of_links = ep_num;
++	connector->links = kmalloc_array(ep_num, sizeof(*connector->links),
++					 GFP_KERNEL);
++	if (!connector->links) {
++		err = -ENOMEM;
++		goto err_put_fwnode;
++	}
++
++	fwnode_graph_for_each_endpoint(remote_pp, remote_ep) {
++		err = v4l2_fwnode_parse_link(remote_ep, &connector->links[i]);
++		if (err) {
++			fwnode_handle_put(remote_ep);
++			goto err_free_links;
++		}
++		i++;
++	}
++
++	/*
++	 * Links reference counting guarantees access -> no duplication needed
++	 */
++	fwnode_property_read_string(remote_pp, "label", &connector->label);
++
++	/* The connector-type is stored within the compatible string. */
++	err = fwnode_property_read_string(remote_pp, "compatible", &type_name);
++	if (err) {
++		err = -EINVAL;
++		goto err_free_links;
++	}
++	connector->type = v4l2_fwnode_string_to_connector_type(type_name);
++
++	/* Now parse the connector specific properties. */
++	switch (connector->type) {
++	case V4L2_CON_COMPOSITE:
++	case V4L2_CON_SVIDEO:
++		err = v4l2_fwnode_connector_parse_analog(remote_pp, connector);
++		break;
++	case V4L2_CON_HDMI:
++		pr_warn_once("Connector specific parsing is currently not supported for %s\n",
++			     type_name);
++		err = 0;
++		break;
++	case V4L2_CON_UNKNOWN:
++	default:
++		pr_err("Unknown connector type\n");
++		err = -EINVAL;
++		goto err_free_links;
++	};
++
++	fwnode_handle_put(remote_pp);
++
++	return err;
++
++err_free_links:
++	for (i = 0; i < ep_num; i++)
++		v4l2_fwnode_put_link(&connector->links[i]);
++	kfree(connector->links);
++err_put_fwnode:
++	fwnode_handle_put(remote_pp);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_alloc_parse);
++
+ static int
+ v4l2_async_notifier_fwnode_parse_endpoint(struct device *dev,
+ 					  struct v4l2_async_notifier *notifier,
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index e39c198882fc..235c7214be3c 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -278,6 +278,44 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+  */
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+ 
++/**
++ * v4l2_fwnode_connector_free() - free the V4L2 connector acquired by
++ * v4l2_fwnode_parse_connector()
++ * @connector: the V4L2 connector the resources of which are to be released
++ *
++ * Drop references to the connection link partners and free the memory allocated
++ * by v4l2_fwnode_parse_connector() call.
++ *
++ * It is safe to call this function with NULL argument or on a V4L2 connector
++ * the parsing of which failed.
++ */
++void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector);
++
++/**
++ * v4l2_fwnode_parse_connector() - parse the connector on endpoint
++ * @fwnode: pointer to the endpoint's fwnode handle where the connector is
++ *          connected to
++ * @connector: pointer to the V4L2 fwnode connector data structure
++ *
++ * Fill the connector data structure with the connector type, label, all found
++ * links between the host and the connector as well as connector specific data.
++ * Since the label is optional it can be %NULL if no one was found.
++ *
++ * A reference is taken to both the connector and the connector destination
++ * where the connector belongs to. This must be dropped when no longer needed.
++ * Also the memory it has allocated to store the variable size data must be
++ * freed. Both dropping the references and freeing the memory is done by
++ * v4l2_fwnode_connector_free().
++ *
++ * Return:
++ * * %0 on success or a negative error code on failure:
++ * * %-ENOMEM if memory allocation failed
++ * * %-ENOLINK if the connector can't be found
++ * * %-EINVAL on parsing failure
++ */
++int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
++				      struct v4l2_fwnode_connector *connector);
++
+ /**
+  * typedef parse_endpoint_func - Driver's callback function to be called on
+  *	each V4L2 fwnode endpoint.
 -- 
-2.21.0
+2.20.1
