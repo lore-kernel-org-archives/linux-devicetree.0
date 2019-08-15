@@ -1,51 +1,48 @@
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: Re: [PATCH v4 18/21] ARM: dts: imx6ull-colibri: Add general wakeup
- key used on Colibri
-Date: Thu, 15 Aug 2019 13:44:14 +0000
-Message-ID: <CAGgjyvFSUCYUxbCU2fOXNH6gBOpw5gay+T8eyk=AKHB0OTornA@mail.gmail.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-19-philippe.schenker@toradex.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 5/8] clk: mediatek: Add MT6765 clock support
+Date: Thu, 15 Aug 2019 15:44:53 +0200
+Message-ID: <20190815134453.GB3372@kroah.com>
+References: <1562924653-10056-1-git-send-email-macpaul.lin@mediatek.com>
+ <1562924653-10056-6-git-send-email-macpaul.lin@mediatek.com>
+ <20190815002721.A71C72083B@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812142105.1995-19-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <41F6EBF36EABB04D96823C2145A359AF@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190815002721.A71C72083B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Macpaul Lin <macpaul.lin@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Owen Chen <owen.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgNToyMyBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
-cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gVGhpcyBhZGRzIHRoZSBwb3Nz
-aWJpbGl0eSB0byB3YWtlIHRoZSBtb2R1bGUgd2l0aCBhbiBleHRlcm5hbCBzaWduYWwNCj4gYXMg
-ZGVmaW5lZCBpbiB0aGUgQ29saWJyaSBzdGFuZGFyZA0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBQaGls
-aXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQo+IEFja2VkLWJ5
-OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCg0KUmV2aWV3
-ZWQtYnk6IE9sZWtzYW5kciBTdXZvcm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4N
-Cg0KPg0KPiAtLS0NCj4NCj4gQ2hhbmdlcyBpbiB2NDoNCj4gLSBBZGQgTWFyY2VsIFppc3dpbGVy
-J3MgQWNrDQo+DQo+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0K
-Pg0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDE0
-ICsrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQ0KPg0K
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMu
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCj4g
-aW5kZXggYjYxNDdjNzZkMTU5Li5hNzg4NDlmZDJhZmEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS1ldmFsLXYzLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KPiBAQCAtOCw2ICs4LDIwIEBA
-DQo+ICAgICAgICAgICAgICAgICBzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsNCj4g
-ICAgICAgICB9Ow0KPg0KPiArICAgICAgIGdwaW8ta2V5cyB7DQo+ICsgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gImdwaW8ta2V5cyI7DQo+ICsgICAgICAgICAgICAgICBwaW5jdHJsLW5hbWVz
-ID0gImRlZmF1bHQiOw0KPiArICAgICAgICAgICAgICAgcGluY3RybC0wID0gPCZwaW5jdHJsX3Nu
-dnNfZ3Bpb2tleXM+Ow0KPiArDQo+ICsgICAgICAgICAgICAgICBwb3dlciB7DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGxhYmVsID0gIldha2UtVXAiOw0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICBncGlvcyA9IDwmZ3BpbzUgMSBHUElPX0FDVElWRV9ISUdIPjsNCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgbGludXgsY29kZSA9IDxLRVlfV0FLRVVQPjsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgZGVib3VuY2UtaW50ZXJ2YWwgPSA8MTA+Ow0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICB3YWtldXAtc291cmNlOw0KPiArICAgICAgICAgICAgICAgfTsNCj4gKyAgICAgICB9Ow0K
-PiArDQo+ICAgICAgICAgLyogZml4ZWQgY3J5c3RhbCBkZWRpY2F0ZWQgdG8gbWNwMjUxNSAqLw0K
-PiAgICAgICAgIGNsazE2bTogY2xrMTZtIHsNCj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
-PSAiZml4ZWQtY2xvY2siOw0KPiAtLQ0KPiAyLjIyLjANCj4NCg0KDQotLSANCkJlc3QgcmVnYXJk
-cw0KT2xla3NhbmRyIFN1dm9yb3YNCg0KVG9yYWRleCBBRw0KQWx0c2FnZW5zdHJhc3NlIDUgfCA2
-MDQ4IEhvcncvTHV6ZXJuIHwgU3dpdHplcmxhbmQgfCBUOiArNDEgNDEgNTAwDQo0ODAwIChtYWlu
-IGxpbmUpDQo=
+On Wed, Aug 14, 2019 at 05:27:20PM -0700, Stephen Boyd wrote:
+> Quoting Macpaul Lin (2019-07-12 02:43:41)
+> > diff --git a/drivers/clk/mediatek/clk-mt6765-audio.c b/drivers/clk/mediatek/clk-mt6765-audio.c
+> > new file mode 100644
+> > index 000000000000..41f19343dfb9
+> > --- /dev/null
+> > +++ b/drivers/clk/mediatek/clk-mt6765-audio.c
+> > @@ -0,0 +1,109 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + * Author: Owen Chen <owen.chen@mediatek.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> 
+> Please use SPDX tags.
+
+To be specific, _only_ the SPDX tag.  There is an SPDX tag on this file,
+and the others, it's just that the license text is no longer needed with
+that.
+
+thanks,
+
+greg k-h
