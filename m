@@ -1,96 +1,120 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: panel: lvds: Add dual-link LVDS
- display support
-Date: Thu, 15 Aug 2019 14:45:15 +0300
-Message-ID: <20190815114515.GH5011@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v2 2/9] dt-bindings: display: Add bindings for Advantech
+ IDK-2121WR
+Date: Thu, 15 Aug 2019 14:47:19 +0300
+Message-ID: <20190815114719.GI5011@pendragon.ideasonboard.com>
 References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1565867073-24746-2-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1565867073-24746-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sCgpPbiBUaHUsIEF1ZyAxNSwgMjAxOSBhdCAxMjowNDoyNVBNICswMTAwLCBG
-YWJyaXppbyBDYXN0cm8gd3JvdGU6Cj4gRHVhbC1saW5rIExWRFMgZGlzcGxheXMgaGF2ZSB0d28g
-cG9ydHMsIHRoZXJlZm9yZSBkb2N1bWVudCB0aGlzCj4gd2l0aCB0aGUgYmluZGluZ3MuCj4gCj4g
-U2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNh
-cy5jb20+Cj4gCj4gLS0tCj4gdjEtPnYyOgo+ICogUmV3b3JrZWQgdGhlIGRlc2NyaXB0aW9uIG9m
-IHRoZSBwb3J0cyBwcm9wZXJ0eQo+ICogbHZkczBfcGFuZWxfaW4gaW4gdGhlIGV4YW1wbGUgaGFz
-IGJlZW4gcmVuYW1lZCB0byBwYW5lbF9pbjAKPiAqIGx2ZHMxX3BhbmVsX2luIGluIHRoZSBleGFt
-cGxlIGhhcyBiZWVuIHJlbmFtZWQgdG8gcGFuZWxfaW4xCj4gCj4gTGF1cmVudCwKPiAKPiBpbiBs
-aW51eC1uZXh0IHRoZXkgYXJlIG5vdyB3b3JraW5nIHdpdGg6Cj4gRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvbHZkcy55YW1sCgpEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9sdmRzLnlhbWwgaXMgaW4KZHJtLW1pc2Mt
-bmV4dCwgc28gSSB3b3VsZCBhZHZpc2UgcmViYXNpbmcgb24gdG9wIG9mIHRoYXQuCgo+IFdoYXQg
-c2hvdWxkIEkgZG8gaGVyZT8KPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwt
-bHZkcy50eHQgICAgICAgICAgfCA5NSArKysrKysrKysrKysrKysrLS0tLS0tCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA3MSBpbnNlcnRpb25zKCspLCAyNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwt
-bHZkcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9wYW5lbC1sdmRzLnR4dAo+IGluZGV4IDI1MDg1MGEuLjUyMzEyNDMgMTAwNjQ0Cj4gLS0tIGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtbHZk
-cy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9wYW5lbC1sdmRzLnR4dAo+IEBAIC00MSw3ICs0MSwxMiBAQCBSZXF1aXJlZCBub2RlczoK
-PiAgCj4gIC0gcGFuZWwtdGltaW5nOiBTZWUgcGFuZWwtY29tbW9uLnR4dC4KPiAgLSBwb3J0czog
-U2VlIHBhbmVsLWNvbW1vbi50eHQuIFRoZXNlIGJpbmRpbmdzIHJlcXVpcmUgYSBzaW5nbGUgcG9y
-dCBzdWJub2RlCj4gLSAgY29ycmVzcG9uZGluZyB0byB0aGUgcGFuZWwgTFZEUyBpbnB1dC4KPiAr
-ICAoZm9yIGEgc2luZ2xlIGxpbmsgcGFuZWwpIGNvcnJlc3BvbmRpbmcgdG8gdGhlIHBhbmVsIExW
-RFMgaW5wdXQsIG9yIHR3byBwb3J0Cj4gKyAgc3Vibm9kZXMgKGZvciBhIGR1YWwgbGluayBwYW5l
-bCkgY29ycmVzcG9uZGluZyB0byB0aGUgcGFuZWwgTFZEUyBpbnB1dHMuCj4gKyAgRHVhbC1saW5r
-IExWRFMgcGFuZWxzIGV4cGVjdCBldmVuIHBpeGVscyAoMCwgMiwgNCwgZXRjLikgYW5kIG9kZCBw
-aXhlbHMgKDEsIDMsCj4gKyAgNSwgZXRjLikgb24gZGlmZmVyZW50IGlucHV0IHBvcnRzLCBpdCdz
-IHVwIHRvIHRoZSBwYW5lbC1zcGVjaWZpYyBiaW5kaW5ncyB0bwo+ICsgIHNwZWNpZnkgd2hhdCBw
-b3J0IGlzIGV4cGVjdGluZyBldmVuIHBpeGVscywgYW5kIHdoYXQgcG9ydCBpcyBleHBlY3Rpbmcg
-b2RkCj4gKyAgcGl4ZWxzLgo+ICAKPiAgCj4gIExWRFMgZGF0YSBtYXBwaW5ncyBhcmUgZGVmaW5l
-ZCBhcyBmb2xsb3dzLgo+IEBAIC05MiwzMCArOTcsNzIgQEAgQ1RMMzogMAo+ICBFeGFtcGxlCj4g
-IC0tLS0tLS0KPiAgCj4gLXBhbmVsIHsKPiAtCWNvbXBhdGlibGUgPSAibWl0c3ViaXNoaSxhYTEy
-MXRkMDEiLCAicGFuZWwtbHZkcyI7Cj4gLQo+IC0Jd2lkdGgtbW0gPSA8MjYxPjsKPiAtCWhlaWdo
-dC1tbSA9IDwxNjM+Owo+IC0KPiAtCWRhdGEtbWFwcGluZyA9ICJqZWlkYS0yNCI7Cj4gLQo+IC0J
-cGFuZWwtdGltaW5nIHsKPiAtCQkvKiAxMjgweDgwMCBANjBIeiAqLwo+IC0JCWNsb2NrLWZyZXF1
-ZW5jeSA9IDw3MTAwMDAwMD47Cj4gLQkJaGFjdGl2ZSA9IDwxMjgwPjsKPiAtCQl2YWN0aXZlID0g
-PDgwMD47Cj4gLQkJaHN5bmMtbGVuID0gPDcwPjsKPiAtCQloZnJvbnQtcG9yY2ggPSA8MjA+Owo+
-IC0JCWhiYWNrLXBvcmNoID0gPDcwPjsKPiAtCQl2c3luYy1sZW4gPSA8NT47Cj4gLQkJdmZyb250
-LXBvcmNoID0gPDM+Owo+IC0JCXZiYWNrLXBvcmNoID0gPDE1PjsKPiArU2luZ2xlIHBvcnQ6Cj4g
-KwlwYW5lbCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJtaXRzdWJpc2hpLGFhMTIxdGQwMSIsICJwYW5l
-bC1sdmRzIjsKPiArCj4gKwkJd2lkdGgtbW0gPSA8MjYxPjsKPiArCQloZWlnaHQtbW0gPSA8MTYz
-PjsKPiArCj4gKwkJZGF0YS1tYXBwaW5nID0gImplaWRhLTI0IjsKPiArCj4gKwkJcGFuZWwtdGlt
-aW5nIHsKPiArCQkJLyogMTI4MHg4MDAgQDYwSHogKi8KPiArCQkJY2xvY2stZnJlcXVlbmN5ID0g
-PDcxMDAwMDAwPjsKPiArCQkJaGFjdGl2ZSA9IDwxMjgwPjsKPiArCQkJdmFjdGl2ZSA9IDw4MDA+
-Owo+ICsJCQloc3luYy1sZW4gPSA8NzA+Owo+ICsJCQloZnJvbnQtcG9yY2ggPSA8MjA+Owo+ICsJ
-CQloYmFjay1wb3JjaCA9IDw3MD47Cj4gKwkJCXZzeW5jLWxlbiA9IDw1PjsKPiArCQkJdmZyb250
-LXBvcmNoID0gPDM+Owo+ICsJCQl2YmFjay1wb3JjaCA9IDwxNT47Cj4gKwkJfTsKPiArCj4gKwkJ
-cG9ydCB7Cj4gKwkJCXBhbmVsX2luOiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQg
-PSA8Jmx2ZHNfZW5jb2Rlcj47Cj4gKwkJCX07Cj4gKwkJfTsKPiAgCX07Cj4gIAo+IC0JcG9ydCB7
-Cj4gLQkJcGFuZWxfaW46IGVuZHBvaW50IHsKPiAtCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRz
-X2VuY29kZXI+Owo+ICtUd28gcG9ydHM6Cj4gKwlwYW5lbCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJh
-ZHZhbnRlY2gsaWRrLTIxMjF3ciIsICJwYW5lbC1sdmRzIjsKPiArCj4gKwkJd2lkdGgtbW0gPSA8
-NDc2PjsKPiArCQloZWlnaHQtbW0gPSA8MjY4PjsKPiArCj4gKwkJZGF0YS1tYXBwaW5nID0gInZl
-c2EtMjQiOwo+ICsKPiArCQlwYW5lbC10aW1pbmcgewo+ICsJCQljbG9jay1mcmVxdWVuY3kgPSA8
-MTQ4NTAwMDAwPjsKPiArCQkJaGFjdGl2ZSA9IDwxOTIwPjsKPiArCQkJdmFjdGl2ZSA9IDwxMDgw
-PjsKPiArCQkJaHN5bmMtbGVuID0gPDQ0PjsKPiArCQkJaGZyb250LXBvcmNoID0gPDg4PjsKPiAr
-CQkJaGJhY2stcG9yY2ggPSA8MTQ4PjsKPiArCQkJdmZyb250LXBvcmNoID0gPDQ+Owo+ICsJCQl2
-YmFjay1wb3JjaCA9IDwzNj47Cj4gKwkJCXZzeW5jLWxlbiA9IDw1PjsKPiArCQl9Owo+ICsKPiAr
-CQlwb3J0cyB7Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9
-IDwwPjsKPiArCj4gKwkJCXBvcnRAMCB7Cj4gKwkJCQlyZWcgPSA8MD47Cj4gKwkJCQlwYW5lbF9p
-bjA6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmx2ZHMwX291dD47Cj4g
-KwkJCQl9Owo+ICsJCQl9Owo+ICsKPiArCQkJcG9ydEAxIHsKPiArCQkJCXJlZyA9IDwxPjsKPiAr
-CQkJCXBhbmVsX2luMTogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZk
-czFfb3V0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gIAkJfTsKPiAgCX07Cj4gLX07CgotLSAKUmVn
-YXJkcywKCkxhdXJlbnQgUGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVs
+Hi Fabrizio,
+
+On Thu, Aug 15, 2019 at 12:04:26PM +0100, Fabrizio Castro wrote:
+> This panel is handled through the generic lvds-panel bindings,
+> so only needs its additional compatible specified.
+> 
+> Some panel-specific documentation can be found here:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> ---
+> v1->v2:
+> * Reworked according to Laurent's feedback
+> * Renamed lvds0_panel_in to panel_in0
+> * Renamed lvds1_panel_in to panel_in1
+> 
+> Laurent,
+> 
+> Should this be a .yaml file already?
+
+It's not a strict requirement, but I'm sure Rob would really appreciate.
+I've converted a DT binding to yaml recently (for a panel too), and I
+have to say I'm impressed by the validation yaml brings, both for DT
+sources and for DT bindings. It even validates the example in the
+bindings, which is great. Documentation/devicetree/writing-schema.md
+should give you a few pointers to get started (in particular make sure
+you run make dt_binding_check for your new bindings).
+
+>  .../display/panel/advantech,idk-2121wr.txt         | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> new file mode 100644
+> index 0000000..6ee1d1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.txt
+> @@ -0,0 +1,56 @@
+> +Advantech Co., Ltd. IDK-2121WR 21.5" LVDS panel
+> +===============================================
+> +
+> +Required properties:
+> +- compatible: should be "advantech,idk-2121wr" followed by "panel-lvds"
+> +
+> +This binding is compatible with the lvds-panel binding, which is specified
+> +in panel-lvds.txt in this directory.
+> +The panel operates in dual-link mode and thus requires two port nodes,
+> +the first port node expects odd pixels (1, 3, 5, etc.) and the second port
+> +expects even pixels (0, 2, 4, etc.).
+> +
+> +Example
+> +-------
+> +
+> +	panel {
+> +		compatible = "advantech,idk-2121wr", "panel-lvds";
+> +
+> +		width-mm = <476>;
+> +		height-mm = <268>;
+> +
+> +		data-mapping = "vesa-24";
+> +
+> +		panel-timing {
+> +			clock-frequency = <148500000>;
+> +			hactive = <1920>;
+> +			vactive = <1080>;
+> +			hsync-len = <44>;
+> +			hfront-porch = <88>;
+> +			hback-porch = <148>;
+> +			vfront-porch = <4>;
+> +			vback-porch = <36>;
+> +			vsync-len = <5>;
+> +		};
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				/* Odd pixels */
+> +				reg = <0>;
+> +				panel_in0: endpoint {
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				/* Even pixels */
+> +				reg = <1>;
+> +				panel_in1: endpoint {
+> +					remote-endpoint = <&lvds1_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
+
+-- 
+Regards,
+
+Laurent Pinchart
