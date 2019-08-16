@@ -1,119 +1,60 @@
-From: Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v2 2/3] arm64: allwinner: h6: add I2C nodes
-Date: Fri, 16 Aug 2019 12:17:09 +0530
-Message-ID: <20190816064710.18280-3-bshah@kde.org>
-References: <20190811090503.32396-1-bshah@kde.org>
- <20190816064710.18280-1-bshah@kde.org>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: Re: [PATCH v4 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to fec
+Date: Fri, 16 Aug 2019 07:09:20 +0000
+Message-ID: <CAGgjyvHQt_Gp+Pm5VFabGHY5xGN4fU1Xv3inGRf9vmsRm3fQBQ@mail.gmail.com>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-15-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190816064710.18280-1-bshah@kde.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Bhushan Shah <bshah@kde.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190812142105.1995-15-philippe.schenker@toradex.com>
+Content-Language: en-US
+Content-ID: <232A2A12B2265B46896FB815BEFBDFDC@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
-nodes.
-
-Suggested-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Bhushan Shah <bshah@kde.org>
----
-Changes in v2:
-  - Add the SoC specific compatible string instead of re-using a31 one.
-
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56 +++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index bcecca17d61d..a1a329926540 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -329,6 +329,21 @@
- 				function = "hdmi";
- 			};
- 
-+			i2c0_pins: i2c0-pins {
-+				pins = "PD25", "PD26";
-+				function = "i2c0";
-+			};
-+
-+			i2c1_pins: i2c1-pins {
-+				pins = "PH5", "PH6";
-+				function = "i2c1";
-+			};
-+
-+			i2c2_pins: i2c2-pins {
-+				pins = "PD23", "PD24";
-+				function = "i2c2";
-+			};
-+
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2", "PF3",
- 				       "PF4", "PF5";
-@@ -464,6 +479,45 @@
- 			status = "disabled";
- 		};
- 
-+		i2c0: i2c@5002000 {
-+			compatible = "allwinner,sun50i-h6-i2c";
-+			reg = <0x05002000 0x400>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C0>;
-+			resets = <&ccu RST_BUS_I2C0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c1: i2c@5002400 {
-+			compatible = "allwinner,sun50i-h6-i2c";
-+			reg = <0x05002400 0x400>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C1>;
-+			resets = <&ccu RST_BUS_I2C1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c2: i2c@5002800 {
-+			compatible = "allwinner,sun50i-h6-i2c";
-+			reg = <0x05002800 0x400>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C2>;
-+			resets = <&ccu RST_BUS_I2C2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		emac: ethernet@5020000 {
- 			compatible = "allwinner,sun50i-h6-emac",
- 				     "allwinner,sun50i-a64-emac";
-@@ -795,7 +849,7 @@
- 		};
- 
- 		r_i2c: i2c@7081400 {
--			compatible = "allwinner,sun6i-a31-i2c";
-+			compatible = "allwinner,sun50i-h6-i2c";
- 			reg = <0x07081400 0x400>;
- 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&r_ccu CLK_R_APB2_I2C>;
--- 
-2.17.1
+T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgNToyMiBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
+cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gRG8gbm90IGNoYW5nZSB0aGUg
+Y2xvY2sgYXMgdGhlIHBvd2VyIGZvciB0aGlzIHBoeSBpcyBzd2l0Y2hlZA0KPiB3aXRoIHRoYXQg
+Y2xvY2suDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5z
+Y2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gQWNrZWQtYnk6IE1hcmNlbCBaaXN3aWxlciA8bWFyY2Vs
+Lnppc3dpbGVyQHRvcmFkZXguY29tPg0KDQpSZXZpZXdlZC1ieTogT2xla3NhbmRyIFN1dm9yb3Yg
+PG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KDQo+DQo+IC0tLQ0KPg0KPiBDaGFuZ2Vz
+IGluIHY0Og0KPiAtIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCj4NCj4gQ2hhbmdlcyBpbiB2
+MzogTm9uZQ0KPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+DQo+ICBhcmNoL2FybS9ib290L2R0cy9p
+bXg2dWxsLWNvbGlicmkuZHRzaSB8IDE4ICsrKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNo
+YW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gaW5kZXggZDU2NzI4ZjAzYzM1Li4xMDE5Y2U2OWEy
+NDIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNp
+DQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpDQo+IEBAIC02
+Miw4ICs2Miw5IEBADQo+ICB9Ow0KPg0KPiAgJmZlYzIgew0KPiAtICAgICAgIHBpbmN0cmwtbmFt
+ZXMgPSAiZGVmYXVsdCI7DQo+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgInNs
+ZWVwIjsNCj4gICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZW5ldDI+Ow0KPiArICAgICAg
+IHBpbmN0cmwtMSA9IDwmcGluY3RybF9lbmV0Ml9zbGVlcD47DQo+ICAgICAgICAgcGh5LW1vZGUg
+PSAicm1paSI7DQo+ICAgICAgICAgcGh5LWhhbmRsZSA9IDwmZXRocGh5MT47DQo+ICAgICAgICAg
+c3RhdHVzID0gIm9rYXkiOw0KPiBAQCAtMjIwLDYgKzIyMSwyMSBAQA0KPiAgICAgICAgICAgICAg
+ICAgPjsNCj4gICAgICAgICB9Ow0KPg0KPiArICAgICAgIHBpbmN0cmxfZW5ldDJfc2xlZXA6IGVu
+ZXQyc2xlZXBncnAgew0KPiArICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIE1YNlVMX1BBRF9HUElPMV9JTzA2X19HUElPMV9JTzA2ICAgICAgICAw
+eDANCj4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg2VUxfUEFEX0dQSU8xX0lPMDdfX0dQSU8x
+X0lPMDcgICAgICAgIDB4MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5F
+VDJfUlhfREFUQTBfX0dQSU8yX0lPMDggICAgMHgwDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IE1YNlVMX1BBRF9FTkVUMl9SWF9EQVRBMV9fR1BJTzJfSU8wOSAgICAweDANCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgTVg2VUxfUEFEX0VORVQyX1JYX0VOX19HUElPMl9JTzEwICAgICAgIDB4
+MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5FVDJfUlhfRVJfX0dQSU8y
+X0lPMTUgICAgICAgMHgwDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIE1YNlVMX1BBRF9FTkVU
+Ml9UWF9DTEtfX0VORVQyX1JFRl9DTEsyICAweDQwMDFiMDMxDQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIE1YNlVMX1BBRF9FTkVUMl9UWF9EQVRBMF9fR1BJTzJfSU8xMSAgICAweDANCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgTVg2VUxfUEFEX0VORVQyX1RYX0RBVEExX19HUElPMl9JTzEy
+ICAgIDB4MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5FVDJfVFhfRU5f
+X0dQSU8yX0lPMTMgICAgICAgMHgwDQo+ICsgICAgICAgICAgICAgICA+Ow0KPiArICAgICAgIH07
+DQo+ICsNCj4gICAgICAgICBwaW5jdHJsX2Vjc3BpMV9jczogZWNzcGkxLWNzLWdycCB7DQo+ICAg
+ICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgTVg2
+VUxfUEFEX0xDRF9EQVRBMjFfX0dQSU8zX0lPMjYgICAgICAgIDB4MDAwYTANCj4gLS0NCj4gMi4y
+Mi4wDQo+DQoNCg0KLS0gDQpCZXN0IHJlZ2FyZHMNCk9sZWtzYW5kciBTdXZvcm92DQoNClRvcmFk
+ZXggQUcNCkFsdHNhZ2Vuc3RyYXNzZSA1IHwgNjA0OCBIb3J3L0x1emVybiB8IFN3aXR6ZXJsYW5k
+IHwgVDogKzQxIDQxIDUwMA0KNDgwMCAobWFpbiBsaW5lKQ0K
