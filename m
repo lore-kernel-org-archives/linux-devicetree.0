@@ -1,28 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: IDU-intc: Add support for
- edge-triggered interrupts
-Date: Fri, 16 Aug 2019 16:05:38 -0500
-Message-ID: <20190816210538.GA30424@bogus>
-References: <CY4PR1201MB0120EDD4173511912A9FC99EA1C60@CYPR1201MB0120.namprd12.prod.outlook.com>
- <20190724120436.8537-1-mischa.jonker@synopsys.com>
- <20190724120436.8537-3-mischa.jonker@synopsys.com>
+Subject: Re: [PATCH] ath10k: Fix HOST capability QMI incompatibility
+Date: Fri, 16 Aug 2019 16:11:41 -0500
+Message-ID: <20190816211141.GA4468@bogus>
+References: <20190725063108.15790-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190724120436.8537-3-mischa.jonker@synopsys.com>
+In-Reply-To: <20190725063108.15790-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Alexey.Brodkin@synopsys.com, Vineet.Gupta1@synopsys.com, kstewart@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mischa Jonker <Mischa.Jonker@synopsys.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Jul 2019 14:04:36 +0200, Mischa Jonker wrote:
-> This updates the documentation for supporting an optional extra interrupt
-> cell to specify edge vs level triggered.
+On Wed, Jul 24, 2019 at 11:31:08PM -0700, Bjorn Andersson wrote:
+> The introduction of 768ec4c012ac ("ath10k: update HOST capability QMI
+> message") served the purpose of supporting the new and extended HOST
+> capability QMI message.
 > 
-> Signed-off-by: Mischa Jonker <mischa.jonker@synopsys.com>
+> But while the new message adds a slew of optional members it changes the
+> data type of the "daemon_support" member, which means that older
+> versions of the firmware will fail to decode the incoming request
+> message.
+> 
+> There is no way to detect this breakage from Linux and there's no way to
+> recover from sending the wrong message (i.e. we can't just try one
+> format and then fallback to the other), so a quirk is introduced in
+> DeviceTree to indicate to the driver that the firmware requires the 8bit
+> version of this message.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 768ec4c012ac ("ath10k: update HOST capability qmi message")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../interrupt-controller/snps,archs-idu-intc.txt      | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
-> 
+>  .../bindings/net/wireless/qcom,ath10k.txt     |  6 +++++
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/net/wireless/ath/ath10k/qmi.c         | 13 ++++++++---
+>  .../net/wireless/ath/ath10k/qmi_wlfw_v01.c    | 22 +++++++++++++++++++
+>  .../net/wireless/ath/ath10k/qmi_wlfw_v01.h    |  1 +
+>  drivers/net/wireless/ath/ath10k/snoc.c        | 11 ++++++++++
+>  drivers/net/wireless/ath/ath10k/snoc.h        |  1 +
+>  6 files changed, 51 insertions(+), 3 deletions(-)
