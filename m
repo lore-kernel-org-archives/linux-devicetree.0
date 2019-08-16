@@ -1,7 +1,7 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V6 2/4] arm64: dts: imx8mm: Add system counter node
-Date: Thu, 15 Aug 2019 20:38:43 -0400
-Message-ID: <1565915925-21009-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V6 3/4] arm64: dts: imx8mq: Add system counter node
+Date: Thu, 15 Aug 2019 20:38:44 -0400
+Message-ID: <1565915925-21009-3-git-send-email-Anson.Huang@nxp.com>
 References: <1565915925-21009-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1565915925-21009-1-git-send-email-Anson.Huang@nxp.com>
@@ -10,21 +10,21 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengu
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX8MM system counter node to enable timer-imx-sysctr
+Add i.MX8MQ system counter node to enable timer-imx-sysctr
 broadcast timer driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index ef66bb5..94433c53 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -572,6 +572,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 7c68df6..4fdd60f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -644,6 +644,14 @@
  				#pwm-cells = <2>;
  				status = "disabled";
  			};
@@ -33,11 +33,11 @@ index ef66bb5..94433c53 100644
 +				compatible = "nxp,sysctr-timer";
 +				reg = <0x306a0000 0x20000>;
 +				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&osc_24m>;
++				clocks = <&osc_25m>;
 +				clock-names = "per";
 +			};
  		};
  
- 		aips3: bus@30800000 {
+ 		bus@30800000 { /* AIPS3 */
 -- 
 2.7.4
