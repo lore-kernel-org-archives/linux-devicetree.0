@@ -1,152 +1,95 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57550 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727524AbfHNKUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:20:05 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 3/3] ARM: OMAP2+: Drop legacy platform data for cpsw on dra7
-Date: Wed, 14 Aug 2019 03:19:49 -0700
-Message-Id: <20190814101949.50006-4-tony@atomide.com>
-In-Reply-To: <20190814101949.50006-1-tony@atomide.com>
-References: <20190814101949.50006-1-tony@atomide.com>
+Return-Path: <SRS0=TnzJ=WM=xs4all.nl=hverkuil@kernel.org>
+Subject: Re: [PATCH v7 10/13] media: dt-bindings: tvp5150: cleanup bindings
+ stlye
+References: <20190815115747.24018-1-m.felsch@pengutronix.de>
+ <20190815115747.24018-11-m.felsch@pengutronix.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8a9b0580-7c7c-927f-172b-aaca9e01861b@xs4all.nl>
+Date: Fri, 16 Aug 2019 13:28:48 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Keerthy <j-keerthy@ti.com>
+In-Reply-To: <20190815115747.24018-11-m.felsch@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>, mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-We can now probe cpsw with ti-sysc interconnect driver and dts
-data. Let's drop the related platform data and custom ti,hwmods
-dts property for am3 and am4.
+Typo in subject: stlye -> style.
 
-As we're just dropping data, and the early platform data init
-is based on the custom ti,hwmods property, we want to drop both
-the platform data and ti,hwmods property in a single patch.
+Regards,
 
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dra7-l4.dtsi            |  2 -
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 65 -----------------------
- 2 files changed, 67 deletions(-)
+	Hans
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3045,7 +3045,6 @@
- 
- 		target-module@84000 {			/* 0x48484000, ap 3 10.0 */
- 			compatible = "ti,sysc-omap4-simple", "ti,sysc";
--			ti,hwmods = "gmac";
- 			reg = <0x85200 0x4>,
- 			      <0x85208 0x4>,
- 			      <0x85204 0x4>;
-@@ -3107,7 +3106,6 @@
- 					clock-names = "fck";
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					ti,hwmods = "davinci_mdio";
- 					bus_freq = <1000000>;
- 					reg = <0x1000 0x100>;
- 				};
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-@@ -284,56 +284,6 @@ static struct omap_hwmod dra7xx_ctrl_module_wkup_hwmod = {
- 	},
- };
- 
--/*
-- * 'gmac' class
-- * cpsw/gmac sub system
-- */
--static struct omap_hwmod_class_sysconfig dra7xx_gmac_sysc = {
--	.rev_offs	= 0x0,
--	.sysc_offs	= 0x8,
--	.syss_offs	= 0x4,
--	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_MIDLEMODE |
--			   SYSS_HAS_RESET_STATUS),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | MSTANDBY_FORCE |
--			   MSTANDBY_NO),
--	.sysc_fields	= &omap_hwmod_sysc_type3,
--};
--
--static struct omap_hwmod_class dra7xx_gmac_hwmod_class = {
--	.name		= "gmac",
--	.sysc		= &dra7xx_gmac_sysc,
--};
--
--static struct omap_hwmod dra7xx_gmac_hwmod = {
--	.name		= "gmac",
--	.class		= &dra7xx_gmac_hwmod_class,
--	.clkdm_name	= "gmac_clkdm",
--	.flags		= (HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY),
--	.main_clk	= "dpll_gmac_ck",
--	.mpu_rt_idx	= 1,
--	.prcm		= {
--		.omap4	= {
--			.clkctrl_offs	= DRA7XX_CM_GMAC_GMAC_CLKCTRL_OFFSET,
--			.context_offs	= DRA7XX_RM_GMAC_GMAC_CONTEXT_OFFSET,
--			.modulemode	= MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/*
-- * 'mdio' class
-- */
--static struct omap_hwmod_class dra7xx_mdio_hwmod_class = {
--	.name		= "davinci_mdio",
--};
--
--static struct omap_hwmod dra7xx_mdio_hwmod = {
--	.name		= "davinci_mdio",
--	.class		= &dra7xx_mdio_hwmod_class,
--	.clkdm_name	= "gmac_clkdm",
--	.main_clk	= "dpll_gmac_ck",
--};
--
- /*
-  * 'dcan' class
-  *
-@@ -2303,19 +2253,6 @@ static struct omap_hwmod_ocp_if dra7xx_l4_wkup__ctrl_module_wkup = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--static struct omap_hwmod_ocp_if dra7xx_l4_per2__cpgmac0 = {
--	.master		= &dra7xx_l4_per2_hwmod,
--	.slave		= &dra7xx_gmac_hwmod,
--	.clk		= "dpll_gmac_ck",
--	.user		= OCP_USER_MPU,
--};
--
--static struct omap_hwmod_ocp_if dra7xx_gmac__mdio = {
--	.master		= &dra7xx_gmac_hwmod,
--	.slave		= &dra7xx_mdio_hwmod,
--	.user		= OCP_USER_MPU,
--};
--
- /* l4_wkup -> dcan1 */
- static struct omap_hwmod_ocp_if dra7xx_l4_wkup__dcan1 = {
- 	.master		= &dra7xx_l4_wkup_hwmod,
-@@ -3021,7 +2958,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
- 	&dra7xx_l4_wkup__ctrl_module_wkup,
- 	&dra7xx_l4_wkup__dcan1,
- 	&dra7xx_l4_per2__dcan2,
--	&dra7xx_l4_per2__cpgmac0,
- 	&dra7xx_l4_per2__mcasp1,
- 	&dra7xx_l3_main_1__mcasp1,
- 	&dra7xx_l4_per2__mcasp2,
-@@ -3033,7 +2969,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
- 	&dra7xx_l4_per2__mcasp6,
- 	&dra7xx_l4_per2__mcasp7,
- 	&dra7xx_l4_per2__mcasp8,
--	&dra7xx_gmac__mdio,
- 	&dra7xx_l4_cfg__dma_system,
- 	&dra7xx_l3_main_1__tpcc,
- 	&dra7xx_l3_main_1__tptc0,
--- 
-2.21.0
+On 8/15/19 1:57 PM, Marco Felsch wrote:
+> Use underlines to highlight optional and required properties. This is
+> quite common for all bindings. Align descriptions and start sentence
+> with uppercase letter. Also reword the usage of the required
+> endpoint properties for the output port in case BT.656 should be used.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/media/i2c/tvp5150.txt | 30 +++++++++++--------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> index 28b64ad149ef..cc98b38c7e73 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> @@ -5,12 +5,14 @@ The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
+>  with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
+>  
+>  Required Properties:
+> -- compatible: value must be "ti,tvp5150"
+> -- reg: I2C slave address
+> +====================
+> +- compatible:	Value must be "ti,tvp5150".
+> +- reg:		I2C slave address.
+>  
+>  Optional Properties:
+> -- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
+> -- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+> +====================
+> +- pdn-gpios:	Phandle for the GPIO connected to the PDN pin, if any.
+> +- reset-gpios:	Phandle for the GPIO connected to the RESETB pin, if any.
+>  
+>  The device node must contain one 'port' child node per device physical input
+>  and output port, in accordance with the video interface bindings defined in
+> @@ -24,9 +26,8 @@ are numbered as follows
+>  	  Y-OUT		src		2
+>  
+>  The device node must contain at least one sink port and the src port. Each input
+> -port must be linked to an endpoint defined in
+> -Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
+> -port/connector layout is as follows
+> +port must be linked to an endpoint defined in [1]. The port/connector layout is
+> +as follows
+>  
+>  tvp-5150 port@0 (AIP1A)
+>  	endpoint@0 -----------> Comp0-Con  port
+> @@ -38,14 +39,17 @@ tvp-5150 port@2
+>  	endpoint (video bitstream output at YOUT[0-7] parallel bus)
+>  
+>  Required Endpoint Properties for parallel synchronization on output port:
+> +=========================================================================
+>  
+> -- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
+> -- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
+> -- field-even-active: field signal level during the even field data
+> -  transmission. Must be <0>.
+> +- hsync-active:		Active state of the HSYNC signal. Must be <1> (HIGH).
+> +- vsync-active:		Active state of the VSYNC signal. Must be <1> (HIGH).
+> +- field-even-active:	Field signal level during the even field data
+> +			transmission. Must be <0>.
+>  
+> -If none of hsync-active, vsync-active and field-even-active is specified,
+> -the endpoint is assumed to use embedded BT.656 synchronization.
+> +Note: Do not specify any of these properties if you want to use the embedded
+> +      BT.656 synchronization.
+> +
+> +[1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
+>  
+>  Example - three input sources:
+>  
+> 
