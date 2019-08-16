@@ -1,114 +1,47 @@
-Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v8 02/13] media: v4l2-fwnode: add v4l2_fwnode_connector
-Date: Wed, 21 Aug 2019 09:30:52 +0200
-Message-Id: <20190821073103.19634-3-m.felsch@pengutronix.de>
-In-Reply-To: <20190821073103.19634-1-m.felsch@pengutronix.de>
-References: <20190821073103.19634-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=dioO=WM=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V5 5/5] arm64: dts: imx8mm: Enable cpu-idle driver
+Date: Fri, 16 Aug 2019 01:03:45 +0000
+Message-ID: 
+ <DB3PR0402MB39160C450FC99A359B2366BDF5AF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190710063056.35689-1-Anson.Huang@nxp.com>
+ <20190710063056.35689-5-Anson.Huang@nxp.com>
+ <34c03d76-ae61-63b4-153f-3f9911cc962e@linaro.org>
+In-Reply-To: <34c03d76-ae61-63b4-153f-3f9911cc962e@linaro.org>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Currently every driver needs to parse the connector endpoints by it self.
-This is the initial work to make this generic. A generic connector has
-common members and connector specific members. The common members are:
-  - type
-  - label (optional)
-  - links
-  - nr_of_links
-
-The specific members are stored within a union, since only one of them
-can be available at the time. Since this is the initial support the
-patch adds only the analog-connector specific ones.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
-[1] https://patchwork.kernel.org/cover/10794703/
-
-v8:
-- rename CON -> CONN
-- supported_tvnorms_stds -> sdtv_stds and adapt description
-
-v7:
-- fix spelling issues
-- constify label
-- support variable label size
-- replace single remote_port/id members by links member of variable
-  size
-- squash v4l2-connector into v4l2-fwnode
-
-@Jacopo: I dropped your r b tag because I changed the port/id logic.
-
-v6:
-- fix some spelling and style issues
-- rm unnecessary comments
-- drop vga and dvi connector
-- fix misspelt connector
-
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
-
- include/media/v4l2-fwnode.h | 45 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index f6a7bcd13197..7ca5669ef6fa 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -123,6 +123,51 @@ struct v4l2_fwnode_link {
- 	unsigned int remote_port;
- };
- 
-+/**
-+ * enum v4l2_connector_type - connector type
-+ * @V4L2_CONN_UNKNOWN:   unknown connector type, no V4L2 connector configuration
-+ * @V4L2_CONN_COMPOSITE: analog composite connector
-+ * @V4L2_CONN_SVIDEO:    analog svideo connector
-+ * @V4L2_CONN_HDMI:      digital hdmi connector
-+ */
-+enum v4l2_connector_type {
-+	V4L2_CONN_UNKNOWN,
-+	V4L2_CONN_COMPOSITE,
-+	V4L2_CONN_SVIDEO,
-+	V4L2_CONN_HDMI,
-+};
-+
-+/**
-+ * struct v4l2_fwnode_connector_analog - analog connector data structure
-+ * @sdtv_stds: sdtv standards this connector supports, set to V4L2_STD_ALL
-+ *             if no restrictions are specified.
-+ */
-+struct v4l2_fwnode_connector_analog {
-+	v4l2_std_id sdtv_stds;
-+};
-+
-+/**
-+ * struct v4l2_fwnode_connector - the connector data structure
-+ * @label: optional connector label
-+ * @type: connector type
-+ * @links: list of &struct v4l2_fwnode_link links the connector is connected to
-+ * @nr_of_links: total number of links
-+ * @connector: connector configuration
-+ * @connector.analog: analog connector configuration
-+ *                    &struct v4l2_fwnode_connector_analog
-+ */
-+struct v4l2_fwnode_connector {
-+	const char *label;
-+	enum v4l2_connector_type type;
-+	struct v4l2_fwnode_link *links;
-+	unsigned int nr_of_links;
-+
-+	union {
-+		struct v4l2_fwnode_connector_analog analog;
-+		/* future connectors */
-+	} connector;
-+};
-+
- /**
-  * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
-  * @fwnode: pointer to the endpoint's fwnode handle
--- 
-2.20.1
+SGksIERhbmllbA0KDQo+IEhpIEFuc29uLA0KPiANCj4gc29ycnkgZm9yIHRoZSBsYXRlIHJldmll
+dywgSSd2ZSBiZWVuIHByZXR0eSBidXN5Lg0KDQpUaGF0IGlzIE9LIGZvciBzdXJlLg0KDQo+IA0K
+PiBJZiBTaGF3biBpcyBvaywgSSBjYW4gcGljayB0aGUgcGF0Y2hlcyAxLTQgaW4gbXkgdHJlZSBh
+bmQgdGhlbiB0aGlzIG9uZSBhZnRlcg0KPiB5b3UgZml4IHRoZSBjb21tZW50cyBiZWxvdy4NCg0K
+U2hhd24gc2hvdWxkIGJlIE9LIGZvciBpdCwgYW5kIGhlIGFscmVhZHkgdG9vayBwYXRjaCBbUEFU
+Q0ggVjUgMi81XSBhcm02NDogRW5hYmxlIFRJTUVSX0lNWF9TWVNfQ1RSIGZvciBBUkNIX01YQyBw
+bGF0Zm9ybXMNCnNpbmNlIEkgZXZlciBzZW50IGl0IGJlZm9yZSBpbiBvdGhlciBzZXJpZXMgd2hl
+biBzeXN0ZW0gY291bnRlciBkcml2ZXIgaXMgTk9UIGxhbmRpbmcgb24gbWFpbiBsaW5lLCBub3cg
+aXQgbGFuZGVkLCBTaGF3biBqdXN0IGFwcGx5DQp0aGF0IG9sZCBwYXRjaCwgc28gaW4gVjYgcGF0
+Y2ggSSBqdXN0IHNlbnQsIEkgZGlkIE5PVCBpbmNsdWRlIHRoaXMgcGF0Y2gsIHlvdSBjYW4ganVz
+dCBhcHBseSB0aGUgNCBwYXRjaGVzIGluIFY2Lg0KDQpIaSwgU2hhd24NCglEYW5pZWwgd2lsbCBw
+aWNrIHRoaXMgd2hvbGUgcGF0Y2ggc2VyaWVzLCBwbGVhc2UgcmFpc2UgaWYgeW91IGhhdmUgYW55
+IGNvbmNlcm4sIHRoYW5rcy4NCg0KPiANCj4gT24gMTAvMDcvMjAxOSAwODozMCwgQW5zb24uSHVh
+bmdAbnhwLmNvbSB3cm90ZToNCj4gDQo+IFsgLi4uIF0NCj4gDQo+ID4gKwkJaWRsZS1zdGF0ZXMg
+ew0KPiA+ICsJCQllbnRyeS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKw0KPiA+ICsJCQljcHVfc2xl
+ZXBfd2FpdDogY3B1LXNsZWVwLXdhaXQgew0KPiANCj4gSXMgdGhhdCBhIHJldGVudGlvbiBzdGF0
+ZSBvciBhIHBvd2VyZG93bj8gSXQgaXMgcHJlZmVyYWJsZSB0byBjaGFuZ2UgdGhlIG5hbWUNCj4g
+dG8gdGhlIGlkbGUgc3RhdGUgbmFtaW5nIGNvbnZlbnRpb24gZ2l2ZW4gaW4gdGhlIFBTQ0kgZG9j
+dW1lbnRhdGlvbiBbMV0gcGFnZQ0KPiAxNi0xNw0KDQpUaGFua3MgZm9yIHlvdXIgZGV0YWlsIHJl
+ZmVyZW5jZSwgaXQgaXMgYSBwb3dlciBkb3duIHN0YXRlIHdpdGggU29DIGVudGVyaW5nIFdBSVQg
+bW9kZSwNCnNvIGluIFY2LCBJIGNoYW5nZSB0aGUgbmFtZSB0byAiY3B1X3BkX3dhaXQ6Y3B1LXBk
+LXdhaXQiLg0KDQo+IA0KPiANCj4gPiArCQkJCWNvbXBhdGlibGUgPSAiYXJtLGlkbGUtc3RhdGUi
+Ow0KPiA+ICsJCQkJYXJtLHBzY2ktc3VzcGVuZC1wYXJhbSA9IDwweDAwMTAwMzM+Ow0KPiA+ICsJ
+CQkJbG9jYWwtdGltZXItc3RvcDsNCj4gPiArCQkJCWVudHJ5LWxhdGVuY3ktdXMgPSA8MTAwMD47
+DQo+ID4gKwkJCQlleGl0LWxhdGVuY3ktdXMgPSA8NzAwPjsNCj4gPiArCQkJCW1pbi1yZXNpZGVu
+Y3ktdXMgPSA8MjcwMD47DQo+ID4gKwkJCQl3YWtldXAtbGF0ZW5jeS11cyA9IDwxNTAwPjsNCj4g
+DQo+IEl0IGlzIHBvaW50bGVzcyB0byBzcGVjaWZ5IHRoZSBlbnRyeSArIGV4aXQgKmFuZCogdGhl
+IHdha2V1cC1sYXRlbmN5IFsyXS4NCg0KQWgsIHllcywgdGhpcyBpcyBuZXcgdG8gbWUsIEkgd2ls
+bCBqdXN0IHJlbW92ZSB0aGUg4oCcd2FrZXVwLWxhdGVuY3ktdXPigJ0gcHJvcGVydHkuDQoNClRo
+YW5rcywNCkFuc29uLg0KDQo=
