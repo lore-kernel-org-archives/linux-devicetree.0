@@ -1,133 +1,99 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] ARM64: dts: allwinner: Add devicetree for pine H64
- modelA evaluation board
-Date: Fri, 16 Aug 2019 13:36:50 +0200
-Message-ID: <20190816113650.hstbi5ntstx3wh4a@flea>
-References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
- <20190812094000.ebdmhyxx7xzbevef@flea>
- <20190814131741.GB24324@Red>
- <20190814133322.dawzv3ityakxtqs4@flea>
- <20190816093513.GA25042@Red>
+From: =?UTF-8?Q?Stefan_Riedm=c3=bcller?= <s.riedmueller@phytec.de>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 UL/ULL
+ devicetree bindings
+Date: Fri, 16 Aug 2019 13:42:38 +0200
+Message-ID: <cda26fbd-c683-d285-dc52-825d5e16a9e1@phytec.de>
+References: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
+ <20190813160448.GA27548@bogus>
+ <073f9466-9dd3-a22c-e000-e9f4c60f90a0@phytec.de>
+ <CAL_JsqJHfVDfpC9Yr7o3HO4wU7QR+sp0mxFLkxwVcGXXLeAyJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qzjcq6rd7xgmbg4h"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190816093513.GA25042@Red>
+In-Reply-To: <CAL_JsqJHfVDfpC9Yr7o3HO4wU7QR+sp0mxFLkxwVcGXXLeAyJw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Rob Herring <robh@kernel.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrew Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---qzjcq6rd7xgmbg4h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 15.08.19 15:43, Rob Herring wrote:
+> On Thu, Aug 15, 2019 at 4:55 AM Stefan Riedm=C3=BCller
+> <s.riedmueller@phytec.de> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 13.08.19 18:04, Rob Herring wrote:
+>>> On Wed, Jul 24, 2019 at 09:49:32AM +0200, Stefan Riedmueller wrote:
+>>>> Add devicetree bindings for i.MX6 UL/ULL based phyCORE-i.MX6 UL/ULL and
+>>>> phyBOARD-Segin.
+>>>>
+>>>> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
+>>>>    1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Document=
+ation/devicetree/bindings/arm/fsl.yaml
+>>>> index 7294ac36f4c0..40f007859092 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+>>>> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+>>>> @@ -161,12 +161,20 @@ properties:
+>>>>            items:
+>>>>              - enum:
+>>>>                  - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 E=
+VK Board
+>>>> +              - phytec,imx6ul-pbacd10     # PHYTEC phyBOARD-Segin wit=
+h i.MX6 UL
+>>>> +              - phytec,imx6ul-pbacd10-emmc  # PHYTEC phyBOARD-Segin e=
+MMC Kit
+>>>> +              - phytec,imx6ul-pbacd10-nand  # PHYTEC phyBOARD-Segin N=
+AND Kit
+>>>> +              - phytec,imx6ul-pcl063      # PHYTEC phyCORE-i.MX 6UL
+>>>
+>>> This doesn't match what is in the dts files:
+>>>
+>>> arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi:    compatible =3D "phytec,=
+imx6ul-pcl063", "fsl,imx6ul";
+>>> arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts:      compatibl=
+e =3D "phytec,imx6ul-pbacd10", "phytec,imx6ul-pcl063",
+>>> "fsl,imx6ul";
+>>> arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi:    compatible =3D =
+"phytec,imx6ul-pbacd-10", "phytec,imx6ul-pcl063",
+>>> "fsl,imx6ul";
+>>
+>> Shawn already applied my patches which rename the compatibles, see
+>> https://lkml.org/lkml/2019/7/23/42
+>=20
+> In any case, it still doesn't match. For example, from those patches:
+>=20
+> + model =3D "PHYTEC phyBOARD-Segin i.MX6 ULL Full Featured with eMMC";
+> + compatible =3D "phytec,imx6ull-pbacd10-emmc", "phytec,imx6ull-pbacd10",
+> +     "phytec,imx6ull-pcl063","fsl,imx6ull";
+>=20
+> The correct schema for this would be:
+>=20
+> items:
+>    - const: phytec,imx6ull-pbacd10-emmc
+>    - const: phytec,imx6ull-pbacd10
+>    - const: phytec,imx6ull-pcl063
+>    - const: fsl,imx6ull
+>=20
+> This defines how many entries (4), what they are, and the order of
+> them. Maybe the first entry can be an enum with the -nand compatible
+> if those are 2 options.
+>=20
+> Run 'make dtbs=5Fcheck' and make sure there aren't warnings for the root =
+node.
 
-On Fri, Aug 16, 2019 at 11:35:13AM +0200, Corentin Labbe wrote:
-> On Wed, Aug 14, 2019 at 03:33:22PM +0200, Maxime Ripard wrote:
-> > On Wed, Aug 14, 2019 at 03:17:41PM +0200, Corentin Labbe wrote:
-> > > On Mon, Aug 12, 2019 at 11:40:00AM +0200, Maxime Ripard wrote:
-> > > > On Thu, Aug 08, 2019 at 10:42:53AM +0200, Corentin Labbe wrote:
-> > > > > This patch adds the evaluation variant of the model A of the PineH64.
-> > > > > The model A has the same size of the pine64 and has a PCIE slot.
-> > > > >
-> > > > > The only devicetree difference with current pineH64, is the PHY
-> > > > > regulator.
-> > > > >
-> > > > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
-> > > > >  .../sun50i-h6-pine-h64-modelA-eval.dts        | 26 +++++++++++++++++++
-> > > > >  2 files changed, 27 insertions(+)
-> > > > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> > > > > index f6db0611cb85..9a02166cbf72 100644
-> > > > > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > > > > @@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-3.dtb
-> > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-lite2.dtb
-> > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
-> > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
-> > > > > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-modelA-eval.dtb
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
-> > > > > new file mode 100644
-> > > > > index 000000000000..d8ff02747efe
-> > > > > --- /dev/null
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-modelA-eval.dts
-> > > > > @@ -0,0 +1,26 @@
-> > > > > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > > > > +/*
-> > > > > + * Copyright (C) 2019 Corentin Labbe <clabbe.montjoie@gmail.com>
-> > > > > + */
-> > > > > +
-> > > > > +#include "sun50i-h6-pine-h64.dts"
-> > > > > +
-> > > > > +/ {
-> > > > > +	model = "Pine H64 model A evaluation board";
-> > > > > +	compatible = "pine64,pine-h64-modelA-eval", "allwinner,sun50i-h6";
-> > > > > +
-> > > > > +	reg_gmac_3v3: gmac-3v3 {
-> > > > > +		compatible = "regulator-fixed";
-> > > > > +		regulator-name = "vcc-gmac-3v3";
-> > > > > +		regulator-min-microvolt = <3300000>;
-> > > > > +		regulator-max-microvolt = <3300000>;
-> > > > > +		startup-delay-us = <100000>;
-> > > > > +		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
-> > > > > +		enable-active-high;
-> > > > > +	};
-> > > > > +
-> > > > > +};
-> > > > > +
-> > > > > +&emac {
-> > > > > +	phy-supply = <&reg_gmac_3v3>;
-> > > > > +};
-> > > >
-> > > > I might be missing some context here, but I'm pretty sure that the
-> > > > initial intent of the pine h64 DTS was to support the model A all
-> > > > along.
-> > > >
-> > >
-> > > The regulator changed between modelA and B.
-> > > See this old patchset (supporting modelA) https://patchwork.kernel.org/patch/10539149/ for example.
-> >
-> > I'm not sure what your point is, but mine is that everything about the
-> > model A should be in sun50i-h6-pine-h64.dts.
-> >
->
-> model A and B are different enough for distinct dtb, (see sub-thread
-> on HDMI difference for an other difference than PHY regulator)
+Thanks for your input. I will take another closer look at this and send a=20
+new version.
 
-I don't mind having separate DTBs for model A and model B.
+Stefan
 
-> And clearly, the current dtb is for model B.
-
-That DTS was added almost a year before the model B was announced, and
-no commit to that file mention the model B, so it's definitely not
-clear.
-
-> So do you mean that we need to create a new dtb for model B ? (and
-> hack the current back to model A ?)
-
-I'd prefer not to hack anything, but yes
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---qzjcq6rd7xgmbg4h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVaVUgAKCRDj7w1vZxhR
-xQYxAP9kR+PnYnOwBKFxW4HwUV9pEEcT1+VA/ujbIaOvnwPfOwEAphQg1tuO5yP2
-DI52+L4m40IPmBjnFMXOdMsrCVezBgk=
-=R7nF
------END PGP SIGNATURE-----
-
---qzjcq6rd7xgmbg4h--
+>=20
+> Rob
+>=20
