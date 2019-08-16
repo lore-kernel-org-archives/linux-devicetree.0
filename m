@@ -1,96 +1,108 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 00/13] net: phy: adin: add support for Analog Devices PHYs
-Date: Fri, 16 Aug 2019 16:09:58 +0300
-Message-ID: <20190816131011.23264-1-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 04/13] net: phy: adin: add {write,read}_mmd hooks
+Date: Fri, 16 Aug 2019 16:10:02 +0300
+Message-ID: <20190816131011.23264-5-alexandru.ardelean@analog.com>
+References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This changeset adds support for Analog Devices Industrial Ethernet PHYs.
-Particularly the PHYs this driver adds support for:
- * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
- * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
-   Ethernet PHY
+Both ADIN1200 & ADIN1300 support Clause 45 access for some registers.
+The Extended Management Interface (EMI) registers are accessible via both
+Clause 45 (at register MDIO_MMD_VEND1) and using Clause 22.
 
-The 2 chips are register compatible with one another. The main
-difference being that ADIN1200 doesn't operate in gigabit mode.
+The Clause 22 access for MMD regs differs from the standard one defined by
+802.3. The ADIN PHYs  use registers ExtRegPtr (0x0010) and ExtRegData
+(0x0011) to access Clause 45 & EMI registers.
 
-The chips can be operated by the Generic PHY driver as well via the
-standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
-kernel as well. This assumes that configuration of the PHY has been done
-completely in HW, according to spec, i.e. no extra SW configuration
-required.
+The indirect access is done via the following mechanism (for both R/W):
+1. Write the address of the register in the ExtRegPtr
+2. Read/write the value of the register via reg ExtRegData
 
-This changeset also implements the ability to configure the chips via SW
-registers.
+This mechanism is needed to manage configuration of chip settings and to
+access EEE registers via Clause 22.
 
-Datasheets:
-  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
-  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
+Since Clause 45 access will likely never be used, it is not implemented via
+this hook.
 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/net/phy/adin.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Alexandru Ardelean (13):
-  net: phy: adin: add support for Analog Devices PHYs
-  net: phy: adin: hook genphy_{suspend,resume} into the driver
-  net: phy: adin: add support for interrupts
-  net: phy: adin: add {write,read}_mmd hooks
-  net: phy: adin: configure RGMII/RMII/MII modes on config
-  net: phy: adin: make RGMII internal delays configurable
-  net: phy: adin: make RMII fifo depth configurable
-  net: phy: adin: add support MDI/MDIX/Auto-MDI selection
-  net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
-  net: phy: adin: implement PHY subsystem software reset
-  net: phy: adin: implement downshift configuration via phy-tunable
-  net: phy: adin: add ethtool get_stats support
-  dt-bindings: net: add bindings for ADIN PHY driver
-
- .../devicetree/bindings/net/adi,adin.yaml     |  73 ++
- MAINTAINERS                                   |   8 +
- drivers/net/phy/Kconfig                       |   9 +
- drivers/net/phy/Makefile                      |   1 +
- drivers/net/phy/adin.c                        | 724 ++++++++++++++++++
- 5 files changed, 815 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
- create mode 100644 drivers/net/phy/adin.c
-
---
-
-Changelog v4 -> v5:
-
-* added Andrew's and Florian's `Reviewed-by` tags where the case
-
-* [PATCH 4 10/14] net: phy: adin: implement PHY subsystem software reset
-  - simplified mechanism; doing a static `msleep(10)` after issuing a subsystem soft
-    reset; the previous mechanism (with a busy-wait) was working because of fluke;
-    the reset bit in GeSftRst is self-clearing; once read, it always reads back 0,
-    so there is no way to determine if the PHY has actually reset, except
-    to wait a fixed/pessimistic time; after that, if any PHY read/write op
-    does not work, it can be assumed that the MDIO bus went into a bad state,
-    so the PHY is unusable
-
-* dropped [PATCH 4 11/14] net: phy: adin: implement Energy Detect Powerdown mode
-  - will re-spin with a phy-tuna proposal at later point in time;
-
-* [PATCH 4 12/14] net: phy: adin: implement downshift configuration via phy-tunable
-  - found some bugs while re-testing
-    i) bug1: changed:
-+       if (cnt > 8)
-+               return -E2BIG;
-    to
-+       if (cnt > 7)
-+               return -E2BIG;
-    my 3 bit-logic was not that great for max value
-    ii) bug2: changed:
-+       *data = enable & cnt ? cnt : DOWNSHIFT_DEV_DISABLE;
-        to
-+       *data = (enable && cnt) ? cnt : DOWNSHIFT_DEV_DISABLE;
-    needed logical OR vs bit-wise
-
-
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index f4ee611e33df..efbb732f0398 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -14,6 +14,9 @@
+ #define PHY_ID_ADIN1200				0x0283bc20
+ #define PHY_ID_ADIN1300				0x0283bc30
+ 
++#define ADIN1300_MII_EXT_REG_PTR		0x0010
++#define ADIN1300_MII_EXT_REG_DATA		0x0011
++
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -51,6 +54,33 @@ static int adin_phy_config_intr(struct phy_device *phydev)
+ 			      ADIN1300_INT_MASK_EN);
+ }
+ 
++static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
++{
++	struct mii_bus *bus = phydev->mdio.bus;
++	int phy_addr = phydev->mdio.addr;
++	int err;
++
++	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
++	if (err)
++		return err;
++
++	return __mdiobus_read(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA);
++}
++
++static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
++			  u16 val)
++{
++	struct mii_bus *bus = phydev->mdio.bus;
++	int phy_addr = phydev->mdio.addr;
++	int err;
++
++	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
++	if (err)
++		return err;
++
++	return __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_DATA, val);
++}
++
+ static struct phy_driver adin_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
+@@ -62,6 +92,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
++		.read_mmd	= adin_read_mmd,
++		.write_mmd	= adin_write_mmd,
+ 	},
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
+@@ -73,6 +105,8 @@ static struct phy_driver adin_driver[] = {
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+ 		.suspend	= genphy_suspend,
++		.read_mmd	= adin_read_mmd,
++		.write_mmd	= adin_write_mmd,
+ 	},
+ };
+ 
+-- 
 2.20.1
