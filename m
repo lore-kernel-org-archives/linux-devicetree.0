@@ -1,60 +1,50 @@
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: Re: [PATCH v4 14/21] ARM: dts: imx6ull-colibri: Add sleep mode to fec
-Date: Fri, 16 Aug 2019 07:09:20 +0000
-Message-ID: <CAGgjyvHQt_Gp+Pm5VFabGHY5xGN4fU1Xv3inGRf9vmsRm3fQBQ@mail.gmail.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-15-philippe.schenker@toradex.com>
+From: Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v3 0/10] Add mt7629 and fix mt7628 pwm
+Date: Fri, 16 Aug 2019 15:21:18 +0800
+Message-ID: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812142105.1995-15-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <232A2A12B2265B46896FB815BEFBDFDC@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, sam shih <sam.shih@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgNToyMiBQTSBQaGlsaXBwZSBTY2hlbmtlcg0KPHBoaWxp
-cHBlLnNjaGVua2VyQHRvcmFkZXguY29tPiB3cm90ZToNCj4NCj4gRG8gbm90IGNoYW5nZSB0aGUg
-Y2xvY2sgYXMgdGhlIHBvd2VyIGZvciB0aGlzIHBoeSBpcyBzd2l0Y2hlZA0KPiB3aXRoIHRoYXQg
-Y2xvY2suDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5z
-Y2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gQWNrZWQtYnk6IE1hcmNlbCBaaXN3aWxlciA8bWFyY2Vs
-Lnppc3dpbGVyQHRvcmFkZXguY29tPg0KDQpSZXZpZXdlZC1ieTogT2xla3NhbmRyIFN1dm9yb3Yg
-PG9sZWtzYW5kci5zdXZvcm92QHRvcmFkZXguY29tPg0KDQo+DQo+IC0tLQ0KPg0KPiBDaGFuZ2Vz
-IGluIHY0Og0KPiAtIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCj4NCj4gQ2hhbmdlcyBpbiB2
-MzogTm9uZQ0KPiBDaGFuZ2VzIGluIHYyOiBOb25lDQo+DQo+ICBhcmNoL2FybS9ib290L2R0cy9p
-bXg2dWxsLWNvbGlicmkuZHRzaSB8IDE4ICsrKysrKysrKysrKysrKysrLQ0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NnVsbC1jb2xpYnJpLmR0c2kNCj4gaW5kZXggZDU2NzI4ZjAzYzM1Li4xMDE5Y2U2OWEy
-NDIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNp
-DQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpDQo+IEBAIC02
-Miw4ICs2Miw5IEBADQo+ICB9Ow0KPg0KPiAgJmZlYzIgew0KPiAtICAgICAgIHBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7DQo+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgInNs
-ZWVwIjsNCj4gICAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZW5ldDI+Ow0KPiArICAgICAg
-IHBpbmN0cmwtMSA9IDwmcGluY3RybF9lbmV0Ml9zbGVlcD47DQo+ICAgICAgICAgcGh5LW1vZGUg
-PSAicm1paSI7DQo+ICAgICAgICAgcGh5LWhhbmRsZSA9IDwmZXRocGh5MT47DQo+ICAgICAgICAg
-c3RhdHVzID0gIm9rYXkiOw0KPiBAQCAtMjIwLDYgKzIyMSwyMSBAQA0KPiAgICAgICAgICAgICAg
-ICAgPjsNCj4gICAgICAgICB9Ow0KPg0KPiArICAgICAgIHBpbmN0cmxfZW5ldDJfc2xlZXA6IGVu
-ZXQyc2xlZXBncnAgew0KPiArICAgICAgICAgICAgICAgZnNsLHBpbnMgPSA8DQo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIE1YNlVMX1BBRF9HUElPMV9JTzA2X19HUElPMV9JTzA2ICAgICAgICAw
-eDANCj4gKyAgICAgICAgICAgICAgICAgICAgICAgTVg2VUxfUEFEX0dQSU8xX0lPMDdfX0dQSU8x
-X0lPMDcgICAgICAgIDB4MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5F
-VDJfUlhfREFUQTBfX0dQSU8yX0lPMDggICAgMHgwDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
-IE1YNlVMX1BBRF9FTkVUMl9SWF9EQVRBMV9fR1BJTzJfSU8wOSAgICAweDANCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgTVg2VUxfUEFEX0VORVQyX1JYX0VOX19HUElPMl9JTzEwICAgICAgIDB4
-MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5FVDJfUlhfRVJfX0dQSU8y
-X0lPMTUgICAgICAgMHgwDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIE1YNlVMX1BBRF9FTkVU
-Ml9UWF9DTEtfX0VORVQyX1JFRl9DTEsyICAweDQwMDFiMDMxDQo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIE1YNlVMX1BBRF9FTkVUMl9UWF9EQVRBMF9fR1BJTzJfSU8xMSAgICAweDANCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgTVg2VUxfUEFEX0VORVQyX1RYX0RBVEExX19HUElPMl9JTzEy
-ICAgIDB4MA0KPiArICAgICAgICAgICAgICAgICAgICAgICBNWDZVTF9QQURfRU5FVDJfVFhfRU5f
-X0dQSU8yX0lPMTMgICAgICAgMHgwDQo+ICsgICAgICAgICAgICAgICA+Ow0KPiArICAgICAgIH07
-DQo+ICsNCj4gICAgICAgICBwaW5jdHJsX2Vjc3BpMV9jczogZWNzcGkxLWNzLWdycCB7DQo+ICAg
-ICAgICAgICAgICAgICBmc2wscGlucyA9IDwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgTVg2
-VUxfUEFEX0xDRF9EQVRBMjFfX0dQSU8zX0lPMjYgICAgICAgIDB4MDAwYTANCj4gLS0NCj4gMi4y
-Mi4wDQo+DQoNCg0KLS0gDQpCZXN0IHJlZ2FyZHMNCk9sZWtzYW5kciBTdXZvcm92DQoNClRvcmFk
-ZXggQUcNCkFsdHNhZ2Vuc3RyYXNzZSA1IHwgNjA0OCBIb3J3L0x1emVybiB8IFN3aXR6ZXJsYW5k
-IHwgVDogKzQxIDQxIDUwMA0KNDgwMCAobWFpbiBsaW5lKQ0K
+From: sam shih <sam.shih@mediatek.com>
+
+Changes since v2:
+- use num-pwms instead of mediatek,num-pwms.
+- rename the member from num_pwms to fallback_num_pwms to make it 
+  more obvious that it doesn't represent the actually used value.
+- add a dev_warn and a expressive comment to help other developers 
+  to not start adding num_pwms in the compatible_data.
+
+Changes since v1:
+- add some checks for backwards compatibility.
+
+Sam Shih (3):
+  pwm: mediatek: add new property and fix mt7628 pwm
+  dt-bindings: pwm: update bindings for MT7628 SoC
+  arm: dts: mediatek: add mt7629 pwm support
+
+ .../devicetree/bindings/pwm/pwm-mediatek.txt      |  3 +++
+ arch/arm/boot/dts/mt7629.dtsi                     | 14 ++++++++++++++
+ drivers/pwm/pwm-mediatek.c                        | 15 ++++++++++++++-
+ 3 files changed, 31 insertions(+), 1 deletion(-)
+
+Ryder Lee (7):
+  pwm: mediatek: add a property "num-pwms"
+  pwm: mediatek: allocate the clks array dynamically
+  pwm: mediatek: use pwm_mediatek as common prefix
+  dt-bindings: pwm: add a property "num-pwms"
+  arm64: dts: mt7622: add a property "num-pwms" for PWM node
+  arm: dts: mt7623: add a property "num-pwms" for PWM node
+  dt-bindings: pwm: update bindings for MT7629 SoC
+
+ .../devicetree/bindings/pwm/pwm-mediatek.txt  |   8 +-
+ arch/arm/boot/dts/mt7623.dtsi                 |   1 +
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      |   1 +
+ drivers/pwm/pwm-mediatek.c                    | 226 +++++++++---------
+ 4 files changed, 126 insertions(+), 110 deletions(-)
+-- 
+2.17.1
