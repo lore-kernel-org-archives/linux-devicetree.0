@@ -1,99 +1,68 @@
-From: =?UTF-8?Q?Stefan_Riedm=c3=bcller?= <s.riedmueller@phytec.de>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 UL/ULL
- devicetree bindings
-Date: Fri, 16 Aug 2019 13:42:38 +0200
-Message-ID: <cda26fbd-c683-d285-dc52-825d5e16a9e1@phytec.de>
-References: <1563954573-370205-1-git-send-email-s.riedmueller@phytec.de>
- <20190813160448.GA27548@bogus>
- <073f9466-9dd3-a22c-e000-e9f4c60f90a0@phytec.de>
- <CAL_JsqJHfVDfpC9Yr7o3HO4wU7QR+sp0mxFLkxwVcGXXLeAyJw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: nvmem: Add Spreadtrum eFuse controller documentation
+Date: Fri, 16 Aug 2019 19:44:16 +0800
+Message-ID: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJHfVDfpC9Yr7o3HO4wU7QR+sp0mxFLkxwVcGXXLeAyJw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Andrew Smirnov <andrew.smirnov@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, NXP Linux Team <linux-imx@nxp.com>
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, freeman.liu@unisoc.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Freeman Liu <freeman.liu@unisoc.com>
 
-On 15.08.19 15:43, Rob Herring wrote:
-> On Thu, Aug 15, 2019 at 4:55 AM Stefan Riedm=C3=BCller
-> <s.riedmueller@phytec.de> wrote:
->>
->> Hi Rob,
->>
->> On 13.08.19 18:04, Rob Herring wrote:
->>> On Wed, Jul 24, 2019 at 09:49:32AM +0200, Stefan Riedmueller wrote:
->>>> Add devicetree bindings for i.MX6 UL/ULL based phyCORE-i.MX6 UL/ULL and
->>>> phyBOARD-Segin.
->>>>
->>>> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
->>>> ---
->>>>    Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
->>>>    1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Document=
-ation/devicetree/bindings/arm/fsl.yaml
->>>> index 7294ac36f4c0..40f007859092 100644
->>>> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
->>>> @@ -161,12 +161,20 @@ properties:
->>>>            items:
->>>>              - enum:
->>>>                  - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 E=
-VK Board
->>>> +              - phytec,imx6ul-pbacd10     # PHYTEC phyBOARD-Segin wit=
-h i.MX6 UL
->>>> +              - phytec,imx6ul-pbacd10-emmc  # PHYTEC phyBOARD-Segin e=
-MMC Kit
->>>> +              - phytec,imx6ul-pbacd10-nand  # PHYTEC phyBOARD-Segin N=
-AND Kit
->>>> +              - phytec,imx6ul-pcl063      # PHYTEC phyCORE-i.MX 6UL
->>>
->>> This doesn't match what is in the dts files:
->>>
->>> arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi:    compatible =3D "phytec,=
-imx6ul-pcl063", "fsl,imx6ul";
->>> arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts:      compatibl=
-e =3D "phytec,imx6ul-pbacd10", "phytec,imx6ul-pcl063",
->>> "fsl,imx6ul";
->>> arch/arm/boot/dts/imx6ul-phytec-phyboard-segin.dtsi:    compatible =3D =
-"phytec,imx6ul-pbacd-10", "phytec,imx6ul-pcl063",
->>> "fsl,imx6ul";
->>
->> Shawn already applied my patches which rename the compatibles, see
->> https://lkml.org/lkml/2019/7/23/42
->=20
-> In any case, it still doesn't match. For example, from those patches:
->=20
-> + model =3D "PHYTEC phyBOARD-Segin i.MX6 ULL Full Featured with eMMC";
-> + compatible =3D "phytec,imx6ull-pbacd10-emmc", "phytec,imx6ull-pbacd10",
-> +     "phytec,imx6ull-pcl063","fsl,imx6ull";
->=20
-> The correct schema for this would be:
->=20
-> items:
->    - const: phytec,imx6ull-pbacd10-emmc
->    - const: phytec,imx6ull-pbacd10
->    - const: phytec,imx6ull-pcl063
->    - const: fsl,imx6ull
->=20
-> This defines how many entries (4), what they are, and the order of
-> them. Maybe the first entry can be an enum with the -nand compatible
-> if those are 2 options.
->=20
-> Run 'make dtbs=5Fcheck' and make sure there aren't warnings for the root =
-node.
+This patch adds the binding documentation for Spreadtrum eFuse controller.
 
-Thanks for your input. I will take another closer look at this and send a=20
-new version.
+Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../devicetree/bindings/nvmem/sprd-efuse.txt       |   39 ++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
 
-Stefan
-
->=20
-> Rob
->=20
+diff --git a/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt b/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
+new file mode 100644
+index 0000000..96b6fee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
+@@ -0,0 +1,39 @@
++= Spreadtrum eFuse device tree bindings =
++
++Required properties:
++- compatible: Should be "sprd,ums312-efuse".
++- reg: Specify the address offset of efuse controller.
++- clock-names: Should be "enable".
++- clocks: The phandle and specifier referencing the controller's clock.
++- hwlocks: Reference to a phandle of a hwlock provider node.
++
++= Data cells =
++Are child nodes of eFuse, bindings of which as described in
++bindings/nvmem/nvmem.txt
++
++Example:
++
++	ap_efuse: efuse@32240000 {
++		compatible = "sprd,ums312-efuse";
++		reg = <0 0x32240000 0 0x10000>;
++		clock-names = "enable";
++		hwlocks = <&hwlock 8>;
++		clocks = <&aonapb_gate CLK_EFUSE_EB>;
++
++		/* Data cells */
++		thermal_calib: calib@10 {
++			reg = <0x10 0x2>;
++		};
++	};
++
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++Example:
++
++	thermal {
++		...
++
++		nvmem-cells = <&thermal_calib>;
++		nvmem-cell-names = "calibration";
++	};
+-- 
+1.7.9.5
