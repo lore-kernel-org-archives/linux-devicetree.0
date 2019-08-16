@@ -1,66 +1,151 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-Date: Thu, 15 Aug 2019 19:04:15 -0700
-Message-ID: <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
- <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
- <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com> <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 2/2] dmaengine: milbeaut-hdmac: Add HDMAC driver for
+ Milbeaut platforms
+Date: Thu, 15 Aug 2019 21:25:44 -0500
+Message-ID: <CABb+yY3pLBA=Y_4kUZ-E_VWOiJsofung2bMA5HqkNeNJkOOZxQ@mail.gmail.com>
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+ <20190613005247.2048-1-jassisinghbrar@gmail.com> <20190624064442.GW2962@vkoul-mobl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
+In-Reply-To: <20190624064442.GW2962@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Android Kernel Team <kernel-team@android.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, orito.takao@socionext.com, Masami Hiramatsu <masami.hiramatsu@linaro.org>, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 4:41 PM Rob Herring <robh+dt@kernel.org> wrote:
+On Mon, Jun 24, 2019 at 1:47 AM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > >
-> > > > PowerPC platforms don't use the generic of/platform code to populate the
-> > > > devices from DT.
-> > >
-> > > Yes, they do.
-> >
-> > No they don't. My wording could be better, but they don't use
-> > of_platform_default_populate_init()
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+> On 12-06-19, 19:52, jassisinghbrar@gmail.com wrote:
 >
-> Right, but the rest of the of/platform code is used (guess where it
-> got moved here from?).
+> > +#include <linux/bits.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/dmaengine.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/list.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_dma.h>
 >
-> > > > Therefore the generic device linking code is never used
-> > > > in PowerPC.  Compile it out to avoid warning about unused functions.
-> > >
-> > > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-> > > return' rather than #ifdefs.
-> >
-> > I'm just moving the existing ifndef some lines above. I don't want to
-> > go change existing #ifndef in this patch. Maybe that should be a
-> > separate patch series that goes and fixes all such code in drivers/of/
-> > or driver/
+> Do we need both, IIRC of_dma.h does include of.h!
 >
-> So the initcall was originally just supposed to call
-> of_platform_default_populate(), but it's grown beyond that. That could
-> make things fragile as it is possible for platforms to call
-> of_platform_populate() (directly or indirectly) before
-> of_platform_default_populate_init(). That was supposed to work, but
-> now I think it's getting more fragile.
+OK
 
-Can you clarify what's wrong with of_platfrom_populate() being called
-before of_platform_default_populate_init()? If that's what a platform
-wants to do, they can do it? I have some thoughts of my own, but I
-want to hear yours.
-In any case, I'd be happy to help  clean up this initcall if you can
-give me a direction to take it in.
+> > +/* mc->vc.lock must be held by caller */
+> > +static void milbeaut_chan_start(struct milbeaut_hdmac_chan *mc,
+> > +                             struct milbeaut_hdmac_desc *md)
+> > +{
+> > +     struct scatterlist *sg;
+> > +     u32  cb, ca, src_addr, dest_addr, len;
+>            ^^
+> double space
+>
+OK
 
-> Anyways, I guess this patch is fine for now.
+> > +static irqreturn_t milbeaut_hdmac_interrupt(int irq, void *dev_id)
+> > +{
+> > +     struct milbeaut_hdmac_chan *mc = dev_id;
+> > +     struct milbeaut_hdmac_desc *md;
+> > +     irqreturn_t ret = IRQ_HANDLED;
+> > +     u32 val;
+> > +
+> > +     spin_lock(&mc->vc.lock);
+> > +
+> > +     /* Ack and Disable irqs */
+> > +     val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACB);
+> > +     val &= ~(FIELD_PREP(MLB_HDMAC_SS, 0x7));
+>                                          ^^^^
+> Magic ..?
+>
+OK, will define a macro for 7
 
-Thanks.
+> > +static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
+> > +{
+> > +     struct virt_dma_chan *vc = to_virt_chan(chan);
+> > +     struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
+> > +     u32 val;
+> > +
+> > +     spin_lock(&mc->vc.lock);
+> > +     val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
+> > +     val |= MLB_HDMAC_PB;
+> > +     writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
+>
+> We really should have an updatel() and friends in kernel, feel free to
+> add in your driver though!
+>
+I'll pass on that for now.
 
--Saravana
+> > +static int milbeaut_hdmac_chan_init(struct platform_device *pdev,
+> > +                                 struct milbeaut_hdmac_device *mdev,
+> > +                                 int chan_id)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct milbeaut_hdmac_chan *mc = &mdev->channels[chan_id];
+> > +     char *irq_name;
+> > +     int irq, ret;
+> > +
+> > +     irq = platform_get_irq(pdev, chan_id);
+> > +     if (irq < 0) {
+> > +             dev_err(&pdev->dev, "failed to get IRQ number for ch%d\n",
+> > +                     chan_id);
+> > +             return irq;
+> > +     }
+> > +
+> > +     irq_name = devm_kasprintf(dev, GFP_KERNEL, "milbeaut-hdmac-%d",
+> > +                               chan_id);
+> > +     if (!irq_name)
+> > +             return -ENOMEM;
+> > +
+> > +     ret = devm_request_irq(dev, irq, milbeaut_hdmac_interrupt,
+> > +                            IRQF_SHARED, irq_name, mc);
+>
+> I tend to dislike using devm_request_irq(), we have no control over when
+> the irq is freed and what is a spirious irq is running while we are
+> unrolling, so IMHO it make sense to free up and ensure all tasklets are
+> quiesced when remove returns
+>
+If the code is written clean and tight we need not be so paranoid.
+
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     mc->mdev = mdev;
+> > +     mc->reg_ch_base = mdev->reg_base + MLB_HDMAC_CH_STRIDE * (chan_id + 1);
+> > +     mc->vc.desc_free = milbeaut_hdmac_desc_free;
+> > +     vchan_init(&mc->vc, &mdev->ddev);
+>
+> who kills the vc->task?
+>
+vchan_synchronize() called from milbeaut_hdmac_synchronize()
+
+> > +static int milbeaut_hdmac_remove(struct platform_device *pdev)
+> > +{
+> > +     struct milbeaut_hdmac_device *mdev = platform_get_drvdata(pdev);
+> > +     struct dma_chan *chan;
+> > +     int ret;
+> > +
+> > +     /*
+> > +      * Before reaching here, almost all descriptors have been freed by the
+> > +      * ->device_free_chan_resources() hook. However, each channel might
+> > +      * be still holding one descriptor that was on-flight at that moment.
+> > +      * Terminate it to make sure this hardware is no longer running. Then,
+> > +      * free the channel resources once again to avoid memory leak.
+> > +      */
+> > +     list_for_each_entry(chan, &mdev->ddev.channels, device_node) {
+> > +             ret = dmaengine_terminate_sync(chan);
+> > +             if (ret)
+> > +                     return ret;
+> > +             milbeaut_hdmac_free_chan_resources(chan);
+> > +     }
+> > +
+> > +     of_dma_controller_free(pdev->dev.of_node);
+> > +     dma_async_device_unregister(&mdev->ddev);
+> > +     clk_disable_unprepare(mdev->clk);
+>
+> And as suspected we have active tasklets and irq at this time :(
+>
+Not sure how is that....
+
+thanks.
