@@ -1,16 +1,17 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V6 4/4] arm64: dts: imx8mm: Enable cpu-idle driver
-Date: Fri, 16 Aug 2019 10:37:00 +0000
-Message-ID: <DB3PR0402MB3916E00B69BD67098F1875FBF5AF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1565915925-21009-1-git-send-email-Anson.Huang@nxp.com>
- <1565915925-21009-4-git-send-email-Anson.Huang@nxp.com>
- <e62d26b9-8c9b-644f-d2b3-485586e07e35@linaro.org>
- <DB3PR0402MB3916E469219C7CC68D55C90AF5AF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X
+ in EP mode
+Date: Fri, 16 Aug 2019 16:19:37 +0530
+Message-ID: <02cf2f3d-336c-85bb-1fb5-a141c5a9cf79@ti.com>
+References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
+ <20190815083716.4715-2-xiaowei.bao@nxp.com>
+ <20190815115340.GG43882@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB3PR0402MB3916E469219C7CC68D55C90AF5AF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,52 +22,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.inf>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>, Andrew Murray <andrew.murray@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>Mingkai Hu <ming>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Shawn
-
-> > On 16/08/2019 02:38, Anson Huang wrote:
-> > > Enable i.MX8MM cpu-idle using generic ARM cpu-idle driver, 2 states
-> > > are supported, details as below:
-> > >
-> > > root@imx8mmevk:~# cat
-> > /sys/devices/system/cpu/cpu0/cpuidle/state0/name
-> > > WFI
-> > > root@imx8mmevk:~# cat
-> > > /sys/devices/system/cpu/cpu0/cpuidle/state0/usage
-> > > 3973
-> > > root@imx8mmevk:~# cat
-> > /sys/devices/system/cpu/cpu0/cpuidle/state1/name
-> > > cpu-pd-wait
-> > > root@imx8mmevk:~# cat
-> > > /sys/devices/system/cpu/cpu0/cpuidle/state1/usage
-> > > 6647
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > Hi Anson,
-> >
-> > I've applied the patches 1-3 but this one does not apply.
-> 
-> Thanks.
-> 
-> >
-> > You can either respin it against tip/timers/core and take it through
-> > Shawn's tree. If the later, you can add my Acked-by.
-> 
-> Hi, Shawn
-> 	Can you take this patch and add below Acked-by? It should can be
-> applied to your tree directly.
-> 
-> 	Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-Sorry that I just found this patch can NOT be applied to your for-next tree neither, so
-I redo the patch against your for-next tree, so you can just skip this patch series now
-(as Daniel already picked the rest 3 patches) and take that patch I just sent, link as below:
-
-https://patchwork.kernel.org/patch/11097471/
-
-Thanks,
-Anson
+SGksCgpPbiAxNi8wOC8xOSA4OjI4IEFNLCBYaWFvd2VpIEJhbyB3cm90ZToKPiAKPiAKPj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4gRnJvbTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11
+cnJheUBhcm0uY29tPgo+PiBTZW50OiAyMDE5xOo41MIxNcjVIDE5OjU0Cj4+IFRvOiBYaWFvd2Vp
+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4KPj4gQ2M6IGppbmdvb2hhbjFAZ21haWwuY29tOyBn
+dXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsKPj4gYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9i
+aCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsKPj4gc2hhd25ndW9Aa2VybmVs
+Lm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOwo+PiBsb3Jl
+bnpvLnBpZXJhbGlzaUBhcm0uY29tOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0
+aW9uLm9yZzsKPj4gTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1
+IDxtaW5na2FpLmh1QG54cC5jb20+Owo+PiBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGxp
+bnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7Cj4+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOwo+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggMDIvMTBdIFBDSTogZGVzaWdud2FyZS1lcDogQWRkIHRoZSBkb29yYmVsbCBtb2Rl
+IG9mCj4+IE1TSS1YIGluIEVQIG1vZGUKPj4KPj4gT24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMDQ6
+Mzc6MDhQTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6Cj4+PiBBZGQgdGhlIGRvb3JiZWxsIG1v
+ZGUgb2YgTVNJLVggaW4gRVAgbW9kZS4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJh
+byA8eGlhb3dlaS5iYW9AbnhwLmNvbT4KPj4+IC0tLQo+Pj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jIHwgMTQgKysrKysrKysrKysrKysKPj4+ICBkcml2
+ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaCAgICB8IDE0ICsrKysrKysr
+KysrKysrCj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5j
+Cj4+PiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jCj4+
+PiBpbmRleCA3NWUyOTU1Li5lM2E3Y2RmIDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMKPj4+ICsrKyBiL2RyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jCj4+PiBAQCAtNDU0LDYgKzQ1NCwyMCBA
+QCBpbnQgZHdfcGNpZV9lcF9yYWlzZV9tc2lfaXJxKHN0cnVjdCBkd19wY2llX2VwCj4+ICplcCwg
+dTggZnVuY19ubywKPj4+ICAJcmV0dXJuIDA7Cj4+PiAgfQo+Pj4KPj4+ICtpbnQgZHdfcGNpZV9l
+cF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbChzdHJ1Y3QgZHdfcGNpZV9lcCAqZXAsIHU4Cj4+IGZ1
+bmNfbm8sCj4+PiArCQkJCSAgICAgICB1MTYgaW50ZXJydXB0X251bSkKPj4+ICt7Cj4+PiArCXN0
+cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOwo+Pj4gKwl1MzIgbXNn
+X2RhdGE7Cj4+PiArCj4+PiArCW1zZ19kYXRhID0gKGZ1bmNfbm8gPDwgUENJRV9NU0lYX0RPT1JC
+RUxMX1BGX1NISUZUKSB8Cj4+PiArCQkgICAoaW50ZXJydXB0X251bSAtIDEpOwo+Pj4gKwo+Pj4g
+Kwlkd19wY2llX3dyaXRlbF9kYmkocGNpLCBQQ0lFX01TSVhfRE9PUkJFTEwsIG1zZ19kYXRhKTsK
+Pj4+ICsKPj4+ICsJcmV0dXJuIDA7Cj4+PiArfQo+Pj4gKwo+Pj4gIGludCBkd19wY2llX2VwX3Jh
+aXNlX21zaXhfaXJxKHN0cnVjdCBkd19wY2llX2VwICplcCwgdTggZnVuY19ubywKPj4+ICAJCQkg
+ICAgICB1MTYgaW50ZXJydXB0X251bSkKPj4KPj4gSGF2ZSBJIHVuZGVyc3Rvb2QgY29ycmVjdGx5
+IHRoYXQgdGhlIGhhcmR3YXJlIHByb3ZpZGVzIGFuIGFsdGVybmF0aXZlCj4+IG1lY2hhbmlzbSB0
+aGF0IGFsbG93cyBmb3IgcmFpc2luZyBNU0ktWCBpbnRlcnJ1cHRzIHdpdGhvdXQgdGhlIGJvdGhl
+ciBvZgo+PiByZWFkaW5nIHRoZSBjYXBhYmlsaXRpZXMgcmVnaXN0ZXJzPwo+IFllcywgdGhlIGhh
+cmR3YXJlIHByb3ZpZGUgdHdvIHdheSB0byBNU0ktWCwgcGxlYXNlIGNoZWNrIHRoZSBwYWdlIDQ5
+MiBvZiAKPiBEV0NfcGNpZV9kbV9yZWdpc3RlcnNfNC4zMCBNZW51Lgo+IE1TSVhfRE9PUkJFTExf
+T0ZGIG9uIHBhZ2UgNDkyIDB4OTQ4IERlc2NyaXB0aW9uOiBNU0ktWCBEb29yYmVsbCBSZWdpc3Rl
+ci4uLi4+Cj4+Cj4+IElmIHNvIGlzIHRoZXJlIGFueSBnb29kIHJlYXNvbiB0byBrZWVwIGR3X3Bj
+aWVfZXBfcmFpc2VfbXNpeF9pcnE/IChBbmQgdGh1cwo+PiB1c2UgaXQgaW4gZHdfcGxhdF9wY2ll
+X2VwX3JhaXNlX2lycSBhbHNvKT8KPiBJIGFtIG5vdCBzdXJlLCBidXQgSSB0aGluayB0aGUgZHdf
+cGNpZV9lcF9yYWlzZV9tc2l4X2lycSBmdW5jdGlvbiBpcyBub3QgY29ycmVjdCwgCj4gYmVjYXVz
+ZSBJIHRoaW5rIHdlIGNhbid0IGdldCB0aGUgTVNJWCB0YWJsZSBmcm9tIHRoZSBhZGRyZXNzIGVw
+LT5waHlzX2Jhc2UgKyB0YmxfYWRkciwgCj4gYnV0IEkgYWxzbyBkb24ndCBrbm93IHdoZXJlIEkg
+Y2FuIGdldCB0aGUgY29ycmVjdCBNU0lYIHRhYmxlLgoKU29tZXRpbWUgYmFjayB3aGVuIEkgdHJp
+ZWQgcmFpc2luZyBNU0ktWCBmcm9tIEVQLCBpdCB3YXMgZmFpbGluZy4gSXQncyBxdWl0ZQpwb3Nz
+aWJsZSBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxIGZ1bmN0aW9uIGlzIG5vdCBjb3JyZWN0LgoK
+TVNJLVggdGFibGUgY2FuIGJlIG9idGFpbmVkIGZyb20gdGhlIGluYm91bmQgQVRVIGNvcnJlc3Bv
+bmRpbmcgdG8gdGhlIE1TSVggYmFyLgpJTU8gTVNJLVggc3VwcG9ydCBpbiBFUCBtb2RlIG5lZWRz
+IHJld29yay4gRm9yIGluc3RhbmNlIHNldF9tc2l4IHNob3VsZCBhbHNvCnRha2UgQkFSIG51bWJl
+ciBhcyBpbnB1dCB0byBiZSBjb25maWd1cmVkIGluIHRoZSBNU0ktWCBjYXBhYmlsaXR5LiBUaGUg
+ZnVuY3Rpb24KZHJpdmVyIChwY2ktZXBmLXRlc3QuYykgc2hvdWxkIGFsbG9jYXRlIG1lbW9yeSB0
+YWtpbmcgaW50byBhY2NvdW50IHRoZSBNU0ktWCB0YWJsZS4KClRoYW5rcwpLaXNob24KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
