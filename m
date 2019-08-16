@@ -1,36 +1,44 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v4 11/14] net: phy: adin: implement Energy Detect
- Powerdown mode
-Date: Fri, 16 Aug 2019 06:09:49 +0000
-Message-ID: <f5d3dc7e4e919427e82ccb637bd757393296047a.camel@analog.com>
-References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
-         <20190812112350.15242-12-alexandru.ardelean@analog.com>
-         <f13feaee-0bad-a774-5527-296b6f74c91b@gmail.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH v4 20/21] ARM: dts: imx7-colibri: Add UHS support to eval
+ board
+Date: Fri, 16 Aug 2019 06:44:35 +0000
+Message-ID: <eda215fd7db7509ddfbe12d83e9ae70674ef1ba4.camel@toradex.com>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+         <20190812142105.1995-21-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f13feaee-0bad-a774-5527-296b6f74c91b@gmail.com>
+In-Reply-To: <20190812142105.1995-21-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <AC1D4EDC47E24F4488C47E4AF165016E@analog.com>
+Content-ID: <F1BF490E43A2434C980DAF8C2479961D@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTE0IGF0IDEwOjU3IC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gDQo+IE9uIDgvMTIvMjAxOSA0OjIzIEFNLCBBbGV4
-YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gVGhlIEFESU4gUEhZcyBzdXBwb3J0IEVuZXJneSBE
-ZXRlY3QgUG93ZXJkb3duIG1vZGUsIHdoaWNoIHB1dHMgdGhlIFBIWSBpbnRvDQo+ID4gYSBsb3cg
-cG93ZXIgbW9kZSB3aGVuIHRoZXJlIGlzIG5vIHNpZ25hbCBvbiB0aGUgd2lyZSAodHlwaWNhbGx5
-IGNhYmxlDQo+ID4gdW5wbHVnZ2VkKS4NCj4gPiBUaGlzIGJlaGF2aW9yIGlzIGVuYWJsZWQgYnkg
-ZGVmYXVsdCwgYnV0IGNhbiBiZSBkaXNhYmxlZCB2aWEgZGV2aWNlDQo+ID4gcHJvcGVydHkuDQo+
-IA0KPiBXZSBjb3VsZCBjb25zaWRlciBhZGRpbmcgYSBQSFkgdHVuYWJsZSwgaGF2aW5nIHRoaXMg
-YXMgYSBEZXZpY2UgVHJlZQ0KPiBwcm9wZXJ0eSBhbW91bnRzIHRvIHB1dHRpbmcgYSBwb2xpY3kg
-aW5zaWRlIERULCB3aGljaCBpcyBmcm93bmVkIHVwb24uDQoNClRoYXQgd291bGQgYmUgaW50ZXJl
-c3RpbmcgYWN0dWFsbHksIGFuZCBJIHdvdWxkIGFsc28gcHJlZmVyIGl0IG92ZXIgc3RhdGljIERU
-Lg0KTWF5YmUgZm9yIHRoaXMgcGF0Y2gsIEknbGwganVzdCBlbmFibGUgRURQRCBieSBkZWZhdWx0
-IGFuZCBzZWUgYWJvdXQgYSB0dW5hIG9wdGlvbi4NCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiANCj4g
-T3RoZXIgdGhhbiB0aGF0LCB0aGUgY29kZSBsb29rcyBmaW5lOg0KPiANCj4gUmV2aWV3ZWQtYnk6
-IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPg0K
+T24gTW9uLCAyMDE5LTA4LTEyIGF0IDE0OjIxICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
+ZToNCj4gVGhpcyBjb21taXQgYWRkcyBVSFMgY2FwYWJpbGl0eSB0byBUb3JhZGV4IEV2YWwgQm9h
+cmRzDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2No
+ZW5rZXJAdG9yYWRleC5jb20+DQoNClBsZWFzZSBpZ25vcmUgdGhpcyBwYXRjaC4gVGhlcmUgd2Fz
+IGEgbWlzdW5kZXJzdGFuZGluZyBhbmQgdGhpcyBvbmUNCnNob3VsZG4ndCBnbyBpbnRvIG1haW5s
+aW5lLiBTb3JyeSBmb3IgdGhhdCENCj4gDQo+IC0tLQ0KPiANCj4gQ2hhbmdlcyBpbiB2NDogTm9u
+ZQ0KPiBDaGFuZ2VzIGluIHYzOg0KPiAtIE5ldyBwYXRjaCB0byBtYWtlIHVzZSBvZiBBUk06IGR0
+czogaW14Ny1jb2xpYnJpOiBmaXggMS44Vi9VSFMNCj4gc3VwcG9ydA0KPiANCj4gQ2hhbmdlcyBp
+biB2MjogTm9uZQ0KPiANCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYz
+LmR0c2kgfCAxMSArKysrKysrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9p
+bXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xp
+YnJpLWV2YWwtdjMuZHRzaQ0KPiBpbmRleCA1NzZkZWM5ZmY4MWMuLjkwMTIxZmJlNTYxZiAxMDA2
+NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0K
+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+IEBA
+IC0yMTAsOSArMjEwLDE2IEBADQo+ICB9Ow0KPiAgDQo+ICAmdXNkaGMxIHsNCj4gLQlrZWVwLXBv
+d2VyLWluLXN1c3BlbmQ7DQo+IC0Jd2FrZXVwLXNvdXJjZTsNCj4gKwlwaW5jdHJsLW5hbWVzID0g
+ImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6IiwgInN0YXRlXzIwMG1oeiI7DQo+ICsJcGluY3RybC0w
+ID0gPCZwaW5jdHJsX3VzZGhjMSAmcGluY3RybF9jZF91c2RoYzE+Ow0KPiArCXBpbmN0cmwtMSA9
+IDwmcGluY3RybF91c2RoYzFfMTAwbWh6ICZwaW5jdHJsX2NkX3VzZGhjMT47DQo+ICsJcGluY3Ry
+bC0yID0gPCZwaW5jdHJsX3VzZGhjMV8yMDBtaHogJnBpbmN0cmxfY2RfdXNkaGMxPjsNCj4gIAl2
+bW1jLXN1cHBseSA9IDwmcmVnXzN2Mz47DQo+ICsJdnFtbWMtc3VwcGx5ID0gPCZyZWdfTERPMj47
+DQo+ICsJY2QtZ3Bpb3MgPSA8JmdwaW8xIDAgR1BJT19BQ1RJVkVfTE9XPjsNCj4gKwlkaXNhYmxl
+LXdwOw0KPiArCWVuYWJsZS1zZGlvLXdha2V1cDsNCj4gKwlrZWVwLXBvd2VyLWluLXN1c3BlbmQ7
+DQo+ICAJc3RhdHVzID0gIm9rYXkiOw0KPiAgfTsNCj4gIA0K
