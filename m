@@ -1,48 +1,33 @@
-From: Stefan Roese <sr@denx.de>
-Subject: [PATCH net-next 1/4 v3] dt-bindings: net: mediatek: Add support for MediaTek MT7628/88 SoC
-Date: Fri, 16 Aug 2019 15:23:22 +0200
-Message-ID: <20190816132325.28426-1-sr@denx.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5 12/13] net: phy: adin: add ethtool get_stats support
+Date: Fri, 16 Aug 2019 15:24:34 +0200
+Message-ID: <20190816132434.GB307@lunn.ch>
+References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
+ <20190816131011.23264-13-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>, Daniel Golle <daniel@makrotopia.org>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190816131011.23264-13-alexandru.ardelean@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add compatible for the ethernet IP core on MT7628/88 SoCs. Its
-compatible with the older Ralink Rt5350F SoC. And OpenWrt already
-uses this compatible string for the MT76x8.
+On Fri, Aug 16, 2019 at 04:10:10PM +0300, Alexandru Ardelean wrote:
+> This change implements retrieving all the error counters from the PHY.
+> 
+> The counters require that the RxErrCnt register (0x0014) be read first,
+> after which copies of the counters are latched into the registers. This
+> ensures that all registers read after RxErrCnt are synchronized at the
+> moment that they are read.
+> 
+> The counter values need to be accumulated by the driver, as each time that
+> RxErrCnt is read, the values that are latched are the ones that have
+> incremented from the last read.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+ 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: René van Dorst <opensource@vdorst.com>
-Cc: Daniel Golle <daniel@makrotopia.org>
-Cc: Sean Wang <sean.wang@mediatek.com>
-Cc: John Crispin <john@phrozen.org>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
----
-v3:
-- No change
-
-v2:
-- New patch - bindings description moved to separate patch
-
- Documentation/devicetree/bindings/net/mediatek-net.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-index 770ff98d4524..72d03e07cf7c 100644
---- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -12,6 +12,7 @@ Required properties:
- 		"mediatek,mt7623-eth", "mediatek,mt2701-eth": for MT7623 SoC
- 		"mediatek,mt7622-eth": for MT7622 SoC
- 		"mediatek,mt7629-eth": for MT7629 SoC
-+		"ralink,rt5350-eth": for Ralink Rt5350F and MT7628/88 SoC
- - reg: Address and length of the register set for the device
- - interrupts: Should contain the three frame engines interrupts in numeric
- 	order. These are fe_int0, fe_int1 and fe_int2.
--- 
-2.22.1
+    Andrew
