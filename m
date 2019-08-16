@@ -1,27 +1,56 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: i2c: mv64xxx: Add compatible for the
- H6 i2c node.
-Date: Fri, 16 Aug 2019 13:44:53 -0600
-Message-ID: <CAL_JsqK_j_AK5wa3cOw_SpVZAX+m_iSvnR+Sgh0dbqxYxHKr=Q@mail.gmail.com>
-References: <20190816064710.18280-1-bshah@kde.org> <20190816084309.27440-1-bshah@kde.org>
- <20190816084309.27440-2-bshah@kde.org>
+Subject: Re: [v3 1/2] dt/bindings: display: Add optional property node for
+ Mali DP500
+Date: Fri, 16 Aug 2019 14:09:16 -0600
+Message-ID: <CAL_JsqLPZ+hCGd=J3MU83saHJJ-yx6k+X0Y7-2ECu5yT8PxF4w@mail.gmail.com>
+References: <20190816100424.5366-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190816084309.27440-2-bshah@kde.org>
+In-Reply-To: <20190816100424.5366-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bhushan Shah <bshah@kde.org>
-Cc: Icenowy Zheng <icenowy@aosc.io>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Wen He <wen.he_1@nxp.com>
+Cc: linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 2:44 AM Bhushan Shah <bshah@kde.org> wrote:
+On Fri, Aug 16, 2019 at 4:14 AM Wen He <wen.he_1@nxp.com> wrote:
 >
-> Allwinner H6 have a mv64xxx i2c interface available to be used.
+> Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
+> This property describe the ARQoS levels of DP500's QoS signaling.
 >
-> Signed-off-by: Bhushan Shah <bshah@kde.org>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 > ---
+> change in v3:
+>         - correction the describe of the node
 >
->  Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml | 3 +++
+>  Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
 >  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
+> index 2f7870983ef1..1f711d32f235 100644
+> --- a/Documentation/devicetree/bindings/display/arm,malidp.txt
+> +++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
+> @@ -37,6 +37,8 @@ Optional properties:
+>      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
+>      to be used for the framebuffer; if not present, the framebuffer may
+>      be located anywhere in memory.
+> +  - arm,malidp-arqos-high-level: phandle to describing the ARQoS levels of DP500's
+> +    QoS signaling.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The driver is reading a u32... Did you test this?
+
+
+>
+>
+>  Example:
+> @@ -54,6 +56,7 @@ Example:
+>                 clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
+>                 clock-names = "pxlclk", "mclk", "aclk", "pclk";
+>                 arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+> +               arm,malidp-arqos-high-level = <&rqosvalue>;
+>                 port {
+>                         dp0_output: endpoint {
+>                                 remote-endpoint = <&tda998x_2_input>;
+> --
+> 2.17.1
+>
