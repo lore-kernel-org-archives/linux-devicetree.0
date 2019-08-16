@@ -1,72 +1,33 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from albert.telenet-ops.be ([195.130.137.90]:48852 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfHNJSg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2019 05:18:36 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] scripts/dtc: dtx_diff - add color output support
-Date: Wed, 14 Aug 2019 11:18:32 +0200
-Message-Id: <20190814091832.12707-1-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <robherring2@gmail.com>
+Date: Fri, 16 Aug 2019 17:14:33 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: DT yaml bindings: handling of complicated compatible property
+Message-ID: <20190816221433.GA25289@bogus>
+References: <CAMRc=Mc_9=3xYWrrn=naQgFprgLA4wkNJQE1niSiYiACi5XFiw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mc_9=3xYWrrn=naQgFprgLA4wkNJQE1niSiYiACi5XFiw@mail.gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add new -c/--color options, to enhance the diff output with color, and
-improve the user's experience.
+On Mon, Jul 29, 2019 at 10:31:17AM +0200, Bartosz Golaszewski wrote:
+> Hello,
+> 
+> I decided to attempt to convert the DT binding for AT24 EEPROM driver
+> to yaml and am not sure on how to handle the compatible property with
+> a lot of options.
+> 
+> In at24 we support 23 models and 8 vendors (184 vendor,model
+> combinations) plus 5 exceptions (with model names not following the
+> general convention).
+> 
+> Do I simply use the oneOf specifier and list all possible options? Or
+> is there a better approach.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Document that -c/--color requires a diff command with color support,
-  - Ignore -c/--color if diff command lacks color support.
----
- scripts/dtc/dtx_diff | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Normally, yes. But this one is a bit special. You can use 'pattern' to 
+address the 184 cases with a regex and then the 5 exceptions under other 
+oneOf entries.
 
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index e9ad7834a22d9459..d3422ee15e300bc7 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -20,6 +20,8 @@ Usage:
- 
- 
-       --annotate    synonym for -T
-+      --color       synonym for -c (requires diff with --color support)
-+       -c           enable colored output
-        -f           print full dts in diff (--unified=99999)
-        -h           synonym for --help
-        -help        synonym for --help
-@@ -178,6 +180,7 @@ compile_to_dts() {
- annotate=""
- cmd_diff=0
- diff_flags="-u"
-+diff_color=""
- dtx_file_1=""
- dtx_file_2=""
- dtc_sort="-s"
-@@ -189,6 +192,13 @@ while [ $# -gt 0 ] ; do
- 
- 	case $1 in
- 
-+	-c | --color )
-+		if diff --color /dev/null /dev/null 2>/dev/null ; then
-+			diff_color="--color=always"
-+		fi
-+		shift
-+		;;
-+
- 	-f )
- 		diff_flags="--unified=999999"
- 		shift
-@@ -344,7 +354,7 @@ DTC="\
- 
- if (( ${cmd_diff} )) ; then
- 
--	diff ${diff_flags} --label "${dtx_file_1}" --label "${dtx_file_2}" \
-+	diff ${diff_flags} ${diff_color} --label "${dtx_file_1}" --label "${dtx_file_2}" \
- 		<(compile_to_dts "${dtx_file_1}" "${dtx_path_1_dtc_include}") \
- 		<(compile_to_dts "${dtx_file_2}" "${dtx_path_2_dtc_include}")
- 
--- 
-2.17.1
+Rob
