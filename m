@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 07/13] net: phy: adin: make RMII fifo depth configurable
-Date: Fri, 16 Aug 2019 16:10:05 +0300
-Message-ID: <20190816131011.23264-8-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 13/13] dt-bindings: net: add bindings for ADIN PHY driver
+Date: Fri, 16 Aug 2019 16:10:11 +0300
+Message-ID: <20190816131011.23264-14-alexandru.ardelean@analog.com>
 References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -10,81 +10,111 @@ Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The FIFO depth can be configured for the RMII mode. This change adds
-support for doing this via device-tree (or ACPI).
+This change adds bindings for the Analog Devices ADIN PHY driver, detailing
+all the properties implemented by the driver.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../devicetree/bindings/net/adi,adin.yaml     | 73 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/adi,adin.yaml
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index c882fcd9ada5..4ca685780622 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -52,8 +52,19 @@
- #define	ADIN1300_RGMII_2_40_NS			0x0007
- 
- #define ADIN1300_GE_RMII_CFG_REG		0xff24
-+#define   ADIN1300_GE_RMII_FIFO_DEPTH_MSK	GENMASK(6, 4)
-+#define   ADIN1300_GE_RMII_FIFO_DEPTH_SEL(x)	\
-+		FIELD_PREP(ADIN1300_GE_RMII_FIFO_DEPTH_MSK, x)
- #define   ADIN1300_GE_RMII_EN			BIT(0)
- 
-+/* RMII fifo depth values */
-+#define ADIN1300_RMII_4_BITS			0x0000
-+#define ADIN1300_RMII_8_BITS			0x0001
-+#define ADIN1300_RMII_12_BITS			0x0002
-+#define ADIN1300_RMII_16_BITS			0x0003
-+#define ADIN1300_RMII_20_BITS			0x0004
-+#define ADIN1300_RMII_24_BITS			0x0005
+diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+new file mode 100644
+index 000000000000..69375cb28e92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/adi,adin.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- /**
-  * struct adin_cfg_reg_map - map a config value to aregister value
-  * @cfg		value in device configuration
-@@ -73,6 +84,16 @@ static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
- 	{ },
- };
- 
-+static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
-+	{ 4,  ADIN1300_RMII_4_BITS },
-+	{ 8,  ADIN1300_RMII_8_BITS },
-+	{ 12, ADIN1300_RMII_12_BITS },
-+	{ 16, ADIN1300_RMII_16_BITS },
-+	{ 20, ADIN1300_RMII_20_BITS },
-+	{ 24, ADIN1300_RMII_24_BITS },
-+	{ },
-+};
++title: Analog Devices ADIN1200/ADIN1300 PHY
 +
- static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
- {
- 	size_t i;
-@@ -156,6 +177,7 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
- 
- static int adin_config_rmii_mode(struct phy_device *phydev)
- {
-+	u32 val;
- 	int reg;
- 
- 	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
-@@ -169,6 +191,13 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
- 
- 	reg |= ADIN1300_GE_RMII_EN;
- 
-+	val = adin_get_reg_value(phydev, "adi,fifo-depth-bits",
-+				 adin_rmii_fifo_depths,
-+				 ADIN1300_RMII_8_BITS);
++maintainers:
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
 +
-+	reg &= ~ADIN1300_GE_RMII_FIFO_DEPTH_MSK;
-+	reg |= ADIN1300_GE_RMII_FIFO_DEPTH_SEL(val);
++description: |
++  Bindings for Analog Devices Industrial Ethernet PHYs
 +
- 	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
- 			     ADIN1300_GE_RMII_CFG_REG, reg);
- }
++allOf:
++  - $ref: ethernet-phy.yaml#
++
++properties:
++  adi,rx-internal-delay-ps:
++    description: |
++      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
++      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
++    enum: [ 1600, 1800, 2000, 2200, 2400 ]
++    default: 2000
++
++  adi,tx-internal-delay-ps:
++    description: |
++      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
++      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
++    enum: [ 1600, 1800, 2000, 2200, 2400 ]
++    default: 2000
++
++  adi,fifo-depth-bits:
++    description: |
++      When operating in RMII mode, this option configures the FIFO depth.
++    enum: [ 4, 8, 12, 16, 20, 24 ]
++    default: 8
++
++  adi,disable-energy-detect:
++    description: |
++      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
++      is enabled if this property is unspecified)
++    type: boolean
++
++examples:
++  - |
++    ethernet {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        phy-mode = "rgmii-id";
++
++        ethernet-phy@0 {
++            reg = <0>;
++
++            adi,rx-internal-delay-ps = <1800>;
++            adi,tx-internal-delay-ps = <2200>;
++        };
++    };
++  - |
++    ethernet {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        phy-mode = "rmii";
++
++        ethernet-phy@1 {
++            reg = <1>;
++
++            adi,fifo-depth-bits = <16>;
++            adi,disable-energy-detect;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e8aa8a667864..fd9ab61c2670 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -944,6 +944,7 @@ L:	netdev@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/net/phy/adin.c
++F:	Documentation/devicetree/bindings/net/adi,adin.yaml
+ 
+ ANALOG DEVICES INC ADIS DRIVER LIBRARY
+ M:	Alexandru Ardelean <alexandru.ardelean@analog.com>
 -- 
 2.20.1
