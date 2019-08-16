@@ -1,76 +1,91 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 1/10] pwm: mediatek: add a property "num-pwms"
-Date: Fri, 16 Aug 2019 09:34:48 +0200
-Message-ID: <20190816073448.37cb7imxnnjdwlix@pengutronix.de>
-References: <1565940088-845-1-git-send-email-sam.shih@mediatek.com>
- <1565940088-845-2-git-send-email-sam.shih@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 2/3] arm64: allwinner: h6: add I2C nodes
+Date: Fri, 16 Aug 2019 09:50:31 +0200
+Message-ID: <20190816075031.zw4bjunn4hfoaq3e@flea>
+References: <20190811090503.32396-1-bshah@kde.org>
+ <20190816064710.18280-1-bshah@kde.org>
+ <20190816064710.18280-3-bshah@kde.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ibqavahcu4hffii3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1565940088-845-2-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <20190816064710.18280-3-bshah@kde.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Shih <sam.shih@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Bhushan Shah <bshah@kde.org>
+Cc: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 03:21:19PM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> This adds a property "num-pwms" to avoid having an endless
-> list of compatibles with no differences for the same driver.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+
+--ibqavahcu4hffii3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Aug 16, 2019 at 12:17:09PM +0530, Bhushan Shah wrote:
+> Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
+> nodes.
+>
+> Suggested-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Bhushan Shah <bshah@kde.org>
 > ---
->  drivers/pwm/pwm-mediatek.c | 35 ++++++++++++++++++++++-------------
->  1 file changed, 22 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index eb6674ce995f..f9d67fb66adb 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
->  };
->  
->  struct mtk_pwm_platform_data {
-> -	unsigned int num_pwms;
-> +	unsigned int fallback_npwms;
->  	bool pwm45_fixup;
->  	bool has_clks;
->  };
-> @@ -226,27 +226,36 @@ static const struct pwm_ops mtk_pwm_ops = {
->  
->  static int mtk_pwm_probe(struct platform_device *pdev)
->  {
-> -	const struct mtk_pwm_platform_data *data;
-> +	struct device_node *np = pdev->dev.of_node;
->  	struct mtk_pwm_chip *pc;
->  	struct resource *res;
-> -	unsigned int i;
-> +	unsigned int i, npwms;
->  	int ret;
->  
->  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
->  	if (!pc)
->  		return -ENOMEM;
->  
-> -	data = of_device_get_match_data(&pdev->dev);
-> -	if (data == NULL)
-> -		return -EINVAL;
-> -	pc->soc = data;
-> +	pc->soc = of_device_get_match_data(&pdev->dev);
+> Changes in v2:
+>   - Add the SoC specific compatible string instead of re-using a31 one.
+>
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56 +++++++++++++++++++-
+>  1 file changed, 55 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index bcecca17d61d..a1a329926540 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -329,6 +329,21 @@
+>  				function = "hdmi";
+>  			};
+>
+> +			i2c0_pins: i2c0-pins {
+> +				pins = "PD25", "PD26";
+> +				function = "i2c0";
+> +			};
+> +
+> +			i2c1_pins: i2c1-pins {
+> +				pins = "PH5", "PH6";
+> +				function = "i2c1";
+> +			};
+> +
+> +			i2c2_pins: i2c2-pins {
+> +				pins = "PD23", "PD24";
+> +				function = "i2c2";
+> +			};
+> +
+>  			mmc0_pins: mmc0-pins {
+>  				pins = "PF0", "PF1", "PF2", "PF3",
+>  				       "PF4", "PF5";
+> @@ -464,6 +479,45 @@
+>  			status = "disabled";
+>  		};
+>
+> +		i2c0: i2c@5002000 {
+> +			compatible = "allwinner,sun50i-h6-i2c";
 
-Droping the check for of_device_get_match_data returning non-NULL is
-unrelated to the official patch's topic.
+This isn't going to work if you don't patch the driver to add the
+compatible. And this isn't what you described in the binding patch.
 
-Other than that I like this patch.
+Maxime
 
-Best regards
-Uwe
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--ibqavahcu4hffii3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVZgRwAKCRDj7w1vZxhR
+xS+HAQCepqHx2ZpfYXULQei3MlCiSsZt/LK4vD5T0th5iQi3YgD/Yh5TJDYYPBYh
+bHb7icMbNnDQjvYijyzCk3IJQmfegAU=
+=b9Qc
+-----END PGP SIGNATURE-----
+
+--ibqavahcu4hffii3--
