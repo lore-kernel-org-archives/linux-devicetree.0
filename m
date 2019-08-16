@@ -1,69 +1,44 @@
-From: Atish Patra <Atish.Patra@wdc.com>
-Subject: Re: [PATCH v2 1/5] RISC-V: Remove per cpu clocksource
-Date: Fri, 16 Aug 2019 18:55:14 +0000
-Message-ID: <089a5ee46759074af391c50f5e9d28344b429de4.camel@wdc.com>
-References: <20190731012418.24565-1-atish.patra@wdc.com>
-         <20190731012418.24565-2-atish.patra@wdc.com>
-         <6ba37c45-2d9b-c01e-5f17-3ab919da4de8@linaro.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v5 00/13] net: phy: adin: add support for Analog
+ Devices PHYs
+Date: Fri, 16 Aug 2019 11:57:21 -0700 (PDT)
+Message-ID: <20190816.115721.2066524764941816948.davem@davemloft.net>
+References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ba37c45-2d9b-c01e-5f17-3ab919da4de8@linaro.org>
-Content-Language: en-US
-Content-ID: <EFC2111BBC7AEE47B65ACD5C5909EF48@namprd04.prod.outlook.com>
+In-Reply-To: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "palmer@sifive.com" <palmer@sifive.com>
-Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Anup Patel <Anup.Patel@wdc.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "info@metux.net" <info@metux.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "allison@lohutok.net" <allison@lohutok.net>, "johan@kernel.org" <johan@kernel.org>, "alexios.zavras@intel.com" <alexios.zavras@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: alexandru.ardelean@analog.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA4LTE2IGF0IDE3OjA5ICswMjAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
-Cj4gT24gMzEvMDcvMjAxOSAwMzoyNCwgQXRpc2ggUGF0cmEgd3JvdGU6DQo+ID4gVGhlcmUgaXMg
-b25seSBvbmUgY2xvY2tzb3VyY2UgaW4gUklTQy1WLiBUaGUgYm9vdCBjcHUgaW5pdGlhbGl6ZXMN
-Cj4gPiB0aGF0IGNsb2Nrc291cmNlLiBObyBuZWVkIHRvIGtlZXAgYSBwZXJjcHUgZGF0YSBzdHJ1
-Y3R1cmUuDQo+IA0KPiBUaGF0IGlzIG5vdCB3aGF0IGlzIHN0YXRlZCBpbiB0aGUgaW5pdGlhbCBw
-YXRjaCBbMV0uDQo+IA0KPiBDYW4geW91IGNsYXJpZnkgdGhhdCA/DQo+IA0KDQpJIHRoaW5rIHdo
-YXQgSSBtZWFudCB0byBzYXkgd2FzICJUaGVyZSBpcyBvbmx5IG9uZSBjbG9ja3NvdXJjZSB1c2Vk
-IGluDQpSSVNDLVYgTGludXgiIGFzIGl0IGlzIGd1cmFudGVlZCB0aGF0IGFsbCB0aGUgdGltZXJz
-IGFjcm9zcyBhbGwgdGhlDQpoYXJ0cyBhcmUgc3luY2hyb25pemVkIHdpdGhpbiBvbmUgdGljayBv
-ZiBlYWNoIG90aGVyIFsyXS4gDQpBcG9sb2dpZXMgZm9yIG5vdCBiZWluZyB2ZXJib3NlIGhlcmUu
-DQoNCkhvd2V2ZXIsIHJlYWRpbmcgdGhlIHByaXZpbGVnZSBzcGVjaWZpY2F0aW9uKDEuMTItZHJh
-ZnQpIA0KDQpTZWN0aW9uLiAzLjEuMTAgc3RhdGVzIHRoYXQgDQoNCiJBY2N1cmF0ZSByZWFsLXRp
-bWUgY2xvY2tzIChSVENzKSBhcmUgcmVsYXRpdmVseSBleHBlbnNpdmUgdG8gcHJvdmlkZQ0KKHJl
-cXVpcmluZyBhIGNyeXN0YWwgb3IgTUVNUyBvc2NpbGxhdG9yKSBhbmQgaGF2ZSB0byBydW4gZXZl
-biB3aGVuIHRoZQ0KcmVzdCBvZiBzeXN0ZW0gaXMgcG93ZXJlZCBkb3duLCBhbmQgc28gdGhlcmUg
-aXMgdXN1YWxseSBvbmx5IG9uZSBpbiBhDQpzeXN0ZW0gbG9jYXRlZCBpbiBhIGRpZmZlcmVudCBm
-cmVxdWVuY3kvdm9sdGFnZSBkb21haW4gZnJvbSB0aGUNCnByb2Nlc3NvcnMuIEhlbmNlLCB0aGUg
-UlRDIG11c3QgYmUgc2hhcmVkIGJ5IGFsbCB0aGUgaGFydHMgaW4gYSBzeXN0ZW0iDQoNClRoaXMg
-aXMgZGlmZmVyZW50IGZyb20gdGhlIGNvbW1pdCB0ZXh0IGluIFsxXS4NCg0KUGVyaGFwcyBJIG1p
-c3VuZGVyc3Rvb2Qgc29tZXRoaW5nLiBAUGFsbWVyID8NCg0KDQpbMl0gDQpodHRwczovL2VsaXhp
-ci5ib290bGluLmNvbS9saW51eC92NS4zLXJjNC9zb3VyY2UvZHJpdmVycy9jbG9ja3NvdXJjZS90
-aW1lci1yaXNjdi5jI0w0NA0KDQo+IFRoYW5rcw0KPiANCj4gICAtLSBEYW5pZWwNCj4gDQo+IFsx
-XSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOC84LzQvNTENCj4gDQo+IA0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
-cml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXJpc2N2LmMgfCA2ICsrLS0tLQ0KPiA+ICAxIGZpbGUg
-Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXJpc2N2LmMNCj4gPiBiL2RyaXZlcnMv
-Y2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYw0KPiA+IGluZGV4IDVlNjAzOGZiZjExNS4uMDllMDMx
-MTc2YmM2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3Yu
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYw0KPiA+IEBAIC01
-NSw3ICs1NSw3IEBAIHN0YXRpYyB1NjQgcmlzY3Zfc2NoZWRfY2xvY2sodm9pZCkNCj4gPiAgCXJl
-dHVybiBnZXRfY3ljbGVzNjQoKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGljIERFRklORV9Q
-RVJfQ1BVKHN0cnVjdCBjbG9ja3NvdXJjZSwgcmlzY3ZfY2xvY2tzb3VyY2UpID0gew0KPiA+ICtz
-dGF0aWMgc3RydWN0IGNsb2Nrc291cmNlIHJpc2N2X2Nsb2Nrc291cmNlID0gew0KPiA+ICAJLm5h
-bWUJCT0gInJpc2N2X2Nsb2Nrc291cmNlIiwNCj4gPiAgCS5yYXRpbmcJCT0gMzAwLA0KPiA+ICAJ
-Lm1hc2sJCT0gQ0xPQ0tTT1VSQ0VfTUFTSyg2NCksDQo+ID4gQEAgLTkyLDcgKzkyLDYgQEAgdm9p
-ZCByaXNjdl90aW1lcl9pbnRlcnJ1cHQodm9pZCkNCj4gPiAgc3RhdGljIGludCBfX2luaXQgcmlz
-Y3ZfdGltZXJfaW5pdF9kdChzdHJ1Y3QgZGV2aWNlX25vZGUgKm4pDQo+ID4gIHsNCj4gPiAgCWlu
-dCBjcHVpZCwgaGFydGlkLCBlcnJvcjsNCj4gPiAtCXN0cnVjdCBjbG9ja3NvdXJjZSAqY3M7DQo+
-ID4gIA0KPiA+ICAJaGFydGlkID0gcmlzY3Zfb2ZfcHJvY2Vzc29yX2hhcnRpZChuKTsNCj4gPiAg
-CWlmIChoYXJ0aWQgPCAwKSB7DQo+ID4gQEAgLTExMiw4ICsxMTEsNyBAQCBzdGF0aWMgaW50IF9f
-aW5pdCByaXNjdl90aW1lcl9pbml0X2R0KHN0cnVjdA0KPiA+IGRldmljZV9ub2RlICpuKQ0KPiA+
-ICANCj4gPiAgCXByX2luZm8oIiVzOiBSZWdpc3RlcmluZyBjbG9ja3NvdXJjZSBjcHVpZCBbJWRd
-IGhhcnRpZCBbJWRdXG4iLA0KPiA+ICAJICAgICAgIF9fZnVuY19fLCBjcHVpZCwgaGFydGlkKTsN
-Cj4gPiAtCWNzID0gcGVyX2NwdV9wdHIoJnJpc2N2X2Nsb2Nrc291cmNlLCBjcHVpZCk7DQo+ID4g
-LQllcnJvciA9IGNsb2Nrc291cmNlX3JlZ2lzdGVyX2h6KGNzLCByaXNjdl90aW1lYmFzZSk7DQo+
-ID4gKwllcnJvciA9IGNsb2Nrc291cmNlX3JlZ2lzdGVyX2h6KCZyaXNjdl9jbG9ja3NvdXJjZSwN
-Cj4gPiByaXNjdl90aW1lYmFzZSk7DQo+ID4gIAlpZiAoZXJyb3IpIHsNCj4gPiAgCQlwcl9lcnIo
-IlJJU0NWIHRpbWVyIHJlZ2lzdGVyIGZhaWxlZCBbJWRdIGZvciBjcHUgPQ0KPiA+IFslZF1cbiIs
-DQo+ID4gIAkJICAgICAgIGVycm9yLCBjcHVpZCk7DQo+ID4gDQo+IA0KPiANCg0K
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date: Fri, 16 Aug 2019 16:09:58 +0300
+
+> This changeset adds support for Analog Devices Industrial Ethernet PHYs.
+> Particularly the PHYs this driver adds support for:
+>  * ADIN1200 - Robust, Industrial, Low Power 10/100 Ethernet PHY
+>  * ADIN1300 - Robust, Industrial, Low Latency 10/100/1000 Gigabit
+>    Ethernet PHY
+> 
+> The 2 chips are register compatible with one another. The main
+> difference being that ADIN1200 doesn't operate in gigabit mode.
+> 
+> The chips can be operated by the Generic PHY driver as well via the
+> standard IEEE PHY registers (0x0000 - 0x000F) which are supported by the
+> kernel as well. This assumes that configuration of the PHY has been done
+> completely in HW, according to spec, i.e. no extra SW configuration
+> required.
+> 
+> This changeset also implements the ability to configure the chips via SW
+> registers.
+> 
+> Datasheets:
+>   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1300.pdf
+>   https://www.analog.com/media/en/technical-documentation/data-sheets/ADIN1200.pdf
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Series applied, thank you.
