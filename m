@@ -1,99 +1,69 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 05/19] irqchip/mmp: do not use of_address_to_resource()
- to get mux regs
-Date: Fri, 16 Aug 2019 20:41:22 +0200
-Message-ID: <e0c0cf62a1f087fd6c1d7307e5e2a65603148341.camel@v3.sk>
-References: <20190809093158.7969-1-lkundrak@v3.sk>
-         <20190809093158.7969-6-lkundrak@v3.sk>
-         <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
+From: Atish Patra <Atish.Patra@wdc.com>
+Subject: Re: [PATCH v2 1/5] RISC-V: Remove per cpu clocksource
+Date: Fri, 16 Aug 2019 18:55:14 +0000
+Message-ID: <089a5ee46759074af391c50f5e9d28344b429de4.camel@wdc.com>
+References: <20190731012418.24565-1-atish.patra@wdc.com>
+         <20190731012418.24565-2-atish.patra@wdc.com>
+         <6ba37c45-2d9b-c01e-5f17-3ab919da4de8@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
+In-Reply-To: <6ba37c45-2d9b-c01e-5f17-3ab919da4de8@linaro.org>
+Content-Language: en-US
+Content-ID: <EFC2111BBC7AEE47B65ACD5C5909EF48@namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "palmer@sifive.com" <palmer@sifive.com>
+Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Anup Patel <Anup.Patel@wdc.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "info@metux.net" <info@metux.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "allison@lohutok.net" <allison@lohutok.net>, "johan@kernel.org" <johan@kernel.org>, "alexios.zavras@intel.com" <alexios.zavras@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-08-09 at 13:12 +0100, Marc Zyngier wrote:
-> On 09/08/2019 10:31, Lubomir Rintel wrote:
-> > The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
-> > are offsets from intc's base, not addresses on the parent bus. At this
-> > point it probably can't be fixed.
-> > 
-> > On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
-> > axi bus, and thus of_address_to_resource() won't work. We should treat
-> > the values as mere integers as opposed to bus addresses.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > ---
-> >  drivers/irqchip/irq-mmp.c | 20 +++++++++++---------
-> >  1 file changed, 11 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-> > index 14618dc0bd396..af9cba4a51c2e 100644
-> > --- a/drivers/irqchip/irq-mmp.c
-> > +++ b/drivers/irqchip/irq-mmp.c
-> > @@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
-> >  static int __init mmp2_mux_of_init(struct device_node *node,
-> >  				   struct device_node *parent)
-> >  {
-> > -	struct resource res;
-> >  	int i, ret, irq, j = 0;
-> >  	u32 nr_irqs, mfp_irq;
-> > +	u32 reg[4];
-> >  
-> >  	if (!parent)
-> >  		return -ENODEV;
-> > @@ -438,18 +438,20 @@ static int __init mmp2_mux_of_init(struct device_node *node,
-> >  		pr_err("Not found mrvl,intc-nr-irqs property\n");
-> >  		return -EINVAL;
-> >  	}
-> > -	ret = of_address_to_resource(node, 0, &res);
-> > +
-> > +	/*
-> > +	 * For historical reasonsm, the "regs" property of the
-> > +	 * mrvl,mmp2-mux-intc is not a regular * "regs" property containing
-> > +	 * addresses on the parent bus, but offsets from the intc's base.
-> > +	 * That is why we can't use of_address_to_resource() here.
-> > +	 */
-> > +	ret = of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg));
-> 
-> This will return 0 even if you've read less than your expected 4 u32s.
-> You may want to try of_property_read_variable_u32_array instead.
-
-Will it? Unless I'm reading the of_property_read_u32_array()
-documentation wrong, it suggests that would return -EOVERFLOW in that
-case.
-
-It ignores the extra values it the property is larger. I guess that is
-not a good thing and we still want to use
-of_property_read_variable_u32_array() though.
-
-> >  	if (ret < 0) {
-> >  		pr_err("Not found reg property\n");
-> >  		return -EINVAL;
-> >  	}
-> > -	icu_data[i].reg_status = mmp_icu_base + res.start;
-> > -	ret = of_address_to_resource(node, 1, &res);
-> > -	if (ret < 0) {
-> > -		pr_err("Not found reg property\n");
-> > -		return -EINVAL;
-> > -	}
-> > -	icu_data[i].reg_mask = mmp_icu_base + res.start;
-> > +	icu_data[i].reg_status = mmp_icu_base + reg[0];
-> > +	icu_data[i].reg_mask = mmp_icu_base + reg[2];
-> >  	icu_data[i].cascade_irq = irq_of_parse_and_map(node, 0);
-> >  	if (!icu_data[i].cascade_irq)
-> >  		return -EINVAL;
-> > 
-> 
-> Thanks,
-> 
-> 	M.
-
-Thanks
-Lubo
+T24gRnJpLCAyMDE5LTA4LTE2IGF0IDE3OjA5ICswMjAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
+Cj4gT24gMzEvMDcvMjAxOSAwMzoyNCwgQXRpc2ggUGF0cmEgd3JvdGU6DQo+ID4gVGhlcmUgaXMg
+b25seSBvbmUgY2xvY2tzb3VyY2UgaW4gUklTQy1WLiBUaGUgYm9vdCBjcHUgaW5pdGlhbGl6ZXMN
+Cj4gPiB0aGF0IGNsb2Nrc291cmNlLiBObyBuZWVkIHRvIGtlZXAgYSBwZXJjcHUgZGF0YSBzdHJ1
+Y3R1cmUuDQo+IA0KPiBUaGF0IGlzIG5vdCB3aGF0IGlzIHN0YXRlZCBpbiB0aGUgaW5pdGlhbCBw
+YXRjaCBbMV0uDQo+IA0KPiBDYW4geW91IGNsYXJpZnkgdGhhdCA/DQo+IA0KDQpJIHRoaW5rIHdo
+YXQgSSBtZWFudCB0byBzYXkgd2FzICJUaGVyZSBpcyBvbmx5IG9uZSBjbG9ja3NvdXJjZSB1c2Vk
+IGluDQpSSVNDLVYgTGludXgiIGFzIGl0IGlzIGd1cmFudGVlZCB0aGF0IGFsbCB0aGUgdGltZXJz
+IGFjcm9zcyBhbGwgdGhlDQpoYXJ0cyBhcmUgc3luY2hyb25pemVkIHdpdGhpbiBvbmUgdGljayBv
+ZiBlYWNoIG90aGVyIFsyXS4gDQpBcG9sb2dpZXMgZm9yIG5vdCBiZWluZyB2ZXJib3NlIGhlcmUu
+DQoNCkhvd2V2ZXIsIHJlYWRpbmcgdGhlIHByaXZpbGVnZSBzcGVjaWZpY2F0aW9uKDEuMTItZHJh
+ZnQpIA0KDQpTZWN0aW9uLiAzLjEuMTAgc3RhdGVzIHRoYXQgDQoNCiJBY2N1cmF0ZSByZWFsLXRp
+bWUgY2xvY2tzIChSVENzKSBhcmUgcmVsYXRpdmVseSBleHBlbnNpdmUgdG8gcHJvdmlkZQ0KKHJl
+cXVpcmluZyBhIGNyeXN0YWwgb3IgTUVNUyBvc2NpbGxhdG9yKSBhbmQgaGF2ZSB0byBydW4gZXZl
+biB3aGVuIHRoZQ0KcmVzdCBvZiBzeXN0ZW0gaXMgcG93ZXJlZCBkb3duLCBhbmQgc28gdGhlcmUg
+aXMgdXN1YWxseSBvbmx5IG9uZSBpbiBhDQpzeXN0ZW0gbG9jYXRlZCBpbiBhIGRpZmZlcmVudCBm
+cmVxdWVuY3kvdm9sdGFnZSBkb21haW4gZnJvbSB0aGUNCnByb2Nlc3NvcnMuIEhlbmNlLCB0aGUg
+UlRDIG11c3QgYmUgc2hhcmVkIGJ5IGFsbCB0aGUgaGFydHMgaW4gYSBzeXN0ZW0iDQoNClRoaXMg
+aXMgZGlmZmVyZW50IGZyb20gdGhlIGNvbW1pdCB0ZXh0IGluIFsxXS4NCg0KUGVyaGFwcyBJIG1p
+c3VuZGVyc3Rvb2Qgc29tZXRoaW5nLiBAUGFsbWVyID8NCg0KDQpbMl0gDQpodHRwczovL2VsaXhp
+ci5ib290bGluLmNvbS9saW51eC92NS4zLXJjNC9zb3VyY2UvZHJpdmVycy9jbG9ja3NvdXJjZS90
+aW1lci1yaXNjdi5jI0w0NA0KDQo+IFRoYW5rcw0KPiANCj4gICAtLSBEYW5pZWwNCj4gDQo+IFsx
+XSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOC84LzQvNTENCj4gDQo+IA0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
+cml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXJpc2N2LmMgfCA2ICsrLS0tLQ0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXJpc2N2LmMNCj4gPiBiL2RyaXZlcnMv
+Y2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYw0KPiA+IGluZGV4IDVlNjAzOGZiZjExNS4uMDllMDMx
+MTc2YmM2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3Yu
+Yw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItcmlzY3YuYw0KPiA+IEBAIC01
+NSw3ICs1NSw3IEBAIHN0YXRpYyB1NjQgcmlzY3Zfc2NoZWRfY2xvY2sodm9pZCkNCj4gPiAgCXJl
+dHVybiBnZXRfY3ljbGVzNjQoKTsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGljIERFRklORV9Q
+RVJfQ1BVKHN0cnVjdCBjbG9ja3NvdXJjZSwgcmlzY3ZfY2xvY2tzb3VyY2UpID0gew0KPiA+ICtz
+dGF0aWMgc3RydWN0IGNsb2Nrc291cmNlIHJpc2N2X2Nsb2Nrc291cmNlID0gew0KPiA+ICAJLm5h
+bWUJCT0gInJpc2N2X2Nsb2Nrc291cmNlIiwNCj4gPiAgCS5yYXRpbmcJCT0gMzAwLA0KPiA+ICAJ
+Lm1hc2sJCT0gQ0xPQ0tTT1VSQ0VfTUFTSyg2NCksDQo+ID4gQEAgLTkyLDcgKzkyLDYgQEAgdm9p
+ZCByaXNjdl90aW1lcl9pbnRlcnJ1cHQodm9pZCkNCj4gPiAgc3RhdGljIGludCBfX2luaXQgcmlz
+Y3ZfdGltZXJfaW5pdF9kdChzdHJ1Y3QgZGV2aWNlX25vZGUgKm4pDQo+ID4gIHsNCj4gPiAgCWlu
+dCBjcHVpZCwgaGFydGlkLCBlcnJvcjsNCj4gPiAtCXN0cnVjdCBjbG9ja3NvdXJjZSAqY3M7DQo+
+ID4gIA0KPiA+ICAJaGFydGlkID0gcmlzY3Zfb2ZfcHJvY2Vzc29yX2hhcnRpZChuKTsNCj4gPiAg
+CWlmIChoYXJ0aWQgPCAwKSB7DQo+ID4gQEAgLTExMiw4ICsxMTEsNyBAQCBzdGF0aWMgaW50IF9f
+aW5pdCByaXNjdl90aW1lcl9pbml0X2R0KHN0cnVjdA0KPiA+IGRldmljZV9ub2RlICpuKQ0KPiA+
+ICANCj4gPiAgCXByX2luZm8oIiVzOiBSZWdpc3RlcmluZyBjbG9ja3NvdXJjZSBjcHVpZCBbJWRd
+IGhhcnRpZCBbJWRdXG4iLA0KPiA+ICAJICAgICAgIF9fZnVuY19fLCBjcHVpZCwgaGFydGlkKTsN
+Cj4gPiAtCWNzID0gcGVyX2NwdV9wdHIoJnJpc2N2X2Nsb2Nrc291cmNlLCBjcHVpZCk7DQo+ID4g
+LQllcnJvciA9IGNsb2Nrc291cmNlX3JlZ2lzdGVyX2h6KGNzLCByaXNjdl90aW1lYmFzZSk7DQo+
+ID4gKwllcnJvciA9IGNsb2Nrc291cmNlX3JlZ2lzdGVyX2h6KCZyaXNjdl9jbG9ja3NvdXJjZSwN
+Cj4gPiByaXNjdl90aW1lYmFzZSk7DQo+ID4gIAlpZiAoZXJyb3IpIHsNCj4gPiAgCQlwcl9lcnIo
+IlJJU0NWIHRpbWVyIHJlZ2lzdGVyIGZhaWxlZCBbJWRdIGZvciBjcHUgPQ0KPiA+IFslZF1cbiIs
+DQo+ID4gIAkJICAgICAgIGVycm9yLCBjcHVpZCk7DQo+ID4gDQo+IA0KPiANCg0K
