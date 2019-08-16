@@ -1,100 +1,38 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X
- in EP mode
-Date: Fri, 16 Aug 2019 11:14:53 +0000
-Message-ID: <AM5PR04MB3299ABCA78FB6B105F4BCDC7F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-2-xiaowei.bao@nxp.com>
- <20190815115340.GG43882@e119886-lin.cambridge.arm.com>
- <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <02cf2f3d-336c-85bb-1fb5-a141c5a9cf79@ti.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] Revert "ARM: dts: rockchip: add startup delay to rk3288-veyron panel-regulators"
+Date: Fri, 16 Aug 2019 13:28:25 +0200
+Message-ID: <1641883.xsURkgBn4i@phil>
+References: <20190620182056.61552-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <02cf2f3d-336c-85bb-1fb5-a141c5a9cf79@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190620182056.61552-1-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Andrew Murray <andrew.murray@arm.com>
-Cc: "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-ar>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: enric.balletbo@collabora.com, mka@chromium.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
-cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOcTqONTCMTbI1SAxODo1MA0KPiBU
-bzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBBbmRyZXcgTXVycmF5DQo+IDxh
-bmRyZXcubXVycmF5QGFybS5jb20+DQo+IENjOiBqaW5nb29oYW4xQGdtYWlsLmNvbTsgZ3VzdGF2
-by5waW1lbnRlbEBzeW5vcHN5cy5jb207DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRA
-a2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7
-IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNv
-bTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IE0uaC4gTGlh
-biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29t
-PjsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IFoucS4g
-SG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwMi8xMF0g
-UENJOiBkZXNpZ253YXJlLWVwOiBBZGQgdGhlIGRvb3JiZWxsIG1vZGUgb2YNCj4gTVNJLVggaW4g
-RVAgbW9kZQ0KPiANCj4gSGksDQo+IA0KPiBPbiAxNi8wOC8xOSA4OjI4IEFNLCBYaWFvd2VpIEJh
-byB3cm90ZToNCj4gPg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+
-IEZyb206IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPj4gU2VudDog
-MjAxOcTqONTCMTXI1SAxOTo1NA0KPiA+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
-cC5jb20+DQo+ID4+IENjOiBqaW5nb29oYW4xQGdtYWlsLmNvbTsgZ3VzdGF2by5waW1lbnRlbEBz
-eW5vcHN5cy5jb207DQo+ID4+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBM
-aSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsNCj4gPj4gbG9yZW56by5waWVy
-YWxpc2lAYXJtLmNvbTsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7
-DQo+ID4+IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdQ0KPiA8
-bWluZ2thaS5odUBueHAuY29tPjsNCj4gPj4gUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBs
-aW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiA+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiA+PiBT
-dWJqZWN0OiBSZTogW1BBVENIIDAyLzEwXSBQQ0k6IGRlc2lnbndhcmUtZXA6IEFkZCB0aGUgZG9v
-cmJlbGwgbW9kZQ0KPiA+PiBvZiBNU0ktWCBpbiBFUCBtb2RlDQo+ID4+DQo+ID4+IE9uIFRodSwg
-QXVnIDE1LCAyMDE5IGF0IDA0OjM3OjA4UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+
-Pj4gQWRkIHRoZSBkb29yYmVsbCBtb2RlIG9mIE1TSS1YIGluIEVQIG1vZGUuDQo+ID4+Pg0KPiA+
-Pj4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4+
-PiAtLS0NCj4gPj4+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUt
-ZXAuYyB8IDE0DQo+ICsrKysrKysrKysrKysrDQo+ID4+PiAgZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9kd2MvcGNpZS1kZXNpZ253YXJlLmggICAgfCAxNA0KPiArKysrKysrKysrKysrKw0KPiA+Pj4g
-IDIgZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQ0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYw0KPiA+
-Pj4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYw0KPiA+
-Pj4gaW5kZXggNzVlMjk1NS4uZTNhN2NkZiAxMDA2NDQNCj4gPj4+IC0tLSBhL2RyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jDQo+ID4+PiArKysgYi9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYw0KPiA+Pj4gQEAgLTQ1NCw2
-ICs0NTQsMjAgQEAgaW50IGR3X3BjaWVfZXBfcmFpc2VfbXNpX2lycShzdHJ1Y3QNCj4gZHdfcGNp
-ZV9lcA0KPiA+PiAqZXAsIHU4IGZ1bmNfbm8sDQo+ID4+PiAgCXJldHVybiAwOw0KPiA+Pj4gIH0N
-Cj4gPj4+DQo+ID4+PiAraW50IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnFfZG9vcmJlbGwoc3Ry
-dWN0IGR3X3BjaWVfZXAgKmVwLCB1OA0KPiA+PiBmdW5jX25vLA0KPiA+Pj4gKwkJCQkgICAgICAg
-dTE2IGludGVycnVwdF9udW0pDQo+ID4+PiArew0KPiA+Pj4gKwlzdHJ1Y3QgZHdfcGNpZSAqcGNp
-ID0gdG9fZHdfcGNpZV9mcm9tX2VwKGVwKTsNCj4gPj4+ICsJdTMyIG1zZ19kYXRhOw0KPiA+Pj4g
-Kw0KPiA+Pj4gKwltc2dfZGF0YSA9IChmdW5jX25vIDw8IFBDSUVfTVNJWF9ET09SQkVMTF9QRl9T
-SElGVCkgfA0KPiA+Pj4gKwkJICAgKGludGVycnVwdF9udW0gLSAxKTsNCj4gPj4+ICsNCj4gPj4+
-ICsJZHdfcGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9NU0lYX0RPT1JCRUxMLCBtc2dfZGF0YSk7
-DQo+ID4+PiArDQo+ID4+PiArCXJldHVybiAwOw0KPiA+Pj4gK30NCj4gPj4+ICsNCj4gPj4+ICBp
-bnQgZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycShzdHJ1Y3QgZHdfcGNpZV9lcCAqZXAsIHU4IGZ1
-bmNfbm8sDQo+ID4+PiAgCQkJICAgICAgdTE2IGludGVycnVwdF9udW0pDQo+ID4+DQo+ID4+IEhh
-dmUgSSB1bmRlcnN0b29kIGNvcnJlY3RseSB0aGF0IHRoZSBoYXJkd2FyZSBwcm92aWRlcyBhbiBh
-bHRlcm5hdGl2ZQ0KPiA+PiBtZWNoYW5pc20gdGhhdCBhbGxvd3MgZm9yIHJhaXNpbmcgTVNJLVgg
-aW50ZXJydXB0cyB3aXRob3V0IHRoZSBib3RoZXINCj4gPj4gb2YgcmVhZGluZyB0aGUgY2FwYWJp
-bGl0aWVzIHJlZ2lzdGVycz8NCj4gPiBZZXMsIHRoZSBoYXJkd2FyZSBwcm92aWRlIHR3byB3YXkg
-dG8gTVNJLVgsIHBsZWFzZSBjaGVjayB0aGUgcGFnZSA0OTINCj4gPiBvZg0KPiA+IERXQ19wY2ll
-X2RtX3JlZ2lzdGVyc180LjMwIE1lbnUuDQo+ID4gTVNJWF9ET09SQkVMTF9PRkYgb24gcGFnZSA0
-OTIgMHg5NDggRGVzY3JpcHRpb246IE1TSS1YIERvb3JiZWxsDQo+ID4gUmVnaXN0ZXIuLi4uPg0K
-PiA+Pg0KPiA+PiBJZiBzbyBpcyB0aGVyZSBhbnkgZ29vZCByZWFzb24gdG8ga2VlcCBkd19wY2ll
-X2VwX3JhaXNlX21zaXhfaXJxPw0KPiA+PiAoQW5kIHRodXMgdXNlIGl0IGluIGR3X3BsYXRfcGNp
-ZV9lcF9yYWlzZV9pcnEgYWxzbyk/DQo+ID4gSSBhbSBub3Qgc3VyZSwgYnV0IEkgdGhpbmsgdGhl
-IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEgZnVuY3Rpb24gaXMNCj4gPiBub3QgY29ycmVjdCwg
-YmVjYXVzZSBJIHRoaW5rIHdlIGNhbid0IGdldCB0aGUgTVNJWCB0YWJsZSBmcm9tIHRoZQ0KPiA+
-IGFkZHJlc3MgZXAtPnBoeXNfYmFzZSArIHRibF9hZGRyLCBidXQgSSBhbHNvIGRvbid0IGtub3cg
-d2hlcmUgSSBjYW4gZ2V0IHRoZQ0KPiBjb3JyZWN0IE1TSVggdGFibGUuDQo+IA0KPiBTb21ldGlt
-ZSBiYWNrIHdoZW4gSSB0cmllZCByYWlzaW5nIE1TSS1YIGZyb20gRVAsIGl0IHdhcyBmYWlsaW5n
-LiBJdCdzIHF1aXRlDQo+IHBvc3NpYmxlIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEgZnVuY3Rp
-b24gaXMgbm90IGNvcnJlY3QuDQo+IA0KPiBNU0ktWCB0YWJsZSBjYW4gYmUgb2J0YWluZWQgZnJv
-bSB0aGUgaW5ib3VuZCBBVFUgY29ycmVzcG9uZGluZyB0byB0aGUgTVNJWA0KPiBiYXIuDQo+IElN
-TyBNU0ktWCBzdXBwb3J0IGluIEVQIG1vZGUgbmVlZHMgcmV3b3JrLiBGb3IgaW5zdGFuY2Ugc2V0
-X21zaXggc2hvdWxkDQo+IGFsc28gdGFrZSBCQVIgbnVtYmVyIGFzIGlucHV0IHRvIGJlIGNvbmZp
-Z3VyZWQgaW4gdGhlIE1TSS1YIGNhcGFiaWxpdHkuIFRoZQ0KPiBmdW5jdGlvbiBkcml2ZXIgKHBj
-aS1lcGYtdGVzdC5jKSBzaG91bGQgYWxsb2NhdGUgbWVtb3J5IHRha2luZyBpbnRvIGFjY291bnQg
-dGhlDQo+IE1TSS1YIHRhYmxlLg0KSGkgS2lzaG9uLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIg
-ZXhwbGFpbiwgeWVzLCB3ZSBjYW4gZ2V0IHRoZSBNU0ktWCB0YWJsZSBmcm9tIHRoZSBpbmJvdW5k
-IEFUVSBvZg0KdGhlIE1TSVggQkFSLg0KPiANCj4gVGhhbmtzDQo+IEtpc2hvbg0K
+Am Donnerstag, 20. Juni 2019, 20:20:56 CEST schrieb Douglas Anderson:
+> This reverts commit 1f45e8c6d0161f044d679f242fe7514e2625af4a.
+> 
+> This 100 ms mystery delay is not on downstream kernels and no longer
+> seems needed on upstream kernels either [1].  Presumably something in the
+> meantime has made things better.  A few possibilities for patches that
+> have landed in the meantime that could have made this better are
+> commit 3157694d8c7f ("pwm-backlight: Add support for PWM delays
+> proprieties."), commit 5fb5caee92ba ("pwm-backlight: Enable/disable
+> the PWM before/after LCD enable toggle."), and commit 6d5922dd0d60
+> ("ARM: dts: rockchip: set PWM delay backlight settings for Veyron")
+> 
+> Let's revert and get our 100 ms back.
+> 
+> [1] https://lkml.kernel.org/r/2226970.BAPq4liE1j@diego
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+I've rebased the change on top of Matthias' veyron display reorganization
+and applied it for 5.4
+
+Thanks
+Heiko
