@@ -1,41 +1,71 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 14/19] ARM: mmp: add support for MMP3 SoC
-Date: Fri, 16 Aug 2019 11:06:00 -0700
-Message-ID: <20190816180601.427BC20665@mail.kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 15/19] ARM: mmp: add SMP support
+Date: Fri, 16 Aug 2019 11:11:00 -0700
+Message-ID: <a433ba97-d317-2876-931b-8e4930681711@gmail.com>
 References: <20190809093158.7969-1-lkundrak@v3.sk>
- <20190809093158.7969-15-lkundrak@v3.sk>
+ <20190809093158.7969-16-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190809093158.7969-15-lkundrak@v3.sk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190809093158.7969-16-lkundrak@v3.sk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lubomir Rintel (2019-08-09 02:31:53)
-> diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
-> index 7bc7ac69391e3..deb069a4e4215 100644
-> --- a/drivers/clk/mmp/Makefile
-> +++ b/drivers/clk/mmp/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+On 8/9/19 2:31 AM, Lubomir Rintel wrote:
+> Used to bring up the second core on MMP3.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  arch/arm/mach-mmp/Makefile  |  3 +++
+>  arch/arm/mach-mmp/platsmp.c | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+>  create mode 100644 arch/arm/mach-mmp/platsmp.c
+> 
+> diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
+> index 322c1c97dc900..7b3a7f979eece 100644
+> --- a/arch/arm/mach-mmp/Makefile
+> +++ b/arch/arm/mach-mmp/Makefile
+> @@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
+>  obj-$(CONFIG_CPU_PXA910)	+= pm-pxa910.o
+>  obj-$(CONFIG_CPU_MMP2)		+= pm-mmp2.o
+>  endif
+> +ifeq ($(CONFIG_SMP),y)
+> +obj-$(CONFIG_MACH_MMP3_DT)	+= platsmp.o
+> +endif
 >  
->  obj-$(CONFIG_MACH_MMP_DT) += clk-of-pxa168.o clk-of-pxa910.o
->  obj-$(CONFIG_MACH_MMP2_DT) += clk-of-mmp2.o
-> +obj-$(CONFIG_MACH_MMP3_DT) += clk-of-mmp2.o
->  
+>  # board support
+>  obj-$(CONFIG_MACH_ASPENITE)	+= aspenite.o
+> diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
+> new file mode 100644
+> index 0000000000000..255df640b5bc1
+> --- /dev/null
+> +++ b/arch/arm/mach-mmp/platsmp.c
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
+> + */
+> +#include <linux/io.h>
+> +#include <asm/smp_scu.h>
+> +#include <asm/smp.h>
+> +#include "addr-map.h"
+> +
+> +#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
+> +
+> +static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> +{
+> +	/*
+> +	 * Apparently, the boot ROM on the second core spins on this
+> +	 * register becoming non-zero and then jumps to the address written
+> +	 * there. No IPIs involved.
+> +	 */
+> +	__raw_writel(virt_to_phys(secondary_startup), SW_BRANCH_VIRT_ADDR);
 
-Maybe make a Kconfig variable in drivers/clk/mmp/Kconfig that builds
-clk-of-mmp2.c and is selected by MACH_MMP*_DT?
-
->  obj-$(CONFIG_CPU_PXA168) += clk-pxa168.o
->  obj-$(CONFIG_CPU_PXA910) += clk-pxa910.o
+You would want to use __pa_symbol() here (which is equivalent, but will
+avoid barfing on you with CONFIG_DEBUG_VIRTUAL).
+-- 
+Florian
