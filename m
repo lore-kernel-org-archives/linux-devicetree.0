@@ -1,93 +1,38 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv3 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Date: Fri, 16 Aug 2019 04:17:32 +0000
-Message-ID: <DB8PR04MB67473C3465BB12B12770683784AF0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190806061553.19934-1-xiaowei.bao@nxp.com>
- <20190806061553.19934-2-xiaowei.bao@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
+Date: Fri, 16 Aug 2019 09:54:40 +0530
+Message-ID: <20190816042440.GY12733@vkoul-mobl.Dlink>
+References: <20190814122958.4981-1-vkoul@kernel.org>
+ <20190814122958.4981-2-vkoul@kernel.org>
+ <20190814171946.E9E8D20665@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190806061553.19934-2-xiaowei.bao@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190814171946.E9E8D20665@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWGlhb3dlaSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBYaWFv
-d2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU2VudDogMjAxOcTqONTCNsjVIDE0OjE2
-DQo+IFRvOiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0
-bGFuZEBhcm0uY29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlA
-bnhwLmNvbT47IGtpc2hvbkB0aS5jb207DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGFy
-bmRAYXJuZGIuZGU7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiBNLmguIExpYW4gPG1p
-bmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47DQo+
-IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IFJveSBaYW5nIDxyb3kuemFuZ0BueHAu
-Y29tPjsNCj4ga3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZzsgcG9tYnJlZGFubmVAbmV4Yi5j
-b207DQo+IHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9y
-ZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMt
-ZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gQ2M6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAu
-Y29tPjsgWi5xLiBIb3UNCj4gPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFU
-Q0h2MyAyLzNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBQQ0llIGNvbnRyb2xsZXIgRFQgbm9k
-ZXMNCj4gDQo+IExTMTAyOGEgaW1wbGVtZW50cyAyIFBDSWUgMy4wIGNvbnRyb2xsZXJzLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFNp
-Z25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+IC0tLQ0K
-PiB2MjoNCj4gIC0gRml4IHVwIHRoZSBsZWdhY3kgSU5UeCBhbGxvY2F0ZSBmYWlsZWQgaXNzdWUu
-DQo+IHYzOg0KPiAgLSBubyBjaGFuZ2UuDQo+IA0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8IDUyDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-DQo+ICAxIGZpbGUgY2hhbmdlZCwgNTIgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+IGluZGV4IGFlZjVi
-MDYuLjBiNTQyZWQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
-L2ZzbC1sczEwMjhhLmR0c2kNCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-ZnNsLWxzMTAyOGEuZHRzaQ0KPiBAQCAtNTAzLDYgKzUwMyw1OCBAQA0KPiAgCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsNCj4gIAkJfTsNCj4gDQo+ICsJCXBjaWVAMzQwMDAwMCB7DQo+ICsJCQljb21w
-YXRpYmxlID0gImZzbCxsczEwMjhhLXBjaWUiOw0KPiArCQkJcmVnID0gPDB4MDAgMHgwMzQwMDAw
-MCAweDAgMHgwMDEwMDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gcmVnaXN0ZXJzICovDQo+ICsJCQkg
-ICAgICAgMHg4MCAweDAwMDAwMDAwIDB4MCAweDAwMDAyMDAwPjsgLyogY29uZmlndXJhdGlvbg0K
-PiBzcGFjZSAqLw0KPiArCQkJcmVnLW5hbWVzID0gInJlZ3MiLCAiY29uZmlnIjsNCj4gKwkJCWlu
-dGVycnVwdHMgPSA8R0lDX1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRQ0KPiBp
-bnRlcnJ1cHQgKi8NCj4gKwkJCQkgICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9MRVZFTF9ISUdI
-PjsgLyogYWVyDQo+IGludGVycnVwdCAqLw0KPiArCQkJaW50ZXJydXB0LW5hbWVzID0gInBtZSIs
-ICJhZXIiOw0KPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ICsJCQkjc2l6ZS1jZWxscyA9
-IDwyPjsNCj4gKwkJCWRldmljZV90eXBlID0gInBjaSI7DQo+ICsJCQlkbWEtY29oZXJlbnQ7DQo+
-ICsJCQludW0tbGFuZXMgPSA8ND47DQoNClJlbW92ZSB0aGUgbnVtLWxhbmVzLCBpdCBpcyBub3Qg
-bmVlZGVkIGJ5IExheWVyc2NhcGUgUENJZSBjb250cm9sbGVycy4gc2VlOiBodHRwOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcHJvamVjdC9saW51eC1wY2kvbGlzdC8/c2VyaWVzPTEyNDQ4OA0KDQo+
-ICsJCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiArCQkJcmFuZ2VzID0gPDB4ODEwMDAwMDAg
-MHgwIDB4MDAwMDAwMDAgMHg4MCAweDAwMDEwMDAwIDB4MA0KPiAweDAwMDEwMDAwICAgLyogZG93
-bnN0cmVhbSBJL08gKi8NCj4gKwkJCQkgIDB4ODIwMDAwMDAgMHgwIDB4NDAwMDAwMDAgMHg4MCAw
-eDQwMDAwMDAwIDB4MA0KPiAweDQwMDAwMDAwPjsgLyogbm9uLXByZWZldGNoYWJsZSBtZW1vcnkg
-Ki8NCj4gKwkJCW1zaS1wYXJlbnQgPSA8Jml0cz47DQo+ICsJCQkjaW50ZXJydXB0LWNlbGxzID0g
-PDE+Ow0KPiArCQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KPiArCQkJaW50ZXJy
-dXB0LW1hcCA9IDwwMDAwIDAgMCAxICZnaWMgMCAwIEdJQ19TUEkgMTA5DQo+IElSUV9UWVBFX0xF
-VkVMX0hJR0g+LA0KPiArCQkJCQk8MDAwMCAwIDAgMiAmZ2ljIDAgMCBHSUNfU1BJIDExMA0KPiBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gKwkJCQkJPDAwMDAgMCAwIDMgJmdpYyAwIDAgR0lDX1NQ
-SSAxMTENCj4gSVJRX1RZUEVfTEVWRUxfSElHSD4sDQo+ICsJCQkJCTwwMDAwIDAgMCA0ICZnaWMg
-MCAwIEdJQ19TUEkgMTEyDQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiArCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsNCj4gKwkJfTsNCj4gKw0KPiArCQlwY2llQDM1MDAwMDAgew0KPiArCQkJY29t
-cGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIjsNCj4gKwkJCXJlZyA9IDwweDAwIDB4MDM1MDAw
-MDAgMHgwIDB4MDAxMDAwMDAgICAvKiBjb250cm9sbGVyDQo+IHJlZ2lzdGVycyAqLw0KPiArCQkJ
-ICAgICAgIDB4ODggMHgwMDAwMDAwMCAweDAgMHgwMDAwMjAwMD47IC8qIGNvbmZpZ3VyYXRpb24N
-Cj4gc3BhY2UgKi8NCj4gKwkJCXJlZy1uYW1lcyA9ICJyZWdzIiwgImNvbmZpZyI7DQo+ICsJCQlp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTEzIElSUV9UWVBFX0xFVkVMX0hJR0g+LA0KPiArCQkJCSAg
-ICAgPEdJQ19TUEkgMTE0IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiArCQkJaW50ZXJydXB0LW5h
-bWVzID0gInBtZSIsICJhZXIiOw0KPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ICsJCQkj
-c2l6ZS1jZWxscyA9IDwyPjsNCj4gKwkJCWRldmljZV90eXBlID0gInBjaSI7DQo+ICsJCQlkbWEt
-Y29oZXJlbnQ7DQo+ICsJCQludW0tbGFuZXMgPSA8ND47DQoNCkRpdHRvDQoNCj4gKwkJCWJ1cy1y
-YW5nZSA9IDwweDAgMHhmZj47DQo+ICsJCQlyYW5nZXMgPSA8MHg4MTAwMDAwMCAweDAgMHgwMDAw
-MDAwMCAweDg4IDB4MDAwMTAwMDAgMHgwDQo+IDB4MDAwMTAwMDAgICAvKiBkb3duc3RyZWFtIEkv
-TyAqLw0KPiArCQkJCSAgMHg4MjAwMDAwMCAweDAgMHg0MDAwMDAwMCAweDg4IDB4NDAwMDAwMDAg
-MHgwDQo+IDB4NDAwMDAwMDA+OyAvKiBub24tcHJlZmV0Y2hhYmxlIG1lbW9yeSAqLw0KPiArCQkJ
-bXNpLXBhcmVudCA9IDwmaXRzPjsNCj4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ICsJ
-CQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgNz47DQo+ICsJCQlpbnRlcnJ1cHQtbWFwID0g
-PDAwMDAgMCAwIDEgJmdpYyAwIDAgR0lDX1NQSSAxMTQNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD4s
-DQo+ICsJCQkJCTwwMDAwIDAgMCAyICZnaWMgMCAwIEdJQ19TUEkgMTE1DQo+IElSUV9UWVBFX0xF
-VkVMX0hJR0g+LA0KPiArCQkJCQk8MDAwMCAwIDAgMyAmZ2ljIDAgMCBHSUNfU1BJIDExNg0KPiBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gKwkJCQkJPDAwMDAgMCAwIDQgJmdpYyAwIDAgR0lDX1NQ
-SSAxMTcNCj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Ow0KPiArCQl9Ow0KPiArDQo+ICAJCXBjaWVAMWYwMDAwMDAwIHsgLyogSW50ZWdyYXRlZCBFbmRw
-b2ludCBSb290IENvbXBsZXggKi8NCj4gIAkJCWNvbXBhdGlibGUgPSAicGNpLWhvc3QtZWNhbS1n
-ZW5lcmljIjsNCj4gIAkJCXJlZyA9IDwweDAxIDB4ZjAwMDAwMDAgMHgwIDB4MTAwMDAwPjsNCj4g
-LS0NCj4gMi45LjUNCg0K
+On 14-08-19, 10:19, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-08-14 05:29:58)
+> > Add support for rpmh clocks found in SM8150
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> 
+> Patch looks OK, but can you convert this driver to use the new parent
+> style and then update the binding to handle it? We can fix the other
+> platforms and dts files that use this driver in parallel, but sm8150
+> will be forward looking.
+
+Yes but that would also impact sdm845 as it uses this driver, so I
+wanted to get this one done so that we have support for rpm clock and
+then do the conversion.
+
+Would that be okay with you to get this in and then I convert this?
+
+Thanks
+-- 
+~Vinod
