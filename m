@@ -1,174 +1,43 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X
- in EP mode
-Date: Fri, 16 Aug 2019 11:20:25 +0100
-Message-ID: <20190816102025.GB14111@e119886-lin.cambridge.arm.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-2-xiaowei.bao@nxp.com>
- <20190815115340.GG43882@e119886-lin.cambridge.arm.com>
- <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From: John Wang <wangzqbj@inspur.com>
+Subject: [PATCH v5 1/2] dt-bindings: Add ipsps1 as a trivial device
+Date: Fri, 16 Aug 2019 18:16:31 +0800
+Message-ID: <20190816101631.3077-1-wangzqbj@inspur.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR04MB329973845D6396624AFDE547F5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.
+To: robh+dt@kernel.org, mark.rutland@arm.com, trivial@kernel.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, duanzhijia01@inspur.com, mine260309@gmail.com, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 02:58:31AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年8月15日 19:54
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
-> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > lorenzo.pieralisi@arm.com; arnd@arndb.de; gregkh@linuxfoundation.org;
-> > M.h. Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
-> > Roy Zang <roy.zang@nxp.com>; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH 02/10] PCI: designware-ep: Add the doorbell mode of
-> > MSI-X in EP mode
-> > 
-> > On Thu, Aug 15, 2019 at 04:37:08PM +0800, Xiaowei Bao wrote:
-> > > Add the doorbell mode of MSI-X in EP mode.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
-> > >  drivers/pci/controller/dwc/pcie-designware.h    | 14 ++++++++++++++
-> > >  2 files changed, 28 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 75e2955..e3a7cdf 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -454,6 +454,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep
-> > *ep, u8 func_no,
-> > >  	return 0;
-> > >  }
-> > >
-> > > +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8
-> > func_no,
-> > > +				       u16 interrupt_num)
-> > > +{
-> > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +	u32 msg_data;
-> > > +
-> > > +	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
-> > > +		   (interrupt_num - 1);
-> > > +
-> > > +	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > >  			      u16 interrupt_num)
-> > 
-> > Have I understood correctly that the hardware provides an alternative
-> > mechanism that allows for raising MSI-X interrupts without the bother of
-> > reading the capabilities registers?
-> Yes, the hardware provide two way to MSI-X, please check the page 492 of 
-> DWC_pcie_dm_registers_4.30 Menu.
-> MSIX_DOORBELL_OFF on page 492 0x948 Description: MSI-X Doorbell Register....>
+The ipsps1 is an Inspur Power System power supply unit
 
-Thanks for the reference.
+Signed-off-by: John Wang <wangzqbj@inspur.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v5:
+    - No changes
+v4:
+    - Rebased on 5.3-rc4 instead of 5.2, No changes
+v3:
+    - Fix adding entry to the inappropriate line
+v2:
+    - No changes.
+---
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > 
-> > If so is there any good reason to keep dw_pcie_ep_raise_msix_irq? (And thus
-> > use it in dw_plat_pcie_ep_raise_irq also)?
-> I am not sure, but I think the dw_pcie_ep_raise_msix_irq function is not correct, 
-> because I think we can't get the MSIX table from the address ep->phys_base + tbl_addr, 
-> but I also don't know where I can get the correct MSIX table.
-
-Well it looks like this function is used by snps,dw-pcie-ep and snps,dw-pcie,
-perhaps the doorbell mode isn't available on that hardware.
-
-> > 
-> > 
-> > >  {
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > > b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index 2b291e8..cd903e9 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -88,6 +88,11 @@
-> > >  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
-> > >  #define PCIE_DBI_RO_WR_EN		BIT(0)
-> > >
-> > > +#define PCIE_MSIX_DOORBELL		0x948
-> > > +#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
-> > > +#define PCIE_MSIX_DOORBELL_VF_SHIFT	16
-> > > +#define PCIE_MSIX_DOORBELL_VF_ACTIVE	BIT(15)
-> > 
-> > The _VF defines are not used, I'd suggest removing them.
-> In fact, I will add the SRIOV support in this file, the SRIOV feature have verified 
-> In my board, but I need wait the EP framework SRIOV patch merge, 
-> so I defined these two macros.
-
-I'd suggest adding the VF macros along with the SRIOV feature.
-
-Thanks,
-
-Andrew Murray
-
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +
-> > >  /*
-> > >   * iATU Unroll-specific register definitions
-> > >   * From 4.80 core version the address translation will be made by
-> > > unroll @@ -399,6 +404,8 @@ int dw_pcie_ep_raise_msi_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  			     u8 interrupt_num);
-> > >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > >  			     u16 interrupt_num);
-> > > +int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8
-> > func_no,
-> > > +				       u16 interrupt_num);
-> > >  void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
-> > > #else  static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep) @@
-> > > -431,6 +438,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct
-> > dw_pcie_ep *ep, u8 func_no,
-> > >  	return 0;
-> > >  }
-> > >
-> > > +static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep
-> > *ep,
-> > > +						     u8 func_no,
-> > > +						     u16 interrupt_num)
-> > > +{
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum
-> > > pci_barno bar)  {  }
-> > > --
-> > > 2.9.5
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flists
-> > > .infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-kernel&amp;data=02%
-> > 7C0
-> > >
-> > 1%7Cxiaowei.bao%40nxp.com%7C8489493003bb48a0139d08d721773972%
-> > 7C686ea1d
-> > >
-> > 3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637014668369499298&amp;sd
-> > ata=dyrXB
-> > >
-> > avljJBFUSNXW7K%2FRoXvwfWTE%2FoU2KMd1bZkJow%3D&amp;reserved=0
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 2e742d399e87..870ac52d2225 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -104,6 +104,8 @@ properties:
+           - infineon,slb9645tt
+             # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
+           - infineon,tlv493d-a1b6
++            # Inspur Power System power supply unit version 1
++          - inspur,ipsps1
+             # Intersil ISL29028 Ambient Light and Proximity Sensor
+           - isil,isl29028
+             # Intersil ISL29030 Ambient Light and Proximity Sensor
+-- 
+2.17.1
