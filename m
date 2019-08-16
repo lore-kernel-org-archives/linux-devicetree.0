@@ -1,110 +1,36 @@
 From: Bhushan Shah <bshah@kde.org>
-Subject: Re: [PATCH v2 2/3] arm64: allwinner: h6: add I2C nodes
-Date: Fri, 16 Aug 2019 13:53:11 +0530
-Message-ID: <20190816082311.GB18236@pyxis>
-References: <20190811090503.32396-1-bshah@kde.org>
- <20190816064710.18280-1-bshah@kde.org>
- <20190816064710.18280-3-bshah@kde.org>
- <20190816075031.zw4bjunn4hfoaq3e@flea>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
+Subject: [PATCH v3 1/2] dt-bindings: i2c: mv64xxx: Add compatible for the H6 i2c node.
+Date: Fri, 16 Aug 2019 14:13:08 +0530
+Message-ID: <20190816084309.27440-2-bshah@kde.org>
+References: <20190816064710.18280-1-bshah@kde.org>
+ <20190816084309.27440-1-bshah@kde.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190816075031.zw4bjunn4hfoaq3e@flea>
+In-Reply-To: <20190816084309.27440-1-bshah@kde.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Bhushan Shah <bshah@kde.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Wolfram Sang <wsa@the-dreams.de>, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Bhushan Shah <bshah@kde.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Allwinner H6 have a mv64xxx i2c interface available to be used.
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bhushan Shah <bshah@kde.org>
+---
 
-On Fri, Aug 16, 2019 at 09:50:31AM +0200, Maxime Ripard wrote:
-> On Fri, Aug 16, 2019 at 12:17:09PM +0530, Bhushan Shah wrote:
-> > Add device-tree nodes for i2c0 to i2c2, and also add relevant pinctrl
-> > nodes.
-> >
-> > Suggested-by: Icenowy Zheng <icenowy@aosc.io>
-> > Signed-off-by: Bhushan Shah <bshah@kde.org>
-> > ---
-> > Changes in v2:
-> >   - Add the SoC specific compatible string instead of re-using a31 one.
-> >
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 56 +++++++++++++++++++-
-> >  1 file changed, 55 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
-boot/dts/allwinner/sun50i-h6.dtsi
-> > index bcecca17d61d..a1a329926540 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > @@ -329,6 +329,21 @@
-> >  				function =3D "hdmi";
-> >  			};
-> >
-> > +			i2c0_pins: i2c0-pins {
-> > +				pins =3D "PD25", "PD26";
-> > +				function =3D "i2c0";
-> > +			};
-> > +
-> > +			i2c1_pins: i2c1-pins {
-> > +				pins =3D "PH5", "PH6";
-> > +				function =3D "i2c1";
-> > +			};
-> > +
-> > +			i2c2_pins: i2c2-pins {
-> > +				pins =3D "PD23", "PD24";
-> > +				function =3D "i2c2";
-> > +			};
-> > +
-> >  			mmc0_pins: mmc0-pins {
-> >  				pins =3D "PF0", "PF1", "PF2", "PF3",
-> >  				       "PF4", "PF5";
-> > @@ -464,6 +479,45 @@
-> >  			status =3D "disabled";
-> >  		};
-> >
-> > +		i2c0: i2c@5002000 {
-> > +			compatible =3D "allwinner,sun50i-h6-i2c";
->=20
-> This isn't going to work if you don't patch the driver to add the
-> compatible. And this isn't what you described in the binding patch.
+ Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-oops, I will correct this in next patch series. Sorry.
-
->=20
-> Maxime
->=20
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
---=20
-Bhushan Shah
-http://blog.bshah.in
-IRC Nick : bshah on Freenode
-GPG key fingerprint : 0AAC 775B B643 7A8D 9AF7 A3AC FE07 8411 7FBC E11D
-
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEs8s2ZVJUC+Bu6a2XEZaMRJKMrvwFAl1WZ+4ACgkQEZaMRJKM
-rvxqAQgAjTTOPqp4IbGW4/nDm8BBmNiePwfg57R8R49Uy4uEW2aWag5VAObJy66F
-cWkU8CtYUYXWPvnke18zDyH+EqqgJgraUnNyU1Slj3e6kylEvREKRsM4W9u8m4ti
-r88PZiTtWmPLmAYOrzIUVckEwDau21Apeqjf1+Tqq2Q3xCGx2vRPBsm59972SGVY
-yT8k1SWABM5m42rko8rQh+XZ9u0niBliD1u4+KY8zQ9Uu/g8T/t7JcCu+ysy8U+W
-esnMrLdwMChMpjDzAX1vdkAexCAo5E6/NeDbcQWJqxjqCDX5oy/vIXlydKl1Sczx
-DrysSQzkyw8rbwv9OGMC+YtpVHjAYA==
-=gJ/S
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
+diff --git a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+index 001f2b7abad0..c779000515d6 100644
+--- a/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml
+@@ -26,6 +26,9 @@ properties:
+       - items:
+           - const: allwinner,sun50i-a64-i2c
+           - const: allwinner,sun6i-a31-i2c
++      - items:
++          - const: allwinner,sun50i-h6-i2c
++          - const: allwinner,sun6i-a31-i2c
+ 
+       - const: marvell,mv64xxx-i2c
+       - const: marvell,mv78230-i2c
+-- 
+2.17.1
