@@ -1,44 +1,108 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Date: Fri, 16 Aug 2019 14:27:28 -0700
-Message-ID: <20190816212728.GW250418@google.com>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190816201342.GB1646@bug>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
+Date: Fri, 16 Aug 2019 16:31:10 -0500
+Message-ID: <20190816213110.GA31192@bogus>
+References: <20190725145804.8886-1-piotrs@cadence.com>
+ <20190725145955.13951-1-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190816201342.GB1646@bug>
-Sender: netdev-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+In-Reply-To: <20190725145955.13951-1-piotrs@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Piotr Sroka <piotrs@cadence.com>
+Cc: linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, BrianNorris <computersforpeace@gmail.com>, Boris Brezillon <bbrezillon@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 10:13:42PM +0200, Pavel Machek wrote:
-> On Tue 2019-08-13 12:11:47, Matthias Kaehlcke wrote:
-> > Add a .config_led hook which is called by the PHY core when
-> > configuration data for a PHY LED is available. Each LED can be
-> > configured to be solid 'off, solid 'on' for certain (or all)
-> > link speeds or to blink on RX/TX activity.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Thu, Jul 25, 2019 at 03:59:55PM +0100, Piotr Sroka wrote:
+> Document the bindings used by Cadence NAND controller driver
 > 
-> THis really needs to go through the LED subsystem,
+> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+> ---
+> Changes for v5:
+> - replace "_" by "-" in all properties
+> - change compatible name from cdns,hpnfc to cdns,hp-nfc
+> Changes for v4:
+> - add commit message
+> Changes for v3:
+> - add unit suffix for board_delay 
+> - move child description to proper place
+> - remove prefix cadence_ for reg and sdma fields
+> Changes for v2:
+> - remove chip dependends parameters from dts bindings
+> - add names for register ranges in dts bindings
+> - add generic bindings to describe NAND chip representation
+> ---
+>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+> new file mode 100644
+> index 000000000000..423547a3f993
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+> @@ -0,0 +1,50 @@
+> +* Cadence NAND controller
+> +
+> +Required properties:
+> +  - compatible : "cdns,hp-nfc"
+> +  - reg : Contains two entries, each of which is a tuple consisting of a
+> +	  physical address and length. The first entry is the address and
+> +	  length of the controller register set. The second entry is the
+> +	  address and length of the Slave DMA data port.
+> +  - reg-names: should contain "reg" and "sdma"
+> +  - interrupts : The interrupt number.
+> +  - clocks: phandle of the controller core clock (nf_clk).
+> +
+> +Optional properties:
+> +  - dmas: shall reference DMA channel associated to the NAND controller
+> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
+> +    round trip delay for the signals and is used for deciding on values
+> +    associated with data read capture. The example formula for SDR mode is
+> +    the following:
+> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
+> +    + DQ PAD delay
+> +
+> +Child nodes represent the available NAND chips.
+> +
+> +Required properties of NAND chips:
+> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
+> +    the cadence nand flash controller
+> +
+> +
+> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
+> +generic bindings.
+> +
+> +Example:
+> +
+> +nand_controller: nand-controller @60000000 {
 
-Sorry, I used what get_maintainers.pl threw at me, I should have
-manually cc-ed the LED list.
+space                              ^
 
-> and use the same userland interfaces as the rest of the system.
+> +	  compatible = "cdns,hp-nfc";
+> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
+> +	  reg-names = "reg", "sdma";
+> +	  clocks = <&nf_clk>;
+> +	  cdns,board-delay-ps = <4830>;
+> +	  interrupts = <2 0>;
 
-With the PHY maintainers we discussed to define a binding that is
-compatible with that of the LED one, to have the option to integrate
-it with the LED subsystem later. The integration itself is beyond the
-scope of this patchset.
+You need #address-cells and #size-cells here.
 
-The PHY LED configuration is a low priority for the project I'm
-working on. I wanted to make an attempt to upstream it and spent
-already significantly more time on it than planned, if integration
-with the LED framework now is a requirement please consider this
-series abandonded.
+With those fixes,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +	  nand@0 {
+> +	      reg = <0>;
+> +	      label = "nand-1";
+> +	  };
+> +	  nand@1 {
+> +	      reg = <1>;
+> +	      label = "nand-2";
+> +	  };
+> +
+> +};
+> -- 
+> 2.15.0
+> 
