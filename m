@@ -1,79 +1,99 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 3/3] OPP: Add helper function for bandwidth OPP tables
-Date: Fri, 16 Aug 2019 11:22:58 -0700
-Message-ID: <20190816182259.538532077C@mail.kernel.org>
-References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-4-saravanak@google.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 05/19] irqchip/mmp: do not use of_address_to_resource()
+ to get mux regs
+Date: Fri, 16 Aug 2019 20:41:22 +0200
+Message-ID: <e0c0cf62a1f087fd6c1d7307e5e2a65603148341.camel@v3.sk>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+         <20190809093158.7969-6-lkundrak@v3.sk>
+         <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807223111.230846-4-saravanak@google.com>
+In-Reply-To: <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Saravana Kannan (2019-08-07 15:31:11)
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 3b7ffd0234e9..22dcf22f908f 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp =
-*opp)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
-> =20
-> +/**
-> + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an availabl=
-e opp
-> + * @opp:       opp for which frequency has to be returned for
+On Fri, 2019-08-09 at 13:12 +0100, Marc Zyngier wrote:
+> On 09/08/2019 10:31, Lubomir Rintel wrote:
+> > The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
+> > are offsets from intc's base, not addresses on the parent bus. At this
+> > point it probably can't be fixed.
+> > 
+> > On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
+> > axi bus, and thus of_address_to_resource() won't work. We should treat
+> > the values as mere integers as opposed to bus addresses.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > ---
+> >  drivers/irqchip/irq-mmp.c | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+> > index 14618dc0bd396..af9cba4a51c2e 100644
+> > --- a/drivers/irqchip/irq-mmp.c
+> > +++ b/drivers/irqchip/irq-mmp.c
+> > @@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
+> >  static int __init mmp2_mux_of_init(struct device_node *node,
+> >  				   struct device_node *parent)
+> >  {
+> > -	struct resource res;
+> >  	int i, ret, irq, j = 0;
+> >  	u32 nr_irqs, mfp_irq;
+> > +	u32 reg[4];
+> >  
+> >  	if (!parent)
+> >  		return -ENODEV;
+> > @@ -438,18 +438,20 @@ static int __init mmp2_mux_of_init(struct device_node *node,
+> >  		pr_err("Not found mrvl,intc-nr-irqs property\n");
+> >  		return -EINVAL;
+> >  	}
+> > -	ret = of_address_to_resource(node, 0, &res);
+> > +
+> > +	/*
+> > +	 * For historical reasonsm, the "regs" property of the
+> > +	 * mrvl,mmp2-mux-intc is not a regular * "regs" property containing
+> > +	 * addresses on the parent bus, but offsets from the intc's base.
+> > +	 * That is why we can't use of_address_to_resource() here.
+> > +	 */
+> > +	ret = of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg));
+> 
+> This will return 0 even if you've read less than your expected 4 u32s.
+> You may want to try of_property_read_variable_u32_array instead.
 
-s/frequency/bandwidth/ ?
+Will it? Unless I'm reading the of_property_read_u32_array()
+documentation wrong, it suggests that would return -EOVERFLOW in that
+case.
 
-> + * @avg_bw:    Pointer where the corresponding average bandwidth is stor=
-ed.
-> + *             Can be NULL.
-> + *
-> + * Return: Peak bandwidth in kBps corresponding to the opp, else
-> + * return 0
-> + */
-> +unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *a=
-vg_bw)
-> +{
-> +       if (IS_ERR_OR_NULL(opp) || !opp->available) {
-> +               pr_err("%s: Invalid parameters\n", __func__);
-> +               return 0;
-> +       }
-> +
-> +       if (avg_bw)
-> +               *avg_bw =3D opp->avg_bw;
-> +
-> +       return opp->rate;
+It ignores the extra values it the property is larger. I guess that is
+not a good thing and we still want to use
+of_property_read_variable_u32_array() though.
 
-It deserves a comment if it stays named 'rate'. At a glance it looks
-like a bug.
+> >  	if (ret < 0) {
+> >  		pr_err("Not found reg property\n");
+> >  		return -EINVAL;
+> >  	}
+> > -	icu_data[i].reg_status = mmp_icu_base + res.start;
+> > -	ret = of_address_to_resource(node, 1, &res);
+> > -	if (ret < 0) {
+> > -		pr_err("Not found reg property\n");
+> > -		return -EINVAL;
+> > -	}
+> > -	icu_data[i].reg_mask = mmp_icu_base + res.start;
+> > +	icu_data[i].reg_status = mmp_icu_base + reg[0];
+> > +	icu_data[i].reg_mask = mmp_icu_base + reg[2];
+> >  	icu_data[i].cascade_irq = irq_of_parse_and_map(node, 0);
+> >  	if (!icu_data[i].cascade_irq)
+> >  		return -EINVAL;
+> > 
+> 
+> Thanks,
+> 
+> 	M.
 
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-> +
->  /**
->   * dev_pm_opp_get_level() - Gets the level corresponding to an available=
- opp
->   * @opp:       opp for which level value has to be returned for
-> @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct=
- device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
-> =20
-> +/**
-> + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp i=
-n kBps
-> + * @dev:       device for which we do this operation
-> + * @avg_bw:    Pointer where the corresponding average bandwidth is stor=
-ed.
-> + *             Can be NULL.
-> + *
-> + * Return: This function returns the peak bandwidth of the OPP marked as
-> + * suspend_opp if one is available, else returns 0;
-
-Why a semicolon instead a full stop?
+Thanks
+Lubo
