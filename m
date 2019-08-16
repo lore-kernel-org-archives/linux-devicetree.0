@@ -1,120 +1,66 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v5 0/3] Introduce Bandwidth OPPs for interconnects
-Date: Thu, 15 Aug 2019 18:54:19 -0700
-Message-ID: <CAGETcx_pzFj1TSoyCTGgZn_yZGZBMT2c_d74wLA5gBqhmhH8Gw@mail.gmail.com>
-References: <20190807223111.230846-1-saravanak@google.com> <b8a6020f-eda5-0c3d-b365-a294c28b9650@linaro.org>
+Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
+Date: Thu, 15 Aug 2019 19:04:15 -0700
+Message-ID: <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
+References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
+ <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
+ <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com> <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b8a6020f-eda5-0c3d-b365-a294c28b9650@linaro.org>
+In-Reply-To: <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Android Kernel Team <kernel-team@android.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 9:19 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On Wed, Aug 14, 2019 at 4:41 PM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> Hi,
+> On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > PowerPC platforms don't use the generic of/platform code to populate the
+> > > > devices from DT.
+> > >
+> > > Yes, they do.
+> >
+> > No they don't. My wording could be better, but they don't use
+> > of_platform_default_populate_init()
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
 >
-> On 8/8/19 01:31, Saravana Kannan wrote:
-> > Interconnects and interconnect paths quantify their performance levels in
-> > terms of bandwidth and not in terms of frequency. So similar to how we have
-> > frequency based OPP tables in DT and in the OPP framework, we need
-> > bandwidth OPP table support in DT and in the OPP framework.
-> >
-> > So with the DT bindings added in this patch series, the DT for a GPU
-> > that does bandwidth voting from GPU to Cache and GPU to DDR would look
-> > something like this:
-> >
-> > gpu_cache_opp_table: gpu_cache_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_cache_3000: opp-3000 {
-> >               opp-peak-KBps = <3000000>;
-> >               opp-avg-KBps = <1000000>;
-> >       };
-> >       gpu_cache_6000: opp-6000 {
-> >               opp-peak-KBps = <6000000>;
-> >               opp-avg-KBps = <2000000>;
-> >       };
-> >       gpu_cache_9000: opp-9000 {
-> >               opp-peak-KBps = <9000000>;
-> >               opp-avg-KBps = <9000000>;
-> >       };
-> > };
-> >
-> > gpu_ddr_opp_table: gpu_ddr_opp_table {
-> >       compatible = "operating-points-v2";
-> >
-> >       gpu_ddr_1525: opp-1525 {
-> >               opp-peak-KBps = <1525000>;
-> >               opp-avg-KBps = <452000>;
-> >       };
-> >       gpu_ddr_3051: opp-3051 {
-> >               opp-peak-KBps = <3051000>;
-> >               opp-avg-KBps = <915000>;
-> >       };
-> >       gpu_ddr_7500: opp-7500 {
-> >               opp-peak-KBps = <7500000>;
-> >               opp-avg-KBps = <3000000>;
-> >       };
-> > };
-> >
-> > gpu_opp_table: gpu_opp_table {
-> >       compatible = "operating-points-v2";
-> >       opp-shared;
-> >
-> >       opp-200000000 {
-> >               opp-hz = /bits/ 64 <200000000>;
-> >       };
-> >       opp-400000000 {
-> >               opp-hz = /bits/ 64 <400000000>;
-> >       };
-> > };
-> >
-> > gpu@7864000 {
-> >       ...
-> >       operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
-> >       ...
-> > };
-> >
-> > v1 -> v3:
-> > - Lots of patch additions that were later dropped
-> > v3 -> v4:
-> > - Fixed typo bugs pointed out by Sibi.
-> > - Fixed bug that incorrectly reset rate to 0 all the time
-> > - Added units documentation
-> > - Dropped interconnect-opp-table property and related changes
-> > v4->v5:
-> > - Replaced KBps with kBps
-> > - Minor documentation fix
-> >
-> > Cheers,
-> > Saravana
-> >
-> > Saravana Kannan (3):
-> >   dt-bindings: opp: Introduce opp-peak-kBps and opp-avg-kBps bindings
-> >   OPP: Add support for bandwidth OPP tables
-> >   OPP: Add helper function for bandwidth OPP tables
-> >
-> >  Documentation/devicetree/bindings/opp/opp.txt | 15 ++++--
-> >  .../devicetree/bindings/property-units.txt    |  4 ++
-> >  drivers/opp/core.c                            | 51 +++++++++++++++++++
-> >  drivers/opp/of.c                              | 41 +++++++++++----
-> >  drivers/opp/opp.h                             |  4 +-
-> >  include/linux/pm_opp.h                        | 19 +++++++
-> >  6 files changed, 121 insertions(+), 13 deletions(-)
-> >
+> Right, but the rest of the of/platform code is used (guess where it
+> got moved here from?).
 >
-> For the series:
-> Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+> > > > Therefore the generic device linking code is never used
+> > > > in PowerPC.  Compile it out to avoid warning about unused functions.
+> > >
+> > > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
+> > > return' rather than #ifdefs.
+> >
+> > I'm just moving the existing ifndef some lines above. I don't want to
+> > go change existing #ifndef in this patch. Maybe that should be a
+> > separate patch series that goes and fixes all such code in drivers/of/
+> > or driver/
+>
+> So the initcall was originally just supposed to call
+> of_platform_default_populate(), but it's grown beyond that. That could
+> make things fragile as it is possible for platforms to call
+> of_platform_populate() (directly or indirectly) before
+> of_platform_default_populate_init(). That was supposed to work, but
+> now I think it's getting more fragile.
 
-Thanks Georgi.
+Can you clarify what's wrong with of_platfrom_populate() being called
+before of_platform_default_populate_init()? If that's what a platform
+wants to do, they can do it? I have some thoughts of my own, but I
+want to hear yours.
+In any case, I'd be happy to help  clean up this initcall if you can
+give me a direction to take it in.
 
-Rob and Viresh, We've settled on one format. Can you pull this series in please?
+> Anyways, I guess this patch is fine for now.
 
-Do you need me to resent the series with the Ack? Or can you put that
-in if you pull in this series?
+Thanks.
 
-Thanks,
-Saravana
+-Saravana
