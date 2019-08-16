@@ -1,51 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] media: dt-bindings: Update bindings for Cadence
- CSI2RX version 2.1
-Date: Fri, 16 Aug 2019 16:18:02 -0500
-Message-ID: <20190816211802.GA12657@bogus>
-References: <20190725102648.13445-1-jank@cadence.com>
- <20190725102648.13445-2-jank@cadence.com>
+Subject: Re: [PATCH v2 06/14] dt-bindings: cpufreq: qcom-nvmem: Support
+ pstates provided by a power domain
+Date: Fri, 16 Aug 2019 16:21:29 -0500
+Message-ID: <20190816212129.GA22090@bogus>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
+ <20190725104144.22924-7-niklas.cassel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190725102648.13445-2-jank@cadence.com>
+In-Reply-To: <20190725104144.22924-7-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: maxime.ripard@bootlin.com, mchehab@kernel.org, mark.rutland@arm.com, rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:26:46AM +0100, Jan Kotas wrote:
-> This patch adds a DT bindings documentation for
-> Cadence CSI2RX v2.1 controller.
-
-And 1.3?
-
+On Thu, 25 Jul 2019 12:41:34 +0200, Niklas Cassel wrote:
+> Some Qualcomm SoCs have support for Core Power Reduction (CPR).
+> On these platforms, we need to attach to the power domain provider
+> providing the performance states, so that the leaky device (the CPU)
+> can configure the performance states (which represent different
+> CPU clock frequencies).
 > 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 > ---
->  Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../bindings/opp/qcom-nvmem-cpufreq.txt       | 111 ++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> index 6b02a0657..a35bb0aed 100644
-> --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> @@ -5,7 +5,9 @@ The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
->  lanes in input, and 4 different pixel streams in output.
->  
->  Required properties:
-> -  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
-> +  - compatible: must be set to "cdns,csi2rx" or "cdns,csi2rx-1.3"
-> +    for version 1.3 of the controller, "cdns,csi2rx-2.1" for v2.1
-> +    and an SoC-specific compatible
 
-This wording is now not clear that an SoC-specific compatible is always 
-required or just for 2.1. Please format one compatible per line.
-
->    - reg: base address and size of the memory mapped region
->    - clocks: phandles to the clocks driving the controller
->    - clock-names: must contain:
-> -- 
-> 2.15.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
