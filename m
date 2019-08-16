@@ -1,47 +1,77 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: [PATCH 1/6] media: dt-bindings: Document 'location' property
-Date: Fri, 16 Aug 2019 16:18:17 +0200
-Message-ID: <20190816141822.7582-2-jacopo@jmondi.org>
-References: <20190816141822.7582-1-jacopo@jmondi.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/5] RISC-V: Remove per cpu clocksource
+Date: Fri, 16 Aug 2019 17:09:07 +0200
+Message-ID: <6ba37c45-2d9b-c01e-5f17-3ab919da4de8@linaro.org>
+References: <20190731012418.24565-1-atish.patra@wdc.com>
+ <20190731012418.24565-2-atish.patra@wdc.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190816141822.7582-1-jacopo@jmondi.org>
+In-Reply-To: <20190731012418.24565-2-atish.patra@wdc.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jacopo Mondi <jacopo@jmondi.org>, "open list:MEDIA INPUT INFRASTRUCTURE
-        V4L/DVB" <linux-media@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc: Albert Ou <aou@eecs.berkeley.edu>, Alexios Zavras <alexios.zavras@intel.com>, Allison Randal <allison@lohutok.net>, Anup Patel <anup.patel@wdc.com>, devicetree@vger.kernel.org, Enrico Weigelt <info@metux.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Johan Hovold <johan@kernel.org>, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add the 'location' device property, used to specify the camera device
-mounting position. The property is particularly meaningful for mobile
-devices with a well defined usage orientation.
+On 31/07/2019 03:24, Atish Patra wrote:
+> There is only one clocksource in RISC-V. The boot cpu initializes
+> that clocksource. No need to keep a percpu data structure.
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
----
- .../devicetree/bindings/media/video-interfaces.txt     | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+That is not what is stated in the initial patch [1].
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index f884ada0bffc..865f4142f432 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -89,6 +89,16 @@ Optional properties
-   but a number of degrees counter clockwise. Typical values are 0 and 180
-   (upside down).
+Can you clarify that ?
 
-+- location: The camera sensor mounting location, expressed as a position
-+  relative to the usage orientation of the device the sensor is installed on.
-+  Possible values are:
-+  0 - Front. The image sensor is mounted on the front facing side of the device.
-+  For mobile devices such as smartphones, tablets and laptops the front side is
-+  the user facing side of the device.
-+  1 - Back. The image sensor is mounted on the back side of the device, which is
-+  defined as the opposite side of the front facing one.
-+  2 - External. The image sensor is connected to the device by extension cables,
-+  and can be freely moved, regardless of the device position.
+Thanks
 
- Optional endpoint properties
- ----------------------------
---
-2.22.0
+  -- Daniel
+
+[1] https://lkml.org/lkml/2018/8/4/51
+
+
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  drivers/clocksource/timer-riscv.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+> index 5e6038fbf115..09e031176bc6 100644
+> --- a/drivers/clocksource/timer-riscv.c
+> +++ b/drivers/clocksource/timer-riscv.c
+> @@ -55,7 +55,7 @@ static u64 riscv_sched_clock(void)
+>  	return get_cycles64();
+>  }
+>  
+> -static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
+> +static struct clocksource riscv_clocksource = {
+>  	.name		= "riscv_clocksource",
+>  	.rating		= 300,
+>  	.mask		= CLOCKSOURCE_MASK(64),
+> @@ -92,7 +92,6 @@ void riscv_timer_interrupt(void)
+>  static int __init riscv_timer_init_dt(struct device_node *n)
+>  {
+>  	int cpuid, hartid, error;
+> -	struct clocksource *cs;
+>  
+>  	hartid = riscv_of_processor_hartid(n);
+>  	if (hartid < 0) {
+> @@ -112,8 +111,7 @@ static int __init riscv_timer_init_dt(struct device_node *n)
+>  
+>  	pr_info("%s: Registering clocksource cpuid [%d] hartid [%d]\n",
+>  	       __func__, cpuid, hartid);
+> -	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
+> -	error = clocksource_register_hz(cs, riscv_timebase);
+> +	error = clocksource_register_hz(&riscv_clocksource, riscv_timebase);
+>  	if (error) {
+>  		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+>  		       error, cpuid);
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
