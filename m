@@ -1,78 +1,124 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v4 21/21] ARM: dts: imx6qdl-colibri.dtsi: UHS-I support
- for v1.1a hw
-Date: Fri, 16 Aug 2019 06:44:56 +0000
-Message-ID: <dd03b626b6d13a10f6e6c644d446c3a51e6b7875.camel@toradex.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
-         <20190812142105.1995-22-philippe.schenker@toradex.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 2/2] pwm: sprd: Add Spreadtrum PWM support
+Date: Fri, 16 Aug 2019 08:45:08 +0200
+Message-ID: <20190816064508.5tyimuqcjcr2hbkp@pengutronix.de>
+References: <20190814150304.x44lalde3cwp67ge@pengutronix.de>
+ <CAMz4kuLiS=cGTA=uEi9ABOVAOb1M0Pcd2a_xU5VsdLo1DGd0Hg@mail.gmail.com>
+ <20190815061540.763ue2ogkvuyhzcu@pengutronix.de>
+ <CAMz4kuL_74V3M-8Zo99GnLaYbmgfQXO-h0Yz5qeXLQQ0ZR3TkA@mail.gmail.com>
+ <20190815085452.2cipewq3l3krnwzv@pengutronix.de>
+ <CAMz4kuJs7pCXWyWd_WMK24JeLOzdVC8zPacRTp91nyTYDDdk5g@mail.gmail.com>
+ <20190815101147.azbbjcvafwjx67wc@pengutronix.de>
+ <CAMz4ku+AAGC6TgxOA5EZGFeqpsq_Q8=S+DkDk9Rm_G=yAshJ0w@mail.gmail.com>
+ <20190815122518.hzy57s635ubohywh@pengutronix.de>
+ <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190812142105.1995-22-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <0D5BD576719C47468937C3ECEB1A4888@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuJBbTrR9+7XfDhRtmJovFJnne_RPGrdOYe09mdRDrDrig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Igor Opaniuk <igor.opaniuk@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, DTML <devicetree@vger.kernel.org>, Chunyan Zhang <zhang.lyra@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de, Orson Zhai <orsonzhai@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTEyIGF0IDE0OjIxICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gRnJvbTogSWdvciBPcGFuaXVrIDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+DQo+IA0K
-PiBQcm92aWRlIHByb3BlciBjb25maWd1cmF0aW9uIGZvciBWR0VOMywgdG8gbWFrZSBzdXJlIGl0
-J3MgaXMgYWx3YXlzDQo+IHBvd2VyZWQNCj4gd2hpY2ggYWxsb3dzIHRoYXQgcmFpbCB0byBiZSBh
-dXRvbWF0aWNhbGx5IHN3aXRjaGVkIHRvIDEuOCB2b2x0cw0KPiBmb3IgcHJvcGVyIFVIUy1JIG9w
-ZXJhdGlvbi4gQnkgZGVmYXVsdCBpdCdzIGRpc2FibGVkLg0KPiANCj4gV2l0aCBVSFMtSSBlbmFi
-bGVkOg0KPiBbICAxMDQuMTUzODk4XSBtbWMxOiBuZXcgdWx0cmEgaGlnaCBzcGVlZCBTRFIxMDQg
-U0RIQyBjYXJkIGF0IGFkZHJlc3MNCj4gNTliNA0KPiBbICAxMDQuMTY2MjAyXSBtbWNibGsxOiBt
-bWMxOjU5YjQgVVNEMDAgMTUuMCBHaUINCj4gWyAgMTA0LjE3MzkyM10gIG1tY2JsazE6IHAxDQo+
-IA0KPiByb290QGNvbGlicmktaW14Njp+IyBoZHBhcm0gLXQgL2Rldi9tbWNibGsxDQo+IC9kZXYv
-bW1jYmxrMToNCj4gVGltaW5nIGJ1ZmZlcmVkIGRpc2sgcmVhZHM6IDIyNiBNQiBpbiAgMy4wMSBz
-ZWNvbmRzID0gIDc1LjAxIE1CL3NlYw0KPiANCj4gU2lnbmVkLW9mZi1ieTogSWdvciBPcGFuaXVr
-IDxpZ29yLm9wYW5pdWtAdG9yYWRleC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNj
-aGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCg0KUGxlYXNlIGlnbm9yZSB0
-aGlzIHBhdGNoLiBUaGVyZSB3YXMgYSBtaXN1bmRlcnN0YW5kaW5nIGFuZCB0aGlzIG9uZQ0Kc2hv
-dWxkbid0IGdvIGludG8gbWFpbmxpbmUuIFNvcnJ5IGZvciB0aGF0IQ0KPiANCj4gLS0tDQo+IA0K
-PiBDaGFuZ2VzIGluIHY0Og0KPiAtIE5ldyBwYXRjaCBhcyBvZiB0aGUgcmVjb21tZW5kYXRpb24g
-ZnJvbSBNYXJjZWwgb24gTUwNCj4gDQo+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gQ2hhbmdlcyBp
-biB2MjogTm9uZQ0KPiANCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtY29saWJyaS5kdHNp
-IHwgNDMgKysrKysrKysrKysrKysrKysrKysrKysNCj4gLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwg
-MzkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZxZGwtY29saWJyaS5kdHNpDQo+IGluZGV4IDlhNjNkZWJhYjBiNS4uMDI0MTYxM2I1ZTJi
-IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0K
-PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaQ0KPiBAQCAtMjI2
-LDcgKzIyNiwxMiBAQA0KPiAgCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ICAJCQl9Ow0KPiAg
-DQo+IC0JCQkvKiB2Z2VuMzogdW51c2VkICovDQo+ICsJCQl2Z2VuM19yZWc6IHZnZW4zIHsNCj4g
-KwkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0
-b3ItbWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItYm9vdC1vbjsN
-Cj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArCQkJfTsNCj4gIA0KPiAgCQkJdmdlbjRf
-cmVnOiB2Z2VuNCB7DQo+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47
-DQo+IEBAIC0zOTQsMTMgKzM5OSwyMSBAQA0KPiAgDQo+ICAvKiBDb2xpYnJpIE1NQyAqLw0KPiAg
-JnVzZGhjMSB7DQo+IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gKwlwaW5jdHJsLW5h
-bWVzID0gImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6IiwgInN0YXRlXzIwMG1oeiI7DQo+ICAJcGlu
-Y3RybC0wID0gPCZwaW5jdHJsX3VzZGhjMSAmcGluY3RybF9tbWNfY2Q+Ow0KPiArCXBpbmN0cmwt
-MSA9IDwmcGluY3RybF91c2RoYzFfMTAwbWh6ICZwaW5jdHJsX21tY19jZD47DQo+ICsJcGluY3Ry
-bC0yID0gPCZwaW5jdHJsX3VzZGhjMV8yMDBtaHogJnBpbmN0cmxfbW1jX2NkPjsNCj4gKwl2cW1t
-Yy1zdXBwbHkgPSA8JnZnZW4zX3JlZz47DQo+ICsJc2QtdWhzLXNkcjEyOw0KPiArCXNkLXVocy1z
-ZHIyNTsNCj4gKwlzZC11aHMtc2RyNTA7DQo+ICsJc2QtdWhzLXNkcjEwNDsNCj4gKwlsYWJlbCA9
-ICJNTUMxIjsNCj4gIAljZC1ncGlvcyA9IDwmZ3BpbzIgNSBHUElPX0FDVElWRV9MT1c+OyAvKiBN
-TUNEICovDQo+ICAJZGlzYWJsZS13cDsNCj4gLQl2cW1tYy1zdXBwbHkgPSA8JnJlZ19tb2R1bGVf
-M3YzPjsNCj4gKwllbmFibGUtc2Rpby13YWtldXA7DQo+ICsJa2VlcC1wb3dlci1pbi1zdXNwZW5k
-Ow0KPiAgCWJ1cy13aWR0aCA9IDw0PjsNCj4gLQluby0xLTgtdjsNCj4gIAlzdGF0dXMgPSAiZGlz
-YWJsZWQiOw0KPiAgfTsNCj4gIA0KPiBAQCAtNzA2LDYgKzcxOSwyOCBAQA0KPiAgCQk+Ow0KPiAg
-CX07DQo+ICANCj4gKwlwaW5jdHJsX3VzZGhjMV8xMDBtaHo6IHVzZGhjMWdycDEwMG1oeiB7DQo+
-ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg2UURMX1BBRF9TRDFfQ01EX19TRDFfQ01EICAgIDB4
-MTcwYjENCj4gKwkJCU1YNlFETF9QQURfU0QxX0NMS19fU0QxX0NMSyAgICAweDEwMGIxDQo+ICsJ
-CQlNWDZRRExfUEFEX1NEMV9EQVQwX19TRDFfREFUQTAgMHgxNzBiMQ0KPiArCQkJTVg2UURMX1BB
-RF9TRDFfREFUMV9fU0QxX0RBVEExIDB4MTcwYjENCj4gKwkJCU1YNlFETF9QQURfU0QxX0RBVDJf
-X1NEMV9EQVRBMiAweDE3MGIxDQo+ICsJCQlNWDZRRExfUEFEX1NEMV9EQVQzX19TRDFfREFUQTMg
-MHgxNzBiMQ0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4gKwlwaW5jdHJsX3VzZGhjMV8yMDBtaHo6
-IHVzZGhjMWdycDIwMG1oeiB7DQo+ICsJCWZzbCxwaW5zID0gPA0KPiArCQkJTVg2UURMX1BBRF9T
-RDFfQ01EX19TRDFfQ01EICAgIDB4MTcwZjENCj4gKwkJCU1YNlFETF9QQURfU0QxX0NMS19fU0Qx
-X0NMSyAgICAweDEwMGYxDQo+ICsJCQlNWDZRRExfUEFEX1NEMV9EQVQwX19TRDFfREFUQTAgMHgx
-NzBmMQ0KPiArCQkJTVg2UURMX1BBRF9TRDFfREFUMV9fU0QxX0RBVEExIDB4MTcwZjENCj4gKwkJ
-CU1YNlFETF9QQURfU0QxX0RBVDJfX1NEMV9EQVRBMiAweDE3MGYxDQo+ICsJCQlNWDZRRExfUEFE
-X1NEMV9EQVQzX19TRDFfREFUQTMgMHgxNzBmMQ0KPiArCQk+Ow0KPiArCX07DQo+ICsNCj4gIAlw
-aW5jdHJsX3VzZGhjMzogdXNkaGMzZ3JwIHsNCj4gIAkJZnNsLHBpbnMgPSA8DQo+ICAJCQlNWDZR
-RExfUEFEX1NEM19DTURfX1NEM19DTUQJMHgxNzA1OQ0KPiAtLSANCj4gMi4yMi4wDQo+IA0K
+Hello Baolin,
+
+On Fri, Aug 16, 2019 at 10:44:41AM +0800, Baolin Wang wrote:
+> On Thu, 15 Aug 2019 at 20:25, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > On Thu, Aug 15, 2019 at 07:05:53PM +0800, Baolin Wang wrote:
+> > > On Thu, 15 Aug 2019 at 18:11, Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > On Thu, Aug 15, 2019 at 05:34:02PM +0800, Baolin Wang wrote:
+> > > > > On Thu, 15 Aug 2019 at 16:54, Uwe Kleine-König
+> > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > On Thu, Aug 15, 2019 at 04:16:32PM +0800, Baolin Wang wrote:
+> > > > > > > On Thu, 15 Aug 2019 at 14:15, Uwe Kleine-König
+> > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > On Thu, Aug 15, 2019 at 11:34:27AM +0800, Baolin Wang wrote:
+> > > > > > > > > On Wed, 14 Aug 2019 at 23:03, Uwe Kleine-König
+> > > > > > > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > > > > > > > On Wed, Aug 14, 2019 at 08:46:11PM +0800, Baolin Wang wrote:
+> > > > > > > > > > > +      * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
+> > > > > > > > > >
+> > > > > > > > > > Did you spend some thoughts about how wrong your period can get because
+> > > > > > > > > > of that "lazyness"?
+> > > > > > > > > >
+> > > > > > > > > > Let's assume a clk rate of 100/3 MHz. Then the available period lengths
+> > > > > > > > > > are:
+> > > > > > > > > >
+> > > > > > > > > >         PRESCALE =  0  ->  period =   7.65 µs
+> > > > > > > > > >         PRESCALE =  1  ->  period =  15.30 µs
+> > > > > > > > > >         ...
+> > > > > > > > > >         PRESCALE = 17  ->  period = 137.70 µs
+> > > > > > > > > >         PRESCALE = 18  ->  period = 145.35 µs
+> > > > > > > > > >
+> > > > > > > > > > So the error can be up to (nearly) 7.65 µs (or in general
+> > > > > > > > >
+> > > > > > > > > Yes, but for our use case (pwm backlight), the precision can meet our
+> > > > > > > > > requirement. Moreover, we usually do not change the period, just
+> > > > > > > > > adjust the duty to change the back light.
+> > > > > > > >
+> > > > > > > > Is this a license requirement for you SoC to only drive a backlight with
+> > > > > > > > the PWM? The idea of having a PWM driver on your platform is that it can
+> > > > > > > > also be used to control a step motor or a laser.
+> > > > > > >
+> > > > > > > Not a license requirement. Until now we have not got any higher
+> > > > > > > precision requirements, and we've run this driver for many years in
+> > > > > > > our downstream kernel.
+> > > > > >
+> > > > > > I understood that you're not ambitious to do something better than "it
+> > > > > > worked for years".
+> > > > >
+> > > > > How do you know that?
+> > > >
+> > > > I showed you how you could match the requested PWM output better and
+> > > > you refused telling it worked for years and the added precision isn't
+> > > > necessary for a backlight.
+> > >
+> > > Please I said the reason, it is not that I do not want a better
+> > > precision. The problem is we do not know how much precision to be
+> > > asked by users if no use case
+> >
+> > I don't understand the problem here. If you are asked for period =
+> > 145340 ns and configure the hardware to yield 137700 ns in reply to that
+> > but you could provide 144780 ns I don't understand why you need a use
+> > case as 144780 ns is objectively better than 137700 ns. A better match
+> 
+> You are wrong, we will provide 145350 ns with
+> DIV_ROUND_CLOSEST_ULL()., which is better than your 144780.
+
+There are two problems with your statement:
+
+ - You're ignoring the fact that I base my argumentation on not using
+   DIV_ROUND_CLOSEST_ULL because it has downsides I pointed out to you.
+   If my suggested algorithm targeted a closest match (and not
+   closest-but-not-bigger) it would pick 145350 ns, too. (I didn't check
+   if something in the interval [145331, 145349] could be achieved. If
+   there is, this should of course be preferred.)
+   I obviously would have to pick a different example request to show
+   that "targeting nearest with MOD always 255" is for some requests
+   worse (probably by a similar factor) than "targeting nearest".
+   It's not surprising that your apple is a better apple than my orange.
+
+ - It's not objective that when 145340 ns was requested 145350 ns is
+   better than 144780 ns. Some approximations are obviously better than
+   others, but these two are not comparable in a way that all PWM
+   consumers agree.
+
+I'm not perfect and I do mistakes of course. But I'm still convinced
+that my argumentation here is right.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
