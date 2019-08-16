@@ -1,106 +1,171 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH 05/10] PCI: layerscape: Modify the way of getting
- capability with different PEX
-Date: Fri, 16 Aug 2019 03:00:00 +0000
-Message-ID: <AM5PR04MB329966792C66E9AAB6C0B30DF5AF0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-5-xiaowei.bao@nxp.com>
- <20190815125103.GH43882@e119886-lin.cambridge.arm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v9 0/7] Solve postboot supplier cleanup and optimize probe
+ ordering
+Date: Thu, 15 Aug 2019 20:09:19 -0700
+Message-ID: <183eab70-0eda-f30e-ae25-74355b8b84c9@gmail.com>
+References: <20190731221721.187713-1-saravanak@google.com>
+ <919b66e9-9708-de34-41cd-e448838b130c@gmail.com>
+ <CAGETcx8LqeOXD5zPsLuxoG5pR9VZ_v=PQfRf-aFwCSaW4kwoxA@mail.gmail.com>
+ <7a0ee940-f81f-36b9-93e7-2b4c242360c9@gmail.com>
+ <CAGETcx_UxNV_Qk79es0SJ3L0yAtFRpOjPcU7e5Cje6UPbp5adQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190815125103.GH43882@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx_UxNV_Qk79es0SJ3L0yAtFRpOjPcU7e5Cje6UPbp5adQ@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "kishon@ti.com" <kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo41MIxNcjVIDIwOjUxDQo+IFRv
-OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGppbmdvb2hhbjFAZ21h
-aWwuY29tOyBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsNCj4gYmhlbGdhYXNAZ29vZ2xl
-LmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gc2hhd25n
-dW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29t
-Ow0KPiBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsNCj4gTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBN
-aW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+Ow0KPiBSb3kgWmFuZyA8cm95LnphbmdAbnhw
-LmNvbT47IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0ggMDUvMTBdIFBDSTogbGF5ZXJzY2FwZTogTW9kaWZ5IHRoZSB3YXkg
-b2YgZ2V0dGluZw0KPiBjYXBhYmlsaXR5IHdpdGggZGlmZmVyZW50IFBFWA0KPiANCj4gT24gVGh1
-LCBBdWcgMTUsIDIwMTkgYXQgMDQ6Mzc6MTFQTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+
-ID4gVGhlIGRpZmZlcmVudCBQQ0llIGNvbnRyb2xsZXIgaW4gb25lIGJvYXJkIG1heSBiZSBoYXZl
-IGRpZmZlcmVudA0KPiA+IGNhcGFiaWxpdHkgb2YgTVNJIG9yIE1TSVgsIHNvIGNoYW5nZSB0aGUg
-d2F5IG9mIGdldHRpbmcgdGhlIE1TSQ0KPiA+IGNhcGFiaWxpdHksIG1ha2UgaXQgbW9yZSBmbGV4
-aWJsZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0Bu
-eHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5
-ZXJzY2FwZS1lcC5jIHwgMjgNCj4gPiArKysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1l
-cC5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5j
-DQo+ID4gaW5kZXggYmU2MWQ5Ni4uOTQwNGNhMCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gKysrIGIvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IEBAIC0yMiw2ICsyMiw3
-IEBADQo+ID4NCj4gPiAgc3RydWN0IGxzX3BjaWVfZXAgew0KPiA+ICAJc3RydWN0IGR3X3BjaWUJ
-CSpwY2k7DQo+ID4gKwlzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcwkqbHNfZXBjOw0KPiA+ICB9Ow0K
-PiA+DQo+ID4gICNkZWZpbmUgdG9fbHNfcGNpZV9lcCh4KQlkZXZfZ2V0X2RydmRhdGEoKHgpLT5k
-ZXYpDQo+ID4gQEAgLTQwLDI1ICs0MSwyNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rldmlj
-ZV9pZA0KPiBsc19wY2llX2VwX29mX21hdGNoW10gPSB7DQo+ID4gIAl7IH0sDQo+ID4gIH07DQo+
-ID4NCj4gPiAtc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzIGxzX3BjaWVfZXBj
-X2ZlYXR1cmVzID0gew0KPiA+IC0JLmxpbmt1cF9ub3RpZmllciA9IGZhbHNlLA0KPiA+IC0JLm1z
-aV9jYXBhYmxlID0gdHJ1ZSwNCj4gPiAtCS5tc2l4X2NhcGFibGUgPSBmYWxzZSwNCj4gPiAtfTsN
-Cj4gPiAtDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyogIGxzX3Bj
-aWVfZXBfZ2V0X2ZlYXR1cmVzKHN0cnVjdA0KPiA+IGR3X3BjaWVfZXAgKmVwKSAgew0KPiA+IC0J
-cmV0dXJuICZsc19wY2llX2VwY19mZWF0dXJlczsNCj4gPiArCXN0cnVjdCBkd19wY2llICpwY2kg
-PSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsJc3RydWN0IGxzX3BjaWVfZXAgKnBjaWUg
-PSB0b19sc19wY2llX2VwKHBjaSk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHBjaWUtPmxzX2VwYzsN
-Cj4gPiAgfQ0KPiA+DQo+ID4gIHN0YXRpYyB2b2lkIGxzX3BjaWVfZXBfaW5pdChzdHJ1Y3QgZHdf
-cGNpZV9lcCAqZXApICB7DQo+ID4gIAlzdHJ1Y3QgZHdfcGNpZSAqcGNpID0gdG9fZHdfcGNpZV9m
-cm9tX2VwKGVwKTsNCj4gPiArCXN0cnVjdCBsc19wY2llX2VwICpwY2llID0gdG9fbHNfcGNpZV9l
-cChwY2kpOw0KPiA+ICAJZW51bSBwY2lfYmFybm8gYmFyOw0KPiA+DQo+ID4gIAlmb3IgKGJhciA9
-IEJBUl8wOyBiYXIgPD0gQkFSXzU7IGJhcisrKQ0KPiA+ICAJCWR3X3BjaWVfZXBfcmVzZXRfYmFy
-KHBjaSwgYmFyKTsNCj4gPiArDQo+ID4gKwlwY2llLT5sc19lcGMtPm1zaV9jYXBhYmxlID0gZXAt
-Pm1zaV9jYXAgPyB0cnVlIDogZmFsc2U7DQo+ID4gKwlwY2llLT5sc19lcGMtPm1zaXhfY2FwYWJs
-ZSA9IGVwLT5tc2l4X2NhcCA/IHRydWUgOiBmYWxzZTsNCj4gPiAgfQ0KPiA+DQo+ID4gIHN0YXRp
-YyBpbnQgbHNfcGNpZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1OCBmdW5j
-X25vLCBAQA0KPiA+IC0xMTgsNiArMTIwLDcgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9l
-cF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+ICAJc3RydWN0IGRl
-dmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiAgCXN0cnVjdCBkd19wY2llICpwY2k7DQo+ID4g
-IAlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZTsNCj4gPiArCXN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVz
-ICpsc19lcGM7DQo+ID4gIAlzdHJ1Y3QgcmVzb3VyY2UgKmRiaV9iYXNlOw0KPiA+ICAJaW50IHJl
-dDsNCj4gPg0KPiA+IEBAIC0xMjksNiArMTMyLDEwIEBAIHN0YXRpYyBpbnQgX19pbml0IGxzX3Bj
-aWVfZXBfcHJvYmUoc3RydWN0DQo+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCWlmICgh
-cGNpKQ0KPiA+ICAJCXJldHVybiAtRU5PTUVNOw0KPiA+DQo+ID4gKwlsc19lcGMgPSBkZXZtX2t6
-YWxsb2MoZGV2LCBzaXplb2YoKmxzX2VwYyksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFsc19l
-cGMpDQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICAJZGJpX2Jhc2UgPSBwbGF0
-Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsIElPUkVTT1VSQ0VfTUVNLA0KPiAicmVncyIp
-Ow0KPiA+ICAJcGNpLT5kYmlfYmFzZSA9IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZShkZXYs
-IGRiaV9iYXNlKTsNCj4gPiAgCWlmIChJU19FUlIocGNpLT5kYmlfYmFzZSkpDQo+ID4gQEAgLTEz
-OSw2ICsxNDYsMTMgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QN
-Cj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJcGNpLT5vcHMgPSAmbHNfcGNpZV9lcF9v
-cHM7DQo+ID4gIAlwY2llLT5wY2kgPSBwY2k7DQo+ID4NCj4gPiArCWxzX2VwYy0+bGlua3VwX25v
-dGlmaWVyID0gZmFsc2UsDQo+ID4gKwlsc19lcGMtPm1zaV9jYXBhYmxlID0gdHJ1ZSwNCj4gPiAr
-CWxzX2VwYy0+bXNpeF9jYXBhYmxlID0gdHJ1ZSwNCj4gDQo+IEFzIFttc2ksbXNpeF1fY2FwYWJs
-ZSBpcyBzaG9ydGx5IHNldCBmcm9tIGxzX3BjaWVfZXBfaW5pdCAtIGlzIHRoZXJlIGFueSByZWFz
-b24NCj4gdG8gc2V0IHRoZW0gaGVyZSAodG8gcG90ZW50aWFsbHkgaW5jb3JyZWN0IHZhbHVlcyk/
-DQpUaGlzIGlzIGEgSU5JVCB2YWx1ZSwgbWF5YmUgZmFsc2UgaXMgYmV0dGVyIGZvciBtc2lfY2Fw
-YWJsZSBhbmQgbXNpeF9jYXBhYmxlLCANCm9mIGNvdXJzZSwgd2UgZG9uJ3QgbmVlZCB0byBzZXQg
-aXQuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+ICsJbHNfZXBj
-LT5iYXJfZml4ZWRfNjRiaXQgPSAoMSA8PCBCQVJfMikgfCAoMSA8PCBCQVJfNCksDQo+ID4gKw0K
-PiA+ICsJcGNpZS0+bHNfZXBjID0gbHNfZXBjOw0KPiA+ICsNCj4gPiAgCXBsYXRmb3JtX3NldF9k
-cnZkYXRhKHBkZXYsIHBjaWUpOw0KPiA+DQo+ID4gIAlyZXQgPSBsc19hZGRfcGNpZV9lcChwY2ll
-LCBwZGV2KTsNCj4gPiAtLQ0KPiA+IDIuOS41DQo+ID4NCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Saravana,
+
+On 8/15/19 6:50 PM, Saravana Kannan wrote:
+> On Fri, Aug 9, 2019 at 10:20 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 8/9/19 10:00 PM, Saravana Kannan wrote:
+>>> On Fri, Aug 9, 2019 at 7:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>
+>>>> Hi Saravana,
+>>>>
+>>>> On 7/31/19 3:17 PM, Saravana Kannan wrote:
+>>>>> Add device-links to track functional dependencies between devices
+>>>>> after they are created (but before they are probed) by looking at
+>>>>> their common DT bindings like clocks, interconnects, etc.
+>>>>>
+>>>>> Having functional dependencies automatically added before the devices
+>>>>> are probed, provides the following benefits:
+>>>>>
+>>>>> - Optimizes device probe order and avoids the useless work of
+>>>>>   attempting probes of devices that will not probe successfully
+>>>>>   (because their suppliers aren't present or haven't probed yet).
+>>>>>
+>>>>>   For example, in a commonly available mobile SoC, registering just
+>>>>>   one consumer device's driver at an initcall level earlier than the
+>>>>>   supplier device's driver causes 11 failed probe attempts before the
+>>>>>   consumer device probes successfully. This was with a kernel with all
+>>>>>   the drivers statically compiled in. This problem gets a lot worse if
+>>>>>   all the drivers are loaded as modules without direct symbol
+>>>>>   dependencies.
+>>>>>
+>>>>> - Supplier devices like clock providers, interconnect providers, etc
+>>>>>   need to keep the resources they provide active and at a particular
+>>>>>   state(s) during boot up even if their current set of consumers don't
+>>>>>   request the resource to be active. This is because the rest of the
+>>>>>   consumers might not have probed yet and turning off the resource
+>>>>>   before all the consumers have probed could lead to a hang or
+>>>>>   undesired user experience.
+>>>>>
+>>>>>   Some frameworks (Eg: regulator) handle this today by turning off
+>>>>>   "unused" resources at late_initcall_sync and hoping all the devices
+>>>>>   have probed by then. This is not a valid assumption for systems with
+>>>>>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>>>>>   this due to the lack of a clear signal for when they can turn off
+>>>>>   resources. This leads to downstream hacks to handle cases like this
+>>>>>   that can easily be solved in the upstream kernel.
+>>>>>
+>>>>>   By linking devices before they are probed, we give suppliers a clear
+>>>>>   count of the number of dependent consumers. Once all of the
+>>>>>   consumers are active, the suppliers can turn off the unused
+>>>>>   resources without making assumptions about the number of consumers.
+>>>>>
+>>>>> By default we just add device-links to track "driver presence" (probe
+>>>>> succeeded) of the supplier device. If any other functionality provided
+>>>>> by device-links are needed, it is left to the consumer/supplier
+>>>>> devices to change the link when they probe.
+>>>>>
+>>>>> v1 -> v2:
+>>>>> - Drop patch to speed up of_find_device_by_node()
+>>>>> - Drop depends-on property and use existing bindings
+>>>>>
+>>>>> v2 -> v3:
+>>>>> - Refactor the code to have driver core initiate the linking of devs
+>>>>> - Have driver core link consumers to supplier before it's probed
+>>>>> - Add support for drivers to edit the device links before probing
+>>>>>
+>>>>> v3 -> v4:
+>>>>> - Tested edit_links() on system with cyclic dependency. Works.
+>>>>> - Added some checks to make sure device link isn't attempted from
+>>>>>   parent device node to child device node.
+>>>>> - Added way to pause/resume sync_state callbacks across
+>>>>>   of_platform_populate().
+>>>>> - Recursively parse DT node to create device links from parent to
+>>>>>   suppliers of parent and all child nodes.
+>>>>>
+>>>>> v4 -> v5:
+>>>>> - Fixed copy-pasta bugs with linked list handling
+>>>>> - Walk up the phandle reference till I find an actual device (needed
+>>>>>   for regulators to work)
+>>>>> - Added support for linking devices from regulator DT bindings
+>>>>> - Tested the whole series again to make sure cyclic dependencies are
+>>>>>   broken with edit_links() and regulator links are created properly.
+>>>>>
+>>>>> v5 -> v6:
+>>>>> - Split, squashed and reordered some of the patches.
+>>>>> - Refactored the device linking code to follow the same code pattern for
+>>>>>   any property.
+>>>>>
+>>>>> v6 -> v7:
+>>>>> - No functional changes.
+>>>>> - Renamed i to index
+>>>>> - Added comment to clarify not having to check property name for every
+>>>>>   index
+>>>>> - Added "matched" variable to clarify code. No functional change.
+>>>>> - Added comments to include/linux/device.h for add_links()
+>>>>>
+>>>>> v7 -> v8:
+>>>>> - Rebased on top of linux-next to handle device link changes in [1]
+>>>>>
+>>>>
+>>>>
+>>>>> v8 -> v9:
+>>>>> - Fixed kbuild test bot reported errors (docs and const)
+>>>>
+>>>> Some maintainers have strong opinions about whether change logs should be:
+>>>>
+>>>>   (1) only in patch 0
+>>>>   (2) only in the specific patches that are changed
+>>>>   (3) both in patch 0 and in the specific patches that are changed.
+>>>>
+>>>> I can adapt to any of the three styles.  But for style "(1)" please
+>>>> list which specific patch has changed for each item in the change list.
+>>>>
+>>>
+>>> Thanks for the context Frank. I'm okay with (1) or (2) but I'll stick
+>>> with (1) for this series. Didn't realize there were options (2) and
+>>> (3). Since you started reviewing from v7, I'll do that in the future
+>>> updates? Also, I haven't forgotten your emails. Just tied up with
+>>> something else for a few days. I'll get to your emails next week.
+>>
+>> Yes, starting with future updates is fine, no need to redo the v9
+>> change logs.
+>>
+>> No problem on the timing.  I figured you were busy or away from the
+>> internet.
+> 
+> I'm replying to your comments on the other 3 patches. Okay with a
+> majority of them. I'll wait for your reply to see where we settle for
+> some of the points before I send out any patches though.
+> 
+> For now I'm thinking of sending them as separate clean up patches so
+> that Greg doesn't have to deal with reverts in his "next" branch. We
+> can squash them later if we really need to rip out what's in there and
+> push it again.
+> 
+> -Saravana
+> 
+
+Please do not do separate clean up patches.  The series that Greg has is
+not ready for acceptance and I am going to ask him to revert it as we
+work through the needed changes.
+
+I suspect there will be at least two more versions of the series.  The
+first is to get the patches I commented in good shape.  Then I will
+look at the patches later in the series to see how they fit into the
+big picture.
+
+In the end, there should be one coherent patch series that implements
+the feature.
+
+-Frank
