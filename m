@@ -1,7 +1,7 @@
 From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH 1/2] dt-bindings: arm: sunxi: Add compatible for Tanix TX6 board
-Date: Fri, 16 Aug 2019 22:53:41 +0200
-Message-ID: <20190816205342.29552-2-jernej.skrabec@siol.net>
+Subject: [PATCH 2/2] arm64: dts: allwinner: h6: Introduce Tanix TX6 board
+Date: Fri, 16 Aug 2019 22:53:42 +0200
+Message-ID: <20190816205342.29552-3-jernej.skrabec@siol.net>
 References: <20190816205342.29552-1-jernej.skrabec@siol.net>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,30 +12,141 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org, wens@csie.org
 Cc: jernej.skrabec@siol.net, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new Oranth Tanix TX6 board compatible string to the bindings
-documentation.
+Tanix TX6 is an Allwinner H6 based TV box, which supports:
+- Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+- GPU Mali-T720
+- 4GiB DDR3 RAM (3GiB useable)
+- 100Mbps EMAC via AC200 EPHY
+- Cdtech 47822BS Wifi/BT
+- 2x USB 2.0 Host and 1x USB 3.0 Host
+- HDMI port
+- IR receiver
+- 64GiB eMMC
+- 5V/2A DC power supply
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../dts/allwinner/sun50i-h6-tanix-tx6.dts     | 100 ++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documenta=
-tion/devicetree/bindings/arm/sunxi.yaml
-index 000a00d12d6a..6afeb1be3a44 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -671,6 +671,11 @@ properties:
-           - const: sinlinx,sina33
-           - const: allwinner,sun8i-a33
-=20
-+      - description: Tanix TX6
-+        items:
-+          - const: oranth,tanix-tx6
-+          - const: allwinner,sun50i-h6
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts=
+/allwinner/Makefile
+index f6db0611cb85..395fe76f6819 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-3.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-lite2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-orangepi-one-plus.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-pine-h64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h6-tanix-tx6.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
+/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+new file mode 100644
+index 000000000000..7e7cb10e3d96
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: (GPL-2.0+ or MIT)
++/*
++ * Copyright (c) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
++ */
 +
-       - description: TBS A711 Tablet
-         items:
-           - const: tbs-biometrics,a711
++/dts-v1/;
++
++#include "sun50i-h6.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model =3D "Tanix TX6";
++	compatible =3D "oranth,tanix-tx6", "allwinner,sun50i-h6";
++
++	aliases {
++		serial0 =3D &uart0;
++	};
++
++	chosen {
++		stdout-path =3D "serial0:115200n8";
++	};
++
++	connector {
++		compatible =3D "hdmi-connector";
++		ddc-en-gpios =3D <&pio 7 2 GPIO_ACTIVE_HIGH>; /* PH2 */
++		type =3D "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint =3D <&hdmi_out_con>;
++			};
++		};
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "vcc3v3";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
++};
++
++&de {
++	status =3D "okay";
++};
++
++&ehci0 {
++	status =3D "okay";
++};
++
++&ehci3 {
++	status =3D "okay";
++};
++
++&hdmi {
++	status =3D "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint =3D <&hdmi_con_in>;
++	};
++};
++
++&mmc0 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&mmc0_pins>;
++	vmmc-supply =3D <&reg_vcc3v3>;
++	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
++	bus-width =3D <4>;
++	status =3D "okay";
++};
++
++&ohci0 {
++	status =3D "okay";
++};
++
++&ohci3 {
++	status =3D "okay";
++};
++
++&r_ir {
++	status =3D "okay";
++};
++
++&uart0 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&uart0_ph_pins>;
++	status =3D "okay";
++};
++
++&usb2otg {
++	dr_mode =3D "host";
++	status =3D "okay";
++};
++
++&usb2phy {
++	status =3D "okay";
++};
 --=20
 2.22.1
