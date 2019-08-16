@@ -1,56 +1,65 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [v3 1/2] dt/bindings: display: Add optional property node for
- Mali DP500
-Date: Fri, 16 Aug 2019 14:09:16 -0600
-Message-ID: <CAL_JsqLPZ+hCGd=J3MU83saHJJ-yx6k+X0Y7-2ECu5yT8PxF4w@mail.gmail.com>
-References: <20190816100424.5366-1-wen.he_1@nxp.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 1/4] dt-bindings: net: phy: Add subnode for LED
+ configuration
+Date: Fri, 16 Aug 2019 22:13:38 +0200
+Message-ID: <20190816201338.GA1646@bug>
+References: <20190813191147.19936-1-mka@chromium.org>
+ <20190813191147.19936-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190816100424.5366-1-wen.he_1@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190813191147.19936-2-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 4:14 AM Wen He <wen.he_1@nxp.com> wrote:
->
-> Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
-> This property describe the ARQoS levels of DP500's QoS signaling.
->
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> ---
-> change in v3:
->         - correction the describe of the node
->
->  Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
-> index 2f7870983ef1..1f711d32f235 100644
-> --- a/Documentation/devicetree/bindings/display/arm,malidp.txt
-> +++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
-> @@ -37,6 +37,8 @@ Optional properties:
->      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
->      to be used for the framebuffer; if not present, the framebuffer may
->      be located anywhere in memory.
-> +  - arm,malidp-arqos-high-level: phandle to describing the ARQoS levels of DP500's
-> +    QoS signaling.
+Hi!
 
-The driver is reading a u32... Did you test this?
+Please Cc led mailing lists on led issues.
 
 
->
->
->  Example:
-> @@ -54,6 +56,7 @@ Example:
->                 clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
->                 clock-names = "pxlclk", "mclk", "aclk", "pclk";
->                 arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
-> +               arm,malidp-arqos-high-level = <&rqosvalue>;
->                 port {
->                         dp0_output: endpoint {
->                                 remote-endpoint = <&tda998x_2_input>;
-> --
-> 2.17.1
->
+On Tue 2019-08-13 12:11:44, Matthias Kaehlcke wrote:
+> The LED behavior of some Ethernet PHYs is configurable. Add an
+> optional 'leds' subnode with a child node for each LED to be
+> configured. The binding aims to be compatible with the common
+> LED binding (see devicetree/bindings/leds/common.txt).
+> 
+> A LED can be configured to be:
+> 
+> - 'on' when a link is active, some PHYs allow configuration for
+>   certain link speeds
+>   speeds
+> - 'off'
+> - blink on RX/TX activity, some PHYs allow configuration for
+>   certain link speeds
+> 
+> For the configuration to be effective it needs to be supported by
+> the hardware and the corresponding PHY driver.
+> 
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+
+> @@ -173,5 +217,20 @@ examples:
+>              reset-gpios = <&gpio1 4 1>;
+>              reset-assert-us = <1000>;
+>              reset-deassert-us = <2000>;
+> +
+> +            leds {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                    reg = <0>;
+> +                    linux,default-trigger = "phy-link-1g";
+> +                };
+
+Because this affects us.
+
+Is the LED software controllable? Or can it do limited subset of triggers you listed?
+
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
