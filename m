@@ -1,211 +1,143 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 12/13] net: phy: adin: add ethtool get_stats support
-Date: Fri, 16 Aug 2019 16:10:10 +0300
-Message-ID: <20190816131011.23264-13-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 09/13] net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
+Date: Fri, 16 Aug 2019 16:10:07 +0300
+Message-ID: <20190816131011.23264-10-alexandru.ardelean@analog.com>
 References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190816131011.23264-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This change implements retrieving all the error counters from the PHY.
+The ADIN1200 & ADIN1300 PHYs support EEE by using standard Clause 45 access
+to access MMD registers for EEE.
 
-The counters require that the RxErrCnt register (0x0014) be read first,
-after which copies of the counters are latched into the registers. This
-ensures that all registers read after RxErrCnt are synchronized at the
-moment that they are read.
+The EEE register addresses (when using Clause 22) are available at
+different addresses (than Clause 45), and since accessing these regs (via
+Clause 22) needs a special mechanism, a translation table is required to
+convert these addresses.
 
-The counter values need to be accumulated by the driver, as each time that
-RxErrCnt is read, the values that are latched are the ones that have
-incremented from the last read.
+For Clause 45, this is not needed since the driver will likely never use
+this access mode.
 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 128 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 128 insertions(+)
+ drivers/net/phy/adin.c | 68 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 66 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 131b577a17e5..ac79e16cd7f1 100644
+index 51c0d17577de..131b7f85ae32 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -24,6 +24,8 @@
- #define   ADIN1300_AUTO_MDI_EN			BIT(10)
- #define   ADIN1300_MAN_MDIX_EN			BIT(9)
+@@ -40,6 +40,16 @@
+ #define ADIN1300_PHY_STATUS1			0x001a
+ #define   ADIN1300_PAIR_01_SWAP			BIT(11)
  
-+#define ADIN1300_RX_ERR_CNT			0x0014
++/* EEE register addresses, accessible via Clause 22 access using
++ * ADIN1300_MII_EXT_REG_PTR & ADIN1300_MII_EXT_REG_DATA.
++ * The bit-fields are the same as specified by IEEE for EEE.
++ */
++#define ADIN1300_EEE_CAP_REG			0x8000
++#define ADIN1300_EEE_ADV_REG			0x8001
++#define ADIN1300_EEE_LPABLE_REG			0x8002
++#define ADIN1300_CLOCK_STOP_REG			0x9400
++#define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
 +
- #define ADIN1300_PHY_CTRL2			0x0016
- #define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
- #define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
-@@ -146,6 +148,33 @@ static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
- 	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
+ #define ADIN1300_GE_RGMII_CFG_REG		0xff23
+ #define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
+ #define   ADIN1300_GE_RGMII_RX_SEL(x)		\
+@@ -101,6 +111,26 @@ static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
+ 	{ },
  };
  
-+struct adin_hw_stat {
-+	const char *string;
-+	u16 reg1;
-+	u16 reg2;
-+};
-+
-+static struct adin_hw_stat adin_hw_stats[] = {
-+	{ "total_frames_checked_count",		0x940A, 0x940B }, /* hi + lo */
-+	{ "length_error_frames_count",		0x940C },
-+	{ "alignment_error_frames_count",	0x940D },
-+	{ "symbol_error_count",			0x940E },
-+	{ "oversized_frames_count",		0x940F },
-+	{ "undersized_frames_count",		0x9410 },
-+	{ "odd_nibble_frames_count",		0x9411 },
-+	{ "odd_preamble_packet_count",		0x9412 },
-+	{ "dribble_bits_frames_count",		0x9413 },
-+	{ "false_carrier_events_count",		0x9414 },
-+};
-+
 +/**
-+ * struct adin_priv - ADIN PHY driver private data
-+ * stats		statistic counters for the PHY
++ * struct adin_clause45_mmd_map - map to convert Clause 45 regs to Clause 22
++ * @devad		device address used in Clause 45 access
++ * @cl45_regnum		register address defined by Clause 45
++ * @adin_regnum		equivalent register address accessible via Clause 22
 + */
-+struct adin_priv {
-+	u64			stats[ARRAY_SIZE(adin_hw_stats)];
++struct adin_clause45_mmd_map {
++	int devad;
++	u16 cl45_regnum;
++	u16 adin_regnum;
++};
++
++static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
++	{ MDIO_MMD_PCS,	MDIO_PCS_EEE_ABLE,	ADIN1300_EEE_CAP_REG },
++	{ MDIO_MMD_AN,	MDIO_AN_EEE_LPABLE,	ADIN1300_EEE_LPABLE_REG },
++	{ MDIO_MMD_AN,	MDIO_AN_EEE_ADV,	ADIN1300_EEE_ADV_REG },
++	{ MDIO_MMD_PCS,	MDIO_CTRL1,		ADIN1300_CLOCK_STOP_REG },
++	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
 +};
 +
  static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
  {
  	size_t i;
-@@ -548,10 +577,102 @@ static int adin_soft_reset(struct phy_device *phydev)
- 	return rc < 0 ? rc : 0;
+@@ -251,13 +281,41 @@ static int adin_phy_config_intr(struct phy_device *phydev)
+ 			      ADIN1300_INT_MASK_EN);
  }
  
-+static int adin_get_sset_count(struct phy_device *phydev)
++static int adin_cl45_to_adin_reg(struct phy_device *phydev, int devad,
++				 u16 cl45_regnum)
 +{
-+	return ARRAY_SIZE(adin_hw_stats);
-+}
-+
-+static void adin_get_strings(struct phy_device *phydev, u8 *data)
-+{
++	struct adin_clause45_mmd_map *m;
 +	int i;
 +
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
-+		strlcpy(&data[i * ETH_GSTRING_LEN],
-+			adin_hw_stats[i].string, ETH_GSTRING_LEN);
-+	}
-+}
++	if (devad == MDIO_MMD_VEND1)
++		return cl45_regnum;
 +
-+static int adin_read_mmd_stat_regs(struct phy_device *phydev,
-+				   struct adin_hw_stat *stat,
-+				   u32 *val)
-+{
-+	int ret;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg1);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = (ret & 0xffff);
-+
-+	if (stat->reg2 == 0)
-+		return 0;
-+
-+	ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, stat->reg2);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val <<= 16;
-+	*val |= (ret & 0xffff);
-+
-+	return 0;
-+}
-+
-+static u64 adin_get_stat(struct phy_device *phydev, int i)
-+{
-+	struct adin_hw_stat *stat = &adin_hw_stats[i];
-+	struct adin_priv *priv = phydev->priv;
-+	u32 val;
-+	int ret;
-+
-+	if (stat->reg1 > 0x1f) {
-+		ret = adin_read_mmd_stat_regs(phydev, stat, &val);
-+		if (ret < 0)
-+			return (u64)(~0);
-+	} else {
-+		ret = phy_read(phydev, stat->reg1);
-+		if (ret < 0)
-+			return (u64)(~0);
-+		val = (ret & 0xffff);
++	for (i = 0; i < ARRAY_SIZE(adin_clause45_mmd_map); i++) {
++		m = &adin_clause45_mmd_map[i];
++		if (m->devad == devad && m->cl45_regnum == cl45_regnum)
++			return m->adin_regnum;
 +	}
 +
-+	priv->stats[i] += val;
++	phydev_err(phydev,
++		   "No translation available for devad: %d reg: %04x\n",
++		   devad, cl45_regnum);
 +
-+	return priv->stats[i];
++	return -EINVAL;
 +}
 +
-+static void adin_get_stats(struct phy_device *phydev,
-+			   struct ethtool_stats *stats, u64 *data)
-+{
-+	int i, rc;
+ static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
+ {
+ 	struct mii_bus *bus = phydev->mdio.bus;
+ 	int phy_addr = phydev->mdio.addr;
++	int adin_regnum;
+ 	int err;
+ 
+-	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
++	adin_regnum = adin_cl45_to_adin_reg(phydev, devad, regnum);
++	if (adin_regnum < 0)
++		return adin_regnum;
 +
-+	/* latch copies of all the frame-checker counters */
-+	rc = phy_read(phydev, ADIN1300_RX_ERR_CNT);
-+	if (rc < 0)
-+		return;
++	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR,
++			      adin_regnum);
+ 	if (err)
+ 		return err;
+ 
+@@ -269,9 +327,15 @@ static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
+ {
+ 	struct mii_bus *bus = phydev->mdio.bus;
+ 	int phy_addr = phydev->mdio.addr;
++	int adin_regnum;
+ 	int err;
+ 
+-	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
++	adin_regnum = adin_cl45_to_adin_reg(phydev, devad, regnum);
++	if (adin_regnum < 0)
++		return adin_regnum;
 +
-+	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++)
-+		data[i] = adin_get_stat(phydev, i);
-+}
-+
-+static int adin_probe(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	struct adin_priv *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	phydev->priv = priv;
-+
-+	return 0;
-+}
-+
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
- 		.name		= "ADIN1200",
-+		.probe		= adin_probe,
- 		.config_init	= adin_config_init,
- 		.soft_reset	= adin_soft_reset,
- 		.config_aneg	= adin_config_aneg,
-@@ -560,6 +681,9 @@ static struct phy_driver adin_driver[] = {
- 		.set_tunable	= adin_set_tunable,
- 		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
-@@ -568,6 +692,7 @@ static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
- 		.name		= "ADIN1300",
-+		.probe		= adin_probe,
- 		.config_init	= adin_config_init,
- 		.soft_reset	= adin_soft_reset,
- 		.config_aneg	= adin_config_aneg,
-@@ -576,6 +701,9 @@ static struct phy_driver adin_driver[] = {
- 		.set_tunable	= adin_set_tunable,
- 		.ack_interrupt	= adin_phy_ack_intr,
- 		.config_intr	= adin_phy_config_intr,
-+		.get_sset_count	= adin_get_sset_count,
-+		.get_strings	= adin_get_strings,
-+		.get_stats	= adin_get_stats,
- 		.resume		= genphy_resume,
- 		.suspend	= genphy_suspend,
- 		.read_mmd	= adin_read_mmd,
++	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR,
++			      adin_regnum);
+ 	if (err)
+ 		return err;
+ 
 -- 
 2.20.1
