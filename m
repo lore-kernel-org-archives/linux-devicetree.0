@@ -1,37 +1,52 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
-Date: Fri, 16 Aug 2019 09:58:11 -0700
-Message-ID: <20190816165812.BC64B2077C@mail.kernel.org>
-References: <20190814122958.4981-1-vkoul@kernel.org> <20190814122958.4981-2-vkoul@kernel.org> <20190814171946.E9E8D20665@mail.kernel.org> <20190816042440.GY12733@vkoul-mobl.Dlink>
+Subject: Re: [PATCH V2 06/13] clk: bcm2835: Mark PLLD_PER as CRITICAL
+Date: Fri, 16 Aug 2019 10:39:33 -0700
+Message-ID: <20190816173934.60509205F4@mail.kernel.org>
+References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
+ <1565713248-4906-7-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190816042440.GY12733@vkoul-mobl.Dlink>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1565713248-4906-7-git-send-email-wahrenst@gmx.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-15 21:24:40)
-> On 14-08-19, 10:19, Stephen Boyd wrote:
-> > Quoting Vinod Koul (2019-08-14 05:29:58)
-> > > Add support for rpmh clocks found in SM8150
-> > >=20
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> >=20
-> > Patch looks OK, but can you convert this driver to use the new parent
-> > style and then update the binding to handle it? We can fix the other
-> > platforms and dts files that use this driver in parallel, but sm8150
-> > will be forward looking.
->=20
-> Yes but that would also impact sdm845 as it uses this driver, so I
-> wanted to get this one done so that we have support for rpm clock and
-> then do the conversion.
->=20
-> Would that be okay with you to get this in and then I convert this?
->=20
+Quoting Stefan Wahren (2019-08-13 09:20:41)
+> The VPU firmware assume that the PLLD_PER isn't modified by the ARM core.
+> Otherwise this could cause firmware lookups. So mark the clock as critical
+> to avoid this.
+> 
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> ---
+>  drivers/clk/bcm/clk-bcm2835.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+> index fdf672a..b62052e 100644
+> --- a/drivers/clk/bcm/clk-bcm2835.c
+> +++ b/drivers/clk/bcm/clk-bcm2835.c
+> @@ -1785,7 +1785,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+>                 .load_mask = CM_PLLD_LOADPER,
+>                 .hold_mask = CM_PLLD_HOLDPER,
+>                 .fixed_divider = 1,
+> -               .flags = CLK_SET_RATE_PARENT),
+> +               .flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT),
 
-How does it impact sdm845? The new way of specifying parents supports
-fallback to legacy string matching.
+Please add a comment in the code to the effect that is in the commit
+text so we don't have to dig through commits to figure out why this
+special CLK_IS_CRITICAL flag is here.
+
+>         [BCM2835_PLLD_DSI0]     = REGISTER_PLL_DIV(
+>                 SOC_ALL,
+>                 .name = "plld_dsi0",
