@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 05/13] net: phy: adin: configure RGMII/RMII/MII modes on config
-Date: Fri, 16 Aug 2019 16:10:03 +0300
-Message-ID: <20190816131011.23264-6-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 06/13] net: phy: adin: make RGMII internal delays configurable
+Date: Fri, 16 Aug 2019 16:10:04 +0300
+Message-ID: <20190816131011.23264-7-alexandru.ardelean@analog.com>
 References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,113 +13,143 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
-unconfigured) is RGMII.
-This change adds support for configuring these modes via the device
-registers.
-
-For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
-the default delay is 2 ns. This can be configurable and will be done in
-a subsequent change.
+The internal delays for the RGMII are configurable for both RX & TX. This
+change adds support for configuring them via device-tree (or ACPI).
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 78 insertions(+), 1 deletion(-)
+ drivers/net/phy/adin.c | 82 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index efbb732f0398..badca6881c6c 100644
+index badca6881c6c..c882fcd9ada5 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -31,9 +31,86 @@
- 	(ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_HW_IRQ_EN)
+@@ -5,11 +5,13 @@
+  * Copyright 2019 Analog Devices Inc.
+  */
+ #include <linux/kernel.h>
++#include <linux/bitfield.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mii.h>
+ #include <linux/phy.h>
++#include <linux/property.h>
+ 
+ #define PHY_ID_ADIN1200				0x0283bc20
+ #define PHY_ID_ADIN1300				0x0283bc30
+@@ -32,15 +34,83 @@
  #define ADIN1300_INT_STATUS_REG			0x0019
  
-+#define ADIN1300_GE_RGMII_CFG_REG		0xff23
-+#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
-+#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
-+#define   ADIN1300_GE_RGMII_EN			BIT(0)
+ #define ADIN1300_GE_RGMII_CFG_REG		0xff23
++#define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
++#define   ADIN1300_GE_RGMII_RX_SEL(x)		\
++		FIELD_PREP(ADIN1300_GE_RGMII_RX_MSK, x)
++#define   ADIN1300_GE_RGMII_GTX_MSK		GENMASK(5, 3)
++#define   ADIN1300_GE_RGMII_GTX_SEL(x)		\
++		FIELD_PREP(ADIN1300_GE_RGMII_GTX_MSK, x)
+ #define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
+ #define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
+ #define   ADIN1300_GE_RGMII_EN			BIT(0)
+ 
++/* RGMII internal delay settings for rx and tx for ADIN1300 */
++#define ADIN1300_RGMII_1_60_NS			0x0001
++#define ADIN1300_RGMII_1_80_NS			0x0002
++#define	ADIN1300_RGMII_2_00_NS			0x0000
++#define	ADIN1300_RGMII_2_20_NS			0x0006
++#define	ADIN1300_RGMII_2_40_NS			0x0007
 +
-+#define ADIN1300_GE_RMII_CFG_REG		0xff24
-+#define   ADIN1300_GE_RMII_EN			BIT(0)
-+
-+static int adin_config_rgmii_mode(struct phy_device *phydev)
-+{
+ #define ADIN1300_GE_RMII_CFG_REG		0xff24
+ #define   ADIN1300_GE_RMII_EN			BIT(0)
+ 
++/**
++ * struct adin_cfg_reg_map - map a config value to aregister value
++ * @cfg		value in device configuration
++ * @reg		value in the register
++ */
++struct adin_cfg_reg_map {
++	int cfg;
 +	int reg;
++};
 +
-+	if (!phy_interface_is_rgmii(phydev))
-+		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
-+					  ADIN1300_GE_RGMII_CFG_REG,
-+					  ADIN1300_GE_RGMII_EN);
++static const struct adin_cfg_reg_map adin_rgmii_delays[] = {
++	{ 1600, ADIN1300_RGMII_1_60_NS },
++	{ 1800, ADIN1300_RGMII_1_80_NS },
++	{ 2000, ADIN1300_RGMII_2_00_NS },
++	{ 2200, ADIN1300_RGMII_2_20_NS },
++	{ 2400, ADIN1300_RGMII_2_40_NS },
++	{ },
++};
 +
-+	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
-+	if (reg < 0)
-+		return reg;
++static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
++{
++	size_t i;
 +
-+	reg |= ADIN1300_GE_RGMII_EN;
-+
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
-+		reg |= ADIN1300_GE_RGMII_RXID_EN;
-+	} else {
-+		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
++	for (i = 0; tbl[i].cfg; i++) {
++		if (tbl[i].cfg == cfg)
++			return tbl[i].reg;
 +	}
 +
-+	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
-+		reg |= ADIN1300_GE_RGMII_TXID_EN;
-+	} else {
-+		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
-+	}
-+
-+	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-+			     ADIN1300_GE_RGMII_CFG_REG, reg);
++	return -EINVAL;
 +}
 +
-+static int adin_config_rmii_mode(struct phy_device *phydev)
++static u32 adin_get_reg_value(struct phy_device *phydev,
++			      const char *prop_name,
++			      const struct adin_cfg_reg_map *tbl,
++			      u32 dflt)
 +{
-+	int reg;
-+
-+	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
-+		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
-+					  ADIN1300_GE_RMII_CFG_REG,
-+					  ADIN1300_GE_RMII_EN);
-+
-+	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
-+	if (reg < 0)
-+		return reg;
-+
-+	reg |= ADIN1300_GE_RMII_EN;
-+
-+	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
-+			     ADIN1300_GE_RMII_CFG_REG, reg);
-+}
-+
- static int adin_config_init(struct phy_device *phydev)
- {
--	return genphy_config_init(phydev);
++	struct device *dev = &phydev->mdio.dev;
++	u32 val;
 +	int rc;
 +
-+	rc = genphy_config_init(phydev);
-+	if (rc < 0)
-+		return rc;
++	if (device_property_read_u32(dev, prop_name, &val))
++		return dflt;
 +
-+	rc = adin_config_rgmii_mode(phydev);
-+	if (rc < 0)
-+		return rc;
++	rc = adin_lookup_reg_value(tbl, val);
++	if (rc < 0) {
++		phydev_warn(phydev,
++			    "Unsupported value %u for %s using default (%u)\n",
++			    val, prop_name, dflt);
++		return dflt;
++	}
 +
-+	rc = adin_config_rmii_mode(phydev);
-+	if (rc < 0)
-+		return rc;
++	return rc;
++}
 +
-+	phydev_dbg(phydev, "PHY is using mode '%s'\n",
-+		   phy_modes(phydev->interface));
-+
-+	return 0;
- }
+ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ {
++	u32 val;
+ 	int reg;
  
- static int adin_phy_ack_intr(struct phy_device *phydev)
+ 	if (!phy_interface_is_rgmii(phydev))
+@@ -57,6 +127,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
+ 		reg |= ADIN1300_GE_RGMII_RXID_EN;
++
++		val = adin_get_reg_value(phydev, "adi,rx-internal-delay-ps",
++					 adin_rgmii_delays,
++					 ADIN1300_RGMII_2_00_NS);
++		reg &= ~ADIN1300_GE_RGMII_RX_MSK;
++		reg |= ADIN1300_GE_RGMII_RX_SEL(val);
+ 	} else {
+ 		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
+ 	}
+@@ -64,6 +140,12 @@ static int adin_config_rgmii_mode(struct phy_device *phydev)
+ 	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+ 	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
+ 		reg |= ADIN1300_GE_RGMII_TXID_EN;
++
++		val = adin_get_reg_value(phydev, "adi,tx-internal-delay-ps",
++					 adin_rgmii_delays,
++					 ADIN1300_RGMII_2_00_NS);
++		reg &= ~ADIN1300_GE_RGMII_GTX_MSK;
++		reg |= ADIN1300_GE_RGMII_GTX_SEL(val);
+ 	} else {
+ 		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
+ 	}
 -- 
 2.20.1
