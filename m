@@ -1,36 +1,82 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V6 4/4] arm64: dts: imx8mm: Enable cpu-idle driver
-Date: Fri, 16 Aug 2019 10:08:44 +0000
-Message-ID: <DB3PR0402MB3916E469219C7CC68D55C90AF5AF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1565915925-21009-1-git-send-email-Anson.Huang@nxp.com>
- <1565915925-21009-4-git-send-email-Anson.Huang@nxp.com>
- <e62d26b9-8c9b-644f-d2b3-485586e07e35@linaro.org>
+From: masonccyang@mxic.com.tw
+Subject: Re: [PATCH v6 1/2] mtd: rawnand: Add Macronix raw NAND controller
+ driver
+Date: Fri, 16 Aug 2019 18:10:47 +0800
+Message-ID: <OFE8EA3122.5F3A0829-ON48258458.00375F0F-48258458.0037EBA6@mxic.com.tw>
+References: <1564631710-30276-1-git-send-email-masonccyang@mxic.com.tw>	<1564631710-30276-2-git-send-email-masonccyang@mxic.com.tw>
+ <20190801082233.759f6ae9@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e62d26b9-8c9b-644f-d2b3-485586e07e35@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "agx@sigxcpu.org" <agx@sigxcpu.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20190801082233.759f6ae9@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christophe.kerello@st.com, richard@nod.at, bbrezillon@kernel.org, juliensu@mxic.com.tw, lee.jones@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, paul@crapouillou.net, marek.vasut@gmail.com, paul.burton@mips.com, liang.yang@amlogic.com, linux-mtd@lists.infradead.org, stefan@agner.ch, miquel.raynal@bootlin.com, anders.roxell@linaro.org, computersforpeace@gmail.com, dwmw2@infradead.org, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIERhbmllbC9TaGF3bg0KDQo+IE9uIDE2LzA4LzIwMTkgMDI6MzgsIEFuc29uIEh1YW5nIHdy
-b3RlOg0KPiA+IEVuYWJsZSBpLk1YOE1NIGNwdS1pZGxlIHVzaW5nIGdlbmVyaWMgQVJNIGNwdS1p
-ZGxlIGRyaXZlciwgMiBzdGF0ZXMNCj4gPiBhcmUgc3VwcG9ydGVkLCBkZXRhaWxzIGFzIGJlbG93
-Og0KPiA+DQo+ID4gcm9vdEBpbXg4bW1ldms6fiMgY2F0DQo+IC9zeXMvZGV2aWNlcy9zeXN0ZW0v
-Y3B1L2NwdTAvY3B1aWRsZS9zdGF0ZTAvbmFtZQ0KPiA+IFdGSQ0KPiA+IHJvb3RAaW14OG1tZXZr
-On4jIGNhdA0KPiA+IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2NwdTAvY3B1aWRsZS9zdGF0ZTAv
-dXNhZ2UNCj4gPiAzOTczDQo+ID4gcm9vdEBpbXg4bW1ldms6fiMgY2F0DQo+IC9zeXMvZGV2aWNl
-cy9zeXN0ZW0vY3B1L2NwdTAvY3B1aWRsZS9zdGF0ZTEvbmFtZQ0KPiA+IGNwdS1wZC13YWl0DQo+
-ID4gcm9vdEBpbXg4bW1ldms6fiMgY2F0DQo+ID4gL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1
-MC9jcHVpZGxlL3N0YXRlMS91c2FnZQ0KPiA+IDY2NDcNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiANCj4gSGkgQW5zb24sDQo+IA0K
-PiBJJ3ZlIGFwcGxpZWQgdGhlIHBhdGNoZXMgMS0zIGJ1dCB0aGlzIG9uZSBkb2VzIG5vdCBhcHBs
-eS4NCg0KVGhhbmtzLg0KDQo+IA0KPiBZb3UgY2FuIGVpdGhlciByZXNwaW4gaXQgYWdhaW5zdCB0
-aXAvdGltZXJzL2NvcmUgYW5kIHRha2UgaXQgdGhyb3VnaCBTaGF3bidzDQo+IHRyZWUuIElmIHRo
-ZSBsYXRlciwgeW91IGNhbiBhZGQgbXkgQWNrZWQtYnkuDQoNCkhpLCBTaGF3bg0KCUNhbiB5b3Ug
-dGFrZSB0aGlzIHBhdGNoIGFuZCBhZGQgYmVsb3cgQWNrZWQtYnk/IEl0IHNob3VsZCBjYW4gYmUg
-YXBwbGllZCB0byB5b3VyIHRyZWUgZGlyZWN0bHkuDQoNCglBY2tlZC1ieTogRGFuaWVsIExlemNh
-bm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+DQoNClRoYW5rcywNCkFuc29uDQoNCg0K
+
+Hi Boris, 
+
+> > +
+> > +static int  mxic_nfc_wait_ready(struct nand_chip *chip)
+> > +{
+> > +   struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
+> > +   u32 sts;
+> > +
+> > +   return readl_poll_timeout(nfc->regs + INT_STS, sts,
+> > +              sts & INT_RDY_PIN, 0, USEC_PER_SEC);
+> 
+> You're not using interrupts at all? For things like R/B wait it's
+> usually a good thing to rely on interrupts instead of status-polling.
+> 
+
+Have updated it and I will patch using interrupts instead of polling.
+
+thanks for your comments.
+
+best regards,
+Mason
+
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
