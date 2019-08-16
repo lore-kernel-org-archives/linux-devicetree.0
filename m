@@ -1,164 +1,36 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] dmaengine: milbeaut-hdmac: Add HDMAC driver for
- Milbeaut platforms
-Date: Fri, 16 Aug 2019 10:13:04 +0530
-Message-ID: <20190816044304.GZ12733@vkoul-mobl.Dlink>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005247.2048-1-jassisinghbrar@gmail.com>
- <20190624064442.GW2962@vkoul-mobl>
- <CABb+yY3pLBA=Y_4kUZ-E_VWOiJsofung2bMA5HqkNeNJkOOZxQ@mail.gmail.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v4 11/14] net: phy: adin: implement Energy Detect
+ Powerdown mode
+Date: Fri, 16 Aug 2019 06:09:49 +0000
+Message-ID: <f5d3dc7e4e919427e82ccb637bd757393296047a.camel@analog.com>
+References: <20190812112350.15242-1-alexandru.ardelean@analog.com>
+         <20190812112350.15242-12-alexandru.ardelean@analog.com>
+         <f13feaee-0bad-a774-5527-296b6f74c91b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY3pLBA=Y_4kUZ-E_VWOiJsofung2bMA5HqkNeNJkOOZxQ@mail.gmail.com>
+In-Reply-To: <f13feaee-0bad-a774-5527-296b6f74c91b@gmail.com>
+Content-Language: en-US
+Content-ID: <AC1D4EDC47E24F4488C47E4AF165016E@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: dmaengine@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, orito.takao@socionext.com, Masami Hiramatsu <masami.hiramatsu@linaro.org>, kasai.kazuhiro@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15-08-19, 21:25, Jassi Brar wrote:
-> On Mon, Jun 24, 2019 at 1:47 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 12-06-19, 19:52, jassisinghbrar@gmail.com wrote:
-> >
-> > > +#include <linux/bits.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/dma-mapping.h>
-> > > +#include <linux/dmaengine.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/iopoll.h>
-> > > +#include <linux/list.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_dma.h>
-> >
-> > Do we need both, IIRC of_dma.h does include of.h!
-> >
-> OK
-> 
-> > > +/* mc->vc.lock must be held by caller */
-> > > +static void milbeaut_chan_start(struct milbeaut_hdmac_chan *mc,
-> > > +                             struct milbeaut_hdmac_desc *md)
-> > > +{
-> > > +     struct scatterlist *sg;
-> > > +     u32  cb, ca, src_addr, dest_addr, len;
-> >            ^^
-> > double space
-> >
-> OK
-> 
-> > > +static irqreturn_t milbeaut_hdmac_interrupt(int irq, void *dev_id)
-> > > +{
-> > > +     struct milbeaut_hdmac_chan *mc = dev_id;
-> > > +     struct milbeaut_hdmac_desc *md;
-> > > +     irqreturn_t ret = IRQ_HANDLED;
-> > > +     u32 val;
-> > > +
-> > > +     spin_lock(&mc->vc.lock);
-> > > +
-> > > +     /* Ack and Disable irqs */
-> > > +     val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACB);
-> > > +     val &= ~(FIELD_PREP(MLB_HDMAC_SS, 0x7));
-> >                                          ^^^^
-> > Magic ..?
-> >
-> OK, will define a macro for 7
-> 
-> > > +static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
-> > > +{
-> > > +     struct virt_dma_chan *vc = to_virt_chan(chan);
-> > > +     struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-> > > +     u32 val;
-> > > +
-> > > +     spin_lock(&mc->vc.lock);
-> > > +     val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
-> > > +     val |= MLB_HDMAC_PB;
-> > > +     writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
-> >
-> > We really should have an updatel() and friends in kernel, feel free to
-> > add in your driver though!
-> >
-> I'll pass on that for now.
-> 
-> > > +static int milbeaut_hdmac_chan_init(struct platform_device *pdev,
-> > > +                                 struct milbeaut_hdmac_device *mdev,
-> > > +                                 int chan_id)
-> > > +{
-> > > +     struct device *dev = &pdev->dev;
-> > > +     struct milbeaut_hdmac_chan *mc = &mdev->channels[chan_id];
-> > > +     char *irq_name;
-> > > +     int irq, ret;
-> > > +
-> > > +     irq = platform_get_irq(pdev, chan_id);
-> > > +     if (irq < 0) {
-> > > +             dev_err(&pdev->dev, "failed to get IRQ number for ch%d\n",
-> > > +                     chan_id);
-> > > +             return irq;
-> > > +     }
-> > > +
-> > > +     irq_name = devm_kasprintf(dev, GFP_KERNEL, "milbeaut-hdmac-%d",
-> > > +                               chan_id);
-> > > +     if (!irq_name)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     ret = devm_request_irq(dev, irq, milbeaut_hdmac_interrupt,
-> > > +                            IRQF_SHARED, irq_name, mc);
-> >
-> > I tend to dislike using devm_request_irq(), we have no control over when
-> > the irq is freed and what is a spirious irq is running while we are
-> > unrolling, so IMHO it make sense to free up and ensure all tasklets are
-> > quiesced when remove returns
-> >
-> If the code is written clean and tight we need not be so paranoid.
-> 
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     mc->mdev = mdev;
-> > > +     mc->reg_ch_base = mdev->reg_base + MLB_HDMAC_CH_STRIDE * (chan_id + 1);
-> > > +     mc->vc.desc_free = milbeaut_hdmac_desc_free;
-> > > +     vchan_init(&mc->vc, &mdev->ddev);
-> >
-> > who kills the vc->task?
-> >
-> vchan_synchronize() called from milbeaut_hdmac_synchronize()
-
-But that can be skipped by called, from driver pov we need to ensure
-that it is killed
-
-> > > +static int milbeaut_hdmac_remove(struct platform_device *pdev)
-> > > +{
-> > > +     struct milbeaut_hdmac_device *mdev = platform_get_drvdata(pdev);
-> > > +     struct dma_chan *chan;
-> > > +     int ret;
-> > > +
-> > > +     /*
-> > > +      * Before reaching here, almost all descriptors have been freed by the
-> > > +      * ->device_free_chan_resources() hook. However, each channel might
-> > > +      * be still holding one descriptor that was on-flight at that moment.
-> > > +      * Terminate it to make sure this hardware is no longer running. Then,
-> > > +      * free the channel resources once again to avoid memory leak.
-> > > +      */
-> > > +     list_for_each_entry(chan, &mdev->ddev.channels, device_node) {
-> > > +             ret = dmaengine_terminate_sync(chan);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +             milbeaut_hdmac_free_chan_resources(chan);
-> > > +     }
-> > > +
-> > > +     of_dma_controller_free(pdev->dev.of_node);
-> > > +     dma_async_device_unregister(&mdev->ddev);
-> > > +     clk_disable_unprepare(mdev->clk);
-> >
-> > And as suspected we have active tasklets and irq at this time :(
-> >
-> Not sure how is that....
-
-Since you use devm variants, and driver tasklet is not killed, irq can
-be fired (spurious as well) and can run irq and schedule a tasklet. How
-do you prevent that?
-
-Thanks
--- 
-~Vinod
+T24gV2VkLCAyMDE5LTA4LTE0IGF0IDEwOjU3IC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gDQo+IE9uIDgvMTIvMjAxOSA0OjIzIEFNLCBBbGV4
+YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gVGhlIEFESU4gUEhZcyBzdXBwb3J0IEVuZXJneSBE
+ZXRlY3QgUG93ZXJkb3duIG1vZGUsIHdoaWNoIHB1dHMgdGhlIFBIWSBpbnRvDQo+ID4gYSBsb3cg
+cG93ZXIgbW9kZSB3aGVuIHRoZXJlIGlzIG5vIHNpZ25hbCBvbiB0aGUgd2lyZSAodHlwaWNhbGx5
+IGNhYmxlDQo+ID4gdW5wbHVnZ2VkKS4NCj4gPiBUaGlzIGJlaGF2aW9yIGlzIGVuYWJsZWQgYnkg
+ZGVmYXVsdCwgYnV0IGNhbiBiZSBkaXNhYmxlZCB2aWEgZGV2aWNlDQo+ID4gcHJvcGVydHkuDQo+
+IA0KPiBXZSBjb3VsZCBjb25zaWRlciBhZGRpbmcgYSBQSFkgdHVuYWJsZSwgaGF2aW5nIHRoaXMg
+YXMgYSBEZXZpY2UgVHJlZQ0KPiBwcm9wZXJ0eSBhbW91bnRzIHRvIHB1dHRpbmcgYSBwb2xpY3kg
+aW5zaWRlIERULCB3aGljaCBpcyBmcm93bmVkIHVwb24uDQoNClRoYXQgd291bGQgYmUgaW50ZXJl
+c3RpbmcgYWN0dWFsbHksIGFuZCBJIHdvdWxkIGFsc28gcHJlZmVyIGl0IG92ZXIgc3RhdGljIERU
+Lg0KTWF5YmUgZm9yIHRoaXMgcGF0Y2gsIEknbGwganVzdCBlbmFibGUgRURQRCBieSBkZWZhdWx0
+IGFuZCBzZWUgYWJvdXQgYSB0dW5hIG9wdGlvbi4NCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
+bGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiANCj4g
+T3RoZXIgdGhhbiB0aGF0LCB0aGUgY29kZSBsb29rcyBmaW5lOg0KPiANCj4gUmV2aWV3ZWQtYnk6
+IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPg0K
