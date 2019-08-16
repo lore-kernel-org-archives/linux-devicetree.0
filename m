@@ -1,108 +1,125 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 10/13] net: phy: adin: implement PHY subsystem software reset
-Date: Fri, 16 Aug 2019 16:10:08 +0300
-Message-ID: <20190816131011.23264-11-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 05/13] net: phy: adin: configure RGMII/RMII/MII modes on config
+Date: Fri, 16 Aug 2019 16:10:03 +0300
+Message-ID: <20190816131011.23264-6-alexandru.ardelean@analog.com>
 References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190816131011.23264-1-alexandru.ardelean@analog.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN PHYs supports 4 types of reset:
-1. The standard PHY reset via BMCR_RESET bit in MII_BMCR reg
-2. Reset via GPIO
-3. Reset via reg GeSftRst (0xff0c) & reload previous pin configs
-4. Reset via reg GeSftRst (0xff0c) & request new pin configs
+The ADIN1300 chip supports RGMII, RMII & MII modes. Default (if
+unconfigured) is RGMII.
+This change adds support for configuring these modes via the device
+registers.
 
-Resets 2, 3 & 4 are almost identical, with the exception that the crystal
-oscillator is available during reset for 2.
+For RGMII with internal delays (modes RGMII_ID,RGMII_TXID, RGMII_RXID),
+the default delay is 2 ns. This can be configurable and will be done in
+a subsequent change.
 
-This change implements subsystem software reset via the GeSftRst and
-reloading the previous pin configuration (so reset number 3).
-This will also reset the PHY core regs (similar to reset 1).
-
-Since writing bit 1 to reg GeSftRst is self-clearing, the only thing that
-can be done, is to write to that register, wait a specific amount of time
-(10 milliseconds should be enough) and try to read back and check if there
-are no errors on read. A busy-wait-read won't work well, and may sometimes
-work or not work.
-
-In case phylib is configured to also do a reset via GPIO, the ADIN PHY may
-be reset twice when the PHY device registers, but that isn't a problem,
-since it's being done on boot (or PHY device register).
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/net/phy/adin.c | 79 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 131b7f85ae32..5622a393e7cf 100644
+index efbb732f0398..badca6881c6c 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/kernel.h>
- #include <linux/bitfield.h>
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/module.h>
-@@ -50,6 +51,9 @@
- #define ADIN1300_CLOCK_STOP_REG			0x9400
- #define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
+@@ -31,9 +31,86 @@
+ 	(ADIN1300_INT_LINK_STAT_CHNG_EN | ADIN1300_INT_HW_IRQ_EN)
+ #define ADIN1300_INT_STATUS_REG			0x0019
  
-+#define ADIN1300_GE_SOFT_RESET_REG		0xff0c
-+#define   ADIN1300_GE_SOFT_RESET		BIT(0)
++#define ADIN1300_GE_RGMII_CFG_REG		0xff23
++#define   ADIN1300_GE_RGMII_RXID_EN		BIT(2)
++#define   ADIN1300_GE_RGMII_TXID_EN		BIT(1)
++#define   ADIN1300_GE_RGMII_EN			BIT(0)
 +
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
- #define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
- #define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-@@ -442,11 +446,32 @@ static int adin_read_status(struct phy_device *phydev)
- 	return genphy_read_status(phydev);
- }
- 
-+static int adin_soft_reset(struct phy_device *phydev)
++#define ADIN1300_GE_RMII_CFG_REG		0xff24
++#define   ADIN1300_GE_RMII_EN			BIT(0)
++
++static int adin_config_rgmii_mode(struct phy_device *phydev)
 +{
++	int reg;
++
++	if (!phy_interface_is_rgmii(phydev))
++		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
++					  ADIN1300_GE_RGMII_CFG_REG,
++					  ADIN1300_GE_RGMII_EN);
++
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RGMII_CFG_REG);
++	if (reg < 0)
++		return reg;
++
++	reg |= ADIN1300_GE_RGMII_EN;
++
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) {
++		reg |= ADIN1300_GE_RGMII_RXID_EN;
++	} else {
++		reg &= ~ADIN1300_GE_RGMII_RXID_EN;
++	}
++
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) {
++		reg |= ADIN1300_GE_RGMII_TXID_EN;
++	} else {
++		reg &= ~ADIN1300_GE_RGMII_TXID_EN;
++	}
++
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
++			     ADIN1300_GE_RGMII_CFG_REG, reg);
++}
++
++static int adin_config_rmii_mode(struct phy_device *phydev)
++{
++	int reg;
++
++	if (phydev->interface != PHY_INTERFACE_MODE_RMII)
++		return phy_clear_bits_mmd(phydev, MDIO_MMD_VEND1,
++					  ADIN1300_GE_RMII_CFG_REG,
++					  ADIN1300_GE_RMII_EN);
++
++	reg = phy_read_mmd(phydev, MDIO_MMD_VEND1, ADIN1300_GE_RMII_CFG_REG);
++	if (reg < 0)
++		return reg;
++
++	reg |= ADIN1300_GE_RMII_EN;
++
++	return phy_write_mmd(phydev, MDIO_MMD_VEND1,
++			     ADIN1300_GE_RMII_CFG_REG, reg);
++}
++
+ static int adin_config_init(struct phy_device *phydev)
+ {
+-	return genphy_config_init(phydev);
 +	int rc;
 +
-+	/* The reset bit is self-clearing, set it and wait */
-+	rc = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1,
-+			      ADIN1300_GE_SOFT_RESET_REG,
-+			      ADIN1300_GE_SOFT_RESET);
++	rc = genphy_config_init(phydev);
 +	if (rc < 0)
 +		return rc;
 +
-+	msleep(10);
++	rc = adin_config_rgmii_mode(phydev);
++	if (rc < 0)
++		return rc;
 +
-+	/* If we get a read error something may be wrong */
-+	rc = phy_read_mmd(phydev, MDIO_MMD_VEND1,
-+			  ADIN1300_GE_SOFT_RESET_REG);
++	rc = adin_config_rmii_mode(phydev);
++	if (rc < 0)
++		return rc;
 +
-+	return rc < 0 ? rc : 0;
-+}
++	phydev_dbg(phydev, "PHY is using mode '%s'\n",
++		   phy_modes(phydev->interface));
 +
- static struct phy_driver adin_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1200),
- 		.name		= "ADIN1200",
- 		.config_init	= adin_config_init,
-+		.soft_reset	= adin_soft_reset,
- 		.config_aneg	= adin_config_aneg,
- 		.read_status	= adin_read_status,
- 		.ack_interrupt	= adin_phy_ack_intr,
-@@ -460,6 +485,7 @@ static struct phy_driver adin_driver[] = {
- 		PHY_ID_MATCH_MODEL(PHY_ID_ADIN1300),
- 		.name		= "ADIN1300",
- 		.config_init	= adin_config_init,
-+		.soft_reset	= adin_soft_reset,
- 		.config_aneg	= adin_config_aneg,
- 		.read_status	= adin_read_status,
- 		.ack_interrupt	= adin_phy_ack_intr,
++	return 0;
+ }
+ 
+ static int adin_phy_ack_intr(struct phy_device *phydev)
 -- 
 2.20.1
