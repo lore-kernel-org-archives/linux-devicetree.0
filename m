@@ -1,7 +1,7 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 09/13] net: phy: adin: add EEE translation layer from Clause 45 to Clause 22
-Date: Fri, 16 Aug 2019 16:10:07 +0300
-Message-ID: <20190816131011.23264-10-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 11/13] net: phy: adin: implement downshift configuration via phy-tunable
+Date: Fri, 16 Aug 2019 16:10:09 +0300
+Message-ID: <20190816131011.23264-12-alexandru.ardelean@analog.com>
 References: <20190816131011.23264-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,131 +13,148 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-The ADIN1200 & ADIN1300 PHYs support EEE by using standard Clause 45 access
-to access MMD registers for EEE.
+Down-speed auto-negotiation may not always be enabled, in which case the
+PHY won't down-shift to 100 or 10 during auto-negotiation.
 
-The EEE register addresses (when using Clause 22) are available at
-different addresses (than Clause 45), and since accessing these regs (via
-Clause 22) needs a special mechanism, a translation table is required to
-convert these addresses.
+This change enables downshift and configures the number of retries to
+default 4 (which is also in the datasheet
 
-For Clause 45, this is not needed since the driver will likely never use
-this access mode.
+The downshift control mechanism can also be controlled via the phy-tunable
+interface (ETHTOOL_PHY_DOWNSHIFT control).
+
+The change has been adapted from the Aquantia PHY driver.
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/phy/adin.c | 68 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 66 insertions(+), 2 deletions(-)
+ drivers/net/phy/adin.c | 86 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
 diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 51c0d17577de..131b7f85ae32 100644
+index 5622a393e7cf..131b577a17e5 100644
 --- a/drivers/net/phy/adin.c
 +++ b/drivers/net/phy/adin.c
-@@ -40,6 +40,16 @@
- #define ADIN1300_PHY_STATUS1			0x001a
- #define   ADIN1300_PAIR_01_SWAP			BIT(11)
+@@ -24,6 +24,17 @@
+ #define   ADIN1300_AUTO_MDI_EN			BIT(10)
+ #define   ADIN1300_MAN_MDIX_EN			BIT(9)
  
-+/* EEE register addresses, accessible via Clause 22 access using
-+ * ADIN1300_MII_EXT_REG_PTR & ADIN1300_MII_EXT_REG_DATA.
-+ * The bit-fields are the same as specified by IEEE for EEE.
-+ */
-+#define ADIN1300_EEE_CAP_REG			0x8000
-+#define ADIN1300_EEE_ADV_REG			0x8001
-+#define ADIN1300_EEE_LPABLE_REG			0x8002
-+#define ADIN1300_CLOCK_STOP_REG			0x9400
-+#define ADIN1300_LPI_WAKE_ERR_CNT_REG		0xa000
++#define ADIN1300_PHY_CTRL2			0x0016
++#define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
++#define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
++#define   ADIN1300_GROUP_MDIO_EN		BIT(6)
++#define   ADIN1300_DOWNSPEEDS_EN	\
++	(ADIN1300_DOWNSPEED_AN_100_EN | ADIN1300_DOWNSPEED_AN_10_EN)
 +
- #define ADIN1300_GE_RGMII_CFG_REG		0xff23
- #define   ADIN1300_GE_RGMII_RX_MSK		GENMASK(8, 6)
- #define   ADIN1300_GE_RGMII_RX_SEL(x)		\
-@@ -101,6 +111,26 @@ static const struct adin_cfg_reg_map adin_rmii_fifo_depths[] = {
- 	{ },
- };
- 
-+/**
-+ * struct adin_clause45_mmd_map - map to convert Clause 45 regs to Clause 22
-+ * @devad		device address used in Clause 45 access
-+ * @cl45_regnum		register address defined by Clause 45
-+ * @adin_regnum		equivalent register address accessible via Clause 22
-+ */
-+struct adin_clause45_mmd_map {
-+	int devad;
-+	u16 cl45_regnum;
-+	u16 adin_regnum;
-+};
++#define ADIN1300_PHY_CTRL3			0x0017
++#define   ADIN1300_LINKING_EN			BIT(13)
++#define   ADIN1300_DOWNSPEED_RETRIES_MSK	GENMASK(12, 10)
 +
-+static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
-+	{ MDIO_MMD_PCS,	MDIO_PCS_EEE_ABLE,	ADIN1300_EEE_CAP_REG },
-+	{ MDIO_MMD_AN,	MDIO_AN_EEE_LPABLE,	ADIN1300_EEE_LPABLE_REG },
-+	{ MDIO_MMD_AN,	MDIO_AN_EEE_ADV,	ADIN1300_EEE_ADV_REG },
-+	{ MDIO_MMD_PCS,	MDIO_CTRL1,		ADIN1300_CLOCK_STOP_REG },
-+	{ MDIO_MMD_PCS, MDIO_PCS_EEE_WK_ERR,	ADIN1300_LPI_WAKE_ERR_CNT_REG },
-+};
-+
- static int adin_lookup_reg_value(const struct adin_cfg_reg_map *tbl, int cfg)
- {
- 	size_t i;
-@@ -251,13 +281,41 @@ static int adin_phy_config_intr(struct phy_device *phydev)
- 			      ADIN1300_INT_MASK_EN);
+ #define ADIN1300_INT_MASK_REG			0x0018
+ #define   ADIN1300_INT_MDIO_SYNC_EN		BIT(9)
+ #define   ADIN1300_INT_ANEG_STAT_CHNG_EN	BIT(8)
+@@ -243,6 +254,73 @@ static int adin_config_rmii_mode(struct phy_device *phydev)
+ 			     ADIN1300_GE_RMII_CFG_REG, reg);
  }
  
-+static int adin_cl45_to_adin_reg(struct phy_device *phydev, int devad,
-+				 u16 cl45_regnum)
++static int adin_get_downshift(struct phy_device *phydev, u8 *data)
 +{
-+	struct adin_clause45_mmd_map *m;
-+	int i;
++	int val, cnt, enable;
 +
-+	if (devad == MDIO_MMD_VEND1)
-+		return cl45_regnum;
++	val = phy_read(phydev, ADIN1300_PHY_CTRL2);
++	if (val < 0)
++		return val;
 +
-+	for (i = 0; i < ARRAY_SIZE(adin_clause45_mmd_map); i++) {
-+		m = &adin_clause45_mmd_map[i];
-+		if (m->devad == devad && m->cl45_regnum == cl45_regnum)
-+			return m->adin_regnum;
-+	}
++	cnt = phy_read(phydev, ADIN1300_PHY_CTRL3);
++	if (cnt < 0)
++		return cnt;
 +
-+	phydev_err(phydev,
-+		   "No translation available for devad: %d reg: %04x\n",
-+		   devad, cl45_regnum);
++	enable = FIELD_GET(ADIN1300_DOWNSPEEDS_EN, val);
++	cnt = FIELD_GET(ADIN1300_DOWNSPEED_RETRIES_MSK, cnt);
 +
-+	return -EINVAL;
++	*data = (enable && cnt) ? cnt : DOWNSHIFT_DEV_DISABLE;
++
++	return 0;
 +}
 +
- static int adin_read_mmd(struct phy_device *phydev, int devad, u16 regnum)
- {
- 	struct mii_bus *bus = phydev->mdio.bus;
- 	int phy_addr = phydev->mdio.addr;
-+	int adin_regnum;
- 	int err;
- 
--	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	adin_regnum = adin_cl45_to_adin_reg(phydev, devad, regnum);
-+	if (adin_regnum < 0)
-+		return adin_regnum;
++static int adin_set_downshift(struct phy_device *phydev, u8 cnt)
++{
++	u16 val;
++	int rc;
 +
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR,
-+			      adin_regnum);
- 	if (err)
- 		return err;
- 
-@@ -269,9 +327,15 @@ static int adin_write_mmd(struct phy_device *phydev, int devad, u16 regnum,
- {
- 	struct mii_bus *bus = phydev->mdio.bus;
- 	int phy_addr = phydev->mdio.addr;
-+	int adin_regnum;
- 	int err;
- 
--	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR, regnum);
-+	adin_regnum = adin_cl45_to_adin_reg(phydev, devad, regnum);
-+	if (adin_regnum < 0)
-+		return adin_regnum;
++	if (cnt == DOWNSHIFT_DEV_DISABLE)
++		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL2,
++				      ADIN1300_DOWNSPEEDS_EN);
 +
-+	err = __mdiobus_write(bus, phy_addr, ADIN1300_MII_EXT_REG_PTR,
-+			      adin_regnum);
- 	if (err)
- 		return err;
++	if (cnt > 7)
++		return -E2BIG;
++
++	val = FIELD_PREP(ADIN1300_DOWNSPEED_RETRIES_MSK, cnt);
++	val |= ADIN1300_LINKING_EN;
++
++	rc = phy_modify(phydev, ADIN1300_PHY_CTRL3,
++			ADIN1300_LINKING_EN | ADIN1300_DOWNSPEED_RETRIES_MSK,
++			val);
++	if (rc < 0)
++		return rc;
++
++	return phy_set_bits(phydev, ADIN1300_PHY_CTRL2,
++			    ADIN1300_DOWNSPEEDS_EN);
++}
++
++static int adin_get_tunable(struct phy_device *phydev,
++			    struct ethtool_tunable *tuna, void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return adin_get_downshift(phydev, data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int adin_set_tunable(struct phy_device *phydev,
++			    struct ethtool_tunable *tuna, const void *data)
++{
++	switch (tuna->id) {
++	case ETHTOOL_PHY_DOWNSHIFT:
++		return adin_set_downshift(phydev, *(const u8 *)data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static int adin_config_init(struct phy_device *phydev)
+ {
+ 	int rc;
+@@ -261,6 +339,10 @@ static int adin_config_init(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
  
++	rc = adin_set_downshift(phydev, 4);
++	if (rc < 0)
++		return rc;
++
+ 	phydev_dbg(phydev, "PHY is using mode '%s'\n",
+ 		   phy_modes(phydev->interface));
+ 
+@@ -474,6 +556,8 @@ static struct phy_driver adin_driver[] = {
+ 		.soft_reset	= adin_soft_reset,
+ 		.config_aneg	= adin_config_aneg,
+ 		.read_status	= adin_read_status,
++		.get_tunable	= adin_get_tunable,
++		.set_tunable	= adin_set_tunable,
+ 		.ack_interrupt	= adin_phy_ack_intr,
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
+@@ -488,6 +572,8 @@ static struct phy_driver adin_driver[] = {
+ 		.soft_reset	= adin_soft_reset,
+ 		.config_aneg	= adin_config_aneg,
+ 		.read_status	= adin_read_status,
++		.get_tunable	= adin_get_tunable,
++		.set_tunable	= adin_set_tunable,
+ 		.ack_interrupt	= adin_phy_ack_intr,
+ 		.config_intr	= adin_phy_config_intr,
+ 		.resume		= genphy_resume,
 -- 
 2.20.1
