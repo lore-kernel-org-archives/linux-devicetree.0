@@ -1,7 +1,7 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 5/6] clk: imx8mn: Improve ARM PLL table to support CPU frequency scaling
-Date: Sat, 17 Aug 2019 18:28:19 -0400
-Message-ID: <1566080900-2539-5-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/6] arm64: dts: imx8mn-ddr4-evk: Add rohm,bd71847 PMIC support
+Date: Sat, 17 Aug 2019 18:28:16 -0400
+Message-ID: <1566080900-2539-2-git-send-email-Anson.Huang@nxp.com>
 References: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
@@ -10,38 +10,142 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengu
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MN supports CPU running at 1.5GHz/1.4GHz/1.2GHz, add missing
-frequency for ARM PLL table, also add .rate_count assignment which
-is necessary for searching required PLL rate from the table.
+On i.MX8MN DDR4 EVK board, there is a rohm,bd71847 PMIC
+on i2c1 bus, enable it.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-	- Improve commit log, no code change.
+No changes.
 ---
- drivers/clk/imx/clk-imx8mn.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 109 ++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index ecd1062..3f1239a 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -42,6 +42,8 @@ enum {
- static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] = {
- 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
- 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
-+	PLL_1416X_RATE(1500000000U, 375, 3, 1),
-+	PLL_1416X_RATE(1400000000U, 350, 3, 1),
- 	PLL_1416X_RATE(1200000000U, 300, 3, 1),
- 	PLL_1416X_RATE(1000000000U, 250, 3, 1),
- 	PLL_1416X_RATE(800000000U,  200, 3, 1),
-@@ -82,6 +84,7 @@ static struct imx_pll14xx_clk imx8mn_dram_pll = {
- static struct imx_pll14xx_clk imx8mn_arm_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mn_pll1416x_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index 5fce5b1..10ebf77 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -57,6 +57,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_pmic: pmicirq {
++		fsl,pins = <
++			MX8MN_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
++		>;
++	};
++
+ 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
+ 		fsl,pins = <
+ 			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
+@@ -194,6 +200,109 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
++
++	pmic@4b {
++		compatible = "rohm,bd71847";
++		reg = <0x4b>;
++		pinctrl-0 = <&pinctrl_pmic>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <3 GPIO_ACTIVE_LOW>;
++		rohm,reset-snvs-powered;
++
++		regulators {
++			buck1_reg: BUCK1 {
++				regulator-name = "BUCK1";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <1250>;
++			};
++
++			buck2_reg: BUCK2 {
++				regulator-name = "BUCK2";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <1250>;
++			};
++
++			buck3_reg: BUCK3 {
++				// BUCK5 in datasheet
++				regulator-name = "BUCK3";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1350000>;
++			};
++
++			buck4_reg: BUCK4 {
++				// BUCK6 in datasheet
++				regulator-name = "BUCK4";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck5_reg: BUCK5 {
++				// BUCK7 in datasheet
++				regulator-name = "BUCK5";
++				regulator-min-microvolt = <1605000>;
++				regulator-max-microvolt = <1995000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck6_reg: BUCK6 {
++				// BUCK8 in datasheet
++				regulator-name = "BUCK6";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1400000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1_reg: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: LDO2 {
++				regulator-name = "LDO2";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: LDO3 {
++				regulator-name = "LDO3";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo4_reg: LDO4 {
++				regulator-name = "LDO4";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo6_reg: LDO6 {
++				regulator-name = "LDO6";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
  };
  
- static struct imx_pll14xx_clk imx8mn_gpu_pll = {
+ &snvs_pwrkey {
 -- 
 2.7.4
