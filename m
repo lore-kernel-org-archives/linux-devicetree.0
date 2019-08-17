@@ -1,8 +1,8 @@
-From: Oleksij Rempel <fishor@gmx.net>
+From: Oleksij Rempel <linux@rempel-privat.de>
 Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
  documentation
-Date: Sat, 17 Aug 2019 17:39:52 +0200
-Message-ID: <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net>
+Date: Sat, 17 Aug 2019 17:40:01 +0200
+Message-ID: <f0743ace-0ca2-82a2-a162-aaa98c8925a8@rempel-privat.de>
 References: <20190724022310.28010-1-gch981213@gmail.com>
  <20190724022310.28010-5-gch981213@gmail.com> <20190813155143.GA19830@bogus>
  <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
@@ -72,3 +72,8 @@ IMO - this information is enough to create full blown drivers/clk/mediatek=
 > [0] https://elixir.bootlin.com/linux/latest/source/arch/mips/ralink/mt76=
 21.c#L156
 >
+
+
+=2D-
+Regards,
+Oleksij
