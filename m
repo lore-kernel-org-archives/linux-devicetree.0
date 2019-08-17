@@ -1,53 +1,36 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 1/6] arm64: dts: imx8mn-ddr4-evk: Add i2c1 support
-Date: Sat, 17 Aug 2019 18:28:15 -0400
-Message-ID: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/6] cpufreq: Use imx-cpufreq-dt for i.MX8MN's speed grading
+Date: Sat, 17 Aug 2019 18:28:17 -0400
+Message-ID: <1566080900-2539-3-git-send-email-Anson.Huang@nxp.com>
+References: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566080900-2539-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, leonard.crestez@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Enable i2c1 on i.MX8MN DDR4 EVK board.
+Add i.MX8MN to blacklist, so that imx-cpufreq-dt driver can handle
+speed grading bits just like other i.MX8M SoCs.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index 9b2c172..5fce5b1 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -50,6 +50,13 @@
- 		>;
- 	};
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index ec2057d..febcec8 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -109,6 +109,7 @@ static const struct of_device_id blacklist[] __initconst = {
+ 	{ .compatible = "fsl,imx7d", },
+ 	{ .compatible = "fsl,imx8mq", },
+ 	{ .compatible = "fsl,imx8mm", },
++	{ .compatible = "fsl,imx8mn", },
  
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_I2C1_SCL_I2C1_SCL		0x400001c3
-+			MX8MN_IOMUXC_I2C1_SDA_I2C1_SDA		0x400001c3
-+		>;
-+	};
-+
- 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
- 		fsl,pins = <
- 			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-@@ -182,6 +189,13 @@
- 	};
- };
+ 	{ .compatible = "marvell,armadaxp", },
  
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
- &snvs_pwrkey {
- 	status = "okay";
- };
 -- 
 2.7.4
