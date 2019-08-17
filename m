@@ -1,74 +1,99 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
- documentation
-Date: Sat, 17 Aug 2019 20:05:49 +0200
-Message-ID: <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de>
-References: <20190724022310.28010-1-gch981213@gmail.com>
- <20190724022310.28010-5-gch981213@gmail.com> <20190813155143.GA19830@bogus>
- <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
- <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net>
- <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 05/19] irqchip/mmp: do not use of_address_to_resource()
+ to get mux regs
+Date: Sat, 17 Aug 2019 19:17:10 +0100
+Message-ID: <20190817191710.539daa01@why>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+ <20190809093158.7969-6-lkundrak@v3.sk>
+ <16d77ca3-7ad1-3af2-650e-722cf6a931ed@kernel.org>
+ <e0c0cf62a1f087fd6c1d7307e5e2a65603148341.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhong Guo <gch981213@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, John Crispin <john@phrozen.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e0c0cf62a1f087fd6c1d7307e5e2a65603148341.camel@v3.sk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 17.08.19 um 18:22 schrieb Chuanhong Guo:
-> Hi!
->
-> On Sat, Aug 17, 2019 at 11:40 PM Oleksij Rempel <fishor@gmx.net> wrote:
->
->> In provided link [0] the  ralink_clk_init function is reading SYSC_REG_=
-CPLL_CLKCFG0 R/W register.
->> This register is used to determine clock source,  clock freq and CPU or=
- bus clocks.
->
-> This register should only be changed by bootloader, not kernel. So
-> it's read-only in kernel's perspective.
-there is no kernel perspective, until you have some kind of privilege
-separation. There is only: "i decided not to write on to writeable
-register".
+On Fri, 16 Aug 2019 20:41:22 +0200
+Lubomir Rintel <lkundrak@v3.sk> wrote:
 
->> SYSC_REG_CPLL_CLKCFG1 register is a clock gate controller. It is used t=
-o enable or disable clocks.
->> Jist wild assumption. All peripheral devices are suing bus clock.
->
-> This assumption is incorrect. When this patchset is applied in
-> OpenWrt, I asked the author why there's still a fixed clock in
-> mt7621.dtsi, He told me that there's another clock for those unchanged
-> peripherals and he doesn't have time to write a clock provider for it.
+> On Fri, 2019-08-09 at 13:12 +0100, Marc Zyngier wrote:
+> > On 09/08/2019 10:31, Lubomir Rintel wrote:  
+> > > The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
+> > > are offsets from intc's base, not addresses on the parent bus. At this
+> > > point it probably can't be fixed.
+> > > 
+> > > On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
+> > > axi bus, and thus of_address_to_resource() won't work. We should treat
+> > > the values as mere integers as opposed to bus addresses.
+> > > 
+> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > 
+> > > ---
+> > >  drivers/irqchip/irq-mmp.c | 20 +++++++++++---------
+> > >  1 file changed, 11 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+> > > index 14618dc0bd396..af9cba4a51c2e 100644
+> > > --- a/drivers/irqchip/irq-mmp.c
+> > > +++ b/drivers/irqchip/irq-mmp.c
+> > > @@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
+> > >  static int __init mmp2_mux_of_init(struct device_node *node,
+> > >  				   struct device_node *parent)
+> > >  {
+> > > -	struct resource res;
+> > >  	int i, ret, irq, j = 0;
+> > >  	u32 nr_irqs, mfp_irq;
+> > > +	u32 reg[4];
+> > >  
+> > >  	if (!parent)
+> > >  		return -ENODEV;
+> > > @@ -438,18 +438,20 @@ static int __init mmp2_mux_of_init(struct device_node *node,
+> > >  		pr_err("Not found mrvl,intc-nr-irqs property\n");
+> > >  		return -EINVAL;
+> > >  	}
+> > > -	ret = of_address_to_resource(node, 0, &res);
+> > > +
+> > > +	/*
+> > > +	 * For historical reasonsm, the "regs" property of the
+> > > +	 * mrvl,mmp2-mux-intc is not a regular * "regs" property containing
+> > > +	 * addresses on the parent bus, but offsets from the intc's base.
+> > > +	 * That is why we can't use of_address_to_resource() here.
+> > > +	 */
+> > > +	ret = of_property_read_u32_array(node, "reg", reg, ARRAY_SIZE(reg));  
+> > 
+> > This will return 0 even if you've read less than your expected 4 u32s.
+> > You may want to try of_property_read_variable_u32_array instead.  
+> 
+> Will it? Unless I'm reading the of_property_read_u32_array()
+> documentation wrong, it suggests that would return -EOVERFLOW in that
+> case.
 
-Can you please provide a link to this patch or email.
+You're appear to be right, and I read it wrong.
 
-> I don't know how many undocumented clocks are there since this piece
-> of info is missing in datasheet.
->
->>
->> IMO - this information is enough to create full blown drivers/clk/media=
-tek/clk-mt7621.c
->
-> And this information isn't enough because the assumption above is incorr=
-ect :P
+> 
+> It ignores the extra values it the property is larger. I guess that is
+> not a good thing and we still want to use
+> of_property_read_variable_u32_array() though.
 
-Ok, let's assume I accept this not technical argumentation.
+It doesn't hurt to check for all possible problems, specially given
+that this machine doesn't appear to have a mainline DT (and its OF
+implementation looks a bit buggy).
 
-We have at least 2 know registers:
-SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
-refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
-SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
-all or some ip cores. What is probably missing is a set of dividers for
-each ip core. From your words it is not document.
+Thanks,
 
-With this information the clk driver will provide gate functionality and
-a set of hardcoded clocks. With this driver will work part of power
-management and nice devicetree without fixed clocks.
-
-=2D-
-Regards,
-Oleksij
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
