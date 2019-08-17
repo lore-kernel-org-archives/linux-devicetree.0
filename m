@@ -1,48 +1,55 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/5] dt-bindings: clock: Add Bitmain BM1880 SoC clock
- controller binding
-Date: Sat, 17 Aug 2019 09:28:45 +0530
-Message-ID: <20190817035845.GD14652@Mani-XPS-13-9360>
-References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org>
- <20190705151440.20844-2-manivannan.sadhasivam@linaro.org>
- <20190808050128.E3DA52186A@mail.kernel.org>
- <20190817033422.GB14652@Mani-XPS-13-9360>
- <20190817034612.6DA7E21721@mail.kernel.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 07/15] dt: thermal: tsens: Document interrupt support in tsens driver
+Date: Fri, 16 Aug 2019 21:10:04 -0700
+Message-ID: <20190817041005.C56FD21019@mail.kernel.org>
+References: <cover.1564091601.git.amit.kucheria@linaro.org> <72bce036fa8cba3db6e5ba82249837ee46e9c077.1564091601.git.amit.kucheria@linaro.org> <20190816213648.GA10244@bogus> <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190817034612.6DA7E21721@mail.kernel.org>
+In-Reply-To: <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com
+To: Amit Kucheria <amit.kucheria@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 08:46:11PM -0700, Stephen Boyd wrote:
-> Quoting Manivannan Sadhasivam (2019-08-16 20:34:22)
-> > On Wed, Aug 07, 2019 at 10:01:28PM -0700, Stephen Boyd wrote:
-> > > Quoting Manivannan Sadhasivam (2019-07-05 08:14:36)
-> > > > +It is expected that it is defined using standard clock bindings as "osc".
-> > > > +
-> > > > +Example: 
-> > > > +
-> > > > +        clk: clock-controller@800 {
-> > > > +                compatible = "bitmain,bm1880-clk";
-> > > > +                reg = <0xe8 0x0c>,<0x800 0xb0>;
-> > > 
-> > > It looks weird still. What hardware module is this actually part of?
-> > > Some larger power manager block?
-> > > 
-> > 
-> > These are all part of the sysctrl block (clock + pinctrl + reset) and the
-> > register domains got split between system and pll.
-> > 
-> 
-> And that can't be one node that probes the clk, pinctrl, and reset
-> drivers from C code?
+Quoting Amit Kucheria (2019-08-16 15:02:08)
+>=20
+> Depending on the version of the tsens IP, there can be 1 (upper/lower
+> threshold), 2 (upper/lower + critical threshold) or 3 (upper/lower +
+> critical + zero degree) interrupts. This patch series only introduces
+> support for a single interrupt (upper/lower).
+>=20
+> I used the names tsens0, tsens1 to encapsulate the controller instance
+> since some SoCs have 1 controller, others have two. So we'll end up
+> with something like the following in DT:
+>=20
+> tsens0: thermal-sensor@c263000 {
+>                         compatible =3D "qcom,sdm845-tsens", "qcom,tsens-v=
+2";
+>                         reg =3D <0 0x0c263000 0 0x1ff>, /* TM */
+>                               <0 0x0c222000 0 0x1ff>; /* SROT */
+>                         #qcom,sensors =3D <13>;
+>                         interrupts =3D <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names =3D "tsens0", "tsens0-critical";
+>                         #thermal-sensor-cells =3D <1>;
+> };
+>=20
+> tsens1: thermal-sensor@c265000 {
+>                         compatible =3D "qcom,sdm845-tsens", "qcom,tsens-v=
+2";
+>                         reg =3D <0 0x0c265000 0 0x1ff>, /* TM */
+>                               <0 0x0c223000 0 0x1ff>; /* SROT */
+>                         #qcom,sensors =3D <8>;
+>                         interrupts =3D <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names =3D "tsens1", "tsens1-critical";
+>                         #thermal-sensor-cells =3D <1>;
+> }
+>=20
+> Does that work?
+>=20
 
-It is not a MFD for sure. It's just grouping of the register domains together.
-
-Thanks,
-Mani
-> 
+Can you convert this binding to YAML? Then it looks like we can enforce
+the number of interrupts based on the compatible string.
