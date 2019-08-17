@@ -1,60 +1,62 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 0/7] Add Bitmain BM1880 clock driver
-Date: Sun, 18 Aug 2019 00:06:07 +0530
-Message-ID: <20190817183614.8429-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/7] arm64: dts: bitmain: Add clock controller support for BM1880 SoC
+Date: Sun, 18 Aug 2019 00:06:09 +0530
+Message-ID: <20190817183614.8429-3-manivannan.sadhasivam@linaro.org>
+References: <20190817183614.8429-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190817183614.8429-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
 Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add clock controller support for Bitmain BM1880 SoC.
 
-This patchset adds common clock driver for Bitmain BM1880 SoC clock
-controller. The clock controller consists of gate, divider, mux
-and pll clocks with different compositions. Hence, the driver uses
-composite clock structure in place where multiple clocking units are
-combined together.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-This patchset also removes UART fixed clock and sources clocks from clock
-controller for Sophon Edge board where the driver has been validated.
-
-Thanks,
-Mani
-
-Changes in v2:
-
-* Converted the dt binding to YAML
-* Incorporated review comments from Stephen (majority of change is switching
-  to new way of specifying clk parents)
-
-Manivannan Sadhasivam (7):
-  dt-bindings: clock: Add devicetree binding for BM1880 SoC
-  arm64: dts: bitmain: Add clock controller support for BM1880 SoC
-  arm64: dts: bitmain: Source common clock for UART controllers
-  clk: Add common clock driver for BM1880 SoC
-  MAINTAINERS: Add entry for BM1880 SoC clock driver
-  clk: Warn if clk_init_data is not zero initialized
-  clk: Zero init clk_init_data in helpers
-
- .../bindings/clock/bitmain,bm1880-clk.yaml    |  83 ++
- MAINTAINERS                                   |   2 +
- .../boot/dts/bitmain/bm1880-sophon-edge.dts   |   9 -
- arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  28 +
- drivers/clk/Kconfig                           |   6 +
- drivers/clk/Makefile                          |   1 +
- drivers/clk/clk-bm1880.c                      | 970 ++++++++++++++++++
- drivers/clk/clk-composite.c                   |   2 +-
- drivers/clk/clk-divider.c                     |   2 +-
- drivers/clk/clk-fixed-rate.c                  |   2 +-
- drivers/clk/clk-gate.c                        |   2 +-
- drivers/clk/clk-mux.c                         |   2 +-
- drivers/clk/clk.c                             |   8 +
- include/dt-bindings/clock/bm1880-clock.h      |  82 ++
- 14 files changed, 1185 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
- create mode 100644 drivers/clk/clk-bm1880.c
- create mode 100644 include/dt-bindings/clock/bm1880-clock.h
-
+diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+index d65453f99a99..8471662413da 100644
+--- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
++++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+@@ -4,6 +4,7 @@
+  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  */
+ 
++#include <dt-bindings/clock/bm1880-clock.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/bitmain,bm1880-reset.h>
+ 
+@@ -66,6 +67,12 @@
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+ 	};
+ 
++	osc: osc {
++		compatible = "fixed-clock";
++		clock-frequency = <25000000>;
++		#clock-cells = <0>;
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -94,6 +101,15 @@
+ 				reg = <0x400 0x120>;
+ 			};
+ 
++			clk: clock-controller@e8 {
++				compatible = "bitmain,bm1880-clk";
++				reg = <0xe8 0x0c>, <0x800 0xb0>;
++				reg-names = "pll", "sys";
++				clocks = <&osc>;
++				clock-names = "osc";
++				#clock-cells = <1>;
++			};
++
+ 			rst: reset-controller@c00 {
+ 				compatible = "bitmain,bm1880-reset";
+ 				reg = <0xc00 0x8>;
 -- 
 2.17.1
