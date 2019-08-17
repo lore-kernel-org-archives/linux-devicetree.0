@@ -1,67 +1,42 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 10/14] dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
-Date: Fri, 16 Aug 2019 23:14:13 -0700
-Message-ID: <5d579b36.1c69fb81.85eba.ff51@mx.google.com>
-References: <20190725104144.22924-1-niklas.cassel@linaro.org> <20190725104144.22924-11-niklas.cassel@linaro.org>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH V2 08/13] i2c: bcm2835: Avoid clk stretch quirk for BCM2711
+Date: Sat, 17 Aug 2019 09:32:01 +0200
+Message-ID: <bb924d04-b4a9-56c7-c7d5-31f3cc8c1da3@gmx.net>
+References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
+ <1565713248-4906-9-git-send-email-wahrenst@gmx.net>
+ <20190814193628.GA9756@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190725104144.22924-11-niklas.cassel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190814193628.GA9756@kunai>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Boyd <sboyd@kernel.org>, Ray Jui <rjui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Niklas Cassel (2019-07-25 03:41:38)
-> +       cpr@b018000 {
-> +               compatible =3D "qcom,qcs404-cpr", "qcom,cpr";
-> +               reg =3D <0x0b018000 0x1000>;
-> +               interrupts =3D <0 15 IRQ_TYPE_EDGE_RISING>;
-> +               clocks =3D <&xo_board>;
-> +               clock-names =3D "ref";
-> +               vdd-apc-supply =3D <&pms405_s3>;
-> +               #power-domain-cells =3D <0>;
-> +               operating-points-v2 =3D <&cpr_opp_table>;
-> +               acc-syscon =3D <&tcsr>;
-> +
-> +               nvmem-cells =3D <&cpr_efuse_quot_offset1>,
-> +                       <&cpr_efuse_quot_offset2>,
-> +                       <&cpr_efuse_quot_offset3>,
-> +                       <&cpr_efuse_init_voltage1>,
-> +                       <&cpr_efuse_init_voltage2>,
-> +                       <&cpr_efuse_init_voltage3>,
-> +                       <&cpr_efuse_quot1>,
-> +                       <&cpr_efuse_quot2>,
-> +                       <&cpr_efuse_quot3>,
-> +                       <&cpr_efuse_ring1>,
-> +                       <&cpr_efuse_ring2>,
-> +                       <&cpr_efuse_ring3>,
-> +                       <&cpr_efuse_revision>;
-> +               nvmem-cell-names =3D "cpr_quotient_offset1",
-> +                       "cpr_quotient_offset2",
-> +                       "cpr_quotient_offset3",
-> +                       "cpr_init_voltage1",
-> +                       "cpr_init_voltage2",
-> +                       "cpr_init_voltage3",
-> +                       "cpr_quotient1",
-> +                       "cpr_quotient2",
-> +                       "cpr_quotient3",
-> +                       "cpr_ring_osc1",
-> +                       "cpr_ring_osc2",
-> +                       "cpr_ring_osc3",
-> +                       "cpr_fuse_revision";
-> +
-> +               qcom,cpr-timer-delay-us =3D <5000>;
-> +               qcom,cpr-timer-cons-up =3D <0>;
-> +               qcom,cpr-timer-cons-down =3D <2>;
-> +               qcom,cpr-up-threshold =3D <1>;
-> +               qcom,cpr-down-threshold =3D <3>;
-> +               qcom,cpr-idle-clocks =3D <15>;
-> +               qcom,cpr-gcnt-us =3D <1>;
-> +               qcom,vdd-apc-step-up-limit =3D <1>;
-> +               qcom,vdd-apc-step-down-limit =3D <1>;
+Hi Wolfram,
 
-Are any of these qcom,* properties going to change for a particular SoC?
-They look like SoC config data that should just go into the driver and
-change based on the SoC compatible string.
+Am 14.08.19 um 21:36 schrieb Wolfram Sang:
+>>  static const struct of_device_id bcm2835_i2c_of_match[] = {
+>> -	{ .compatible = "brcm,bcm2835-i2c" },
+>> +	{ .compatible = "brcm,bcm2711-i2c", .data = (void *)NO_STRETCH_BUG },
+>> +	{ .compatible = "brcm,bcm2835-i2c", .data = (void *)STRETCH_BUG },
+> What about simply putting a pointer to the quirks data (or NULL) as
+> match_data? Then the code should be:
+>
+> adap->quirks = (cast)of_device_get_match_data(&pdev->dev);
+
+quirks = (const struct i2c_adapter_quirks *)of_device_get_match_data(dev);
+
+would hit the line limit. Do you insists on the cast, because it's
+actually not required?
