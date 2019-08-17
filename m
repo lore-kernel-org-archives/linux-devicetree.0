@@ -1,76 +1,66 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Date: Sat, 17 Aug 2019 16:05:02 +0200
-Message-ID: <20190817140502.GA5878@amd>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190816201342.GB1646@bug>
- <20190816212728.GW250418@google.com>
+From: Chuanhong Guo <gch981213@gmail.com>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Date: Sat, 17 Aug 2019 22:42:12 +0800
+Message-ID: <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
+References: <20190724022310.28010-1-gch981213@gmail.com>
+ <20190724022310.28010-5-gch981213@gmail.com>
+ <20190813155143.GA19830@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190816212728.GW250418@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, dmurphy@ti.com
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20190813155143.GA19830@bogus>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@kernel.org>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "open list:MIPS" <linux-mips@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, open list <linux-kernel@vger.kernel.org>, Paul Burton <paul.burton@mips.com>, Weijie Gao <hackpascal@gmail.com>, John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 13, 2019 at 11:51 PM Rob Herring <robh@kernel.org> wrote:
+> [...]
+> > +Example:
+> > +     pll {
+> > +             compatible = "mediatek,mt7621-pll";
+>
+> You didn't answer Stephen's question on v1.
 
-On Fri 2019-08-16 14:27:28, Matthias Kaehlcke wrote:
-> On Fri, Aug 16, 2019 at 10:13:42PM +0200, Pavel Machek wrote:
-> > On Tue 2019-08-13 12:11:47, Matthias Kaehlcke wrote:
-> > > Add a .config_led hook which is called by the PHY core when
-> > > configuration data for a PHY LED is available. Each LED can be
-> > > configured to be solid 'off, solid 'on' for certain (or all)
-> > > link speeds or to blink on RX/TX activity.
-> > >=20
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >=20
-> > THis really needs to go through the LED subsystem,
->=20
-> Sorry, I used what get_maintainers.pl threw at me, I should have
-> manually cc-ed the LED list.
->=20
-> > and use the same userland interfaces as the rest of the system.
->=20
-> With the PHY maintainers we discussed to define a binding that is
-> compatible with that of the LED one, to have the option to integrate
-> it with the LED subsystem later. The integration itself is beyond the
-> scope of this patchset.
+I thought he was asking why there's a syscon in compatible string. I
+noticed that the syscon in my previous patch is a copy-paste error
+from elsewhere and dropped it.
 
-Yes, I believe the integration is neccessary. Using same binding is
-neccessary for that, but not sufficient. For example, we need
-compatible trigger names, too.
+>
+> Based on this binding, there is no way to control/program the PLL. Is
+> this part of some IP block?
 
-So... I'd really like to see proper integration is possible before we
-merge this.
+The entire section is called "system control" in datasheet and is
+occupied in arch/mips/ralink/mt7621.c [0]
+Two clocks provided here is determined by reading some read-only
+registers in this part.
+There's another register in this section providing clock gates for
+every peripherals, but MTK doesn't provide a clock plan in their
+datasheet. I can't determine corresponding clock frequencies for every
+peripherals, thus unable to write a working clock driver.
 
-Best regards,
+>
+> > +
+> > +             #clock-cells = <1>;
+> > +             clock-output-names = "cpu", "bus";
+> > +     };
+> > --
+> > 2.21.0
+> >
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Regards,
+Chuanhong Guo
 
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1YCY4ACgkQMOfwapXb+vLWawCfRWR0PDijLDYNaPyitgHnT8lZ
-gP0AoKg13Rvbd2LdaNcuMCeR8ISyxfLv
-=ya1+
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+[0] https://elixir.bootlin.com/linux/latest/source/arch/mips/ralink/mt7621.c#L156
