@@ -1,92 +1,102 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 7/7] clk: Zero init clk_init_data in helpers
-Date: Sun, 18 Aug 2019 00:06:14 +0530
-Message-ID: <20190817183614.8429-8-manivannan.sadhasivam@linaro.org>
-References: <20190817183614.8429-1-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 07/15] dt: thermal: tsens: Document interrupt support in
+ tsens driver
+Date: Sat, 17 Aug 2019 14:25:36 -0500
+Message-ID: <CAL_Jsq+bymJXY-ffeuCc-15Vkmh88AsUAj5znBN+b-3YWP-Kqg@mail.gmail.com>
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
+ <72bce036fa8cba3db6e5ba82249837ee46e9c077.1564091601.git.amit.kucheria@linaro.org>
+ <20190816213648.GA10244@bogus> <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190817183614.8429-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The clk_init_data struct needs to be initialized to zero for the new
-parent_map implementation to work correctly. Otherwise, the member which
-is available first will get processed.
+On Fri, Aug 16, 2019 at 5:02 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Sat, Aug 17, 2019 at 3:06 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Jul 26, 2019 at 03:48:42AM +0530, Amit Kucheria wrote:
+> > > Define two new required properties to define interrupts and
+> > > interrupt-names for tsens.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > index 673cc1831ee9..3d3dd5dc6d36 100644
+> > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > @@ -22,6 +22,8 @@ Required properties:
+> > >
+> > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> > >  - #qcom,sensors: Number of sensors in tsens block
+> > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
+> > > +- interrupt-names: The name of the interrupt e.g. "tsens0", "tsens1"
+> >
+> > How many interrupts? A name with just indices isn't too useful.
+>
+> Depending on the version of the tsens IP, there can be 1 (upper/lower
+> threshold), 2 (upper/lower + critical threshold) or 3 (upper/lower +
+> critical + zero degree) interrupts. This patch series only introduces
+> support for a single interrupt (upper/lower).
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/clk/clk-composite.c  | 2 +-
- drivers/clk/clk-divider.c    | 2 +-
- drivers/clk/clk-fixed-rate.c | 2 +-
- drivers/clk/clk-gate.c       | 2 +-
- drivers/clk/clk-mux.c        | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+I would expect a different compatible for each possibility.
 
-diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
-index b06038b8f658..4d579f9d20f6 100644
---- a/drivers/clk/clk-composite.c
-+++ b/drivers/clk/clk-composite.c
-@@ -208,7 +208,7 @@ struct clk_hw *clk_hw_register_composite(struct device *dev, const char *name,
- 			unsigned long flags)
- {
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = { NULL };
- 	struct clk_composite *composite;
- 	struct clk_ops *clk_composite_ops;
- 	int ret;
-diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-index 3f9ff78c4a2a..65dd8137f9ec 100644
---- a/drivers/clk/clk-divider.c
-+++ b/drivers/clk/clk-divider.c
-@@ -471,7 +471,7 @@ static struct clk_hw *_register_divider(struct device *dev, const char *name,
- {
- 	struct clk_divider *div;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = { NULL };
- 	int ret;
- 
- 	if (clk_divider_flags & CLK_DIVIDER_HIWORD_MASK) {
-diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-index a7e4aef7a376..746c3ecdc5b3 100644
---- a/drivers/clk/clk-fixed-rate.c
-+++ b/drivers/clk/clk-fixed-rate.c
-@@ -58,7 +58,7 @@ struct clk_hw *clk_hw_register_fixed_rate_with_accuracy(struct device *dev,
- {
- 	struct clk_fixed_rate *fixed;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = { NULL };
- 	int ret;
- 
- 	/* allocate fixed-rate clock */
-diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-index 1b99fc962745..8ed83ec730cb 100644
---- a/drivers/clk/clk-gate.c
-+++ b/drivers/clk/clk-gate.c
-@@ -141,7 +141,7 @@ struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
- {
- 	struct clk_gate *gate;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = { NULL };
- 	int ret;
- 
- 	if (clk_gate_flags & CLK_GATE_HIWORD_MASK) {
-diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-index 66e91f740508..2caa6b2a9ee5 100644
---- a/drivers/clk/clk-mux.c
-+++ b/drivers/clk/clk-mux.c
-@@ -153,7 +153,7 @@ struct clk_hw *clk_hw_register_mux_table(struct device *dev, const char *name,
- {
- 	struct clk_mux *mux;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = { NULL };
- 	u8 width = 0;
- 	int ret;
- 
--- 
-2.17.1
+> I used the names tsens0, tsens1 to encapsulate the controller instance
+> since some SoCs have 1 controller, others have two. So we'll end up
+> with something like the following in DT:
+
+That's not really how *-names is supposed to work. The name is for
+identifying what is at each index. Or to put it another way, a driver
+should be able to use platform_get_irq_by_name(). So 'critical',
+'zero' and something for the first one.
+
+> tsens0: thermal-sensor@c263000 {
+>                         compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+>                         reg = <0 0x0c263000 0 0x1ff>, /* TM */
+>                               <0 0x0c222000 0 0x1ff>; /* SROT */
+>                         #qcom,sensors = <13>;
+>                         interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "tsens0", "tsens0-critical";
+>                         #thermal-sensor-cells = <1>;
+> };
+>
+> tsens1: thermal-sensor@c265000 {
+>                         compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+>                         reg = <0 0x0c265000 0 0x1ff>, /* TM */
+>                               <0 0x0c223000 0 0x1ff>; /* SROT */
+>                         #qcom,sensors = <8>;
+>                         interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "tsens1", "tsens1-critical";
+>                         #thermal-sensor-cells = <1>;
+> }
+>
+> Does that work?
+>
+> Regards,
+> Amit
+>
+> > >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+> > >  nvmem cells
+> > >
+> > > @@ -40,6 +42,9 @@ tsens0: thermal-sensor@c263000 {
+> > >               reg = <0xc263000 0x1ff>, /* TM */
+> > >                       <0xc222000 0x1ff>; /* SROT */
+> > >               #qcom,sensors = <13>;
+> > > +             interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> > > +             interrupt-names = "tsens0";
+> > > +
+> > >               #thermal-sensor-cells = <1>;
+> > >       };
+> > >
+> > > --
+> > > 2.17.1
+> > >
