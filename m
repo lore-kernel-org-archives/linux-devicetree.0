@@ -1,64 +1,58 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
- documentation
-Date: Sun, 18 Aug 2019 08:10:22 +0200
-Message-ID: <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
-References: <20190724022310.28010-1-gch981213@gmail.com>
- <20190724022310.28010-5-gch981213@gmail.com> <20190813155143.GA19830@bogus>
- <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
- <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net>
- <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
- <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de>
- <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 5/6] clk: imx8mn: Add necessary frequency support for ARM
+ PLL table
+Date: Sun, 18 Aug 2019 06:19:14 +0000
+Message-ID: <DB3PR0402MB3916710B3613D6C08A68438BF5A90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1565866783-19672-1-git-send-email-Anson.Huang@nxp.com>
+ <1565866783-19672-5-git-send-email-Anson.Huang@nxp.com>
+ <20190817035220.268F32173B@mail.kernel.org>
+ <DB3PR0402MB3916D320EB51B2D9E28D55E1F5AE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190818011133.CE6F52173B@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhong Guo <gch981213@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, John Crispin <john@phrozen.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>, Paul Fertser <fercerpav@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190818011133.CE6F52173B@mail.kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Abel Vesa <abel.vesa@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 18.08.19 um 04:29 schrieb Chuanhong Guo:
-> Hi!
->
-> On Sun, Aug 18, 2019 at 2:06 AM Oleksij Rempel <linux@rempel-privat.de> =
-wrote:
->>>> SYSC_REG_CPLL_CLKCFG1 register is a clock gate controller. It is used=
- to enable or disable clocks.
->>>> Jist wild assumption. All peripheral devices are suing bus clock.
->>>
->>> This assumption is incorrect. When this patchset is applied in
->>> OpenWrt, I asked the author why there's still a fixed clock in
->>> mt7621.dtsi, He told me that there's another clock for those unchanged
->>> peripherals and he doesn't have time to write a clock provider for it.
->>
->> Can you please provide a link to this patch or email.
->
-> This discussion is in Chinese and using an IM software so there's no
-> link available.
->
->> We have at least 2 know registers:
->> SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
->> refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
->> SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
->> all or some ip cores.
->> What is probably missing is a set of dividers for
->> each ip core. From your words it is not document.
->
-> The specific missing part I was referring to, is parent clocks for
-> every gates. I'm not going to assume this with current openwrt device
-> tree because some peripherals doesn't have a clock binding at all or
-> have a dummy one there.
+Hi, Stephen
 
-Ok, then I do not understand what is the motivation to upstream
-something what is not nearly ready for use. This code is currently on
-prototyping phase and you have no information how to make it ready.
+> Quoting Anson Huang (2019-08-17 15:22:01)
+> > Hi, Stephen
+> >
+> > > Quoting Anson.Huang@nxp.com (2019-08-15 03:59:42)
+> > > > diff --git a/drivers/clk/imx/clk-imx8mn.c
+> > > > b/drivers/clk/imx/clk-imx8mn.c index ecd1062..3f1239a 100644
+> > > > --- a/drivers/clk/imx/clk-imx8mn.c
+> > > > +++ b/drivers/clk/imx/clk-imx8mn.c
+> > > > @@ -82,6 +84,7 @@ static struct imx_pll14xx_clk imx8mn_dram_pll =
+> > > > { static struct imx_pll14xx_clk imx8mn_arm_pll = {
+> > > >                 .type = PLL_1416X,
+> > > >                 .rate_table = imx8mn_pll1416x_tbl,
+> > > > +               .rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
+> > >
+> > > Why is rate_count added? That's not described in the commit text.
+> >
+> > rate_count is necessary for table search during set_rate, it was
+> > missed previously, I will add it into commit text in V2.
+> >
+> 
+> Right, isn't that a more critical fix to make by itself instead of rolling into this
+> change that adds a few more frequencies?
 
-It means, we cannot expect that this driver will be fixed any time soon.
+Right, let me split this patch into two patches and resend the V2.
 
-=2D-
-Regards,
-Oleksij
+Thanks,
+Anson.
