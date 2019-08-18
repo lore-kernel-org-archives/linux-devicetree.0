@@ -1,48 +1,159 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: clock: Add Bitmain BM1880 SoC clock controller binding
-Date: Sat, 17 Aug 2019 18:16:22 -0700
-Message-ID: <20190818011623.B78062173B@mail.kernel.org>
-References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org> <20190705151440.20844-2-manivannan.sadhasivam@linaro.org> <20190808050128.E3DA52186A@mail.kernel.org> <20190817033422.GB14652@Mani-XPS-13-9360> <20190817034612.6DA7E21721@mail.kernel.org> <20190817035845.GD14652@Mani-XPS-13-9360>
+Subject: Re: [PATCH 4/5] clk: Add driver for Bitmain BM1880 SoC clock controller
+Date: Sat, 17 Aug 2019 18:21:58 -0700
+Message-ID: <20190818012159.1EF652077C@mail.kernel.org>
+References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org> <20190705151440.20844-5-manivannan.sadhasivam@linaro.org> <20190808051600.4EF7D2186A@mail.kernel.org> <20190817035557.GC14652@Mani-XPS-13-9360>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190817035845.GD14652@Mani-XPS-13-9360>
+In-Reply-To: <20190817035557.GC14652@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manivannan Sadhasivam (2019-08-16 20:58:45)
-> On Fri, Aug 16, 2019 at 08:46:11PM -0700, Stephen Boyd wrote:
-> > Quoting Manivannan Sadhasivam (2019-08-16 20:34:22)
-> > > On Wed, Aug 07, 2019 at 10:01:28PM -0700, Stephen Boyd wrote:
-> > > > Quoting Manivannan Sadhasivam (2019-07-05 08:14:36)
-> > > > > +It is expected that it is defined using standard clock bindings =
-as "osc".
-> > > > > +
-> > > > > +Example:=20
-> > > > > +
-> > > > > +        clk: clock-controller@800 {
-> > > > > +                compatible =3D "bitmain,bm1880-clk";
-> > > > > +                reg =3D <0xe8 0x0c>,<0x800 0xb0>;
-> > > >=20
-> > > > It looks weird still. What hardware module is this actually part of?
-> > > > Some larger power manager block?
-> > > >=20
-> > >=20
-> > > These are all part of the sysctrl block (clock + pinctrl + reset) and=
- the
-> > > register domains got split between system and pll.
-> > >=20
-> >=20
-> > And that can't be one node that probes the clk, pinctrl, and reset
-> > drivers from C code?
+Quoting Manivannan Sadhasivam (2019-08-16 20:55:57)
+> Hi Stephen,
 >=20
-> It is not a MFD for sure. It's just grouping of the register domains toge=
-ther.
+> On Wed, Aug 07, 2019 at 10:15:59PM -0700, Stephen Boyd wrote:
+> > Quoting Manivannan Sadhasivam (2019-07-05 08:14:39)
+> > > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> > > index fc1e0cf44995..ffc61ed85ade 100644
+> > > --- a/drivers/clk/Kconfig
+> > > +++ b/drivers/clk/Kconfig
+> > > @@ -304,6 +304,12 @@ config COMMON_CLK_FIXED_MMIO
+> > >         help
+> > >           Support for Memory Mapped IO Fixed clocks
+> > > =20
+> > > +config COMMON_CLK_BM1880
+> > > +       bool "Clock driver for Bitmain BM1880 SoC"
+> > > +       depends on ARCH_BITMAIN || COMPILE_TEST
+> > > +       help
+> > > +         This driver supports the clocks on Bitmain BM1880 SoC.
+> >=20
+> > Can you add this config somewhere else besides the end? Preferably
+> > close to alphabetically in this file.
+> >=20
+>=20
+> Okay. I got confused by the fact that Makefile is sorted but not the
+> Kconfig.
+
+Ok. I'll make a reminder to sort the Kconfig after -rc1 next time.
+
+>=20
+> > > +
+> > >  source "drivers/clk/actions/Kconfig"
+> > >  source "drivers/clk/analogbits/Kconfig"
+> > >  source "drivers/clk/bcm/Kconfig"
+> > > diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
+> > > new file mode 100644
+> > > index 000000000000..26cdb75bb936
+> > > --- /dev/null
+> > > +++ b/drivers/clk/clk-bm1880.c
+[....]
+> > > +
+> > > +struct clk *bm1880_clk_register_pll(const struct bm1880_pll_clock *p=
+ll_clk,
+> > > +                                   void __iomem *sys_base)
+> > > +{
+> > > +       struct bm1880_pll_hw_clock *pll_hw;
+> > > +       struct clk_init_data init;
+> > > +       struct clk_hw *hw;
+> > > +       int err;
+> > > +
+> > > +       pll_hw =3D kzalloc(sizeof(*pll_hw), GFP_KERNEL);
+> > > +       if (!pll_hw)
+> > > +               return ERR_PTR(-ENOMEM);
+> > > +
+> > > +       init.name =3D pll_clk->name;
+> > > +       init.ops =3D &bm1880_pll_ops;
+> > > +       init.flags =3D pll_clk->flags;
+> > > +       init.parent_names =3D &pll_clk->parent;
+> >=20
+> > Can you use the new way of specifying parents instead of using strings
+> > for everything?
+> >=20
+>=20
+> Sure, will do it for clocks which doesn't use helper APIs.
+>=20
+> > > +       init.num_parents =3D 1;
+> > > +
+> > > +       pll_hw->hw.init =3D &init;
+> > > +       pll_hw->pll.reg =3D pll_clk->reg;
+> > > +       pll_hw->base =3D sys_base;
+> > > +
+> > > +       hw =3D &pll_hw->hw;
+> > > +       err =3D clk_hw_register(NULL, hw);
+> > > +
+> > > +       if (err) {
+> > > +               kfree(pll_hw);
+> > > +               return ERR_PTR(err);
+> > > +       }
+> > > +
+> > > +       return hw->clk;
+> >=20
+> > Can this return the clk_hw pointer instead?
+> >=20
+>=20
+> What is the benefit? I see that only hw:init is going to be NULL in futur=
+e.
+
+Eventually we will remove ->clk from struct clk_hw and then this will
+break. It also clearly makes this driver a clk provider driver and not a
+clk consumer.
+
+> So, I'll keep it as it is.
+
+Please no!
+
+> > > +               bm1880_clk_unregister_pll(data->clk_data.clks[clks[i]=
+.id]);
+> > > +
+> > > +       return PTR_ERR(clk);
+> > > +}
+> > > +
+> > > +int bm1880_clk_register_mux(const struct bm1880_mux_clock *clks,
+> > > +                           int num_clks, struct bm1880_clock_data *d=
+ata)
+> > > +{
+> > > +       struct clk *clk;
+> > > +       void __iomem *sys_base =3D data->sys_base;
+> > > +       int i;
+> > > +
+> > > +       for (i =3D 0; i < num_clks; i++) {
+> > > +               clk =3D clk_register_mux(NULL, clks[i].name,
+> >=20
+> > Can you use the clk_hw based APIs for generic type clks?
+> >=20
+>=20
+> IMO using helper APIs greatly reduce code size and makes the driver
+> look more clean. So I prefer to use the helpers wherever applicable.
+> When you plan to deprecate those, I'll switch over to plain clk_hw APIs.
+
+We have clk_hw_register_mux(). Please use it. The clk based registration
+APIs are deprecated.
+
+> > > +       kfree(clk_data);
+> > > +}
+> > > +
+> > > +CLK_OF_DECLARE_DRIVER(bm1880_clk, "bitmain,bm1880-clk", bm1880_clk_i=
+nit);
+> >=20
+> > Is there a reason why it can't be a platform driver?
+> >=20
+>=20
+> Hmm, I looked into the majority of drivers which live under `driver/clk/`.
+> Most of them are using CLK_OF_DECLARE_DRIVER, so I thought that only driv=
+ers
+> which have a separate directory are preferred by the maintainers to use
+> platform driver way.
+>=20
+> Anyway, I can switch over to platform driver and that's what I prefer.
 >=20
 
-Are there datasheets? I'm not saying it's an "MFD", just saying that
-it's one hardware IP block delivered by the SoC integrator. It's
-already odd that there are two register properties.
+Yes please use a platform driver unless it doesn't work for some reason.
+Even then, use a platform driver and CLK_OF_DECLARE_DRIVER() in
+conjunction to register the early clks from the OF_DECLARED section and
+then adopt the rest to the proper device driver later on. This way we
+gain the benefits of driver core.
