@@ -1,63 +1,54 @@
-From: Chuanhong Guo <gch981213@gmail.com>
-Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding documentation
-Date: Sun, 18 Aug 2019 15:19:08 +0800
-Message-ID: <CAJsYDVK9Yj02WxNFo7iEP3aJn+j5MqzCtLrmgsz=4zWnfQ4VOw@mail.gmail.com>
-References: <20190724022310.28010-1-gch981213@gmail.com> <20190724022310.28010-5-gch981213@gmail.com>
- <20190813155143.GA19830@bogus> <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
- <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net> <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
- <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de> <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
- <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
+From: Avi Fishman <avifishman70@gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Date: Sun, 18 Aug 2019 10:26:17 +0300
+Message-ID: <CAKKbWA607qZ+LODfYi7yUWOQ3DV4Wxi4VUGkW=waSzzRbHp+OA@mail.gmail.com>
+References: <20190722150241.345609-1-tmaimon77@gmail.com> <20190722150241.345609-2-tmaimon77@gmail.com>
+ <20190812233623.GA24924@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fb39803d-d303-f259-d78d-9f8b1fc7dde3@rempel-privat.de>
+In-Reply-To: <20190812233623.GA24924@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: Rob Herring <robh@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, John Crispin <john@phrozen.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Weijie Gao <hackpascal@gmail.com>, NeilBrown <neil@brown.name>, Paul Fertser <fercerpav@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Tomer Maimon <tmaimon77@gmail.com>, mpm@selenic.com, herbert@gondor.apana.org.au, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Sun, Aug 18, 2019 at 2:10 PM Oleksij Rempel <linux@rempel-privat.de> wrote:
+On Tue, Aug 13, 2019 at 2:36 AM Rob Herring <robh@kernel.org> wrote:
 >
-> >> We have at least 2 know registers:
-> >> SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
-> >> refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
-> >> SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
-> >> all or some ip cores.
-> >> What is probably missing is a set of dividers for
-> >> each ip core. From your words it is not document.
+> On Mon, Jul 22, 2019 at 06:02:40PM +0300, Tomer Maimon wrote:
+> > Added device tree binding documentation for Nuvoton BMC
+> > NPCM Random Number Generator (RNG).
 > >
-> > The specific missing part I was referring to, is parent clocks for
-> > every gates. I'm not going to assume this with current openwrt device
-> > tree because some peripherals doesn't have a clock binding at all or
-> > have a dummy one there.
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > ---
+> >  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > new file mode 100644
+> > index 000000000000..a697b4425fb3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > @@ -0,0 +1,17 @@
+> > +NPCM SoC Random Number Generator
+> > +
+> > +Required properties:
+> > +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
+> > +- reg         : Specifies physical base address and size of the registers.
+> > +
+> > +Optional property:
+> > +- quality : estimated number of bits of true entropy per 1024 bits
+> > +                     read from the rng.
+> > +                     If this property is not defined, it defaults to 1000.
 >
-> Ok, then I do not understand what is the motivation to upstream
-> something what is not nearly ready for use.
+> This would need a vendor prefix, however, I think it should be implied
+> by the compatible string. It is fixed per SoC, right?
 
-Why isn't it "ready for use" then?
-A complete mt7621-pll driver will contain two parts:
-1. A clock provider which outputs several clocks
-2. A clock gate with parent clocks properly configured
+Tomer is on vacation, so I answer instead:
+This value is the same for all our SoC flavor that contains this RNG HW.
 
-Two clocks provided here are just two clocks that can't be controlled
-in kernel no matter where it goes (arch/mips/ralink or drivers/clk).
-Having a working CPU clock provider is better than defining a fixed
-clock in dts because CPU clock can be controlled by bootloader.
-(BTW description for CPU PLL register is also missing in datasheet.)
-Clock gate is an unrelated part and there is no information to
-properly implement it unless MTK decided to release a clock plan
-somehow.
 
-> This code is currently on prototyping phase
-
-Code for clock calculation is done, not "prototyping".
-
-> It means, we cannot expect that this driver will be fixed any time soon.
-
-I think clock gating is a separated feature instead of a broken part
-that has to be fixed.
-
+-- 
 Regards,
-Chuanhong Guo
+Avi
