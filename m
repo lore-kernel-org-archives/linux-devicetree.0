@@ -1,159 +1,66 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 4/5] clk: Add driver for Bitmain BM1880 SoC clock controller
-Date: Sat, 17 Aug 2019 18:21:58 -0700
-Message-ID: <20190818012159.1EF652077C@mail.kernel.org>
-References: <20190705151440.20844-1-manivannan.sadhasivam@linaro.org> <20190705151440.20844-5-manivannan.sadhasivam@linaro.org> <20190808051600.4EF7D2186A@mail.kernel.org> <20190817035557.GC14652@Mani-XPS-13-9360>
+From: Chuanhong Guo <gch981213@gmail.com>
+Subject: Re: [PATCH v2 4/6] dt: bindings: add mt7621-pll dt binding
+ documentation
+Date: Sun, 18 Aug 2019 10:29:29 +0800
+Message-ID: <CAJsYDVLLPa07wUg2EoeJww9XSJYgX_kBu-oGiv7n+zejUc877w@mail.gmail.com>
+References: <20190724022310.28010-1-gch981213@gmail.com>
+ <20190724022310.28010-5-gch981213@gmail.com>
+ <20190813155143.GA19830@bogus>
+ <CAJsYDVKnf4M8jyVOyotRxs=SsHqjex_q60AwkX=QAPK33ivw-Q@mail.gmail.com>
+ <2d48f4a4-7d30-547b-21ee-6aadabe7d7c3@gmx.net>
+ <CAJsYDVLq1-U_AngA4=YKHS_L=zurhLse9XwQ0Rzup9BdXfri-w@mail.gmail.com>
+ <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190817035557.GC14652@Mani-XPS-13-9360>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <6b6ee744-61d3-8848-19e7-0a301fe4d1b3@rempel-privat.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, James Hogan <jhogan@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "open list:MIPS" <linux-mips@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, open list <linux-kernel@vger.kernel.org>, Paul Burton <paul.burton@mips.com>, Weijie Gao <hackpascal@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manivannan Sadhasivam (2019-08-16 20:55:57)
-> Hi Stephen,
->=20
-> On Wed, Aug 07, 2019 at 10:15:59PM -0700, Stephen Boyd wrote:
-> > Quoting Manivannan Sadhasivam (2019-07-05 08:14:39)
-> > > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> > > index fc1e0cf44995..ffc61ed85ade 100644
-> > > --- a/drivers/clk/Kconfig
-> > > +++ b/drivers/clk/Kconfig
-> > > @@ -304,6 +304,12 @@ config COMMON_CLK_FIXED_MMIO
-> > >         help
-> > >           Support for Memory Mapped IO Fixed clocks
-> > > =20
-> > > +config COMMON_CLK_BM1880
-> > > +       bool "Clock driver for Bitmain BM1880 SoC"
-> > > +       depends on ARCH_BITMAIN || COMPILE_TEST
-> > > +       help
-> > > +         This driver supports the clocks on Bitmain BM1880 SoC.
-> >=20
-> > Can you add this config somewhere else besides the end? Preferably
-> > close to alphabetically in this file.
-> >=20
->=20
-> Okay. I got confused by the fact that Makefile is sorted but not the
-> Kconfig.
+Hi!
 
-Ok. I'll make a reminder to sort the Kconfig after -rc1 next time.
+On Sun, Aug 18, 2019 at 2:06 AM Oleksij Rempel <linux@rempel-privat.de> wrote:
+> >> SYSC_REG_CPLL_CLKCFG1 register is a clock gate controller. It is used to enable or disable clocks.
+> >> Jist wild assumption. All peripheral devices are suing bus clock.
+> >
+> > This assumption is incorrect. When this patchset is applied in
+> > OpenWrt, I asked the author why there's still a fixed clock in
+> > mt7621.dtsi, He told me that there's another clock for those unchanged
+> > peripherals and he doesn't have time to write a clock provider for it.
+>
+> Can you please provide a link to this patch or email.
 
->=20
-> > > +
-> > >  source "drivers/clk/actions/Kconfig"
-> > >  source "drivers/clk/analogbits/Kconfig"
-> > >  source "drivers/clk/bcm/Kconfig"
-> > > diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
-> > > new file mode 100644
-> > > index 000000000000..26cdb75bb936
-> > > --- /dev/null
-> > > +++ b/drivers/clk/clk-bm1880.c
-[....]
-> > > +
-> > > +struct clk *bm1880_clk_register_pll(const struct bm1880_pll_clock *p=
-ll_clk,
-> > > +                                   void __iomem *sys_base)
-> > > +{
-> > > +       struct bm1880_pll_hw_clock *pll_hw;
-> > > +       struct clk_init_data init;
-> > > +       struct clk_hw *hw;
-> > > +       int err;
-> > > +
-> > > +       pll_hw =3D kzalloc(sizeof(*pll_hw), GFP_KERNEL);
-> > > +       if (!pll_hw)
-> > > +               return ERR_PTR(-ENOMEM);
-> > > +
-> > > +       init.name =3D pll_clk->name;
-> > > +       init.ops =3D &bm1880_pll_ops;
-> > > +       init.flags =3D pll_clk->flags;
-> > > +       init.parent_names =3D &pll_clk->parent;
-> >=20
-> > Can you use the new way of specifying parents instead of using strings
-> > for everything?
-> >=20
->=20
-> Sure, will do it for clocks which doesn't use helper APIs.
->=20
-> > > +       init.num_parents =3D 1;
-> > > +
-> > > +       pll_hw->hw.init =3D &init;
-> > > +       pll_hw->pll.reg =3D pll_clk->reg;
-> > > +       pll_hw->base =3D sys_base;
-> > > +
-> > > +       hw =3D &pll_hw->hw;
-> > > +       err =3D clk_hw_register(NULL, hw);
-> > > +
-> > > +       if (err) {
-> > > +               kfree(pll_hw);
-> > > +               return ERR_PTR(err);
-> > > +       }
-> > > +
-> > > +       return hw->clk;
-> >=20
-> > Can this return the clk_hw pointer instead?
-> >=20
->=20
-> What is the benefit? I see that only hw:init is going to be NULL in futur=
-e.
+This discussion is in Chinese and using an IM software so there's no
+link available.
 
-Eventually we will remove ->clk from struct clk_hw and then this will
-break. It also clearly makes this driver a clk provider driver and not a
-clk consumer.
+> We have at least 2 know registers:
+> SYSC_REG_CPLL_CLKCFG0 - it provides some information about boostrapped
+> refclock. PLL and dividers used for CPU and some sort of BUS (AHB?).
+> SYSC_REG_CPLL_CLKCFG1 - a banch of gates to enable/disable clocks for
+> all or some ip cores.
+> What is probably missing is a set of dividers for
+> each ip core. From your words it is not document.
 
-> So, I'll keep it as it is.
+The specific missing part I was referring to, is parent clocks for
+every gates. I'm not going to assume this with current openwrt device
+tree because some peripherals doesn't have a clock binding at all or
+have a dummy one there.
 
-Please no!
+>
+> With this information the clk driver will provide gate functionality and
+> a set of hardcoded clocks. With this driver will work part of power
+> management and nice devicetree without fixed clocks.
 
-> > > +               bm1880_clk_unregister_pll(data->clk_data.clks[clks[i]=
-.id]);
-> > > +
-> > > +       return PTR_ERR(clk);
-> > > +}
-> > > +
-> > > +int bm1880_clk_register_mux(const struct bm1880_mux_clock *clks,
-> > > +                           int num_clks, struct bm1880_clock_data *d=
-ata)
-> > > +{
-> > > +       struct clk *clk;
-> > > +       void __iomem *sys_base =3D data->sys_base;
-> > > +       int i;
-> > > +
-> > > +       for (i =3D 0; i < num_clks; i++) {
-> > > +               clk =3D clk_register_mux(NULL, clks[i].name,
-> >=20
-> > Can you use the clk_hw based APIs for generic type clks?
-> >=20
->=20
-> IMO using helper APIs greatly reduce code size and makes the driver
-> look more clean. So I prefer to use the helpers wherever applicable.
-> When you plan to deprecate those, I'll switch over to plain clk_hw APIs.
-
-We have clk_hw_register_mux(). Please use it. The clk based registration
-APIs are deprecated.
-
-> > > +       kfree(clk_data);
-> > > +}
-> > > +
-> > > +CLK_OF_DECLARE_DRIVER(bm1880_clk, "bitmain,bm1880-clk", bm1880_clk_i=
-nit);
-> >=20
-> > Is there a reason why it can't be a platform driver?
-> >=20
->=20
-> Hmm, I looked into the majority of drivers which live under `driver/clk/`.
-> Most of them are using CLK_OF_DECLARE_DRIVER, so I thought that only driv=
-ers
-> which have a separate directory are preferred by the maintainers to use
-> platform driver way.
->=20
-> Anyway, I can switch over to platform driver and that's what I prefer.
->=20
-
-Yes please use a platform driver unless it doesn't work for some reason.
-Even then, use a platform driver and CLK_OF_DECLARE_DRIVER() in
-conjunction to register the early clks from the OF_DECLARED section and
-then adopt the rest to the proper device driver later on. This way we
-gain the benefits of driver core.
+Regards,
+Chuanhong Guo
