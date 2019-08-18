@@ -1,26 +1,141 @@
-From: Frank Wunderlich <frank-w@public-files.de>
-Subject: Re: [PATCH v6 00/13] implement poweroff for mt6323 / bpi-r2
-Date: Sun, 18 Aug 2019 16:30:01 +0200
-Message-ID: <B8BBF532-0642-4BB6-818B-4376E1E70431@public-files.de>
-References: <20190818135611.7776-1-frank-w@public-files.de>
-Reply-To: frank-w@public-files.de
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V3 3/4] staging: iio: adc: ad7192: Add system
+ calibration support
+Date: Sun, 18 Aug 2019 19:40:17 +0100
+Message-ID: <20190818194017.7ba2fc97@archlinux>
+References: <20190814073150.4602-1-mircea.caprioru@analog.com>
+        <20190814073150.4602-3-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190818135611.7776-1-frank-w@public-files.de>
+In-Reply-To: <20190814073150.4602-3-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mediatek@lists.infradead.org
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Mircea Caprioru <mircea.caprioru@analog.com>
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Arg, missed a comma between
+On Wed, 14 Aug 2019 10:31:49 +0300
+Mircea Caprioru <mircea.caprioru@analog.com> wrote:
 
-linux-arm-kernel@lists=2Einfradead=2Eorg
- and
-Alessandro Zummo
+> This patch will add a system calibration attribute for each channel. Using
+> this option the user will have the ability to calibrate each channel for
+> zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
+> to implement the functionality.
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
 
-Will send the series to linux-arm-kernel later
+Hi, 
 
-Sorry for that
+This introduces new ABI so needs documentation in
+Documentation/ABI/testing/...
+
+I'm not particularly keen on a write to what might be considered
+a mode select register resulting in a calibration starting.
+That is rather non obvious, I'd prefer to either two attributes
+to trigger the two modes, or a mode attr and some sort of calibrate
+now attribute.
+
+I'll back out patch 2 for now, as it was there to support this.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+> Changelog V2:
+> - no changes here
+> 
+> Changelog V3:
+> - no changes here
+> 
+>  drivers/staging/iio/adc/ad7192.c | 55 +++++++++++++++++++++++++++++++-
+>  1 file changed, 54 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+> index d58ce08f3693..731072830f30 100644
+> --- a/drivers/staging/iio/adc/ad7192.c
+> +++ b/drivers/staging/iio/adc/ad7192.c
+> @@ -155,6 +155,11 @@
+>   * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
+>   */
+>  
+> +enum {
+> +   AD7192_SYSCALIB_ZERO_SCALE,
+> +   AD7192_SYSCALIB_FULL_SCALE,
+> +};
+> +
+>  struct ad7192_state {
+>  	struct regulator		*avdd;
+>  	struct regulator		*dvdd;
+> @@ -169,10 +174,56 @@ struct ad7192_state {
+>  	u8				devid;
+>  	u8				clock_sel;
+>  	struct mutex			lock;	/* protect sensor state */
+> +	u8				syscalib_mode[8];
+>  
+>  	struct ad_sigma_delta		sd;
+>  };
+>  
+> +static const char * const ad7192_syscalib_modes[] = {
+> +	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
+> +	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
+> +};
+> +
+> +static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
+> +				    const struct iio_chan_spec *chan,
+> +				    unsigned int mode)
+> +{
+> +	struct ad7192_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	st->syscalib_mode[chan->channel] = mode;
+> +
+> +	if (mode == AD7192_SYSCALIB_ZERO_SCALE)
+> +		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
+> +				      chan->address);
+> +	else
+> +		ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
+> +				      chan->address);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
+> +				    const struct iio_chan_spec *chan)
+> +{
+> +	struct ad7192_state *st = iio_priv(indio_dev);
+> +
+> +	return st->syscalib_mode[chan->channel];
+> +}
+> +
+> +static const struct iio_enum ad7192_syscalib_mode_enum = {
+> +	.items = ad7192_syscalib_modes,
+> +	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
+> +	.set = ad7192_set_syscalib_mode,
+> +	.get = ad7192_get_syscalib_mode
+> +};
+> +
+> +static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
+> +	IIO_ENUM("system_calibration", IIO_SEPARATE, &ad7192_syscalib_mode_enum),
+> +	IIO_ENUM_AVAILABLE("system_calibration", &ad7192_syscalib_mode_enum),
+> +	{}
+> +};
+> +
+>  static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
+>  {
+>  	return container_of(sd, struct ad7192_state, sd);
+> @@ -769,9 +820,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+>  		*chan = channels[i];
+>  		chan->info_mask_shared_by_all |=
+>  			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
+> -		if (chan->type != IIO_TEMP)
+> +		if (chan->type != IIO_TEMP) {
+>  			chan->info_mask_shared_by_type_available |=
+>  				BIT(IIO_CHAN_INFO_SCALE);
+> +			chan->ext_info = ad7192_calibsys_ext_info;
+> +		}
+>  		chan++;
+>  	}
+>  
