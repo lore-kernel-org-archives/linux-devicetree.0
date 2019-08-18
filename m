@@ -1,7 +1,7 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH RESEND V2 6/7] clk: imx8mn: Add necessary frequency support for ARM PLL table
-Date: Sun, 18 Aug 2019 02:32:24 -0400
-Message-ID: <1566109945-11149-6-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V2 7/7] arm64: dts: imx8mn: Add cpu-freq support
+Date: Sun, 18 Aug 2019 02:32:25 -0400
+Message-ID: <1566109945-11149-7-git-send-email-Anson.Huang@nxp.com>
 References: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
@@ -10,30 +10,118 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengu
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MN supports CPU running at 1.5GHz/1.4GHz/1.2GHz, add missing
-frequency for ARM PLL table.
+Add A53 OPP table, cpu regulator and speed grading node to
+support cpu-freq driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-         - split the patch into 2 patches, #1 fixed those missing .rate_count assignment,
-           #2 add missing frequency points.
+No changes.
 ---
- drivers/clk/imx/clk-imx8mn.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts |  4 +++
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi         | 41 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index b5a027c..48884f9 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -42,6 +42,8 @@ enum {
- static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] = {
- 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
- 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
-+	PLL_1416X_RATE(1500000000U, 375, 3, 1),
-+	PLL_1416X_RATE(1400000000U, 350, 3, 1),
- 	PLL_1416X_RATE(1200000000U, 300, 3, 1),
- 	PLL_1416X_RATE(1000000000U, 250, 3, 1),
- 	PLL_1416X_RATE(800000000U,  200, 3, 1),
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index 10ebf77..11c705d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -27,6 +27,10 @@
+ 	};
+ };
+ 
++&A53_0 {
++	cpu-supply = <&buck2_reg>;
++};
++
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index 1d8899b..785f4c4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -51,6 +51,9 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 
+ 		A53_1: cpu@1 {
+@@ -61,6 +64,7 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
+ 		};
+ 
+ 		A53_2: cpu@2 {
+@@ -71,6 +75,7 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
+ 		};
+ 
+ 		A53_3: cpu@3 {
+@@ -81,6 +86,7 @@
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&A53_L2>;
++			operating-points-v2 = <&a53_opp_table>;
+ 		};
+ 
+ 		A53_L2: l2-cache0 {
+@@ -88,6 +94,35 @@
+ 		};
+ 	};
+ 
++	a53_opp_table: opp-table {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <850000>;
++			opp-supported-hw = <0xb00>, <0x7>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++
++		opp-1400000000 {
++			opp-hz = /bits/ 64 <1400000000>;
++			opp-microvolt = <950000>;
++			opp-supported-hw = <0x300>, <0x7>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++
++		opp-1500000000 {
++			opp-hz = /bits/ 64 <1500000000>;
++			opp-microvolt = <1000000>;
++			opp-supported-hw = <0x100>, <0x3>;
++			clock-latency-ns = <150000>;
++			opp-suspend;
++		};
++	};
++
+ 	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0 0x80000000>;
+@@ -288,6 +323,12 @@
+ 				compatible = "fsl,imx8mn-ocotp", "fsl,imx7d-ocotp", "syscon";
+ 				reg = <0x30350000 0x10000>;
+ 				clocks = <&clk IMX8MN_CLK_OCOTP_ROOT>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
+ 			};
+ 
+ 			anatop: anatop@30360000 {
 -- 
 2.7.4
