@@ -1,84 +1,32 @@
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: allwinner: h6: Introduce Tanix TX6 board
-Date: Mon, 19 Aug 2019 00:18:27 +0200
-Message-ID: <CAJiuCcfSejK-fkk1TQW7e-WpjNCqR4h12xTUMYgnCApofL+X6Q@mail.gmail.com>
-References: <20190816205342.29552-3-jernej.skrabec@siol.net>
- <201908190222.ZdIp2gT1%lkp@intel.com> <7640522.c0V0aH5rf2@jernej-laptop>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v9 01/22] pinctrl: tegra: Fix write barrier placement in pmx_writel
+Date: Mon, 19 Aug 2019 00:20:01 +0200
+Message-ID: <CACRpkdbTYON9nhrP1ritBNcm49u7-c190wL5zeufvUoGQt1jOw@mail.gmail.com>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-2-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7640522.c0V0aH5rf2@jernej-laptop>
+In-Reply-To: <1565984527-5272-2-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc: kbuild test robot <lkp@intel.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Aug 16, 2019 at 9:42 PM Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
+>
+> pmx_writel uses writel which inserts write barrier before the
+> register write.
+>
+> This patch has fix to replace writel with writel_relaxed followed
+> by a readback and memory barrier to ensure write operation is
+> completed for successful pinctrl change.
+>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-On Sun, 18 Aug 2019 at 21:00, Jernej =C5=A0krabec <jernej.skrabec@siol.net>=
- wrote:
->
-> Dne nedelja, 18. avgust 2019 ob 20:42:49 CEST je kbuild test robot napisa=
-l(a):
-> > Hi Jernej,
-> >
-> > Thank you for the patch! Yet something to improve:
-> >
-> > [auto build test ERROR on linus/master]
-> > [cannot apply to v5.3-rc4 next-20190816]
-> > [if your patch is applied to the wrong git tree, please drop us a note =
-to
-> > help improve the system]
-> >
-> > url:
-> > https://github.com/0day-ci/linux/commits/Jernej-Skrabec/dt-bindings-arm=
--sun
-> > xi-Add-compatible-for-Tanix-TX6-board/20190819-002034 config:
-> > arm64-defconfig (attached as .config)
-> > compiler: aarch64-linux-gcc (GCC) 7.4.0
-> > reproduce:
-> >         wget
-> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cros=
-s -O
-> > ~/bin/make.cross chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         GCC_VERSION=3D7.4.0 make.cross ARCH=3Darm64
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> > All errors (new ones prefixed by >>):
-> > >> Error: arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts:83.1-6 =
-Label
-> > >> or path r_ir not found FATAL ERROR: Syntax error parsing input tree
->
-> Strange, Allwinner tree has commit, which introduces r_ir node:
-> https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/commit/?
-> h=3Dsunxi/dt-for-5.4&id=3D9267811aad3524c857cf2e16bbadd8c569e15ab9
->
-> Maybe kbuild test robot tree doesn't have it?
-Yes Kbuild is on v5.3-rc4 vs the IR patch is planned for 5.4.
+Took out the previous patches and applied this instead.
 
-Regards,
-Cl=C3=A9ment
-
->
-> Best regards,
-> Jernej
->
-> >
-> > ---
-> > 0-DAY kernel test infrastructure                Open Source Technology
-> > Center https://lists.01.org/pipermail/kbuild-all                   Inte=
-l
-> > Corporation
->
->
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Yours,
+Linus Walleij
