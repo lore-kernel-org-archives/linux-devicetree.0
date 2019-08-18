@@ -1,53 +1,39 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH RESEND V2 1/7] arm64: dts: imx8mn-ddr4-evk: Add i2c1 support
-Date: Sun, 18 Aug 2019 02:32:19 -0400
-Message-ID: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V2 6/7] clk: imx8mn: Add necessary frequency support for ARM PLL table
+Date: Sun, 18 Aug 2019 02:32:24 -0400
+Message-ID: <1566109945-11149-6-git-send-email-Anson.Huang@nxp.com>
+References: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, leonard.crestez@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Enable i2c1 on i.MX8MN DDR4 EVK board.
+i.MX8MN supports CPU running at 1.5GHz/1.4GHz/1.2GHz, add missing
+frequency for ARM PLL table.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-No changes.
+Changes since V1:
+         - split the patch into 2 patches, #1 fixed those missing .rate_count assignment,
+           #2 add missing frequency points.
 ---
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/clk/imx/clk-imx8mn.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index 9b2c172..5fce5b1 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -50,6 +50,13 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_I2C1_SCL_I2C1_SCL		0x400001c3
-+			MX8MN_IOMUXC_I2C1_SDA_I2C1_SDA		0x400001c3
-+		>;
-+	};
-+
- 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
- 		fsl,pins = <
- 			MX8MN_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-@@ -182,6 +189,13 @@
- 	};
- };
- 
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
- &snvs_pwrkey {
- 	status = "okay";
- };
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index b5a027c..48884f9 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -42,6 +42,8 @@ enum {
+ static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] = {
+ 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
+ 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
++	PLL_1416X_RATE(1500000000U, 375, 3, 1),
++	PLL_1416X_RATE(1400000000U, 350, 3, 1),
+ 	PLL_1416X_RATE(1200000000U, 300, 3, 1),
+ 	PLL_1416X_RATE(1000000000U, 250, 3, 1),
+ 	PLL_1416X_RATE(800000000U,  200, 3, 1),
 -- 
 2.7.4
