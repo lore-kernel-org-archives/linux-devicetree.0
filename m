@@ -1,79 +1,26 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v6 13/13] arm: dts: mt6323: add keys, power-controller,
- rtc and codec
-Date: Sun, 18 Aug 2019 15:56:11 +0200
-Message-ID: <20190818135611.7776-14-frank-w@public-files.de>
+Subject: Re: [PATCH v6 00/13] implement poweroff for mt6323 / bpi-r2
+Date: Sun, 18 Aug 2019 16:30:01 +0200
+Message-ID: <B8BBF532-0642-4BB6-818B-4376E1E70431@public-files.de>
 References: <20190818135611.7776-1-frank-w@public-files.de>
+Reply-To: frank-w@public-files.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190818135611.7776-1-frank-w@public-files.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mediatek@lists.infradead.org
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Josef Friedl <josef.friedl@speed.at>
+Arg, missed a comma between
 
-support poweroff and power-related keys on bpi-r2
+linux-arm-kernel@lists=2Einfradead=2Eorg
+ and
+Alessandro Zummo
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-changes since v5: none
-changes since v4: none
-changes since v3: none
-changes since v2: none (=v2 part 7)
----
- arch/arm/boot/dts/mt6323.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Will send the series to linux-arm-kernel later
 
-diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
-index ba397407c1dd..7fda40ab5fe8 100644
---- a/arch/arm/boot/dts/mt6323.dtsi
-+++ b/arch/arm/boot/dts/mt6323.dtsi
-@@ -238,5 +238,32 @@
- 				regulator-enable-ramp-delay = <216>;
- 			};
- 		};
-+
-+		mt6323keys: mt6323keys {
-+			compatible = "mediatek,mt6323-keys";
-+			mediatek,long-press-mode = <1>;
-+			power-off-time-sec = <0>;
-+
-+			power {
-+				linux,keycodes = <116>;
-+				wakeup-source;
-+			};
-+
-+			home {
-+				linux,keycodes = <114>;
-+			};
-+		};
-+
-+		codec: mt6397codec {
-+			compatible = "mediatek,mt6397-codec";
-+		};
-+
-+		power-controller {
-+			compatible = "mediatek,mt6323-pwrc";
-+		};
-+
-+		rtc {
-+			compatible = "mediatek,mt6323-rtc";
-+		};
- 	};
- };
--- 
-2.17.1
+Sorry for that
