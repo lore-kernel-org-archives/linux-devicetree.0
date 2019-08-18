@@ -1,52 +1,26 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 0/3] iio: imu: st_lsm6dsx: Add support for LSM9DS1
-Date: Sun, 18 Aug 2019 20:10:41 +0100
-Message-ID: <20190818201041.6b0bb698@archlinux>
-References: <20190813073533.8007-1-martin.kepplinger@puri.sm>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next 1/4 v3] dt-bindings: net: mediatek: Add
+ support for MediaTek MT7628/88 SoC
+Date: Sun, 18 Aug 2019 14:16:05 -0700 (PDT)
+Message-ID: <20190818.141605.39249439314908619.davem@davemloft.net>
+References: <20190816132325.28426-1-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813073533.8007-1-martin.kepplinger@puri.sm>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc: lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190816132325.28426-1-sr@denx.de>
+Sender: netdev-owner@vger.kernel.org
+To: sr@denx.de
+Cc: netdev@vger.kernel.org, linux-mediatek@lists.infradead.org, opensource@vdorst.com, daniel@makrotopia.org, sean.wang@mediatek.com, john@phrozen.org, devicetree@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Aug 2019 09:35:30 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+From: Stefan Roese <sr@denx.de>
+Date: Fri, 16 Aug 2019 15:23:22 +0200
 
-> Add basic functionality for LSM9DS1. This has become a trivial addition
-> by now.
+> Add compatible for the ethernet IP core on MT7628/88 SoCs. Its
+> compatible with the older Ralink Rt5350F SoC. And OpenWrt already
+> uses this compatible string for the MT76x8.
 > 
+> Signed-off-by: Stefan Roese <sr@denx.de>
 
-To me these look fine, but I'd ideally like an Ack or reviewed-by from
-Lorenzo.
-
-Thanks,
-
-Jonathan
-
-
-> revision history
-> ----------------
-> v4: rebase on top of today's iio testing branch with Lorenzo's recent work
-> v3: rebase and add Lorenzo's patches in order to apply to the iio testing brach
-> v2: further simplifications based on Lorenzo's feedback
-> v1: initial change for adding lsm9ds1 support
-> 
-> 
-> Martin Kepplinger (3):
->   iio: imu: st_lsm6sdx: move register definitions to sensor_settings
->     struct
->   iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9sd1
->   dt-bindings: iio: imu: st_lsm6dsx: add lsm9ds1 device bindings
-> 
->  .../bindings/iio/imu/st_lsm6dsx.txt           |   1 +
->  drivers/iio/imu/st_lsm6dsx/Kconfig            |   2 +-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |   8 ++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 118 ++++++++++++++++--
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c   |   5 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c   |   5 +
->  6 files changed, 129 insertions(+), 10 deletions(-)
-> 
+Applied.
