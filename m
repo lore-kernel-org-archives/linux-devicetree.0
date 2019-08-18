@@ -1,7 +1,7 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH RESEND V2 5/7] clk: imx8mn: Add missing rate_count assignment for each PLL structure
-Date: Sun, 18 Aug 2019 02:32:23 -0400
-Message-ID: <1566109945-11149-5-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V2 4/7] cpufreq: imx-cpufreq-dt: Add i.MX8MN support
+Date: Sun, 18 Aug 2019 02:32:22 -0400
+Message-ID: <1566109945-11149-4-git-send-email-Anson.Huang@nxp.com>
 References: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
@@ -10,66 +10,59 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengu
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add .rate_count assignment which is necessary for searching required
-PLL rate from the each PLL table.
+i.MX8MN has different speed grading definition as below, it has 4 bits
+to define speed grading, add support for it.
 
-Fixes: 96d6392b54db ("clk: imx: Add support for i.MX8MN clock driver")
+ SPEED_GRADE[3:0]    MHz
+    0000            2300
+    0001            2200
+    0010            2100
+    0011            2000
+    0100            1900
+    0101            1800
+    0110            1700
+    0111            1600
+    1000            1500
+    1001            1400
+    1010            1300
+    1011            1200
+    1100            1100
+    1101            1000
+    1110             900
+    1111             800
+
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Changes since V1:
-	- split the patch into 2 patches, #1 fixed those missing .rate_count assignment,
-	  #2 add missing frequency points.
+No changes.
 ---
- drivers/clk/imx/clk-imx8mn.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/cpufreq/imx-cpufreq-dt.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index ecd1062..b5a027c 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -67,36 +67,43 @@ static const struct imx_pll14xx_rate_table imx8mn_drampll_tbl[] = {
- static struct imx_pll14xx_clk imx8mn_audio_pll = {
- 		.type = PLL_1443X,
- 		.rate_table = imx8mn_audiopll_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_audiopll_tbl),
- };
+diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
+index 4f85f31..35db14c 100644
+--- a/drivers/cpufreq/imx-cpufreq-dt.c
++++ b/drivers/cpufreq/imx-cpufreq-dt.c
+@@ -16,6 +16,7 @@
  
- static struct imx_pll14xx_clk imx8mn_video_pll = {
- 		.type = PLL_1443X,
- 		.rate_table = imx8mn_videopll_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_videopll_tbl),
- };
+ #define OCOTP_CFG3_SPEED_GRADE_SHIFT	8
+ #define OCOTP_CFG3_SPEED_GRADE_MASK	(0x3 << 8)
++#define IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK	(0xf << 8)
+ #define OCOTP_CFG3_MKT_SEGMENT_SHIFT    6
+ #define OCOTP_CFG3_MKT_SEGMENT_MASK     (0x3 << 6)
  
- static struct imx_pll14xx_clk imx8mn_dram_pll = {
- 		.type = PLL_1443X,
- 		.rate_table = imx8mn_drampll_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_drampll_tbl),
- };
+@@ -34,7 +35,12 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- static struct imx_pll14xx_clk imx8mn_arm_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mn_pll1416x_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
- };
+-	speed_grade = (cell_value & OCOTP_CFG3_SPEED_GRADE_MASK) >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
++	if (of_machine_is_compatible("fsl,imx8mn"))
++		speed_grade = (cell_value & IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK)
++			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
++	else
++		speed_grade = (cell_value & OCOTP_CFG3_SPEED_GRADE_MASK)
++			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
+ 	mkt_segment = (cell_value & OCOTP_CFG3_MKT_SEGMENT_MASK) >> OCOTP_CFG3_MKT_SEGMENT_SHIFT;
  
- static struct imx_pll14xx_clk imx8mn_gpu_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mn_pll1416x_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
- };
- 
- static struct imx_pll14xx_clk imx8mn_vpu_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mn_pll1416x_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
- };
- 
- static struct imx_pll14xx_clk imx8mn_sys_pll = {
- 		.type = PLL_1416X,
- 		.rate_table = imx8mn_pll1416x_tbl,
-+		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
- };
- 
- static const char * const pll_ref_sels[] = { "osc_24m", "dummy", "dummy", "dummy", };
+ 	/*
 -- 
 2.7.4
