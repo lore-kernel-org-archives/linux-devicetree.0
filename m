@@ -1,26 +1,34 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 01/21] ARM: dts: imx7-colibri: make sure module
- supplies are always on
-Date: Mon, 19 Aug 2019 12:58:46 +0200
-Message-ID: <20190819105845.GK5999@X250>
+Subject: Re: [PATCH v4 02/21] ARM: dts: imx7-colibri: disable HS400
+Date: Mon, 19 Aug 2019 13:06:46 +0200
+Message-ID: <20190819110645.GL5999@X250>
 References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-2-philippe.schenker@toradex.com>
+ <20190812142105.1995-3-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812142105.1995-2-philippe.schenker@toradex.com>
+In-Reply-To: <20190812142105.1995-3-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:21:15PM +0000, Philippe Schenker wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Mon, Aug 12, 2019 at 02:21:17PM +0000, Philippe Schenker wrote:
+> From: Stefan Agner <stefan.agner@toradex.com>
 > 
-> Prevent regulators from being switched off.
+> Force HS200 by masking bit 63 of the SDHCI capability register.
+> The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+> that the stack checks bit 63 to descide whether HS400 is available.
+> Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+> HS200 as operating mode.
 > 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> This prevents rare communication errors with minimal effect on
+> performance:
+> 	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+> 		status REF not lock!
+> 
+> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
 > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
 Applied, thanks.
