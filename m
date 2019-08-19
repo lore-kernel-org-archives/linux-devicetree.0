@@ -1,93 +1,76 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: mfd: Convert Allwinner GPADC bindings
- to a schema
-Date: Mon, 19 Aug 2019 20:27:26 +0200
-Message-ID: <20190819182726.7se7vexlftybsqlz@flea>
-References: <20190813124744.32614-1-mripard@kernel.org>
- <CAL_Jsq+QxsxxCsaJ8GjSQhKVHnas3WqjOPnv86=-fWs143CUQg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [EXT] Re: [v2 2/3] clk: ls1028a: Add clock driver for Display output interface
+Date: Mon, 19 Aug 2019 11:29:43 -0700
+Message-ID: <20190819182944.4AEAB22CF5@mail.kernel.org>
+References: <20190815101613.22872-1-wen.he_1@nxp.com> <20190815101613.22872-2-wen.he_1@nxp.com> <20190816174624.115FC205F4@mail.kernel.org> <DB7PR04MB51952DF4E1EE7FF10A947347E2A80@DB7PR04MB5195.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4014002962065167183=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+QxsxxCsaJ8GjSQhKVHnas3WqjOPnv86=-fWs143CUQg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB7PR04MB51952DF4E1EE7FF10A947347E2A80@DB7PR04MB5195.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Wen He <wen.he_1@nxp.com>
+Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Wen He (2019-08-19 00:30:49)
+> > Quoting Wen He (2019-08-15 03:16:12)
+> > > diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig index
+> > > 801fa1cd0321..3c95d8ec31d4 100644
+> > > --- a/drivers/clk/Kconfig
+> > > +++ b/drivers/clk/Kconfig
+> > > @@ -223,6 +223,16 @@ config CLK_QORIQ
+> > >           This adds the clock driver support for Freescale QorIQ plat=
+forms
+> > >           using common clock framework.
+> > >
+> > > +config CLK_LS1028A_PLLDIG
+> > > +        bool "Clock driver for LS1028A Display output"
+> > > +       depends on (ARCH_LAYERSCAPE || COMPILE_TEST) && OF
+> >=20
+> > Where is the OF dependency to build anything? Doesn't this still compile
+> > without CONFIG_OF set?
+>=20
+> Yes, current included some APIs of the OF, like of_get_parent_name()
 
---===============4014002962065167183==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cqozu4ph2avfiavn"
-Content-Disposition: inline
+And there isn't a stub API for of_get_parent_name when OF isn't defined?
 
+> > > +
+> > > +static int plldig_clk_probe(struct platform_device *pdev) {
+> > > +       struct clk_plldig *data;
+> > > +       struct resource *mem;
+> > > +       const char *parent_name;
+> > > +       struct clk_init_data init =3D {};
+> > > +       struct device *dev =3D &pdev->dev;
+> > > +       int ret;
+> > > +
+> > > +       data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> > > +       if (!data)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +       data->regs =3D devm_ioremap_resource(dev, mem);
+> > > +       if (IS_ERR(data->regs))
+> > > +               return PTR_ERR(data->regs);
+> > > +
+> > > +       init.name =3D dev->of_node->name;
+> > > +       init.ops =3D &plldig_clk_ops;
+> > > +       parent_name =3D of_clk_get_parent_name(dev->of_node, 0);
+> > > +       init.parent_names =3D &parent_name;
+> >=20
+> > Can you use the new way of specifying clk parents with the parent_data
+> > member of clk_init?
+>=20
+> Of course, but I don't understand why need recommend to use this member?
+> Is that the member parent_names will be discard in future?
+>=20
+> Here are definition of the clk-provider.h
+> /* Only one of the following three should be assigned */
+> const char              * const *parent_names;
+> const struct clk_parent_data    *parent_data;
+> const struct clk_hw             **parent_hws;
+>=20
+> For PLLDIG, it only has one parent.
 
---cqozu4ph2avfiavn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Aug 13, 2019 at 03:28:01PM -0600, Rob Herring wrote:
-> On Tue, Aug 13, 2019 at 6:47 AM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The Allwinner SoCs have an embedded GPADC that is doing thermal reading as
-> > well, supported in Linux, with a matching Device Tree binding.
-> >
-> > Now that we have the DT validation in place, let's convert the device tree
-> > bindings for that controller over to a YAML schemas.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  .../iio/adc/allwinner,sun8i-a33-ths.yaml      | 43 +++++++++++
-> >  .../bindings/mfd/allwinner,sun4i-a10-ts.yaml  | 76 +++++++++++++++++++
-> >  .../devicetree/bindings/mfd/sun4i-gpadc.txt   | 59 --------------
-> >  3 files changed, 119 insertions(+), 59 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/allwinner,sun8i-a33-ths.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun4i-a10-ts.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Applied, thanks
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---cqozu4ph2avfiavn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVrqDgAKCRDj7w1vZxhR
-xe/QAQCdjHYyPT1sbZs3doytGQ893nBVcEEfzd/iGm9+jIBxGQD/QEk4vLmUXEEu
-fopc6mLQNzKp3ZMuCE3WzEnc5wQU+Qc=
-=yYiT
------END PGP SIGNATURE-----
-
---cqozu4ph2avfiavn--
-
-
---===============4014002962065167183==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4014002962065167183==--
+Yes. Can you use clk_parent_data array and specify a DT index of 0 and
+some name that would go into "clock-names" in the .fw_name member?
