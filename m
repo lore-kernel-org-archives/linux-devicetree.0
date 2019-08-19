@@ -1,59 +1,26 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
-Date: Mon, 19 Aug 2019 11:31:47 +0200
-Message-ID: <20190819093147.GE4841@zn.tnic>
-References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
- <20190807144016.GA24328@zn.tnic>
- <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [v1 3/3] arm64: dts: ls1028a: Add properties node for Display
+ output pixel clock
+Date: Mon, 19 Aug 2019 11:32:01 +0200
+Message-ID: <20190819093159.GJ5999@X250>
+References: <20190812100224.34502-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
+In-Reply-To: <20190812100224.34502-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lei Wang <leiwang_git@outlook.com>
-Cc: "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>
+To: Wen He <wen.he_1@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, liviu.dudau@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:05:02AM +0000, Lei Wang wrote:
-> Added some more comments for the file:
+On Mon, Aug 12, 2019 at 06:02:24PM +0800, Wen He wrote:
+> The LS1028A has a clock domain PXLCLK0 used for the Display output
+> interface in the display core, independent of the system bus frequency,
+> for flexible clock design. This display core has its own pixel clock.
 > 
-> /*
->   * dmc520_edac.c, EDAC driver for DMC-520 memory controller
-      ^^^^^^^^^^^^^
+> This patch enable the pixel clock provider on the LS1028A.
+> 
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
 
-Filename is redundant.
-
-> These comments tell how to potentially expand the driver functions to 
-> support more interrupts besides what are already here.
-
-I can read that - the question is why are they there and for whom? For
-your future colleagues who'll take over this driver or what is those
-comments' purpose?
-
-> As above comments, this comment is to guide potential future adding to 
-> this driver to support other interrupts.
-
-See question above.
-
-> After edac_mc_alloc(), if succeeds, the above code updates dmc520_edac 
-> struct data. If moving edac_mc_alloc as suggested, I will need to use 
-> local variables to store the data,
-
-Yes, do that pls.
-
-> Do you mean having an array to keep all the irq_id, and then only 
-> devm_request_irq on them if all of the platform_get_irq are success?
-
-No, move it before edac_mc_alloc().
-
-In general, do *all* initialization of your hardware first and only
-then, when it succeeds, allocate the EDAC structures.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Applied, thanks.
