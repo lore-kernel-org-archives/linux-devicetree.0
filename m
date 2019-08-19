@@ -1,46 +1,37 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [v4, 1/8] cpufreq: mediatek: change to regulator_get_optional
-Date: Mon, 19 Aug 2019 15:21:56 +0530
-Message-ID: <20190819095156.m3iltf5ni3pprrt7@vireshk-i7>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1565703113-31479-2-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v1 3/3] arm64: dts: ls1028a: Add properties node for
+ Display output pixel clock
+Date: Mon, 19 Aug 2019 09:52:09 +0000
+Message-ID: <DB7PR04MB51951491600141680A1146FDE2A80@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190812100224.34502-1-wen.he_1@nxp.com>
+ <20190819093159.GJ5999@X250>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1565703113-31479-2-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <20190819093159.GJ5999@X250>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> For new mediatek chip mt8183,
-> cci and little cluster share the same buck,
-> so need to modify the attribute of regulator from exclusive to optional
-> 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  drivers/cpufreq/mediatek-cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-> index f14f3a85f2f7..a370577ffc73 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq.c
-> @@ -338,7 +338,7 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
->  		goto out_free_resources;
->  	}
->  
-> -	proc_reg = regulator_get_exclusive(cpu_dev, "proc");
-> +	proc_reg = regulator_get_optional(cpu_dev, "proc");
->  	if (IS_ERR(proc_reg)) {
->  		if (PTR_ERR(proc_reg) == -EPROBE_DEFER)
->  			pr_warn("proc regulator for cpu%d not ready, retry.\n",
-
-Applied. Thanks.
-
--- 
-viresh
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
+bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo41MIxOcjVIDE3OjMyDQo+IFRvOiBXZW4g
+SGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwu
+b3JnPjsgTWljaGFlbCBUdXJxdWV0dGUNCj4gPG10dXJxdWV0dGVAYmF5bGlicmUuY29tPjsgU3Rl
+cGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPjsgTWFyaw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxh
+bmRAYXJtLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1jbGtAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxl
+b3lhbmcubGlAbnhwLmNvbT47IGxpdml1LmR1ZGF1QGFybS5jb20NCj4gU3ViamVjdDogW0VYVF0g
+UmU6IFt2MSAzLzNdIGFybTY0OiBkdHM6IGxzMTAyOGE6IEFkZCBwcm9wZXJ0aWVzIG5vZGUgZm9y
+DQo+IERpc3BsYXkgb3V0cHV0IHBpeGVsIGNsb2NrDQo+IA0KPiANCj4gT24gTW9uLCBBdWcgMTIs
+IDIwMTkgYXQgMDY6MDI6MjRQTSArMDgwMCwgV2VuIEhlIHdyb3RlOg0KPiA+IFRoZSBMUzEwMjhB
+IGhhcyBhIGNsb2NrIGRvbWFpbiBQWExDTEswIHVzZWQgZm9yIHRoZSBEaXNwbGF5IG91dHB1dA0K
+PiA+IGludGVyZmFjZSBpbiB0aGUgZGlzcGxheSBjb3JlLCBpbmRlcGVuZGVudCBvZiB0aGUgc3lz
+dGVtIGJ1cw0KPiA+IGZyZXF1ZW5jeSwgZm9yIGZsZXhpYmxlIGNsb2NrIGRlc2lnbi4gVGhpcyBk
+aXNwbGF5IGNvcmUgaGFzIGl0cyBvd24gcGl4ZWwgY2xvY2suDQo+ID4NCj4gPiBUaGlzIHBhdGNo
+IGVuYWJsZSB0aGUgcGl4ZWwgY2xvY2sgcHJvdmlkZXIgb24gdGhlIExTMTAyOEEuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IA0KPiBBcHBsaWVk
+LCB0aGFua3MuDQoNClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldywgU2hhd24uDQoNCkJlc3QgUmVn
+YXJkcywNCldlbg0K
