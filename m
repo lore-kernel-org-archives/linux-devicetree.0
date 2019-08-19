@@ -1,105 +1,107 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2] userdiff: Add a builtin pattern for dts files
-Date: Mon, 19 Aug 2019 13:44:50 -0700
-Message-ID: <20190819204451.522D422CEB@mail.kernel.org>
-References: <20190816225658.8946-1-sboyd@kernel.org> <98f9cdc2-fa9b-b639-b906-44b17f0efd76@kdbg.org>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
+ DT bindings
+Date: Mon, 19 Aug 2019 13:49:09 -0700
+Message-ID: <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
+References: <20190724001100.133423-1-saravanak@google.com> <20190724001100.133423-4-saravanak@google.com>
+ <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com> <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
+ <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <98f9cdc2-fa9b-b639-b906-44b17f0efd76@kdbg.org>
-Sender: git-owner@vger.kernel.org
-To: Johannes Sixt <j6t@kdbg.org>
-Cc: git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Alban Gruin <alban.gruin@gmail.com>, Junio C Hamano <gitster@pobox.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Johannes Sixt (2019-08-19 11:40:47)
-> Am 17.08.19 um 00:56 schrieb Stephen Boyd:
-> > The Linux kernel receives many patches to the devicetree files each
-> > release. The hunk header for those patches typically show nothing,
-> > making it difficult to figure out what node is being modified without
-> > applying the patch or opening the file and seeking to the context. Let's
-> > add a builtin 'dts' pattern to git so that users can get better diff
-> > output on dts files when they use the diff=3Ddts driver.
-> >=20
-> > The regex has been constructed based on the spec at devicetree.org[1]
-> >=20
-> > [1] https://github.com/devicetree-org/devicetree-specification/releases=
-/latest
-> >=20
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >=20
-> > Sending this again after getting feedback and it getting stuck in
-> > review[1]. I'm not sure what happened with the meta question from Junio
-> > to add a way for various projects to introduce their own patterns, but
-> > I'd still prefer to have this in git proper because the kernel uses git
-> > extensively and we rely on git formatted patches in our workflow. I
-> > recently reviewed a dts change and remembered this never got accepted.
-> >=20
-> > Changes from v1:
-> >  * Updated regex to handle anything after node names instead of
-> >    requiring a '{'
-> >  * Updated test for boolean relation operators
-> >  * Sent out a patch to devicetree spec to document % operator
-> >=20
-> > [1] Feedback was in 16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com
->=20
-> Thanks. I've a few suggestions below.
->=20
-> > diff --git a/t/t4018/dts-labels b/t/t4018/dts-labels
-> > new file mode 100644
-> > index 000000000000..27cd4921cfb6
-> > --- /dev/null
-> > +++ b/t/t4018/dts-labels
-> > @@ -0,0 +1,8 @@
-> > +/ {
-> > +     label_1: node1@ff00 {
-> > +             label2: RIGHT {
-> > +                     vendor,some-property;
-> > +                     ChangeMe =3D <0x45-30>;
->=20
-> In these tests, it would be worthwhile to leave another (possibly blank)
-> line before the ChangeMe line in order to demonstrate that lines
-> beginning with a word, such as the 'vendor,some-property;' line, are
-> _not_ picked up when they are not in the hunk context.
+On Mon, Aug 19, 2019 at 10:16 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 8/15/19 6:50 PM, Saravana Kannan wrote:
+> > On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 7/23/19 5:10 PM, Saravana Kannan wrote:
+> >>> Add device-links after the devices are created (but before they are
+> >>> probed) by looking at common DT bindings like clocks and
+> >>> interconnects.
+>
+>
+> < very big snip (lots of comments that deserve answers) >
+>
+>
+> >>
+> >> /**
+> >>  * of_link_property - TODO:
+> >>  * dev:
+> >>  * con_np:
+> >>  * prop:
+> >>  *
+> >>  * TODO...
+> >>  *
+> >>  * Any failed attempt to create a link will NOT result in an immediate return.
+> >>  * of_link_property() must create all possible links even when one of more
+> >>  * attempts to create a link fail.
+> >>
+> >> Why?  isn't one failure enough to prevent probing this device?
+> >> Continuing to scan just results in extra work... which will be
+> >> repeated every time device_link_check_waiting_consumers() is called
+> >
+> > Context:
+> > As I said in the cover letter, avoiding unnecessary probes is just one
+> > of the reasons for this patch. The other (arguably more important)
+>
+> Agree that it is more important.
+>
+>
+> > reason for this patch is to make sure suppliers know that they have
+> > consumers that are yet to be probed. That way, suppliers can leave
+> > their resource on AND in the right state if they were left on by the
+> > bootloader. For example, if a clock was left on and at 200 MHz, the
+> > clock provider needs to keep that clock ON and at 200 MHz till all the
+> > consumers are probed.
+> >
+> > Answer: Let's say a consumer device Z has suppliers A, B and C. If the
+> > linking fails at A and you return immediately, then B and C could
+> > probe and then figure that they have no more consumers (they don't see
+> > a link to Z) and turn off their resources. And Z could fail
+> > catastrophically.
+>
+> Then I think that this approach is fatally flawed in the current implementation.
 
-Sure. I can add a blank line. Did you want it on all the tests or just
-some of them?
+I'm waiting to hear how it is fatally flawed. But maybe this is just a
+misunderstanding of the problem?
 
-> > diff --git a/userdiff.c b/userdiff.c
-> > index e74a6d402255..1db5d30aaebe 100644
-> > --- a/userdiff.c
-> > +++ b/userdiff.c
-> > @@ -23,6 +23,15 @@ IPATTERN("ada",
-> >        "[a-zA-Z][a-zA-Z0-9_]*"
-> >        "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
-> >        "|=3D>|\\.\\.|\\*\\*|:=3D|/=3D|>=3D|<=3D|<<|>>|<>"),
-> > +PATTERNS("dts",
-> > +      /* Node name with optional label and unit address */
-> > +      "^[ \t]*((([a-zA-Z_][a-zA-Z0-9_]*:[ \t]*)?[a-zA-Z][a-zA-Z0-9,._+=
--]*(@[a-zA-Z0-9,._+-]+)?"
->=20
-> From the examples I see in this patch, it looks like lines ending in a
-> ';' are not candidates, everything that begins with 'word' or '&word'
-> is. Wouldn't that greatly simplify these patterns?
->=20
->         "!;\n"
->         /* lines beginning with a word optionally preceded by '&' */
->         "^[ \t]*(&?([a-zA-Z_].*)"
+In the text below, I'm not sure if you mixing up two different things
+or just that your wording it a bit ambiguous. So pardon my nitpick to
+err on the side of clarity.
 
-Right. I was stuck with my old regex ways where it wasn't considering
-lines that didn't end in a semicolon. This looks like it will work.
+> A device can be added by a module that is loaded.
 
->=20
-> > +      /* Reference */
-> > +      "|&[a-zA-Z_][a-zA-Z0-9_]*)[ \t]*[^;]*)$",
->=20
-> Note that you don't have to replicate the syntax faithfully in the
-> patterns because you can assume that files adhere to the correct syntax.
-> You could merge this into the former pattern by just matching "&?" after
-> the initial whitespace.
+No, in the example I gave, of_platform_default_populate_init() would
+add all 3 of those devices during arch_initcall_sync().
 
-Ok. Thanks for simplifying by providing the regex above. I'll rework and
-resend.
+>  In that case the device
+> was not present at late boot when the suppliers may turn off their resources.
+
+In that case, the _drivers_ for those devices aren't present at late
+boot. So that they can't request to keep the resources on for their
+consumer devices. Since there are no consumer requests on resources,
+the suppliers turn off their resources at late boot (since there isn't
+a better location as of today). The sync_state() call back added in a
+subsequent patche in this series will provide the better location.
+
+> (I am assuming the details since I have not reviewed the patches later in
+> the series that implement this part.)
+>
+> Am I missing something?
+
+I think you are mixing up devices getting added/populated with drivers
+getting loaded as modules?
+
+> If I am wrong, then I'll have more comments for your review replies for
+> patches 2 and 3.
+
+I'll wait for more review replies?
+
+Thanks,
+Saravana
