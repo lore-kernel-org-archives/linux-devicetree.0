@@ -1,204 +1,127 @@
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v4 1/3] iio: imu: st_lsm6sdx: move register definitions
- to sensor_settings struct
-Date: Mon, 19 Aug 2019 10:47:10 +0200
-Message-ID: <20190819084710.GA17835@localhost.localdomain>
-References: <20190813073533.8007-1-martin.kepplinger@puri.sm>
- <20190813073533.8007-2-martin.kepplinger@puri.sm>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
+Date: Mon, 19 Aug 2019 10:54:43 +0200
+Message-ID: <2529818.3AUhDYJ4cv@kreacher>
+References: <20190724074722.12270-1-ran.wang_1@nxp.com> <CAJZ5v0i58p-GsswzMGEsgD5OXDqJ_G5zXDYf8jq8JJbWxZv+nQ@mail.gmail.com> <DB8PR04MB6826475ACA623AE6D63617D7F1A80@DB8PR04MB6826.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813073533.8007-2-martin.kepplinger@puri.sm>
+In-Reply-To: <DB8PR04MB6826475ACA623AE6D63617D7F1A80@DB8PR04MB6826.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday, August 19, 2019 10:33:25 AM CEST Ran Wang wrote:
+> Hi Rafael,
+> 
+> On Monday, August 19, 2019 16:20, Rafael J. Wysocki wrote:
+> > 
+> > On Mon, Aug 19, 2019 at 10:15 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+> > >
+> > > Hi Rafael,
+> > >
+> > > On Monday, August 05, 2019 17:59, Rafael J. Wysocki wrote:
+> > > >
+> > > > On Wednesday, July 24, 2019 9:47:20 AM CEST Ran Wang wrote:
+> > > > > Some user might want to go through all registered wakeup sources
+> > > > > and doing things accordingly. For example, SoC PM driver might
+> > > > > need to do HW programming to prevent powering down specific IP
+> > > > > which wakeup source depending on. So add this API to help walk
+> > > > > through all registered wakeup source objects on that list and return them
+> > one by one.
+> > > > >
+> > > > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > > > ---
+> > > > > Change in v5:
+> > > > >     - Update commit message, add decription of walk through all wakeup
+> > > > >     source objects.
+> > > > >     - Add SCU protection in function wakeup_source_get_next().
+> > > > >     - Rename wakeup_source member 'attached_dev' to 'dev' and move
+> > > > > it
+> > > > up
+> > > > >     (before wakeirq).
+> > > > >
+> > > > > Change in v4:
+> > > > >     - None.
+> > > > >
+> > > > > Change in v3:
+> > > > >     - Adjust indentation of *attached_dev;.
+> > > > >
+> > > > > Change in v2:
+> > > > >     - None.
+> > > > >
+> > > > >  drivers/base/power/wakeup.c | 24 ++++++++++++++++++++++++
+> > > > >  include/linux/pm_wakeup.h   |  3 +++
+> > > > >  2 files changed, 27 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/base/power/wakeup.c
+> > > > > b/drivers/base/power/wakeup.c index ee31d4f..2fba891 100644
+> > > > > --- a/drivers/base/power/wakeup.c
+> > > > > +++ b/drivers/base/power/wakeup.c
+> > > > > @@ -14,6 +14,7 @@
+> > > > >  #include <linux/suspend.h>
+> > > > >  #include <linux/seq_file.h>
+> > > > >  #include <linux/debugfs.h>
+> > > > > +#include <linux/of_device.h>
+> > > > >  #include <linux/pm_wakeirq.h>
+> > > > >  #include <trace/events/power.h>
+> > > > >
+> > > > > @@ -226,6 +227,28 @@ void wakeup_source_unregister(struct
+> > > > wakeup_source *ws)
+> > > > >     }
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+> > > > > +/**
+> > > > > + * wakeup_source_get_next - Get next wakeup source from the list
+> > > > > + * @ws: Previous wakeup source object, null means caller want first one.
+> > > > > + */
+> > > > > +struct wakeup_source *wakeup_source_get_next(struct wakeup_source
+> > > > > +*ws) {
+> > > > > +   struct list_head *ws_head = &wakeup_sources;
+> > > > > +   struct wakeup_source *next_ws = NULL;
+> > > > > +   int idx;
+> > > > > +
+> > > > > +   idx = srcu_read_lock(&wakeup_srcu);
+> > > > > +   if (ws)
+> > > > > +           next_ws = list_next_or_null_rcu(ws_head, &ws->entry,
+> > > > > +                           struct wakeup_source, entry);
+> > > > > +   else
+> > > > > +           next_ws = list_entry_rcu(ws_head->next,
+> > > > > +                           struct wakeup_source, entry);
+> > > > > +   srcu_read_unlock(&wakeup_srcu, idx);
+> > > > > +
+> > > >
+> > > > This is incorrect.
+> > > >
+> > > > The SRCU cannot be unlocked until the caller of this is done with
+> > > > the object returned by it, or that object can be freed while it is still being
+> > accessed.
+> > >
+> > > Thanks for the comment. Looks like I was not fully understanding your
+> > > point on
+> > > v4 discussion. So I will implement 3 APIs by referring
+> > > wakeup_sources_stats_seq_start/next/stop()
+> > >
+> > > > Besides, this patch conflicts with some general wakeup sources
+> > > > changes in the works, so it needs to be deferred and rebased on top of those
+> > changes.
+> > >
+> > > Could you please tell me which is the right code base I should developing on?
+> > > I just tried applying v5 patch on latest
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git branch master
+> > (d1abaeb Linux 5.3-rc5) and no conflict encountered.
+> > 
+> > It is better to use the most recent -rc from Linus (5.3-rc5 as of
+> > today) as the base unless your patches depend on some changes that are not in
+> > there.
+> 
+> OK, So I need to implement on latest git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git branch master, am I right?
+> 
+> However, I just checked v5.3-rc5 code and found it has the same HEAD (d1abaeb Linux 5.3-rc5
+> on which I did not observe v5 patch apply conflict, did I miss something? Thanks.
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-> Move some register definitions to the per-device array of struct
-> st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-> devices to the driver.
->=20
-> Also, remove completely unused register definitions.
->=20
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-
-> ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
->  2 files changed, 28 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st=
-_lsm6dsx/st_lsm6dsx.h
-> index 4e8e67ae1632..c8f333902eb7 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -200,6 +200,9 @@ struct st_lsm6dsx_ext_dev_settings {
->  /**
->   * struct st_lsm6dsx_settings - ST IMU sensor settings
->   * @wai: Sensor WhoAmI default value.
-> + * @int1_addr: Control Register address for INT1
-> + * @int2_addr: Control Register address for INT2
-> + * @reset_addr: register address for reset/reboot
->   * @max_fifo_size: Sensor max fifo length in FIFO words.
->   * @id: List of hw id/device name supported by the driver configuration.
->   * @channels: IIO channels supported by the device.
-> @@ -213,6 +216,9 @@ struct st_lsm6dsx_ext_dev_settings {
->   */
->  struct st_lsm6dsx_settings {
->  	u8 wai;
-> +	u8 int1_addr;
-> +	u8 int2_addr;
-> +	u8 reset_addr;
->  	u16 max_fifo_size;
->  	struct {
->  		enum st_lsm6dsx_hw_id hw_id;
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
-mu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 85824d6739ee..56e1c5262a2c 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -49,17 +49,12 @@
-> =20
->  #include "st_lsm6dsx.h"
-> =20
-> -#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
-> -#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
->  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
->  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
-> -#define ST_LSM6DSX_REG_RESET_ADDR		0x12
->  #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
->  #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
->  #define ST_LSM6DSX_REG_BDU_ADDR			0x12
->  #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
-> -#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
-> -#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
-> =20
->  static const struct iio_chan_spec st_lsm6dsx_acc_channels[] =3D {
->  	ST_LSM6DSX_CHANNEL(IIO_ACCEL, 0x28, IIO_MOD_X, 0),
-> @@ -78,6 +73,9 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_chann=
-els[] =3D {
->  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] =3D=
- {
->  	{
->  		.wai =3D 0x69,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 1365,
->  		.id =3D {
->  			{
-> @@ -186,6 +184,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x69,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 682,
->  		.id =3D {
->  			{
-> @@ -294,6 +295,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6a,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 682,
->  		.id =3D {
->  			{
-> @@ -411,6 +415,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6c,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -540,6 +547,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6b,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -640,6 +650,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_se=
-nsor_settings[] =3D {
->  	},
->  	{
->  		.wai =3D 0x6b,
-> +		.int1_addr =3D 0x0d,
-> +		.int2_addr =3D 0x0e,
-> +		.reset_addr =3D 0x12,
->  		.max_fifo_size =3D 512,
->  		.id =3D {
->  			{
-> @@ -1166,10 +1179,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6=
-dsx_hw *hw, u8 *drdy_reg)
-> =20
->  	switch (drdy_pin) {
->  	case 1:
-> -		*drdy_reg =3D ST_LSM6DSX_REG_INT1_ADDR;
-> +		*drdy_reg =3D hw->settings->int1_addr;
->  		break;
->  	case 2:
-> -		*drdy_reg =3D ST_LSM6DSX_REG_INT2_ADDR;
-> +		*drdy_reg =3D hw->settings->int2_addr;
->  		break;
->  	default:
->  		dev_err(hw->dev, "unsupported data ready pin\n");
-> @@ -1269,7 +1282,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
->  	int err;
-> =20
->  	/* device sw reset */
-> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
->  				 ST_LSM6DSX_REG_RESET_MASK,
->  				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
->  	if (err < 0)
-> @@ -1278,7 +1291,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx=
-_hw *hw)
->  	msleep(50);
-> =20
->  	/* reload trimming parameter */
-> -	err =3D regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-> +	err =3D regmap_update_bits(hw->regmap, hw->settings->reset_addr,
->  				 ST_LSM6DSX_REG_BOOT_MASK,
->  				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
->  	if (err < 0)
-> --=20
-> 2.20.1
->=20
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXVpiCwAKCRA6cBh0uS2t
-rCQzAQCTY3lH6Z9kanC2WwOlC23pp4bh/UZmgL3L0TpWwjcMJwEArACu/ihDmU+C
-y5LVhGXoawOT7f6hcV1qAznkHvgTpQA=
-=yYKY
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+The conflict I mentioned earlier was with another patch series in the works
+which is not in 5.3-rc5.  However, there are problems with that series and it
+is not linux-next now even, so please just base your series on top of -rc5.
