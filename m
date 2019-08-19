@@ -1,62 +1,72 @@
-From: <dongchun.zhu@mediatek.com>
-Subject: [V3, 0/2] media: Add support for OV02A10 sensor
-Date: Mon, 19 Aug 2019 11:43:29 +0800
-Message-ID: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
+Date: Mon, 19 Aug 2019 13:36:15 +0900
+Message-ID: <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
+References: <20190617162123.24920-1-yamada.masahiro@socionext.com> <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com, drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, DTML <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+On Thu, Aug 1, 2019 at 11:30 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 1:21 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
+> >
+> > <linux/kernel.h> pulls in a lots of broat.
+> >
+> > Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
+> > macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
+> > <linux/limits.h>.
+> >
+> > This saves including dozens of headers.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+>
+> ping?
 
-Hello,
+ping x2.
 
-This patch adds driver and bindings for Omnivision's OV02A10 2 megapixel CMOS 1/5" sensor,
-which has a single MIPI lane interface and output format of 10-bit Raw.
 
-The driver is implemented wth V4L2 framework.
-1. Async registered as a V4L2 I2C sub-device.
-2. A media entity that can provide several source pads and sink pads to link with other device like Seninf, ISP one after another
-   to create a default overall camera topology, image frame or meta-data from sensor can flow through particular path to output
-   preview or capture image or 3A info.
 
-Changes of v3 are mainly addressing comments from Rob, Sakari, Bingbu.
- - Fix coding style errors in dt-bindings
- - Use macro flag to describle basic line 1224 when updating v-blanking
- - Remove unnecessary debug log in driver
 
-Mainly changes of v2 are addressing the comments from Nicolas, Bingbu, Sakari, Rob,
-including,
- - Put dt binding before driver in series
- - Add MAINTAINERS entries
- - Squash the MAINTAINERS entry and Kconfig to driver patch
- - Add rotation support for driver
- - Fix other reviewed issues in v1
+>
+>
+> >  include/linux/libfdt_env.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+> > index edb0f0c30904..2231eb855e8f 100644
+> > --- a/include/linux/libfdt_env.h
+> > +++ b/include/linux/libfdt_env.h
+> > @@ -2,7 +2,7 @@
+> >  #ifndef LIBFDT_ENV_H
+> >  #define LIBFDT_ENV_H
+> >
+> > -#include <linux/kernel.h>      /* For INT_MAX */
+> > +#include <linux/limits.h>      /* For INT_MAX */
+> >  #include <linux/string.h>
+> >
+> >  #include <asm/byteorder.h>
+> > --
+> > 2.17.1
+> >
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
 
-Dongchun Zhu (2):
-  media: dt-bindings: media: i2c: Add bindings for OV02A10
-  media: i2c: Add Omnivision OV02A10 camera sensor driver
 
- .../devicetree/bindings/media/i2c/ov02a10.txt      |   54 ++
- MAINTAINERS                                        |    8 +
- drivers/media/i2c/Kconfig                          |   11 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/ov02a10.c                        | 1018 ++++++++++++++++++++
- 5 files changed, 1092 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
- create mode 100644 drivers/media/i2c/ov02a10.c
 
 -- 
-2.9.2
+Best Regards
+Masahiro Yamada
