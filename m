@@ -1,80 +1,41 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] arm64: dts: ls1088a: fix gpio node
-Date: Mon, 19 Aug 2019 15:20:06 +0200
-Message-ID: <20190819132004.GJ5999@X250>
-References: <20190815103016.23125-1-hui.song_1@nxp.com>
+Subject: Re: [PATCH] arm64: dts: imx8mm: Enable cpu-idle driver
+Date: Mon, 19 Aug 2019 15:25:21 +0200
+Message-ID: <20190819132520.GK5999@X250>
+References: <1565950383-589-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190815103016.23125-1-hui.song_1@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hui Song <hui.song_1@nxp.com>
-Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <1565950383-589-1-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, abel.vesa@nxp.com, daniel.baluta@nxp.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, jun.li@nxp.com, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 06:30:16PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
+On Fri, Aug 16, 2019 at 06:13:03AM -0400, Anson Huang wrote:
+> Enable i.MX8MM cpu-idle using generic ARM cpu-idle driver, 2 states
+> are supported, details as below:
 > 
-> Update the nodes to include little-endian
+> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state0/name
+> WFI
+> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state0/usage
+> 3973
+> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state1/name
+> cpu-pd-wait
+> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state1/usage
+> 6647
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-So the commit log needs an update as well?
-
-Shawn
-
-> property to be consistent with the hardware
-> and add ls1088a gpio specify compatible.
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
-> Changes in v3:
-> 	- delete the attribute of little-endian.
-> Changes in v2:
-> 	- update the subject.
-> 	
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index dfbead4..ff669c8 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -269,7 +269,7 @@
->  		};
->  
->  		gpio0: gpio@2300000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2300000 0x0 0x10000>;
->  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> @@ -280,7 +280,7 @@
->  		};
->  
->  		gpio1: gpio@2310000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2310000 0x0 0x10000>;
->  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> @@ -291,7 +291,7 @@
->  		};
->  
->  		gpio2: gpio@2320000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2320000 0x0 0x10000>;
->  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> @@ -302,7 +302,7 @@
->  		};
->  
->  		gpio3: gpio@2330000 {
-> -			compatible = "fsl,qoriq-gpio";
-> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
->  			reg = <0x0 0x2330000 0x0 0x10000>;
->  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
->  			little-endian;
-> -- 
-> 2.9.5
-> 
+Applied, thanks.
