@@ -1,52 +1,57 @@
-Return-Path: <SRS0=63TF=WQ=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 9/9] arm64: dts: renesas: Add EK874 board with
- idk-2121wr display support
-Date: Tue, 20 Aug 2019 13:59:55 +0000
-Message-ID: 
- <TY1PR01MB1770B6108929C74EC4064345C0AB0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1565867073-24746-10-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdW9Lx_x=tgTXxpKAqTxY5w_b06y7Httky-ks8jj3zQHBg@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdW9Lx_x=tgTXxpKAqTxY5w_b06y7Httky-ks8jj3zQHBg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=Ncy5=WP=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Chris Paterson" <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>, "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>
+References: <1565867073-24746-1-git-send-email-fabrizio.castro@bp.renesas.com> <1565867073-24746-10-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1565867073-24746-10-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 19 Aug 2019 14:03:04 +0200
+Message-ID: <CAMuHMdW9Lx_x=tgTXxpKAqTxY5w_b06y7Httky-ks8jj3zQHBg@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] arm64: dts: renesas: Add EK874 board with
+ idk-2121wr display support
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBH
-ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAxOSBBdWd1
-c3QgMjAxOSAxMzowMw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDkvOV0gYXJtNjQ6IGR0czog
-cmVuZXNhczogQWRkIEVLODc0IGJvYXJkIHdpdGggaWRrLTIxMjF3ciBkaXNwbGF5IHN1cHBvcnQN
-Cj4gDQo+IEhpIEZhYnJpemlvLA0KPiANCj4gT24gVGh1LCBBdWcgMTUsIDIwMTkgYXQgMTowNSBQ
-TSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4gd3Jv
-dGU6DQo+ID4gVGhlIEVLODc0IGlzIGFkdmVydGlzZWQgYXMgY29tcGF0aWJsZSB3aXRoIHBhbmVs
-IElESy0yMTIxV1IgZnJvbQ0KPiA+IEFkdmFudGVjaCwgaG93ZXZlciB0aGUgcGFuZWwgaXNuJ3Qg
-c29sZCBhbG9uZ3NpZGUgdGhlIGJvYXJkLg0KPiA+IEEgbmV3IGR0cywgYWRkaW5nIGV2ZXJ5dGhp
-bmcgdGhhdCdzIHJlcXVpcmVkIHRvIGdldCB0aGUgcGFuZWwgdG8NCj4gPiB0byB3b3JrIHdpdGgg
-dGhlIEVLODc0LCBpcyB0aGUgbW9zdCBjb252ZW5pZW50IHdheSB0byBzdXBwb3J0IHRoZQ0KPiA+
-IEVLODc0IHdoZW4gaXQncyBjb25uZWN0ZWQgdG8gdGhlIElESy0yMTIxV1IuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
-LmNvbT4NCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gDQo+ID4gR2VlcnQsDQo+ID4N
-Cj4gPiBhdCB0aGlzIHBvaW50IGluIHRpbWUgbm8gb3RoZXIgYm9hcmQgdXNlcyB0aGlzIGRpc3Bs
-YXksIGNhbiB3ZQ0KPiA+IHBvc3Rwb25lIHRoZSBjcmVhdGlvbiBvZiB0aGUgLmR0c2kgZmlsZSB0
-byB3aGVuIHRoZXJlJ2xsIGJlIGFub3RoZXINCj4gPiB1c2VyIChpZiBhbnkpPw0KPiANCj4gT0su
-DQo+IA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jl
-bmVzYXMvcjhhNzc0YzAtZWs4NzQtaWRrLTIxMjF3ci5kdHMNCj4gDQo+ID4gKyZsdmRzMCB7DQo+
-ID4gKyAgICAgICByZW5lc2FzLHN3YXAtZGF0YTsNCj4gDQo+IFdhc24ndCB0aGF0IHByb3BlcnR5
-IGRyb3BwZWQ/DQoNClllYWgsIGxlZnRvdmVyIGZyb20gdGhlIHByZXZpb3VzIHNlcmllcywgc29y
-cnkgYWJvdXQgdGhhdC4gQW55aG93LCB3ZSBiZXR0ZXIgZGVjaWRlDQpob3cgdG8gaW1wbGVtZW50
-IHRoZSBzd2FwcGluZyBiZWZvcmUgZG9pbmcgYW55dGhpbmcgd2l0aCB0aGUgRFQgcmVsYXRlZCBw
-YXRjaC4NCg0KVGhhbmtzIQ0KRmFiDQoNCj4gDQo+IEknZCBiZSBncmF0ZWZ1bCBpZiBhbnlvbmUg
-Y291bGQgcmV2aWV3IHRoZSBwYW5lbCBwYXJ0cy4NCj4gVGhhbmtzIQ0KPiANCj4gR3J7b2V0amUs
-ZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0N
-Cj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEz
-MiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9u
-cyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3
-aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9y
-IHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-LS0gTGludXMgVG9ydmFsZHMNCg==
+Hi Fabrizio,
+
+On Thu, Aug 15, 2019 at 1:05 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> The EK874 is advertised as compatible with panel IDK-2121WR from
+> Advantech, however the panel isn't sold alongside the board.
+> A new dts, adding everything that's required to get the panel to
+> to work with the EK874, is the most convenient way to support the
+> EK874 when it's connected to the IDK-2121WR.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Thanks for your patch!
+
+> Geert,
+>
+> at this point in time no other board uses this display, can we
+> postpone the creation of the .dtsi file to when there'll be another
+> user (if any)?
+
+OK.
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+
+> +&lvds0 {
+> +       renesas,swap-data;
+
+Wasn't that property dropped?
+
+I'd be grateful if anyone could review the panel parts.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
