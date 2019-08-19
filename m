@@ -1,67 +1,126 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 3/4] ARM: dts: ls1021a: Remove num-lanes property from
- PCIe nodes
-Date: Mon, 19 Aug 2019 14:24:40 -0500
-Message-ID: <20190819192440.GT253360@google.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-emmc-phy: Add new
+ compatible for LGM eMMC PHY
+Date: Mon, 19 Aug 2019 14:27:09 -0500
+Message-ID: <CAL_JsqL2m-3BJHCSg2pwogyPDbp6yADUP1MQEV6QyZMpgta4xw@mail.gmail.com>
+References: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 04:22:27AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> controller is not fixed, it is determined by the selected
-> SerDes protocol in the RCW (Reset Configuration Word), and
-> the PCIe link training is completed automatically base on
-> the selected SerDes protocol, and the link width set-up is
-> updated by hardware. So the num-lanes is not needed to
-> specify the link width.
-> 
-> The current num-lanes indicates the max lanes PCIe controller
-> can support up to, instead of the lanes assigned to the PCIe
-> controller. This can result in PCIe link training fail after
-> hot-reset. So remove the num-lanes to avoid set-up to incorrect
-> link width.
-
-It would be useful to explain *why* "num-lanes" in DT causes a link
-training failure.  Maybe the code programs "num-lanes" somewhere,
-overriding what hardware automatically sensed?  Maybe the code tries
-to bring up exactly "num-lanes" lanes even if not all are present?
-
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Sun, Aug 18, 2019 at 10:44 PM Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>
+> Add a new compatible to use the host controller driver with the
+> eMMC PHY on Intel's Lightning Mountain SoC.
+>
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  arch/arm/boot/dts/ls1021a.dtsi | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 464df4290ffc..2f6977ada447 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -874,7 +874,6 @@
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			device_type = "pci";
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-> @@ -899,7 +898,6 @@
->  			#address-cells = <3>;
->  			#size-cells = <2>;
->  			device_type = "pci";
-> -			num-lanes = <4>;
->  			num-viewport = <6>;
->  			bus-range = <0x0 0xff>;
->  			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
-> -- 
-> 2.17.1
-> 
+>  .../bindings/phy/intel-lgm-emmc-phy.yaml           | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
+> new file mode 100644
+> index 000000000000..52156ff091ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Preference for new bindings is (GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel-lgm-emmc-phy.yaml#
+
+Preferred filename is the compatible string (plus .yaml).
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel LGM e-MMC PHY Device Tree Bindings
+
+LGM is what?
+
+> +
+> +maintainers:
+> +  - Rob Herring <robh+dt@kernel.org>
+> +  - Mark Rutland <mark.rutland@arm.com>
+
+I don't know anything about this h/w. Please put yourself here.
+
+> +
+> +intel,syscon:
+
+This will throw an error with 'make dt_binding_check'...
+
+> +   $ref: /schemas/types.yaml#definitions/phandle
+> +   description:
+> +    - |
+> +      e-MMC phy module connected through chiptop. Phandle to a node that can
+> +      contain the following properties
+> +        * reg, Access the e-MMC, get the base address from syscon.
+> +        * reset, reset the e-MMC module.
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  compatible:
+> +    const: intel,lgm-emmc-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: e-MMC phy module clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: emmcclk
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    sysconf: chiptop@e0020000 {
+> +        compatible = "intel,chiptop-lgm", "syscon";
+> +        reg = <0xe0020000 0x100>;
+> +        #reset-cells = <1>;
+> +     };
+> +
+> +  - |
+
+Looks like 1 example to me, not 2.
+
+> +    emmc_phy: emmc_phy {
+> +        compatible = "intel,lgm-emmc-phy";
+> +        intel,syscon = <&sysconf>;
+> +        clocks = <&emmc>;
+> +        clock-names = "emmcclk";
+> +        #phy-cells = <0>;
+> +    };
+> +
+> +...
+> --
+> 2.11.0
+>
