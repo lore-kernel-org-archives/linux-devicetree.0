@@ -1,111 +1,72 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v12 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Mon, 19 Aug 2019 11:13:20 +0800
-Message-ID: <1566184400.6182.0.camel@mtksdaap41>
-References: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
-         <20190819025359.11381-12-bibby.hsieh@mediatek.com>
+From: Richard Tresidder <rtresidd@electromag.com.au>
+Subject: Re: [PATCH 1/1] dt-bindings: power/supply/sbs_sbs-battery: Addition
+ of force_load binding Add device tree binding documentation for addition of
+ force_load boolean value to allow loading a battery during boot even if not
+ present at that time.
+Date: Mon, 19 Aug 2019 11:33:03 +0800
+Message-ID: <1baa2fe9-7649-f70a-9076-5b49464ae1cd@electromag.com.au>
+References: <1564037445-22936-1-git-send-email-rtresidd@electromag.com.au>
+ <20190816211430.GA8175@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819025359.11381-12-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190816211430.GA8175@bogus>
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Rob Herring <robh@kernel.org>
+Cc: sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Bibby:
+There is a force load option when loading the driver as a module.
+This adds the equivalent methodology for the binding path.
+Though I suppose you could in fact just force load if the gpio detect 
+isn't present.
+Thats a good idea, just wasn't the existing driver flow. I can't think 
+of any reason why we couldn't do that though.
 
-On Mon, 2019-08-19 at 10:53 +0800, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
+I'll update the patch and resubmit V3
+Will add a note about it in the docs
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Please note I'd submitted this incorrectly when using our patch script 
+last time, it's now correctly part of the combined patch
 
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 340a92a254e5..1bed07362b7a 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -27,6 +27,35 @@ struct cmdq_instruction {
->  	u8 op;
->  };
->  
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx)
-> +{
-> +	struct of_phandle_args spec;
-> +	int err;
-> +
-> +	if (!client_reg)
-> +		return -ENOENT;
-> +
-> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
-> +					       "mediatek,gce-client-reg",
-> +					       3, idx, &spec);
-> +	if (err < 0) {
-> +		dev_err(dev,
-> +			"error %d can't parse gce-client-reg property (%d)",
-> +			err, idx);
-> +
-> +		return err;
-> +	}
-> +
-> +	client_reg->subsys = (u8)spec.args[0];
-> +	client_reg->offset = (u16)spec.args[1];
-> +	client_reg->size = (u16)spec.args[2];
-> +	of_node_put(spec.np);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a345870a6d10..6215d4fc4ba3 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -15,6 +15,12 @@
->  
->  struct cmdq_pkt;
->  
-> +struct cmdq_client_reg {
-> +	u8 subsys;
-> +	u16 offset;
-> +	u16 size;
-> +};
-> +
->  struct cmdq_client {
->  	spinlock_t lock;
->  	u32 pkt_cnt;
-> @@ -24,6 +30,21 @@ struct cmdq_client {
->  	u32 timeout_ms; /* in unit of microsecond */
->  };
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-> + *			       node of CMDQ client
-> + * @dev:	device of CMDQ mailbox clienti
-> + * @client_reg: CMDQ client reg pointer
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Help CMDQ client pasing the cmdq client reg
-> + * from the device node of CMDQ client.
-> + */
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx);
-> +
->  /**
->   * cmdq_mbox_create() - create CMDQ mailbox client and channel
->   * @dev:	device of CMDQ mailbox client
+Regards
+   Richard Tresidder
+Richard Tresidder
+
+
+**
+On 17/08/2019 5:14 am, Rob Herring wrote:
+> On Thu, Jul 25, 2019 at 02:50:45PM +0800, Richard Tresidder wrote:
+>> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
+>> ---
+>>
+>> Notes:
+>>      Add device tree binding documentation for addition of force_load
+>>      boolean value to allow loading a battery during boot even if not
+>>      present at that time.
+>>      Accompanying patch to drivers/power/supply/sbs-battery.c submitted to linux-pm@vger.kernel.org
+>>
+>>   Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+>> index 4e78e51..187d7bb 100644
+>> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+>> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+>> @@ -15,7 +15,8 @@ Optional properties :
+>>      after an external change notification.
+>>    - sbs,battery-detect-gpios : The gpio which signals battery detection and
+>>      a flag specifying its polarity.
+>> -
+>> + - sbs,force-load : Allow loading of a hot-pluggable battery when there is no
+>> +   GPIO detect available and the module is statically built.
+> What's a module? That's Linux specific and nothing to do with the
+> binding.
+>
+> Can't you just force load if sbs,battery-detect-gpios is not present?
+>
+> Rob
+>
+>
