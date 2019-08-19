@@ -1,64 +1,124 @@
-From: Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v7 2/2] dt-bindings: mtd: Document Macronix raw NAND controller bindings
-Date: Mon, 19 Aug 2019 15:19:09 +0800
-Message-ID: <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
-References: <1566199149-5669-1-git-send-email-masonccyang@mxic.com.tw>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH 07/15] dt: thermal: tsens: Document interrupt support in
+ tsens driver
+Date: Mon, 19 Aug 2019 12:40:13 +0530
+Message-ID: <CAHLCerN6uOijzj4skWSRhNr+dSPZ6ysXV5AQjuY9tpa7ndbMUw@mail.gmail.com>
+References: <cover.1564091601.git.amit.kucheria@linaro.org>
+ <72bce036fa8cba3db6e5ba82249837ee46e9c077.1564091601.git.amit.kucheria@linaro.org>
+ <20190816213648.GA10244@bogus> <CAP245DVUKRxvU3wWygOFtZuwbvCxfW=wUH=xArOKmYiRZf+EXA@mail.gmail.com>
+ <CAL_Jsq+bymJXY-ffeuCc-15Vkmh88AsUAj5znBN+b-3YWP-Kqg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566199149-5669-1-git-send-email-masonccyang@mxic.com.tw>
+In-Reply-To: <CAL_Jsq+bymJXY-ffeuCc-15Vkmh88AsUAj5znBN+b-3YWP-Kqg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: miquel.raynal@bootlin.com, richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org, bbrezillon@kernel.org, computersforpeace@gmail.com, vigneshr@ti.com, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: lee.jones@linaro.org, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, paul.burton@mips.com, liang.yang@amlogic.com, linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw, anders.roxell@linaro.org, christophe.kerello@st.com, paul@crapouillou.net, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Andy Gross <agross@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings used by the Macronix raw NAND controller.
+On Sun, Aug 18, 2019 at 12:55 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Aug 16, 2019 at 5:02 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> >
+> > On Sat, Aug 17, 2019 at 3:06 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Jul 26, 2019 at 03:48:42AM +0530, Amit Kucheria wrote:
+> > > > Define two new required properties to define interrupts and
+> > > > interrupt-names for tsens.
+> > > >
+> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 5 +++++
+> > > >  1 file changed, 5 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > index 673cc1831ee9..3d3dd5dc6d36 100644
+> > > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > @@ -22,6 +22,8 @@ Required properties:
+> > > >
+> > > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> > > >  - #qcom,sensors: Number of sensors in tsens block
+> > > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
+> > > > +- interrupt-names: The name of the interrupt e.g. "tsens0", "tsens1"
+> > >
+> > > How many interrupts? A name with just indices isn't too useful.
+> >
+> > Depending on the version of the tsens IP, there can be 1 (upper/lower
+> > threshold), 2 (upper/lower + critical threshold) or 3 (upper/lower +
+> > critical + zero degree) interrupts. This patch series only introduces
+> > support for a single interrupt (upper/lower).
+>
+> I would expect a different compatible for each possibility.
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- .../devicetree/bindings/mtd/mxic-nand.txt          | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+We're currently using the 'qcom,tsens-v1' and 'qcom,tsens-v2'
+compatibles to broadly capture the feature (and register map)
+differences.
 
-diff --git a/Documentation/devicetree/bindings/mtd/mxic-nand.txt b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-new file mode 100644
-index 0000000..46c5529
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/mxic-nand.txt
-@@ -0,0 +1,36 @@
-+Macronix Raw NAND Controller Device Tree Bindings
-+-------------------------------------------------
-+
-+Required properties:
-+- compatible: should be "mxic,multi-itfc-v009-nand-controller"
-+- reg: should contain 1 entry for the registers
-+- #address-cells: should be set to 1
-+- #size-cells: should be set to 0
-+- interrupts: interrupt line connected to this raw NAND controller
-+- clock-names: should contain "ps", "send" and "send_dly"
-+- clocks: should contain 3 phandles for the "ps", "send" and
-+	 "send_dly" clocks
-+
-+Children nodes:
-+- children nodes represent the available NAND chips.
-+
-+See Documentation/devicetree/bindings/mtd/nand-controller.yaml
-+for more details on generic bindings.
-+
-+Example:
-+
-+	nand: nand-controller@43c30000 {
-+		compatible = "mxic,multi-itfc-v009-nand-controller";
-+		reg = <0x43c30000 0x10000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 0x1d IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-+		clock-names = "send", "send_dly", "ps";
-+
-+		nand@0 {
-+			reg = <0>;
-+			nand-ecc-mode = "soft";
-+			nand-ecc-algo = "bch";
-+		};
-+	};
--- 
-1.9.1
+By defining the following, I should be able to check at runtime (using
+platform_get_irq_by_name() as suggested) if a particular interrupt
+type is available on the platform, no? So do we really require three
+different compatibles?
+
+    interrupt-names = "uplow", "crit", "cold"
+
+[1] Respin of older SoC with a newer version of IP
+
+> > I used the names tsens0, tsens1 to encapsulate the controller instance
+> > since some SoCs have 1 controller, others have two. So we'll end up
+> > with something like the following in DT:
+>
+> That's not really how *-names is supposed to work. The name is for
+> identifying what is at each index. Or to put it another way, a driver
+> should be able to use platform_get_irq_by_name(). So 'critical',
+> 'zero' and something for the first one.
+
+Fair point. I'll rework it to use "uplow", "crit" and "cold" or
+something to the effect.
+
+Is there another way I get the controller instance index in the name
+in /proc/interrupts?
+
+> > tsens0: thermal-sensor@c263000 {
+> >                         compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> >                         reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> >                               <0 0x0c222000 0 0x1ff>; /* SROT */
+> >                         #qcom,sensors = <13>;
+> >                         interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> >                                      <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> >                         interrupt-names = "tsens0", "tsens0-critical";
+> >                         #thermal-sensor-cells = <1>;
+> > };
+> >
+> > tsens1: thermal-sensor@c265000 {
+> >                         compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> >                         reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> >                               <0 0x0c223000 0 0x1ff>; /* SROT */
+> >                         #qcom,sensors = <8>;
+> >                         interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> >                                      <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> >                         interrupt-names = "tsens1", "tsens1-critical";
+> >                         #thermal-sensor-cells = <1>;
+> > }
+> >
+> > Does that work?
+> >
+> > Regards,
+> > Amit
+> >
+> > > >  - Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+> > > >  nvmem cells
+> > > >
+> > > > @@ -40,6 +42,9 @@ tsens0: thermal-sensor@c263000 {
+> > > >               reg = <0xc263000 0x1ff>, /* TM */
+> > > >                       <0xc222000 0x1ff>; /* SROT */
+> > > >               #qcom,sensors = <13>;
+> > > > +             interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> > > > +             interrupt-names = "tsens0";
+> > > > +
+> > > >               #thermal-sensor-cells = <1>;
+> > > >       };
+> > > >
+> > > > --
+> > > > 2.17.1
+> > > >
