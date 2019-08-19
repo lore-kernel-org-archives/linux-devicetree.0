@@ -1,48 +1,57 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 3/3] dt-bindings: reset: hisilicon: Add ao reset controller
-Date: Mon, 19 Aug 2019 23:48:40 +0000
-Message-ID: <20190819234840.37786-4-john.stultz@linaro.org>
-References: <20190819234840.37786-1-john.stultz@linaro.org>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
+ properties
+Date: Mon, 19 Aug 2019 23:57:32 +0000
+Message-ID: <DB8PR04MB6747E90543E28E5B9EFE7F1684A80@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+ <20190819192029.GS253360@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819234840.37786-1-john.stultz@linaro.org>
+In-Reply-To: <20190819192029.GS253360@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Griffin <peter.griffin@linaro.org>
-
-This is required to bring Mali450 gpu out of reset.
-
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- include/dt-bindings/reset/hisi,hi6220-resets.h | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
-index e7c362a81a97..63aff7d8aa45 100644
---- a/include/dt-bindings/reset/hisi,hi6220-resets.h
-+++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
-@@ -73,4 +73,11 @@
- #define MEDIA_MMU                       6
- #define MEDIA_XG2RAM1                   7
- 
-+#define AO_G3D                          1
-+#define AO_CODECISP                     2
-+#define AO_MCPU                         4
-+#define AO_BBPHARQMEM                   5
-+#define AO_HIFI                         8
-+#define AO_ACPUSCUL2C                   12
-+
- #endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
--- 
-2.17.1
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOo41MIyMMjVIDM6MjANCj4gVG86IFoucS4gSG91
+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOyBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsNCj4gamluZ29vaGFuMUBnbWFpbC5j
+b207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3Vv
+QGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gbG9yZW56by5waWVy
+YWxpc2lAYXJtLmNvbTsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+DQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggMS80XSBkdC1iaW5naW5nczogUENJOiBSZW1vdmUgdGhlIG51bS1sYW5l
+cyBmcm9tDQo+IFJlcXVpcmVkIHByb3BlcnRpZXMNCj4gDQo+IEluIHN1YmplY3Q6DQo+IA0KPiAg
+IHMvZHQtYmluZ2luZ3MvZHQtYmluZGluZ3MvDQo+IA0KPiBBbHNvLCBwb3NzaWJseQ0KPiANCj4g
+ICBzL1BDSTovUENJOiBkZXNpZ253YXJlOi8NCj4gDQoNCkknbGwgZml4IHRoZW0gaW4gdjIuDQoN
+ClRoYW5rcywNClpoaXFpYW5nDQo+IHNpbmNlIHRoaXMgb25seSBhcHBsaWVzIHRvIGRlc2lnbndh
+cmUtcGNpZS50eHQuDQo+IA0KPiBPbiBNb24sIEF1ZyAxMiwgMjAxOSBhdCAwNDoyMjoxNkFNICsw
+MDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhv
+dUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIG51bS1sYW5lcyBpcyBub3QgYSBtYW5kYXRvcnkgcHJv
+cGVydHksIGUuZy4gb24gRlNMIExheWVyc2NhcGUNCj4gPiBTb0NzLCB0aGUgUENJZSBsaW5rIHRy
+YWluaW5nIGlzIGNvbXBsZXRlZCBhdXRvbWF0aWNhbGx5IGJhc2Ugb24gdGhlDQo+ID4gc2VsZWN0
+ZWQgU2VyRGVzIHByb3RvY29sLCBpdCBkb2Vzbid0IG5lZWQgdGhlIG51bS1sYW5lcyB0byBzZXQt
+dXAgdGhlDQo+ID4gbGluayB3aWR0aC4NCj4gPg0KPiA+IEl0IGhhcyBiZWVuIGFkZGVkIGluIHRo
+ZSBPcHRpb25hbCBwcm9wZXJ0aWVzLiBUaGlzIHBhdGNoIGlzIHRvIHJlbW92ZQ0KPiA+IGl0IGZy
+b20gdGhlIFJlcXVpcmVkIHByb3BlcnRpZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3Ug
+WmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQgfCAxIC0NCj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndhcmUtcGNpZS50eHQN
+Cj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1w
+Y2llLnR4dA0KPiA+IGluZGV4IDU1NjFhMWMwNjBkMC4uYmQ4ODBkZjM5YTc5IDEwMDY0NA0KPiA+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZGVzaWdud2FyZS1w
+Y2llLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
+ZGVzaWdud2FyZS1wY2llLnR4dA0KPiA+IEBAIC0xMSw3ICsxMSw2IEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6DQo+ID4gIAkgICAgIHRoZSBBVFUgYWRkcmVzcyBzcGFjZS4NCj4gPiAgICAgIChUaGUg
+b2xkIHdheSBvZiBnZXR0aW5nIHRoZSBjb25maWd1cmF0aW9uIGFkZHJlc3Mgc3BhY2UgZnJvbSAi
+cmFuZ2VzIg0KPiA+ICAgICAgaXMgZGVwcmVjYXRlZCBhbmQgc2hvdWxkIGJlIGF2b2lkZWQuKQ0K
+PiA+IC0tIG51bS1sYW5lczogbnVtYmVyIG9mIGxhbmVzIHRvIHVzZQ0KPiA+ICBSQyBtb2RlOg0K
+PiA+ICAtICNhZGRyZXNzLWNlbGxzOiBzZXQgdG8gPDM+DQo+ID4gIC0gI3NpemUtY2VsbHM6IHNl
+dCB0byA8Mj4NCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
