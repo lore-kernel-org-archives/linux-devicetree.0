@@ -1,50 +1,49 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] ARM: dts: socfpga: update to new Denali NAND binding
-Date: Mon, 19 Aug 2019 15:17:59 +0900
-Message-ID: <CAK7LNASrdNwFEEFoy8mH4CnWHN5d8qCw_LeU1St0x1oa9jRNFQ@mail.gmail.com>
-References: <20190621112306.17769-1-yamada.masahiro@socionext.com> <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] clk: qcom: clk-rpmh: Add support for SM8150
+Date: Mon, 19 Aug 2019 11:58:21 +0530
+Message-ID: <20190819062821.GF12733@vkoul-mobl.Dlink>
+References: <20190814122958.4981-1-vkoul@kernel.org>
+ <20190814122958.4981-2-vkoul@kernel.org>
+ <20190814171946.E9E8D20665@mail.kernel.org>
+ <20190816042440.GY12733@vkoul-mobl.Dlink>
+ <20190816165812.BC64B2077C@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0e357fa8-3241-4ce4-fae7-d0ad36fb14c6@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190816165812.BC64B2077C@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:39 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
->
->
-> On 6/21/19 6:23 AM, Masahiro Yamada wrote:
-> > With commit d8e8fd0ebf8b ("mtd: rawnand: denali: decouple controller
-> > and NAND chips"), the Denali NAND controller driver migrated to the
-> > new controller/chip representation.
-> >
-> > Update DT for it.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  arch/arm/boot/dts/socfpga.dtsi                |  2 +-
-> >  arch/arm/boot/dts/socfpga_arria10.dtsi        |  2 +-
-> >  .../boot/dts/socfpga_arria10_socdk_nand.dts   | 20 ++++++++++++-------
-> >  3 files changed, 15 insertions(+), 9 deletions(-)
-> >
->
-> Applied! Thanks!
->
-> Dinh
+On 16-08-19, 09:58, Stephen Boyd wrote:
+> Quoting Vinod Koul (2019-08-15 21:24:40)
+> > On 14-08-19, 10:19, Stephen Boyd wrote:
+> > > Quoting Vinod Koul (2019-08-14 05:29:58)
+> > > > Add support for rpmh clocks found in SM8150
+> > > > 
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > ---
+> > > 
+> > > Patch looks OK, but can you convert this driver to use the new parent
+> > > style and then update the binding to handle it? We can fix the other
+> > > platforms and dts files that use this driver in parallel, but sm8150
+> > > will be forward looking.
+> > 
+> > Yes but that would also impact sdm845 as it uses this driver, so I
+> > wanted to get this one done so that we have support for rpm clock and
+> > then do the conversion.
+> > 
+> > Would that be okay with you to get this in and then I convert this?
+> > 
+> 
+> How does it impact sdm845? The new way of specifying parents supports
+> fallback to legacy string matching.
 
+Yes it does, I have managed to convert this as well as sdm845 and test.
+I will send updates shortly
 
-You did not send this to upstream for v5.3-rc1.
-
-Which version is this aiming for?
-
-
-
-
-
+Thanks
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
