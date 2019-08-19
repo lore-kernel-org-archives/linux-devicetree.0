@@ -1,52 +1,48 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 2/3] dt-bindings: reset: hisilicon: Update compatible
- documentation
-Date: Mon, 19 Aug 2019 23:48:39 +0000
-Message-ID: <20190819234840.37786-3-john.stultz@linaro.org>
+Subject: [PATCH 3/3] dt-bindings: reset: hisilicon: Add ao reset controller
+Date: Mon, 19 Aug 2019 23:48:40 +0000
+Message-ID: <20190819234840.37786-4-john.stultz@linaro.org>
 References: <20190819234840.37786-1-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190819234840.37786-1-john.stultz@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgoKVGhlIHJlc2V0
-IGRyaXZlciBub3cgc3VwcG9ydHMgdGhlIGFvIHJlc2V0IGNvbnRyb2xsZXIsIHNvIHVwZGF0ZSB0
-aGUKZG9jdW1lbnRhdGlvbiB0byBtYXRjaC4KCkNjOiBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGlu
-dXguaWU+CkNjOiBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+CkNjOiBSb2IgSGVycmlu
-ZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJt
-LmNvbT4KQ2M6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+CkNjOiBkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZwpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1i
-eTogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgpTaWduZWQtb2ZmLWJ5
-OiBKb2huIFN0dWx0eiA8am9obi5zdHVsdHpAbGluYXJvLm9yZz4KLS0tCiAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGk2MjIwLXJlc2V0LnR4dCAgICAgICAgIHwgMSAr
-CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhpNjIyMC1yZXNldC50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhpNjIy
-MC1yZXNldC50eHQKaW5kZXggYzI1ZGEzOWRmNzA3Li5lYTBhNmE5NzM0YzEgMTAwNjQ0Ci0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGk2MjIw
-LXJlc2V0LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQv
-aGlzaWxpY29uLGhpNjIyMC1yZXNldC50eHQKQEAgLTExLDYgKzExLDcgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoKIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgog
-ICAtICJoaXNpbGljb24saGk2MjIwLXN5c2N0cmwiLCAic3lzY29uIiA6IEZvciBwZXJpcGhlcmFs
-IHJlc2V0IGNvbnRyb2xsZXIuCiAgIC0gImhpc2lsaWNvbixoaTYyMjAtbWVkaWFjdHJsIiwgInN5
-c2NvbiIgOiBGb3IgbWVkaWEgcmVzZXQgY29udHJvbGxlci4KKyAgLSAiaGlzaWxpY29uLGhpNjIy
-MC1hb2N0cmwiLCAic3lzY29uIiA6IEZvciBhbyByZXNldCBjb250cm9sbGVyLgogLSByZWc6IHNo
-b3VsZCBiZSByZWdpc3RlciBiYXNlIGFuZCBsZW5ndGggYXMgZG9jdW1lbnRlZCBpbiB0aGUKICAg
-ZGF0YXNoZWV0CiAtICNyZXNldC1jZWxsczogMSwgc2VlIGJlbG93Ci0tIAoyLjE3LjEKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+From: Peter Griffin <peter.griffin@linaro.org>
+
+This is required to bring Mali450 gpu out of reset.
+
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ include/dt-bindings/reset/hisi,hi6220-resets.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/include/dt-bindings/reset/hisi,hi6220-resets.h b/include/dt-bindings/reset/hisi,hi6220-resets.h
+index e7c362a81a97..63aff7d8aa45 100644
+--- a/include/dt-bindings/reset/hisi,hi6220-resets.h
++++ b/include/dt-bindings/reset/hisi,hi6220-resets.h
+@@ -73,4 +73,11 @@
+ #define MEDIA_MMU                       6
+ #define MEDIA_XG2RAM1                   7
+ 
++#define AO_G3D                          1
++#define AO_CODECISP                     2
++#define AO_MCPU                         4
++#define AO_BBPHARQMEM                   5
++#define AO_HIFI                         8
++#define AO_ACPUSCUL2C                   12
++
+ #endif /*_DT_BINDINGS_RESET_CONTROLLER_HI6220*/
+-- 
+2.17.1
