@@ -1,27 +1,44 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 05/21] ARM: dts: imx7-colibri: add recovery for I2C
- for iMX7
-Date: Mon, 19 Aug 2019 13:14:58 +0200
-Message-ID: <20190819111457.GO5999@X250>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-6-philippe.schenker@toradex.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Date: Mon, 19 Aug 2019 13:16:19 +0200
+Message-ID: <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
+        <20190718143044.25066-1-s.nawrocki@samsung.com>
+        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+        <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+        <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+        <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+        <20190819090928.pke6cov52n4exlbp@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190812142105.1995-6-philippe.schenker@toradex.com>
+In-Reply-To: <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:21:21PM +0000, Philippe Schenker wrote:
-> From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+On 8/19/19 11:09, Viresh Kumar wrote:
+> Will something like this help ?
 > 
-> - add recovery mode for applicable i2c buses for
->   Colibri iMX7 module.
+> https://lore.kernel.org/lkml/1442623929-4507-3-git-send-email-sboyd@codeaurora.org/
 > 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> This never got merged but the idea was AVS only.
 
-Applied, thanks.
+It's quite interesting work, it seems to be for a more advanced use case 
+where OPP voltage is being adjusted at runtime.
+
+We could use it instead of removing an OPP and then adding with updated 
+voltage. On Exynos there is there is just a need to update OPPs once at boot 
+time, so it is more "static". However the requirements could presumably 
+change in future.
+
+If that's your preference I could switch to that notifier approach.
+AFAICS the API would still need to be extended to support multiple voltages,
+when in future we add support for the Body Bias regulator. 
+
+-- 
+Thanks,
+Sylwester
