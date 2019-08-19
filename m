@@ -1,71 +1,141 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/8] dt-bindings: omap: add new binding for PRM instances
-Date: Mon, 19 Aug 2019 16:28:16 -0500
-Message-ID: <b6506850-f4fc-43be-b5b7-b83cd77b5d66@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-2-git-send-email-t-kristo@ti.com>
- <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
- <aa5538ae-76b4-942b-dc98-6e55628cf36a@ti.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
+ DT bindings
+Date: Mon, 19 Aug 2019 14:30:04 -0700
+Message-ID: <74931824-f8a1-0435-e00a-5b5cdbe8a8a2@gmail.com>
+References: <20190724001100.133423-1-saravanak@google.com>
+ <20190724001100.133423-4-saravanak@google.com>
+ <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com>
+ <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
+ <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
+ <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <aa5538ae-76b4-942b-dc98-6e55628cf36a@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGVybywKCk9uIDgvMTkvMTkgNDoyOCBBTSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMDgv
-MDgvMjAxOSAwNzozNSwgS2VlcnRoeSB3cm90ZToKPj4KPj4KPj4gT24gMDcvMDgvMTkgMToxOCBQ
-TSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4+PiBBZGQgbmV3IGJpbmRpbmcgZm9yIE9NQVAgUFJNIChQ
-b3dlciBhbmQgUmVzZXQgTWFuYWdlcikgaW5zdGFuY2VzLiBFYWNoCj4+PiBvZiB0aGVzZSB3aWxs
-IGFjdCBhcyBhIHBvd2VyIGRvbWFpbiBjb250cm9sbGVyIGFuZCBwb3RlbnRpYWxseSBhcyBhCj4+
-PiByZXNldAo+Pj4gcHJvdmlkZXIuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogVGVybyBLcmlzdG8g
-PHQta3Jpc3RvQHRpLmNvbT4KPj4+IC0tLQo+Pj4gwqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-YXJtL29tYXAvcHJtLWluc3QudHh0wqDCoMKgwqDCoCB8IDI0Cj4+PiArKysrKysrKysrKysrKysr
-KysrKysrCj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQo+Pj4gwqAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0Cj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
-L29tYXAvcHJtLWluc3QudHh0Cj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vb21hcC9wcm0taW5zdC50eHQKPj4+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9vbWFwL3BybS1pbnN0LnR4dAo+Pj4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLmUwYWU4N2IKPj4+IC0tLSAvZGV2L251bGwK
-Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vb21hcC9wcm0t
-aW5zdC50eHQKPj4+IEBAIC0wLDAgKzEsMjQgQEAKPj4+ICtPTUFQIFBSTSBpbnN0YW5jZSBiaW5k
-aW5ncwo+Pj4gKwo+Pj4gK1Bvd2VyIGFuZCBSZXNldCBNYW5hZ2VyIGlzIGFuIElQIGJsb2NrIG9u
-IE9NQVAgZmFtaWx5IG9mIGRldmljZXMgd2hpY2gKPj4+ICtoYW5kbGUgdGhlIHBvd2VyIGRvbWFp
-bnMgYW5kIHRoZWlyIGN1cnJlbnQgc3RhdGUsIGFuZCBwcm92aWRlIHJlc2V0Cj4+PiAraGFuZGxp
-bmcgZm9yIHRoZSBkb21haW5zIGFuZC9vciBzZXBhcmF0ZSBJUCBibG9ja3MgdW5kZXIgdGhlIHBv
-d2VyCj4+PiBkb21haW4KPj4+ICtoaWVyYXJjaHkuCgpTbywgSSBzZWUgdGhhdCB5b3UgYXJlIGFk
-ZGluZyB0aGVzZSBhcyBmbGF0IG5vZGVzIGRpcmVjdGx5IHVuZGVyIHRoZSBwcm0Kbm9kZXMgd2hl
-cmUgd2UgaGF2ZSB0aGUgY2xvY2tzIGFuZCBjbG9ja19kb21haW5zLiBBcmUgeW91IGFudGljaXBh
-dGluZyBhCnNpbmdsZSBEVCBub2RlIGFuZC9vciBkcml2ZXIgbWFuYWdpbmcgYm90aCBwb3dlci1k
-b21haW5zIGFuZCByZXNldHM/Cgo+Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+PiAr
-LSBjb21wYXRpYmxlOsKgwqDCoCBNdXN0IGJlIG9uZSBvZjoKPj4+ICvCoMKgwqDCoMKgwqDCoCAi
-dGksYW0zLXBybS1pbnN0Igo+Pj4gK8KgwqDCoMKgwqDCoMKgICJ0aSxhbTQtcHJtLWluc3QiCj4+
-PiArwqDCoMKgwqDCoMKgwqAgInRpLG9tYXA0LXBybS1pbnN0Igo+Pj4gK8KgwqDCoMKgwqDCoMKg
-ICJ0aSxvbWFwNS1wcm0taW5zdCIKPj4+ICvCoMKgwqDCoMKgwqDCoCAidGksZHJhNy1wcm0taW5z
-dCIKCldoYXQgYWJvdXQgT01BUDIsIE9NQVAzLCBETTgxNHgsIERNODE2eD8KCnJlZ2FyZHMKU3Vt
-YW4KCj4+PiArLSByZWc6wqDCoMKgwqDCoMKgwqAgQ29udGFpbnMgUFJNIGluc3RhbmNlIHJlZ2lz
-dGVyIGFkZHJlc3MgcmFuZ2UKPj4+ICvCoMKgwqDCoMKgwqDCoCAoYmFzZSBhZGRyZXNzIGFuZCBs
-ZW5ndGgpCj4+Cj4+IEhvdyBhYm91dCByZXNldC1jZWxscyBwcm9wZXJ0eSwgSXNuJ3QgdGhhdCBh
-IG1hbmRhdG9yeSBwcm9wZXJ0eT8KPiAKPiBJdCBpcyBvcHRpb25hbCwgYnV0IHlvdSBhcmUgcmln
-aHQsIHNob3VsZCBiZSBhZGRlZCB0byB0aGlzLgo+IAo+IC1UZXJvCj4gCj4+Cj4+PiArCj4+PiAr
-RXhhbXBsZToKPj4+ICsKPj4+ICtwcm1fZHNwMjogcHJtQDFiMDAgewo+Pj4gK8KgwqDCoCBjb21w
-YXRpYmxlID0gInRpLGRyYTctcHJtLWluc3QiOwo+Pj4gK8KgwqDCoCByZWcgPSA8MHgxYjAwIDB4
-NDA+Owo+Pj4gK8KgwqDCoCAjcmVzZXQtY2VsbHMgPSA8MT47Cj4+PiArfTsKPj4+Cj4gCj4gLS0g
-Cj4gVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAg
-SGVsc2lua2kuCj4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9E
-b21pY2lsZTogSGVsc2lua2kKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 8/19/19 1:49 PM, Saravana Kannan wrote:
+> On Mon, Aug 19, 2019 at 10:16 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 8/15/19 6:50 PM, Saravana Kannan wrote:
+>>> On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>
+>>>> On 7/23/19 5:10 PM, Saravana Kannan wrote:
+>>>>> Add device-links after the devices are created (but before they are
+>>>>> probed) by looking at common DT bindings like clocks and
+>>>>> interconnects.
+>>
+>>
+>> < very big snip (lots of comments that deserve answers) >
+>>
+>>
+>>>>
+>>>> /**
+>>>>  * of_link_property - TODO:
+>>>>  * dev:
+>>>>  * con_np:
+>>>>  * prop:
+>>>>  *
+>>>>  * TODO...
+>>>>  *
+>>>>  * Any failed attempt to create a link will NOT result in an immediate return.
+>>>>  * of_link_property() must create all possible links even when one of more
+>>>>  * attempts to create a link fail.
+>>>>
+>>>> Why?  isn't one failure enough to prevent probing this device?
+>>>> Continuing to scan just results in extra work... which will be
+>>>> repeated every time device_link_check_waiting_consumers() is called
+>>>
+>>> Context:
+>>> As I said in the cover letter, avoiding unnecessary probes is just one
+>>> of the reasons for this patch. The other (arguably more important)
+>>
+>> Agree that it is more important.
+>>
+>>
+>>> reason for this patch is to make sure suppliers know that they have
+>>> consumers that are yet to be probed. That way, suppliers can leave
+>>> their resource on AND in the right state if they were left on by the
+>>> bootloader. For example, if a clock was left on and at 200 MHz, the
+>>> clock provider needs to keep that clock ON and at 200 MHz till all the
+>>> consumers are probed.
+>>>
+>>> Answer: Let's say a consumer device Z has suppliers A, B and C. If the
+>>> linking fails at A and you return immediately, then B and C could
+>>> probe and then figure that they have no more consumers (they don't see
+>>> a link to Z) and turn off their resources. And Z could fail
+>>> catastrophically.
+>>
+>> Then I think that this approach is fatally flawed in the current implementation.
+> 
+> I'm waiting to hear how it is fatally flawed. But maybe this is just a
+> misunderstanding of the problem?
+
+Fatally flawed because it does not handle modules that add a consumer
+device when the module is loaded.
+
+
+> 
+> In the text below, I'm not sure if you mixing up two different things
+> or just that your wording it a bit ambiguous. So pardon my nitpick to
+> err on the side of clarity.
+
+Please do nitpick.  Clarity is good.
+
+
+> 
+>> A device can be added by a module that is loaded.
+> 
+> No, in the example I gave, of_platform_default_populate_init() would
+> add all 3 of those devices during arch_initcall_sync().
+
+The example you gave does not cover all use cases.
+
+There are modules that add devices when the module is loaded.  You can not
+ignore systems using such modules.
+
+
+> 
+>>  In that case the device
+>> was not present at late boot when the suppliers may turn off their resources.
+> 
+> In that case, the _drivers_ for those devices aren't present at late
+> boot. So that they can't request to keep the resources on for their
+> consumer devices. Since there are no consumer requests on resources,
+> the suppliers turn off their resources at late boot (since there isn't
+> a better location as of today). The sync_state() call back added in a
+> subsequent patche in this series will provide the better location.
+
+And the sync_state() call back will not deal with modules that add consumer
+devices when the module is loaded, correct?
+
+
+> 
+>> (I am assuming the details since I have not reviewed the patches later in
+>> the series that implement this part.)
+>>
+>> Am I missing something?
+> 
+> I think you are mixing up devices getting added/populated with drivers
+> getting loaded as modules?
+
+Only some modules add devices when they are loaded.  But these modules do
+exist.
+
+-Frank
+
+> 
+>> If I am wrong, then I'll have more comments for your review replies for
+>> patches 2 and 3.
+> 
+> I'll wait for more review replies?
+> 
+> Thanks,
+> Saravana
+> 
