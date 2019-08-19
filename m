@@ -1,107 +1,342 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
- DT bindings
-Date: Mon, 19 Aug 2019 13:49:09 -0700
-Message-ID: <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
-References: <20190724001100.133423-1-saravanak@google.com> <20190724001100.133423-4-saravanak@google.com>
- <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com> <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
- <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH v3] userdiff: Add a builtin pattern for dts files
+Date: Mon, 19 Aug 2019 14:22:43 -0700
+Message-ID: <20190819212243.84492-1-sboyd@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <git-owner@vger.kernel.org>
+Sender: git-owner@vger.kernel.org
+To: git@vger.kernel.org
+Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Alban Gruin <alban.gruin@gmail.com>, Junio C Hamano <gitster@pobox.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:16 AM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 8/15/19 6:50 PM, Saravana Kannan wrote:
-> > On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 7/23/19 5:10 PM, Saravana Kannan wrote:
-> >>> Add device-links after the devices are created (but before they are
-> >>> probed) by looking at common DT bindings like clocks and
-> >>> interconnects.
->
->
-> < very big snip (lots of comments that deserve answers) >
->
->
-> >>
-> >> /**
-> >>  * of_link_property - TODO:
-> >>  * dev:
-> >>  * con_np:
-> >>  * prop:
-> >>  *
-> >>  * TODO...
-> >>  *
-> >>  * Any failed attempt to create a link will NOT result in an immediate return.
-> >>  * of_link_property() must create all possible links even when one of more
-> >>  * attempts to create a link fail.
-> >>
-> >> Why?  isn't one failure enough to prevent probing this device?
-> >> Continuing to scan just results in extra work... which will be
-> >> repeated every time device_link_check_waiting_consumers() is called
-> >
-> > Context:
-> > As I said in the cover letter, avoiding unnecessary probes is just one
-> > of the reasons for this patch. The other (arguably more important)
->
-> Agree that it is more important.
->
->
-> > reason for this patch is to make sure suppliers know that they have
-> > consumers that are yet to be probed. That way, suppliers can leave
-> > their resource on AND in the right state if they were left on by the
-> > bootloader. For example, if a clock was left on and at 200 MHz, the
-> > clock provider needs to keep that clock ON and at 200 MHz till all the
-> > consumers are probed.
-> >
-> > Answer: Let's say a consumer device Z has suppliers A, B and C. If the
-> > linking fails at A and you return immediately, then B and C could
-> > probe and then figure that they have no more consumers (they don't see
-> > a link to Z) and turn off their resources. And Z could fail
-> > catastrophically.
->
-> Then I think that this approach is fatally flawed in the current implementation.
+The Linux kernel receives many patches to the devicetree files each
+release. The hunk header for those patches typically show nothing,
+making it difficult to figure out what node is being modified without
+applying the patch or opening the file and seeking to the context. Let's
+add a builtin 'dts' pattern to git so that users can get better diff
+output on dts files when they use the diff=dts driver.
 
-I'm waiting to hear how it is fatally flawed. But maybe this is just a
-misunderstanding of the problem?
+The regex has been constructed based on the spec at devicetree.org[1]
+and with some help from Johannes Sixt.
 
-In the text below, I'm not sure if you mixing up two different things
-or just that your wording it a bit ambiguous. So pardon my nitpick to
-err on the side of clarity.
+[1] https://github.com/devicetree-org/devicetree-specification/releases/latest
 
-> A device can be added by a module that is loaded.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
 
-No, in the example I gave, of_platform_default_populate_init() would
-add all 3 of those devices during arch_initcall_sync().
+Changes from v2:
+ * Added a few more tests for comments after and before {
+ * Added a root node test
+ * Support for root node (/) in the regex
+ * Simplified regex per Johannes' feedback
+ * Sprinkled some newlines into the tests for variety
 
->  In that case the device
-> was not present at late boot when the suppliers may turn off their resources.
+Changes from v1:                                                                                                                                                                    
+ * Updated regex to handle anything after node names instead of                                                                                                                     
+   requiring a '{'                                                                                                                                                                  
+ * Updated test for boolean relation operators                                                                                                                                      
+ * Sent out a patch to devicetree spec to document % operator                                                                                                                       
+																					     
+ Documentation/gitattributes.txt |  2 ++
+ t/t4018-diff-funcname.sh        |  1 +
+ t/t4018/dts-labels              |  9 ++++++++
+ t/t4018/dts-node-unitless       |  8 +++++++
+ t/t4018/dts-nodes               |  8 +++++++
+ t/t4018/dts-nodes-comment1      |  8 +++++++
+ t/t4018/dts-nodes-comment2      |  8 +++++++
+ t/t4018/dts-reference           |  9 ++++++++
+ t/t4018/dts-root                |  5 +++++
+ t/t4034-diff-words.sh           |  1 +
+ t/t4034/dts/expect              | 37 +++++++++++++++++++++++++++++++++
+ t/t4034/dts/post                | 32 ++++++++++++++++++++++++++++
+ t/t4034/dts/pre                 | 32 ++++++++++++++++++++++++++++
+ userdiff.c                      |  8 +++++++
+ 14 files changed, 168 insertions(+)
+ create mode 100644 t/t4018/dts-labels
+ create mode 100644 t/t4018/dts-node-unitless
+ create mode 100644 t/t4018/dts-nodes
+ create mode 100644 t/t4018/dts-nodes-comment1
+ create mode 100644 t/t4018/dts-nodes-comment2
+ create mode 100644 t/t4018/dts-reference
+ create mode 100644 t/t4018/dts-root
+ create mode 100644 t/t4034/dts/expect
+ create mode 100644 t/t4034/dts/post
+ create mode 100644 t/t4034/dts/pre
 
-In that case, the _drivers_ for those devices aren't present at late
-boot. So that they can't request to keep the resources on for their
-consumer devices. Since there are no consumer requests on resources,
-the suppliers turn off their resources at late boot (since there isn't
-a better location as of today). The sync_state() call back added in a
-subsequent patche in this series will provide the better location.
-
-> (I am assuming the details since I have not reviewed the patches later in
-> the series that implement this part.)
->
-> Am I missing something?
-
-I think you are mixing up devices getting added/populated with drivers
-getting loaded as modules?
-
-> If I am wrong, then I'll have more comments for your review replies for
-> patches 2 and 3.
-
-I'll wait for more review replies?
-
-Thanks,
-Saravana
+diff --git a/Documentation/gitattributes.txt b/Documentation/gitattributes.txt
+index fb1d188d440c..c5a528c667b6 100644
+--- a/Documentation/gitattributes.txt
++++ b/Documentation/gitattributes.txt
+@@ -810,6 +810,8 @@ patterns are available:
+ 
+ - `css` suitable for cascading style sheets.
+ 
++- `dts` suitable for devicetree (DTS) files.
++
+ - `fortran` suitable for source code in the Fortran language.
+ 
+ - `fountain` suitable for Fountain documents.
+diff --git a/t/t4018-diff-funcname.sh b/t/t4018-diff-funcname.sh
+index 9261d6d3a000..6f5ef0035e92 100755
+--- a/t/t4018-diff-funcname.sh
++++ b/t/t4018-diff-funcname.sh
+@@ -31,6 +31,7 @@ diffpatterns="
+ 	cpp
+ 	csharp
+ 	css
++	dts
+ 	fortran
+ 	fountain
+ 	golang
+diff --git a/t/t4018/dts-labels b/t/t4018/dts-labels
+new file mode 100644
+index 000000000000..b21ef8737bb8
+--- /dev/null
++++ b/t/t4018/dts-labels
+@@ -0,0 +1,9 @@
++/ {
++	label_1: node1@ff00 {
++		label2: RIGHT {
++			vendor,some-property;
++
++			ChangeMe = <0x45-30>;
++		};
++	};
++};
+diff --git a/t/t4018/dts-node-unitless b/t/t4018/dts-node-unitless
+new file mode 100644
+index 000000000000..c5287d91416e
+--- /dev/null
++++ b/t/t4018/dts-node-unitless
+@@ -0,0 +1,8 @@
++/ {
++	label_1: node1 {
++		RIGHT {
++			prop-array = <1>, <4>;
++			ChangeMe = <0xffeedd00>;
++		};
++	};
++};
+diff --git a/t/t4018/dts-nodes b/t/t4018/dts-nodes
+new file mode 100644
+index 000000000000..5a4334bb1645
+--- /dev/null
++++ b/t/t4018/dts-nodes
+@@ -0,0 +1,8 @@
++/ {
++	label_1: node1@ff00 {
++		RIGHT@deadf00,4000 {
++			#size-cells = <1>;
++			ChangeMe = <0xffeedd00>;
++		};
++	};
++};
+diff --git a/t/t4018/dts-nodes-comment1 b/t/t4018/dts-nodes-comment1
+new file mode 100644
+index 000000000000..559dfce9b308
+--- /dev/null
++++ b/t/t4018/dts-nodes-comment1
+@@ -0,0 +1,8 @@
++/ {
++	label_1: node1@ff00 {
++		RIGHT@deadf00,4000 /* &a comment */ {
++			#size-cells = <1>;
++			ChangeMe = <0xffeedd00>;
++		};
++	};
++};
+diff --git a/t/t4018/dts-nodes-comment2 b/t/t4018/dts-nodes-comment2
+new file mode 100644
+index 000000000000..27e9718b31cf
+--- /dev/null
++++ b/t/t4018/dts-nodes-comment2
+@@ -0,0 +1,8 @@
++/ {
++	label_1: node1@ff00 {
++		RIGHT@deadf00,4000 { /* a trailing comment */ 
++			#size-cells = <1>;
++			ChangeMe = <0xffeedd00>;
++		};
++	};
++};
+diff --git a/t/t4018/dts-reference b/t/t4018/dts-reference
+new file mode 100644
+index 000000000000..8f0c87d8637f
+--- /dev/null
++++ b/t/t4018/dts-reference
+@@ -0,0 +1,9 @@
++&label_1 {
++	TEST = <455>;
++};
++
++&RIGHT {
++	vendor,some-property;
++
++	ChangeMe = <0x45-30>;
++};
+diff --git a/t/t4018/dts-root b/t/t4018/dts-root
+new file mode 100644
+index 000000000000..2ef9e6ffaa2c
+--- /dev/null
++++ b/t/t4018/dts-root
+@@ -0,0 +1,5 @@
++/RIGHT { /* Technically just supposed to be a slash */
++	#size-cells = <1>;
++
++	ChangeMe = <0xffeedd00>;
++};
+diff --git a/t/t4034-diff-words.sh b/t/t4034-diff-words.sh
+index 912df91226f2..9a93c2a3e0dd 100755
+--- a/t/t4034-diff-words.sh
++++ b/t/t4034-diff-words.sh
+@@ -303,6 +303,7 @@ test_language_driver bibtex
+ test_language_driver cpp
+ test_language_driver csharp
+ test_language_driver css
++test_language_driver dts
+ test_language_driver fortran
+ test_language_driver html
+ test_language_driver java
+diff --git a/t/t4034/dts/expect b/t/t4034/dts/expect
+new file mode 100644
+index 000000000000..560fc9918476
+--- /dev/null
++++ b/t/t4034/dts/expect
+@@ -0,0 +1,37 @@
++<BOLD>diff --git a/pre b/post<RESET>
++<BOLD>index b6a9051..7803aee 100644<RESET>
++<BOLD>--- a/pre<RESET>
++<BOLD>+++ b/post<RESET>
++<CYAN>@@ -1,32 +1,32 @@<RESET>
++/ {<RESET>
++	<RED>this_handle<RESET><GREEN>HANDLE_2<RESET>: <RED>node<RESET><GREEN>new-node<RESET>@<RED>f00<RESET><GREEN>eeda<RESET> {
++		compatible = "<RED>mydev<RESET><GREEN>vendor,compat<RESET>";
++		string-prop = <RED>start<RESET><GREEN>end<RESET>: "hello <RED>world!<RESET><GREEN>world?<RESET>" <RED>end<RESET><GREEN>start<RESET>: ;
++		<RED>#size-cells<RESET><GREEN>#address-cells<RESET> = <<RED>0+0<RESET><GREEN>0+40<RESET>>;
++		reg = <<RED>0xf00<RESET><GREEN>0xeeda<RESET>>;
++		prop = <<GREEN>(<RESET>1<GREEN>)<RESET>>;
++		prop = <<GREEN>(<RESET>-1e10<GREEN>)<RESET>>;
++		prop = <(!<RED>3<RESET><GREEN>1<RESET>)>;
++		prop = <(~<RED>3<RESET><GREEN>1<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>*<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>&<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>*<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>/<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>%<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3+4<RESET><GREEN>1+2<RESET>)>;
++		prop = <(<RED>3-4<RESET><GREEN>1-2<RESET>)>;
++		prop = /bits/ <RED>64<RESET><GREEN>32<RESET> <(<RED>3<RESET><GREEN>1<RESET><<<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>>><RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>&<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>^<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>|<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>&&<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>3<RESET><GREEN>1<RESET>||<RED>4<RESET><GREEN>2<RESET>)>;
++		prop = <(<RED>4?5<RESET><GREEN>1?2<RESET>:3)>;
++		list = <&<RED>this_handle<RESET><GREEN>HANDLE_2<RESET>>, <0 0 0 <RED>0<RESET><GREEN>1<RESET>>;
++	};<RESET>
++
++	&<RED>phandle<RESET><GREEN>phandle2<RESET> {
++		<RED>pre-phandle<RESET><GREEN>prop_handle<RESET> = <&<RED>this_handle<RESET><GREEN>HANDLE_2<RESET>>;
++	};<RESET>
++};<RESET>
+diff --git a/t/t4034/dts/post b/t/t4034/dts/post
+new file mode 100644
+index 000000000000..7803aee28093
+--- /dev/null
++++ b/t/t4034/dts/post
+@@ -0,0 +1,32 @@
++/ {
++	HANDLE_2: new-node@eeda {
++		compatible = "vendor,compat";
++		string-prop = end: "hello world?" start: ;
++		#address-cells = <0+40>;
++		reg = <0xeeda>;
++		prop = <(1)>;
++		prop = <(-1e10)>;
++		prop = <(!1)>;
++		prop = <(~1)>;
++		prop = <(1*2)>;
++		prop = <(1&2)>;
++		prop = <(1*2)>;
++		prop = <(1/2)>;
++		prop = <(1%2)>;
++		prop = <(1+2)>;
++		prop = <(1-2)>;
++		prop = /bits/ 32 <(1<<2)>;
++		prop = <(1>>2)>;
++		prop = <(1&2)>;
++		prop = <(1^2)>;
++		prop = <(1|2)>;
++		prop = <(1&&2)>;
++		prop = <(1||2)>;
++		prop = <(1?2:3)>;
++		list = <&HANDLE_2>, <0 0 0 1>;
++	};
++
++	&phandle2 {
++		prop_handle = <&HANDLE_2>;
++	};
++};
+diff --git a/t/t4034/dts/pre b/t/t4034/dts/pre
+new file mode 100644
+index 000000000000..b6a905113c22
+--- /dev/null
++++ b/t/t4034/dts/pre
+@@ -0,0 +1,32 @@
++/ {
++	this_handle: node@f00 {
++		compatible = "mydev";
++		string-prop = start: "hello world!" end: ;
++		#size-cells = <0+0>;
++		reg = <0xf00>;
++		prop = <1>;
++		prop = <-1e10>;
++		prop = <(!3)>;
++		prop = <(~3)>;
++		prop = <(3*4)>;
++		prop = <(3&4)>;
++		prop = <(3*4)>;
++		prop = <(3/4)>;
++		prop = <(3%4)>;
++		prop = <(3+4)>;
++		prop = <(3-4)>;
++		prop = /bits/ 64 <(3<<4)>;
++		prop = <(3>>4)>;
++		prop = <(3&4)>;
++		prop = <(3^4)>;
++		prop = <(3|4)>;
++		prop = <(3&&4)>;
++		prop = <(3||4)>;
++		prop = <(4?5:3)>;
++		list = <&this_handle>, <0 0 0 0>;
++	};
++
++	&phandle {
++		pre-phandle = <&this_handle>;
++	};
++};
+diff --git a/userdiff.c b/userdiff.c
+index e74a6d402255..86e3244e15dd 100644
+--- a/userdiff.c
++++ b/userdiff.c
+@@ -23,6 +23,14 @@ IPATTERN("ada",
+ 	 "[a-zA-Z][a-zA-Z0-9_]*"
+ 	 "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
+ 	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
++PATTERNS("dts",
++	 "!;\n"
++	 /* lines beginning with a word optionally preceded by '&' or the root */
++	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
++	 /* -- */
++	 /* Property names and math operators */
++	 "[a-zA-Z0-9,._+?#-]+"
++	 "|[-+*/%&^|!~]|>>|<<|&&|\\|\\|"),
+ IPATTERN("fortran",
+ 	 "!^([C*]|[ \t]*!)\n"
+ 	 "!^[ \t]*MODULE[ \t]+PROCEDURE[ \t]\n"
+-- 
+Sent by a computer through tubes
