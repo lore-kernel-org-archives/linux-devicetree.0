@@ -1,72 +1,39 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] libfdt: reduce the number of headers included from libfdt_env.h
-Date: Mon, 19 Aug 2019 13:36:15 +0900
-Message-ID: <CAK7LNASMwqy0ZUZ=kTJ7MJ6OJNa=+vbj5444xzmubJ8+6vO=sg@mail.gmail.com>
-References: <20190617162123.24920-1-yamada.masahiro@socionext.com> <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 0/2] watchdog: aspeed: Add support for ast2600
+Date: Mon, 19 Aug 2019 14:47:36 +0930
+Message-ID: <20190819051738.17370-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATtqhxPcDneW0QOkw-5NyPNP06Qv0bYTe7A_gCiHMiU7A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, DTML <devicetree@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Ryan Chen <ryan_chen@aspeedtech.com>, linux-watchdog@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 1, 2019 at 11:30 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Tue, Jun 18, 2019 at 1:21 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Currently, libfdt_env.h includes <linux/kernel.h> just for INT_MAX.
-> >
-> > <linux/kernel.h> pulls in a lots of broat.
-> >
-> > Thanks to commit 54d50897d544 ("linux/kernel.h: split *_MAX and *_MIN
-> > macros into <linux/limits.h>"), <linux/kernel.h> can be replaced with
-> > <linux/limits.h>.
-> >
-> > This saves including dozens of headers.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
->
-> ping?
+Hello,
 
-ping x2.
+Here's a small patch series to enable the ast2600 watchdog.
 
+v2 addresses Guenter's review.
 
+Joel Stanley (1):
+  dt-bindings: watchdog: Add ast2600 compatible
 
+Ryan Chen (1):
+  watchdog: aspeed: Add support for AST2600
 
->
->
-> >  include/linux/libfdt_env.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-> > index edb0f0c30904..2231eb855e8f 100644
-> > --- a/include/linux/libfdt_env.h
-> > +++ b/include/linux/libfdt_env.h
-> > @@ -2,7 +2,7 @@
-> >  #ifndef LIBFDT_ENV_H
-> >  #define LIBFDT_ENV_H
-> >
-> > -#include <linux/kernel.h>      /* For INT_MAX */
-> > +#include <linux/limits.h>      /* For INT_MAX */
-> >  #include <linux/string.h>
-> >
-> >  #include <asm/byteorder.h>
-> > --
-> > 2.17.1
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
-
-
+ Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 1 +
+ drivers/watchdog/aspeed_wdt.c                             | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.23.0.rc1
