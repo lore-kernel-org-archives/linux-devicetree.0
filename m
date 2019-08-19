@@ -1,48 +1,28 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 10/22] arm64: dts: qcom: pm8150b: Add pon and adc nodes
-Date: Mon, 19 Aug 2019 10:56:27 -0700
-Message-ID: <20190819175628.6914A22CEB@mail.kernel.org>
-References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-11-vkoul@kernel.org> <20190814170803.DEFCC214DA@mail.kernel.org> <20190819174331.GN12733@vkoul-mobl.Dlink>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v3 09/14] dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+Date: Mon, 19 Aug 2019 10:58:20 -0700
+Message-ID: <5d5ae33d.1c69fb81.49902.678d@mx.google.com>
+References: <20190725104144.22924-10-niklas.cassel@linaro.org> <20190819101238.17335-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819174331.GN12733@vkoul-mobl.Dlink>
+In-Reply-To: <20190819101238.17335-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <agross@kernel.org>, Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2019-08-19 10:43:31)
-> On 14-08-19, 10:08, Stephen Boyd wrote:
-> >=20
-> > >=20
-> > > diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/=
-dts/qcom/pm8150b.dtsi
-> > > index c0a678b0f159..846197bd65cd 100644
-> > > --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> > > @@ -2,6 +2,7 @@
-> > >  // Copyright (c) 2017-2019, The Linux Foundation. All rights reserve=
-d.
-> > >  // Copyright (c) 2019, Linaro Limited
-> > > =20
-> > > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> > >  #include <dt-bindings/interrupt-controller/irq.h>
-> > >  #include <dt-bindings/spmi/spmi.h>
-> > > =20
-> > > @@ -11,6 +12,59 @@
-> > >                 reg =3D <0x2 SPMI_USID>;
-> > >                 #address-cells =3D <1>;
-> > >                 #size-cells =3D <0>;
-> > > +
-> > > +               pon@800 {
-> >=20
-> > Maybe pon node name should be 'key' or 'power-on'?
+Quoting Niklas Cassel (2019-08-19 03:12:38)
+> Add qcom-opp bindings with properties needed for Core Power Reduction
+> (CPR).
 >=20
-> pon stands for power on device. See Documentation/devicetree/bindings/pow=
-er/reset/qcom,pon.txt
+> CPR is included in a great variety of Qualcomm SoCs, e.g. msm8916 and
+> msm8996. CPR was first introduced in msm8974.
 >=20
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
 
-Right. I was hoping for a more standard node name vs. an acronym that's
-SoC specific.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
