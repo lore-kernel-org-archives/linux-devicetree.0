@@ -1,51 +1,96 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v12 12/12] arm64: dts: add gce node for mt8183
-Date: Mon, 19 Aug 2019 10:53:59 +0800
-Message-ID: <20190819025359.11381-13-bibby.hsieh@mediatek.com>
+Subject: [PATCH v12 07/12] soc: mediatek: cmdq: reorder the parameter
+Date: Mon, 19 Aug 2019 10:53:54 +0800
+Message-ID: <20190819025359.11381-8-bibby.hsieh@mediatek.com>
 References: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, linux-mediatek@lists.infradead.org, Houlong Wei <houlong.wei@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, YT Shen <yt.shen@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, linux-arm-kernel@lists.infradead.org, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-add gce device node for mt8183
+The order of gce instructions is [subsys offset value]
+so reorder the parameter of cmdq_pkt_write_mask
+and cmdq_pkt_write function.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c |  6 +++---
+ include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 08274bfcebd8..a81c995bbea9 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/mt8183-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gce/mt8183-gce.h>
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index ff9fef5a032b..082b8978651e 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 	return 0;
+ }
  
- / {
- 	compatible = "mediatek,mt8183";
-@@ -212,6 +213,15 @@
- 			clock-names = "spi", "wrap";
- 		};
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+ {
+ 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+ 		    (subsys << CMDQ_SUBSYS_SHIFT);
+@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
  
-+		gce: mailbox@10238000 {
-+			compatible = "mediatek,mt8183-gce";
-+			reg = <0 0x10238000 0 0x4000>;
-+			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
-+			#mbox-cells = <3>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
-+		};
-+
- 		uart0: serial@11002000 {
- 			compatible = "mediatek,mt8183-uart",
- 				     "mediatek,mt6577-uart";
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+-			u32 subsys, u32 offset, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
++			u32 offset, u32 value, u32 mask)
+ {
+ 	u32 offset_mask = offset;
+ 	int err = 0;
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 4e8899972db4..39d813dde4b4 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+ /**
+  * cmdq_pkt_write() - append write command to the CMDQ packet
+  * @pkt:	the CMDQ packet
+- * @value:	the specified target register value
+  * @subsys:	the CMDQ sub system code
+  * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+ 
+ /**
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+  * @pkt:	the CMDQ packet
+- * @value:	the specified target register value
+  * @subsys:	the CMDQ sub system code
+  * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
+  * @mask:	the specified target register mask
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+-			u32 subsys, u32 offset, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
++			u32 offset, u32 value, u32 mask);
+ 
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
 -- 
 2.18.0
