@@ -1,110 +1,60 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v9 20/22] soc/tegra: pmc: Configure deep sleep control
- settings
-Date: Mon, 19 Aug 2019 22:33:49 +0300
-Message-ID: <8f5630bd-2869-4f5b-c18d-7ee8326432d6@gmail.com>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
- <1565984527-5272-21-git-send-email-skomatineni@nvidia.com>
- <bf5541d2-1bad-8a8c-fd9d-821b55861136@gmail.com>
- <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
- <a8d65dbc-6924-c972-06e9-5bc47d66e94f@nvidia.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
+Date: Mon, 19 Aug 2019 21:43:47 +0200
+Message-ID: <b217183a-33c1-f384-e730-eb1903ca0d03@linaro.org>
+References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
+ <20190722081229.22422-3-maxime.ripard@bootlin.com>
+ <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
+ <20190812091631.j2pr7i2zeput3hrc@flea>
+ <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
+ <20190812112411.ty3npkq6ztbushhm@flea> <20190819133058.bujcawpw5rgsfp4g@flea>
+ <0e36a6fe-33de-5af5-f4f9-4cedfc9d0cbf@linaro.org>
+ <20190819191326.c27vmevrqkmjhfru@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a8d65dbc-6924-c972-06e9-5bc47d66e94f@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190819191326.c27vmevrqkmjhfru@flea>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-19.08.2019 22:07, Sowjanya Komatineni пишет:
-> 
-> On 8/19/19 11:20 AM, Sowjanya Komatineni wrote:
->>
->> On 8/19/19 9:48 AM, Dmitry Osipenko wrote:
->>> 16.08.2019 22:42, Sowjanya Komatineni пишет:
->>>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
->>>> timings which are platform specific that should be configured before
->>>> entering into deep sleep.
->>>>
->>>> Below are the timing specific configurations for deep sleep entry and
->>>> wakeup.
->>>> - Core rail power-on stabilization timer
->>>> - OSC clock stabilization timer after SOC rail power is stabilized.
->>>> - Core power off time is the minimum wake delay to keep the system
->>>>    in deep sleep state irrespective of any quick wake event.
->>>>
->>>> These values depends on the discharge time of regulators and turn OFF
->>>> time of the PMIC to allow the complete system to finish entering into
->>>> deep sleep state.
->>>>
->>>> These values vary based on the platform design and are specified
->>>> through the device tree.
->>>>
->>>> This patch has implementation to configure these timings which are must
->>>> to have for proper deep sleep and wakeup operations.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   drivers/soc/tegra/pmc.c | 14 +++++++++++++-
->>>>   1 file changed, 13 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>>> index 53ed70773872..710969043668 100644
->>>> --- a/drivers/soc/tegra/pmc.c
->>>> +++ b/drivers/soc/tegra/pmc.c
->>>> @@ -88,6 +88,8 @@
->>>>     #define PMC_CPUPWRGOOD_TIMER        0xc8
->>>>   #define PMC_CPUPWROFF_TIMER        0xcc
->>>> +#define PMC_COREPWRGOOD_TIMER        0x3c
->>>> +#define PMC_COREPWROFF_TIMER        0xe0
->>>>     #define PMC_PWR_DET_VALUE        0xe4
->>>>   @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs
->>>> tegra20_pmc_regs = {
->>>>     static void tegra20_pmc_init(struct tegra_pmc *pmc)
->>>>   {
->>>> -    u32 value;
->>>> +    u32 value, osc, pmu, off;
->>>>         /* Always enable CPU power request */
->>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>> @@ -2303,6 +2305,16 @@ static void tegra20_pmc_init(struct tegra_pmc
->>>> *pmc)
->>>>       value = tegra_pmc_readl(pmc, PMC_CNTRL);
->>>>       value |= PMC_CNTRL_SYSCLK_OE;
->>>>       tegra_pmc_writel(pmc, value, PMC_CNTRL);
->>>> +
->>>> +    /* program core timings which are applicable only for suspend
->>>> state */
->>>> +    if (pmc->suspend_mode != TEGRA_SUSPEND_NONE) {
->>>> +        osc = DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
->>>> +        pmu = DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
->>>> +        off = DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
->>>> +        tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
->>>> +                 PMC_COREPWRGOOD_TIMER);
->>>> +        tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
->>>> +    }
->>>>   }
->>>>     static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
->>>>
->>> In the previous version of this patch there were checks for zero values
->>> of the timers with intention to skip programming of the timers if value
->>> is zero. I'm a bit puzzled by the new version, given that SUSPEND_NONE
->>> means that suspending isn't available at all and thus PMC timers won't
->>> be utilized, hence it shouldn't matter what values are programmed for
->>> the counters, isn't it?
->>
->> Yes, as I see in documentation we already specify all these timings
->> are required properties when suspend mode is used, I updated in this
->> version to program core timings only when suspend mode is enabled.
->>
-> In other words, core timings are for SC7 entry only. So when SC7/suspend
-> mode is not used, these timings doesn't matter.
-
-In this case, it should be a bit more straightforward to always program
-the timers unconditionally. But since device-tree binding requires all
-the properties to be specified when suspend mode isn't NONE, then the
-new variant also makes sense. Either way is good to me, thanks.
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+T24gMTkvMDgvMjAxOSAyMToxMywgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBPbiBNb24sIEF1ZyAx
+OSwgMjAxOSBhdCAwMzo0NTo0MFBNICswMjAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToKPj4gT24g
+MTkvMDgvMjAxOSAxNTozMCwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPj4+IE9uIE1vbiwgQXVnIDEy
+LCAyMDE5IGF0IDAxOjI0OjExUE0gKzAyMDAsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+Pj4gT24g
+TW9uLCBBdWcgMTIsIDIwMTkgYXQgMTE6MjE6NTBBTSArMDIwMCwgRGFuaWVsIExlemNhbm8gd3Jv
+dGU6Cj4+Pj4+IE9uIDEyLzA4LzIwMTkgMTE6MTYsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+Pj4+
+PiBIaSwKPj4+Pj4+Cj4+Pj4+PiBPbiBNb24sIEF1ZyAxMiwgMjAxOSBhdCAxMDo1OTo1MUFNICsw
+MjAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToKPj4+Pj4+PiBPbiAyMi8wNy8yMDE5IDEwOjEyLCBN
+YXhpbWUgUmlwYXJkIHdyb3RlOgo+Pj4+Pj4+PiBOZXdlciBBbGx3aW5uZXIgU29DcyBoYXZlIGRp
+ZmZlcmVudCBudW1iZXIgb2YgaW50ZXJydXB0cywgbGV0J3MgYWRkCj4+Pj4+Pj4+IGRpZmZlcmVu
+dCBjb21wYXRpYmxlcyBmb3IgYWxsIG9mIHRoZW0gdG8gZGVhbCB3aXRoIHRoaXMgcHJvcGVybHku
+Cj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5y
+aXBhcmRAYm9vdGxpbi5jb20+Cj4+Pj4+Pj4KPj4+Pj4+PiBBY2tlZC1ieTogRGFuaWVsIExlemNh
+bm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+Cj4+Pj4+Pgo+Pj4+Pj4gVGhhbmtzIQo+Pj4+
+Pj4KPj4+Pj4+IENhbiB5b3UgbWVyZ2UgdGhpcyB0aHJvdWdoIHlvdXIgdHJlZSAoYWxvbmcgd2l0
+aCB0aGUgYmluZGluZ3MpPyBJJ2xsCj4+Pj4+PiBtZXJnZSB0aGUgRFQgcGF0Y2hlcwo+Pj4+Pgo+
+Pj4+PiBwYXRjaGVzIDEtNCB0aGVuID8KPj4+Pgo+Pj4+IFllcCwgdGhhbmtzIQo+Pj4KPj4+IFBp
+bmc/Cj4+Cj4+IFRoZXkgYXJlIGFwcGxpZWQgOikKPiAKPiBPaCwgbXkgYmFkIDopCgpBY3R1YWxs
+eSwgSSBzaG91bGQgaGF2ZSB0ZWxsIHlvdSB0aGV5IHdlcmUgYXBwbGllZC4KCj4gV2hlcmUgaXMg
+eW91ciB0cmVlIHRoZXNlIGRheXM/IEkgY291bGRuJ3QgZmluZCBpdCBpbiBsaW51eC1uZXh0IGVp
+dGhlcgoKaHR0cHM6Ly9naXQubGluYXJvLm9yZy9wZW9wbGUvZGFuaWVsLmxlemNhbm8vbGludXgu
+Z2l0L2xvZy8/aD1jbG9ja2V2ZW50cy9uZXh0CgoKCi0tIAogPGh0dHA6Ly93d3cubGluYXJvLm9y
+Zy8+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwoKRm9s
+bG93IExpbmFybzogIDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vi
+b29rIHwKPGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfAo8aHR0cDov
+L3d3dy5saW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZwoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
