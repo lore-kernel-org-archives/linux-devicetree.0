@@ -1,96 +1,31 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
-Date: Mon, 19 Aug 2019 15:30:58 +0200
-Message-ID: <20190819133058.bujcawpw5rgsfp4g@flea>
-References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
- <20190722081229.22422-3-maxime.ripard@bootlin.com>
- <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
- <20190812091631.j2pr7i2zeput3hrc@flea>
- <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
- <20190812112411.ty3npkq6ztbushhm@flea>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
+Date: Mon, 19 Aug 2019 16:32:28 +0300
+Message-ID: <20190819133228.lg62qeuugmygpsmd@linux.intel.com>
+References: <20190813130559.16936-1-sashal@kernel.org>
+ <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0473390430561236406=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190812112411.ty3npkq6ztbushhm@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>, Mark Rutland <mark.rutland@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-integrity@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============0473390430561236406==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="u5prx2f64eoqygbx"
-Content-Disposition: inline
-
-
---u5prx2f64eoqygbx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Aug 12, 2019 at 01:24:11PM +0200, Maxime Ripard wrote:
-> On Mon, Aug 12, 2019 at 11:21:50AM +0200, Daniel Lezcano wrote:
-> > On 12/08/2019 11:16, Maxime Ripard wrote:
-> > > Hi,
-> > >
-> > > On Mon, Aug 12, 2019 at 10:59:51AM +0200, Daniel Lezcano wrote:
-> > >> On 22/07/2019 10:12, Maxime Ripard wrote:
-> > >>> Newer Allwinner SoCs have different number of interrupts, let's add
-> > >>> different compatibles for all of them to deal with this properly.
-> > >>>
-> > >>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > >>
-> > >> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > >
-> > > Thanks!
-> > >
-> > > Can you merge this through your tree (along with the bindings)? I'll
-> > > merge the DT patches
+On Tue, Aug 13, 2019 at 07:37:32AM -0600, Rob Herring wrote:
+> On Tue, Aug 13, 2019 at 7:06 AM Sasha Levin <sashal@kernel.org> wrote:
 > >
-> > patches 1-4 then ?
->
-> Yep, thanks!
+> > Fixes a few checkpatch warnings (and ignores some), mostly around
+> > spaces/tabs and documentation.
+> >
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Ping?
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---u5prx2f64eoqygbx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVqkkgAKCRDj7w1vZxhR
-xbepAQCWHgrNba54ySml5bNd587ZvZnP5TK5AjUaKHVhUVTzUAD+Li7sWvaQd0cZ
-RqB2LELzNfW2VyjKXWSRctv1YsjZ6g4=
-=fn3W
------END PGP SIGNATURE-----
-
---u5prx2f64eoqygbx--
-
-
---===============0473390430561236406==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0473390430561236406==--
+/Jarkko
