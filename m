@@ -1,24 +1,31 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1028a: fix gpio nodes
-Date: Mon, 19 Aug 2019 09:40:06 +0200
-Message-ID: <20190819074005.GC5999@X250>
-References: <20190805065700.7601-1-hui.song_1@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v2 0/4] clk: qcom: Add support for SM8150
+Date: Mon, 19 Aug 2019 13:09:43 +0530
+Message-ID: <20190819073947.17258-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190805065700.7601-1-hui.song_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hui Song <hui.song_1@nxp.com>
-Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 02:57:00PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> Update the nodes to include little-endian
-> property to be consistent with the hardware.
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Add support for rpm clock controller found in SM8150 and while at it update
+the driver to support parent data clock scheme as suggested by Stephen.
 
-Applied, thanks.
+Changes since v2:
+ - Describe parent clocks for rpmhcc
+ - Add support for parent data scheme for rpmhcc
+
+Vinod Koul (4):
+  dt-bindings: clock: Document the parent clocks
+  clk: qcom: clk-rpmh: Convert to parent data scheme
+  dt-bindings: clock: Document SM8150 rpmh-clock compatible
+  clk: qcom: clk-rpmh: Add support for SM8150
+
+ .../bindings/clock/qcom,rpmh-clk.txt          |  7 +++-
+ drivers/clk/qcom/clk-rpmh.c                   | 37 ++++++++++++++++++-
+ 2 files changed, 41 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
