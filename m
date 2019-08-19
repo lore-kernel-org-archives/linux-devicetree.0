@@ -1,68 +1,92 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: Re: [PATCH v2] arm: dts: rockchip: fix vcc_host_5v regulator for usb3
- host
-Date: Mon, 19 Aug 2019 08:29:31 +0800
-Message-ID: <208c56e1-bfe0-a982-927d-bdddc3116631@rock-chips.com>
-References: <20190815081252.27405-1-kever.yang@rock-chips.com>
- <2932927.UJgUFA1Pmh@phil>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v6 1/4] dt-bindings: net: phy: Add subnode for LED
+ configuration
+Date: Mon, 19 Aug 2019 02:29:51 +0200
+Message-ID: <20190819002951.GA8981@lunn.ch>
+References: <20190813191147.19936-1-mka@chromium.org>
+ <20190813191147.19936-2-mka@chromium.org>
+ <20190816201338.GA1646@bug>
+ <20190816220411.GX250418@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2932927.UJgUFA1Pmh@phil>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>, Katsuhiro Suzuki <katsuhiro@katsuster.net>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Tomohiro Mayama <parly-gh@iris.mystia.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190816220411.GX250418@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Pavel Machek <pavel@ucw.cz>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiAyMDE5LzgvMTYg5LiL5Y2IODoyNCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6
-Cj4gSGkgS2V2ZXIsIFRMLAo+Cj4gW2FkZGVkIFRMIExpbSBmb3IgY2xhcmlmaWNhdGlvbl0KPgo+
-IEFtIERvbm5lcnN0YWcsIDE1LiBBdWd1c3QgMjAxOSwgMTA6MTI6NTIgQ0VTVCBzY2hyaWViIEtl
-dmVyIFlhbmc6Cj4+IEFjY29yZGluZyB0byByb2NrNjQgc2NoZW1ldGljIFYyIGFuZCBWMywgdGhl
-IFZDQ19IT1NUXzVWIG91dHB1dCBpcwo+PiBjb250cm9sbGVkIGJ5IFVTQl8yMF9IT1NUX0RSViwg
-d2hpY2ggaXMgdGhlIHNhbWUgYXMgVkNDX0hPU1QxXzVWLgo+IFRoZSB2MSBzY2hlbWF0aWNzIEkg
-aGF2ZSBkbyByZWZlcmVuY2UgdGhlIEdQSU8wX0EwIGFzIGNvbnRyb2xsaW5nIHRoaXMKPiBzdXBw
-bHksIHNvIHRoZSBiaWcgcXVlc3Rpb24gd291bGQgYmUgaG93IHRvIGhhbmRsZSB0aGUgZGlmZmVy
-ZW50IHZlcnNpb25zLgo+Cj4gQmVjYXVzZSBhZGRpbmcgdGhpcyB3b3VsZCBwcm9iYWJseSBicmVh
-ayB2MSBib2FyZHMgaW4gdGhpcyBmdW5jdGlvbi4KPgo+IEBUTDogd2hlcmUgdjEgYm9hcmRzIGFs
-c28gc29sZCBvciB3ZXJlIHRoZXkgb25seSB1c2VkIGR1cmluZyBkZXZlbG9wbWVudD8KCgpJIGhh
-dmUgY2hlY2sgdGhpcyB3aXRoIFRMIHdoZW4gSSBtYWtlIHRoaXMgcGF0Y2gsIHRoZSBWMSBoYXJk
-d2FyZSB3YXMgCm5ldmVyIHNvbGQgYW5kIG9ubHkgVjIvVjMKCmFyZSBhdmFpbGFibGUgb24gdGhl
-IG1hcmtldC4KCgpUaGFua3MsCgotIEtldmVyCgo+IElmIHRoaXMgd2VyZSB0aGUgY2FzZSwgd2Ug
-Y291bGQganVzdCBhcHBseSB0aGUgcGF0Y2gsIG5vdCBjYXJpbmcgYWJvdXQKPiB2MSBib2FyZHMs
-IGJ1dCBpZiB2MSBib2FyZHMgd2VyZSBhbHNvIHNvbGQgdG8gY3VzdG9tZXJzIHRoZXJlIHdvdWxk
-IGJlCj4gbW9yZSBvZiBhIHByb2JsZW0uCj4KPiBUaGFua3MKPiBIZWlrbwo+Cj4KPj4gU2lnbmVk
-LW9mZi1ieTogS2V2ZXIgWWFuZyA8a2V2ZXIueWFuZ0Byb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+
-Cj4+IENoYW5nZXMgaW4gdjI6Cj4+IC0gcmVtb3ZlIGVuYWJsZS1hY3RpdmUtaGlnaCBwcm9wZXJ0
-eQo+Pgo+PiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzI4LXJvY2s2NC5kdHMg
-fCAxMSArKy0tLS0tLS0tLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDkg
-ZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tj
-aGlwL3JrMzMyOC1yb2NrNjQuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMz
-Mjgtcm9jazY0LmR0cwo+PiBpbmRleCA3Y2ZkNWNhNmNjODUuLjYyOTM2YjQzMmY5YSAxMDA2NDQK
-Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzMjgtcm9jazY0LmR0cwo+
-PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzMyOC1yb2NrNjQuZHRzCj4+
-IEBAIC0zNCwxMCArMzQsOSBAQAo+PiAgIAo+PiAgIAl2Y2NfaG9zdF81djogdmNjLWhvc3QtNXYt
-cmVndWxhdG9yIHsKPj4gICAJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPj4gLQkJ
-ZW5hYmxlLWFjdGl2ZS1oaWdoOwo+PiAtCQlncGlvID0gPCZncGlvMCBSS19QQTAgR1BJT19BQ1RJ
-VkVfSElHSD47Cj4+ICsJCWdwaW8gPSA8JmdwaW8wIFJLX1BBMiBHUElPX0FDVElWRV9MT1c+Owo+
-PiAgIAkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gLQkJcGluY3RybC0wID0gPCZ1c2Iz
-MF9ob3N0X2Rydj47Cj4+ICsJCXBpbmN0cmwtMCA9IDwmdXNiMjBfaG9zdF9kcnY+Owo+PiAgIAkJ
-cmVndWxhdG9yLW5hbWUgPSAidmNjX2hvc3RfNXYiOwo+PiAgIAkJcmVndWxhdG9yLWFsd2F5cy1v
-bjsKPj4gICAJCXJlZ3VsYXRvci1ib290LW9uOwo+PiBAQCAtMzIwLDEyICszMTksNiBAQAo+PiAg
-IAkJCXJvY2tjaGlwLHBpbnMgPSA8MCBSS19QQTIgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9u
-ZT47Cj4+ICAgCQl9Owo+PiAgIAl9Owo+PiAtCj4+IC0JdXNiMyB7Cj4+IC0JCXVzYjMwX2hvc3Rf
-ZHJ2OiB1c2IzMC1ob3N0LWRydiB7Cj4+IC0JCQlyb2NrY2hpcCxwaW5zID0gPDAgUktfUEEwIFJL
-X0ZVTkNfR1BJTyAmcGNmZ19wdWxsX25vbmU+Owo+PiAtCQl9Owo+PiAtCX07Cj4+ICAgfTsKPj4g
-ICAKPj4gICAmc2RtbWMgewo+Pgo+Cj4KPgo+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Aug 16, 2019 at 03:04:11PM -0700, Matthias Kaehlcke wrote:
+> On Fri, Aug 16, 2019 at 10:13:38PM +0200, Pavel Machek wrote:
+> > Hi!
+> > 
+> > Please Cc led mailing lists on led issues.
+> 
+> sorry for missing this
+> 
+> > On Tue 2019-08-13 12:11:44, Matthias Kaehlcke wrote:
+> > > The LED behavior of some Ethernet PHYs is configurable. Add an
+> > > optional 'leds' subnode with a child node for each LED to be
+> > > configured. The binding aims to be compatible with the common
+> > > LED binding (see devicetree/bindings/leds/common.txt).
+> > > 
+> > > A LED can be configured to be:
+> > > 
+> > > - 'on' when a link is active, some PHYs allow configuration for
+> > >   certain link speeds
+> > >   speeds
+> > > - 'off'
+> > > - blink on RX/TX activity, some PHYs allow configuration for
+> > >   certain link speeds
+> > > 
+> > > For the configuration to be effective it needs to be supported by
+> > > the hardware and the corresponding PHY driver.
+> > > 
+> > > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > 
+> > > @@ -173,5 +217,20 @@ examples:
+> > >              reset-gpios = <&gpio1 4 1>;
+> > >              reset-assert-us = <1000>;
+> > >              reset-deassert-us = <2000>;
+> > > +
+> > > +            leds {
+> > > +                #address-cells = <1>;
+> > > +                #size-cells = <0>;
+> > > +
+> > > +                led@0 {
+> > > +                    reg = <0>;
+> > > +                    linux,default-trigger = "phy-link-1g";
+> > > +                };
+> > 
+> > Because this affects us.
+> > 
+> > Is the LED software controllable?
+> 
+> it might be for certain PHYs, integration with the LED framework is
+> not part of this series.
+> 
+> > Or can it do limited subset of triggers you listed?
+> 
+> it depends on the PHY. The one in this series (RTL8211E) only supports
+> a limited subset of the listed triggers.
+
+Hi Pavel
+
+At the moment, there is no integration with the LED
+subsystem. However, i would like to be prepared for it in the
+future. It will also require some extensions to the LED subsystem.
+These triggers are hardware triggers. We would need to add support for
+LED trigger offload to the hardware, not have Linux blink the LED in
+software. Plus we need per LED triggers, not only global triggers.
+Most Ethernet PHYs also allow on/off state to be set, so they could be
+software controllable, and support the generic triggers Linux has.
+
+It has been on my mind to do this for a while, but i've never had the
+time. It should also be applicable to other subsystems which have
+hardware to blink LEDs. Some serial ports can control LEDs for Rx/Tx
+and flow control. Maybe disk/RAID controllers are configuration how
+they blink there LEDs?
+
+      Andrew
