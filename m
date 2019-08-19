@@ -1,238 +1,80 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2 11/11] arm64: dts: add dts nodes for MT6779
-Date: Mon, 19 Aug 2019 10:40:18 +0100
-Message-ID: <adec38bf-735b-9131-2b9d-1e427d47f88d@kernel.org>
-References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
- <1566206502-4347-12-git-send-email-mars.cheng@mediatek.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [v4, 2/8] cpufreq: mediatek: add clock enable for intermediate
+ clock
+Date: Mon, 19 Aug 2019 15:20:02 +0530
+Message-ID: <20190819095002.ncpzxzahzqfvsjba@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1565703113-31479-3-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566206502-4347-12-git-send-email-mars.cheng@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1565703113-31479-3-git-send-email-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org
+To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 19/08/2019 10:21, Mars Cheng wrote:
-> this adds initial MT6779 dts settings fo board support,
-> including cpu, gic, timer, ccf, pinctrl, uart...etc.
+On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 > 
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Intermediate clock is not always enabled by ccf in different projects,
+> so cpufreq should always enable it by itself.
+> 
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
 > ---
->  arch/arm64/boot/dts/mediatek/Makefile        |    1 +
->  arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi |   31 ++++
->  arch/arm64/boot/dts/mediatek/mt6779.dts      |  229 ++++++++++++++++++++++++++
->  3 files changed, 261 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dts
+>  drivers/cpufreq/mediatek-cpufreq.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index 458bbc4..53f1c61 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi b/arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
-> new file mode 100644
-> index 0000000..164f5cb
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6779-evb.dtsi
-> @@ -0,0 +1,31 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Mars.C <mars.cheng@mediatek.com>
-> + *
-> + */
+> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
+> index a370577ffc73..acd9539e95de 100644
+> --- a/drivers/cpufreq/mediatek-cpufreq.c
+> +++ b/drivers/cpufreq/mediatek-cpufreq.c
+> @@ -368,13 +368,17 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  		goto out_free_resources;
+>  	}
+>  
+> +	ret = clk_prepare_enable(inter_clk);
+> +	if (ret)
+> +		goto out_free_opp_table;
 > +
-> +/dts-v1/;
-> +#include "mt6779.dtsi"
+>  	/* Search a safe voltage for intermediate frequency. */
+>  	rate = clk_get_rate(inter_clk);
+>  	opp = dev_pm_opp_find_freq_ceil(cpu_dev, &rate);
+>  	if (IS_ERR(opp)) {
+>  		pr_err("failed to get intermediate opp for cpu%d\n", cpu);
+>  		ret = PTR_ERR(opp);
+> -		goto out_free_opp_table;
+> +		goto out_disable_clock;
+>  	}
+>  	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+> @@ -393,6 +397,9 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  
+>  	return 0;
+>  
+> +out_disable_clock:
+> +	clk_disable_unprepare(inter_clk);
 > +
-> +/ {
-> +	model = "MediaTek MT6779 EVB";
-> +	compatible = "mediatek,mt6779-evb", "mediatek,mt6779";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x1e800000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:921600n8";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dts b/arch/arm64/boot/dts/mediatek/mt6779.dts
-> new file mode 100644
-> index 0000000..daa25b7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dts
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Mars.C <mars.cheng@mediatek.com>
-> + *
-> + */
-> +
-> +#include <dt-bindings/clock/mt6779-clk.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt6779";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x000>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x100>;
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x200>;
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x300>;
-> +		};
-> +
-> +		cpu4: cpu@4 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x400>;
-> +		};
-> +
-> +		cpu5: cpu@5 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			enable-method = "psci";
-> +			reg = <0x500>;
-> +		};
-> +
-> +		cpu6: cpu@6 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a75";
-> +			enable-method = "psci";
-> +			reg = <0x600>;
-> +		};
-> +
-> +		cpu7: cpu@7 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a75";
-> +			enable-method = "psci";
-> +			reg = <0x700>;
-> +		};
-> +	};
-> +
-> +	clk26m: oscillator@0 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <26000000>;
-> +		clock-output-names = "clk26m";
-> +	};
-> +
-> +	clk32k: oscillator@1 {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "clk32k";
-> +	};
-> +
-> +	uart_clk: dummy26m {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <26000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		gic: interrupt-controller@0c000000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
+>  out_free_opp_table:
+>  	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
+>  
+> @@ -419,6 +426,10 @@ static void mtk_cpu_dvfs_info_release(struct mtk_cpu_dvfs_info *info)
+>  		clk_put(info->cpu_clk);
+>  	if (!IS_ERR(info->inter_clk))
+>  		clk_put(info->inter_clk);
 
-You also haven't described the CPU PMUs. Depending on how they are wired
-(SPIs or PPIs), you may have to change the interrupt-cells property to
-include a cell for the PPI partitioning.
+Shouldn't you remove this part now ?
 
+> +	if (!IS_ERR(info->inter_clk)) {
+> +		clk_disable_unprepare(info->inter_clk);
+> +		clk_put(info->inter_clk);
+> +	}
+>  
+>  	dev_pm_opp_of_cpumask_remove_table(&info->cpus);
+>  }
+> -- 
+> 2.12.5
 
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			#redistributor-regions = <1>;
-
-This is the default, so this can be omitted.
-
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
-> +			      <0 0x0c040000 0 0x200000>, /* GICR */
-> +			      <0 0x0c400000 0 0x2000>,   /* GICC */
-> +			      <0 0x0c410000 0 0x1000>,   /* GICH */
-> +			      <0 0x0c420000 0 0x2000>;   /* GICV */
-
-Where do the last 3 ranges come from? Neither Cortex-A55 nor A75 have
-the memory-mapped CPU interface. It looks like a copy/paste from another
-SoC...
-
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-
-And no ITS?
-
-	M.
 -- 
-Jazz is not dead, it just smells funny...
+viresh
