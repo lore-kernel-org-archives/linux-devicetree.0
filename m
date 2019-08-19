@@ -1,114 +1,100 @@
-From: <dongchun.zhu@mediatek.com>
-Subject: [V3, 1/2] media: dt-bindings: media: i2c: Add bindings for OV02A10
-Date: Mon, 19 Aug 2019 11:43:30 +0800
-Message-ID: <20190819034331.13098-2-dongchun.zhu@mediatek.com>
-References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com, drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: "Ramuthevar,Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v1 1/2] dt-bindings: phy: intel-emmc-phy: Add new compatible for LGM eMMC PHY
+Date: Mon, 19 Aug 2019 11:44:15 +0800
+Message-ID: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com, vadivel.muruganx.ramuthevar@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-Add device tree binding documentation for the OV02A10 camera sensor.
+Add a new compatible to use the host controller driver with the
+eMMC PHY on Intel's Lightning Mountain SoC.
 
-Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 ---
- .../devicetree/bindings/media/i2c/ov02a10.txt      | 54 ++++++++++++++++++++++
- MAINTAINERS                                        |  7 +++
- 2 files changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+ .../bindings/phy/intel-lgm-emmc-phy.yaml           | 70 ++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+diff --git a/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
 new file mode 100644
-index 0000000..4a83a38
+index 000000000000..52156ff091ad
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-@@ -0,0 +1,54 @@
-+* Omnivision OV02A10 MIPI CSI-2 sensor
++++ b/Documentation/devicetree/bindings/phy/intel-lgm-emmc-phy.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel-lgm-emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+Required Properties:
-+- compatible: shall be "ovti,ov02a10"
-+- clocks: reference to the xvclk input clock
-+- clock-names: shall be "xvclk"
-+- avdd-supply: Analog voltage supply, 2.8 volts
-+- dovdd-supply: Digital I/O voltage supply, 1.8 volts
-+- dvdd-supply: Digital core voltage supply, 1.8 volts
-+- reset-gpios: reference to the GPIO connected to the reset pin, if any.
-+	       This is an active high signal to the OV02A10.
-+- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-+		   if any. This is an active low signal to the OV02A10.
++title: Intel LGM e-MMC PHY Device Tree Bindings
 +
-+Optional Properties:
-+- rotation: as defined in
-+	    Documentation/devicetree/bindings/media/video-interfaces.txt,
-+	    valid values are 0 (sensor mounted upright) and 180 (sensor
-+	    mounted upside down).
++maintainers:
++  - Rob Herring <robh+dt@kernel.org>
++  - Mark Rutland <mark.rutland@arm.com>
 +
-+The device node shall contain one 'port' child node with an
-+'endpoint' subnode for its digital output video port,
-+in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+The endpoint optional property 'data-lanes' shall be "<1>".
++intel,syscon:
++   $ref: /schemas/types.yaml#definitions/phandle
++   description:
++    - |
++      e-MMC phy module connected through chiptop. Phandle to a node that can
++      contain the following properties
++        * reg, Access the e-MMC, get the base address from syscon.
++        * reset, reset the e-MMC module.
 +
-+Example:
-+&i2c4 {
-+	ov02a10: camera-sensor@3d {
-+		compatible = "ovti,ov02a10";
-+		reg = <0x3d>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&camera_pins_cam1_mclk_on>;
++properties:
++  "#phy-cells":
++    const: 0
 +
-+		clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
-+			<&topckgen CLK_TOP_UNIVP_192M_D8>;
-+		clock-names = "xvclk", "freq_mux";
++  compatible:
++    const: intel,lgm-emmc-phy
 +
-+		avdd-supply = <&mt6358_vcama1_reg>;
-+		dvdd-supply = <&mt6358_vcn18_reg>;
-+		dovdd-supply = <&mt6358_vcamio_reg>;
-+		reset-gpios = <&pio 109 1>;
-+		powerdown-gpios = <&pio 107 1>;
-+		rotation = <180>;
++  reg:
++    maxItems: 1
 +
-+		port {
-+			/* MIPI CSI-2 bus endpoint */
-+			ov02a10_core: endpoint {
-+				remote-endpoint = <&ov02a10_0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 783569e..41734fb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11816,6 +11816,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/ov13858.c
- 
-+OMNIVISION OV02A10 SENSOR DRIVER
-+M:	Dongchun Zhu <dongchun.zhu@mediatek.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/ov02a10.txt
++  clocks:
++    items:
++      - description: e-MMC phy module clock
 +
- OMNIVISION OV2680 SENSOR DRIVER
- M:	Rui Miguel Silva <rmfrfs@gmail.com>
- L:	linux-media@vger.kernel.org
++  clock-names:
++    items:
++      - const: emmcclk
++
++  resets:
++    maxItems: 1
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    sysconf: chiptop@e0020000 {
++        compatible = "intel,chiptop-lgm", "syscon";
++        reg = <0xe0020000 0x100>;
++        #reset-cells = <1>;
++     };
++
++  - |
++    emmc_phy: emmc_phy {
++        compatible = "intel,lgm-emmc-phy";
++        intel,syscon = <&sysconf>;
++        clocks = <&emmc>;
++        clock-names = "emmcclk";
++        #phy-cells = <0>;
++    };
++
++...
 -- 
-2.9.2
+2.11.0
