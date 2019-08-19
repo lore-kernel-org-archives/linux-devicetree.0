@@ -1,29 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v9 02/22] pinctrl: tegra: Flush pinctrl writes during resume
-Date: Mon, 19 Aug 2019 00:20:54 +0200
-Message-ID: <CACRpkda7CTUevWogRo9FQQOBZfO4hQqt-1fGYpAiGJTm-sE_Xw@mail.gmail.com>
-References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com> <1565984527-5272-3-git-send-email-skomatineni@nvidia.com>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add ast2600 compatible
+Date: Mon, 19 Aug 2019 09:46:46 +0930
+Message-ID: <efbc1e57-5c5e-4ff4-af94-d18b017d64ab@www.fastmail.com>
+References: <20190816160347.23393-1-joel@jms.id.au>
+ <20190816160347.23393-2-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565984527-5272-3-git-send-email-skomatineni@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, jckuo@nvidia.com, Joseph Lo <josephl@nvidia.com>, talho@nvidia.com, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, spatra@nvidia.com, Rob Herring <robh+dt@kernel.org>, Dmitry Osipenko <dig>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190816160347.23393-2-joel@jms.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Ryan Chen <ryan_chen@aspeedtech.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 9:42 PM Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
 
-> This patch adds pinctrl register read to flush all the prior pinctrl
-> writes and then adds barrier for pinctrl register read to complete
-> during resume to make sure all pinctrl changes are effective.
+
+On Sat, 17 Aug 2019, at 01:34, Joel Stanley wrote:
+> This adds a compatible for the ast2600, a new ASPEED SoC.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+>  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt 
+> b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> index c5077a1f5cb3..d78d4a8fb868 100644
+> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>   - compatible: must be one of:
+>  	- "aspeed,ast2400-wdt"
+>  	- "aspeed,ast2500-wdt"
+> +	- "aspeed,ast2600-wdt"
+>  
+>   - reg: physical base address of the controller and length of memory mapped
+>     region
+> -- 
+> 2.23.0.rc1
+> 
 >
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-
-Patch applied.
-
-Yours,
-Linus Walleij
