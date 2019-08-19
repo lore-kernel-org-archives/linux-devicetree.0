@@ -1,44 +1,94 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Date: Mon, 19 Aug 2019 13:16:19 +0200
-Message-ID: <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
-References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
-        <20190718143044.25066-1-s.nawrocki@samsung.com>
-        <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
-        <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
-        <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
-        <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
-        <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 06/21] ARM: dts: imx7-colibri: add GPIO wakeup key
+Date: Mon, 19 Aug 2019 13:17:08 +0200
+Message-ID: <20190819111707.GP5999@X250>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-7-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819090928.pke6cov52n4exlbp@vireshk-i7>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190812142105.1995-7-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 8/19/19 11:09, Viresh Kumar wrote:
-> Will something like this help ?
+On Mon, Aug 12, 2019 at 02:21:23PM +0000, Philippe Schenker wrote:
+> From: Stefan Agner <stefan.agner@toradex.com>
 > 
-> https://lore.kernel.org/lkml/1442623929-4507-3-git-send-email-sboyd@codeaurora.org/
+> Add wakeup GPIO key which is able to wake the system from sleep
+> modes (e.g. Suspend-to-Memory).
 > 
-> This never got merged but the idea was AVS only.
+> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v4:
+> - Add Marcel Ziswiler's Ack
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 14 ++++++++++++++
+>  arch/arm/boot/dts/imx7-colibri.dtsi         |  7 ++++++-
+>  2 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> index 3f2746169181..d4dbc4fc1adf 100644
+> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> @@ -52,6 +52,20 @@
+>  		clock-frequency = <16000000>;
+>  	};
+>  
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpiokeys>;
+> +
+> +		power {
+> +			label = "Wake-Up";
+> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+> +			linux,code = <KEY_WAKEUP>;
+> +			debounce-interval = <10>;
+> +			gpio-key,wakeup;
 
-It's quite interesting work, it seems to be for a more advanced use case 
-where OPP voltage is being adjusted at runtime.
+Please check Documentation/devicetree/bindings/power/wakeup-source.txt
 
-We could use it instead of removing an OPP and then adding with updated 
-voltage. On Exynos there is there is just a need to update OPPs once at boot 
-time, so it is more "static". However the requirements could presumably 
-change in future.
+Shawn
 
-If that's your preference I could switch to that notifier approach.
-AFAICS the API would still need to be extended to support multiple voltages,
-when in future we add support for the Body Bias regulator. 
-
--- 
-Thanks,
-Sylwester
+> +		};
+> +	};
+> +
+>  	panel: panel {
+>  		compatible = "edt,et057090dhu";
+>  		backlight = <&bl>;
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index cab40d22d24e..5347ed38acb2 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -741,12 +741,17 @@
+>  
+>  	pinctrl_gpio_lpsr: gpio1-grp {
+>  		fsl,pins = <
+> -			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x59
+>  			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x59
+>  			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x59
+>  		>;
+>  	};
+>  
+> +	pinctrl_gpiokeys: gpiokeysgrp {
+> +		fsl,pins = <
+> +			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x19
+> +		>;
+> +	};
+> +
+>  	pinctrl_i2c1: i2c1-grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA	0x4000007f
+> -- 
+> 2.22.0
+> 
