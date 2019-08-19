@@ -1,114 +1,44 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 10/22] arm64: dts: qcom: pm8150b: Add pon and adc nodes
-Date: Mon, 19 Aug 2019 23:13:31 +0530
-Message-ID: <20190819174331.GN12733@vkoul-mobl.Dlink>
-References: <20190814125012.8700-1-vkoul@kernel.org>
- <20190814125012.8700-11-vkoul@kernel.org>
- <20190814170803.DEFCC214DA@mail.kernel.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v3 1/8] PCI: Add Amazon's Annapurna Labs vendor ID
+Date: Mon, 19 Aug 2019 18:51:30 +0100
+Message-ID: <20190819175130.GC23903@e119886-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092529.11310-2-jonnyc@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190814170803.DEFCC214DA@mail.kernel.org>
+In-Reply-To: <20190723092529.11310-2-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-08-19, 10:08, Stephen Boyd wrote:
-> Quoting Vinod Koul (2019-08-14 05:50:00)
-> > Add the pon and adc nodes found in pm8150b PMIC.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 54 +++++++++++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
+On Tue, Jul 23, 2019 at 12:25:26PM +0300, Jonathan Chocron wrote:
+> Add Amazon's Annapurna Labs vendor ID to pci_ids.h.
 > 
-> Squash?
-
-Ok
-
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  include/linux/pci_ids.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> > index c0a678b0f159..846197bd65cd 100644
-> > --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> > @@ -2,6 +2,7 @@
-> >  // Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> >  // Copyright (c) 2019, Linaro Limited
-> >  
-> > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> >  #include <dt-bindings/spmi/spmi.h>
-> >  
-> > @@ -11,6 +12,59 @@
-> >                 reg = <0x2 SPMI_USID>;
-> >                 #address-cells = <1>;
-> >                 #size-cells = <0>;
-> > +
-> > +               pon@800 {
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 40015609c4b5..63dfa4bace57 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2569,6 +2569,8 @@
+>  
+>  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
+>  
+> +#define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
+> +
+>  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
+>  #define PCI_SUBSYSTEM_ID_CIRCUITCO_MINNOWBOARD	0x0001
+>  
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
+> -- 
+> 2.17.1
 > 
-> Maybe pon node name should be 'key' or 'power-on'?
-
-pon stands for power on device. See Documentation/devicetree/bindings/power/reset/qcom,pon.txt
-
-> 
-> > +                       compatible = "qcom,pm8916-pon";
-> > +                       reg = <0x0800>;
-> > +               };
-> > +
-> > +               adc@3100 {
-> > +                       compatible = "qcom,spmi-adc5";
-> > +                       reg = <0x3100>;
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +                       #io-channel-cells = <1>;
-> > +                       interrupts = <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> > +
-> > +                       ref-gnd@0 {
-> > +                               reg = <ADC5_REF_GND>;
-> > +                               qcom,pre-scaling = <1 1>;
-> > +                               label = "ref_gnd";
-> > +                       };
-> > +
-> > +                       vref-1p25@1 {
-> > +                               reg = <ADC5_1P25VREF>;
-> > +                               qcom,pre-scaling = <1 1>;
-> > +                               label = "vref_1p25";
-> > +                       };
-> > +
-> > +                       die-temp@6 {
-> > +                               reg = <ADC5_DIE_TEMP>;
-> > +                               qcom,pre-scaling = <1 1>;
-> > +                               label = "die_temp";
-> > +                       };
-> > +
-> > +                       chg-temp@9 {
-> > +                               reg = <ADC5_CHG_TEMP>;
-> > +                               qcom,pre-scaling = <1 1>;
-> > +                               label = "chg_temp";
-> > +                       };
-> > +
-> > +                       smb1390-therm@14 {
-> > +                               reg = <ADC5_AMUX_THM2>;
-> > +                               qcom,hw-settle-time = <200>;
-> > +                               qcom,pre-scaling = <1 1>;
-> > +                               label = "smb1390_therm";
-> > +                       };
-> > +
-> > +                       smb1355-therm@78 {
-> > +                               reg = <ADC5_AMUX_THM2_100K_PU>;
-> > +                               qcom,ratiometric;
-> > +                               qcom,hw-settle-time = <200>;
-> > +                               qcom,pre-scaling = <1 1>;
-> > +                               label = "smb1355_therm";
-> > +                       };
-> 
-> Again, are these board level details? Maybe should be provided here with
-> status = "disabled" and then added by the boards that use these ADCs.
-
-Sure I will update these
-
--- 
-~Vinod
