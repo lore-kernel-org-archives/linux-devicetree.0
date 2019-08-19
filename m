@@ -1,14 +1,16 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add ast2600 compatible
-Date: Mon, 19 Aug 2019 09:46:46 +0930
-Message-ID: <efbc1e57-5c5e-4ff4-af94-d18b017d64ab@www.fastmail.com>
-References: <20190816160347.23393-1-joel@jms.id.au>
- <20190816160347.23393-2-joel@jms.id.au>
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: Re: [PATCH v2] arm: dts: rockchip: fix vcc_host_5v regulator for usb3
+ host
+Date: Mon, 19 Aug 2019 08:29:31 +0800
+Message-ID: <208c56e1-bfe0-a982-927d-bdddc3116631@rock-chips.com>
+References: <20190815081252.27405-1-kever.yang@rock-chips.com>
+ <2932927.UJgUFA1Pmh@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190816160347.23393-2-joel@jms.id.au>
+In-Reply-To: <2932927.UJgUFA1Pmh@phil>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,37 +20,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Ryan Chen <ryan_chen@aspeedtech.com>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>, Katsuhiro Suzuki <katsuhiro@katsuster.net>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Tomohiro Mayama <parly-gh@iris.mystia.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Sat, 17 Aug 2019, at 01:34, Joel Stanley wrote:
-> This adds a compatible for the ast2600, a new ASPEED SoC.
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-> ---
->  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt 
-> b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> index c5077a1f5cb3..d78d4a8fb868 100644
-> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> @@ -4,6 +4,7 @@ Required properties:
->   - compatible: must be one of:
->  	- "aspeed,ast2400-wdt"
->  	- "aspeed,ast2500-wdt"
-> +	- "aspeed,ast2600-wdt"
->  
->   - reg: physical base address of the controller and length of memory mapped
->     region
-> -- 
-> 2.23.0.rc1
-> 
->
+SGkgSGVpa28sCgpPbiAyMDE5LzgvMTYg5LiL5Y2IODoyNCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6
+Cj4gSGkgS2V2ZXIsIFRMLAo+Cj4gW2FkZGVkIFRMIExpbSBmb3IgY2xhcmlmaWNhdGlvbl0KPgo+
+IEFtIERvbm5lcnN0YWcsIDE1LiBBdWd1c3QgMjAxOSwgMTA6MTI6NTIgQ0VTVCBzY2hyaWViIEtl
+dmVyIFlhbmc6Cj4+IEFjY29yZGluZyB0byByb2NrNjQgc2NoZW1ldGljIFYyIGFuZCBWMywgdGhl
+IFZDQ19IT1NUXzVWIG91dHB1dCBpcwo+PiBjb250cm9sbGVkIGJ5IFVTQl8yMF9IT1NUX0RSViwg
+d2hpY2ggaXMgdGhlIHNhbWUgYXMgVkNDX0hPU1QxXzVWLgo+IFRoZSB2MSBzY2hlbWF0aWNzIEkg
+aGF2ZSBkbyByZWZlcmVuY2UgdGhlIEdQSU8wX0EwIGFzIGNvbnRyb2xsaW5nIHRoaXMKPiBzdXBw
+bHksIHNvIHRoZSBiaWcgcXVlc3Rpb24gd291bGQgYmUgaG93IHRvIGhhbmRsZSB0aGUgZGlmZmVy
+ZW50IHZlcnNpb25zLgo+Cj4gQmVjYXVzZSBhZGRpbmcgdGhpcyB3b3VsZCBwcm9iYWJseSBicmVh
+ayB2MSBib2FyZHMgaW4gdGhpcyBmdW5jdGlvbi4KPgo+IEBUTDogd2hlcmUgdjEgYm9hcmRzIGFs
+c28gc29sZCBvciB3ZXJlIHRoZXkgb25seSB1c2VkIGR1cmluZyBkZXZlbG9wbWVudD8KCgpJIGhh
+dmUgY2hlY2sgdGhpcyB3aXRoIFRMIHdoZW4gSSBtYWtlIHRoaXMgcGF0Y2gsIHRoZSBWMSBoYXJk
+d2FyZSB3YXMgCm5ldmVyIHNvbGQgYW5kIG9ubHkgVjIvVjMKCmFyZSBhdmFpbGFibGUgb24gdGhl
+IG1hcmtldC4KCgpUaGFua3MsCgotIEtldmVyCgo+IElmIHRoaXMgd2VyZSB0aGUgY2FzZSwgd2Ug
+Y291bGQganVzdCBhcHBseSB0aGUgcGF0Y2gsIG5vdCBjYXJpbmcgYWJvdXQKPiB2MSBib2FyZHMs
+IGJ1dCBpZiB2MSBib2FyZHMgd2VyZSBhbHNvIHNvbGQgdG8gY3VzdG9tZXJzIHRoZXJlIHdvdWxk
+IGJlCj4gbW9yZSBvZiBhIHByb2JsZW0uCj4KPiBUaGFua3MKPiBIZWlrbwo+Cj4KPj4gU2lnbmVk
+LW9mZi1ieTogS2V2ZXIgWWFuZyA8a2V2ZXIueWFuZ0Byb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+
+Cj4+IENoYW5nZXMgaW4gdjI6Cj4+IC0gcmVtb3ZlIGVuYWJsZS1hY3RpdmUtaGlnaCBwcm9wZXJ0
+eQo+Pgo+PiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzI4LXJvY2s2NC5kdHMg
+fCAxMSArKy0tLS0tLS0tLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDkg
+ZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tj
+aGlwL3JrMzMyOC1yb2NrNjQuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMz
+Mjgtcm9jazY0LmR0cwo+PiBpbmRleCA3Y2ZkNWNhNmNjODUuLjYyOTM2YjQzMmY5YSAxMDA2NDQK
+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzMjgtcm9jazY0LmR0cwo+
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzMyOC1yb2NrNjQuZHRzCj4+
+IEBAIC0zNCwxMCArMzQsOSBAQAo+PiAgIAo+PiAgIAl2Y2NfaG9zdF81djogdmNjLWhvc3QtNXYt
+cmVndWxhdG9yIHsKPj4gICAJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPj4gLQkJ
+ZW5hYmxlLWFjdGl2ZS1oaWdoOwo+PiAtCQlncGlvID0gPCZncGlvMCBSS19QQTAgR1BJT19BQ1RJ
+VkVfSElHSD47Cj4+ICsJCWdwaW8gPSA8JmdwaW8wIFJLX1BBMiBHUElPX0FDVElWRV9MT1c+Owo+
+PiAgIAkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gLQkJcGluY3RybC0wID0gPCZ1c2Iz
+MF9ob3N0X2Rydj47Cj4+ICsJCXBpbmN0cmwtMCA9IDwmdXNiMjBfaG9zdF9kcnY+Owo+PiAgIAkJ
+cmVndWxhdG9yLW5hbWUgPSAidmNjX2hvc3RfNXYiOwo+PiAgIAkJcmVndWxhdG9yLWFsd2F5cy1v
+bjsKPj4gICAJCXJlZ3VsYXRvci1ib290LW9uOwo+PiBAQCAtMzIwLDEyICszMTksNiBAQAo+PiAg
+IAkJCXJvY2tjaGlwLHBpbnMgPSA8MCBSS19QQTIgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9u
+ZT47Cj4+ICAgCQl9Owo+PiAgIAl9Owo+PiAtCj4+IC0JdXNiMyB7Cj4+IC0JCXVzYjMwX2hvc3Rf
+ZHJ2OiB1c2IzMC1ob3N0LWRydiB7Cj4+IC0JCQlyb2NrY2hpcCxwaW5zID0gPDAgUktfUEEwIFJL
+X0ZVTkNfR1BJTyAmcGNmZ19wdWxsX25vbmU+Owo+PiAtCQl9Owo+PiAtCX07Cj4+ICAgfTsKPj4g
+ICAKPj4gICAmc2RtbWMgewo+Pgo+Cj4KPgo+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
