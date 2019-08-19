@@ -1,7 +1,7 @@
 From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v2 05/11] pinctrl: mediatek: avoid virtual gpio trying to set reg
-Date: Mon, 19 Aug 2019 17:21:36 +0800
-Message-ID: <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH v2 02/11] dt-bindings: mtk-uart: add mt6779 uart bindings
+Date: Mon, 19 Aug 2019 17:21:33 +0800
+Message-ID: <1566206502-4347-3-git-send-email-mars.cheng@mediatek.com>
 References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,77 +12,24 @@ To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, Ma
 Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org, Mars Cheng <mars.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-for virtual gpios, they should not do reg setting and
-should behave as expected for eint function.
+Add documentation for mt6779 uart dt-bindings
 
 Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 ---
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |   20 ++++++++++++++++++++
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |    1 +
- drivers/pinctrl/mediatek/pinctrl-paris.c         |    3 +++
- 3 files changed, 24 insertions(+)
+ .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 20e1c89..04948a6 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -226,6 +226,23 @@ static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
- 	return EINT_NA;
- }
- 
-+bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
-+{
-+	const struct mtk_pin_desc *desc;
-+	bool virt_gpio = false;
-+
-+	if (gpio_n >= hw->soc->npins)
-+		return virt_gpio;
-+
-+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
-+
-+	if (desc->funcs &&
-+	    desc->funcs[desc->eint.eint_m].name == 0)
-+		virt_gpio = true;
-+
-+	return virt_gpio;
-+}
-+
- static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
- 			     unsigned int *gpio_n,
- 			     struct gpio_chip **gpio_chip)
-@@ -278,6 +295,9 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
- 	if (err)
- 		return err;
- 
-+	if (mtk_is_virt_gpio(hw, gpio_n))
-+		return 0;
-+
- 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
- 
- 	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-index 1b7da42..cda1c7a0 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-@@ -299,4 +299,5 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
- int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
- 			      const struct mtk_pin_desc *desc, u32 *val);
- 
-+bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n);
- #endif /* __PINCTRL_MTK_COMMON_V2_H */
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 923264d..ef479ea 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
- 	const struct mtk_pin_desc *desc;
- 	int value, err;
- 
-+	if (mtk_is_virt_gpio(hw, gpio))
-+		return 1;
-+
- 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
- 
- 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
+diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+index 6fdffb7..3a3b570 100644
+--- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+@@ -9,6 +9,7 @@ Required properties:
+   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+   * "mediatek,mt6755-uart" for MT6755 compatible UARTS
+   * "mediatek,mt6765-uart" for MT6765 compatible UARTS
++  * "mediatek,mt6779-uart" for MT6779 compatible UARTS
+   * "mediatek,mt6795-uart" for MT6795 compatible UARTS
+   * "mediatek,mt6797-uart" for MT6797 compatible UARTS
+   * "mediatek,mt7622-uart" for MT7622 compatible UARTS
 -- 
 1.7.9.5
