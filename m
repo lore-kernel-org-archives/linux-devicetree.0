@@ -1,38 +1,32 @@
-Return-Path: <SRS0=gEAL=WV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60237 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728359AbfHYOAQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 25 Aug 2019 10:00:16 -0400
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 0/2] arm64: dts: renesas: Add LIF channel to 'vsps' property
-Date: Sun, 25 Aug 2019 16:01:33 +0200
-Message-Id: <20190825140135.12150-1-jacopo+renesas@jmondi.org>
+Return-Path: <SRS0=rFFT=WP=verge.net.au=horms@kernel.org>
+Date: Mon, 19 Aug 2019 16:15:31 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: iio: light: isl29501: Rename bindings
+ documentation file
+Message-ID: <20190819141531.daj5gfpcb2sco5fq@verge.net.au>
+References: <20190819140105.18800-1-horms+renesas@verge.net.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819140105.18800-1-horms+renesas@verge.net.au>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-V2 of this patch splits the DTS changes from the updating of the DU driver
-comment as suggested by Laurent and Geert.
+On Mon, Aug 19, 2019 at 04:01:05PM +0200, Simon Horman wrote:
+> Rename the bindings documentation file for Renesas ISL29501 Time-of-flight
+> sensor from isl29501.txt to renesas,isl29501.txt.
+> 
+> This is part of an ongoing effort to name bindings documentation files for
+> Renesas IP blocks consistently, in line with the compat strings they
+> document.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+> Based on v5.3-rc1
+> ---
+>  .../bindings/iio/light/{isl29501.txt => renesas,isl29501.txt}         | 0
+>  Makefile                                                              | 4 ++--
 
-Patches based on renesas-devel-2019-08-21.
-
-Thanks
-  j
-
-Jacopo Mondi (2):
-  arm64: dts: renesas: Add LIF channel indices to vsps property
-  drm: rcar-du: kms: Expand comment in vsps parsing routine
-
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi    | 2 +-
- arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 +-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi     | 2 +-
- arch/arm64/boot/dts/renesas/r8a77970.dtsi    | 2 +-
- arch/arm64/boot/dts/renesas/r8a77980.dtsi    | 2 +-
- drivers/gpu/drm/rcar-du/rcar_du_kms.c        | 6 +++++-
- 6 files changed, 10 insertions(+), 6 deletions(-)
-
---
-2.23.0
+Sorry, I seem to have messed this up a bit: the Makefile portion should not
+be there.  I'll shake things out and repost.
