@@ -1,168 +1,113 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v2 6/6] ARM: dts: sunxi: Add missing watchdog clocks
-Date: Mon, 19 Aug 2019 20:20:39 +0200
-Message-ID: <20190819182039.24892-6-mripard@kernel.org>
-References: <20190819182039.24892-1-mripard@kernel.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Date: Mon, 19 Aug 2019 19:23:39 +0100
+Message-ID: <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+ <20190723092529.11310-5-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819182039.24892-1-mripard@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190723092529.11310-5-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, wim@linux-watchdog.org
-Cc: linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+On Tue, Jul 23, 2019 at 12:25:29PM +0300, Jonathan Chocron wrote:
+> The Root Port (identified by [1c36:0032]) doesn't support MSI-X. On some
 
-The watchdog has a clock on all our SoCs, but it wasn't always listed.
-Add it to the devicetree where it's missing.
+Shouldn't this read [1c36:0031]?
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
----
+> platforms it is configured to not advertise the capability at all, while
+> on others it (mistakenly) does. This causes a panic during
+> initialization by the pcieport driver, since it tries to configure the
+> MSI-X capability. Specifically, when trying to access the MSI-X table
+> a "non-existing addr" exception occurs.
+> 
+> Example stacktrace snippet:
+> 
+> [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
+> [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
+> [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
+> [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
+> [    1.632367] sp : ffffff80117db700
+> [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
+> [    1.632370] x27: 0000000000000001 x26: 0000000000000000
+> [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
+> [    1.632373] x23: 0000000000000000 x22: 0000000000000000
+> [    1.632375] x21: 0000000000000001 x20: 0000000000000000
+> [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
+> [    1.632378] x17: 0000000000000000 x16: 0000000000000000
+> [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
+> [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
+> [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
+> [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
+> [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
+> [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
+> [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
+> [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
+> [    1.632392] Kernel panic - not syncing: Asynchronous SError Interrupt
+> [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
+> [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> [    1.632394] Call trace:
+> [    1.632395]  dump_backtrace+0x0/0x140
+> [    1.632395]  show_stack+0x14/0x20
+> [    1.632396]  dump_stack+0xa8/0xcc
+> [    1.632396]  panic+0x140/0x334
+> [    1.632397]  nmi_panic+0x6c/0x70
+> [    1.632398]  arm64_serror_panic+0x74/0x88
+> [    1.632398]  __pte_error+0x0/0x28
+> [    1.632399]  el1_error+0x84/0xf8
+> [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
+> [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
+> [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
+> [    1.632402]  pcie_portdrv_probe+0x34/0xf0
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/quirks.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 23672680dba7..11f843aa96b3 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2925,6 +2925,21 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
+>  			quirk_msi_intx_disable_qca_bug);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+>  			quirk_msi_intx_disable_qca_bug);
+> +
+> +/*
+> + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
+> + * should be disabled on platforms where the device (mistakenly) advertises it.
+> + *
+> + * The 0031 device id is reused for other non Root Port device types,
+> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> + */
+> +static void quirk_al_msi_disable(struct pci_dev *dev)
+> +{
+> +	dev->no_msi = 1;
+> +	pci_warn(dev, "Disabling MSI-X\n");
 
-Changes from v1:
-  - New patch
----
- arch/arm/boot/dts/sun4i-a10.dtsi              | 1 +
- arch/arm/boot/dts/sun5i.dtsi                  | 1 +
- arch/arm/boot/dts/sun6i-a31.dtsi              | 1 +
- arch/arm/boot/dts/sun7i-a20.dtsi              | 1 +
- arch/arm/boot/dts/sun8i-a23-a33.dtsi          | 1 +
- arch/arm/boot/dts/sun8i-r40.dtsi              | 1 +
- arch/arm/boot/dts/sun8i-v3s.dtsi              | 1 +
- arch/arm/boot/dts/sunxi-h3-h5.dtsi            | 1 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 2 ++
- 10 files changed, 11 insertions(+)
+This will disable both MSI and MSI-X support - is this really the intention
+here? Do the root ports support MSI and legacy, or just legacy?
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index eed9fcb46185..ce823c44e98a 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -816,6 +816,7 @@
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
- 			interrupts = <24>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		rtc: rtc@1c20d00 {
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 29a825f7afd1..cfb1efc8828c 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -601,6 +601,7 @@
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
- 			interrupts = <24>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		ir0: ir@1c21800 {
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index b32d2d7cad4e..72282fd6c2d0 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -745,6 +745,7 @@
- 			compatible = "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
- 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		spdif: spdif@1c21000 {
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index aeb682e757f2..02fad11c125e 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1116,6 +1116,7 @@
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
- 			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		rtc: rtc@1c20d00 {
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 954489b4ec66..52eed0ae3607 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -452,6 +452,7 @@
- 			compatible = "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
- 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		pwm: pwm@1c21400 {
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index f1be554b5894..bde068111b85 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -405,6 +405,7 @@
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
- 			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		uart0: serial@1c28000 {
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index ddbcc28dc541..23ba56df38f7 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -339,6 +339,7 @@
- 			compatible = "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
- 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		lradc: lradc@1c22800 {
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 224e105a994a..eba190b3f9de 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -574,6 +574,7 @@
- 			compatible = "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
- 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		spdif: spdif@1c21000 {
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index ddb6f11e89df..69128a6dfc46 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -1169,6 +1169,7 @@
- 				     "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
- 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index e8bed58e7246..78e5b9e97c52 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -225,6 +225,7 @@
- 				     "allwinner,sun6i-a31-wdt";
- 			reg = <0x030090a0 0x20>;
- 			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 			/* Broken on some H6 boards */
- 			status = "disabled";
- 		};
-@@ -648,6 +649,7 @@
- 				     "allwinner,sun6i-a31-wdt";
- 			reg = <0x07020400 0x20>;
- 			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&osc24M>;
- 		};
- 
- 		r_intc: interrupt-controller@7021000 {
--- 
-2.21.0
+Thanks,
+
+Andrew Murray
+
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
+>  #endif /* CONFIG_PCI_MSI */
+>  
+>  /*
+> -- 
+> 2.17.1
+> 
