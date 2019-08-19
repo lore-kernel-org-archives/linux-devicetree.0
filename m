@@ -1,49 +1,100 @@
-From: "Theodore Y. Ts'o" <tytso@mit.edu>
-Subject: Re: [PATCH v8 2/3] fdt: add support for rng-seed
-Date: Mon, 19 Aug 2019 14:13:49 -0400
-Message-ID: <20190819181349.GE10349@mit.edu>
-References: <20190819071602.139014-1-hsinyi@chromium.org>
- <20190819071602.139014-3-hsinyi@chromium.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: [PATCH v9 20/22] soc/tegra: pmc: Configure deep sleep control
+ settings
+Date: Mon, 19 Aug 2019 11:20:21 -0700
+Message-ID: <2092e557-06cb-4a74-fe40-1d83bf67ccca@nvidia.com>
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-21-git-send-email-skomatineni@nvidia.com>
+ <bf5541d2-1bad-8a8c-fd9d-821b55861136@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190819071602.139014-3-hsinyi@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yu Zhao <yuzhao@google.com>, Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Stephen Boyd <swboyd@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>, Jun Yao <yaojun8558363@gmail.com>, Miles Chen <miles.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bf5541d2-1bad-8a8c-fd9d-821b55861136@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 03:16:04PM +0800, Hsin-Yi Wang wrote:
-> Introducing a chosen node, rng-seed, which is an entropy that can be
-> passed to kernel called very early to increase initial device
-> randomness. Bootloader should provide this entropy and the value is
-> read from /chosen/rng-seed in DT.
 
-So it's really cool that you've sent out this patch set.  I've been
-wanting this for all platforms / architectures for quite a while.
-Question --- are you willing to guarantee that the booloader can be
-trusted enough that you *know* the entropy being provided by the
-bootloader to be secure?
+On 8/19/19 9:48 AM, Dmitry Osipenko wrote:
+> 16.08.2019 22:42, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Tegra210 and prior Tegra chips have deep sleep entry and wakeup related
+>> timings which are platform specific that should be configured before
+>> entering into deep sleep.
+>>
+>> Below are the timing specific configurations for deep sleep entry and
+>> wakeup.
+>> - Core rail power-on stabilization timer
+>> - OSC clock stabilization timer after SOC rail power is stabilized.
+>> - Core power off time is the minimum wake delay to keep the system
+>>    in deep sleep state irrespective of any quick wake event.
+>>
+>> These values depends on the discharge time of regulators and turn OFF
+>> time of the PMIC to allow the complete system to finish entering into
+>> deep sleep state.
+>>
+>> These values vary based on the platform design and are specified
+>> through the device tree.
+>>
+>> This patch has implementation to configure these timings which are must
+>> to have for proper deep sleep and wakeup operations.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/soc/tegra/pmc.c | 14 +++++++++++++-
+>>   1 file changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>> index 53ed70773872..710969043668 100644
+>> --- a/drivers/soc/tegra/pmc.c
+>> +++ b/drivers/soc/tegra/pmc.c
+>> @@ -88,6 +88,8 @@
+>>  =20
+>>   #define PMC_CPUPWRGOOD_TIMER		0xc8
+>>   #define PMC_CPUPWROFF_TIMER		0xcc
+>> +#define PMC_COREPWRGOOD_TIMER		0x3c
+>> +#define PMC_COREPWROFF_TIMER		0xe0
+>>  =20
+>>   #define PMC_PWR_DET_VALUE		0xe4
+>>  =20
+>> @@ -2277,7 +2279,7 @@ static const struct tegra_pmc_regs tegra20_pmc_reg=
+s =3D {
+>>  =20
+>>   static void tegra20_pmc_init(struct tegra_pmc *pmc)
+>>   {
+>> -	u32 value;
+>> +	u32 value, osc, pmu, off;
+>>  =20
+>>   	/* Always enable CPU power request */
+>>   	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
+>> @@ -2303,6 +2305,16 @@ static void tegra20_pmc_init(struct tegra_pmc *pm=
+c)
+>>   	value =3D tegra_pmc_readl(pmc, PMC_CNTRL);
+>>   	value |=3D PMC_CNTRL_SYSCLK_OE;
+>>   	tegra_pmc_writel(pmc, value, PMC_CNTRL);
+>> +
+>> +	/* program core timings which are applicable only for suspend state */
+>> +	if (pmc->suspend_mode !=3D TEGRA_SUSPEND_NONE) {
+>> +		osc =3D DIV_ROUND_UP(pmc->core_osc_time * 8192, 1000000);
+>> +		pmu =3D DIV_ROUND_UP(pmc->core_pmu_time * 32768, 1000000);
+>> +		off =3D DIV_ROUND_UP(pmc->core_off_time * 32768, 1000000);
+>> +		tegra_pmc_writel(pmc, ((osc << 8) & 0xff00) | (pmu & 0xff),
+>> +				 PMC_COREPWRGOOD_TIMER);
+>> +		tegra_pmc_writel(pmc, off, PMC_COREPWROFF_TIMER);
+>> +	}
+>>   }
+>>  =20
+>>   static void tegra20_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
+>>
+> In the previous version of this patch there were checks for zero values
+> of the timers with intention to skip programming of the timers if value
+> is zero. I'm a bit puzzled by the new version, given that SUSPEND_NONE
+> means that suspending isn't available at all and thus PMC timers won't
+> be utilized, hence it shouldn't matter what values are programmed for
+> the counters, isn't it?
 
-If so, we could let fdt.c use a different interface, perhaps
-add_hwgenerator_randomness(), which allows the bootloader to transfer
-trusted entropy for the purposes of initializing the crng and entropy
-accounting for /dev/random.
-
-One of the questions is how do we make sure the boot loader is
-actually secure, but given that we have to trust the boot loader for
-various trusted boot use cases, it seems reasonable to do that.
-
-What do you think?
-
-					- Ted
+Yes, as I see in documentation we already specify all these timings are=20
+required properties when suspend mode is used, I updated in this version=20
+to program core timings only when suspend mode is enabled.
