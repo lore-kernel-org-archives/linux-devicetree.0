@@ -1,56 +1,52 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 1/3] dt-bindings: gpu: mali-utgard: add hisilicon,hi6220-mali compatible
-Date: Mon, 19 Aug 2019 23:48:38 +0000
-Message-ID: <20190819234840.37786-2-john.stultz@linaro.org>
+Subject: [PATCH 2/3] dt-bindings: reset: hisilicon: Update compatible
+ documentation
+Date: Mon, 19 Aug 2019 23:48:39 +0000
+Message-ID: <20190819234840.37786-3-john.stultz@linaro.org>
 References: <20190819234840.37786-1-john.stultz@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190819234840.37786-1-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linux-kernel@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Griffin <peter.griffin@linaro.org>
-
-The Hisilicon hi6220 uses a Mali-450MP4 with 4 PPs, so add
-a compatible for it.
-
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-index b352a6851a06..ba895efe3039 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-@@ -24,6 +24,7 @@ Required properties:
-       + rockchip,rk3228-mali
-       + rockchip,rk3328-mali
-       + stericsson,db8500-mali
-+      + hisilicon,hi6220-mali
- 
-   - reg: Physical base address and length of the GPU registers
- 
-@@ -98,6 +99,10 @@ to specify one more vendor-specific compatible, among:
-       * interrupt-names and interrupts:
-         + combined: combined interrupt of all of the above lines
- 
-+  - hisilicon,hi6220-mali
-+    Required properties:
-+      * resets: phandles to the reset lines for the GPU
-+
- Example:
- 
- mali: gpu@1c40000 {
--- 
-2.17.1
+RnJvbTogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgoKVGhlIHJlc2V0
+IGRyaXZlciBub3cgc3VwcG9ydHMgdGhlIGFvIHJlc2V0IGNvbnRyb2xsZXIsIHNvIHVwZGF0ZSB0
+aGUKZG9jdW1lbnRhdGlvbiB0byBtYXRjaC4KCkNjOiBEYXZpZCBBaXJsaWUgPGFpcmxpZWRAbGlu
+dXguaWU+CkNjOiBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+CkNjOiBSb2IgSGVycmlu
+ZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJt
+LmNvbT4KQ2M6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+CkNjOiBkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZwpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1i
+eTogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgpTaWduZWQtb2ZmLWJ5
+OiBKb2huIFN0dWx0eiA8am9obi5zdHVsdHpAbGluYXJvLm9yZz4KLS0tCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGk2MjIwLXJlc2V0LnR4dCAgICAgICAgIHwgMSAr
+CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhpNjIyMC1yZXNldC50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhpNjIy
+MC1yZXNldC50eHQKaW5kZXggYzI1ZGEzOWRmNzA3Li5lYTBhNmE5NzM0YzEgMTAwNjQ0Ci0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGk2MjIw
+LXJlc2V0LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQv
+aGlzaWxpY29uLGhpNjIyMC1yZXNldC50eHQKQEAgLTExLDYgKzExLDcgQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoKIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgog
+ICAtICJoaXNpbGljb24saGk2MjIwLXN5c2N0cmwiLCAic3lzY29uIiA6IEZvciBwZXJpcGhlcmFs
+IHJlc2V0IGNvbnRyb2xsZXIuCiAgIC0gImhpc2lsaWNvbixoaTYyMjAtbWVkaWFjdHJsIiwgInN5
+c2NvbiIgOiBGb3IgbWVkaWEgcmVzZXQgY29udHJvbGxlci4KKyAgLSAiaGlzaWxpY29uLGhpNjIy
+MC1hb2N0cmwiLCAic3lzY29uIiA6IEZvciBhbyByZXNldCBjb250cm9sbGVyLgogLSByZWc6IHNo
+b3VsZCBiZSByZWdpc3RlciBiYXNlIGFuZCBsZW5ndGggYXMgZG9jdW1lbnRlZCBpbiB0aGUKICAg
+ZGF0YXNoZWV0CiAtICNyZXNldC1jZWxsczogMSwgc2VlIGJlbG93Ci0tIAoyLjE3LjEKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
