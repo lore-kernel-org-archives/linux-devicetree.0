@@ -1,66 +1,89 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
-Date: Mon, 19 Aug 2019 16:48:36 +0530
-Message-ID: <20190819111836.5cu245xre6ky6xav@vireshk-i7>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Mon, 19 Aug 2019 13:18:48 +0200
+Message-ID: <20190819111847.GQ5999@X250>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+ <20190812142105.1995-8-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <20190812142105.1995-8-philippe.schenker@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>, Roger Lu <roger.lu@mediatek.com>
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
+On Mon, Aug 12, 2019 at 02:21:25PM +0000, Philippe Schenker wrote:
+> From: Stefan Agner <stefan.agner@toradex.com>
 > 
-> On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> employed to optimize the operating voltage of a device. At a
-> given frequency, the hardware monitors dynamic factors and either
-> makes a suggestion for how much to adjust a voltage for the
-> current frequency, or it automatically adjusts the voltage
-> without software intervention. Add an API to the OPP library for
-> the former case, so that AVS type devices can update the voltages
-> for an OPP when the hardware determines the voltage should
-> change. The assumption is that drivers like CPUfreq or devfreq
-> will register for the OPP notifiers and adjust the voltage
-> according to suggestions that AVS makes.
+> Add pinmuxing and do not specify voltage restrictions for the usdhc
+> instance available on the modules edge connector. This allows to use
+> SD-cards with higher transfer modes if supported by the carrier board.
 > 
-> This patch is devired from [1] submitted by Stephen.
-> [1] https://lore.kernel.org/patchwork/patch/599279/
+> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
 > ---
->  drivers/opp/core.c     | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h | 11 +++++++++
->  2 files changed, 74 insertions(+)
 > 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index c094d5d20fd7..407a07f29b12 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2054,6 +2054,69 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
->  }
+> Changes in v4:
+> - Add Marcel Ziswiler's Ack
+> 
+> Changes in v3:
+> - Add new commit message from Stefan's proposal on ML
+> 
+> Changes in v2: None
+> 
+>  arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index 5347ed38acb2..c563bb821b5e 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -326,7 +326,6 @@
+>  &usdhc1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+> -	no-1-8-v;
+>  	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+>  	disable-wp;
+>  	vqmmc-supply = <&reg_LDO2>;
+> @@ -671,6 +670,28 @@
+>  		>;
+>  	};
 >  
->  /**
-> + * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
-> + * @dev:		device for which we do this operation
-> + * @freq:		OPP frequency to adjust voltage of
-> + * @u_volt:		new OPP voltage
-> + *
-> + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
-> + * copy operation, returns 0 if no modifcation was done OR modification was
-> + * successful.
-> + */
-> +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> +			      unsigned long u_volt)
+> +	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD1_CMD__SD1_CMD	0x5a
+> +			MX7D_PAD_SD1_CLK__SD1_CLK	0x1a
+> +			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5a
+> +			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5a
+> +			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5a
+> +			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5a
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
 
-Can you please update this to take a triplet instead ? That is what we are
-storing in OPP core now a days.
+No reference to them from usdhc1 node?
 
--- 
-viresh
+Shawn
+
+> +		fsl,pins = <
+> +			MX7D_PAD_SD1_CMD__SD1_CMD	0x5b
+> +			MX7D_PAD_SD1_CLK__SD1_CLK	0x1b
+> +			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5b
+> +			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5b
+> +			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5b
+> +			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5b
+> +		>;
+> +	};
+> +
+>  	pinctrl_usdhc3: usdhc3grp {
+>  		fsl,pins = <
+>  			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> -- 
+> 2.22.0
+> 
