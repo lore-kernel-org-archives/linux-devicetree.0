@@ -1,61 +1,32 @@
-From: houlong wei <houlong.wei@mediatek.com>
-Subject: Re: [PATCH v12 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Tue, 20 Aug 2019 01:24:40 +0800
-Message-ID: <1566235480.24117.13.camel@mhfsdcap03>
-References: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
- <20190819025359.11381-12-bibby.hsieh@mediatek.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Subject: [PATCH v4 0/2] add imx8mq nitrogen support - changes since v3
+Date: Mon, 19 Aug 2019 19:26:04 +0200
+Message-ID: <20190819172606.6410-1-dafna.hirschfeld@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190819025359.11381-12-bibby.hsieh@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= <Daoyuan.Huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= <Yt.Shen@mediatek.com>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= <ginny.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, houlon.wei@mediatek.comMatthias Brugger <ma>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dafna.hirschfeld@collabora.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-08-19 at 10:53 +0800, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-[...]
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-> + *			       node of CMDQ client
-> + * @dev:	device of CMDQ mailbox clienti
+change log:
+patch 1: no changes
+patch 2:
+- gpio-key,wakeup -> source-wakeup
+- newline between property list and child nodes.
+- settting pinctrl nodes names to: "pinctrl_xxx: xxxgrp {"
 
-'clienti' looks like a typo, 'client'?
+Gary Bisson (2):
+  dt-bindings: arm: imx: add imx8mq nitrogen support
+  arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts support
 
-> + * @client_reg: CMDQ client reg pointer
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Help CMDQ client pasing the cmdq client reg
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../boot/dts/freescale/imx8mq-nitrogen.dts    | 405 ++++++++++++++++++
+ 3 files changed, 407 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-nitrogen.dts
 
-'pasing' looks like a typo, 'parsing'?
-
-> + * from the device node of CMDQ client.
-> + */
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx);
-> +
->  /**
->   * cmdq_mbox_create() - create CMDQ mailbox client and channel
->   * @dev:	device of CMDQ mailbox client
+-- 
+2.20.1
