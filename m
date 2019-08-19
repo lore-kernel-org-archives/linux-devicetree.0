@@ -1,14 +1,17 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mm: Enable cpu-idle driver
-Date: Mon, 19 Aug 2019 15:25:21 +0200
-Message-ID: <20190819132520.GK5999@X250>
-References: <1565950383-589-1-git-send-email-Anson.Huang@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 03/11] clocksource: sun4i: Add missing compatibles
+Date: Mon, 19 Aug 2019 15:30:58 +0200
+Message-ID: <20190819133058.bujcawpw5rgsfp4g@flea>
+References: <20190722081229.22422-1-maxime.ripard@bootlin.com>
+ <20190722081229.22422-3-maxime.ripard@bootlin.com>
+ <9df53981-d1b2-433c-e61f-7c000c71bc55@linaro.org>
+ <20190812091631.j2pr7i2zeput3hrc@flea>
+ <42ee55ee-258c-7588-fea3-db3c661a0156@linaro.org>
+ <20190812112411.ty3npkq6ztbushhm@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0473390430561236406=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1565950383-589-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20190812112411.ty3npkq6ztbushhm@flea>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,24 +21,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, abel.vesa@nxp.com, daniel.baluta@nxp.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, jun.li@nxp.com, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 06:13:03AM -0400, Anson Huang wrote:
-> Enable i.MX8MM cpu-idle using generic ARM cpu-idle driver, 2 states
-> are supported, details as below:
-> 
-> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state0/name
-> WFI
-> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state0/usage
-> 3973
-> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state1/name
-> cpu-pd-wait
-> root@imx8mmevk:~# cat /sys/devices/system/cpu/cpu0/cpuidle/state1/usage
-> 6647
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Applied, thanks.
+--===============0473390430561236406==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="u5prx2f64eoqygbx"
+Content-Disposition: inline
+
+
+--u5prx2f64eoqygbx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Aug 12, 2019 at 01:24:11PM +0200, Maxime Ripard wrote:
+> On Mon, Aug 12, 2019 at 11:21:50AM +0200, Daniel Lezcano wrote:
+> > On 12/08/2019 11:16, Maxime Ripard wrote:
+> > > Hi,
+> > >
+> > > On Mon, Aug 12, 2019 at 10:59:51AM +0200, Daniel Lezcano wrote:
+> > >> On 22/07/2019 10:12, Maxime Ripard wrote:
+> > >>> Newer Allwinner SoCs have different number of interrupts, let's add
+> > >>> different compatibles for all of them to deal with this properly.
+> > >>>
+> > >>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > >>
+> > >> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > >
+> > > Thanks!
+> > >
+> > > Can you merge this through your tree (along with the bindings)? I'll
+> > > merge the DT patches
+> >
+> > patches 1-4 then ?
+>
+> Yep, thanks!
+
+Ping?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--u5prx2f64eoqygbx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVqkkgAKCRDj7w1vZxhR
+xbepAQCWHgrNba54ySml5bNd587ZvZnP5TK5AjUaKHVhUVTzUAD+Li7sWvaQd0cZ
+RqB2LELzNfW2VyjKXWSRctv1YsjZ6g4=
+=fn3W
+-----END PGP SIGNATURE-----
+
+--u5prx2f64eoqygbx--
+
+
+--===============0473390430561236406==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0473390430561236406==--
