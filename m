@@ -1,94 +1,66 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 06/21] ARM: dts: imx7-colibri: add GPIO wakeup key
-Date: Mon, 19 Aug 2019 13:17:08 +0200
-Message-ID: <20190819111707.GP5999@X250>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
- <20190812142105.1995-7-philippe.schenker@toradex.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
+Date: Mon, 19 Aug 2019 16:48:36 +0530
+Message-ID: <20190819111836.5cu245xre6ky6xav@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812142105.1995-7-philippe.schenker@toradex.com>
+In-Reply-To: <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan@agner.ch" <stefan@agner.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>, Roger Lu <roger.lu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 02:21:23PM +0000, Philippe Schenker wrote:
-> From: Stefan Agner <stefan.agner@toradex.com>
+On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
+> From: Stephen Boyd <sboyd@codeaurora.org>
 > 
-> Add wakeup GPIO key which is able to wake the system from sleep
-> modes (e.g. Suspend-to-Memory).
+> On some SoCs the Adaptive Voltage Scaling (AVS) technique is
+> employed to optimize the operating voltage of a device. At a
+> given frequency, the hardware monitors dynamic factors and either
+> makes a suggestion for how much to adjust a voltage for the
+> current frequency, or it automatically adjusts the voltage
+> without software intervention. Add an API to the OPP library for
+> the former case, so that AVS type devices can update the voltages
+> for an OPP when the hardware determines the voltage should
+> change. The assumption is that drivers like CPUfreq or devfreq
+> will register for the OPP notifiers and adjust the voltage
+> according to suggestions that AVS makes.
 > 
-> Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> This patch is devired from [1] submitted by Stephen.
+> [1] https://lore.kernel.org/patchwork/patch/599279/
 > 
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
 > ---
+>  drivers/opp/core.c     | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h | 11 +++++++++
+>  2 files changed, 74 insertions(+)
 > 
-> Changes in v4:
-> - Add Marcel Ziswiler's Ack
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 14 ++++++++++++++
->  arch/arm/boot/dts/imx7-colibri.dtsi         |  7 ++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> index 3f2746169181..d4dbc4fc1adf 100644
-> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-> @@ -52,6 +52,20 @@
->  		clock-frequency = <16000000>;
->  	};
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index c094d5d20fd7..407a07f29b12 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2054,6 +2054,69 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
+>  }
 >  
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpiokeys>;
-> +
-> +		power {
-> +			label = "Wake-Up";
-> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> +			linux,code = <KEY_WAKEUP>;
-> +			debounce-interval = <10>;
-> +			gpio-key,wakeup;
+>  /**
+> + * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
+> + * @dev:		device for which we do this operation
+> + * @freq:		OPP frequency to adjust voltage of
+> + * @u_volt:		new OPP voltage
+> + *
+> + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
+> + * copy operation, returns 0 if no modifcation was done OR modification was
+> + * successful.
+> + */
+> +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+> +			      unsigned long u_volt)
 
-Please check Documentation/devicetree/bindings/power/wakeup-source.txt
+Can you please update this to take a triplet instead ? That is what we are
+storing in OPP core now a days.
 
-Shawn
-
-> +		};
-> +	};
-> +
->  	panel: panel {
->  		compatible = "edt,et057090dhu";
->  		backlight = <&bl>;
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index cab40d22d24e..5347ed38acb2 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -741,12 +741,17 @@
->  
->  	pinctrl_gpio_lpsr: gpio1-grp {
->  		fsl,pins = <
-> -			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x59
->  			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x59
->  			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x59
->  		>;
->  	};
->  
-> +	pinctrl_gpiokeys: gpiokeysgrp {
-> +		fsl,pins = <
-> +			MX7D_PAD_LPSR_GPIO1_IO01__GPIO1_IO1	0x19
-> +		>;
-> +	};
-> +
->  	pinctrl_i2c1: i2c1-grp {
->  		fsl,pins = <
->  			MX7D_PAD_LPSR_GPIO1_IO05__I2C1_SDA	0x4000007f
-> -- 
-> 2.22.0
-> 
+-- 
+viresh
