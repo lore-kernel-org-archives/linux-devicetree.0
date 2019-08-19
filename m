@@ -1,357 +1,217 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
- deserializer
-Date: Tue, 20 Aug 2019 00:41:27 +0200
-Message-ID: <8bd3161b-31d6-f49a-cc79-1ac9762e037f@lucaceresoli.net>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-4-luca@lucaceresoli.net> <20190813154439.GA29515@bogus>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 2/8] soc: ti: add initial PRM driver with reset control
+ support
+Date: Mon, 19 Aug 2019 18:01:53 -0500
+Message-ID: <9372957c-9ab9-b0dd-fe07-815eb2cb2f16@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-3-git-send-email-t-kristo@ti.com>
+ <3b76f0e0-7530-e7b5-09df-2de9956f30ee@ti.com>
+ <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813154439.GA29515@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-thanks for your review.
-
-On 13/08/19 17:44, Rob Herring wrote:
-> On Tue, Jul 23, 2019 at 10:37:20PM +0200, Luca Ceresoli wrote:
->> Describe the Texas Instruments DS90UB954-Q1, a 2-input video deserializer
->> with I2C Address Translator and remote GPIOs.
->>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>
->> ---
->>
->> Changes RFCv1 -> RFCv2:
->>
->>  - add explicit aliases for the FPD-link RX ports (optional)
->>  - add proper remote GPIO description
->> ---
->>  .../bindings/media/i2c/ti,ds90ub954-q1.txt    | 194 ++++++++++++++++++
->>  1 file changed, 194 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt b/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
->> new file mode 100644
->> index 000000000000..73ce21ecc3b6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ti,ds90ub954-q1.txt
->> @@ -0,0 +1,194 @@
->> +Texas Instruments DS90UB954-Q1 dual video deserializer
->> +======================================================
->> +
->> +The TI DS90UB954-Q1 is a MIPI CSI-2 video deserializer that forwards video
->> +streams from up to two FPD-Link 3 connections to a MIPI CSI-2 output. It
->> +also allows access to remote I2C and GPIO.
->> +
->> +Required properties:
->> +
->> + - compatible: must be "ti,ds90ub954-q1"
->> +
->> + - reg: main I2C slave address; optionally aliases for RX port registers
->> +   and remote serializers. The main address is mandatory and must be the
->> +   first, others are optional and fall back to defaults if not
->> +   specified. See "reg-names".
->> +
->> + - reset-gpios: chip reset GPIO, active low (connected to PDB pin of the chip)
->> + - i2c-alias-pool: list of I2C addresses that are known to be available on the
->> +                   "local" (SoC-to-deser) I2C bus; they will be picked at
->> +		   runtime and used as aliases to reach remove I2C chips
-> 
-> s/remove/remote/
-
-Will fix.
-
-> Needs a vendor prefix.
-
-The ultimate goal here is to define a standard property that all chips
-able to to I2C forwarding (video serdes or, potentially, other chips)
-can use. That's why the GMSL (Maxim deser) developers are in Cc: they
-are also facing a similar need.
-
-However I'm OK to change this to "ti,i2c-alias-pool" just in case there
-are reasons to not use a common name [yet]. However, following this
-argument, shouldn't a prefix be needed also for other nonstandard
-strings, such as "i2c-atr" below?
-
->> + - gpio-controller
->> + - #gpio-cells: must be 3: FPD-Link 3 RX port number, remote gpio number, flags
-> 
-> We're pretty standardized on 2 cells for GPIO. Perhaps combine the port 
-> and gpio number to 1 cell.
-
-Oh dear. I dislike implementing software that does not model the
-physical reality. I know it will bite me back sooner or later. Here we
-_really_ have N physically separate GPIO controllers, and the number of
-GPIOs they have depends on the model of the chip that is connected remotely.
-
-This is how things look in the case of 2 ports:
-
- <-- base board -->         <------- remote camera module 1 ----->
-                            .---------------------.
- .-----.    .------.        |         SER 1       |
- | CPU |----|port 1|========|----------.          |
- `-----'    |      |  FPD   | GPIO ctl |          |
-            |      | Link 3 `---------------------'
-            |      | cable        ||||
-	    | DES  |         remote GPIO pins
-            |      |
-            |      |        <------- remote camera module 2 ----->
-            |      |        .---------------------.
-            |port 2|        |         SER 2       |
-            |      |========|----------.          |
-            `------'  FPD   | GPIO ctl |          |
-                     Link 3 `---------------------'
-                     cable    ||||||||
-	                     remote GPIO pins
-
-Perhaps we should have N separate gpiochips, one per port? Under which
-node? Not under "ports" ("We don't allow other nodes within graph
-nodes"), and "i2c-atr" does not seem like a suitable name. Under a new
-"remote-gpiochips" node?
-
->> +Required subnodes:
->> +
->> + - ports: A ports node with one port child node per device input and output
->> +          port, in accordance with the video interface bindings defined in
->> +          Documentation/devicetree/bindings/media/video-interfaces.txt. The
->> +          port nodes are numbered as follows:
->> +
->> +          Port Description
->> +          ------------------------------------
->> +          0    Input from FPD-Link 3 RX port 0
->> +          1    Input from FPD-Link 3 RX port 1
->> +          2    CSI-2 output
->> +
->> +          Each port must have a "remote-chip" subnode that defines the remote
->> +	  chip (serializer) with at least a "compatible" property
-> 
-> We don't allow other nodes within graph nodes. I'm not really clear what 
-> you are trying to do here.
-
-Each of the deser ports (2 ports in this chip) creates a physical
-point-to-point "bus". It's called "FPD-Link 3" in the TI chips, "GMSL"
-in the Maxim chips. One "remote chip" serializer can be connected to
-each bus. The remote chip has, at least, a model (e.g. DS90UB953) and
-some properties. So I need a place where model and properties can be
-described. The port node looked like a good place, but as you point out
-it is not.
-
-Adding to the above discussion about 3 gpio-cells, I can think of a
-different, tentative DT layout:
-
-deser: deser@3d {
-	compatible = "ti,ds90ub954-q1";
-	reg-names = "main", "rxport0", "rxport1", "ser0", "ser1";
-	reg       = <0x3d>,  <0x40>,    <0x41>,   <0x44>, <0x45>;
-	clocks = <&clk_25M>;
-	interrupt-parent = <&gic>;
-	interrupts = <3 1 IRQ_TYPE_LEVEL_HIGH>;
-	reset-gpios = <&gpio_ctl 4 GPIO_ACTIVE_LOW>;
-
-	i2c-alias-pool = /bits/ 16 <0x4a 0x4b 0x4c 0x4d 0x4e 0x4f>;
-
-	ports {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		port@0 {
-			reg = <0>;
-			endpoint {
-				remote-endpoint = <&sensor_0_out>;
-			};
-		};
-
-		port@1 {
-			reg = <1>;
-			endpoint {
-				remote-endpoint = <&sensor_1_out>;
-			};
-		};
-
-		port@2 {
-			reg = <2>;
-			endpoint {
-				data-lanes = <1 2 3 4>;
-				/* Actually a REFCLK multiplier */
-				data-rate = <1600000000>;
-				remote-endpoint = <&csirx_0_in>;
-			};
-		};
-	};
-
-	remote-chips {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		remote-chip@0 {
-			reg = <0>;
-			chip {
-				compatible = "ti,ds90ub953-q1";
-				gpio-functions = <...>;
-			};
-
-			remote_i2c0: i2c@0 {
-				reg = <0>;
-				#address-cells = <1>;
-				#size-cells = <0>;
-			};
-
-			gpio-controller;
-			/* 2 cells for _each_ gpiochip */
-			#gpio-cells = <2>; /* remote gpio num, flags */
-		};
-
-		remote-chip@1 {
-			reg = <1>;
-			/* similar to remote chip 0 */
-		};
-	};
-};
-
-Here there are two subnodes:
-
- - "remote-chips" with a subnode per remote port, each describing
-   the remote chip model and properties, remote i2c bus, gpio controller
-   and others (other chips have I2S, SPI, UART...)
-
- - "ports" with only the standard v4l2 port properties, no subnodes
-   under the endpoint nodes
-
-Does this look better from the device tree point of view?
-
->> + - i2c-atr: contains one child per RX port, each describes the I2C bus on
->> +            the remote side
->> +
->> +	    Required properties:
->> +	    - #address-cells = <1>;
->> +	    - #size-cells = <0>;
->> +
->> +	    Subnodes: one per each FPD-link RX port, each having:
->> +
->> +	    Required properties for "i2c-atr" child bus nodes:
->> +	    - reg: The number of the port where the remove chip is connected
-> 
-> s/remove/remote/
-
-Ok.
-
->> +	    - #address-cells = <1>;
->> +	    - #size-cells = <0>;
->> +
->> +	    Optional properties for "i2c-atr" child bus nodes:
->> +	    - Other properties specific to the remote hardware
-> 
-> Such as?
-
-"clock-frequency" at least. The remote chip is an I2C master, thus any
-property that applies to an I2C master might apply as well.
-
-"clock-frequency" is only half-implemented in these RFC patches:
-
- * in patch 5, function ds90_rxport_add_serializer() passes the REFCLK
-   value of the deser to the remote chip (serializer): this value is
-   the physical reference clock the remote chip receives, all of its
-   timings are based on it
-
- * the remote chip, given refclk, computes the register values that best
-   approximate "clock-frequency" [not implemented in this version, would
-   be in patch 6]
-
-I plan to implement and document the whole clock-frequency feature for
-the next patch iteration. But I'd love to receive comments about how
-reflck is passed from the deser to the serializer via platform_data.
-
->> +Device node example
->> +-------------------
->> +
->> +&i2c0 {
->> +	deser: deser@3d {
->> +		compatible = "ti,ds90ub954-q1";
->> +		reg-names = "main", "rxport0", "rxport1", "ser0", "ser1";
->> +		reg       = <0x3d>,  <0x40>,    <0x41>,   <0x44>, <0x45>;
->> +		clocks = <&clk_25M>;
->> +		interrupt-parent = <&gic>;
->> +		interrupts = <3 1 IRQ_TYPE_LEVEL_HIGH>;
->> +		reset-gpios = <&gpio_ctl 4 GPIO_ACTIVE_LOW>;
->> +
->> +		i2c-alias-pool = /bits/ 16 <0x4a 0x4b 0x4c 0x4d 0x4e 0x4f>;
->> +
->> +		gpio-controller;
->> +		#gpio-cells = <3>; /* rxport, remote gpio num, flags */
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			port@0 {
->> +				reg = <0>;
->> +				ds90ub954_fpd3_in0: endpoint {
->> +					remote-endpoint = <&sensor_0_out>;
->> +				};
->> +			};
->> +
->> +			port@1 {
->> +				reg = <1>;
->> +				ds90ub954_fpd3_in1: endpoint {
->> +					remote-endpoint = <&sensor_1_out>;
->> +				};
->> +			};
->> +
->> +			port@2 {
->> +				reg = <2>;
->> +				ds90ub954_mipi_out0: endpoint {
->> +					data-lanes = <1 2 3 4>;
->> +					/* Actually a REFCLK multiplier */
->> +					data-rate = <1600000000>;
->> +					remote-endpoint = <&csirx_0_in>;
->> +				};
->> +			};
->> +		};
->> +
->> +		i2c-atr {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			remote_i2c0: i2c@0 {
->> +				reg = <0>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
-> 
-> Presumably, there are child I2C devices here. Please show that in the 
-> example.
-
-They are shown below to avoid excessive nesting, look for "&remote_i2c0"
-(1).
-
->> +&ds90ub954_fpd3_in0 {
->> +	remote-chip {
->> +		compatible = "ti,ds90ub953-q1";
->> +		gpio-functions = <DS90_GPIO_FUNC_OUTPUT_REMOTE
-> 
-> Not documented.
-
-That's because this node describes the remote chip. The remote chip is a
-ti,ds90ub953-q1, its bindings are defined in patch 4. It's similar to
-showing some child I2C devices under the I2C master, as you suggested
-just above, except it's not an I2C bus but an FPD-Link 3 "bus".
-
-Is it OK if I replace the whole gpio-functions node with the comment
-"/* properties specific to the ti,ds90ub953-q1 chip */"?
-
->> +&remote_i2c0 {
->> +	sensor_0@3c {
->> +		compatible = "sony,imx274";
->> +		reg = <0x3c>;
-
-(1) here are the child I2C device mentioned above
-
--- 
-Luca
+SGkgVGVybywKCk9uIDgvMTkvMTkgNDozMiBBTSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMDgv
+MDgvMjAxOSAwODoyNiwgS2VlcnRoeSB3cm90ZToKPj4KPj4KPj4gT24gMDcvMDgvMTkgMToxOCBQ
+TSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4+PiBBZGQgaW5pdGlhbCBQUk0gKFBvd2VyIGFuZCBSZXNl
+dCBNYW5hZ2VtZW50KSBkcml2ZXIgZm9yIFRJIE9NQVAgY2xhc3MKPj4+IFNvQ3MuIEluaXRpYWxs
+eSB0aGlzIGRyaXZlciBvbmx5IHN1cHBvcnRzIHJlc2V0IGNvbnRyb2wsIGJ1dCBjYW4gYmUKPj4+
+IGV4dGVuZGVkIHRvIHN1cHBvcnQgcmVzdCBvZiB0aGUgZnVuY3Rpb25hbGl0eSwgbGlrZSBwb3dl
+cmRvbWFpbgo+Pj4gY29udHJvbCwgUFJDTSBpcnEgc3VwcG9ydCBldGMuCj4+Pgo+Pj4gU2lnbmVk
+LW9mZi1ieTogVGVybyBLcmlzdG8gPHQta3Jpc3RvQHRpLmNvbT4KPj4+IC0tLQo+Pj4gwqAgYXJj
+aC9hcm0vbWFjaC1vbWFwMi9LY29uZmlnIHzCoMKgIDEgKwo+Pj4gwqAgZHJpdmVycy9zb2MvdGkv
+TWFrZWZpbGXCoMKgwqDCoCB8wqDCoCAxICsKPj4+IMKgIGRyaXZlcnMvc29jL3RpL29tYXBfcHJt
+LmPCoMKgIHwgMjE2Cj4+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+Pj4gwqAgMyBmaWxlcyBjaGFuZ2VkLCAyMTggaW5zZXJ0aW9ucygrKQo+Pj4gwqAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc29jL3RpL29tYXBfcHJtLmMKPj4+Cj4+PiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm0vbWFjaC1vbWFwMi9LY29uZmlnIGIvYXJjaC9hcm0vbWFjaC1vbWFwMi9L
+Y29uZmlnCj4+PiBpbmRleCBmZGI2NzQzLi40MmFkMDYzIDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC9h
+cm0vbWFjaC1vbWFwMi9LY29uZmlnCj4+PiArKysgYi9hcmNoL2FybS9tYWNoLW9tYXAyL0tjb25m
+aWcKPj4+IEBAIC0xMDksNiArMTA5LDcgQEAgY29uZmlnIEFSQ0hfT01BUDJQTFVTCj4+PiDCoMKg
+wqDCoMKgIHNlbGVjdCBUSV9TWVNDCj4+PiDCoMKgwqDCoMKgIHNlbGVjdCBPTUFQX0lSUUNISVAK
+Pj4+IMKgwqDCoMKgwqAgc2VsZWN0IENMS1NSQ19USV8zMksKPj4+ICvCoMKgwqAgc2VsZWN0IFJF
+U0VUX0NPTlRST0xMRVIKClVzZSBBUkNIX0hBU19SRVNFVF9DT05UUk9MTEVSIGluc3RlYWQuCgo+
+Pj4gwqDCoMKgwqDCoCBoZWxwCj4+PiDCoMKgwqDCoMKgwqDCoCBTeXN0ZW1zIGJhc2VkIG9uIE9N
+QVAyLCBPTUFQMywgT01BUDQgb3IgT01BUDUKPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy90
+aS9NYWtlZmlsZSBiL2RyaXZlcnMvc29jL3RpL01ha2VmaWxlCj4+PiBpbmRleCBiMzg2OGQzLi43
+ODhiNWNkIDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9zb2MvdGkvTWFrZWZpbGUKPj4+ICsrKyBi
+L2RyaXZlcnMvc29jL3RpL01ha2VmaWxlCj4+PiBAQCAtNiw2ICs2LDcgQEAgb2JqLSQoQ09ORklH
+X0tFWVNUT05FX05BVklHQVRPUl9RTVNTKcKgwqDCoCArPSBrbmF2X3Ftc3Mubwo+Pj4gwqAga25h
+dl9xbXNzLXkgOj0ga25hdl9xbXNzX3F1ZXVlLm8ga25hdl9xbXNzX2FjYy5vCj4+PiDCoCBvYmot
+JChDT05GSUdfS0VZU1RPTkVfTkFWSUdBVE9SX0RNQSnCoMKgwqAgKz0ga25hdl9kbWEubwo+Pj4g
+wqAgb2JqLSQoQ09ORklHX0FNWDNfUE0pwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCArPSBwbTMzeHgu
+bwo+Pj4gK29iai0kKENPTkZJR19BUkNIX09NQVAyUExVUynCoMKgwqDCoMKgwqDCoCArPSBvbWFw
+X3BybS5vCj4+PiDCoCBvYmotJChDT05GSUdfV0tVUF9NM19JUEMpwqDCoMKgwqDCoMKgwqAgKz0g
+d2t1cF9tM19pcGMubwo+Pj4gwqAgb2JqLSQoQ09ORklHX1RJX1NDSV9QTV9ET01BSU5TKcKgwqDC
+oMKgwqDCoMKgICs9IHRpX3NjaV9wbV9kb21haW5zLm8KPj4+IMKgIG9iai0kKENPTkZJR19USV9T
+Q0lfSU5UQV9NU0lfRE9NQUlOKcKgwqDCoCArPSB0aV9zY2lfaW50YV9tc2kubwo+Pj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvc29jL3RpL29tYXBfcHJtLmMgYi9kcml2ZXJzL3NvYy90aS9vbWFwX3By
+bS5jCj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMC4uN2M4OWViOAo+
+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvZHJpdmVycy9zb2MvdGkvb21hcF9wcm0uYwo+Pj4g
+QEAgLTAsMCArMSwyMTYgQEAKPj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MAo+Pj4gKy8qCj4+PiArICogT01BUDIrIFBSTSBkcml2ZXIKPj4+ICsgKgo+Pj4gKyAqIENvcHly
+aWdodCAoQykgMjAxOSBUZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBvcmF0ZWQgLQo+Pj4gaHR0cDov
+L3d3dy50aS5jb20vCj4+PiArICrCoMKgwqAgVGVybyBLcmlzdG8gPHQta3Jpc3RvQHRpLmNvbT4K
+Pj4+ICsgKi8KPj4+ICsKPj4+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4+PiArI2luY2x1
+ZGUgPGxpbnV4L21vZHVsZS5oPgo+Pj4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4KPj4+ICsj
+aW5jbHVkZSA8bGludXgvaW8uaD4KPj4+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPj4+ICsjaW5j
+bHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4+PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2Rl
+dmljZS5oPgo+Pj4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC1jb250cm9sbGVyLmg+Cj4+PiArI2lu
+Y2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4+PiArCj4+PiArc3RydWN0IG9tYXBfcnN0X21hcCB7Cj4+
+PiArwqDCoMKgIHM4IHJzdDsKPj4+ICvCoMKgwqAgczggc3Q7Cj4+PiArfTsKPj4+ICsKPj4+ICtz
+dHJ1Y3Qgb21hcF9wcm1fZGF0YSB7Cj4+PiArwqDCoMKgIHUzMiBiYXNlOwo+Pj4gK8KgwqDCoCBj
+b25zdCBjaGFyICpuYW1lOwo+Pj4gK8KgwqDCoCB1MTYgcHdzdGN0cmw7Cj4+PiArwqDCoMKgIHUx
+NiBwd3N0c3Q7Cj4+PiArwqDCoMKgIHUxNiByc3RjdGw7CgpNaW5vciBuaXQsIGNhbiB5b3UgdXNl
+IHJzdGN0cmwgaW5zdGVhZCBoZXJlIHNvIHRoYXQgaXQgaXMgaW4gc3luYyB3aXRoCnRoZSBvdGhl
+ciB2YXJpYWJsZXMgYW5kIHdpdGggdGhlIHJlZ2lzdGVyIG5hbWVzIHVzZWQgaW4gVFJNLgoKPj4+
+ICvCoMKgwqAgdTE2IHJzdHN0Owo+Pj4gK8KgwqDCoCBzdHJ1Y3Qgb21hcF9yc3RfbWFwICpyc3Rt
+YXA7Cj4+PiArwqDCoMKgIHU4IGZsYWdzOwo+Pj4gK307Cj4+PiArCj4+PiArc3RydWN0IG9tYXBf
+cHJtIHsKPj4+ICvCoMKgwqAgY29uc3Qgc3RydWN0IG9tYXBfcHJtX2RhdGEgKmRhdGE7Cj4+PiAr
+wqDCoMKgIHZvaWQgX19pb21lbSAqYmFzZTsKPj4+ICt9Owo+Pj4gKwo+Pj4gK3N0cnVjdCBvbWFw
+X3Jlc2V0X2RhdGEgewo+Pj4gK8KgwqDCoCBzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgcmNk
+ZXY7Cj4+PiArwqDCoMKgIHN0cnVjdCBvbWFwX3BybSAqcHJtOwo+Pj4gK307Cj4+PiArCj4+PiAr
+I2RlZmluZSB0b19vbWFwX3Jlc2V0X2RhdGEocCkgY29udGFpbmVyX29mKChwKSwgc3RydWN0Cj4+
+PiBvbWFwX3Jlc2V0X2RhdGEsIHJjZGV2KQo+Pj4gKwo+Pj4gKyNkZWZpbmUgT01BUF9NQVhfUkVT
+RVRTwqDCoMKgwqDCoMKgwqAgOAo+Pj4gKyNkZWZpbmUgT01BUF9SRVNFVF9NQVhfV0FJVMKgwqDC
+oCAxMDAwMAo+Pj4gKwo+Pj4gKyNkZWZpbmUgT01BUF9QUk1fTk9fUlNUU1TCoMKgwqAgQklUKDAp
+Cj4+PiArCj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb21hcF9wcm1faWRf
+dGFibGVbXSA9IHsKPj4+ICvCoMKgwqAgeyB9LAo+Pj4gK307Cj4+Cj4+IFRoaXMgdGFibGUgaXMg
+YmxhbmsgYW5kIHdlIGFyZSBkb2luZyBvZl9tYXRjaF9kZXZpY2UgYWdhaW5zdCBpdC4KPiAKPiBZ
+ZXMsIGl0IGdldHMgcG9wdWxhdGVkIHdpdGggb3RoZXIgcGF0Y2hlcyBpbiBzZXJpZXMsIG9uZSBl
+bnRyeSBwZXIgc29jLgo+IAo+Pgo+Pj4gKwo+Pj4gK3N0YXRpYyBpbnQgb21hcF9yZXNldF9zdGF0
+dXMoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwKPj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGlkKQo+Pj4gK3sKPj4+ICvCoMKgwqAg
+c3RydWN0IG9tYXBfcmVzZXRfZGF0YSAqcmVzZXQgPSB0b19vbWFwX3Jlc2V0X2RhdGEocmNkZXYp
+Owo+Pj4gK8KgwqDCoCB1MzIgdjsKPj4+ICsKPj4+ICvCoMKgwqAgdiA9IHJlYWRsX3JlbGF4ZWQo
+cmVzZXQtPnBybS0+YmFzZSArIHJlc2V0LT5wcm0tPmRhdGEtPnJzdHN0KTsKPj4+ICvCoMKgwqAg
+diAmPSAxIDw8IGlkOwo+Pj4gK8KgwqDCoCB2ID4+PSBpZDsKPj4+ICsKPj4+ICvCoMKgwqAgcmV0
+dXJuIHY7Cj4+PiArfQo+Pj4gKwo+Pj4gK3N0YXRpYyBpbnQgb21hcF9yZXNldF9hc3NlcnQoc3Ry
+dWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwKPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGlkKQo+Pj4gK3sKPj4+ICvCoMKgwqAgc3RydWN0
+IG9tYXBfcmVzZXRfZGF0YSAqcmVzZXQgPSB0b19vbWFwX3Jlc2V0X2RhdGEocmNkZXYpOwo+Pj4g
+K8KgwqDCoCB1MzIgdjsKPj4+ICsKPj4+ICvCoMKgwqAgLyogYXNzZXJ0IHRoZSByZXNldCBjb250
+cm9sIGxpbmUgKi8KPj4+ICvCoMKgwqAgdiA9IHJlYWRsX3JlbGF4ZWQocmVzZXQtPnBybS0+YmFz
+ZSArIHJlc2V0LT5wcm0tPmRhdGEtPnJzdGN0bCk7Cj4+PiArwqDCoMKgIHYgfD0gMSA8PCBpZDsK
+Pj4+ICvCoMKgwqAgd3JpdGVsX3JlbGF4ZWQodiwgcmVzZXQtPnBybS0+YmFzZSArIHJlc2V0LT5w
+cm0tPmRhdGEtPnJzdGN0bCk7Cj4+PiArCj4+PiArwqDCoMKgIHJldHVybiAwOwo+Pj4gK30KPj4+
+ICsKPj4+ICtzdGF0aWMgaW50IG9tYXBfcmVzZXRfZ2V0X3N0X2JpdChzdHJ1Y3Qgb21hcF9yZXNl
+dF9kYXRhICpyZXNldCwKPj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNp
+Z25lZCBsb25nIGlkKQo+Pj4gK3sKPj4+ICvCoMKgwqAgc3RydWN0IG9tYXBfcnN0X21hcCAqbWFw
+ID0gcmVzZXQtPnBybS0+ZGF0YS0+cnN0bWFwOwo+Pj4gKwo+Pj4gK8KgwqDCoCB3aGlsZSAobWFw
+ICYmIG1hcC0+cnN0ID49IDApIHsKPj4+ICvCoMKgwqDCoMKgwqDCoCBpZiAobWFwLT5yc3QgPT0g
+aWQpCj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gbWFwLT5zdDsKPj4+ICsKPj4+
+ICvCoMKgwqDCoMKgwqDCoCBtYXArKzsKPj4+ICvCoMKgwqAgfQo+Pj4gKwo+Pj4gK8KgwqDCoCBy
+ZXR1cm4gaWQ7Cj4+PiArfQo+Pj4gKwo+Pj4gKy8qCj4+PiArICogTm90ZSB0aGF0IHN0YXR1cyB3
+aWxsIG5vdCBjaGFuZ2UgdW50aWwgY2xvY2tzIGFyZSBvbiwgYW5kIGNsb2Nrcwo+Pj4gY2Fubm90
+IGJlCj4+PiArICogZW5hYmxlZCB1bnRpbCByZXNldCBpcyBkZWFzc2VydGVkLiBDb25zdW1lciBk
+cml2ZXJzIG11c3QgY2hlY2sKPj4+IHN0YXR1cwo+Pj4gKyAqIHNlcGFyYXRlbHkgYWZ0ZXIgZW5h
+YmxpbmcgY2xvY2tzLgo+Pj4gKyAqLwo+Pj4gK3N0YXRpYyBpbnQgb21hcF9yZXNldF9kZWFzc2Vy
+dChzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LAo+Pj4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGlkKQo+Pj4gK3sKPj4+ICvCoMKg
+wqAgc3RydWN0IG9tYXBfcmVzZXRfZGF0YSAqcmVzZXQgPSB0b19vbWFwX3Jlc2V0X2RhdGEocmNk
+ZXYpOwo+Pj4gK8KgwqDCoCB1MzIgdjsKPj4+ICvCoMKgwqAgaW50IHN0X2JpdCA9IGlkOwoKTm8g
+bmVlZCB0byBpbml0aWFsaXplIHRoaXMsIHdpbGwgYWx3YXlzIGdldCBvdmVyd3JpdHRlbiBiZWxv
+dy4KCj4+PiArwqDCoMKgIGJvb2wgaGFzX3JzdHN0Owo+Pj4gKwo+Pj4gK8KgwqDCoCAvKiBjaGVj
+ayB0aGUgY3VycmVudCBzdGF0dXMgdG8gYXZvaWQgZGUtYXNzZXJ0aW5nIHRoZSBsaW5lIHR3aWNl
+ICovCj4+PiArwqDCoMKgIHYgPSByZWFkbF9yZWxheGVkKHJlc2V0LT5wcm0tPmJhc2UgKyByZXNl
+dC0+cHJtLT5kYXRhLT5yc3RjdGwpOwo+Pj4gK8KgwqDCoCBpZiAoISh2ICYgQklUKGlkKSkpCj4+
+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FRVhJU1Q7Cj4+PiArCj4+PiArwqDCoMKgIGhhc19y
+c3RzdCA9ICEocmVzZXQtPnBybS0+ZGF0YS0+ZmxhZ3MgJiBPTUFQX1BSTV9OT19SU1RTVCk7Cj4+
+PiArCj4+PiArwqDCoMKgIGlmIChoYXNfcnN0c3QpIHsKPj4+ICvCoMKgwqDCoMKgwqDCoCBzdF9i
+aXQgPSBvbWFwX3Jlc2V0X2dldF9zdF9iaXQocmVzZXQsIGlkKTsKPj4+ICsKPj4+ICvCoMKgwqDC
+oMKgwqDCoCAvKiBDbGVhciB0aGUgcmVzZXQgc3RhdHVzIGJ5IHdyaXRpbmcgMSB0byB0aGUgc3Rh
+dHVzIGJpdCAqLwo+Pj4gK8KgwqDCoMKgwqDCoMKgIHYgPSByZWFkbF9yZWxheGVkKHJlc2V0LT5w
+cm0tPmJhc2UgKyByZXNldC0+cHJtLT5kYXRhLT5yc3RzdCk7Cj4+PiArwqDCoMKgwqDCoMKgwqAg
+diB8PSAxIDw8IHN0X2JpdDsKPj4+ICvCoMKgwqDCoMKgwqDCoCB3cml0ZWxfcmVsYXhlZCh2LCBy
+ZXNldC0+cHJtLT5iYXNlICsgcmVzZXQtPnBybS0+ZGF0YS0+cnN0c3QpOwo+Pj4gK8KgwqDCoCB9
+Cj4+PiArCj4+PiArwqDCoMKgIC8qIGRlLWFzc2VydCB0aGUgcmVzZXQgY29udHJvbCBsaW5lICov
+Cj4+PiArwqDCoMKgIHYgPSByZWFkbF9yZWxheGVkKHJlc2V0LT5wcm0tPmJhc2UgKyByZXNldC0+
+cHJtLT5kYXRhLT5yc3RjdGwpOwo+Pj4gK8KgwqDCoCB2ICY9IH4oMSA8PCBpZCk7Cj4+PiArwqDC
+oMKgIHdyaXRlbF9yZWxheGVkKHYsIHJlc2V0LT5wcm0tPmJhc2UgKyByZXNldC0+cHJtLT5kYXRh
+LT5yc3RjdGwpOwo+Pj4gKwo+Pj4gK8KgwqDCoCByZXR1cm4gMDsKPj4+ICt9Cj4+PiArCj4+PiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCByZXNldF9jb250cm9sX29wcyBvbWFwX3Jlc2V0X29wcyA9IHsK
+Pj4+ICvCoMKgwqAgLmFzc2VydMKgwqDCoMKgwqDCoMKgID0gb21hcF9yZXNldF9hc3NlcnQsCj4+
+PiArwqDCoMKgIC5kZWFzc2VydMKgwqDCoCA9IG9tYXBfcmVzZXRfZGVhc3NlcnQsCj4+PiArwqDC
+oMKgIC5zdGF0dXPCoMKgwqDCoMKgwqDCoCA9IG9tYXBfcmVzZXRfc3RhdHVzLAo+Pj4gK307Cj4+
+PiArCj4+PiArc3RhdGljIGludCBvbWFwX3BybV9yZXNldF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2LAo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3Qg
+b21hcF9wcm0gKnBybSkKCkNhbGwgdGhpcyBvbWFwX3BybV9yZXNldF9pbml0IG9yIHNvbWV0aGlu
+ZyBzaW1pbGFyIHRvIGF2b2lkIGNvbmZ1c2lvbi4KCj4+PiArewo+Pj4gK8KgwqDCoCBzdHJ1Y3Qg
+b21hcF9yZXNldF9kYXRhICpyZXNldDsKPj4+ICsKPj4+ICvCoMKgwqAgLyoKPj4+ICvCoMKgwqDC
+oCAqIENoZWNrIGlmIHdlIGhhdmUgcmVzZXRzLiBJZiBlaXRoZXIgcnN0Y3RsIG9yIHJzdHN0IGlz
+Cj4+PiArwqDCoMKgwqAgKiBub24temVybywgd2UgaGF2ZSByZXNldCByZWdpc3RlcnMgaW4gcGxh
+Y2UuIEFkZGl0aW9uYWxseQo+Pj4gK8KgwqDCoMKgICogdGhlIGZsYWcgT01BUF9QUk1fTk9fUlNU
+U1QgaW1wbGllcyB0aGF0IHdlIGhhdmUgcmVzZXRzLgo+Pj4gK8KgwqDCoMKgICovCj4+PiArwqDC
+oMKgIGlmICghcHJtLT5kYXRhLT5yc3RjdGwgJiYgIXBybS0+ZGF0YS0+cnN0c3QgJiYKPj4+ICvC
+oMKgwqDCoMKgwqDCoCAhKHBybS0+ZGF0YS0+ZmxhZ3MgJiBPTUFQX1BSTV9OT19SU1RTVCkpCj4+
+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+PiArCj4+PiArwqDCoMKgIHJlc2V0ID0gZGV2
+bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqcmVzZXQpLCBHRlBfS0VSTkVMKTsKPj4+ICvC
+oMKgwqAgaWYgKCFyZXNldCkKPj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsKPj4+
+ICsKPj4+ICvCoMKgwqAgcmVzZXQtPnJjZGV2Lm93bmVyID0gVEhJU19NT0RVTEU7Cj4+PiArwqDC
+oMKgIHJlc2V0LT5yY2Rldi5vcHMgPSAmb21hcF9yZXNldF9vcHM7Cj4+PiArwqDCoMKgIHJlc2V0
+LT5yY2Rldi5vZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4+PiArwqDCoMKgIHJlc2V0LT5y
+Y2Rldi5ucl9yZXNldHMgPSBPTUFQX01BWF9SRVNFVFM7CgpTdWdnZXN0IGFkZGluZyBhIG51bWJl
+ciBvZiByZXNldHMgdG8gcHJtLT5kYXRhLCBhbmQgdXNpbmcgaXQgc28gdGhhdCB3ZQpkb24ndCBl
+dmVuIGVudGVydGFpbiBhbnkgcmVzZXRzIGJleW9uZCB0aGUgYWN0dWFsIG51bWJlciBvZiByZXNl
+dHMuCgpZb3UgYWN0dWFsbHkgc2VlbSB0byBiZSB1c2luZyB0aGUgYml0LXBvc2l0aW9uIGRpcmVj
+dGx5IGluIGNsaWVudCBkYXRhCmluc3RlYWQgb2YgYSByZXNldCBudW1iZXIuIEkgYW0gbm90IHN1
+cmUgaWYgdGhpcyBpcyBhY2NlcHRlZCBwcmFjdGljZQp3aXRoIHJlc2V0IGNvbnRyb2xsZXJzLCBk
+byB5b3UgaW5jdXIgYW55IG1lbW9yeSB3YXN0YWdlPwoKPj4+ICsKPj4+ICvCoMKgwqAgcmVzZXQt
+PnBybSA9IHBybTsKPj4+ICsKPj4+ICvCoMKgwqAgcmV0dXJuIGRldm1fcmVzZXRfY29udHJvbGxl
+cl9yZWdpc3RlcigmcGRldi0+ZGV2LCAmcmVzZXQtPnJjZGV2KTsKPj4+ICt9Cj4+PiArCj4+PiAr
+c3RhdGljIGludCBvbWFwX3BybV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
+Pj4gK3sKPj4+ICvCoMKgwqAgc3RydWN0IHJlc291cmNlICpyZXM7Cj4+PiArwqDCoMKgIGNvbnN0
+IHN0cnVjdCBvbWFwX3BybV9kYXRhICpkYXRhOwo+Pj4gK8KgwqDCoCBzdHJ1Y3Qgb21hcF9wcm0g
+KnBybTsKPj4+ICvCoMKgwqAgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2g7Cj4+PiAr
+Cj4+PiArwqDCoMKgIHJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNF
+X01FTSwgMCk7Cj4+PiArwqDCoMKgIGlmICghcmVzKQo+Pj4gK8KgwqDCoMKgwqDCoMKgIHJldHVy
+biAtRU5PREVWOwo+Pj4gKwo+Pj4gK8KgwqDCoCBtYXRjaCA9IG9mX21hdGNoX2RldmljZShvbWFw
+X3BybV9pZF90YWJsZSwgJnBkZXYtPmRldik7Cj4+PiArwqDCoMKgIGlmICghbWF0Y2gpCj4+PiAr
+wqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9UU1VQUDsKClVzZSBvZl9kZXZpY2VfZ2V0X21hdGNo
+X2RhdGEoKSBpbnN0ZWFkIHRvIGRvIGJvdGggbWF0Y2ggYW5kIGdldCB0aGUKZGF0YS4gVGhhdCBj
+YW4gcGVyaGFwcyBiZSB0aGUgZmlyc3QgYmxvY2suCgo+Pj4gKwo+Pj4gK8KgwqDCoCBwcm0gPSBk
+ZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpwcm0pLCBHRlBfS0VSTkVMKTsKPj4+ICvC
+oMKgwqAgaWYgKCFwcm0pCj4+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9NRU07CgpQZXJo
+YXBzIG1vdmUgdGhlIGFsbG9jYXRlIGFmdGVyIHRoZSBtYXRjaCBjaGVjayB0byBzdHJlYW1saW5l
+LgoKPj4+ICsKPj4+ICvCoMKgwqAgZGF0YSA9IG1hdGNoLT5kYXRhOwo+Pj4gKwo+Pj4gK8KgwqDC
+oCB3aGlsZSAoZGF0YS0+YmFzZSAhPSByZXMtPnN0YXJ0KSB7Cj4+PiArwqDCoMKgwqDCoMKgwqAg
+aWYgKCFkYXRhLT5iYXNlKQo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FSU5W
+QUw7Cj4+PiArwqDCoMKgwqDCoMKgwqAgZGF0YSsrOwo+Pj4gK8KgwqDCoCB9Cj4+PiArCj4+PiAr
+wqDCoMKgIHBybS0+ZGF0YSA9IGRhdGE7Cj4+PiArCj4+PiArwqDCoMKgIHBybS0+YmFzZSA9IGRl
+dm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOwo+Pj4gK8KgwqDCoCBpZiAoIXBy
+bS0+YmFzZSkKPj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsKPj4+ICsKPj4+ICvC
+oMKgwqAgcmV0dXJuIG9tYXBfcHJtX3Jlc2V0X3Byb2JlKHBkZXYsIHBybSk7Cj4+PiArfQo+Pj4g
+Kwo+Pj4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIG9tYXBfcHJtX2RyaXZlciA9IHsK
+Pj4+ICvCoMKgwqAgLnByb2JlID0gb21hcF9wcm1fcHJvYmUsCj4+PiArwqDCoMKgIC5kcml2ZXIg
+PSB7Cj4+PiArwqDCoMKgwqDCoMKgwqAgLm5hbWXCoMKgwqDCoMKgwqDCoCA9IEtCVUlMRF9NT0RO
+QU1FLAo+Pj4gK8KgwqDCoMKgwqDCoMKgIC5vZl9tYXRjaF90YWJsZcKgwqDCoCA9IG9tYXBfcHJt
+X2lkX3RhYmxlLAo+Pj4gK8KgwqDCoCB9LAo+Pj4gK307Cj4+PiArYnVpbHRpbl9wbGF0Zm9ybV9k
+cml2ZXIob21hcF9wcm1fZHJpdmVyKTsKPj4+ICsKPj4+ICtNT0RVTEVfQUxJQVMoInBsYXRmb3Jt
+OnBybSIpOwoKRHJvcCB0aGlzIGFuZCB1c2UgTU9EVUxFX0RFVklDRV9UQUJMRSBpbnN0ZWFkIG9u
+IG9tYXBfcHJtX2lkX3RhYmxlIGlmCnJldGFpbmluZywgYnV0IEkgZG9uJ3QgdGhpbmsgdGhlc2Ug
+bmVlZCB0byBiZSBkZWZpbmVkLgoKcmVnYXJkcwpTdW1hbgoKPj4+ICtNT0RVTEVfTElDRU5TRSgi
+R1BMIHYyIik7Cj4+PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJvbWFwMisgcHJtIGRyaXZlciIpOwo+
+Pgo+PiBJdCBpcyBhIGJ1aWx0aW5fcGxhdGZvcm1fZHJpdmVyIHNvIGRvIHdlIG5lZWQgdGhlIE1P
+RFVMRSo/Cj4gCj4gV2VsbCwgdGhhdHMgZGViYXRhYmxlLCBob3dldmVyIHNvbWUgZXhpc3Rpbmcg
+ZHJpdmVycyBkbyBpbnRyb2R1Y2UgdGhpcwo+IGV2ZW4gaWYgdGhleSBhcmUgYnVpbHRpbi4KPiAK
+PiAtVGVybwo+IC0tIAo+IFRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmth
+dHUgMjIsIDAwMTgwIEhlbHNpbmtpLgo+IFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQu
+IEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
