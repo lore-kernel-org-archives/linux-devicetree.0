@@ -1,90 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
- DT bindings
-Date: Mon, 19 Aug 2019 10:16:25 -0700
-Message-ID: <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com>
-References: <20190724001100.133423-1-saravanak@google.com>
- <20190724001100.133423-4-saravanak@google.com>
- <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com>
- <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [PATCH v12 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+Date: Tue, 20 Aug 2019 01:24:40 +0800
+Message-ID: <1566235480.24117.13.camel@mhfsdcap03>
+References: <20190819025359.11381-1-bibby.hsieh@mediatek.com>
+ <20190819025359.11381-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190819025359.11381-12-bibby.hsieh@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream <srv_heupstream@mediatek.com>, Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= <Daoyuan.Huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= <Yt.Shen@mediatek.com>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= <ginny.chen@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, houlon.wei@mediatek.comMatthias Brugger <ma>
 List-Id: devicetree@vger.kernel.org
 
-On 8/15/19 6:50 PM, Saravana Kannan wrote:
-> On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 7/23/19 5:10 PM, Saravana Kannan wrote:
->>> Add device-links after the devices are created (but before they are
->>> probed) by looking at common DT bindings like clocks and
->>> interconnects.
-
-
-< very big snip (lots of comments that deserve answers) >
-
-
->>
->> /**
->>  * of_link_property - TODO:
->>  * dev:
->>  * con_np:
->>  * prop:
->>  *
->>  * TODO...
->>  *
->>  * Any failed attempt to create a link will NOT result in an immediate return.
->>  * of_link_property() must create all possible links even when one of more
->>  * attempts to create a link fail.
->>
->> Why?  isn't one failure enough to prevent probing this device?
->> Continuing to scan just results in extra work... which will be
->> repeated every time device_link_check_waiting_consumers() is called
+On Mon, 2019-08-19 at 10:53 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 > 
-> Context:
-> As I said in the cover letter, avoiding unnecessary probes is just one
-> of the reasons for this patch. The other (arguably more important)
-
-Agree that it is more important.
-
-
-> reason for this patch is to make sure suppliers know that they have
-> consumers that are yet to be probed. That way, suppliers can leave
-> their resource on AND in the right state if they were left on by the
-> bootloader. For example, if a clock was left on and at 200 MHz, the
-> clock provider needs to keep that clock ON and at 200 MHz till all the
-> consumers are probed.
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+>  2 files changed, 50 insertions(+)
 > 
-> Answer: Let's say a consumer device Z has suppliers A, B and C. If the
-> linking fails at A and you return immediately, then B and C could
-> probe and then figure that they have no more consumers (they don't see
-> a link to Z) and turn off their resources. And Z could fail
-> catastrophically.
+[...]
+>  
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
+> + *			       node of CMDQ client
+> + * @dev:	device of CMDQ mailbox clienti
 
-Then I think that this approach is fatally flawed in the current implementation.
+'clienti' looks like a typo, 'client'?
 
-A device can be added by a module that is loaded.  In that case the device
-was not present at late boot when the suppliers may turn off their resources.
-(I am assuming the details since I have not reviewed the patches later in
-the series that implement this part.)
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
 
-Am I missing something?
+'pasing' looks like a typo, 'parsing'?
 
-If I am wrong, then I'll have more comments for your review replies for
-patches 2 and 3.
-
-> 
-
-< another snip >
-
-> Thanks,
-> Saravana
-> 
-
--Frank
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx);
+> +
+>  /**
+>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
+>   * @dev:	device of CMDQ mailbox client
