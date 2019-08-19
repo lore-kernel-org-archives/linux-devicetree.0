@@ -1,44 +1,41 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v3 1/8] PCI: Add Amazon's Annapurna Labs vendor ID
-Date: Mon, 19 Aug 2019 18:51:30 +0100
-Message-ID: <20190819175130.GC23903@e119886-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092529.11310-2-jonnyc@amazon.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH 5/5] ARM: dts: sunxi: Add missing watchdog interrupts
+Date: Mon, 19 Aug 2019 19:51:43 +0200
+Message-ID: <20190819175143.g5hilveoeubkbfpk@flea>
+References: <20190813124744.32614-1-mripard@kernel.org>
+ <20190813124744.32614-5-mripard@kernel.org>
+ <CAGb2v66C-Mqdo-xWm4RAw33sFk-gLy-L_YWQ__6BjYU9gcpYug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190723092529.11310-2-jonnyc@amazon.com>
+In-Reply-To: <CAGb2v66C-Mqdo-xWm4RAw33sFk-gLy-L_YWQ__6BjYU9gcpYug@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Chocron <jonnyc@amazon.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2019 at 12:25:26PM +0300, Jonathan Chocron wrote:
-> Add Amazon's Annapurna Labs vendor ID to pci_ids.h.
-> 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  include/linux/pci_ids.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 40015609c4b5..63dfa4bace57 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2569,6 +2569,8 @@
->  
->  #define PCI_VENDOR_ID_ASMEDIA		0x1b21
->  
-> +#define PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS	0x1c36
-> +
->  #define PCI_VENDOR_ID_CIRCUITCO		0x1cc8
->  #define PCI_SUBSYSTEM_ID_CIRCUITCO_MINNOWBOARD	0x0001
->  
+On Wed, Aug 14, 2019 at 12:44:02PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Aug 13, 2019 at 8:48 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > The watchdog has an interrupt on all our SoCs, but it wasn't always listed.
+> > Add it to the devicetree where it's missing.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+>
+> On a separate note, the A31 has four watchdogs in the timer block, and
+> one interrupt for each watchdog. Should we expand the node to encompass
+> all of them, or add separate nodes for each additional one?
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Yep, I guess that's the idea considering the register range.
 
-> -- 
-> 2.17.1
-> 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
