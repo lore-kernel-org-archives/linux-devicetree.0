@@ -1,51 +1,45 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH RESEND V2 4/7] cpufreq: imx-cpufreq-dt: Add i.MX8MN
- support
-Date: Mon, 19 Aug 2019 14:07:21 +0530
-Message-ID: <20190819083721.w75clbpu2vtoeocx@vireshk-i7>
-References: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
- <1566109945-11149-4-git-send-email-Anson.Huang@nxp.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 13/19] dt-bindings: phy: Add Marvell COMPHY clocks
+Date: Mon, 19 Aug 2019 10:40:09 +0200
+Message-ID: <20190819104009.44b76442@xps13>
+References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
+ <20190731122126.3049-14-miquel.raynal@bootlin.com>
+ <20190812212946.GA6120@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1566109945-11149-4-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, leonard.crestez@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190812212946.GA6120@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 18-08-19, 02:32, Anson Huang wrote:
-> i.MX8MN has different speed grading definition as below, it has 4 bits
-> to define speed grading, add support for it.
-> 
->  SPEED_GRADE[3:0]    MHz
->     0000            2300
->     0001            2200
->     0010            2100
->     0011            2000
->     0100            1900
->     0101            1800
->     0110            1700
->     0111            1600
->     1000            1500
->     1001            1400
->     1010            1300
->     1011            1200
->     1100            1100
->     1101            1000
->     1110             900
->     1111             800
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
-> No changes.
-> ---
->  drivers/cpufreq/imx-cpufreq-dt.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-
-Applied. Thanks.
-
--- 
-viresh
+SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gTW9uLCAxMiBB
+dWcgMjAxOSAxNToyOTo0NiAtMDYwMDoKCj4gT24gV2VkLCAzMSBKdWwgMjAxOSAxNDoyMToyMCAr
+MDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IE1hcnZlbGwgQ1AxMTAgQ09NUEhZIGJsb2Nr
+IGlzIGZlZCBieSAzIGNsb2Nrcy4gRGVzY3JpYmUgZWFjaCBvZiB0aGVtIGluIHRoZQo+ID4gYmlu
+ZGluZ3MuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXlu
+YWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkv
+cGh5LW12ZWJ1LWNvbXBoeS50eHQgICAgICAgfCAxMCArKysrKysrKysrCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDEwIGluc2VydGlvbnMoKykKPiA+IAo+IAo+IFBsZWFzZSBhZGQgQWNrZWQtYnkvUmV2
+aWV3ZWQtYnkgdGFncyB3aGVuIHBvc3RpbmcgbmV3IHZlcnNpb25zLiBIb3dldmVyLAo+IHRoZXJl
+J3Mgbm8gbmVlZCB0byByZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBUaGUg
+dXBzdHJlYW0KPiBtYWludGFpbmVyIHdpbGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0
+aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lgo+IAo+IElmIGEgdGFnIHdhcyBub3QgYWRkZWQgb24gcHVy
+cG9zZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFuZ2VkLgoKT29wcywgSSBrbm93IEkg
+a25vdywgSSBqdXN0IGZvcmdvdCB0byBhZGQgbWFudWFsbHkgeW91ciBSZXZpZXdlZC1ieS4KCklm
+IHRoZSBtYWludGFpbmVycyBjYW4gYWRkIGl0IG1hbnVhbGx5IGl0J3MgZ3JlYXQ7IGF2b2lkaW5n
+IHRvIHJlc2VuZAoxOSBwYXRjaGVzIGZvciB0aGF0IHNvdW5kcyBzYW5lIDopCgoKVGhhbmtzLApN
+aXF1w6hsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
