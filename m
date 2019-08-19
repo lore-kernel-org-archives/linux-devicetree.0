@@ -1,31 +1,22 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH] tpm/tpm_ftpm_tee: trivial checkpatch fixes
-Date: Mon, 19 Aug 2019 16:32:28 +0300
-Message-ID: <20190819133228.lg62qeuugmygpsmd@linux.intel.com>
-References: <20190813130559.16936-1-sashal@kernel.org>
- <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND V2 1/7] arm64: dts: imx8mn-ddr4-evk: Add i2c1
+ support
+Date: Mon, 19 Aug 2019 15:35:56 +0200
+Message-ID: <20190819133553.GL5999@X250>
+References: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJaRmeV3Ne-HFTxMG_AZhaiGW_SKzgNrDMLJ5WGP0FXUQ@mail.gmail.com>
+In-Reply-To: <1566109945-11149-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>, Peter Huewe <peterhuewe@gmx.de>, Mark Rutland <mark.rutland@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-integrity@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, leonard.crestez@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 07:37:32AM -0600, Rob Herring wrote:
-> On Tue, Aug 13, 2019 at 7:06 AM Sasha Levin <sashal@kernel.org> wrote:
-> >
-> > Fixes a few checkpatch warnings (and ignores some), mostly around
-> > spaces/tabs and documentation.
-> >
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml |  2 ++
+On Sun, Aug 18, 2019 at 02:32:19AM -0400, Anson Huang wrote:
+> Enable i2c1 on i.MX8MN DDR4 EVK board.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
-/Jarkko
+Applied, thanks.
