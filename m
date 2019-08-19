@@ -1,7 +1,7 @@
 From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: [PATCH v8 2/3] fdt: add support for rng-seed
-Date: Mon, 19 Aug 2019 15:16:04 +0800
-Message-ID: <20190819071602.139014-3-hsinyi@chromium.org>
+Subject: [PATCH v8 3/3] arm64: kexec_file: add rng-seed support
+Date: Mon, 19 Aug 2019 15:16:06 +0800
+Message-ID: <20190819071602.139014-4-hsinyi@chromium.org>
 References: <20190819071602.139014-1-hsinyi@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,76 +12,60 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Introducing a chosen node, rng-seed, which is an entropy that can be
-passed to kernel called very early to increase initial device
-randomness. Bootloader should provide this entropy and the value is
-read from /chosen/rng-seed in DT.
-
-Obtain of_fdt_crc32 for CRC check after early_init_dt_scan_nodes(),
-since early_init_dt_scan_chosen() would modify fdt to erase rng-seed.
+Adding "rng-seed" to dtb. It's fine to add this property if original
+fdt doesn't contain it. Since original seed will be wiped after
+read, so use a default size 128 bytes here.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Change from v7:
-obtain of_fdt_crc32 after early_init_dt_scan_nodes().
+No change after v7.
 ---
- drivers/of/fdt.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/machine_kexec_file.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 9cdf14b9aaab..97a75996993c 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -24,6 +24,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/random.h>
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index ba78ee7ca990..7b08bf9499b6 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -27,6 +27,8 @@
+ #define FDT_PROP_INITRD_END	"linux,initrd-end"
+ #define FDT_PROP_BOOTARGS	"bootargs"
+ #define FDT_PROP_KASLR_SEED	"kaslr-seed"
++#define FDT_PROP_RNG_SEED	"rng-seed"
++#define RNG_SEED_SIZE		128
  
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -1044,6 +1045,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- {
- 	int l;
- 	const char *p;
-+	const void *rng_seed;
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&kexec_image_ops,
+@@ -102,6 +104,19 @@ static int setup_dtb(struct kimage *image,
+ 				FDT_PROP_KASLR_SEED);
+ 	}
  
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
- 
-@@ -1078,6 +1080,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	pr_debug("Command line is: %s\n", (char*)data);
- 
-+	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
-+	if (rng_seed && l > 0) {
-+		add_device_randomness(rng_seed, l);
-+
-+		/* try to clear seed so it won't be found. */
-+		fdt_nop_property(initial_boot_params, node, "rng-seed");
++	/* add rng-seed */
++	if (rng_is_initialized()) {
++		u8 rng_seed[RNG_SEED_SIZE];
++		get_random_bytes(rng_seed, RNG_SEED_SIZE);
++		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
++				RNG_SEED_SIZE);
++		if (ret)
++			goto out;
++	} else {
++		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
++				FDT_PROP_RNG_SEED);
 +	}
 +
- 	/* break now */
- 	return 1;
- }
-@@ -1166,8 +1176,6 @@ bool __init early_init_dt_verify(void *params)
- 
- 	/* Setup flat device-tree pointer */
- 	initial_boot_params = params;
--	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
--				fdt_totalsize(initial_boot_params));
- 	return true;
+ out:
+ 	if (ret)
+ 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
+@@ -110,7 +125,8 @@ static int setup_dtb(struct kimage *image,
  }
  
-@@ -1197,6 +1205,8 @@ bool __init early_init_dt_scan(void *params)
- 		return false;
- 
- 	early_init_dt_scan_nodes();
-+	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
-+				fdt_totalsize(initial_boot_params));
- 	return true;
- }
+ /*
+- * More space needed so that we can add initrd, bootargs and kaslr-seed.
++ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
++ * rng-seed.
+  */
+ #define DTB_EXTRA_SPACE 0x1000
  
 -- 
 2.20.1
