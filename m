@@ -1,58 +1,28 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bingings: PCI: Remove the num-lanes from Required
- properties
-Date: Mon, 19 Aug 2019 14:20:29 -0500
-Message-ID: <20190819192029.GS253360@google.com>
-References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
- <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v7 2/2] dt-bindings: mtd: Document Macronix raw NAND
+ controller bindings
+Date: Mon, 19 Aug 2019 14:21:43 -0500
+Message-ID: <CAL_JsqJB7JgSTcp9oVhnqxp7Xq4P1wj_sxggN-r7RXd8pOQ2xQ@mail.gmail.com>
+References: <1566199149-5669-1-git-send-email-masonccyang@mxic.com.tw> <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190812042435.25102-2-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+To: Mason Yang <masonccyang@mxic.com.tw>
+Cc: =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <bbrezillon@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Vignesh R <vigneshr@ti.com>, Stefan Agner <stefan@agner.ch>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Julien Su <juliensu@mxic.com.tw>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Burton <paul.burton@mips.com>, Liang Yang <liang.yang@amlogic.com>, MTD Maling List <linux-mtd@lists.infradead.org>, anders.roxell@linaro.org, Christophe Kerello <christophe.kerello@st.com>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-In subject:
-
-  s/dt-bingings/dt-bindings/
-
-Also, possibly
-
-  s/PCI:/PCI: designware:/
-
-since this only applies to designware-pcie.txt.
-
-On Mon, Aug 12, 2019 at 04:22:16AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The num-lanes is not a mandatory property, e.g. on FSL
-> Layerscape SoCs, the PCIe link training is completed
-> automatically base on the selected SerDes protocol, it
-> doesn't need the num-lanes to set-up the link width.
-> 
-> It has been added in the Optional properties. This
-> patch is to remove it from the Required properties.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Mon, Aug 19, 2019 at 1:55 AM Mason Yang <masonccyang@mxic.com.tw> wrote:
+>
+> Document the bindings used by the Macronix raw NAND controller.
+>
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 > ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..bd880df39a79 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  	     the ATU address space.
->      (The old way of getting the configuration address space from "ranges"
->      is deprecated and should be avoided.)
-> -- num-lanes: number of lanes to use
->  RC mode:
->  - #address-cells: set to <3>
->  - #size-cells: set to <2>
-> -- 
-> 2.17.1
-> 
+>  .../devicetree/bindings/mtd/mxic-nand.txt          | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mxic-nand.txt
+
+I would ask for this to use DT schema, but given it is v7 already:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
