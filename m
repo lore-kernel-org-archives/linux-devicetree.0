@@ -1,333 +1,65 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: Re: [RFC V2 10/11] interconnect: mediatek: Add mt8183 interconnect
- provider driver
-Date: Mon, 19 Aug 2019 09:53:59 +0800
-Message-ID: <1566179639.6371.14.camel@mtksdaap41>
-References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
-         <1556614265-12745-11-git-send-email-henryc.chen@mediatek.com>
-         <b8db4f70-4b95-5a98-38b4-9990bae023b4@linaro.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v3 1/2] dt/bindings: display: Add optional property
+ node for Mali DP500
+Date: Mon, 19 Aug 2019 02:13:39 +0000
+Message-ID: <DB7PR04MB5195A94A64615FF44C0F4442E2A80@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190816100424.5366-1-wen.he_1@nxp.com>
+ <CAL_JsqLPZ+hCGd=J3MU83saHJJ-yx6k+X0Y7-2ECu5yT8PxF4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b8db4f70-4b95-5a98-38b4-9990bae023b4@linaro.org>
+In-Reply-To: <CAL_JsqLPZ+hCGd=J3MU83saHJJ-yx6k+X0Y7-2ECu5yT8PxF4w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, Liviu Dudau <liviu.dudau@arm.com>, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
-
-Sorry for late reply.
-
-On Tue, 2019-05-14 at 09:43 +0300, Georgi Djakov wrote:
-> Hi Henry,
-> 
-> On 4/30/19 11:51, Henry Chen wrote:
-> > Introduce Mediatek MT8183 specific provider driver using the
-> > interconnect framework.
-> > 
-> > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> > ---
-> >  drivers/interconnect/Kconfig           |   1 +
-> >  drivers/interconnect/Makefile          |   1 +
-> >  drivers/interconnect/mediatek/Kconfig  |  13 ++
-> >  drivers/interconnect/mediatek/Makefile |   5 +
-> >  drivers/interconnect/mediatek/mt8183.c | 223 +++++++++++++++++++++++++++++++++
-> >  5 files changed, 243 insertions(+)
-> >  create mode 100644 drivers/interconnect/mediatek/Kconfig
-> >  create mode 100644 drivers/interconnect/mediatek/Makefile
-> >  create mode 100644 drivers/interconnect/mediatek/mt8183.c
-> > 
-> > diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-> > index 07a8276..ac41ea6 100644
-> > --- a/drivers/interconnect/Kconfig
-> > +++ b/drivers/interconnect/Kconfig
-> > @@ -11,5 +11,6 @@ menuconfig INTERCONNECT
-> >  if INTERCONNECT
-> >  
-> >  source "drivers/interconnect/qcom/Kconfig"
-> > +source "drivers/interconnect/mediatek/Kconfig"
-> >  
-> >  endif
-> > diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
-> > index 28f2ab0..253f24a3 100644
-> > --- a/drivers/interconnect/Makefile
-> > +++ b/drivers/interconnect/Makefile
-> > @@ -4,3 +4,4 @@ icc-core-objs				:= core.o
-> >  
-> >  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
-> >  obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
-> > +obj-$(CONFIG_INTERCONNECT_MTK)		+= mediatek/
-> > diff --git a/drivers/interconnect/mediatek/Kconfig b/drivers/interconnect/mediatek/Kconfig
-> > new file mode 100644
-> > index 0000000..0686494
-> > --- /dev/null
-> > +++ b/drivers/interconnect/mediatek/Kconfig
-> > @@ -0,0 +1,13 @@
-> > +config INTERCONNECT_MTK
-> > +	bool "Mediatek Network-on-Chip interconnect drivers"
-> > +	depends on ARCH_MEDIATEK
-> > +	help
-> > +	  Support for Mediatek's Network-on-Chip interconnect hardware.
-> > +
-> > +config INTERCONNECT_MTK_MT8183
-> > +	tristate "Mediatek MT8183 interconnect driver"
-> > +	depends on INTERCONNECT_MTK
-> > +	depends on (MTK_DVFSRC && OF)
-> > +	help
-> > +	  This is a driver for the Mediatek Network-on-Chip on mt8183-based
-> > +	  platforms.
-> > diff --git a/drivers/interconnect/mediatek/Makefile b/drivers/interconnect/mediatek/Makefile
-> > new file mode 100644
-> > index 0000000..a39ceee
-> > --- /dev/null
-> > +++ b/drivers/interconnect/mediatek/Makefile
-> > @@ -0,0 +1,5 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +mtk-mt8183-objs			:= mt8183.o
-> > +
-> > +obj-$(CONFIG_INTERCONNECT_MTK_MT8183) += mtk-mt8183.o
-> > \ No newline at end of file
-> > diff --git a/drivers/interconnect/mediatek/mt8183.c b/drivers/interconnect/mediatek/mt8183.c
-> > new file mode 100644
-> > index 0000000..38ffe0b
-> > --- /dev/null
-> > +++ b/drivers/interconnect/mediatek/mt8183.c
-> > @@ -0,0 +1,223 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> > + *
-> > + */
-> > +
-> > +#include <dt-bindings/interconnect/mtk,mt8183.h>
-> > +#include <linux/device.h>
-> > +#include <linux/interconnect.h>
-> 
-> This is not needed.
-ok, thanks.
-> 
-> > +#include <linux/interconnect-provider.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <soc/mediatek/mtk_dvfsrc.h>
-> > +
-> > +#define MT8183_MAX_LINKS	6
-> > +
-> > +/**
-> > + * struct mtk_icc_node - Mediatek specific interconnect nodes
-> > + * @name: the node name used in debugfs
-> > + * @ep: true if the node is an end point.
-> > + * @id: a unique node identifier
-> > + * @links: an array of nodes where we can go next while traversing
-> > + * @num_links: the total number of @links
-> > + * @buswidth: width of the interconnect between a node and the bus
-> 
-> Maybe mention the units?
-ok, I will add it.
-> 
-> > + * @sum_avg: current sum aggregate value of all avg bw requests
-> > + * @max_peak: current max aggregate value of all peak bw requests
-> 
-> units?
-> 
-> > + */
-> > +struct mtk_icc_node {
-> > +	unsigned char *name;
-> > +	bool ep;
-> > +	u16 id;
-> > +	u16 links[MT8183_MAX_LINKS];
-> > +	u16 num_links;
-> > +	u16 buswidth;
-> > +	u64 sum_avg;
-> > +	u64 max_peak;
-> > +};
-> > +
-> > +struct mtk_icc_desc {
-> > +	struct mtk_icc_node **nodes;
-> > +	size_t num_nodes;
-> > +};
-> > +
-> > +#define DEFINE_MNODE(_name, _id, _buswidth, _ep, _numlinks, ...)	\
-> 
-> We can drop the _numlinks and..
-ok, thank you for the advice.
-> 
-> > +		static struct mtk_icc_node _name = {			\
-> > +		.name = #_name,						\
-> > +		.id = _id,						\
-> > +		.buswidth = _buswidth,					\
-> > +		.ep = _ep,						\
-> > +		.num_links = _numlinks,					\
-> 
-> ..just use 	.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ }))
-> 
-> > +		.links = { __VA_ARGS__ },				\
-> > +}
-> > +
-> > +DEFINE_MNODE(ddr_emi, SLAVE_DDR_EMI, 1024, 1, 0, 0);
-> > +DEFINE_MNODE(mcusys, MASTER_MCUSYS, 256, 0, 1, SLAVE_DDR_EMI);
-> > +DEFINE_MNODE(gpu, MASTER_GPU, 256, 0, 1, SLAVE_DDR_EMI);
-> > +DEFINE_MNODE(mmsys, MASTER_MMSYS, 256, 0, 1, SLAVE_DDR_EMI);
-> > +DEFINE_MNODE(mm_vpu, MASTER_MM_VPU, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_disp, MASTER_MM_DISP, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_vdec, MASTER_MM_VDEC, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_venc, MASTER_MM_VENC, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_cam, MASTER_MM_CAM, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_img, MASTER_MM_IMG, 128, 0, 1, MASTER_MMSYS);
-> > +DEFINE_MNODE(mm_mdp, MASTER_MM_MDP, 128, 0, 1, MASTER_MMSYS);
-> > +
-> > +static struct mtk_icc_node *mt8183_icc_nodes[] = {
-> > +	&ddr_emi,
-> > +	&mcusys,
-> > +	&gpu,
-> > +	&mmsys,
-> > +	&mm_vpu,
-> > +	&mm_disp,
-> > +	&mm_vdec,
-> > +	&mm_venc,
-> > +	&mm_cam,
-> > +	&mm_img,
-> > +	&mm_mdp,
-> > +};
-> > +
-> > +static struct mtk_icc_desc mt8183_icc = {
-> > +	.nodes = mt8183_icc_nodes,
-> > +	.num_nodes = ARRAY_SIZE(mt8183_icc_nodes),
-> > +};
-> > +
-> > +static int mt8183_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> > +			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> > +{
-> > +	struct mtk_icc_node *in;
-> > +
-> > +	in = node->data;
-> > +
-> > +	*agg_avg += avg_bw;
-> > +	*agg_peak = max_t(u32, *agg_peak, peak_bw);
-> > +
-> > +	in->sum_avg = *agg_avg;
-> > +	in->max_peak = *agg_peak;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mt8183_icc_set(struct icc_node *src, struct icc_node *dst)
-> > +{
-> > +	int ret = 0;
-> > +	struct mtk_icc_node *node;
-> > +
-> > +	node = dst->data;
-> > +	if (node->ep) {
-> > +		pr_debug("sum_avg (%llu), max_peak (%llu)\n",
-> > +			node->sum_avg, node->max_peak);
-> > +		mtk_dvfsrc_send_request(src->provider->dev->parent,
-> > +					MTK_DVFSRC_CMD_BW_REQUEST,
-> > +					node->max_peak);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int mt8183_icc_probe(struct platform_device *pdev)
-> > +{
-> > +	int ret;
-> > +	const struct mtk_icc_desc *desc;
-> > +	struct icc_node *node;
-> > +	struct icc_onecell_data *data;
-> > +	struct icc_provider *provider;
-> > +	struct mtk_icc_node **mnodes;
-> > +	size_t num_nodes, i, j;
-> > +
-> > +	desc = of_device_get_match_data(&pdev->dev);
-> > +	if (!desc)
-> > +		return -EINVAL;
-> > +
-> > +	mnodes = desc->nodes;
-> > +	num_nodes = desc->num_nodes;
-> > +
-> > +	provider = devm_kzalloc(&pdev->dev, sizeof(*provider), GFP_KERNEL);
-> > +	if (!provider)
-> > +		return -ENOMEM;
-> > +
-> > +	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> > +
-> > +	provider->dev = &pdev->dev;
-> > +	provider->set = mt8183_icc_set;
-> > +	provider->aggregate = mt8183_icc_aggregate;
-> > +	provider->xlate = of_icc_xlate_onecell;
-> > +	INIT_LIST_HEAD(&provider->nodes);
-> > +	provider->data = data;
-> > +
-> > +	ret = icc_provider_add(provider);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "error adding interconnect provider\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	for (i = 0; i < num_nodes; i++) {
-> > +		node = icc_node_create(mnodes[i]->id);
-> > +		if (IS_ERR(node)) {
-> > +			ret = PTR_ERR(node);
-> > +			goto err;
-> > +		}
-> > +
-> > +		node->name = mnodes[i]->name;
-> > +		node->data = mnodes[i];
-> > +		icc_node_add(node, provider);
-> > +
-> > +		dev_dbg(&pdev->dev, "registered node %s, num link: %d\n",
-> > +			mnodes[i]->name, mnodes[i]->num_links);
-> > +
-> > +		/* populate links */
-> > +		for (j = 0; j < mnodes[i]->num_links; j++)
-> > +			icc_link_create(node, mnodes[i]->links[j]);
-> > +
-> > +		data->nodes[i] = node;
-> > +	}
-> > +	data->num_nodes = num_nodes;
-> > +
-> > +	platform_set_drvdata(pdev, provider);
-> > +
-> > +	return ret;
-> 
-> just return 0;
-ok.
-> 
-> > +err:
-> > +	list_for_each_entry(node, &provider->nodes, node_list) {
-> > +		icc_node_del(node);
-> > +		icc_node_destroy(node->id);
-> > +	}
-> > +
-> > +	icc_provider_del(provider);
-> > +	return ret;
-> > +}
-> > +
-> > +static int mt8183_icc_remove(struct platform_device *pdev)
-> > +{
-> > +	struct icc_provider *provider = platform_get_drvdata(pdev);
-> > +	struct icc_node *n;
-> > +
-> > +	list_for_each_entry(n, &provider->nodes, node_list) {
-> > +		icc_node_del(n);
-> > +		icc_node_destroy(n->id);
-> > +	}
-> > +
-> > +	return icc_provider_del(provider);
-> > +}
-> > +
-> > +static const struct of_device_id mt8183_icc_of_match[] = {
-> > +	{ .compatible = "mediatek,mt8183-emi-icc", .data = &mt8183_icc },
-> 
-> A separate -icc compatible should not be needed.
-ok.
-> 
-> Thanks,
-> Georgi
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
+YmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOeW5tDjmnIgxN+aXpSA0OjA5DQo+IFRvOiBX
+ZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBsaW51eC1kZXZlbEBsaW51eC5ueGRpLm54
+cC5jb207IExpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPjsNCj4gQnJpYW4gU3Rhcmtl
+eSA8YnJpYW4uc3RhcmtleUBhcm0uY29tPjsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4Lmll
+PjsgRGFuaWVsDQo+IFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPjsgTWFyayBSdXRsYW5kIDxtYXJr
+LnJ1dGxhbmRAYXJtLmNvbT47IGRyaS1kZXZlbA0KPiA8ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZz47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gU3ViamVjdDogW0VY
+VF0gUmU6IFt2MyAxLzJdIGR0L2JpbmRpbmdzOiBkaXNwbGF5OiBBZGQgb3B0aW9uYWwgcHJvcGVy
+dHkgbm9kZSBmb3INCj4gTWFsaSBEUDUwMA0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0K
+PiBPbiBGcmksIEF1ZyAxNiwgMjAxOSBhdCA0OjE0IEFNIFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNv
+bT4gd3JvdGU6DQo+ID4NCj4gPiBBZGQgb3B0aW9uYWwgcHJvcGVydHkgbm9kZSAnYXJtLG1hbGlk
+cC1hcnFvcy12YWx1ZScgZm9yIHRoZSBNYWxpIERQNTAwLg0KPiA+IFRoaXMgcHJvcGVydHkgZGVz
+Y3JpYmUgdGhlIEFSUW9TIGxldmVscyBvZiBEUDUwMCdzIFFvUyBzaWduYWxpbmcuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+ID4gLS0tDQo+ID4g
+Y2hhbmdlIGluIHYzOg0KPiA+ICAgICAgICAgLSBjb3JyZWN0aW9uIHRoZSBkZXNjcmliZSBvZiB0
+aGUgbm9kZQ0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2FybSxtYWxpZHAudHh0IHwgMyArKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0
+aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQNCj4gPiBpbmRleCAyZjc4NzA5ODNl
+ZjEuLjFmNzExZDMyZjIzNSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0DQo+ID4gQEAgLTM3
+LDYgKzM3LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPg0KPiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3Jlc2VydmVkLW1lbW9yeS50eHQpDQo+
+ID4gICAgICB0byBiZSB1c2VkIGZvciB0aGUgZnJhbWVidWZmZXI7IGlmIG5vdCBwcmVzZW50LCB0
+aGUgZnJhbWVidWZmZXIgbWF5DQo+ID4gICAgICBiZSBsb2NhdGVkIGFueXdoZXJlIGluIG1lbW9y
+eS4NCj4gPiArICAtIGFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbDogcGhhbmRsZSB0byBkZXNj
+cmliaW5nIHRoZSBBUlFvUyBsZXZlbHMgb2YNCj4gRFA1MDAncw0KPiA+ICsgICAgUW9TIHNpZ25h
+bGluZy4NCj4gDQo+IFRoZSBkcml2ZXIgaXMgcmVhZGluZyBhIHUzMi4uLiBEaWQgeW91IHRlc3Qg
+dGhpcz8NCg0KU3VyZSwgYWN0dWFsbHksIGhlcmUgc2hvdWxkIGJlIHVzZSBhIHUzMiB2YWx1ZS4u
+Li4NCg0KVGhlIG9sZGVyIGRlc2NyaXB0aW9uIHdhcyBjb3JyZWN0LCBzb3JyeSwgSSBzaG91bGQg
+YmUNCkNvcnJlY3Rpb24gdGhlIGV4YW1wbGUgbm9kZSBkZWZpbmUuLi4NCg0KJ2ludGVnZXIgb2Yg
+dTMyIHZhbHVlIGRlc2NyaWJpbmcgdGhlIEFSUW9TIGxldmVscyBvZiBEUDUwMCdzIFFvUyBzaWdu
+YWxpbmcnLCANCg0KPiANCj4gDQo+ID4NCj4gPg0KPiA+ICBFeGFtcGxlOg0KPiA+IEBAIC01NCw2
+ICs1Niw3IEBAIEV4YW1wbGU6DQo+ID4gICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmb3NjY2xr
+Mj4sIDwmZnBnYW9zYzA+LCA8JmZwZ2Fvc2MxPiwNCj4gPCZmcGdhb3NjMT47DQo+ID4gICAgICAg
+ICAgICAgICAgIGNsb2NrLW5hbWVzID0gInB4bGNsayIsICJtY2xrIiwgImFjbGsiLCAicGNsayI7
+DQo+ID4gICAgICAgICAgICAgICAgIGFybSxtYWxpZHAtb3V0cHV0LXBvcnQtbGluZXMgPSAvYml0
+cy8gOCA8OCA4IDg+Ow0KPiA+ICsgICAgICAgICAgICAgICBhcm0sbWFsaWRwLWFycW9zLWhpZ2gt
+bGV2ZWwgPSA8JnJxb3N2YWx1ZT47DQoJCQkJCWFybSxtYWxpZHAtYXJxb3MtaGlnaC1sZXZlbCA9
+IDwgMHhkMDAwZDAwMD47DQoNCkJlc3QgUmVnYXJkcywNCldlbg0KDQo+ID4gICAgICAgICAgICAg
+ICAgIHBvcnQgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGRwMF9vdXRwdXQ6IGVuZHBv
+aW50IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2lu
+dCA9DQo+IDwmdGRhOTk4eF8yX2lucHV0PjsNCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo=
