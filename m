@@ -1,63 +1,59 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/8] dt-bindings: omap: add new binding for PRM instances
-Date: Mon, 19 Aug 2019 12:28:25 +0300
-Message-ID: <aa5538ae-76b4-942b-dc98-6e55628cf36a@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-2-git-send-email-t-kristo@ti.com>
- <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
+Date: Mon, 19 Aug 2019 11:31:47 +0200
+Message-ID: <20190819093147.GE4841@zn.tnic>
+References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
+ <20190807144016.GA24328@zn.tnic>
+ <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org, s-anna@ti.com
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lei Wang <leiwang_git@outlook.com>
+Cc: "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDgvMjAxOSAwNzozNSwgS2VlcnRoeSB3cm90ZToKPiAKPiAKPiBPbiAwNy8wOC8xOSAx
-OjE4IFBNLCBUZXJvIEtyaXN0byB3cm90ZToKPj4gQWRkIG5ldyBiaW5kaW5nIGZvciBPTUFQIFBS
-TSAoUG93ZXIgYW5kIFJlc2V0IE1hbmFnZXIpIGluc3RhbmNlcy4gRWFjaAo+PiBvZiB0aGVzZSB3
-aWxsIGFjdCBhcyBhIHBvd2VyIGRvbWFpbiBjb250cm9sbGVyIGFuZCBwb3RlbnRpYWxseSBhcyBh
-IHJlc2V0Cj4+IHByb3ZpZGVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBUZXJvIEtyaXN0byA8dC1r
-cmlzdG9AdGkuY29tPgo+PiAtLS0KPj4gwqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29t
-YXAvcHJtLWluc3QudHh0wqDCoMKgwqDCoCB8IDI0IAo+PiArKysrKysrKysrKysrKysrKysrKysr
-Cj4+IMKgIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspCj4+IMKgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCAKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9vbWFwL3By
-bS1pbnN0LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9vbWFwL3BybS1pbnN0LnR4dCAKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvYXJtL29tYXAvcHJtLWluc3QudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-Cj4+IGluZGV4IDAwMDAwMDAuLmUwYWU4N2IKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvcHJtLWluc3QudHh0Cj4+IEBA
-IC0wLDAgKzEsMjQgQEAKPj4gK09NQVAgUFJNIGluc3RhbmNlIGJpbmRpbmdzCj4+ICsKPj4gK1Bv
-d2VyIGFuZCBSZXNldCBNYW5hZ2VyIGlzIGFuIElQIGJsb2NrIG9uIE9NQVAgZmFtaWx5IG9mIGRl
-dmljZXMgd2hpY2gKPj4gK2hhbmRsZSB0aGUgcG93ZXIgZG9tYWlucyBhbmQgdGhlaXIgY3VycmVu
-dCBzdGF0ZSwgYW5kIHByb3ZpZGUgcmVzZXQKPj4gK2hhbmRsaW5nIGZvciB0aGUgZG9tYWlucyBh
-bmQvb3Igc2VwYXJhdGUgSVAgYmxvY2tzIHVuZGVyIHRoZSBwb3dlciAKPj4gZG9tYWluCj4+ICto
-aWVyYXJjaHkuCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6
-wqDCoMKgIE11c3QgYmUgb25lIG9mOgo+PiArwqDCoMKgwqDCoMKgwqAgInRpLGFtMy1wcm0taW5z
-dCIKPj4gK8KgwqDCoMKgwqDCoMKgICJ0aSxhbTQtcHJtLWluc3QiCj4+ICvCoMKgwqDCoMKgwqDC
-oCAidGksb21hcDQtcHJtLWluc3QiCj4+ICvCoMKgwqDCoMKgwqDCoCAidGksb21hcDUtcHJtLWlu
-c3QiCj4+ICvCoMKgwqDCoMKgwqDCoCAidGksZHJhNy1wcm0taW5zdCIKPj4gKy0gcmVnOsKgwqDC
-oMKgwqDCoMKgIENvbnRhaW5zIFBSTSBpbnN0YW5jZSByZWdpc3RlciBhZGRyZXNzIHJhbmdlCj4+
-ICvCoMKgwqDCoMKgwqDCoCAoYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGgpCj4gCj4gSG93IGFib3V0
-IHJlc2V0LWNlbGxzIHByb3BlcnR5LCBJc24ndCB0aGF0IGEgbWFuZGF0b3J5IHByb3BlcnR5PwoK
-SXQgaXMgb3B0aW9uYWwsIGJ1dCB5b3UgYXJlIHJpZ2h0LCBzaG91bGQgYmUgYWRkZWQgdG8gdGhp
-cy4KCi1UZXJvCgo+IAo+PiArCj4+ICtFeGFtcGxlOgo+PiArCj4+ICtwcm1fZHNwMjogcHJtQDFi
-MDAgewo+PiArwqDCoMKgIGNvbXBhdGlibGUgPSAidGksZHJhNy1wcm0taW5zdCI7Cj4+ICvCoMKg
-wqAgcmVnID0gPDB4MWIwMCAweDQwPjsKPj4gK8KgwqDCoCAjcmVzZXQtY2VsbHMgPSA8MT47Cj4+
-ICt9Owo+PgoKLS0KVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAy
-MiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlw
-YWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Aug 13, 2019 at 01:05:02AM +0000, Lei Wang wrote:
+> Added some more comments for the file:
+> 
+> /*
+>   * dmc520_edac.c, EDAC driver for DMC-520 memory controller
+      ^^^^^^^^^^^^^
+
+Filename is redundant.
+
+> These comments tell how to potentially expand the driver functions to 
+> support more interrupts besides what are already here.
+
+I can read that - the question is why are they there and for whom? For
+your future colleagues who'll take over this driver or what is those
+comments' purpose?
+
+> As above comments, this comment is to guide potential future adding to 
+> this driver to support other interrupts.
+
+See question above.
+
+> After edac_mc_alloc(), if succeeds, the above code updates dmc520_edac 
+> struct data. If moving edac_mc_alloc as suggested, I will need to use 
+> local variables to store the data,
+
+Yes, do that pls.
+
+> Do you mean having an array to keep all the irq_id, and then only 
+> devm_request_irq on them if all of the platform_get_irq are success?
+
+No, move it before edac_mc_alloc().
+
+In general, do *all* initialization of your hardware first and only
+then, when it succeeds, allocate the EDAC structures.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
