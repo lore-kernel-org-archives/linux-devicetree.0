@@ -1,7 +1,7 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v2 4/6] dt-bindings: watchdog: sun4i: Add the watchdog clock
-Date: Mon, 19 Aug 2019 20:20:37 +0200
-Message-ID: <20190819182039.24892-4-mripard@kernel.org>
+Subject: [PATCH v2 5/6] ARM: dts: sunxi: Add missing watchdog interrupts
+Date: Mon, 19 Aug 2019 20:20:38 +0200
+Message-ID: <20190819182039.24892-5-mripard@kernel.org>
 References: <20190819182039.24892-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,50 +14,78 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The Allwinner watchdog has a clock that has been described in some DT, but
-not all of them.
+The watchdog has an interrupt on all our SoCs, but it wasn't always listed.
+Add it to the devicetree where it's missing.
 
-The binding is also completely missing that description. Let's add that
-property to be consistent.
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
 ---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 1 +
+ arch/arm/boot/dts/sun5i.dtsi     | 1 +
+ arch/arm/boot/dts/sun6i-a31.dtsi | 1 +
+ arch/arm/boot/dts/sun7i-a20.dtsi | 1 +
+ arch/arm/boot/dts/sun8i-r40.dtsi | 1 +
+ 5 files changed, 5 insertions(+)
 
-Changes from v1:
-  - New patch
----
- .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-index 31c95c404619..3a54f58683a0 100644
---- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-@@ -31,12 +31,16 @@ properties:
-   reg:
-     maxItems: 1
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 077d45c7db6f..eed9fcb46185 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -815,6 +815,7 @@
+ 		wdt: watchdog@1c20c90 {
+ 			compatible = "allwinner,sun4i-a10-wdt";
+ 			reg = <0x01c20c90 0x10>;
++			interrupts = <24>;
+ 		};
  
-+  clocks:
-+    maxItems: 1
-+
-   interrupts:
-     maxItems: 1
+ 		rtc: rtc@1c20d00 {
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index 4e725afe7203..29a825f7afd1 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -600,6 +600,7 @@
+ 		wdt: watchdog@1c20c90 {
+ 			compatible = "allwinner,sun4i-a10-wdt";
+ 			reg = <0x01c20c90 0x10>;
++			interrupts = <24>;
+ 		};
  
- required:
-   - compatible
-   - reg
-+  - clocks
-   - interrupts
+ 		ir0: ir@1c21800 {
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 916f99db6206..b32d2d7cad4e 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -744,6 +744,7 @@
+ 		wdt1: watchdog@1c20ca0 {
+ 			compatible = "allwinner,sun6i-a31-wdt";
+ 			reg = <0x01c20ca0 0x20>;
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
- unevaluatedProperties: false
-@@ -47,6 +51,7 @@ examples:
-         compatible = "allwinner,sun4i-a10-wdt";
-         reg = <0x01c20c90 0x10>;
-         interrupts = <24>;
-+        clocks = <&osc24M>;
-         timeout-sec = <10>;
-     };
+ 		spdif: spdif@1c21000 {
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 9ad8e445b240..aeb682e757f2 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1115,6 +1115,7 @@
+ 		wdt: watchdog@1c20c90 {
+ 			compatible = "allwinner,sun4i-a10-wdt";
+ 			reg = <0x01c20c90 0x10>;
++			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
+ 		rtc: rtc@1c20d00 {
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 09e20768228c..f1be554b5894 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -404,6 +404,7 @@
+ 		wdt: watchdog@1c20c90 {
+ 			compatible = "allwinner,sun4i-a10-wdt";
+ 			reg = <0x01c20c90 0x10>;
++			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+ 		uart0: serial@1c28000 {
 -- 
 2.21.0
