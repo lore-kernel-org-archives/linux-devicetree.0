@@ -1,34 +1,32 @@
-From: Jan Kotas <jank@cadence.com>
-Subject: Re: [PATCH 1/3] media: dt-bindings: Update bindings for Cadence
- CSI2RX version 2.1
-Date: Mon, 19 Aug 2019 07:16:04 +0000
-Message-ID: <A3DAF408-887A-4913-B620-959BCD4E98D8@global.cadence.com>
-References: <20190725102648.13445-1-jank@cadence.com>
- <20190725102648.13445-2-jank@cadence.com> <20190816211802.GA12657@bogus>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: [PATCH v8 0/3] add support for rng-seed
+Date: Mon, 19 Aug 2019 15:16:00 +0800
+Message-ID: <20190819071602.139014-1-hsinyi@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190816211802.GA12657@bogus>
-Content-Language: en-US
-Content-ID: <727375F62A61604DBA21FABDFB9748E1@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jan Kotas <jank@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rafal Ciepiela <rafalc@cadence.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboyd@chromium.org>, Kees Cook <keescook@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gT24gMTYgQXVnIDIwMTksIGF0IDIzOjE4LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToNCj4gDQo+IA0KPiBPbiBUaHUsIEp1bCAyNSwgMjAxOSBhdCAxMToyNjo0NkFN
-ICswMTAwLCBKYW4gS290YXMgd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGFkZHMgYSBEVCBiaW5kaW5n
-cyBkb2N1bWVudGF0aW9uIGZvcg0KPj4gQ2FkZW5jZSBDU0kyUlggdjIuMSBjb250cm9sbGVyLg0K
-PiANCj4gQW5kIDEuMz8NCg0KT0ssIEnigJlsbCB1cGRhdGUgdGhlIGNvbW1pdCBkZXNjcmlwdGlv
-bi4NCj4+IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAtICAtIGNvbXBhdGlibGU6IG11c3QgYmUg
-c2V0IHRvICJjZG5zLGNzaTJyeCIgYW5kIGFuIFNvQy1zcGVjaWZpYyBjb21wYXRpYmxlDQo+PiAr
-ICAtIGNvbXBhdGlibGU6IG11c3QgYmUgc2V0IHRvICJjZG5zLGNzaTJyeCIgb3IgImNkbnMsY3Np
-MnJ4LTEuMyINCj4+ICsgICAgZm9yIHZlcnNpb24gMS4zIG9mIHRoZSBjb250cm9sbGVyLCAiY2Ru
-cyxjc2kycngtMi4xIiBmb3IgdjIuMQ0KPj4gKyAgICBhbmQgYW4gU29DLXNwZWNpZmljIGNvbXBh
-dGlibGUNCj4gDQo+IFRoaXMgd29yZGluZyBpcyBub3cgbm90IGNsZWFyIHRoYXQgYW4gU29DLXNw
-ZWNpZmljIGNvbXBhdGlibGUgaXMgYWx3YXlzIA0KPiByZXF1aXJlZCBvciBqdXN0IGZvciAyLjEu
-IFBsZWFzZSBmb3JtYXQgb25lIGNvbXBhdGlibGUgcGVyIGxpbmUuDQoNCk9LLCBJIHdpbGwgZml4
-IGl0IGluIHYyLg0KDQpUaGFuayB5b3UgZm9yIHRoZSBjb21tZW50cy4NCg0KUmVnYXJkcywNCkph
-bg0KDQoNCg==
+Introducing a chosen node, rng-seed, which is an entropy that can be
+passed to kernel called very early to increase initial device
+randomness. This can be used for adding sufficient initial entropy
+for stack canary. Especially architectures that lack per-stack canary.
+
+Hsin-Yi Wang (3):
+  arm64: map FDT as RW for early_init_dt_scan()
+  fdt: add support for rng-seed
+  arm64: kexec_file: add rng-seed support
+
+ arch/arm64/include/asm/mmu.h           |  2 +-
+ arch/arm64/kernel/kaslr.c              |  5 +----
+ arch/arm64/kernel/machine_kexec_file.c | 18 +++++++++++++++++-
+ arch/arm64/kernel/setup.c              |  9 ++++++++-
+ arch/arm64/mm/mmu.c                    | 15 +--------------
+ drivers/of/fdt.c                       | 14 ++++++++++++--
+ 6 files changed, 40 insertions(+), 23 deletions(-)
+
+-- 
+2.20.1
