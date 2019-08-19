@@ -1,342 +1,71 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH v3] userdiff: Add a builtin pattern for dts files
-Date: Mon, 19 Aug 2019 14:22:43 -0700
-Message-ID: <20190819212243.84492-1-sboyd@kernel.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 1/8] dt-bindings: omap: add new binding for PRM instances
+Date: Mon, 19 Aug 2019 16:28:16 -0500
+Message-ID: <b6506850-f4fc-43be-b5b7-b83cd77b5d66@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-2-git-send-email-t-kristo@ti.com>
+ <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
+ <aa5538ae-76b4-942b-dc98-6e55628cf36a@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <git-owner@vger.kernel.org>
-Sender: git-owner@vger.kernel.org
-To: git@vger.kernel.org
-Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Alban Gruin <alban.gruin@gmail.com>, Junio C Hamano <gitster@pobox.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <aa5538ae-76b4-942b-dc98-6e55628cf36a@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Linux kernel receives many patches to the devicetree files each
-release. The hunk header for those patches typically show nothing,
-making it difficult to figure out what node is being modified without
-applying the patch or opening the file and seeking to the context. Let's
-add a builtin 'dts' pattern to git so that users can get better diff
-output on dts files when they use the diff=dts driver.
-
-The regex has been constructed based on the spec at devicetree.org[1]
-and with some help from Johannes Sixt.
-
-[1] https://github.com/devicetree-org/devicetree-specification/releases/latest
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
-
-Changes from v2:
- * Added a few more tests for comments after and before {
- * Added a root node test
- * Support for root node (/) in the regex
- * Simplified regex per Johannes' feedback
- * Sprinkled some newlines into the tests for variety
-
-Changes from v1:                                                                                                                                                                    
- * Updated regex to handle anything after node names instead of                                                                                                                     
-   requiring a '{'                                                                                                                                                                  
- * Updated test for boolean relation operators                                                                                                                                      
- * Sent out a patch to devicetree spec to document % operator                                                                                                                       
-																					     
- Documentation/gitattributes.txt |  2 ++
- t/t4018-diff-funcname.sh        |  1 +
- t/t4018/dts-labels              |  9 ++++++++
- t/t4018/dts-node-unitless       |  8 +++++++
- t/t4018/dts-nodes               |  8 +++++++
- t/t4018/dts-nodes-comment1      |  8 +++++++
- t/t4018/dts-nodes-comment2      |  8 +++++++
- t/t4018/dts-reference           |  9 ++++++++
- t/t4018/dts-root                |  5 +++++
- t/t4034-diff-words.sh           |  1 +
- t/t4034/dts/expect              | 37 +++++++++++++++++++++++++++++++++
- t/t4034/dts/post                | 32 ++++++++++++++++++++++++++++
- t/t4034/dts/pre                 | 32 ++++++++++++++++++++++++++++
- userdiff.c                      |  8 +++++++
- 14 files changed, 168 insertions(+)
- create mode 100644 t/t4018/dts-labels
- create mode 100644 t/t4018/dts-node-unitless
- create mode 100644 t/t4018/dts-nodes
- create mode 100644 t/t4018/dts-nodes-comment1
- create mode 100644 t/t4018/dts-nodes-comment2
- create mode 100644 t/t4018/dts-reference
- create mode 100644 t/t4018/dts-root
- create mode 100644 t/t4034/dts/expect
- create mode 100644 t/t4034/dts/post
- create mode 100644 t/t4034/dts/pre
-
-diff --git a/Documentation/gitattributes.txt b/Documentation/gitattributes.txt
-index fb1d188d440c..c5a528c667b6 100644
---- a/Documentation/gitattributes.txt
-+++ b/Documentation/gitattributes.txt
-@@ -810,6 +810,8 @@ patterns are available:
- 
- - `css` suitable for cascading style sheets.
- 
-+- `dts` suitable for devicetree (DTS) files.
-+
- - `fortran` suitable for source code in the Fortran language.
- 
- - `fountain` suitable for Fountain documents.
-diff --git a/t/t4018-diff-funcname.sh b/t/t4018-diff-funcname.sh
-index 9261d6d3a000..6f5ef0035e92 100755
---- a/t/t4018-diff-funcname.sh
-+++ b/t/t4018-diff-funcname.sh
-@@ -31,6 +31,7 @@ diffpatterns="
- 	cpp
- 	csharp
- 	css
-+	dts
- 	fortran
- 	fountain
- 	golang
-diff --git a/t/t4018/dts-labels b/t/t4018/dts-labels
-new file mode 100644
-index 000000000000..b21ef8737bb8
---- /dev/null
-+++ b/t/t4018/dts-labels
-@@ -0,0 +1,9 @@
-+/ {
-+	label_1: node1@ff00 {
-+		label2: RIGHT {
-+			vendor,some-property;
-+
-+			ChangeMe = <0x45-30>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-node-unitless b/t/t4018/dts-node-unitless
-new file mode 100644
-index 000000000000..c5287d91416e
---- /dev/null
-+++ b/t/t4018/dts-node-unitless
-@@ -0,0 +1,8 @@
-+/ {
-+	label_1: node1 {
-+		RIGHT {
-+			prop-array = <1>, <4>;
-+			ChangeMe = <0xffeedd00>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-nodes b/t/t4018/dts-nodes
-new file mode 100644
-index 000000000000..5a4334bb1645
---- /dev/null
-+++ b/t/t4018/dts-nodes
-@@ -0,0 +1,8 @@
-+/ {
-+	label_1: node1@ff00 {
-+		RIGHT@deadf00,4000 {
-+			#size-cells = <1>;
-+			ChangeMe = <0xffeedd00>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-nodes-comment1 b/t/t4018/dts-nodes-comment1
-new file mode 100644
-index 000000000000..559dfce9b308
---- /dev/null
-+++ b/t/t4018/dts-nodes-comment1
-@@ -0,0 +1,8 @@
-+/ {
-+	label_1: node1@ff00 {
-+		RIGHT@deadf00,4000 /* &a comment */ {
-+			#size-cells = <1>;
-+			ChangeMe = <0xffeedd00>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-nodes-comment2 b/t/t4018/dts-nodes-comment2
-new file mode 100644
-index 000000000000..27e9718b31cf
---- /dev/null
-+++ b/t/t4018/dts-nodes-comment2
-@@ -0,0 +1,8 @@
-+/ {
-+	label_1: node1@ff00 {
-+		RIGHT@deadf00,4000 { /* a trailing comment */ 
-+			#size-cells = <1>;
-+			ChangeMe = <0xffeedd00>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-reference b/t/t4018/dts-reference
-new file mode 100644
-index 000000000000..8f0c87d8637f
---- /dev/null
-+++ b/t/t4018/dts-reference
-@@ -0,0 +1,9 @@
-+&label_1 {
-+	TEST = <455>;
-+};
-+
-+&RIGHT {
-+	vendor,some-property;
-+
-+	ChangeMe = <0x45-30>;
-+};
-diff --git a/t/t4018/dts-root b/t/t4018/dts-root
-new file mode 100644
-index 000000000000..2ef9e6ffaa2c
---- /dev/null
-+++ b/t/t4018/dts-root
-@@ -0,0 +1,5 @@
-+/RIGHT { /* Technically just supposed to be a slash */
-+	#size-cells = <1>;
-+
-+	ChangeMe = <0xffeedd00>;
-+};
-diff --git a/t/t4034-diff-words.sh b/t/t4034-diff-words.sh
-index 912df91226f2..9a93c2a3e0dd 100755
---- a/t/t4034-diff-words.sh
-+++ b/t/t4034-diff-words.sh
-@@ -303,6 +303,7 @@ test_language_driver bibtex
- test_language_driver cpp
- test_language_driver csharp
- test_language_driver css
-+test_language_driver dts
- test_language_driver fortran
- test_language_driver html
- test_language_driver java
-diff --git a/t/t4034/dts/expect b/t/t4034/dts/expect
-new file mode 100644
-index 000000000000..560fc9918476
---- /dev/null
-+++ b/t/t4034/dts/expect
-@@ -0,0 +1,37 @@
-+<BOLD>diff --git a/pre b/post<RESET>
-+<BOLD>index b6a9051..7803aee 100644<RESET>
-+<BOLD>--- a/pre<RESET>
-+<BOLD>+++ b/post<RESET>
-+<CYAN>@@ -1,32 +1,32 @@<RESET>
-+/ {<RESET>
-+	<RED>this_handle<RESET><GREEN>HANDLE_2<RESET>: <RED>node<RESET><GREEN>new-node<RESET>@<RED>f00<RESET><GREEN>eeda<RESET> {
-+		compatible = "<RED>mydev<RESET><GREEN>vendor,compat<RESET>";
-+		string-prop = <RED>start<RESET><GREEN>end<RESET>: "hello <RED>world!<RESET><GREEN>world?<RESET>" <RED>end<RESET><GREEN>start<RESET>: ;
-+		<RED>#size-cells<RESET><GREEN>#address-cells<RESET> = <<RED>0+0<RESET><GREEN>0+40<RESET>>;
-+		reg = <<RED>0xf00<RESET><GREEN>0xeeda<RESET>>;
-+		prop = <<GREEN>(<RESET>1<GREEN>)<RESET>>;
-+		prop = <<GREEN>(<RESET>-1e10<GREEN>)<RESET>>;
-+		prop = <(!<RED>3<RESET><GREEN>1<RESET>)>;
-+		prop = <(~<RED>3<RESET><GREEN>1<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>*<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>&<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>*<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>/<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>%<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3+4<RESET><GREEN>1+2<RESET>)>;
-+		prop = <(<RED>3-4<RESET><GREEN>1-2<RESET>)>;
-+		prop = /bits/ <RED>64<RESET><GREEN>32<RESET> <(<RED>3<RESET><GREEN>1<RESET><<<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>>><RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>&<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>^<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>|<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>&&<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>3<RESET><GREEN>1<RESET>||<RED>4<RESET><GREEN>2<RESET>)>;
-+		prop = <(<RED>4?5<RESET><GREEN>1?2<RESET>:3)>;
-+		list = <&<RED>this_handle<RESET><GREEN>HANDLE_2<RESET>>, <0 0 0 <RED>0<RESET><GREEN>1<RESET>>;
-+	};<RESET>
-+
-+	&<RED>phandle<RESET><GREEN>phandle2<RESET> {
-+		<RED>pre-phandle<RESET><GREEN>prop_handle<RESET> = <&<RED>this_handle<RESET><GREEN>HANDLE_2<RESET>>;
-+	};<RESET>
-+};<RESET>
-diff --git a/t/t4034/dts/post b/t/t4034/dts/post
-new file mode 100644
-index 000000000000..7803aee28093
---- /dev/null
-+++ b/t/t4034/dts/post
-@@ -0,0 +1,32 @@
-+/ {
-+	HANDLE_2: new-node@eeda {
-+		compatible = "vendor,compat";
-+		string-prop = end: "hello world?" start: ;
-+		#address-cells = <0+40>;
-+		reg = <0xeeda>;
-+		prop = <(1)>;
-+		prop = <(-1e10)>;
-+		prop = <(!1)>;
-+		prop = <(~1)>;
-+		prop = <(1*2)>;
-+		prop = <(1&2)>;
-+		prop = <(1*2)>;
-+		prop = <(1/2)>;
-+		prop = <(1%2)>;
-+		prop = <(1+2)>;
-+		prop = <(1-2)>;
-+		prop = /bits/ 32 <(1<<2)>;
-+		prop = <(1>>2)>;
-+		prop = <(1&2)>;
-+		prop = <(1^2)>;
-+		prop = <(1|2)>;
-+		prop = <(1&&2)>;
-+		prop = <(1||2)>;
-+		prop = <(1?2:3)>;
-+		list = <&HANDLE_2>, <0 0 0 1>;
-+	};
-+
-+	&phandle2 {
-+		prop_handle = <&HANDLE_2>;
-+	};
-+};
-diff --git a/t/t4034/dts/pre b/t/t4034/dts/pre
-new file mode 100644
-index 000000000000..b6a905113c22
---- /dev/null
-+++ b/t/t4034/dts/pre
-@@ -0,0 +1,32 @@
-+/ {
-+	this_handle: node@f00 {
-+		compatible = "mydev";
-+		string-prop = start: "hello world!" end: ;
-+		#size-cells = <0+0>;
-+		reg = <0xf00>;
-+		prop = <1>;
-+		prop = <-1e10>;
-+		prop = <(!3)>;
-+		prop = <(~3)>;
-+		prop = <(3*4)>;
-+		prop = <(3&4)>;
-+		prop = <(3*4)>;
-+		prop = <(3/4)>;
-+		prop = <(3%4)>;
-+		prop = <(3+4)>;
-+		prop = <(3-4)>;
-+		prop = /bits/ 64 <(3<<4)>;
-+		prop = <(3>>4)>;
-+		prop = <(3&4)>;
-+		prop = <(3^4)>;
-+		prop = <(3|4)>;
-+		prop = <(3&&4)>;
-+		prop = <(3||4)>;
-+		prop = <(4?5:3)>;
-+		list = <&this_handle>, <0 0 0 0>;
-+	};
-+
-+	&phandle {
-+		pre-phandle = <&this_handle>;
-+	};
-+};
-diff --git a/userdiff.c b/userdiff.c
-index e74a6d402255..86e3244e15dd 100644
---- a/userdiff.c
-+++ b/userdiff.c
-@@ -23,6 +23,14 @@ IPATTERN("ada",
- 	 "[a-zA-Z][a-zA-Z0-9_]*"
- 	 "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
- 	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
-+PATTERNS("dts",
-+	 "!;\n"
-+	 /* lines beginning with a word optionally preceded by '&' or the root */
-+	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
-+	 /* -- */
-+	 /* Property names and math operators */
-+	 "[a-zA-Z0-9,._+?#-]+"
-+	 "|[-+*/%&^|!~]|>>|<<|&&|\\|\\|"),
- IPATTERN("fortran",
- 	 "!^([C*]|[ \t]*!)\n"
- 	 "!^[ \t]*MODULE[ \t]+PROCEDURE[ \t]\n"
--- 
-Sent by a computer through tubes
+SGkgVGVybywKCk9uIDgvMTkvMTkgNDoyOCBBTSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMDgv
+MDgvMjAxOSAwNzozNSwgS2VlcnRoeSB3cm90ZToKPj4KPj4KPj4gT24gMDcvMDgvMTkgMToxOCBQ
+TSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4+PiBBZGQgbmV3IGJpbmRpbmcgZm9yIE9NQVAgUFJNIChQ
+b3dlciBhbmQgUmVzZXQgTWFuYWdlcikgaW5zdGFuY2VzLiBFYWNoCj4+PiBvZiB0aGVzZSB3aWxs
+IGFjdCBhcyBhIHBvd2VyIGRvbWFpbiBjb250cm9sbGVyIGFuZCBwb3RlbnRpYWxseSBhcyBhCj4+
+PiByZXNldAo+Pj4gcHJvdmlkZXIuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogVGVybyBLcmlzdG8g
+PHQta3Jpc3RvQHRpLmNvbT4KPj4+IC0tLQo+Pj4gwqAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL29tYXAvcHJtLWluc3QudHh0wqDCoMKgwqDCoCB8IDI0Cj4+PiArKysrKysrKysrKysrKysr
+KysrKysrCj4+PiDCoCAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQo+Pj4gwqAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0Cj4+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
+L29tYXAvcHJtLWluc3QudHh0Cj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vb21hcC9wcm0taW5zdC50eHQKPj4+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9vbWFwL3BybS1pbnN0LnR4dAo+Pj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLmUwYWU4N2IKPj4+IC0tLSAvZGV2L251bGwK
+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vb21hcC9wcm0t
+aW5zdC50eHQKPj4+IEBAIC0wLDAgKzEsMjQgQEAKPj4+ICtPTUFQIFBSTSBpbnN0YW5jZSBiaW5k
+aW5ncwo+Pj4gKwo+Pj4gK1Bvd2VyIGFuZCBSZXNldCBNYW5hZ2VyIGlzIGFuIElQIGJsb2NrIG9u
+IE9NQVAgZmFtaWx5IG9mIGRldmljZXMgd2hpY2gKPj4+ICtoYW5kbGUgdGhlIHBvd2VyIGRvbWFp
+bnMgYW5kIHRoZWlyIGN1cnJlbnQgc3RhdGUsIGFuZCBwcm92aWRlIHJlc2V0Cj4+PiAraGFuZGxp
+bmcgZm9yIHRoZSBkb21haW5zIGFuZC9vciBzZXBhcmF0ZSBJUCBibG9ja3MgdW5kZXIgdGhlIHBv
+d2VyCj4+PiBkb21haW4KPj4+ICtoaWVyYXJjaHkuCgpTbywgSSBzZWUgdGhhdCB5b3UgYXJlIGFk
+ZGluZyB0aGVzZSBhcyBmbGF0IG5vZGVzIGRpcmVjdGx5IHVuZGVyIHRoZSBwcm0Kbm9kZXMgd2hl
+cmUgd2UgaGF2ZSB0aGUgY2xvY2tzIGFuZCBjbG9ja19kb21haW5zLiBBcmUgeW91IGFudGljaXBh
+dGluZyBhCnNpbmdsZSBEVCBub2RlIGFuZC9vciBkcml2ZXIgbWFuYWdpbmcgYm90aCBwb3dlci1k
+b21haW5zIGFuZCByZXNldHM/Cgo+Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+PiAr
+LSBjb21wYXRpYmxlOsKgwqDCoCBNdXN0IGJlIG9uZSBvZjoKPj4+ICvCoMKgwqDCoMKgwqDCoCAi
+dGksYW0zLXBybS1pbnN0Igo+Pj4gK8KgwqDCoMKgwqDCoMKgICJ0aSxhbTQtcHJtLWluc3QiCj4+
+PiArwqDCoMKgwqDCoMKgwqAgInRpLG9tYXA0LXBybS1pbnN0Igo+Pj4gK8KgwqDCoMKgwqDCoMKg
+ICJ0aSxvbWFwNS1wcm0taW5zdCIKPj4+ICvCoMKgwqDCoMKgwqDCoCAidGksZHJhNy1wcm0taW5z
+dCIKCldoYXQgYWJvdXQgT01BUDIsIE9NQVAzLCBETTgxNHgsIERNODE2eD8KCnJlZ2FyZHMKU3Vt
+YW4KCj4+PiArLSByZWc6wqDCoMKgwqDCoMKgwqAgQ29udGFpbnMgUFJNIGluc3RhbmNlIHJlZ2lz
+dGVyIGFkZHJlc3MgcmFuZ2UKPj4+ICvCoMKgwqDCoMKgwqDCoCAoYmFzZSBhZGRyZXNzIGFuZCBs
+ZW5ndGgpCj4+Cj4+IEhvdyBhYm91dCByZXNldC1jZWxscyBwcm9wZXJ0eSwgSXNuJ3QgdGhhdCBh
+IG1hbmRhdG9yeSBwcm9wZXJ0eT8KPiAKPiBJdCBpcyBvcHRpb25hbCwgYnV0IHlvdSBhcmUgcmln
+aHQsIHNob3VsZCBiZSBhZGRlZCB0byB0aGlzLgo+IAo+IC1UZXJvCj4gCj4+Cj4+PiArCj4+PiAr
+RXhhbXBsZToKPj4+ICsKPj4+ICtwcm1fZHNwMjogcHJtQDFiMDAgewo+Pj4gK8KgwqDCoCBjb21w
+YXRpYmxlID0gInRpLGRyYTctcHJtLWluc3QiOwo+Pj4gK8KgwqDCoCByZWcgPSA8MHgxYjAwIDB4
+NDA+Owo+Pj4gK8KgwqDCoCAjcmVzZXQtY2VsbHMgPSA8MT47Cj4+PiArfTsKPj4+Cj4gCj4gLS0g
+Cj4gVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAg
+SGVsc2lua2kuCj4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9E
+b21pY2lsZTogSGVsc2lua2kKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
