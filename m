@@ -1,265 +1,197 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v1 2/2] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Date: Mon, 19 Aug 2019 18:03:18 +0530
-Message-ID: <a28b11cb-a12d-f717-0f27-5de6e2e28ed2@codeaurora.org>
-References: <20190807181301.15326-1-tdas@codeaurora.org>
- <20190807181301.15326-3-tdas@codeaurora.org>
- <20190807222424.17549214C6@mail.kernel.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH v3 01/11] dt-bindings: firmware: imx-scu: new binding to
+ parse clocks from device tree
+Date: Mon, 19 Aug 2019 12:36:36 +0000
+Message-ID: <caab750569dc246c99e88bbe6d9ca137ae7f198f.camel@nxp.com>
+References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
+ <1563289265-10977-2-git-send-email-aisheng.dong@nxp.com>
+ <20190803144246.GM8870@X250.getinternet.no>
+ <CAA+hA=Sm0MAHNwH1sZQfK8cO+3jLkue97u=ceFiUv34+qGos1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190807222424.17549214C6@mail.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAA+hA=Sm0MAHNwH1sZQfK8cO+3jLkue97u=ceFiUv34+qGos1Q@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org
+Content-ID: <00FD0AD8D6909240B0D78742C00FF69A@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "dongas86@gmail.com" <dongas86@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
-
-On 8/8/2019 3:54 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-08-07 11:13:01)
->> Add support for the global clock controller found on SC7180
->> based devices. This should allow most non-multimedia device
->> drivers to probe and control their clocks.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+On Mon, 2019-08-05 at 11:48 +0800, Dong Aisheng wrote:
+> On Sun, Aug 4, 2019 at 11:49 AM Shawn Guo <shawnguo@kernel.org>
+> wrote:
+> > 
+> > On Tue, Jul 16, 2019 at 11:00:55PM +0800, Dong Aisheng wrote:
+> > > There's a few limitations on the original one cell clock binding
+> > > (#clock-cells = <1>) that we have to define some SW clock IDs for
+> > > device
+> > > tree to reference. This may cause troubles if we want to use
+> > > common
+> > > clock IDs for multi platforms support when the clock of those
+> > > platforms
+> > > are mostly the same.
+> > > e.g. Current clock IDs name are defined with SS prefix.
+> > > 
+> > > However the device may reside in different SS across CPUs, that
+> > > means the
+> > > SS prefix may not valid anymore for a new SoC. Furthermore, the
+> > > device
+> > > availability of those clocks may also vary a bit.
+> > > 
+> > > For such situation, we want to eliminate the using of SW Clock
+> > > IDs and
+> > > change to use a more close to HW one instead.
+> > > For SCU clocks usage, only two params required: Resource id +
+> > > Clock Type.
+> > 
+> > If this is how SCU firmware addresses the clock, I agree that it's
+> > worth
+> > witching to this new bindings, which describes the hardware (SCU
+> > firmware in this case) better, IMO.
+> > 
+> > > Both parameters are platform independent. So we could use two
+> > > cells binding
+> > > to pass those parameters,
+> > > 
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Stephen Boyd <sboyd@kernel.org>
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > > Cc: Michael Turquette <mturquette@baylibre.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > > ---
+> > > ChangeLog:
+> > > v2->v3:
+> > >  * Changed to two cells binding and register all clocks in driver
+> > >    instead of parse from device tree.
+> > > v1->v2:
+> > >  * changed to one cell binding inspired by arm,scpi.txt
+> > >    Documentation/devicetree/bindings/arm/arm,scpi.txt
+> > >    Resource ID is encoded in 'reg' property.
+> > >    Clock type is encoded in generic clock-indices property.
+> > >    Then we don't have to search all the DT nodes to fetch
+> > >    those two value to construct clocks which is relatively
+> > >    low efficiency.
+> > >  * Add required power-domain property as well.
+> > > ---
+> > >  .../devicetree/bindings/arm/freescale/fsl,scu.txt       | 12
+> > > +++++++-----
+> > >  include/dt-bindings/firmware/imx/rsrc.h                 | 17
+> > > +++++++++++++++++
+> > >  2 files changed, 24 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > index 5d7dbab..351d335 100644
+> > > --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> > > @@ -89,7 +89,10 @@ Required properties:
+> > >                         "fsl,imx8qm-clock"
+> > >                         "fsl,imx8qxp-clock"
+> > >                       followed by "fsl,scu-clk"
+> > > -- #clock-cells:              Should be 1. Contains the Clock ID
+> > > value.
+> > > +- #clock-cells:              Should be either
+> > > +                     2: Contains the Resource and Clock ID
+> > > value.
+> > > +                     or
+> > > +                     1: Contains the Clock ID value.
+> > > (DEPRECATED)
+> > >  - clocks:            List of clock specifiers, must contain an
+> > > entry for
+> > >                       each required entry in clock-names
+> > >  - clock-names:               Should include entries
+> > > "xtal_32KHz", "xtal_24MHz"
+> > > @@ -162,7 +165,7 @@ firmware {
+> > > 
+> > >               clk: clk {
+> > >                       compatible = "fsl,imx8qxp-clk", "fsl,scu-
+> > > clk";
+> > > -                     #clock-cells = <1>;
+> > > +                     #clock-cells = <2>;
+> > >               };
+> > > 
+> > >               iomuxc {
+> > > @@ -192,8 +195,7 @@ serial@5a060000 {
+> > >       ...
+> > >       pinctrl-names = "default";
+> > >       pinctrl-0 = <&pinctrl_lpuart0>;
+> > > -     clocks = <&clk IMX8QXP_UART0_CLK>,
+> > > -              <&clk IMX8QXP_UART0_IPG_CLK>;
+> > > -     clock-names = "per", "ipg";
+> > > +     clocks = <&uart0_clk IMX_SC_R_UART_0 IMX_SC_PM_CLK_PER>;
+> > > +     clock-names = "ipg";
+> > >       power-domains = <&pd IMX_SC_R_UART_0>;
+> > >  };
+> > > diff --git a/include/dt-bindings/firmware/imx/rsrc.h
+> > > b/include/dt-bindings/firmware/imx/rsrc.h
+> > > index 4e61f64..fbeaca7 100644
+> > > --- a/include/dt-bindings/firmware/imx/rsrc.h
+> > > +++ b/include/dt-bindings/firmware/imx/rsrc.h
+> > > @@ -547,4 +547,21 @@
+> > >  #define IMX_SC_R_ATTESTATION         545
+> > >  #define IMX_SC_R_LAST                        546
+> > > 
+> > > +/*
+> > > + * Defines for SC PM CLK
+> > > + */
+> > > +#define IMX_SC_PM_CLK_SLV_BUS                0       /* Slave
+> > > bus clock */
+> > > +#define IMX_SC_PM_CLK_MST_BUS                1       /* Master
+> > > bus clock */
+> > > +#define IMX_SC_PM_CLK_PER            2       /* Peripheral clock
+> > > */
+> > > +#define IMX_SC_PM_CLK_PHY            3       /* Phy clock */
+> > > +#define IMX_SC_PM_CLK_MISC           4       /* Misc clock */
 > 
-> Overall looks pretty good to me. Some minor nitpicks below.
+> This is for typical device resource.
 > 
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index e1ff83cc361e..9e634cf27464 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -323,4 +323,13 @@ config KRAITCC
->>            Support for the Krait CPU clocks on Qualcomm devices.
->>            Say Y if you want to support CPU frequency scaling.
->>
->> +config SC_GCC_7180
+> > > +#define IMX_SC_PM_CLK_MISC0          0       /* Misc 0 clock */
+> > > +#define IMX_SC_PM_CLK_MISC1          1       /* Misc 1 clock */
+> > > +#define IMX_SC_PM_CLK_MISC2          2       /* Misc 2 clock */
+> > > +#define IMX_SC_PM_CLK_MISC3          3       /* Misc 3 clock */
+> > > +#define IMX_SC_PM_CLK_MISC4          4       /* Misc 4 clock */
 > 
-> Can this be sorted alphabetically in this file? It's getting out of hand
-> when they all get added to the end.
+> This is for some special clock types which do not belong to above
+> normal clock types.
+> Used very rare in SCU firmware.
+> e.g.
+> enet0_mac0_rxclk SC_R_ENE T_0 / SC_PM_CL K_MISC0
 > 
-
-Next patch would add them in sorted order.
-
->> +       tristate "SC7180 Global Clock Controller"
->> +       select QCOM_GDSC
->> +       depends on COMMON_CLK_QCOM
->> +       help
->> +         Support for the global clock controller on SC7180 devices.
->> +         Say Y if you want to use peripheral devices such as UART, SPI,
->> +         I2C, USB, UFS, SDCC, etc.
->> +
->>   endif
->> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
->> new file mode 100644
->> index 000000000000..004b76e69402
->> --- /dev/null
->> +++ b/drivers/clk/qcom/gcc-sc7180.c
->> @@ -0,0 +1,2496 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,gcc-sc7180.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "common.h"
->> +#include "gdsc.h"
->> +#include "reset.h"
->> +
->> +#define GCC_MMSS_MISC          0x09ffc
->> +#define GCC_NPU_MISC           0x4d110
->> +#define GCC_GPU_MISC           0x71028
->> +
->> +enum {
->> +       P_BI_TCXO,
->> +       P_CORE_BI_PLL_TEST_SE,
->> +       P_GPLL0_OUT_EVEN,
->> +       P_GPLL0_OUT_MAIN,
->> +       P_GPLL1_OUT_MAIN,
->> +       P_GPLL4_OUT_MAIN,
->> +       P_GPLL6_OUT_MAIN,
->> +       P_GPLL7_OUT_MAIN,
->> +       P_SLEEP_CLK,
->> +};
->> +
->> +static struct clk_alpha_pll gpll0;
->> +static struct clk_alpha_pll gpll1;
->> +static struct clk_alpha_pll gpll4;
->> +static struct clk_alpha_pll gpll6;
->> +static struct clk_alpha_pll gpll7;
->> +static struct clk_alpha_pll_postdiv gpll0_out_even;
+> > > +#define IMX_SC_PM_CLK_CPU            2       /* CPU clock */
+> > > +#define IMX_SC_PM_CLK_PLL            4       /* PLL */
+> > > +#define IMX_SC_PM_CLK_BYPASS         4       /* Bypass clock */
 > 
-> Can't we create these PLLs before the parent maps? I don't see why we
-> need to forward declare the structs.
-> 
+> They're for specific clock types for CPU/PLL/BYPASS only.
 
-Would define the PLLs earlier.
+Hi Aisheng,
 
->> +
->> +static const struct parent_map gcc_parent_map_0[] = {
->> +       { P_BI_TCXO, 0 },
->> +       { P_GPLL0_OUT_MAIN, 1 },
->> +       { P_GPLL0_OUT_EVEN, 6 },
->> +       { P_CORE_BI_PLL_TEST_SE, 7 },
->> +};
->> +
->> +static const struct clk_parent_data gcc_parent_data_0[] = {
->> +       { .fw_name = "bi_tcxo", .name = "bi_tcxo" },
->> +       { .hw = &gpll0.clkr.hw },
-> [...]
->> +static struct clk_branch gcc_camera_ahb_clk = {
->> +       .halt_reg = 0xb008,
->> +       .halt_check = BRANCH_HALT,
->> +       .hwcg_reg = 0xb008,
->> +       .hwcg_bit = 1,
->> +       .clkr = {
->> +               .enable_reg = 0xb008,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gcc_camera_ahb_clk",
->> +                       .flags = CLK_IS_CRITICAL,
-> 
-> Please add a comment for CLK_IS_CRITICAL usage explaining why clks must
-> be kept on forever.
-> 
-
-Would add the comments for the CRITICAL clocks.
-
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_branch gcc_camera_hf_axi_clk = {
->> +       .halt_reg = 0xb020,
->> +       .halt_check = BRANCH_HALT,
->> +       .clkr = {
->> +               .enable_reg = 0xb020,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
-> [...]
->> +
->> +static const struct qcom_reset_map gcc_sc7180_resets[] = {
->> +       [GCC_QUSB2PHY_PRIM_BCR] = { 0x26000 },
->> +       [GCC_QUSB2PHY_SEC_BCR] = { 0x26004 },
->> +       [GCC_UFS_PHY_BCR] = { 0x77000 },
->> +       [GCC_USB30_PRIM_BCR] = { 0xf000 },
->> +       [GCC_USB3_PHY_PRIM_BCR] = { 0x50000 },
->> +       [GCC_USB3PHY_PHY_PRIM_BCR] = { 0x50004 },
->> +       [GCC_USB3_PHY_SEC_BCR] = { 0x5000c },
->> +       [GCC_USB3_DP_PHY_PRIM_BCR] = { 0x50008 },
->> +       [GCC_USB3PHY_PHY_SEC_BCR] = { 0x50010 },
->> +       [GCC_USB3_DP_PHY_SEC_BCR] = { 0x50014 },
->> +       [GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
->> +};
->> +
->> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk),
-> 
-> I was happy if you wanted to include the _src changing patch from
-> earlier. Can you throw it into this series?
-> 
-
-Next patch series I would include the patch.
-
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk),
->> +       DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk),
->> +};
->> +
->> +static const struct regmap_config gcc_sc7180_regmap_config = {
->> +       .reg_bits = 32,
->> +       .reg_stride = 4,
->> +       .val_bits = 32,
->> +       .max_register = 0x18208c,
->> +       .fast_io = true,
->> +};
->> +
->> +static const struct qcom_cc_desc gcc_sc7180_desc = {
->> +       .config = &gcc_sc7180_regmap_config,
->> +       .clk_hws = gcc_sc7180_hws,
->> +       .num_clk_hws = ARRAY_SIZE(gcc_sc7180_hws),
->> +       .clks = gcc_sc7180_clocks,
->> +       .num_clks = ARRAY_SIZE(gcc_sc7180_clocks),
->> +       .resets = gcc_sc7180_resets,
->> +       .num_resets = ARRAY_SIZE(gcc_sc7180_resets),
->> +       .gdscs = gcc_sc7180_gdscs,
->> +       .num_gdscs = ARRAY_SIZE(gcc_sc7180_gdscs),
->> +};
->> +
->> +static const struct of_device_id gcc_sc7180_match_table[] = {
->> +       { .compatible = "qcom,gcc-sc7180" },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
->> +
->> +static int gcc_sc7180_probe(struct platform_device *pdev)
->> +{
->> +       struct regmap *regmap;
->> +       int ret;
->> +
->> +       regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
->> +       if (IS_ERR(regmap)) {
->> +               pr_err("Failed to map the gcc registers\n");
-> 
-> I don't think we need this error message. Please remove it.
-> 
-
-Yes, would remove this.
-
-
->> +               return PTR_ERR(regmap);
->> +       }
->> +
->> +       /*
->> +        * Disable the GPLL0 active input to MM blocks, NPU
->> +        * and GPU via MISC registers.
->> +        */
->> +       regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
->> +       regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
->> +       regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
->> +
->> +       /* DFS clock registration */
-> 
-> This comment is pretty useless, please remove it.
-
-Done, would remove it.
+Yes, please separate this types of clocks in their own sections with
+proper description.
 
 > 
->> +       ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
->> +                                       ARRAY_SIZE(gcc_dfs_clocks));
->> +       if (ret)
->> +               return ret;
->> +
->> +       return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
->> +}
+> > 
+> > It seems that there are several sets of clock type which apply to
+> > different resources/devices?  If so, can you separate them a bit
+> > with
+> > some comments to make the list easier for readers?
+> > 
+> 
+> 
+So, please send v4 with all comments fixed. I can help with testing.
+I am also intrested in seeing this get in!
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+thanks,
+Daniel.
