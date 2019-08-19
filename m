@@ -1,41 +1,48 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 5/5] ARM: dts: sunxi: Add missing watchdog interrupts
-Date: Mon, 19 Aug 2019 19:51:43 +0200
-Message-ID: <20190819175143.g5hilveoeubkbfpk@flea>
-References: <20190813124744.32614-1-mripard@kernel.org>
- <20190813124744.32614-5-mripard@kernel.org>
- <CAGb2v66C-Mqdo-xWm4RAw33sFk-gLy-L_YWQ__6BjYU9gcpYug@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 10/22] arm64: dts: qcom: pm8150b: Add pon and adc nodes
+Date: Mon, 19 Aug 2019 10:56:27 -0700
+Message-ID: <20190819175628.6914A22CEB@mail.kernel.org>
+References: <20190814125012.8700-1-vkoul@kernel.org> <20190814125012.8700-11-vkoul@kernel.org> <20190814170803.DEFCC214DA@mail.kernel.org> <20190819174331.GN12733@vkoul-mobl.Dlink>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66C-Mqdo-xWm4RAw33sFk-gLy-L_YWQ__6BjYU9gcpYug@mail.gmail.com>
+In-Reply-To: <20190819174331.GN12733@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, sibis@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 12:44:02PM +0800, Chen-Yu Tsai wrote:
-> On Tue, Aug 13, 2019 at 8:48 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The watchdog has an interrupt on all our SoCs, but it wasn't always listed.
-> > Add it to the devicetree where it's missing.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
->
-> On a separate note, the A31 has four watchdogs in the timer block, and
-> one interrupt for each watchdog. Should we expand the node to encompass
-> all of them, or add separate nodes for each additional one?
+Quoting Vinod Koul (2019-08-19 10:43:31)
+> On 14-08-19, 10:08, Stephen Boyd wrote:
+> >=20
+> > >=20
+> > > diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/=
+dts/qcom/pm8150b.dtsi
+> > > index c0a678b0f159..846197bd65cd 100644
+> > > --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+> > > @@ -2,6 +2,7 @@
+> > >  // Copyright (c) 2017-2019, The Linux Foundation. All rights reserve=
+d.
+> > >  // Copyright (c) 2019, Linaro Limited
+> > > =20
+> > > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
+> > >  #include <dt-bindings/interrupt-controller/irq.h>
+> > >  #include <dt-bindings/spmi/spmi.h>
+> > > =20
+> > > @@ -11,6 +12,59 @@
+> > >                 reg =3D <0x2 SPMI_USID>;
+> > >                 #address-cells =3D <1>;
+> > >                 #size-cells =3D <0>;
+> > > +
+> > > +               pon@800 {
+> >=20
+> > Maybe pon node name should be 'key' or 'power-on'?
+>=20
+> pon stands for power on device. See Documentation/devicetree/bindings/pow=
+er/reset/qcom,pon.txt
+>=20
 
-Yep, I guess that's the idea considering the register range.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Right. I was hoping for a more standard node name vs. an acronym that's
+SoC specific.
