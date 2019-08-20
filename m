@@ -1,12 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 06/10] ARM: dts: sunxi: a83t: Add msgbox node
-Date: Mon, 19 Aug 2019 22:23:07 -0500
-Message-ID: <20190820032311.6506-7-samuel@sholland.org>
+Subject: [PATCH v4 07/10] ARM: dts: sunxi: h3/h5: Add msgbox node
+Date: Mon, 19 Aug 2019 22:23:08 -0500
+Message-ID: <20190820032311.6506-8-samuel@sholland.org>
 References: <20190820032311.6506-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBJOP5XVAKGQE4NJHEBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBJWP5XVAKGQEHBCK6EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190820032311.6506-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,25 +19,25 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A83T SoC contains a message box that can be used to send messages
-and interrupts back and forth between the ARM application CPUs and the
-ARISC coprocessor. Add a device tree node for it.
+The H3 and H5 SoCs contain a message box that can be used to send
+messages and interrupts back and forth between the ARM application CPUs
+and the ARISC coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 523be6611c50..8871d1aaf7f5 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -583,6 +583,16 @@
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 224e105a994a..f25876a8021a 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -232,6 +232,16 @@
  			reg = <0x1c14000 0x400>;
  		};
  
 +		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun8i-a83t-msgbox",
++			compatible = "allwinner,sun8i-h3-msgbox",
 +				     "allwinner,sun6i-a31-msgbox";
 +			reg = <0x01c17000 0x1000>;
 +			clocks = <&ccu CLK_BUS_MSGBOX>;
@@ -47,7 +47,7 @@ index 523be6611c50..8871d1aaf7f5 100644
 +		};
 +
  		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-a83t-musb",
- 				     "allwinner,sun8i-a33-musb";
+ 			compatible = "allwinner,sun8i-h3-musb";
+ 			reg = <0x01c19000 0x400>;
 -- 
 2.21.0
