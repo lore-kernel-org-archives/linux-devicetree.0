@@ -1,245 +1,167 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] dt-bindings: Convert Arm Mali Bifrost GPU to DT schema
-Date: Tue, 20 Aug 2019 14:59:58 -0500
-Message-ID: <20190820195959.6126-3-robh@kernel.org>
+Subject: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT schema
+Date: Tue, 20 Aug 2019 14:59:57 -0500
+Message-ID: <20190820195959.6126-2-robh@kernel.org>
 References: <20190820195959.6126-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the Arm Bifrost GPU binding to DT schema format.
-
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/gpu/arm,mali-bifrost.txt         |  92 --------------
- .../bindings/gpu/arm,mali-bifrost.yaml        | 115 ++++++++++++++++++
- 2 files changed, 115 insertions(+), 92 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-deleted file mode 100644
-index b8be9dbc68b4..000000000000
---- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-+++ /dev/null
-@@ -1,92 +0,0 @@
--ARM Mali Bifrost GPU
--====================
--
--Required properties:
--
--- compatible :
--  * Since Mali Bifrost GPU model/revision is fully discoverable by reading
--    some determined registers, must contain the following:
--    + "arm,mali-bifrost"
--  * which must be preceded by one of the following vendor specifics:
--    + "amlogic,meson-g12a-mali"
--
--- reg : Physical base address of the device and length of the register area.
--
--- interrupts : Contains the three IRQ lines required by Mali Bifrost devices,
--  in the following defined order.
--
--- interrupt-names : Contains the names of IRQ resources in this exact defined
--  order: "job", "mmu", "gpu".
--
--Optional properties:
--
--- clocks : Phandle to clock for the Mali Bifrost device.
--
--- mali-supply : Phandle to regulator for the Mali device. Refer to
--  Documentation/devicetree/bindings/regulator/regulator.txt for details.
--
--- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
--  for details.
--
--- resets : Phandle of the GPU reset line.
--
--Vendor-specific bindings
--------------------------
--
--The Mali GPU is integrated very differently from one SoC to
--another. In order to accommodate those differences, you have the option
--to specify one more vendor-specific compatible, among:
--
--- "amlogic,meson-g12a-mali"
--  Required properties:
--  - resets : Should contain phandles of :
--    + GPU reset line
--    + GPU APB glue reset line
--
--Example for a Mali-G31:
--
--gpu@ffa30000 {
--	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
--	reg = <0xffe40000 0x10000>;
--	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "job", "mmu", "gpu";
--	clocks = <&clk CLKID_MALI>;
--	mali-supply = <&vdd_gpu>;
--	operating-points-v2 = <&gpu_opp_table>;
--	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
--};
--
--gpu_opp_table: opp_table0 {
--	compatible = "operating-points-v2";
--
--	opp@533000000 {
--		opp-hz = /bits/ 64 <533000000>;
--		opp-microvolt = <1250000>;
--	};
--	opp@450000000 {
--		opp-hz = /bits/ 64 <450000000>;
--		opp-microvolt = <1150000>;
--	};
--	opp@400000000 {
--		opp-hz = /bits/ 64 <400000000>;
--		opp-microvolt = <1125000>;
--	};
--	opp@350000000 {
--		opp-hz = /bits/ 64 <350000000>;
--		opp-microvolt = <1075000>;
--	};
--	opp@266000000 {
--		opp-hz = /bits/ 64 <266000000>;
--		opp-microvolt = <1025000>;
--	};
--	opp@160000000 {
--		opp-hz = /bits/ 64 <160000000>;
--		opp-microvolt = <925000>;
--	};
--	opp@100000000 {
--		opp-hz = /bits/ 64 <100000000>;
--		opp-microvolt = <912500>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-new file mode 100644
-index 000000000000..51f63c9dac46
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/arm,mali-bifrost.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Mali Bifrost GPU
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  $nodename:
-+    pattern: '^gpu@[a-f0-9]+$'
-+
-+  compatible:
-+    items:
-+      - enum:
-+          - amlogic,meson-g12a-mali
-+      - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: Job interrupt
-+      - description: MMU interrupt
-+      - description: GPU interrupt
-+
-+  interrupt-names:
-+    items:
-+      - const: job
-+      - const: mmu
-+      - const: gpu
-+
-+  clocks:
-+    maxItems: 1
-+
-+  mali-supply:
-+    maxItems: 1
-+
-+  operating-points-v2: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: amlogic,meson-g12a-mali
-+    then:
-+      properties:
-+        resets:
-+          minItems: 2
-+      required:
-+        - resets
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpu@ffe40000 {
-+      compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
-+      reg = <0xffe40000 0x10000>;
-+      interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-names = "job", "mmu", "gpu";
-+      clocks = <&clk 1>;
-+      mali-supply = <&vdd_gpu>;
-+      operating-points-v2 = <&gpu_opp_table>;
-+      resets = <&reset 0>, <&reset 1>;
-+    };
-+
-+    gpu_opp_table: opp_table0 {
-+      compatible = "operating-points-v2";
-+
-+      opp@533000000 {
-+        opp-hz = /bits/ 64 <533000000>;
-+        opp-microvolt = <1250000>;
-+      };
-+      opp@450000000 {
-+        opp-hz = /bits/ 64 <450000000>;
-+        opp-microvolt = <1150000>;
-+      };
-+      opp@400000000 {
-+        opp-hz = /bits/ 64 <400000000>;
-+        opp-microvolt = <1125000>;
-+      };
-+      opp@350000000 {
-+        opp-hz = /bits/ 64 <350000000>;
-+        opp-microvolt = <1075000>;
-+      };
-+      opp@266000000 {
-+        opp-hz = /bits/ 64 <266000000>;
-+        opp-microvolt = <1025000>;
-+      };
-+      opp@160000000 {
-+        opp-hz = /bits/ 64 <160000000>;
-+        opp-microvolt = <925000>;
-+      };
-+      opp@100000000 {
-+        opp-hz = /bits/ 64 <100000000>;
-+        opp-microvolt = <912500>;
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+Q29udmVydCB0aGUgQXJtIE1pZGdhcmQgR1BVIGJpbmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdC4K
+ClNpZ25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2Jp
+bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCAgICAgICAgIHwgMTE5IC0tLS0tLS0tLS0t
+LS0KIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC55YW1sICAgICAgICB8IDE2NSAr
+KysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMTY1IGluc2VydGlvbnMoKyksIDEx
+OSBkZWxldGlvbnMoLSkKIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlh
+bWwKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2Fy
+bSxtYWxpLW1pZGdhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dw
+dS9hcm0sbWFsaS1taWRnYXJkLnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggOWIy
+OThlZGVjNWIyLi4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAorKysgL2Rldi9udWxsCkBAIC0xLDExOSAr
+MCwwIEBACi1BUk0gTWFsaSBNaWRnYXJkIEdQVQotPT09PT09PT09PT09PT09PT09PT0KLQotUmVx
+dWlyZWQgcHJvcGVydGllczoKLQotLSBjb21wYXRpYmxlIDoKLSAgKiBNdXN0IGNvbnRhaW4gb25l
+IG9mIHRoZSBmb2xsb3dpbmc6Ci0gICAgKyAiYXJtLG1hbGktdDYwNCIKLSAgICArICJhcm0sbWFs
+aS10NjI0IgotICAgICsgImFybSxtYWxpLXQ2MjgiCi0gICAgKyAiYXJtLG1hbGktdDcyMCIKLSAg
+ICArICJhcm0sbWFsaS10NzYwIgotICAgICsgImFybSxtYWxpLXQ4MjAiCi0gICAgKyAiYXJtLG1h
+bGktdDgzMCIKLSAgICArICJhcm0sbWFsaS10ODYwIgotICAgICsgImFybSxtYWxpLXQ4ODAiCi0g
+ICogd2hpY2ggbXVzdCBiZSBwcmVjZWRlZCBieSBvbmUgb2YgdGhlIGZvbGxvd2luZyB2ZW5kb3Ig
+c3BlY2lmaWNzOgotICAgICsgImFsbHdpbm5lcixzdW41MGktaDYtbWFsaSIKLSAgICArICJhbWxv
+Z2ljLG1lc29uLWd4bS1tYWxpIgotICAgICsgInNhbXN1bmcsZXh5bm9zNTQzMy1tYWxpIgotICAg
+ICsgInJvY2tjaGlwLHJrMzI4OC1tYWxpIgotICAgICsgInJvY2tjaGlwLHJrMzM5OS1tYWxpIgot
+Ci0tIHJlZyA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgZGV2aWNlIGFuZCBsZW5ndGgg
+b2YgdGhlIHJlZ2lzdGVyIGFyZWEuCi0KLS0gaW50ZXJydXB0cyA6IENvbnRhaW5zIHRoZSB0aHJl
+ZSBJUlEgbGluZXMgcmVxdWlyZWQgYnkgTWFsaSBNaWRnYXJkIGRldmljZXMuCi0KLS0gaW50ZXJy
+dXB0LW5hbWVzIDogQ29udGFpbnMgdGhlIG5hbWVzIG9mIElSUSByZXNvdXJjZXMgaW4gdGhlIG9y
+ZGVyIHRoZXkgd2VyZQotICBwcm92aWRlZCBpbiB0aGUgaW50ZXJydXB0cyBwcm9wZXJ0eS4gTXVz
+dCBjb250YWluOiAiam9iIiwgIm1tdSIsICJncHUiLgotCi0KLU9wdGlvbmFsIHByb3BlcnRpZXM6
+Ci0KLS0gY2xvY2tzIDogUGhhbmRsZSB0byBjbG9jayBmb3IgdGhlIE1hbGkgTWlkZ2FyZCBkZXZp
+Y2UuCi0KLS0gY2xvY2stbmFtZXMgOiBTcGVjaWZ5IHRoZSBuYW1lcyBvZiB0aGUgY2xvY2tzIHNw
+ZWNpZmllZCBpbiBjbG9ja3MKLSAgd2hlbiBtdWx0aXBsZSBjbG9ja3MgYXJlIHByZXNlbnQuCi0g
+ICAgKiBjb3JlOiBjbG9jayBkcml2aW5nIHRoZSBHUFUgaXRzZWxmIChXaGVuIG9ubHkgb25lIGNs
+b2NrIGlzIHByZXNlbnQsCi0gICAgICBhc3N1bWUgaXQncyB0aGlzIGNsb2NrLikKLSAgICAqIGJ1
+czogYnVzIGNsb2NrIGZvciB0aGUgR1BVCi0KLS0gbWFsaS1zdXBwbHkgOiBQaGFuZGxlIHRvIHJl
+Z3VsYXRvciBmb3IgdGhlIE1hbGkgZGV2aWNlLiBSZWZlciB0bwotICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3VsYXRvci50eHQgZm9yIGRldGFpbHMuCi0K
+LS0gb3BlcmF0aW5nLXBvaW50cy12MiA6IFJlZmVyIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9vcHAvb3BwLnR4dAotICBmb3IgZGV0YWlscy4KLQotLSAjY29vbGluZy1jZWxs
+czogUmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhl
+cm1hbC50eHQKLSAgZm9yIGRldGFpbHMuCi0KLS0gcmVzZXRzIDogUGhhbmRsZSBvZiB0aGUgR1BV
+IHJlc2V0IGxpbmUuCi0KLVZlbmRvci1zcGVjaWZpYyBiaW5kaW5ncwotLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCi0KLVRoZSBNYWxpIEdQVSBpcyBpbnRlZ3JhdGVkIHZlcnkgZGlmZmVyZW50bHkg
+ZnJvbSBvbmUgU29DIHRvCi1hbm90aGVyLiBJbiBvcmRlciB0byBhY2NvbW1vZGF0ZSB0aG9zZSBk
+aWZmZXJlbmNlcywgeW91IGhhdmUgdGhlIG9wdGlvbgotdG8gc3BlY2lmeSBvbmUgbW9yZSB2ZW5k
+b3Itc3BlY2lmaWMgY29tcGF0aWJsZSwgYW1vbmc6Ci0KLS0gImFsbHdpbm5lcixzdW41MGktaDYt
+bWFsaSIKLSAgUmVxdWlyZWQgcHJvcGVydGllczoKLSAgLSBjbG9ja3MgOiBwaGFuZGxlcyB0byBj
+b3JlIGFuZCBidXMgY2xvY2tzCi0gIC0gY2xvY2stbmFtZXMgOiBtdXN0IGNvbnRhaW4gImNvcmUi
+IGFuZCAiYnVzIgotICAtIHJlc2V0czogcGhhbmRsZSB0byBHUFUgcmVzZXQgbGluZQotCi0tICJh
+bWxvZ2ljLG1lc29uLWd4bS1tYWxpIgotICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgotICAtIHJlc2V0
+cyA6IFNob3VsZCBjb250YWluIHBoYW5kbGVzIG9mIDoKLSAgICArIEdQVSByZXNldCBsaW5lCi0g
+ICAgKyBHUFUgQVBCIGdsdWUgcmVzZXQgbGluZQotCi1FeGFtcGxlIGZvciBhIE1hbGktVDc2MDoK
+LQotZ3B1QGZmYTMwMDAwIHsKLQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1tYWxpIiwg
+ImFybSxtYWxpLXQ3NjAiOwotCXJlZyA9IDwweGZmYTMwMDAwIDB4MTAwMDA+OwotCWludGVycnVw
+dHMgPSA8R0lDX1NQSSA2IElSUV9UWVBFX0xFVkVMX0hJR0g+LAotCQkgICAgIDxHSUNfU1BJIDcg
+SVJRX1RZUEVfTEVWRUxfSElHSD4sCi0JCSAgICAgPEdJQ19TUEkgOCBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsKLQlpbnRlcnJ1cHQtbmFtZXMgPSAiam9iIiwgIm1tdSIsICJncHUiOwotCWNsb2NrcyA9
+IDwmY3J1IEFDTEtfR1BVPjsKLQltYWxpLXN1cHBseSA9IDwmdmRkX2dwdT47Ci0Jb3BlcmF0aW5n
+LXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47Ci0JcG93ZXItZG9tYWlucyA9IDwmcG93ZXIg
+UkszMjg4X1BEX0dQVT47Ci0JI2Nvb2xpbmctY2VsbHMgPSA8Mj47Ci19OwotCi1ncHVfb3BwX3Rh
+YmxlOiBvcHBfdGFibGUwIHsKLQljb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjIiOwot
+Ci0Jb3BwQDUzMzAwMDAwMCB7Ci0JCW9wcC1oeiA9IC9iaXRzLyA2NCA8NTMzMDAwMDAwPjsKLQkJ
+b3BwLW1pY3Jvdm9sdCA9IDwxMjUwMDAwPjsKLQl9OwotCW9wcEA0NTAwMDAwMDAgewotCQlvcHAt
+aHogPSAvYml0cy8gNjQgPDQ1MDAwMDAwMD47Ci0JCW9wcC1taWNyb3ZvbHQgPSA8MTE1MDAwMD47
+Ci0JfTsKLQlvcHBANDAwMDAwMDAwIHsKLQkJb3BwLWh6ID0gL2JpdHMvIDY0IDw0MDAwMDAwMDA+
+OwotCQlvcHAtbWljcm92b2x0ID0gPDExMjUwMDA+OwotCX07Ci0Jb3BwQDM1MDAwMDAwMCB7Ci0J
+CW9wcC1oeiA9IC9iaXRzLyA2NCA8MzUwMDAwMDAwPjsKLQkJb3BwLW1pY3Jvdm9sdCA9IDwxMDc1
+MDAwPjsKLQl9OwotCW9wcEAyNjYwMDAwMDAgewotCQlvcHAtaHogPSAvYml0cy8gNjQgPDI2NjAw
+MDAwMD47Ci0JCW9wcC1taWNyb3ZvbHQgPSA8MTAyNTAwMD47Ci0JfTsKLQlvcHBAMTYwMDAwMDAw
+IHsKLQkJb3BwLWh6ID0gL2JpdHMvIDY0IDwxNjAwMDAwMDA+OwotCQlvcHAtbWljcm92b2x0ID0g
+PDkyNTAwMD47Ci0JfTsKLQlvcHBAMTAwMDAwMDAwIHsKLQkJb3BwLWh6ID0gL2JpdHMvIDY0IDwx
+MDAwMDAwMDA+OwotCQlvcHAtbWljcm92b2x0ID0gPDkxMjUwMD47Ci0JfTsKLX07CmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdh
+cmQueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGkt
+bWlkZ2FyZC55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uMjRj
+NGFmNzRmYjhkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlhbWwKQEAgLTAsMCArMSwxNjUgQEAKKyMgU1BE
+WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQorJVlBTUwgMS4yCistLS0KKyRpZDog
+aHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZ3B1L2FybSxtYWxpLW1pZGdhcmQueWFtbCMK
+KyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIwor
+Cit0aXRsZTogQVJNIE1hbGkgTWlkZ2FyZCBHUFUKKworbWFpbnRhaW5lcnM6CisgIC0gUm9iIEhl
+cnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KKworcHJvcGVydGllczoKKyAgJG5vZGVuYW1lOgorICAg
+IHBhdHRlcm46ICdeZ3B1QFthLWYwLTldKyQnCisgIGNvbXBhdGlibGU6CisgICAgb25lT2Y6Cisg
+ICAgICAtIGl0ZW1zOgorICAgICAgICAgIC0gZW51bToKKyAgICAgICAgICAgICAtIGFsbHdpbm5l
+cixzdW41MGktaDYtbWFsaQorICAgICAgICAgIC0gY29uc3Q6IGFybSxtYWxpLXQ3MjAKKyAgICAg
+IC0gaXRlbXM6CisgICAgICAgICAgLSBlbnVtOgorICAgICAgICAgICAgIC0gYW1sb2dpYyxtZXNv
+bi1neG0tbWFsaQorICAgICAgICAgIC0gY29uc3Q6IGFybSxtYWxpLXQ4MjAKKyAgICAgIC0gaXRl
+bXM6CisgICAgICAgICAgLSBlbnVtOgorICAgICAgICAgICAgIC0gcm9ja2NoaXAscmszMjg4LW1h
+bGkKKyAgICAgICAgICAtIGNvbnN0OiBhcm0sbWFsaS10NzYwCisgICAgICAtIGl0ZW1zOgorICAg
+ICAgICAgIC0gZW51bToKKyAgICAgICAgICAgICAtIHJvY2tjaGlwLHJrMzM5OS1tYWxpCisgICAg
+ICAgICAgLSBjb25zdDogYXJtLG1hbGktdDg2MAorICAgICAgLSBpdGVtczoKKyAgICAgICAgICAt
+IGVudW06CisgICAgICAgICAgICAgLSBzYW1zdW5nLGV4eW5vczU0MzMtbWFsaQorICAgICAgICAg
+IC0gY29uc3Q6IGFybSxtYWxpLXQ3NjAKKworICAgICAgICAgICMgImFybSxtYWxpLXQ2MDQiCisg
+ICAgICAgICAgIyAiYXJtLG1hbGktdDYyNCIKKyAgICAgICAgICAjICJhcm0sbWFsaS10NjI4Igor
+ICAgICAgICAgICMgImFybSxtYWxpLXQ4MzAiCisgICAgICAgICAgIyAiYXJtLG1hbGktdDg4MCIK
+KworICByZWc6CisgICAgbWF4SXRlbXM6IDEKKworICBpbnRlcnJ1cHRzOgorICAgIGl0ZW1zOgor
+ICAgICAgLSBkZXNjcmlwdGlvbjogSm9iIGludGVycnVwdAorICAgICAgLSBkZXNjcmlwdGlvbjog
+TU1VIGludGVycnVwdAorICAgICAgLSBkZXNjcmlwdGlvbjogR1BVIGludGVycnVwdAorCisgIGlu
+dGVycnVwdC1uYW1lczoKKyAgICBpdGVtczoKKyAgICAgIC0gY29uc3Q6IGpvYgorICAgICAgLSBj
+b25zdDogbW11CisgICAgICAtIGNvbnN0OiBncHUKKworICBjbG9ja3M6CisgICAgbWluSXRlbXM6
+IDEKKyAgICBtYXhJdGVtczogMgorCisgIGNsb2NrLW5hbWVzOgorICAgIG1pbkl0ZW1zOiAxCisg
+ICAgaXRlbXM6CisgICAgICAtIGNvbnN0OiBjb3JlCisgICAgICAtIGNvbnN0OiBidXMKKworICBt
+YWxpLXN1cHBseToKKyAgICBtYXhJdGVtczogMQorCisgIHJlc2V0czoKKyAgICBtaW5JdGVtczog
+MQorICAgIG1heEl0ZW1zOiAyCisKKyAgb3BlcmF0aW5nLXBvaW50cy12MjogdHJ1ZQorCisgICIj
+Y29vbGluZy1jZWxscyI6CisgICAgY29uc3Q6IDIKKworcmVxdWlyZWQ6CisgIC0gY29tcGF0aWJs
+ZQorICAtIHJlZworICAtIGludGVycnVwdHMKKyAgLSBpbnRlcnJ1cHQtbmFtZXMKKworYWxsT2Y6
+CisgIC0gaWY6CisgICAgICBwcm9wZXJ0aWVzOgorICAgICAgICBjb21wYXRpYmxlOgorICAgICAg
+ICAgIGNvbnRhaW5zOgorICAgICAgICAgICAgY29uc3Q6IGFsbHdpbm5lcixzdW41MGktaDYtbWFs
+aQorICAgIHRoZW46CisgICAgICBwcm9wZXJ0aWVzOgorICAgICAgICBjbG9ja3M6CisgICAgICAg
+ICAgbWluSXRlbXM6IDIKKyAgICAgIHJlcXVpcmVkOgorICAgICAgICAtIGNsb2NrcworICAgICAg
+ICAtIGNsb2NrLW5hbWVzCisgICAgICAgIC0gcmVzZXRzCisgIC0gaWY6CisgICAgICBwcm9wZXJ0
+aWVzOgorICAgICAgICBjb21wYXRpYmxlOgorICAgICAgICAgIGNvbnRhaW5zOgorICAgICAgICAg
+ICAgY29uc3Q6IGFtbG9naWMsbWVzb24tZ3htLW1hbGkKKyAgICB0aGVuOgorICAgICAgcHJvcGVy
+dGllczoKKyAgICAgICAgcmVzZXRzOgorICAgICAgICAgIG1pbkl0ZW1zOiAyCisgICAgICByZXF1
+aXJlZDoKKyAgICAgICAgLSByZXNldHMKKworZXhhbXBsZXM6CisgIC0gfAorICAgICNpbmNsdWRl
+IDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4KKyAgICAjaW5jbHVkZSA8
+ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgorCisgICAgZ3B1QGZm
+YTMwMDAwIHsKKyAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjg4LW1hbGkiLCAiYXJt
+LG1hbGktdDc2MCI7CisgICAgICByZWcgPSA8MHhmZmEzMDAwMCAweDEwMDAwPjsKKyAgICAgIGlu
+dGVycnVwdHMgPSA8R0lDX1NQSSA2IElSUV9UWVBFX0xFVkVMX0hJR0g+LAorICAgICAgICAgICAg
+IDxHSUNfU1BJIDcgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisgICAgICAgICAgICAgPEdJQ19TUEkg
+OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKyAgICAgIGludGVycnVwdC1uYW1lcyA9ICJqb2IiLCAi
+bW11IiwgImdwdSI7CisgICAgICBjbG9ja3MgPSA8JmNydSAwPjsKKyAgICAgIG1hbGktc3VwcGx5
+ID0gPCZ2ZGRfZ3B1PjsKKyAgICAgIG9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmdwdV9vcHBfdGFi
+bGU+OworICAgICAgcG93ZXItZG9tYWlucyA9IDwmcG93ZXIgMD47CisgICAgICAjY29vbGluZy1j
+ZWxscyA9IDwyPjsKKyAgICB9OworCisgICAgZ3B1X29wcF90YWJsZTogb3BwX3RhYmxlMCB7Cisg
+ICAgICBjb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjIiOworCisgICAgICBvcHBANTMz
+MDAwMDAwIHsKKyAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw1MzMwMDAwMDA+OworICAgICAg
+ICBvcHAtbWljcm92b2x0ID0gPDEyNTAwMDA+OworICAgICAgfTsKKyAgICAgIG9wcEA0NTAwMDAw
+MDAgeworICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQ1MDAwMDAwMD47CisgICAgICAgIG9w
+cC1taWNyb3ZvbHQgPSA8MTE1MDAwMD47CisgICAgICB9OworICAgICAgb3BwQDQwMDAwMDAwMCB7
+CisgICAgICAgIG9wcC1oeiA9IC9iaXRzLyA2NCA8NDAwMDAwMDAwPjsKKyAgICAgICAgb3BwLW1p
+Y3Jvdm9sdCA9IDwxMTI1MDAwPjsKKyAgICAgIH07CisgICAgICBvcHBAMzUwMDAwMDAwIHsKKyAg
+ICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDwzNTAwMDAwMDA+OworICAgICAgICBvcHAtbWljcm92
+b2x0ID0gPDEwNzUwMDA+OworICAgICAgfTsKKyAgICAgIG9wcEAyNjYwMDAwMDAgeworICAgICAg
+ICBvcHAtaHogPSAvYml0cy8gNjQgPDI2NjAwMDAwMD47CisgICAgICAgIG9wcC1taWNyb3ZvbHQg
+PSA8MTAyNTAwMD47CisgICAgICB9OworICAgICAgb3BwQDE2MDAwMDAwMCB7CisgICAgICAgIG9w
+cC1oeiA9IC9iaXRzLyA2NCA8MTYwMDAwMDAwPjsKKyAgICAgICAgb3BwLW1pY3Jvdm9sdCA9IDw5
+MjUwMDA+OworICAgICAgfTsKKyAgICAgIG9wcEAxMDAwMDAwMDAgeworICAgICAgICBvcHAtaHog
+PSAvYml0cy8gNjQgPDEwMDAwMDAwMD47CisgICAgICAgIG9wcC1taWNyb3ZvbHQgPSA8OTEyNTAw
+PjsKKyAgICAgIH07CisgICAgfTsKKworLi4uCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
