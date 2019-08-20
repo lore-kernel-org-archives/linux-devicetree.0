@@ -1,32 +1,21 @@
 From: Saravana Kannan <saravanak@google.com>
 Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
-Date: Tue, 20 Aug 2019 15:27:24 -0700
-Message-ID: <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
+Date: Tue, 20 Aug 2019 15:34:07 -0700
+Message-ID: <CAGETcx8h2v054eS6pZ3iEsM2AGfN45_fqJGsVt+1UhbrK_dbdQ@mail.gmail.com>
 References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-3-saravanak@google.com>
- <20190820061300.wa2dirylb7fztsem@vireshk-i7>
+ <20190816182131.A692E206C1@mail.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820061300.wa2dirylb7fztsem@vireshk-i7>
+In-Reply-To: <20190816182131.A692E206C1@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Georgi Djakov <georgi.djakov@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.or>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Fri, Aug 16, 2019 at 11:21 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> On 07-08-19, 15:31, Saravana Kannan wrote:
-> > Not all devices quantify their performance points in terms of frequency.
-> > Devices like interconnects quantify their performance points in terms of
-> > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > add support for parsing bandwidth OPPs from DT.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
-> >  drivers/opp/opp.h |  4 +++-
-> >  2 files changed, 35 insertions(+), 10 deletions(-)
-> >
+> Quoting Saravana Kannan (2019-08-07 15:31:10)
 > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
 > > index 1813f5ad5fa2..e1750033fef9 100644
 > > --- a/drivers/opp/of.c
@@ -37,121 +26,80 @@ On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 > >
 > > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
 > > +{
-> > +     int ret;
-> > +     u64 rate;
-> > +     u32 bw;
+> > +       int ret;
+> > +       u64 rate;
+> > +       u32 bw;
 > > +
-> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     if (!ret) {
-> > +             /*
-> > +              * Rate is defined as an unsigned long in clk API, and so
-> > +              * casting explicitly to its type. Must be fixed once rate is 64
-> > +              * bit guaranteed in clk API.
-> > +              */
-> > +             new_opp->rate = (unsigned long)rate;
-> > +             return 0;
-> > +     }
+> > +       ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +       if (!ret) {
+> > +               /*
+> > +                * Rate is defined as an unsigned long in clk API, and so
+> > +                * casting explicitly to its type. Must be fixed once rate is 64
+> > +                * bit guaranteed in clk API.
+> > +                */
+> > +               new_opp->rate = (unsigned long)rate;
+> > +               return 0;
+> > +       }
 > > +
->
-> Please read opp-level also here and do error handling.
-
-Can you please explain what's the reasoning? opp-level doesn't seem to
-be a "key" based on looking at the code.
-
->
-> > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> > +     if (ret)
-> > +             return ret;
-> > +     new_opp->rate = (unsigned long) bw;
+> > +       ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > +       if (ret)
+> > +               return ret;
+> > +       new_opp->rate = (unsigned long) bw;
 > > +
-> > +     ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
-> > +     if (!ret)
-> > +             new_opp->avg_bw = (unsigned long) bw;
+> > +       ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
+> > +       if (!ret)
 >
-> If none of opp-hz/level/peak-kBps are available, print error message here
-> itself..
+> I would write this as
+>
+>         if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+>                 new_opp->avg_bw = (unsigned long) bw;
+>
+> because you don't care about the return value.
 
-But you don't print any error for opp-level today. Seems like it's optional?
+Sure, will do.
 
 >
+> > +               new_opp->avg_bw = (unsigned long) bw;
 > > +
-> > +     return 0;
->
-> You are returning 0 on failure as well here.
-
-Thanks.
-
+> > +       return 0;
 > > +}
 > > +
 > >  /**
 > >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> >   * @opp_table:       OPP table
-> > @@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> >       if (!new_opp)
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     ret = _read_opp_key(new_opp, np);
-> >       if (ret < 0) {
-> >               /* "opp-hz" is optional for devices like power domains. */
-> >               if (!opp_table->is_genpd) {
-> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > +                     dev_err(dev, "%s: opp-hz or opp-peak-kBps not found\n",
-> > +                             __func__);
-> >                       goto free_opp;
-> >               }
-> >
-> >               rate_not_available = true;
->
-> Move all above as well to read_opp_key().
-
-Ok. I didn't want to print an error at the API level and instead print
-at the caller level. But if that's what you want, that's fine by me.
-
->
-> > -     } else {
-> > -             /*
-> > -              * Rate is defined as an unsigned long in clk API, and so
-> > -              * casting explicitly to its type. Must be fixed once rate is 64
-> > -              * bit guaranteed in clk API.
-> > -              */
-> > -             new_opp->rate = (unsigned long)rate;
-> >       }
-> >
-> >       of_property_read_u32(np, "opp-level", &new_opp->level);
+> >   * @opp_table: OPP table
 > > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
 > > index 01a500e2c40a..6bb238af9cac 100644
 > > --- a/drivers/opp/opp.h
 > > +++ b/drivers/opp/opp.h
 > > @@ -56,7 +56,8 @@ extern struct list_head opp_tables;
-> >   * @turbo:   true if turbo (boost) OPP
-> >   * @suspend: true if suspend OPP
+> >   * @turbo:     true if turbo (boost) OPP
+> >   * @suspend:   true if suspend OPP
 > >   * @pstate: Device's power domain's performance state.
-> > - * @rate:    Frequency in hertz
-> > + * @rate:    Frequency in hertz OR Peak bandwidth in kilobytes per second
-> > + * @avg_bw:  Average bandwidth in kilobytes per second
+> > - * @rate:      Frequency in hertz
+> > + * @rate:      Frequency in hertz OR Peak bandwidth in kilobytes per second
 >
-> Please add separate entry for peak_bw here.
->
-> I know you reused rate because you don't want to reimplement the helpers we
-> have. Maybe we can just update them to return peak_bw when opp-hz isn't present.
+> Why is Peak capitalized?
 
-How about I just rename this to "key"? That makes a lot more sense
-than trying to save 3 different keys and going through them one at a
-time.
+Because it's another Key? :)
 
-> >   * @level:   Performance level
-> >   * @supplies:        Power supplies voltage/current values
+Just kidding. I'll fix it.
+
+> > + * @avg_bw:    Average bandwidth in kilobytes per second
+> >   * @level:     Performance level
+> >   * @supplies:  Power supplies voltage/current values
 > >   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
 > > @@ -78,6 +79,7 @@ struct dev_pm_opp {
-> >       bool suspend;
-> >       unsigned int pstate;
-> >       unsigned long rate;
-> > +     unsigned long avg_bw;
-> >       unsigned int level;
-> >
-> >       struct dev_pm_opp_supply *supplies;
-> > --
-> > 2.23.0.rc1.153.gdeed80330f-goog
+> >         bool suspend;
+> >         unsigned int pstate;
+> >         unsigned long rate;
+>
+> If you're trying to save space why not make an anonymous union here of
+> 'rate' and 'bandwidth'? Then the code doesn't read all weird.
+
+It's not about saving space. It's about having to rewrite all the
+helper functions (see subsequent patch in this series) for different
+"keys" with zero difference in the actual comparisons/logic. I'm
+proposing I rename this to "key" in another email.
+
 
 -Saravana
