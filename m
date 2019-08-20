@@ -1,33 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 9/10] dt-bindings: pwm: update bindings for MT7629 SoC
-Date: Tue, 20 Aug 2019 13:00:15 -0500
-Message-ID: <20190820180015.GA12975@bogus>
-References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
- <1566265225-27452-10-git-send-email-sam.shih@mediatek.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Tue, 20 Aug 2019 11:24:50 -0700
+Message-ID: <20190820182450.GA38078@google.com>
+References: <20190814055108.214253-1-brendanhiggins@google.com>
+ <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566265225-27452-10-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sam Shih <sam.shih@mediatek.com>
+To: shuah <shuah@kernel.org>
+Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mp
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Aug 2019 09:40:24 +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
+> On 8/13/19 11:50 PM, Brendan Higgins wrote:
+> > ## TL;DR
+> > 
+> > This revision addresses comments from Stephen and Bjorn Helgaas. Most
+> > changes are pretty minor stuff that doesn't affect the API in anyway.
+> > One significant change, however, is that I added support for freeing
+> > kunit_resource managed resources before the test case is finished via
+> > kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+> > KUnit on certain configurations (like the default one for x86, whoops).
+> > 
+> > Based on Stephen's feedback on the previous change, I think we are
+> > pretty close. I am not expecting any significant changes from here on
+> > out.
+> > 
 > 
-> This updates bindings for MT7629 pwm controller.
+> Hi Brendan,
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> I found checkpatch errors in one or two patches. Can you fix those and
+> send v14.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Hi Shuah,
 
-If a tag was not added on purpose, please state why and what changed.
+Are you refering to the following errors?
+
+ERROR: Macros with complex values should be enclosed in parentheses
+#144: FILE: include/kunit/test.h:456:
++#define KUNIT_BINARY_CLASS \
++       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
+
+ERROR: Macros with complex values should be enclosed in parentheses
+#146: FILE: include/kunit/test.h:458:
++#define KUNIT_BINARY_PTR_CLASS \
++       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
+
+These values should *not* be in parentheses. I am guessing checkpatch is
+getting confused and thinks that these are complex expressions, when
+they are not.
+
+I ignored the errors since I figured checkpatch was complaining
+erroneously.
+
+I could refactor the code to remove these macros entirely, but I think
+the code is cleaner with them.
+
+What would you prefer I do?
+
+NB: These macros are introduced in: "[PATCH v13 05/18] kunit: test: add
+the concept of expectations"
+
+Thanks!
