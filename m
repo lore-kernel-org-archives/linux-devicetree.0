@@ -1,101 +1,26 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
-Date: Tue, 20 Aug 2019 15:27:39 -0500
-Message-ID: <CAL_JsqKBWB2FiVjYo9O7DPw1JYJvan7uRgbR0VBG=FfHDVYdZQ@mail.gmail.com>
-References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
- <1566315318-30320-3-git-send-email-krzk@kernel.org> <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
- <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
- <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com> <20190820202142.GA15866@kozik-lap>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: Add kryo485 compatible
+Date: Tue, 20 Aug 2019 15:28:38 -0500
+Message-ID: <20190820202838.GA14358@bogus>
+References: <20190820171020.22673-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820202142.GA15866@kozik-lap>
+Content-Disposition: inline
+In-Reply-To: <20190820171020.22673-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sugaya Taichi <sugaya.taichi@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 3:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Tue, Aug 20, 2019 at 03:04:57PM -0500, Rob Herring wrote:
-> > On Tue, Aug 20, 2019 at 1:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Tue, 20 Aug 2019 at 18:59, Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > >
-> > > > > Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
-> > > > >
-> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > >
-> > > > > ---
-> > > > >
-> > > > > Changes since v5:
-> > > > > New patch
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > > > index 7294ac36f4c0..d07b3c06d7cf 100644
-> > > > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > > > @@ -161,6 +161,9 @@ properties:
-> > > > >          items:
-> > > > >            - enum:
-> > > > >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-> > > > > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-> > > > > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
-> > > > > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
-> > > >
-> > > > This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
-> > >
-> > > You mean the name does not match? I thought that '#' is a comment in YAML...
-> >
-> > No, the number of compatible strings is the problem.
->
-> I see. If I understand the schema correctly, this should look like:
+On Tue, Aug 20, 2019 at 10:40:20PM +0530, Vinod Koul wrote:
+> Kryo485 is found in SM8150, so add it it list of cpu compatibles
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Looks correct, but a couple of comments.
+Applied, thanks.
 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> index 7294ac36f4c0..eb263d1ccf13 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -161,6 +161,22 @@ properties:
->          items:
->            - enum:
->                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-> +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-
-Is the SOM ever used alone? If not, then no point in listing this here.
-
-> +          - const: fsl,imx6ul
-> +
-> +      - description: Kontron N6310 S Board
-> +        items:
-> +          - enum:
-> +              - kontron,imx6ul-n6310-s
-
-This could be a 'const' instead. It depends if you think there will
-ever be more than one entry.
-
-> +          - const: kontron,imx6ul-n6310-som
-> +          - const: fsl,imx6ul
-> +
-> +      - description: Kontron N6310 S 43 Board
-> +        items:
-> +          - enum:
-> +              - kontron,imx6ul-n6310-s-43
-> +          - const: kontron,imx6ul-n6310-s
-> +          - const: kontron,imx6ul-n6310-som
->            - const: fsl,imx6ul
->
->        - description: i.MX6ULL based Boards
->
->
-> It passes the dtbs_check. Is it correct?
->
-> Best regards,
-> Krzysztof
->
+Rob
