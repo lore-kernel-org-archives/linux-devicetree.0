@@ -1,28 +1,32 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
-Date: Tue, 20 Aug 2019 22:32:20 +0200
-Message-ID: <CAFBinCBWFNJNAWdeZ2LfEJA-MVpSf-A5SrLZEx+0z_P+-iBFDg@mail.gmail.com>
-References: <20190814142918.11636-1-narmstrong@baylibre.com> <20190814142918.11636-12-narmstrong@baylibre.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH 08/49] ath11k: add core.c
+Date: Tue, 20 Aug 2019 22:32:45 +0200
+Message-ID: <0c526ce00e6e1c7731c990515e7438230efb55af.camel@sipsolutions.net>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+         <1566316095-27507-9-git-send-email-kvalo@codeaurora.org>
+         (sfid-20190820_175156_803421_4FF79584)
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814142918.11636-12-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1566316095-27507-9-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (sfid-20190820_175156_803421_4FF79584)
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 4:33 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> This fixes the following DT schemas check errors:
-> meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[...]
-> -       compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-> +       compatible = "amediatech,x96-max", "amlogic,g12a";
-only partially related: I wonder if we should add a s905x2 compatible
-string here and to the .dts filename (just like we separate the GXL
-variants s905x, s905d, s905w, ...)
+> +module_param_named(debug_mask, ath11k_debug_mask, uint, 0644);
+> +
+> +MODULE_PARM_DESC(debug_mask, "Debugging mask");
+> +
+> +static const struct ath11k_hw_params ath11k_hw_params = {
+> +			.name = "ipq8074",
+
+indentation here seems a bit too much
+
+> +MODULE_LICENSE("Dual BSD/GPL");
+
+All your files state "ISC", shouldn't that be reflected here?
+
+johannes
