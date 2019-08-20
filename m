@@ -1,102 +1,95 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 7/8] soc: ti: omap-prm: add dra7 PRM data
-Date: Tue, 20 Aug 2019 14:03:26 -0500
-Message-ID: <0e8aa351-4c58-ab6c-890f-094118b812ac@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-8-git-send-email-t-kristo@ti.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/7] iommu/arm-smmu: Split pagetable support for
+ Adreno GPUs
+Date: Tue, 20 Aug 2019 13:06:25 -0600
+Message-ID: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1565164139-21886-8-git-send-email-t-kristo@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jeffrey Hugo <jeffrey.l.hugo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wen Yang <wen.yang99-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Mamta Shukla <mamtashukla555-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fritz Koenig <frkoenig-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sharat Masetty <smasetty-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexios Zavras <alexios.zavras-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Allison Randal <allison-wcfNWazeolPR7s880joybQ@public.gmane.org>, Bruce
 List-Id: devicetree@vger.kernel.org
 
-Hi Tero,
-
-On 8/7/19 2:48 AM, Tero Kristo wrote:
-> Add PRM data for dra7 family of SoCs.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  drivers/soc/ti/omap_prm.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-> index fadfc7f..05b7749 100644
-> --- a/drivers/soc/ti/omap_prm.c
-> +++ b/drivers/soc/ti/omap_prm.c
-> @@ -73,6 +73,31 @@ struct omap_prm_data omap4_prm_data[] = {
->  	{ },
->  };
->  
-> +static struct omap_prm_data dra7_prm_data[] = {
-> +	{ .name = "mpu", .base = 0x4ae06300, .pwstst = 0x4 },
-> +	{ .name = "dsp1", .base = 0x4ae06400, .pwstst = 0x4, .rstctl = 0x10, .rstst = 0x14 },
-> +	{ .name = "ipu", .base = 0x4ae06500, .pwstst = 0x4, .rstctl = 0x10, .rstst = 0x14, .clkdm_name = "ipu1" },
-> +	{ .name = "coreaon", .base = 0x4ae06628, .pwstst = 0x4 },
-
-Public TRM marks this region Reserved. Do you need it for anything?
-
-> +	{ .name = "core", .base = 0x4ae06700, .pwstst = 0x4, .rstctl = 0x210, .rstst = 0x214, .clkdm_name = "ipu2" },
-> +	{ .name = "iva", .base = 0x4ae06f00, .pwstst = 0x4 },
-
-Missing rstctrl and rstst offsets.
-
-> +	{ .name = "cam", .base = 0x4ae07000, .pwstst = 0x4 },
-> +	{ .name = "dss", .base = 0x4ae07100, .pwstst = 0x4 },
-> +	{ .name = "gpu", .base = 0x4ae07200, .pwstst = 0x4 },
-> +	{ .name = "l3init", .base = 0x4ae07300, .pwstst = 0x4, .rstctl = 0x10, .rstst = 0x14 },
-> +	{ .name = "l4per", .base = 0x4ae07400, .pwstst = 0x4 },
-> +	{ .name = "custefuse", .base = 0x4ae07600, .pwstst = 0x4 },
-> +	{ .name = "wkupaon", .base = 0x4ae07724, .pwstst = 0x4 },
-
-No pwstctrl and pwstst bits documented in TRM or are marked reserved.
-
-> +	{ .name = "emu", .base = 0x4ae07900, .pwstst = 0x4 },
-> +	{ .name = "dsp2", .base = 0x4ae07b00, .pwstst = 0x4, .rstctl = 0x10, .rstst = 0x14 },
-> +	{ .name = "eve1", .base = 0x4ae07b40, .pwstst = 0x4 },
-> +	{ .name = "eve2", .base = 0x4ae07b80, .pwstst = 0x4 },
-> +	{ .name = "eve3", .base = 0x4ae07bc0, .pwstst = 0x4 },
-> +	{ .name = "eve4", .base = 0x4ae07c00, .pwstst = 0x4 },
-
-All EVEs are missing rstctrl and rstst fields.
-
-> +	{ .name = "rtc", .base = 0x4ae07c60, .pwstst = 0x4 },
-
-Undocumented pwstctrl and pwstst registers.
-
-> +	{ .name = "vpe", .base = 0x4ae07c80, .pwstst = 0x4 },
-
-Missing "device" and "instr" PRM. The latter doesn't have any pwrstctl
-and pwrstst though.
-
-regards
-Suman
-
-> +	{ },
-> +};
-> +
->  struct omap_rst_map am3_wkup_rst_map[] = {
->  	{ .rst = 3, .st = 5 },
->  	{ .rst = -1 },
-> @@ -91,6 +116,7 @@ struct omap_prm_data am3_prm_data[] = {
->  
->  static const struct of_device_id omap_prm_id_table[] = {
->  	{ .compatible = "ti,omap4-prm-inst", .data = omap4_prm_data },
-> +	{ .compatible = "ti,dra7-prm-inst", .data = dra7_prm_data },
->  	{ .compatible = "ti,am3-prm-inst", .data = am3_prm_data },
->  	{ },
->  };
-> 
+VGhpcyBpcyBhbm90aGVyIGl0ZXJhdGlvbiB0byBzdXBwb3J0IHNwbGl0IHBhZ2V0YWJsZXMgZm9y
+IEFkcmVubyBHUFVzIGFzIHBhcnQgb2YKYW4gaW5jcmVtZW50YWwgcHJvY2VzcyB0byBlbmFibGUg
+cGVyLWNvbnRleHQgcGFnZXRhYmxlcy4KCkluIG9yZGVyIHRvIHN1cHBvcnQgcGVyLWNvbnRleHQg
+cGFnZXRhYmxlcyB0aGUgR1BVIG5lZWRzIHRvIGVuYWJsZSBzcGxpdApwYWdldGFibGVzIHNvIHRo
+YXQgd2UgY2FuIHN0b3JlIHRoZSBnbG9iYWwgYnVmZmVycyBpbiB0aGUgVFRCUjEgc3BhY2UgbGVh
+dmluZwp0aGUgR1BVIGZyZWUgdG8gcHJvZ3JhbSB0aGUgVFRCUjAgcmVnaXN0ZXIgd2l0aCB0aGUg
+cGFnZSBhZGRyZXNzIG9mIGEgY29udGV4dApzcGVjaWZpYyBwdC4KClByZXZpb3VzIHJldmlzaW9u
+cyBvZiB0aGlzIHNlcmllcyBjYW4gYmUgZm91bmQgYXQgWzFdIGFuZCBbMl0uCgpUaGlzIGl0ZXJh
+dGlvbiBpcyBidWlsdCBvbiB0b3Agb2YgdGhlIGFybS1zbW11LWltcGwgYW5kIGFybS1zbW11LXYy
+CnJld29yayBjb2RlIGZyb20gUm9iaW4gTXVycGh5IFszXSBhbmQgWzRdLgoKVGhpcyBjb2RlIGlz
+IGJhc2VkIG9uIHRoZSByZWFsaXphdGlvbiB0aGF0IHdoZW4gc3BsaXQgcGFnZXRhYmxlcyBhcmUg
+ZW5hYmxlZCB0aGUKY29uZmlndXJhdGlvbiBmb3IgdGhlIFQxIGFkZHJlc3Mgc3BhY2UgaXMgaWRl
+bnRpY2FsIHRvIHRoYXQgb2YgdGhlIFQwIHNwYWNlLApzbyB3ZSBjYW4ganVzdCB0YWtlIHRoZSBU
+Q1IgY29uZmlndXJhdGlvbiBwcm92aWRlZCBieSBpby1wZ3RhYmxlLCBkdXBsaWNhdGUgaXQKYW5k
+IHNoaWZ0IGl0IGJ5IDE2IGJpdHMuCgpTaW5jZSB0aGUgY3VycmVudCBzcGxpdCBwYWdldGFibGUg
+aW1wbGVtZW50YXRpb24gaXMgc3BlY2lmaWMgdG8gdGhlIEFkcmVubwpHUFVzIHdlIGNhbiBhbHNv
+IHRha2UgYSBzbWFsbCBzaG9ydGN1dCBhbmQgb25seSBhbGxvdyBzcGxpdCBwYWdldGFibGVzIGZv
+ciBTTU1Vcwp3aXRoIGEgNDkgYml0IHVwc3RyZWFtIGJ1cyB3aGljaCBhbGxvd3MgdXMgdG8gdXNl
+IHRoZSBkZWZhdWx0IGNvbmZpZ3VyYXRpb24KZm9yIHRoZSBzaWduIGV4dGVuc2lvbiBiaXQgYW5k
+IHdlIGNhbiBhdm9pZCBhIGxvdCBvZiBleHRyYSBjb2RlIHRvIGhhbmRsZQpkaWZmZXJlbnQgdXBz
+dHJlYW0gYnVzIHNpemVzIHRoYXQgd2lsbCBuZXZlciBnZXQgdXNlZC4KClRoZSBmaXJzdCBwYXRj
+aCBpbXBsZW1lbnRzIHRoZSBzcGxpdCBwYWdldGFibGUgc3VwcG9ydCBmb3IgYXJtLXNtbXUtdjIu
+CgpUaGUgc2Vjb25kIGFkZHMgYSBTTU1VIG1vZGVsIGZvciB0aGUgQWRyZW5vIEdQVSBTTU1VIGFu
+ZCBlbmFibGVzIHRoZSBzcGxpdApwYWdldGFibGVzIGlmIGNvbmRpdGlvbnMgd2FycmFudC4KClRo
+ZSAzcmQgYW5kIDR0aCBwYXRjaGVzIGFkZCBhIGRvbWFpbiBhdHRyaWJ1dGUgdG8gcXVlcnkgdGhl
+IHN0YXR1cyBvZiBzcGxpdApwYWdldGFibGVzLgoKVGhlIHJlbWFpbmluZyBwYXRjaGVzIG1vZGlm
+eSBkcm0vbXNtIHNsaWdodGx5IHRvIGFsbG93IGE2eHggdGFyZ2V0cyB0bwpyZWNvZ25pemUgaWYg
+c3BsaXQgcGFnZXRhYmxlcyBhcmUgZW5hYmxlZCBhbmQgYWRqdXN0IHRoZSBhZGRyZXNzIHNwYWNl
+CmFjY29yZGluZ2x5LgoKVGhpcyBzZXJpZXMgb25seSBpbmNsdWRlcyBzdXBwb3J0IGZvciBzcGxp
+dCBwYWdldGFibGVzIGJlY2F1c2UgSSB3YW50ZWQgdG8gZ2V0CnRoaXMgb3V0IGZvciBkaXNjdXNz
+aW9uIGFuZCBJIGhhdmVuJ3QgcG9ydGVkIG92ZXIgdGhlIGF1eCBkb21haW4gY29kZSB0byB0aGlz
+Cmtlcm5lbCB2ZXJzaW9uLCBidXQgSSBkb24ndCBzdXNwZWN0IGl0IHdpbGwgZW5kIHVwIGJlaW5n
+IG11Y2ggZGlmZmVyZW50IHRoYW4KcHJldmlvdXMgdmVyc2lvbnMgWzVdLgoKWzFdIGh0dHBzOi8v
+cGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjM0MDMvClsyXSBodHRwczovL3BhdGNo
+d29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzY0ODc0LwpbM10gaHR0cHM6Ly9saXN0cy5saW51
+eGZvdW5kYXRpb24ub3JnL3BpcGVybWFpbC9pb21tdS8yMDE5LUF1Z3VzdC8wMzc5MDUuaHRtbApb
+NF0gaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL3BpcGVybWFpbC9pb21tdS8yMDE5
+LUF1Z3VzdC8wMzgyNDQuaHRtbApbNV0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
+L3BhdGNoLzMwNzYwMS8KCgpKb3JkYW4gQ3JvdXNlICg3KToKICBpb21tdS9hcm0tc21tdTogU3Vw
+cG9ydCBzcGxpdCBwYWdldGFibGVzCiAgZHQtYmluZGluZ3M6IGFybS1zbW11OiBBZGQgQWRyZW5v
+IEdQVSB2YXJpYW50CiAgaW9tbXUvYXJtLXNtbXU6IEFkZCBhIFNNTVUgdmFyaWFudCBmb3IgdGhl
+IEFkcmVubyBHUFUKICBpb21tdTogQWRkIERPTUFJTl9BVFRSX1NQTElUX1RBQkxFUwogIGlvbW11
+L2FybS1zbW11OiBTdXBwb3J0IERPTUFJTl9BVFRSX1NQTElUX1RBQkxFUwogIGRybS9tc206IENy
+ZWF0ZSB0aGUgbXNtX21tdSBvYmplY3QgaW5kZXBlbmRlbnRseSBmcm9tIHRoZSBhZGRyZXNzCiAg
+ICBzcGFjZQogIGRybS9tc206IFVzZSBwZXItdGFyZ2V0IGZ1bmN0aW9ucyB0byBzZXQgdXAgYWRk
+cmVzcyBzcGFjZXMKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQg
+ICAgICAgICB8ICA3ICsrKwogZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTJ4eF9ncHUuYyAg
+ICAgICAgICAgICAgfCAyOCArKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8v
+YTN4eF9ncHUuYyAgICAgICAgICAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVu
+by9hNHh4X2dwdS5jICAgICAgICAgICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRy
+ZW5vL2E1eHhfZ3B1LmMgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9h
+ZHJlbm8vYTZ4eF9ncHUuYyAgICAgICAgICAgICAgfCA1NiArKysrKysrKysrKysrKysrKysrKysr
+CiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1LmMgICAgICAgICAgICB8IDQz
+ICsrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1
+LmggICAgICAgICAgICB8ICA1ICsrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVf
+a21zLmMgICAgICAgICAgICB8IDE2ICsrKystLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9t
+ZHA0L21kcDRfa21zLmMgICAgICAgICAgIHwgMTYgKysrKy0tLQogZHJpdmVycy9ncHUvZHJtL21z
+bS9kaXNwL21kcDUvbWRwNV9jZmcuYyAgICAgICAgICAgfCAgNCAtLQogZHJpdmVycy9ncHUvZHJt
+L21zbS9kaXNwL21kcDUvbWRwNV9rbXMuYyAgICAgICAgICAgfCAxMyArKysrLQogZHJpdmVycy9n
+cHUvZHJtL21zbS9tc21fZHJ2LmggICAgICAgICAgICAgICAgICAgICAgfCAgOCArLS0tCiBkcml2
+ZXJzL2dwdS9kcm0vbXNtL21zbV9nZW1fdm1hLmMgICAgICAgICAgICAgICAgICB8IDMwICsrLS0t
+LS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZ3B1LmMgICAgICAgICAgICAgICAgICAg
+ICAgfCA1MSArKy0tLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZ3B1
+LmggICAgICAgICAgICAgICAgICAgICAgfCAgNCArLQogZHJpdmVycy9pb21tdS9hcm0tc21tdS1p
+bXBsLmMgICAgICAgICAgICAgICAgICAgICAgfCAxNSArKysrKysKIGRyaXZlcnMvaW9tbXUvYXJt
+LXNtbXUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNDYgKysrKysrKysrKysrKysrKy0t
+CiBkcml2ZXJzL2lvbW11L2FybS1zbW11LmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAy
+ICsKIGluY2x1ZGUvbGludXgvaW9tbXUuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+IDEgKwogMjAgZmlsZXMgY2hhbmdlZCwgMjM3IGluc2VydGlvbnMoKyksIDExMSBkZWxldGlvbnMo
+LSkKCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRy
+ZW5v
