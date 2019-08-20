@@ -1,34 +1,76 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] dt-bindings: spi: Fix the number of CS lines documented as an example
-Date: Tue, 20 Aug 2019 17:20:00 +0530
-Message-ID: <20190820115000.32041-1-manivannan.sadhasivam@linaro.org>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: [PATCH v6 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
+Date: Tue, 20 Aug 2019 14:03:39 +0200
+Message-ID: <20190820120345.22593-2-poeschel@lemonage.de>
+References: <20190820120345.22593-1-poeschel@lemonage.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820120345.22593-1-poeschel@lemonage.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The number of CS lines is mentioned as 2 in the spi-controller binding
-but however in the example, 4 cs-gpios are used. Hence fix that to
-mention 4.
+Add a simple binding doc for the pn532.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
- Documentation/devicetree/bindings/spi/spi-controller.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
+- Picked up Rob's Reviewed-By
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-index a02e2fe2bfb2..732339275848 100644
---- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-@@ -31,7 +31,7 @@ properties:
-       If that property is used, the number of chip selects will be
-       increased automatically with max(cs-gpios, hardware chip selects).
- 
--      So if, for example, the controller has 2 CS lines, and the
-+      So if, for example, the controller has 4 CS lines, and the
-       cs-gpios looks like this
-         cs-gpios = <&gpio1 0 0>, <0>, <&gpio1 1 0>, <&gpio1 2 0>;
- 
+Changes in v4:
+- Add documentation about reg property in case of i2c
+
+Changes in v3:
+- seperate binding doc instead of entry in trivial-devices.txt
+
+ .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
+
+diff --git a/Documentation/devicetree/bindings/nfc/pn532.txt b/Documentation/devicetree/bindings/nfc/pn532.txt
+new file mode 100644
+index 000000000000..d5aaa588073d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nfc/pn532.txt
+@@ -0,0 +1,33 @@
++NXP PN532 NFC Chip
++
++Required properties:
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
++- reg: for the i2c bus address. This is fixed at 0x48 for the PN532.
++
++Example uart:
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
++
++Example i2c:
++
++i2c1: i2c@0 {
++        compatible = "ti,omap3-i2c";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++                reg = <0x48>;
++        };
++};
 -- 
-2.17.1
+2.23.0.rc1
