@@ -1,7 +1,7 @@
 From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 3/7] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a7792
-Date: Tue, 20 Aug 2019 21:35:25 +0900
-Message-ID: <156630452545.17444.4277682052018128256.sendpatchset@octo>
+Subject: [PATCH v2 4/7] dt-bindings: timer: renesas, cmt: Add CMT0 and CMT1 to r8a77995
+Date: Tue, 20 Aug 2019 21:35:36 +0900
+Message-ID: <156630453593.17444.15839904958810436985.sendpatchset@octo>
 References: <156630449239.17444.11157306180861080402.sendpatchset@octo>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <156630449239.17444.11157306180861080402.sendpatchset@octo>
@@ -13,7 +13,7 @@ List-Id: devicetree@vger.kernel.org
 From: Magnus Damm <damm+renesas@opensource.se>
 
 This patch adds DT binding documentation for the CMT devices on
-the R-Car Gen2 V2H (r8a7792) SoC.
+the R-Car Gen3 D3 (r8a77995) SoC.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -24,14 +24,14 @@ Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
  Documentation/devicetree/bindings/timer/renesas,cmt.txt |    2 ++
  1 file changed, 2 insertions(+)
 
---- 0004/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-07-18 18:23:48.256013425 +0900
-@@ -35,6 +35,8 @@ Required Properties:
-     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
-     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
-     - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
-+    - "renesas,r8a7792-cmt0" for the 32-bit CMT0 device included in r8a7792.
-+    - "renesas,r8a7792-cmt1" for the 48-bit CMT1 device included in r8a7792.
-     - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+--- 0006/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ work/Documentation/devicetree/bindings/timer/renesas,cmt.txt	2019-07-18 18:25:04.331001914 +0900
+@@ -53,6 +53,8 @@ Required Properties:
+     - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
+     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
+     - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
++    - "renesas,r8a77995-cmt0" for the 32-bit CMT0 device included in r8a77995.
++    - "renesas,r8a77995-cmt1" for the 48-bit CMT1 device included in r8a77995.
+     - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
+     - "renesas,sh73a0-cmt1" for the 48-bit CMT1 device included in sh73a0.
+     - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
