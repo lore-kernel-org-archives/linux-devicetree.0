@@ -1,7 +1,7 @@
 From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 44/49] ath11k: add trace.h
-Date: Tue, 20 Aug 2019 18:48:10 +0300
-Message-ID: <1566316095-27507-45-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH 40/49] ath11k: add testmode.c
+Date: Tue, 20 Aug 2019 18:48:06 +0300
+Message-ID: <1566316095-27507-41-git-send-email-kvalo@codeaurora.org>
 References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1566316095-27507-1-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -11,122 +11,211 @@ Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL
 List-Id: devicetree@vger.kernel.org
 
 ---
- drivers/net/wireless/ath/ath11k/trace.h | 110 ++++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+ drivers/net/wireless/ath/ath11k/testmode.c | 199 +++++++++++++++++++++++++++++
+ 1 file changed, 199 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/trace.h b/drivers/net/wireless/ath/ath11k/trace.h
+diff --git a/drivers/net/wireless/ath/ath11k/testmode.c b/drivers/net/wireless/ath/ath11k/testmode.c
 new file mode 100644
-index 000000000000..aa96c4e7a0d5
+index 000000000000..9274b6cc3921
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/trace.h
-@@ -0,0 +1,110 @@
-+/* SPDX-License-Identifier: ISC */
++++ b/drivers/net/wireless/ath/ath11k/testmode.c
+@@ -0,0 +1,199 @@
++// SPDX-License-Identifier: ISC
 +/*
-+ * Copyright (c) 2019 The Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#if !defined(_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-+
-+#include <linux/tracepoint.h>
++#include "testmode.h"
++#include <net/netlink.h>
++#include "debug.h"
++#include "wmi.h"
++#include "hw.h"
 +#include "core.h"
++#include "testmode_i.h"
 +
-+#define _TRACE_H_
++static const struct nla_policy ath11k_tm_policy[ATH11K_TM_ATTR_MAX + 1] = {
++	[ATH11K_TM_ATTR_CMD]		= { .type = NLA_U32 },
++	[ATH11K_TM_ATTR_DATA]		= { .type = NLA_BINARY,
++					    .len = ATH11K_TM_DATA_MAX_LEN },
++	[ATH11K_TM_ATTR_WMI_CMDID]	= { .type = NLA_U32 },
++	[ATH11K_TM_ATTR_VERSION_MAJOR]	= { .type = NLA_U32 },
++	[ATH11K_TM_ATTR_VERSION_MINOR]	= { .type = NLA_U32 },
++};
 +
-+/* create empty functions when tracing is disabled */
-+#if !defined(CONFIG_ATH11K_TRACING)
-+#undef TRACE_EVENT
-+#define TRACE_EVENT(name, proto, ...) \
-+static inline void trace_ ## name(proto) {}
-+#endif /* !CONFIG_ATH11K_TRACING || __CHECKER__ */
++/* Returns true if callee consumes the skb and the skb should be discarded.
++ * Returns false if skb is not used. Does not sleep.
++ */
++bool ath11k_tm_event_wmi(struct ath11k *ar, u32 cmd_id, struct sk_buff *skb)
++{
++	struct sk_buff *nl_skb;
++	bool consumed;
++	int ret;
 +
-+TRACE_EVENT(ath11k_htt_pktlog,
-+	    TP_PROTO(struct ath11k *ar, const void *buf, u16 buf_len),
++	ath11k_dbg(ar->ab, ATH11K_DBG_TESTMODE,
++		   "testmode event wmi cmd_id %d skb %pK skb->len %d\n",
++		   cmd_id, skb, skb->len);
 +
-+	TP_ARGS(ar, buf, buf_len),
++	ath11k_dbg_dump(ar->ab, ATH11K_DBG_TESTMODE, NULL, "", skb->data, skb->len);
 +
-+	TP_STRUCT__entry(
-+		__string(device, dev_name(ar->ab->dev))
-+		__string(driver, dev_driver_string(ar->ab->dev))
-+		__field(u16, buf_len)
-+		__dynamic_array(u8, pktlog, buf_len)
-+	),
++	spin_lock_bh(&ar->data_lock);
 +
-+	TP_fast_assign(
-+		__assign_str(device, dev_name(ar->ab->dev));
-+		__assign_str(driver, dev_driver_string(ar->ab->dev));
-+		__entry->buf_len = buf_len;
-+		memcpy(__get_dynamic_array(pktlog), buf, buf_len);
-+	),
++	consumed = true;
 +
-+	TP_printk(
-+		"%s %s size %hu",
-+		__get_str(driver),
-+		__get_str(device),
-+		__entry->buf_len
-+	 )
-+);
++	nl_skb = cfg80211_testmode_alloc_event_skb(ar->hw->wiphy,
++						   2 * sizeof(u32) + skb->len,
++						   GFP_ATOMIC);
++	if (!nl_skb) {
++		ath11k_warn(ar->ab,
++			    "failed to allocate skb for testmode wmi event\n");
++		goto out;
++	}
 +
-+TRACE_EVENT(ath11k_htt_ppdu_stats,
-+	    TP_PROTO(struct ath11k *ar, const void *data, size_t len),
++	ret = nla_put_u32(nl_skb, ATH11K_TM_ATTR_CMD, ATH11K_TM_CMD_WMI);
++	if (ret) {
++		ath11k_warn(ar->ab,
++			    "failed to to put testmode wmi event cmd attribute: %d\n",
++			    ret);
++		kfree_skb(nl_skb);
++		goto out;
++	}
 +
-+	TP_ARGS(ar, data, len),
++	ret = nla_put_u32(nl_skb, ATH11K_TM_ATTR_WMI_CMDID, cmd_id);
++	if (ret) {
++		ath11k_warn(ar->ab,
++			    "failed to to put testmode wmi even cmd_id: %d\n",
++			    ret);
++		kfree_skb(nl_skb);
++		goto out;
++	}
 +
-+	TP_STRUCT__entry(
-+		__string(device, dev_name(ar->ab->dev))
-+		__string(driver, dev_driver_string(ar->ab->dev))
-+		__field(u16, len)
-+		__dynamic_array(u8, ppdu, len)
-+	),
++	ret = nla_put(nl_skb, ATH11K_TM_ATTR_DATA, skb->len, skb->data);
++	if (ret) {
++		ath11k_warn(ar->ab,
++			    "failed to copy skb to testmode wmi event: %d\n",
++			    ret);
++		kfree_skb(nl_skb);
++		goto out;
++	}
 +
-+	TP_fast_assign(
-+		__assign_str(device, dev_name(ar->ab->dev));
-+		__assign_str(driver, dev_driver_string(ar->ab->dev));
-+		__entry->len = len;
-+		memcpy(__get_dynamic_array(ppdu), data, len);
-+	),
++	cfg80211_testmode_event(nl_skb, GFP_ATOMIC);
 +
-+	TP_printk(
-+		"%s %s ppdu len %d",
-+		__get_str(driver),
-+		__get_str(device),
-+		__entry->len
-+	 )
-+);
++out:
++	spin_unlock_bh(&ar->data_lock);
 +
-+TRACE_EVENT(ath11k_htt_rxdesc,
-+	    TP_PROTO(struct ath11k *ar, const void *data, size_t len),
++	return consumed;
++}
 +
-+	TP_ARGS(ar, data, len),
++static int ath11k_tm_cmd_get_version(struct ath11k *ar, struct nlattr *tb[])
++{
++	struct sk_buff *skb;
++	int ret;
 +
-+	TP_STRUCT__entry(
-+		__string(device, dev_name(ar->ab->dev))
-+		__string(driver, dev_driver_string(ar->ab->dev))
-+		__field(u16, len)
-+		__dynamic_array(u8, rxdesc, len)
-+	),
++	ath11k_dbg(ar->ab, ATH11K_DBG_TESTMODE,
++		   "testmode cmd get version_major %d version_minor %d\n",
++		   ATH11K_TESTMODE_VERSION_MAJOR,
++		   ATH11K_TESTMODE_VERSION_MINOR);
 +
-+	TP_fast_assign(
-+		__assign_str(device, dev_name(ar->ab->dev));
-+		__assign_str(driver, dev_driver_string(ar->ab->dev));
-+		__entry->len = len;
-+		memcpy(__get_dynamic_array(rxdesc), data, len);
-+	),
++	skb = cfg80211_testmode_alloc_reply_skb(ar->hw->wiphy,
++						nla_total_size(sizeof(u32)));
++	if (!skb)
++		return -ENOMEM;
 +
-+	TP_printk(
-+		"%s %s rxdesc len %d",
-+		__get_str(driver),
-+		__get_str(device),
-+		__entry->len
-+	 )
-+);
++	ret = nla_put_u32(skb, ATH11K_TM_ATTR_VERSION_MAJOR,
++			  ATH11K_TESTMODE_VERSION_MAJOR);
++	if (ret) {
++		kfree_skb(skb);
++		return ret;
++	}
 +
-+#endif /* _TRACE_H_ || TRACE_HEADER_MULTI_READ*/
++	ret = nla_put_u32(skb, ATH11K_TM_ATTR_VERSION_MINOR,
++			  ATH11K_TESTMODE_VERSION_MINOR);
++	if (ret) {
++		kfree_skb(skb);
++		return ret;
++	}
 +
-+/* we don't want to use include/trace/events */
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace
++	return cfg80211_testmode_reply(skb);
++}
 +
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
++static int ath11k_tm_cmd_wmi(struct ath11k *ar, struct nlattr *tb[])
++{
++	struct ath11k_pdev_wmi *wmi = ar->wmi;
++	struct sk_buff *skb;
++	u32 cmd_id, buf_len;
++	int ret;
++	void *buf;
++
++	mutex_lock(&ar->conf_mutex);
++
++	if (ar->state != ATH11K_STATE_ON) {
++		ret = -ENETDOWN;
++		goto out;
++	}
++
++	if (!tb[ATH11K_TM_ATTR_DATA]) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (!tb[ATH11K_TM_ATTR_WMI_CMDID]) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	buf = nla_data(tb[ATH11K_TM_ATTR_DATA]);
++	buf_len = nla_len(tb[ATH11K_TM_ATTR_DATA]);
++	cmd_id = nla_get_u32(tb[ATH11K_TM_ATTR_WMI_CMDID]);
++
++	ath11k_dbg(ar->ab, ATH11K_DBG_TESTMODE,
++		   "testmode cmd wmi cmd_id %d buf %pK buf_len %d\n",
++		   cmd_id, buf, buf_len);
++
++	ath11k_dbg_dump(ar->ab, ATH11K_DBG_TESTMODE, NULL, "", buf, buf_len);
++
++	skb = ath11k_wmi_alloc_skb(wmi->wmi_sc, buf_len);
++	if (!skb) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	memcpy(skb->data, buf, buf_len);
++
++	ret = ath11k_wmi_cmd_send(wmi, skb, cmd_id);
++	if (ret) {
++		dev_kfree_skb(skb);
++		ath11k_warn(ar->ab, "failed to transmit wmi command (testmode): %d\n",
++			    ret);
++		goto out;
++	}
++
++	ret = 0;
++
++out:
++	mutex_unlock(&ar->conf_mutex);
++	return ret;
++}
++
++int ath11k_tm_cmd(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
++		  void *data, int len)
++{
++	struct ath11k *ar = hw->priv;
++	struct nlattr *tb[ATH11K_TM_ATTR_MAX + 1];
++	int ret;
++
++	ret = nla_parse(tb, ATH11K_TM_ATTR_MAX, data, len, ath11k_tm_policy,
++			NULL);
++	if (ret)
++		return ret;
++
++	if (!tb[ATH11K_TM_ATTR_CMD])
++		return -EINVAL;
++
++	switch (nla_get_u32(tb[ATH11K_TM_ATTR_CMD])) {
++	case ATH11K_TM_CMD_GET_VERSION:
++		return ath11k_tm_cmd_get_version(ar, tb);
++	case ATH11K_TM_CMD_WMI:
++		return ath11k_tm_cmd_wmi(ar, tb);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
