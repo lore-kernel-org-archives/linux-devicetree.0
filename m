@@ -1,416 +1,278 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 04/10] mailbox: sunxi-msgbox: Add a new
- mailbox driver
-Date: Tue, 20 Aug 2019 13:18:25 +0200
-Message-ID: <20190820111825.2w55fleehrnon27u@core.my.home>
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-5-samuel@sholland.org>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH v7 0/5] media: Allwinner A10 CSI support
+Date: Tue, 20 Aug 2019 13:24:31 +0200
+Message-ID: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBA5O57VAKGQEBFMFVQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190820032311.6506-5-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-On Mon, Aug 19, 2019 at 10:23:05PM -0500, Samuel Holland wrote:
-> Allwinner sun8i, sun9i, and sun50i SoCs contain a hardware message box
-> used for communication between the ARM CPUs and the ARISC management
-> coprocessor. The hardware contains 8 unidirectional 4-message FIFOs.
-> 
-> Add a driver for it, so it can be used for SCPI or other communication
-> protocols.
-> 
-> Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-> ---
->  drivers/mailbox/Kconfig        |  10 +
->  drivers/mailbox/Makefile       |   2 +
->  drivers/mailbox/sunxi-msgbox.c | 323 +++++++++++++++++++++++++++++++++
->  3 files changed, 335 insertions(+)
->  create mode 100644 drivers/mailbox/sunxi-msgbox.c
-> 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index ab4eb750bbdd..57d12936175e 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -227,4 +227,14 @@ config ZYNQMP_IPI_MBOX
->  	  message to the IPI buffer and will access the IPI control
->  	  registers to kick the other processor or enquire status.
->  
-> +config SUNXI_MSGBOX
-> +	tristate "Allwinner sunxi Message Box"
-> +	depends on ARCH_SUNXI || COMPILE_TEST
-> +	default ARCH_SUNXI
-> +	help
-> +	  Mailbox implementation for the hardware message box present in
-> +	  Allwinner sun8i, sun9i, and sun50i SoCs. The hardware message box is
-> +	  used for communication between the application CPUs and the power
-> +	  management coprocessor.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index c22fad6f696b..bec2d50b0976 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
->  obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
->  
->  obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
-> +
-> +obj-$(CONFIG_SUNXI_MSGBOX)	+= sunxi-msgbox.o
-> diff --git a/drivers/mailbox/sunxi-msgbox.c b/drivers/mailbox/sunxi-msgbox.c
-> new file mode 100644
-> index 000000000000..29a5101a5390
-> --- /dev/null
-> +++ b/drivers/mailbox/sunxi-msgbox.c
-> @@ -0,0 +1,323 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2017-2019 Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define NUM_CHANS		8
-> +
-> +#define CTRL_REG(n)		(0x0000 + 0x4 * ((n) / 4))
-> +#define CTRL_RX(n)		BIT(0 + 8 * ((n) % 4))
-> +#define CTRL_TX(n)		BIT(4 + 8 * ((n) % 4))
-> +
-> +#define REMOTE_IRQ_EN_REG	0x0040
-> +#define REMOTE_IRQ_STAT_REG	0x0050
-> +#define LOCAL_IRQ_EN_REG	0x0060
-> +#define LOCAL_IRQ_STAT_REG	0x0070
-> +
-> +#define RX_IRQ(n)		BIT(0 + 2 * (n))
-> +#define RX_IRQ_MASK		0x5555
-> +#define TX_IRQ(n)		BIT(1 + 2 * (n))
-> +#define TX_IRQ_MASK		0xaaaa
-> +
-> +#define FIFO_STAT_REG(n)	(0x0100 + 0x4 * (n))
-> +#define FIFO_STAT_MASK		GENMASK(0, 0)
-> +
-> +#define MSG_STAT_REG(n)		(0x0140 + 0x4 * (n))
-> +#define MSG_STAT_MASK		GENMASK(2, 0)
-> +
-> +#define MSG_DATA_REG(n)		(0x0180 + 0x4 * (n))
-> +
-> +#define mbox_dbg(mbox, ...)	dev_dbg((mbox)->controller.dev, __VA_ARGS__)
-> +
-> +struct sunxi_msgbox {
-> +	struct mbox_controller controller;
-> +	struct clk *clk;
-> +	spinlock_t lock;
-> +	void __iomem *regs;
-> +};
-> +
-> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan);
-> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan);
-> +
-> +static inline int channel_number(struct mbox_chan *chan)
-> +{
-> +	return chan - chan->mbox->chans;
-> +}
-> +
-> +static inline struct sunxi_msgbox *channel_to_msgbox(struct mbox_chan *chan)
-> +{
-> +	return chan->con_priv;
-> +}
-> +
-> +static irqreturn_t sunxi_msgbox_irq(int irq, void *dev_id)
-> +{
-> +	struct sunxi_msgbox *mbox = dev_id;
-> +	uint32_t status;
-> +	int n;
-> +
-> +	/* Only examine channels that are currently enabled. */
-> +	status = readl(mbox->regs + LOCAL_IRQ_EN_REG) &
-> +		 readl(mbox->regs + LOCAL_IRQ_STAT_REG);
-> +
-> +	if (!(status & RX_IRQ_MASK))
-> +		return IRQ_NONE;
-> +
-> +	for (n = 0; n < NUM_CHANS; ++n) {
-> +		struct mbox_chan *chan = &mbox->controller.chans[n];
-> +
-> +		if (!(status & RX_IRQ(n)))
-> +			continue;
-> +
-> +		while (sunxi_msgbox_peek_data(chan)) {
-> +			uint32_t msg = readl(mbox->regs + MSG_DATA_REG(n));
-> +
-> +			mbox_dbg(mbox, "Channel %d received 0x%08x\n", n, msg);
-> +			mbox_chan_received_data(chan, &msg);
-> +		}
-> +
-> +		/* The IRQ can be cleared only once the FIFO is empty. */
-> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int sunxi_msgbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +	uint32_t msg = *(uint32_t *)data;
-> +
-> +	/* Using a channel backwards gets the hardware into a bad state. */
-> +	if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-> +		return 0;
-> +
-> +	/* We cannot post a new message if the FIFO is full. */
-> +	if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
-> +		mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-> +		return -EBUSY;
-> +	}
-> +
-> +	writel(msg, mbox->regs + MSG_DATA_REG(n));
-> +	mbox_dbg(mbox, "Channel %d sent 0x%08x\n", n, msg);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sunxi_msgbox_startup(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	/* The coprocessor is responsible for setting channel directions. */
-> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-> +		/* Flush the receive FIFO. */
-> +		while (sunxi_msgbox_peek_data(chan))
-> +			readl(mbox->regs + MSG_DATA_REG(n));
-> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> +
-> +		/* Enable the receive IRQ. */
-> +		spin_lock(&mbox->lock);
-> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) | RX_IRQ(n),
-> +		       mbox->regs + LOCAL_IRQ_EN_REG);
-> +		spin_unlock(&mbox->lock);
-> +	}
-> +
-> +	mbox_dbg(mbox, "Channel %d startup complete\n", n);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sunxi_msgbox_shutdown(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-> +		/* Disable the receive IRQ. */
-> +		spin_lock(&mbox->lock);
-> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) & ~RX_IRQ(n),
-> +		       mbox->regs + LOCAL_IRQ_EN_REG);
-> +		spin_unlock(&mbox->lock);
-> +
-> +		/* Attempt to flush the FIFO until the IRQ is cleared. */
-> +		do {
-> +			while (sunxi_msgbox_peek_data(chan))
-> +				readl(mbox->regs + MSG_DATA_REG(n));
-> +			writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> +		} while (readl(mbox->regs + LOCAL_IRQ_STAT_REG) & RX_IRQ(n));
-> +	}
-> +
-> +	mbox_dbg(mbox, "Channel %d shutdown complete\n", n);
-> +}
-> +
-> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	/*
-> +	 * The hardware allows snooping on the remote user's IRQ statuses.
-> +	 * We consider a message to be acknowledged only once the receive IRQ
-> +	 * for that channel is cleared. Since the receive IRQ for a channel
-> +	 * cannot be cleared until the FIFO for that channel is empty, this
-> +	 * ensures that the message has actually been read. It also gives the
-> +	 * recipient an opportunity to perform minimal processing before
-> +	 * acknowledging the message.
-> +	 */
-> +	return !(readl(mbox->regs + REMOTE_IRQ_STAT_REG) & RX_IRQ(n));
-> +}
-> +
-> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan)
-> +{
-> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> +	int n = channel_number(chan);
-> +
-> +	return readl(mbox->regs + MSG_STAT_REG(n)) & MSG_STAT_MASK;
-> +}
-> +
-> +static const struct mbox_chan_ops sunxi_msgbox_chan_ops = {
-> +	.send_data    = sunxi_msgbox_send_data,
-> +	.startup      = sunxi_msgbox_startup,
-> +	.shutdown     = sunxi_msgbox_shutdown,
-> +	.last_tx_done = sunxi_msgbox_last_tx_done,
-> +	.peek_data    = sunxi_msgbox_peek_data,
-> +};
-> +
-> +static int sunxi_msgbox_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mbox_chan *chans;
-> +	struct reset_control *reset;
-> +	struct resource *res;
-> +	struct sunxi_msgbox *mbox;
-> +	int i, ret;
-> +
-> +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> +	if (!mbox)
-> +		return -ENOMEM;
-> +
-> +	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
-> +	if (!chans)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < NUM_CHANS; ++i)
-> +		chans[i].con_priv = mbox;
-> +
-> +	mbox->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(mbox->clk)) {
-> +		ret = PTR_ERR(mbox->clk);
-> +		dev_err(dev, "Failed to get clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(mbox->clk);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	reset = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(reset)) {
-> +		ret = PTR_ERR(reset);
-> +		dev_err(dev, "Failed to get reset control: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	ret = reset_control_deassert(reset);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to deassert reset: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
+Hi,
 
-You need to assert the reset again from now on, in error paths. devm
-will not do that for you.
+Here is a series introducing the support for the A10 (and SoCs of the same
+generation) CMOS Sensor Interface (called CSI, not to be confused with
+MIPI-CSI, which isn't support by that IP).
 
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		ret = -ENODEV;
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	mbox->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(mbox->regs)) {
-> +		ret = PTR_ERR(mbox->regs);
-> +		dev_err(dev, "Failed to map MMIO resource: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	/* Disable all IRQs for this end of the msgbox. */
-> +	writel(0, mbox->regs + LOCAL_IRQ_EN_REG);
-> +
-> +	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
-> +			       sunxi_msgbox_irq, 0, dev_name(dev), mbox);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register IRQ handler: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	mbox->controller.dev           = dev;
-> +	mbox->controller.ops           = &sunxi_msgbox_chan_ops;
-> +	mbox->controller.chans         = chans;
-> +	mbox->controller.num_chans     = NUM_CHANS;
-> +	mbox->controller.txdone_irq    = false;
-> +	mbox->controller.txdone_poll   = true;
-> +	mbox->controller.txpoll_period = 5;
-> +
-> +	spin_lock_init(&mbox->lock);
-> +	platform_set_drvdata(pdev, mbox);
-> +
-> +	ret = mbox_controller_register(&mbox->controller);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register controller: %d\n", ret);
-> +		goto err_disable_unprepare;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_disable_unprepare:
-> +	clk_disable_unprepare(mbox->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sunxi_msgbox_remove(struct platform_device *pdev)
-> +{
-> +	struct sunxi_msgbox *mbox = platform_get_drvdata(pdev);
-> +
-> +	mbox_controller_unregister(&mbox->controller);
-> +	clk_disable_unprepare(mbox->clk);
+That interface is pretty straightforward, but the driver has a few issues
+that I wanted to bring up:
 
-Also, assert the reset here.
+  * The only board I've been testing this with has an ov5640 sensor
+    attached, which doesn't work with the upstream driver. Copying the
+    Allwinner init sequence works though, and this is how it has been
+    tested. Testing with a second sensor would allow to see if it's an
+    issue on the CSI side or the sensor side.
+  * We don't have support for the ISP at the moment, but this can be added
+    eventually.
 
-regards,
-	o.
+Here is the v4l2-compliance output (commit f61132e81d79 of v4l-utils)
+v4l2-compliance SHA: not available, 32 bits
 
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sunxi_msgbox_of_match[] = {
-> +	{ .compatible = "allwinner,sun6i-a31-msgbox", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sunxi_msgbox_of_match);
-> +
-> +static struct platform_driver sunxi_msgbox_driver = {
-> +	.driver = {
-> +		.name = "sunxi-msgbox",
-> +		.of_match_table = sunxi_msgbox_of_match,
-> +	},
-> +	.probe  = sunxi_msgbox_probe,
-> +	.remove = sunxi_msgbox_remove,
-> +};
-> +module_platform_driver(sunxi_msgbox_driver);
-> +
-> +MODULE_AUTHOR("Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>");
-> +MODULE_DESCRIPTION("Allwinner sunxi Message Box");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.21.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Compliance test for device /dev/video1:
+
+Driver Info:
+	Driver name      : sun4i_csi
+	Card type        : sun4i-csi
+	Bus info         : platform:1c09000.csi
+	Driver version   : 5.3.0
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : sun4i-csi
+	Model            : Allwinner Video Capture Device
+	Serial           :
+	Bus info         :
+	Media version    : 5.3.0
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 5.3.0
+Interface Info:
+	ID               : 0x03000008
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000006 (6)
+	Name             : sun4i_csi
+	Function         : V4L2 I/O
+	Pad 0x01000007   : 0: Sink, Must Connect
+	  Link 0x0200000a: from remote pad 0x1000005 of entity 'sun4i-csi-0': Data, Enabled, Immutable
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video1 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	test MMAP: OK
+	test USERPTR: OK (Not Supported)
+	test DMABUF: OK (Not Supported)
+
+Total: 49, Succeeded: 49, Failed: 0, Warnings: 0
+
+media-ctl -p -d /dev/media1 output after boot:
+Media controller API version 5.3.0
+
+Media device information
+------------------------
+driver          sun4i-csi
+model           Allwinner Video Capture Device
+serial
+bus info
+hw revision     0x0
+driver version  5.3.0
+
+Device topology
+- entity 1: ov5640 1-0021 (1 pad, 1 link)
+            type V4L2 subdev subtype Sensor flags 0
+            device node name /dev/v4l-subdev0
+	pad0: Source
+		[fmt:YUYV8_2X8/640x480@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:full-range]
+		-> "sun4i-csi-0":0 [ENABLED,IMMUTABLE]
+
+- entity 3: sun4i-csi-0 (2 pads, 2 links)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev1
+	pad0: Sink
+		[fmt:YUYV8_2X8/640x480 field:none colorspace:raw]
+		<- "ov5640 1-0021":0 [ENABLED,IMMUTABLE]
+	pad1: Source
+		[fmt:YUYV8_2X8/640x480 field:none colorspace:raw]
+		-> "sun4i_csi":0 [ENABLED,IMMUTABLE]
+
+- entity 6: sun4i_csi (1 pad, 1 link)
+            type Node subtype V4L flags 0
+            device node name /dev/video1
+	pad0: Sink
+		<- "sun4i-csi-0":1 [ENABLED,IMMUTABLE]
+
+Let me know what you think,
+Maxime
+
+Changes from v6:
+  - Add init_cfg callback on the pads
+  - Use v4l2_subdev_link_validate instead of hand-rolled link validate
+  - Make sun4i_csi_qops const
+  - Add MODULE_DESCRIPTION, MODULE_AUTHOR and MODULE_LICENSE
+  - Remove the mod clock handling from the CSI driver
+  - Remove the A10 compatible fallback
+  - Rework the CSI pinctrl groups
+  - Add an example to the binding
+
+Changes from v5:
+  - Add link_validate/get_fmt/set_fmt/enum_mbus_code to the subdevice
+  - Create a device file for the subdevice
+  - Add link_validate to the video device
+  - Remove the storage of both the v4l2_pix_format_mplane structure and the
+    sun4i_csi_format structure, since the latter can be retrieved easily
+    from the former, and this is actually needed in a single place.
+  - Fix the copyright year notice
+
+Changes from v4:
+  - Created an intermediate sub-device
+
+Changes from v3:
+  - Rebased on v5.1-rc
+  - Fixed the YAML binding according to Rob's review
+
+Changes from v2:
+  - Address a few minors comments on the error path, the return type of
+    some functions, the type of some variables
+  - Disable the device if the subdev call fails in start_streaming
+  - Use __maybe_unused and SET_RUNTIME_PM_OPS for the runtime PM hooks
+  - Call media_device_cleanup in the remove function
+  - Add a dependency on the subdev API and the common clock framework
+  - Fix the MAINTAINERS entry to point to the yaml file
+  - Add the of graph bindings to the YAML schemas
+  - Rebase on next
+
+Changes from v1:
+  - Make sure it's compliant with a much newer v4l2-compliance
+  - Conversion of the DT bindings to a JSON schema
+  - Drop the vendor properties and use a separate compatible instead
+  - Fix an issue on the last frame where we would not have any buffer
+    queued and would report an error by using a scratch buffer
+  - Fix the warnings reported by v4l2-compliance
+  - Rebase on top of 5.0-rc1
+  - Added a MAINTAINERS entry
+  - Switched to strscpy
+  - Fixed SPDX header
+
+Maxime Ripard (5):
+  dt-bindings: media: Add Allwinner A10 CSI binding
+  media: sunxi: Refactor the Makefile and Kconfig
+  media: sunxi: Add A10 CSI driver
+  ARM: dts: sun7i: Add CSI0 controller
+  DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+
+ Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 +++++++++++++++++-
+ MAINTAINERS                                                          |   8 +-
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts                             |  87 ++++++++++++++-
+ arch/arm/boot/dts/sun7i-a20.dtsi                                     |  25 ++++-
+ drivers/media/platform/Kconfig                                       |   2 +-
+ drivers/media/platform/Makefile                                      |   2 +-
+ drivers/media/platform/sunxi/Kconfig                                 |   2 +-
+ drivers/media/platform/sunxi/Makefile                                |   2 +-
+ drivers/media/platform/sunxi/sun4i-csi/Kconfig                       |  11 ++-
+ drivers/media/platform/sunxi/sun4i-csi/Makefile                      |   5 +-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c                   | 305 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h                   | 159 ++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c                   | 444 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c                  | 383 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 14 files changed, 1540 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+ create mode 100644 drivers/media/platform/sunxi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
+ create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
+
+base-commit: 85b8819be27eab140d280bbee4f01385beb11e7d
+-- 
+git-series 0.9.1
