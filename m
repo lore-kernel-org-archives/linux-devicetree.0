@@ -1,8 +1,7 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 03/10] dt-bindings: mailbox: Add a sunxi
- message box binding
-Date: Mon, 19 Aug 2019 22:23:04 -0500
-Message-ID: <20190820032311.6506-4-samuel@sholland.org>
+Subject: [PATCH v4 05/10] ARM: dts: sunxi: a80: Add msgbox node
+Date: Mon, 19 Aug 2019 22:23:06 -0500
+Message-ID: <20190820032311.6506-6-samuel@sholland.org>
 References: <20190820032311.6506-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
@@ -17,103 +16,38 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This mailbox hardware is present in Allwinner sun8i, sun9i, and sun50i
-SoCs. Add a device tree binding for it.
+The A80 SoC contains a message box that can be used to send messages and
+interrupts back and forth between the ARM application CPUs and the ARISC
+coprocessor. Add a device tree node for it.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- .../mailbox/allwinner,sunxi-msgbox.yaml       | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+ arch/arm/boot/dts/sun9i-a80.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
-new file mode 100644
-index 000000000000..f34a1909ab2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/allwinner,sunxi-msgbox.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index c34d505c7efe..844a265dbd0e 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -318,6 +318,16 @@
+ 			};
+ 		};
+ 
++		msgbox: mailbox@803000 {
++			compatible = "allwinner,sun9i-a80-msgbox",
++				     "allwinner,sun6i-a31-msgbox";
++			reg = <0x00803000 0x1000>;
++			clocks = <&ccu CLK_BUS_MSGBOX>;
++			resets = <&ccu RST_BUS_MSGBOX>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <1>;
++		};
 +
-+title: Allwinner sunxi Message Box
-+
-+maintainers:
-+  - Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-+
-+description: |
-+  The hardware message box on sun6i and newer sunxi SoCs is a two-user mailbox
-+  controller containing 8 unidirectional FIFOs. An interrupt is raised for
-+  received messages, but software must poll to know when a transmitted message
-+  has been acknowledged by the remote user. Each FIFO can hold four 32-bit
-+  messages; when a FIFO is full, clients must wait before more transmissions.
-+
-+  Refer to ./mailbox.txt for generic information about mailbox device-tree
-+  bindings.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - allwinner,sun8i-a83t-msgbox
-+              - allwinner,sun8i-h3-msgbox
-+              - allwinner,sun9i-a80-msgbox
-+              - allwinner,sun50i-a64-msgbox
-+              - allwinner,sun50i-h6-msgbox
-+          - const: allwinner,sun6i-a31-msgbox
-+      - items:
-+          - const: allwinner,sun6i-a31-msgbox
-+
-+  reg:
-+    items:
-+      - description: MMIO register range
-+
-+  clocks:
-+    maxItems: 1
-+    description: bus clock
-+
-+  resets:
-+    maxItems: 1
-+    description: bus reset
-+
-+  interrupts:
-+    maxItems: 1
-+    description: controller interrupt
-+
-+  '#mbox-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - interrupts
-+  - '#mbox-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun8i-h3-ccu.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/reset/sun8i-h3-ccu.h>
-+
-+    msgbox: mailbox@1c17000 {
-+            compatible = "allwinner,sun8i-h3-msgbox",
-+                         "allwinner,sun6i-a31-msgbox";
-+            reg = <0x01c17000 0x1000>;
-+            clocks = <&ccu CLK_BUS_MSGBOX>;
-+            resets = <&ccu RST_BUS_MSGBOX>;
-+            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+            #mbox-cells = <1>;
-+    };
-+
-+...
+ 		gmac: ethernet@830000 {
+ 			compatible = "allwinner,sun7i-a20-gmac";
+ 			reg = <0x00830000 0x1054>;
 -- 
 2.21.0
