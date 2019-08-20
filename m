@@ -1,38 +1,46 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 3/4] dt-bindings: Add optional label property for ina2xx
-Date: Tue, 20 Aug 2019 16:11:40 +0200
-Message-ID: <3c56deb8cc1842d2915b203e622be1eb442414de.1566310292.git.michal.simek@xilinx.com>
-References: <cover.1566310292.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1566310292.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1566310292.git.michal.simek@xilinx.com>
-References: <cover.1566310292.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, linux@roeck-us.net
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Mark Rutland <mark.rutland@arm.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/6] dt-bindings: soc: amlogic: clk-measure: Add SM1 compatible
+Date: Tue, 20 Aug 2019 16:40:48 +0200
+Message-ID: <20190820144052.18269-3-narmstrong@baylibre.com>
+References: <20190820144052.18269-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190820144052.18269-1-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: khilman@baylibre.com
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Using optional "label" property is adding an option to user to use better
-name for device identification.
+Add the Amlogic SM1 Compatible for the clk-measurer IP.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
+ Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/hwmon/ina2xx.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-index 02af0d94e921..d15bf7e46fd7 100644
---- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-+++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-@@ -14,6 +14,8 @@ Optional properties:
- 
- - shunt-resistor
- 	Shunt resistor value in micro-Ohm
-+- label
-+	Symbolic name for a power monitor
+diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+index 6bf6b43f8dd8..3dd563cec794 100644
+--- a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
++++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 			"amlogic,meson8b-clk-measure" for Meson8b SoCs
+ 			"amlogic,meson-axg-clk-measure" for AXG SoCs
+ 			"amlogic,meson-g12a-clk-measure" for G12a SoCs
++			"amlogic,meson-sm1-clk-measure" for SM1 SoCs
+ - reg: base address and size of the Clock Measurer register space.
  
  Example:
- 
 -- 
-2.17.1
+2.22.0
