@@ -1,64 +1,73 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 07/11] arm64: re-introduce max_zone_dma_phys()
-Date: Tue, 20 Aug 2019 16:58:15 +0200
-Message-ID: <20190820145821.27214-8-nsaenzjulienne@suse.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
+Date: Tue, 20 Aug 2019 10:18:41 -0500
+Message-ID: <CAL_JsqLdh41o2cQfG=spa_1HkPUgeyvVm2r0f=5OZiGP6Fw29g@mail.gmail.com>
+References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
+ <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
+ <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
+ <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com> <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190820145821.27214-1-nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, wahrenst-hi6Y0CQ0nG0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, linux-riscv-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: phill-FnsA7b+Nu9XCNwmyUqMw6A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsaenzjulienne-l3A5Bk7waGM@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Android Kernel Team <kernel-team@android.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Some devices might have multiple interconnects with different DMA
-addressing limitations. This function provides the higher physical
-address accessible by all peripherals on the SoC. If such limitation
-doesn't exist it'll return the maximum physical address of the 32 bit
-addressable area.
+On Thu, Aug 15, 2019 at 9:04 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Wed, Aug 14, 2019 at 4:41 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > >
+> > > > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > >
+> > > > > PowerPC platforms don't use the generic of/platform code to populate the
+> > > > > devices from DT.
+> > > >
+> > > > Yes, they do.
+> > >
+> > > No they don't. My wording could be better, but they don't use
+> > > of_platform_default_populate_init()
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+> >
+> > Right, but the rest of the of/platform code is used (guess where it
+> > got moved here from?).
+> >
+> > > > > Therefore the generic device linking code is never used
+> > > > > in PowerPC.  Compile it out to avoid warning about unused functions.
+> > > >
+> > > > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
+> > > > return' rather than #ifdefs.
+> > >
+> > > I'm just moving the existing ifndef some lines above. I don't want to
+> > > go change existing #ifndef in this patch. Maybe that should be a
+> > > separate patch series that goes and fixes all such code in drivers/of/
+> > > or driver/
+> >
+> > So the initcall was originally just supposed to call
+> > of_platform_default_populate(), but it's grown beyond that. That could
+> > make things fragile as it is possible for platforms to call
+> > of_platform_populate() (directly or indirectly) before
+> > of_platform_default_populate_init(). That was supposed to work, but
+> > now I think it's getting more fragile.
+>
+> Can you clarify what's wrong with of_platfrom_populate() being called
+> before of_platform_default_populate_init()? If that's what a platform
+> wants to do, they can do it? I have some thoughts of my own, but I
+> want to hear yours.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
----
+Really, I'd like to get rid of platforms doing their own calls. That's
+mostly an arm32 issue. Most of what's left are either platforms using
+auxdata which was supposed to be a transition thing or ones that set a
+parent device (soc_device). The former takes work to finish converting
+platforms to DT and I don't know what to do for the latter other than
+always or never set a parent device. Also, I know there's an issue on
+atmel where we can't remove their of_platform_populate call because it
+changes the probe order and breaks their pinctrl and gpio driver (I
+started a patch for that...).
 
-Changes in v2:
-- Update function's behavior to fit new dma zones split
-- Use dma_zone_size
-- Take into account devices with a hardcoded DMA offset
-
- arch/arm64/mm/init.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 8956c22634dd..bc7999020c71 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -174,6 +174,17 @@ static phys_addr_t __init max_zone_dma32_phys(void)
- 	return min(offset + (1ULL << 32), memblock_end_of_DRAM());
- }
- 
-+static phys_addr_t __init max_zone_dma_phys(void)
-+
-+{
-+	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, 32);
-+
-+	if (dma_zone_size)
-+		return min(offset + dma_zone_size, memblock_end_of_DRAM());
-+	else
-+		return max_zone_dma32_phys();
-+}
-+
- #ifdef CONFIG_NUMA
- 
- static void __init zone_sizes_init(unsigned long min, unsigned long max)
--- 
-2.22.0
+Rob
