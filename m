@@ -1,7 +1,7 @@
 From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 02/49] ath11k: add Kconfig
-Date: Tue, 20 Aug 2019 18:47:28 +0300
-Message-ID: <1566316095-27507-3-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH 03/49] ath11k: add Makefile
+Date: Tue, 20 Aug 2019 18:47:29 +0300
+Message-ID: <1566316095-27507-4-git-send-email-kvalo@codeaurora.org>
 References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1566316095-27507-1-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -11,46 +11,38 @@ Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL
 List-Id: devicetree@vger.kernel.org
 
 ---
- drivers/net/wireless/ath/ath11k/Kconfig | 34 +++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/net/wireless/ath/ath11k/Makefile | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/Kconfig b/drivers/net/wireless/ath/ath11k/Kconfig
+diff --git a/drivers/net/wireless/ath/ath11k/Makefile b/drivers/net/wireless/ath/ath11k/Makefile
 new file mode 100644
-index 000000000000..26bf98fa648e
+index 000000000000..6b4a5b5a2aa3
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/Kconfig
-@@ -0,0 +1,34 @@
-+config ATH11K
-+        tristate "Qualcomm Technologies 802.11ax chipset support"
-+        depends on MAC80211 && HAS_DMA
-+	depends on REMOTEPROC
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	select ATH_COMMON
-+	select QCOM_QMI_HELPERS
-+        help
-+          This module adds support for Qualcomm Technologies 802.11ax family of
-+	  chipsets.
++++ b/drivers/net/wireless/ath/ath11k/Makefile
+@@ -0,0 +1,26 @@
++# SPDX-License-Identifier: ISC
++obj-$(CONFIG_ATH11K) += ath11k.o
++ath11k-y += core.o \
++	    hal.o \
++	    hal_tx.o \
++	    hal_rx.o \
++	    ahb.o \
++	    wmi.o \
++	    mac.o \
++	    reg.o \
++	    htc.o \
++	    qmi.o \
++	    dp.o  \
++	    dp_tx.o \
++	    dp_rx.o \
++	    debug.o \
++	    ce.o \
++	    peer.o
 +
-+          If you choose to build a module, it'll be called ath11k.
++ath11k-$(CONFIG_ATH11K_DEBUGFS) += debug_htt_stats.o
++ath11k-$(CONFIG_MAC80211_DEBUGFS) += debugfs_sta.o
++ath11k-$(CONFIG_NL80211_TESTMODE) += testmode.o
++ath11k-$(CONFIG_ATH11K_TRACING) += trace.o
 +
-+config ATH11K_DEBUG
-+	bool "QCA ath11k debugging"
-+	depends on ATH11K
-+	help
-+	  Enables debug support
-+
-+	  If unsure, say Y to make it easier to debug problems.
-+
-+config ATH11K_DEBUGFS
-+	bool "QCA ath11k debugfs support"
-+	depends on ATH11K && DEBUG_FS
-+	help
-+	  Enable ath11k debugfs support
-+
-+	  If unsure, say Y to make it easier to debug problems.
-+
-+config ATH11K_TRACING
-+	bool "ath11k tracing support"
-+	depends on ATH11K && EVENT_TRACING
-+	---help---
-+	  Select this to ath11k use tracing infrastructure.
++# for tracing framework to find trace.h
++CFLAGS_trace.o := -I$(src)
