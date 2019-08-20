@@ -1,36 +1,63 @@
-From: Sean Nyekjaer <sean@geanix.com>
-Subject: Re: [PATCH 2/2] dt-bindings: can: flexcan: add can wakeup property
-Date: Tue, 20 Aug 2019 11:10:45 +0200
-Message-ID: <9e152f0d-fd1c-cb6f-2d9a-730804f8ec41@geanix.com>
-References: <20190409083949.27917-1-sean@geanix.com>
- <20190409083949.27917-2-sean@geanix.com> <20190429173930.GA11283@bogus>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Date: Tue, 20 Aug 2019 14:51:13 +0530
+Message-ID: <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
+References: <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+ <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+ <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+ <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+ <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+ <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+ <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
+ <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+ <20190820030114.6flnn2omeys3lih3@vireshk-i7>
+ <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190429173930.GA11283@bogus>
-Content-Language: en-US-large
-Sender: netdev-owner@vger.kernel.org
-To: linux-can@vger.kernel.org, mkl@pengutronix.de
-Cc: Rob Herring <robh@kernel.org>, netdev@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 29/04/2019 19.39, Rob Herring wrote:
-> On Tue,  9 Apr 2019 10:39:49 +0200, Sean Nyekjaer wrote:
->> add wakeup-source boolean property.
->>
->> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
->> ---
->>   Documentation/devicetree/bindings/net/can/fsl-flexcan.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
+On 20-08-19, 11:03, Sylwester Nawrocki wrote:
+> On 8/20/19 05:01, Viresh Kumar wrote:
+> > Sorry but I am unable to understand the difficulty you are facing now. So what I
+> > suggest is something like this.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
->
-This doesn't seem to be applied. PATCH 1/2 in this series is applied.
+> The difficulty was about representing data from tables asv_{arm,kfc}_table[][]
+> added in patch 3/9 of the series in devicetree.  If you have no objections
+> about keeping those tables in the driver then I can't see any difficulties. 
 
-In any case which repo does this patch belong to?
+The problem with keeping such tables in kernel is that they contain too much
+magic values which very few people understand. And after some amount of time,
+even they don't remember any of it.
 
-/Sean
+What I was expecting was to remove as much of these tables as possible and do
+the calculations to get them at runtime with some logical code which people can
+understand later on.
+
+> > - Use DT to get a frequency and voltage for each frequency.
+> 
+> Yes, this is what happens now, we have common OPPs in DT that work for each SoC
+> revision. 
+> 
+> > - At runtime, based on SoC, registers, efuses, etc, update the voltage of the
+> >   OPPs.
+> > - This algo can be different for each SoC, no one is stopping you from doing
+> >   that.
+> > 
+> > Am I missing something ?
+> 
+> Not really, this is basically what happens in the $subject patch series. 
+> 
+> Then IIUC what I would need to change is to modify exynos_asv_update_cpu_opps() 
+> function in patch 3/9 to use dev_pm_opp_adjust_voltage() rather than 
+> dev_pm_opp_remove(), dev_pm_opp_add().
+
+That and somehow add code to get those tables if possible.
+
+-- 
+viresh
