@@ -1,10 +1,12 @@
 From: megous@megous.com
-Subject: [PATCH 0/6] Add ethernet support for Orange Pi 3
-Date: Tue, 20 Aug 2019 16:53:37 +0200
-Message-ID: <20190820145343.29108-1-megous@megous.com>
+Subject: [PATCH 3/6] net: stmmac: sun8i: Use devm_regulator_get for PHY regulator
+Date: Tue, 20 Aug 2019 16:53:40 +0200
+Message-ID: <20190820145343.29108-4-megous@megous.com>
+References: <20190820145343.29108-1-megous@megous.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820145343.29108-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
 Cc: Ondrej Jirman <megous@megous.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
@@ -12,43 +14,71 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-This series implements ethernet support for Xunlong Orange Pi 3 board, by:
+Use devm_regulator_get instead of devm_regulator_get_optional and rely
+on dummy supply. This avoids NULL checks before regulator_enable/disable
+calls.
 
-- making small cleanups of existing dwmac-sun8i code
-- adding DT bindings docummentation
-- adding support for phy-io-supply to dwmac-sun8i code
-- adding DT configuration for Orange Pi 3 board
+This path also improves error reporting, because we now report both
+use of dummy supply and error during registration with more detail,
+instead of generic info level message "No regulator found" that
+was reported previously on errors and lack of regulator property in DT.
 
-For some people, ethernet doesn't work after reboot because u-boot doesn't
-support AXP805 PMIC, and will not turn off the etherent PHY regulators.
-So the regulator controlled by gpio will be shut down, but the other one
-controlled by the AXP PMIC will not.
+Finally, we'll be adding further optional regulators, and the overall
+code will be simpler.
 
-This is a problem only when running with a builtin driver. This needs
-to be fixed in u-boot and should not prevent these patches from being
-merged.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 23 ++++++++-----------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-This evolved out of the Orange Pi 3 patches series, as I didn't want
-to stretch that out any longer.
-
-Please take a look.
-
-thank you and regards,
-  Ondrej Jirman
-
-Ondrej Jirman (6):
-  dt-bindings: net: sun8i-a83t-emac: Add phy-supply property
-  dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
-  net: stmmac: sun8i: Use devm_regulator_get for PHY regulator
-  net: stmmac: sun8i: Rename PHY regulator variable to regulator_phy
-  net: stmmac: sun8i: Add support for enabling a regulator for PHY I/O
-    pins
-  arm64: dts: allwinner: orange-pi-3: Enable ethernet
-
- .../net/allwinner,sun8i-a83t-emac.yaml        |  8 ++
- .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 40 ++++++++++
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 74 ++++++++++++-------
- 3 files changed, 96 insertions(+), 26 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 4083019c547a..3e951a11aec3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -528,12 +528,10 @@ static int sun8i_dwmac_init(struct platform_device *pdev, void *priv)
+ 	struct sunxi_priv_data *gmac = priv;
+ 	int ret;
+ 
+-	if (gmac->regulator) {
+-		ret = regulator_enable(gmac->regulator);
+-		if (ret) {
+-			dev_err(&pdev->dev, "Fail to enable regulator\n");
+-			return ret;
+-		}
++	ret = regulator_enable(gmac->regulator);
++	if (ret) {
++		dev_err(&pdev->dev, "Fail to enable regulator\n");
++		return ret;
+ 	}
+ 
+ 	ret = clk_prepare_enable(gmac->tx_clk);
+@@ -992,8 +990,7 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
+ 
+ 	clk_disable_unprepare(gmac->tx_clk);
+ 
+-	if (gmac->regulator)
+-		regulator_disable(gmac->regulator);
++	regulator_disable(gmac->regulator);
+ }
+ 
+ static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
+@@ -1129,12 +1126,12 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Optional regulator for PHY */
+-	gmac->regulator = devm_regulator_get_optional(dev, "phy");
++	gmac->regulator = devm_regulator_get(dev, "phy");
+ 	if (IS_ERR(gmac->regulator)) {
+-		if (PTR_ERR(gmac->regulator) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-		dev_info(dev, "No regulator found\n");
+-		gmac->regulator = NULL;
++		ret = PTR_ERR(gmac->regulator);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get PHY regulator (%d)\n", ret);
++		return ret;
+ 	}
+ 
+ 	/* The "GMAC clock control" register might be located in the
 -- 
 2.22.1
