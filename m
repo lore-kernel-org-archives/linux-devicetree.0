@@ -1,22 +1,101 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 07/14] arm64: dts: meson-gx: fix periphs bus node name
-Date: Tue, 20 Aug 2019 22:25:59 +0200
-Message-ID: <CAFBinCC9LS+-tM80d8EeyhwUJhV65h11e-M8J6UVy1iE1aD9Kg@mail.gmail.com>
-References: <20190814142918.11636-1-narmstrong@baylibre.com> <20190814142918.11636-8-narmstrong@baylibre.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
+Date: Tue, 20 Aug 2019 15:27:39 -0500
+Message-ID: <CAL_JsqKBWB2FiVjYo9O7DPw1JYJvan7uRgbR0VBG=FfHDVYdZQ@mail.gmail.com>
+References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
+ <1566315318-30320-3-git-send-email-krzk@kernel.org> <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
+ <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
+ <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com> <20190820202142.GA15866@kozik-lap>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814142918.11636-8-narmstrong@baylibre.com>
+In-Reply-To: <20190820202142.GA15866@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 4:32 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Tue, Aug 20, 2019 at 3:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> This fixes the following DT schemas check errors:
-> meson-gxbb-nanopi-k2.dt.yaml: periphs@c8834000: $nodename:0: 'periphs@c8834000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> meson-gxl-s805x-libretech-ac.dt.yaml: periphs@c8834000: $nodename:0: 'periphs@c8834000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> On Tue, Aug 20, 2019 at 03:04:57PM -0500, Rob Herring wrote:
+> > On Tue, Aug 20, 2019 at 1:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > On Tue, 20 Aug 2019 at 18:59, Rob Herring <robh+dt@kernel.org> wrote:
+> > > >
+> > > > On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > >
+> > > > > Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
+> > > > >
+> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > >
+> > > > > ---
+> > > > >
+> > > > > Changes since v5:
+> > > > > New patch
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
+> > > > >  1 file changed, 3 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > > index 7294ac36f4c0..d07b3c06d7cf 100644
+> > > > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > > @@ -161,6 +161,9 @@ properties:
+> > > > >          items:
+> > > > >            - enum:
+> > > > >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> > > > > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+> > > > > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
+> > > > > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+> > > >
+> > > > This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
+> > >
+> > > You mean the name does not match? I thought that '#' is a comment in YAML...
+> >
+> > No, the number of compatible strings is the problem.
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> I see. If I understand the schema correctly, this should look like:
+
+Looks correct, but a couple of comments.
+
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 7294ac36f4c0..eb263d1ccf13 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -161,6 +161,22 @@ properties:
+>          items:
+>            - enum:
+>                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+
+Is the SOM ever used alone? If not, then no point in listing this here.
+
+> +          - const: fsl,imx6ul
+> +
+> +      - description: Kontron N6310 S Board
+> +        items:
+> +          - enum:
+> +              - kontron,imx6ul-n6310-s
+
+This could be a 'const' instead. It depends if you think there will
+ever be more than one entry.
+
+> +          - const: kontron,imx6ul-n6310-som
+> +          - const: fsl,imx6ul
+> +
+> +      - description: Kontron N6310 S 43 Board
+> +        items:
+> +          - enum:
+> +              - kontron,imx6ul-n6310-s-43
+> +          - const: kontron,imx6ul-n6310-s
+> +          - const: kontron,imx6ul-n6310-som
+>            - const: fsl,imx6ul
+>
+>        - description: i.MX6ULL based Boards
+>
+>
+> It passes the dtbs_check. Is it correct?
+>
+> Best regards,
+> Krzysztof
+>
