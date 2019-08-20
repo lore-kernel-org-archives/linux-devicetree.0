@@ -1,48 +1,35 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply
- property
-Date: Tue, 20 Aug 2019 18:34:33 +0200
-Message-ID: <20190820163433.sr4lvjxmmhjtbtcb@core.my.home>
-References: <20190820145343.29108-1-megous@megous.com>
- <20190820145343.29108-3-megous@megous.com>
- <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com>
+From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Subject: Re: [PATCH v2 2/6] arm64: Introduce config for S32
+Date: Tue, 20 Aug 2019 16:38:30 +0000
+Message-ID: <VI1PR0402MB2863F70B8497B8901087B7A4DFAB0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com>
+ <20190809112853.15846-3-stefan-gabriel.mirea@nxp.com>
+ <20190819081457.GH5999@X250>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 11:20:22AM -0500, Rob Herring wrote:
-> On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
-> >
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > Some PHYs require separate power supply for I/O pins in some modes
-> > of operation. Add phy-io-supply property, to allow enabling this
-> > power supply.
-> 
-> Perhaps since this is new, such phys should have *-supply in their nodes.
-
-Yes, I just don't understand, since external ethernet phys are so common,
-and they require power, how there's no fairly generic mechanism for this
-already in the PHY subsystem, or somewhere?
-
-It looks like other ethernet mac drivers also implement supplies on phys
-on the EMAC nodes. Just grep phy-supply through dt-bindings/net.
-
-Historical reasons, or am I missing something? It almost seems like I must
-be missing something, since putting these properties to phy nodes
-seems so obvious.
-
-thank you and regards,
-	Ondrej
-
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
-> >  1 file changed, 4 insertions(+)
+Hello Shawn,=0A=
+=0A=
+On 8/19/2019 11:15 AM, Shawn Guo wrote:=0A=
+> On Fri, Aug 09, 2019 at 11:29:10AM +0000, Stefan-gabriel Mirea wrote:=0A=
+>> +config ARCH_S32=0A=
+>> +     bool "Freescale S32 SoC Family"=0A=
+> =0A=
+> So you still want to use 'Freescale' than 'NXP' here?=0A=
+> =0A=
+>> +     help=0A=
+>> +       This enables support for the Freescale S32 family of processors.=
+=0A=
+=0A=
+Thanks; I will replace Freescale with NXP wherever possible in the next=0A=
+version.=0A=
+=0A=
+Regards,=0A=
+Stefan=0A=
