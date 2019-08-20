@@ -1,50 +1,109 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/2] reset: dt-bindings: meson: update arb bindings for sm1
-Date: Tue, 20 Aug 2019 11:46:24 +0200
-Message-ID: <20190820094625.13455-2-jbrunet@baylibre.com>
-References: <20190820094625.13455-1-jbrunet@baylibre.com>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+Date: Tue, 20 Aug 2019 17:47:13 +0800
+Message-ID: <1566294433.24117.19.camel@mhfsdcap03>
+References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+         <20190820084932.22282-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820094625.13455-1-jbrunet@baylibre.com>
+In-Reply-To: <20190820084932.22282-12-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT
 List-Id: devicetree@vger.kernel.org
 
-SM1 SoC family adds two new audio FIFOs with the related arb reset lines
+On Tue, 2019-08-20 at 16:49 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index c53f8476c68d..80f75a1075b4 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,35 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
+>  
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx)
+> +{
+> +	struct of_phandle_args spec;
+> +	int err;
+> +
+> +	if (!client_reg)
+> +		return -ENOENT;
+> +
+> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
+> +					       "mediatek,gce-client-reg",
+> +					       3, idx, &spec);
+> +	if (err < 0) {
+> +		dev_err(dev,
+> +			"error %d can't parse gce-client-reg property (%d)",
+> +			err, idx);
+> +
+> +		return err;
+> +	}
+> +
+> +	client_reg->subsys = (u8)spec.args[0];
+> +	client_reg->offset = (u16)spec.args[1];
+> +	client_reg->size = (u16)spec.args[2];
+> +	of_node_put(spec.np);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..02ddd60b212f 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
+>  
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -24,6 +30,21 @@ struct cmdq_client {
+>  	u32 timeout_ms; /* in unit of microsecond */
+>  };
+>  
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
+> + *			       node of CMDQ client
+> + * @dev:	device of CMDQ mailbox client
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client parsing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx);
+> +
+>  /**
+>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
+>   * @dev:	device of CMDQ mailbox client
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt  | 3 ++-
- include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h        | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-index 26e542eb96df..43e580ef64ba 100644
---- a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-+++ b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
-@@ -4,7 +4,8 @@ The Amlogic Audio ARB is a simple device which enables or
- disables the access of Audio FIFOs to DDR on AXG based SoC.
- 
- Required properties:
--- compatible: 'amlogic,meson-axg-audio-arb'
-+- compatible: 'amlogic,meson-axg-audio-arb' or
-+	      'amlogic,meson-sm1-audio-arb'
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - clocks: phandle to the fifo peripheral clock provided by the audio
-diff --git a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-index 05c36367875c..1ef807856cb8 100644
---- a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-+++ b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
-@@ -13,5 +13,7 @@
- #define AXG_ARB_FRDDR_A	3
- #define AXG_ARB_FRDDR_B	4
- #define AXG_ARB_FRDDR_C	5
-+#define AXG_ARB_TODDR_D	6
-+#define AXG_ARB_FRDDR_D	7
- 
- #endif /* _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H */
--- 
-2.21.0
+Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
