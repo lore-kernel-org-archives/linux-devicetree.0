@@ -1,52 +1,92 @@
-From: Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v4 10/10] arm: dts: mediatek: add mt7629 pwm support
-Date: Tue, 20 Aug 2019 09:40:25 +0800
-Message-ID: <1566265225-27452-11-git-send-email-sam.shih@mediatek.com>
-References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v2 2/3] clk: ls1028a: Add clock driver for Display
+ output interface
+Date: Tue, 20 Aug 2019 02:24:25 +0000
+Message-ID: <DB7PR04MB519563FED2146F6D1327668AE2AB0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190815101613.22872-1-wen.he_1@nxp.com>
+ <20190815101613.22872-2-wen.he_1@nxp.com>
+ <20190816174624.115FC205F4@mail.kernel.org>
+ <DB7PR04MB51952DF4E1EE7FF10A947347E2A80@DB7PR04MB5195.eurprd04.prod.outlook.com>
+ <20190819182944.4AEAB22CF5@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <20190819182944.4AEAB22CF5@mail.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, sam shih <sam.shih@mediatek.com>
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: sam shih <sam.shih@mediatek.com>
-
-This adds pwm support for MT7629.
-
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm/boot/dts/mt7629.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..493be9a9453b 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -241,6 +241,22 @@
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm@11006000 {
-+			compatible = "mediatek,mt7629-pwm",
-+				     "mediatek,mt7622-pwm";
-+			reg = <0 0x11006000 0 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+				 <&pericfg CLK_PERI_PWM_PD>,
-+				 <&pericfg CLK_PERI_PWM1_PD>;
-+			clock-names = "top", "main", "pwm1";
-+			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-+			assigned-clock-parents =
-+					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-+			num-pwms = <1>;
-+			status = "disabled";
-+		};
-+
- 		i2c: i2c@11007000 {
- 			compatible = "mediatek,mt7629-i2c",
- 				     "mediatek,mt2712-i2c";
--- 
-2.17.1
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
+Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE55bm0OOaciDIw5pelIDI6MzANCj4gVG86IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOw0KPiBs
+aW51eC1kZXZlbEBsaW51eC5ueGRpLm54cC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBNaWNoYWVsIFR1cnF1
+ZXR0ZSA8bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20+Ow0KPiBSb2IgSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgV2VuDQo+IEhlIDx3
+ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBsaXZp
+dS5kdWRhdUBhcm0uY29tDQo+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW3YyIDIvM10gY2xrOiBs
+czEwMjhhOiBBZGQgY2xvY2sgZHJpdmVyIGZvciBEaXNwbGF5IG91dHB1dA0KPiBpbnRlcmZhY2UN
+Cj4gDQo+IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gUXVvdGluZyBXZW4gSGUgKDIwMTktMDgt
+MTkgMDA6MzA6NDkpDQo+ID4gPiBRdW90aW5nIFdlbiBIZSAoMjAxOS0wOC0xNSAwMzoxNjoxMikN
+Cj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL0tjb25maWcgYi9kcml2ZXJzL2Nsay9L
+Y29uZmlnIGluZGV4DQo+ID4gPiA+IDgwMWZhMWNkMDMyMS4uM2M5NWQ4ZWMzMWQ0IDEwMDY0NA0K
+PiA+ID4gPiAtLS0gYS9kcml2ZXJzL2Nsay9LY29uZmlnDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMv
+Y2xrL0tjb25maWcNCj4gPiA+ID4gQEAgLTIyMyw2ICsyMjMsMTYgQEAgY29uZmlnIENMS19RT1JJ
+UQ0KPiA+ID4gPiAgICAgICAgICAgVGhpcyBhZGRzIHRoZSBjbG9jayBkcml2ZXIgc3VwcG9ydCBm
+b3IgRnJlZXNjYWxlIFFvcklRDQo+IHBsYXRmb3Jtcw0KPiA+ID4gPiAgICAgICAgICAgdXNpbmcg
+Y29tbW9uIGNsb2NrIGZyYW1ld29yay4NCj4gPiA+ID4NCj4gPiA+ID4gK2NvbmZpZyBDTEtfTFMx
+MDI4QV9QTExESUcNCj4gPiA+ID4gKyAgICAgICAgYm9vbCAiQ2xvY2sgZHJpdmVyIGZvciBMUzEw
+MjhBIERpc3BsYXkgb3V0cHV0Ig0KPiA+ID4gPiArICAgICAgIGRlcGVuZHMgb24gKEFSQ0hfTEFZ
+RVJTQ0FQRSB8fCBDT01QSUxFX1RFU1QpICYmIE9GDQo+ID4gPg0KPiA+ID4gV2hlcmUgaXMgdGhl
+IE9GIGRlcGVuZGVuY3kgdG8gYnVpbGQgYW55dGhpbmc/IERvZXNuJ3QgdGhpcyBzdGlsbA0KPiA+
+ID4gY29tcGlsZSB3aXRob3V0IENPTkZJR19PRiBzZXQ/DQo+ID4NCj4gPiBZZXMsIGN1cnJlbnQg
+aW5jbHVkZWQgc29tZSBBUElzIG9mIHRoZSBPRiwgbGlrZSBvZl9nZXRfcGFyZW50X25hbWUoKQ0K
+PiANCj4gQW5kIHRoZXJlIGlzbid0IGEgc3R1YiBBUEkgZm9yIG9mX2dldF9wYXJlbnRfbmFtZSB3
+aGVuIE9GIGlzbid0IGRlZmluZWQ/DQoNCllvdSBhcmUgcmlnaHQsIHNob3VsZCBiZSByZW1vdmUg
+T0YgZGVwZW5kZW5jeS4NCg0KPiANCj4gPiA+ID4gKw0KPiA+ID4gPiArc3RhdGljIGludCBwbGxk
+aWdfY2xrX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gPiA+ID4gKyAg
+ICAgICBzdHJ1Y3QgY2xrX3BsbGRpZyAqZGF0YTsNCj4gPiA+ID4gKyAgICAgICBzdHJ1Y3QgcmVz
+b3VyY2UgKm1lbTsNCj4gPiA+ID4gKyAgICAgICBjb25zdCBjaGFyICpwYXJlbnRfbmFtZTsNCj4g
+PiA+ID4gKyAgICAgICBzdHJ1Y3QgY2xrX2luaXRfZGF0YSBpbml0ID0ge307DQo+ID4gPiA+ICsg
+ICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiA+ID4gKyAgICAgICBp
+bnQgcmV0Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgZGF0YSA9IGRldm1fa3phbGxvYyhk
+ZXYsIHNpemVvZigqZGF0YSksIEdGUF9LRVJORUwpOw0KPiA+ID4gPiArICAgICAgIGlmICghZGF0
+YSkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+ID4gPiArDQo+
+ID4gPiA+ICsgICAgICAgbWVtID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VS
+Q0VfTUVNLCAwKTsNCj4gPiA+ID4gKyAgICAgICBkYXRhLT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jl
+c291cmNlKGRldiwgbWVtKTsNCj4gPiA+ID4gKyAgICAgICBpZiAoSVNfRVJSKGRhdGEtPnJlZ3Mp
+KQ0KPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoZGF0YS0+cmVncyk7DQo+
+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBpbml0Lm5hbWUgPSBkZXYtPm9mX25vZGUtPm5hbWU7
+DQo+ID4gPiA+ICsgICAgICAgaW5pdC5vcHMgPSAmcGxsZGlnX2Nsa19vcHM7DQo+ID4gPiA+ICsg
+ICAgICAgcGFyZW50X25hbWUgPSBvZl9jbGtfZ2V0X3BhcmVudF9uYW1lKGRldi0+b2Zfbm9kZSwg
+MCk7DQo+ID4gPiA+ICsgICAgICAgaW5pdC5wYXJlbnRfbmFtZXMgPSAmcGFyZW50X25hbWU7DQo+
+ID4gPg0KPiA+ID4gQ2FuIHlvdSB1c2UgdGhlIG5ldyB3YXkgb2Ygc3BlY2lmeWluZyBjbGsgcGFy
+ZW50cyB3aXRoIHRoZQ0KPiA+ID4gcGFyZW50X2RhdGEgbWVtYmVyIG9mIGNsa19pbml0Pw0KPiA+
+DQo+ID4gT2YgY291cnNlLCBidXQgSSBkb24ndCB1bmRlcnN0YW5kIHdoeSBuZWVkIHJlY29tbWVu
+ZCB0byB1c2UgdGhpcyBtZW1iZXI/DQo+ID4gSXMgdGhhdCB0aGUgbWVtYmVyIHBhcmVudF9uYW1l
+cyB3aWxsIGJlIGRpc2NhcmQgaW4gZnV0dXJlPw0KPiA+DQo+ID4gSGVyZSBhcmUgZGVmaW5pdGlv
+biBvZiB0aGUgY2xrLXByb3ZpZGVyLmgNCj4gPiAvKiBPbmx5IG9uZSBvZiB0aGUgZm9sbG93aW5n
+IHRocmVlIHNob3VsZCBiZSBhc3NpZ25lZCAqLw0KPiA+IGNvbnN0IGNoYXIgICAgICAgICAgICAg
+ICogY29uc3QgKnBhcmVudF9uYW1lczsNCj4gPiBjb25zdCBzdHJ1Y3QgY2xrX3BhcmVudF9kYXRh
+ICAgICpwYXJlbnRfZGF0YTsNCj4gPiBjb25zdCBzdHJ1Y3QgY2xrX2h3ICAgICAgICAgICAgICoq
+cGFyZW50X2h3czsNCj4gPg0KPiA+IEZvciBQTExESUcsIGl0IG9ubHkgaGFzIG9uZSBwYXJlbnQu
+DQo+IA0KPiBZZXMuIENhbiB5b3UgdXNlIGNsa19wYXJlbnRfZGF0YSBhcnJheSBhbmQgc3BlY2lm
+eSBhIERUIGluZGV4IG9mIDAgYW5kIHNvbWUNCj4gbmFtZSB0aGF0IHdvdWxkIGdvIGludG8gImNs
+b2NrLW5hbWVzIiBpbiB0aGUgLmZ3X25hbWUgbWVtYmVyPw0KDQpPSywgYnV0IC5md19uYW1lIHVz
+ZWQgZm9yIHRvIHJlZ2lzdGVyaW5nIGNsaywgY3VycmVudCBpdCByZWdpc3RlcmVkIHdpdGggZml4
+ZWQgY2xrIGluIGR0cyAuDQpJIHRoaW5rIHNob3VsZCBiZSBzcGVjaWZ5IGEgRFQgaW5kZXggb2Yg
+MCBhbmQgc3BlY2lmeSB0aGUgdW5pcXVlIG5hbWUgZm9yIC5uYW1lIG1lbWJlci4NCg0KSSBmb3Vu
+ZCBoYXZlIHR3byB3YXlzIHRvIHNwZWNpZnk6DQoxLiBkZWNsYXJlIGNsa19wYXJlbnRfZGF0YSB2
+YXJpYWJsZSBwYXJlbnRfZGF0YSwgYW5kIGluaXRpYWxpemF0aW9uIHdpdGggY2xrX2luaXRfZGF0
+YSwgbGlrZSB0aGlzOg0KIA0KcGFyZW50X2RhdGEubmFtZSA9IG9mX2Nsa19nZXRfcGFyZW50X25h
+bWUoZGV2LT5vZl9ub2RlLCAwKTsgDQpwYXJlbnRfZGF0YS5pbmRleCA9IDA7DQoNCmluaXQubmFt
+ZSA9IGRldi0+b2Zfbm9kZS0+bmFtZTsNCmluaXQub3BzID0gJnBsbGRpZ19jbGtfb3BzOw0KaW5p
+dC5wYXJlbnRfZGF0YSA9ICZwYXJlbnRfZGF0YTsNCmluaXQubnVtX3BhcmVudHMgPSAxOw0KDQoy
+LiBPciB1c2UgYSBzdGF0aWMgY29uc3QgYXJyYXkgZm9yIGhlcmU/IEFuZCBwdXQgdGhlIHVuaXF1
+ZSBuYW1lIGFuZCBpbmRleCBsaWtlIHRoaXMuDQpzdGF0aWMgY29uc3Qgc3RydWN0IGNsa19wYXJl
+bnRfZGF0YSBwYXJlbnRfZGF0YVtdID0gew0KICAgICAgICB7Lm5hbWUgPSAicGh5XzI3bSIsIC5p
+bmRleCA9IDB9LA0KfTsNCg0KQWZ0ZXIgdGhlbiBpbml0aWFsaXphdGlvbiB3aXRoIG1hY3JvIENM
+S19IV19JTklUX1BBUkVOVFNfREFUQT8NCg0KQmVzdCBSZWdhcmRzLA0KV2VuDQo=
