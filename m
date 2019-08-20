@@ -1,26 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: arm: Add kryo485 compatible
-Date: Tue, 20 Aug 2019 15:28:38 -0500
-Message-ID: <20190820202838.GA14358@bogus>
-References: <20190820171020.22673-1-vkoul@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 02/14] arm64: dts: meson-gx: drop the vpu dmc memory cell
+Date: Tue, 20 Aug 2019 22:28:52 +0200
+Message-ID: <CAFBinCBQwsoO1dGKzzkE4Jh9VeqDhiy__m96X=CZBKSDRrHDOw@mail.gmail.com>
+References: <20190814142918.11636-1-narmstrong@baylibre.com> <20190814142918.11636-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820171020.22673-1-vkoul@kernel.org>
+In-Reply-To: <20190814142918.11636-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sugaya Taichi <sugaya.taichi@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Maxime Ripard <maxime.ripard@bootlin.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:40:20PM +0530, Vinod Koul wrote:
-> Kryo485 is found in SM8150, so add it it list of cpu compatibles
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
+On Wed, Aug 14, 2019 at 4:31 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> This fixes the following DT schemas check errors:
+> meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: Additional items are not allowed ('dmc' was unexpected)
+> meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: ['vpu', 'hhi', 'dmc'] is too long
+if you have to re-send it for whatever reason I would add:
+"
+The 'dmc' register area was replaced by the amlogic,canvas property
+which was introduced in commit f1726043426c73 ("arm64: dts: meson-gx:
+add dmcbus and canvas nodes.") and commit cf34287986d0b6 ("arm64: dts:
+meson-gx: Add canvas provider node to the vpu")
+"
 
-Applied, thanks.
-
-Rob
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
