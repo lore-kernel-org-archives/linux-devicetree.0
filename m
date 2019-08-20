@@ -1,12 +1,12 @@
 From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 02/10] clk: sunxi-ng: Mark AR100 clocks as critical
-Date: Mon, 19 Aug 2019 22:23:03 -0500
-Message-ID: <20190820032311.6506-3-samuel@sholland.org>
+Subject: [PATCH v4 06/10] ARM: dts: sunxi: a83t: Add msgbox node
+Date: Mon, 19 Aug 2019 22:23:07 -0500
+Message-ID: <20190820032311.6506-7-samuel@sholland.org>
 References: <20190820032311.6506-1-samuel@sholland.org>
 Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBIWP5XVAKGQEYHBELTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBJOP5XVAKGQE4NJHEBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190820032311.6506-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,58 +19,35 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On sun8i, sun9i, and sun50i SoCs, system suspend/resume support requires
-firmware running on the AR100 coprocessor (the "SCP"). Such firmware can
-provide additional features, such as thermal monitoring and poweron/off
-support for boards without a PMIC.
-
-Since the AR100 may be running critical firmware, even if Linux does not
-know about it or directly interact with it (all requests may go through
-an intermediary interface such as PSCI), Linux must not turn off its
-clock.
-
-At this time, such power management firmware only exists for the A64 and
-H5 SoCs.  However, it makes sense to take care of all CCU drivers now
-for consistency, and to ease the transition in the future once firmware
-is ported to the other SoCs.
-
-Leaving the clock running is safe even if no firmware is present, since
-the AR100 stays in reset by default. In most cases, the AR100 clock is
-kept enabled by Linux anyway, since it is the parent of all APB0 bus
-peripherals. This change only prevents Linux from turning off the AR100
-clock in the rare case that no peripherals are in use.
+The A83T SoC contains a message box that can be used to send messages
+and interrupts back and forth between the ARM application CPUs and the
+ARISC coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c | 2 +-
- drivers/clk/sunxi-ng/ccu-sun8i-r.c     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-index 45a1ed3fe674..adf907020951 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6-r.c
-@@ -45,7 +45,7 @@ static struct ccu_div ar100_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("ar100",
- 						      ar100_r_apb2_parents,
- 						      &ccu_div_ops,
--						      0),
-+						      CLK_IS_CRITICAL),
- 	},
- };
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 523be6611c50..8871d1aaf7f5 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -583,6 +583,16 @@
+ 			reg = <0x1c14000 0x400>;
+ 		};
  
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-index 4646fdc61053..feef4f750943 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-@@ -45,7 +45,7 @@ static struct ccu_div ar100_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS_DATA("ar100",
- 							   ar100_parents,
- 							   &ccu_div_ops,
--							   0),
-+							   CLK_IS_CRITICAL),
- 	},
- };
- 
++		msgbox: mailbox@1c17000 {
++			compatible = "allwinner,sun8i-a83t-msgbox",
++				     "allwinner,sun6i-a31-msgbox";
++			reg = <0x01c17000 0x1000>;
++			clocks = <&ccu CLK_BUS_MSGBOX>;
++			resets = <&ccu RST_BUS_MSGBOX>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <1>;
++		};
++
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a83t-musb",
+ 				     "allwinner,sun8i-a33-musb";
 -- 
 2.21.0
