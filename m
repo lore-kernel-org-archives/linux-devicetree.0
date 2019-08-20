@@ -1,62 +1,107 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
- generic RC bindings
-Date: Tue, 20 Aug 2019 11:50:28 +0200
-Message-ID: <20190820095028.l74sfvipwjjla6kq@flea>
-References: <20190819182619.29065-1-mripard@kernel.org>
- <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [RESEND, PATCH v13 10/12] soc: mediatek: cmdq: add polling
+ function
+Date: Tue, 20 Aug 2019 17:50:39 +0800
+Message-ID: <1566294639.24117.20.camel@mhfsdcap03>
+References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+         <20190820084932.22282-11-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ftcnfstprcqph37g"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
+In-Reply-To: <20190820084932.22282-11-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: mchehab@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2019-08-20 at 16:49 +0800, Bibby Hsieh wrote:
+> add polling function in cmdq helper functions
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
+>  3 files changed, 44 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index e3d5b0be8e79..c53f8476c68d 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -221,6 +221,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value, u32 mask)
+> +{
+> +	struct cmdq_instruction *inst;
+> +
+> +	if (mask != 0xffffffff) {
+> +		inst = cmdq_pkt_append_command(pkt);
+> +		if (!inst)
+> +			return -ENOMEM;
+> +
+> +		inst->op = CMDQ_CODE_MASK;
+> +		inst->value = ~mask;
+> +		offset = offset | 0x1;
+> +	}
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_POLL;
+> +	inst->value = value;
+> +	inst->offset = offset;
+> +	inst->subsys = subsys;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_poll);
+> +
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+>  	struct cmdq_instruction *inst;
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index c8adedefaf42..9e3502945bc1 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -46,6 +46,7 @@
+>  enum cmdq_code {
+>  	CMDQ_CODE_MASK = 0x02,
+>  	CMDQ_CODE_WRITE = 0x04,
+> +	CMDQ_CODE_POLL = 0x08,
+>  	CMDQ_CODE_JUMP = 0x10,
+>  	CMDQ_CODE_WFE = 0x20,
+>  	CMDQ_CODE_EOC = 0x40,
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 9618debb9ceb..a345870a6d10 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>   */
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+> +/**
+> + * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
+> + *		     execute an instruction that wait for a specified hardware
+> + *		     register to check for the value. All GCE hardware
+> + *		     threads will be blocked by this instruction.
+> + * @pkt:	the CMDQ packet
+> + * @subsys:	the CMDQ sub system code
+> + * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+> + * @mask:	the specified target register mask
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value, u32 mask);
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+>   *                          packet and call back at the end of done packet
 
---ftcnfstprcqph37g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Sean,
-
-On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
-> On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The RC controllers have a bunch of generic properties that are needed in a
-> > device tree. Add a YAML schemas for those.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> For the series (both 1/2 and 2.2):
->
-> Reviewed-by: Sean Young <sean@mess.org>
->
-> How's tree should this go through?
-
-Either yours or Rob's, I guess?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ftcnfstprcqph37g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXVvCZAAKCRDj7w1vZxhR
-xTFAAQDl8xXvQIXa8WbCZaFxnwrmvUt5UqA7/9ObYafNNiYcpQEAt15seL7rf1IE
-lBtjtxdyX5TG4nk1wDwD7edVTHVeaQ4=
-=TAb7
------END PGP SIGNATURE-----
-
---ftcnfstprcqph37g--
+Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
