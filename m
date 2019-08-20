@@ -1,57 +1,78 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
- from Required properties
-Date: Tue, 20 Aug 2019 10:04:29 +0000
-Message-ID: <DB8PR04MB6747E55FD982EE4C856DF30D84AB0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
- <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
- <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 2/3] macb: Update compatibility string for SiFive
+ FU540-C000
+Date: Tue, 20 Aug 2019 10:16:58 +0000
+Message-ID: <0b50622a-1145-3637-082f-c4edaccbbaa1@microchip.com>
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+ <1563534631-15897-2-git-send-email-yash.shah@sifive.com>
+ <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com>
+ <CAJ2_jOEHoh+D76VpAoVq3XnpAZEQxdQtaVX5eiKw5X4r+ypKVw@mail.gmail.com>
+ <alpine.DEB.2.21.9999.1908131142150.5033@viisi.sifive.com>
+ <mvm5zmskxs3.fsf@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
+In-Reply-To: <mvm5zmskxs3.fsf@suse.de>
 Content-Language: en-US
+Content-ID: <44B36E30E59D7841828B2F7738A2E610@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+To: schwab@suse.de, paul.walmsley@sifive.com, davem@davemloft.net, jakub.kicinski@netronome.com
+Cc: yash.shah@sifive.com, robh+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3IQ0KDQpUaGFua3MsDQpa
-aGlxaWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHJldyBN
-dXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gU2VudDogMjAxOcTqONTCMjDI1SAxNzoy
-Mw0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgtcGNp
-QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiBq
-aW5nb29oYW4xQGdtYWlsLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwu
-b3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExp
-DQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBNLmgu
-IExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSHYy
-IDEvNF0gZHQtYmluZGluZ3M6IFBDSTogZGVzaWdud2FyZTogUmVtb3ZlIHRoZQ0KPiBudW0tbGFu
-ZXMgZnJvbSBSZXF1aXJlZCBwcm9wZXJ0aWVzDQo+IA0KPiBPbiBUdWUsIEF1ZyAyMCwgMjAxOSBh
-dCAwNzoyODo0M0FNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlh
-bmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIG51bS1sYW5lcyBpcyBub3Qg
-YSBtYW5kYXRvcnkgcHJvcGVydHksIGUuZy4gb24gRlNMIExheWVyc2NhcGUNCj4gPiBTb0NzLCB0
-aGUgUENJZSBsaW5rIHRyYWluaW5nIGlzIGNvbXBsZXRlZCBhdXRvbWF0aWNhbGx5IGJhc2Ugb24g
-dGhlDQo+ID4gc2VsZWN0ZWQgU2VyRGVzIHByb3RvY29sLCBpdCBkb2Vzbid0IG5lZWQgdGhlIG51
-bS1sYW5lcyB0byBzZXQtdXAgdGhlDQo+ID4gbGluayB3aWR0aC4NCj4gPg0KPiA+IEl0IGlzIHBy
-ZXZpb3VzbHkgaW4gYm90aCBSZXF1aXJlZCBhbmQgT3B0aW9uYWwgcHJvcGVydGllcywgbGV0J3MN
-Cj4gPiByZW1vdmUgaXQgZnJvbSB0aGUgUmVxdWlyZWQgcHJvcGVydGllcy4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0t
-DQo+IA0KPiBSZXZpZXdlZC1ieTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJheUBhcm0uY29t
-Pg0KPiANCj4gDQo+ID4gVjI6DQo+ID4gIC0gUmV3b3JkZWQgdGhlIGNoYW5nZSBsb2cgYW5kIHN1
-YmplY3QuDQo+ID4gIC0gRml4ZWQgYSB0eXBvIGluIHN1YmplY3QuDQo+ID4NCj4gPiAgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUudHh0IHwgMSAt
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9kZXNpZ253YXJlLXBjaWUu
-dHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndh
-cmUtcGNpZS50eHQNCj4gPiBpbmRleCA1NTYxYTFjMDYwZDAuLmJkODgwZGYzOWE3OSAxMDA2NDQN
-Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2Rlc2lnbndh
-cmUtcGNpZS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL2Rlc2lnbndhcmUtcGNpZS50eHQNCj4gPiBAQCAtMTEsNyArMTEsNiBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOg0KPiA+ICAJICAgICB0aGUgQVRVIGFkZHJlc3Mgc3BhY2UuDQo+ID4gICAgICAo
-VGhlIG9sZCB3YXkgb2YgZ2V0dGluZyB0aGUgY29uZmlndXJhdGlvbiBhZGRyZXNzIHNwYWNlIGZy
-b20NCj4gInJhbmdlcyINCj4gPiAgICAgIGlzIGRlcHJlY2F0ZWQgYW5kIHNob3VsZCBiZSBhdm9p
-ZGVkLikNCj4gPiAtLSBudW0tbGFuZXM6IG51bWJlciBvZiBsYW5lcyB0byB1c2UNCj4gPiAgUkMg
-bW9kZToNCj4gPiAgLSAjYWRkcmVzcy1jZWxsczogc2V0IHRvIDwzPg0KPiA+ICAtICNzaXplLWNl
-bGxzOiBzZXQgdG8gPDI+DQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0K
+On 20/08/2019 at 11:10, Andreas Schwab wrote:
+> External E-Mail
+>=20
+>=20
+> On Aug 13 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>=20
+>> Dave, Nicolas,
+>>
+>> On Mon, 22 Jul 2019, Yash Shah wrote:
+>>
+>>> On Fri, Jul 19, 2019 at 5:36 PM <Nicolas.Ferre@microchip.com> wrote:
+>>>>
+>>>> On 19/07/2019 at 13:10, Yash Shah wrote:
+>>>>> Update the compatibility string for SiFive FU540-C000 as per the new
+>>>>> string updated in the binding doc.
+>>>>> Reference: https://lkml.org/lkml/2019/7/17/200
+>>>>
+>>>> Maybe referring to lore.kernel.org is better:
+>>>> https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4=
+p8P5KA-+rgww@mail.gmail.com/
+>>>
+>>> Sure. Will keep that in mind for future reference.
+>>>
+>>>>
+>>>>> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>>>>
+>>>> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+>>>
+>>> Thanks.
+>>
+>> Am assuming you'll pick this up for the -net tree for v5.4-rc1 or earlie=
+r.
+>> If not, please let us know.
+>=20
+> This is still missing in v5.4-rc5, which means that networking is broken.
+
+Andreas, Paul,
+
+The patchwork state for the 2 first patches of this series is "Changes=20
+Requested". It's probably due to my advice of using lore.kernel.org (or=20
+something else).
+
+I'm perfectly fine in accepting the patches are they are today but can't=20
+change their patchwork state myself. We would need Dave or Jakub to take=20
+them.
+
+Dave, Jakub,
+
+All tags are collected in patchwork and all should be fine on DT (Rob)=20
+side as well.
+Please tell me if you're waiting some sign from me.
+
+Best regards,
+--=20
+Nicolas Ferre
