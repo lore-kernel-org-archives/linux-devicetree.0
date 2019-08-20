@@ -1,21 +1,43 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/6] Add ethernet support for Orange Pi 3
-Date: Tue, 20 Aug 2019 13:56:18 -0700 (PDT)
-Message-ID: <20190820.135618.1241308358677497033.davem@davemloft.net>
-References: <20190820145343.29108-1-megous@megous.com>
+From: Hongwei Zhang <hongweiz@ami.com>
+Subject: [v8]  gpio: aspeed: Add SGPIO driver
+Date: Tue, 20 Aug 2019 17:05:27 -0400
+Message-ID: <1566335128-31498-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820145343.29108-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: megous@megous.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org, wens@csie.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, mcoquelin.stm32@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Hongwei Zhang <hongweiz@ami.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-It looks like there will be some updates to this series either involving
-adding -supply to the property names or adjusting some of the kernel log
-messages.
+This short series introduce dt-binding document and a driver for the 
+Aspeed AST2500 SGPIO controller. Please review.
 
-Seriously, I would prefer less verbiage in the logs rather than more.
+[v8]:   Changes between v7 and v8:
+        - v7 updates based on Linus' feedback 
+        - since Linus has already merged sgpio-aspeed.txt, I only include
+	  the driver here to avoid confusion.
+
+[v7]:   Changes between v6 and v7:
+        - fix missing variable 'reg' assign issue in aspeed_sgpio_set()
+        - v6 feedback updates
+
+[v6]:   Changes between v5 and v6:
+        - fix a bug in aspeed_sgpio_dir_out()
+        - v5 feedback updates, some comments cleanup
+
+The related SGPM pinmux dt-binding document, dts, and pinctrl driver
+updates have been accepted and merged:
+_http://patchwork.ozlabs.org/patch/1110210/
+
+Hongwei Zhang (1):
+  gpio: aspeed: Add SGPIO driver
+
+ drivers/gpio/sgpio-aspeed.c | 533 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 533 insertions(+)
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
+
+-- 
+2.7.4
