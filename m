@@ -1,335 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/3] dt-bindings: Convert Arm Mali Utgard GPU to DT schema
-Date: Tue, 20 Aug 2019 14:59:59 -0500
-Message-ID: <20190820195959.6126-4-robh@kernel.org>
-References: <20190820195959.6126-1-robh@kernel.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
+Date: Tue, 20 Aug 2019 15:04:57 -0500
+Message-ID: <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com>
+References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
+ <1566315318-30320-3-git-send-email-krzk@kernel.org> <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
+ <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
+In-Reply-To: <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert the Arm Utgard GPU binding to DT schema format.
+On Tue, Aug 20, 2019 at 1:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Tue, 20 Aug 2019 at 18:59, Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > >
+> > > ---
+> > >
+> > > Changes since v5:
+> > > New patch
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > index 7294ac36f4c0..d07b3c06d7cf 100644
+> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > @@ -161,6 +161,9 @@ properties:
+> > >          items:
+> > >            - enum:
+> > >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> > > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+> > > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
+> > > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+> >
+> > This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
+>
+> You mean the name does not match? I thought that '#' is a comment in YAML...
 
-'allwinner,sun8i-a23-mali' compatible was not documented, so add it.
+No, the number of compatible strings is the problem.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/gpu/arm,mali-utgard.txt          | 129 --------------
- .../bindings/gpu/arm,mali-utgard.yaml         | 166 ++++++++++++++++++
- 2 files changed, 166 insertions(+), 129 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+> The dtbs_check fail on missing dt-mk-schema. Any reason why it is not
+> in the scripts?
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-deleted file mode 100644
-index ba895efe3039..000000000000
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-+++ /dev/null
-@@ -1,129 +0,0 @@
--ARM Mali Utgard GPU
--===================
--
--Required properties:
--  - compatible
--    * Must be one of the following:
--      + "arm,mali-300"
--      + "arm,mali-400"
--      + "arm,mali-450"
--    * And, optionally, one of the vendor specific compatible:
--      + allwinner,sun4i-a10-mali
--      + allwinner,sun7i-a20-mali
--      + allwinner,sun8i-h3-mali
--      + allwinner,sun50i-a64-mali
--      + allwinner,sun50i-h5-mali
--      + amlogic,meson8-mali
--      + amlogic,meson8b-mali
--      + amlogic,meson-gxbb-mali
--      + amlogic,meson-gxl-mali
--      + samsung,exynos4210-mali
--      + rockchip,rk3036-mali
--      + rockchip,rk3066-mali
--      + rockchip,rk3188-mali
--      + rockchip,rk3228-mali
--      + rockchip,rk3328-mali
--      + stericsson,db8500-mali
--      + hisilicon,hi6220-mali
--
--  - reg: Physical base address and length of the GPU registers
--
--  - interrupts: an entry for each entry in interrupt-names.
--    See ../interrupt-controller/interrupts.txt for details.
--
--  - interrupt-names:
--    * ppX: Pixel Processor X interrupt (X from 0 to 7)
--    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
--    * pp: Pixel Processor broadcast interrupt (mali-450 only)
--    * gp: Geometry Processor interrupt
--    * gpmmu: Geometry Processor MMU interrupt
--
--  - clocks: an entry for each entry in clock-names
--  - clock-names:
--    * bus: bus clock for the GPU
--    * core: clock driving the GPU itself
--
--Optional properties:
--  - interrupt-names and interrupts:
--    * pmu: Power Management Unit interrupt, if implemented in hardware
--
--  - memory-region:
--    Memory region to allocate from, as defined in
--    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
--
--  - mali-supply:
--    Phandle to regulator for the Mali device, as defined in
--    Documentation/devicetree/bindings/regulator/regulator.txt for details.
--
--  - operating-points-v2:
--    Operating Points for the GPU, as defined in
--    Documentation/devicetree/bindings/opp/opp.txt
--
--  - power-domains:
--    A power domain consumer specifier as defined in
--    Documentation/devicetree/bindings/power/power_domain.txt
--
--Vendor-specific bindings
--------------------------
--
--The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
--to specify one more vendor-specific compatible, among:
--
--  - allwinner,sun4i-a10-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - allwinner,sun7i-a20-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - allwinner,sun50i-a64-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - allwinner,sun50i-h5-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - amlogic,meson8-mali and amlogic,meson8b-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - Rockchip variants:
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - stericsson,db8500-mali
--    Required properties:
--      * interrupt-names and interrupts:
--        + combined: combined interrupt of all of the above lines
--
--  - hisilicon,hi6220-mali
--    Required properties:
--      * resets: phandles to the reset lines for the GPU
--
--Example:
--
--mali: gpu@1c40000 {
--	compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
--	reg = <0x01c40000 0x10000>;
--	interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "gp",
--			  "gpmmu",
--			  "pp0",
--			  "ppmmu0",
--			  "pp1",
--			  "ppmmu1",
--			  "pmu";
--	clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
--	clock-names = "bus", "core";
--	resets = <&ccu RST_BUS_GPU>;
--};
--
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-new file mode 100644
-index 000000000000..d3883ba09174
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-@@ -0,0 +1,166 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/arm,mali-utgard.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Mali Utgard GPU
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+  - Maxime Ripard <maxime.ripard@free-electrons.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  $nodename:
-+    pattern: '^gpu@[a-f0-9]+$'
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: allwinner,sun8i-a23-mali
-+          - const: allwinner,sun7i-a20-mali
-+          - const: arm,mali-400
-+      - items:
-+          - enum:
-+              - allwinner,sun4i-a10-mali
-+              - allwinner,sun7i-a20-mali
-+              - allwinner,sun8i-h3-mali
-+              - allwinner,sun50i-a64-mali
-+              - rockchip,rk3036-mali
-+              - rockchip,rk3066-mali
-+              - rockchip,rk3188-mali
-+              - rockchip,rk3228-mali
-+              - samsung,exynos4210-mali
-+              - stericsson,db8500-mali
-+          - const: arm,mali-400
-+      - items:
-+          - enum:
-+              - allwinner,sun50i-h5-mali
-+              - amlogic,meson8-mali
-+              - amlogic,meson8b-mali
-+              - amlogic,meson-gxbb-mali
-+              - amlogic,meson-gxl-mali
-+              - hisilicon,hi6220-mali
-+              - rockchip,rk3328-mali
-+          - const: arm,mali-450
-+
-+      # "arm,mali-300"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 4
-+    maxItems: 20
-+
-+  interrupt-names:
-+    allOf:
-+      - additionalItems: true
-+        minItems: 4
-+        maxItems: 20
-+        items:
-+          # At least enforce the first 2 interrupts
-+          - const: gp
-+          - const: gpmmu
-+      - items:
-+          # Not ideal as any order and combination are allowed
-+          enum:
-+            - gp        # Geometry Processor interrupt
-+            - gpmmu     # Geometry Processor MMU interrupt
-+            - pp        # Pixel Processor broadcast interrupt (mali-450 only)
-+            - pp0       # Pixel Processor X interrupt (X from 0 to 7)
-+            - ppmmu0    # Pixel Processor X MMU interrupt (X from 0 to 7)
-+            - pp1
-+            - ppmmu1
-+            - pp2
-+            - ppmmu2
-+            - pp3
-+            - ppmmu3
-+            - pp4
-+            - ppmmu4
-+            - pp5
-+            - ppmmu5
-+            - pp6
-+            - ppmmu6
-+            - pp7
-+            - ppmmu7
-+            - pmu       # Power Management Unit interrupt (optional)
-+            - combined  # stericsson,db8500-mali only
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: core
-+
-+  memory-region: true
-+
-+  mali-supply:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  operating-points-v2: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun4i-a10-mali
-+              - allwinner,sun7i-a20-mali
-+              - allwinner,sun50i-a64-mali
-+              - allwinner,sun50i-h5-mali
-+              - amlogic,meson8-mali
-+              - amlogic,meson8b-mali
-+              - hisilicon,hi6220-mali
-+              - rockchip,rk3036-mali
-+              - rockchip,rk3066-mali
-+              - rockchip,rk3188-mali
-+              - rockchip,rk3228-mali
-+              - rockchip,rk3328-mali
-+    then:
-+      required:
-+        - resets
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    mali: gpu@1c40000 {
-+      compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
-+      reg = <0x01c40000 0x10000>;
-+      interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-names = "gp",
-+            "gpmmu",
-+            "pp0",
-+            "ppmmu0",
-+            "pp1",
-+            "ppmmu1",
-+            "pmu";
-+      clocks = <&ccu 1>, <&ccu 2>;
-+      clock-names = "bus", "core";
-+      resets = <&ccu 1>;
-+    };
-+
-+...
--- 
-2.20.1
+Because it is not just that script, but the whole project of scripts,
+schemas and meta-schemas. Read the instructions in
+Documentation/devicetree/writing-schema.md(.rst in next).
+
+Rob
