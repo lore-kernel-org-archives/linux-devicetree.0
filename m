@@ -1,14 +1,13 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 0/3] soc: ti: k3: Allow for exclusive and shared device
- requests
-Date: Tue, 20 Aug 2019 18:18:07 +0530
-Message-ID: <05218f41-9601-9a6c-8ac1-3bf1482e1c3d@ti.com>
-References: <20190729122453.32252-1-lokeshvutla@ti.com>
+Subject: Re: [PATCH v5 0/2] arm64: dts: ti: k3: Update the power-domain cells
+Date: Tue, 20 Aug 2019 18:18:24 +0530
+Message-ID: <9aa7eeaf-36ee-3d5f-9654-d8fa37577877@ti.com>
+References: <20190729123023.32702-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190729122453.32252-1-lokeshvutla@ti.com>
+In-Reply-To: <20190729123023.32702-1-lokeshvutla@ti.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,43 +24,11 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 29/07/19 5:54 PM, Lokesh Vutla wrote:
-> Sysfw provides an option for requesting exclusive access for a
-> device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
-> not used, the device is meant to be shared across hosts. Once a device
-> is requested from a host with this flag set, any request to this
-> device from a different host will be nacked by sysfw.
-> 
-> Current tisci firmware and pm drivers always requests for device with
-> exclusive permissions set. But this is not be true for certain devices
-> that are expcted to be shared across different host contexts.
-> So add support for getting the shared or exclusive permissions from DT
-> and request firmware accordingly.
+On 29/07/19 6:00 PM, Lokesh Vutla wrote:
+> Update the power-domains cells on all K3 based devices to reflect
+> exclusive and shared permissions in each device.
 
 Gentle Ping on this series.
 
 Thanks and regards,
 Lokesh
-
-> 
-> Changes since v4: https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=148371
-> - Split the driver and arch changes into a separate series.
-> - Added Reviewed-by from Nishanth M
-> - Rebased on top of v5.3-rc2
-> 
-> Lokesh Vutla (3):
->   firmware: ti_sci: Allow for device shared and exclusive requests
->   dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
->     access
->   soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
->     access
-> 
->  .../bindings/soc/ti/sci-pm-domain.txt         | 11 ++++-
->  MAINTAINERS                                   |  1 +
->  drivers/firmware/ti_sci.c                     | 45 ++++++++++++++++++-
->  drivers/soc/ti/ti_sci_pm_domains.c            | 23 +++++++++-
->  include/dt-bindings/soc/ti,sci_pm_domain.h    |  9 ++++
->  include/linux/soc/ti/ti_sci_protocol.h        |  3 ++
->  6 files changed, 86 insertions(+), 6 deletions(-)
->  create mode 100644 include/dt-bindings/soc/ti,sci_pm_domain.h
-> 
