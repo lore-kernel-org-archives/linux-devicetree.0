@@ -1,73 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
-Date: Tue, 20 Aug 2019 10:18:41 -0500
-Message-ID: <CAL_JsqLdh41o2cQfG=spa_1HkPUgeyvVm2r0f=5OZiGP6Fw29g@mail.gmail.com>
-References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
- <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
- <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
- <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com> <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
+From: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Subject: [PATCH v2 1/3] dt-bindings: Add compatible for H6 RTC
+Date: Tue, 20 Aug 2019 17:19:32 +0200
+Message-ID: <20190820151934.3860-2-megous@megous.com>
+References: <20190820151934.3860-1-megous@megous.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Android Kernel Team <kernel-team@android.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBCM76DVAKGQESUDI3QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190820151934.3860-1-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 9:04 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Aug 14, 2019 at 4:41 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > >
-> > > > > PowerPC platforms don't use the generic of/platform code to populate the
-> > > > > devices from DT.
-> > > >
-> > > > Yes, they do.
-> > >
-> > > No they don't. My wording could be better, but they don't use
-> > > of_platform_default_populate_init()
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
-> >
-> > Right, but the rest of the of/platform code is used (guess where it
-> > got moved here from?).
-> >
-> > > > > Therefore the generic device linking code is never used
-> > > > > in PowerPC.  Compile it out to avoid warning about unused functions.
-> > > >
-> > > > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
-> > > > return' rather than #ifdefs.
-> > >
-> > > I'm just moving the existing ifndef some lines above. I don't want to
-> > > go change existing #ifndef in this patch. Maybe that should be a
-> > > separate patch series that goes and fixes all such code in drivers/of/
-> > > or driver/
-> >
-> > So the initcall was originally just supposed to call
-> > of_platform_default_populate(), but it's grown beyond that. That could
-> > make things fragile as it is possible for platforms to call
-> > of_platform_populate() (directly or indirectly) before
-> > of_platform_default_populate_init(). That was supposed to work, but
-> > now I think it's getting more fragile.
->
-> Can you clarify what's wrong with of_platfrom_populate() being called
-> before of_platform_default_populate_init()? If that's what a platform
-> wants to do, they can do it? I have some thoughts of my own, but I
-> want to hear yours.
+From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 
-Really, I'd like to get rid of platforms doing their own calls. That's
-mostly an arm32 issue. Most of what's left are either platforms using
-auxdata which was supposed to be a transition thing or ones that set a
-parent device (soc_device). The former takes work to finish converting
-platforms to DT and I don't know what to do for the latter other than
-always or never set a parent device. Also, I know there's an issue on
-atmel where we can't remove their of_platform_populate call because it
-changes the probe order and breaks their pinctrl and gpio driver (I
-started a patch for that...).
+RTC on H6 is similar to the one on H5 SoC, but incompatible in small
+details. See the driver for description of differences. For example
+H6 RTC needs to enable the external low speed oscillator. Add new
+compatible for this RTC.
 
-Rob
+Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+---
+ .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml       | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+index 924622f39c44..d7a57ec4a640 100644
+--- a/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml
+@@ -25,6 +25,7 @@ properties:
+       - items:
+           - const: allwinner,sun50i-a64-rtc
+           - const: allwinner,sun8i-h3-rtc
++      - const: allwinner,sun50i-h6-rtc
+ 
+   reg:
+     maxItems: 1
+@@ -92,6 +93,18 @@ allOf:
+           minItems: 3
+           maxItems: 3
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun50i-h6-rtc
++
++    then:
++      properties:
++        clock-output-names:
++          minItems: 3
++          maxItems: 3
++
+   - if:
+       properties:
+         compatible:
+-- 
+2.22.1
