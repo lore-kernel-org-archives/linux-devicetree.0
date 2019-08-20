@@ -1,63 +1,56 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Date: Tue, 20 Aug 2019 14:51:13 +0530
-Message-ID: <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
-References: <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
- <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
- <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
- <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
- <20190819090928.pke6cov52n4exlbp@vireshk-i7>
- <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
- <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
- <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
- <20190820030114.6flnn2omeys3lih3@vireshk-i7>
- <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
+ from Required properties
+Date: Tue, 20 Aug 2019 10:22:52 +0100
+Message-ID: <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
+In-Reply-To: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20-08-19, 11:03, Sylwester Nawrocki wrote:
-> On 8/20/19 05:01, Viresh Kumar wrote:
-> > Sorry but I am unable to understand the difficulty you are facing now. So what I
-> > suggest is something like this.
+On Tue, Aug 20, 2019 at 07:28:43AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> The difficulty was about representing data from tables asv_{arm,kfc}_table[][]
-> added in patch 3/9 of the series in devicetree.  If you have no objections
-> about keeping those tables in the driver then I can't see any difficulties. 
-
-The problem with keeping such tables in kernel is that they contain too much
-magic values which very few people understand. And after some amount of time,
-even they don't remember any of it.
-
-What I was expecting was to remove as much of these tables as possible and do
-the calculations to get them at runtime with some logical code which people can
-understand later on.
-
-> > - Use DT to get a frequency and voltage for each frequency.
+> The num-lanes is not a mandatory property, e.g. on FSL
+> Layerscape SoCs, the PCIe link training is completed
+> automatically base on the selected SerDes protocol, it
+> doesn't need the num-lanes to set-up the link width.
 > 
-> Yes, this is what happens now, we have common OPPs in DT that work for each SoC
-> revision. 
+> It is previously in both Required and Optional properties,
+> let's remove it from the Required properties.
 > 
-> > - At runtime, based on SoC, registers, efuses, etc, update the voltage of the
-> >   OPPs.
-> > - This algo can be different for each SoC, no one is stopping you from doing
-> >   that.
-> > 
-> > Am I missing something ?
-> 
-> Not really, this is basically what happens in the $subject patch series. 
-> 
-> Then IIUC what I would need to change is to modify exynos_asv_update_cpu_opps() 
-> function in patch 3/9 to use dev_pm_opp_adjust_voltage() rather than 
-> dev_pm_opp_remove(), dev_pm_opp_add().
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
 
-That and somehow add code to get those tables if possible.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
--- 
-viresh
+
+> V2:
+>  - Reworded the change log and subject.
+>  - Fixed a typo in subject.
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 5561a1c060d0..bd880df39a79 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -11,7 +11,6 @@ Required properties:
+>  	     the ATU address space.
+>      (The old way of getting the configuration address space from "ranges"
+>      is deprecated and should be avoided.)
+> -- num-lanes: number of lanes to use
+>  RC mode:
+>  - #address-cells: set to <3>
+>  - #size-cells: set to <2>
+> -- 
+> 2.17.1
+> 
