@@ -1,164 +1,34 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v7 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-Date: Tue, 20 Aug 2019 14:48:49 +0300
-Message-ID: <20190820114849.GD5123@paasikivi.fi.intel.com>
-References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
- <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] dt-bindings: spi: Fix the number of CS lines documented as an example
+Date: Tue, 20 Aug 2019 17:20:00 +0530
+Message-ID: <20190820115000.32041-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh@kernel.org>
+To: broonie@kernel.org, robh+dt@kernel.org
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+The number of CS lines is mentioned as 2 in the spi-controller binding
+but however in the example, 4 cs-gpios are used. Hence fix that to
+mention 4.
 
-On Tue, Aug 20, 2019 at 01:24:32PM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
-> The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-> used in later (A10s, A13, A20, R8 and GR8) SoCs.
-> 
-> On some SoCs, like the A10, there's multiple instances of that controller,
-> with one instance supporting more channels and having an ISP.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 107 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> new file mode 100644
-> index 000000000000..9000bca344f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +description: |-
-> +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
-> +  frames from a parallel or BT656 sensor.
-> +
-> +properties:
-> +  compatible:
-> +    const: allwinner,sun7i-a20-csi0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: The CSI interface clock
-> +      - description: The CSI module clock
-> +      - description: The CSI ISP clock
-> +      - description: The CSI DRAM clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: mod
-> +      - const: isp
-> +      - const: ram
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      endpoint:
-> +        properties:
-> +          bus-width:
-> +            const: 8
-> +            description: Number of data lines actively used.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ Documentation/devicetree/bindings/spi/spi-controller.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Are other values supported? If not, you could omit this.
-
-> +
-> +          data-active: true
-> +          hsync-active: true
-> +          pclk-sample: true
-> +          remote-endpoint: true
-> +          vsync-active: true
-> +
-> +        required:
-> +          - bus-width
-> +          - data-active
-> +          - hsync-active
-> +          - pclk-sample
-> +          - remote-endpoint
-> +          - vsync-active
-
-Some of these are not allowed in the Bt.656 mode (vsync-active and
-hsync-active) while they're required in Bt.601 mode. Is there a way to tell
-that in YAML-based bindings?
-
-Similarly, video-interfaces.txt should be referenced from here, shouldn't
-it?
-
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/sun7i-a20-ccu.h>
-> +    #include <dt-bindings/reset/sun4i-a10-ccu.h>
-> +
-> +    csi0: csi@1c09000 {
-> +        compatible = "allwinner,sun7i-a20-csi0";
-> +        reg = <0x01c09000 0x1000>;
-> +        interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-> +                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> +        clock-names = "bus", "mod", "isp", "ram";
-> +        resets = <&ccu RST_CSI0>;
-> +
-> +        port {
-> +            csi_from_ov5640: endpoint {
-> +                remote-endpoint = <&ov5640_to_csi>;
-> +                bus-width = <8>;
-> +                hsync-active = <1>; /* Active high */
-> +                vsync-active = <0>; /* Active low */
-> +                data-active = <1>;  /* Active high */
-> +                pclk-sample = <1>;  /* Rising */
-> +            };
-> +        };
-> +    };
-> +
-> +...
-
+diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+index a02e2fe2bfb2..732339275848 100644
+--- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+@@ -31,7 +31,7 @@ properties:
+       If that property is used, the number of chip selects will be
+       increased automatically with max(cs-gpios, hardware chip selects).
+ 
+-      So if, for example, the controller has 2 CS lines, and the
++      So if, for example, the controller has 4 CS lines, and the
+       cs-gpios looks like this
+         cs-gpios = <&gpio1 0 0>, <0>, <&gpio1 1 0>, <&gpio1 2 0>;
+ 
 -- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.17.1
