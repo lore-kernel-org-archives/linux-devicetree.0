@@ -1,41 +1,63 @@
-From: megous@megous.com
-Subject: [PATCH 1/6] dt-bindings: net: sun8i-a83t-emac: Add phy-supply property
-Date: Tue, 20 Aug 2019 16:53:38 +0200
-Message-ID: <20190820145343.29108-2-megous@megous.com>
-References: <20190820145343.29108-1-megous@megous.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 01/11] asm-generic: add dma_zone_size
+Date: Tue, 20 Aug 2019 16:58:09 +0200
+Message-ID: <20190820145821.27214-2-nsaenzjulienne@suse.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820145343.29108-1-megous@megous.com>
+In-Reply-To: <20190820145821.27214-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Ondrej Jirman <megous@megous.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+To: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Cc: phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org, eric@anholt.net, mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+Some architectures have platform specific DMA addressing limitations.
+This will allow for hardware description code to provide the constraints
+in a generic manner, so as for arch code to properly setup it's memory
+zones and DMA mask.
 
-This is already supported by the driver, but is missing from the
-bindings.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 3fb0714e761e..304f244e9ab5 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -43,6 +43,10 @@ properties:
-       Phandle to the device containing the EMAC or GMAC clock
-       register
- 
-+  phy-supply:
-+    description:
-+      PHY regulator
+Changes in v2: None
+
+ include/asm-generic/dma.h | 8 +++++++-
+ mm/page_alloc.c           | 3 +++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/include/asm-generic/dma.h b/include/asm-generic/dma.h
+index 43d0c8af8058..c2f39cdb64f6 100644
+--- a/include/asm-generic/dma.h
++++ b/include/asm-generic/dma.h
+@@ -8,7 +8,13 @@
+  *
+  * Some code relies on seeing MAX_DMA_ADDRESS though.
+  */
+-#define MAX_DMA_ADDRESS PAGE_OFFSET
++#define MAX_DMA_ADDRESS	 (PAGE_OFFSET + dma_zone_size)
 +
- required:
-   - compatible
-   - reg
++/*
++ * Some architectures may have platform specific DMA addressing constraints.
++ * Firmware can use this to fine tune the device's DMA memory zone.
++ */
++extern u64 dma_zone_size __ro_after_init;
+ 
+ extern int request_dma(unsigned int dmanr, const char *device_id);
+ extern void free_dma(unsigned int dmanr);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 272c6de1bf4e..b514afee5451 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -133,6 +133,9 @@ EXPORT_SYMBOL(_totalram_pages);
+ unsigned long totalreserve_pages __read_mostly;
+ unsigned long totalcma_pages __read_mostly;
+ 
++u64 dma_zone_size __ro_after_init;
++EXPORT_SYMBOL(dma_zone_size);
++
+ int percpu_pagelist_fraction;
+ gfp_t gfp_allowed_mask __read_mostly = GFP_BOOT_MASK;
+ #ifdef CONFIG_INIT_ON_ALLOC_DEFAULT_ON
 -- 
-2.22.1
+2.22.0
