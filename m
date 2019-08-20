@@ -1,278 +1,142 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v7 0/5] media: Allwinner A10 CSI support
-Date: Tue, 20 Aug 2019 13:24:31 +0200
-Message-ID: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v7 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
+Date: Tue, 20 Aug 2019 13:24:36 +0200
+Message-ID: <44a0d31330ea355b44e744f9b63cc96ae645e8db.1566300265.git-series.maxime.ripard@bootlin.com>
+References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Hi,
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 87 +++++++++++++++++++++++++-
+ 1 file changed, 87 insertions(+)
 
-Here is a series introducing the support for the A10 (and SoCs of the same
-generation) CMOS Sensor Interface (called CSI, not to be confused with
-MIPI-CSI, which isn't support by that IP).
-
-That interface is pretty straightforward, but the driver has a few issues
-that I wanted to bring up:
-
-  * The only board I've been testing this with has an ov5640 sensor
-    attached, which doesn't work with the upstream driver. Copying the
-    Allwinner init sequence works though, and this is how it has been
-    tested. Testing with a second sensor would allow to see if it's an
-    issue on the CSI side or the sensor side.
-  * We don't have support for the ISP at the moment, but this can be added
-    eventually.
-
-Here is the v4l2-compliance output (commit f61132e81d79 of v4l-utils)
-v4l2-compliance SHA: not available, 32 bits
-
-Compliance test for device /dev/video1:
-
-Driver Info:
-	Driver name      : sun4i_csi
-	Card type        : sun4i-csi
-	Bus info         : platform:1c09000.csi
-	Driver version   : 5.3.0
-	Capabilities     : 0x84201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04201000
-		Video Capture Multiplanar
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : sun4i-csi
-	Model            : Allwinner Video Capture Device
-	Serial           :
-	Bus info         :
-	Media version    : 5.3.0
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 5.3.0
-Interface Info:
-	ID               : 0x03000008
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000006 (6)
-	Name             : sun4i_csi
-	Function         : V4L2 I/O
-	Pad 0x01000007   : 0: Sink, Must Connect
-	  Link 0x0200000a: from remote pad 0x1000005 of entity 'sun4i-csi-0': Data, Enabled, Immutable
-
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video1 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls (Input 0):
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-	test VIDIOC_QUERYCTRL: OK (Not Supported)
-	test VIDIOC_G/S_CTRL: OK (Not Supported)
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 0 Private Controls: 0
-
-Format ioctls (Input 0):
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK
-
-Codec ioctls (Input 0):
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls (Input 0):
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	test MMAP: OK
-	test USERPTR: OK (Not Supported)
-	test DMABUF: OK (Not Supported)
-
-Total: 49, Succeeded: 49, Failed: 0, Warnings: 0
-
-media-ctl -p -d /dev/media1 output after boot:
-Media controller API version 5.3.0
-
-Media device information
-------------------------
-driver          sun4i-csi
-model           Allwinner Video Capture Device
-serial
-bus info
-hw revision     0x0
-driver version  5.3.0
-
-Device topology
-- entity 1: ov5640 1-0021 (1 pad, 1 link)
-            type V4L2 subdev subtype Sensor flags 0
-            device node name /dev/v4l-subdev0
-	pad0: Source
-		[fmt:YUYV8_2X8/640x480@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:full-range]
-		-> "sun4i-csi-0":0 [ENABLED,IMMUTABLE]
-
-- entity 3: sun4i-csi-0 (2 pads, 2 links)
-            type V4L2 subdev subtype Unknown flags 0
-            device node name /dev/v4l-subdev1
-	pad0: Sink
-		[fmt:YUYV8_2X8/640x480 field:none colorspace:raw]
-		<- "ov5640 1-0021":0 [ENABLED,IMMUTABLE]
-	pad1: Source
-		[fmt:YUYV8_2X8/640x480 field:none colorspace:raw]
-		-> "sun4i_csi":0 [ENABLED,IMMUTABLE]
-
-- entity 6: sun4i_csi (1 pad, 1 link)
-            type Node subtype V4L flags 0
-            device node name /dev/video1
-	pad0: Sink
-		<- "sun4i-csi-0":1 [ENABLED,IMMUTABLE]
-
-Let me know what you think,
-Maxime
-
-Changes from v6:
-  - Add init_cfg callback on the pads
-  - Use v4l2_subdev_link_validate instead of hand-rolled link validate
-  - Make sun4i_csi_qops const
-  - Add MODULE_DESCRIPTION, MODULE_AUTHOR and MODULE_LICENSE
-  - Remove the mod clock handling from the CSI driver
-  - Remove the A10 compatible fallback
-  - Rework the CSI pinctrl groups
-  - Add an example to the binding
-
-Changes from v5:
-  - Add link_validate/get_fmt/set_fmt/enum_mbus_code to the subdevice
-  - Create a device file for the subdevice
-  - Add link_validate to the video device
-  - Remove the storage of both the v4l2_pix_format_mplane structure and the
-    sun4i_csi_format structure, since the latter can be retrieved easily
-    from the former, and this is actually needed in a single place.
-  - Fix the copyright year notice
-
-Changes from v4:
-  - Created an intermediate sub-device
-
-Changes from v3:
-  - Rebased on v5.1-rc
-  - Fixed the YAML binding according to Rob's review
-
-Changes from v2:
-  - Address a few minors comments on the error path, the return type of
-    some functions, the type of some variables
-  - Disable the device if the subdev call fails in start_streaming
-  - Use __maybe_unused and SET_RUNTIME_PM_OPS for the runtime PM hooks
-  - Call media_device_cleanup in the remove function
-  - Add a dependency on the subdev API and the common clock framework
-  - Fix the MAINTAINERS entry to point to the yaml file
-  - Add the of graph bindings to the YAML schemas
-  - Rebase on next
-
-Changes from v1:
-  - Make sure it's compliant with a much newer v4l2-compliance
-  - Conversion of the DT bindings to a JSON schema
-  - Drop the vendor properties and use a separate compatible instead
-  - Fix an issue on the last frame where we would not have any buffer
-    queued and would report an error by using a scratch buffer
-  - Fix the warnings reported by v4l2-compliance
-  - Rebase on top of 5.0-rc1
-  - Added a MAINTAINERS entry
-  - Switched to strscpy
-  - Fixed SPDX header
-
-Maxime Ripard (5):
-  dt-bindings: media: Add Allwinner A10 CSI binding
-  media: sunxi: Refactor the Makefile and Kconfig
-  media: sunxi: Add A10 CSI driver
-  ARM: dts: sun7i: Add CSI0 controller
-  DO NOT MERGE: ARM: dts: bananapi: Add Camera support
-
- Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 +++++++++++++++++-
- MAINTAINERS                                                          |   8 +-
- arch/arm/boot/dts/sun7i-a20-bananapi.dts                             |  87 ++++++++++++++-
- arch/arm/boot/dts/sun7i-a20.dtsi                                     |  25 ++++-
- drivers/media/platform/Kconfig                                       |   2 +-
- drivers/media/platform/Makefile                                      |   2 +-
- drivers/media/platform/sunxi/Kconfig                                 |   2 +-
- drivers/media/platform/sunxi/Makefile                                |   2 +-
- drivers/media/platform/sunxi/sun4i-csi/Kconfig                       |  11 ++-
- drivers/media/platform/sunxi/sun4i-csi/Makefile                      |   5 +-
- drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c                   | 305 +++++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h                   | 159 ++++++++++++++++++++++++++-
- drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c                   | 444 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c                  | 383 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 14 files changed, 1540 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
- create mode 100644 drivers/media/platform/sunxi/Kconfig
- create mode 100644 drivers/media/platform/sunxi/Makefile
- create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Kconfig
- create mode 100644 drivers/media/platform/sunxi/sun4i-csi/Makefile
- create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
- create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.h
- create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_dma.c
- create mode 100644 drivers/media/platform/sunxi/sun4i-csi/sun4i_v4l2.c
-
-base-commit: 85b8819be27eab140d280bbee4f01385beb11e7d
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index c5730b30a15d..d3f23ce041b2 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -54,6 +54,9 @@
+ 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+ 
+ 	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 		serial0 = &uart0;
+ 		serial1 = &uart3;
+ 		serial2 = &uart7;
+@@ -63,6 +66,41 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	reg_cam: cam {
++		compatible = "regulator-fixed";
++		regulator-name = "cam";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
++
++        reg_cam_avdd: cam-avdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-avdd";
++                regulator-min-microvolt = <2800000>;
++                regulator-max-microvolt = <2800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dovdd: cam-dovdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dovdd";
++                regulator-min-microvolt = <1800000>;
++                regulator-max-microvolt = <1800000>;
++                vin-supply = <&reg_cam>;
++        };
++
++        reg_cam_dvdd: cam-dvdd {
++                compatible = "regulator-fixed";
++                regulator-name = "cam500b-dvdd";
++                regulator-min-microvolt = <1500000>;
++                regulator-max-microvolt = <1500000>;
++                vin-supply = <&reg_cam>;
++        };
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -116,6 +154,23 @@
+ 		>;
+ };
+ 
++&csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&csi0_8bits_pins>;
++	status = "okay";
++
++	port {
++		csi_from_ov5640: endpoint {
++                        remote-endpoint = <&ov5640_to_csi>;
++                        bus-width = <8>;
++                        hsync-active = <1>; /* Active high */
++                        vsync-active = <0>; /* Active low */
++                        data-active = <1>;  /* Active high */
++                        pclk-sample = <1>;  /* Rising */
++                };
++	};
++};
++
+ &de {
+ 	status = "okay";
+ };
+@@ -161,6 +216,38 @@
+ 	};
+ };
+ 
++&i2c1 {
++	status = "okay";
++
++	camera: camera@21 {
++		compatible = "ovti,ov5640";
++		reg = <0x21>;
++		clocks = <&ccu CLK_CSI0>;
++		clock-names = "xclk";
++		assigned-clocks = <&ccu CLK_CSI0>;
++		assigned-clock-rates = <24000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&csi0_clk_pin>;
++
++		reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
++		powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
++		AVDD-supply = <&reg_cam_avdd>;
++		DOVDD-supply = <&reg_cam_dovdd>;
++		DVDD-supply = <&reg_cam_dvdd>;
++
++		port {
++			ov5640_to_csi: endpoint {
++				remote-endpoint = <&csi_from_ov5640>;
++				bus-width = <8>;
++				hsync-active = <1>; /* Active high */
++				vsync-active = <0>; /* Active low */
++				data-active = <1>;  /* Active high */
++				pclk-sample = <1>;  /* Rising */
++			};
++		};
++	};
++};
++
+ &i2c2 {
+ 	status = "okay";
+ };
 -- 
 git-series 0.9.1
