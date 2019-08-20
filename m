@@ -1,7 +1,7 @@
 From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 04/49] ath11k: add ahb.c
-Date: Tue, 20 Aug 2019 18:47:30 +0300
-Message-ID: <1566316095-27507-5-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH 09/49] ath11k: add core.h
+Date: Tue, 20 Aug 2019 18:47:35 +0300
+Message-ID: <1566316095-27507-10-git-send-email-kvalo@codeaurora.org>
 References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1566316095-27507-1-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -11,1058 +11,834 @@ Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL
 List-Id: devicetree@vger.kernel.org
 
 ---
- drivers/net/wireless/ath/ath11k/ahb.c | 1046 +++++++++++++++++++++++++++++++++
- 1 file changed, 1046 insertions(+)
+ drivers/net/wireless/ath/ath11k/core.h | 822 +++++++++++++++++++++++++++++++++
+ 1 file changed, 822 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
+diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
 new file mode 100644
-index 000000000000..e1fee70055a6
+index 000000000000..35cb7b58220e
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -0,0 +1,1046 @@
-+// SPDX-License-Identifier: ISC
++++ b/drivers/net/wireless/ath/ath11k/core.h
+@@ -0,0 +1,822 @@
++/* SPDX-License-Identifier: ISC */
 +/*
 + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_device.h>
-+#include <linux/of.h>
-+#include <linux/dma-mapping.h>
-+#include "ahb.h"
-+#include "debug.h"
-+#include <linux/remoteproc.h>
++#ifndef ATH11K_CORE_H
++#define ATH11K_CORE_H
 +
-+static const struct of_device_id ath11k_ahb_of_match[] = {
-+	/* TODO: Should we change the compatible string to something similar
-+	 * to one that ath10k uses?
-+	 */
-+	{ .compatible = "qcom,ipq8074-wifi",
-+	  .data = (void *)ATH11K_HW_IPQ8074,
-+	},
-+	{ }
++#include <linux/types.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/bitfield.h>
++#include "qmi.h"
++#include "htc.h"
++#include "wmi.h"
++#include "hal.h"
++#include "dp.h"
++#include "ce.h"
++#include "mac.h"
++#include "hw.h"
++#include "hal_rx.h"
++#include "reg.h"
++
++#define SM(_v, _f) (((_v) << _f##_LSB) & _f##_MASK)
++
++#define ATH11K_TX_MGMT_NUM_PENDING_MAX	512
++
++#define ATH11K_TX_MGMT_TARGET_MAX_SUPPORT_WMI 64
++
++/* Pending management packets threshold for dropping probe responses */
++#define ATH11K_PRB_RSP_DROP_THRESHOLD ((ATH11K_TX_MGMT_TARGET_MAX_SUPPORT_WMI * 3) / 4)
++
++#define ATH11K_INVALID_HW_MAC_ID	0xFF
++
++enum ath11k_supported_bw {
++	ATH11K_BW_20	= 0,
++	ATH11K_BW_40	= 1,
++	ATH11K_BW_80	= 2,
++	ATH11K_BW_160	= 3,
 +};
 +
-+MODULE_DEVICE_TABLE(of, ath11k_ahb_of_match);
-+
-+/* Target firmware's Copy Engine configuration. */
-+static const struct ce_pipe_config target_ce_config_wlan[] = {
-+	/* CE0: host->target HTC control and raw streams */
-+	{
-+		.pipenum = __cpu_to_le32(0),
-+		.pipedir = __cpu_to_le32(PIPEDIR_OUT),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE1: target->host HTT + HTC control */
-+	{
-+		.pipenum = __cpu_to_le32(1),
-+		.pipedir = __cpu_to_le32(PIPEDIR_IN),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE2: target->host WMI */
-+	{
-+		.pipenum = __cpu_to_le32(2),
-+		.pipedir = __cpu_to_le32(PIPEDIR_IN),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE3: host->target WMI */
-+	{
-+		.pipenum = __cpu_to_le32(3),
-+		.pipedir = __cpu_to_le32(PIPEDIR_OUT),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE4: host->target HTT */
-+	{
-+		.pipenum = __cpu_to_le32(4),
-+		.pipedir = __cpu_to_le32(PIPEDIR_OUT),
-+		.nentries = __cpu_to_le32(256),
-+		.nbytes_max = __cpu_to_le32(256),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS | CE_ATTR_DIS_INTR),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE5: target->host Pktlog */
-+	{
-+		.pipenum = __cpu_to_le32(5),
-+		.pipedir = __cpu_to_le32(PIPEDIR_IN),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(0),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE6: Reserved for target autonomous hif_memcpy */
-+	{
-+		.pipenum = __cpu_to_le32(6),
-+		.pipedir = __cpu_to_le32(PIPEDIR_INOUT),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(65535),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE7 used only by Host */
-+	{
-+		.pipenum = __cpu_to_le32(7),
-+		.pipedir = __cpu_to_le32(PIPEDIR_OUT),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE8 target->host used only by IPA */
-+	{
-+		.pipenum = __cpu_to_le32(8),
-+		.pipedir = __cpu_to_le32(PIPEDIR_INOUT),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(65535),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE9 host->target HTT */
-+	{
-+		.pipenum = __cpu_to_le32(9),
-+		.pipedir = __cpu_to_le32(PIPEDIR_OUT),
-+		.nentries = __cpu_to_le32(32),
-+		.nbytes_max = __cpu_to_le32(2048),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE10 target->host HTT */
-+	{
-+		.pipenum = __cpu_to_le32(10),
-+		.pipedir = __cpu_to_le32(PIPEDIR_INOUT_H2H),
-+		.nentries = __cpu_to_le32(0),
-+		.nbytes_max = __cpu_to_le32(0),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
-+
-+	/* CE11 Not used */
-+	{
-+		.pipenum = __cpu_to_le32(0),
-+		.pipedir = __cpu_to_le32(0),
-+		.nentries = __cpu_to_le32(0),
-+		.nbytes_max = __cpu_to_le32(0),
-+		.flags = __cpu_to_le32(CE_ATTR_FLAGS),
-+		.reserved = __cpu_to_le32(0),
-+	},
++enum wme_ac {
++	WME_AC_BE,
++	WME_AC_BK,
++	WME_AC_VI,
++	WME_AC_VO,
++	WME_NUM_AC
 +};
 +
-+/* Map from service/endpoint to Copy Engine.
-+ * This table is derived from the CE_PCI TABLE, above.
-+ * It is passed to the Target at startup for use by firmware.
-+ */
-+static const struct service_to_pipe target_service_to_ce_map_wlan[] = {
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(3),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_BK),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(3),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_BK),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_BE),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(3),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_BE),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VI),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(3),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VI),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_CONTROL),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(3),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_CONTROL),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC1),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(7),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC1),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC2),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(9),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_CONTROL_MAC2),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(2),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_RSVD_CTRL),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(0),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_RSVD_CTRL),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(1),
-+	},
-+	{ /* not used */
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_TEST_RAW_STREAMS),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(0),
-+	},
-+	{ /* not used */
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_TEST_RAW_STREAMS),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(1),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_HTT_DATA_MSG),
-+		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-+		__cpu_to_le32(4),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_HTT_DATA_MSG),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(1),
-+	},
-+	{
-+		__cpu_to_le32(ATH11K_HTC_SVC_ID_PKT_LOG),
-+		__cpu_to_le32(PIPEDIR_IN),	/* in = DL = target -> host */
-+		__cpu_to_le32(5),
-+	},
++#define ATH11K_HT_MCS_MAX	7
++#define ATH11K_VHT_MCS_MAX	9
++#define ATH11K_HE_MCS_MAX	11
 +
-+	/* (Additions here) */
++static inline enum wme_ac ath11k_tid_to_ac(u32 tid)
++{
++	return (((tid == 0) || (tid == 3)) ? WME_AC_BE :
++		((tid == 1) || (tid == 2)) ? WME_AC_BK :
++		((tid == 4) || (tid == 5)) ? WME_AC_VI :
++		WME_AC_VO);
++}
 +
-+	{ /* must be last */
-+		__cpu_to_le32(0),
-+		__cpu_to_le32(0),
-+		__cpu_to_le32(0),
-+	},
++struct ath11k_skb_cb {
++	dma_addr_t paddr;
++	u8 eid;
++	struct ath11k *ar;
++	struct ieee80211_vif *vif;
++} __packed;
++
++struct ath11k_skb_rxcb {
++	dma_addr_t paddr;
++	bool is_first_msdu;
++	bool is_last_msdu;
++	bool is_continuation;
++	struct hal_rx_desc *rx_desc;
++	u8 err_rel_src;
++	u8 err_code;
++	u8 mac_id;
++	u8 unmapped;
 +};
 +
-+#define ATH11K_IRQ_CE0_OFFSET 4
-+
-+static const char *irq_name[ATH11K_IRQ_NUM_MAX] = {
-+	"misc-pulse1",
-+	"misc-latch",
-+	"sw-exception",
-+	"watchdog",
-+	"ce0",
-+	"ce1",
-+	"ce2",
-+	"ce3",
-+	"ce4",
-+	"ce5",
-+	"ce6",
-+	"ce7",
-+	"ce8",
-+	"ce9",
-+	"ce10",
-+	"ce11",
-+	"host2wbm-desc-feed",
-+	"host2reo-re-injection",
-+	"host2reo-command",
-+	"host2rxdma-monitor-ring3",
-+	"host2rxdma-monitor-ring2",
-+	"host2rxdma-monitor-ring1",
-+	"reo2ost-exception",
-+	"wbm2host-rx-release",
-+	"reo2host-status",
-+	"reo2host-destination-ring4",
-+	"reo2host-destination-ring3",
-+	"reo2host-destination-ring2",
-+	"reo2host-destination-ring1",
-+	"rxdma2host-monitor-destination-mac3",
-+	"rxdma2host-monitor-destination-mac2",
-+	"rxdma2host-monitor-destination-mac1",
-+	"ppdu-end-interrupts-mac3",
-+	"ppdu-end-interrupts-mac2",
-+	"ppdu-end-interrupts-mac1",
-+	"rxdma2host-monitor-status-ring-mac3",
-+	"rxdma2host-monitor-status-ring-mac2",
-+	"rxdma2host-monitor-status-ring-mac1",
-+	"host2rxdma-host-buf-ring-mac3",
-+	"host2rxdma-host-buf-ring-mac2",
-+	"host2rxdma-host-buf-ring-mac1",
-+	"rxdma2host-destination-ring-mac3",
-+	"rxdma2host-destination-ring-mac2",
-+	"rxdma2host-destination-ring-mac1",
-+	"host2tcl-input-ring4",
-+	"host2tcl-input-ring3",
-+	"host2tcl-input-ring2",
-+	"host2tcl-input-ring1",
-+	"wbm2host-tx-completions-ring3",
-+	"wbm2host-tx-completions-ring2",
-+	"wbm2host-tx-completions-ring1",
-+	"tcl2host-status-ring",
++enum ath11k_hw_rev {
++	ATH11K_HW_IPQ8074,
 +};
 +
-+#define ATH11K_TX_RING_MASK_0 0x1
-+#define ATH11K_TX_RING_MASK_1 0x2
-+#define ATH11K_TX_RING_MASK_2 0x4
-+#define ATH11K_TX_RING_MASK_3 0x0
++enum ath11k_firmware_mode {
++	/* the default mode, standard 802.11 functionality */
++	ATH11K_FIRMWARE_MODE_NORMAL,
 +
-+#define ATH11K_RX_RING_MASK_0 0x1
-+#define ATH11K_RX_RING_MASK_1 0x2
-+#define ATH11K_RX_RING_MASK_2 0x4
-+#define ATH11K_RX_RING_MASK_3 0x8
-+
-+#define ATH11K_RX_ERR_RING_MASK_0 0x1
-+#define ATH11K_RX_ERR_RING_MASK_1 0x0
-+#define ATH11K_RX_ERR_RING_MASK_2 0x0
-+#define ATH11K_RX_ERR_RING_MASK_3 0x0
-+
-+#define ATH11K_RX_WBM_REL_RING_MASK_0 0x1
-+#define ATH11K_RX_WBM_REL_RING_MASK_1 0x0
-+#define ATH11K_RX_WBM_REL_RING_MASK_2 0x0
-+#define ATH11K_RX_WBM_REL_RING_MASK_3 0x0
-+
-+#define ATH11K_REO_STATUS_RING_MASK_0 0x1
-+#define ATH11K_REO_STATUS_RING_MASK_1 0x0
-+#define ATH11K_REO_STATUS_RING_MASK_2 0x0
-+#define ATH11K_REO_STATUS_RING_MASK_3 0x0
-+
-+#define ATH11K_RXDMA2HOST_RING_MASK_0 0x1
-+#define ATH11K_RXDMA2HOST_RING_MASK_1 0x2
-+#define ATH11K_RXDMA2HOST_RING_MASK_2 0x4
-+#define ATH11K_RXDMA2HOST_RING_MASK_3 0x0
-+
-+#define ATH11K_HOST2RXDMA_RING_MASK_0 0x1
-+#define ATH11K_HOST2RXDMA_RING_MASK_1 0x2
-+#define ATH11K_HOST2RXDMA_RING_MASK_2 0x4
-+#define ATH11K_HOST2RXDMA_RING_MASK_3 0x0
-+
-+#define ATH11K_RX_MON_STATUS_RING_MASK_0 0x1
-+#define ATH11K_RX_MON_STATUS_RING_MASK_1 0x2
-+#define ATH11K_RX_MON_STATUS_RING_MASK_2 0x4
-+#define ATH11K_RX_MON_STATUS_RING_MASK_3 0x0
-+
-+const u8 ath11k_tx_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	ATH11K_TX_RING_MASK_0,
-+	ATH11K_TX_RING_MASK_1,
-+	ATH11K_TX_RING_MASK_2,
-+	ATH11K_TX_RING_MASK_3,
++	/* factory tests etc */
++	ATH11K_FIRMWARE_MODE_FTM,
 +};
 +
-+const u8 rx_mon_status_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	0, 0, 0, 0,
-+	ATH11K_RX_MON_STATUS_RING_MASK_0,
-+	ATH11K_RX_MON_STATUS_RING_MASK_1,
-+	ATH11K_RX_MON_STATUS_RING_MASK_2,
-+};
-+
-+const u8 ath11k_rx_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	0, 0, 0, 0, 0, 0, 0,
-+	ATH11K_RX_RING_MASK_0,
-+	ATH11K_RX_RING_MASK_1,
-+	ATH11K_RX_RING_MASK_2,
-+	ATH11K_RX_RING_MASK_3,
-+};
-+
-+const u8 ath11k_rx_err_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	ATH11K_RX_ERR_RING_MASK_0,
-+	ATH11K_RX_ERR_RING_MASK_1,
-+	ATH11K_RX_ERR_RING_MASK_2,
-+	ATH11K_RX_ERR_RING_MASK_3,
-+};
-+
-+const u8 ath11k_rx_wbm_rel_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	ATH11K_RX_WBM_REL_RING_MASK_0,
-+	ATH11K_RX_WBM_REL_RING_MASK_1,
-+	ATH11K_RX_WBM_REL_RING_MASK_2,
-+	ATH11K_RX_WBM_REL_RING_MASK_3,
-+};
-+
-+const u8 ath11k_reo_status_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	ATH11K_REO_STATUS_RING_MASK_0,
-+	ATH11K_REO_STATUS_RING_MASK_1,
-+	ATH11K_REO_STATUS_RING_MASK_2,
-+	ATH11K_REO_STATUS_RING_MASK_3,
-+};
-+
-+const u8 ath11k_rxdma2host_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	ATH11K_RXDMA2HOST_RING_MASK_0,
-+	ATH11K_RXDMA2HOST_RING_MASK_1,
-+	ATH11K_RXDMA2HOST_RING_MASK_2,
-+	ATH11K_RXDMA2HOST_RING_MASK_3,
-+};
-+
-+const u8 ath11k_host2rxdma_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX] = {
-+	ATH11K_HOST2RXDMA_RING_MASK_0,
-+	ATH11K_HOST2RXDMA_RING_MASK_1,
-+	ATH11K_HOST2RXDMA_RING_MASK_2,
-+	ATH11K_HOST2RXDMA_RING_MASK_3,
-+};
-+
-+/* enum ext_irq_num - irq nubers that can be used by external modules
-+ * like datapath
-+ */
-+enum ext_irq_num {
-+	host2wbm_desc_feed = 16,
-+	host2reo_re_injection,
-+	host2reo_command,
-+	host2rxdma_monitor_ring3,
-+	host2rxdma_monitor_ring2,
-+	host2rxdma_monitor_ring1,
-+	reo2host_exception,
-+	wbm2host_rx_release,
-+	reo2host_status,
-+	reo2host_destination_ring4,
-+	reo2host_destination_ring3,
-+	reo2host_destination_ring2,
-+	reo2host_destination_ring1,
-+	rxdma2host_monitor_destination_mac3,
-+	rxdma2host_monitor_destination_mac2,
-+	rxdma2host_monitor_destination_mac1,
-+	ppdu_end_interrupts_mac3,
-+	ppdu_end_interrupts_mac2,
-+	ppdu_end_interrupts_mac1,
-+	rxdma2host_monitor_status_ring_mac3,
-+	rxdma2host_monitor_status_ring_mac2,
-+	rxdma2host_monitor_status_ring_mac1,
-+	host2rxdma_host_buf_ring_mac3,
-+	host2rxdma_host_buf_ring_mac2,
-+	host2rxdma_host_buf_ring_mac1,
-+	rxdma2host_destination_ring_mac3,
-+	rxdma2host_destination_ring_mac2,
-+	rxdma2host_destination_ring_mac1,
-+	host2tcl_input_ring4,
-+	host2tcl_input_ring3,
-+	host2tcl_input_ring2,
-+	host2tcl_input_ring1,
-+	wbm2host_tx_completions_ring3,
-+	wbm2host_tx_completions_ring2,
-+	wbm2host_tx_completions_ring1,
-+	tcl2host_status_ring,
-+};
-+
-+inline u32 ath11k_ahb_read32(struct ath11k_base *ab, u32 offset)
-+{
-+	return ioread32(ab->mem + offset);
-+}
-+
-+inline void ath11k_ahb_write32(struct ath11k_base *ab, u32 offset, u32 value)
-+{
-+	iowrite32(value, ab->mem + offset);
-+}
-+
-+static void ath11k_ahb_kill_tasklets(struct ath11k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < CE_COUNT; i++) {
-+		struct ath11k_ce_pipe *ce_pipe = &ab->ce.ce_pipe[i];
-+
-+		if (ath11k_ce_get_attr_flags(i) & CE_ATTR_DIS_INTR)
-+			continue;
-+
-+		tasklet_kill(&ce_pipe->intr_tq);
-+	}
-+}
-+
-+static void ath11k_ahb_ext_grp_disable(struct ath11k_ext_irq_grp *irq_grp)
-+{
-+	int i;
-+
-+	for (i = 0; i < irq_grp->num_irq; i++)
-+		disable_irq_nosync(irq_grp->ab->irq_num[irq_grp->irqs[i]]);
-+}
-+
-+static void __ath11k_ahb_ext_irq_disable(struct ath11k_base *ab)
-+{
-+	struct sk_buff *skb;
-+	int i;
-+
-+	for (i = 0; i < ATH11K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath11k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+
-+		ath11k_ahb_ext_grp_disable(irq_grp);
-+
-+		napi_synchronize(&irq_grp->napi);
-+		napi_disable(&irq_grp->napi);
-+
-+		while ((skb = __skb_dequeue(&irq_grp->pending_q)))
-+			dev_kfree_skb_any(skb);
-+	}
-+}
-+
-+static void ath11k_ahb_ext_grp_enable(struct ath11k_ext_irq_grp *irq_grp)
-+{
-+	int i;
-+
-+	for (i = 0; i < irq_grp->num_irq; i++)
-+		enable_irq(irq_grp->ab->irq_num[irq_grp->irqs[i]]);
-+}
-+
-+static void ath11k_ahb_ce_irq_enable(struct ath11k_base *ab, u16 ce_id)
-+{
-+	const struct ce_pipe_config *ce_config;
-+	u32 val;
-+
-+	ce_config = &target_ce_config_wlan[ce_id];
-+	if (__le32_to_cpu(ce_config->pipedir) & PIPEDIR_OUT) {
-+		val = ath11k_ahb_read32(ab, CE_HOST_IE_ADDRESS);
-+		val |= BIT(ce_id);
-+		ath11k_ahb_write32(ab, CE_HOST_IE_ADDRESS, val);
-+	}
-+
-+	if (__le32_to_cpu(ce_config->pipedir) & PIPEDIR_IN) {
-+		val = ath11k_ahb_read32(ab, CE_HOST_IE_2_ADDRESS);
-+		val |= BIT(ce_id);
-+		ath11k_ahb_write32(ab, CE_HOST_IE_2_ADDRESS, val);
-+
-+		val = ath11k_ahb_read32(ab, CE_HOST_IE_3_ADDRESS);
-+		val |= BIT(ce_id + CE_HOST_IE_3_SHIFT);
-+		ath11k_ahb_write32(ab, CE_HOST_IE_3_ADDRESS, val);
-+	}
-+}
-+
-+static void ath11k_ahb_ce_irq_disable(struct ath11k_base *ab, u16 ce_id)
-+{
-+	const struct ce_pipe_config *ce_config;
-+	u32 val;
-+
-+	ce_config = &target_ce_config_wlan[ce_id];
-+	if (__le32_to_cpu(ce_config->pipedir) & PIPEDIR_OUT) {
-+		val = ath11k_ahb_read32(ab, CE_HOST_IE_ADDRESS);
-+		val &= ~BIT(ce_id);
-+		ath11k_ahb_write32(ab, CE_HOST_IE_ADDRESS, val);
-+	}
-+
-+	if (__le32_to_cpu(ce_config->pipedir) & PIPEDIR_IN) {
-+		val = ath11k_ahb_read32(ab, CE_HOST_IE_2_ADDRESS);
-+		val &= ~BIT(ce_id);
-+		ath11k_ahb_write32(ab, CE_HOST_IE_2_ADDRESS, val);
-+
-+		val = ath11k_ahb_read32(ab, CE_HOST_IE_3_ADDRESS);
-+		val &= ~BIT(ce_id + CE_HOST_IE_3_SHIFT);
-+		ath11k_ahb_write32(ab, CE_HOST_IE_3_ADDRESS, val);
-+	}
-+}
-+
-+static void ath11k_ahb_sync_ce_irqs(struct ath11k_base *ab)
-+{
-+	int i;
-+	int irq_idx;
-+
-+	for (i = 0; i < CE_COUNT; i++) {
-+		if (ath11k_ce_get_attr_flags(i) & CE_ATTR_DIS_INTR)
-+			continue;
-+
-+		irq_idx = ATH11K_IRQ_CE0_OFFSET + i;
-+		synchronize_irq(ab->irq_num[irq_idx]);
-+	}
-+}
-+
-+static void ath11k_ahb_sync_ext_irqs(struct ath11k_base *ab)
-+{
-+	int i, j;
-+	int irq_idx;
-+
-+	for (i = 0; i < ATH11K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath11k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+
-+		for (j = 0; j < irq_grp->num_irq; j++) {
-+			irq_idx = irq_grp->irqs[j];
-+			synchronize_irq(ab->irq_num[irq_idx]);
-+		}
-+	}
-+}
-+
-+static void ath11k_ahb_ce_irqs_enable(struct ath11k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < CE_COUNT; i++) {
-+		if (ath11k_ce_get_attr_flags(i) & CE_ATTR_DIS_INTR)
-+			continue;
-+		ath11k_ahb_ce_irq_enable(ab, i);
-+	}
-+}
-+
-+static void ath11k_ahb_ce_irqs_disable(struct ath11k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < CE_COUNT; i++) {
-+		if (ath11k_ce_get_attr_flags(i) & CE_ATTR_DIS_INTR)
-+			continue;
-+		ath11k_ahb_ce_irq_disable(ab, i);
-+	}
-+}
-+
-+int ath11k_ahb_start(struct ath11k_base *ab)
-+{
-+	ath11k_ahb_ce_irqs_enable(ab);
-+	ath11k_ce_rx_post_buf(ab);
-+
-+	/* Bring up other components as appropriate */
-+
-+	return 0;
-+}
-+
-+void ath11k_ahb_ext_irq_enable(struct ath11k_base *ab)
-+{
-+	int i;
-+
-+	for (i = 0; i < ATH11K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath11k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+
-+		napi_enable(&irq_grp->napi);
-+		ath11k_ahb_ext_grp_enable(irq_grp);
-+	}
-+}
-+
-+void ath11k_ahb_ext_irq_disable(struct ath11k_base *ab)
-+{
-+	__ath11k_ahb_ext_irq_disable(ab);
-+	ath11k_ahb_sync_ext_irqs(ab);
-+}
-+
-+void ath11k_ahb_stop(struct ath11k_base *ab)
-+{
-+	if (!test_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags))
-+		ath11k_ahb_ce_irqs_disable(ab);
-+	ath11k_ahb_sync_ce_irqs(ab);
-+	ath11k_ahb_kill_tasklets(ab);
-+	del_timer_sync(&ab->rx_replenish_retry);
-+	ath11k_ce_cleanup_pipes(ab);
-+	/* Shutdown other components as appropriate */
-+}
-+
-+int ath11k_ahb_power_up(struct ath11k_base *ab)
-+{
-+	int ret;
-+
-+	ret = rproc_boot(ab->tgt_rproc);
-+	if (ret)
-+		ath11k_err(ab, "failed to boot the remote processor Q6\n");
-+
-+	return ret;
-+}
-+
-+void ath11k_ahb_power_down(struct ath11k_base *ab)
-+{
-+	rproc_shutdown(ab->tgt_rproc);
-+}
-+
-+static void ath11k_ahb_init_qmi_ce_config(struct ath11k_base *ab)
-+{
-+	struct ath11k_qmi_ce_cfg *cfg = &ab->qmi.ce_cfg;
-+
-+	cfg->tgt_ce = (u8 *)target_ce_config_wlan;
-+	cfg->tgt_ce_len = sizeof(target_ce_config_wlan);
-+
-+	cfg->svc_to_ce_map = (u8 *)target_service_to_ce_map_wlan;
-+	cfg->svc_to_ce_map_len = sizeof(target_service_to_ce_map_wlan);
-+}
-+
-+static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
-+{
-+	int i, j;
-+
-+	for (i = 0; i < ATH11K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath11k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+
-+		for (j = 0; j < irq_grp->num_irq; j++)
-+			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
-+	}
-+}
-+
-+static void ath11k_ahb_free_irq(struct ath11k_base *ab)
-+{
-+	int irq_idx;
-+	int i;
-+
-+	for (i = 0; i < CE_COUNT; i++) {
-+		if (ath11k_ce_get_attr_flags(i) & CE_ATTR_DIS_INTR)
-+			continue;
-+		irq_idx = ATH11K_IRQ_CE0_OFFSET + i;
-+		free_irq(ab->irq_num[irq_idx], &ab->ce.ce_pipe[i]);
-+	}
-+
-+	ath11k_ahb_free_ext_irq(ab);
-+}
-+
-+static void ath11k_ahb_ce_tasklet(unsigned long data)
-+{
-+	struct ath11k_ce_pipe *ce_pipe = (struct ath11k_ce_pipe *)data;
-+
-+	ath11k_ce_per_engine_service(ce_pipe->ab, ce_pipe->pipe_num);
-+
-+	ath11k_ahb_ce_irq_enable(ce_pipe->ab, ce_pipe->pipe_num);
-+}
-+
-+static irqreturn_t ath11k_ahb_ce_interrupt_handler(int irq, void *arg)
-+{
-+	struct ath11k_ce_pipe *ce_pipe = arg;
-+
-+	ath11k_ahb_ce_irq_disable(ce_pipe->ab, ce_pipe->pipe_num);
-+
-+	tasklet_schedule(&ce_pipe->intr_tq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ath11k_ahb_ext_grp_napi_poll(struct napi_struct *napi, int budget)
-+{
-+	struct ath11k_ext_irq_grp *irq_grp = container_of(napi,
-+						struct ath11k_ext_irq_grp,
-+						napi);
-+	struct ath11k_base *ab = irq_grp->ab;
-+	int work_done;
-+
-+	work_done = ath11k_dp_service_srng(ab, irq_grp, budget);
-+	if (work_done < budget) {
-+		napi_complete_done(napi, work_done);
-+		ath11k_ahb_ext_grp_enable(irq_grp);
-+	}
-+
-+	if (work_done > budget)
-+		work_done = budget;
-+
-+	return work_done;
-+}
-+
-+static irqreturn_t ath11k_ahb_ext_interrupt_handler(int irq, void *arg)
-+{
-+	struct ath11k_ext_irq_grp *irq_grp = arg;
-+
-+	ath11k_ahb_ext_grp_disable(irq_grp);
-+
-+	napi_schedule(&irq_grp->napi);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ath11k_ahb_ext_irq_config(struct ath11k_base *ab)
-+{
-+	int i, j;
-+	int irq;
-+	int ret;
-+
-+	for (i = 0; i < ATH11K_EXT_IRQ_GRP_NUM_MAX; i++) {
-+		struct ath11k_ext_irq_grp *irq_grp = &ab->ext_irq_grp[i];
-+		u32 num_irq = 0;
-+
-+		irq_grp->ab = ab;
-+		irq_grp->grp_id = i;
-+		init_dummy_netdev(&irq_grp->napi_ndev);
-+		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
-+			       ath11k_ahb_ext_grp_napi_poll, NAPI_POLL_WEIGHT);
-+		__skb_queue_head_init(&irq_grp->pending_q);
-+
-+		for (j = 0; j < ATH11K_EXT_IRQ_NUM_MAX; j++) {
-+			if (ath11k_tx_ring_mask[i] & BIT(j)) {
-+				irq_grp->irqs[num_irq++] =
-+					wbm2host_tx_completions_ring1 - j;
-+			}
-+
-+			if (ath11k_rx_ring_mask[i] & BIT(j)) {
-+				irq_grp->irqs[num_irq++] =
-+					reo2host_destination_ring1 - j;
-+			}
-+
-+			if (ath11k_rx_err_ring_mask[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] = reo2host_exception;
-+
-+			if (ath11k_rx_wbm_rel_ring_mask[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] = wbm2host_rx_release;
-+
-+			if (ath11k_reo_status_ring_mask[i] & BIT(j))
-+				irq_grp->irqs[num_irq++] = reo2host_status;
-+
-+			if (j < MAX_RADIOS) {
-+				if (ath11k_rxdma2host_ring_mask[i] & BIT(j)) {
-+					irq_grp->irqs[num_irq++] =
-+						rxdma2host_destination_ring_mac1
-+						- ath11k_core_get_hw_mac_id(ab, j);
-+				}
-+
-+				if (ath11k_host2rxdma_ring_mask[i] & BIT(j)) {
-+					irq_grp->irqs[num_irq++] =
-+						host2rxdma_host_buf_ring_mac1
-+						- ath11k_core_get_hw_mac_id(ab, j);
-+				}
-+
-+				if (rx_mon_status_ring_mask[i] & BIT(j)) {
-+					irq_grp->irqs[num_irq++] =
-+						ppdu_end_interrupts_mac1 -
-+						ath11k_core_get_hw_mac_id(ab, j);
-+					irq_grp->irqs[num_irq++] =
-+						rxdma2host_monitor_status_ring_mac1 -
-+						ath11k_core_get_hw_mac_id(ab, j);
-+				}
-+			}
-+		}
-+		irq_grp->num_irq = num_irq;
-+
-+		for (j = 0; j < irq_grp->num_irq; j++) {
-+			int irq_idx = irq_grp->irqs[j];
-+
-+			irq = platform_get_irq_byname(ab->pdev,
-+						      irq_name[irq_idx]);
-+			ab->irq_num[irq_idx] = irq;
-+			irq_set_status_flags(irq, IRQ_NOAUTOEN);
-+			ret = request_irq(irq, ath11k_ahb_ext_interrupt_handler,
-+					  IRQF_TRIGGER_RISING,
-+					  irq_name[irq_idx], irq_grp);
-+			if (ret) {
-+				ath11k_err(ab, "failed request_irq for %d\n",
-+					   irq);
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int ath11k_ahb_config_irq(struct ath11k_base *ab)
-+{
-+	int irq, irq_idx, i;
-+	int ret;
-+
-+	/* Configure CE irqs */
-+	for (i = 0; i < CE_COUNT; i++) {
-+		struct ath11k_ce_pipe *ce_pipe = &ab->ce.ce_pipe[i];
-+
-+		if (ath11k_ce_get_attr_flags(i) & CE_ATTR_DIS_INTR)
-+			continue;
-+
-+		irq_idx = ATH11K_IRQ_CE0_OFFSET + i;
-+
-+		tasklet_init(&ce_pipe->intr_tq, ath11k_ahb_ce_tasklet,
-+			     (unsigned long)ce_pipe);
-+		irq = platform_get_irq_byname(ab->pdev, irq_name[irq_idx]);
-+		ret = request_irq(irq, ath11k_ahb_ce_interrupt_handler,
-+				  IRQF_TRIGGER_RISING, irq_name[irq_idx],
-+				  ce_pipe);
-+		if (ret)
-+			return ret;
-+
-+		ab->irq_num[irq_idx] = irq;
-+	}
-+
-+	/* Configure external interrupts */
-+	ret = ath11k_ahb_ext_irq_config(ab);
-+
-+	return ret;
-+}
-+
-+int ath11k_ahb_map_service_to_pipe(struct ath11k_base *ab, u16 service_id,
-+				   u8 *ul_pipe, u8 *dl_pipe)
-+{
-+	const struct service_to_pipe *entry;
-+	bool ul_set = false, dl_set = false;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan); i++) {
-+		entry = &target_service_to_ce_map_wlan[i];
-+
-+		if (__le32_to_cpu(entry->service_id) != service_id)
-+			continue;
-+
-+		switch (__le32_to_cpu(entry->pipedir)) {
-+		case PIPEDIR_NONE:
-+			break;
-+		case PIPEDIR_IN:
-+			WARN_ON(dl_set);
-+			*dl_pipe = __le32_to_cpu(entry->pipenum);
-+			dl_set = true;
-+			break;
-+		case PIPEDIR_OUT:
-+			WARN_ON(ul_set);
-+			*ul_pipe = __le32_to_cpu(entry->pipenum);
-+			ul_set = true;
-+			break;
-+		case PIPEDIR_INOUT:
-+			WARN_ON(dl_set);
-+			WARN_ON(ul_set);
-+			*dl_pipe = __le32_to_cpu(entry->pipenum);
-+			*ul_pipe = __le32_to_cpu(entry->pipenum);
-+			dl_set = true;
-+			ul_set = true;
-+			break;
-+		}
-+	}
-+
-+	if (WARN_ON(!ul_set || !dl_set))
-+		return -ENOENT;
-+
-+	return 0;
-+}
-+
-+static int ath11k_ahb_probe(struct platform_device *pdev)
-+{
++#define ATH11K_IRQ_NUM_MAX 52
++#define ATH11K_EXT_IRQ_GRP_NUM_MAX 11
++#define ATH11K_EXT_IRQ_NUM_MAX	16
++
++extern const u8 ath11k_reo_status_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 ath11k_tx_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 ath11k_rx_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 ath11k_rx_err_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 ath11k_rx_wbm_rel_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 ath11k_rxdma2host_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 ath11k_host2rxdma_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++extern const u8 rx_mon_status_ring_mask[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++
++struct ath11k_ext_irq_grp {
 +	struct ath11k_base *ab;
-+	const struct of_device_id *of_id;
-+	struct resource *mem_res;
-+	void __iomem *mem;
-+	int ret;
-+
-+	of_id = of_match_device(ath11k_ahb_of_match, &pdev->dev);
-+	if (!of_id) {
-+		dev_err(&pdev->dev, "failed to find matching device tree id\n");
-+		return -EINVAL;
-+	}
-+
-+	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem_res) {
-+		dev_err(&pdev->dev, "failed to get IO memory resource\n");
-+		return -ENXIO;
-+	}
-+
-+	mem = devm_ioremap_resource(&pdev->dev, mem_res);
-+	if (IS_ERR(mem)) {
-+		dev_err(&pdev->dev, "ioremap error\n");
-+		return PTR_ERR(mem);
-+	}
-+
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to set 32-bit consistent dma\n");
-+		return ret;
-+	}
-+
-+	ab = ath11k_core_alloc(&pdev->dev);
-+	if (!ab) {
-+		dev_err(&pdev->dev, "failed to allocate ath11k base\n");
-+		return -ENOMEM;
-+	}
-+
-+	ab->pdev = pdev;
-+	ab->hw_rev = (enum ath11k_hw_rev)of_id->data;
-+	ab->mem = mem;
-+	ab->mem_len = resource_size(mem_res);
-+	platform_set_drvdata(pdev, ab);
-+
-+	ret = ath11k_hal_srng_init(ab);
-+	if (ret)
-+		goto err_core_free;
-+
-+	ret = ath11k_ce_alloc_pipes(ab);
-+	if (ret) {
-+		ath11k_err(ab, "failed to allocate ce pipes: %d\n", ret);
-+		goto err_hal_srng_deinit;
-+	}
-+
-+	ath11k_ahb_init_qmi_ce_config(ab);
-+
-+	ret = ath11k_ahb_config_irq(ab);
-+	if (ret) {
-+		ath11k_err(ab, "failed to configure irq: %d\n", ret);
-+		goto err_ce_free;
-+	}
-+
-+	ret = ath11k_core_init(ab);
-+	if (ret) {
-+		ath11k_err(ab, "failed to init core: %d\n", ret);
-+		goto err_ce_free;
-+	}
-+
-+	return 0;
-+
-+err_ce_free:
-+	ath11k_ce_free_pipes(ab);
-+
-+err_hal_srng_deinit:
-+	ath11k_hal_srng_deinit(ab);
-+
-+err_core_free:
-+	ath11k_core_free(ab);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return ret;
-+}
-+
-+static int ath11k_ahb_remove(struct platform_device *pdev)
-+{
-+	struct ath11k_base *ab = platform_get_drvdata(pdev);
-+
-+	reinit_completion(&ab->driver_recovery);
-+
-+	if (test_bit(ATH11K_FLAG_RECOVERY, &ab->dev_flags))
-+		wait_for_completion_timeout(&ab->driver_recovery,
-+					    ATH11K_AHB_RECOVERY_TIMEOUT);
-+
-+	set_bit(ATH11K_FLAG_UNREGISTERING, &ab->dev_flags);
-+	cancel_work_sync(&ab->restart_work);
-+
-+	ath11k_core_deinit(ab);
-+	ath11k_ahb_free_irq(ab);
-+
-+	ath11k_hal_srng_deinit(ab);
-+	ath11k_ce_free_pipes(ab);
-+	ath11k_core_free(ab);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ath11k_ahb_driver = {
-+	.driver         = {
-+		.name   = "ath11k",
-+		.of_match_table = ath11k_ahb_of_match,
-+	},
-+	.probe  = ath11k_ahb_probe,
-+	.remove = ath11k_ahb_remove,
++	u32 irqs[ATH11K_EXT_IRQ_NUM_MAX];
++	u32 num_irq;
++	u32 grp_id;
++	struct napi_struct napi;
++	struct net_device napi_ndev;
++	/* Queue of pending packets, not expected to be accessed concurrently
++	 * to avoid locking overhead.
++	 */
++	struct sk_buff_head pending_q;
 +};
 +
-+int ath11k_ahb_init(void)
++#define HEHANDLE_CAP_PHYINFO_SIZE       3
++#define HECAP_PHYINFO_SIZE              9
++#define HECAP_MACINFO_SIZE              5
++#define HECAP_TXRX_MCS_NSS_SIZE         2
++#define HECAP_PPET16_PPET8_MAX_SIZE     25
++
++#define HE_PPET16_PPET8_SIZE            8
++
++/* 802.11ax PPE (PPDU packet Extension) threshold */
++struct he_ppe_threshold {
++	u32 numss_m1;
++	u32 ru_mask;
++	u32 ppet16_ppet8_ru3_ru0[HE_PPET16_PPET8_SIZE];
++};
++
++struct ath11k_he {
++	u8 hecap_macinfo[HECAP_MACINFO_SIZE];
++	u32 hecap_rxmcsnssmap;
++	u32 hecap_txmcsnssmap;
++	u32 hecap_phyinfo[HEHANDLE_CAP_PHYINFO_SIZE];
++	struct he_ppe_threshold   hecap_ppet;
++	u32 heop_param;
++};
++
++#define MAX_RADIOS 3
++
++enum {
++	WMI_HOST_TP_SCALE_MAX   = 0,
++	WMI_HOST_TP_SCALE_50    = 1,
++	WMI_HOST_TP_SCALE_25    = 2,
++	WMI_HOST_TP_SCALE_12    = 3,
++	WMI_HOST_TP_SCALE_MIN   = 4,
++	WMI_HOST_TP_SCALE_SIZE   = 5,
++};
++
++enum ath11k_scan_state {
++	ATH11K_SCAN_IDLE,
++	ATH11K_SCAN_STARTING,
++	ATH11K_SCAN_RUNNING,
++	ATH11K_SCAN_ABORTING,
++};
++
++enum ath11k_dev_flags {
++	ATH11K_CAC_RUNNING,
++	ATH11K_FLAG_CORE_REGISTERED,
++	ATH11K_FLAG_CRASH_FLUSH,
++	ATH11K_FLAG_RAW_MODE,
++	ATH11K_FLAG_HW_CRYPTO_DISABLED,
++	ATH11K_FLAG_BTCOEX,
++	ATH11K_FLAG_RECOVERY,
++	ATH11K_FLAG_UNREGISTERING,
++	ATH11K_FLAG_REGISTERED,
++};
++
++enum ath11k_monitor_flags {
++	ATH11K_FLAG_MONITOR_ENABLED,
++};
++
++struct ath11k_vif {
++	u32 vdev_id;
++	enum wmi_vdev_type vdev_type;
++	enum wmi_vdev_subtype vdev_subtype;
++	u32 beacon_interval;
++	u32 dtim_period;
++	u16 ast_hash;
++	u16 tcl_metadata;
++	u8 hal_addr_search_flags;
++	u8 search_type;
++
++	struct ath11k *ar;
++	struct ieee80211_vif *vif;
++
++	u16 tx_seq_no;
++	struct wmi_wmm_params_all_arg wmm_params;
++	struct list_head list;
++	union {
++		struct {
++			u32 uapsd;
++		} sta;
++		struct {
++			/* 127 stations; wmi limit */
++			u8 tim_bitmap[16];
++			u8 tim_len;
++			u32 ssid_len;
++			u8 ssid[IEEE80211_MAX_SSID_LEN];
++			bool hidden_ssid;
++			/* P2P_IE with NoA attribute for P2P_GO case */
++			u32 noa_len;
++			u8 *noa_data;
++		} ap;
++	} u;
++
++	bool is_started;
++	bool is_up;
++	u32 aid;
++	u8 bssid[ETH_ALEN];
++	struct cfg80211_bitrate_mask bitrate_mask;
++	int num_legacy_stations;
++	int rtscts_prot_mode;
++	int txpower;
++};
++
++struct ath11k_vif_iter {
++	u32 vdev_id;
++	struct ath11k_vif *arvif;
++};
++
++struct ath11k_rx_peer_stats {
++	u64 num_msdu;
++	u64 num_mpdu_fcs_ok;
++	u64 num_mpdu_fcs_err;
++	u64 tcp_msdu_count;
++	u64 udp_msdu_count;
++	u64 other_msdu_count;
++	u64 ampdu_msdu_count;
++	u64 non_ampdu_msdu_count;
++	u64 stbc_count;
++	u64 beamformed_count;
++	u64 mcs_count[HAL_RX_MAX_MCS + 1];
++	u64 nss_count[HAL_RX_MAX_NSS];
++	u64 bw_count[HAL_RX_BW_MAX];
++	u64 gi_count[HAL_RX_GI_MAX];
++	u64 coding_count[HAL_RX_SU_MU_CODING_MAX];
++	u64 tid_count[IEEE80211_NUM_TIDS + 1];
++	u64 pream_cnt[HAL_RX_PREAMBLE_MAX];
++	u64 reception_type[HAL_RX_RECEPTION_TYPE_MAX];
++	u64 rx_duration;
++};
++
++#define ATH11K_HE_MCS_NUM       12
++#define ATH11K_VHT_MCS_NUM      10
++#define ATH11K_BW_NUM           4
++#define ATH11K_NSS_NUM          4
++#define ATH11K_LEGACY_NUM       12
++#define ATH11K_GI_NUM           4
++#define ATH11K_HT_MCS_NUM       32
++
++enum ath11k_pkt_rx_err {
++	ATH11K_PKT_RX_ERR_FCS,
++	ATH11K_PKT_RX_ERR_TKIP,
++	ATH11K_PKT_RX_ERR_CRYPT,
++	ATH11K_PKT_RX_ERR_PEER_IDX_INVAL,
++	ATH11K_PKT_RX_ERR_MAX,
++};
++
++enum ath11k_ampdu_subfrm_num {
++	ATH11K_AMPDU_SUBFRM_NUM_10,
++	ATH11K_AMPDU_SUBFRM_NUM_20,
++	ATH11K_AMPDU_SUBFRM_NUM_30,
++	ATH11K_AMPDU_SUBFRM_NUM_40,
++	ATH11K_AMPDU_SUBFRM_NUM_50,
++	ATH11K_AMPDU_SUBFRM_NUM_60,
++	ATH11K_AMPDU_SUBFRM_NUM_MORE,
++	ATH11K_AMPDU_SUBFRM_NUM_MAX,
++};
++
++enum ath11k_amsdu_subfrm_num {
++	ATH11K_AMSDU_SUBFRM_NUM_1,
++	ATH11K_AMSDU_SUBFRM_NUM_2,
++	ATH11K_AMSDU_SUBFRM_NUM_3,
++	ATH11K_AMSDU_SUBFRM_NUM_4,
++	ATH11K_AMSDU_SUBFRM_NUM_MORE,
++	ATH11K_AMSDU_SUBFRM_NUM_MAX,
++};
++
++enum ath11k_counter_type {
++	ATH11K_COUNTER_TYPE_BYTES,
++	ATH11K_COUNTER_TYPE_PKTS,
++	ATH11K_COUNTER_TYPE_MAX,
++};
++
++enum ath11k_stats_type {
++	ATH11K_STATS_TYPE_SUCC,
++	ATH11K_STATS_TYPE_FAIL,
++	ATH11K_STATS_TYPE_RETRY,
++	ATH11K_STATS_TYPE_AMPDU,
++	ATH11K_STATS_TYPE_MAX,
++};
++
++struct ath11k_htt_data_stats {
++	u64 legacy[ATH11K_COUNTER_TYPE_MAX][ATH11K_LEGACY_NUM];
++	u64 ht[ATH11K_COUNTER_TYPE_MAX][ATH11K_HT_MCS_NUM];
++	u64 vht[ATH11K_COUNTER_TYPE_MAX][ATH11K_VHT_MCS_NUM];
++	u64 he[ATH11K_COUNTER_TYPE_MAX][ATH11K_HE_MCS_NUM];
++	u64 bw[ATH11K_COUNTER_TYPE_MAX][ATH11K_BW_NUM];
++	u64 nss[ATH11K_COUNTER_TYPE_MAX][ATH11K_NSS_NUM];
++	u64 gi[ATH11K_COUNTER_TYPE_MAX][ATH11K_GI_NUM];
++};
++
++struct ath11k_htt_tx_stats {
++	struct ath11k_htt_data_stats stats[ATH11K_STATS_TYPE_MAX];
++	u64 tx_duration;
++	u64 ba_fails;
++	u64 ack_fails;
++};
++
++struct ath11k_per_ppdu_tx_stats {
++	u16 succ_pkts;
++	u16 failed_pkts;
++	u16 retry_pkts;
++	u32 succ_bytes;
++	u32 failed_bytes;
++	u32 retry_bytes;
++};
++
++struct ath11k_sta {
++	struct ath11k_vif *arvif;
++
++	/* the following are protected by ar->data_lock */
++	u32 changed; /* IEEE80211_RC_* */
++	u32 bw;
++	u32 nss;
++	u32 smps;
++
++	struct work_struct update_wk;
++	struct ieee80211_tx_info tx_info;
++	struct rate_info txrate;
++	struct rate_info last_txrate;
++	u64 rx_duration;
++	u8 rssi_comb;
++	struct ath11k_htt_tx_stats *tx_stats;
++	struct ath11k_rx_peer_stats *rx_stats;
++};
++
++#define ATH11K_NUM_CHANS 41
++#define ATH11K_MAX_5G_CHAN 173
++
++enum ath11k_state {
++	ATH11K_STATE_OFF,
++	ATH11K_STATE_ON,
++	ATH11K_STATE_RESTARTING,
++	ATH11K_STATE_RESTARTED,
++	ATH11K_STATE_WEDGED,
++	/* Add other states as required */
++};
++
++/* Antenna noise floor */
++#define ATH11K_DEFAULT_NOISE_FLOOR -95
++
++struct ath11k_fw_stats {
++	struct dentry *debugfs_fwstats;
++	u32 pdev_id;
++	u32 stats_id;
++	struct list_head pdevs;
++	struct list_head vdevs;
++	struct list_head bcn;
++};
++
++struct ath11k_dbg_htt_stats {
++	u8 type;
++	u8 reset;
++	struct debug_htt_stats_req *stats_req;
++	/* protects shared stats req buffer */
++	spinlock_t lock;
++};
++
++struct ath11k_debug {
++	struct dentry *debugfs_pdev;
++	struct ath11k_dbg_htt_stats htt_stats;
++	u32 extd_tx_stats;
++	struct ath11k_fw_stats fw_stats;
++	struct completion fw_stats_complete;
++	bool fw_stats_done;
++	u32 extd_rx_stats;
++	u32 pktlog_filter;
++	u32 pktlog_mode;
++	u32 pktlog_peer_valid;
++	u8 pktlog_peer_addr[ETH_ALEN];
++};
++
++struct ath11k_per_peer_tx_stats {
++	u32 succ_bytes;
++	u32 retry_bytes;
++	u32 failed_bytes;
++	u16 succ_pkts;
++	u16 retry_pkts;
++	u16 failed_pkts;
++	u32 duration;
++	u8 ba_fails;
++	bool is_ampdu;
++};
++
++#define ATH11K_FLUSH_TIMEOUT (5 * HZ)
++
++struct ath11k_vdev_stop_status {
++	bool stop_in_progress;
++	u32  vdev_id;
++};
++
++struct ath11k {
++	struct ath11k_base *ab;
++	struct ath11k_pdev *pdev;
++	struct ieee80211_hw *hw;
++	struct ieee80211_ops *ops;
++	struct ath11k_pdev_wmi *wmi;
++	struct ath11k_pdev_dp dp;
++	u8 mac_addr[ETH_ALEN];
++	u32 ht_cap_info;
++	u32 vht_cap_info;
++	struct ath11k_he ar_he;
++	enum ath11k_state state;
++	struct {
++		struct completion started;
++		struct completion completed;
++		struct completion on_channel;
++		struct delayed_work timeout;
++		enum ath11k_scan_state state;
++		bool is_roc;
++		int vdev_id;
++		int roc_freq;
++		bool roc_notify;
++	} scan;
++
++	struct {
++		struct ieee80211_supported_band sbands[NUM_NL80211_BANDS];
++	} mac;
++	unsigned long dev_flags;
++	unsigned int filter_flags;
++	unsigned long monitor_flags;
++	u32 min_tx_power;
++	u32 max_tx_power;
++	u32 txpower_limit_2g;
++	u32 txpower_limit_5g;
++	u32 txpower_scale;
++	u32 power_scale;
++	u32 chan_tx_pwr;
++	u32 num_stations;
++	u32 max_num_stations;
++	bool monitor_present;
++	/* To synchronize concurrent synchronous mac80211 callback operations,
++	 * concurrent debugfs configuration and concurrent FW statistics events.
++	 */
++	struct mutex conf_mutex;
++	/* protects the radio specific data like debug stats, ppdu_stats_info stats,
++	 * vdev_stop_status info, scan data, ath11k_sta info, ath11k_vif info,
++	 * channel context data, survey info, test mode data.
++	 */
++	spinlock_t data_lock;
++
++	struct list_head arvifs;
++	/* should never be NULL; needed for regular htt rx */
++	struct ieee80211_channel *rx_channel;
++
++	/* valid during scan; needed for mgmt rx during scan */
++	struct ieee80211_channel *scan_channel;
++
++	u8 cfg_tx_chainmask;
++	u8 cfg_rx_chainmask;
++	u8 num_rx_chains;
++	u8 num_tx_chains;
++	/* pdev_idx starts from 0 whereas pdev->pdev_id starts with 1 */
++	u8 pdev_idx;
++	u8 lmac_id;
++
++	struct completion peer_assoc_done;
++
++	int install_key_status;
++	struct completion install_key_done;
++
++	int last_wmi_vdev_start_status;
++	struct ath11k_vdev_stop_status vdev_stop_status;
++	struct completion vdev_setup_done;
++
++	int num_peers;
++	int max_num_peers;
++	u32 num_started_vdevs;
++	u32 num_created_vdevs;
++
++	struct idr txmgmt_idr;
++	/* protects txmgmt_idr data */
++	spinlock_t txmgmt_idr_lock;
++	atomic_t num_pending_mgmt_tx;
++
++	/* cycle count is reported twice for each visited channel during scan.
++	 * access protected by data_lock
++	 */
++	u32 survey_last_rx_clear_count;
++	u32 survey_last_cycle_count;
++
++	/* Channel info events are expected to come in pairs without and with
++	 * COMPLETE flag set respectively for each channel visit during scan.
++	 *
++	 * However there are deviations from this rule. This flag is used to
++	 * avoid reporting garbage data.
++	 */
++	bool ch_info_can_report_survey;
++	struct survey_info survey[ATH11K_NUM_CHANS];
++	struct completion bss_survey_done;
++
++	struct work_struct regd_update_work;
++
++	struct work_struct wmi_mgmt_tx_work;
++	struct sk_buff_head wmi_mgmt_tx_queue;
++
++	struct ath11k_per_peer_tx_stats peer_tx_stats;
++	struct list_head ppdu_stats_info;
++	u32 ppdu_stat_list_depth;
++
++	struct ath11k_per_peer_tx_stats cached_stats;
++	u32 last_ppdu_id;
++	u32 cached_ppdu_id;
++#ifdef CONFIG_ATH11K_DEBUGFS
++	struct ath11k_debug debug;
++#endif
++	bool dfs_block_radar_events;
++};
++
++struct ath11k_band_cap {
++	u32 max_bw_supported;
++	u32 ht_cap_info;
++	u32 he_cap_info[2];
++	u32 he_mcs;
++	u32 he_cap_phy_info[PSOC_HOST_MAX_PHY_SIZE];
++	struct ath11k_ppe_threshold he_ppet;
++};
++
++struct ath11k_pdev_cap {
++	u32 supported_bands;
++	u32 ampdu_density;
++	u32 vht_cap;
++	u32 vht_mcs;
++	u32 he_mcs;
++	u32 tx_chain_mask;
++	u32 rx_chain_mask;
++	u32 tx_chain_mask_shift;
++	u32 rx_chain_mask_shift;
++	struct ath11k_band_cap band[NUM_NL80211_BANDS];
++};
++
++struct ath11k_pdev {
++	struct ath11k *ar;
++	u32 pdev_id;
++	struct ath11k_pdev_cap cap;
++	u8 mac_addr[ETH_ALEN];
++};
++
++struct ath11k_board_data {
++	const struct firmware *fw;
++	const void *data;
++	size_t len;
++};
++
++/* IPQ8074 HW channel counters frequency value in hertz */
++#define IPQ8074_CC_FREQ_HERTZ 320000
++
++struct ath11k_soc_dp_rx_stats {
++	u32 err_ring_pkts;
++	u32 invalid_rbm;
++	u32 rxdma_error[HAL_REO_ENTR_RING_RXDMA_ECODE_MAX];
++	u32 reo_error[HAL_REO_DEST_RING_ERROR_CODE_MAX];
++	u32 hal_reo_error[DP_REO_DST_RING_MAX];
++};
++
++/* Master structure to hold the hw data which may be used in core module */
++struct ath11k_base {
++	enum ath11k_hw_rev hw_rev;
++	struct platform_device *pdev;
++	struct device *dev;
++	struct ath11k_qmi qmi;
++	struct ath11k_wmi_base wmi_sc;
++	struct completion fw_ready;
++	struct rproc *tgt_rproc;
++	int num_radios;
++	/* HW channel counters frequency value in hertz common to all MACs */
++	u32 cc_freq_hz;
++
++	struct ath11k_htc htc;
++
++	struct ath11k_dp dp;
++
++	void __iomem *mem;
++	unsigned long mem_len;
++
++	const struct ath11k_hif_ops *hif_ops;
++
++	struct ath11k_ce ce;
++	struct timer_list rx_replenish_retry;
++	struct ath11k_hal hal;
++	/* To synchronize core_start/core_stop */
++	struct mutex core_lock;
++	/* Protects data like peers */
++	spinlock_t base_lock;
++	struct ath11k_pdev pdevs[MAX_RADIOS];
++	struct ath11k_pdev __rcu *pdevs_active[MAX_RADIOS];
++	struct ath11k_hal_reg_capabilities_ext hal_reg_cap[MAX_RADIOS];
++	unsigned long long free_vdev_map;
++	struct list_head peers;
++	wait_queue_head_t peer_mapping_wq;
++	u8 mac_addr[ETH_ALEN];
++	bool wmi_ready;
++	u32 wlan_init_status;
++	int irq_num[ATH11K_IRQ_NUM_MAX];
++	struct ath11k_ext_irq_grp ext_irq_grp[ATH11K_EXT_IRQ_GRP_NUM_MAX];
++	struct napi_struct *napi;
++	struct ath11k_targ_cap target_caps;
++	u32 ext_service_bitmap[WMI_SERVICE_EXT_BM_SIZE];
++	bool pdevs_macaddr_valid;
++	int bd_api;
++	struct ath11k_hw_params hw_params;
++	const struct firmware *cal_file;
++
++	/* Below regd's are protected by ab->data_lock */
++	/* This is the regd set for every radio
++	 * by the firmware during initializatin
++	 */
++	struct ieee80211_regdomain *default_regd[MAX_RADIOS];
++	/* This regd is set during dynamic country setting
++	 * This may or may not be used during the runtime
++	 */
++	struct ieee80211_regdomain *new_regd[MAX_RADIOS];
++
++	/* Current DFS Regulatory */
++	enum ath11k_dfs_region dfs_region;
++#ifdef CONFIG_ATH11K_DEBUGFS
++	struct dentry *debugfs_soc;
++#endif
++	struct ath11k_soc_dp_rx_stats soc_stats;
++
++	unsigned long dev_flags;
++	struct completion driver_recovery;
++	struct workqueue_struct *workqueue;
++	struct work_struct restart_work;
++	struct {
++		/* protected by data_lock */
++		u32 fw_crash_counter;
++	} stats;
++};
++
++struct ath11k_fw_stats_pdev {
++	struct list_head list;
++
++	/* PDEV stats */
++	s32 ch_noise_floor;
++	/* Cycles spent transmitting frames */
++	u32 tx_frame_count;
++	/* Cycles spent receiving frames */
++	u32 rx_frame_count;
++	/* Total channel busy time, evidently */
++	u32 rx_clear_count;
++	/* Total on-channel time */
++	u32 cycle_count;
++	u32 phy_err_count;
++	u32 chan_tx_power;
++	u32 ack_rx_bad;
++	u32 rts_bad;
++	u32 rts_good;
++	u32 fcs_bad;
++	u32 no_beacons;
++	u32 mib_int_count;
++
++	/* PDEV TX stats */
++	/* Num HTT cookies queued to dispatch list */
++	s32 comp_queued;
++	/* Num HTT cookies dispatched */
++	s32 comp_delivered;
++	/* Num MSDU queued to WAL */
++	s32 msdu_enqued;
++	/* Num MPDU queue to WAL */
++	s32 mpdu_enqued;
++	/* Num MSDUs dropped by WMM limit */
++	s32 wmm_drop;
++	/* Num Local frames queued */
++	s32 local_enqued;
++	/* Num Local frames done */
++	s32 local_freed;
++	/* Num queued to HW */
++	s32 hw_queued;
++	/* Num PPDU reaped from HW */
++	s32 hw_reaped;
++	/* Num underruns */
++	s32 underrun;
++	/* Num PPDUs cleaned up in TX abort */
++	s32 tx_abort;
++	/* Num MPDUs requed by SW */
++	s32 mpdus_requed;
++	/* excessive retries */
++	u32 tx_ko;
++	/* data hw rate code */
++	u32 data_rc;
++	/* Scheduler self triggers */
++	u32 self_triggers;
++	/* frames dropped due to excessive sw retries */
++	u32 sw_retry_failure;
++	/* illegal rate phy errors	*/
++	u32 illgl_rate_phy_err;
++	/* wal pdev continuous xretry */
++	u32 pdev_cont_xretry;
++	/* wal pdev tx timeouts */
++	u32 pdev_tx_timeout;
++	/* wal pdev resets */
++	u32 pdev_resets;
++	/* frames dropped due to non-availability of stateless TIDs */
++	u32 stateless_tid_alloc_failure;
++	/* PhY/BB underrun */
++	u32 phy_underrun;
++	/* MPDU is more than txop limit */
++	u32 txop_ovf;
++
++	/* PDEV RX stats */
++	/* Cnts any change in ring routing mid-ppdu */
++	s32 mid_ppdu_route_change;
++	/* Total number of statuses processed */
++	s32 status_rcvd;
++	/* Extra frags on rings 0-3 */
++	s32 r0_frags;
++	s32 r1_frags;
++	s32 r2_frags;
++	s32 r3_frags;
++	/* MSDUs / MPDUs delivered to HTT */
++	s32 htt_msdus;
++	s32 htt_mpdus;
++	/* MSDUs / MPDUs delivered to local stack */
++	s32 loc_msdus;
++	s32 loc_mpdus;
++	/* AMSDUs that have more MSDUs than the status ring size */
++	s32 oversize_amsdu;
++	/* Number of PHY errors */
++	s32 phy_errs;
++	/* Number of PHY errors drops */
++	s32 phy_err_drop;
++	/* Number of mpdu errors - FCS, MIC, ENC etc. */
++	s32 mpdu_errs;
++};
++
++struct ath11k_fw_stats_vdev {
++	struct list_head list;
++
++	u32 vdev_id;
++	u32 beacon_snr;
++	u32 data_snr;
++	u32 num_tx_frames[WLAN_MAX_AC];
++	u32 num_rx_frames;
++	u32 num_tx_frames_retries[WLAN_MAX_AC];
++	u32 num_tx_frames_failures[WLAN_MAX_AC];
++	u32 num_rts_fail;
++	u32 num_rts_success;
++	u32 num_rx_err;
++	u32 num_rx_discard;
++	u32 num_tx_not_acked;
++	u32 tx_rate_history[MAX_TX_RATE_VALUES];
++	u32 beacon_rssi_history[MAX_TX_RATE_VALUES];
++};
++
++struct ath11k_fw_stats_bcn {
++	struct list_head list;
++
++	u32 vdev_id;
++	u32 tx_bcn_succ_cnt;
++	u32 tx_bcn_outage_cnt;
++};
++
++void ath11k_peer_unmap_event(struct ath11k_base *ab, u16 peer_id);
++void ath11k_peer_map_event(struct ath11k_base *ab, u8 vdev_id, u16 peer_id,
++			   u8 *mac_addr, u16 ast_hash);
++struct ath11k_peer *ath11k_peer_find(struct ath11k_base *ab, int vdev_id,
++				     const u8 *addr);
++struct ath11k_peer *ath11k_peer_find_by_addr(struct ath11k_base *ab,
++					     const u8 *addr);
++struct ath11k_peer *ath11k_peer_find_by_id(struct ath11k_base *ab, int peer_id);
++int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab);
++int ath11k_core_init(struct ath11k_base *ath11k);
++void ath11k_core_deinit(struct ath11k_base *ath11k);
++struct ath11k_base *ath11k_core_alloc(struct device *dev);
++void ath11k_core_free(struct ath11k_base *ath11k);
++int ath11k_core_fetch_bdf(struct ath11k_base *ath11k,
++			  struct ath11k_board_data *bd);
++void ath11k_core_free_bdf(struct ath11k_base *ab, struct ath11k_board_data *bd);
++
++void ath11k_core_halt(struct ath11k *ar);
++u8 ath11k_core_get_hw_mac_id(struct ath11k_base *ab, int pdev_idx);
++
++static inline const char *ath11k_scan_state_str(enum ath11k_scan_state state)
 +{
-+	return platform_driver_register(&ath11k_ahb_driver);
++	switch (state) {
++	case ATH11K_SCAN_IDLE:
++		return "idle";
++	case ATH11K_SCAN_STARTING:
++		return "starting";
++	case ATH11K_SCAN_RUNNING:
++		return "running";
++	case ATH11K_SCAN_ABORTING:
++		return "aborting";
++	}
++
++	return "unknown";
 +}
 +
-+void ath11k_ahb_exit(void)
++static inline struct ath11k_skb_cb *ATH11K_SKB_CB(struct sk_buff *skb)
 +{
-+	platform_driver_unregister(&ath11k_ahb_driver);
++	return (struct ath11k_skb_cb *)&IEEE80211_SKB_CB(skb)->driver_data;
 +}
++
++static inline struct ath11k_skb_rxcb *ATH11K_SKB_RXCB(struct sk_buff *skb)
++{
++	BUILD_BUG_ON(sizeof(struct ath11k_skb_rxcb) > sizeof(skb->cb));
++	return (struct ath11k_skb_rxcb *)skb->cb;
++}
++
++static inline struct ath11k_vif *ath11k_vif_to_arvif(struct ieee80211_vif *vif)
++{
++	return (struct ath11k_vif *)vif->drv_priv;
++}
++
++#endif /* _CORE_H_ */
