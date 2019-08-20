@@ -1,56 +1,42 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 03/10] dt-bindings: mailbox: Add a sunxi
- message box binding
-Date: Tue, 20 Aug 2019 09:14:56 +0200
-Message-ID: <20190820071456.if5lyb4t3em77svl@flea>
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-4-samuel@sholland.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe nodes
+Date: Tue, 20 Aug 2019 07:28:37 +0000
+Message-ID: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jk5ejfcyipdkxe5r"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5F353VAKGQEENNYQKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190820032311.6506-4-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>
+Cc: "M.h. Lian" <minghuan.lian@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
---jk5ejfcyipdkxe5r
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+controller is not fixed, it is determined by the selected
+SerDes protocol. The current num-lanes indicates the max lanes
+PCIe controller can support up to, instead of the lanes assigned
+to the PCIe controller. This can result in PCIe link training fail
+after hot-reset.
 
-Hi,
+Hou Zhiqiang (4):
+  dt-bindings: PCI: designware: Remove the num-lanes from Required
+    properties
+  PCI: dwc: Return directly when num-lanes is not found
+  ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
+  arm64: dts: fsl: Remove num-lanes property from PCIe nodes
 
-On Mon, Aug 19, 2019 at 10:23:04PM -0500, Samuel Holland wrote:
-> This mailbox hardware is present in Allwinner sun8i, sun9i, and sun50i
-> SoCs. Add a device tree binding for it.
->
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-> ---
->  .../mailbox/allwinner,sunxi-msgbox.yaml       | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
+ Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+ arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
+ drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
+ 8 files changed, 4 insertions(+), 22 deletions(-)
 
-So we merged a bunch of schemas already, with the convention that the
-name was the first compatible to use that binding.
-
-That would be allwinner,sun6i-a31-msgbox.yaml in that case
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---jk5ejfcyipdkxe5r--
+--=20
+2.17.1
