@@ -1,181 +1,129 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-Date: Tue, 20 Aug 2019 08:42:51 -0500
-Message-ID: <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
-References: <cover.1566208109.git.eswara.kota@linux.intel.com> <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date: Tue, 20 Aug 2019 16:56:02 +0300
+Message-ID: <20190820135602.GN30120@smile.fi.intel.com>
+References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <eswara.kota@linux.intel.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 4:40 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->
-> The Intel PCIe RC controller is Synopsys Designware
-> based PCIe core. Add YAML schemas for PCIe in RC mode
-> present in Intel Universal Gateway soc.
+On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
 
-Run 'make dt_binding_check' and fix all the warnings.
+Thanks for an update.
+Looks better though several minor comments below.
 
->
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
->  .../devicetree/bindings/pci/intel-pcie.yaml        | 133 +++++++++++++++++++++
->  1 file changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-pcie.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pci/intel-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
-> new file mode 100644
-> index 000000000000..80caaaba5e2c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-(GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+> +/* eMMC phy register definitions */
+> +#define EMMC_PHYCTRL0_REG	0xa8
+> +#define DR_TY_MASK		GENMASK(30, 28)
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel AXI bus based PCI express root complex
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    description: Ranges for the PCI memory and I/O regions.
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: PCIe registers interface clock.
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: phy
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  num-lanes:
-> +    description: Number of lanes to use for this port.
-> +
-> +  linux,pci-domain:
-> +    description: PCI domain ID.
-> +
-> +  interrupts:
-> +    description: PCIe core integrated miscellaneous interrupt.
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  intel,rst-interval:
+> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
 
-Use 'reset-assert-us'
+For consistency it should be
 
-> +    description: |
-> +      Device reset interval in ms. Some devices need an interval upto 500ms.
-> +      By default it is 100ms.
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-> +  - linux,pci-domain
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <
-> +            0xd0e00000 0x1000
-> +            0xd2000000 0x800000
-> +            0xd0a41000 0x1000
-> +            >;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      interrupts = <67 1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> +      phys = <&cb0phy0>;
-> +      phy-names = "phy";
-> +    };
-> +
-> +    &pcie10 {
+#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
 
-Don't show this soc/board split in examples. Just combine to one node.
+with explanation about 50 Ohm in the code below.
 
-> +      status = "okay";
-> +      intel,rst-interval = <100>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
-> --
-> 2.11.0
->
+> +#define OTAPDLYENA		BIT(14)
+> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
+> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
+> +
+> +#define EMMC_PHYCTRL1_REG	0xac
+> +#define PDB_MASK		BIT(0)
+> +#define ENDLL_MASK		BIT(7)
+
+> +#define ENDLL_VAL		BIT(7)
+
+Again, inconsistency here,
+
+#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
+
+> +#define EMMC_PHYCTRL2_REG	0xb0
+> +#define FRQSEL_25M		0
+> +#define FRQSEL_150M		3
+> +#define FRQSEL_MASK		GENMASK(24, 22)
+
+> +#define FRQSEL_SHIFT(x)		((x) << 22)
+
+And here
+
+#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
+
+> +	/*
+> +	 * According to the user manual, calpad calibration
+> +	 * cycle takes more than 2us without the minimal recommended
+> +	 * value, so we may need a little margin here
+> +	 */
+
+> +	usleep_range(3, 6);
+
+Actually for this low values it's recommended to use udelay() disregard to
+context.
+
+	udelay(5);
+
+> +	regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
+
+1 looks like a magic that has to be changed in the same way as for the rest, i.e.
+
+#define PDB_SHIFT(x)	(((x) << 0) & PDB_MASK)
+
+	..., PDB_MASK, PDB_SHIFT(1)...
+
+> +static int intel_emmc_phy_power_on(struct phy *phy)
+> +{
+> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	/* Drive impedance: 50 Ohm */
+
+Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
+
+> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
+> +				 DR_TY_50OHM(1));
+
+> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
+> +				 0x0);
+
+0x0 -> 0
+
+> +static int intel_emmc_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct intel_emmc_phy *priv;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/* Get eMMC phy (accessed via chiptop) regmap */
+
+> +	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						       "intel,syscon");
+
+Perhaps
+
+	struct device_node *np = dev->of_node;
+	...
+	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
+
+> +	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+
+And here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
