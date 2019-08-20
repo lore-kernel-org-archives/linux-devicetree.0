@@ -1,95 +1,48 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 0/7] iommu/arm-smmu: Split pagetable support for
- Adreno GPUs
-Date: Tue, 20 Aug 2019 13:06:25 -0600
-Message-ID: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jeffrey Hugo <jeffrey.l.hugo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wen Yang <wen.yang99-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Jonathan Marek <jonathan-eSc4qw6YbEQ@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Mamta Shukla <mamtashukla555-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fritz Koenig <frkoenig-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sharat Masetty <smasetty-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexios Zavras <alexios.zavras-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Allison Randal <allison-wcfNWazeolPR7s880joybQ@public.gmane.org>, Bruce
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: [PATCH 2/7] dt-bindings: arm-smmu: Add Adreno GPU variant
+Date: Tue, 20 Aug 2019 13:06:27 -0600
+Message-ID: <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
+References: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: freedreno@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joerg Roedel <joro@8bytes.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBhbm90aGVyIGl0ZXJhdGlvbiB0byBzdXBwb3J0IHNwbGl0IHBhZ2V0YWJsZXMgZm9y
-IEFkcmVubyBHUFVzIGFzIHBhcnQgb2YKYW4gaW5jcmVtZW50YWwgcHJvY2VzcyB0byBlbmFibGUg
-cGVyLWNvbnRleHQgcGFnZXRhYmxlcy4KCkluIG9yZGVyIHRvIHN1cHBvcnQgcGVyLWNvbnRleHQg
-cGFnZXRhYmxlcyB0aGUgR1BVIG5lZWRzIHRvIGVuYWJsZSBzcGxpdApwYWdldGFibGVzIHNvIHRo
-YXQgd2UgY2FuIHN0b3JlIHRoZSBnbG9iYWwgYnVmZmVycyBpbiB0aGUgVFRCUjEgc3BhY2UgbGVh
-dmluZwp0aGUgR1BVIGZyZWUgdG8gcHJvZ3JhbSB0aGUgVFRCUjAgcmVnaXN0ZXIgd2l0aCB0aGUg
-cGFnZSBhZGRyZXNzIG9mIGEgY29udGV4dApzcGVjaWZpYyBwdC4KClByZXZpb3VzIHJldmlzaW9u
-cyBvZiB0aGlzIHNlcmllcyBjYW4gYmUgZm91bmQgYXQgWzFdIGFuZCBbMl0uCgpUaGlzIGl0ZXJh
-dGlvbiBpcyBidWlsdCBvbiB0b3Agb2YgdGhlIGFybS1zbW11LWltcGwgYW5kIGFybS1zbW11LXYy
-CnJld29yayBjb2RlIGZyb20gUm9iaW4gTXVycGh5IFszXSBhbmQgWzRdLgoKVGhpcyBjb2RlIGlz
-IGJhc2VkIG9uIHRoZSByZWFsaXphdGlvbiB0aGF0IHdoZW4gc3BsaXQgcGFnZXRhYmxlcyBhcmUg
-ZW5hYmxlZCB0aGUKY29uZmlndXJhdGlvbiBmb3IgdGhlIFQxIGFkZHJlc3Mgc3BhY2UgaXMgaWRl
-bnRpY2FsIHRvIHRoYXQgb2YgdGhlIFQwIHNwYWNlLApzbyB3ZSBjYW4ganVzdCB0YWtlIHRoZSBU
-Q1IgY29uZmlndXJhdGlvbiBwcm92aWRlZCBieSBpby1wZ3RhYmxlLCBkdXBsaWNhdGUgaXQKYW5k
-IHNoaWZ0IGl0IGJ5IDE2IGJpdHMuCgpTaW5jZSB0aGUgY3VycmVudCBzcGxpdCBwYWdldGFibGUg
-aW1wbGVtZW50YXRpb24gaXMgc3BlY2lmaWMgdG8gdGhlIEFkcmVubwpHUFVzIHdlIGNhbiBhbHNv
-IHRha2UgYSBzbWFsbCBzaG9ydGN1dCBhbmQgb25seSBhbGxvdyBzcGxpdCBwYWdldGFibGVzIGZv
-ciBTTU1Vcwp3aXRoIGEgNDkgYml0IHVwc3RyZWFtIGJ1cyB3aGljaCBhbGxvd3MgdXMgdG8gdXNl
-IHRoZSBkZWZhdWx0IGNvbmZpZ3VyYXRpb24KZm9yIHRoZSBzaWduIGV4dGVuc2lvbiBiaXQgYW5k
-IHdlIGNhbiBhdm9pZCBhIGxvdCBvZiBleHRyYSBjb2RlIHRvIGhhbmRsZQpkaWZmZXJlbnQgdXBz
-dHJlYW0gYnVzIHNpemVzIHRoYXQgd2lsbCBuZXZlciBnZXQgdXNlZC4KClRoZSBmaXJzdCBwYXRj
-aCBpbXBsZW1lbnRzIHRoZSBzcGxpdCBwYWdldGFibGUgc3VwcG9ydCBmb3IgYXJtLXNtbXUtdjIu
-CgpUaGUgc2Vjb25kIGFkZHMgYSBTTU1VIG1vZGVsIGZvciB0aGUgQWRyZW5vIEdQVSBTTU1VIGFu
-ZCBlbmFibGVzIHRoZSBzcGxpdApwYWdldGFibGVzIGlmIGNvbmRpdGlvbnMgd2FycmFudC4KClRo
-ZSAzcmQgYW5kIDR0aCBwYXRjaGVzIGFkZCBhIGRvbWFpbiBhdHRyaWJ1dGUgdG8gcXVlcnkgdGhl
-IHN0YXR1cyBvZiBzcGxpdApwYWdldGFibGVzLgoKVGhlIHJlbWFpbmluZyBwYXRjaGVzIG1vZGlm
-eSBkcm0vbXNtIHNsaWdodGx5IHRvIGFsbG93IGE2eHggdGFyZ2V0cyB0bwpyZWNvZ25pemUgaWYg
-c3BsaXQgcGFnZXRhYmxlcyBhcmUgZW5hYmxlZCBhbmQgYWRqdXN0IHRoZSBhZGRyZXNzIHNwYWNl
-CmFjY29yZGluZ2x5LgoKVGhpcyBzZXJpZXMgb25seSBpbmNsdWRlcyBzdXBwb3J0IGZvciBzcGxp
-dCBwYWdldGFibGVzIGJlY2F1c2UgSSB3YW50ZWQgdG8gZ2V0CnRoaXMgb3V0IGZvciBkaXNjdXNz
-aW9uIGFuZCBJIGhhdmVuJ3QgcG9ydGVkIG92ZXIgdGhlIGF1eCBkb21haW4gY29kZSB0byB0aGlz
-Cmtlcm5lbCB2ZXJzaW9uLCBidXQgSSBkb24ndCBzdXNwZWN0IGl0IHdpbGwgZW5kIHVwIGJlaW5n
-IG11Y2ggZGlmZmVyZW50IHRoYW4KcHJldmlvdXMgdmVyc2lvbnMgWzVdLgoKWzFdIGh0dHBzOi8v
-cGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjM0MDMvClsyXSBodHRwczovL3BhdGNo
-d29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzY0ODc0LwpbM10gaHR0cHM6Ly9saXN0cy5saW51
-eGZvdW5kYXRpb24ub3JnL3BpcGVybWFpbC9pb21tdS8yMDE5LUF1Z3VzdC8wMzc5MDUuaHRtbApb
-NF0gaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL3BpcGVybWFpbC9pb21tdS8yMDE5
-LUF1Z3VzdC8wMzgyNDQuaHRtbApbNV0gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
-L3BhdGNoLzMwNzYwMS8KCgpKb3JkYW4gQ3JvdXNlICg3KToKICBpb21tdS9hcm0tc21tdTogU3Vw
-cG9ydCBzcGxpdCBwYWdldGFibGVzCiAgZHQtYmluZGluZ3M6IGFybS1zbW11OiBBZGQgQWRyZW5v
-IEdQVSB2YXJpYW50CiAgaW9tbXUvYXJtLXNtbXU6IEFkZCBhIFNNTVUgdmFyaWFudCBmb3IgdGhl
-IEFkcmVubyBHUFUKICBpb21tdTogQWRkIERPTUFJTl9BVFRSX1NQTElUX1RBQkxFUwogIGlvbW11
-L2FybS1zbW11OiBTdXBwb3J0IERPTUFJTl9BVFRSX1NQTElUX1RBQkxFUwogIGRybS9tc206IENy
-ZWF0ZSB0aGUgbXNtX21tdSBvYmplY3QgaW5kZXBlbmRlbnRseSBmcm9tIHRoZSBhZGRyZXNzCiAg
-ICBzcGFjZQogIGRybS9tc206IFVzZSBwZXItdGFyZ2V0IGZ1bmN0aW9ucyB0byBzZXQgdXAgYWRk
-cmVzcyBzcGFjZXMKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQg
-ICAgICAgICB8ICA3ICsrKwogZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTJ4eF9ncHUuYyAg
-ICAgICAgICAgICAgfCAyOCArKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8v
-YTN4eF9ncHUuYyAgICAgICAgICAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVu
-by9hNHh4X2dwdS5jICAgICAgICAgICAgICB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRy
-ZW5vL2E1eHhfZ3B1LmMgICAgICAgICAgICAgIHwgIDEgKwogZHJpdmVycy9ncHUvZHJtL21zbS9h
-ZHJlbm8vYTZ4eF9ncHUuYyAgICAgICAgICAgICAgfCA1NiArKysrKysrKysrKysrKysrKysrKysr
-CiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1LmMgICAgICAgICAgICB8IDQz
-ICsrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1
-LmggICAgICAgICAgICB8ICA1ICsrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVf
-a21zLmMgICAgICAgICAgICB8IDE2ICsrKystLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9t
-ZHA0L21kcDRfa21zLmMgICAgICAgICAgIHwgMTYgKysrKy0tLQogZHJpdmVycy9ncHUvZHJtL21z
-bS9kaXNwL21kcDUvbWRwNV9jZmcuYyAgICAgICAgICAgfCAgNCAtLQogZHJpdmVycy9ncHUvZHJt
-L21zbS9kaXNwL21kcDUvbWRwNV9rbXMuYyAgICAgICAgICAgfCAxMyArKysrLQogZHJpdmVycy9n
-cHUvZHJtL21zbS9tc21fZHJ2LmggICAgICAgICAgICAgICAgICAgICAgfCAgOCArLS0tCiBkcml2
-ZXJzL2dwdS9kcm0vbXNtL21zbV9nZW1fdm1hLmMgICAgICAgICAgICAgICAgICB8IDMwICsrLS0t
-LS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZ3B1LmMgICAgICAgICAgICAgICAgICAg
-ICAgfCA1MSArKy0tLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZ3B1
-LmggICAgICAgICAgICAgICAgICAgICAgfCAgNCArLQogZHJpdmVycy9pb21tdS9hcm0tc21tdS1p
-bXBsLmMgICAgICAgICAgICAgICAgICAgICAgfCAxNSArKysrKysKIGRyaXZlcnMvaW9tbXUvYXJt
-LXNtbXUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNDYgKysrKysrKysrKysrKysrKy0t
-CiBkcml2ZXJzL2lvbW11L2FybS1zbW11LmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAy
-ICsKIGluY2x1ZGUvbGludXgvaW9tbXUuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-IDEgKwogMjAgZmlsZXMgY2hhbmdlZCwgMjM3IGluc2VydGlvbnMoKyksIDExMSBkZWxldGlvbnMo
-LSkKCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRy
-ZW5v
+Add a compatible string to identify SMMUs that are attached
+to Adreno GPU devices that wish to support split pagetables.
+
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
+
+ Documentation/devicetree/bindings/iommu/arm,smmu.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+index 3133f3b..3b07896 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+@@ -18,6 +18,7 @@ conditions.
+                         "arm,mmu-500"
+                         "cavium,smmu-v2"
+                         "qcom,smmu-v2"
++			"qcom,adreno-smmu-v2"
+ 
+                   depending on the particular implementation and/or the
+                   version of the architecture implemented.
+@@ -31,6 +32,12 @@ conditions.
+                   as below, SoC-specific compatibles:
+                   "qcom,sdm845-smmu-500", "arm,mmu-500"
+ 
++		  "qcom,adreno-smmu-v2" is a special implementation for
++		  SMMU devices attached to the Adreno GPU on Qcom devices.
++		  If selected, this will enable split pagetable (TTBR1)
++		  support. Only use this if the GPU target is capable of
++		  supporting 64 bit addresses.
++
+ - reg           : Base address and size of the SMMU.
+ 
+ - #global-interrupts : The number of global interrupts exposed by the
+-- 
+2.7.4
