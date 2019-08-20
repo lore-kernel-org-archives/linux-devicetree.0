@@ -1,45 +1,36 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH v2 7/7] clocksource/drivers/sh_cmt: Document "cmt-48" as deprecated
-Date: Tue, 20 Aug 2019 21:36:07 +0900
-Message-ID: <156630456771.17444.15687151782258703992.sendpatchset@octo>
-References: <156630449239.17444.11157306180861080402.sendpatchset@octo>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ASoC: meson: axg-tdm-formatter: free reset on device removal
+Date: Tue, 20 Aug 2019 14:34:13 +0200
+Message-ID: <20190820123413.22249-1-jbrunet@baylibre.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <156630449239.17444.11157306180861080402.sendpatchset@octo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geert+renesas@glider.be, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, tglx@linutronix.de
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+Use the devm variant to get the formatter reset so it is properly freed
+on device removal
 
-Update the CMT driver to mark "renesas,cmt-48" as deprecated.
-
-Instead of documenting a theoretical hardware device based on current software
-support level, define DT bindings top-down based on available data sheet
-information and make use of part numbers in the DT compat string.
-
-In case of the only in-tree users r8a7740 and sh73a0 the compat strings
-"renesas,r8a7740-cmt1" and "renesas,sh73a0-cmt1" may be used instead.
-
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 751bd5db5260 ("ASoC: meson: axg-tdm-formatter: add reset")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
+ sound/soc/meson/axg-tdm-formatter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/clocksource/sh_cmt.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- 0011/drivers/clocksource/sh_cmt.c
-+++ work/drivers/clocksource/sh_cmt.c	2019-07-18 19:31:01.917491800 +0900
-@@ -921,7 +921,11 @@ static const struct platform_device_id s
- MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
+index 21c735afab35..358c8c0d861c 100644
+--- a/sound/soc/meson/axg-tdm-formatter.c
++++ b/sound/soc/meson/axg-tdm-formatter.c
+@@ -325,7 +325,7 @@ int axg_tdm_formatter_probe(struct platform_device *pdev)
+ 	}
  
- static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
--	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
-+	{
-+		/* deprecated, preserved for backward compatibility */
-+		.compatible = "renesas,cmt-48",
-+		.data = &sh_cmt_info[SH_CMT_48BIT]
-+	},
- 	{
- 		/* deprecated, preserved for backward compatibility */
- 		.compatible = "renesas,cmt-48-gen2",
+ 	/* Formatter dedicated reset line */
+-	formatter->reset = reset_control_get_optional_exclusive(dev, NULL);
++	formatter->reset = devm_reset_control_get_optional_exclusive(dev, NULL);
+ 	if (IS_ERR(formatter->reset)) {
+ 		ret = PTR_ERR(formatter->reset);
+ 		if (ret != -EPROBE_DEFER)
+-- 
+2.21.0
