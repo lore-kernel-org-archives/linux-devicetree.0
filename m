@@ -1,7 +1,7 @@
 From: megous@megous.com
-Subject: [PATCH 4/6] net: stmmac: sun8i: Rename PHY regulator variable to regulator_phy
-Date: Tue, 20 Aug 2019 16:53:41 +0200
-Message-ID: <20190820145343.29108-5-megous@megous.com>
+Subject: [PATCH 1/6] dt-bindings: net: sun8i-a83t-emac: Add phy-supply property
+Date: Tue, 20 Aug 2019 16:53:38 +0200
+Message-ID: <20190820145343.29108-2-megous@megous.com>
 References: <20190820145343.29108-1-megous@megous.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,82 +14,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-We'll be adding further optional regulators, and this makes it clearer
-what the regulator is for.
+This is already supported by the driver, but is missing from the
+bindings.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 32 ++++++++++---------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 3e951a11aec3..e7df30d3cab1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -57,19 +57,21 @@ struct emac_variant {
- };
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+index 3fb0714e761e..304f244e9ab5 100644
+--- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
++++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+@@ -43,6 +43,10 @@ properties:
+       Phandle to the device containing the EMAC or GMAC clock
+       register
  
- /* struct sunxi_priv_data - hold all sunxi private data
-- * @tx_clk:	reference to MAC TX clock
-- * @ephy_clk:	reference to the optional EPHY clock for the internal PHY
-- * @regulator:	reference to the optional regulator
-- * @rst_ephy:	reference to the optional EPHY reset for the internal PHY
-- * @variant:	reference to the current board variant
-- * @regmap:	regmap for using the syscon
-- * @internal_phy_powered: Does the internal PHY is enabled
-- * @mux_handle:	Internal pointer used by mdio-mux lib
-+ * @tx_clk:			reference to MAC TX clock
-+ * @ephy_clk:			reference to the optional EPHY clock for
-+ *				the internal PHY
-+ * @regulator_phy:		reference to the optional regulator
-+ * @rst_ephy:			reference to the optional EPHY reset for
-+ *				the internal PHY
-+ * @variant:			reference to the current board variant
-+ * @regmap:			regmap for using the syscon
-+ * @internal_phy_powered:	Does the internal PHY is enabled
-+ * @mux_handle:			Internal pointer used by mdio-mux lib
-  */
- struct sunxi_priv_data {
- 	struct clk *tx_clk;
- 	struct clk *ephy_clk;
--	struct regulator *regulator;
-+	struct regulator *regulator_phy;
- 	struct reset_control *rst_ephy;
- 	const struct emac_variant *variant;
- 	struct regmap_field *regmap_field;
-@@ -528,9 +530,9 @@ static int sun8i_dwmac_init(struct platform_device *pdev, void *priv)
- 	struct sunxi_priv_data *gmac = priv;
- 	int ret;
- 
--	ret = regulator_enable(gmac->regulator);
-+	ret = regulator_enable(gmac->regulator_phy);
- 	if (ret) {
--		dev_err(&pdev->dev, "Fail to enable regulator\n");
-+		dev_err(&pdev->dev, "Fail to enable PHY regulator\n");
- 		return ret;
- 	}
- 
-@@ -990,7 +992,7 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
- 
- 	clk_disable_unprepare(gmac->tx_clk);
- 
--	regulator_disable(gmac->regulator);
-+	regulator_disable(gmac->regulator_phy);
- }
- 
- static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
-@@ -1126,9 +1128,9 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Optional regulator for PHY */
--	gmac->regulator = devm_regulator_get(dev, "phy");
--	if (IS_ERR(gmac->regulator)) {
--		ret = PTR_ERR(gmac->regulator);
-+	gmac->regulator_phy = devm_regulator_get(dev, "phy");
-+	if (IS_ERR(gmac->regulator_phy)) {
-+		ret = PTR_ERR(gmac->regulator_phy);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "Failed to get PHY regulator (%d)\n", ret);
- 		return ret;
++  phy-supply:
++    description:
++      PHY regulator
++
+ required:
+   - compatible
+   - reg
 -- 
 2.22.1
