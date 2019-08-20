@@ -1,57 +1,99 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Date: Tue, 20 Aug 2019 08:31:14 +0530
-Message-ID: <20190820030114.6flnn2omeys3lih3@vireshk-i7>
-References: <CGME20190718143117eucas1p1e534b9075d10fbbbe427c66192205eb1@eucas1p1.samsung.com>
- <20190718143044.25066-1-s.nawrocki@samsung.com>
- <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
- <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
- <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
- <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
- <20190819090928.pke6cov52n4exlbp@vireshk-i7>
- <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
- <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
- <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date: Tue, 20 Aug 2019 11:10:15 +0800
+Message-ID: <0bae8558-1ecd-e3f0-76c6-ba25c529a12e@linux.intel.com>
+References: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190819034416.45192-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190819160642.GC30120@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+In-Reply-To: <20190819160642.GC30120@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 19-08-19, 15:39, Sylwester Nawrocki wrote:
-> Unfortunately not, the patch set as I see it is another way of updating 
-> an OPP after it was parsed from DT.  OPP remove/add could work equally 
-> well in our use case.
+On 20/8/2019 12:06 AM, Andy Shevchenko wrote:
+> On Mon, Aug 19, 2019 at 11:44:16AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Adds support for eMMC PHY on Intel's Lightning Mountain SoC.
+> Adds -> Add.
+Thanks Andy, agreed.
+>> +/* eMMC phy register definitions */
+>> +#define EMMC_PHYCTRL0_REG	0xa8
+>> +#define DR_TY_MASK		GENMASK(30, 28)
+>> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
+>> +#define OTAPDLYENA		BIT(14)
+>> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
+>> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
+>> +
+>> +#define EMMC_PHYCTRL1_REG	0xac
+>> +#define PDB_MASK		1
+> BIT(0)
+agreed.
+>> +#define ENDLL_MASK		BIT(7)
+>> +#define ENDLL_VAL		BIT(7)
+>> +
+>> +#define EMMC_PHYCTRL2_REG	0xb0
+>> +#define FRQSEL_25M		0
+>> +#define FRQSEL_150M		3
+>> +#define FRQSEL_MASK		GENMASK(24, 22)
+>> +#define FRQSEL_SHIFT(x)		((x) << 22)
+>> +
+>> +#define EMMC_PHYSTAT_REG	0xbc
+>> +#define CALDONE_MASK		1
+>> +#define DLLRDY_MASK		1
+>> +#define IS_CALDONE(x)	((((x) >> 9) & CALDONE_MASK) == 1)
+>> +#define IS_DLLRDY(x)	((((x) >> 8) & DLLRDY_MASK) == 1)
+> These are inconsistent with above:
+>
+> 	#define CALDONE_MASK	BIT(9)
+> 	...
+> 	#define IS_CALDONE	((x) & CALDONE_MASK)
+>
+> Note redundant == part.
+Agreed, will update.
+>> +static int intel_emmc_phy_power(struct phy *phy, bool on_off)
+>> +{
+>> +	 * - PHY driver to probe
+>> +	 * - SDHCI driver to start probe
+>> +	 * - SDHCI driver to register it's clock
+>> +	 * - SDHCI driver to get the PHY
+>> +	 * - SDHCI driver to init the PHY
+>> +	 *
+>
+>> +	 * The clock is optional, so upon any error we just set to NULL.
+> No, the clock framework will do it for you.
+>
+>> +	 *
+>> +	 * NOTE: we don't do anything special for EPROBE_DEFER here.  Given the
+>> +	 * above expected use case, EPROBE_DEFER isn't sensible to expect, so
+>> +	 * it's just like any other error.
+> This comment is not correct...
+Agreed, re-structure the sentence.
+>> +	 */
+>> +	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
+>> +	if (IS_ERR(priv->emmcclk)) {
+>> +		dev_warn(&phy->dev, "ERROR: getting emmcclk\n");
+> ...because here you have to return an error...
+Agreed.
+>> +		priv->emmcclk = NULL;
+> ...and here is redundant assignment.
+>
+Agreed.
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> When you send out patches, check that you do this for latest version you got reviewed internally.
+Thank you so much for the review comments, sure I will recheck and 
+recollect your review comments of different patches
+for  the same cases .
 
-Adding OPPs dynamically has limitations, you can't set many values which are
-otherwise possible with DT. And removing/adding is not the right thing to do
-technically.
-
-> The problem is that we have the information on how to translate the 
-> common OPP voltage to a voltage specific to given silicon encoded jointly 
-> in the ASV tables and the CHIPID registers (efuse/OTP memory). 
-> Additionally, algorithm of selecting ASV data (OPP voltage) based on 
-> the "key" data from registers is not generic, it is usually different 
-> per each SoC type.
-> 
-> I tried to identify some patterns in those tables in order to simplify 
-> possible DT binding, but that was not really successful. I ended up just 
-> keeping whole tables.
-
-Sorry but I am unable to understand the difficulty you are facing now. So what I
-suggest is something like this.
-
-- Use DT to get a frequency and voltage for each frequency.
-- At runtime, based on SoC, registers, efuses, etc, update the voltage of the
-  OPPs.
-- This algo can be different for each SoC, no one is stopping you from doing
-  that.
-
-Am I missing something ?
-
--- 
-viresh
+With Best Regards
+vadivel
