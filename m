@@ -1,122 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-Date: Tue, 20 Aug 2019 10:54:18 -0500
-Message-ID: <CAL_JsqKvzogi9969fx9j6v58V5+EH-06tDx7-qy7xu84pGRSRA@mail.gmail.com>
-References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/6] dt-bindings: watchdog: Add YAML schemas for the
+ generic watchdog bindings
+Date: Tue, 20 Aug 2019 08:54:53 -0700
+Message-ID: <ada53037-898f-7b8c-8a96-b80414563fa7@roeck-us.net>
+References: <20190819182039.24892-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20190819182039.24892-1-mripard@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Maxime Ripard <mripard@kernel.org>, wim@linux-watchdog.org
+Cc: linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 5:31 AM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->
-> Add a YAML schema to use the host controller driver with the
-> eMMC PHY on Intel's Lightning Mountain SoC.
->
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 8/19/19 11:20 AM, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+> 
+> The watchdogs have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+What is the target subsystem for this series ? You didn't copy the watchdog
+mailing list, so I assume it won't be the watchdog subsystem.
+
+Thanks,
+Guenter
+
+> 
 > ---
-> changes in v2:
->   As per Rob Herring review comments, the following updates
->  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
->  - filename is the compatible string plus .yaml
->  - LGM: Lightning Mountain
->  - update maintainer
->  - add intel,syscon under property list
->  - keep one example instead of two
+> 
+> Changes from v1:
+>    - New patch
 > ---
->  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 72 ++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->
-> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>   .../bindings/watchdog/watchdog.yaml           | 26 +++++++++++++++++++
+>   1 file changed, 26 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/watchdog.yaml b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
 > new file mode 100644
-> index 000000000000..ec177573aca6
+> index 000000000000..187bf6cb62bf
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> @@ -0,0 +1,26 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
+> +$id: http://devicetree.org/schemas/watchdog/watchdog.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
+> +title: Watchdog Generic Bindings
 > +
 > +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +  - Guenter Roeck <linux@roeck-us.net>
+> +  - Wim Van Sebroeck <wim@linux-watchdog.org>
 > +
-> +
-> +description:
-> +  -  Add a new compatible to use the host controller driver with the
-> +     eMMC PHY on Intel's Lightning Mountain SoC.
-> +
-> +$ref: /schemas/types.yaml#definitions/phandle
-> +  description:
-> +    - It also requires a "syscon" node with compatible = "intel,lgm-chiptop",
-> +      "syscon" to access the eMMC PHY register.
-
-Not valid schema. Please build 'make dt_binding_check' and fix any warnings.
-
+> +description: |
+> +  This document describes generic bindings which can be used to
+> +  describe watchdog devices in a device tree.
 > +
 > +properties:
-> +  "#phy-cells":
-> +    const: 0
+> +  $nodename:
+> +    pattern: "^watchdog(@.*|-[0-9a-f])?$"
 > +
-> +  compatible:
-> +    const: intel,lgm-emmc-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  intel,syscon:
-> +    items:
-> +      - description:
-> +         - |
-> +           e-MMC phy module should include the following properties
-> +           * reg, Access the e-MMC, get the base address from syscon.
-> +           * reset, reset the e-MMC module.
-> +
-> +  clocks:
-> +    items:
-> +      - description: e-MMC phy module clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: emmcclk
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    emmc_phy: emmc_phy {
-> +        compatible = "intel,lgm-emmc-phy";
-> +        reg = <0xe0020000 0x100>;
-> +        intel,syscon = <&sysconf>;
-> +        clocks = <&emmc>;
-> +        clock-names = "emmcclk";
-> +        #phy-cells = <0>;
-> +    };
+> +  timeout-sec:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Contains the watchdog timeout in seconds.
 > +
 > +...
-> --
-> 2.11.0
->
+> 
