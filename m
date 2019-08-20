@@ -1,7 +1,8 @@
 From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv2 2/4] PCI: dwc: Return directly when num-lanes is not found
-Date: Tue, 20 Aug 2019 07:28:49 +0000
-Message-ID: <20190820073022.24217-3-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv2 3/4] ARM: dts: ls1021a: Remove num-lanes property from PCIe
+ nodes
+Date: Tue, 20 Aug 2019 07:28:55 +0000
+Message-ID: <20190820073022.24217-4-Zhiqiang.Hou@nxp.com>
 References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,36 +17,53 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-The num-lanes is optional, so probably it isn't added
-on some platforms. The subsequent programming is base
-on the num-lanes, hence return when it is not found.
+Remove the num-lanes to avoid the driver setting the link width.
+
+On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+controller is not fixed, it is determined by the selected SerDes
+protocol in the RCW (Reset Configuration Word), and the PCIe link
+training is completed automatically base on the selected SerDes
+protocol, and the link width set-up is updated by hardware after
+power on reset. So the num-lanes is not needed for Layerscape PCIe.
+
+The current num-lanes was added erroneously, which actually indicates
+the max lanes PCIe controller can support up to, instead of the lanes
+assigned to the PCIe controller. And the link width set by SerDes
+protocol will be overridden by the num-lanes, hence the subsequent
+re-taining will fail when the assigned lanes does not equal to
+num-lanes.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 ---
 V2:
- - No change.
+ - Reworded the change log.
 
- drivers/pci/controller/dwc/pcie-designware.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ls1021a.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/con=
-troller/dwc/pcie-designware.c
-index 7d25102c304c..0a89bfd1636e 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -423,8 +423,10 @@ void dw_pcie_setup(struct dw_pcie *pci)
-=20
-=20
- 	ret =3D of_property_read_u32(np, "num-lanes", &lanes);
--	if (ret)
--		lanes =3D 0;
-+	if (ret) {
-+		dev_dbg(pci->dev, "property num-lanes isn't found\n");
-+		return;
-+	}
-=20
- 	/* Set the number of lanes */
- 	val =3D dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dts=
+i
+index 464df4290ffc..2f6977ada447 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -874,7 +874,6 @@
+ 			#address-cells =3D <3>;
+ 			#size-cells =3D <2>;
+ 			device_type =3D "pci";
+-			num-lanes =3D <4>;
+ 			num-viewport =3D <6>;
+ 			bus-range =3D <0x0 0xff>;
+ 			ranges =3D <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   =
+/* downstream I/O */
+@@ -899,7 +898,6 @@
+ 			#address-cells =3D <3>;
+ 			#size-cells =3D <2>;
+ 			device_type =3D "pci";
+-			num-lanes =3D <4>;
+ 			num-viewport =3D <6>;
+ 			bus-range =3D <0x0 0xff>;
+ 			ranges =3D <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   =
+/* downstream I/O */
 --=20
 2.17.1
