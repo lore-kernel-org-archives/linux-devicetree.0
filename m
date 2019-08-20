@@ -1,35 +1,59 @@
-From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: Re: [PATCH v2 2/6] arm64: Introduce config for S32
-Date: Tue, 20 Aug 2019 16:38:30 +0000
-Message-ID: <VI1PR0402MB2863F70B8497B8901087B7A4DFAB0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com>
- <20190809112853.15846-3-stefan-gabriel.mirea@nxp.com>
- <20190819081457.GH5999@X250>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/8] arm64: dts: qcom: sm8150: add base dts file
+Date: Tue, 20 Aug 2019 22:07:32 +0530
+Message-ID: <20190820163732.GF12733@vkoul-mobl.Dlink>
+References: <20190820064216.8629-1-vkoul@kernel.org>
+ <20190820064216.8629-2-vkoul@kernel.org>
+ <CAHLCerOBbaOuPf+WfsG8gKzAxs+9kTMbW7k4MAkmciwyWyeQww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAHLCerOBbaOuPf+WfsG8gKzAxs+9kTMbW7k4MAkmciwyWyeQww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
+To: Amit Kucheria <amit.kucheria@verdurent.com>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Shawn,=0A=
-=0A=
-On 8/19/2019 11:15 AM, Shawn Guo wrote:=0A=
-> On Fri, Aug 09, 2019 at 11:29:10AM +0000, Stefan-gabriel Mirea wrote:=0A=
->> +config ARCH_S32=0A=
->> +     bool "Freescale S32 SoC Family"=0A=
-> =0A=
-> So you still want to use 'Freescale' than 'NXP' here?=0A=
-> =0A=
->> +     help=0A=
->> +       This enables support for the Freescale S32 family of processors.=
-=0A=
-=0A=
-Thanks; I will replace Freescale with NXP wherever possible in the next=0A=
-version.=0A=
-=0A=
-Regards,=0A=
-Stefan=0A=
+On 20-08-19, 19:03, Amit Kucheria wrote:
+> On Tue, Aug 20, 2019 at 12:14 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > This add base DTS file with cpu, psci, firmware, clock, tlmm and
+> > spmi nodes which enables boot to console
+> >
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sm8150.dtsi | 305 +++++++++++++++++++++++++++
+> >  1 file changed, 305 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > new file mode 100644
+> > index 000000000000..d9dc95f851b7
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > @@ -0,0 +1,305 @@
+> > +// SPDX-License-Identifier: BSD-3-Clause
+> 
+> This is fine.
+> 
+> > +// Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> > +// Copyright (c) 2019, Linaro Limited
+> 
+> These two lines should be in /* */
+
+Yeah I made it same as previous, lets do right style.
+
+> > +       timer {
+> > +               compatible = "arm,armv8-timer";
+> > +               interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
+> > +                            <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
+> > +                            <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
+> > +                            <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
+> 
+> Any particular reason why these are defined in this order - 1, 2, 3, 0?
+
+Copied from downstream :)
+
+-- 
+~Vinod
