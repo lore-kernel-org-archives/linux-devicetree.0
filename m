@@ -1,59 +1,112 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 3/6] net: stmmac: sun8i: Use devm_regulator_get for PHY
- regulator
-Date: Tue, 20 Aug 2019 17:57:44 +0200
-Message-ID: <20190820155744.GN29991@lunn.ch>
-References: <20190820145343.29108-1-megous@megous.com>
- <20190820145343.29108-4-megous@megous.com>
- <20190820153939.GL29991@lunn.ch>
- <20190820154714.2rt4ctovil5ol3u2@core.my.home>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] reset: meson-audio-arb: add sm1 support
+Date: Tue, 20 Aug 2019 17:58:01 +0200
+Message-ID: <1jlfvnomly.fsf@starbuckisacylon.baylibre.com>
+References: <20190820094625.13455-1-jbrunet@baylibre.com> <20190820094625.13455-3-jbrunet@baylibre.com> <1566315581.3030.18.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820154714.2rt4ctovil5ol3u2@core.my.home>
+In-Reply-To: <1566315581.3030.18.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 05:47:14PM +0200, Ondřej Jirman wrote:
-> Hi Andrew,
-> 
-> On Tue, Aug 20, 2019 at 05:39:39PM +0200, Andrew Lunn wrote:
-> > On Tue, Aug 20, 2019 at 04:53:40PM +0200, megous@megous.com wrote:
-> > > From: Ondrej Jirman <megous@megous.com>
-> > > 
-> > > Use devm_regulator_get instead of devm_regulator_get_optional and rely
-> > > on dummy supply. This avoids NULL checks before regulator_enable/disable
-> > > calls.
-> > 
-> > Hi Ondrej
-> > 
-> > What do you mean by a dummy supply? I'm just trying to make sure you
-> > are not breaking backwards compatibility.
-> 
-> Sorry, I mean dummy regulator. See:
-> 
-> https://elixir.bootlin.com/linux/latest/source/drivers/regulator/core.c#L1874
-> 
-> On systems that use DT (i.e. have_full_constraints() == true), when the
-> regulator is not found (ENODEV, not specified in DT), regulator_get will return
-> a fake dummy regulator that can be enabled/disabled, but doesn't do anything
-> real.
+On Tue 20 Aug 2019 at 17:39, Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-Hi Ondrej
+> Hi Jerome,
+>
+> thank you for the patch. Just one nitpick and one real issue below:
+>
+> On Tue, 2019-08-20 at 11:46 +0200, Jerome Brunet wrote:
+>> Add the new arb reset lines of the SM1 SoC family
+>> 
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/reset/reset-meson-audio-arb.c | 28 ++++++++++++++++++++++++---
+>>  1 file changed, 25 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
+>> index c53a2185a039..72d29dbca45a 100644
+>> --- a/drivers/reset/reset-meson-audio-arb.c
+>> +++ b/drivers/reset/reset-meson-audio-arb.c
+>> @@ -30,6 +30,17 @@ static const unsigned int axg_audio_arb_reset_bits[] = {
+>>  	[AXG_ARB_FRDDR_C]	= 6,
+>>  };
+>>  
+>> +static const unsigned int sm1_audio_arb_reset_bits[] = {
+>> +	[AXG_ARB_TODDR_A]	= 0,
+>> +	[AXG_ARB_TODDR_B]	= 1,
+>> +	[AXG_ARB_TODDR_C]	= 2,
+>> +	[AXG_ARB_FRDDR_A]	= 4,
+>> +	[AXG_ARB_FRDDR_B]	= 5,
+>> +	[AXG_ARB_FRDDR_C]	= 6,
+>> +	[AXG_ARB_TODDR_D]	= 3,
+>> +	[AXG_ARB_FRDDR_D]	= 7,
+>> +};
+>> +
+>>  static int meson_audio_arb_update(struct reset_controller_dev *rcdev,
+>>  				  unsigned long id, bool assert)
+>>  {
+>> @@ -82,8 +93,14 @@ static const struct reset_control_ops meson_audio_arb_rstc_ops = {
+>>  };
+>>  
+>>  static const struct of_device_id meson_audio_arb_of_match[] = {
+>> -	{ .compatible = "amlogic,meson-axg-audio-arb", },
+>> -	{}
+>> +	{
+>> +		.compatible = "amlogic,meson-axg-audio-arb",
+>> +		.data = axg_audio_arb_reset_bits,
+>> +	},
+>> +	{
+>> +		.compatible = "amlogic,meson-sm1-audio-arb",
+>> +		.data = sm1_audio_arb_reset_bits
+>> +	}, {}
+>
+> Only slight preference, I would keep the sentinel on a separate line.
+> Your choice.
 
-But we also gain a new warning:
+Agreed.
 
-	dev_warn(dev,
-		 "%s supply %s not found, using dummy regulator\n",
-	         devname, id);
+>
+>>  };
+>>  MODULE_DEVICE_TABLE(of, meson_audio_arb_of_match);
+>>  
+>> @@ -104,10 +121,15 @@ static int meson_audio_arb_remove(struct platform_device *pdev)
+>>  static int meson_audio_arb_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>> +	const unsigned int *data;
+>>  	struct meson_audio_arb_data *arb;
+>>  	struct resource *res;
+>>  	int ret;
+>>  
+>> +	data = of_device_get_match_data(dev);
+>> +	if (!data)
+>> +		return -EINVAL;
+>> +
+>>  	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
+>>  	if (!arb)
+>>  		return -ENOMEM;
+>> @@ -126,7 +148,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
+>>  		return PTR_ERR(arb->regs);
+>>  
+>>  	spin_lock_init(&arb->lock);
+>> -	arb->reset_bits = axg_audio_arb_reset_bits;
+>> +	arb->reset_bits = data;
+>>  	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
+>
+> Since SM1 has two more resets, this needs to come from device match data
+> as well, or the last two resets will be unusable.
 
-This regulator is clearly optional, so there should not be a warning.
+Absolutely. Sorry about that.
+We are still a bit early in process of adding the support for this SoC.
 
-Maybe you can add a new get_type, OPTIONAL_GET, which does not issue
-the warning, but does give back a dummy regulator.
+I'll wait until I can do more complete tests to send a v2.
 
-Thanks
-	Andrew
+>
+>>  	arb->rstc.ops = &meson_audio_arb_rstc_ops;
+>>  	arb->rstc.of_node = dev->of_node;
+>
+> regards
+> Philipp
