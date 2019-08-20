@@ -1,34 +1,52 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 49/49] MAINTAINERS: add ath11k
-Date: Tue, 20 Aug 2019 18:48:15 +0300
-Message-ID: <1566316095-27507-50-git-send-email-kvalo@codeaurora.org>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1566316095-27507-1-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
+ generic RC bindings
+Date: Tue, 20 Aug 2019 10:52:29 -0500
+Message-ID: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+References: <20190819182619.29065-1-mripard@kernel.org>
+ <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
+ <20190820095028.l74sfvipwjjla6kq@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190820095028.l74sfvipwjjla6kq@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sean Young <sean@mess.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Tue, Aug 20, 2019 at 4:50 AM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> Hi Sean,
+>
+> On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
+> > On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
+> > > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> > >
+> > > The RC controllers have a bunch of generic properties that are needed in a
+> > > device tree. Add a YAML schemas for those.
+> > >
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > For the series (both 1/2 and 2.2):
+> >
+> > Reviewed-by: Sean Young <sean@mess.org>
+> >
+> > How's tree should this go through?
+>
+> Either yours or Rob's, I guess?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 677ef41cb012..ae00b2c443b6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13028,6 +13028,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git
- S:	Supported
- F:	drivers/net/wireless/ath/ath10k/
- 
-+QUALCOMM ATHEROS ATH11K WIRELESS DRIVER
-+M:	Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-+L:	ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git
-+S:	Supported
-+F:	drivers/net/wireless/ath/ath11k/
-+
- QUALCOMM ATHEROS ATH9K WIRELESS DRIVER
- M:	QCA ath9k Development <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
- L:	linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sean's because there are other changes to
+Documentation/devicetree/bindings/media/sunxi-ir.txt in -next.
+
+Rob
