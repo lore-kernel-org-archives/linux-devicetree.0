@@ -1,29 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
-Date: Tue, 20 Aug 2019 11:20:22 -0500
-Message-ID: <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com>
-References: <20190820145343.29108-1-megous@megous.com> <20190820145343.29108-3-megous@megous.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
+ generic RC bindings
+Date: Tue, 20 Aug 2019 17:22:16 +0100
+Message-ID: <20190820162216.7uol2jy5i3swhxi5@gofer.mess.org>
+References: <20190819182619.29065-1-mripard@kernel.org>
+ <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
+ <20190820095028.l74sfvipwjjla6kq@flea>
+ <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820145343.29108-3-megous@megous.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ondrej Jirman <megous@megous.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Ripard <mripard@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> Some PHYs require separate power supply for I/O pins in some modes
-> of operation. Add phy-io-supply property, to allow enabling this
-> power supply.
+On Tue, Aug 20, 2019 at 10:52:29AM -0500, Rob Herring wrote:
+> On Tue, Aug 20, 2019 at 4:50 AM Maxime Ripard <mripard@kernel.org> wrote:
+> > On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
+> > > On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
+> > > > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > >
+> > > > The RC controllers have a bunch of generic properties that are needed in a
+> > > > device tree. Add a YAML schemas for those.
+> > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > >
+> > > For the series (both 1/2 and 2.2):
+> > >
+> > > Reviewed-by: Sean Young <sean@mess.org>
+> > >
+> > > How's tree should this go through?
+> >
+> > Either yours or Rob's, I guess?
+> 
+> Sean's because there are other changes to
+> Documentation/devicetree/bindings/media/sunxi-ir.txt in -next.
 
-Perhaps since this is new, such phys should have *-supply in their nodes.
+Good point, I'll take them.
 
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
+Thanks
+Sean
