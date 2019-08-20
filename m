@@ -1,60 +1,102 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
-Date: Tue, 20 Aug 2019 15:04:57 -0500
-Message-ID: <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com>
-References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
- <1566315318-30320-3-git-send-email-krzk@kernel.org> <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
- <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
+From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
+Subject: Re: [PATCH 04/49] ath11k: add ahb.c
+Date: Tue, 20 Aug 2019 22:05:55 +0200
+Message-ID: <8c791df54a831f32fddd634e71e5e91342532535.camel@sipsolutions.net>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+         <1566316095-27507-5-git-send-email-kvalo@codeaurora.org>
+         (sfid-20190820_175156_108502_D7159DB2)
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1566316095-27507-5-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (sfid-20190820_175156_108502_D7159DB2)
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 1:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Tue, 20 Aug 2019 at 18:59, Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >
-> > > ---
-> > >
-> > > Changes since v5:
-> > > New patch
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > index 7294ac36f4c0..d07b3c06d7cf 100644
-> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > @@ -161,6 +161,9 @@ properties:
-> > >          items:
-> > >            - enum:
-> > >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
-> > > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
-> > > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
-> > > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
-> >
-> > This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
->
-> You mean the name does not match? I thought that '#' is a comment in YAML...
+On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
+> 
+> +static const struct service_to_pipe target_service_to_ce_map_wlan[] = {
+> +	{
+> +		__cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
+> +		__cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
+> +		__cpu_to_le32(3),
+> +	},
 
-No, the number of compatible strings is the problem.
+this might be nicer as C99 initializers as well? It's a struct of some
+sort, after all.
 
-> The dtbs_check fail on missing dt-mk-schema. Any reason why it is not
-> in the scripts?
+> +	{ /* must be last */
+> +		__cpu_to_le32(0),
+> +		__cpu_to_le32(0),
+> +		__cpu_to_le32(0),
+> +	},
 
-Because it is not just that script, but the whole project of scripts,
-schemas and meta-schemas. Read the instructions in
-Documentation/devicetree/writing-schema.md(.rst in next).
+You don't need endian conversion for 0, even sparse will not complain,
+but I'd argue it should anyway be something like
 
-Rob
+	{ /* terminator entry */ }
+
+since that's why it's there I guess?
+
+> +#define ATH11K_TX_RING_MASK_3 0x0
+
+You have a LOT of masks here that are 0, that seems odd?
+
+> +/* enum ext_irq_num - irq nubers that can be used by external modules
+
+typo ("numbers")
+
+> +inline u32 ath11k_ahb_read32(struct ath11k_base *ab, u32 offset)
+> +{
+> +	return ioread32(ab->mem + offset);
+> +}
+> +
+> +inline void ath11k_ahb_write32(struct ath11k_base *ab, u32 offset, u32 value)
+> +{
+> +	iowrite32(value, ab->mem + offset);
+> +}
+
+Just "inline" doesn't seem to make that much sense? If it's only used
+here then I guess it should be static, otherwise not inline? Or maybe
+you want it to be inlined *in this file* but available out-of-line
+otherwise? I'm not sure that actually is guaranteed to work right in C?
+
+> +		val = ath11k_ahb_read32(ab, CE_HOST_IE_ADDRESS);
+> +		val |= BIT(ce_id);
+> +		ath11k_ahb_write32(ab, CE_HOST_IE_ADDRESS, val);
+
+You could perhaps benefit from ath11k_ahb_setbit32() or something like
+that, this repeats a few times?
+
+> +	if (__le32_to_cpu(ce_config->pipedir) & PIPEDIR_OUT) {
+> +		val = ath11k_ahb_read32(ab, CE_HOST_IE_ADDRESS);
+> +		val &= ~BIT(ce_id);
+> +		ath11k_ahb_write32(ab, CE_HOST_IE_ADDRESS, val);
+
+and clearbit32() maybe. Dunno, I saw only 3 instances of each here I
+guess, but still, feels repetitive.
+
+> +int ath11k_ahb_start(struct ath11k_base *ab)
+> +{
+> +	ath11k_ahb_ce_irqs_enable(ab);
+> +	ath11k_ce_rx_post_buf(ab);
+> +
+> +	/* Bring up other components as appropriate */
+
+Hmm. What would be appropriate? It's not really doing anything else?
+
+> +void ath11k_ahb_stop(struct ath11k_base *ab)
+> +{
+> +	if (!test_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags))
+> +		ath11k_ahb_ce_irqs_disable(ab);
+> +	ath11k_ahb_sync_ce_irqs(ab);
+> +	ath11k_ahb_kill_tasklets(ab);
+> +	del_timer_sync(&ab->rx_replenish_retry);
+> +	ath11k_ce_cleanup_pipes(ab);
+> +	/* Shutdown other components as appropriate */
+
+likewise, it's not doing anything else?
+
+johannes
