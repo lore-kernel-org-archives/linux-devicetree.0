@@ -1,78 +1,84 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 04/11] of/fdt: add early_init_dt_get_dma_zone_size()
-Date: Tue, 20 Aug 2019 16:58:12 +0200
-Message-ID: <20190820145821.27214-5-nsaenzjulienne@suse.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus probe
+Date: Tue, 20 Aug 2019 09:58:34 -0500
+Message-ID: <20190820145834.7301-2-dinguyen@kernel.org>
+References: <20190820145834.7301-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190820145821.27214-1-nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, wahrenst-hi6Y0CQ0nG0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, linux-riscv-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: phill-FnsA7b+Nu9XCNwmyUqMw6A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsaenzjulienne-l3A5Bk7waGM@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820145834.7301-1-dinguyen@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org, linux@armlinux.org.uk, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, daniel.thompson@linaro.org, linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some devices might have weird DMA addressing limitations that only apply
-to a subset of the available peripherals. For example the Raspberry Pi 4
-has two interconnects, one able to address the whole lower 4G memory
-area and another one limited to the lower 1G.
+The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+default. Until recently, the DMA controller was brought out of reset by the
+bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
+that are not used are held in reset and are left to Linux to bring them
+out of reset.
 
-Being an uncommon situation we simply hardcode the device wide DMA
-addressable memory size conditionally to the machine compatible name and
-set 'dma_zone_size' accordingly.
+Add a mechanism for getting the reset property and de-assert the primecell
+module from reset if found. This is a not a hard fail if the reset properti
+is not present in the device tree node, so the driver will continue to
+probe.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
+Because there are different variants of the controller that may have
+multiple reset signals, the code will find all reset(s) specified and
+de-assert them.
 
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
+v4: cleaned up indentation in loop
+    fix up a few checkpatch warnings
+    add Reviewed-by:
+v3: add a reset_control_put()
+    add error handling
+v2: move reset control to bus code
+    find all reset properties and de-assert them
+---
+ drivers/amba/bus.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Changes in v2:
-- New approach to getting dma_zone_size, instead of parsing the dts we
-  hardcode it conditionally to the machine compatible name.
-
- drivers/of/fdt.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 06ffbd39d9af..f756e8c05a77 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -27,6 +27,7 @@
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 100e798a5c82..76a1cd56a1ab 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -18,6 +18,7 @@
+ #include <linux/limits.h>
+ #include <linux/clk/clk-conf.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
  
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-+#include <asm/dma.h>	/* for dma_zone_size */
+ #include <asm/irq.h>
  
- #include "of_private.h"
- 
-@@ -1195,6 +1196,12 @@ void __init early_init_dt_scan_nodes(void)
- 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
- }
- 
-+void __init early_init_dt_get_dma_zone_size(void)
-+{
-+	if (of_fdt_machine_is_compatible("brcm,bcm2711"))
-+		dma_zone_size = 0x3c000000;
-+}
+@@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 	ret = amba_get_enable_pclk(dev);
+ 	if (ret == 0) {
+ 		u32 pid, cid;
++		int count;
++		struct reset_control *rstc;
 +
- bool __init early_init_dt_scan(void *params)
- {
- 	bool status;
-@@ -1204,6 +1211,7 @@ bool __init early_init_dt_scan(void *params)
- 		return false;
++		/*
++		 * Find reset control(s) of the amba bus and de-assert them.
++		 */
++		count = reset_control_get_count(&dev->dev);
++		while (count > 0) {
++			rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
++			if (IS_ERR(rstc)) {
++				if (PTR_ERR(rstc) == -EPROBE_DEFER)
++					ret = -EPROBE_DEFER;
++				else
++					dev_err(&dev->dev, "Can't get amba reset!\n");
++				break;
++			}
++			reset_control_deassert(rstc);
++			reset_control_put(rstc);
++			count--;
++		}
  
- 	early_init_dt_scan_nodes();
-+	early_init_dt_get_dma_zone_size();
- 	return true;
- }
- 
+ 		/*
+ 		 * Read pid and cid based on size of resource
 -- 
-2.22.0
+2.20.0
