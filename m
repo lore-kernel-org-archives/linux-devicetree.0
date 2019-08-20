@@ -1,7 +1,7 @@
 From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 20/49] ath11k: add dp_tx.h
-Date: Tue, 20 Aug 2019 18:47:46 +0300
-Message-ID: <1566316095-27507-21-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH 30/49] ath11k: add hw.h
+Date: Tue, 20 Aug 2019 18:47:56 +0300
+Message-ID: <1566316095-27507-31-git-send-email-kvalo@codeaurora.org>
 References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1566316095-27507-1-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -11,52 +11,139 @@ Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL
 List-Id: devicetree@vger.kernel.org
 
 ---
- drivers/net/wireless/ath/ath11k/dp_tx.h | 40 +++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/net/wireless/ath/ath11k/hw.h | 127 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 127 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/dp_tx.h b/drivers/net/wireless/ath/ath11k/dp_tx.h
+diff --git a/drivers/net/wireless/ath/ath11k/hw.h b/drivers/net/wireless/ath/ath11k/hw.h
 new file mode 100644
-index 000000000000..0a1f151aad8a
+index 000000000000..f510d9d9263c
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/dp_tx.h
-@@ -0,0 +1,40 @@
++++ b/drivers/net/wireless/ath/ath11k/hw.h
+@@ -0,0 +1,127 @@
 +/* SPDX-License-Identifier: ISC */
 +/*
 + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#ifndef ATH11K_DP_TX_H
-+#define ATH11K_DP_TX_H
++#ifndef ATH11K_HW_H
++#define ATH11K_HW_H
 +
-+#include "core.h"
-+#include "hal_tx.h"
++/* Target configuration defines */
 +
-+struct ath11k_dp_htt_wbm_tx_status {
-+	u32 msdu_id;
-+	bool acked;
-+	int ack_rssi;
++/* Num VDEVS per radio */
++#define TARGET_NUM_VDEVS	(16 + 1)
++
++#define TARGET_NUM_PEERS_PDEV	(512 + TARGET_NUM_VDEVS)
++
++/* Num of peers for Single Radio mode */
++#define TARGET_NUM_PEERS_SINGLE		(TARGET_NUM_PEERS_PDEV)
++
++/* Num of peers for DBS */
++#define TARGET_NUM_PEERS_DBS		(2 * TARGET_NUM_PEERS_PDEV)
++
++/* Num of peers for DBS_SBS */
++#define TARGET_NUM_PEERS_DBS_SBS	(3 * TARGET_NUM_PEERS_PDEV)
++
++/* Max num of stations (per radio) */
++#define TARGET_NUM_STATIONS	512
++
++#define TARGET_NUM_PEERS(x)	TARGET_NUM_PEERS_##x
++#define TARGET_NUM_PEER_KEYS	2
++#define TARGET_NUM_TIDS(x)	(2 * TARGET_NUM_PEERS(x) + \
++				 4 * TARGET_NUM_VDEVS + 8)
++
++#define TARGET_AST_SKID_LIMIT	16
++#define TARGET_NUM_OFFLD_PEERS	4
++#define TARGET_NUM_OFFLD_REORDER_BUFFS 4
++
++#define TARGET_TX_CHAIN_MASK	(BIT(0) | BIT(1) | BIT(2) | BIT(4))
++#define TARGET_RX_CHAIN_MASK	(BIT(0) | BIT(1) | BIT(2) | BIT(4))
++#define TARGET_RX_TIMEOUT_LO_PRI	100
++#define TARGET_RX_TIMEOUT_HI_PRI	40
++
++#define TARGET_DECAP_MODE_RAW		0
++#define TARGET_DECAP_MODE_NATIVE_WIFI	1
++#define TARGET_DECAP_MODE_ETH		2
++
++#define TARGET_SCAN_MAX_PENDING_REQS	4
++#define TARGET_BMISS_OFFLOAD_MAX_VDEV	3
++#define TARGET_ROAM_OFFLOAD_MAX_VDEV	3
++#define TARGET_ROAM_OFFLOAD_MAX_AP_PROFILES	8
++#define TARGET_GTK_OFFLOAD_MAX_VDEV	3
++#define TARGET_NUM_MCAST_GROUPS		12
++#define TARGET_NUM_MCAST_TABLE_ELEMS	64
++#define TARGET_MCAST2UCAST_MODE		2
++#define TARGET_TX_DBG_LOG_SIZE		1024
++#define TARGET_RX_SKIP_DEFRAG_TIMEOUT_DUP_DETECTION_CHECK 1
++#define TARGET_VOW_CONFIG		0
++#define TARGET_NUM_MSDU_DESC		(2500)
++#define TARGET_MAX_FRAG_ENTRIES		6
++#define TARGET_MAX_BCN_OFFLD		16
++#define TARGET_NUM_WDS_ENTRIES		32
++#define TARGET_DMA_BURST_SIZE		1
++#define TARGET_RX_BATCHMODE		1
++
++#define ATH11K_HW_MAX_QUEUES		4
++
++#define ATH11k_HW_RATECODE_CCK_SHORT_PREAM_MASK  0x4
++
++#define ATH11K_FW_DIR			"ath11k"
++
++/* IPQ8074 definitions */
++#define IPQ8074_FW_DIR			"IPQ8074"
++#define IPQ8074_MAX_BOARD_DATA_SZ	(256 * 1024)
++#define IPQ8074_MAX_CAL_DATA_SZ		IPQ8074_MAX_BOARD_DATA_SZ
++
++#define ATH11K_BOARD_MAGIC		"QCA-ATH11K-BOARD"
++#define ATH11K_BOARD_API2_FILE		"board-2.bin"
++#define ATH11K_DEFAULT_BOARD_FILE	"bdwlan.bin"
++#define ATH11K_DEFAULT_CAL_FILE		"caldata.bin"
++
++enum ath11k_hw_rate_cck {
++	ATH11K_HW_RATE_CCK_LP_11M = 0,
++	ATH11K_HW_RATE_CCK_LP_5_5M,
++	ATH11K_HW_RATE_CCK_LP_2M,
++	ATH11K_HW_RATE_CCK_LP_1M,
++	ATH11K_HW_RATE_CCK_SP_11M,
++	ATH11K_HW_RATE_CCK_SP_5_5M,
++	ATH11K_HW_RATE_CCK_SP_2M,
 +};
 +
-+int ath11k_dp_tx_htt_h2t_ver_req_msg(struct ath11k_base *ab);
-+int ath11k_dp_tx(struct ath11k *ar, struct ath11k_vif *arvif,
-+		 struct sk_buff *skb);
-+void ath11k_dp_tx_completion_handler(struct ath11k_base *ab, int ring_id);
-+int ath11k_dp_tx_send_reo_cmd(struct ath11k_base *ab, struct dp_rx_tid *rx_tid,
-+			      enum hal_reo_cmd_type type,
-+			      struct ath11k_hal_reo_cmd *cmd,
-+			      void (*func)(struct ath11k_dp *, void *,
-+					   enum hal_reo_cmd_status));
++enum ath11k_hw_rate_ofdm {
++	ATH11K_HW_RATE_OFDM_48M = 0,
++	ATH11K_HW_RATE_OFDM_24M,
++	ATH11K_HW_RATE_OFDM_12M,
++	ATH11K_HW_RATE_OFDM_6M,
++	ATH11K_HW_RATE_OFDM_54M,
++	ATH11K_HW_RATE_OFDM_36M,
++	ATH11K_HW_RATE_OFDM_18M,
++	ATH11K_HW_RATE_OFDM_9M,
++};
 +
-+int ath11k_dp_tx_htt_h2t_ppdu_stats_req(struct ath11k *ar, u32 mask);
-+int
-+ath11k_dp_tx_htt_h2t_ext_stats_req(struct ath11k *ar, u8 type,
-+				   struct htt_ext_stats_cfg_params *cfg_params,
-+				   u64 cookie);
-+int ath11k_dp_tx_htt_monitor_mode_ring_config(struct ath11k *ar, bool reset);
++struct ath11k_hw_params {
++	const char *name;
++	struct {
++		const char *dir;
++		size_t board_size;
++		size_t cal_size;
++	} fw;
++};
 +
-+int ath11k_dp_tx_htt_rx_filter_setup(struct ath11k_base *ab, u32 ring_id,
-+				     int mac_id, enum hal_ring_type ring_type,
-+				     int rx_buf_size,
-+				     struct htt_rx_ring_tlv_filter *tlv_filter);
++struct ath11k_fw_ie {
++	__le32 id;
++	__le32 len;
++	u8 data[0];
++};
++
++enum ath11k_bd_ie_board_type {
++	ATH11K_BD_IE_BOARD_NAME = 0,
++	ATH11K_BD_IE_BOARD_DATA = 1,
++};
++
++enum ath11k_bd_ie_type {
++	/* contains sub IEs of enum ath11k_bd_ie_board_type */
++	ATH11K_BD_IE_BOARD = 0,
++	ATH11K_BD_IE_BOARD_EXT = 1,
++};
 +
 +#endif
