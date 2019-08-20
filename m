@@ -1,146 +1,71 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH v7 3/7] of/platform: Add functional dependency link from
- DT bindings
-Date: Mon, 19 Aug 2019 17:09:08 -0700
-Message-ID: <CAGETcx8UHA9kNkjjnBXcf_OYXaaPO9ky60M01Cfz3NFb1c1FZw@mail.gmail.com>
-References: <20190724001100.133423-1-saravanak@google.com> <20190724001100.133423-4-saravanak@google.com>
- <141d2e16-26cc-1f05-1ac0-6784bab5ae88@gmail.com> <CAGETcx-dVnLCRA+1CX47gtZgtwTcrN5KefpjMzh9OJB-BEnqyg@mail.gmail.com>
- <19c99a6e-51c3-68d7-d1d6-640aae754c14@gmail.com> <CAGETcx-XcXZq7YFHsFdzBDniQku9cxFUJL_vBoEKKhCH+cDKRw@mail.gmail.com>
- <74931824-f8a1-0435-e00a-5b5cdbe8a8a2@gmail.com>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH 3/4] ARM: dts: ls1021a: Remove num-lanes property from
+ PCIe nodes
+Date: Tue, 20 Aug 2019 00:12:31 +0000
+Message-ID: <DB8PR04MB6747FDA7787D986D5FB851E384AB0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190812042435.25102-1-Zhiqiang.Hou@nxp.com>
+ <20190812042435.25102-4-Zhiqiang.Hou@nxp.com>
+ <20190819192440.GT253360@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74931824-f8a1-0435-e00a-5b5cdbe8a8a2@gmail.com>
+In-Reply-To: <20190819192440.GT253360@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 2:30 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 8/19/19 1:49 PM, Saravana Kannan wrote:
-> > On Mon, Aug 19, 2019 at 10:16 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 8/15/19 6:50 PM, Saravana Kannan wrote:
-> >>> On Wed, Aug 7, 2019 at 7:06 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>>
-> >>>> On 7/23/19 5:10 PM, Saravana Kannan wrote:
-> >>>>> Add device-links after the devices are created (but before they are
-> >>>>> probed) by looking at common DT bindings like clocks and
-> >>>>> interconnects.
-> >>
-> >>
-> >> < very big snip (lots of comments that deserve answers) >
-> >>
-> >>
-> >>>>
-> >>>> /**
-> >>>>  * of_link_property - TODO:
-> >>>>  * dev:
-> >>>>  * con_np:
-> >>>>  * prop:
-> >>>>  *
-> >>>>  * TODO...
-> >>>>  *
-> >>>>  * Any failed attempt to create a link will NOT result in an immediate return.
-> >>>>  * of_link_property() must create all possible links even when one of more
-> >>>>  * attempts to create a link fail.
-> >>>>
-> >>>> Why?  isn't one failure enough to prevent probing this device?
-> >>>> Continuing to scan just results in extra work... which will be
-> >>>> repeated every time device_link_check_waiting_consumers() is called
-> >>>
-> >>> Context:
-> >>> As I said in the cover letter, avoiding unnecessary probes is just one
-> >>> of the reasons for this patch. The other (arguably more important)
-> >>
-> >> Agree that it is more important.
-> >>
-> >>
-> >>> reason for this patch is to make sure suppliers know that they have
-> >>> consumers that are yet to be probed. That way, suppliers can leave
-> >>> their resource on AND in the right state if they were left on by the
-> >>> bootloader. For example, if a clock was left on and at 200 MHz, the
-> >>> clock provider needs to keep that clock ON and at 200 MHz till all the
-> >>> consumers are probed.
-> >>>
-> >>> Answer: Let's say a consumer device Z has suppliers A, B and C. If the
-> >>> linking fails at A and you return immediately, then B and C could
-> >>> probe and then figure that they have no more consumers (they don't see
-> >>> a link to Z) and turn off their resources. And Z could fail
-> >>> catastrophically.
-> >>
-> >> Then I think that this approach is fatally flawed in the current implementation.
-> >
-> > I'm waiting to hear how it is fatally flawed. But maybe this is just a
-> > misunderstanding of the problem?
->
-> Fatally flawed because it does not handle modules that add a consumer
-> device when the module is loaded.
-
-If you are talking about modules adding child devices of the device
-they are managing, then that's handled correctly later in the series.
-
-If you are talking about modules adding devices that aren't defined in
-DT, then right, I'm not trying to handle that. The module needs to
-make sure it keeps the resources needed for new devices it's adding
-are in the right state or need to add the right device links.
-
-> > In the text below, I'm not sure if you mixing up two different things
-> > or just that your wording it a bit ambiguous. So pardon my nitpick to
-> > err on the side of clarity.
->
-> Please do nitpick.  Clarity is good.
->
->
-> >
-> >> A device can be added by a module that is loaded.
-> >
-> > No, in the example I gave, of_platform_default_populate_init() would
-> > add all 3 of those devices during arch_initcall_sync().
->
-> The example you gave does not cover all use cases.
->
-> There are modules that add devices when the module is loaded.  You can not
-> ignore systems using such modules.
-
-I'll have to agree to disagree on that. While I understand that the
-design should be good and I'm happy to work on that, you can't insist
-that a patch series shouldn't be allowed because it's only improving
-99% of the cases and leaves the other 1% in the status quo. You are
-just going to bring the kernel development to a grinding halt.
-
-> >
-> >>  In that case the device
-> >> was not present at late boot when the suppliers may turn off their resources.
-> >
-> > In that case, the _drivers_ for those devices aren't present at late
-> > boot. So that they can't request to keep the resources on for their
-> > consumer devices. Since there are no consumer requests on resources,
-> > the suppliers turn off their resources at late boot (since there isn't
-> > a better location as of today). The sync_state() call back added in a
-> > subsequent patche in this series will provide the better location.
->
-> And the sync_state() call back will not deal with modules that add consumer
-> devices when the module is loaded, correct?
-
-Depends. If it's just more devices from DT, then it'll be fine. If
-it's not, then the module needs to take care of the needs of devices
-it's adding.
-
-> >
-> >> (I am assuming the details since I have not reviewed the patches later in
-> >> the series that implement this part.)
-> >>
-> >> Am I missing something?
-> >
-> > I think you are mixing up devices getting added/populated with drivers
-> > getting loaded as modules?
->
-> Only some modules add devices when they are loaded.  But these modules do
-> exist.
-
-Out of the billions of Android devices, how many do you see this happening in?
-
-Thanks,
-Saravana
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOo41MIyMMjVIDM6MjUNCj4gVG86IFoucS4gSG91
+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOyBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsNCj4gamluZ29vaGFuMUBnbWFpbC5j
+b207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXduZ3Vv
+QGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsNCj4gbG9yZW56by5waWVy
+YWxpc2lAYXJtLmNvbTsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+DQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggMy80XSBBUk06IGR0czogbHMxMDIxYTogUmVtb3ZlIG51bS1sYW5lcyBw
+cm9wZXJ0eQ0KPiBmcm9tIFBDSWUgbm9kZXMNCj4gDQo+IE9uIE1vbiwgQXVnIDEyLCAyMDE5IGF0
+IDA0OjIyOjI3QU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFu
+ZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4NCj4gPiBPbiBGU0wgTGF5ZXJzY2FwZSBTb0Nz
+LCB0aGUgbnVtYmVyIG9mIGxhbmVzIGFzc2lnbmVkIHRvIFBDSWUNCj4gPiBjb250cm9sbGVyIGlz
+IG5vdCBmaXhlZCwgaXQgaXMgZGV0ZXJtaW5lZCBieSB0aGUgc2VsZWN0ZWQgU2VyRGVzDQo+ID4g
+cHJvdG9jb2wgaW4gdGhlIFJDVyAoUmVzZXQgQ29uZmlndXJhdGlvbiBXb3JkKSwgYW5kIHRoZSBQ
+Q0llIGxpbmsNCj4gPiB0cmFpbmluZyBpcyBjb21wbGV0ZWQgYXV0b21hdGljYWxseSBiYXNlIG9u
+IHRoZSBzZWxlY3RlZCBTZXJEZXMNCj4gPiBwcm90b2NvbCwgYW5kIHRoZSBsaW5rIHdpZHRoIHNl
+dC11cCBpcyB1cGRhdGVkIGJ5IGhhcmR3YXJlLiBTbyB0aGUNCj4gPiBudW0tbGFuZXMgaXMgbm90
+IG5lZWRlZCB0byBzcGVjaWZ5IHRoZSBsaW5rIHdpZHRoLg0KPiA+DQo+ID4gVGhlIGN1cnJlbnQg
+bnVtLWxhbmVzIGluZGljYXRlcyB0aGUgbWF4IGxhbmVzIFBDSWUgY29udHJvbGxlciBjYW4NCj4g
+PiBzdXBwb3J0IHVwIHRvLCBpbnN0ZWFkIG9mIHRoZSBsYW5lcyBhc3NpZ25lZCB0byB0aGUgUENJ
+ZSBjb250cm9sbGVyLg0KPiA+IFRoaXMgY2FuIHJlc3VsdCBpbiBQQ0llIGxpbmsgdHJhaW5pbmcg
+ZmFpbCBhZnRlciBob3QtcmVzZXQuIFNvIHJlbW92ZQ0KPiA+IHRoZSBudW0tbGFuZXMgdG8gYXZv
+aWQgc2V0LXVwIHRvIGluY29ycmVjdCBsaW5rIHdpZHRoLg0KPiANCj4gSXQgd291bGQgYmUgdXNl
+ZnVsIHRvIGV4cGxhaW4gKndoeSogIm51bS1sYW5lcyIgaW4gRFQgY2F1c2VzIGEgbGluayB0cmFp
+bmluZw0KPiBmYWlsdXJlLiAgTWF5YmUgdGhlIGNvZGUgcHJvZ3JhbXMgIm51bS1sYW5lcyIgc29t
+ZXdoZXJlLCBvdmVycmlkaW5nIHdoYXQNCj4gaGFyZHdhcmUgYXV0b21hdGljYWxseSBzZW5zZWQ/
+ICBNYXliZSB0aGUgY29kZSB0cmllcyB0byBicmluZyB1cCBleGFjdGx5DQo+ICJudW0tbGFuZXMi
+IGxhbmVzIGV2ZW4gaWYgbm90IGFsbCBhcmUgcHJlc2VudD8NCg0KV2lsbCBhZGQgaW4gdjIuDQpB
+cyB0aGUgTGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgbGluayB0cmFpbmluZyBpcyBjb21wbGV0
+ZWQgYXV0b21hdGljYWxseSBkdXJpbmcNCnRoZSBwb3dlciBvbiByZXNldC4gSXQgZG9lc24ndCBu
+ZWVkIHNvZnR3YXJlIHRvIGJyaW5nIHVwLiBTbyBJIHRoaW5rIGl0IHNob3VsZCBiZSB0aGUNCmZv
+cm1lci4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlx
+aWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2xzMTAyMWEuZHRzaSB8IDIgLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25z
+KC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNp
+DQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kgaW5kZXggNDY0ZGY0MjkwZmZj
+Li4yZjY5NzdhZGE0NDcNCj4gPiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9s
+czEwMjFhLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kNCj4g
+PiBAQCAtODc0LDcgKzg3NCw2IEBADQo+ID4gIAkJCSNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiA+
+ICAJCQkjc2l6ZS1jZWxscyA9IDwyPjsNCj4gPiAgCQkJZGV2aWNlX3R5cGUgPSAicGNpIjsNCj4g
+PiAtCQkJbnVtLWxhbmVzID0gPDQ+Ow0KPiA+ICAJCQludW0tdmlld3BvcnQgPSA8Nj47DQo+ID4g
+IAkJCWJ1cy1yYW5nZSA9IDwweDAgMHhmZj47DQo+ID4gIAkJCXJhbmdlcyA9IDwweDgxMDAwMDAw
+IDB4MCAweDAwMDAwMDAwIDB4NDAgMHgwMDAxMDAwMCAweDANCj4gMHgwMDAxMDAwMCAgIC8qIGRv
+d25zdHJlYW0gSS9PICovDQo+ID4gQEAgLTg5OSw3ICs4OTgsNiBAQA0KPiA+ICAJCQkjYWRkcmVz
+cy1jZWxscyA9IDwzPjsNCj4gPiAgCQkJI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gIAkJCWRldmlj
+ZV90eXBlID0gInBjaSI7DQo+ID4gLQkJCW51bS1sYW5lcyA9IDw0PjsNCj4gPiAgCQkJbnVtLXZp
+ZXdwb3J0ID0gPDY+Ow0KPiA+ICAJCQlidXMtcmFuZ2UgPSA8MHgwIDB4ZmY+Ow0KPiA+ICAJCQly
+YW5nZXMgPSA8MHg4MTAwMDAwMCAweDAgMHgwMDAwMDAwMCAweDQ4IDB4MDAwMTAwMDAgMHgwDQo+
+IDB4MDAwMTAwMDAgICAvKiBkb3duc3RyZWFtIEkvTyAqLw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+
+ID4NCg==
