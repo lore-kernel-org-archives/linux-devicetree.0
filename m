@@ -1,42 +1,36 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 1/4] iommu/arm-smmu: Introduce wrapper for writeq/readq
-Date: Tue, 20 Aug 2019 13:08:49 +0100
-Message-ID: <20190820120848.2m6gytilrpil4stu@willie-the-truck>
-References: <20190711150242.25290-1-gregory.clement@bootlin.com>
- <20190711150242.25290-2-gregory.clement@bootlin.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 1/2] arm64: dts: meson: g12a: audio clock controller provides resets
+Date: Tue, 20 Aug 2019 14:15:50 +0200
+Message-ID: <20190820121551.18398-2-jbrunet@baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190711150242.25290-2-gregory.clement@bootlin.com>
+In-Reply-To: <20190820121551.18398-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory, Hanna,
+The clock controller dedicated to audio clocks also provides reset lines
+on the g12 SoC family
 
-On Thu, Jul 11, 2019 at 05:02:39PM +0200, Gregory CLEMENT wrote:
-> From: Hanna Hawa <hannah@marvell.com>
-> 
-> This patch introduces the smmu_writeq_relaxed/smmu_readq_relaxed
-> helpers, as preparation to add specific Marvell work-around for
-> accessing 64 bits width registers of ARM SMMU.
-> 
-> Signed-off-by: Hanna Hawa <hannah@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  drivers/iommu/arm-smmu.c | 36 +++++++++++++++++++++++++++---------
->  1 file changed, 27 insertions(+), 9 deletions(-)
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Sorry for the delay in replying to this -- Robin's been reworking the driver
-so that implementation quirks can be specified more cleanly. Please can you
-take a look at:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/refactoring
-
-and try to respin your patches on top of that?
-
-Thanks,
-
-Will
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 809f741a82ec..8eb92edb7a66 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -1477,6 +1477,7 @@
+ 					compatible = "amlogic,g12a-audio-clkc";
+ 					reg = <0x0 0x0 0x0 0xb4>;
+ 					#clock-cells = <1>;
++					#reset-cells = <1>;
+ 
+ 					clocks = <&clkc CLKID_AUDIO>,
+ 						 <&clkc CLKID_MPLL0>,
+-- 
+2.21.0
