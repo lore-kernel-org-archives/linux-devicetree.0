@@ -1,76 +1,126 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3] dt-bindings: arm: Convert Actions Semi bindings to
- jsonschema
-Date: Tue, 20 Aug 2019 21:36:41 +0530
-Message-ID: <20190820160641.GA9262@Mani-XPS-13-9360>
-References: <20190517153223.7650-1-robh@kernel.org>
- <20190613224435.GA32572@bogus>
- <20190614170450.GA29654@Mani-XPS-13-9360>
- <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
- <CAL_JsqJoQDkqZO_4XdaQymVW0cJDXVmAPh3uieRkBjoUXeWE1w@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: serial: lantiq: Convert to YAML schema
+Date: Tue, 20 Aug 2019 11:07:49 -0500
+Message-ID: <CAL_JsqKmyEn5iXuibmZGcvRpaiyUjVoi4-2e9NKY9eYnWLL7iQ@mail.gmail.com>
+References: <cover.1566288689.git.rahul.tanwar@linux.intel.com> <772527bd87da45eeef905d9b9d46a8d99915a116.1566288689.git.rahul.tanwar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJoQDkqZO_4XdaQymVW0cJDXVmAPh3uieRkBjoUXeWE1w@mail.gmail.com>
+In-Reply-To: <772527bd87da45eeef905d9b9d46a8d99915a116.1566288689.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+To: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 01:33:47PM -0600, Rob Herring wrote:
-> On Fri, Jun 14, 2019 at 11:07 AM Andreas Färber <afaerber@suse.de> wrote:
-> >
-> > Am 14.06.19 um 19:04 schrieb Manivannan Sadhasivam:
-> > > On Thu, Jun 13, 2019 at 04:44:35PM -0600, Rob Herring wrote:
-> > >> On Fri, May 17, 2019 at 10:32:23AM -0500, Rob Herring wrote:
-> > >>> Convert Actions Semi SoC bindings to DT schema format using json-schema.
-> > >>>
-> > >>> Cc: "Andreas Färber" <afaerber@suse.de>
-> > >>> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >>> Cc: Mark Rutland <mark.rutland@arm.com>
-> > >>> Cc: linux-arm-kernel@lists.infradead.org
-> > >>> Cc: devicetree@vger.kernel.org
-> > >>> Signed-off-by: Rob Herring <robh@kernel.org>
-> > >>> ---
-> > >>> v3:
-> > >>> - update MAINTAINERS
-> > >>>
-> > >>>  .../devicetree/bindings/arm/actions.txt       | 56 -------------------
-> > >>>  .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
-> > >>>  MAINTAINERS                                   |  2 +-
-> > >>>  3 files changed, 39 insertions(+), 57 deletions(-)
-> > >>>  delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
-> > >>>  create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
-> > >>
-> > >> Ping. Please apply or modify this how you'd prefer. I'm not going to
-> > >> keep respinning this.
-> > >>
-> > >
-> > > Sorry for that Rob.
-> >
-> > Well, it was simply not clear whether we were supposed to or not. :)
-> 
-> I thought 'To' you and a single patch should be clear enough.
-> 
-> > > Andreas, are you going to take this patch? Else I'll pick it up (If you
-> > > want me to do the PR for next cycle)
-> >
-> > I had checked that all previous changes to the .txt file were by myself,
-> > so I would prefer if we not license it under GPLv2-only but under the
-> > same dual-license (MIT/GPLv2+) as the DTs. That modification would need
-> > Rob's approval then.
-> 
-> That's fine and dual license is preferred. Can you adjust that when
-> applying. Note that the preference for schema is (GPL-2.0 OR
-> BSD-2-Clause), but MIT/GPLv2+ is fine by me.
+On Tue, Aug 20, 2019 at 3:29 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
+>
+> Convert the existing DT binding document for Lantiq SoC ASC serial controller
+> from txt format to YAML format.
+>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/serial/lantiq_asc.txt      | 31 ----------
+>  .../devicetree/bindings/serial/lantiq_asc.yaml     | 70 ++++++++++++++++++++++
 
-Andreas, are you going to take this patch? Else, we can ask Rob to take
-this through his tree as we don't have any queued patches for v5.4 yet.
+Use the compatible name: lantiq,asc.yaml
 
-Thanks,
-Mani
+Don't forget the $id value too.
 
-> 
-> Rob
+>  2 files changed, 70 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/lantiq_asc.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+
+
+> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> new file mode 100644
+> index 000000000000..54b90490f4fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/lantiq_asc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Lantiq SoC ASC serial controller
+> +
+> +maintainers:
+> +  - Rahul Tanwar <rahul.tanwar@intel.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/serial.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      items:
+> +        - const: lantiq,asc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+
+Technically, 1 item is not allowed until patch 2 (or the old doc was wrong).
+
+> +    maxItems: 3
+> +    items:
+> +      - description: tx or combined interrupt
+> +      - description: rx interrupt
+> +      - description: err interrupt
+> +
+> +  clocks:
+> +    description:
+> +      When present, first entry listed should contain phandle
+> +      to the frequency clock and second entry should contain
+> +      phandle to the gate clock.
+
+Schema needs to define how many entries:
+
+items:
+  - description: ...
+  - description: ...
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: freq
+> +      - const: asc
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +
+> +examples:
+> +  - |
+> +    asc0: serial@16600000 {
+> +            compatible = "lantiq,asc";
+> +            reg = <0x16600000 0x100000>;
+> +            interrupt-parent = <&gic>;
+> +            interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
+> +            clocks = <&cgu CLK_SSX4>, <&cgu GCLK_UART>;
+> +            clock-names = "freq", "asc";
+> +    };
+> +
+> +  - |
+> +    asc1: serial@e100c00 {
+
+I don't think this 2nd example adds anything.
+
+> +            compatible = "lantiq,asc";
+> +            reg = <0xE100C00 0x400>;
+> +            interrupt-parent = <&icu0>;
+> +            interrupts = <112 113 114>;
+> +    };
+> +
+> +...
+> --
+> 2.11.0
+>
