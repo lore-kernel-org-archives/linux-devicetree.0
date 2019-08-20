@@ -1,112 +1,80 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 2/2] reset: meson-audio-arb: add sm1 support
-Date: Tue, 20 Aug 2019 17:58:01 +0200
-Message-ID: <1jlfvnomly.fsf@starbuckisacylon.baylibre.com>
-References: <20190820094625.13455-1-jbrunet@baylibre.com> <20190820094625.13455-3-jbrunet@baylibre.com> <1566315581.3030.18.camel@pengutronix.de>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: lantiq: Update for new SoC
+Date: Tue, 20 Aug 2019 11:00:50 -0500
+Message-ID: <CAL_JsqJK=TFsAt4kegGs2ymnWpY4tuDXNJF0RFpvZJmuPHJMYA@mail.gmail.com>
+References: <cover.1566288689.git.rahul.tanwar@linux.intel.com> <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566315581.3030.18.camel@pengutronix.de>
+In-Reply-To: <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 20 Aug 2019 at 17:39, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+On Tue, Aug 20, 2019 at 3:29 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
+>
+> Intel Lightning Mountain(LGM) SoC reuses Lantiq ASC serial controller IP.
+> Update the dt bindings to support LGM as well.
+>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/serial/lantiq_asc.yaml          | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> index 54b90490f4fb..92807b59b024 100644
+> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
+> @@ -17,6 +17,7 @@ properties:
+>      oneOf:
+>        items:
+>          - const: lantiq,asc
+> +        - const: intel,lgm-asc
 
-> Hi Jerome,
->
-> thank you for the patch. Just one nitpick and one real issue below:
->
-> On Tue, 2019-08-20 at 11:46 +0200, Jerome Brunet wrote:
->> Add the new arb reset lines of the SM1 SoC family
->> 
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> ---
->>  drivers/reset/reset-meson-audio-arb.c | 28 ++++++++++++++++++++++++---
->>  1 file changed, 25 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
->> index c53a2185a039..72d29dbca45a 100644
->> --- a/drivers/reset/reset-meson-audio-arb.c
->> +++ b/drivers/reset/reset-meson-audio-arb.c
->> @@ -30,6 +30,17 @@ static const unsigned int axg_audio_arb_reset_bits[] = {
->>  	[AXG_ARB_FRDDR_C]	= 6,
->>  };
->>  
->> +static const unsigned int sm1_audio_arb_reset_bits[] = {
->> +	[AXG_ARB_TODDR_A]	= 0,
->> +	[AXG_ARB_TODDR_B]	= 1,
->> +	[AXG_ARB_TODDR_C]	= 2,
->> +	[AXG_ARB_FRDDR_A]	= 4,
->> +	[AXG_ARB_FRDDR_B]	= 5,
->> +	[AXG_ARB_FRDDR_C]	= 6,
->> +	[AXG_ARB_TODDR_D]	= 3,
->> +	[AXG_ARB_FRDDR_D]	= 7,
->> +};
->> +
->>  static int meson_audio_arb_update(struct reset_controller_dev *rcdev,
->>  				  unsigned long id, bool assert)
->>  {
->> @@ -82,8 +93,14 @@ static const struct reset_control_ops meson_audio_arb_rstc_ops = {
->>  };
->>  
->>  static const struct of_device_id meson_audio_arb_of_match[] = {
->> -	{ .compatible = "amlogic,meson-axg-audio-arb", },
->> -	{}
->> +	{
->> +		.compatible = "amlogic,meson-axg-audio-arb",
->> +		.data = axg_audio_arb_reset_bits,
->> +	},
->> +	{
->> +		.compatible = "amlogic,meson-sm1-audio-arb",
->> +		.data = sm1_audio_arb_reset_bits
->> +	}, {}
->
-> Only slight preference, I would keep the sentinel on a separate line.
-> Your choice.
+Better expressed as:
 
-Agreed.
+compatible:
+  enum:
+    - intel,lgm-asc
+    - lantiq,asc
 
 >
->>  };
->>  MODULE_DEVICE_TABLE(of, meson_audio_arb_of_match);
->>  
->> @@ -104,10 +121,15 @@ static int meson_audio_arb_remove(struct platform_device *pdev)
->>  static int meson_audio_arb_probe(struct platform_device *pdev)
->>  {
->>  	struct device *dev = &pdev->dev;
->> +	const unsigned int *data;
->>  	struct meson_audio_arb_data *arb;
->>  	struct resource *res;
->>  	int ret;
->>  
->> +	data = of_device_get_match_data(dev);
->> +	if (!data)
->> +		return -EINVAL;
->> +
->>  	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
->>  	if (!arb)
->>  		return -ENOMEM;
->> @@ -126,7 +148,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
->>  		return PTR_ERR(arb->regs);
->>  
->>  	spin_lock_init(&arb->lock);
->> -	arb->reset_bits = axg_audio_arb_reset_bits;
->> +	arb->reset_bits = data;
->>  	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
->
-> Since SM1 has two more resets, this needs to come from device match data
-> as well, or the last two resets will be unusable.
+>    reg:
+>      maxItems: 1
+> @@ -28,6 +29,12 @@ properties:
+>        - description: tx or combined interrupt
+>        - description: rx interrupt
+>        - description: err interrupt
+> +    description:
+> +      For lantiq,asc compatible, it supports 3 separate
+> +      interrupts for tx rx & err. Whereas, for intel,lgm-asc
+> +      compatible, it supports combined single interrupt for
+> +      all of tx, rx & err interrupts.
 
-Absolutely. Sorry about that.
-We are still a bit early in process of adding the support for this SoC.
+This can be expressed with an if/then schema. There's some examples in
+the tree how to do that.
 
-I'll wait until I can do more complete tests to send a v2.
-
+> +
 >
->>  	arb->rstc.ops = &meson_audio_arb_rstc_ops;
->>  	arb->rstc.of_node = dev->of_node;
+>    clocks:
+>      description:
+> @@ -67,4 +74,14 @@ examples:
+>              interrupts = <112 113 114>;
+>      };
 >
-> regards
-> Philipp
+> +  - |
+> +    asc0: serial@e0a00000 {
+> +            compatible = "intel,lgm-asc";
+> +            reg = <0xe0a00000 0x1000>;
+> +            interrupt-parent = <&ioapic1>;
+> +            interrupts = <128 1>;
+> +            clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
+> +            clock-names = "freq", "asc";
+> +    };
+> +
+>  ...
+> --
+> 2.11.0
+>
