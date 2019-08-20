@@ -1,7 +1,7 @@
 From: megous@megous.com
-Subject: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
-Date: Tue, 20 Aug 2019 16:53:39 +0200
-Message-ID: <20190820145343.29108-3-megous@megous.com>
+Subject: [PATCH 6/6] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Date: Tue, 20 Aug 2019 16:53:43 +0200
+Message-ID: <20190820145343.29108-7-megous@megous.com>
 References: <20190820145343.29108-1-megous@megous.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,29 +14,102 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Some PHYs require separate power supply for I/O pins in some modes
-of operation. Add phy-io-supply property, to allow enabling this
-power supply.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E
+PHY. According to the datasheet, both regulators need to be enabled
+at the same time, or that "phy-io" should be enabled slightly earlier
+than "phy" regulator.
+
+RTL8211E/RTL8211EG datasheet says:
+
+  Note 4: 2.5V (or 1.8/1.5V) RGMII power should be risen simultaneously
+  or slightly earlier than 3.3V power. Rising 2.5V (or 1.8/1.5V) power
+  later than 3.3V power may lead to errors.
+
+The driver ensures the regulator enable ordering. The timing is set
+in DT via startup-delay-us.
+
+We also need to wait at least 30ms after power-up/reset, before
+accessing the PHY registers.
+
+All values of RX/TX delay were tested exhaustively and a middle one
+of the range of working values was chosen.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 304f244e9ab5..782e202aa124 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -47,6 +47,10 @@ properties:
-     description:
-       PHY regulator
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index eda9d5f640b9..18349e60b8c6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
-+  phy-io-supply:
-+    description:
-+      PHY I/O pins regulator
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -56,6 +57,15 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
 +
- required:
-   - compatible
-   - reg
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++	};
+ };
+ 
+ &cpu0 {
+@@ -74,6 +84,35 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
++	 * at the same time and to wait 100ms. The driver enables phy-io
++	 * first. Delay is achieved with enable-ramp-delay on reg_aldo2.
++	 */
++	phy-supply = <&reg_aldo2>;
++	phy-io-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &hdmi {
+ 	status = "okay";
+ };
+@@ -136,6 +175,7 @@
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vcc33-audio-tv-ephy-mac";
++				regulator-enable-ramp-delay = <100000>;
+ 			};
+ 
+ 			/* ALDO3 is shorted to CLDO1 */
 -- 
 2.22.1
