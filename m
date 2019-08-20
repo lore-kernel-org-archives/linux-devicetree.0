@@ -1,77 +1,29 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH 3/6] net: stmmac: sun8i: Use devm_regulator_get for PHY
- regulator
-Date: Tue, 20 Aug 2019 18:20:27 +0200
-Message-ID: <20190820162027.7erc2rlvoqasfjk7@core.my.home>
-References: <20190820145343.29108-1-megous@megous.com>
- <20190820145343.29108-4-megous@megous.com>
- <20190820153939.GL29991@lunn.ch>
- <20190820154714.2rt4ctovil5ol3u2@core.my.home>
- <20190820155744.GN29991@lunn.ch>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
+Date: Tue, 20 Aug 2019 11:20:22 -0500
+Message-ID: <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com>
+References: <20190820145343.29108-1-megous@megous.com> <20190820145343.29108-3-megous@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820155744.GN29991@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820145343.29108-3-megous@megous.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ondrej Jirman <megous@megous.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
+>
+> From: Ondrej Jirman <megous@megous.com>
+>
+> Some PHYs require separate power supply for I/O pins in some modes
+> of operation. Add phy-io-supply property, to allow enabling this
+> power supply.
 
-On Tue, Aug 20, 2019 at 05:57:44PM +0200, Andrew Lunn wrote:
-> On Tue, Aug 20, 2019 at 05:47:14PM +0200, Ondřej Jirman wrote:
-> > Hi Andrew,
-> > 
-> > On Tue, Aug 20, 2019 at 05:39:39PM +0200, Andrew Lunn wrote:
-> > > On Tue, Aug 20, 2019 at 04:53:40PM +0200, megous@megous.com wrote:
-> > > > From: Ondrej Jirman <megous@megous.com>
-> > > > 
-> > > > Use devm_regulator_get instead of devm_regulator_get_optional and rely
-> > > > on dummy supply. This avoids NULL checks before regulator_enable/disable
-> > > > calls.
-> > > 
-> > > Hi Ondrej
-> > > 
-> > > What do you mean by a dummy supply? I'm just trying to make sure you
-> > > are not breaking backwards compatibility.
-> > 
-> > Sorry, I mean dummy regulator. See:
-> > 
-> > https://elixir.bootlin.com/linux/latest/source/drivers/regulator/core.c#L1874
-> > 
-> > On systems that use DT (i.e. have_full_constraints() == true), when the
-> > regulator is not found (ENODEV, not specified in DT), regulator_get will return
-> > a fake dummy regulator that can be enabled/disabled, but doesn't do anything
-> > real.
-> 
-> Hi Ondrej
-> 
-> But we also gain a new warning:
-> 
-> 	dev_warn(dev,
-> 		 "%s supply %s not found, using dummy regulator\n",
-> 	         devname, id);
-> 
-> This regulator is clearly optional, so there should not be a warning.
-> 
-> Maybe you can add a new get_type, OPTIONAL_GET, which does not issue
-> the warning, but does give back a dummy regulator.
+Perhaps since this is new, such phys should have *-supply in their nodes.
 
-We already had a info message. See my other e-mail with the dmesg output.
-
-IMO, that warning is useful during development, and more informative than the
-previous one.
-
-regards,
-	o.
-
-> Thanks
-> 	Andrew
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
+>  1 file changed, 4 insertions(+)
