@@ -1,141 +1,77 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v2 8/8] arm64: dts: qcom: sm8150: Add apps shared nodes
-Date: Tue, 20 Aug 2019 12:12:16 +0530
-Message-ID: <20190820064216.8629-9-vkoul@kernel.org>
-References: <20190820064216.8629-1-vkoul@kernel.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 02/10] clk: sunxi-ng: Mark AR100 clocks
+ as critical
+Date: Tue, 20 Aug 2019 09:11:42 +0200
+Message-ID: <20190820071142.2bgfsnt75xfeyusp@flea>
+References: <20190820032311.6506-1-samuel@sholland.org>
+ <20190820032311.6506-3-samuel@sholland.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820064216.8629-1-vkoul@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="i7cnfwqz3x4wuuzw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMF253VAKGQEBIVUN5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190820032311.6506-3-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add apss_shared and apps_rsc including the rpmhcc child node, pmu, SMEM
-nodes
 
-Co-developed-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+--i7cnfwqz3x4wuuzw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 8bf4b4c17ae0..cf58b367df28 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -142,12 +142,23 @@
- 		};
- 	};
- 
-+	tcsr_mutex: hwlock {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr_mutex_regs 0 0x1000>;
-+		#hwlock-cells = <1>;
-+	};
-+
- 	memory@80000000 {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the size */
- 		reg = <0 0x80000000 0 0>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-@@ -264,6 +275,12 @@
- 		};
- 	};
- 
-+	smem {
-+		compatible = "qcom,smem";
-+		memory-region = <&smem_mem>;
-+		hwlocks = <&tcsr_mutex 3>;
-+	};
-+
- 	soc: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -303,6 +320,11 @@
- 			};
- 		};
- 
-+		tcsr_mutex_regs: syscon@1f40000 {
-+			compatible = "syscon";
-+			reg = <0x01f40000 0x40000>;
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x03100000 0x300000>,
-@@ -318,6 +340,16 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		aoss_qmp: power-controller@c300000 {
-+			compatible = "qcom,sm8150-aoss-qmp";
-+			reg = <0x0c300000 0x100000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+			mboxes = <&apss_shared 0>;
-+
-+			#clock-cells = <0>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			interrupt-controller;
-@@ -327,6 +359,12 @@
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		apss_shared: mailbox@17c00000 {
-+			compatible = "qcom,sm8150-apss-shared";
-+			reg = <0x17c00000 0x1000>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		timer@17c20000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -386,6 +424,31 @@
- 			};
- 		};
- 
-+		apps_rsc: rsc@18200000 {
-+			label = "apps_rsc";
-+			compatible = "qcom,rpmh-rsc";
-+			reg = <0x18200000 0x10000>,
-+			      <0x18210000 0x10000>,
-+			      <0x18220000 0x10000>;
-+			reg-names = "drv-0", "drv-1", "drv-2";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			qcom,tcs-offset = <0xd00>;
-+			qcom,drv-id = <2>;
-+			qcom,tcs-config = <ACTIVE_TCS  2>,
-+					  <SLEEP_TCS   1>,
-+					  <WAKE_TCS    1>,
-+					  <CONTROL_TCS 0>;
-+
-+			rpmhcc: clock-controller {
-+				compatible = "qcom,sm8150-rpmh-clk";
-+				#clock-cells = <1>;
-+				clock-names = "xo";
-+				clocks = <&xo_board>;
-+			};
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0x0c440000 0x0001100>,
--- 
-2.20.1
+Hi,
+
+On Mon, Aug 19, 2019 at 10:23:03PM -0500, Samuel Holland wrote:
+> On sun8i, sun9i, and sun50i SoCs, system suspend/resume support requires
+> firmware running on the AR100 coprocessor (the "SCP"). Such firmware can
+> provide additional features, such as thermal monitoring and poweron/off
+> support for boards without a PMIC.
+>
+> Since the AR100 may be running critical firmware, even if Linux does not
+> know about it or directly interact with it (all requests may go through
+> an intermediary interface such as PSCI), Linux must not turn off its
+> clock.
+>
+> At this time, such power management firmware only exists for the A64 and
+> H5 SoCs.  However, it makes sense to take care of all CCU drivers now
+> for consistency, and to ease the transition in the future once firmware
+> is ported to the other SoCs.
+>
+> Leaving the clock running is safe even if no firmware is present, since
+> the AR100 stays in reset by default. In most cases, the AR100 clock is
+> kept enabled by Linux anyway, since it is the parent of all APB0 bus
+> peripherals. This change only prevents Linux from turning off the AR100
+> clock in the rare case that no peripherals are in use.
+>
+> Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+
+So I'm not really sure where you want to go with this.
+
+That clock is only useful where you're having a firmware running on
+the AR100, and that firmware would have a device tree node of its own,
+where we could list the clocks needed for the firmware to keep
+running, if it ever runs. If the driver has not been compiled in /
+loaded, then we don't care either.
+
+But more fundamentally, if we're going to use SCPI, then those clocks
+will not be handled by that driver anyway, but by the firmware, right?
+
+So I'm not really sure that we should do it statically this way, and
+that we should do it at all.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--i7cnfwqz3x4wuuzw--
