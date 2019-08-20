@@ -1,129 +1,392 @@
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date: Tue, 20 Aug 2019 16:56:02 +0300
-Message-ID: <20190820135602.GN30120@smile.fi.intel.com>
-References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: remove rk3288 fennec board support
+Date: Tue, 20 Aug 2019 15:56:54 +0200
+Message-ID: <3270378.xvmEzLMrnJ@phil>
+References: <20190820100353.17728-1-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20190820100353.17728-1-kever.yang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Hi Kever,
+
+Am Dienstag, 20. August 2019, 12:03:52 CEST schrieb Kever Yang:
+> Since there is no one using this board, remove it.
+
+so just to elaborate a bit, I guess this board was internal to Rockchip,
+never went to the market and therefore is obsolete without any users,
+right?
+
+Also we should remove the binding  from
+	Documentation/devicetree/bindings/arm/rockchip.yaml as well
+
+
+Heiko
+
+
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
 > 
-> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
-
-Thanks for an update.
-Looks better though several minor comments below.
-
-
-> +/* eMMC phy register definitions */
-> +#define EMMC_PHYCTRL0_REG	0xa8
-> +#define DR_TY_MASK		GENMASK(30, 28)
-
-> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
-
-For consistency it should be
-
-#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
-
-with explanation about 50 Ohm in the code below.
-
-> +#define OTAPDLYENA		BIT(14)
-> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
-> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
-> +
-> +#define EMMC_PHYCTRL1_REG	0xac
-> +#define PDB_MASK		BIT(0)
-> +#define ENDLL_MASK		BIT(7)
-
-> +#define ENDLL_VAL		BIT(7)
-
-Again, inconsistency here,
-
-#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
-
-> +#define EMMC_PHYCTRL2_REG	0xb0
-> +#define FRQSEL_25M		0
-> +#define FRQSEL_150M		3
-> +#define FRQSEL_MASK		GENMASK(24, 22)
-
-> +#define FRQSEL_SHIFT(x)		((x) << 22)
-
-And here
-
-#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
-
-> +	/*
-> +	 * According to the user manual, calpad calibration
-> +	 * cycle takes more than 2us without the minimal recommended
-> +	 * value, so we may need a little margin here
-> +	 */
-
-> +	usleep_range(3, 6);
-
-Actually for this low values it's recommended to use udelay() disregard to
-context.
-
-	udelay(5);
-
-> +	regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
-
-1 looks like a magic that has to be changed in the same way as for the rest, i.e.
-
-#define PDB_SHIFT(x)	(((x) << 0) & PDB_MASK)
-
-	..., PDB_MASK, PDB_SHIFT(1)...
-
-> +static int intel_emmc_phy_power_on(struct phy *phy)
-> +{
-> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	/* Drive impedance: 50 Ohm */
-
-Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
-
-> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
-> +				 DR_TY_50OHM(1));
-
-> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
-> +				 0x0);
-
-0x0 -> 0
-
-> +static int intel_emmc_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct intel_emmc_phy *priv;
-> +	struct phy *generic_phy;
-> +	struct phy_provider *phy_provider;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	/* Get eMMC phy (accessed via chiptop) regmap */
-
-> +	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +						       "intel,syscon");
-
-Perhaps
-
-	struct device_node *np = dev->of_node;
-	...
-	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
-
-> +	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-
-And here.
-
--- 
-With Best Regards,
-Andy Shevchenko
+>  arch/arm/boot/dts/rk3288-fennec.dts | 347 ----------------------------
+>  1 file changed, 347 deletions(-)
+>  delete mode 100644 arch/arm/boot/dts/rk3288-fennec.dts
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-fennec.dts b/arch/arm/boot/dts/rk3288-fennec.dts
+> deleted file mode 100644
+> index 4847cf902a15..000000000000
+> --- a/arch/arm/boot/dts/rk3288-fennec.dts
+> +++ /dev/null
+> @@ -1,347 +0,0 @@
+> -// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> -
+> -/dts-v1/;
+> -
+> -#include "rk3288.dtsi"
+> -
+> -/ {
+> -	model = "Rockchip RK3288 Fennec Board";
+> -	compatible = "rockchip,rk3288-fennec", "rockchip,rk3288";
+> -
+> -	memory@0 {
+> -		reg = <0x0 0x0 0x0 0x80000000>;
+> -		device_type = "memory";
+> -	};
+> -
+> -	ext_gmac: external-gmac-clock {
+> -		compatible = "fixed-clock";
+> -		#clock-cells = <0>;
+> -		clock-frequency = <125000000>;
+> -		clock-output-names = "ext_gmac";
+> -	};
+> -
+> -	vcc_sys: vsys-regulator {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vcc_sys";
+> -		regulator-min-microvolt = <5000000>;
+> -		regulator-max-microvolt = <5000000>;
+> -		regulator-always-on;
+> -		regulator-boot-on;
+> -	};
+> -};
+> -
+> -&cpu0 {
+> -	cpu0-supply = <&vdd_cpu>;
+> -};
+> -
+> -&emmc {
+> -	bus-width = <8>;
+> -	cap-mmc-highspeed;
+> -	non-removable;
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_pwr &emmc_bus8>;
+> -	status = "okay";
+> -};
+> -
+> -&gmac {
+> -	assigned-clocks = <&cru SCLK_MAC>;
+> -	assigned-clock-parents = <&ext_gmac>;
+> -	clock_in_out = "input";
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&rgmii_pins>, <&phy_rst>, <&phy_pmeb>, <&phy_int>;
+> -	phy-supply = <&vcc_lan>;
+> -	phy-mode = "rgmii";
+> -	snps,reset-active-low;
+> -	snps,reset-delays-us = <0 10000 1000000>;
+> -	snps,reset-gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_LOW>;
+> -	tx_delay = <0x30>;
+> -	rx_delay = <0x10>;
+> -	status = "okay";
+> -};
+> -
+> -&gpu {
+> -	mali-supply = <&vdd_gpu>;
+> -	status = "okay";
+> -};
+> -
+> -&hdmi {
+> -	status = "okay";
+> -};
+> -
+> -&i2c0 {
+> -	status = "okay";
+> -	clock-frequency = <400000>;
+> -
+> -	rk808: pmic@1b {
+> -		compatible = "rockchip,rk808";
+> -		reg = <0x1b>;
+> -		interrupt-parent = <&gpio0>;
+> -		interrupts = <RK_PA4 IRQ_TYPE_LEVEL_LOW>;
+> -		#clock-cells = <1>;
+> -		clock-output-names = "xin32k", "rk808-clkout2";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pmic_int &global_pwroff>;
+> -		rockchip,system-power-controller;
+> -		wakeup-source;
+> -
+> -		vcc1-supply = <&vcc_sys>;
+> -		vcc2-supply = <&vcc_sys>;
+> -		vcc3-supply = <&vcc_sys>;
+> -		vcc4-supply = <&vcc_sys>;
+> -		vcc6-supply = <&vcc_sys>;
+> -		vcc7-supply = <&vcc_sys>;
+> -		vcc8-supply = <&vcc_io>;
+> -		vcc9-supply = <&vcc_io>;
+> -		vcc10-supply = <&vcc_io>;
+> -		vcc11-supply = <&vcc_io>;
+> -		vcc12-supply = <&vcc_io>;
+> -		vddio-supply = <&vcc_io>;
+> -
+> -		regulators {
+> -			vdd_cpu: DCDC_REG1 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <750000>;
+> -				regulator-max-microvolt = <1350000>;
+> -				regulator-name = "vdd_arm";
+> -				regulator-state-mem {
+> -					regulator-off-in-suspend;
+> -				};
+> -			};
+> -
+> -			vdd_gpu: DCDC_REG2 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <850000>;
+> -				regulator-max-microvolt = <1250000>;
+> -				regulator-name = "vdd_gpu";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1000000>;
+> -				};
+> -			};
+> -
+> -			vcc_ddr: DCDC_REG3 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-name = "vcc_ddr";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -				};
+> -			};
+> -
+> -			vcc_io: DCDC_REG4 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <3300000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-name = "vcc_io";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <3300000>;
+> -				};
+> -			};
+> -
+> -			vccio_pmu: LDO_REG1 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <3300000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-name = "vccio_pmu";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <3300000>;
+> -				};
+> -			};
+> -
+> -			vcca_33: LDO_REG2 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <3300000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-name = "vcca_33";
+> -				regulator-state-mem {
+> -					regulator-off-in-suspend;
+> -				};
+> -			};
+> -
+> -			vdd_10: LDO_REG3 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <1000000>;
+> -				regulator-max-microvolt = <1000000>;
+> -				regulator-name = "vdd_10";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1000000>;
+> -				};
+> -			};
+> -
+> -			vcc_wl: LDO_REG4 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <1800000>;
+> -				regulator-name = "vcc_wl";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1800000>;
+> -				};
+> -			};
+> -
+> -			vccio_sd: LDO_REG5 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-name = "vccio_sd";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <3300000>;
+> -				};
+> -			};
+> -
+> -			vdd10_lcd: LDO_REG6 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <1000000>;
+> -				regulator-max-microvolt = <1000000>;
+> -				regulator-name = "vdd10_lcd";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1000000>;
+> -				};
+> -			};
+> -
+> -			vcc_18: LDO_REG7 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <1800000>;
+> -				regulator-name = "vcc_18";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1800000>;
+> -				};
+> -			};
+> -
+> -			vcc18_lcd: LDO_REG8 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <1800000>;
+> -				regulator-name = "vcc18_lcd";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -					regulator-suspend-microvolt = <1800000>;
+> -				};
+> -			};
+> -
+> -			vcc_sd: SWITCH_REG1 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-name = "vcc_sd";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -				};
+> -			};
+> -
+> -			vcc_lan: SWITCH_REG2 {
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-name = "vcc_lan";
+> -				regulator-state-mem {
+> -					regulator-on-in-suspend;
+> -				};
+> -			};
+> -		};
+> -	};
+> -};
+> -
+> -&pinctrl {
+> -	pcfg_output_high: pcfg-output-high {
+> -		output-high;
+> -	};
+> -
+> -	pcfg_output_low: pcfg-output-low {
+> -		output-low;
+> -	};
+> -
+> -	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
+> -		drive-strength = <8>;
+> -	};
+> -
+> -	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
+> -		bias-pull-up;
+> -		drive-strength = <8>;
+> -	};
+> -
+> -	gmac {
+> -		phy_int: phy-int {
+> -			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_up>;
+> -		};
+> -
+> -		phy_pmeb: phy-pmeb {
+> -			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
+> -		};
+> -
+> -		phy_rst: phy-rst {
+> -			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_output_high>;
+> -		};
+> -	};
+> -
+> -	pmic {
+> -		pmic_int: pmic-int {
+> -			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
+> -		};
+> -	};
+> -
+> -	usbphy {
+> -		host_drv: host-drv {
+> -			rockchip,pins = <0 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
+> -		};
+> -	};
+> -};
+> -
+> -&uart2 {
+> -	status = "okay";
+> -};
+> -
+> -&usbphy {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&host_drv>;
+> -	vbus_drv-gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_HIGH>;
+> -	status = "okay";
+> -};
+> -
+> -&usb_host0_ehci {
+> -	status = "okay";
+> -};
+> -
+> -&usb_host1 {
+> -	status = "okay";
+> -};
+> -
+> -&usb_otg {
+> -	status = "okay";
+> -};
+> -
+> -&usb_hsic {
+> -	status = "okay";
+> -};
+> -
+> -&vopb {
+> -	status = "okay";
+> -};
+> -
+> -&vopb_mmu {
+> -	status = "okay";
+> -};
+> -
+> -&vopl {
+> -	status = "okay";
+> -};
+> -
+> -&vopl_mmu {
+> -	status = "okay";
+> -};
+> 
