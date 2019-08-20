@@ -1,56 +1,61 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6 1/2] dt-bindings: Add ipsps1 as a trivial device
-Date: Tue, 20 Aug 2019 08:21:40 -0700
-Message-ID: <20190820152140.GA13677@roeck-us.net>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 6/7] clocksource/drivers/sh_cmt: r8a7740 and sh73a0
+ SoC-specific match
+Date: Tue, 20 Aug 2019 17:22:50 +0200
+Message-ID: <20190820152249.kg3udh2aonjusbqk@verge.net.au>
+References: <156345023791.5307.6113391102648394591.sendpatchset@octo>
+ <156345032407.5307.16702422867507502597.sendpatchset@octo>
+ <20190724111227.qaeq3d5mkeyvlkq3@verge.net.au>
+ <CANqRtoTN3Ea6LK2BwdUevWOPRiquBWmw=foEDPMzsRut08QcPA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <CANqRtoTN3Ea6LK2BwdUevWOPRiquBWmw=foEDPMzsRut08QcPA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Wang <wangzqbj@inspur.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, trivial@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, duanzhijia01@inspur.com, mine260309@gmail.com, joel@jms.id.au
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 05:14:25PM +0800, John Wang wrote:
-> The ipsps1 is an Inspur Power System power supply unit
+On Tue, Aug 20, 2019 at 09:34:13PM +0900, Magnus Damm wrote:
+> Hi Simon,
 > 
-> Signed-off-by: John Wang <wangzqbj@inspur.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Aplied to hwmon-next. If someone else wants to take it, please
-let me know and I'll drop it.
-
-Thanks,
-Guenter
-
-> ---
-> v6:
->     - No changes
-> v5:
->     - No changes
-> v4:
->     - Rebased on 5.3-rc4 instead of 5.2, No changes
-> v3:
->     - Fix adding entry to the inappropriate line
-> v2:
->     - No changes.
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> On Wed, Jul 24, 2019 at 8:12 PM Simon Horman <horms@verge.net.au> wrote:
+> >
+> > On Thu, Jul 18, 2019 at 08:45:24PM +0900, Magnus Damm wrote:
+> > > From: Magnus Damm <damm+renesas@opensource.se>
+> > >
+> > > Add SoC-specific matching for CMT1 on r8a7740 and sh73a0.
+> > >
+> > > This allows us to move away from the old DT bindings such as
+> > >  - "renesas,cmt-48-sh73a0"
+> > >  - "renesas,cmt-48-r8a7740"
+> > >  - "renesas,cmt-48"
+> > > in favour for the now commonly used format "renesas,<soc>-<device>"
+> > >
+> > > Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> >
+> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 > 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 2e742d399e87..870ac52d2225 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -104,6 +104,8 @@ properties:
->            - infineon,slb9645tt
->              # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
->            - infineon,tlv493d-a1b6
-> +            # Inspur Power System power supply unit version 1
-> +          - inspur,ipsps1
->              # Intersil ISL29028 Ambient Light and Proximity Sensor
->            - isil,isl29028
->              # Intersil ISL29030 Ambient Light and Proximity Sensor
-> -- 
-> 2.17.1
+> Thanks!
 > 
+> > > ---
+> > >
+> > >  drivers/clocksource/sh_cmt.c |    8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > --- 0001/drivers/clocksource/sh_cmt.c
+> > > +++ work/drivers/clocksource/sh_cmt.c 2019-07-18 19:29:06.005414716 +0900
+> > > @@ -928,6 +928,14 @@ static const struct of_device_id sh_cmt_
+> > >               .data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
+> > >       },
+> > >       {
+> > > +             .compatible = "renesas,r8a7740-cmt1",
+> > > +             .data = &sh_cmt_info[SH_CMT_48BIT]
+> >
+> > Perhaps as a follow-up SH_CMT_48BIT could be renamed.
+> 
+> I was actually considering implementing proper 48-bit support, and
+> reworking those names might be a good idea at that point.
+
+Sure, I don't think there is any urgency on updating the name :)
