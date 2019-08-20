@@ -1,33 +1,80 @@
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Subject: Re: [PATCH v8 2/3] fdt: add support for rng-seed
-Date: Tue, 20 Aug 2019 15:42:37 +0800
-Message-ID: <CAJMQK-ghQ8weMerXW7t0DFZTAg_c5M80Yp5DTAtyY2LA7YpS1A@mail.gmail.com>
-References: <20190819071602.139014-1-hsinyi@chromium.org> <20190819071602.139014-3-hsinyi@chromium.org>
- <20190819181349.GE10349@mit.edu>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/8] dt-bindings: omap: add new binding for PRM instances
+Date: Tue, 20 Aug 2019 10:45:58 +0300
+Message-ID: <c485156c-735f-40d3-d6a9-1b277e9c3d1d@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-2-git-send-email-t-kristo@ti.com>
+ <6bf4194b-23c0-2de0-3f9c-e99195336dc7@ti.com>
+ <aa5538ae-76b4-942b-dc98-6e55628cf36a@ti.com>
+ <b6506850-f4fc-43be-b5b7-b83cd77b5d66@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819181349.GE10349@mit.edu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Theodore Y. Ts'o" <tytso@mit.edu>, Hsin-Yi Wang <hsinyi@chromium.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b6506850-f4fc-43be-b5b7-b83cd77b5d66@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ted,
-
-Thanks for raising this question.
-
-For UEFI based system, they have a config table that carries rng seed
-and can be passed to device randomness. However, they also use
-add_device_randomness (not sure if it's the same reason that they
-can't guarantee _all_ bootloader can be trusted)
-This patch is to let DT based system also have similar features, which
-can make initial random number stronger. (We only care initial
-situation here, since more entropy would be added to kernel as time
-goes on )
-
-Conservatively, we can use add_device_randomness() as well, which
-would pass buffer to crng_slow_load() instead of crng_fast_load().
-But I think we should trust bootloader here. Whoever wants to use this
-feature should make sure their bootloader can pass valid (random
-enough) seeds. If they are not sure, they can just don't add the
-property to DT.
+T24gMjAuOC4yMDE5IDAuMjgsIFN1bWFuIEFubmEgd3JvdGU6Cj4gSGkgVGVybywKPiAKPiBPbiA4
+LzE5LzE5IDQ6MjggQU0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+PiBPbiAwOC8wOC8yMDE5IDA3OjM1
+LCBLZWVydGh5IHdyb3RlOgo+Pj4KPj4+Cj4+PiBPbiAwNy8wOC8xOSAxOjE4IFBNLCBUZXJvIEty
+aXN0byB3cm90ZToKPj4+PiBBZGQgbmV3IGJpbmRpbmcgZm9yIE9NQVAgUFJNIChQb3dlciBhbmQg
+UmVzZXQgTWFuYWdlcikgaW5zdGFuY2VzLiBFYWNoCj4+Pj4gb2YgdGhlc2Ugd2lsbCBhY3QgYXMg
+YSBwb3dlciBkb21haW4gY29udHJvbGxlciBhbmQgcG90ZW50aWFsbHkgYXMgYQo+Pj4+IHJlc2V0
+Cj4+Pj4gcHJvdmlkZXIuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBUZXJvIEtyaXN0byA8dC1r
+cmlzdG9AdGkuY29tPgo+Pj4+IC0tLQo+Pj4+ICDCoCAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vb21hcC9wcm0taW5zdC50eHTCoMKgwqDCoMKgIHwgMjQKPj4+PiArKysrKysrKysrKysrKysr
+KysrKysrCj4+Pj4gIMKgIDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspCj4+Pj4gIMKg
+IGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9hcm0vb21hcC9wcm0taW5zdC50eHQKPj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvcHJtLWluc3QudHh0Cj4+Pj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL29tYXAvcHJtLWluc3QudHh0Cj4+Pj4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+PiBpbmRleCAwMDAwMDAwLi5lMGFlODdiCj4+Pj4gLS0t
+IC9kZXYvbnVsbAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vb21hcC9wcm0taW5zdC50eHQKPj4+PiBAQCAtMCwwICsxLDI0IEBACj4+Pj4gK09NQVAgUFJN
+IGluc3RhbmNlIGJpbmRpbmdzCj4+Pj4gKwo+Pj4+ICtQb3dlciBhbmQgUmVzZXQgTWFuYWdlciBp
+cyBhbiBJUCBibG9jayBvbiBPTUFQIGZhbWlseSBvZiBkZXZpY2VzIHdoaWNoCj4+Pj4gK2hhbmRs
+ZSB0aGUgcG93ZXIgZG9tYWlucyBhbmQgdGhlaXIgY3VycmVudCBzdGF0ZSwgYW5kIHByb3ZpZGUg
+cmVzZXQKPj4+PiAraGFuZGxpbmcgZm9yIHRoZSBkb21haW5zIGFuZC9vciBzZXBhcmF0ZSBJUCBi
+bG9ja3MgdW5kZXIgdGhlIHBvd2VyCj4+Pj4gZG9tYWluCj4+Pj4gK2hpZXJhcmNoeS4KPiAKPiBT
+bywgSSBzZWUgdGhhdCB5b3UgYXJlIGFkZGluZyB0aGVzZSBhcyBmbGF0IG5vZGVzIGRpcmVjdGx5
+IHVuZGVyIHRoZSBwcm0KPiBub2RlcyB3aGVyZSB3ZSBoYXZlIHRoZSBjbG9ja3MgYW5kIGNsb2Nr
+X2RvbWFpbnMuIEFyZSB5b3UgYW50aWNpcGF0aW5nIGEKPiBzaW5nbGUgRFQgbm9kZSBhbmQvb3Ig
+ZHJpdmVyIG1hbmFnaW5nIGJvdGggcG93ZXItZG9tYWlucyBhbmQgcmVzZXRzPwoKU2luZ2xlIERU
+IG5vZGUgKyBkcml2ZXIgZm9yIGJvdGggcG93ZXItZG9tYWlucyAvIHJlc2V0cy4gWW91IGNhbiAK
+cHJvYmFibHkgc2VlIGZyb20gdGhlIGRyaXZlciBjb2RlIHRoYXQgdGhlIHJlc2V0IHByb2Jpbmcg
+aXMgY2FsbGVkIApzZXBhcmF0ZWx5IGZyb20gdGhlIG1haW4gcHJvYmUgZnVuY3Rpb247IHBvd2Vy
+IGRvbWFpbiBzdXBwb3J0IHNob3VsZCBiZSAKYWRkZWQgaW4gc2ltaWxhciBtYW5uZXIgdW5kZXIg
+aXQuCgo+IAo+Pj4+ICsKPj4+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4+PiArLSBjb21wYXRp
+YmxlOsKgwqDCoCBNdXN0IGJlIG9uZSBvZjoKPj4+PiArwqDCoMKgwqDCoMKgwqAgInRpLGFtMy1w
+cm0taW5zdCIKPj4+PiArwqDCoMKgwqDCoMKgwqAgInRpLGFtNC1wcm0taW5zdCIKPj4+PiArwqDC
+oMKgwqDCoMKgwqAgInRpLG9tYXA0LXBybS1pbnN0Igo+Pj4+ICvCoMKgwqDCoMKgwqDCoCAidGks
+b21hcDUtcHJtLWluc3QiCj4+Pj4gK8KgwqDCoMKgwqDCoMKgICJ0aSxkcmE3LXBybS1pbnN0Igo+
+IAo+IFdoYXQgYWJvdXQgT01BUDIsIE9NQVAzLCBETTgxNHgsIERNODE2eD8KCk9NQVAyLzMgYXJj
+aGl0ZWN0dXJlcyBhcmUgc2xpZ2h0bHkgZGlmZmVyZW50IGJlYXN0IHRvIHRhY2tsZSwgc28gCnBs
+YW5uaW5nIHRvIHdvcmsgb24gdGhvc2UgbGF0ZXIgb24uCgotVGVybwoKPiAKPiByZWdhcmRzCj4g
+U3VtYW4KPiAKPj4+PiArLSByZWc6wqDCoMKgwqDCoMKgwqAgQ29udGFpbnMgUFJNIGluc3RhbmNl
+IHJlZ2lzdGVyIGFkZHJlc3MgcmFuZ2UKPj4+PiArwqDCoMKgwqDCoMKgwqAgKGJhc2UgYWRkcmVz
+cyBhbmQgbGVuZ3RoKQo+Pj4KPj4+IEhvdyBhYm91dCByZXNldC1jZWxscyBwcm9wZXJ0eSwgSXNu
+J3QgdGhhdCBhIG1hbmRhdG9yeSBwcm9wZXJ0eT8KPj4KPj4gSXQgaXMgb3B0aW9uYWwsIGJ1dCB5
+b3UgYXJlIHJpZ2h0LCBzaG91bGQgYmUgYWRkZWQgdG8gdGhpcy4KPj4KPj4gLVRlcm8KPj4KPj4+
+Cj4+Pj4gKwo+Pj4+ICtFeGFtcGxlOgo+Pj4+ICsKPj4+PiArcHJtX2RzcDI6IHBybUAxYjAwIHsK
+Pj4+PiArwqDCoMKgIGNvbXBhdGlibGUgPSAidGksZHJhNy1wcm0taW5zdCI7Cj4+Pj4gK8KgwqDC
+oCByZWcgPSA8MHgxYjAwIDB4NDA+Owo+Pj4+ICvCoMKgwqAgI3Jlc2V0LWNlbGxzID0gPDE+Owo+
+Pj4+ICt9Owo+Pj4+Cj4+Cj4+IC0tIAo+IAoKLS0KVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBP
+eSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElE
+OiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
