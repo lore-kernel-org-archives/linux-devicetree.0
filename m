@@ -1,52 +1,122 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
- generic RC bindings
-Date: Tue, 20 Aug 2019 10:52:29 -0500
-Message-ID: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
-References: <20190819182619.29065-1-mripard@kernel.org>
- <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
- <20190820095028.l74sfvipwjjla6kq@flea>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
+ for LGM eMMC PHY
+Date: Tue, 20 Aug 2019 10:54:18 -0500
+Message-ID: <CAL_JsqKvzogi9969fx9j6v58V5+EH-06tDx7-qy7xu84pGRSRA@mail.gmail.com>
+References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190820095028.l74sfvipwjjla6kq@flea>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sean Young <sean@mess.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 4:50 AM Maxime Ripard <mripard@kernel.org> wrote:
+On Tue, Aug 20, 2019 at 5:31 AM Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >
-> Hi Sean,
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 >
-> On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
-> > On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
-> > > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> > >
-> > > The RC controllers have a bunch of generic properties that are needed in a
-> > > device tree. Add a YAML schemas for those.
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > For the series (both 1/2 and 2.2):
-> >
-> > Reviewed-by: Sean Young <sean@mess.org>
-> >
-> > How's tree should this go through?
+> Add a YAML schema to use the host controller driver with the
+> eMMC PHY on Intel's Lightning Mountain SoC.
 >
-> Either yours or Rob's, I guess?
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+> changes in v2:
+>   As per Rob Herring review comments, the following updates
+>  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+>  - filename is the compatible string plus .yaml
+>  - LGM: Lightning Mountain
+>  - update maintainer
+>  - add intel,syscon under property list
+>  - keep one example instead of two
+> ---
+>  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 72 ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> new file mode 100644
+> index 000000000000..ec177573aca6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +
+> +description:
+> +  -  Add a new compatible to use the host controller driver with the
+> +     eMMC PHY on Intel's Lightning Mountain SoC.
+> +
+> +$ref: /schemas/types.yaml#definitions/phandle
+> +  description:
+> +    - It also requires a "syscon" node with compatible = "intel,lgm-chiptop",
+> +      "syscon" to access the eMMC PHY register.
 
-Sean's because there are other changes to
-Documentation/devicetree/bindings/media/sunxi-ir.txt in -next.
+Not valid schema. Please build 'make dt_binding_check' and fix any warnings.
 
-Rob
+> +
+> +properties:
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  compatible:
+> +    const: intel,lgm-emmc-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  intel,syscon:
+> +    items:
+> +      - description:
+> +         - |
+> +           e-MMC phy module should include the following properties
+> +           * reg, Access the e-MMC, get the base address from syscon.
+> +           * reset, reset the e-MMC module.
+> +
+> +  clocks:
+> +    items:
+> +      - description: e-MMC phy module clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: emmcclk
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    emmc_phy: emmc_phy {
+> +        compatible = "intel,lgm-emmc-phy";
+> +        reg = <0xe0020000 0x100>;
+> +        intel,syscon = <&sysconf>;
+> +        clocks = <&emmc>;
+> +        clock-names = "emmcclk";
+> +        #phy-cells = <0>;
+> +    };
+> +
+> +...
+> --
+> 2.11.0
+>
