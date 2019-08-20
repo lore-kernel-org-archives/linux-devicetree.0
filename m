@@ -1,7 +1,7 @@
 From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 10/49] ath11k: add debug.c
-Date: Tue, 20 Aug 2019 18:47:36 +0300
-Message-ID: <1566316095-27507-11-git-send-email-kvalo@codeaurora.org>
+Subject: [PATCH 08/49] ath11k: add core.c
+Date: Tue, 20 Aug 2019 18:47:34 +0300
+Message-ID: <1566316095-27507-9-git-send-email-kvalo@codeaurora.org>
 References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1566316095-27507-1-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -11,1053 +11,776 @@ Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL
 List-Id: devicetree@vger.kernel.org
 
 ---
- drivers/net/wireless/ath/ath11k/debug.c | 1041 +++++++++++++++++++++++++++++++
- 1 file changed, 1041 insertions(+)
+ drivers/net/wireless/ath/ath11k/core.c | 764 +++++++++++++++++++++++++++++++++
+ 1 file changed, 764 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath11k/debug.c b/drivers/net/wireless/ath/ath11k/debug.c
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
 new file mode 100644
-index 000000000000..dc247b41390d
+index 000000000000..9324dcb45bbe
 --- /dev/null
-+++ b/drivers/net/wireless/ath/ath11k/debug.c
-@@ -0,0 +1,1041 @@
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -0,0 +1,764 @@
 +// SPDX-License-Identifier: ISC
 +/*
 + * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 + */
 +
-+#include <linux/vmalloc.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/remoteproc.h>
++#include <linux/firmware.h>
++#include "ahb.h"
 +#include "core.h"
-+#include "debug.h"
-+#include "wmi.h"
-+#include "hal_rx.h"
 +#include "dp_tx.h"
-+#include "debug_htt_stats.h"
-+#include "peer.h"
++#include "debug.h"
 +
-+void ath11k_info(struct ath11k_base *ab, const char *fmt, ...)
++unsigned int ath11k_debug_mask;
++
++module_param_named(debug_mask, ath11k_debug_mask, uint, 0644);
++
++MODULE_PARM_DESC(debug_mask, "Debugging mask");
++
++static const struct ath11k_hw_params ath11k_hw_params = {
++			.name = "ipq8074",
++			.fw = {
++				.dir = IPQ8074_FW_DIR,
++				.board_size = IPQ8074_MAX_BOARD_DATA_SZ,
++				.cal_size =  IPQ8074_MAX_CAL_DATA_SZ,
++			},
++};
++
++/* Map from pdev index to hw mac index */
++u8 ath11k_core_get_hw_mac_id(struct ath11k_base *ab, int pdev_idx)
 +{
-+	struct va_format vaf = {
-+		.fmt = fmt,
-+	};
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	vaf.va = &args;
-+	dev_info(ab->dev, "%pV", &vaf);
-+	/* TODO: Trace the log */
-+	va_end(args);
-+}
-+
-+void ath11k_err(struct ath11k_base *ab, const char *fmt, ...)
-+{
-+	struct va_format vaf = {
-+		.fmt = fmt,
-+	};
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	vaf.va = &args;
-+	dev_err(ab->dev, "%pV", &vaf);
-+	/* TODO: Trace the log */
-+	va_end(args);
-+}
-+
-+void ath11k_warn(struct ath11k_base *ab, const char *fmt, ...)
-+{
-+	struct va_format vaf = {
-+		.fmt = fmt,
-+	};
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	vaf.va = &args;
-+	dev_warn_ratelimited(ab->dev, "%pV", &vaf);
-+	/* TODO: Trace the log */
-+	va_end(args);
-+}
-+
-+#ifdef CONFIG_ATH11K_DEBUG
-+void __ath11k_dbg(struct ath11k_base *ab, enum ath11k_debug_mask mask,
-+		  const char *fmt, ...)
-+{
-+	struct va_format vaf;
-+	va_list args;
-+
-+	va_start(args, fmt);
-+
-+	vaf.fmt = fmt;
-+	vaf.va = &args;
-+
-+	if (ath11k_debug_mask & mask)
-+		dev_printk(KERN_DEBUG, ab->dev, "%pV", &vaf);
-+
-+	/* TODO: trace log */
-+
-+	va_end(args);
-+}
-+
-+void ath11k_dbg_dump(struct ath11k_base *ab,
-+		     enum ath11k_debug_mask mask,
-+		     const char *msg, const char *prefix,
-+		     const void *buf, size_t len)
-+{
-+	char linebuf[256];
-+	size_t linebuflen;
-+	const void *ptr;
-+
-+	if (ath11k_debug_mask & mask) {
-+		if (msg)
-+			__ath11k_dbg(ab, mask, "%s\n", msg);
-+
-+		for (ptr = buf; (ptr - buf) < len; ptr += 16) {
-+			linebuflen = 0;
-+			linebuflen += scnprintf(linebuf + linebuflen,
-+						sizeof(linebuf) - linebuflen,
-+						"%s%08x: ",
-+						(prefix ? prefix : ""),
-+						(unsigned int)(ptr - buf));
-+			hex_dump_to_buffer(ptr, len - (ptr - buf), 16, 1,
-+					   linebuf + linebuflen,
-+					   sizeof(linebuf) - linebuflen, true);
-+			dev_printk(KERN_DEBUG, ab->dev, "%s\n", linebuf);
-+		}
++	switch (pdev_idx) {
++	case 0:
++		return 0;
++	case 1:
++		return 2;
++	case 2:
++		return 1;
++	default:
++		ath11k_warn(ab, "Invalid pdev idx %d\n", pdev_idx);
++		return ATH11K_INVALID_HW_MAC_ID;
 +	}
 +}
 +
-+#endif
-+
-+#ifdef CONFIG_ATH11K_DEBUGFS
-+static void ath11k_fw_stats_pdevs_free(struct list_head *head)
++static int ath11k_core_create_board_name(struct ath11k_base *ab, char *name,
++					 size_t name_len)
 +{
-+	struct ath11k_fw_stats_pdev *i, *tmp;
++	/* Note: bus is fixed to ahb. When other bus type supported,
++	 * make it to dynamic.
++	 */
++	scnprintf(name, name_len,
++		  "bus=ahb,qmi-chip-id=%d,qmi-board-id=%d",
++		  ab->qmi.target.chip_id,
++		  ab->qmi.target.board_id);
 +
-+	list_for_each_entry_safe(i, tmp, head, list) {
-+		list_del(&i->list);
-+		kfree(i);
-+	}
++	ath11k_dbg(ab, ATH11K_DBG_BOOT, "boot using board name '%s'\n", name);
++
++	return 0;
 +}
 +
-+static void ath11k_fw_stats_vdevs_free(struct list_head *head)
++static const struct firmware *ath11k_fetch_fw_file(struct ath11k_base *ab,
++						   const char *dir,
++						   const char *file)
 +{
-+	struct ath11k_fw_stats_vdev *i, *tmp;
-+
-+	list_for_each_entry_safe(i, tmp, head, list) {
-+		list_del(&i->list);
-+		kfree(i);
-+	}
-+}
-+
-+static void ath11k_fw_stats_bcn_free(struct list_head *head)
-+{
-+	struct ath11k_fw_stats_bcn *i, *tmp;
-+
-+	list_for_each_entry_safe(i, tmp, head, list) {
-+		list_del(&i->list);
-+		kfree(i);
-+	}
-+}
-+
-+static void ath11k_debug_fw_stats_reset(struct ath11k *ar)
-+{
-+	spin_lock_bh(&ar->data_lock);
-+	ar->debug.fw_stats_done = false;
-+	ath11k_fw_stats_pdevs_free(&ar->debug.fw_stats.pdevs);
-+	ath11k_fw_stats_vdevs_free(&ar->debug.fw_stats.vdevs);
-+	spin_unlock_bh(&ar->data_lock);
-+}
-+
-+void ath11k_debug_fw_stats_process(struct ath11k_base *ab, struct sk_buff *skb)
-+{
-+	struct ath11k_fw_stats stats = {};
-+	struct ath11k *ar;
-+	struct ath11k_pdev *pdev;
-+	bool is_end;
-+	static unsigned int num_vdev, num_bcn;
-+	size_t total_vdevs_started = 0;
-+	int i, ret;
-+
-+	INIT_LIST_HEAD(&stats.pdevs);
-+	INIT_LIST_HEAD(&stats.vdevs);
-+	INIT_LIST_HEAD(&stats.bcn);
-+
-+	ret = ath11k_wmi_pull_fw_stats(ab, skb, &stats);
-+	if (ret) {
-+		ath11k_warn(ab, "failed to pull fw stats: %d\n", ret);
-+		goto free;
-+	}
-+
-+	rcu_read_lock();
-+	ar = ath11k_mac_get_ar_by_pdev_id(ab, stats.pdev_id);
-+	if (!ar) {
-+		rcu_read_unlock();
-+		ath11k_warn(ab, "failed to get ar for pdev_id %d: %d\n",
-+			    stats.pdev_id, ret);
-+		goto free;
-+	}
-+
-+	spin_lock_bh(&ar->data_lock);
-+
-+	if (stats.stats_id == WMI_REQUEST_PDEV_STAT) {
-+		list_splice_tail_init(&stats.pdevs, &ar->debug.fw_stats.pdevs);
-+		ar->debug.fw_stats_done = true;
-+		goto complete;
-+	}
-+
-+	if (stats.stats_id == WMI_REQUEST_VDEV_STAT) {
-+		if (list_empty(&stats.vdevs)) {
-+			ath11k_warn(ab, "empty vdev stats");
-+			goto complete;
-+		}
-+		/* FW sends all the active VDEV stats irrespective of PDEV,
-+		 * hence limit until the count of all VDEVs started
-+		 */
-+		for (i = 0; i < ab->num_radios; i++) {
-+			pdev = rcu_dereference(ab->pdevs_active[i]);
-+			if (pdev && pdev->ar)
-+				total_vdevs_started += ar->num_started_vdevs;
-+		}
-+
-+		is_end = ((++num_vdev) == total_vdevs_started ? true : false);
-+
-+		list_splice_tail_init(&stats.vdevs,
-+				      &ar->debug.fw_stats.vdevs);
-+
-+		if (is_end) {
-+			ar->debug.fw_stats_done = true;
-+			num_vdev = 0;
-+		}
-+		goto complete;
-+	}
-+
-+	if (stats.stats_id == WMI_REQUEST_BCN_STAT) {
-+		if (list_empty(&stats.bcn)) {
-+			ath11k_warn(ab, "empty bcn stats");
-+			goto complete;
-+		}
-+		/* Mark end until we reached the count of all started VDEVs
-+		 * within the PDEV
-+		 */
-+		is_end = ((++num_bcn) == ar->num_started_vdevs ? true : false);
-+
-+		list_splice_tail_init(&stats.bcn,
-+				      &ar->debug.fw_stats.bcn);
-+
-+		if (is_end) {
-+			ar->debug.fw_stats_done = true;
-+			num_bcn = 0;
-+		}
-+	}
-+complete:
-+	complete(&ar->debug.fw_stats_complete);
-+	rcu_read_unlock();
-+	spin_unlock_bh(&ar->data_lock);
-+
-+free:
-+	ath11k_fw_stats_pdevs_free(&stats.pdevs);
-+	ath11k_fw_stats_vdevs_free(&stats.vdevs);
-+	ath11k_fw_stats_bcn_free(&stats.bcn);
-+}
-+
-+static int ath11k_debug_fw_stats_request(struct ath11k *ar,
-+					 struct stats_request_params *req_param)
-+{
-+	struct ath11k_base *ab = ar->ab;
-+	unsigned long timeout, time_left;
++	char filename[100];
++	const struct firmware *fw;
 +	int ret;
 +
-+	lockdep_assert_held(&ar->conf_mutex);
++	if (file == NULL)
++		return ERR_PTR(-ENOENT);
 +
-+	/* FW stats can get split when exceeding the stats data buffer limit.
-+	 * In that case, since there is no end marking for the back-to-back
-+	 * received 'update stats' event, we keep a 3 seconds timeout in case,
-+	 * fw_stats_done is not marked yet
-+	 */
-+	timeout = jiffies + msecs_to_jiffies(3 * HZ);
++	if (dir == NULL)
++		dir = ".";
 +
-+	ath11k_debug_fw_stats_reset(ar);
++	snprintf(filename, sizeof(filename), "%s/%s", dir, file);
++	ret = firmware_request_nowarn(&fw, filename, ab->dev);
++	ath11k_dbg(ab, ATH11K_DBG_BOOT, "boot fw request '%s': %d\n",
++		   filename, ret);
 +
-+	reinit_completion(&ar->debug.fw_stats_complete);
++	if (ret)
++		return ERR_PTR(ret);
++	ath11k_warn(ab, "Downloading BDF: %s, size: %zu\n",
++		    filename, fw->size);
 +
-+	ret = ath11k_wmi_send_stats_request_cmd(ar, req_param);
++	return fw;
++}
 +
++void ath11k_core_free_bdf(struct ath11k_base *ab, struct ath11k_board_data *bd)
++{
++	if (!IS_ERR(bd->fw))
++		release_firmware(bd->fw);
++
++	memset(bd, 0, sizeof(*bd));
++}
++
++static int ath11k_core_parse_bd_ie_board(struct ath11k_base *ab,
++					 struct ath11k_board_data *bd,
++					 const void *buf, size_t buf_len,
++					 const char *boardname,
++					 int bd_ie_type)
++{
++	const struct ath11k_fw_ie *hdr;
++	bool name_match_found;
++	int ret, board_ie_id;
++	size_t board_ie_len;
++	const void *board_ie_data;
++
++	name_match_found = false;
++
++	/* go through ATH11K_BD_IE_BOARD_ elements */
++	while (buf_len > sizeof(struct ath11k_fw_ie)) {
++		hdr = buf;
++		board_ie_id = le32_to_cpu(hdr->id);
++		board_ie_len = le32_to_cpu(hdr->len);
++		board_ie_data = hdr->data;
++
++		buf_len -= sizeof(*hdr);
++		buf += sizeof(*hdr);
++
++		if (buf_len < ALIGN(board_ie_len, 4)) {
++			ath11k_err(ab, "invalid ATH11K_BD_IE_BOARD length: %zu < %zu\n",
++				   buf_len, ALIGN(board_ie_len, 4));
++			ret = -EINVAL;
++			goto out;
++		}
++
++		switch (board_ie_id) {
++		case ATH11K_BD_IE_BOARD_NAME:
++			ath11k_dbg_dump(ab, ATH11K_DBG_BOOT, "board name", "",
++					board_ie_data, board_ie_len);
++
++			if (board_ie_len != strlen(boardname))
++				break;
++
++			ret = memcmp(board_ie_data, boardname, strlen(boardname));
++			if (ret)
++				break;
++
++			name_match_found = true;
++			ath11k_dbg(ab, ATH11K_DBG_BOOT,
++				   "boot found match for name '%s'",
++				   boardname);
++			break;
++		case ATH11K_BD_IE_BOARD_DATA:
++			if (!name_match_found)
++				/* no match found */
++				break;
++
++			ath11k_dbg(ab, ATH11K_DBG_BOOT,
++				   "boot found board data for '%s'", boardname);
++
++			bd->data = board_ie_data;
++			bd->len = board_ie_len;
++
++			ret = 0;
++			goto out;
++		default:
++			ath11k_warn(ab, "unknown ATH11K_BD_IE_BOARD found: %d\n",
++				    board_ie_id);
++			break;
++		}
++
++		/* jump over the padding */
++		board_ie_len = ALIGN(board_ie_len, 4);
++
++		buf_len -= board_ie_len;
++		buf += board_ie_len;
++	}
++
++	/* no match found */
++	ret = -ENOENT;
++
++out:
++	return ret;
++}
++
++static int ath11k_core_fetch_board_data_api_n(struct ath11k_base *ab,
++					      struct ath11k_board_data *bd,
++					      const char *boardname)
++{
++	size_t len, magic_len;
++	const u8 *data;
++	char *filename = ATH11K_BOARD_API2_FILE;
++	size_t ie_len;
++	struct ath11k_fw_ie *hdr;
++	int ret, ie_id;
++
++	if (!bd->fw)
++		bd->fw = ath11k_fetch_fw_file(ab,
++					      ab->hw_params.fw.dir,
++					      filename);
++	if (IS_ERR(bd->fw))
++		return PTR_ERR(bd->fw);
++
++	data = bd->fw->data;
++	len = bd->fw->size;
++
++	/* magic has extra null byte padded */
++	magic_len = strlen(ATH11K_BOARD_MAGIC) + 1;
++	if (len < magic_len) {
++		ath11k_err(ab, "failed to find magic value in %s/%s, file too short: %zu\n",
++			   ab->hw_params.fw.dir, filename, len);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	if (memcmp(data, ATH11K_BOARD_MAGIC, magic_len)) {
++		ath11k_err(ab, "found invalid board magic\n");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	/* magic is padded to 4 bytes */
++	magic_len = ALIGN(magic_len, 4);
++	if (len < magic_len) {
++		ath11k_err(ab, "failed: %s/%s too small to contain board data, len: %zu\n",
++			   ab->hw_params.fw.dir, filename, len);
++		ret = -EINVAL;
++		goto err;
++	}
++
++	data += magic_len;
++	len -= magic_len;
++
++	while (len > sizeof(struct ath11k_fw_ie)) {
++		hdr = (struct ath11k_fw_ie *)data;
++		ie_id = le32_to_cpu(hdr->id);
++		ie_len = le32_to_cpu(hdr->len);
++
++		len -= sizeof(*hdr);
++		data = hdr->data;
++
++		if (len < ALIGN(ie_len, 4)) {
++			ath11k_err(ab, "invalid length for board ie_id %d ie_len %zu len %zu\n",
++				   ie_id, ie_len, len);
++			return -EINVAL;
++		}
++
++		switch (ie_id) {
++		case ATH11K_BD_IE_BOARD:
++			ret = ath11k_core_parse_bd_ie_board(ab, bd, data,
++							    ie_len,
++							    boardname,
++							    ATH11K_BD_IE_BOARD);
++			if (ret == -ENOENT)
++				/* no match found, continue */
++				break;
++			else if (ret)
++				/* there was an error, bail out */
++				goto err;
++			/* either found or error, so stop searching */
++			goto out;
++		}
++
++		/* jump over the padding */
++		ie_len = ALIGN(ie_len, 4);
++
++		len -= ie_len;
++		data += ie_len;
++	}
++
++out:
++	if (!bd->data || !bd->len) {
++		ath11k_err(ab,
++			   "failed to fetch board data for %s from %s/%s\n",
++			   boardname, ab->hw_params.fw.dir, filename);
++		ret = -ENODATA;
++		goto err;
++	}
++
++	return 0;
++
++err:
++	ath11k_core_free_bdf(ab, bd);
++	return ret;
++}
++
++static int ath11k_core_fetch_board_data_api_1(struct ath11k_base *ab,
++					      struct ath11k_board_data *bd)
++{
++	bd->fw = ath11k_fetch_fw_file(ab,
++				      ab->hw_params.fw.dir,
++				      ATH11K_DEFAULT_BOARD_FILE);
++	if (IS_ERR(bd->fw))
++		return PTR_ERR(bd->fw);
++
++	bd->data = bd->fw->data;
++	bd->len = bd->fw->size;
++
++	return 0;
++}
++
++#define BOARD_NAME_SIZE 100
++int ath11k_core_fetch_bdf(struct ath11k_base *ab, struct ath11k_board_data *bd)
++{
++	char boardname[BOARD_NAME_SIZE];
++	int ret;
++
++	ret = ath11k_core_create_board_name(ab, boardname, BOARD_NAME_SIZE);
 +	if (ret) {
-+		ath11k_warn(ab, "could not request fw stats (%d)\n",
-+			    ret);
++		ath11k_err(ab, "failed to create board name: %d", ret);
 +		return ret;
 +	}
 +
-+	time_left =
-+	wait_for_completion_timeout(&ar->debug.fw_stats_complete,
-+				    1 * HZ);
-+	if (!time_left)
-+		return -ETIMEDOUT;
++	ab->bd_api = 2;
++	ret = ath11k_core_fetch_board_data_api_n(ab, bd, boardname);
++	if (!ret)
++		goto success;
 +
-+	for (;;) {
-+		if (time_after(jiffies, timeout))
-+			break;
-+
-+		spin_lock_bh(&ar->data_lock);
-+		if (ar->debug.fw_stats_done) {
-+			spin_unlock_bh(&ar->data_lock);
-+			break;
-+		}
-+		spin_unlock_bh(&ar->data_lock);
++	ab->bd_api = 1;
++	ret = ath11k_core_fetch_board_data_api_1(ab, bd);
++	if (ret) {
++		ath11k_err(ab, "failed to fetch board-2.bin or board.bin from %s\n",
++			   ab->hw_params.fw.dir);
++		return ret;
 +	}
++
++success:
++	ath11k_dbg(ab, ATH11K_DBG_BOOT, "using board api %d\n", ab->bd_api);
 +	return 0;
 +}
 +
-+static int ath11k_open_pdev_stats(struct inode *inode, struct file *file)
++static void ath11k_core_stop(struct ath11k_base *ab)
 +{
-+	struct ath11k *ar = inode->i_private;
++	if (!test_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags))
++		ath11k_qmi_firmware_stop(ab);
++	ath11k_ahb_stop(ab);
++	ath11k_wmi_detach(ab);
++
++	/* De-Init of components as needed */
++}
++
++static int ath11k_core_soc_create(struct ath11k_base *ab)
++{
++	int ret;
++
++	ret = ath11k_qmi_init_service(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to initialize qmi :%d\n", ret);
++		return ret;
++	}
++
++	ret = ath11k_debug_soc_create(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to create ath11k debugfs\n");
++		goto err_qmi_deinit;
++	}
++
++	ret = ath11k_ahb_power_up(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to power up :%d\n", ret);
++		goto err_debugfs_reg;
++	}
++
++	return 0;
++
++err_debugfs_reg:
++	ath11k_debug_soc_destroy(ab);
++err_qmi_deinit:
++	ath11k_qmi_deinit_service(ab);
++	return ret;
++}
++
++static void ath11k_core_soc_destroy(struct ath11k_base *ab)
++{
++	ath11k_debug_soc_destroy(ab);
++	ath11k_dp_free(ab);
++	ath11k_reg_free(ab);
++	ath11k_qmi_deinit_service(ab);
++}
++
++static int ath11k_core_pdev_create(struct ath11k_base *ab)
++{
++	int ret;
++
++	ret = ath11k_mac_create(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to create new hw device with mac80211 :%d\n",
++			   ret);
++		return ret;
++	}
++
++	ret = ath11k_dp_pdev_alloc(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to attach DP pdev: %d\n", ret);
++		goto err_mac_destroy;
++	}
++
++	return 0;
++
++err_mac_destroy:
++	ath11k_mac_destroy(ab);
++
++	return ret;
++}
++
++static void ath11k_core_pdev_destroy(struct ath11k_base *ab)
++{
++	ath11k_mac_unregister(ab);
++	ath11k_ahb_ext_irq_disable(ab);
++	ath11k_dp_pdev_free(ab);
++}
++
++static int ath11k_core_start(struct ath11k_base *ab,
++			     enum ath11k_firmware_mode mode)
++{
++	int ret;
++
++	ret = ath11k_qmi_firmware_start(ab, mode);
++	if (ret) {
++		ath11k_err(ab, "failed to attach wmi: %d\n", ret);
++		return ret;
++	}
++
++	ret = ath11k_wmi_attach(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to attach wmi: %d\n", ret);
++		goto err_firmware_stop;
++	}
++
++	ret = ath11k_htc_init(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to init htc: %d\n", ret);
++		goto err_wmi_detach;
++	}
++
++	ret = ath11k_ahb_start(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to start HIF: %d\n", ret);
++		goto err_wmi_detach;
++	}
++
++	ret = ath11k_htc_wait_target(&ab->htc);
++	if (ret) {
++		ath11k_err(ab, "failed to connect to HTC: %d\n", ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_dp_htt_connect(&ab->dp);
++	if (ret) {
++		ath11k_err(ab, "failed to connect to HTT: %d\n", ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_wmi_connect(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to connect wmi: %d\n", ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_htc_start(&ab->htc);
++	if (ret) {
++		ath11k_err(ab, "failed to start HTC: %d\n", ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_wmi_wait_for_service_ready(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to receive wmi service ready event: %d\n",
++			   ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_wmi_cmd_init(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to send wmi init cmd: %d\n", ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_wmi_wait_for_unified_ready(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to receive wmi unified ready event: %d\n",
++			   ret);
++		goto err_hif_stop;
++	}
++
++	ret = ath11k_dp_tx_htt_h2t_ver_req_msg(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to send htt version request message: %d\n",
++			   ret);
++		goto err_hif_stop;
++	}
++
++	return 0;
++
++err_hif_stop:
++	ath11k_ahb_stop(ab);
++err_wmi_detach:
++	ath11k_wmi_detach(ab);
++err_firmware_stop:
++	ath11k_qmi_firmware_stop(ab);
++
++	return ret;
++}
++
++int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
++{
++	int ret;
++
++	ret = ath11k_ce_init_pipes(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to initialize CE: %d\n", ret);
++		return ret;
++	}
++
++	ret = ath11k_dp_alloc(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to init DP: %d\n", ret);
++		return ret;
++	}
++
++	mutex_lock(&ab->core_lock);
++	ret = ath11k_core_start(ab, ATH11K_FIRMWARE_MODE_NORMAL);
++	if (ret) {
++		ath11k_err(ab, "failed to start core: %d\n", ret);
++		goto err_dp_free;
++	}
++
++	ret = ath11k_core_pdev_create(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to create pdev core: %d\n", ret);
++		goto err_core_stop;
++	}
++	ath11k_ahb_ext_irq_enable(ab);
++	mutex_unlock(&ab->core_lock);
++
++	return 0;
++
++err_core_stop:
++	ath11k_core_stop(ab);
++err_dp_free:
++	ath11k_dp_free(ab);
++	return ret;
++}
++
++static int ath11k_core_reconfigure_on_crash(struct ath11k_base *ab)
++{
++	int ret;
++
++	mutex_lock(&ab->core_lock);
++	ath11k_ahb_ext_irq_disable(ab);
++	ath11k_dp_pdev_free(ab);
++	ath11k_ahb_stop(ab);
++	ath11k_wmi_detach(ab);
++	mutex_unlock(&ab->core_lock);
++
++	ath11k_dp_free(ab);
++	ath11k_hal_srng_deinit(ab);
++
++	ab->free_vdev_map = (1LL << (ab->num_radios * TARGET_NUM_VDEVS)) - 1;
++
++	ret = ath11k_hal_srng_init(ab);
++	if (ret)
++		return ret;
++
++	clear_bit(ATH11K_FLAG_CRASH_FLUSH, &ab->dev_flags);
++
++	ret = ath11k_core_qmi_firmware_ready(ab);
++	if (ret)
++		goto err_hal_srng_deinit;
++
++	clear_bit(ATH11K_FLAG_RECOVERY, &ab->dev_flags);
++
++	return 0;
++
++err_hal_srng_deinit:
++	ath11k_hal_srng_deinit(ab);
++	return ret;
++}
++
++void ath11k_core_halt(struct ath11k *ar)
++{
 +	struct ath11k_base *ab = ar->ab;
-+	struct stats_request_params req_param;
-+	void *buf = NULL;
-+	int ret;
 +
-+	mutex_lock(&ar->conf_mutex);
++	lockdep_assert_held(&ar->conf_mutex);
 +
-+	if (ar->state != ATH11K_STATE_ON) {
-+		ret = -ENETDOWN;
-+		goto err_unlock;
-+	}
++	ar->num_created_vdevs = 0;
 +
-+	buf = vmalloc(ATH11K_FW_STATS_BUF_SIZE);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto err_unlock;
-+	}
++	ath11k_mac_scan_finish(ar);
++	ath11k_mac_peer_cleanup_all(ar);
++	cancel_delayed_work_sync(&ar->scan.timeout);
++	cancel_work_sync(&ar->regd_update_work);
 +
-+	req_param.pdev_id = ar->pdev->pdev_id;
-+	req_param.vdev_id = 0;
-+	req_param.stats_id = WMI_REQUEST_PDEV_STAT;
-+
-+	ret = ath11k_debug_fw_stats_request(ar, &req_param);
-+	if (ret) {
-+		ath11k_warn(ab, "failed to request fw pdev stats: %d\n", ret);
-+		goto err_free;
-+	}
-+
-+	ath11k_wmi_fw_stats_fill(ar, &ar->debug.fw_stats, req_param.stats_id,
-+				 buf);
-+
-+	file->private_data = buf;
-+
-+	mutex_unlock(&ar->conf_mutex);
-+	return 0;
-+
-+err_free:
-+	vfree(buf);
-+
-+err_unlock:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
++	rcu_assign_pointer(ab->pdevs_active[ar->pdev_idx], NULL);
++	synchronize_rcu();
++	INIT_LIST_HEAD(&ar->arvifs);
++	idr_init(&ar->txmgmt_idr);
 +}
 +
-+static int ath11k_release_pdev_stats(struct inode *inode, struct file *file)
++static void ath11k_core_restart(struct work_struct *work)
 +{
-+	vfree(file->private_data);
-+
-+	return 0;
-+}
-+
-+static ssize_t ath11k_read_pdev_stats(struct file *file,
-+				      char __user *user_buf,
-+				      size_t count, loff_t *ppos)
-+{
-+	const char *buf = file->private_data;
-+	size_t len = strlen(buf);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+}
-+
-+static const struct file_operations fops_pdev_stats = {
-+	.open = ath11k_open_pdev_stats,
-+	.release = ath11k_release_pdev_stats,
-+	.read = ath11k_read_pdev_stats,
-+	.owner = THIS_MODULE,
-+	.llseek = default_llseek,
-+};
-+
-+static int ath11k_open_vdev_stats(struct inode *inode, struct file *file)
-+{
-+	struct ath11k *ar = inode->i_private;
-+	struct stats_request_params req_param;
-+	void *buf = NULL;
-+	int ret;
-+
-+	mutex_lock(&ar->conf_mutex);
-+
-+	if (ar->state != ATH11K_STATE_ON) {
-+		ret = -ENETDOWN;
-+		goto err_unlock;
-+	}
-+
-+	buf = vmalloc(ATH11K_FW_STATS_BUF_SIZE);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto err_unlock;
-+	}
-+
-+	req_param.pdev_id = ar->pdev->pdev_id;
-+	/* VDEV stats is always sent for all active VDEVs from FW */
-+	req_param.vdev_id = 0;
-+	req_param.stats_id = WMI_REQUEST_VDEV_STAT;
-+
-+	ret = ath11k_debug_fw_stats_request(ar, &req_param);
-+	if (ret) {
-+		ath11k_warn(ar->ab, "failed to request fw vdev stats: %d\n", ret);
-+		goto err_free;
-+	}
-+
-+	ath11k_wmi_fw_stats_fill(ar, &ar->debug.fw_stats, req_param.stats_id,
-+				 buf);
-+
-+	file->private_data = buf;
-+
-+	mutex_unlock(&ar->conf_mutex);
-+	return 0;
-+
-+err_free:
-+	vfree(buf);
-+
-+err_unlock:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
-+}
-+
-+static int ath11k_release_vdev_stats(struct inode *inode, struct file *file)
-+{
-+	vfree(file->private_data);
-+
-+	return 0;
-+}
-+
-+static ssize_t ath11k_read_vdev_stats(struct file *file,
-+				      char __user *user_buf,
-+				      size_t count, loff_t *ppos)
-+{
-+	const char *buf = file->private_data;
-+	size_t len = strlen(buf);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+}
-+
-+static const struct file_operations fops_vdev_stats = {
-+	.open = ath11k_open_vdev_stats,
-+	.release = ath11k_release_vdev_stats,
-+	.read = ath11k_read_vdev_stats,
-+	.owner = THIS_MODULE,
-+	.llseek = default_llseek,
-+};
-+
-+static int ath11k_open_bcn_stats(struct inode *inode, struct file *file)
-+{
-+	struct ath11k *ar = inode->i_private;
-+	struct ath11k_vif *arvif;
-+	struct stats_request_params req_param;
-+	void *buf = NULL;
-+	int ret;
-+
-+	mutex_lock(&ar->conf_mutex);
-+
-+	if (ar->state != ATH11K_STATE_ON) {
-+		ret = -ENETDOWN;
-+		goto err_unlock;
-+	}
-+
-+	buf = vmalloc(ATH11K_FW_STATS_BUF_SIZE);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto err_unlock;
-+	}
-+
-+	req_param.stats_id = WMI_REQUEST_BCN_STAT;
-+	req_param.pdev_id = ar->pdev->pdev_id;
-+
-+	/* loop all active VDEVs for bcn stats */
-+	list_for_each_entry(arvif, &ar->arvifs, list) {
-+		if (!arvif->is_up)
-+			continue;
-+
-+		req_param.vdev_id = arvif->vdev_id;
-+		ret = ath11k_debug_fw_stats_request(ar, &req_param);
-+		if (ret) {
-+			ath11k_warn(ar->ab, "failed to request fw bcn stats: %d\n", ret);
-+			goto err_free;
-+		}
-+	}
-+
-+	ath11k_wmi_fw_stats_fill(ar, &ar->debug.fw_stats, req_param.stats_id,
-+				 buf);
-+
-+	/* since beacon stats request is looped for all active VDEVs, saved fw
-+	 * stats is not freed for each request until done for all active VDEVs
-+	 */
-+	spin_lock_bh(&ar->data_lock);
-+	ath11k_fw_stats_bcn_free(&ar->debug.fw_stats.bcn);
-+	spin_unlock_bh(&ar->data_lock);
-+
-+	file->private_data = buf;
-+
-+	mutex_unlock(&ar->conf_mutex);
-+	return 0;
-+
-+err_free:
-+	vfree(buf);
-+
-+err_unlock:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
-+}
-+
-+static int ath11k_release_bcn_stats(struct inode *inode, struct file *file)
-+{
-+	vfree(file->private_data);
-+
-+	return 0;
-+}
-+
-+static ssize_t ath11k_read_bcn_stats(struct file *file,
-+				     char __user *user_buf,
-+				     size_t count, loff_t *ppos)
-+{
-+	const char *buf = file->private_data;
-+	size_t len = strlen(buf);
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+}
-+
-+static const struct file_operations fops_bcn_stats = {
-+	.open = ath11k_open_bcn_stats,
-+	.release = ath11k_release_bcn_stats,
-+	.read = ath11k_read_bcn_stats,
-+	.owner = THIS_MODULE,
-+	.llseek = default_llseek,
-+};
-+
-+static ssize_t ath11k_read_simulate_fw_crash(struct file *file,
-+					     char __user *user_buf,
-+					     size_t count, loff_t *ppos)
-+{
-+	const char buf[] =
-+		"To simulate firmware crash write one of the keywords to this file:\n"
-+		"`assert` - this will send WMI_FORCE_FW_HANG_CMDID to firmware to cause assert.\n"
-+		"`hw-restart` - this will simply queue hw restart without fw/hw actually crashing.\n";
-+
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, strlen(buf));
-+}
-+
-+/* Simulate firmware crash:
-+ * 'soft': Call wmi command causing firmware hang. This firmware hang is
-+ * recoverable by warm firmware reset.
-+ * 'hard': Force firmware crash by setting any vdev parameter for not allowed
-+ * vdev id. This is hard firmware crash because it is recoverable only by cold
-+ * firmware reset.
-+ */
-+static ssize_t ath11k_write_simulate_fw_crash(struct file *file,
-+					      const char __user *user_buf,
-+					      size_t count, loff_t *ppos)
-+{
-+	struct ath11k_base *ab = file->private_data;
++	struct ath11k_base *ab = container_of(work, struct ath11k_base, restart_work);
++	struct ath11k *ar;
 +	struct ath11k_pdev *pdev;
-+	struct ath11k *ar = ab->pdevs[0].ar;
-+	char buf[32] = {0};
-+	ssize_t rc;
-+	int i, ret, radioup;
++	int i, ret = 0;
++
++	spin_lock_bh(&ab->base_lock);
++	ab->stats.fw_crash_counter++;
++	spin_unlock_bh(&ab->base_lock);
 +
 +	for (i = 0; i < ab->num_radios; i++) {
 +		pdev = &ab->pdevs[i];
 +		ar = pdev->ar;
-+		if (ar && ar->state == ATH11K_STATE_ON) {
-+			radioup = 1;
++		if (!ar || ar->state == ATH11K_STATE_OFF)
++			continue;
++
++		ieee80211_stop_queues(ar->hw);
++		ath11k_mac_drain_tx(ar);
++		complete(&ar->scan.started);
++		complete(&ar->scan.completed);
++		complete(&ar->peer_assoc_done);
++		complete(&ar->install_key_done);
++		complete(&ar->vdev_setup_done);
++		complete(&ar->bss_survey_done);
++
++		wake_up(&ar->dp.tx_empty_waitq);
++		idr_for_each(&ar->txmgmt_idr,
++			     ath11k_mac_tx_mgmt_pending_free, ar);
++		idr_destroy(&ar->txmgmt_idr);
++	}
++
++	wake_up(&ab->wmi_sc.tx_credits_wq);
++	wake_up(&ab->peer_mapping_wq);
++
++	ret = ath11k_core_reconfigure_on_crash(ab);
++	if (ret) {
++		ath11k_err(ab, "failed to reconfigure driver on crash recovery\n");
++		return;
++	}
++
++	for (i = 0; i < ab->num_radios; i++) {
++		pdev = &ab->pdevs[i];
++		ar = pdev->ar;
++		if (!ar || ar->state == ATH11K_STATE_OFF)
++			continue;
++
++		mutex_lock(&ar->conf_mutex);
++
++		switch (ar->state) {
++		case ATH11K_STATE_ON:
++			ar->state = ATH11K_STATE_RESTARTING;
++			ath11k_core_halt(ar);
++			ieee80211_restart_hw(ar->hw);
++			break;
++		case ATH11K_STATE_OFF:
++			ath11k_warn(ab,
++				    "cannot restart radio %d that hasn't been started\n",
++				    i);
++			break;
++		case ATH11K_STATE_RESTARTING:
++			break;
++		case ATH11K_STATE_RESTARTED:
++			ar->state = ATH11K_STATE_WEDGED;
++			/* fall through */
++		case ATH11K_STATE_WEDGED:
++			ath11k_warn(ab,
++				    "device is wedged, will not restart radio %d\n", i);
 +			break;
 +		}
++		mutex_unlock(&ar->conf_mutex);
 +	}
-+	/* filter partial writes and invalid commands */
-+	if (*ppos != 0 || count >= sizeof(buf) || count == 0)
++	complete(&ab->driver_recovery);
++}
++
++int ath11k_core_init(struct ath11k_base *ab)
++{
++	struct device *dev = ab->dev;
++	struct rproc *prproc;
++	phandle rproc_phandle;
++	int ret;
++
++	if (of_property_read_u32(dev->of_node, "qcom,rproc", &rproc_phandle)) {
++		ath11k_err(ab, "failed to get q6_rproc handle\n");
++		return -ENOENT;
++	}
++
++	prproc = rproc_get_by_phandle(rproc_phandle);
++	if (!prproc) {
++		ath11k_err(ab, "failed to get rproc\n");
 +		return -EINVAL;
-+
-+	rc = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, user_buf, count);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* drop the possible '\n' from the end */
-+	if (buf[*ppos - 1] == '\n')
-+		buf[*ppos - 1] = '\0';
-+
-+	if (radioup == 0) {
-+		ret = -ENETDOWN;
-+		goto exit;
 +	}
++	ab->tgt_rproc = prproc;
++	ab->hw_params = ath11k_hw_params;
 +
-+	if (!strcmp(buf, "assert")) {
-+		ath11k_info(ab, "simulating firmware assert crash\n");
-+		ret = ath11k_wmi_force_fw_hang_cmd(ar,
-+						   ATH11K_WMI_FW_HANG_ASSERT_TYPE,
-+						   ATH11K_WMI_FW_HANG_DELAY);
-+	} else {
-+		ret = -EINVAL;
-+		goto exit;
-+	}
-+
++	ret = ath11k_core_soc_create(ab);
 +	if (ret) {
-+		ath11k_warn(ab, "failed to simulate firmware crash: %d\n", ret);
-+		goto exit;
-+	}
-+
-+	ret = count;
-+
-+exit:
-+	return ret;
-+}
-+
-+static const struct file_operations fops_simulate_fw_crash = {
-+	.read = ath11k_read_simulate_fw_crash,
-+	.write = ath11k_write_simulate_fw_crash,
-+	.open = simple_open,
-+	.owner = THIS_MODULE,
-+	.llseek = default_llseek,
-+};
-+
-+static ssize_t ath11k_write_enable_extd_tx_stats(struct file *file,
-+						 const char __user *ubuf,
-+						 size_t count, loff_t *ppos)
-+{
-+	struct ath11k *ar = file->private_data;
-+	u32 filter;
-+	int ret;
-+
-+	if (kstrtouint_from_user(ubuf, count, 0, &filter))
-+		return -EINVAL;
-+
-+	mutex_lock(&ar->conf_mutex);
-+
-+	if (ar->state != ATH11K_STATE_ON) {
-+		ret = -ENETDOWN;
-+		goto out;
-+	}
-+
-+	if (filter == ar->debug.extd_tx_stats) {
-+		ret = count;
-+		goto out;
-+	}
-+
-+	ar->debug.extd_tx_stats = filter;
-+	ret = count;
-+
-+out:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
-+}
-+
-+static ssize_t ath11k_read_enable_extd_tx_stats(struct file *file,
-+						char __user *ubuf,
-+						size_t count, loff_t *ppos)
-+
-+{
-+	char buf[32] = {0};
-+	struct ath11k *ar = file->private_data;
-+	int len = 0;
-+
-+	mutex_lock(&ar->conf_mutex);
-+	len = scnprintf(buf, sizeof(buf) - len, "%08x\n",
-+			ar->debug.extd_tx_stats);
-+	mutex_unlock(&ar->conf_mutex);
-+
-+	return simple_read_from_buffer(ubuf, count, ppos, buf, len);
-+}
-+
-+static const struct file_operations fops_extd_tx_stats = {
-+	.read = ath11k_read_enable_extd_tx_stats,
-+	.write = ath11k_write_enable_extd_tx_stats,
-+	.open = simple_open
-+};
-+
-+static ssize_t ath11k_write_extd_rx_stats(struct file *file,
-+					  const char __user *ubuf,
-+					  size_t count, loff_t *ppos)
-+{
-+	struct ath11k *ar = file->private_data;
-+	struct htt_rx_ring_tlv_filter tlv_filter = {0};
-+	u32 enable, rx_filter = 0, ring_id;
-+	int ret;
-+
-+	if (kstrtouint_from_user(ubuf, count, 0, &enable))
-+		return -EINVAL;
-+
-+	mutex_lock(&ar->conf_mutex);
-+
-+	if (ar->state != ATH11K_STATE_ON) {
-+		ret = -ENETDOWN;
-+		goto exit;
-+	}
-+
-+	if (enable > 1) {
-+		ret = -EINVAL;
-+		goto exit;
-+	}
-+
-+	if (enable == ar->debug.extd_rx_stats) {
-+		ret = count;
-+		goto exit;
-+	}
-+
-+	if (enable) {
-+		rx_filter =  HTT_RX_FILTER_TLV_FLAGS_MPDU_START;
-+		rx_filter |= HTT_RX_FILTER_TLV_FLAGS_PPDU_START;
-+		rx_filter |= HTT_RX_FILTER_TLV_FLAGS_PPDU_END;
-+		rx_filter |= HTT_RX_FILTER_TLV_FLAGS_PPDU_END_USER_STATS;
-+		rx_filter |= HTT_RX_FILTER_TLV_FLAGS_PPDU_END_USER_STATS_EXT;
-+		rx_filter |= HTT_RX_FILTER_TLV_FLAGS_PPDU_END_STATUS_DONE;
-+
-+		tlv_filter.rx_filter = rx_filter;
-+		tlv_filter.pkt_filter_flags0 = HTT_RX_FP_MGMT_FILTER_FLAGS0;
-+		tlv_filter.pkt_filter_flags1 = HTT_RX_FP_MGMT_FILTER_FLAGS1;
-+		tlv_filter.pkt_filter_flags2 = HTT_RX_FP_CTRL_FILTER_FLASG2;
-+		tlv_filter.pkt_filter_flags3 = HTT_RX_FP_CTRL_FILTER_FLASG3 |
-+			HTT_RX_FP_DATA_FILTER_FLASG3;
-+	} else {
-+		tlv_filter = ath11k_mac_mon_status_filter_default;
-+	}
-+
-+	ring_id = ar->dp.rx_mon_status_refill_ring.refill_buf_ring.ring_id;
-+	ret = ath11k_dp_tx_htt_rx_filter_setup(ar->ab, ring_id, ar->dp.mac_id,
-+					       HAL_RXDMA_MONITOR_STATUS,
-+					       DP_RX_BUFFER_SIZE, &tlv_filter);
-+
-+	if (ret) {
-+		ath11k_warn(ar->ab, "failed to set rx filter for moniter status ring\n");
-+		goto exit;
-+	}
-+
-+	ar->debug.extd_rx_stats = enable;
-+	ret = count;
-+exit:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
-+}
-+
-+static ssize_t ath11k_read_extd_rx_stats(struct file *file,
-+					 char __user *ubuf,
-+					 size_t count, loff_t *ppos)
-+{
-+	struct ath11k *ar = file->private_data;
-+	char buf[32];
-+	int len = 0;
-+
-+	mutex_lock(&ar->conf_mutex);
-+	len = scnprintf(buf, sizeof(buf) - len, "%d\n",
-+			ar->debug.extd_rx_stats);
-+	mutex_unlock(&ar->conf_mutex);
-+
-+	return simple_read_from_buffer(ubuf, count, ppos, buf, len);
-+}
-+
-+static const struct file_operations fops_extd_rx_stats = {
-+	.read = ath11k_read_extd_rx_stats,
-+	.write = ath11k_write_extd_rx_stats,
-+	.open = simple_open,
-+};
-+
-+static ssize_t ath11k_debug_dump_soc_rx_stats(struct file *file,
-+					      char __user *user_buf,
-+					      size_t count, loff_t *ppos)
-+{
-+	struct ath11k_base *ab = file->private_data;
-+	struct ath11k_soc_dp_rx_stats *soc_stats = &ab->soc_stats;
-+	int len = 0, i, retval;
-+	const int size = 4096;
-+	static const char *rxdma_err[HAL_REO_ENTR_RING_RXDMA_ECODE_MAX] = {
-+			"Overflow", "MPDU len", "FCS", "Decrypt", "TKIP MIC",
-+			"Unencrypt", "MSDU len", "MSDU limit", "WiFi parse",
-+			"AMSDU parse", "SA timeout", "DA timeout",
-+			"Flow timeout", "Flush req"};
-+	static const char *reo_err[HAL_REO_DEST_RING_ERROR_CODE_MAX] = {
-+			"Desc addr zero", "Desc inval", "AMPDU in non BA",
-+			"Non BA dup", "BA dup", "Frame 2k jump", "BAR 2k jump",
-+			"Frame OOR", "BAR OOR", "No BA session",
-+			"Frame SN equal SSN", "PN check fail", "2k err",
-+			"PN err", "Desc blocked"};
-+
-+	char *buf;
-+
-+	buf = kzalloc(size, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	len += scnprintf(buf + len, size - len, "SOC RX STATS:\n\n");
-+	len += scnprintf(buf + len, size - len, "err ring pkts: %u\n",
-+			 soc_stats->err_ring_pkts);
-+	len += scnprintf(buf + len, size - len, "Invalid RBM: %u\n\n",
-+			 soc_stats->invalid_rbm);
-+	len += scnprintf(buf + len, size - len, "RXDMA errors:\n");
-+	for (i = 0; i < HAL_REO_ENTR_RING_RXDMA_ECODE_MAX; i++)
-+		len += scnprintf(buf + len, size - len, "%s: %u\n",
-+				 rxdma_err[i], soc_stats->rxdma_error[i]);
-+
-+	len += scnprintf(buf + len, size - len, "\nREO errors:\n");
-+	for (i = 0; i < HAL_REO_DEST_RING_ERROR_CODE_MAX; i++)
-+		len += scnprintf(buf + len, size - len, "%s: %u\n",
-+				 reo_err[i], soc_stats->reo_error[i]);
-+
-+	len += scnprintf(buf + len, size - len, "\nHAL REO errors:\n");
-+	len += scnprintf(buf + len, size - len,
-+			 "ring0: %u\nring1: %u\nring2: %u\nring3: %u\n",
-+			 soc_stats->hal_reo_error[0],
-+			 soc_stats->hal_reo_error[1],
-+			 soc_stats->hal_reo_error[2],
-+			 soc_stats->hal_reo_error[3]);
-+
-+	if (len > size)
-+		len = size;
-+	retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	kfree(buf);
-+
-+	return retval;
-+}
-+
-+static const struct file_operations fops_soc_rx_stats = {
-+	.read = ath11k_debug_dump_soc_rx_stats,
-+	.open = simple_open,
-+	.owner = THIS_MODULE,
-+	.llseek = default_llseek,
-+};
-+
-+int ath11k_debug_soc_create(struct ath11k_base *ab)
-+{
-+	ab->debugfs_soc = debugfs_create_dir("ath11k", NULL);
-+
-+	if (IS_ERR_OR_NULL(ab->debugfs_soc)) {
-+		if (IS_ERR(ab->debugfs_soc))
-+			return PTR_ERR(ab->debugfs_soc);
-+		return -ENOMEM;
-+	}
-+
-+	debugfs_create_file("simulate_fw_crash", 0600, ab->debugfs_soc, ab,
-+			    &fops_simulate_fw_crash);
-+
-+	debugfs_create_file("soc_rx_stats", 0600, ab->debugfs_soc, ab,
-+			    &fops_soc_rx_stats);
-+
-+	return 0;
-+}
-+
-+void ath11k_debug_soc_destroy(struct ath11k_base *ab)
-+{
-+	debugfs_remove_recursive(ab->debugfs_soc);
-+	ab->debugfs_soc = NULL;
-+}
-+
-+void ath11k_debug_fw_stats_init(struct ath11k *ar)
-+{
-+	struct dentry *fwstats_dir = debugfs_create_dir("fw_stats",
-+							ar->debug.debugfs_pdev);
-+
-+	ar->debug.fw_stats.debugfs_fwstats = fwstats_dir;
-+
-+	/* all stats debugfs files created are under "fw_stats" directory
-+	 * created per PDEV
-+	 */
-+	debugfs_create_file("pdev_stats", 0600, fwstats_dir, ar,
-+			    &fops_pdev_stats);
-+	debugfs_create_file("vdev_stats", 0600, fwstats_dir, ar,
-+			    &fops_vdev_stats);
-+	debugfs_create_file("beacon_stats", 0600, fwstats_dir, ar,
-+			    &fops_bcn_stats);
-+
-+	INIT_LIST_HEAD(&ar->debug.fw_stats.pdevs);
-+	INIT_LIST_HEAD(&ar->debug.fw_stats.vdevs);
-+	INIT_LIST_HEAD(&ar->debug.fw_stats.bcn);
-+
-+	init_completion(&ar->debug.fw_stats_complete);
-+}
-+
-+static ssize_t ath11k_write_pktlog_filter(struct file *file,
-+					  const char __user *ubuf,
-+					  size_t count, loff_t *ppos)
-+{
-+	struct ath11k *ar = file->private_data;
-+	struct htt_rx_ring_tlv_filter tlv_filter = {0};
-+	u32 rx_filter = 0, ring_id, filter, mode;
-+	u8 buf[128] = {0};
-+	int ret;
-+	ssize_t rc;
-+
-+	mutex_lock(&ar->conf_mutex);
-+	if (ar->state != ATH11K_STATE_ON) {
-+		ret = -ENETDOWN;
-+		goto out;
-+	}
-+
-+	rc = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, ubuf, count);
-+	if (rc < 0) {
-+		ret = rc;
-+		goto out;
-+	}
-+	buf[rc] = '\0';
-+
-+	ret = sscanf(buf, "0x%x %u", &filter, &mode);
-+	if (ret != 2) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (filter) {
-+		ret = ath11k_wmi_pdev_pktlog_enable(ar, filter);
-+		if (ret) {
-+			ath11k_warn(ar->ab,
-+				    "failed to enable pktlog filter %x: %d\n",
-+				    ar->debug.pktlog_filter, ret);
-+			goto out;
-+		}
-+	} else {
-+		ret = ath11k_wmi_pdev_pktlog_disable(ar);
-+		if (ret) {
-+			ath11k_warn(ar->ab, "failed to disable pktlog: %d\n", ret);
-+			goto out;
-+		}
-+	}
-+
-+#define HTT_RX_FILTER_TLV_LITE_MODE \
-+			(HTT_RX_FILTER_TLV_FLAGS_PPDU_START | \
-+			HTT_RX_FILTER_TLV_FLAGS_PPDU_END | \
-+			HTT_RX_FILTER_TLV_FLAGS_PPDU_END_USER_STATS | \
-+			HTT_RX_FILTER_TLV_FLAGS_PPDU_END_USER_STATS_EXT | \
-+			HTT_RX_FILTER_TLV_FLAGS_PPDU_END_STATUS_DONE | \
-+			HTT_RX_FILTER_TLV_FLAGS_MPDU_START)
-+
-+	if (mode == ATH11K_PKTLOG_MODE_FULL) {
-+		rx_filter = HTT_RX_FILTER_TLV_LITE_MODE |
-+			    HTT_RX_FILTER_TLV_FLAGS_MSDU_START |
-+			    HTT_RX_FILTER_TLV_FLAGS_MSDU_END |
-+			    HTT_RX_FILTER_TLV_FLAGS_MPDU_END |
-+			    HTT_RX_FILTER_TLV_FLAGS_PACKET_HEADER |
-+			    HTT_RX_FILTER_TLV_FLAGS_ATTENTION;
-+	} else if (mode == ATH11K_PKTLOG_MODE_LITE) {
-+		rx_filter = HTT_RX_FILTER_TLV_LITE_MODE;
-+	}
-+
-+	tlv_filter.rx_filter = rx_filter;
-+	if (rx_filter) {
-+		tlv_filter.pkt_filter_flags0 = HTT_RX_FP_MGMT_FILTER_FLAGS0;
-+		tlv_filter.pkt_filter_flags1 = HTT_RX_FP_MGMT_FILTER_FLAGS1;
-+		tlv_filter.pkt_filter_flags2 = HTT_RX_FP_CTRL_FILTER_FLASG2;
-+		tlv_filter.pkt_filter_flags3 = HTT_RX_FP_CTRL_FILTER_FLASG3 |
-+					       HTT_RX_FP_DATA_FILTER_FLASG3;
-+	}
-+
-+	ring_id = ar->dp.rx_mon_status_refill_ring.refill_buf_ring.ring_id;
-+	ret = ath11k_dp_tx_htt_rx_filter_setup(ar->ab, ring_id, ar->dp.mac_id,
-+					       HAL_RXDMA_MONITOR_STATUS,
-+					       DP_RX_BUFFER_SIZE, &tlv_filter);
-+	if (ret) {
-+		ath11k_warn(ar->ab, "failed to set rx filter for moniter status ring\n");
-+		goto out;
-+	}
-+
-+	ath11k_dbg(ar->ab, ATH11K_DBG_WMI, "pktlog filter %d mode %s\n",
-+		   filter, ((mode == ATH11K_PKTLOG_MODE_FULL) ? "full" : "lite"));
-+
-+	ar->debug.pktlog_filter = filter;
-+	ar->debug.pktlog_mode = mode;
-+	ret = count;
-+
-+out:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
-+}
-+
-+static ssize_t ath11k_read_pktlog_filter(struct file *file,
-+					 char __user *ubuf,
-+					 size_t count, loff_t *ppos)
-+
-+{
-+	char buf[32] = {0};
-+	struct ath11k *ar = file->private_data;
-+	int len = 0;
-+
-+	mutex_lock(&ar->conf_mutex);
-+	len = scnprintf(buf, sizeof(buf) - len, "%08x %08x\n",
-+			ar->debug.pktlog_filter,
-+			ar->debug.pktlog_mode);
-+	mutex_unlock(&ar->conf_mutex);
-+
-+	return simple_read_from_buffer(ubuf, count, ppos, buf, len);
-+}
-+
-+static const struct file_operations fops_pktlog_filter = {
-+	.read = ath11k_read_pktlog_filter,
-+	.write = ath11k_write_pktlog_filter,
-+	.open = simple_open
-+};
-+
-+static ssize_t ath11k_write_simulate_radar(struct file *file,
-+					   const char __user *user_buf,
-+					   size_t count, loff_t *ppos)
-+{
-+	struct ath11k *ar = file->private_data;
-+	int ret;
-+
-+	ret = ath11k_wmi_simulate_radar(ar);
-+	if (ret)
++		ath11k_err(ab, "failed to create soc core: %d\n", ret);
 +		return ret;
-+
-+	return count;
-+}
-+
-+static const struct file_operations fops_simulate_radar = {
-+	.write = ath11k_write_simulate_radar,
-+	.open = simple_open
-+};
-+
-+int ath11k_debug_register(struct ath11k *ar)
-+{
-+	struct ath11k_base *ab = ar->ab;
-+	char pdev_name[5];
-+	char buf[100] = {0};
-+
-+	snprintf(pdev_name, sizeof(pdev_name), "%s%d", "mac", ar->pdev_idx);
-+
-+	ar->debug.debugfs_pdev = debugfs_create_dir(pdev_name, ab->debugfs_soc);
-+
-+	if (IS_ERR_OR_NULL(ar->debug.debugfs_pdev)) {
-+		if (IS_ERR(ar->debug.debugfs_pdev))
-+			return PTR_ERR(ar->debug.debugfs_pdev);
-+
-+		return -ENOMEM;
-+	}
-+
-+	/* Create a symlink under ieee80211/phy* */
-+	snprintf(buf, 100, "../../%pd2", ar->debug.debugfs_pdev);
-+	debugfs_create_symlink("ath11k", ar->hw->wiphy->debugfsdir, buf);
-+
-+	ath11k_debug_htt_stats_init(ar);
-+
-+	ath11k_debug_fw_stats_init(ar);
-+
-+	debugfs_create_file("ext_tx_stats", 0644,
-+			    ar->debug.debugfs_pdev, ar,
-+			    &fops_extd_tx_stats);
-+	debugfs_create_file("ext_rx_stats", 0644,
-+			    ar->debug.debugfs_pdev, ar,
-+			    &fops_extd_rx_stats);
-+	debugfs_create_file("pktlog_filter", 0644,
-+			    ar->debug.debugfs_pdev, ar,
-+			    &fops_pktlog_filter);
-+
-+	if (ar->hw->wiphy->bands[NL80211_BAND_5GHZ]) {
-+		debugfs_create_file("dfs_simulate_radar", 0200,
-+				    ar->debug.debugfs_pdev, ar,
-+				    &fops_simulate_radar);
-+		debugfs_create_bool("dfs_block_radar_events", 0200,
-+				    ar->debug.debugfs_pdev,
-+				    &ar->dfs_block_radar_events);
 +	}
 +
 +	return 0;
 +}
 +
-+void ath11k_debug_unregister(struct ath11k *ar)
++void ath11k_core_deinit(struct ath11k_base *ab)
 +{
++	mutex_lock(&ab->core_lock);
++
++	ath11k_core_pdev_destroy(ab);
++	ath11k_core_stop(ab);
++
++	mutex_unlock(&ab->core_lock);
++
++	ath11k_ahb_power_down(ab);
++	ath11k_mac_destroy(ab);
++	ath11k_core_soc_destroy(ab);
 +}
-+#endif /* CONFIG_ATH11K_DEBUGFS */
++
++void ath11k_core_free(struct ath11k_base *ab)
++{
++	kfree(ab);
++}
++
++struct ath11k_base *ath11k_core_alloc(struct device *dev)
++{
++	struct ath11k_base *ab;
++
++	ab = kzalloc(sizeof(*ab), GFP_KERNEL);
++	if (!ab)
++		return NULL;
++
++	init_completion(&ab->driver_recovery);
++
++	ab->workqueue = create_singlethread_workqueue("ath11k_wq");
++	if (!ab->workqueue)
++		goto err_sc_free;
++
++	mutex_init(&ab->core_lock);
++	spin_lock_init(&ab->base_lock);
++
++	INIT_LIST_HEAD(&ab->peers);
++	init_waitqueue_head(&ab->peer_mapping_wq);
++	init_waitqueue_head(&ab->wmi_sc.tx_credits_wq);
++	INIT_WORK(&ab->restart_work, ath11k_core_restart);
++	timer_setup(&ab->rx_replenish_retry, ath11k_ce_rx_replenish_retry, 0);
++	ab->dev = dev;
++
++	return ab;
++
++err_sc_free:
++	kfree(ab);
++	return NULL;
++}
++
++static int __init ath11k_init(void)
++{
++	int ret;
++
++	ret = ath11k_ahb_init();
++	if (ret)
++		printk(KERN_ERR "failed to register ath11k ahb driver: %d\n",
++		       ret);
++	return ret;
++}
++module_init(ath11k_init);
++
++static void __exit ath11k_exit(void)
++{
++	ath11k_ahb_exit();
++}
++module_exit(ath11k_exit);
++
++MODULE_DESCRIPTION("Driver support for Qualcomm Technologies 802.11ax wireless chip");
++MODULE_LICENSE("Dual BSD/GPL");
