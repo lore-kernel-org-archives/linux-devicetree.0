@@ -1,46 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt-bindings: spi: Fix the number of CS lines documented
- as an example
-Date: Tue, 20 Aug 2019 13:05:47 +0100
-Message-ID: <20190820120547.GA4738@sirena.co.uk>
-References: <20190820115000.32041-1-manivannan.sadhasivam@linaro.org>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 1/4] iommu/arm-smmu: Introduce wrapper for writeq/readq
+Date: Tue, 20 Aug 2019 13:08:49 +0100
+Message-ID: <20190820120848.2m6gytilrpil4stu@willie-the-truck>
+References: <20190711150242.25290-1-gregory.clement@bootlin.com>
+ <20190711150242.25290-2-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190820115000.32041-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20190711150242.25290-2-gregory.clement@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: robh+dt@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Gregory, Hanna,
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Jul 11, 2019 at 05:02:39PM +0200, Gregory CLEMENT wrote:
+> From: Hanna Hawa <hannah@marvell.com>
+> 
+> This patch introduces the smmu_writeq_relaxed/smmu_readq_relaxed
+> helpers, as preparation to add specific Marvell work-around for
+> accessing 64 bits width registers of ARM SMMU.
+> 
+> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  drivers/iommu/arm-smmu.c | 36 +++++++++++++++++++++++++++---------
+>  1 file changed, 27 insertions(+), 9 deletions(-)
 
-On Tue, Aug 20, 2019 at 05:20:00PM +0530, Manivannan Sadhasivam wrote:
-> The number of CS lines is mentioned as 2 in the spi-controller binding
-> but however in the example, 4 cs-gpios are used. Hence fix that to
-> mention 4.
+Sorry for the delay in replying to this -- Robin's been reworking the driver
+so that implementation quirks can be specified more cleanly. Please can you
+take a look at:
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/refactoring
 
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
+and try to respin your patches on top of that?
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1b4hgACgkQJNaLcl1U
-h9CaTAf+NDDtCxFNPDyqiudCbpGsmAOBaem3UqwpTZRbK9vy7b0ePoD9WJKWG+2O
-1VxpcQp243Ardj1r8k9gZPYeWpolHmFen00GoakMDJiP7HLfjUIj/qReHkvbY23k
-6f0+DWwWlW6dNYOTzunzeqihVNB8Ca+IRADgp6S89o9fMD/2KbIAsNrSKOJwuhAG
-qtELaiaIKSFFbibjD1kLAjhcvcSZ6kYeF6sA6dNXvgvH9VgAuoWxcJTR092lPPDd
-3f1T/MKZQyo3yal/0WJ9O5rKdUe7HAinhnc8ptUm11hvog21k+sWQkMFgELcJ3Ci
-tVI+DaUHu+fv61YcaPMmvHPb8hITEA==
-=qfh+
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
+Will
