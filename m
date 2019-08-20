@@ -1,56 +1,90 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
- from Required properties
-Date: Tue, 20 Aug 2019 10:22:52 +0100
-Message-ID: <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
- <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH 1/2] venus: use on-chip interconnect API
+Date: Tue, 20 Aug 2019 12:34:59 +0300
+Message-ID: <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
+References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
+ <20190814084701.25455-2-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
+In-Reply-To: <20190814084701.25455-2-stanimir.varbanov@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Vikash Garodia <vgarodia@codeaurora.org>, Andy Gross <agross@kernel.org>, Aniket Masule <amasule@codeaurora.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 07:28:43AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Hi Stan,
+
+On 8/14/19 11:47, Stanimir Varbanov wrote:
+> This aims to add a requests for bandwidth scaling depending
+> on the resolution and framerate (macroblocks per second). The
+> exact value ff the requested bandwidth is get from a
+
+s/ff/of/
+
+> pre-calculated tables for encoder and decoder.
 > 
-> The num-lanes is not a mandatory property, e.g. on FSL
-> Layerscape SoCs, the PCIe link training is completed
-> automatically base on the selected SerDes protocol, it
-> doesn't need the num-lanes to set-up the link width.
-> 
-> It is previously in both Required and Optional properties,
-> let's remove it from the Required properties.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > ---
+>  drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
+>  drivers/media/platform/qcom/venus/core.h    | 14 +++++
+>  drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
+>  3 files changed, 114 insertions(+), 1 deletion(-)
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+It looks like venus can be built-in, so how about the case when venus is
+built-in and the interconnect provider is a module? Maybe add a dependency in
+Kconfig to depend on INTERCONNECT || !INTERCONNECT?
 
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 0acc7576cc58..19cbe9d5d028 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -5,6 +5,7 @@
+>   */
+>  #include <linux/clk.h>
+>  #include <linux/init.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/ioctl.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> @@ -239,6 +240,14 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (IS_ERR(core->base))
+>  		return PTR_ERR(core->base);
+>  
+> +	core->video_path = of_icc_get(dev, "video-mem");
+> +	if (IS_ERR(core->video_path))
+> +		return PTR_ERR(core->video_path);
+> +
+> +	core->cpucfg_path = of_icc_get(dev, "cpu-cfg");
+> +	if (IS_ERR(core->cpucfg_path))
+> +		return PTR_ERR(core->cpucfg_path);
+> +
+>  	core->irq = platform_get_irq(pdev, 0);
+>  	if (core->irq < 0)
+>  		return core->irq;
+> @@ -273,6 +282,10 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = hfi_create(core, &venus_core_ops);
+>  	if (ret)
+>  		return ret;
+> @@ -355,6 +368,9 @@ static int venus_remove(struct platform_device *pdev)
+>  	pm_runtime_put_sync(dev);
+>  	pm_runtime_disable(dev);
+>  
+> +	icc_put(core->video_path);
+> +	icc_put(core->cpucfg_path);
+> +
 
-> V2:
->  - Reworded the change log and subject.
->  - Fixed a typo in subject.
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..bd880df39a79 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  	     the ATU address space.
->      (The old way of getting the configuration address space from "ranges"
->      is deprecated and should be avoided.)
-> -- num-lanes: number of lanes to use
->  RC mode:
->  - #address-cells: set to <3>
->  - #size-cells: set to <2>
-> -- 
-> 2.17.1
-> 
+Do you have any plans to scale the bandwidth on suspend/resume too?
+
+Thanks,
+Georgi
