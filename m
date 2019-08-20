@@ -1,47 +1,52 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 02/49] ath11k: add Kconfig
-Date: Tue, 20 Aug 2019 18:52:49 +0200
-Message-ID: <f5af5ff4-63d6-6b94-6c04-8436f955985a@phrozen.org>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
- <1566316095-27507-3-git-send-email-kvalo@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
+Date: Tue, 20 Aug 2019 11:57:06 -0500
+Message-ID: <CAL_JsqJHNL91KMAP5ya97eiyTypGniCJ+tbP=NchPJK502i5FQ@mail.gmail.com>
+References: <20190820145343.29108-1-megous@megous.com> <20190820145343.29108-3-megous@megous.com>
+ <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com> <20190820163433.sr4lvjxmmhjtbtcb@core.my.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1566316095-27507-3-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190820163433.sr4lvjxmmhjtbtcb@core.my.home>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-
-On 20/08/2019 17:47, Kalle Valo wrote:
-> ---
->   drivers/net/wireless/ath/ath11k/Kconfig | 34 +++++++++++++++++++++++++++++++++
->   1 file changed, 34 insertions(+)
+On Tue, Aug 20, 2019 at 11:34 AM Ond=C5=99ej Jirman <megous@megous.com> wro=
+te:
 >
-> diff --git a/drivers/net/wireless/ath/ath11k/Kconfig b/drivers/net/wireless/ath/ath11k/Kconfig
-> new file mode 100644
-> index 000000000000..26bf98fa648e
-> --- /dev/null
-> +++ b/drivers/net/wireless/ath/ath11k/Kconfig
-> @@ -0,0 +1,34 @@
-> +config ATH11K
-> +        tristate "Qualcomm Technologies 802.11ax chipset support"
-> +        depends on MAC80211 && HAS_DMA
+> On Tue, Aug 20, 2019 at 11:20:22AM -0500, Rob Herring wrote:
+> > On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
+> > >
+> > > From: Ondrej Jirman <megous@megous.com>
+> > >
+> > > Some PHYs require separate power supply for I/O pins in some modes
+> > > of operation. Add phy-io-supply property, to allow enabling this
+> > > power supply.
+> >
+> > Perhaps since this is new, such phys should have *-supply in their node=
+s.
+>
+> Yes, I just don't understand, since external ethernet phys are so common,
+> and they require power, how there's no fairly generic mechanism for this
+> already in the PHY subsystem, or somewhere?
 
-    ^^ space vs tab here
+Because generic mechanisms for this don't work. For example, what
+happens when the 2 supplies need to be turned on in a certain order
+and with certain timings? And then add in reset or control lines into
+the mix... You can see in the bindings we already have some of that.
 
-     John
+> It looks like other ethernet mac drivers also implement supplies on phys
+> on the EMAC nodes. Just grep phy-supply through dt-bindings/net.
+>
+> Historical reasons, or am I missing something? It almost seems like I mus=
+t
+> be missing something, since putting these properties to phy nodes
+> seems so obvious.
 
-> +	depends on REMOTEPROC
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	select ATH_COMMON
-> +	select QCOM_QMI_HELPERS
-> +        help
-> +          This module adds support for Qualcomm Technologies 802.11ax family of
-> +	  chipsets.
-> +
-> +          If you choose to build a module, it'll be called ath11k.
-> +
+Things get added one by one and one new property isn't that
+controversial. We've generally learned the lesson and avoid this
+pattern now, but ethernet phys are one of the older bindings.
+
+Rob
