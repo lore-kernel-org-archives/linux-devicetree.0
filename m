@@ -1,46 +1,44 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
- generic RC bindings
-Date: Tue, 20 Aug 2019 17:22:16 +0100
-Message-ID: <20190820162216.7uol2jy5i3swhxi5@gofer.mess.org>
-References: <20190819182619.29065-1-mripard@kernel.org>
- <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
- <20190820095028.l74sfvipwjjla6kq@flea>
- <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: arm: imx: add imx8mq nitrogen
+ support
+Date: Tue, 20 Aug 2019 18:27:39 +0200
+Message-ID: <26b78fe57106f47d34f14bec2f81732af40c3d8d.camel@collabora.com>
+References: <20190819172606.6410-1-dafna.hirschfeld@collabora.com>
+         <20190819172606.6410-2-dafna.hirschfeld@collabora.com>
+         <CAL_JsqJx6pTw7Pr=7f0jkC81JF+EDkyhHrvFehSWZV=0wy+YXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJx6pTw7Pr=7f0jkC81JF+EDkyhHrvFehSWZV=0wy+YXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Ripard <mripard@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:52:29AM -0500, Rob Herring wrote:
-> On Tue, Aug 20, 2019 at 4:50 AM Maxime Ripard <mripard@kernel.org> wrote:
-> > On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
-> > > On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
-> > > > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > >
-> > > > The RC controllers have a bunch of generic properties that are needed in a
-> > > > device tree. Add a YAML schemas for those.
-> > > >
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > >
-> > > For the series (both 1/2 and 2.2):
-> > >
-> > > Reviewed-by: Sean Young <sean@mess.org>
-> > >
-> > > How's tree should this go through?
-> >
-> > Either yours or Rob's, I guess?
+On Mon, 2019-08-19 at 14:08 -0500, Rob Herring wrote:
+> On Mon, Aug 19, 2019 at 12:26 PM Dafna Hirschfeld
+> <dafna.hirschfeld@collabora.com> wrote:
+> > From: Gary Bisson <gary.bisson@boundarydevices.com>
+> > 
+> > The Nitrogen8M is an ARM based single board computer (SBC)
+> > designed to leverage the full capabilities of NXP’s i.MX8M
+> > Quad processor.
+> > 
+> > Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+> > Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
+> > [Dafna: porting vendor's code to mainline]
+> > Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
 > 
-> Sean's because there are other changes to
-> Documentation/devicetree/bindings/media/sunxi-ir.txt in -next.
+> Please add acks/reviewed-bys when posting new versions.
+> 
+Hi,
+Thank you for the remark, I forgot to add it. I will add it in the
+next.
+Regards,
+Dafna Hirschfeld
 
-Good point, I'll take them.
-
-Thanks
-Sean
+> Rob
