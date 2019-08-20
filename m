@@ -1,56 +1,74 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 03/11] of/fdt: add of_fdt_machine_is_compatible function
-Date: Tue, 20 Aug 2019 12:16:43 -0500
-Message-ID: <CAL_JsqJT3UNVKpAt+3g-tosy=uCZTosUxD4RfVYjMJ-gpGmPiA@mail.gmail.com>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de> <20190820145821.27214-4-nsaenzjulienne@suse.de>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 5/8] soc: ti: omap-prm: add omap4 PRM data
+Date: Tue, 20 Aug 2019 12:23:58 -0500
+Message-ID: <ed0ec707-ddea-cbfa-ecdf-99faeb770f3f@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-6-git-send-email-t-kristo@ti.com>
+ <04bc6773-dbd4-e1ab-ce31-d93e99dafb33@ti.com>
+ <9d684bdc-28b8-0772-2957-93e01c55aae4@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820145821.27214-4-nsaenzjulienne@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, Stefan Wahren <wahrenst@gmx.net>, Marc Zyngier <marc.zyngier@arm.com>, Robin Murphy <robin.murphy@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, linux-mm@kvack.org, linux-riscv@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, phill@raspberryi.org, Florian Fainelli <f.fainelli@gmail.com>, Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Matthias Brugger <mbrugger@suse.com>moderat
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9d684bdc-28b8-0772-2957-93e01c55aae4@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 9:58 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Provides the same functionality as of_machine_is_compatible.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->
-> Changes in v2: None
->
->  drivers/of/fdt.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 9cdf14b9aaab..06ffbd39d9af 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -802,6 +802,13 @@ const char * __init of_flat_dt_get_machine_name(void)
->         return name;
->  }
->
-> +static const int __init of_fdt_machine_is_compatible(char *name)
-
-No point in const return (though name could possibly be const), and
-the return could be bool instead.
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +{
-> +       unsigned long dt_root = of_get_flat_dt_root();
-> +
-> +       return of_flat_dt_is_compatible(dt_root, name);
-> +}
-> +
->  /**
->   * of_flat_dt_match_machine - Iterate match tables to find matching machine.
->   *
-> --
-> 2.22.0
->
+T24gOC8yMC8xOSAyOjUyIEFNLCBUZXJvIEtyaXN0byB3cm90ZToKPiBPbiAyMC44LjIwMTkgMi4w
+OCwgU3VtYW4gQW5uYSB3cm90ZToKPj4gT24gOC83LzE5IDI6NDggQU0sIFRlcm8gS3Jpc3RvIHdy
+b3RlOgo+Pj4gQWRkIFBSTSBkYXRhIGZvciBvbWFwNCBmYW1pbHkgb2YgU29Dcy4KPj4+Cj4+PiBT
+aWduZWQtb2ZmLWJ5OiBUZXJvIEtyaXN0byA8dC1rcmlzdG9AdGkuY29tPgo+Pj4gLS0tCj4+PiDC
+oCBkcml2ZXJzL3NvYy90aS9vbWFwX3BybS5jIHwgMjAgKysrKysrKysrKysrKysrKysrKysKPj4+
+IMKgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvc29jL3RpL29tYXBfcHJtLmMgYi9kcml2ZXJzL3NvYy90aS9vbWFwX3BybS5jCj4+
+PiBpbmRleCA4NzA1MTVlMy4uOWI4ZDU5NDUgMTAwNjQ0Cj4+PiAtLS0gYS9kcml2ZXJzL3NvYy90
+aS9vbWFwX3BybS5jCj4+PiArKysgYi9kcml2ZXJzL3NvYy90aS9vbWFwX3BybS5jCj4+PiBAQCAt
+NTQsNyArNTQsMjcgQEAgc3RydWN0IG9tYXBfcmVzZXRfZGF0YSB7Cj4+PiDCoCDCoCAjZGVmaW5l
+IE9NQVBfUFJNX05PX1JTVFNUwqDCoMKgIEJJVCgwKQo+Pj4gwqAgK3N0cnVjdCBvbWFwX3BybV9k
+YXRhIG9tYXA0X3BybV9kYXRhW10gPSB7Cj4+Cj4+IHN0YXRpYyBjb25zdAo+IAo+IFdpbGwgZml4
+IHRoaXMgYW5kIHJlc3Qgb2YgdGhlIHNpbWlsYXIgY29tbWVudHMuCj4gCj4gLVRlcm8KPiAKPj4K
+Pj4gcmVnYXJkcwo+PiBTdW1hbgo+Pgo+Pj4gK8KgwqDCoCB7IC5uYW1lID0gIm1wdSIsIC5iYXNl
+ID0gMHg0YTMwNjMwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4gK8KgwqDCoCB7IC5uYW1lID0gInRl
+c2xhIiwgLmJhc2UgPSAweDRhMzA2NDAwLCAucHdzdHN0ID0gMHg0LCAucnN0Y3RsID0KPj4+IDB4
+MTAsIC5yc3RzdCA9IDB4MTQgfSwKPj4+ICvCoMKgwqAgeyAubmFtZSA9ICJhYmUiLCAuYmFzZSA9
+IDB4NGEzMDY1MDAsIC5wd3N0c3QgPSAweDQgfSwKPj4+ICvCoMKgwqAgeyAubmFtZSA9ICJhbHdh
+eXNfb25fY29yZSIsIC5iYXNlID0gMHg0YTMwNjYwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4gK8Kg
+wqDCoCB7IC5uYW1lID0gImNvcmUiLCAuYmFzZSA9IDB4NGEzMDY3MDAsIC5wd3N0c3QgPSAweDQs
+IC5yc3RjdGwgPQo+Pj4gMHgyMTAsIC5yc3RzdCA9IDB4MjE0IH0sCj4+PiArwqDCoMKgIHsgLm5h
+bWUgPSAiaXZhaGQiLCAuYmFzZSA9IDB4NGEzMDZmMDAsIC5wd3N0c3QgPSAweDQsIC5yc3RjdGwg
+PQo+Pj4gMHgxMCwgLnJzdHN0ID0gMHgxNCB9LAo+Pj4gK8KgwqDCoCB7IC5uYW1lID0gImNhbSIs
+IC5iYXNlID0gMHg0YTMwNzAwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4gK8KgwqDCoCB7IC5uYW1l
+ID0gImRzcyIsIC5iYXNlID0gMHg0YTMwNzEwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4gK8KgwqDC
+oCB7IC5uYW1lID0gImdmeCIsIC5iYXNlID0gMHg0YTMwNzIwMCwgLnB3c3RzdCA9IDB4NCB9LAo+
+Pj4gK8KgwqDCoCB7IC5uYW1lID0gImwzaW5pdCIsIC5iYXNlID0gMHg0YTMwNzMwMCwgLnB3c3Rz
+dCA9IDB4NCB9LAo+Pj4gK8KgwqDCoCB7IC5uYW1lID0gImw0cGVyIiwgLmJhc2UgPSAweDRhMzA3
+NDAwLCAucHdzdHN0ID0gMHg0IH0sCj4+PiArwqDCoMKgIHsgLm5hbWUgPSAiY2VmdXNlIiwgLmJh
+c2UgPSAweDRhMzA3NjAwLCAucHdzdHN0ID0gMHg0IH0sCj4+PiArwqDCoMKgIHsgLm5hbWUgPSAi
+d2t1cCIsIC5iYXNlID0gMHg0YTMwNzcwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4gK8KgwqDCoCB7
+IC5uYW1lID0gImVtdSIsIC5iYXNlID0gMHg0YTMwNzkwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4g
+K8KgwqDCoCB7IC5uYW1lID0gImRldmljZSIsIC5iYXNlID0gMHg0YTMwN2IwMCwgLnJzdGN0bCA9
+IDB4MCwgLnJzdHN0ID0KPj4+IDB4NCB9LAoKU28sIGxvb2tzIGxpa2UgeW91IGFyZSB1c2luZyBw
+d3N0Y3RybCBhcyAwIGJ5IGRlZmF1bHQsIGJ1dCBzb21lIG9mIHRoZW0Kd2lsbCBuZWl0aGVyIGhh
+dmUgcHdzdGN0cmwgb3IgcHdzdHN0IGxpa2UgImRldmljZSIgUFJNIGhlcmUuIElzIHRoZSBwbGFu
+CnRvIHVzZSAtMSBmb3IgdGhlIGZpZWxkcywgb3IgYSBmbGFncyBmaWVsZD8KCnJlZ2FyZHMKU3Vt
+YW4KCj4+PiArwqDCoMKgIHsgfSwKPj4+ICt9Owo+Pj4gKwo+Pj4gwqAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBvZl9kZXZpY2VfaWQgb21hcF9wcm1faWRfdGFibGVbXSA9IHsKPj4+ICvCoMKgwqAgeyAu
+Y29tcGF0aWJsZSA9ICJ0aSxvbWFwNC1wcm0taW5zdCIsIC5kYXRhID0gb21hcDRfcHJtX2RhdGEg
+fSwKPj4+IMKgwqDCoMKgwqAgeyB9LAo+Pj4gwqAgfTsKPj4+IMKgCj4+Cj4gCj4gLS0gCj4gVGV4
+YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
+a2kuCj4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2ls
+ZTogSGVsc2lua2kKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
