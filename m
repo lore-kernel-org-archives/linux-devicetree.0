@@ -1,82 +1,145 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 4/4] clk: qcom: clk-rpmh: Add support for SM8150
-Date: Mon, 19 Aug 2019 22:09:44 -0700
-Message-ID: <20190820050944.GL26807@tuxbook-pro>
-References: <20190819073947.17258-1-vkoul@kernel.org>
- <20190819073947.17258-5-vkoul@kernel.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4 1/10] pwm: mediatek: add a property "num-pwms"
+Date: Tue, 20 Aug 2019 07:32:30 +0200
+Message-ID: <20190820053230.veu5qseftw45laka@pengutronix.de>
+References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+ <1566265225-27452-2-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190819073947.17258-5-vkoul@kernel.org>
+In-Reply-To: <1566265225-27452-2-git-send-email-sam.shih@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sam Shih <sam.shih@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 19 Aug 00:39 PDT 2019, Vinod Koul wrote:
+Hello,
 
-> Add support for rpmh clocks found in SM8150
+On Tue, Aug 20, 2019 at 09:40:16AM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> This adds a property "num-pwms" to avoid having an endless
+> list of compatibles with no differences for the same driver.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 > ---
->  drivers/clk/qcom/clk-rpmh.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+> Used:
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=68207
 > 
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> index 16d689e5bb3c..3b304a3fb5c9 100644
-> --- a/drivers/clk/qcom/clk-rpmh.c
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -374,6 +374,32 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
->  	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
+> Changes since v4:
+> Follow reviewer's comments:
+> Move the changes of droping the check for of_device_get_match_data
+> returning non-NULL to next patch
+> ---
+>  drivers/pwm/pwm-mediatek.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index eb6674ce995f..287fda3674ce 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
 >  };
 >  
-> +DEFINE_CLK_RPMH_ARC(sm8150, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
-> +DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
-> +DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 2);
-> +DEFINE_CLK_RPMH_VRM(sm8150, rf_clk1, rf_clk1_ao, "rfclka1", 1);
-> +DEFINE_CLK_RPMH_VRM(sm8150, rf_clk2, rf_clk2_ao, "rfclka2", 1);
-> +DEFINE_CLK_RPMH_VRM(sm8150, rf_clk3, rf_clk3_ao, "rfclka3", 1);
-> +
-> +static struct clk_hw *sm8150_rpmh_clocks[] = {
-> +	[RPMH_CXO_CLK]		= &sm8150_bi_tcxo.hw,
-> +	[RPMH_CXO_CLK_A]	= &sm8150_bi_tcxo_ao.hw,
-> +	[RPMH_LN_BB_CLK2]	= &sm8150_ln_bb_clk2.hw,
-> +	[RPMH_LN_BB_CLK2_A]	= &sm8150_ln_bb_clk2_ao.hw,
-> +	[RPMH_LN_BB_CLK3]	= &sm8150_ln_bb_clk3.hw,
-> +	[RPMH_LN_BB_CLK3_A]	= &sm8150_ln_bb_clk3_ao.hw,
-> +	[RPMH_RF_CLK1]		= &sm8150_rf_clk1.hw,
-> +	[RPMH_RF_CLK1_A]	= &sm8150_rf_clk1_ao.hw,
-> +	[RPMH_RF_CLK2]		= &sm8150_rf_clk2.hw,
-> +	[RPMH_RF_CLK2_A]	= &sm8150_rf_clk2_ao.hw,
-> +	[RPMH_RF_CLK3]		= &sm8150_rf_clk3.hw,
-> +	[RPMH_RF_CLK3_A]	= &sm8150_rf_clk3_ao.hw,
-> +};
-> +
-> +static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
-> +	.clks = sm8150_rpmh_clocks,
-> +	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
-> +};
-
-Maybe an empty line here?
-
->  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
->  					 void *data)
+>  struct mtk_pwm_platform_data {
+> -	unsigned int num_pwms;
+> +	unsigned int fallback_npwms;
+>  	bool pwm45_fixup;
+>  	bool has_clks;
+>  };
+> @@ -226,10 +226,10 @@ static const struct pwm_ops mtk_pwm_ops = {
+>  
+>  static int mtk_pwm_probe(struct platform_device *pdev)
 >  {
-> @@ -453,6 +479,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
+> -	const struct mtk_pwm_platform_data *data;
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct mtk_pwm_chip *pc;
+>  	struct resource *res;
+> -	unsigned int i;
+> +	unsigned int i, npwms;
+>  	int ret;
 >  
->  static const struct of_device_id clk_rpmh_match_table[] = {
->  	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
-> +	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
->  	{ }
+>  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+> @@ -246,7 +246,19 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pc->regs))
+>  		return PTR_ERR(pc->regs);
+>  
+> -	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
+> +	ret = of_property_read_u32(np, "num-pwms", &npwms);
+> +	if (ret < 0) {
+> +		/* It's deprecated, we should specify num_pwms via DT now. */
+> +		if (pc->soc->fallback_npwms) {
+> +			npwms = pc->soc->fallback_npwms;
+> +			dev_warn(&pdev->dev, "DT is outdated, please update it\n");
+> +		} else {
+> +			dev_err(&pdev->dev, "failed to get number of PWMs\n");
+> +			return ret;
+> +		}
+> +	}
+
+I'd suggest to add here:
+
+	if (npwms > ARRAY_SIZE(mtk_pwm_clk_name) + 2)
+		npwms = ARRAY_SIZE(mtk_pwm_clk_name) + 2;
+
+to ensure to not use mtk_pwm_clk_name[10].
+
+Best regards
+Uwe
+
+> +
+> +	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+>  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+>  		if (IS_ERR(pc->clks[i])) {
+>  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+> @@ -260,7 +272,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	pc->chip.dev = &pdev->dev;
+>  	pc->chip.ops = &mtk_pwm_ops;
+>  	pc->chip.base = -1;
+> -	pc->chip.npwm = data->num_pwms;
+> +	pc->chip.npwm = npwms;
+>  
+>  	ret = pwmchip_add(&pc->chip);
+>  	if (ret < 0) {
+> @@ -279,25 +291,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct mtk_pwm_platform_data mt2712_pwm_data = {
+> -	.num_pwms = 8,
+> +	.fallback_npwms = 8,
+>  	.pwm45_fixup = false,
+>  	.has_clks = true,
 >  };
->  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+>  
+>  static const struct mtk_pwm_platform_data mt7622_pwm_data = {
+> -	.num_pwms = 6,
+> +	.fallback_npwms = 6,
+>  	.pwm45_fixup = false,
+>  	.has_clks = true,
+>  };
+>  
+>  static const struct mtk_pwm_platform_data mt7623_pwm_data = {
+> -	.num_pwms = 5,
+> +	.fallback_npwms = 5,
+>  	.pwm45_fixup = true,
+>  	.has_clks = true,
+>  };
+>  
+>  static const struct mtk_pwm_platform_data mt7628_pwm_data = {
+> -	.num_pwms = 4,
+> +	.fallback_npwms = 4,
+>  	.pwm45_fixup = true,
+>  	.has_clks = false,
+>  };
 > -- 
-> 2.20.1
+> 2.17.1
 > 
+> 
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
