@@ -1,37 +1,35 @@
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date: Tue, 20 Aug 2019 16:59:21 +0300
-Message-ID: <20190820135921.GO30120@smile.fi.intel.com>
-References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820135602.GN30120@smile.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 0/4] iio: adc: ina2xx: Improve device identification
+Date: Tue, 20 Aug 2019 16:11:37 +0200
+Message-ID: <cover.1566310292.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820135602.GN30120@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, linux@roeck-us.net
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Colin Ian King <colin.king@canonical.com>, linux-iio@vger.kernel.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Jean Delvare <jdelvare@suse.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 04:56:02PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+Hi,
 
-> > +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
-> 
-> For consistency it should be
-> 
-> #define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
-> 
-> with explanation about 50 Ohm in the code below.
+the purpose of this series is to improve ina226 identification. On systems
+like Xilinx ZynqMP zcu102 (check dt in the tree) you can find out almost 20
+ina226 chips and it is impossible to find out based on simple ina226 which
+chip is repsonsible for what.
+The series is adding two ways how to improve device identification.
+Please let me know what you think I am happy to do changes in it.
 
-> > +	/* Drive impedance: 50 Ohm */
-> 
-> Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
+Thanks,
+Michal
 
-It should be DR_TY_SHIFT(6) now since I dropped the negation.
+
+Michal Simek (4):
+  iio: adc: ina2xx: Define *device_node only once
+  iio: adc: ina2xx: Setup better name then simple ina2xx
+  dt-bindings: Add optional label property for ina2xx
+  iio: adc: ina2xx: Use label proper for device identification
+
+ .../devicetree/bindings/hwmon/ina2xx.txt          |  2 ++
+ drivers/iio/adc/ina2xx-adc.c                      | 15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
