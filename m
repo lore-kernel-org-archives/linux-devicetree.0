@@ -1,68 +1,52 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Tue, 20 Aug 2019 11:24:50 -0700
-Message-ID: <20190820182450.GA38078@google.com>
-References: <20190814055108.214253-1-brendanhiggins@google.com>
- <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
+Date: Tue, 20 Aug 2019 20:36:16 +0200
+Message-ID: <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
+References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
+ <1566315318-30320-3-git-send-email-krzk@kernel.org> <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
+In-Reply-To: <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>
-Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mp
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
-> On 8/13/19 11:50 PM, Brendan Higgins wrote:
-> > ## TL;DR
-> > 
-> > This revision addresses comments from Stephen and Bjorn Helgaas. Most
-> > changes are pretty minor stuff that doesn't affect the API in anyway.
-> > One significant change, however, is that I added support for freeing
-> > kunit_resource managed resources before the test case is finished via
-> > kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
-> > KUnit on certain configurations (like the default one for x86, whoops).
-> > 
-> > Based on Stephen's feedback on the previous change, I think we are
-> > pretty close. I am not expecting any significant changes from here on
-> > out.
-> > 
-> 
-> Hi Brendan,
-> 
-> I found checkpatch errors in one or two patches. Can you fix those and
-> send v14.
+On Tue, 20 Aug 2019 at 18:59, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Aug 20, 2019 at 10:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v5:
+> > New patch
+> > ---
+> >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > index 7294ac36f4c0..d07b3c06d7cf 100644
+> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > @@ -161,6 +161,9 @@ properties:
+> >          items:
+> >            - enum:
+> >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+> > +              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
+> > +              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+>
+> This doesn't match what is in your dts files. Run 'make dtbs_check' and see.
 
-Hi Shuah,
+You mean the name does not match? I thought that '#' is a comment in YAML...
 
-Are you refering to the following errors?
+The dtbs_check fail on missing dt-mk-schema. Any reason why it is not
+in the scripts?
 
-ERROR: Macros with complex values should be enclosed in parentheses
-#144: FILE: include/kunit/test.h:456:
-+#define KUNIT_BINARY_CLASS \
-+       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
-
-ERROR: Macros with complex values should be enclosed in parentheses
-#146: FILE: include/kunit/test.h:458:
-+#define KUNIT_BINARY_PTR_CLASS \
-+       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
-
-These values should *not* be in parentheses. I am guessing checkpatch is
-getting confused and thinks that these are complex expressions, when
-they are not.
-
-I ignored the errors since I figured checkpatch was complaining
-erroneously.
-
-I could refactor the code to remove these macros entirely, but I think
-the code is cleaner with them.
-
-What would you prefer I do?
-
-NB: These macros are introduced in: "[PATCH v13 05/18] kunit: test: add
-the concept of expectations"
-
-Thanks!
+Best regards,
+Krzysztof
