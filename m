@@ -1,25 +1,87 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/2] reset: meson-audio-arb: add sm1 support
-Date: Tue, 20 Aug 2019 11:46:23 +0200
-Message-ID: <20190820094625.13455-1-jbrunet@baylibre.com>
+Subject: [PATCH 2/2] reset: meson-audio-arb: add sm1 support
+Date: Tue, 20 Aug 2019 11:46:25 +0200
+Message-ID: <20190820094625.13455-3-jbrunet@baylibre.com>
+References: <20190820094625.13455-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820094625.13455-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the new arb reset lines for the sm1 SoC family
+Add the new arb reset lines of the SM1 SoC family
 
-Jerome Brunet (2):
-  reset: dt-bindings: meson: update arb bindings for sm1
-  reset: meson-audio-arb: add sm1 support
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/reset/reset-meson-audio-arb.c | 28 ++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
- .../reset/amlogic,meson-axg-audio-arb.txt     |  3 +-
- drivers/reset/reset-meson-audio-arb.c         | 28 +++++++++++++++++--
- .../reset/amlogic,meson-axg-audio-arb.h       |  2 ++
- 3 files changed, 29 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
+index c53a2185a039..72d29dbca45a 100644
+--- a/drivers/reset/reset-meson-audio-arb.c
++++ b/drivers/reset/reset-meson-audio-arb.c
+@@ -30,6 +30,17 @@ static const unsigned int axg_audio_arb_reset_bits[] = {
+ 	[AXG_ARB_FRDDR_C]	= 6,
+ };
+ 
++static const unsigned int sm1_audio_arb_reset_bits[] = {
++	[AXG_ARB_TODDR_A]	= 0,
++	[AXG_ARB_TODDR_B]	= 1,
++	[AXG_ARB_TODDR_C]	= 2,
++	[AXG_ARB_FRDDR_A]	= 4,
++	[AXG_ARB_FRDDR_B]	= 5,
++	[AXG_ARB_FRDDR_C]	= 6,
++	[AXG_ARB_TODDR_D]	= 3,
++	[AXG_ARB_FRDDR_D]	= 7,
++};
++
+ static int meson_audio_arb_update(struct reset_controller_dev *rcdev,
+ 				  unsigned long id, bool assert)
+ {
+@@ -82,8 +93,14 @@ static const struct reset_control_ops meson_audio_arb_rstc_ops = {
+ };
+ 
+ static const struct of_device_id meson_audio_arb_of_match[] = {
+-	{ .compatible = "amlogic,meson-axg-audio-arb", },
+-	{}
++	{
++		.compatible = "amlogic,meson-axg-audio-arb",
++		.data = axg_audio_arb_reset_bits,
++	},
++	{
++		.compatible = "amlogic,meson-sm1-audio-arb",
++		.data = sm1_audio_arb_reset_bits
++	}, {}
+ };
+ MODULE_DEVICE_TABLE(of, meson_audio_arb_of_match);
+ 
+@@ -104,10 +121,15 @@ static int meson_audio_arb_remove(struct platform_device *pdev)
+ static int meson_audio_arb_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	const unsigned int *data;
+ 	struct meson_audio_arb_data *arb;
+ 	struct resource *res;
+ 	int ret;
+ 
++	data = of_device_get_match_data(dev);
++	if (!data)
++		return -EINVAL;
++
+ 	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
+ 	if (!arb)
+ 		return -ENOMEM;
+@@ -126,7 +148,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
+ 		return PTR_ERR(arb->regs);
+ 
+ 	spin_lock_init(&arb->lock);
+-	arb->reset_bits = axg_audio_arb_reset_bits;
++	arb->reset_bits = data;
+ 	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
+ 	arb->rstc.ops = &meson_audio_arb_rstc_ops;
+ 	arb->rstc.of_node = dev->of_node;
 -- 
 2.21.0
