@@ -1,80 +1,76 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: lantiq: Update for new SoC
-Date: Tue, 20 Aug 2019 11:00:50 -0500
-Message-ID: <CAL_JsqJK=TFsAt4kegGs2ymnWpY4tuDXNJF0RFpvZJmuPHJMYA@mail.gmail.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com> <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3] dt-bindings: arm: Convert Actions Semi bindings to
+ jsonschema
+Date: Tue, 20 Aug 2019 21:36:41 +0530
+Message-ID: <20190820160641.GA9262@Mani-XPS-13-9360>
+References: <20190517153223.7650-1-robh@kernel.org>
+ <20190613224435.GA32572@bogus>
+ <20190614170450.GA29654@Mani-XPS-13-9360>
+ <5946467c-7674-de2b-a657-627cf3be42df@suse.de>
+ <CAL_JsqJoQDkqZO_4XdaQymVW0cJDXVmAPh3uieRkBjoUXeWE1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJoQDkqZO_4XdaQymVW0cJDXVmAPh3uieRkBjoUXeWE1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 3:29 AM Rahul Tanwar
-<rahul.tanwar@linux.intel.com> wrote:
->
-> Intel Lightning Mountain(LGM) SoC reuses Lantiq ASC serial controller IP.
-> Update the dt bindings to support LGM as well.
->
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../devicetree/bindings/serial/lantiq_asc.yaml          | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-> index 54b90490f4fb..92807b59b024 100644
-> --- a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-> +++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-> @@ -17,6 +17,7 @@ properties:
->      oneOf:
->        items:
->          - const: lantiq,asc
-> +        - const: intel,lgm-asc
+On Fri, Jun 14, 2019 at 01:33:47PM -0600, Rob Herring wrote:
+> On Fri, Jun 14, 2019 at 11:07 AM Andreas Färber <afaerber@suse.de> wrote:
+> >
+> > Am 14.06.19 um 19:04 schrieb Manivannan Sadhasivam:
+> > > On Thu, Jun 13, 2019 at 04:44:35PM -0600, Rob Herring wrote:
+> > >> On Fri, May 17, 2019 at 10:32:23AM -0500, Rob Herring wrote:
+> > >>> Convert Actions Semi SoC bindings to DT schema format using json-schema.
+> > >>>
+> > >>> Cc: "Andreas Färber" <afaerber@suse.de>
+> > >>> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >>> Cc: Mark Rutland <mark.rutland@arm.com>
+> > >>> Cc: linux-arm-kernel@lists.infradead.org
+> > >>> Cc: devicetree@vger.kernel.org
+> > >>> Signed-off-by: Rob Herring <robh@kernel.org>
+> > >>> ---
+> > >>> v3:
+> > >>> - update MAINTAINERS
+> > >>>
+> > >>>  .../devicetree/bindings/arm/actions.txt       | 56 -------------------
+> > >>>  .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
+> > >>>  MAINTAINERS                                   |  2 +-
+> > >>>  3 files changed, 39 insertions(+), 57 deletions(-)
+> > >>>  delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
+> > >>>  create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
+> > >>
+> > >> Ping. Please apply or modify this how you'd prefer. I'm not going to
+> > >> keep respinning this.
+> > >>
+> > >
+> > > Sorry for that Rob.
+> >
+> > Well, it was simply not clear whether we were supposed to or not. :)
+> 
+> I thought 'To' you and a single patch should be clear enough.
+> 
+> > > Andreas, are you going to take this patch? Else I'll pick it up (If you
+> > > want me to do the PR for next cycle)
+> >
+> > I had checked that all previous changes to the .txt file were by myself,
+> > so I would prefer if we not license it under GPLv2-only but under the
+> > same dual-license (MIT/GPLv2+) as the DTs. That modification would need
+> > Rob's approval then.
+> 
+> That's fine and dual license is preferred. Can you adjust that when
+> applying. Note that the preference for schema is (GPL-2.0 OR
+> BSD-2-Clause), but MIT/GPLv2+ is fine by me.
 
-Better expressed as:
+Andreas, are you going to take this patch? Else, we can ask Rob to take
+this through his tree as we don't have any queued patches for v5.4 yet.
 
-compatible:
-  enum:
-    - intel,lgm-asc
-    - lantiq,asc
+Thanks,
+Mani
 
->
->    reg:
->      maxItems: 1
-> @@ -28,6 +29,12 @@ properties:
->        - description: tx or combined interrupt
->        - description: rx interrupt
->        - description: err interrupt
-> +    description:
-> +      For lantiq,asc compatible, it supports 3 separate
-> +      interrupts for tx rx & err. Whereas, for intel,lgm-asc
-> +      compatible, it supports combined single interrupt for
-> +      all of tx, rx & err interrupts.
-
-This can be expressed with an if/then schema. There's some examples in
-the tree how to do that.
-
-> +
->
->    clocks:
->      description:
-> @@ -67,4 +74,14 @@ examples:
->              interrupts = <112 113 114>;
->      };
->
-> +  - |
-> +    asc0: serial@e0a00000 {
-> +            compatible = "intel,lgm-asc";
-> +            reg = <0xe0a00000 0x1000>;
-> +            interrupt-parent = <&ioapic1>;
-> +            interrupts = <128 1>;
-> +            clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
-> +            clock-names = "freq", "asc";
-> +    };
-> +
->  ...
-> --
-> 2.11.0
->
+> 
+> Rob
