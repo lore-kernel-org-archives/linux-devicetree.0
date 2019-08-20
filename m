@@ -1,64 +1,36 @@
-From: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 2/2] dt-bindings: lantiq: Update for new SoC
-Date: Tue, 20 Aug 2019 16:29:02 +0800
-Message-ID: <fa6b20015dc6bfe247e1b2a07bdc5c727595a04b.1566288689.git.rahul.tanwar@linux.intel.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v13 05/12] mailbox: mediatek: cmdq: support mt8183 gce function
+Date: Tue, 20 Aug 2019 16:36:28 +0800
+Message-ID: <20190820083635.5404-6-bibby.hsieh@mediatek.com>
+References: <20190820083635.5404-1-bibby.hsieh@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <20190820083635.5404-1-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC reuses Lantiq ASC serial controller IP.
-Update the dt bindings to support LGM as well.
+add mt8183 compatible name for supporting gce function
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- .../devicetree/bindings/serial/lantiq_asc.yaml          | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-index 54b90490f4fb..92807b59b024 100644
---- a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-+++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-@@ -17,6 +17,7 @@ properties:
-     oneOf:
-       items:
-         - const: lantiq,asc
-+        - const: intel,lgm-asc
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 8fddd26288e8..69daaadc3a5f 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -539,6 +539,7 @@ static const struct dev_pm_ops cmdq_pm_ops = {
  
-   reg:
-     maxItems: 1
-@@ -28,6 +29,12 @@ properties:
-       - description: tx or combined interrupt
-       - description: rx interrupt
-       - description: err interrupt
-+    description:
-+      For lantiq,asc compatible, it supports 3 separate
-+      interrupts for tx rx & err. Whereas, for intel,lgm-asc
-+      compatible, it supports combined single interrupt for
-+      all of tx, rx & err interrupts.
-+
+ static const struct of_device_id cmdq_of_ids[] = {
+ 	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
++	{.compatible = "mediatek,mt8183-gce", .data = (void *)24},
+ 	{}
+ };
  
-   clocks:
-     description:
-@@ -67,4 +74,14 @@ examples:
-             interrupts = <112 113 114>;
-     };
- 
-+  - |
-+    asc0: serial@e0a00000 {
-+            compatible = "intel,lgm-asc";
-+            reg = <0xe0a00000 0x1000>;
-+            interrupt-parent = <&ioapic1>;
-+            interrupts = <128 1>;
-+            clocks = <&cgu0 LGM_CLK_NOC4>, <&cgu0 LGM_GCLK_ASC0>;
-+            clock-names = "freq", "asc";
-+    };
-+
- ...
 -- 
-2.11.0
+2.18.0
