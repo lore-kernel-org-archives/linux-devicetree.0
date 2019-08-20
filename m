@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v6 2/4] dt-bindings: eeprom: at25: Add Anvo ANV32E61W
-Date: Tue, 20 Aug 2019 17:35:16 +0200
-Message-ID: <1566315318-30320-2-git-send-email-krzk@kernel.org>
+Subject: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310 compatibles
+Date: Tue, 20 Aug 2019 17:35:17 +0200
+Message-ID: <1566315318-30320-3-git-send-email-krzk@kernel.org>
 References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566315318-30320-1-git-send-email-krzk@kernel.org>
@@ -10,33 +10,31 @@ To: Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the compatible for ANV32E61W 64kb Serial SPI non-volatile SRAM.
-Although it is a SRAM device, it can be accessed through EEPROM
-interface. At least until there is no proper SRAM driver support for
-it.
+Add the compatibles for Kontron i.MX6UL N6310 SoM and boards.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
 ---
 
-Changes since v4:
-1. Update commit msg.
+Changes since v5:
+New patch
 ---
- Documentation/devicetree/bindings/eeprom/at25.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
-index b3bde97dc199..42577dd113dd 100644
---- a/Documentation/devicetree/bindings/eeprom/at25.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at25.txt
-@@ -3,6 +3,7 @@ EEPROMs (SPI) compatible with Atmel at25.
- Required properties:
- - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
-   Example "<vendor>,<type>" values:
-+    "anvo,anv32e61w"
-     "microchip,25lc040"
-     "st,m95m02"
-     "st,m95256"
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 7294ac36f4c0..d07b3c06d7cf 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -161,6 +161,9 @@ properties:
+         items:
+           - enum:
+               - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
++              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
++              - kontron,imx6ul-n6310-s    # Kontron N6310 S Board
++              - kontron,imx6ul-n6310-s-43 # Kontron N6310 S 43 Board
+           - const: fsl,imx6ul
+ 
+       - description: i.MX6ULL based Boards
 -- 
 2.7.4
