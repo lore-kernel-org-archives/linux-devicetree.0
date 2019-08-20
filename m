@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v3 4/8] arm64: dts: qcom: pm8150l: Add base dts file
-Date: Tue, 20 Aug 2019 22:53:46 +0530
-Message-ID: <20190820172351.24145-5-vkoul@kernel.org>
+Subject: [PATCH v3 3/8] arm64: dts: qcom: pm8150b: Add base dts file
+Date: Tue, 20 Aug 2019 22:53:45 +0530
+Message-ID: <20190820172351.24145-4-vkoul@kernel.org>
 References: <20190820172351.24145-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,21 +12,21 @@ To: Andy Gross <agross@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PMIC pm8150l is a slave pmic and this adds base DTS file for pm8150l
-with power-on, adc and gpio nodes
+PMIC pm8150b is a slave pmic and this adds base DTS file for pm8150b
+with power-on, adc, and gpio nodes
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/pm8150l.dtsi | 80 +++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi | 86 +++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
 new file mode 100644
-index 000000000000..eb0e9a090e42
+index 000000000000..322379d5c31f
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
-@@ -0,0 +1,80 @@
++++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+@@ -0,0 +1,86 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +/*
 + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
@@ -38,9 +38,9 @@ index 000000000000..eb0e9a090e42
 +#include <dt-bindings/spmi/spmi.h>
 +
 +&spmi_bus {
-+	pmic@4 {
-+		compatible = "qcom,pm8150l", "qcom,spmi-pmic";
-+		reg = <0x4 SPMI_USID>;
++	pmic@2 {
++		compatible = "qcom,pm8150b", "qcom,spmi-pmic";
++		reg = <0x2 SPMI_USID>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
@@ -57,7 +57,7 @@ index 000000000000..eb0e9a090e42
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			#io-channel-cells = <1>;
-+			interrupts = <0x4 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
 +
 +			status = "disabled";
 +
@@ -78,31 +78,37 @@ index 000000000000..eb0e9a090e42
 +				qcom,pre-scaling = <1 1>;
 +				label = "die_temp";
 +			};
++
++			chg-temp@9 {
++				reg = <ADC5_CHG_TEMP>;
++				qcom,pre-scaling = <1 1>;
++				label = "chg_temp";
++			};
 +		};
 +
-+		pm8150l_gpios: gpio@c000 {
-+			compatible = "qcom,pm8150l-gpio";
++		pm8150b_gpios: gpio@c000 {
++			compatible = "qcom,pm8150b-gpio";
 +			reg = <0xc000>;
 +			gpio-controller;
 +			#gpio-cells = <2>;
-+			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
-+				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
++			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
++				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
 +		};
 +	};
 +
-+	pmic@5 {
-+		compatible = "qcom,pm8150l", "qcom,spmi-pmic";
-+		reg = <0x5 SPMI_USID>;
++	pmic@3 {
++		compatible = "qcom,pm8150b", "qcom,spmi-pmic";
++		reg = <0x3 SPMI_USID>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +	};
