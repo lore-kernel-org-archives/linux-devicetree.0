@@ -1,48 +1,70 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: [PATCH 2/7] dt-bindings: arm-smmu: Add Adreno GPU variant
-Date: Tue, 20 Aug 2019 13:06:27 -0600
-Message-ID: <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
-References: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
+From: shuah <shuah@kernel.org>
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Tue, 20 Aug 2019 13:08:28 -0600
+Message-ID: <e8eaf28e-75df-c966-809a-2e3631353cc9@kernel.org>
+References: <20190814055108.214253-1-brendanhiggins@google.com>
+ <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
+ <20190820182450.GA38078@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <20190820182450.GA38078@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: freedreno@lists.freedesktop.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joerg Roedel <joro@8bytes.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mp
 List-Id: devicetree@vger.kernel.org
 
-Add a compatible string to identify SMMUs that are attached
-to Adreno GPU devices that wish to support split pagetables.
+On 8/20/19 12:24 PM, Brendan Higgins wrote:
+> On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
+>> On 8/13/19 11:50 PM, Brendan Higgins wrote:
+>>> ## TL;DR
+>>>
+>>> This revision addresses comments from Stephen and Bjorn Helgaas. Most
+>>> changes are pretty minor stuff that doesn't affect the API in anyway.
+>>> One significant change, however, is that I added support for freeing
+>>> kunit_resource managed resources before the test case is finished via
+>>> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+>>> KUnit on certain configurations (like the default one for x86, whoops).
+>>>
+>>> Based on Stephen's feedback on the previous change, I think we are
+>>> pretty close. I am not expecting any significant changes from here on
+>>> out.
+>>>
+>>
+>> Hi Brendan,
+>>
+>> I found checkpatch errors in one or two patches. Can you fix those and
+>> send v14.
+> 
+> Hi Shuah,
+> 
+> Are you refering to the following errors?
+> 
+> ERROR: Macros with complex values should be enclosed in parentheses
+> #144: FILE: include/kunit/test.h:456:
+> +#define KUNIT_BINARY_CLASS \
+> +       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
+> 
+> ERROR: Macros with complex values should be enclosed in parentheses
+> #146: FILE: include/kunit/test.h:458:
+> +#define KUNIT_BINARY_PTR_CLASS \
+> +       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
+> 
+> These values should *not* be in parentheses. I am guessing checkpatch is
+> getting confused and thinks that these are complex expressions, when
+> they are not.
+> 
+> I ignored the errors since I figured checkpatch was complaining
+> erroneously.
+> 
+> I could refactor the code to remove these macros entirely, but I think
+> the code is cleaner with them.
+> 
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Please do. I am not veru sure what value these macros add.
 
- Documentation/devicetree/bindings/iommu/arm,smmu.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-index 3133f3b..3b07896 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-@@ -18,6 +18,7 @@ conditions.
-                         "arm,mmu-500"
-                         "cavium,smmu-v2"
-                         "qcom,smmu-v2"
-+			"qcom,adreno-smmu-v2"
- 
-                   depending on the particular implementation and/or the
-                   version of the architecture implemented.
-@@ -31,6 +32,12 @@ conditions.
-                   as below, SoC-specific compatibles:
-                   "qcom,sdm845-smmu-500", "arm,mmu-500"
- 
-+		  "qcom,adreno-smmu-v2" is a special implementation for
-+		  SMMU devices attached to the Adreno GPU on Qcom devices.
-+		  If selected, this will enable split pagetable (TTBR1)
-+		  support. Only use this if the GPU target is capable of
-+		  supporting 64 bit addresses.
-+
- - reg           : Base address and size of the SMMU.
- 
- - #global-interrupts : The number of global interrupts exposed by the
--- 
-2.7.4
+thanks,
+-- Shuah
