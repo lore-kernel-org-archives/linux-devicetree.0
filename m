@@ -1,167 +1,335 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT schema
-Date: Tue, 20 Aug 2019 14:59:57 -0500
-Message-ID: <20190820195959.6126-2-robh@kernel.org>
+Subject: [PATCH 3/3] dt-bindings: Convert Arm Mali Utgard GPU to DT schema
+Date: Tue, 20 Aug 2019 14:59:59 -0500
+Message-ID: <20190820195959.6126-4-robh@kernel.org>
 References: <20190820195959.6126-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <narmstrong@baylibre.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCB0aGUgQXJtIE1pZGdhcmQgR1BVIGJpbmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdC4K
-ClNpZ25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2Jp
-bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCAgICAgICAgIHwgMTE5IC0tLS0tLS0tLS0t
-LS0KIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC55YW1sICAgICAgICB8IDE2NSAr
-KysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMTY1IGluc2VydGlvbnMoKyksIDEx
-OSBkZWxldGlvbnMoLSkKIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlh
-bWwKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2Fy
-bSxtYWxpLW1pZGdhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dw
-dS9hcm0sbWFsaS1taWRnYXJkLnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggOWIy
-OThlZGVjNWIyLi4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAorKysgL2Rldi9udWxsCkBAIC0xLDExOSAr
-MCwwIEBACi1BUk0gTWFsaSBNaWRnYXJkIEdQVQotPT09PT09PT09PT09PT09PT09PT0KLQotUmVx
-dWlyZWQgcHJvcGVydGllczoKLQotLSBjb21wYXRpYmxlIDoKLSAgKiBNdXN0IGNvbnRhaW4gb25l
-IG9mIHRoZSBmb2xsb3dpbmc6Ci0gICAgKyAiYXJtLG1hbGktdDYwNCIKLSAgICArICJhcm0sbWFs
-aS10NjI0IgotICAgICsgImFybSxtYWxpLXQ2MjgiCi0gICAgKyAiYXJtLG1hbGktdDcyMCIKLSAg
-ICArICJhcm0sbWFsaS10NzYwIgotICAgICsgImFybSxtYWxpLXQ4MjAiCi0gICAgKyAiYXJtLG1h
-bGktdDgzMCIKLSAgICArICJhcm0sbWFsaS10ODYwIgotICAgICsgImFybSxtYWxpLXQ4ODAiCi0g
-ICogd2hpY2ggbXVzdCBiZSBwcmVjZWRlZCBieSBvbmUgb2YgdGhlIGZvbGxvd2luZyB2ZW5kb3Ig
-c3BlY2lmaWNzOgotICAgICsgImFsbHdpbm5lcixzdW41MGktaDYtbWFsaSIKLSAgICArICJhbWxv
-Z2ljLG1lc29uLWd4bS1tYWxpIgotICAgICsgInNhbXN1bmcsZXh5bm9zNTQzMy1tYWxpIgotICAg
-ICsgInJvY2tjaGlwLHJrMzI4OC1tYWxpIgotICAgICsgInJvY2tjaGlwLHJrMzM5OS1tYWxpIgot
-Ci0tIHJlZyA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgZGV2aWNlIGFuZCBsZW5ndGgg
-b2YgdGhlIHJlZ2lzdGVyIGFyZWEuCi0KLS0gaW50ZXJydXB0cyA6IENvbnRhaW5zIHRoZSB0aHJl
-ZSBJUlEgbGluZXMgcmVxdWlyZWQgYnkgTWFsaSBNaWRnYXJkIGRldmljZXMuCi0KLS0gaW50ZXJy
-dXB0LW5hbWVzIDogQ29udGFpbnMgdGhlIG5hbWVzIG9mIElSUSByZXNvdXJjZXMgaW4gdGhlIG9y
-ZGVyIHRoZXkgd2VyZQotICBwcm92aWRlZCBpbiB0aGUgaW50ZXJydXB0cyBwcm9wZXJ0eS4gTXVz
-dCBjb250YWluOiAiam9iIiwgIm1tdSIsICJncHUiLgotCi0KLU9wdGlvbmFsIHByb3BlcnRpZXM6
-Ci0KLS0gY2xvY2tzIDogUGhhbmRsZSB0byBjbG9jayBmb3IgdGhlIE1hbGkgTWlkZ2FyZCBkZXZp
-Y2UuCi0KLS0gY2xvY2stbmFtZXMgOiBTcGVjaWZ5IHRoZSBuYW1lcyBvZiB0aGUgY2xvY2tzIHNw
-ZWNpZmllZCBpbiBjbG9ja3MKLSAgd2hlbiBtdWx0aXBsZSBjbG9ja3MgYXJlIHByZXNlbnQuCi0g
-ICAgKiBjb3JlOiBjbG9jayBkcml2aW5nIHRoZSBHUFUgaXRzZWxmIChXaGVuIG9ubHkgb25lIGNs
-b2NrIGlzIHByZXNlbnQsCi0gICAgICBhc3N1bWUgaXQncyB0aGlzIGNsb2NrLikKLSAgICAqIGJ1
-czogYnVzIGNsb2NrIGZvciB0aGUgR1BVCi0KLS0gbWFsaS1zdXBwbHkgOiBQaGFuZGxlIHRvIHJl
-Z3VsYXRvciBmb3IgdGhlIE1hbGkgZGV2aWNlLiBSZWZlciB0bwotICBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3JlZ3VsYXRvci50eHQgZm9yIGRldGFpbHMuCi0K
-LS0gb3BlcmF0aW5nLXBvaW50cy12MiA6IFJlZmVyIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9vcHAvb3BwLnR4dAotICBmb3IgZGV0YWlscy4KLQotLSAjY29vbGluZy1jZWxs
-czogUmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvdGhl
-cm1hbC50eHQKLSAgZm9yIGRldGFpbHMuCi0KLS0gcmVzZXRzIDogUGhhbmRsZSBvZiB0aGUgR1BV
-IHJlc2V0IGxpbmUuCi0KLVZlbmRvci1zcGVjaWZpYyBiaW5kaW5ncwotLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tCi0KLVRoZSBNYWxpIEdQVSBpcyBpbnRlZ3JhdGVkIHZlcnkgZGlmZmVyZW50bHkg
-ZnJvbSBvbmUgU29DIHRvCi1hbm90aGVyLiBJbiBvcmRlciB0byBhY2NvbW1vZGF0ZSB0aG9zZSBk
-aWZmZXJlbmNlcywgeW91IGhhdmUgdGhlIG9wdGlvbgotdG8gc3BlY2lmeSBvbmUgbW9yZSB2ZW5k
-b3Itc3BlY2lmaWMgY29tcGF0aWJsZSwgYW1vbmc6Ci0KLS0gImFsbHdpbm5lcixzdW41MGktaDYt
-bWFsaSIKLSAgUmVxdWlyZWQgcHJvcGVydGllczoKLSAgLSBjbG9ja3MgOiBwaGFuZGxlcyB0byBj
-b3JlIGFuZCBidXMgY2xvY2tzCi0gIC0gY2xvY2stbmFtZXMgOiBtdXN0IGNvbnRhaW4gImNvcmUi
-IGFuZCAiYnVzIgotICAtIHJlc2V0czogcGhhbmRsZSB0byBHUFUgcmVzZXQgbGluZQotCi0tICJh
-bWxvZ2ljLG1lc29uLWd4bS1tYWxpIgotICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgotICAtIHJlc2V0
-cyA6IFNob3VsZCBjb250YWluIHBoYW5kbGVzIG9mIDoKLSAgICArIEdQVSByZXNldCBsaW5lCi0g
-ICAgKyBHUFUgQVBCIGdsdWUgcmVzZXQgbGluZQotCi1FeGFtcGxlIGZvciBhIE1hbGktVDc2MDoK
-LQotZ3B1QGZmYTMwMDAwIHsKLQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1tYWxpIiwg
-ImFybSxtYWxpLXQ3NjAiOwotCXJlZyA9IDwweGZmYTMwMDAwIDB4MTAwMDA+OwotCWludGVycnVw
-dHMgPSA8R0lDX1NQSSA2IElSUV9UWVBFX0xFVkVMX0hJR0g+LAotCQkgICAgIDxHSUNfU1BJIDcg
-SVJRX1RZUEVfTEVWRUxfSElHSD4sCi0JCSAgICAgPEdJQ19TUEkgOCBJUlFfVFlQRV9MRVZFTF9I
-SUdIPjsKLQlpbnRlcnJ1cHQtbmFtZXMgPSAiam9iIiwgIm1tdSIsICJncHUiOwotCWNsb2NrcyA9
-IDwmY3J1IEFDTEtfR1BVPjsKLQltYWxpLXN1cHBseSA9IDwmdmRkX2dwdT47Ci0Jb3BlcmF0aW5n
-LXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47Ci0JcG93ZXItZG9tYWlucyA9IDwmcG93ZXIg
-UkszMjg4X1BEX0dQVT47Ci0JI2Nvb2xpbmctY2VsbHMgPSA8Mj47Ci19OwotCi1ncHVfb3BwX3Rh
-YmxlOiBvcHBfdGFibGUwIHsKLQljb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjIiOwot
-Ci0Jb3BwQDUzMzAwMDAwMCB7Ci0JCW9wcC1oeiA9IC9iaXRzLyA2NCA8NTMzMDAwMDAwPjsKLQkJ
-b3BwLW1pY3Jvdm9sdCA9IDwxMjUwMDAwPjsKLQl9OwotCW9wcEA0NTAwMDAwMDAgewotCQlvcHAt
-aHogPSAvYml0cy8gNjQgPDQ1MDAwMDAwMD47Ci0JCW9wcC1taWNyb3ZvbHQgPSA8MTE1MDAwMD47
-Ci0JfTsKLQlvcHBANDAwMDAwMDAwIHsKLQkJb3BwLWh6ID0gL2JpdHMvIDY0IDw0MDAwMDAwMDA+
-OwotCQlvcHAtbWljcm92b2x0ID0gPDExMjUwMDA+OwotCX07Ci0Jb3BwQDM1MDAwMDAwMCB7Ci0J
-CW9wcC1oeiA9IC9iaXRzLyA2NCA8MzUwMDAwMDAwPjsKLQkJb3BwLW1pY3Jvdm9sdCA9IDwxMDc1
-MDAwPjsKLQl9OwotCW9wcEAyNjYwMDAwMDAgewotCQlvcHAtaHogPSAvYml0cy8gNjQgPDI2NjAw
-MDAwMD47Ci0JCW9wcC1taWNyb3ZvbHQgPSA8MTAyNTAwMD47Ci0JfTsKLQlvcHBAMTYwMDAwMDAw
-IHsKLQkJb3BwLWh6ID0gL2JpdHMvIDY0IDwxNjAwMDAwMDA+OwotCQlvcHAtbWljcm92b2x0ID0g
-PDkyNTAwMD47Ci0JfTsKLQlvcHBAMTAwMDAwMDAwIHsKLQkJb3BwLWh6ID0gL2JpdHMvIDY0IDwx
-MDAwMDAwMDA+OwotCQlvcHAtbWljcm92b2x0ID0gPDkxMjUwMD47Ci0JfTsKLX07CmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdh
-cmQueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGkt
-bWlkZ2FyZC55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uMjRj
-NGFmNzRmYjhkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlhbWwKQEAgLTAsMCArMSwxNjUgQEAKKyMgU1BE
-WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQorJVlBTUwgMS4yCistLS0KKyRpZDog
-aHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZ3B1L2FybSxtYWxpLW1pZGdhcmQueWFtbCMK
-KyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIwor
-Cit0aXRsZTogQVJNIE1hbGkgTWlkZ2FyZCBHUFUKKworbWFpbnRhaW5lcnM6CisgIC0gUm9iIEhl
-cnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KKworcHJvcGVydGllczoKKyAgJG5vZGVuYW1lOgorICAg
-IHBhdHRlcm46ICdeZ3B1QFthLWYwLTldKyQnCisgIGNvbXBhdGlibGU6CisgICAgb25lT2Y6Cisg
-ICAgICAtIGl0ZW1zOgorICAgICAgICAgIC0gZW51bToKKyAgICAgICAgICAgICAtIGFsbHdpbm5l
-cixzdW41MGktaDYtbWFsaQorICAgICAgICAgIC0gY29uc3Q6IGFybSxtYWxpLXQ3MjAKKyAgICAg
-IC0gaXRlbXM6CisgICAgICAgICAgLSBlbnVtOgorICAgICAgICAgICAgIC0gYW1sb2dpYyxtZXNv
-bi1neG0tbWFsaQorICAgICAgICAgIC0gY29uc3Q6IGFybSxtYWxpLXQ4MjAKKyAgICAgIC0gaXRl
-bXM6CisgICAgICAgICAgLSBlbnVtOgorICAgICAgICAgICAgIC0gcm9ja2NoaXAscmszMjg4LW1h
-bGkKKyAgICAgICAgICAtIGNvbnN0OiBhcm0sbWFsaS10NzYwCisgICAgICAtIGl0ZW1zOgorICAg
-ICAgICAgIC0gZW51bToKKyAgICAgICAgICAgICAtIHJvY2tjaGlwLHJrMzM5OS1tYWxpCisgICAg
-ICAgICAgLSBjb25zdDogYXJtLG1hbGktdDg2MAorICAgICAgLSBpdGVtczoKKyAgICAgICAgICAt
-IGVudW06CisgICAgICAgICAgICAgLSBzYW1zdW5nLGV4eW5vczU0MzMtbWFsaQorICAgICAgICAg
-IC0gY29uc3Q6IGFybSxtYWxpLXQ3NjAKKworICAgICAgICAgICMgImFybSxtYWxpLXQ2MDQiCisg
-ICAgICAgICAgIyAiYXJtLG1hbGktdDYyNCIKKyAgICAgICAgICAjICJhcm0sbWFsaS10NjI4Igor
-ICAgICAgICAgICMgImFybSxtYWxpLXQ4MzAiCisgICAgICAgICAgIyAiYXJtLG1hbGktdDg4MCIK
-KworICByZWc6CisgICAgbWF4SXRlbXM6IDEKKworICBpbnRlcnJ1cHRzOgorICAgIGl0ZW1zOgor
-ICAgICAgLSBkZXNjcmlwdGlvbjogSm9iIGludGVycnVwdAorICAgICAgLSBkZXNjcmlwdGlvbjog
-TU1VIGludGVycnVwdAorICAgICAgLSBkZXNjcmlwdGlvbjogR1BVIGludGVycnVwdAorCisgIGlu
-dGVycnVwdC1uYW1lczoKKyAgICBpdGVtczoKKyAgICAgIC0gY29uc3Q6IGpvYgorICAgICAgLSBj
-b25zdDogbW11CisgICAgICAtIGNvbnN0OiBncHUKKworICBjbG9ja3M6CisgICAgbWluSXRlbXM6
-IDEKKyAgICBtYXhJdGVtczogMgorCisgIGNsb2NrLW5hbWVzOgorICAgIG1pbkl0ZW1zOiAxCisg
-ICAgaXRlbXM6CisgICAgICAtIGNvbnN0OiBjb3JlCisgICAgICAtIGNvbnN0OiBidXMKKworICBt
-YWxpLXN1cHBseToKKyAgICBtYXhJdGVtczogMQorCisgIHJlc2V0czoKKyAgICBtaW5JdGVtczog
-MQorICAgIG1heEl0ZW1zOiAyCisKKyAgb3BlcmF0aW5nLXBvaW50cy12MjogdHJ1ZQorCisgICIj
-Y29vbGluZy1jZWxscyI6CisgICAgY29uc3Q6IDIKKworcmVxdWlyZWQ6CisgIC0gY29tcGF0aWJs
-ZQorICAtIHJlZworICAtIGludGVycnVwdHMKKyAgLSBpbnRlcnJ1cHQtbmFtZXMKKworYWxsT2Y6
-CisgIC0gaWY6CisgICAgICBwcm9wZXJ0aWVzOgorICAgICAgICBjb21wYXRpYmxlOgorICAgICAg
-ICAgIGNvbnRhaW5zOgorICAgICAgICAgICAgY29uc3Q6IGFsbHdpbm5lcixzdW41MGktaDYtbWFs
-aQorICAgIHRoZW46CisgICAgICBwcm9wZXJ0aWVzOgorICAgICAgICBjbG9ja3M6CisgICAgICAg
-ICAgbWluSXRlbXM6IDIKKyAgICAgIHJlcXVpcmVkOgorICAgICAgICAtIGNsb2NrcworICAgICAg
-ICAtIGNsb2NrLW5hbWVzCisgICAgICAgIC0gcmVzZXRzCisgIC0gaWY6CisgICAgICBwcm9wZXJ0
-aWVzOgorICAgICAgICBjb21wYXRpYmxlOgorICAgICAgICAgIGNvbnRhaW5zOgorICAgICAgICAg
-ICAgY29uc3Q6IGFtbG9naWMsbWVzb24tZ3htLW1hbGkKKyAgICB0aGVuOgorICAgICAgcHJvcGVy
-dGllczoKKyAgICAgICAgcmVzZXRzOgorICAgICAgICAgIG1pbkl0ZW1zOiAyCisgICAgICByZXF1
-aXJlZDoKKyAgICAgICAgLSByZXNldHMKKworZXhhbXBsZXM6CisgIC0gfAorICAgICNpbmNsdWRl
-IDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4KKyAgICAjaW5jbHVkZSA8
-ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgorCisgICAgZ3B1QGZm
-YTMwMDAwIHsKKyAgICAgIGNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjg4LW1hbGkiLCAiYXJt
-LG1hbGktdDc2MCI7CisgICAgICByZWcgPSA8MHhmZmEzMDAwMCAweDEwMDAwPjsKKyAgICAgIGlu
-dGVycnVwdHMgPSA8R0lDX1NQSSA2IElSUV9UWVBFX0xFVkVMX0hJR0g+LAorICAgICAgICAgICAg
-IDxHSUNfU1BJIDcgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisgICAgICAgICAgICAgPEdJQ19TUEkg
-OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKyAgICAgIGludGVycnVwdC1uYW1lcyA9ICJqb2IiLCAi
-bW11IiwgImdwdSI7CisgICAgICBjbG9ja3MgPSA8JmNydSAwPjsKKyAgICAgIG1hbGktc3VwcGx5
-ID0gPCZ2ZGRfZ3B1PjsKKyAgICAgIG9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmdwdV9vcHBfdGFi
-bGU+OworICAgICAgcG93ZXItZG9tYWlucyA9IDwmcG93ZXIgMD47CisgICAgICAjY29vbGluZy1j
-ZWxscyA9IDwyPjsKKyAgICB9OworCisgICAgZ3B1X29wcF90YWJsZTogb3BwX3RhYmxlMCB7Cisg
-ICAgICBjb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjIiOworCisgICAgICBvcHBANTMz
-MDAwMDAwIHsKKyAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw1MzMwMDAwMDA+OworICAgICAg
-ICBvcHAtbWljcm92b2x0ID0gPDEyNTAwMDA+OworICAgICAgfTsKKyAgICAgIG9wcEA0NTAwMDAw
-MDAgeworICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQ1MDAwMDAwMD47CisgICAgICAgIG9w
-cC1taWNyb3ZvbHQgPSA8MTE1MDAwMD47CisgICAgICB9OworICAgICAgb3BwQDQwMDAwMDAwMCB7
-CisgICAgICAgIG9wcC1oeiA9IC9iaXRzLyA2NCA8NDAwMDAwMDAwPjsKKyAgICAgICAgb3BwLW1p
-Y3Jvdm9sdCA9IDwxMTI1MDAwPjsKKyAgICAgIH07CisgICAgICBvcHBAMzUwMDAwMDAwIHsKKyAg
-ICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDwzNTAwMDAwMDA+OworICAgICAgICBvcHAtbWljcm92
-b2x0ID0gPDEwNzUwMDA+OworICAgICAgfTsKKyAgICAgIG9wcEAyNjYwMDAwMDAgeworICAgICAg
-ICBvcHAtaHogPSAvYml0cy8gNjQgPDI2NjAwMDAwMD47CisgICAgICAgIG9wcC1taWNyb3ZvbHQg
-PSA8MTAyNTAwMD47CisgICAgICB9OworICAgICAgb3BwQDE2MDAwMDAwMCB7CisgICAgICAgIG9w
-cC1oeiA9IC9iaXRzLyA2NCA8MTYwMDAwMDAwPjsKKyAgICAgICAgb3BwLW1pY3Jvdm9sdCA9IDw5
-MjUwMDA+OworICAgICAgfTsKKyAgICAgIG9wcEAxMDAwMDAwMDAgeworICAgICAgICBvcHAtaHog
-PSAvYml0cy8gNjQgPDEwMDAwMDAwMD47CisgICAgICAgIG9wcC1taWNyb3ZvbHQgPSA8OTEyNTAw
-PjsKKyAgICAgIH07CisgICAgfTsKKworLi4uCi0tIAoyLjIwLjEKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Convert the Arm Utgard GPU binding to DT schema format.
+
+'allwinner,sun8i-a23-mali' compatible was not documented, so add it.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/gpu/arm,mali-utgard.txt          | 129 --------------
+ .../bindings/gpu/arm,mali-utgard.yaml         | 166 ++++++++++++++++++
+ 2 files changed, 166 insertions(+), 129 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+deleted file mode 100644
+index ba895efe3039..000000000000
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ /dev/null
+@@ -1,129 +0,0 @@
+-ARM Mali Utgard GPU
+-===================
+-
+-Required properties:
+-  - compatible
+-    * Must be one of the following:
+-      + "arm,mali-300"
+-      + "arm,mali-400"
+-      + "arm,mali-450"
+-    * And, optionally, one of the vendor specific compatible:
+-      + allwinner,sun4i-a10-mali
+-      + allwinner,sun7i-a20-mali
+-      + allwinner,sun8i-h3-mali
+-      + allwinner,sun50i-a64-mali
+-      + allwinner,sun50i-h5-mali
+-      + amlogic,meson8-mali
+-      + amlogic,meson8b-mali
+-      + amlogic,meson-gxbb-mali
+-      + amlogic,meson-gxl-mali
+-      + samsung,exynos4210-mali
+-      + rockchip,rk3036-mali
+-      + rockchip,rk3066-mali
+-      + rockchip,rk3188-mali
+-      + rockchip,rk3228-mali
+-      + rockchip,rk3328-mali
+-      + stericsson,db8500-mali
+-      + hisilicon,hi6220-mali
+-
+-  - reg: Physical base address and length of the GPU registers
+-
+-  - interrupts: an entry for each entry in interrupt-names.
+-    See ../interrupt-controller/interrupts.txt for details.
+-
+-  - interrupt-names:
+-    * ppX: Pixel Processor X interrupt (X from 0 to 7)
+-    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
+-    * pp: Pixel Processor broadcast interrupt (mali-450 only)
+-    * gp: Geometry Processor interrupt
+-    * gpmmu: Geometry Processor MMU interrupt
+-
+-  - clocks: an entry for each entry in clock-names
+-  - clock-names:
+-    * bus: bus clock for the GPU
+-    * core: clock driving the GPU itself
+-
+-Optional properties:
+-  - interrupt-names and interrupts:
+-    * pmu: Power Management Unit interrupt, if implemented in hardware
+-
+-  - memory-region:
+-    Memory region to allocate from, as defined in
+-    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+-
+-  - mali-supply:
+-    Phandle to regulator for the Mali device, as defined in
+-    Documentation/devicetree/bindings/regulator/regulator.txt for details.
+-
+-  - operating-points-v2:
+-    Operating Points for the GPU, as defined in
+-    Documentation/devicetree/bindings/opp/opp.txt
+-
+-  - power-domains:
+-    A power domain consumer specifier as defined in
+-    Documentation/devicetree/bindings/power/power_domain.txt
+-
+-Vendor-specific bindings
+-------------------------
+-
+-The Mali GPU is integrated very differently from one SoC to
+-another. In order to accomodate those differences, you have the option
+-to specify one more vendor-specific compatible, among:
+-
+-  - allwinner,sun4i-a10-mali
+-    Required properties:
+-      * resets: phandle to the reset line for the GPU
+-
+-  - allwinner,sun7i-a20-mali
+-    Required properties:
+-      * resets: phandle to the reset line for the GPU
+-
+-  - allwinner,sun50i-a64-mali
+-    Required properties:
+-      * resets: phandle to the reset line for the GPU
+-
+-  - allwinner,sun50i-h5-mali
+-    Required properties:
+-      * resets: phandle to the reset line for the GPU
+-
+-  - amlogic,meson8-mali and amlogic,meson8b-mali
+-    Required properties:
+-      * resets: phandle to the reset line for the GPU
+-
+-  - Rockchip variants:
+-    Required properties:
+-      * resets: phandle to the reset line for the GPU
+-
+-  - stericsson,db8500-mali
+-    Required properties:
+-      * interrupt-names and interrupts:
+-        + combined: combined interrupt of all of the above lines
+-
+-  - hisilicon,hi6220-mali
+-    Required properties:
+-      * resets: phandles to the reset lines for the GPU
+-
+-Example:
+-
+-mali: gpu@1c40000 {
+-	compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
+-	reg = <0x01c40000 0x10000>;
+-	interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+-	interrupt-names = "gp",
+-			  "gpmmu",
+-			  "pp0",
+-			  "ppmmu0",
+-			  "pp1",
+-			  "ppmmu1",
+-			  "pmu";
+-	clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+-	clock-names = "bus", "core";
+-	resets = <&ccu RST_BUS_GPU>;
+-};
+-
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+new file mode 100644
+index 000000000000..d3883ba09174
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+@@ -0,0 +1,166 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/arm,mali-utgard.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM Mali Utgard GPU
++
++maintainers:
++  - Rob Herring <robh@kernel.org>
++  - Maxime Ripard <maxime.ripard@free-electrons.com>
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  $nodename:
++    pattern: '^gpu@[a-f0-9]+$'
++  compatible:
++    oneOf:
++      - items:
++          - const: allwinner,sun8i-a23-mali
++          - const: allwinner,sun7i-a20-mali
++          - const: arm,mali-400
++      - items:
++          - enum:
++              - allwinner,sun4i-a10-mali
++              - allwinner,sun7i-a20-mali
++              - allwinner,sun8i-h3-mali
++              - allwinner,sun50i-a64-mali
++              - rockchip,rk3036-mali
++              - rockchip,rk3066-mali
++              - rockchip,rk3188-mali
++              - rockchip,rk3228-mali
++              - samsung,exynos4210-mali
++              - stericsson,db8500-mali
++          - const: arm,mali-400
++      - items:
++          - enum:
++              - allwinner,sun50i-h5-mali
++              - amlogic,meson8-mali
++              - amlogic,meson8b-mali
++              - amlogic,meson-gxbb-mali
++              - amlogic,meson-gxl-mali
++              - hisilicon,hi6220-mali
++              - rockchip,rk3328-mali
++          - const: arm,mali-450
++
++      # "arm,mali-300"
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 4
++    maxItems: 20
++
++  interrupt-names:
++    allOf:
++      - additionalItems: true
++        minItems: 4
++        maxItems: 20
++        items:
++          # At least enforce the first 2 interrupts
++          - const: gp
++          - const: gpmmu
++      - items:
++          # Not ideal as any order and combination are allowed
++          enum:
++            - gp        # Geometry Processor interrupt
++            - gpmmu     # Geometry Processor MMU interrupt
++            - pp        # Pixel Processor broadcast interrupt (mali-450 only)
++            - pp0       # Pixel Processor X interrupt (X from 0 to 7)
++            - ppmmu0    # Pixel Processor X MMU interrupt (X from 0 to 7)
++            - pp1
++            - ppmmu1
++            - pp2
++            - ppmmu2
++            - pp3
++            - ppmmu3
++            - pp4
++            - ppmmu4
++            - pp5
++            - ppmmu5
++            - pp6
++            - ppmmu6
++            - pp7
++            - ppmmu7
++            - pmu       # Power Management Unit interrupt (optional)
++            - combined  # stericsson,db8500-mali only
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: bus
++      - const: core
++
++  memory-region: true
++
++  mali-supply:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  operating-points-v2: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - allwinner,sun4i-a10-mali
++              - allwinner,sun7i-a20-mali
++              - allwinner,sun50i-a64-mali
++              - allwinner,sun50i-h5-mali
++              - amlogic,meson8-mali
++              - amlogic,meson8b-mali
++              - hisilicon,hi6220-mali
++              - rockchip,rk3036-mali
++              - rockchip,rk3066-mali
++              - rockchip,rk3188-mali
++              - rockchip,rk3228-mali
++              - rockchip,rk3328-mali
++    then:
++      required:
++        - resets
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    mali: gpu@1c40000 {
++      compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
++      reg = <0x01c40000 0x10000>;
++      interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-names = "gp",
++            "gpmmu",
++            "pp0",
++            "ppmmu0",
++            "pp1",
++            "ppmmu1",
++            "pmu";
++      clocks = <&ccu 1>, <&ccu 2>;
++      clock-names = "bus", "core";
++      resets = <&ccu 1>;
++    };
++
++...
+-- 
+2.20.1
