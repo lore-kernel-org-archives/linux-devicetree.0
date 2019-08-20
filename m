@@ -1,76 +1,46 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: [PATCH v6 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
-Date: Tue, 20 Aug 2019 14:03:39 +0200
-Message-ID: <20190820120345.22593-2-poeschel@lemonage.de>
-References: <20190820120345.22593-1-poeschel@lemonage.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] dt-bindings: spi: Fix the number of CS lines documented
+ as an example
+Date: Tue, 20 Aug 2019 13:05:47 +0100
+Message-ID: <20190820120547.GA4738@sirena.co.uk>
+References: <20190820115000.32041-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820120345.22593-1-poeschel@lemonage.de>
+Content-Disposition: inline
+In-Reply-To: <20190820115000.32041-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a simple binding doc for the pn532.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
-Changes in v6:
-- Rebased the patch series on v5.3-rc5
-- Picked up Rob's Reviewed-By
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes in v4:
-- Add documentation about reg property in case of i2c
+On Tue, Aug 20, 2019 at 05:20:00PM +0530, Manivannan Sadhasivam wrote:
+> The number of CS lines is mentioned as 2 in the spi-controller binding
+> but however in the example, 4 cs-gpios are used. Hence fix that to
+> mention 4.
 
-Changes in v3:
-- seperate binding doc instead of entry in trivial-devices.txt
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
- .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/Documentation/devicetree/bindings/nfc/pn532.txt b/Documentation/devicetree/bindings/nfc/pn532.txt
-new file mode 100644
-index 000000000000..d5aaa588073d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nfc/pn532.txt
-@@ -0,0 +1,33 @@
-+NXP PN532 NFC Chip
-+
-+Required properties:
-+- compatible: Should be
-+    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
-+                  where the NFC chip is connected to.
-+                  Currently the kernel has phy bindings for uart and i2c.
-+    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
-+    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
-+
-+Required properties if connected on i2c:
-+- reg: for the i2c bus address. This is fixed at 0x48 for the PN532.
-+
-+Example uart:
-+
-+uart4: serial@49042000 {
-+        compatible = "ti,omap3-uart";
-+
-+        pn532: nfc {
-+                compatible = "nxp,pn532";
-+        };
-+};
-+
-+Example i2c:
-+
-+i2c1: i2c@0 {
-+        compatible = "ti,omap3-i2c";
-+
-+        pn532: nfc {
-+                compatible = "nxp,pn532";
-+                reg = <0x48>;
-+        };
-+};
--- 
-2.23.0.rc1
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1b4hgACgkQJNaLcl1U
+h9CaTAf+NDDtCxFNPDyqiudCbpGsmAOBaem3UqwpTZRbK9vy7b0ePoD9WJKWG+2O
+1VxpcQp243Ardj1r8k9gZPYeWpolHmFen00GoakMDJiP7HLfjUIj/qReHkvbY23k
+6f0+DWwWlW6dNYOTzunzeqihVNB8Ca+IRADgp6S89o9fMD/2KbIAsNrSKOJwuhAG
+qtELaiaIKSFFbibjD1kLAjhcvcSZ6kYeF6sA6dNXvgvH9VgAuoWxcJTR092lPPDd
+3f1T/MKZQyo3yal/0WJ9O5rKdUe7HAinhnc8ptUm11hvog21k+sWQkMFgELcJ3Ci
+tVI+DaUHu+fv61YcaPMmvHPb8hITEA==
+=qfh+
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
