@@ -1,7 +1,7 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v7 2/5] media: sunxi: Refactor the Makefile and Kconfig
-Date: Tue, 20 Aug 2019 13:24:33 +0200
-Message-ID: <1345e5d1beb34549399bd2c2dc30adb52cda2b01.1566300265.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v7 4/5] ARM: dts: sun7i: Add CSI0 controller
+Date: Tue, 20 Aug 2019 13:24:35 +0200
+Message-ID: <c9d4b21cff8f0fb283dd249e949ea60a6a848d2f.1566300265.git-series.maxime.ripard@bootlin.com>
 References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,57 +14,56 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The Makefile and Kconfig for the sun6i CSI driver are included in the main
-Makefile / KConfig file. Since we're going to add a new CSI driver for an
-older chip, and the Cedrus driver eventually, it makes more sense to put
-those in our directory.
+The CSI controller embedded in the A20 can be supported by our new driver.
+Let's add it to our DT.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/media/platform/Kconfig        | 2 +-
- drivers/media/platform/Makefile       | 2 +-
- drivers/media/platform/sunxi/Kconfig  | 1 +
- drivers/media/platform/sunxi/Makefile | 1 +
- 4 files changed, 4 insertions(+), 2 deletions(-)
- create mode 100644 drivers/media/platform/sunxi/Kconfig
- create mode 100644 drivers/media/platform/sunxi/Makefile
+ arch/arm/boot/dts/sun7i-a20.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 89555f9a813f..2fda8036d11d 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -146,7 +146,7 @@ source "drivers/media/platform/am437x/Kconfig"
- source "drivers/media/platform/xilinx/Kconfig"
- source "drivers/media/platform/rcar-vin/Kconfig"
- source "drivers/media/platform/atmel/Kconfig"
--source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-+source "drivers/media/platform/sunxi/Kconfig"
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 9ad8e445b240..713c20be8c7a 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -376,6 +376,17 @@
+ 			num-cs = <1>;
+ 		};
  
- config VIDEO_TI_CAL
- 	tristate "TI CAL (Camera Adaptation Layer) driver"
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 7cbbd925124c..6ee7eb0d36f4 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -100,4 +100,4 @@ obj-y					+= meson/
++		csi0: csi@1c09000 {
++			compatible = "allwinner,sun7i-a20-csi0";
++			reg = <0x01c09000 0x1000>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
++				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
++			clock-names = "bus", "mod", "isp", "ram";
++			resets = <&ccu RST_CSI0>;
++			status = "disabled";
++		};
++
+ 		emac: ethernet@1c0b000 {
+ 			compatible = "allwinner,sun4i-a10-emac";
+ 			reg = <0x01c0b000 0x1000>;
+@@ -775,6 +786,20 @@
+ 			};
  
- obj-y					+= cros-ec-cec/
- 
--obj-$(CONFIG_VIDEO_SUN6I_CSI)		+= sunxi/sun6i-csi/
-+obj-y					+= sunxi/
-diff --git a/drivers/media/platform/sunxi/Kconfig b/drivers/media/platform/sunxi/Kconfig
-new file mode 100644
-index 000000000000..1b6e89cb78b2
---- /dev/null
-+++ b/drivers/media/platform/sunxi/Kconfig
-@@ -0,0 +1 @@
-+source "drivers/media/platform/sunxi/sun6i-csi/Kconfig"
-diff --git a/drivers/media/platform/sunxi/Makefile b/drivers/media/platform/sunxi/Makefile
-new file mode 100644
-index 000000000000..8d06f98500ee
---- /dev/null
-+++ b/drivers/media/platform/sunxi/Makefile
-@@ -0,0 +1 @@
-+obj-y		+= sun6i-csi/
+ 			/omit-if-no-ref/
++			csi0_8bits_pins: csi-8bits-pins {
++				pins = "PE0", "PE2", "PE3", "PE4", "PE5",
++				       "PE6", "PE7", "PE8", "PE9", "PE10",
++				       "PE11";
++				function = "csi0";
++			};
++
++			/omit-if-no-ref/
++			csi0_clk_pin: csi-clk-pin {
++				pins = "PE1";
++				function = "csi0";
++			};
++
++			/omit-if-no-ref/
+ 			emac_pa_pins: emac-pa-pins {
+ 				pins = "PA0", "PA1", "PA2",
+ 				       "PA3", "PA4", "PA5", "PA6",
 -- 
 git-series 0.9.1
