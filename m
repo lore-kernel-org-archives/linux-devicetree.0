@@ -1,39 +1,54 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Tue, 20 Aug 2019 11:24:45 -0600
-Message-ID: <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
-References: <20190814055108.214253-1-brendanhiggins@google.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v3 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Date: Tue, 20 Aug 2019 22:53:42 +0530
+Message-ID: <20190820172351.24145-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814055108.214253-1-brendanhiggins@google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>, shuah <shuah@kernel.org>
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/13/19 11:50 PM, Brendan Higgins wrote:
-> ## TL;DR
-> 
-> This revision addresses comments from Stephen and Bjorn Helgaas. Most
-> changes are pretty minor stuff that doesn't affect the API in anyway.
-> One significant change, however, is that I added support for freeing
-> kunit_resource managed resources before the test case is finished via
-> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
-> KUnit on certain configurations (like the default one for x86, whoops).
-> 
-> Based on Stephen's feedback on the previous change, I think we are
-> pretty close. I am not expecting any significant changes from here on
-> out.
-> 
+This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+the MTP for SM8150.
 
-Hi Brendan,
+Changes in v3:
+ - Fix copyright comment style to Linux kernel style
+ - Make property values all hex or decimal
+ - Fix patch titles and logs and make them consistent
+ - Fix line breaks
 
-I found checkpatch errors in one or two patches. Can you fix those and
-send v14.
+Changes in v2:
+ - Squash patches
+ - Fix comments given by Stephen namely, lowercase for hext numbers,
+   making rpmhcc have xo_board as parent, rename pon controller to
+   power-on controller, make pmic nodes as disabled etc.
+ - removed the dependency on clk defines and use raw numbers
 
-thanks,
--- Shuah
+
+Vinod Koul (8):
+  arm64: dts: qcom: sm8150: Add base dts file
+  arm64: dts: qcom: pm8150: Add base dts file
+  arm64: dts: qcom: pm8150b: Add base dts file
+  arm64: dts: qcom: pm8150l: Add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add regulators
+  arm64: dts: qcom: sm8150: Add reserved-memory regions
+  arm64: dts: qcom: sm8150: Add apps shared nodes
+
+ arch/arm64/boot/dts/qcom/Makefile       |   1 +
+ arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 378 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi    | 481 ++++++++++++++++++++++++
+ 6 files changed, 1123 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+
+-- 
+2.20.1
