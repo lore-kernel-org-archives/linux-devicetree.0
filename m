@@ -1,168 +1,84 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-Date: Wed, 21 Aug 2019 13:57:38 +0200
-Message-ID: <20190821115738.3amrk5td544mhpwd@flea>
-References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
- <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
- <20190820114849.GD5123@paasikivi.fi.intel.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v3 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date: Wed, 21 Aug 2019 15:01:42 +0300
+Message-ID: <20190821120142.GX30120@smile.fi.intel.com>
+References: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190821101118.42774-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6ow4c2sufu6lsmjk"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190820114849.GD5123@paasikivi.fi.intel.com>
+In-Reply-To: <20190821101118.42774-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 21, 2019 at 06:11:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
 
---6ow4c2sufu6lsmjk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> --- /dev/null
+> +++ b/drivers/phy/intel/Kconfig
+> @@ -0,0 +1,8 @@
 
-Hi Sakari,
+Missed licence tag
 
-On Tue, Aug 20, 2019 at 02:48:49PM +0300, Sakari Ailus wrote:
-> Hi Maxime,
->
-> On Tue, Aug 20, 2019 at 01:24:32PM +0200, Maxime Ripard wrote:
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-> > used in later (A10s, A13, A20, R8 and GR8) SoCs.
-> >
-> > On some SoCs, like the A10, there's multiple instances of that controller,
-> > with one instance supporting more channels and having an ISP.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 107 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > new file mode 100644
-> > index 000000000000..9000bca344f9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > @@ -0,0 +1,107 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Chen-Yu Tsai <wens@csie.org>
-> > +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> > +
-> > +description: |-
-> > +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
-> > +  frames from a parallel or BT656 sensor.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: allwinner,sun7i-a20-csi0
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: The CSI interface clock
-> > +      - description: The CSI module clock
-> > +      - description: The CSI ISP clock
-> > +      - description: The CSI DRAM clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: bus
-> > +      - const: mod
-> > +      - const: isp
-> > +      - const: ram
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  port:
-> > +    type: object
-> > +    additionalProperties: false
-> > +
-> > +    properties:
-> > +      endpoint:
-> > +        properties:
-> > +          bus-width:
-> > +            const: 8
-> > +            description: Number of data lines actively used.
->
-> Are other values supported? If not, you could omit this.
+> +#
+> +# Phy drivers for Intel X86 LGM platform
+> +#
 
-It can also support 16 bits data input, but this description is
-redundant anyway, I'll remove it.
+> +#define EMMC_PHYCTRL2_REG	0xb0
+> +#define FRQSEL_25M		0
 
-> > +
-> > +          data-active: true
-> > +          hsync-active: true
-> > +          pclk-sample: true
-> > +          remote-endpoint: true
-> > +          vsync-active: true
-> > +
-> > +        required:
-> > +          - bus-width
-> > +          - data-active
-> > +          - hsync-active
-> > +          - pclk-sample
-> > +          - remote-endpoint
-> > +          - vsync-active
->
-> Some of these are not allowed in the Bt.656 mode (vsync-active and
-> hsync-active) while they're required in Bt.601 mode. Is there a way to tell
-> that in YAML-based bindings?
+I would still leave 1 and 2 with corresponding names for sake of documentation.
 
-You could, but that would be more suited in another schemas. The way
-schemas works is that you can have several layers of them, and each
-being validated in isolation from the others.
+> +#define FRQSEL_150M		3
+> +#define FRQSEL_MASK		GENMASK(24, 22)
+> +#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
 
-Here, we're just listing the values usable by that binding, and it
-will be used only to validate that binding.
+> +	unsigned int freqsel = 0;
 
-Eventually, we'll want to have a video-interfaces schemas that will
-apply to all the OF graph users, with those constraints defined.
+Redundant assignment.
 
-This way, we can avoid a lot of duplication and just have the binding
-description.
+> +	udelay(5);
 
-I guess I could just have the remote endpoint being required, and the
-rest will be in the generic part.
++ blank line
 
-> Similarly, video-interfaces.txt should be referenced from here, shouldn't
-> it?
+> +	regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
 
-Sure.
+And here missed to address one of my comments.
 
-Maxime
+> +	/*
+> +	 * We purposely get the clock here and not in probe to avoid the
+> +	 * circular dependency problem.  We expect:
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+We don't use double space
 
---6ow4c2sufu6lsmjk
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	 * - PHY driver to probe
+> +	 * - SDHCI driver to start probe
+> +	 * - SDHCI driver to register it's clock
+> +	 * - SDHCI driver to get the PHY
+> +	 * - SDHCI driver to init the PHY
+> +	 *
+> +	 * The clock is optional, so upon any error just return it like
+> +	 * any other error to user.
+> +	 *
+> +	 */
 
------BEGIN PGP SIGNATURE-----
+> +	struct device *dev = &pdev->dev;
+> +	struct intel_emmc_phy *priv;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV0xsgAKCRDj7w1vZxhR
-xZRVAQCiMCXGC+Jhj5UArGqGUPo8RfUmzov8i8LF6Y+puf29bQD9FukZcvSbUwWP
-7Nb97AhXzuzAohNb4SnGTSQI6zT4lQQ=
-=wBTw
------END PGP SIGNATURE-----
+> +	struct device_node *np = dev->of_node;
 
---6ow4c2sufu6lsmjk--
+Group it with other assignment(s), i.e. dev = ... above.
+
+	struct device *dev = ...;
+	struct device_node *np = ...;
+
+-- 
+With Best Regards,
+Andy Shevchenko
