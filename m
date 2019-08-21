@@ -1,81 +1,54 @@
-Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v8 09/13] media: tvp5150: add s_power callback
-Date: Wed, 21 Aug 2019 09:30:59 +0200
-Message-Id: <20190821073103.19634-10-m.felsch@pengutronix.de>
-In-Reply-To: <20190821073103.19634-1-m.felsch@pengutronix.de>
-References: <20190821073103.19634-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=Gvwe=WR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39610 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfHUIGa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2019 04:06:30 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+References: <20181118173056.4591-1-marek.vasut+renesas@gmail.com>
+ <20181119104243.csnkooxolkple2ln@verge.net.au> <499ffcf5-0617-a142-914d-afee88c2127b@gmail.com>
+In-Reply-To: <499ffcf5-0617-a142-914d-afee88c2127b@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Aug 2019 10:06:18 +0200
+Message-ID: <CAMuHMdUJK79r8Kn035nzVrg-DN76sYD_diijvH=q37Zbw3VBNQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: can: rcar_can: document r8a77990 support
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Eugeniu Rosca <erosca@de.adit-jv.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Don't en-/disable the interrupts during s_stream because someone can
-disable the stream but wants to get informed if the stream is locked
-again. So keep the interrupts enabled the whole time the pipeline is
-opened.
+On Sat, Feb 16, 2019 at 2:58 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 11/19/18 11:42 AM, Simon Horman wrote:
+> > On Sun, Nov 18, 2018 at 06:30:56PM +0100, Marek Vasut wrote:
+> >> Document the support for rcar_can on R8A77990 SoC devices.
+> >> Add R8A77990 to the list of SoCs which require the "assigned-clocks"
+> >> and "assigned-clock-rates" properties.
+> >>
+> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+> >> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> Cc: Simon Horman <horms+renesas@verge.net.au>
+> >> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >> Cc: linux-renesas-soc@vger.kernel.org
+> >> ---
+> >>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> >
+> This patch seems to be missing upstream ?
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+Thanks, queuing in renesas-devel for v5.4.
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index c74410684675..c2fe14fc643e 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1352,11 +1352,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-+static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int val = 0;
-+
-+	if (on)
-+		val = TVP5150_INT_A_LOCK;
-+
-+	if (decoder->irq)
-+		/* Enable / Disable lock interrupt */
-+		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-+				   TVP5150_INT_A_LOCK, val);
-+
-+	return 0;
-+}
- 
- static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
--	unsigned int mask, val = 0, int_val = 0;
-+	unsigned int mask, val = 0;
- 
- 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
- 	       TVP5150_MISC_CTL_CLOCK_OE;
-@@ -1369,15 +1384,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 			val = decoder->lock ? decoder->oe : 0;
- 		else
- 			val = decoder->oe;
--		int_val = TVP5150_INT_A_LOCK;
- 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
- 	}
- 
- 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
--	if (decoder->irq)
--		/* Enable / Disable lock interrupt */
--		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
--				   TVP5150_INT_A_LOCK, int_val);
- 
- 	return 0;
- }
-@@ -1574,6 +1584,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
- 	.g_register = tvp5150_g_register,
- 	.s_register = tvp5150_s_register,
- #endif
-+	.s_power = tvp5150_s_power,
- };
- 
- static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
