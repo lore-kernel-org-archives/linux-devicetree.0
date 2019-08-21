@@ -1,31 +1,74 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 8/8] arm64: dts: qcom: sm8150: Add apps shared nodes
-Date: Wed, 21 Aug 2019 23:33:39 +0530
-Message-ID: <20190821180339.GK12733@vkoul-mobl.Dlink>
-References: <20190820172351.24145-1-vkoul@kernel.org>
- <20190820172351.24145-10-vkoul@kernel.org>
- <CAHLCerOKd8Nr9hnKKMZawoUxopcUDfez=xMB34t7s0=2ZpnDVg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/4] nvmem: meson-efuse: bindings: Add secure-monitor
+ phandle
+Date: Wed, 21 Aug 2019 13:14:58 -0500
+Message-ID: <20190821181458.GA2886@bogus>
+References: <20190731082339.20163-1-ccaione@baylibre.com>
+ <20190731082339.20163-3-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAHLCerOKd8Nr9hnKKMZawoUxopcUDfez=xMB34t7s0=2ZpnDVg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20190731082339.20163-3-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, srinivas.kandagatla@linaro.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 21-08-19, 14:13, Amit Kucheria wrote:
-> On Tue, Aug 20, 2019 at 10:55 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > Add hwlock, pmu, smem, tcsr_mutex_regs, apss_shared mailbox, apps_rsc
-> > including the rpmhcc child nodes to the SM8150 DTSI
-> > +
-> >                 spmi_bus: spmi@c440000 {
+On Wed, Jul 31, 2019 at 09:23:37AM +0100, Carlo Caione wrote:
+> Add a new property to link the nvmem driver to the secure-monitor. The
+> nvmem driver needs to access the secure-monitor to be able to access the
+> fuses.
 > 
-> Sort by address here.
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> index 2e0723ab3384..f7b3ed74db54 100644
+> --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  - compatible: should be "amlogic,meson-gxbb-efuse"
+>  - clocks: phandle to the efuse peripheral clock provided by the
+>  	  clock controller.
+> +- secure-monitor: phandle to the secure-monitor node
+>  
+>  = Data cells =
+>  Are child nodes of eFuse, bindings of which as described in
+> @@ -16,6 +17,7 @@ Example:
+>  		clocks = <&clkc CLKID_EFUSE>;
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> +		secure-monitor = <&sm>;
+>  
+>  		sn: sn@14 {
+>  			reg = <0x14 0x10>;
+> @@ -30,6 +32,10 @@ Example:
+>  		};
+>  	};
+>  
+> +	sm: secure-monitor {
+> +		compatible = "amlogic,meson-gxbb-sm";
+> +	};
 
-Yes will fix, thanks for spotting!
+I guess I acked this a while back, but I'm not sure I would today. It 
+seems incomplete and a node with only a compatible string and no 
+resources doesn't need to be in DT. But that's already done...
 
--- 
-~Vinod
+There's no need for 'secure-monitor' anyways. Just do 
+'of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm")' or search 
+for the driver directly. It's not like there's more than one secure 
+monitor...
+
+Rob
