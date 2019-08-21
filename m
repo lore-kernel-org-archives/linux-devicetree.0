@@ -1,67 +1,64 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
-Date: Wed, 21 Aug 2019 14:53:40 +0530
-Message-ID: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v12 6/9] ARM: dts: exynos: add chipid label and syscon
+ compatible
+Date: Wed, 21 Aug 2019 11:29:08 +0200
+Message-ID: <8cee8885-142f-d508-472b-334a73d30696@partner.samsung.com>
+References: <20190722094646.13342-1-l.luba@partner.samsung.com>
+        <CGME20190722094730eucas1p2f3f8298c43c8bf0d96135bca9a9e753b@eucas1p2.samsung.com>
+        <20190722094646.13342-7-l.luba@partner.samsung.com>
+        <20190724171049.GA11333@kozik-lap>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190724171049.GA11333@kozik-lap>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com
-Cc: palmer@sifive.com, aou@eecs.berkeley.edu, bmeng.cn@gmail.com, sagar.kadam@sifive.com, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add the PWM DT node in SiFive FU540 soc-specific DT file.
-Enable the PWM nodes in HiFive Unleashed board-specific DT file.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
- 2 files changed, 27 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 42b5ec2..bb422db 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -230,6 +230,25 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+		pwm0: pwm@10020000 {
-+			compatible = "sifive,pwm0";
-+			reg = <0x0 0x10020000 0x0 0x1000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <42 43 44 45>;
-+			clocks = <&prci PRCI_CLK_TLCLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+		pwm1: pwm@10021000 {
-+			compatible = "sifive,pwm0";
-+			reg = <0x0 0x10021000 0x0 0x1000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <46 47 48 49>;
-+			reg-names = "control";
-+			clocks = <&prci PRCI_CLK_TLCLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
- 
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 93d68cb..104d334 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -85,3 +85,11 @@
- 		reg = <0>;
- 	};
- };
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
--- 
-1.9.1
+On 7/24/19 7:10 PM, Krzysztof Kozlowski wrote:
+> On Mon, Jul 22, 2019 at 11:46:43AM +0200, Lukasz Luba wrote:
+>> Add the chipid label which allows to use it in phandle from other device.
+>> Use syscon in compatible to get the regmap of the device register set.
+>> The chipid is used in DMC during initialization to compare compatibility.
+>>
+> 
+> I cannot find its usage in DMC driver.
+You are right, it was used in the old versions. I will skip this patch.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5.dtsi | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+>> index 67f9b4504a42..4801ca759feb 100644
+>> --- a/arch/arm/boot/dts/exynos5.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5.dtsi
+>> @@ -35,8 +35,8 @@
+>>   		#size-cells = <1>;
+>>   		ranges;
+>>   
+>> -		chipid@10000000 {
+>> -			compatible = "samsung,exynos4210-chipid";
+>> +		chipid: chipid@10000000 {
+>> +			compatible = "samsung,exynos4210-chipid", "syscon";
+>>   			reg = <0x10000000 0x100>;
+>>   		};
+>>   
+>> -- 
+>> 2.17.1
+>>
+> 
+> 
