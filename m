@@ -1,165 +1,282 @@
-From: Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH v5 2/4] iio: imu: st_lsm6sdx: move register definitions to sensor_settings struct
-Date: Wed, 21 Aug 2019 15:25:18 +0200
-Message-ID: <20190821132520.28225-3-martin.kepplinger@puri.sm>
-References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT schema
+Date: Wed, 21 Aug 2019 08:28:07 -0500
+Message-ID: <CAL_JsqL=qCVfbKnNK6q_au2PXKcOpZ6584gungRgz7T0oXNFdg@mail.gmail.com>
+References: <20190820195959.6126-1-robh@kernel.org> <20190820195959.6126-2-robh@kernel.org>
+ <0ab5959e-fc6c-06c3-a3f1-ea5a1ebef87d@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821132520.28225-1-martin.kepplinger@puri.sm>
+In-Reply-To: <0ab5959e-fc6c-06c3-a3f1-ea5a1ebef87d@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@puri.sm>, Lorenzo Bianconi <lorenzo@kernel.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Heiko Stuebner <heiko@sntech.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Move some register definitions to the per-device array of struct
-st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-devices to the driver.
+On Wed, Aug 21, 2019 at 2:12 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Rob,
+>
+> On 20/08/2019 21:59, Rob Herring wrote:
+> > Convert the Arm Midgard GPU binding to DT schema format.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
+> >  .../bindings/gpu/arm,mali-midgard.yaml        | 165 ++++++++++++++++++
+> >  2 files changed, 165 insertions(+), 119 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > deleted file mode 100644
+> > index 9b298edec5b2..000000000000
+> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > +++ /dev/null
+> > @@ -1,119 +0,0 @@
+> > -ARM Mali Midgard GPU
+> > -====================
+> > -
+> > -Required properties:
+> > -
+> > -- compatible :
+> > -  * Must contain one of the following:
+> > -    + "arm,mali-t604"
+> > -    + "arm,mali-t624"
+> > -    + "arm,mali-t628"
+> > -    + "arm,mali-t720"
+> > -    + "arm,mali-t760"
+> > -    + "arm,mali-t820"
+> > -    + "arm,mali-t830"
+> > -    + "arm,mali-t860"
+> > -    + "arm,mali-t880"
+> > -  * which must be preceded by one of the following vendor specifics:
+> > -    + "allwinner,sun50i-h6-mali"
+> > -    + "amlogic,meson-gxm-mali"
+> > -    + "samsung,exynos5433-mali"
+> > -    + "rockchip,rk3288-mali"
+> > -    + "rockchip,rk3399-mali"
+> > -
+> > -- reg : Physical base address of the device and length of the register area.
+> > -
+> > -- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+> > -
+> > -- interrupt-names : Contains the names of IRQ resources in the order they were
+> > -  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
+> > -
+> > -
+> > -Optional properties:
+> > -
+> > -- clocks : Phandle to clock for the Mali Midgard device.
+> > -
+> > -- clock-names : Specify the names of the clocks specified in clocks
+> > -  when multiple clocks are present.
+> > -    * core: clock driving the GPU itself (When only one clock is present,
+> > -      assume it's this clock.)
+> > -    * bus: bus clock for the GPU
+> > -
+> > -- mali-supply : Phandle to regulator for the Mali device. Refer to
+> > -  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> > -
+> > -- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+> > -  for details.
+> > -
+> > -- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
+> > -  for details.
+> > -
+> > -- resets : Phandle of the GPU reset line.
+> > -
+> > -Vendor-specific bindings
+> > -------------------------
+> > -
+> > -The Mali GPU is integrated very differently from one SoC to
+> > -another. In order to accommodate those differences, you have the option
+> > -to specify one more vendor-specific compatible, among:
+> > -
+> > -- "allwinner,sun50i-h6-mali"
+> > -  Required properties:
+> > -  - clocks : phandles to core and bus clocks
+> > -  - clock-names : must contain "core" and "bus"
+> > -  - resets: phandle to GPU reset line
+> > -
+> > -- "amlogic,meson-gxm-mali"
+> > -  Required properties:
+> > -  - resets : Should contain phandles of :
+> > -    + GPU reset line
+> > -    + GPU APB glue reset line
+> > -
+> > -Example for a Mali-T760:
+> > -
+> > -gpu@ffa30000 {
+> > -     compatible = "rockchip,rk3288-mali", "arm,mali-t760";
+> > -     reg = <0xffa30000 0x10000>;
+> > -     interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> > -                  <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> > -                  <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> > -     interrupt-names = "job", "mmu", "gpu";
+> > -     clocks = <&cru ACLK_GPU>;
+> > -     mali-supply = <&vdd_gpu>;
+> > -     operating-points-v2 = <&gpu_opp_table>;
+> > -     power-domains = <&power RK3288_PD_GPU>;
+> > -     #cooling-cells = <2>;
+> > -};
+> > -
+> > -gpu_opp_table: opp_table0 {
+> > -     compatible = "operating-points-v2";
+> > -
+> > -     opp@533000000 {
+> > -             opp-hz = /bits/ 64 <533000000>;
+> > -             opp-microvolt = <1250000>;
+> > -     };
+> > -     opp@450000000 {
+> > -             opp-hz = /bits/ 64 <450000000>;
+> > -             opp-microvolt = <1150000>;
+> > -     };
+> > -     opp@400000000 {
+> > -             opp-hz = /bits/ 64 <400000000>;
+> > -             opp-microvolt = <1125000>;
+> > -     };
+> > -     opp@350000000 {
+> > -             opp-hz = /bits/ 64 <350000000>;
+> > -             opp-microvolt = <1075000>;
+> > -     };
+> > -     opp@266000000 {
+> > -             opp-hz = /bits/ 64 <266000000>;
+> > -             opp-microvolt = <1025000>;
+> > -     };
+> > -     opp@160000000 {
+> > -             opp-hz = /bits/ 64 <160000000>;
+> > -             opp-microvolt = <925000>;
+> > -     };
+> > -     opp@100000000 {
+> > -             opp-hz = /bits/ 64 <100000000>;
+> > -             opp-microvolt = <912500>;
+> > -     };
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> > new file mode 100644
+> > index 000000000000..24c4af74fb8d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> > @@ -0,0 +1,165 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpu/arm,mali-midgard.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ARM Mali Midgard GPU
+> > +
+> > +maintainers:
+> > +  - Rob Herring <robh@kernel.org>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: '^gpu@[a-f0-9]+$'
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +             - allwinner,sun50i-h6-mali
+> > +          - const: arm,mali-t720
+> > +      - items:
+> > +          - enum:
+> > +             - amlogic,meson-gxm-mali
+> > +          - const: arm,mali-t820
+> > +      - items:
+> > +          - enum:
+> > +             - rockchip,rk3288-mali
+> > +          - const: arm,mali-t760
+> > +      - items:
+> > +          - enum:
+> > +             - rockchip,rk3399-mali
+> > +          - const: arm,mali-t860
+> > +      - items:
+> > +          - enum:
+> > +             - samsung,exynos5433-mali
+> > +          - const: arm,mali-t760
+> > +
+> > +          # "arm,mali-t604"
+> > +          # "arm,mali-t624"
+> > +          # "arm,mali-t628"
+> > +          # "arm,mali-t830"
+> > +          # "arm,mali-t880"
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: Job interrupt
+> > +      - description: MMU interrupt
+> > +      - description: GPU interrupt
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: job
+> > +      - const: mmu
+> > +      - const: gpu
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: core
+> > +      - const: bus
+> > +
+> > +  mali-supply:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  operating-points-v2: true
+> > +
+> > +  "#cooling-cells":
+> > +    const: 2
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-names
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: allwinner,sun50i-h6-mali
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          minItems: 2
+> > +      required:
+> > +        - clocks
+> > +        - clock-names
+> > +        - resets
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: amlogic,meson-gxm-mali
+> > +    then:
+> > +      properties:
+> > +        resets:
+> > +          minItems: 2
+> > +      required:
+> > +        - resets
+>
+> The original bindings was wrong, In fact, clocks should be required here aswell.
+> Same for bifrost and utgard...
+>
+> Should I send a fixup patch ?
 
-Also, remove completely unused register definitions.
+I think we should just make clocks required. I can't imagine anyone
+not using the clock binding.
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
- 2 files changed, 28 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index 055e52dec36a..090b7bd3c5b0 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -203,6 +203,9 @@ struct st_lsm6dsx_ext_dev_settings {
- /**
-  * struct st_lsm6dsx_settings - ST IMU sensor settings
-  * @wai: Sensor WhoAmI default value.
-+ * @int1_addr: Control Register address for INT1
-+ * @int2_addr: Control Register address for INT2
-+ * @reset_addr: register address for reset/reboot
-  * @max_fifo_size: Sensor max fifo length in FIFO words.
-  * @id: List of hw id/device name supported by the driver configuration.
-  * @channels: IIO channels supported by the device.
-@@ -216,6 +219,9 @@ struct st_lsm6dsx_ext_dev_settings {
-  */
- struct st_lsm6dsx_settings {
- 	u8 wai;
-+	u8 int1_addr;
-+	u8 int2_addr;
-+	u8 reset_addr;
- 	u16 max_fifo_size;
- 	struct {
- 		enum st_lsm6dsx_hw_id hw_id;
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 0aa93b45d772..1b46d9dc2089 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -49,17 +49,12 @@
- 
- #include "st_lsm6dsx.h"
- 
--#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
--#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
- #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
- #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
--#define ST_LSM6DSX_REG_RESET_ADDR		0x12
- #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
- #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
- #define ST_LSM6DSX_REG_BDU_ADDR			0x12
- #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
--#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
--#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
- 
- static const struct iio_chan_spec st_lsm6dsx_acc_channels[] = {
- 	ST_LSM6DSX_CHANNEL(IIO_ACCEL, 0x28, IIO_MOD_X, 0),
-@@ -78,6 +73,9 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
- static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	{
- 		.wai = 0x69,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 1365,
- 		.id = {
- 			{
-@@ -187,6 +185,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x69,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 682,
- 		.id = {
- 			{
-@@ -296,6 +297,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6a,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 682,
- 		.id = {
- 			{
-@@ -414,6 +418,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6c,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 512,
- 		.id = {
- 			{
-@@ -544,6 +551,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6b,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 512,
- 		.id = {
- 			{
-@@ -645,6 +655,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6b,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 512,
- 		.id = {
- 			{
-@@ -1172,10 +1185,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
- 
- 	switch (drdy_pin) {
- 	case 1:
--		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
-+		*drdy_reg = hw->settings->int1_addr;
- 		break;
- 	case 2:
--		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
-+		*drdy_reg = hw->settings->int2_addr;
- 		break;
- 	default:
- 		dev_err(hw->dev, "unsupported data ready pin\n");
-@@ -1275,7 +1288,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
- 	int err;
- 
- 	/* device sw reset */
--	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-+	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
- 				 ST_LSM6DSX_REG_RESET_MASK,
- 				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
- 	if (err < 0)
-@@ -1284,7 +1297,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
- 	msleep(50);
- 
- 	/* reload trimming parameter */
--	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-+	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
- 				 ST_LSM6DSX_REG_BOOT_MASK,
- 				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
- 	if (err < 0)
--- 
-2.20.1
+Rob
