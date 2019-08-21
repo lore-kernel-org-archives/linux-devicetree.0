@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v4 3/6] arm64: dts: amlogic: g12: add temperature sensor
-Date: Thu, 22 Aug 2019 00:24:18 +0200
-Message-ID: <20190821222421.30242-4-glaroque@baylibre.com>
+Subject: [PATCH v4 6/6] MAINTAINERS: add entry for Amlogic Thermal driver
+Date: Thu, 22 Aug 2019 00:24:21 +0200
+Message-ID: <20190821222421.30242-7-glaroque@baylibre.com>
 References: <20190821222421.30242-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190821222421.30242-1-glaroque@baylibre.com>
@@ -10,44 +10,33 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add cpu and ddr temperature sensors for G12 Socs
+Add myself as maintainer for Amlogic Thermal driver.
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12-common.dtsi    | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 06e186ca41e3..ce13c7c2e454 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -1353,6 +1353,26 @@
- 				};
- 			};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fb2b12f75c37..299f27d11058 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15910,6 +15910,15 @@ F:	Documentation/driver-api/thermal/cpu-cooling-api.rst
+ F:	drivers/thermal/cpu_cooling.c
+ F:	include/linux/cpu_cooling.h
  
-+			cpu_temp: temperature-sensor@34800 {
-+				compatible = "amlogic,g12a-cpu-thermal",
-+					     "amlogic,g12a-thermal";
-+				reg = <0x0 0x34800 0x0 0x50>;
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_TS>;
-+				#thermal-sensor-cells = <0>;
-+				amlogic,ao-secure = <&sec_AO>;
-+			};
++THERMAL DRIVER FOR AMLOGIC SOCS
++M:	Guillaume La Roque <glaroque@baylibre.com>
++L:	linux-pm@vger.kernel.org
++L:	linux-amlogic@lists.infradead.org
++W:	http://linux-meson.com/
++S:	Supported
++F:	drivers/thermal/amlogic_thermal.c
++F:	Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
 +
-+			ddr_temp: temperature-sensor@34c00 {
-+				compatible = "amlogic,g12a-ddr-thermal",
-+					     "amlogic,g12a-thermal";
-+				reg = <0x0 0x34c00 0x0 0x50>;
-+				interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_TS>;
-+				#thermal-sensor-cells = <0>;
-+				amlogic,ao-secure = <&sec_AO>;
-+			};
-+
- 			usb2_phy0: phy@36000 {
- 				compatible = "amlogic,g12a-usb2-phy";
- 				reg = <0x0 0x36000 0x0 0x2000>;
+ THINKPAD ACPI EXTRAS DRIVER
+ M:	Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+ L:	ibm-acpi-devel@lists.sourceforge.net
 -- 
 2.17.1
