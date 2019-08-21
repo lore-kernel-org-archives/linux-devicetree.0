@@ -1,70 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: Introduce compatible string for imx8qm" to the asoc tree
-Date: Wed, 21 Aug 2019 13:15:32 +0100 (BST)
-Message-ID: <20190821121532.B2DC62742FCD@ypsilon.sirena.org.uk>
-References: <20190814082911.665-3-daniel.baluta@nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to use
+ the regmap API
+Date: Wed, 21 Aug 2019 14:16:44 +0200
+Message-ID: <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
+References: <20190813150827.31972-1-s.nawrocki@samsung.com>
+ <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
+ <20190813150827.31972-3-s.nawrocki@samsung.com> <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+ <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
+ <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org> <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814082911.665-3-daniel.baluta@nxp.com>
+In-Reply-To: <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com, perex@perex.cz, robh+dt@kernel.org, shengjiu.wang@nxp.com, viorel.suman@nxp.com, Xiubo.Lee@gmail.com
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-tegra <linux-tegra@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Wed, 21 Aug 2019 at 13:51, Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+> >>> Following this change, I am now seeing the above error on our Tegra
+> >>> boards where this driver is enabled. This is triggering a kernel
+> >>> warnings test we have to fail. Hence, I don't think that you can remove
+> >>> the compatible node test here, unless you have a better way to determine
+> >>> if this is a samsung device.
+> >>
+> >> Right, this is really wrong... I missed that it is not a probe but
+> >> early init. And this init will be called on every board... Probably it
+> >> should be converted to a regular driver.
+>
+> Early initialization is needed for SoC driver to be used from within
+> arch/arm/mach-exynos/ and _initcall() usage is the usual way for SoC
+> drivers to be initialized:
+>
+> drivers/soc/amlogic/meson-gx-socinfo.c
+> drivers/soc/amlogic/meson-mx-socinfo.c
+> drivers/soc/atmel/soc.c
+> drivers/soc/bcm/brcmstb/common.c
+> drivers/soc/imx/soc-imx-scu.c
+> drivers/soc/imx/soc-imx8.c
+> drivers/soc/renesas/renesas-soc.c
+> drivers/soc/tegra/fuse/fuse-tegra.c
+> drivers/soc/ux500/ux500-soc-id.c
+> drivers/soc/versatile/soc-integrator.c
+> drivers/soc/versatile/soc-integrator.c
+>
+> The only SoC drivers that are regular drivers are:
+>
+> drivers/soc/fsl/guts.c
+> drivers/soc/versatile/soc-realview.c
 
-   ASoC: dt-bindings: Introduce compatible string for imx8qm
+Thanks for pointing it out.
 
-has been applied to the asoc tree at
+Indeed, the initcall was needed in your set of patches here:
+https://patchwork.kernel.org/project/linux-samsung-soc/list/?series=43565&state=*
+but this work was not continued here. Maybe it will be later
+resubmitted... maybe not... who knows? Therefore I would prefer proper
+solution for current case (driver), unless patches for mach are being
+brought back to life now.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+> > I'm also inclined to have it converted to a regular driver.  We already
+> > have "exynos-asv" driver matching on the chipid node (patch 3/9).
+> > The ASV patches will not be merged soon anyway, all this needs some more
+> > thought. Krzysztof, can we abandon the chipid patches for now? Your
+>
+> chipid driver is good and useful on its own. The preferred solution
+> IMHO would be to just revert "soc: samsung: Convert exynos-chipid
+> driver to use the regmap API" commit.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I queued the chipid as a dependency for ASV but ASV requires the
+regmap. What would be left after reverting the regmap part? Simple
+unused printk driver? No need for such. If reverting, then let's drop
+entire driver and rework it offline.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c1fe93581ae9d85c3a783b5fad21912bb88a0f34 Mon Sep 17 00:00:00 2001
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Date: Wed, 14 Aug 2019 11:29:11 +0300
-Subject: [PATCH] ASoC: dt-bindings: Introduce compatible string for imx8qm
-
-Register map for i.MX8QM is similar with i.MX6 series. Integration
-of SAI IP into i.MX8QM SOC features a FIFO size of 64 X 32 bits samples.
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20190814082911.665-3-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index e61c0dc1fc0b..0dc83cc4a236 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -9,7 +9,8 @@ Required properties:
- 
-   - compatible		: Compatible list, contains "fsl,vf610-sai",
- 			  "fsl,imx6sx-sai", "fsl,imx6ul-sai",
--			  "fsl,imx7ulp-sai" or "fsl,imx8mq-sai".
-+			  "fsl,imx7ulp-sai", "fsl,imx8mq-sai" or
-+			  "fsl,imx8qm-sai".
- 
-   - reg			: Offset and length of the register set for the device.
- 
--- 
-2.20.1
+Best regards,
+Krzysztof
