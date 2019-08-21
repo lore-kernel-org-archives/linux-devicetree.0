@@ -1,83 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/6] dt-bindings: serial: Document Freescale LINFlex
- UART
-Date: Wed, 21 Aug 2019 16:18:41 -0500
-Message-ID: <20190821211841.GA16627@bogus>
-References: <20190809112853.15846-1-stefan-gabriel.mirea@nxp.com>
- <20190809112853.15846-5-stefan-gabriel.mirea@nxp.com>
+From: guillaume La Roque <glaroque@baylibre.com>
+Subject: Re: [PATCH v3 0/6] Add support of New Amlogic temperature sensor for
+ G12 SoCs
+Date: Wed, 21 Aug 2019 23:19:37 +0200
+Message-ID: <9a63d585-69b1-c9b2-8092-51361ff41991@baylibre.com>
+References: <20190806130506.8753-1-glaroque@baylibre.com>
+ <357FACA6-6EAC-4E9D-B6F7-4D8D0D59A20A@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190809112853.15846-5-stefan-gabriel.mirea@nxp.com>
+In-Reply-To: <357FACA6-6EAC-4E9D-B6F7-4D8D0D59A20A@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc: "corbet@lwn.net" <corbet@lwn.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>, Larisa Ileana Grigore <larisa.grigore@nxp.com>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: daniel.lezcano@linaro.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:29:14AM +0000, Stefan-gabriel Mirea wrote:
-> From: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-> 
-> Add documentation for the serial communication interface module (LINFlex),
-> found in two instances on S32V234.
-> 
-> Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-> Signed-off-by: Larisa Grigore <Larisa.Grigore@nxp.com>
-> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-> ---
->  .../bindings/serial/fsl,s32-linflexuart.txt   | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/fsl,s32-linflexuart.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/fsl,s32-linflexuart.txt b/Documentation/devicetree/bindings/serial/fsl,s32-linflexuart.txt
-> new file mode 100644
-> index 000000000000..957ffeaca9f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/fsl,s32-linflexuart.txt
-> @@ -0,0 +1,24 @@
-> +* Freescale Linflex UART
+Hi Christian,
 
-Be consistent with the name: LINFlexD?
 
-> +
-> +The LINFlexD controller implements several LIN protocol versions, as well as
-> +support for full-duplex UART communication through 8-bit and 9-bit frames. The
-> +Linflex UART driver enables operation only in UART mode.
+thanks for testing on this 3 boards.
 
-What the driver supports or not is independent of the binding.
 
-> +
-> +See chapter 47 ("LINFlexD") in the reference manual[1].
-> +
-> +Required properties:
-> +- compatible :
-> +  - "fsl,s32-linflexuart" for linflex configured in uart mode which
+guillaume
 
-LINFlexD?
-
-> +  is compatible with the one integrated on S32V234 SoC
-
-Compatibles should be SoC specific. Is 's32' specific enough to account 
-for any differences or future bugs found?
-
-> +- reg : Address and length of the register set for the device
-> +- interrupts : Should contain uart interrupt
-> +
-> +Example:
-> +uart0:serial@40053000 {
-
-space    ^
-
-> +	compatible = "fsl,s32-linflexuart";
-> +	reg = <0x0 0x40053000 0x0 0x1000>;
-> +	interrupts = <0 59 4>;
-> +	status = "disabled";
-
-Don't show status in examples.
-
-> +};
-> +
-> +[1] https://www.nxp.com/webapp/Download?colCode=S32V234RM
-> -- 
-> 2.22.0
-> 
+On 8/14/19 2:24 PM, Christian Hewitt wrote:
+> On 6 Aug 2019, at 5:05 pm, Guillaume La Roque <glaroque@baylibre.com> wrote:
+>> This patchs series add support of New Amlogic temperature sensor and minimal
+>> thermal zone for SEI510 and ODROID-N2 boards.
+>>
+>> First implementation was doing on IIO[1] but after comments i move on thermal framework.
+>> Formulas and calibration values come from amlogic.
+>>
+>> Changes since v2:
+>>  - fix yaml documention 
+>>  - remove unneeded status variable for temperature-sensor node
+>>  - rework driver after Martin review
+>>  - add some information in commit message
+>>
+>> Changes since v1:
+>>  - fix enum vs const in documentation
+>>  - fix error with thermal-sensor-cells value set to 1 instead of 0
+>>  - add some dependencies needed to add cooling-maps
+>>
+>> Dependencies :
+>> - patch 3,4 & 5: depends on Neil's patch and series :
+>>              - missing dwc2 phy-names[2]
+>>              - patchsets to add DVFS on G12a[3] which have deps on [4] and [5]
+>>
+>> [1] https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@baylibre.com/
+>> [2] https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@baylibre.com/
+>> [3] https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@baylibre.com/
+>> [4] https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@baylibre.com/
+>> [5] https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@baylibre.com/
+>>
+>> Guillaume La Roque (6):
+>>  dt-bindings: thermal: Add DT bindings documentation for Amlogic
+>>    Thermal
+>>  thermal: amlogic: Add thermal driver to support G12 SoCs
+>>  arm64: dts: amlogic: g12: add temperature sensor
+>>  arm64: dts: meson: sei510: Add minimal thermal zone
+>>  arm64: dts: amlogic: odroid-n2: add minimal thermal zone
+>>  MAINTAINERS: add entry for Amlogic Thermal driver
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+>
+> I’ve tested this series with Odroid N2 and Khadas VIM3, X96-Max. Patches to add
+> support for VIM3/X96-max will be submitted once the driver is merged.
+>
+> VIM3:~ # dmesg | grep thermal
+> [    0.046375] thermal_sys: Registered thermal governor 'step_wise'
+>
+> VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone0/temp
+> 51300
+>
+> VIM3:~ # cat /sys/devices/virtual/thermal/thermal_zone1/temp
+> 52800
+>
+> Christian
