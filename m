@@ -1,54 +1,28 @@
-Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v8 08/13] media: tvp5150: initialize subdev before parsing device tree
-Date: Wed, 21 Aug 2019 09:30:58 +0200
-Message-Id: <20190821073103.19634-9-m.felsch@pengutronix.de>
-In-Reply-To: <20190821073103.19634-1-m.felsch@pengutronix.de>
-References: <20190821073103.19634-1-m.felsch@pengutronix.de>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 21 Aug 2019 13:29:25 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: ata: fix typo in Allwinner R40 reset
+ specific paragraph
+Message-ID: <20190821182925.GA17783@bogus>
+References: <20190731122535.3257-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731122535.3257-1-miquel.raynal@bootlin.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+On Wed, 31 Jul 2019 14:25:35 +0200, Miquel Raynal wrote:
+> "Property" is misspelled, correct it.
+> 
+> Fixes: caf8975b97c1 ("dt-bindings: ata: update ahci_sunxi bindings")
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/ata/ahci-platform.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-There are several debug prints in the tvp5150_parse_dt() function, which
-do not print the prefix, because the v4l2_subdev is not initialized, yet.
+Applied, thanks.
 
-Initialize the v4l2_subdev before parsing the device tree to fix the
-debug messages.
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 62a1c7c3a7c0..c74410684675 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1953,6 +1953,9 @@ static int tvp5150_probe(struct i2c_client *c)
- 
- 	core->regmap = map;
- 	sd = &core->sd;
-+	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
-+	sd->internal_ops = &tvp5150_internal_ops;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- 	if (IS_ENABLED(CONFIG_OF) && np) {
- 		res = tvp5150_parse_dt(core, np);
-@@ -1965,10 +1968,6 @@ static int tvp5150_probe(struct i2c_client *c)
- 		core->mbus_type = V4L2_MBUS_BT656;
- 	}
- 
--	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
--	sd->internal_ops = &tvp5150_internal_ops;
--	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
--
- 	res = tvp5150_mc_init(core);
- 	if (res)
- 		return res;
--- 
-2.20.1
+Rob
