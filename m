@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 08/14] arm64: dts: meson-gxl: fix internal phy compatible
-Date: Wed, 21 Aug 2019 16:20:37 +0200
-Message-ID: <20190821142043.14649-9-narmstrong@baylibre.com>
+Subject: [PATCH v2 06/14] arm64: dts: meson-gx: fix mhu compatible
+Date: Wed, 21 Aug 2019 16:20:35 +0200
+Message-ID: <20190821142043.14649-7-narmstrong@baylibre.com>
 References: <20190821142043.14649-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,25 +13,26 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: ethernet-phy@8: compatible: ['ethernet-phy-id0181.4400', 'ethernet-phy-ieee802.3-c22'] is not valid under any of the given schemas
+meson-gxbb-nanopi-k2.dt.yaml: mailbox@404: compatible:0: 'amlogic,meson-gx-mhu' is not one of ['amlogic,meson-gxbb-mhu']
+meson-gxl-s805x-libretech-ac.dt.yaml: mailbox@404: compatible:0: 'amlogic,meson-gx-mhu' is not one of ['amlogic,meson-gxbb-mhu']
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index ee1ecdbcc958..43eb158bee24 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -709,7 +709,7 @@
- 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 00215ece17c8..d8127f863b55 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -476,7 +476,7 @@
+ 			};
  
- 			internal_phy: ethernet-phy@8 {
--				compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
-+				compatible = "ethernet-phy-id0181.4400";
- 				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 				reg = <8>;
- 				max-speed = <100>;
+ 			mailbox: mailbox@404 {
+-				compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
++				compatible = "amlogic,meson-gxbb-mhu";
+ 				reg = <0 0x404 0 0x4c>;
+ 				interrupts = <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
+ 					     <GIC_SPI 209 IRQ_TYPE_EDGE_RISING>,
 -- 
 2.22.0
