@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v3 07/15] drm/mxsfb: Fix the vblank events
-Date: Wed, 21 Aug 2019 13:15:47 +0300
-Message-ID: <1566382555-12102-8-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v3 12/15] drm/mxsfb: Improve the axi clock usage
+Date: Wed, 21 Aug 2019 13:15:52 +0300
+Message-ID: <1566382555-12102-13-git-send-email-robert.chiras@nxp.com>
 References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
@@ -10,58 +10,146 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the vblank support is not correctly implemented in MXSFB_DRM
-driver. The call to drm_vblank_init is made with mode_config.num_crtc
-which at that time is 0. Because of this, vblank is not activated, so
-there won't be any vblank event submitted.
-For example, when running modetest with the '-v' parameter will result
-in an astronomical refresh rate (10000+ Hz), because of that.
+Currently, the enable of the axi clock return status is ignored, causing
+issues when the enable fails then we try to disable it. Therefore, it is
+better to check the return status and disable it only when enable
+succeeded.
+Also, remove the helper functions around clk_axi, since we can directly
+use the clk API function for enable/disable the clock. Those functions
+are already checking for NULL clk and returning 0 if that's the case.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+Acked-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c |  8 ++++----
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 32 +++++++++++++-------------------
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  3 ---
+ 3 files changed, 17 insertions(+), 26 deletions(-)
 
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+index a4ba368..e727f5e 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+@@ -408,7 +408,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+ {
+ 	dma_addr_t paddr;
+ 
+-	mxsfb_enable_axi_clk(mxsfb);
++	clk_prepare_enable(mxsfb->clk_axi);
+ 	writel(0, mxsfb->base + LCDC_CTRL);
+ 	mxsfb_crtc_mode_set_nofb(mxsfb);
+ 
+@@ -425,7 +425,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
+ void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
+ {
+ 	mxsfb_disable_controller(mxsfb);
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ }
+ 
+ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+@@ -451,8 +451,8 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+ 
+ 	paddr = mxsfb_get_fb_paddr(mxsfb);
+ 	if (paddr) {
+-		mxsfb_enable_axi_clk(mxsfb);
++		clk_prepare_enable(mxsfb->clk_axi);
+ 		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
+-		mxsfb_disable_axi_clk(mxsfb);
++		clk_disable_unprepare(mxsfb->clk_axi);
+ 	}
+ }
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 2743975..78a2382 100644
+index deb5e2b..dd5809b 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -38,6 +38,9 @@
- #include "mxsfb_drv.h"
- #include "mxsfb_regs.h"
- 
-+/* The eLCDIF max possible CRTCs */
-+#define MAX_CRTCS 1
-+
- enum mxsfb_devtype {
- 	MXSFB_V3,
- 	MXSFB_V4,
-@@ -138,6 +141,8 @@ static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
- 		mxsfb->connector = &mxsfb->panel_connector;
- 	}
- 
-+	drm_crtc_vblank_on(&pipe->crtc);
-+
- 	pm_runtime_get_sync(drm->dev);
- 	drm_panel_prepare(mxsfb->panel);
- 	mxsfb_crtc_enable(mxsfb);
-@@ -164,6 +169,8 @@ static void mxsfb_pipe_disable(struct drm_simple_display_pipe *pipe)
- 	}
- 	spin_unlock_irq(&drm->event_lock);
- 
-+	drm_crtc_vblank_off(&pipe->crtc);
-+
- 	if (mxsfb->connector != &mxsfb->panel_connector)
- 		mxsfb->connector = NULL;
+@@ -97,18 +97,6 @@ drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
+ 	return container_of(pipe, struct mxsfb_drm_private, pipe);
  }
-@@ -246,7 +253,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
  
- 	pm_runtime_enable(drm->dev);
+-void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb)
+-{
+-	if (mxsfb->clk_axi)
+-		clk_prepare_enable(mxsfb->clk_axi);
+-}
+-
+-void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+-{
+-	if (mxsfb->clk_axi)
+-		clk_disable_unprepare(mxsfb->clk_axi);
+-}
+-
+ /**
+  * mxsfb_atomic_helper_check - validate state object
+  * @dev: DRM device
+@@ -272,25 +260,31 @@ static void mxsfb_pipe_update(struct drm_simple_display_pipe *pipe,
+ static int mxsfb_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
+ {
+ 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
++	int ret = 0;
++
++	ret = clk_prepare_enable(mxsfb->clk_axi);
++	if (ret)
++		return ret;
  
--	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
-+	ret = drm_vblank_init(drm, MAX_CRTCS);
- 	if (ret < 0) {
- 		dev_err(drm->dev, "Failed to initialise vblank\n");
- 		goto err_vblank;
+ 	/* Clear and enable VBLANK IRQ */
+-	mxsfb_enable_axi_clk(mxsfb);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_SET);
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
+ {
+ 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
+ 
++	if (clk_prepare_enable(mxsfb->clk_axi))
++		return;
++
+ 	/* Disable and clear VBLANK IRQ */
+-	mxsfb_enable_axi_clk(mxsfb);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ }
+ 
+ static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
+@@ -451,7 +445,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+ 	struct mxsfb_drm_private *mxsfb = drm->dev_private;
+ 	u32 reg;
+ 
+-	mxsfb_enable_axi_clk(mxsfb);
++	clk_prepare_enable(mxsfb->clk_axi);
+ 
+ 	reg = readl(mxsfb->base + LCDC_CTRL1);
+ 
+@@ -460,7 +454,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
+ 
+ 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
+ 
+-	mxsfb_disable_axi_clk(mxsfb);
++	clk_disable_unprepare(mxsfb->clk_axi);
+ 
+ 	return IRQ_HANDLED;
+ }
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+index a178173..54c0644 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+@@ -39,9 +39,6 @@ struct mxsfb_drm_private {
+ int mxsfb_setup_crtc(struct drm_device *dev);
+ int mxsfb_create_output(struct drm_device *dev);
+ 
+-void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb);
+-void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+-
+ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
+ void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
+ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
 -- 
 2.7.4
