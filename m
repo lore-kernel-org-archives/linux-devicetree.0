@@ -1,40 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/3] dt-bindings: Convert Arm Mali GPUs to DT schema
-Date: Wed, 21 Aug 2019 12:43:49 -0500
-Message-ID: <CAL_JsqJoMAHWDonXVik=y1D=_sx20OAzueBtB+YuSwzwU6iVFw@mail.gmail.com>
-References: <20190820195959.6126-1-robh@kernel.org> <174045783.D6yh98NvXX@phil>
+From: Jonas Karlman <jonas@kwiboo.se>
+Subject: [RESEND PATCH] arm64: dts: rockchip: add rk3328 VPU node
+Date: Wed, 21 Aug 2019 17:54:38 +0000
+Message-ID: <HE1PR06MB4011C8496657B2C267A66327ACAA0@HE1PR06MB4011.eurprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <174045783.D6yh98NvXX@phil>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Neil Armstrong <narmstrong@baylibre.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 12:24 PM Heiko Stuebner <heiko@sntech.de> wrote:
->
-> Am Dienstag, 20. August 2019, 21:59:56 CEST schrieb Rob Herring:
-> > This series converts the various Arm Mali GPU bindings to use the DT
-> > schema format.
-> >
-> > The Midgard and Bifrost bindings generate warnings on 'interrupt-names'
-> > because there's all different ordering. The Utgard binding generates
-> > warnings on Rockchip platforms because 'clock-names' order is reversed.
->
-> Are you planning on sending fixes for these, should I just change the
-> ordering myself?
+This patch add a VPU device node for rk3328.
 
-I wasn't planning on it. I just add warnings. :)
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+It would be great if this can be considered for v5.4,
+related dt-bindings commit has been merged in media tree for v5.4.
 
->
-> > Rob Herring (3):
-> >   dt-bindings: Convert Arm Mali Midgard GPU to DT schema
-> >   dt-bindings: Convert Arm Mali Bifrost GPU to DT schema
-> >   dt-bindings: Convert Arm Mali Utgard GPU to DT schema
->
-> Acked-by: Heiko Stuebner <heiko@sntech.de>
+Decoding using hantro driver has been tested on a Pine64 Rock64 RK3328 device.
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-Thanks.
-
-Rob
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index e9fefd8a7e02..4a175fff2861 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -278,6 +278,7 @@
+ 			};
+ 			pd_vpu@RK3328_PD_VPU {
+ 				reg = <RK3328_PD_VPU>;
++				clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+ 			};
+ 		};
+ 
+@@ -596,6 +597,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	vpu: video-codec@ff350000 {
++		compatible = "rockchip,rk3328-vpu";
++		reg = <0x0 0xff350000 0x0 0x800>;
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vdpu";
++		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
++		clock-names = "aclk", "hclk";
++		iommus = <&vpu_mmu>;
++		power-domains = <&power RK3328_PD_VPU>;
++	};
++
+ 	vpu_mmu: iommu@ff350800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff350800 0x0 0x40>;
+@@ -604,7 +616,7 @@
+ 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
+-		status = "disabled";
++		power-domains = <&power RK3328_PD_VPU>;
+ 	};
+ 
+ 	rkvdec_mmu: iommu@ff360480 {
+-- 
+2.17.1
