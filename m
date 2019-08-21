@@ -1,41 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: cp110: document the new CP115 pinctrl
- compatible
-Date: Wed, 21 Aug 2019 13:53:41 -0500
-Message-ID: <20190821185341.GA29195@bogus>
-References: <20190805101607.29811-1-miquel.raynal@bootlin.com>
- <20190805101607.29811-3-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: pwm-mediatek: Add documentation
+ for MT8516
+Date: Wed, 21 Aug 2019 13:53:53 -0500
+Message-ID: <20190821185353.GA29669@bogus>
+References: <20190805125848.15751-1-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190805101607.29811-3-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190805125848.15751-1-fparent@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Fabien Parent <fparent@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  5 Aug 2019 12:16:06 +0200, Miquel Raynal wrote:
-> From: Grzegorz Jaszczyk <jaz@semihalf.com>
+On Mon,  5 Aug 2019 14:58:47 +0200, Fabien Parent wrote:
+> Add the device-tree documentation for the PWM IP on the MediaTek
+> MT8516 SoCs.
 > 
-> A new compatible is going to be used for Armada CP115 pinctrl block,
-> document it.
-> 
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> [<miquel.raynal@bootlin.com>: split the documentation out of the
-> driver commit]
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  .../bindings/arm/marvell/cp110-system-controller.txt          | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
