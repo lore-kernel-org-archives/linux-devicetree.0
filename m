@@ -1,46 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-Date: Wed, 21 Aug 2019 14:17:04 -0500
-Message-ID: <20190821191704.GA32425@bogus>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/7] dt-bindings: display: msm: gmu: add
+ optional ocmem property
+Date: Wed, 21 Aug 2019 14:26:02 -0500
+Message-ID: <20190821192602.GA16243@bogus>
+References: <20190806002229.8304-1-masneyb@onstation.org>
+ <20190806002229.8304-3-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190805143911.12185-2-hhhawa@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hanna Hawa <hhhawa@amazon.com>
-Cc: mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+In-Reply-To: <20190806002229.8304-3-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 03:39:08PM +0100, Hanna Hawa wrote:
-> Document Amazon's Annapurna Labs L1 EDAC SoC binding.
-> 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  .../devicetree/bindings/edac/amazon,al-l1-edac.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-> new file mode 100644
-> index 000000000000..2ae8370216bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-> @@ -0,0 +1,14 @@
-> +* Amazon's Annapurna Labs L1 EDAC
-> +
-> +Amazon's Annapurna Labs SoCs supports L1 single bit correction and
-> +two bits detection capability based on ARM implementation.
-> +
-> +Required properties:
-> +- compatible:
-> +	should be "amazon,al-l1-edac".
-
-Why is this even in DT? AFAICT, this is all just CortexA57 core features 
-(i.e. nothing Amazon specific). The core type and the ECC capabilities 
-are discoverable.
-
-Rob
+T24gTW9uLCBBdWcgMDUsIDIwMTkgYXQgMDg6MjI6MjRQTSAtMDQwMCwgQnJpYW4gTWFzbmV5IHdy
+b3RlOgo+IFNvbWUgQTN4eCBhbmQgQTR4eCBBZHJlbm8gR1BVcyBkbyBub3QgaGF2ZSBHTUVNIGlu
+c2lkZSB0aGUgR1BVIGNvcmUgYW5kCj4gbXVzdCB1c2UgdGhlIE9uIENoaXAgTUVNb3J5IChPQ01F
+TSkgaW4gb3JkZXIgdG8gYmUgZnVuY3Rpb25hbC4gQWRkIHRoZQo+IG9wdGlvbmFsIG9jbWVtIHBy
+b3BlcnR5IHRvIHRoZSBBZHJlbm8gR3JhcGhpY3MgTWFuYWdlbWVudCBVbml0IGJpbmRpbmdzLgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0YXRpb24ub3JnPgo+
+IC0tLQo+IENoYW5nZXMgc2luY2UgdjQ6Cj4gLSBOb25lCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MzoK
+PiAtIGNvcnJlY3QgbGluayB0byBxY29tLG9jbWVtLnlhbWwKPiAKPiBDaGFuZ2VzIHNpbmNlIHYy
+Ogo+IC0gQWRkIGEzeHggZXhhbXBsZSB3aXRoIE9DTUVNCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MToK
+PiAtIE5vbmUKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4
+dCAgIHwgNTAgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0
+aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tc20vZ211LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L21zbS9nbXUudHh0Cj4gaW5kZXggOTBhZjViMGE1NmE5Li42NzJkNTU3Y2FiYTQg
+MTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bXNtL2dtdS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9tc20vZ211LnR4dAo+IEBAIC0zMSw2ICszMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+ICAtIGlvbW11czogcGhhbmRsZSB0byB0aGUgYWRyZW5vIGlvbW11Cj4gIC0gb3BlcmF0aW5n
+LXBvaW50cy12MjogcGhhbmRsZSB0byB0aGUgT1BQIG9wZXJhdGluZyBwb2ludHMKPiAgCj4gK09w
+dGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gb2NtZW06IHBoYW5kbGUgdG8gdGhlIE9uIENoaXAgTWVt
+b3J5IChPQ01FTSkgdGhhdCdzIHByZXNlbnQgb24gc29tZSBTbmFwZHJhZ29uCj4gKyAgICAgICAg
+IFNvQ3MuIFNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3JhbS9xY29tLG9j
+bWVtLnlhbWwuCgpTaWdoLCB0byByZXBlYXQgbXkgY29tbWVudCBvbiB2MSBhbmQgdjM6CgpXZSBh
+bHJlYWR5IGhhdmUgYSBjb3VwbGUgb2Ygc2ltaWxhciBwcm9wZXJ0aWVzLiBMZXRzIHN0YW5kYXJk
+aXplIG9uCidzcmFtJyBhcyB0aGF0IGlzIHdoYXQgVEkgYWxyZWFkeSB1c2VzLgoKUm9iCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
+aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
