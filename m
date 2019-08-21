@@ -1,147 +1,144 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH v3 8/8] arm64: dts: qcom: sm8150: Add apps shared nodes
-Date: Wed, 21 Aug 2019 14:13:33 +0530
-Message-ID: <CAHLCerOKd8Nr9hnKKMZawoUxopcUDfez=xMB34t7s0=2ZpnDVg@mail.gmail.com>
-References: <20190820172351.24145-1-vkoul@kernel.org> <20190820172351.24145-10-vkoul@kernel.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v12 3/9] drivers: memory: extend of_memory by LPDDR3
+ support
+Date: Wed, 21 Aug 2019 11:03:28 +0200
+Message-ID: <43c8fb01-c85c-47f7-f5c1-5fc0d0191b26@partner.samsung.com>
+References: <CGME20190722094727eucas1p10041ba25819e6e62d639423a97435f2d@eucas1p1.samsung.com>
+        <20190722094646.13342-1-l.luba@partner.samsung.com>
+        <20190722094646.13342-4-l.luba@partner.samsung.com>
+        <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820172351.24145-10-vkoul@kernel.org>
+In-Reply-To: <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:55 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Add hwlock, pmu, smem, tcsr_mutex_regs, apss_shared mailbox, apps_rsc
-> including the rpmhcc child nodes to the SM8150 DTSI
->
-> Co-developed-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 63 ++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 3bed04d60dea..781905e9977a 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -144,12 +144,23 @@
->                 };
->         };
->
-> +       tcsr_mutex: hwlock {
-> +               compatible = "qcom,tcsr-mutex";
-> +               syscon = <&tcsr_mutex_regs 0 0x1000>;
-> +               #hwlock-cells = <1>;
-> +       };
-> +
->         memory@80000000 {
->                 device_type = "memory";
->                 /* We expect the bootloader to fill in the size */
->                 reg = <0x0 0x80000000 0x0 0x0>;
->         };
->
-> +       pmu {
-> +               compatible = "arm,armv8-pmuv3";
-> +               interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +       };
-> +
->         psci {
->                 compatible = "arm,psci-1.0";
->                 method = "smc";
-> @@ -266,6 +277,12 @@
->                 };
->         };
->
-> +       smem {
-> +               compatible = "qcom,smem";
-> +               memory-region = <&smem_mem>;
-> +               hwlocks = <&tcsr_mutex 3>;
-> +       };
-> +
->         soc: soc@0 {
->                 #address-cells = <1>;
->                 #size-cells = <1>;
-> @@ -305,6 +322,11 @@
->                         };
->                 };
->
-> +               tcsr_mutex_regs: syscon@1f40000 {
-> +                       compatible = "syscon";
-> +                       reg = <0x01f40000 0x40000>;
-> +               };
-> +
->                 tlmm: pinctrl@3100000 {
->                         compatible = "qcom,sm8150-pinctrl";
->                         reg = <0x03100000 0x300000>,
-> @@ -320,6 +342,16 @@
->                         #interrupt-cells = <2>;
->                 };
->
-> +               aoss_qmp: power-controller@c300000 {
-> +                       compatible = "qcom,sm8150-aoss-qmp";
-> +                       reg = <0x0c300000 0x100000>;
-> +                       interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-> +                       mboxes = <&apss_shared 0>;
-> +
-> +                       #clock-cells = <0>;
-> +                       #power-domain-cells = <1>;
-> +               };
-> +
->                 intc: interrupt-controller@17a00000 {
->                         compatible = "arm,gic-v3";
->                         interrupt-controller;
-> @@ -329,6 +361,12 @@
->                         interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> +               apss_shared: mailbox@17c00000 {
-> +                       compatible = "qcom,sm8150-apss-shared";
-> +                       reg = <0x17c00000 0x1000>;
-> +                       #mbox-cells = <1>;
-> +               };
-> +
->                 timer@17c20000 {
->                         #address-cells = <1>;
->                         #size-cells = <1>;
-> @@ -388,6 +426,31 @@
->                         };
->                 };
->
-> +               apps_rsc: rsc@18200000 {
-> +                       label = "apps_rsc";
-> +                       compatible = "qcom,rpmh-rsc";
-> +                       reg = <0x18200000 0x10000>,
-> +                             <0x18210000 0x10000>,
-> +                             <0x18220000 0x10000>;
-> +                       reg-names = "drv-0", "drv-1", "drv-2";
-> +                       interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +                       qcom,tcs-offset = <0xd00>;
-> +                       qcom,drv-id = <2>;
-> +                       qcom,tcs-config = <ACTIVE_TCS  2>,
-> +                                         <SLEEP_TCS   1>,
-> +                                         <WAKE_TCS    1>,
-> +                                         <CONTROL_TCS 0>;
-> +
-> +                       rpmhcc: clock-controller {
-> +                               compatible = "qcom,sm8150-rpmh-clk";
-> +                               #clock-cells = <1>;
-> +                               clock-names = "xo";
-> +                               clocks = <&xo_board>;
-> +                       };
-> +               };
-> +
->                 spmi_bus: spmi@c440000 {
+Hi Krzysztof,
 
-Sort by address here.
+On 7/24/19 1:39 PM, Krzysztof Kozlowski wrote:
+> On Mon, 22 Jul 2019 at 11:47, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> The patch adds AC timings information needed to support LPDDR3 and memory
+>> controllers. The structure is used in of_memory and currently in Exynos
+>> 5422 DMC. Add parsing data needed for LPDDR3 support.
+>> It is currently used in Exynos5422 Dynamic Memory Controller.
+>>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/memory/jedec_ddr.h |  61 +++++++++++++++
+>>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
+>>   drivers/memory/of_memory.h |  18 +++++
+>>   3 files changed, 233 insertions(+)
+>>
+>> diff --git a/drivers/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
+>> index 4a21b5044ff8..38e26d461bdb 100644
+>> --- a/drivers/memory/jedec_ddr.h
+>> +++ b/drivers/memory/jedec_ddr.h
+>> @@ -29,6 +29,7 @@
+>>   #define DDR_TYPE_LPDDR2_S4     3
+>>   #define DDR_TYPE_LPDDR2_S2     4
+>>   #define DDR_TYPE_LPDDR2_NVM    5
+>> +#define DDR_TYPE_LPDDR3                6
+>>
+>>   /* DDR IO width */
+>>   #define DDR_IO_WIDTH_4         1
+>> @@ -169,4 +170,64 @@ extern const struct lpddr2_timings
+>>          lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
+>>   extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
+>>
+>> +/*
+>> + * Structure for timings for LPDDR3 based on LPDDR2 plus additional fields.
+>> + * All parameters are in pico seconds(ps) unless explicitly indicated
+>> + * with a suffix like tRAS_max_ns below
+>> + */
+>> +struct lpddr3_timings {
+>> +       u32 max_freq;
+>> +       u32 min_freq;
+>> +       u32 tRFC;
+>> +       u32 tRRD;
+>> +       u32 tRPab;
+>> +       u32 tRPpb;
+>> +       u32 tRCD;
+>> +       u32 tRC;
+>> +       u32 tRAS;
+>> +       u32 tWTR;
+>> +       u32 tWR;
+>> +       u32 tRTP;
+>> +       u32 tW2W_C2C;
+>> +       u32 tR2R_C2C;
+>> +       u32 tWL;
+>> +       u32 tDQSCK;
+>> +       u32 tRL;
+>> +       u32 tFAW;
+>> +       u32 tXSR;
+>> +       u32 tXP;
+>> +       u32 tCKE;
+>> +       u32 tCKESR;
+>> +       u32 tMRD;
+>> +};
+>> +
+>> +/*
+>> + * Min value for some parameters in terms of number of tCK cycles(nCK)
+>> + * Please set to zero parameters that are not valid for a given memory
+>> + * type
+>> + */
+>> +struct lpddr3_min_tck {
+>> +       u32 tRFC;
+>> +       u32 tRRD;
+>> +       u32 tRPab;
+>> +       u32 tRPpb;
+>> +       u32 tRCD;
+>> +       u32 tRC;
+>> +       u32 tRAS;
+>> +       u32 tWTR;
+>> +       u32 tWR;
+>> +       u32 tRTP;
+>> +       u32 tW2W_C2C;
+>> +       u32 tR2R_C2C;
+>> +       u32 tWL;
+>> +       u32 tDQSCK;
+>> +       u32 tRL;
+>> +       u32 tFAW;
+>> +       u32 tXSR;
+>> +       u32 tXP;
+>> +       u32 tCKE;
+>> +       u32 tCKESR;
+>> +       u32 tMRD;
+>> +};
+>> +
+>>   #endif /* __JEDEC_DDR_H */
+>> diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
+>> index 46539b27a3fb..4f5b8c81669f 100644
+>> --- a/drivers/memory/of_memory.c
+>> +++ b/drivers/memory/of_memory.c
+>> @@ -3,6 +3,12 @@
+>>    * OpenFirmware helpers for memory drivers
+>>    *
+>>    * Copyright (C) 2012 Texas Instruments, Inc.
+>> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+> 
+> What's this?
+My bad, in the meantime Thomas Gleixner has replaced the license header.
+The old part has been automatically taken again during my re-base.
+I will just remove the old license comment.
 
->                         compatible = "qcom,spmi-pmic-arb";
->                         reg = <0x0c440000 0x0001100>,
-> --
-> 2.20.1
->
+Regards,
+Lukasz
+> 
+> Please, get a independent review or ack for this patch.
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
