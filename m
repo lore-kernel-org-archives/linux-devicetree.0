@@ -1,50 +1,68 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 0/7] Add support for Qualcomm SM8150 and SC7180 SoCs
-Date: Wed, 21 Aug 2019 16:03:56 -0700
-Message-ID: <20190821230356.GB1892@tuxbook-pro>
-References: <20190807070957.30655-1-sibis@codeaurora.org>
+Subject: Re: [PATCH v4 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Date: Wed, 21 Aug 2019 16:04:37 -0700
+Message-ID: <20190821230437.GC1892@tuxbook-pro>
+References: <20190821184239.12364-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190807070957.30655-1-sibis@codeaurora.org>
+In-Reply-To: <20190821184239.12364-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org, mark.rutland@arm.com, agross@kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, clew@codeaurora.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 07 Aug 00:09 PDT 2019, Sibi Sankar wrote:
+On Wed 21 Aug 11:42 PDT 2019, Vinod Koul wrote:
 
-> This patch series adds SCM, APSS shared mailbox and QMP AOSS PD/clock
-> support on SM8150 and SC7180 SoCs.
-> 
-> v2:
->  * re-arrange the compatible lists in sort order
+> This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+> the MTP for SM8150.
 > 
 
-Applied patches 1-3 and 6-7.
+Applied, with Amit's acks.
 
-Regards,
-Bjorn
-
-> Sibi Sankar (7):
->   soc: qcom: smem: Update max processor count
->   dt-bindings: firmware: scm: re-order compatible list
->   dt-bindings: firmware: scm: Add SM8150 and SC7180 support
->   dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
->   mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
->   dt-bindings: soc: qcom: aoss: Add SM8150 and SC7180 support
->   soc: qcom: aoss: Add AOSS QMP support
+> Changes in v4:
+>  - Update the address and size cell to 2 and extend ranges and describe DMA
+>    space
+>  - Fix node location of spmi per sorted address
+>  - Add Niklas's review tags
 > 
->  Documentation/devicetree/bindings/firmware/qcom,scm.txt      | 4 +++-
->  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt    | 2 ++
->  Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt | 5 ++++-
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 2 ++
->  drivers/soc/qcom/qcom_aoss.c                                 | 2 ++
->  drivers/soc/qcom/smem.c                                      | 2 +-
->  6 files changed, 14 insertions(+), 3 deletions(-)
+> Changes in v3:
+>  - Fix copyright comment style to Linux kernel style
+>  - Make property values all hex or decimal
+>  - Fix patch titles and logs and make them consistent
+>  - Fix line breaks
+> 
+> Changes in v2:
+>  - Squash patches
+>  - Fix comments given by Stephen namely, lowercase for hex numbers,
+>    making rpmhcc have xo_board as parent, rename pon controller to
+>    power-on controller, make pmic nodes as disabled etc.
+>  - removed the dependency on clk defines and use raw numbers
+> 
+> Vinod Koul (8):
+>   arm64: dts: qcom: sm8150: Add base dts file
+>   arm64: dts: qcom: pm8150: Add base dts file
+>   arm64: dts: qcom: pm8150b: Add base dts file
+>   arm64: dts: qcom: pm8150l: Add base dts file
+>   arm64: dts: qcom: sm8150-mtp: Add base dts file
+>   arm64: dts: qcom: sm8150-mtp: Add regulators
+>   arm64: dts: qcom: sm8150: Add reserved-memory regions
+>   arm64: dts: qcom: sm8150: Add apps shared nodes
+> 
+>  arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>  arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
+>  arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
+>  arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 375 ++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 482 ++++++++++++++++++++++++
+>  6 files changed, 1121 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
 > 
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 2.20.1
 > 
