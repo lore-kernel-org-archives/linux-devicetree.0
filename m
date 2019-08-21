@@ -1,74 +1,116 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] nvmem: meson-efuse: bindings: Add secure-monitor
- phandle
-Date: Wed, 21 Aug 2019 13:14:58 -0500
-Message-ID: <20190821181458.GA2886@bogus>
-References: <20190731082339.20163-1-ccaione@baylibre.com>
- <20190731082339.20163-3-ccaione@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+Date: Wed, 21 Aug 2019 21:15:18 +0300
+Message-ID: <20190821181518.GB26759@pendragon.ideasonboard.com>
+References: <cover.1565367567.git.agx@sigxcpu.org>
+ <9c906bb6592424acdb1a67447a482e010a113b49.1565367567.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190731082339.20163-3-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, srinivas.kandagatla@linaro.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+In-Reply-To: <9c906bb6592424acdb1a67447a482e010a113b49.1565367567.git.agx@sigxcpu.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, Pengutronix Kernel Team <kernel@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Sascha Hauer <s.hauer@pengutronix.de>, Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, Lee Jones <lee.jones@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 09:23:37AM +0100, Carlo Caione wrote:
-> Add a new property to link the nvmem driver to the secure-monitor. The
-> nvmem driver needs to access the secure-monitor to be able to access the
-> fuses.
-> 
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> index 2e0723ab3384..f7b3ed74db54 100644
-> --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: should be "amlogic,meson-gxbb-efuse"
->  - clocks: phandle to the efuse peripheral clock provided by the
->  	  clock controller.
-> +- secure-monitor: phandle to the secure-monitor node
->  
->  = Data cells =
->  Are child nodes of eFuse, bindings of which as described in
-> @@ -16,6 +17,7 @@ Example:
->  		clocks = <&clkc CLKID_EFUSE>;
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> +		secure-monitor = <&sm>;
->  
->  		sn: sn@14 {
->  			reg = <0x14 0x10>;
-> @@ -30,6 +32,10 @@ Example:
->  		};
->  	};
->  
-> +	sm: secure-monitor {
-> +		compatible = "amlogic,meson-gxbb-sm";
-> +	};
-
-I guess I acked this a while back, but I'm not sure I would today. It 
-seems incomplete and a node with only a compatible string and no 
-resources doesn't need to be in DT. But that's already done...
-
-There's no need for 'secure-monitor' anyways. Just do 
-'of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm")' or search 
-for the driver directly. It's not like there's more than one secure 
-monitor...
-
-Rob
+SGkgR3VpZG8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZyaSwgQXVnIDA5LCAyMDE5
+IGF0IDA2OjI0OjIyUE0gKzAyMDAsIEd1aWRvIEfDvG50aGVyIHdyb3RlOgo+IFRoZSBOb3J0aHdl
+c3QgTG9naWMgTUlQSSBEU0kgSVAgY29yZSBjYW4gYmUgZm91bmQgaW4gTlhQcyBpLk1YOCBTb0Nz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEd1aWRvIEfDvG50aGVyIDxhZ3hAc2lneGNwdS5vcmc+Cj4g
+LS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9ud2wtZHNpLnlhbWwgICAgICB8IDE1
+NSArKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDE1NSBpbnNlcnRpb25zKCsp
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvbndsLWRzaS55YW1sCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9ud2wtZHNpLnlhbWwgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbndsLWRzaS55YW1s
+Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjVlZDhiYzRhNGQx
+OAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvbndsLWRzaS55YW1sCj4gQEAgLTAsMCArMSwxNTUgQEAKPiArIyBT
+UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICslWUFNTCAxLjIKPiArLS0tCj4gKyRp
+ZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvZGlzcGxheS9icmlkZ2UvaW14LW53bC1k
+c2kueWFtbCMKPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9j
+b3JlLnlhbWwjCj4gKwo+ICt0aXRsZTogTm9ydGh3ZXN0IExvZ2ljIE1JUEktRFNJIG9uIGlteCBT
+b0NzCj4gKwo+ICttYWludGFpbmVyczoKPiArICAtIEd1aWRvIEfDum50aGVyIDxhZ3hAc2lneGNw
+dS5vcmc+Cj4gKyAgLSBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20+Cj4gKwo+
+ICtkZXNjcmlwdGlvbjogfAo+ICsgIE5XTCBNSVBJLURTSSBob3N0IGNvbnRyb2xsZXIgZm91bmQg
+b24gaS5NWDggcGxhdGZvcm1zLiBUaGlzIGlzIGEgZHNpIGJyaWRnZSBmb3IKPiArICB0aGUgU09D
+cyBOV0wgTUlQSS1EU0kgaG9zdCBjb250cm9sbGVyLgo+ICsKPiArcHJvcGVydGllczoKPiArICBj
+b21wYXRpYmxlOgo+ICsgICAgb25lT2Y6Cj4gKyAgICAgIC0gaXRlbXM6Cj4gKyAgICAgICAgLSBj
+b25zdDogZnNsLGlteDhtcS1ud2wtZHNpCj4gKwo+ICsgIHJlZzoKPiArICAgIG1heEl0ZW1zOiAx
+Cj4gKwo+ICsgIGludGVycnVwdHM6Cj4gKyAgICBtYXhJdGVtczogMQo+ICsKPiArICBjbG9ja3M6
+Cj4gKyAgICBpdGVtczoKPiArICAgICAgLSBkZXNjcmlwdGlvbjogRFNJIGNvcmUgY2xvY2sKPiAr
+ICAgICAgLSBkZXNjcmlwdGlvbjogUlhfRVNDIGNsb2NrICh1c2VkIGluIGVzY2FwZSBtb2RlKQo+
+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBUWF9FU0MgY2xvY2sgKHVzZWQgaW4gZXNjYXBlIG1vZGUp
+Cj4gKyAgICAgIC0gZGVzY3JpcHRpb246IFBIWV9SRUYgY2xvY2sKPiArCj4gKyAgY2xvY2stbmFt
+ZXM6Cj4gKyAgICBpdGVtczoKPiArICAgICAgLSBjb25zdDogY29yZQo+ICsgICAgICAtIGNvbnN0
+OiByeF9lc2MKPiArICAgICAgLSBjb25zdDogdHhfZXNjCj4gKyAgICAgIC0gY29uc3Q6IHBoeV9y
+ZWYKPiArCj4gKyAgcGh5czoKPiArICAgIG1heEl0ZW1zOiAxCj4gKyAgICBkZXNjcmlwdGlvbjoK
+PiArICAgICAgQSBwaGFuZGxlIHRvIHRoZSBwaHkgbW9kdWxlIHJlcHJlc2VudGluZyB0aGUgRFBI
+WQo+ICsKPiArICBwaHktbmFtZXM6Cj4gKyAgICBpdGVtczoKPiArICAgICAgLSBjb25zdDogZHBo
+eQo+ICsKPiArICBwb3dlci1kb21haW5zOgo+ICsgICAgbWF4SXRlbXM6IDEKPiArICAgIGRlc2Ny
+aXB0aW9uOgo+ICsgICAgICBBIHBoYW5kbGUgdG8gdGhlIHBvd2VyIGRvbWFpbgo+ICsKPiArICBy
+ZXNldHM6Cj4gKyAgICBtYXhJdGVtczogNAo+ICsgICAgZGVzY3JpcHRpb246Cj4gKyAgICAgIEEg
+cGhhbmRsZSB0byB0aGUgcmVzZXQgY29udHJvbGxlcgo+ICsKPiArICByZXNldC1uYW1lczoKPiAr
+ICAgIGl0ZW1zOgo+ICsgICAgICAtIGNvbnN0OiBieXRlCj4gKyAgICAgIC0gY29uc3Q6IGRwaQo+
+ICsgICAgICAtIGNvbnN0OiBlc2MKPiArICAgICAgLSBjb25zdDogcGNsawo+ICsKPiArICBtdXgt
+c2VsOgo+ICsgICAgbWF4SXRlbXM6IDEKPiArICAgIGRlc2NyaXB0aW9uOgo+ICsgICAgICBBIHBo
+YW5kbGUgdG8gdGhlIE1VWCByZWdpc3RlciBzZXQKCkRpZCB5b3UgbWVhbiB0aGUgTVVYIHN5c2Nv
+biA/IEEgcGhhbmRsZSB0byBhIHJlZ2lzdGVyIHNldCBzb3VuZHMgYSBiaXQKc3RyYW5nZS4KCj4g
+Kwo+ICsgIHBvcnQ6Cj4gKyAgICB0eXBlOiBvYmplY3QKPiArICAgIGRlc2NyaXB0aW9uOgo+ICsg
+ICAgICBBIGlucHV0IHB1dCBvciBvdXRwdXQgcG9ydCBub2RlLgoKcy9pbnB1dCBwdXQvaW5wdXQv
+Cgo+ICsKPiArICBwb3J0czoKPiArICAgIHR5cGU6IG9iamVjdAo+ICsgICAgZGVzY3JpcHRpb246
+Cj4gKyAgICAgIEEgbm9kZSBjb250YWluaW5nIERTSSBpbnB1dCAmIG91dHB1dCBwb3J0IG5vZGVz
+IHdpdGggZW5kcG9pbnQKPiArICAgICAgZGVmaW5pdGlvbnMgYXMgZG9jdW1lbnRlZCBpbgo+ICsg
+ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lgo+ICsKPiAr
+cGF0dGVyblByb3BlcnRpZXM6Cj4gKyAgIl5wYW5lbEBbMC05XSskIjogdHJ1ZQo+ICsKPiArYWxs
+T2Y6Cj4gKyAgLSBpZjoKPiArICAgICAgcHJvcGVydGllczoKPiArICAgICAgICBjb21wYXRpYmxl
+Ogo+ICsgICAgICAgICAgY29udGFpbnM6Cj4gKyAgICAgICAgICAgIGVudW06Cj4gKyAgICAgICAg
+ICAgICAgLSBmc2wsaW14OG1xLW53bC1kc2kKPiArICAgIHRoZW46Cj4gKyAgICAgIHJlcXVpcmVk
+Ogo+ICsgICAgICAgIC0gcmVzZXRzCj4gKyAgICAgICAgLSByZXNldC1uYW1lcwo+ICsgICAgICAg
+IC0gbXV4LXNlbAo+ICsKPiArcmVxdWlyZWQ6Cj4gKyAgLSBjb21wYXRpYmxlCj4gKyAgLSByZWcK
+PiArICAtIGludGVycnVwdHMKPiArICAtIGNsb2Nrcwo+ICsgIC0gY2xvY2stbmFtZXMKPiArICAt
+IHBoeXMKPiArICAtIHBoeS1uYW1lcwo+ICsKPiArZXhhbXBsZXM6Cj4gKyAtIHwKPiArCj4gKyAg
+IG1pcGlfZHNpOiBtaXBpX2RzaUAzMGEwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKyAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLW53bC1kc2kiOwo+ICsgICAgICAgICAg
+ICAgIHJlZyA9IDwweDMwQTAwMDAwIDB4MzAwPjsKPiArICAgICAgICAgICAgICBjbG9ja3MgPSA8
+JmNsayAxNjM+LCA8JmNsayAyNDQ+LCA8JmNsayAyNDU+LCA8JmNsayAxNjQ+Owo+ICsgICAgICAg
+ICAgICAgIGNsb2NrLW5hbWVzID0gImNvcmUiLCAicnhfZXNjIiwgInR4X2VzYyIsICJwaHlfcmVm
+IjsKPiArICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMzQgND47Cj4gKyAgICAgICAgICAg
+ICAgcG93ZXItZG9tYWlucyA9IDwmcGdjX21pcGk+Owo+ICsgICAgICAgICAgICAgIHJlc2V0cyA9
+IDwmc3JjIDA+LCA8JnNyYyAxPiwgPCZzcmMgMj4sIDwmc3JjIDM+Owo+ICsgICAgICAgICAgICAg
+IHJlc2V0LW5hbWVzID0gImJ5dGUiLCAiZHBpIiwgImVzYyIsICJwY2xrIjsKPiArICAgICAgICAg
+ICAgICBtdXgtc2VsID0gPCZpb211eGNfZ3ByPjsKPiArICAgICAgICAgICAgICBwaHlzID0gPCZk
+cGh5PjsKPiArICAgICAgICAgICAgICBwaHktbmFtZXMgPSAiZHBoeSI7Cj4gKwo+ICsgICAgICAg
+ICAgICAgIHBhbmVsQDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICIu
+Li4iOwo+ICsgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcGFuZWxfaW46IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmbWlwaV9kc2lfb3V0PjsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgIH07Cj4g
+KyAgICAgICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgICAgICAgcG9ydHMgewo+ICsgICAgICAg
+ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAg
+ICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICBwb3J0QDAgewo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIG1pcGlfZHNpX2luOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmxjZGlmX21pcGlfZHNp
+PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAg
+ICB9Owo+ICsgICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHJlZyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgbWlwaV9k
+c2lfb3V0OiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbj47Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICB9
+Owo+ICsgICAgICB9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
