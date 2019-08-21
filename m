@@ -1,133 +1,56 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 14/14] arm64: dts: meson: fix boards regulators states format
-Date: Wed, 21 Aug 2019 16:20:43 +0200
-Message-ID: <20190821142043.14649-15-narmstrong@baylibre.com>
+Subject: [PATCH v2 02/14] arm64: dts: meson-gx: drop the vpu dmc memory cell
+Date: Wed, 21 Aug 2019 16:20:31 +0200
+Message-ID: <20190821142043.14649-3-narmstrong@baylibre.com>
 References: <20190821142043.14649-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190821142043.14649-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxbb-odroidc2.dt.yaml: gpio-regulator-tf_io: states:0: Additional items are not allowed (1800000, 1 were unexpected)
-meson-gxbb-odroidc2.dt.yaml: gpio-regulator-tf_io: states:0: [3300000, 0, 1800000, 1] is too long
-meson-gxbb-nexbox-a95x.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
-meson-gxbb-nexbox-a95x.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
-meson-gxbb-p200.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
-meson-gxbb-p200.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
-meson-gxl-s905x-hwacom-amazetv.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
-meson-gxl-s905x-hwacom-amazetv.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
-meson-gxbb-p201.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
-meson-gxbb-p201.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
-meson-g12b-odroid-n2.dt.yaml: gpio-regulator-tf_io: states:0: Additional items are not allowed (1800000, 1 were unexpected)
-meson-g12b-odroid-n2.dt.yaml: gpio-regulator-tf_io: states:0: [3300000, 0, 1800000, 1] is too long
-meson-gxl-s905x-nexbox-a95x.dt.yaml: gpio-regulator: states:0: Additional items are not allowed (3300000, 1 were unexpected)
-meson-gxl-s905x-nexbox-a95x.dt.yaml: gpio-regulator: states:0: [1800000, 0, 3300000, 1] is too long
+meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: Additional items are not allowed ('dmc' was unexpected)
+meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: ['vpu', 'hhi', 'dmc'] is too long
+
+The 'dmc' register area was replaced by the amlogic,canvas property
+which was introduced in commit f1726043426c73 ("arm64: dts: meson-gx:
+add dmcbus and canvas nodes.") and commit cf34287986d0b6 ("arm64: dts:
+meson-gx: Add canvas provider node to the vpu")
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts          | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts        | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts           | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi              | 4 ++--
- .../arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts   | 4 ++--
- 6 files changed, 12 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 81780ffcc7f0..dc35e2982c71 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -65,8 +65,8 @@
- 		gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <0>;
- 
--		states = <3300000 0
--			  1800000 1>;
-+		states = <3300000 0>,
-+			 <1800000 1>;
- 	};
- 
- 	flash_1v8: regulator-flash_1v8 {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index b636912a2715..afcf8a9f667b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -75,8 +75,8 @@
- 		gpios-states = <1>;
- 
- 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
--		states = <1800000 0
--			  3300000 1>;
-+		states = <1800000 0>,
-+			 <3300000 1>;
- 	};
- 
- 	vddio_boot: regulator-vddio_boot {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 9972b1515da6..6039adda12ee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -77,8 +77,8 @@
- 		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <0>;
- 
--		states = <3300000 0
--			  1800000 1>;
-+		states = <3300000 0>,
-+			 <1800000 1>;
- 	};
- 
- 	vcc1v8: regulator-vcc1v8 {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index e8f925871edf..89f7b41b0e9e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -46,8 +46,8 @@
- 		gpios-states = <1>;
- 
- 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
--		states = <1800000 0
--			  3300000 1>;
-+		states = <1800000 0>,
-+			 <3300000 1>;
- 
- 		regulator-settling-time-up-us = <10000>;
- 		regulator-settling-time-down-us = <150000>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-index 796baea7a0bf..c8d74e61dec1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-@@ -38,8 +38,8 @@
- 		gpios-states = <1>;
- 
- 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
--		states = <1800000 0
--			  3300000 1>;
-+		states = <1800000 0>,
-+			 <3300000 1>;
- 	};
- 
- 	vddio_boot: regulator-vddio_boot {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-index 26907ac82930..c433a031841f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-@@ -38,8 +38,8 @@
- 		gpios-states = <1>;
- 
- 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
--		states = <1800000 0
--			  3300000 1>;
-+		states = <1800000 0>,
-+			 <3300000 1>;
- 	};
- 
- 	vddio_boot: regulator-vddio_boot {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index faff77175486..c2d3fffea8a7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -528,9 +528,8 @@
+ 		vpu: vpu@d0100000 {
+ 			compatible = "amlogic,meson-gx-vpu";
+ 			reg = <0x0 0xd0100000 0x0 0x100000>,
+-			      <0x0 0xc883c000 0x0 0x1000>,
+-			      <0x0 0xc8838000 0x0 0x1000>;
+-			reg-names = "vpu", "hhi", "dmc";
++			      <0x0 0xc883c000 0x0 0x1000>;
++			reg-names = "vpu", "hhi";
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.22.0
