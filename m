@@ -1,63 +1,119 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
-Date: Wed, 21 Aug 2019 10:56:21 +0530
-Message-ID: <20190821052621.ftvxivls6tdf6vnx@vireshk-i7>
-References: <20190807223111.230846-1-saravanak@google.com>
- <20190807223111.230846-3-saravanak@google.com>
- <20190820061300.wa2dirylb7fztsem@vireshk-i7>
- <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
- <CAGETcx-xQika2MgTgA3Gft3u2_uXgvoYThXwEpW_G03QTEh-yQ@mail.gmail.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date: Wed, 21 Aug 2019 13:33:14 +0800
+Message-ID: <8aadf00b-048a-0db8-ba31-307cc6e7eb2e@linux.intel.com>
+References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190820135602.GN30120@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-xQika2MgTgA3Gft3u2_uXgvoYThXwEpW_G03QTEh-yQ@mail.gmail.com>
+In-Reply-To: <20190820135602.GN30120@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Georgi Djakov <georgi.djakov@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.or>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 20-08-19, 15:36, Saravana Kannan wrote:
-> On Tue, Aug 20, 2019 at 3:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 07-08-19, 15:31, Saravana Kannan wrote:
-> 
-> > > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +     new_opp->rate = (unsigned long) bw;
-> > > > +
-> > > > +     ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
-> > > > +     if (!ret)
-> > > > +             new_opp->avg_bw = (unsigned long) bw;
+On 20/8/2019 9:56 PM, Andy Shevchenko wrote:
+> On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
+> Thanks for an update.
+> Looks better though several minor comments below.
+>
+Thanks a lot! Andy,  for the review comments.
 
-Why is this casting required ? If you really want a 64 bit value for bw, then
-make it 64 bit in bindings as well, like opp-hz. And then you can simply do:
+>> +/* eMMC phy register definitions */
+>> +#define EMMC_PHYCTRL0_REG	0xa8
+>> +#define DR_TY_MASK		GENMASK(30, 28)
+>> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
+> For consistency it should be
+>
+> #define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
+>
+> with explanation about 50 Ohm in the code below.
+>
+>> +#define OTAPDLYENA		BIT(14)
+>> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
+>> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
+>> +
+>> +#define EMMC_PHYCTRL1_REG	0xac
+>> +#define PDB_MASK		BIT(0)
+>> +#define ENDLL_MASK		BIT(7)
+>> +#define ENDLL_VAL		BIT(7)
+> Again, inconsistency here,
+>
+> #define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
+Agreed
+>> +#define EMMC_PHYCTRL2_REG	0xb0
+>> +#define FRQSEL_25M		0
+>> +#define FRQSEL_150M		3
+>> +#define FRQSEL_MASK		GENMASK(24, 22)
+>> +#define FRQSEL_SHIFT(x)		((x) << 22)
+> And here
+>
+> #define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
+Agreed
+>> +	/*
+>> +	 * According to the user manual, calpad calibration
+>> +	 * cycle takes more than 2us without the minimal recommended
+>> +	 * value, so we may need a little margin here
+>> +	 */
+>> +	usleep_range(3, 6);
+> Actually for this low values it's recommended to use udelay() disregard to
+> context.
+>
+> 	udelay(5);
+Agreed
+>> +	regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
+> 1 looks like a magic that has to be changed in the same way as for the rest, i.e.
+>
+> #define PDB_SHIFT(x)	(((x) << 0) & PDB_MASK)
+>
+> 	..., PDB_MASK, PDB_SHIFT(1)...
+Agreed
+>> +static int intel_emmc_phy_power_on(struct phy *phy)
+>> +{
+>> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
+>> +	int ret;
+>> +
+>> +	/* Drive impedance: 50 Ohm */
+> Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
+>
+>> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
+>> +				 DR_TY_50OHM(1));
+>> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA,
+>> +				 0x0);
+> 0x0 -> 0
+Noted
+>> +static int intel_emmc_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct intel_emmc_phy *priv;
+>> +	struct phy *generic_phy;
+>> +	struct phy_provider *phy_provider;
+>> +
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	/* Get eMMC phy (accessed via chiptop) regmap */
+>> +	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
+>> +						       "intel,syscon");
+> Perhaps
+>
+> 	struct device_node *np = dev->of_node;
+> 	...
+> 	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
+>
+>> +	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+> And here.
 
-of_property_read_u32(np, "opp-avg-kBps", &new_opp->avg_bw);
+Noted, will update
 
-
-> > >
-> > > If none of opp-hz/level/peak-kBps are available, print error message here
-> > > itself..
-> >
-> > But you don't print any error for opp-level today. Seems like it's optional?
-> >
-> > >
-> > > > +
-> > > > +     return 0;
-> > >
-> > > You are returning 0 on failure as well here.
-> >
-> > Thanks.
-> 
-> Wait, no. This is not actually a failure. opp-avg-kBps is optional. So
-> returning 0 is the right thing to do. If the mandatory properties
-> aren't present an error is returned before you get to th end.
-> 
-> -Saravana
-
--- 
-viresh
+With Best Regards
+Vadivel
