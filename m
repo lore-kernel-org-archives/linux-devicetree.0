@@ -1,33 +1,62 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v10 08/23] iommu/io-pgtable-arm-v7s: Rename the quirk
- from MTK_4GB to MTK_EXT
-Date: Wed, 21 Aug 2019 16:25:54 +0100
-Message-ID: <20190821152553.r6mdhucvuovq4xdk@willie-the-truck>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
+ PA[33:32] for MediaTek
+Date: Wed, 21 Aug 2019 16:34:27 +0100
+Message-ID: <22a79977-5074-7af1-97b8-8a3e549b23c1@arm.com>
 References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
- <1566395606-7975-9-git-send-email-yong.wu@mediatek.com>
+ <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
+ <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1566395606-7975-9-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+To: Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:53:11PM +0800, Yong Wu wrote:
-> In previous mt2712/mt8173, MediaTek extend the v7s to support 4GB dram.
-> But in the latest mt8183, We extend it to support the PA up to 34bit.
-> Then the "MTK_4GB" name is not so fit, This patch only change the quirk
-> name to "MTK_EXT".
+On 21/08/2019 16:24, Will Deacon wrote:
+> On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
+>> MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
+>> the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
+>> respectively. Meanwhile the iova still is 32bits.
+>>
+>> Regarding whether the pagetable address could be over 4GB, the mt8183
+>> support it while the previous mt8173 don't, thus keep it as is.
+>>
+>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+>> ---
+>>   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
+>>   include/linux/io-pgtable.h         |  7 +++----
+>>   2 files changed, 28 insertions(+), 11 deletions(-)
 > 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/iommu/io-pgtable-arm-v7s.c | 6 +++---
->  drivers/iommu/mtk_iommu.c          | 2 +-
->  include/linux/io-pgtable.h         | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
+> [...]
+> 
+>> @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+>>   {
+>>   	struct arm_v7s_io_pgtable *data;
+>>   
+>> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
+>> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
+>> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
+>> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
+> 
+> Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
+> ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
 
-Acked-by: Will Deacon <will@kernel.org>
+You mean oas, right? I believe the hardware *does* actually support a 
+32-bit ias as well, but we shouldn't pretend to support that while 
+__arm_v7s_alloc_table() still only knows how to allocate normal-sized 
+tables.
 
-Will
+Robin.
+
+> 
+> With that change:
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> 
+> Will
+> 
