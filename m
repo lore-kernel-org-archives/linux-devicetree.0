@@ -1,72 +1,45 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v4 11/21] ARM: dts: imx6qdl-apalis: Add sleep state to can
- interfaces
-Date: Wed, 21 Aug 2019 13:15:53 +0000
-Message-ID: <4c318f310babcf655be8db79abcfce547daea284.camel@toradex.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
-         <20190812142105.1995-12-philippe.schenker@toradex.com>
-         <20190819112754.GU5999@X250>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Martin Kepplinger <martin.kepplinger@puri.sm>
+Subject: [PATCH v5 0/4] iio: imu: st_lsm6dsx: Add support for LSM9DS1
+Date: Wed, 21 Aug 2019 15:25:16 +0200
+Message-ID: <20190821132520.28225-1-martin.kepplinger@puri.sm>
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819112754.GU5999@X250>
-Content-Language: en-US
-Content-ID: <59B0EF509A0A674089D3E25AC9E6EBF7@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Max Krummenacher <max.krummenacher@toradex.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+To: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@puri.sm>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTE5IGF0IDEzOjI3ICswMjAwLCBTaGF3biBHdW8gd3JvdGU6DQo+IE9u
-IE1vbiwgQXVnIDEyLCAyMDE5IGF0IDAyOjIxOjMxUE0gKzAwMDAsIFBoaWxpcHBlIFNjaGVua2Vy
-IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggcHJlcGFyZXMgdGhlIGRldmljZXRyZWUgZm9yIHRoZSBu
-ZXcgSXhvcmEgVjEuMiB3aGVyZSB3ZQ0KPiA+IGFyZQ0KPiA+IGFibGUgdG8gdHVybiBvZmYgdGhl
-IHN1cHBseSBvZiB0aGUgY2FuIHRyYW5zY2VpdmVyLiBUaGlzIGltcGxpZXMgdG8NCj4gPiB1c2UN
-Cj4gPiBhIHNsZWVwIHN0YXRlIG9uIHRyYW5zbWlzc2lvbiBwaW5zIGluIG9yZGVyIHRvIHByZXZl
-bnQgYmFja2ZlZWRpbmcuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5r
-ZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KPiA+IEFja2VkLWJ5OiBNYXJjZWwg
-Wmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCj4gPiANCj4gPiAtLS0NCj4g
-PiANCj4gPiBDaGFuZ2VzIGluIHY0Og0KPiA+IC0gQWRkIE1hcmNlbCBaaXN3aWxlcidzIEFjaw0K
-PiA+IA0KPiA+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+IC0g
-Q2hhbmdlZCBjb21taXQgdGl0bGUgdG8gJy4uLmlteDZxZGwtYXBhbGlzOi4uLicNCj4gPiANCj4g
-PiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaSB8IDI3ICsrKysrKysrKysr
-KysrKysrKysrKy0tLQ0KPiA+IC0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9u
-cygrKSwgNiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFk
-bC1hcGFsaXMuZHRzaQ0KPiA+IGluZGV4IDdjNGFkNTQxYzNmNS4uNTllZDJlNGExZmQxIDEwMDY0
-NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kNCj4gPiAr
-KysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpDQo+ID4gQEAgLTE0OCwx
-NCArMTQ4LDE2IEBADQo+ID4gIH07DQo+ID4gIA0KPiA+ICAmY2FuMSB7DQo+ID4gLQlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOw0KPiA+IC0JcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4x
-PjsNCj4gDQo+IFRoaXMgbGluZSBkb2Vzbid0IG5lZWQgdG8gYmUgY2hhbmdlZC4NCg0KWW91J3Jl
-IHJpZ2h0LCBidXQgYnkgYWRkaW5nIHBpbmN0cmxfZmxleGNhbjFfc2xlZXAgaGVyZSwgSSdkIGxp
-a2UgdG8NCmVtcGhhc2l6ZSBiZXR3ZWVuICJkZWZhdWx0IiBhbmQgInNsZWVwIiBhbmQgY2hhbmdl
-IHRoYXQuDQoNClNpbmNlIGl0J3Mgb25seSB1c2VkIGluIHRoaXMgZmlsZSBJIGRvbid0IHNlZSBh
-bnkgcHJvYmxlbXMuDQoNClBoaWxpcHBlDQo+IA0KPiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZh
-dWx0IiwgInNsZWVwIjsNCj4gPiArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9mbGV4Y2FuMV9kZWZh
-dWx0PjsNCj4gPiArCXBpbmN0cmwtMSA9IDwmcGluY3RybF9mbGV4Y2FuMV9zbGVlcD47DQo+ID4g
-IAlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICB9Ow0KPiA+ICANCj4gPiAgJmNhbjIgew0KPiA+
-IC0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAtCXBpbmN0cmwtMCA9IDwmcGluY3Ry
-bF9mbGV4Y2FuMj47DQo+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAic2xlZXAiOw0K
-PiA+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2ZsZXhjYW4yX2RlZmF1bHQ+Ow0KPiA+ICsJcGlu
-Y3RybC0xID0gPCZwaW5jdHJsX2ZsZXhjYW4yX3NsZWVwPjsNCj4gPiAgCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7DQo+ID4gIH07DQo+ID4gIA0KPiA+IEBAIC01OTksMTkgKzYwMSwzMiBAQA0KPiA+ICAJ
-CT47DQo+ID4gIAl9Ow0KPiA+ICANCj4gPiAtCXBpbmN0cmxfZmxleGNhbjE6IGZsZXhjYW4xZ3Jw
-IHsNCj4gDQo+IERpdHRvLiAgSSB0YWtlIHRoZW0gYXMgdW5uZWNlc3NhcnkgY2hhbmdlcy4NCj4g
-DQo+IFNoYXduDQo+IA0KPiA+ICsJcGluY3RybF9mbGV4Y2FuMV9kZWZhdWx0OiBmbGV4Y2FuMWRl
-ZmdycCB7DQo+ID4gIAkJZnNsLHBpbnMgPSA8DQo+ID4gIAkJCU1YNlFETF9QQURfR1BJT183X19G
-TEVYQ0FOMV9UWCAweDFiMGIwDQo+ID4gIAkJCU1YNlFETF9QQURfR1BJT184X19GTEVYQ0FOMV9S
-WCAweDFiMGIwDQo+ID4gIAkJPjsNCj4gPiAgCX07DQo+ID4gIA0KPiA+IC0JcGluY3RybF9mbGV4
-Y2FuMjogZmxleGNhbjJncnAgew0KPiA+ICsJcGluY3RybF9mbGV4Y2FuMV9zbGVlcDogZmxleGNh
-bjFzbHBncnAgew0KPiA+ICsJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQlNWDZRRExfUEFEX0dQSU9f
-N19fR1BJTzFfSU8wNyAweDANCj4gPiArCQkJTVg2UURMX1BBRF9HUElPXzhfX0dQSU8xX0lPMDgg
-MHgwDQo+ID4gKwkJPjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJcGluY3RybF9mbGV4Y2FuMl9k
-ZWZhdWx0OiBmbGV4Y2FuMmRlZmdycCB7DQo+ID4gIAkJZnNsLHBpbnMgPSA8DQo+ID4gIAkJCU1Y
-NlFETF9QQURfS0VZX0NPTDRfX0ZMRVhDQU4yX1RYIDB4MWIwYjANCj4gPiAgCQkJTVg2UURMX1BB
-RF9LRVlfUk9XNF9fRkxFWENBTjJfUlggMHgxYjBiMA0KPiA+ICAJCT47DQo+ID4gIAl9Ow0KPiA+
-ICsJcGluY3RybF9mbGV4Y2FuMl9zbGVlcDogZmxleGNhbjJzbHBncnAgew0KPiA+ICsJCWZzbCxw
-aW5zID0gPA0KPiA+ICsJCQlNWDZRRExfUEFEX0tFWV9DT0w0X19HUElPNF9JTzE0IDB4MA0KPiA+
-ICsJCQlNWDZRRExfUEFEX0tFWV9ST1c0X19HUElPNF9JTzE1IDB4MA0KPiA+ICsJCT47DQo+ID4g
-Kwl9Ow0KPiA+ICANCj4gPiAgCXBpbmN0cmxfZ3Bpb19ibF9vbjogZ3Bpb2Jsb24gew0KPiA+ICAJ
-CWZzbCxwaW5zID0gPA0KPiA+IC0tIA0KPiA+IDIuMjIuMA0KPiA+IA0K
+Add basic functionality for LSM9DS1. This has become a trivial addition
+by now.
+
+revision history
+----------------
+v5: struct rename and add one patch from Lorenzo in order handle fifo-enable
+    correctly. thanks.
+v4: rebase on top of today's iio testing branch with Lorenzo's recent work
+v3: rebase and add Lorenzo's patches in order to apply to the iio testing brach
+v2: further simplifications based on Lorenzo's feedback
+v1: initial change for adding lsm9ds1 support
+
+
+
+Lorenzo Bianconi (1):
+  iio: imu: st_lsm6dsx: introduce update_fifo function pointer
+
+Martin Kepplinger (3):
+  iio: imu: st_lsm6sdx: move register definitions to sensor_settings
+    struct
+  iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9sd1
+  dt-bindings: iio: imu: st_lsm6dsx: add lsm9ds1 device bindings
+
+ .../bindings/iio/imu/st_lsm6dsx.txt           |   1 +
+ drivers/iio/imu/st_lsm6dsx/Kconfig            |   2 +-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  12 ++
+ .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    |  19 ++-
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  | 124 ++++++++++++++++--
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c   |   5 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c   |   5 +
+ 7 files changed, 154 insertions(+), 14 deletions(-)
+
+-- 
+2.20.1
