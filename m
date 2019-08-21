@@ -1,105 +1,168 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to
- use the regmap API
-Date: Wed, 21 Aug 2019 13:51:36 +0200
-Message-ID: <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
-References: <20190813150827.31972-1-s.nawrocki@samsung.com>
-        <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
-        <20190813150827.31972-3-s.nawrocki@samsung.com>
-        <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
-        <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
-        <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v7 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+Date: Wed, 21 Aug 2019 13:57:38 +0200
+Message-ID: <20190821115738.3amrk5td544mhpwd@flea>
+References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
+ <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
+ <20190820114849.GD5123@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6ow4c2sufu6lsmjk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190820114849.GD5123@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <snawrocki@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-tegra <linux-tegra@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi,
+--6ow4c2sufu6lsmjk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 8/20/19 11:38 PM, Sylwester Nawrocki wrote:
-> On 8/20/19 21:37, Krzysztof Kozlowski wrote:
->>>> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-> 
->>>> @@ -51,29 +48,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
->>>>   int __init exynos_chipid_early_init(void)
->>>>   {
->>>>        struct soc_device_attribute *soc_dev_attr;
->>>> -     void __iomem *exynos_chipid_base;
->>>>        struct soc_device *soc_dev;
->>>>        struct device_node *root;
->>>> -     struct device_node *np;
->>>> +     struct regmap *regmap;
->>>>        u32 product_id;
->>>>        u32 revision;
->>>> +     int ret;
->>>>
->>>> -     /* look up for chipid node */
->>>> -     np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
->>>> -     if (!np)
->>>> -             return -ENODEV;
->>>> -
->>>> -     exynos_chipid_base = of_iomap(np, 0);
->>>> -     of_node_put(np);
->>>> -
->>>> -     if (!exynos_chipid_base) {
->>>> -             pr_err("Failed to map SoC chipid\n");
->>>> -             return -ENXIO;
->>>> +     regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
->>>> +     if (IS_ERR(regmap)) {
->>>> +             pr_err("Failed to get CHIPID regmap\n");
->>>> +             return PTR_ERR(regmap);
->>>>        }
->>> Following this change, I am now seeing the above error on our Tegra
->>> boards where this driver is enabled. This is triggering a kernel
->>> warnings test we have to fail. Hence, I don't think that you can remove
->>> the compatible node test here, unless you have a better way to determine
->>> if this is a samsung device.
->>
->> Right, this is really wrong... I missed that it is not a probe but
->> early init. And this init will be called on every board... Probably it
->> should be converted to a regular driver.
+Hi Sakari,
 
-Early initialization is needed for SoC driver to be used from within
-arch/arm/mach-exynos/ and _initcall() usage is the usual way for SoC
-drivers to be initialized:
+On Tue, Aug 20, 2019 at 02:48:49PM +0300, Sakari Ailus wrote:
+> Hi Maxime,
+>
+> On Tue, Aug 20, 2019 at 01:24:32PM +0200, Maxime Ripard wrote:
+> > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
+> > used in later (A10s, A13, A20, R8 and GR8) SoCs.
+> >
+> > On some SoCs, like the A10, there's multiple instances of that controller,
+> > with one instance supporting more channels and having an ISP.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 107 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > new file mode 100644
+> > index 000000000000..9000bca344f9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > @@ -0,0 +1,107 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Chen-Yu Tsai <wens@csie.org>
+> > +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> > +
+> > +description: |-
+> > +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
+> > +  frames from a parallel or BT656 sensor.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: allwinner,sun7i-a20-csi0
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: The CSI interface clock
+> > +      - description: The CSI module clock
+> > +      - description: The CSI ISP clock
+> > +      - description: The CSI DRAM clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: bus
+> > +      - const: mod
+> > +      - const: isp
+> > +      - const: ram
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  port:
+> > +    type: object
+> > +    additionalProperties: false
+> > +
+> > +    properties:
+> > +      endpoint:
+> > +        properties:
+> > +          bus-width:
+> > +            const: 8
+> > +            description: Number of data lines actively used.
+>
+> Are other values supported? If not, you could omit this.
 
-drivers/soc/amlogic/meson-gx-socinfo.c
-drivers/soc/amlogic/meson-mx-socinfo.c
-drivers/soc/atmel/soc.c
-drivers/soc/bcm/brcmstb/common.c
-drivers/soc/imx/soc-imx-scu.c
-drivers/soc/imx/soc-imx8.c
-drivers/soc/renesas/renesas-soc.c
-drivers/soc/tegra/fuse/fuse-tegra.c
-drivers/soc/ux500/ux500-soc-id.c
-drivers/soc/versatile/soc-integrator.c
-drivers/soc/versatile/soc-integrator.c
+It can also support 16 bits data input, but this description is
+redundant anyway, I'll remove it.
 
-The only SoC drivers that are regular drivers are:
+> > +
+> > +          data-active: true
+> > +          hsync-active: true
+> > +          pclk-sample: true
+> > +          remote-endpoint: true
+> > +          vsync-active: true
+> > +
+> > +        required:
+> > +          - bus-width
+> > +          - data-active
+> > +          - hsync-active
+> > +          - pclk-sample
+> > +          - remote-endpoint
+> > +          - vsync-active
+>
+> Some of these are not allowed in the Bt.656 mode (vsync-active and
+> hsync-active) while they're required in Bt.601 mode. Is there a way to tell
+> that in YAML-based bindings?
 
-drivers/soc/fsl/guts.c
-drivers/soc/versatile/soc-realview.c
+You could, but that would be more suited in another schemas. The way
+schemas works is that you can have several layers of them, and each
+being validated in isolation from the others.
 
-> I'm also inclined to have it converted to a regular driver.  We already
-> have "exynos-asv" driver matching on the chipid node (patch 3/9). 
-> The ASV patches will not be merged soon anyway, all this needs some more
-> thought. Krzysztof, can we abandon the chipid patches for now? Your
+Here, we're just listing the values usable by that binding, and it
+will be used only to validate that binding.
 
-chipid driver is good and useful on its own. The preferred solution
-IMHO would be to just revert "soc: samsung: Convert exynos-chipid
-driver to use the regmap API" commit.
+Eventually, we'll want to have a video-interfaces schemas that will
+apply to all the OF graph users, with those constraints defined.
 
-> pull request doesn't appear to be merged to arm-soc yet. Sorry about
-> that.
-Best regards,
+This way, we can avoid a lot of duplication and just have the binding
+description.
+
+I guess I could just have the remote endpoint being required, and the
+rest will be in the generic part.
+
+> Similarly, video-interfaces.txt should be referenced from here, shouldn't
+> it?
+
+Sure.
+
+Maxime
+
 --
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--6ow4c2sufu6lsmjk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV0xsgAKCRDj7w1vZxhR
+xZRVAQCiMCXGC+Jhj5UArGqGUPo8RfUmzov8i8LF6Y+puf29bQD9FukZcvSbUwWP
+7Nb97AhXzuzAohNb4SnGTSQI6zT4lQQ=
+=wBTw
+-----END PGP SIGNATURE-----
+
+--6ow4c2sufu6lsmjk--
