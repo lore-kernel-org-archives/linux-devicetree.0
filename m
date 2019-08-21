@@ -1,12 +1,14 @@
 From: Sunil Mohan Adapa <sunil@medhas.org>
-Subject: [PATCH v3 0/2] arm64: dts: allwinner: a64: Add A64 OlinuXino board
- (with eMMC)
-Date: Wed, 21 Aug 2019 12:52:15 -0700
-Message-ID: <20190821195217.4166-1-sunil@medhas.org>
+Subject: [PATCH v3 1/2] dt-bindings: arm: sunxi: Add compatible for A64
+ OlinuXino with eMMC
+Date: Wed, 21 Aug 2019 12:52:16 -0700
+Message-ID: <20190821195217.4166-2-sunil@medhas.org>
+References: <20190821195217.4166-1-sunil@medhas.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190821195217.4166-1-sunil@medhas.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,24 +28,29 @@ addition, there are two variants without eMMC. One without eMMC and one with SPI
 flash. This suggests the need for separate device tree for the three eMMC
 variants.
 
-Changes:
+Add new compatible string to the bindings documentation for the A64 OlinuXino
+board variant with on-board eMMC.
 
-  v3: Separate dts for eMMC variants
+Signed-off-by: Sunil Mohan Adapa <sunil@medhas.org>
+---
+ Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  v2: Fix descriptions for VCC and VCCQ
-
-Version 2 of this series already committed in linux-sunxi tree as
-8d3071f3e85894be35a1b35bcf6fdef970c81018 must be reverted before applying this.
-
-Sunil Mohan Adapa (2):
-  dt-bindings: arm: sunxi: Add compatible for A64 OlinuXino with eMMC
-  arm64: dts: allwinner: a64: Add A64 OlinuXino board (with eMMC)
-
- .../devicetree/bindings/arm/sunxi.yaml        |  5 ++++
- arch/arm64/boot/dts/allwinner/Makefile        |  1 +
- .../allwinner/sun50i-a64-olinuxino-emmc.dts   | 23 +++++++++++++++++++
- 3 files changed, 29 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
+index 93dc4c607f07..972b1e9ee804 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.yaml
++++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
+@@ -574,6 +574,11 @@ properties:
+           - const: olimex,a64-olinuxino
+           - const: allwinner,sun50i-a64
+ 
++      - description: Olimex A64-OlinuXino (with eMMC)
++        items:
++          - const: olimex,a64-olinuxino-emmc
++          - const: allwinner,sun50i-a64
++
+       - description: Olimex A64 Teres-I
+         items:
+           - const: olimex,a64-teres-i
 -- 
 2.20.1
