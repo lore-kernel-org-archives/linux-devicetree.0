@@ -1,349 +1,210 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 2/2] interconnect: qcom: Add OSM L3 interconnect provider support
-Date: Wed, 21 Aug 2019 14:41:32 +0530
-Message-ID: <20190821091132.14994-3-sibis@codeaurora.org>
-References: <20190821091132.14994-1-sibis@codeaurora.org>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v12 3/9] drivers: memory: extend of_memory by LPDDR3
+ support
+Date: Wed, 21 Aug 2019 11:17:27 +0200
+Message-ID: <21d22ba6-2254-ae5e-7ef4-5dfaa3f54229@partner.samsung.com>
+References: <CGME20190722094727eucas1p10041ba25819e6e62d639423a97435f2d@eucas1p1.samsung.com>
+        <20190722094646.13342-1-l.luba@partner.samsung.com>
+        <20190722094646.13342-4-l.luba@partner.samsung.com>
+        <CAJKOXPd96ExoCR-SiJfRqTbwO+_aQ6LSDVOQcrrt8JQHsoZBEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821091132.14994-1-sibis@codeaurora.org>
+In-Reply-To: <CAJKOXPd96ExoCR-SiJfRqTbwO+_aQ6LSDVOQcrrt8JQHsoZBEw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc: bjorn.andersson@linaro.org, agross@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, evgreen@chromium.org, daidavid1@codeaurora.org, saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-resources of scaling L3 caches. Add a driver to handle bandwidth
-requests to OSM L3 from CPU/GPU.
+Hi Krzysztof,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/interconnect/qcom/Kconfig  |   7 +
- drivers/interconnect/qcom/Makefile |   2 +
- drivers/interconnect/qcom/osm-l3.c | 284 +++++++++++++++++++++++++++++
- 3 files changed, 293 insertions(+)
- create mode 100644 drivers/interconnect/qcom/osm-l3.c
+On 7/24/19 1:31 PM, Krzysztof Kozlowski wrote:
+> On Mon, 22 Jul 2019 at 11:47, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> The patch adds AC timings information needed to support LPDDR3 and memory
+>> controllers. The structure is used in of_memory and currently in Exynos
+>> 5422 DMC. Add parsing data needed for LPDDR3 support.
+>> It is currently used in Exynos5422 Dynamic Memory Controller.
+>>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/memory/jedec_ddr.h |  61 +++++++++++++++
+>>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
+>>   drivers/memory/of_memory.h |  18 +++++
+>>   3 files changed, 233 insertions(+)
+>>
+>> diff --git a/drivers/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
+>> index 4a21b5044ff8..38e26d461bdb 100644
+>> --- a/drivers/memory/jedec_ddr.h
+>> +++ b/drivers/memory/jedec_ddr.h
+>> @@ -29,6 +29,7 @@
+>>   #define DDR_TYPE_LPDDR2_S4     3
+>>   #define DDR_TYPE_LPDDR2_S2     4
+>>   #define DDR_TYPE_LPDDR2_NVM    5
+>> +#define DDR_TYPE_LPDDR3                6
+>>
+>>   /* DDR IO width */
+>>   #define DDR_IO_WIDTH_4         1
+>> @@ -169,4 +170,64 @@ extern const struct lpddr2_timings
+>>          lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
+>>   extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
+>>
+>> +/*
+>> + * Structure for timings for LPDDR3 based on LPDDR2 plus additional fields.
+>> + * All parameters are in pico seconds(ps) unless explicitly indicated
+>> + * with a suffix like tRAS_max_ns below
+> 
+> To which tRAS_max_ns are you referring?
+The comment failed to stand the test of time, not for the first time
+though. I will update it according to the current struct.
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index d5e70ebc24108..f6c2a11a1a2c9 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
- 	help
- 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
- 
-+config INTERCONNECT_QCOM_OSM_L3
-+	tristate "Qualcomm OSM L3 interconnect driver"
-+	depends on INTERCONNECT_QCOM || COMPILE_TEST
-+	help
-+	  Say y here to support the Operating State Manager (OSM) interconnect
-+	  driver which controls the scaling of L3 caches on Qualcomm SoCs.
-+
- config INTERCONNECT_QCOM_SDM845
- 	tristate "Qualcomm SDM845 interconnect driver"
- 	depends on INTERCONNECT_QCOM
-diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-index 1c1cea690f922..9078af5fed109 100644
---- a/drivers/interconnect/qcom/Makefile
-+++ b/drivers/interconnect/qcom/Makefile
-@@ -1,5 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
-+icc-osm-l3-objs				:= osm-l3.o
- qnoc-sdm845-objs			:= sdm845.o
- 
-+obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
- obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-new file mode 100644
-index 0000000000000..db2202ebd1e9a
---- /dev/null
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ *
-+ */
-+
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
-+#include <dt-bindings/interconnect/qcom,sdm845.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+#define LUT_MAX_ENTRIES			40U
-+#define LUT_SRC				GENMASK(31, 30)
-+#define LUT_L_VAL			GENMASK(7, 0)
-+#define LUT_ROW_SIZE			32
-+#define CLK_HW_DIV			2
-+
-+/* Register offsets */
-+#define REG_ENABLE			0x0
-+#define REG_FREQ_LUT			0x110
-+#define REG_PERF_STATE			0x920
-+
-+#define OSM_L3_MAX_LINKS		1
-+
-+#define to_qcom_provider(_provider) \
-+	container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
-+
-+enum {
-+	SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-+	SDM845_SLAVE_OSM_L3,
-+};
-+
-+struct qcom_osm_l3_icc_provider {
-+	void __iomem *base;
-+	unsigned int max_state;
-+	unsigned long lut_tables[LUT_MAX_ENTRIES];
-+	struct icc_provider provider;
-+};
-+
-+/**
-+ * struct qcom_icc_node - Qualcomm specific interconnect nodes
-+ * @name: the node name used in debugfs
-+ * @links: an array of nodes where we can go next while traversing
-+ * @id: a unique node identifier
-+ * @num_links: the total number of @links
-+ * @buswidth: width of the interconnect between a node and the bus
-+ */
-+struct qcom_icc_node {
-+	const char *name;
-+	u16 links[OSM_L3_MAX_LINKS];
-+	u16 id;
-+	u16 num_links;
-+	u16 buswidth;
-+};
-+
-+struct qcom_icc_desc {
-+	struct qcom_icc_node **nodes;
-+	size_t num_nodes;
-+};
-+
-+#define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
-+		static struct qcom_icc_node _name = {			\
-+		.name = #_name,						\
-+		.id = _id,						\
-+		.buswidth = _buswidth,					\
-+		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-+		.links = { __VA_ARGS__ },				\
-+	}
-+
-+DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-+DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-+
-+static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-+	[MASTER_OSM_L3_APPS] = &osm_apps_l3,
-+	[SLAVE_OSM_L3] = &osm_l3,
-+};
-+
-+static struct qcom_icc_desc sdm845_osm_l3 = {
-+	.nodes = sdm845_osm_l3_nodes,
-+	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-+};
-+
-+static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-+			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg += avg_bw;
-+	*agg_peak = max_t(u32, *agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
-+static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-+{
-+	struct qcom_osm_l3_icc_provider *qp;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node *qn;
-+	struct icc_node *n;
-+	unsigned int index;
-+	u32 agg_peak = 0;
-+	u32 agg_avg = 0;
-+	u64 rate;
-+
-+	qn = src->data;
-+	provider = src->provider;
-+	qp = to_qcom_provider(provider);
-+
-+	list_for_each_entry(n, &provider->nodes, node_list)
-+		qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-+				   &agg_avg, &agg_peak);
-+
-+	rate = max(agg_avg, agg_peak);
-+	rate = icc_units_to_bps(rate);
-+	do_div(rate, qn->buswidth);
-+
-+	for (index = 0; index < qp->max_state; index++) {
-+		if (qp->lut_tables[index] >= rate)
-+			break;
-+	}
-+
-+	writel_relaxed(index, qp->base + REG_PERF_STATE);
-+
-+	return 0;
-+}
-+
-+static int qcom_osm_l3_remove(struct platform_device *pdev)
-+{
-+	struct qcom_osm_l3_icc_provider *qp = platform_get_drvdata(pdev);
-+	struct icc_provider *provider = &qp->provider;
-+	struct icc_node *n;
-+
-+	list_for_each_entry(n, &provider->nodes, node_list) {
-+		icc_node_del(n);
-+		icc_node_destroy(n->id);
-+	}
-+
-+	return icc_provider_del(provider);
-+}
-+
-+static int qcom_osm_l3_probe(struct platform_device *pdev)
-+{
-+	u32 info, src, lval, i, prev_freq = 0, freq;
-+	static unsigned long hw_rate, xo_rate;
-+	struct qcom_osm_l3_icc_provider *qp;
-+	const struct qcom_icc_desc *desc;
-+	struct icc_onecell_data *data;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node **qnodes;
-+	struct icc_node *node;
-+	size_t num_nodes;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = clk_get(&pdev->dev, "xo");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	xo_rate = clk_get_rate(clk);
-+	clk_put(clk);
-+
-+	clk = clk_get(&pdev->dev, "alternate");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
-+	clk_put(clk);
-+
-+	qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-+	if (!qp)
-+		return -ENOMEM;
-+
-+	qp->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(qp->base))
-+		return PTR_ERR(qp->base);
-+
-+	/* HW should be in enabled state to proceed */
-+	if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-+		dev_err(&pdev->dev, "error hardware not enabled\n");
-+		return -ENODEV;
-+	}
-+
-+	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-+		info = readl_relaxed(qp->base + REG_FREQ_LUT +
-+				     i * LUT_ROW_SIZE);
-+		src = FIELD_GET(LUT_SRC, info);
-+		lval = FIELD_GET(LUT_L_VAL, info);
-+		if (src)
-+			freq = xo_rate * lval;
-+		else
-+			freq = hw_rate;
-+
-+		/*
-+		 * Two of the same frequencies with the same core counts means
-+		 * end of table
-+		 */
-+		if (i > 0 && prev_freq == freq)
-+			break;
-+
-+		qp->lut_tables[i] = freq;
-+		prev_freq = freq;
-+	}
-+	qp->max_state = i;
-+
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	qnodes = desc->nodes;
-+	num_nodes = desc->num_nodes;
-+
-+	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	provider = &qp->provider;
-+	provider->dev = &pdev->dev;
-+	provider->set = qcom_icc_set;
-+	provider->aggregate = qcom_icc_aggregate;
-+	provider->xlate = of_icc_xlate_onecell;
-+	INIT_LIST_HEAD(&provider->nodes);
-+	provider->data = data;
-+
-+	ret = icc_provider_add(provider);
-+	if (ret) {
-+		dev_err(&pdev->dev, "error adding interconnect provider\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < num_nodes; i++) {
-+		size_t j;
-+
-+		node = icc_node_create(qnodes[i]->id);
-+		if (IS_ERR(node)) {
-+			ret = PTR_ERR(node);
-+			goto err;
-+		}
-+
-+		node->name = qnodes[i]->name;
-+		node->data = qnodes[i];
-+		icc_node_add(node, provider);
-+
-+		dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-+			qnodes[i]->name, node->id);
-+
-+		/* populate links */
-+		for (j = 0; j < qnodes[i]->num_links; j++)
-+			icc_link_create(node, qnodes[i]->links[j]);
-+
-+		data->nodes[i] = node;
-+	}
-+	data->num_nodes = num_nodes;
-+
-+	platform_set_drvdata(pdev, qp);
-+
-+	return ret;
-+err:
-+	qcom_osm_l3_remove(pdev);
-+	return ret;
-+}
-+
-+static const struct of_device_id osm_l3_of_match[] = {
-+	{ .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-+
-+static struct platform_driver osm_l3_driver = {
-+	.probe = qcom_osm_l3_probe,
-+	.remove = qcom_osm_l3_remove,
-+	.driver = {
-+		.name = "osm-l3",
-+		.of_match_table = osm_l3_of_match,
-+	},
-+};
-+module_platform_driver(osm_l3_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-+MODULE_LICENSE("GPL v2");
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> 
+>> + */
+>> +struct lpddr3_timings {
+>> +       u32 max_freq;
+>> +       u32 min_freq;
+>> +       u32 tRFC;
+>> +       u32 tRRD;
+>> +       u32 tRPab;
+>> +       u32 tRPpb;
+>> +       u32 tRCD;
+>> +       u32 tRC;
+>> +       u32 tRAS;
+>> +       u32 tWTR;
+>> +       u32 tWR;
+>> +       u32 tRTP;
+>> +       u32 tW2W_C2C;
+>> +       u32 tR2R_C2C;
+>> +       u32 tWL;
+>> +       u32 tDQSCK;
+>> +       u32 tRL;
+>> +       u32 tFAW;
+>> +       u32 tXSR;
+>> +       u32 tXP;
+>> +       u32 tCKE;
+>> +       u32 tCKESR;
+>> +       u32 tMRD;
+>> +};
+>> +
+>> +/*
+>> + * Min value for some parameters in terms of number of tCK cycles(nCK)
+>> + * Please set to zero parameters that are not valid for a given memory
+>> + * type
+>> + */
+>> +struct lpddr3_min_tck {
+>> +       u32 tRFC;
+>> +       u32 tRRD;
+>> +       u32 tRPab;
+>> +       u32 tRPpb;
+>> +       u32 tRCD;
+>> +       u32 tRC;
+>> +       u32 tRAS;
+>> +       u32 tWTR;
+>> +       u32 tWR;
+>> +       u32 tRTP;
+>> +       u32 tW2W_C2C;
+>> +       u32 tR2R_C2C;
+>> +       u32 tWL;
+>> +       u32 tDQSCK;
+>> +       u32 tRL;
+>> +       u32 tFAW;
+>> +       u32 tXSR;
+>> +       u32 tXP;
+>> +       u32 tCKE;
+>> +       u32 tCKESR;
+>> +       u32 tMRD;
+>> +};
+>> +
+>>   #endif /* __JEDEC_DDR_H */
+>> diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
+>> index 46539b27a3fb..4f5b8c81669f 100644
+>> --- a/drivers/memory/of_memory.c
+>> +++ b/drivers/memory/of_memory.c
+>> @@ -3,6 +3,12 @@
+>>    * OpenFirmware helpers for memory drivers
+>>    *
+>>    * Copyright (C) 2012 Texas Instruments, Inc.
+>> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>>    */
+>>
+>>   #include <linux/device.h>
+>> @@ -149,3 +155,151 @@ const struct lpddr2_timings *of_get_ddr_timings(struct device_node *np_ddr,
+>>          return lpddr2_jedec_timings;
+>>   }
+>>   EXPORT_SYMBOL(of_get_ddr_timings);
+>> +
+>> +/**
+>> + * of_lpddr3_get_min_tck() - extract min timing values for lpddr3
+>> + * @np: pointer to ddr device tree node
+>> + * @device: device requesting for min timing values
+>> + *
+>> + * Populates the lpddr3_min_tck structure by extracting data
+>> + * from device tree node. Returns a pointer to the populated
+>> + * structure. If any error in populating the structure, returns NULL.
+>> + */
+>> +const struct lpddr3_min_tck *of_lpddr3_get_min_tck(struct device_node *np,
+>> +                                                  struct device *dev)
+>> +{
+>> +       int                     ret = 0;
+>> +       struct lpddr3_min_tck   *min;
+>> +
+>> +       min = devm_kzalloc(dev, sizeof(*min), GFP_KERNEL);
+>> +       if (!min)
+>> +               goto default_min_tck;
+>> +
+>> +       ret |= of_property_read_u32(np, "tRFC-min-tck", &min->tRFC);
+>> +       ret |= of_property_read_u32(np, "tRRD-min-tck", &min->tRRD);
+>> +       ret |= of_property_read_u32(np, "tRPab-min-tck", &min->tRPab);
+>> +       ret |= of_property_read_u32(np, "tRPpb-min-tck", &min->tRPpb);
+>> +       ret |= of_property_read_u32(np, "tRCD-min-tck", &min->tRCD);
+>> +       ret |= of_property_read_u32(np, "tRC-min-tck", &min->tRC);
+>> +       ret |= of_property_read_u32(np, "tRAS-min-tck", &min->tRAS);
+>> +       ret |= of_property_read_u32(np, "tWTR-min-tck", &min->tWTR);
+>> +       ret |= of_property_read_u32(np, "tWR-min-tck", &min->tWR);
+>> +       ret |= of_property_read_u32(np, "tRTP-min-tck", &min->tRTP);
+>> +       ret |= of_property_read_u32(np, "tW2W-C2C-min-tck", &min->tW2W_C2C);
+>> +       ret |= of_property_read_u32(np, "tR2R-C2C-min-tck", &min->tR2R_C2C);
+>> +       ret |= of_property_read_u32(np, "tWL-min-tck", &min->tWL);
+>> +       ret |= of_property_read_u32(np, "tDQSCK-min-tck", &min->tDQSCK);
+>> +       ret |= of_property_read_u32(np, "tRL-min-tck", &min->tRL);
+>> +       ret |= of_property_read_u32(np, "tFAW-min-tck", &min->tFAW);
+>> +       ret |= of_property_read_u32(np, "tXSR-min-tck", &min->tXSR);
+>> +       ret |= of_property_read_u32(np, "tXP-min-tck", &min->tXP);
+>> +       ret |= of_property_read_u32(np, "tCKE-min-tck", &min->tCKE);
+>> +       ret |= of_property_read_u32(np, "tCKESR-min-tck", &min->tCKESR);
+>> +       ret |= of_property_read_u32(np, "tMRD-min-tck", &min->tMRD);
+>> +
+>> +       if (ret) {
+>> +               dev_warn(dev, "%s: errors while parsing min-tck values\n",
+>> +                        __func__);
+>> +               devm_kfree(dev, min);
+>> +               goto default_min_tck;
+>> +       }
+>> +
+>> +       return min;
+>> +
+>> +default_min_tck:
+>> +       dev_warn(dev, "%s: using default min-tck values\n", __func__);
+> 
+> Here and later - you return NULL, not default values. Your driver -
+> consumer - also behaves like with error condition, not like with
+> default values. Print just that you cannot get timings, I guess.
+OK, thank you. I will change the print.
+
+Thank you for the review.
+
+Regards,
+Lukasz
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
