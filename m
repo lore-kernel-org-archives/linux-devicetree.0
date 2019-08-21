@@ -1,26 +1,59 @@
-Return-Path: <SRS0=5k37=WP=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH] dt-bindings: sh-mobile-ceu: Rename bindings documentation file
-Date: Mon, 19 Aug 2019 16:05:44 +0200
-Message-Id: <20190819140544.19294-1-horms+renesas@verge.net.au>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v8 00/13] Add TVP5150 features
+Date: Wed, 21 Aug 2019 09:30:50 +0200
+Message-Id: <20190821073103.19634-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Renesas media binding documentation files uses a naming schema of
-'renesas,<module>.txt'. Rename the SH Mobile CEU file to match this pattern.
+Hi,
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
-Based on v5.3-rc1
----
- .../bindings/media/{sh_mobile_ceu.txt => renesas,sh-mobile-ceu.txt}       | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/media/{sh_mobile_ceu.txt => renesas,sh-mobile-ceu.txt} (100%)
+the main purpose of this v8 is:
+ - fix rebasing issue I made on the v7
+ - fix error handling for tvp5150_registered()
+ - fix FORMAT_TRY patch so only set/get_selection is modified
+ - change the tvnorms to sdtv-standards
+ - some more minor fixes
 
-diff --git a/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt b/Documentation/devicetree/bindings/media/renesas,sh-mobile-ceu.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
-rename to Documentation/devicetree/bindings/media/renesas,sh-mobile-ceu.txt
+Many thanks to Hans for the quick response made on my v7. I've tested the
+code on a custom embedded device and compile tested it using our 0day
+instance.
+
+Regards,
+  Marco
+
+Javier Martinez Canillas (1):
+  partial revert of "[media] tvp5150: add HW input connectors support"
+
+Marco Felsch (11):
+  dt-bindings: connector: analog: add sdtv standards property
+  media: v4l2-fwnode: add v4l2_fwnode_connector
+  media: v4l2-fwnode: add initial connector parsing support
+  media: tvp5150: add input source selection of_graph support
+  media: dt-bindings: tvp5150: Add input port connectors DT bindings
+  media: tvp5150: add FORMAT_TRY support for get/set selection handlers
+  media: tvp5150: add s_power callback
+  media: dt-bindings: tvp5150: cleanup bindings stlye
+  media: dt-bindings: tvp5150: add optional sdtv standards documentation
+  media: tvp5150: add support to limit sdtv standards
+  media: tvp5150: make debug output more readable
+
+Michael Tretter (1):
+  media: tvp5150: initialize subdev before parsing device tree
+
+ .../display/connector/analog-tv-connector.txt |   6 +
+ .../devicetree/bindings/media/i2c/tvp5150.txt | 146 +++-
+ drivers/media/i2c/tvp5150.c                   | 649 +++++++++++++-----
+ drivers/media/v4l2-core/v4l2-fwnode.c         | 133 ++++
+ include/dt-bindings/display/sdtv-standards.h  |  76 ++
+ include/dt-bindings/media/tvp5150.h           |   2 -
+ include/media/v4l2-fwnode.h                   |  83 +++
+ include/uapi/linux/videodev2.h                |   4 +
+ 8 files changed, 909 insertions(+), 190 deletions(-)
+ create mode 100644 include/dt-bindings/display/sdtv-standards.h
+
 -- 
-2.11.0
+2.20.1
