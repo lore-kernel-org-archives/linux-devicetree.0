@@ -1,123 +1,214 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC,v4,1/4] media: dt-bindings: mt8183: Added camera ISP Pass 1
-Date: Wed, 21 Aug 2019 15:17:58 -0500
-Message-ID: <20190821201758.GB15270@bogus>
-References: <jungo.lin@mediatek.com>
- <20190807124803.29884-1-jungo.lin@mediatek.com>
- <20190807124803.29884-2-jungo.lin@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: iio: adc: Migrate AD7606
+ documentation to yaml
+Date: Wed, 21 Aug 2019 15:24:30 -0500
+Message-ID: <20190821202430.GA16419@bogus>
+References: <20190807133137.11185-1-beniamin.bia@analog.com>
+ <20190807133137.11185-3-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190807124803.29884-2-jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: ryan.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frankie.chiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hverkuil-cisco-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ddavenport-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <20190807133137.11185-3-beniamin.bia@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamin Bia <beniamin.bia@analog.com>
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, paulmck@linux.ibm.com, mchehab+samsung@kernel.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, biabeniamin@outlook.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 08:48:00PM +0800, Jungo Lin wrote:
-> This patch adds DT binding document for the Pass 1 (P1) unit
-> in Mediatek's camera ISP system. The Pass 1 unit grabs the sensor
-> data out from the sensor interface, applies ISP image effects
-> from tuning data and outputs the image data or statistics data to DRAM.
+On Wed, Aug 07, 2019 at 04:31:36PM +0300, Beniamin Bia wrote:
+> The documentation for ad7606 was migrated to yaml.
 > 
-> Signed-off-by: Jungo Lin <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 > ---
->  .../bindings/media/mediatek,camisp.txt        | 73 +++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+> Changes in v2:
+> -old txt file was deleted
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,camisp.txt b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
+>  .../bindings/iio/adc/adi,ad7606.txt           |  66 ---------
+>  .../bindings/iio/adc/adi,ad7606.yaml          | 134 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 135 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> deleted file mode 100644
+> index d8652460198e..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+> +++ /dev/null
+> @@ -1,66 +0,0 @@
+> -Analog Devices AD7606 Simultaneous Sampling ADC
+> -
+> -Required properties for the AD7606:
+> -
+> -- compatible: Must be one of
+> -	* "adi,ad7605-4"
+> -	* "adi,ad7606-8"
+> -	* "adi,ad7606-6"
+> -	* "adi,ad7606-4"
+> -	* "adi,ad7616"
+> -- reg: SPI chip select number for the device
+> -- spi-max-frequency: Max SPI frequency to use
+> -	see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> -- spi-cpha: See Documentation/devicetree/bindings/spi/spi-bus.txt
+> -- avcc-supply: phandle to the Avcc power supply
+> -- interrupts: IRQ line for the ADC
+> -	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> -- adi,conversion-start-gpios: must be the device tree identifier of the CONVST pin.
+> -		  This logic input is used to initiate conversions on the analog
+> -		  input channels. As the line is active high, it should be marked
+> -		  GPIO_ACTIVE_HIGH.
+> -
+> -Optional properties:
+> -
+> -- reset-gpios: must be the device tree identifier of the RESET pin. If specified,
+> -	       it will be asserted during driver probe. As the line is active high,
+> -	       it should be marked GPIO_ACTIVE_HIGH.
+> -- standby-gpios: must be the device tree identifier of the STBY pin. This pin is used
+> -		to place the AD7606 into one of two power-down modes, Standby mode or
+> -		Shutdown mode. As the line is active low, it should be marked
+> -		GPIO_ACTIVE_LOW.
+> -- adi,first-data-gpios: must be the device tree identifier of the FRSTDATA pin.
+> -		    The FRSTDATA output indicates when the first channel, V1, is
+> -		    being read back on either the parallel, byte or serial interface.
+> -		    As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> -- adi,range-gpios: must be the device tree identifier of the RANGE pin. The polarity on
+> -	      this pin determines the input range of the analog input channels. If
+> -	      this pin is tied to a logic high, the analog input range is ±10V for
+> -	      all channels. If this pin is tied to a logic low, the analog input range
+> -	      is ±5V for all channels. As the line is active high, it should be marked
+> -	      GPIO_ACTIVE_HIGH.
+> -- adi,oversampling-ratio-gpios: must be the device tree identifier of the over-sampling
+> -				mode pins. As the line is active high, it should be marked
+> -				GPIO_ACTIVE_HIGH.
+> -
+> -Example:
+> -
+> -	adc@0 {
+> -		compatible = "adi,ad7606-8";
+> -		reg = <0>;
+> -		spi-max-frequency = <1000000>;
+> -		spi-cpol;
+> -
+> -		avcc-supply = <&adc_vref>;
+> -
+> -		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
+> -		interrupt-parent = <&gpio>;
+> -
+> -		adi,conversion-start-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
+> -		adi,first-data-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
+> -		adi,oversampling-ratio-gpios = <&gpio 18 GPIO_ACTIVE_HIGH
+> -						&gpio 23 GPIO_ACTIVE_HIGH
+> -						&gpio 26 GPIO_ACTIVE_HIGH>;
+> -		standby-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
 > new file mode 100644
-> index 000000000000..fa2713acceca
+> index 000000000000..509dbe9c84d2
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
-> @@ -0,0 +1,73 @@
-> +* Mediatek Image Signal Processor Pass 1 (ISP P1)
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +The Pass 1 unit of Mediatek's camera ISP system grabs the sensor data out
-> +from the sensor interface, applies ISP effects from tuning data and outputs
-> +the image data and statistics data to DRAM. Furthermore, Pass 1 unit has
-> +the ability to output two different resolutions frames at the same time to
-> +increase the performance of the camera application.
+> +title: Analog Devices AD7606 Simultaneous Sampling ADC
 > +
-> +Required properties:
-> +- compatible: Must be "mediatek,mt8183-camisp" for MT8183.
-> +- reg: Physical base address of the camera function block register and
-> +  length of memory mapped region. Must contain an entry for each entry
-> +  in reg-names.
-> +- reg-names: Must include the following entries:
-> +  "cam_sys": Camera base function block
-> +  "cam_uni": Camera UNI function block
-> +  "cam_a": Camera ISP P1 hardware unit A
-> +  "cam_b": Camera ISP P1 hardware unit B
-> +  "cam_c": Camera ISP P1 hardware unit C
-> +- interrupts: Must contain an entry for each entry in interrupt-names.
-> +- interrupt-names : Must include the following entries:
-> +  "cam_uni": Camera UNI interrupt
-> +  "cam_a": Camera unit A interrupt
-> +  "cam_b": Camera unit B interrupt
-> +  "cam_c": Camera unit C interrupt
-> +- iommus: Shall point to the respective IOMMU block with master port
-> +  as argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-> +  for details.
-> +- clocks: A list of phandle and clock specifier pairs as listed
-> +  in clock-names property, see
-> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-> +- clock-names: Must be "camsys_cam_cgpdn" and "camsys_camtg_cgpdn".
-> +- mediatek,larb: Must contain the local arbiters in the current SoCs, see
-> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-> +  for details.
-> +- power-domains: a phandle to the power domain, see
-> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
-> +- mediatek,scp : The node of system control processor (SCP), see
-> +  Documentation/devicetree/bindings/remoteproc/mtk,scp.txt for details.
+> +maintainers:
+> +  - Beniamin Bia <beniamin.bia@analog.com>
+> +  - Stefan Popa <stefan.popa@analog.com>
 > +
-> +Example:
-> +SoC specific DT entry:
+> +description: |
+> +  Analog Devices AD7606 Simultaneous Sampling ADC
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7616.pdf
 > +
-> +		camisp: camisp@1a000000 {
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7605-4
+> +      - adi,ad7606-8
+> +      - adi,ad7606-6
+> +      - adi,ad7606-4
+> +      - adi,ad7616
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-cpha: true
+> +
+> +  avcc-supply:
+> +    description:
+> +      Phandle to the Avcc power supply
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  adi,conversion-start-gpios:
+> +    description:
+> +      Must be the device tree identifier of the CONVST pin.
+> +      This logic input is used to initiate conversions on the analog
+> +      input channels. As the line is active high, it should be marked
+> +      GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description:
+> +      Must be the device tree identifier of the RESET pin. If specified,
+> +      it will be asserted during driver probe. As the line is active high,
+> +      it should be marked GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  standby-gpios:
+> +    description:
+> +       Must be the device tree identifier of the STBY pin. This pin is used
+> +       to place the AD7606 into one of two power-down modes, Standby mode or
+> +       Shutdown mode. As the line is active low, it should be marked
+> +       GPIO_ACTIVE_LOW.
+> +    maxItems: 1
+> +
+> +  adi,first-data-gpios:
+> +    description:
+> +      Must be the device tree identifier of the FRSTDATA pin.
+> +      The FRSTDATA output indicates when the first channel, V1, is
+> +      being read back on either the parallel, byte or serial interface.
+> +      As the line is active high, it should be marked GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,range-gpios:
+> +    description:
+> +      Must be the device tree identifier of the RANGE pin. The polarity on
+> +      this pin determines the input range of the analog input channels. If
+> +      this pin is tied to a logic high, the analog input range is ±10V for
+> +      all channels. If this pin is tied to a logic low, the analog input range
+> +      is ±5V for all channels. As the line is active high, it should be marked
+> +      GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,oversampling-ratio-gpios:
+> +    description:
+> +      Must be the device tree identifier of the over-sampling
+> +      mode pins. As the line is active high, it should be marked
+> +      GPIO_ACTIVE_HIGH.
+> +    maxItems: 1
+> +
+> +  adi,sw-mode:
+> +    description:
+> +      Software mode of operation, so far available only for ad7616.
+> +      It is enabled when all three oversampling mode pins are connected to
+> +      high level. The device is configured by the corresponding registers. If the
+> +      adi,oversampling-ratio-gpios property is defined, then the driver will set the
+> +      oversampling gpios to high. Otherwise, it is assumed that the pins are hardwired
+> +      to VDD.
+> +    maxItems: 1
 
-Also, you can remove 2 levels of indentation here.
+Drop this. Doesn't make sense as a boolean can't be an array. I have a 
+meta-schema check for this pending.
 
-> +			compatible = "mediatek,mt8183-camisp", "syscon";
-> +			reg = <0 0x1a000000 0 0x1000>,
-> +					<0 0x1a003000 0 0x1000>,
-> +					<0 0x1a004000 0 0x2000>,
-> +					<0 0x1a006000 0 0x2000>,
-> +					<0 0x1a008000 0 0x2000>;
-> +			reg-names = "cam_sys",
-> +					"cam_uni",
-> +					"cam_a",
-> +					"cam_b",
-> +					"cam_c";
-> +			interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_LOW>,
-> +					<GIC_SPI 254 IRQ_TYPE_LEVEL_LOW>,
-> +					<GIC_SPI 255 IRQ_TYPE_LEVEL_LOW>,
-> +					<GIC_SPI 256 IRQ_TYPE_LEVEL_LOW>;
-> +			interrupt-names = "cam_uni",
-> +					"cam_a",
-> +					"cam_b",
-> +					"cam_c";
-> +			iommus = <&iommu M4U_PORT_CAM_IMGO>;
-> +			clocks = <&camsys CLK_CAM_CAM>,
-> +					<&camsys CLK_CAM_CAMTG>;
-> +			clock-names = "camsys_cam_cgpdn",
-> +					"camsys_camtg_cgpdn";
-> +			mediatek,larb = <&larb3>,
-> +					<&larb6>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
-> +			mediatek,scp = <&scp>;
-> +		};
-> -- 
-> 2.18.0
-> 
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
