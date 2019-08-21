@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v3 12/15] drm/mxsfb: Improve the axi clock usage
-Date: Wed, 21 Aug 2019 13:15:52 +0300
-Message-ID: <1566382555-12102-13-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v3 08/15] drm/mxsfb: Signal mode changed when bpp changed
+Date: Wed, 21 Aug 2019 13:15:48 +0300
+Message-ID: <1566382555-12102-9-git-send-email-robert.chiras@nxp.com>
 References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
@@ -10,146 +10,82 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the enable of the axi clock return status is ignored, causing
-issues when the enable fails then we try to disable it. Therefore, it is
-better to check the return status and disable it only when enable
-succeeded.
-Also, remove the helper functions around clk_axi, since we can directly
-use the clk API function for enable/disable the clock. Those functions
-are already checking for NULL clk and returning 0 if that's the case.
+From: Mirela Rabulea <mirela.rabulea@nxp.com>
 
+Add mxsfb_atomic_helper_check to signal mode changed when bpp changed.
+This will trigger the execution of disable/enable on
+a modeset with different bpp than the current one.
+
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-Acked-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c |  8 ++++----
- drivers/gpu/drm/mxsfb/mxsfb_drv.c  | 32 +++++++++++++-------------------
- drivers/gpu/drm/mxsfb/mxsfb_drv.h  |  3 ---
- 3 files changed, 17 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c | 45 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index a4ba368..e727f5e 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -408,7 +408,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
- {
- 	dma_addr_t paddr;
- 
--	mxsfb_enable_axi_clk(mxsfb);
-+	clk_prepare_enable(mxsfb->clk_axi);
- 	writel(0, mxsfb->base + LCDC_CTRL);
- 	mxsfb_crtc_mode_set_nofb(mxsfb);
- 
-@@ -425,7 +425,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
- void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb)
- {
- 	mxsfb_disable_controller(mxsfb);
--	mxsfb_disable_axi_clk(mxsfb);
-+	clk_disable_unprepare(mxsfb->clk_axi);
- }
- 
- void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
-@@ -451,8 +451,8 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
- 
- 	paddr = mxsfb_get_fb_paddr(mxsfb);
- 	if (paddr) {
--		mxsfb_enable_axi_clk(mxsfb);
-+		clk_prepare_enable(mxsfb->clk_axi);
- 		writel(paddr, mxsfb->base + mxsfb->devdata->next_buf);
--		mxsfb_disable_axi_clk(mxsfb);
-+		clk_disable_unprepare(mxsfb->clk_axi);
- 	}
- }
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index deb5e2b..dd5809b 100644
+index 78a2382..f51c8a3 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -97,18 +97,6 @@ drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
- 	return container_of(pipe, struct mxsfb_drm_private, pipe);
+@@ -26,6 +26,7 @@
+ #include <drm/drm_drv.h>
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_fb_helper.h>
++#include <drm/drm_fourcc.h>
+ #include <drm/drm_gem_cma_helper.h>
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_irq.h>
+@@ -108,9 +109,51 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+ 		clk_disable_unprepare(mxsfb->clk_axi);
  }
  
--void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb)
--{
--	if (mxsfb->clk_axi)
--		clk_prepare_enable(mxsfb->clk_axi);
--}
--
--void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
--{
--	if (mxsfb->clk_axi)
--		clk_disable_unprepare(mxsfb->clk_axi);
--}
--
- /**
-  * mxsfb_atomic_helper_check - validate state object
-  * @dev: DRM device
-@@ -272,25 +260,31 @@ static void mxsfb_pipe_update(struct drm_simple_display_pipe *pipe,
- static int mxsfb_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
- {
- 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
-+	int ret = 0;
++/**
++ * mxsfb_atomic_helper_check - validate state object
++ * @dev: DRM device
++ * @state: the driver state object
++ *
++ * On top of the drm imlementation drm_atomic_helper_check,
++ * check if the bpp is changed, if so, signal mode_changed,
++ * this will trigger disable/enable
++ *
++ * RETURNS:
++ * Zero for success or -errno
++ */
++static int mxsfb_atomic_helper_check(struct drm_device *dev,
++				     struct drm_atomic_state *state)
++{
++	struct drm_crtc *crtc;
++	struct drm_crtc_state *new_state;
++	int i, ret;
 +
-+	ret = clk_prepare_enable(mxsfb->clk_axi);
++	ret = drm_atomic_helper_check(dev, state);
 +	if (ret)
 +		return ret;
- 
- 	/* Clear and enable VBLANK IRQ */
--	mxsfb_enable_axi_clk(mxsfb);
- 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
- 	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_SET);
--	mxsfb_disable_axi_clk(mxsfb);
-+	clk_disable_unprepare(mxsfb->clk_axi);
- 
--	return 0;
-+	return ret;
- }
- 
- static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
- {
- 	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
- 
-+	if (clk_prepare_enable(mxsfb->clk_axi))
-+		return;
 +
- 	/* Disable and clear VBLANK IRQ */
--	mxsfb_enable_axi_clk(mxsfb);
- 	writel(CTRL1_CUR_FRAME_DONE_IRQ_EN, mxsfb->base + LCDC_CTRL1 + REG_CLR);
- 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
--	mxsfb_disable_axi_clk(mxsfb);
-+	clk_disable_unprepare(mxsfb->clk_axi);
- }
++	for_each_new_crtc_in_state(state, crtc, new_state, i) {
++		struct drm_plane_state *primary_state;
++		int old_bpp = 0;
++		int new_bpp = 0;
++
++		if (!crtc->primary || !crtc->primary->old_fb)
++			continue;
++		primary_state =
++			drm_atomic_get_plane_state(state, crtc->primary);
++		if (!primary_state || !primary_state->fb)
++			continue;
++		old_bpp = crtc->primary->old_fb->format->depth;
++		new_bpp = primary_state->fb->format->depth;
++		if (old_bpp != new_bpp)
++			new_state->mode_changed = true;
++	}
++	return ret;
++}
++
+ static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
+ 	.fb_create		= drm_gem_fb_create,
+-	.atomic_check		= drm_atomic_helper_check,
++	.atomic_check		= mxsfb_atomic_helper_check,
+ 	.atomic_commit		= drm_atomic_helper_commit,
+ };
  
- static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
-@@ -451,7 +445,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
- 	struct mxsfb_drm_private *mxsfb = drm->dev_private;
- 	u32 reg;
- 
--	mxsfb_enable_axi_clk(mxsfb);
-+	clk_prepare_enable(mxsfb->clk_axi);
- 
- 	reg = readl(mxsfb->base + LCDC_CTRL1);
- 
-@@ -460,7 +454,7 @@ static irqreturn_t mxsfb_irq_handler(int irq, void *data)
- 
- 	writel(CTRL1_CUR_FRAME_DONE_IRQ, mxsfb->base + LCDC_CTRL1 + REG_CLR);
- 
--	mxsfb_disable_axi_clk(mxsfb);
-+	clk_disable_unprepare(mxsfb->clk_axi);
- 
- 	return IRQ_HANDLED;
- }
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-index a178173..54c0644 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-@@ -39,9 +39,6 @@ struct mxsfb_drm_private {
- int mxsfb_setup_crtc(struct drm_device *dev);
- int mxsfb_create_output(struct drm_device *dev);
- 
--void mxsfb_enable_axi_clk(struct mxsfb_drm_private *mxsfb);
--void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
--
- void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
- void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
- void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
 -- 
 2.7.4
