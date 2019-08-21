@@ -1,979 +1,222 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
-Date: Wed, 21 Aug 2019 19:30:38 +0900
-Message-ID: <20190821103038.GA148543@chromium.org>
-References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
- <20190819034331.13098-3-dongchun.zhu@mediatek.com>
+From: "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Date: Wed, 21 Aug 2019 10:30:18 +0000
+Message-ID: <51a336a7565047f91a59fc7aaad3ae582b989cf4.camel@amazon.com>
+References: <20190723092529.11310-1-jonnyc@amazon.com>
+         <20190723092529.11310-5-jonnyc@amazon.com>
+         <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
+         <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+         <20190820152554.GG23903@e119886-lin.cambridge.arm.com>
+         <87417da8ccea10b84c1a968700ef2ff783c751be.camel@amazon.com>
+         <20190820195400.GH23903@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190819034331.13098-3-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dongchun.zhu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820195400.GH23903@e119886-lin.cambridge.arm.com>
+Content-Language: en-US
+Content-ID: <34FFD9A93BBC6E4590FCBCC6CEDAD1AA@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "andrew.murray@arm.com" <andrew.murray@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, benh@kernel.crashing
 List-Id: devicetree@vger.kernel.org
 
-Hi Dongchun,
-
-On Mon, Aug 19, 2019 at 11:43:31AM +0800, dongchun.zhu@mediatek.com wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> 
-> This patch adds a V4L2 sub-device driver for OV02A10 image sensor.
-> The OV02A10 is a 1/5" CMOS sensor from Omnivision,
-> which supports output format: 10-bit Raw.
-> The OV02A10 has a single MIPI lane interface and use the I2C bus
-> for control and the CSI-2 bus for data.
-> 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> ---
->  MAINTAINERS                 |    1 +
->  drivers/media/i2c/Kconfig   |   11 +
->  drivers/media/i2c/Makefile  |    1 +
->  drivers/media/i2c/ov02a10.c | 1018 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 1031 insertions(+)
->  create mode 100644 drivers/media/i2c/ov02a10.c
-> 
-
-Thanks for the patch! Please see my comments inline.
-
-[snip]
-
-> +#define CHIP_ID                                         0x2509
-> +#define OV02A10_REG_CHIP_ID_H                           0x02
-> +#define OV02A10_REG_CHIP_ID_L                           0x03
-> +#define OV02A10_ID(_msb, _lsb)                          ((_msb) << 8 | (_lsb))
-> +
-> +/* Bit[1] vertical upside down */
-> +/* Bit[0] horizontal mirror */
-> +#define REG_MIRROR_FLIP_CONTROL                         0x3f
-> +
-> +/* Orientation */
-> +#define REG_CONFIG_MIRROR_FLIP		                0x03
-> +
-> +#define REG_PAGE_SWITCH                                 0xfd
-> +#define REG_GLOBAL_EFFECTIVE                            0x01
-> +#define REG_ENABLE                                      BIT(0)
-> +
-> +#define REG_SC_CTRL_MODE                                0xac
-> +#define SC_CTRL_MODE_STANDBY                            0x00
-> +#define SC_CTRL_MODE_STREAMING                          0x01
-> +
-> +#define OV02A10_REG_EXPOSURE_H                          0x03
-> +#define OV02A10_REG_EXPOSURE_L                          0x04
-> +#define	OV02A10_EXPOSURE_MIN                            4
-> +#define	OV02A10_EXPOSURE_STEP                           1
-> +
-> +#define OV02A10_REG_VTS_H                               0x05
-> +#define OV02A10_REG_VTS_L                               0x06
-> +#define OV02A10_VTS_MAX                                 0x209f
-> +#define OV02A10_VTS_MIN                                 0x04cf
-> +#define OV02A10_BASIC_LINE				1224
-> +
-> +#define OV02A10_REG_GAIN                                0x24
-> +#define OV02A10_GAIN_MIN                                0x10
-> +#define OV02A10_GAIN_MAX                                0xf8
-> +#define OV02A10_GAIN_STEP                               0x01
-> +#define OV02A10_GAIN_DEFAULT                            0x40
-> +
-> +#define REG_NULL                                        0xff
-> +
-> +#define OV02A10_LANES                                   1
-> +#define OV02A10_BITS_PER_SAMPLE                         10
-> +
-
-I think there is something wrong with the indentation in the code above.
-Please use tabs wherever possible.
-
-[snip]
-
-> +
-> +#define to_ov02a10(sd) container_of(sd, struct ov02a10, subdev)
-
-Please use a static inline function for added compile-time type checks.
-
-> +
-> +static inline void msleep_range(unsigned int delay_base)
-> +{
-> +	usleep_range(delay_base * 1000, delay_base * 1000 + 500);
-> +}
-
-Why not just use msleep()?
-
-> +
-> +/* MIPI color bar enable output */
-> +static const struct regval ov02a10_test_pattern_enable_regs[] = {
-> +	{0xfd, 0x01},
-> +	{0x0d, 0x00},
-> +	{0xb6, 0x01},
-> +	{0x01, 0x01},
-> +	{0xfd, 0x01},
-> +	{0xac, 0x01},
-> +	{REG_NULL, 0x00}
-> +};
-> +
-> +/* MIPI color bar disable output */
-> +static const struct regval ov02a10_test_pattern_disable_regs[] = {
-> +	{0xfd, 0x01},
-> +	{0x0d, 0x00},
-> +	{0xb6, 0x00},
-> +	{0x01, 0x01},
-> +	{0xfd, 0x01},
-> +	{0xac, 0x01},
-> +	{REG_NULL, 0x00}
-> +};
-
-Hmm, only the register 0xb6 seems to here. Could we just set it directly,
-without these arrays?
-
-> +
-> +/*
-> + * xvclk 24Mhz
-
-This seems to assume 24MHz, but the driver allows a range in probe. Is that
-correct?
-
-[snip]]
-
-> +/* Write a register */
-> +static int ov02a10_write_reg(struct ov02a10 *ov02a10, u8 addr, u8 val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	u8 buf[2] = {addr, val};
-> +	int ret;
-> +
-> +	ret = i2c_master_send(client, buf, 2);
-> +
-> +	if (ret != 2) {
-> +		dev_err(&client->dev, "%s: error: reg=%x, val=%x\n",
-> +			__func__, addr, val);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-
-Could this be replaced with i2c_smbus_write_byte_data()?
-
-> +
-> +static int ov02a10_write_array(struct ov02a10 *ov02a10,
-> +			       const struct regval *regs)
-> +{
-> +	u32 i;
-> +	int ret;
-> +
-> +	for (i = 0; regs[i].addr != REG_NULL; i++) {
-> +		ret = ov02a10_write_reg(ov02a10, regs[i].addr, regs[i].val);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* Read a register */
-> +static int ov02a10_read_reg(struct ov02a10 *ov02a10, u8 reg, u8 *val)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	u8 data = reg;
-> +	struct i2c_msg msg = {
-> +		.addr	= client->addr,
-> +		.flags	= 0,
-> +		.len	= 1,
-> +		.buf	= &data,
-> +	};
-> +	int ret;
-> +
-> +	ret = i2c_transfer(client->adapter, &msg, 1);
-> +	if (ret < 0)
-> +		goto err_wr;
-> +
-> +	msg.flags = I2C_M_RD;
-> +	ret = i2c_transfer(client->adapter, &msg, 1);
-> +	if (ret < 0)
-> +		goto err_rd;
-
-Could we just have 2 messages in an array and just call i2c_transfer() once
-for both write and read?
-
-Or actually it sounds like the i2c_smbus_read_byte_data() helper could work
-here.
-
-> +
-> +	*val = data;
-> +	return 0;
-> +
-> +err_rd:
-> +	dev_err(&client->dev, "i2c_transfer --I2C_M_RD failed\n");
-> +err_wr:
-> +	dev_err(&client->dev, "read error: reg=0x%02x: %d\n", reg, ret);
-> +	return ret;
-> +}
-> +
-> +static void ov02a10_fill_fmt(const struct ov02a10_mode *mode,
-> +			     struct v4l2_mbus_framefmt *fmt)
-> +{
-> +	fmt->width = mode->width;
-> +	fmt->height = mode->height;
-> +	fmt->field = V4L2_FIELD_NONE;
-> +}
-> +
-> +static int ov02a10_set_fmt(struct v4l2_subdev *sd,
-> +			   struct v4l2_subdev_pad_config *cfg,
-> +			   struct v4l2_subdev_format *fmt)
-> +{
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +	struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
-> +
-> +	mutex_lock(&ov02a10->mutex);
-> +
-> +	if (ov02a10->streaming) {
-> +		mutex_unlock(&ov02a10->mutex);
-> +		return -EBUSY;
-> +	}
-> +
-> +	/* Only one sensor mode supported */
-> +	mbus_fmt->code = ov02a10->fmt.code;
-> +	ov02a10_fill_fmt(ov02a10->cur_mode, mbus_fmt);
-> +	ov02a10->fmt = fmt->format;
-> +
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov02a10_get_fmt(struct v4l2_subdev *sd,
-> +			   struct v4l2_subdev_pad_config *cfg,
-> +			   struct v4l2_subdev_format *fmt)
-> +{
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +	struct v4l2_mbus_framefmt *mbus_fmt = &fmt->format;
-> +
-> +	mutex_lock(&ov02a10->mutex);
-> +
-> +	fmt->format = ov02a10->fmt;
-> +	mbus_fmt->code = ov02a10->fmt.code;
-> +	ov02a10_fill_fmt(ov02a10->cur_mode, mbus_fmt);
-> +
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov02a10_enum_mbus_code(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_pad_config *cfg,
-> +				  struct v4l2_subdev_mbus_code_enum *code)
-> +{
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +
-> +	if (code->index >= ARRAY_SIZE(supported_modes) || !(code->index))
-
-Hmm, ARRAY_SIZE(supported_modes) is 1 and we don't allow code->index to be
-0 either. Is there a code->index value that wouldn't return an error here?
-
-> +		return -EINVAL;
-> +
-> +	code->code = ov02a10->fmt.code;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov02a10_enum_frame_sizes(struct v4l2_subdev *sd,
-> +				    struct v4l2_subdev_pad_config *cfg,
-> +				    struct v4l2_subdev_frame_size_enum *fse)
-> +{
-> +	if (fse->index >= ARRAY_SIZE(supported_modes) || !(fse->index))
-
-Same here.
-
-> +		return -EINVAL;
-> +
-> +	fse->min_width  = supported_modes[fse->index].width;
-> +	fse->max_width  = supported_modes[fse->index].width;
-> +	fse->max_height = supported_modes[fse->index].height;
-> +	fse->min_height = supported_modes[fse->index].height;
-> +
-> +	return 0;
-> +}
-> +
-> +static int __ov02a10_power_on(struct ov02a10 *ov02a10)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	struct device *dev = &client->dev;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(ov02a10->xvclk);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enable xvclk\n");
-> +		return ret;
-> +	}
-
-Is it really correct to enable the clock before the regulators?
-
-According to the datasheet, it should be:
- - PD pin HIGH,
- - nRST pin LOW,
- - DVDDIO and AVDD28 power up and stabilize,
- - clock enabled,
- - min 5 ms delay,
- - PD pin LOW,
- - min 4 ms delay,
- - nRST pin HIGH,
- - min 5 ms delay,
- - I2C interface ready.
-
-> +
-> +	/* Note: set 0 is high, set 1 is low */
-
-Why is that? If there is some inverter on the way that should be handled
-outside of this driver. (GPIO DT bindings have flags for this purpose.
-
-If the pins are nRESET and nPOWERDOWN in the hardware datasheet, we should
-call them like this in the driver too (+/- the lowercase and underscore
-convention).
-
-According to the datasheet, the reset pin is called RST and inverted, so we should
-call it n_rst, but the powerdown signal, called PD, is not inverted, so pd
-would be the right name.
-
-> +	gpiod_set_value_cansleep(ov02a10->reset_gpio, 1);
-> +	gpiod_set_value_cansleep(ov02a10->powerdown_gpio, 0);
-> +
-> +	ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enable regulators\n");
-> +		goto disable_clk;
-> +	}
-> +	msleep_range(7);
-> +
-> +	gpiod_set_value_cansleep(ov02a10->powerdown_gpio, 1);
-> +	msleep_range(10);
-> +
-> +	gpiod_set_value_cansleep(ov02a10->reset_gpio, 0);
-> +	msleep_range(10);
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	clk_disable_unprepare(ov02a10->xvclk);
-> +
-> +	return ret;
-> +}
-> +
-> +static void __ov02a10_power_off(struct ov02a10 *ov02a10)
-> +{
-> +	clk_disable_unprepare(ov02a10->xvclk);
-> +	gpiod_set_value_cansleep(ov02a10->reset_gpio, 1);
-> +	gpiod_set_value_cansleep(ov02a10->powerdown_gpio, 1);
-> +	regulator_bulk_disable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
-
-This also doesn't seem to match my datasheet. The sequence there is:
- - nRST goes LOW,
- - clock stops,
- - PD goes HIGH,
- - regulators are powerd down.
-
-> +}
-> +
-> +static int __ov02a10_start_stream(struct ov02a10 *ov02a10)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	int ret;
-> +
-> +	/* Apply default values of current mode */
-> +	ret = ov02a10_write_array(ov02a10, ov02a10->cur_mode->reg_list);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Apply customized values from user */
-> +	ret = __v4l2_ctrl_handler_setup(ov02a10->subdev.ctrl_handler);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set orientation to 180 degree */
-> +	if (ov02a10->upside_down) {
-> +		ret = ov02a10_write_reg(ov02a10, REG_MIRROR_FLIP_CONTROL,
-> +					REG_CONFIG_MIRROR_FLIP);
-> +		if (ret) {
-> +			dev_err(&client->dev, "%s failed to set orientation\n",
-> +				__func__);
-> +			return ret;
-> +		}
-> +		ret = ov02a10_write_reg(ov02a10, REG_GLOBAL_EFFECTIVE,
-> +					REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	/* Set stream on register */
-> +	return ov02a10_write_reg(ov02a10,
-> +				 REG_SC_CTRL_MODE, SC_CTRL_MODE_STREAMING);
-> +}
-> +
-> +static int __ov02a10_stop_stream(struct ov02a10 *ov02a10)
-> +{
-> +	return ov02a10_write_reg(ov02a10,
-> +				 REG_SC_CTRL_MODE, SC_CTRL_MODE_STANDBY);
-> +}
-> +
-> +static int ov02a10_entity_init_cfg(struct v4l2_subdev *subdev,
-> +				   struct v4l2_subdev_pad_config *cfg)
-> +{
-> +	struct v4l2_subdev_format fmt = { 0 };
-> +
-> +	fmt.which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE;
-> +	fmt.format.width = 1600;
-> +	fmt.format.height = 1200;
-
-Where do these values come from? Should we have some macros for them?
-
-> +
-> +	ov02a10_set_fmt(subdev, cfg, &fmt);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov02a10_s_stream(struct v4l2_subdev *sd, int on)
-> +{
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	int ret = 0;
-> +
-> +	mutex_lock(&ov02a10->mutex);
-> +
-> +	if (ov02a10->streaming == on)
-> +		goto unlock_and_return;
-> +
-> +	if (on) {
-> +		ret = pm_runtime_get_sync(&client->dev);
-> +		if (ret < 0) {
-> +			pm_runtime_put_noidle(&client->dev);
-> +			goto unlock_and_return;
-> +		}
-> +
-> +		ret = __ov02a10_start_stream(ov02a10);
-> +		if (ret) {
-> +			__ov02a10_stop_stream(ov02a10);
-> +			ov02a10->streaming = !on;
-> +			goto err_rpm_put;
-> +		}
-> +	} else {
-> +		__ov02a10_stop_stream(ov02a10);
-> +		pm_runtime_put(&client->dev);
-> +	}
-> +
-> +	ov02a10->streaming = on;
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-> +	return ret;
-> +
-> +err_rpm_put:
-> +	pm_runtime_put(&client->dev);
-> +unlock_and_return:
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ov02a10_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-> +{
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +	struct v4l2_mbus_framefmt *try_fmt = v4l2_subdev_get_try_format(sd,
-> +									fh->pad,
-> +									0);
-
-Please separate the initialization from the declaration, because there
-isn't just enough space on this line anymore.
-
-> +
-> +	mutex_lock(&ov02a10->mutex);
-> +	/* Initialize try_fmt */
-> +	try_fmt->code = ov02a10->fmt.code;
-> +	ov02a10_fill_fmt(&supported_modes[0], try_fmt);
-> +
-> +	mutex_unlock(&ov02a10->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused ov02a10_runtime_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +
-> +	return __ov02a10_power_on(ov02a10);
-> +}
-> +
-> +static int __maybe_unused ov02a10_runtime_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +
-> +	__ov02a10_power_off(ov02a10);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops ov02a10_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(ov02a10_runtime_suspend,
-> +			   ov02a10_runtime_resume, NULL)
-
-Don't we need to implement and provide system PM ops too?
-
-> +};
-> +
-> +static int ov02a10_set_test_pattern(struct ov02a10 *ov02a10, s32 value)
-> +{
-> +	if (value)
-> +		return ov02a10_write_array(ov02a10,
-> +					   ov02a10_test_pattern_enable_regs);
-> +
-> +	return ov02a10_write_array(ov02a10,
-> +		ov02a10_test_pattern_disable_regs);
-> +}
-> +
-> +static int ov02a10_set_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct ov02a10 *ov02a10 = container_of(ctrl->handler,
-> +					     struct ov02a10, ctrl_handler);
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	s64 max_expo;
-> +	int ret;
-> +
-> +	/* Propagate change of current control to all related controls */
-> +	if (ctrl->id == V4L2_CID_VBLANK) {
-> +		/* Update max exposure while meeting expected vblanking */
-> +		max_expo = ov02a10->cur_mode->height + ctrl->val - 4;
-> +		__v4l2_ctrl_modify_range(ov02a10->exposure,
-> +					 ov02a10->exposure->minimum, max_expo,
-> +					 ov02a10->exposure->step,
-> +					 ov02a10->exposure->default_value);
-> +	}
-> +
-> +	/* V4L2 controls values will be applied only when power is already up */
-> +	if (!pm_runtime_get_if_in_use(&client->dev))
-> +		return 0;
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_EXPOSURE:
-> +		ret = ov02a10_write_reg(ov02a10, REG_PAGE_SWITCH, REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +		ret = ov02a10_write_reg(ov02a10, OV02A10_REG_EXPOSURE_H,
-> +					((ctrl->val >> 8) & 0xFF));
-> +		if (!ret) {
-> +			ret = ov02a10_write_reg(ov02a10, OV02A10_REG_EXPOSURE_L,
-> +						(ctrl->val & 0xFF));
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +		ret = ov02a10_write_reg(ov02a10, REG_GLOBAL_EFFECTIVE,
-> +					REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	case V4L2_CID_ANALOGUE_GAIN:
-> +		ret = ov02a10_write_reg(ov02a10, REG_PAGE_SWITCH, REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +		ret = ov02a10_write_reg(ov02a10, OV02A10_REG_GAIN,
-> +					(ctrl->val & 0xFF));
-> +		if (ret < 0)
-> +			return ret;
-> +		ret = ov02a10_write_reg(ov02a10, REG_GLOBAL_EFFECTIVE,
-> +					REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	case V4L2_CID_VBLANK:
-> +		ret = ov02a10_write_reg(ov02a10, REG_PAGE_SWITCH, REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +		ret = ov02a10_write_reg(ov02a10, OV02A10_REG_VTS_H,
-> +					(((ctrl->val +
-> +					ov02a10->cur_mode->height -
-> +					OV02A10_BASIC_LINE) >> 8)
-> +					& 0xFF));
-> +		if (!ret) {
-> +			ret = ov02a10_write_reg(ov02a10, OV02A10_REG_VTS_L,
-> +						((ctrl->val +
-> +						ov02a10->cur_mode->height -
-> +						OV02A10_BASIC_LINE) & 0xFF));
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +		ret = ov02a10_write_reg(ov02a10, REG_GLOBAL_EFFECTIVE,
-> +					REG_ENABLE);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		ret = ov02a10_set_test_pattern(ov02a10, ctrl->val);
-> +		if (ret < 0)
-> +			return ret;
-> +		break;
-> +	default:
-> +		dev_warn(&client->dev, "%s Unhandled id:0x%x, val:0x%x\n",
-> +			 __func__, ctrl->id, ctrl->val);
-> +		ret = -EINVAL;
-> +		break;
-
-We shouldn't need to handle this, as the control framework wouldn't call us
-with a control that we didn't register explicitly.
-
-> +	};
-> +
-> +	pm_runtime_put(&client->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct v4l2_subdev_video_ops ov02a10_video_ops = {
-> +	.s_stream = ov02a10_s_stream,
-> +};
-> +
-> +static const struct v4l2_subdev_pad_ops ov02a10_pad_ops = {
-> +	.init_cfg = ov02a10_entity_init_cfg,
-> +	.enum_mbus_code = ov02a10_enum_mbus_code,
-> +	.enum_frame_size = ov02a10_enum_frame_sizes,
-> +	.get_fmt = ov02a10_get_fmt,
-> +	.set_fmt = ov02a10_set_fmt,
-> +};
-> +
-> +static const struct v4l2_subdev_ops ov02a10_subdev_ops = {
-> +	.video	= &ov02a10_video_ops,
-> +	.pad	= &ov02a10_pad_ops,
-> +};
-> +
-> +static const struct media_entity_operations ov02a10_subdev_entity_ops = {
-> +	.link_validate = v4l2_subdev_link_validate,
-> +};
-> +
-> +static const struct v4l2_subdev_internal_ops ov02a10_internal_ops = {
-> +	.open = ov02a10_open,
-> +};
-> +
-> +static const struct v4l2_ctrl_ops ov02a10_ctrl_ops = {
-> +	.s_ctrl = ov02a10_set_ctrl,
-> +};
-> +
-> +static int ov02a10_initialize_controls(struct ov02a10 *ov02a10)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	const struct ov02a10_mode *mode;
-> +	struct v4l2_ctrl_handler *handler;
-> +	struct v4l2_ctrl *ctrl;
-> +	u64 exposure_max;
-> +	u32 pixel_rate, h_blank;
-> +	int ret;
-> +
-> +	handler = &ov02a10->ctrl_handler;
-> +	mode = ov02a10->cur_mode;
-> +	ret = v4l2_ctrl_handler_init(handler, 10);
-
-I can see 6 controls registered below.
-
-> +	if (ret)
-> +		return ret;
-> +	handler->lock = &ov02a10->mutex;
-> +
-> +	ctrl = v4l2_ctrl_new_int_menu(handler, NULL, V4L2_CID_LINK_FREQ,
-> +				      0, 0, link_freq_menu_items);
-> +	if (ctrl)
-> +		ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> +
-> +	pixel_rate = (link_freq_menu_items[0] * 2 * OV02A10_LANES) /
-> +		     OV02A10_BITS_PER_SAMPLE;
-> +	v4l2_ctrl_new_std(handler, NULL, V4L2_CID_PIXEL_RATE,
-> +			  0, pixel_rate, 1, pixel_rate);
-> +
-> +	h_blank = mode->hts_def - mode->width;
-> +	ov02a10->hblank = v4l2_ctrl_new_std(handler, NULL, V4L2_CID_HBLANK,
-> +					    h_blank, h_blank, 1, h_blank);
-> +	if (ov02a10->hblank)
-> +		ov02a10->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> +
-> +	ov02a10->vblank = v4l2_ctrl_new_std(handler, &ov02a10_ctrl_ops,
-> +					    V4L2_CID_VBLANK, mode->vts_def -
-> +					    mode->height,
-> +					    OV02A10_VTS_MAX - mode->height, 1,
-> +					    mode->vts_def - mode->height);
-> +
-> +	exposure_max = mode->vts_def - 4;
-> +	ov02a10->exposure = v4l2_ctrl_new_std(handler, &ov02a10_ctrl_ops,
-> +					      V4L2_CID_EXPOSURE,
-> +					      OV02A10_EXPOSURE_MIN,
-> +					      exposure_max,
-> +					      OV02A10_EXPOSURE_STEP,
-> +					      mode->exp_def);
-> +
-> +	ov02a10->anal_gain = v4l2_ctrl_new_std(handler, &ov02a10_ctrl_ops,
-> +					       V4L2_CID_ANALOGUE_GAIN,
-> +					       OV02A10_GAIN_MIN,
-> +					       OV02A10_GAIN_MAX,
-> +					       OV02A10_GAIN_STEP,
-> +					       OV02A10_GAIN_DEFAULT);
-> +
-> +	ov02a10->test_pattern =
-> +	   v4l2_ctrl_new_std_menu_items(handler,
-> +					&ov02a10_ctrl_ops,
-> +					V4L2_CID_TEST_PATTERN,
-> +					ARRAY_SIZE(ov02a10_test_pattern_menu) -
-> +					1, 0, 0, ov02a10_test_pattern_menu);
-> +
-> +	if (handler->error) {
-> +		ret = handler->error;
-> +		dev_err(&client->dev,
-> +			"Failed to init controls(%d)\n", ret);
-> +		goto err_free_handler;
-> +	}
-> +
-> +	ov02a10->subdev.ctrl_handler = handler;
-> +
-> +	return 0;
-> +
-> +err_free_handler:
-> +	v4l2_ctrl_handler_free(handler);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ov02a10_check_sensor_id(struct ov02a10 *ov02a10)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	u16 id;
-> +	u8 pid = 0;
-> +	u8 ver = 0;
-> +	int ret;
-> +
-> +	/* Check sensor revision */
-> +	ret = ov02a10_read_reg(ov02a10, OV02A10_REG_CHIP_ID_H, &pid);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov02a10_read_reg(ov02a10, OV02A10_REG_CHIP_ID_L, &ver);
-> +	if (ret)
-> +		return ret;
-> +
-> +	id = OV02A10_ID(pid, ver);
-> +	if (id != CHIP_ID) {
-> +		dev_err(&client->dev, "Unexpected sensor id(%04x)\n", id);
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&client->dev, "Detected OV%04X sensor\n", id);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov02a10_configure_regulators(struct ov02a10 *ov02a10)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < OV02A10_NUM_SUPPLIES; i++)
-> +		ov02a10->supplies[i].supply = ov02a10_supply_names[i];
-> +
-> +	return devm_regulator_bulk_get(&client->dev,
-> +				       OV02A10_NUM_SUPPLIES,
-> +				       ov02a10->supplies);
-> +}
-
-I think we can just have this directly inside probe.
-
-> +
-> +static int ov02a10_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct ov02a10 *ov02a10;
-> +	u32 rotation;
-> +	u32 xclk_freq;
-> +	int ret;
-> +
-> +	ov02a10 = devm_kzalloc(dev, sizeof(*ov02a10), GFP_KERNEL);
-> +	if (!ov02a10)
-> +		return -ENOMEM;
-> +
-> +	v4l2_i2c_subdev_init(&ov02a10->subdev, client, &ov02a10_subdev_ops);
-> +	ov02a10->fmt.code = MEDIA_BUS_FMT_SBGGR10_1X10;
-> +
-> +	/* Optional indication of physical rotation of sensor */
-> +	ret = fwnode_property_read_u32(dev_fwnode(dev), "rotation",
-> +				       &rotation);
-> +	if (!ret) {
-> +		switch (rotation) {
-> +		case 180:
-> +			ov02a10->upside_down = true;
-> +			ov02a10->fmt.code = MEDIA_BUS_FMT_SRGGB10_1X10;
-> +			break;
-> +		case 0:
-> +			break;
-> +		default:
-> +			dev_warn(dev, "%u degrees rotation is not supported, ignoring...\n",
-> +				 rotation);
-> +		}
-> +	}
-> +
-> +	/* Get system clock (xvclk) */
-> +	ov02a10->xvclk = devm_clk_get(dev, "xvclk");
-> +	if (IS_ERR(ov02a10->xvclk)) {
-> +		dev_err(dev, "Failed to get xvclk\n");
-> +		return -EINVAL;
-> +	}
-
-Hmm, it's called eclk in my datasheet.
-
-> +
-> +	ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get xclk frequency\n");
-> +		return ret;
-> +	}
-> +
-> +	/* External clock must be 24MHz, allow 1% tolerance */
-> +	if (xclk_freq < 23760000 || xclk_freq > 24240000) {
-
-How do we support a range of frequencies? I don't see the driver calculate
-any register values based on this frequency. Are you sure that the register
-arrays don't assume one specific frequency?
-
-> +		dev_err(dev, "external clock frequency %u is not supported\n",
-> +			xclk_freq);
-> +		return -EINVAL;
-> +	}
-> +	dev_dbg(dev, "external clock frequency %u\n", xclk_freq);
-> +
-> +	ret = clk_set_rate(ov02a10->xvclk, xclk_freq);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set xvclk frequency (24MHz)\n");
-> +		return ret;
-> +	}
-> +
-> +	ov02a10->powerdown_gpio = devm_gpiod_get(dev, "powerdown",
-> +						 GPIOD_OUT_LOW);
-
-Hmm, shouldn't this be HIGH? At least the datasheet has it so for the
-powered down state.
-
-> +	if (IS_ERR(ov02a10->powerdown_gpio)) {
-> +		dev_err(dev, "Failed to get powerdown-gpios\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ov02a10->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-
-Also LOW here, similarly to the above.
-
-> +	if (IS_ERR(ov02a10->reset_gpio)) {
-> +		dev_err(dev, "Failed to get reset-gpios\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = ov02a10_configure_regulators(ov02a10);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to get power regulators\n");
-> +		return ret;
-> +	}
-> +
-> +	mutex_init(&ov02a10->mutex);
-> +	ov02a10->cur_mode = &supported_modes[0];
-> +	ret = ov02a10_initialize_controls(ov02a10);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize controls\n");
-> +		goto err_destroy_mutex;
-> +	}
-> +
-> +	ret = __ov02a10_power_on(ov02a10);
-> +	if (ret)
-> +		goto err_free_handler;
-> +
-> +	ret = ov02a10_check_sensor_id(ov02a10);
-> +	if (ret)
-> +		goto err_power_off;
-> +
-> +	ov02a10->subdev.internal_ops = &ov02a10_internal_ops;
-> +	ov02a10->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	ov02a10->subdev.entity.ops = &ov02a10_subdev_entity_ops;
-> +	ov02a10->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> +	ov02a10->pad.flags = MEDIA_PAD_FL_SOURCE;
-> +	ret = media_entity_pads_init(&ov02a10->subdev.entity, 1, &ov02a10->pad);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to init entity pads: %d", ret);
-> +		goto err_power_off;
-> +	}
-> +
-> +	ret = v4l2_async_register_subdev(&ov02a10->subdev);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register V4L2 subdev: %d",
-> +			ret);
-> +		goto err_clean_entity;
-> +	}
-> +
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +	pm_runtime_idle(dev);
-> +
-> +	dev_info(dev, "ov02a10 probe --\n");
-
-Please remove this.
-
-> +	return 0;
-> +
-> +err_clean_entity:
-> +	media_entity_cleanup(&ov02a10->subdev.entity);
-> +err_power_off:
-> +	__ov02a10_power_off(ov02a10);
-> +err_free_handler:
-> +	v4l2_ctrl_handler_free(ov02a10->subdev.ctrl_handler);
-> +err_destroy_mutex:
-> +	mutex_destroy(&ov02a10->mutex);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ov02a10_remove(struct i2c_client *client)
-> +{
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct ov02a10 *ov02a10 = to_ov02a10(sd);
-> +
-> +	v4l2_async_unregister_subdev(sd);
-> +	media_entity_cleanup(&sd->entity);
-> +	v4l2_ctrl_handler_free(sd->ctrl_handler);
-> +	pm_runtime_disable(&client->dev);
-> +	if (!pm_runtime_status_suspended(&client->dev))
-> +		__ov02a10_power_off(ov02a10);
-> +	pm_runtime_set_suspended(&client->dev);
-> +	mutex_destroy(&ov02a10->mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id ov02a10_of_match[] = {
-> +	{ .compatible = "ovti,ov02a10" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ov02a10_of_match);
-> +#endif
-> +
-> +static struct i2c_driver ov02a10_i2c_driver = {
-> +	.driver = {
-> +		.name = "ov02a10",
-> +		.pm = &ov02a10_pm_ops,
-> +		.of_match_table = ov02a10_of_match,
-
-Please use of_match_ptr() wrapper.
-
-Best regards,
-Tomasz
+T24gVHVlLCAyMDE5LTA4LTIwIGF0IDIwOjU0ICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
+PiBPbiBUdWUsIEF1ZyAyMCwgMjAxOSBhdCAwNTowNjoyMlBNICswMDAwLCBDaG9jcm9uLCBKb25h
+dGhhbiB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMTktMDgtMjAgYXQgMTY6MjUgKzAxMDAsIEFuZHJl
+dyBNdXJyYXkgd3JvdGU6DQo+ID4gPiBPbiBUdWUsIEF1ZyAyMCwgMjAxOSBhdCAwMjo1MjozMFBN
+ICswMDAwLCBDaG9jcm9uLCBKb25hdGhhbg0KPiA+ID4gd3JvdGU6DQo+ID4gPiA+IE9uIE1vbiwg
+MjAxOS0wOC0xOSBhdCAxOToyMyArMDEwMCwgQW5kcmV3IE11cnJheSB3cm90ZToNCj4gPiA+ID4g
+PiBPbiBUdWUsIEp1bCAyMywgMjAxOSBhdCAxMjoyNToyOVBNICswMzAwLCBKb25hdGhhbiBDaG9j
+cm9uDQo+ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiBUaGUgUm9vdCBQb3J0IChpZGVudGlm
+aWVkIGJ5IFsxYzM2OjAwMzJdKSBkb2Vzbid0IHN1cHBvcnQNCj4gPiA+ID4gPiA+IE1TSS0NCj4g
+PiA+ID4gPiA+IFguIE9uDQo+ID4gPiA+ID4gPiBzb21lDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
+U2hvdWxkbid0IHRoaXMgcmVhZCBbMWMzNjowMDMxXT8NCj4gPiA+ID4gPiANCj4gPiA+ID4gDQo+
+ID4gPiA+IEluZGVlZC4gVGhhbmtzIGZvciBjYXRjaGluZyB0aGlzLg0KPiA+ID4gPiANCj4gPiA+
+ID4gPiANCj4gPiA+ID4gPiA+IHBsYXRmb3JtcyBpdCBpcyBjb25maWd1cmVkIHRvIG5vdCBhZHZl
+cnRpc2UgdGhlIGNhcGFiaWxpdHkNCj4gPiA+ID4gPiA+IGF0DQo+ID4gPiA+ID4gPiBhbGwsDQo+
+ID4gPiA+ID4gPiB3aGlsZQ0KPiA+ID4gPiA+ID4gb24gb3RoZXJzIGl0IChtaXN0YWtlbmx5KSBk
+b2VzLiBUaGlzIGNhdXNlcyBhIHBhbmljIGR1cmluZw0KPiA+ID4gPiA+ID4gaW5pdGlhbGl6YXRp
+b24gYnkgdGhlIHBjaWVwb3J0IGRyaXZlciwgc2luY2UgaXQgdHJpZXMgdG8NCj4gPiA+ID4gPiA+
+IGNvbmZpZ3VyZQ0KPiA+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gPiBNU0ktWCBjYXBhYmlsaXR5
+LiBTcGVjaWZpY2FsbHksIHdoZW4gdHJ5aW5nIHRvIGFjY2VzcyB0aGUNCj4gPiA+ID4gPiA+IE1T
+SS1YDQo+ID4gPiA+ID4gPiB0YWJsZQ0KPiA+ID4gPiA+ID4gYSAibm9uLWV4aXN0aW5nIGFkZHIi
+IGV4Y2VwdGlvbiBvY2N1cnMuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEV4YW1wbGUgc3Rh
+Y2t0cmFjZSBzbmlwcGV0Og0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBbICAgIDEuNjMyMzYz
+XSBTRXJyb3IgSW50ZXJydXB0IG9uIENQVTIsIGNvZGUgMHhiZjAwMDAwMCAtLQ0KPiA+ID4gPiA+
+ID4gU0Vycm9yDQo+ID4gPiA+ID4gPiBbICAgIDEuNjMyMzY0XSBDUFU6IDIgUElEOiAxIENvbW06
+IHN3YXBwZXIvMCBOb3QgdGFpbnRlZA0KPiA+ID4gPiA+ID4gNS4yLjAtDQo+ID4gPiA+ID4gPiBy
+YzEtDQo+ID4gPiA+ID4gPiBKb25ueS0xNDg0Ny1nZTc2ZjFkNGExODI4LWRpcnR5ICMzMw0KPiA+
+ID4gPiA+ID4gWyAgICAxLjYzMjM2NV0gSGFyZHdhcmUgbmFtZTogQW5uYXB1cm5hIExhYnMgQWxw
+aW5lIFYzIEVWUA0KPiA+ID4gPiA+ID4gKERUKQ0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM2NV0g
+cHN0YXRlOiA4MDAwMDAwNSAoTnpjdiBkYWlmIC1QQU4gLVVBTykNCj4gPiA+ID4gPiA+IFsgICAg
+MS42MzIzNjZdIHBjIDogX19wY2lfZW5hYmxlX21zaXhfcmFuZ2UrMHg0ZTQvMHg2MDgNCj4gPiA+
+ID4gPiA+IFsgICAgMS42MzIzNjddIGxyIDogX19wY2lfZW5hYmxlX21zaXhfcmFuZ2UrMHg0OTgv
+MHg2MDgNCj4gPiA+ID4gPiA+IFsgICAgMS42MzIzNjddIHNwIDogZmZmZmZmODAxMTdkYjcwMA0K
+PiA+ID4gPiA+ID4gWyAgICAxLjYzMjM2OF0geDI5OiBmZmZmZmY4MDExN2RiNzAwIHgyODogMDAw
+MDAwMDAwMDAwMDAwMQ0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM3MF0geDI3OiAwMDAwMDAwMDAw
+MDAwMDAxIHgyNjogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM3Ml0g
+eDI1OiBmZmZmZmZkM2U5ZDhjMGIwIHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiA+ID4g
+WyAgICAxLjYzMjM3M10geDIzOiAwMDAwMDAwMDAwMDAwMDAwIHgyMjogMDAwMDAwMDAwMDAwMDAw
+MA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM3NV0geDIxOiAwMDAwMDAwMDAwMDAwMDAxIHgyMDog
+MDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM3Nl0geDE5OiBmZmZmZmZk
+M2U5ZDhjMDAwIHgxODogZmZmZmZmZmZmZmZmZmZmZg0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM3
+OF0geDE3OiAwMDAwMDAwMDAwMDAwMDAwIHgxNjogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiA+
+ID4gWyAgICAxLjYzMjM3OV0geDE1OiBmZmZmZmY4MDExNjQ5NmM4IHgxNDogZmZmZmZmZDNlOTg0
+NDUwMw0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM4MF0geDEzOiBmZmZmZmZkM2U5ODQ0NTAyIHgx
+MjogMDAwMDAwMDAwMDAwMDAzOA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM4Ml0geDExOiBmZmZm
+ZmZmZmZmZmZmZjAwIHgxMDogMDAwMDAwMDAwMDAwMDA0MA0KPiA+ID4gPiA+ID4gWyAgICAxLjYz
+MjM4NF0geDkgOiBmZmZmZmY4MDExNjVlMjcwIHg4IDogZmZmZmZmODAxMTY1ZTI2OA0KPiA+ID4g
+PiA+ID4gWyAgICAxLjYzMjM4NV0geDcgOiAwMDAwMDAwMDAwMDAwMDAyIHg2IDogMDAwMDAwMDAw
+MDAwMDBiMg0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM4N10geDUgOiBmZmZmZmZkM2U5ZDhjMmMw
+IHg0IDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM4OF0geDMgOiAw
+MDAwMDAwMDAwMDAwMDAwIHgyIDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiA+ID4gWyAgICAx
+LjYzMjM5MF0geDEgOiAwMDAwMDAwMDAwMDAwMDAwIHgwIDogZmZmZmZmZDNlOTg0NDY4MA0KPiA+
+ID4gPiA+ID4gWyAgICAxLjYzMjM5Ml0gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEFzeW5j
+aHJvbm91cw0KPiA+ID4gPiA+ID4gU0Vycm9yDQo+ID4gPiA+ID4gPiBJbnRlcnJ1cHQNCj4gPiA+
+ID4gPiA+IFsgICAgMS42MzIzOTNdIENQVTogMiBQSUQ6IDEgQ29tbTogc3dhcHBlci8wIE5vdCB0
+YWludGVkDQo+ID4gPiA+ID4gPiA1LjIuMC0NCj4gPiA+ID4gPiA+IHJjMS0NCj4gPiA+ID4gPiA+
+IEpvbm55LTE0ODQ3LWdlNzZmMWQ0YTE4MjgtZGlydHkgIzMzDQo+ID4gPiA+ID4gPiBbICAgIDEu
+NjMyMzk0XSBIYXJkd2FyZSBuYW1lOiBBbm5hcHVybmEgTGFicyBBbHBpbmUgVjMgRVZQDQo+ID4g
+PiA+ID4gPiAoRFQpDQo+ID4gPiA+ID4gPiBbICAgIDEuNjMyMzk0XSBDYWxsIHRyYWNlOg0KPiA+
+ID4gPiA+ID4gWyAgICAxLjYzMjM5NV0gIGR1bXBfYmFja3RyYWNlKzB4MC8weDE0MA0KPiA+ID4g
+PiA+ID4gWyAgICAxLjYzMjM5NV0gIHNob3dfc3RhY2srMHgxNC8weDIwDQo+ID4gPiA+ID4gPiBb
+ICAgIDEuNjMyMzk2XSAgZHVtcF9zdGFjaysweGE4LzB4Y2MNCj4gPiA+ID4gPiA+IFsgICAgMS42
+MzIzOTZdICBwYW5pYysweDE0MC8weDMzNA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjM5N10gIG5t
+aV9wYW5pYysweDZjLzB4NzANCj4gPiA+ID4gPiA+IFsgICAgMS42MzIzOThdICBhcm02NF9zZXJy
+b3JfcGFuaWMrMHg3NC8weDg4DQo+ID4gPiA+ID4gPiBbICAgIDEuNjMyMzk4XSAgX19wdGVfZXJy
+b3IrMHgwLzB4MjgNCj4gPiA+ID4gPiA+IFsgICAgMS42MzIzOTldICBlbDFfZXJyb3IrMHg4NC8w
+eGY4DQo+ID4gPiA+ID4gPiBbICAgIDEuNjMyNDAwXSAgX19wY2lfZW5hYmxlX21zaXhfcmFuZ2Ur
+MHg0ZTQvMHg2MDgNCj4gPiA+ID4gPiA+IFsgICAgMS42MzI0MDBdICBwY2lfYWxsb2NfaXJxX3Zl
+Y3RvcnNfYWZmaW5pdHkrMHhkYy8weDE1MA0KPiA+ID4gPiA+ID4gWyAgICAxLjYzMjQwMV0gIHBj
+aWVfcG9ydF9kZXZpY2VfcmVnaXN0ZXIrMHgyYjgvMHg0ZTANCj4gPiA+ID4gPiA+IFsgICAgMS42
+MzI0MDJdICBwY2llX3BvcnRkcnZfcHJvYmUrMHgzNC8weGYwDQo+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Nyb24gPGpvbm55Y0BhbWF6b24uY29t
+Pg0KPiA+ID4gPiA+ID4gUmV2aWV3ZWQtYnk6IEd1c3Rhdm8gUGltZW50ZWwgPA0KPiA+ID4gPiA+
+ID4gZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20+DQo+ID4gPiA+ID4gPiAtLS0NCj4gPiA+
+ID4gPiA+ICBkcml2ZXJzL3BjaS9xdWlya3MuYyB8IDE1ICsrKysrKysrKysrKysrKw0KPiA+ID4g
+PiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspDQo+ID4gPiA+ID4gPiANCj4g
+PiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNp
+L3F1aXJrcy5jDQo+ID4gPiA+ID4gPiBpbmRleCAyMzY3MjY4MGRiYTcuLjExZjg0M2FhOTZiMyAx
+MDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ID4gPiA+ID4g
+PiArKysgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+ID4gPiA+ID4gQEAgLTI5MjUsNiArMjky
+NSwyMSBAQA0KPiA+ID4gPiA+ID4gREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoUENJX1ZFTkRPUl9J
+RF9BVFRBTlNJQywgMHgxMGExLA0KPiA+ID4gPiA+ID4gIAkJCXF1aXJrX21zaV9pbnR4X2Rpc2Fi
+bGVfcWNhX2J1Zyk7DQo+ID4gPiA+ID4gPiAgREVDTEFSRV9QQ0lfRklYVVBfRklOQUwoUENJX1ZF
+TkRPUl9JRF9BVFRBTlNJQywgMHhlMDkxLA0KPiA+ID4gPiA+ID4gIAkJCXF1aXJrX21zaV9pbnR4
+X2Rpc2FibGVfcWNhX2J1Zyk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArLyoNCj4gPiA+
+ID4gPiA+ICsgKiBBbWF6b24ncyBBbm5hcHVybmEgTGFicyAxYzM2OjAwMzEgUm9vdCBQb3J0cyBk
+b24ndA0KPiA+ID4gPiA+ID4gc3VwcG9ydA0KPiA+ID4gPiA+ID4gTVNJLQ0KPiA+ID4gPiA+ID4g
+WCwgc28gaXQNCj4gPiA+ID4gPiA+ICsgKiBzaG91bGQgYmUgZGlzYWJsZWQgb24gcGxhdGZvcm1z
+IHdoZXJlIHRoZSBkZXZpY2UNCj4gPiA+ID4gPiA+IChtaXN0YWtlbmx5KQ0KPiA+ID4gPiA+ID4g
+YWR2ZXJ0aXNlcyBpdC4NCj4gPiA+ID4gPiA+ICsgKg0KPiA+ID4gPiA+ID4gKyAqIFRoZSAwMDMx
+IGRldmljZSBpZCBpcyByZXVzZWQgZm9yIG90aGVyIG5vbiBSb290IFBvcnQNCj4gPiA+ID4gPiA+
+IGRldmljZQ0KPiA+ID4gPiA+ID4gdHlwZXMsDQo+ID4gPiA+ID4gPiArICogdGhlcmVmb3JlIHRo
+ZSBxdWlyayBpcyByZWdpc3RlcmVkIGZvciB0aGUNCj4gPiA+ID4gPiA+IFBDSV9DTEFTU19CUklE
+R0VfUENJDQo+ID4gPiA+ID4gPiBjbGFzcy4NCj4gPiA+ID4gPiA+ICsgKi8NCj4gPiA+ID4gPiA+
+ICtzdGF0aWMgdm9pZCBxdWlya19hbF9tc2lfZGlzYWJsZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0K
+PiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsJZGV2LT5ub19tc2kgPSAxOw0KPiA+ID4gPiA+
+ID4gKwlwY2lfd2FybihkZXYsICJEaXNhYmxpbmcgTVNJLVhcbiIpOw0KPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+IFRoaXMgd2lsbCBkaXNhYmxlIGJvdGggTVNJIGFuZCBNU0ktWCBzdXBwb3J0IC0gaXMg
+dGhpcyByZWFsbHkNCj4gPiA+ID4gPiB0aGUNCj4gPiA+ID4gPiBpbnRlbnRpb24NCj4gPiA+ID4g
+PiBoZXJlPyBEbyB0aGUgcm9vdCBwb3J0cyBzdXBwb3J0IE1TSSBhbmQgbGVnYWN5LCBvciBqdXN0
+DQo+ID4gPiA+ID4gbGVnYWN5Pw0KPiA+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gVGhlIEhX
+IHNob3VsZCBzdXBwb3J0IE1TSSwgYnV0IHdlIGN1cnJlbnRseSBkb24ndCBoYXZlIGEgdXNlDQo+
+ID4gPiA+IGNhc2UNCj4gPiA+ID4gZm9yDQo+ID4gPiA+IGl0IHNvIGl0IGhhc24ndCBiZWVuIHRl
+c3RlZCBhbmQgdGhlcmVmb3JlIHdlIGFyZSBva2F5IHdpdGgNCj4gPiA+ID4gZGlzYWJsaW5nDQo+
+ID4gPiA+IGl0Lg0KPiA+ID4gDQo+ID4gPiBPSyAtIHRoZW4gdGhlIGNvbW1pdCBtZXNzYWdlIGFu
+ZCBjb21tZW50IChmb3INCj4gPiA+IHF1aXJrX2FsX21zaV9kaXNhYmxlKQ0KPiA+ID4gc2hvdWxk
+DQo+ID4gPiBwcm9iYWJseSBiZSB1cGRhdGVkIHRvIHJlZmxlY3QgdGhpcy4gDQo+ID4gDQo+ID4g
+SWYgeW91IG1lYW4gdGhhdCB3ZSBzaG91bGQgZXhwbGljaXRseSBzdGF0ZSB0aGF0IE1TSSBpcyBw
+b3NzaWJseQ0KPiA+IHN1cHBvcnRlZCB0aGVuIEkgZG9uJ3QgdGhpbmsgaXQgaXMgdmVyeSByZWxl
+dmFudCBoZXJlLiBJZiB3ZSBkZWNpZGUNCj4gPiB0bw0KPiA+IHRlc3QgYW5kIGVuYWJsZSBpdCBp
+biB0aGUgZnV0dXJlLCB0aGVuIHRoZSBuZXcgcXVpcmsgKHdoaWNoIHdvdWxkDQo+ID4gb25seQ0K
+PiA+IGRpc2FibGUgTVNJLXgpIHdvdWxkIHJlZmxlY3QgdGhlIGZhY3QgdGhhdCBNU0kgd29ya3Mu
+IFNvdW5kcyBvaz8NCj4gPiANCj4gDQo+IE15IHRob3VnaHQgcHJvY2VzcyBpcyB0aGF0IDFjMzY6
+MDAzMSBwcm9iYWJseSBhZHZlcnRpc2VzIGFuIE1TSQ0KPiBjYXBhYmlsaXR5DQo+IHJlZmxlY3Rp
+bmcgdGhhdCB0aGUgZGV2aWNlIHByb2JhYmx5IHN1cHBvcnRzIE1TSSAtIGlmIHRoZXJlIGlzIG5v
+DQo+IHZhbGlkDQo+IHJlYXNvbiBmb3IgZGlzYWJsaW5nIE1TSSBzdXBwb3J0IHRoZW4gd2Ugc2hv
+dWxkbid0IGRpc2FibGUgaXQuDQo+IA0KPiBJdCBkb2Vzbid0IG1ha2Ugc2Vuc2UgdG8gbWUgdG8g
+ZGlzYWJsZSBpdCBqdXN0IGJlY2F1c2UgdGhhdCdzIHRoZQ0KPiBwYXRoIG9mDQo+IGxlYXN0IHJl
+c2lzdGFuY2UgLSBhIGJldHRlciBjb3Vyc2Ugb2YgYWN0aW9uIHdvdWxkIGJlIHRvIGFkZCBzdXBw
+b3J0DQo+IHRvIGRpc2FibGUgTVNJLVggaW4gdGhlIGtlcm5lbC4NCj4gDQpJdCdzIG5vdCBiZWNh
+dXNlIGl0J3MgdGhlIHBhdGggb2YgbGVhc3QgcmVzaXN0YW5jZS4gQXMgSSd2ZSBzdGF0ZWQsIHdl
+DQpjdXJyZW50bHkgaGF2ZSBubyB1c2UgY2FzZSBmb3IgaXQuIEFkZGluZyBzdXBwb3J0IGluIHRo
+ZSBrZXJuZWwgZm9yDQpkaWZmZXJlbnRpYXRpb24gYmV0d2VlbiBNU0kgYW5kIE1TSS1YIHNvdW5k
+cyBsaWtlIGEgZ29vZCBpZGVhLCBidXQgYXMNCmZhciBhcyBJIHNlZSBpdCwgaXNuJ3QgYSBwcmVy
+ZXF1aXNpdGUgZm9yIHRoaXMgcGF0Y2guDQoNCj4gVGhlIGtlcm5lbCBwYW5pYyBnZW5lcmF0ZWQg
+aW4gYXR0ZW1wdGluZyB0byBlbmFibGUgTVNJLVggc2hvd3MgdGhhdA0KPiB0aGlzDQo+IGRldmlj
+ZSBoYXMgYSB1c2VyIGZvciBpdHMgTVNJL01TSS1YIGludGVycnVwdHMuIFRodXMgaWYgeW91IGRp
+c2FibGVkDQo+IG9ubHkNCj4gTVNJLVggdGhlIFBDSWUgcG9ydCBkcml2ZXIgd291bGQgdXNlIE1T
+SSBpbnRlcnJ1cHRzIGluc3RlYWQgLSBEdWUgdG8NCj4gIm5vX21zaSA9IDEiIEkgZ3Vlc3MgaXQg
+d2lsbCBiZSB1c2luZyBsZWdhY3kuDQo+IA0KVGhpcyBkb2Vzbid0IG5lY2Vzc2FyaWx5IG1lYW4g
+dGhhdCB0aGVyZSBpcyBhIHVzZXIgZm9yIE1lc3NhZ2Ugc2lnbmFsZWQNCmludGVycnVwdHMsIHNp
+bmNlIGl0IGNvdWxkIHNpbXBseSBiZSBhIEhXIGRlZmF1bHQgb2YgdGhlIGNvcmUgdG8gZXhwb3Nl
+DQp0aGVzZSBjYXBhYmlsaXRpZXMgd2hpbGUgaW4gdGhlIHNwZWNpZmljIGluc3RhbnRpYXRpb24s
+IHByb3BlciBzdXBwb3J0DQp3YXNuJ3QgaW1wbGVtZW50ZWQgKHdoaWNoIGlzIHRoZSBjYXNlIGZv
+ciBNU0ktWCwgcmVzdWx0aW5nIGluIHRoaXMNCnBhdGNoKS4gVGhlb3JldGljYWxseSwgaXQgaXMg
+cG9zc2libGUgdGhhdCBNU0kgd29ya3MsIGJ1dCBzaW5jZSBpdA0KaXNuJ3QgcmVxdWlyZWQgYW5k
+IG5vIGV4aXN0aW5nIHdheSB0byBrZWVwIGp1c3QgTVNJIGVuYWJsZWQsIEkgZG9uJ3QNCnNlZSB3
+aHkgdGhpcyBwYXRjaCBzaG91bGQgYmUgYmxvY2tlZCBieSB0aGlzLg0KIA0KPiA+ID4gRXNwZWNp
+YWxseSBnaXZlbiB0aGF0IHRoZSBkZXZpY2UgaWQNCj4gPiA+IG1heSBiZSB1c2VkIG9uIG90aGVy
+IGRldmljZSB0eXBlcyAtIGltcGx5aW5nIHRoYXQgYSB1c2UtY2FzZSBmb3INCj4gPiA+IHRoaXMN
+Cj4gPiA+IG1heSBsYXRlciBhcmlzZS4NCj4gPiA+IA0KPiA+IA0KPiA+IE5vdCBzdXJlIEkgdW5k
+ZXJzdG9vZCB0aGF0IGxhc3QgbGluZS4gVGhpcyBwYXRjaCBpcyByZWxldmFudCBvbmx5DQo+ID4g
+Zm9yDQo+ID4gdGhlIEJSSURHRSBjbGFzcyAweDAwMzEgZGV2aWNlLiBUaGUgb3RoZXIgZGV2aWNl
+IHR5cGVzLCB3aGljaA0KPiA+IChzYWRseSkNCj4gPiBoYXBwZW4gdG8gcmUtdXNlIHRoZSBkZXZf
+aWQsIGhhdmUgYXJlIHRvdGFsbHkgZGlmZmVyZW50IGFuZA0KPiA+IHNob3VsZG4ndA0KPiA+IGJl
+IG1peGVkIGluIGhlcmUuDQo+ID4gDQo+IA0KPiBJdCdzIHByb2JhYmx5IHVubGlrZWx5LCBidXQg
+aWYgMWMzNjowMDMxIHdhcyB0aGUgZGV2aWNlIElEIGdpdmVuIHRvIGENCj4gZnV0dXJlIGluY2Fy
+bmF0aW9uIG9mIHRoaXMgaGFyZHdhcmUgaW4gYSBQQ0llIHN3aXRjaCAod2hpY2ggaGFzDQo+IEJS
+SURHRQ0KPiBjbGFzcyksIHRoZW4gdXNpbmcgbGVnYWN5IGludGVycnVwdHMgaW5zdGVhZCBvZiBN
+U0kgd291bGRuJ3QgYmUgaWRlYWwNCj4gYW5kIGFuIHVuLW5lY2Vzc2FyeSBsaW1pdGF0aW9uLg0K
+PiANCj4gVGhpcyBpcyB3aHkgYWRkaW5nIGEgY29tbWVudCB0byBpbmRpY2F0ZSB0aGF0IE1TSSBt
+YXkgd29yayBidXQgaGFzbid0DQo+IGJlZW4gdGVzdGVkIG1heSBiZSBoZWxwZnVsIGZvciBvdGhl
+cnMgaW4gdGhlIGZ1dHVyZS4NCj4gDQpObyBwcm9ibGVtLCB3aWxsIGJlIGFkZGVkIGluIHY0Lg0K
+DQo+ID4gPiA+IA0KPiA+ID4gPiBGb3IgZnV0dXJlIGtub3dsZWRnZSwgaG93IGNhbiBqdXN0IE1T
+SS1YIGJlIGRpc2FibGVkPw0KPiA+ID4gPiBJIHNlZSB0aGF0IGluIHBjaWVfcG9ydF9lbmFibGVf
+aXJxX3ZlYygpLCB0aGUgcGNpZXBvcnQgZHJpdmVyDQo+ID4gPiA+IGNhbGxzDQo+ID4gPiA+IHBj
+aV9hbGxvY19pcnFfdmVjdG9ycygpIHdpdGggUENJX0lSUV9NU0lYIHwgUENJX0lSUV9NU0kuIEFu
+ZA0KPiA+ID4gPiBpbnRlcm5hbGx5LCBib3RoIF9fcGNpX2VuYWJsZV9tc2l4X3JhbmdlKCkgYW5k
+DQo+ID4gPiA+IF9fcGNpX2VuYWJsZV9tc2lfcmFuZ2UoKQ0KPiA+ID4gPiB1c2UgcGNpX21zaV9z
+dXBwb3J0ZWQoKSB3aGljaCBkb2Vzbid0IGRpZmZlcmVudGlhdGUgYmV0d2VlbiBNU0kNCj4gPiA+
+ID4gYW5kDQo+ID4gPiA+IE1TSS14Lg0KPiA+ID4gDQo+ID4gPiBUaGUgZG9jdW1lbnRhdGlvbiBb
+MV0gd291bGQgc3VnZ2VzdCB0aGF0IG9uY2UgdXBvbiBhIHRpbWUNCj4gPiA+IHBjaV9kaXNhYmxl
+X21zaXgNCj4gPiA+IHdhcyB1c2VkIC0gYnV0IG5vdyBzaG91bGQgbGV0IHBjaV9hbGxvY19pcnFf
+dmVjdG9ycyBjYXAgdGhlIG1heA0KPiA+ID4gbnVtYmVyDQo+ID4gPiBvZiB2ZWN0b3JzLiBIb3dl
+dmVyIGluIHlvdXIgY2FzZSBpdCdzIHRoZSBQQ0llIHBvcnQgZHJpdmVyIHRoYXQNCj4gPiA+IGlz
+DQo+ID4gPiBhdHRlbXB0aW5nDQo+ID4gPiB0byBhbGxvY2F0ZSBNU0ktWCdzIGFuZCBzbyB0aGUg
+c29sdXRpb24gaXNuJ3QgYW4gb2J2aW91cyBvbmUuDQo+ID4gPiANCj4gPiA+IFNldHRpbmcgZGV2
+LT5tc2l4X2VuYWJsZWQgdG8gZmFsc2UgKGkuZS4gdGhyb3VnaA0KPiA+ID4gcGNpX2Rpc2FibGVf
+bXNpeCkNCj4gPiA+IHdvdWxkDQo+ID4gPiByZXN1bHQgaW4gYW4gdW4tbmVjZXNzYXJ5IFdBUk5f
+T05fT05DRS4gDQo+ID4gDQo+ID4gUGVyIG15IHVuZGVyc3RhbmRpbmcsIGl0IHNlZW1zIHRoYXQg
+ZGV2LT5tc2l4X2VuYWJsZWQgaW5kaWNhdGVzIGlmDQo+ID4gdGhlDQo+ID4gTVNJLVggY2FwYWJp
+bGl0eSBoYXMgYWxyZWFkeSBiZWVuIGVuYWJsZWQgb3Igbm90LCBhbmQgbm90IGFzIGFuDQo+ID4g
+aW5kaWNhdGlvbiBpZiBpdCBpcyBzdXBwb3J0ZWQgYnkgdGhlIGRldmljZS4gSWYgdGhhdCBpcyB0
+aGUgY2FzZSwNCj4gPiB0aGVuDQo+ID4gbm90IHN1cmUgcGNpX2Rpc2FibGVfbXNpeCgpIHdvdWxk
+IHJlc3VsdCBpbiB0aGUgZGVzaXJlZCBlZmZlY3QuDQo+IA0KPiBZZXMgdGhpcyBpc24ndCB0aGUg
+cmlnaHQgYXBwcm9hY2guDQo+IA0KPiA+IA0KPiA+ID4gSSB0aGluayB5b3UnZCBuZWVkIHRvIGVu
+c3VyZQ0KPiA+ID4gZGV2aS0+bXNpeF9jYXAgaXMgTlVMTCAod2hpY2ggbWFrZXMgc2Vuc2UgYXMg
+eW91ciBoYXJkd2FyZQ0KPiA+ID4gc2hvdWxkbid0DQo+ID4gPiBiZQ0KPiA+ID4gZXhwb3Npbmcg
+dGhpcyBjYXBhYmlsaXR5KS4NCj4gPiA+IA0KPiA+ID4gSSBndWVzcyB0aGUgcmlnaHQgd2F5IG9m
+IGFjaGlldmluZyB0aGlzIHdvdWxkIGJlIHRocm91Z2ggYSBxdWlyaywNCj4gPiA+IHRob3VnaCB5
+b3UnZA0KPiA+ID4gYmUgdGhlIGZpcnN0IHRvIGRvIHRoaXMgYW5kIHlvdSdkIGhhdmUgdG8gZW5z
+dXJlIHRoZSBxdWlyayBydW5zDQo+ID4gPiBiZWZvcmUNCj4gPiA+IGFueW9uZSB0ZXN0cyBmb3Ig
+bXNpeF9jYXAuDQo+ID4gPiANCj4gPiA+IFRoYXQncyBteSB2aWV3LCB0aG91Z2ggb3RoZXJzIG1h
+eSBoYXZlIGRpZmZlcmVudCBzdWdnZXN0aW9ucy4NCj4gPiA+IA0KPiA+IA0KPiA+IEkgdGhpbmsg
+dGhhdCBtYXliZSBhIGRldi0+bm9fbXNpeCBmaWVsZCBzaG91bGQgYmUgYWRkZWQgYW5kIHRoZW4g
+YQ0KPiA+IGNvcnJlc3BvbmRpbmcgcGNpX21zaXhfc3VwcG9ydGVkKCkgZnVuY3Rpb24gYXMgd2Vs
+bC4gSSdkIGJlIGdsYWQgdG8NCj4gPiB0YWtlIGl0IG9mZmxpbmUgb3Igb24gYSBkZWRpY2F0ZWQg
+dGhyZWFkLCBidXQgaXQgc2hvdWxkbid0IGJsb2NrDQo+ID4gdGhpcw0KPiA+IHBhdGNoc2V0Lg0K
+PiANCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3IE11cnJheQ0KPiANClRoYW5rcyBmb3IgeW91ciBy
+ZXZpZXchDQoNCj4gPiANCj4gPiA+IFsxXSBEb2N1bWVudGF0aW9uL1BDSS9tc2ktaG93dG8ucnN0
+DQo+ID4gPiANCj4gPiA+IFRoYW5rcywNCj4gPiA+IA0KPiA+ID4gQW5kcmV3IE11cnJheQ0KPiA+
+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiA+IFRoYW5rcywNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBB
+bmRyZXcgTXVycmF5DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ID4gK0RF
+Q0xBUkVfUENJX0ZJWFVQX0NMQVNTX0ZJTkFMKFBDSV9WRU5ET1JfSURfQU1BWk9OX0FOTkFQVVIN
+Cj4gPiA+ID4gPiA+IE5BX0wNCj4gPiA+ID4gPiA+IEFCUywNCj4gPiA+ID4gPiA+IDB4MDAzMSwN
+Cj4gPiA+ID4gPiA+ICsJCQkgICAgICBQQ0lfQ0xBU1NfQlJJREdFX1BDSSwgOCwNCj4gPiA+ID4g
+PiA+IHF1aXJrX2FsX21zaV9kaXNhYmxlKTsNCj4gPiA+ID4gPiA+ICAjZW5kaWYgLyogQ09ORklH
+X1BDSV9NU0kgKi8NCj4gPiA+ID4gPiA+ICANCj4gPiA+ID4gPiA+ICAvKg0KPiA+ID4gPiA+ID4g
+LS0gDQo+ID4gPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4gPiA+IA0K
