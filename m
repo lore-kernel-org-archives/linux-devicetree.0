@@ -1,38 +1,39 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 03/14] arm64: dts: meson-gx: fix reset controller compatible
-Date: Wed, 21 Aug 2019 16:20:32 +0200
-Message-ID: <20190821142043.14649-4-narmstrong@baylibre.com>
-References: <20190821142043.14649-1-narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+Date: Wed, 21 Aug 2019 16:23:36 +0200
+Message-ID: <69a85842-3933-3965-9f4b-9d6a8432f766@baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821142043.14649-1-narmstrong@baylibre.com>
+In-Reply-To: <20190820121551.18398-1-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-gxbb-nanopi-k2.dt.yaml: reset-controller@4404: compatible:0: 'amlogic,meson-gx-reset' is not one of ['amlogic,meson8b-reset', 'amlogic,meson-gxbb-reset', 'amlogic,meson-axg-reset']
+On 20/08/2019 14:15, Jerome Brunet wrote:
+> This patchset adds the dedicated reset of the tdm formatters which
+> have been added on the g12a SoC family. Using these help with the channel
+> mapping when the formatter uses more than 1 i2s lane.
+> 
+> Kevin, please note that to build, this patchset depends on the new reset
+> bindings of the audio clock controller. I've prepared a tag for you [0]
+> 
+> [0]: git://github.com/BayLibre/clk-meson.git - clk-meson-dt-v5.4-2
+> 
+> Jerome Brunet (2):
+>   arm64: dts: meson: g12a: audio clock controller provides resets
+>   arm64: dts: meson: g12a: add reset to tdm formatters
+> 
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For the serie,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index c2d3fffea8a7..5b3dfd03c3d3 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -220,7 +220,7 @@
- 			};
- 
- 			reset: reset-controller@4404 {
--				compatible = "amlogic,meson-gx-reset", "amlogic,meson-gxbb-reset";
-+				compatible = "amlogic,meson-gxbb-reset";
- 				reg = <0x0 0x04404 0x0 0x9c>;
- 				#reset-cells = <1>;
- 			};
--- 
-2.22.0
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Neil
