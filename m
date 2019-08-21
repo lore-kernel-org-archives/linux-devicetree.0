@@ -1,144 +1,63 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v12 3/9] drivers: memory: extend of_memory by LPDDR3
- support
-Date: Wed, 21 Aug 2019 11:03:28 +0200
-Message-ID: <43c8fb01-c85c-47f7-f5c1-5fc0d0191b26@partner.samsung.com>
-References: <CGME20190722094727eucas1p10041ba25819e6e62d639423a97435f2d@eucas1p1.samsung.com>
-        <20190722094646.13342-1-l.luba@partner.samsung.com>
-        <20190722094646.13342-4-l.luba@partner.samsung.com>
-        <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v3 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Date: Wed, 21 Aug 2019 11:06:57 +0200
+Message-ID: <20190821090657.GA560@centauri>
+References: <20190820172351.24145-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdue75yF=v5vsawOdfvcCMBDP6HGVXdwngBWE264kGJwg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190820172351.24145-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, Aug 20, 2019 at 10:53:42PM +0530, Vinod Koul wrote:
+> This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+> the MTP for SM8150.
+> 
+> Changes in v3:
+>  - Fix copyright comment style to Linux kernel style
+>  - Make property values all hex or decimal
+>  - Fix patch titles and logs and make them consistent
+>  - Fix line breaks
+> 
+> Changes in v2:
+>  - Squash patches
+>  - Fix comments given by Stephen namely, lowercase for hext numbers,
+>    making rpmhcc have xo_board as parent, rename pon controller to
+>    power-on controller, make pmic nodes as disabled etc.
+>  - removed the dependency on clk defines and use raw numbers
+> 
+> 
+> Vinod Koul (8):
+>   arm64: dts: qcom: sm8150: Add base dts file
+>   arm64: dts: qcom: pm8150: Add base dts file
+>   arm64: dts: qcom: pm8150b: Add base dts file
+>   arm64: dts: qcom: pm8150l: Add base dts file
+>   arm64: dts: qcom: sm8150-mtp: Add base dts file
+>   arm64: dts: qcom: sm8150-mtp: Add regulators
+>   arm64: dts: qcom: sm8150: Add reserved-memory regions
+>   arm64: dts: qcom: sm8150: Add apps shared nodes
+> 
+>  arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>  arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
+>  arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
+>  arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 378 +++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 481 ++++++++++++++++++++++++
+>  6 files changed, 1123 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+> 
+> -- 
+> 2.20.1
+> 
 
-On 7/24/19 1:39 PM, Krzysztof Kozlowski wrote:
-> On Mon, 22 Jul 2019 at 11:47, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> The patch adds AC timings information needed to support LPDDR3 and memory
->> controllers. The structure is used in of_memory and currently in Exynos
->> 5422 DMC. Add parsing data needed for LPDDR3 support.
->> It is currently used in Exynos5422 Dynamic Memory Controller.
->>
->> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/memory/jedec_ddr.h |  61 +++++++++++++++
->>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
->>   drivers/memory/of_memory.h |  18 +++++
->>   3 files changed, 233 insertions(+)
->>
->> diff --git a/drivers/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
->> index 4a21b5044ff8..38e26d461bdb 100644
->> --- a/drivers/memory/jedec_ddr.h
->> +++ b/drivers/memory/jedec_ddr.h
->> @@ -29,6 +29,7 @@
->>   #define DDR_TYPE_LPDDR2_S4     3
->>   #define DDR_TYPE_LPDDR2_S2     4
->>   #define DDR_TYPE_LPDDR2_NVM    5
->> +#define DDR_TYPE_LPDDR3                6
->>
->>   /* DDR IO width */
->>   #define DDR_IO_WIDTH_4         1
->> @@ -169,4 +170,64 @@ extern const struct lpddr2_timings
->>          lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
->>   extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
->>
->> +/*
->> + * Structure for timings for LPDDR3 based on LPDDR2 plus additional fields.
->> + * All parameters are in pico seconds(ps) unless explicitly indicated
->> + * with a suffix like tRAS_max_ns below
->> + */
->> +struct lpddr3_timings {
->> +       u32 max_freq;
->> +       u32 min_freq;
->> +       u32 tRFC;
->> +       u32 tRRD;
->> +       u32 tRPab;
->> +       u32 tRPpb;
->> +       u32 tRCD;
->> +       u32 tRC;
->> +       u32 tRAS;
->> +       u32 tWTR;
->> +       u32 tWR;
->> +       u32 tRTP;
->> +       u32 tW2W_C2C;
->> +       u32 tR2R_C2C;
->> +       u32 tWL;
->> +       u32 tDQSCK;
->> +       u32 tRL;
->> +       u32 tFAW;
->> +       u32 tXSR;
->> +       u32 tXP;
->> +       u32 tCKE;
->> +       u32 tCKESR;
->> +       u32 tMRD;
->> +};
->> +
->> +/*
->> + * Min value for some parameters in terms of number of tCK cycles(nCK)
->> + * Please set to zero parameters that are not valid for a given memory
->> + * type
->> + */
->> +struct lpddr3_min_tck {
->> +       u32 tRFC;
->> +       u32 tRRD;
->> +       u32 tRPab;
->> +       u32 tRPpb;
->> +       u32 tRCD;
->> +       u32 tRC;
->> +       u32 tRAS;
->> +       u32 tWTR;
->> +       u32 tWR;
->> +       u32 tRTP;
->> +       u32 tW2W_C2C;
->> +       u32 tR2R_C2C;
->> +       u32 tWL;
->> +       u32 tDQSCK;
->> +       u32 tRL;
->> +       u32 tFAW;
->> +       u32 tXSR;
->> +       u32 tXP;
->> +       u32 tCKE;
->> +       u32 tCKESR;
->> +       u32 tMRD;
->> +};
->> +
->>   #endif /* __JEDEC_DDR_H */
->> diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
->> index 46539b27a3fb..4f5b8c81669f 100644
->> --- a/drivers/memory/of_memory.c
->> +++ b/drivers/memory/of_memory.c
->> @@ -3,6 +3,12 @@
->>    * OpenFirmware helpers for memory drivers
->>    *
->>    * Copyright (C) 2012 Texas Instruments, Inc.
->> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
-> 
-> What's this?
-My bad, in the meantime Thomas Gleixner has replaced the license header.
-The old part has been automatically taken again during my re-base.
-I will just remove the old license comment.
+Whole series is:
 
-Regards,
-Lukasz
-> 
-> Please, get a independent review or ack for this patch.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
