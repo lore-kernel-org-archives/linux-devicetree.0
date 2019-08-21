@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 04/14] arm64: dts: meson-gx: fix spifc compatible
-Date: Wed, 21 Aug 2019 16:20:33 +0200
-Message-ID: <20190821142043.14649-5-narmstrong@baylibre.com>
+Subject: [PATCH v2 07/14] arm64: dts: meson-gx: fix periphs bus node name
+Date: Wed, 21 Aug 2019 16:20:36 +0200
+Message-ID: <20190821142043.14649-8-narmstrong@baylibre.com>
 References: <20190821142043.14649-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,7 +13,8 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: spi@8c80: compatible:0: 'amlogic,meson-gx-spifc' is not one of ['amlogic,meson6-spifc', 'amlogic,meson-gxbb-spifc']
+meson-gxbb-nanopi-k2.dt.yaml: periphs@c8834000: $nodename:0: 'periphs@c8834000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+meson-gxl-s805x-libretech-ac.dt.yaml: periphs@c8834000: $nodename:0: 'periphs@c8834000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
@@ -22,17 +23,17 @@ Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 5b3dfd03c3d3..e2cdc9fce21c 100644
+index d8127f863b55..a7735d2f0037 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -317,7 +317,7 @@
+@@ -437,7 +437,7 @@
  			};
+ 		};
  
- 			spifc: spi@8c80 {
--				compatible = "amlogic,meson-gx-spifc", "amlogic,meson-gxbb-spifc";
-+				compatible = "amlogic,meson-gxbb-spifc";
- 				reg = <0x0 0x08c80 0x0 0x80>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+-		periphs: periphs@c8834000 {
++		periphs: bus@c8834000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xc8834000 0x0 0x2000>;
+ 			#address-cells = <2>;
 -- 
 2.22.0
