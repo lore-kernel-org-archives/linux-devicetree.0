@@ -1,62 +1,83 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 03/10] dt-bindings: mailbox: Add a sunxi
- message box binding
-Date: Wed, 21 Aug 2019 14:07:43 +0200
-Message-ID: <20190821120743.hihurpkjancgacs6@flea>
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-4-samuel@sholland.org>
- <20190820071456.if5lyb4t3em77svl@flea>
- <8947f4d1-3bb4-11b8-b114-5016339514b8@sholland.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yj7riia4gph2tfyk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEXI6TVAKGQE4A5HP7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <8947f4d1-3bb4-11b8-b114-5016339514b8-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: fsl_sai: Add support for imx8qm" to the asoc tree
+Date: Wed, 21 Aug 2019 13:15:32 +0100 (BST)
+Message-ID: <20190821121532.E3E7D2742BAE@ypsilon.sirena.org.uk>
+References: <20190814082911.665-2-daniel.baluta@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190814082911.665-2-daniel.baluta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com, perex@perex.cz, robh+dt@kernel.org, shengjiu.wang@nxp.com, viorel.suman@nxp.com, Xiubo.Lee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---yj7riia4gph2tfyk
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+   ASoC: fsl_sai: Add support for imx8qm
 
-On Tue, Aug 20, 2019 at 08:04:26AM -0500, Samuel Holland wrote:
-> On 8/20/19 2:14 AM, Maxime Ripard wrote:
-> > Hi,
-> >
-> > On Mon, Aug 19, 2019 at 10:23:04PM -0500, Samuel Holland wrote:
-> >> This mailbox hardware is present in Allwinner sun8i, sun9i, and sun50i
-> >> SoCs. Add a device tree binding for it.
-> >>
-> >> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-> >> ---
-> >>  .../mailbox/allwinner,sunxi-msgbox.yaml       | 79 +++++++++++++++++++
-> >>  1 file changed, 79 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sunxi-msgbox.yaml
-> >
-> > So we merged a bunch of schemas already, with the convention that the
-> > name was the first compatible to use that binding.
-> >
-> > That would be allwinner,sun6i-a31-msgbox.yaml in that case
->
-> Okay, I'll rename the binding and driver (and Kconfig symbol?).
+has been applied to the asoc tree at
 
-Yep, thanks!
-Maxime
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---yj7riia4gph2tfyk--
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 6eeb60be5ebb73b2e5911e26fb1aed02940b7d09 Mon Sep 17 00:00:00 2001
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Date: Wed, 14 Aug 2019 11:29:10 +0300
+Subject: [PATCH] ASoC: fsl_sai: Add support for imx8qm
+
+SAI module on imx8qm features a register map similar with imx6 series
+(it doesn't have VERID and PARAM registers at the beginning
+of address spece).
+
+Also, it has one FIFO which can help up to 64 * 32 bit samples.
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20190814082911.665-2-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/fsl/fsl_sai.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 4a346fcb5630..728307acab90 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -1031,12 +1031,19 @@ static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
+ 	.reg_offset = 8,
+ };
+ 
++static const struct fsl_sai_soc_data fsl_sai_imx8qm_data = {
++	.use_imx_pcm = true,
++	.fifo_depth = 64,
++	.reg_offset = 0,
++};
++
+ static const struct of_device_id fsl_sai_ids[] = {
+ 	{ .compatible = "fsl,vf610-sai", .data = &fsl_sai_vf610_data },
+ 	{ .compatible = "fsl,imx6sx-sai", .data = &fsl_sai_imx6sx_data },
+ 	{ .compatible = "fsl,imx6ul-sai", .data = &fsl_sai_imx6sx_data },
+ 	{ .compatible = "fsl,imx7ulp-sai", .data = &fsl_sai_imx7ulp_data },
+ 	{ .compatible = "fsl,imx8mq-sai", .data = &fsl_sai_imx8mq_data },
++	{ .compatible = "fsl,imx8qm-sai", .data = &fsl_sai_imx8qm_data },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_sai_ids);
+-- 
+2.20.1
