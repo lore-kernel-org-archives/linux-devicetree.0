@@ -1,88 +1,75 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 2/8] soc: ti: add initial PRM driver with reset control
- support
-Date: Wed, 21 Aug 2019 21:15:22 +0300
-Message-ID: <e75eed22-1bed-4c8a-930d-e05890d58c47@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-3-git-send-email-t-kristo@ti.com>
- <3b76f0e0-7530-e7b5-09df-2de9956f30ee@ti.com>
- <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
- <9372957c-9ab9-b0dd-fe07-815eb2cb2f16@ti.com>
- <0f335aec-bfdf-345a-8dfb-dad70aef1af6@ti.com>
- <a4196b73-63a0-f9d8-1c43-e6c4d1c1d6a4@ti.com>
- <1566400237.4193.15.camel@pengutronix.de>
- <5e82199f-2f75-ee05-ba65-1595d0526572@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: phy: Modify Stingray USB PHY
+ #phy-cells
+Date: Wed, 21 Aug 2019 13:21:19 -0500
+Message-ID: <20190821182119.GA27408@bogus>
+References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
+ <1564568395-9980-3-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5e82199f-2f75-ee05-ba65-1595d0526572@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, Philipp Zabel <p.zabel@pengutronix.de>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1564568395-9980-3-git-send-email-srinath.mannam@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjEuOC4yMDE5IDE4LjQ1LCBTdW1hbiBBbm5hIHdyb3RlOgo+IE9uIDgvMjEvMTkgMTA6MTAg
-QU0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4+IE9uIFR1ZSwgMjAxOS0wOC0yMCBhdCAxMTo0NyAt
-MDUwMCwgU3VtYW4gQW5uYSB3cm90ZToKPj4+IE9uIDgvMjAvMTkgMjozNyBBTSwgVGVybyBLcmlz
-dG8gd3JvdGU6Cj4+Pj4gT24gMjAuOC4yMDE5IDIuMDEsIFN1bWFuIEFubmEgd3JvdGU6Cj4+Pj4+
-IEhpIFRlcm8sCj4+Pj4+Cj4+Pj4+IE9uIDgvMTkvMTkgNDozMiBBTSwgVGVybyBLcmlzdG8gd3Jv
-dGU6Cj4+IFsuLi5dCj4+Pj4+Pj4+ICt7Cj4+Pj4+Pj4+ICvCoMKgwqAgc3RydWN0IG9tYXBfcmVz
-ZXRfZGF0YSAqcmVzZXQ7Cj4+Pj4+Pj4+ICsKPj4+Pj4+Pj4gK8KgwqDCoCAvKgo+Pj4+Pj4+PiAr
-wqDCoMKgwqAgKiBDaGVjayBpZiB3ZSBoYXZlIHJlc2V0cy4gSWYgZWl0aGVyIHJzdGN0bCBvciBy
-c3RzdCBpcwo+Pj4+Pj4+PiArwqDCoMKgwqAgKiBub24temVybywgd2UgaGF2ZSByZXNldCByZWdp
-c3RlcnMgaW4gcGxhY2UuIEFkZGl0aW9uYWxseQo+Pj4+Pj4+PiArwqDCoMKgwqAgKiB0aGUgZmxh
-ZyBPTUFQX1BSTV9OT19SU1RTVCBpbXBsaWVzIHRoYXQgd2UgaGF2ZSByZXNldHMuCj4+Pj4+Pj4+
-ICvCoMKgwqDCoCAqLwo+Pj4+Pj4+PiArwqDCoMKgIGlmICghcHJtLT5kYXRhLT5yc3RjdGwgJiYg
-IXBybS0+ZGF0YS0+cnN0c3QgJiYKPj4+Pj4+Pj4gK8KgwqDCoMKgwqDCoMKgICEocHJtLT5kYXRh
-LT5mbGFncyAmIE9NQVBfUFJNX05PX1JTVFNUKSkKPj4+Pj4+Pj4gK8KgwqDCoMKgwqDCoMKgIHJl
-dHVybiAwOwo+Pj4+Pj4+PiArCj4+Pj4+Pj4+ICvCoMKgwqAgcmVzZXQgPSBkZXZtX2t6YWxsb2Mo
-JnBkZXYtPmRldiwgc2l6ZW9mKCpyZXNldCksIEdGUF9LRVJORUwpOwo+Pj4+Pj4+PiArwqDCoMKg
-IGlmICghcmVzZXQpCj4+Pj4+Pj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsKPj4+
-Pj4+Pj4gKwo+Pj4+Pj4+PiArwqDCoMKgIHJlc2V0LT5yY2Rldi5vd25lciA9IFRISVNfTU9EVUxF
-Owo+Pj4+Pj4+PiArwqDCoMKgIHJlc2V0LT5yY2Rldi5vcHMgPSAmb21hcF9yZXNldF9vcHM7Cj4+
-Pj4+Pj4+ICvCoMKgwqAgcmVzZXQtPnJjZGV2Lm9mX25vZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsK
-Pj4+Pj4+Pj4gK8KgwqDCoCByZXNldC0+cmNkZXYubnJfcmVzZXRzID0gT01BUF9NQVhfUkVTRVRT
-Owo+Pj4+Pgo+Pj4+PiBTdWdnZXN0IGFkZGluZyBhIG51bWJlciBvZiByZXNldHMgdG8gcHJtLT5k
-YXRhLCBhbmQgdXNpbmcgaXQgc28gdGhhdCB3ZQo+Pj4+PiBkb24ndCBldmVuIGVudGVydGFpbiBh
-bnkgcmVzZXRzIGJleW9uZCB0aGUgYWN0dWFsIG51bWJlciBvZiByZXNldHMuCj4+Pj4KPj4+PiBI
-bW0gd2h5IGJvdGhlcj8gQWNjZXNzaW5nIGEgc3RhbGUgcmVzZXQgYml0IHdpbGwganVzdCBjYXVz
-ZSBhY2Nlc3MgdG8gYQo+Pj4+IHJlc2VydmVkIGJpdCBpbiB0aGUgcmVzZXQgcmVnaXN0ZXIsIGRv
-aW5nIGJhc2ljYWxseSBub3RoaW5nLiBBbHNvLCB0aGlzCj4+Pj4gd291bGQgbm90IHdvcmsgZm9y
-IGFtMy9hbTQgd2t1cCwgYXMgdGhlcmUgaXMgYSBzaW5nbGUgcmVzZXQgYml0IGF0IGFuCj4+Pj4g
-YXJiaXRyYXJ5IHBvc2l0aW9uLgo+Pj4KPj4+IFRoZSBnZW5lcmljIGNvbnZlbnRpb24gc2VlbXMg
-dG8gYmUgZGVmaW5pbmcgYSByZXNldCBpZCB2YWx1ZSBkZWZpbmVkCj4+PiBmcm9tIGluY2x1ZGUv
-ZHQtYmluZGluZ3MvcmVzZXQvIHRoYXQgY2FuIGJlIHVzZWQgdG8gbWF0Y2ggYmV0d2VlbiB0aGUK
-Pj4+IGR0LW5vZGVzIGFuZCB0aGUgcmVzZXQtY29udHJvbGxlciBkcml2ZXIuCj4+Pgo+Pj4gUGhp
-bGlwcCwKPj4+IEFueSBjb21tZW50cz8KPj4KPj4gQXJlIHRoZXJlIG9ubHkgcmVzZXQgYml0cyBh
-bmQgcmVzZXJ2ZWQgYml0cyBpbiB0aGUgcmFuZ2UgYWNjZXNzaWJsZSBieQo+PiBbMC4uT01BUF9N
-QVhfUkVTRVRTXSBvciBhcmUgdGhlciBiaXRzIHdpdGggYW5vdGhlciBmdW5jdGlvbiBhcyB3ZWxs
-Pwo+IAo+IFRoYW5rcyBQaGlsaXBwLCB0aGVzZSBhcmUganVzdCByZXNldCBiaXRzIGFuZCByZXNl
-cnZlZCBiaXRzLgo+IAo+PiBJZiB0aGUgbGF0dGVyIGlzIHRoZSBjYXNlLCBJIHdvdWxkIHByZWZl
-ciBlbnVtZXJhdGluZyB0aGUgcmVzZXRzIGluIGEKPj4gZHQtYmluZGluZ3MgaGVhZGVyLCB3aXRo
-IHRoZSBkcml2ZXIgY29udGFpbmluZyBhbiBlbnVtIC0+IHJlZy9iaXQKPj4gcG9zaXRpb24gbG9v
-a3VwIHRhYmxlLgo+Pgo+PiBJbiBnZW5lcmFsLCBhc3N1bWluZyB0aGUgZGV2aWNlIHRyZWUgY29u
-dGFpbnMgbm8gZXJyb3JzLCB0aGlzIHNob3VsZCBub3QKPj4gbWF0dGVyIG11Y2gsIGJ1dCBJIHRo
-aW5rIGl0IGlzIG5pY2UgaWYgdGhlIHJlc2V0IGRyaXZlciwgZXZlbiB3aXRoIGEKPj4gbWlzY29u
-ZmlndXJlZCBkZXZpY2UgdHJlZSwgY2FuJ3Qgd3JpdGUgaW50byBhcmJpdHJhcnkgYml0IGZpZWxk
-cy4KPiAKPiBUZXJvLAo+IENhbiB5b3UgYWRkIGEgY2hlY2sgZm9yIHRoaXMgaWYgcG9zc2libGU/
-CgpXZWxsLCBJIGNhbiBlbmZvcmNlIHRoZSB1c2FnZSBvZiByZXNldCBiaXQgbWFwcGluZywgd2hp
-Y2ggSSBoYXZlIGFscmVhZHkgCmltcGxlbWVudGVkIGZvciBzb21lIFNvQ3MgbGlrZSBhbTMzeHgu
-IElmIHRoZSBzcGVjaWZpYyBJRCBpcyBub3QgZm91bmQsIApJIGNhbiBiYWlsIG91dC4gU28sIGJh
-c2ljYWxseSBpbiB0aGlzIGV4YW1wbGUgcmVxdWVzdGluZyByZXNldCBhdCBpbmRleCAKMyB3b3Vs
-ZCBzdWNjZWVkLCBidXQgaXQgd291bGQgZmFpbCBmb3IgYW55IG90aGVyIElEOyB0aGlzIHdvdWxk
-IGJlIApkaXJlY3QgSFcgYml0IG1hcHBpbmcuCgotVGVybwotLQpUZXhhcyBJbnN0cnVtZW50cyBG
-aW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMvQnVz
-aW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Jul 31, 2019 at 03:49:52PM +0530, Srinath Mannam wrote:
+> Increase #phy-cells from 1 to 2 to have bitmask of PHY enabled ports.
+
+And from 0 to 1...
+
+Are you going to update all the dts files so when we convert this to 
+schema we don't get a bunch of warnings? (Feel free to convert this 
+to schema too).
+
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
+>  .../devicetree/bindings/phy/brcm,stingray-usb-phy.txt      | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> index 4ba2989..aeb0568 100644
+> --- a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> @@ -6,9 +6,11 @@ Required properties:
+>  	- "brcm,sr-usb-hs-phy" is a single HS PHY.
+>   - reg: offset and length of the PHY blocks registers
+>   - #phy-cells:
+> -   - Must be 1 for brcm,sr-usb-combo-phy as it expects one argument to indicate
+> -     the PHY number of two PHYs. 0 for HS PHY and 1 for SS PHY.
+> -   - Must be 0 for brcm,sr-usb-hs-phy.
+> +   - Must be 2 for brcm,sr-usb-combo-phy.
+> +     - Cell 1 - PHY Number, 0 for HS PHY and 1 for SS PHY.
+> +     - Cell 2 - Bitmask of enabled ports connected to USB Host controller.
+> +   - Must be 1 for brcm,sr-usb-hs-phy to indicate Bit mask of ports connected
+> +     to USB Host controller.
+>  
+>  Refer to phy/phy-bindings.txt for the generic PHY binding properties
+>  
+> @@ -16,17 +18,17 @@ Example:
+>  	usbphy0: usb-phy@0 {
+>  		compatible = "brcm,sr-usb-combo-phy";
+>  		reg = <0x00000000 0x100>;
+> -		#phy-cells = <1>;
+> +		#phy-cells = <2>;
+>  	};
+>  
+>  	usbphy1: usb-phy@10000 {
+>  		compatible = "brcm,sr-usb-combo-phy";
+>  		reg = <0x00010000 0x100>,
+> -		#phy-cells = <1>;
+> +		#phy-cells = <2>;
+>  	};
+>  
+>  	usbphy2: usb-phy@20000 {
+>  		compatible = "brcm,sr-usb-hs-phy";
+>  		reg = <0x00020000 0x100>,
+> -		#phy-cells = <0>;
+> +		#phy-cells = <1>;
+>  	};
+> -- 
+> 2.7.4
+> 
