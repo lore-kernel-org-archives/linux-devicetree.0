@@ -1,13 +1,20 @@
-From: Adriana Kobylak <anoo@linux.ibm.com>
-Subject: Re: [PATCH] ARM: dts: aspeed: swift: Add eMMC device
-Date: Wed, 21 Aug 2019 10:10:06 -0500
-Message-ID: <202dcd112f41044162465d8a724b66d0@linux.vnet.ibm.com>
-References: <20190821045655.21752-1-joel@jms.id.au>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/8] soc: ti: add initial PRM driver with reset control
+ support
+Date: Wed, 21 Aug 2019 17:10:37 +0200
+Message-ID: <1566400237.4193.15.camel@pengutronix.de>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-3-git-send-email-t-kristo@ti.com>
+ <3b76f0e0-7530-e7b5-09df-2de9956f30ee@ti.com>
+ <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
+ <9372957c-9ab9-b0dd-fe07-815eb2cb2f16@ti.com>
+ <0f335aec-bfdf-345a-8dfb-dad70aef1af6@ti.com>
+ <a4196b73-63a0-f9d8-1c43-e6c4d1c1d6a4@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821045655.21752-1-joel@jms.id.au>
+In-Reply-To: <a4196b73-63a0-f9d8-1c43-e6c4d1c1d6a4@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,39 +24,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, Adriana Kobylak <anoo@us.ibm.com>, Linux-aspeed <linux-aspeed-bounces+anoo=linux.ibm.com@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-08-20 23:56, Joel Stanley wrote:
-> Swift contains an eMMC device attached to the second SDHCI controller.
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-
-Reviewed-by: Adriana Kobylak <anoo@us.ibm.com>
-
-> ---
->  arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> index f14f745b34ca..25bc0e1bbced 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-> @@ -963,4 +963,15 @@
->  	status = "okay";
->  };
-> 
-> +&sdmmc {
-> +       status = "okay";
-> +};
-> +
-> +&sdhci1 {
-> +       status = "okay";
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_sd2_default>;
-> +};
-> +
->  #include "ibm-power9-dual.dtsi"
+T24gVHVlLCAyMDE5LTA4LTIwIGF0IDExOjQ3IC0wNTAwLCBTdW1hbiBBbm5hIHdyb3RlOgo+IE9u
+IDgvMjAvMTkgMjozNyBBTSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gPiBPbiAyMC44LjIwMTkgMi4w
+MSwgU3VtYW4gQW5uYSB3cm90ZToKPiA+ID4gSGkgVGVybywKPiA+ID4gCj4gPiA+IE9uIDgvMTkv
+MTkgNDozMiBBTSwgVGVybyBLcmlzdG8gd3JvdGU6ClsuLi5dCj4gPiA+ID4gPiA+ICt7Cj4gPiA+
+ID4gPiA+ICvCoMKgwqAgc3RydWN0IG9tYXBfcmVzZXRfZGF0YSAqcmVzZXQ7Cj4gPiA+ID4gPiA+
+ICsKPiA+ID4gPiA+ID4gK8KgwqDCoCAvKgo+ID4gPiA+ID4gPiArwqDCoMKgwqAgKiBDaGVjayBp
+ZiB3ZSBoYXZlIHJlc2V0cy4gSWYgZWl0aGVyIHJzdGN0bCBvciByc3RzdCBpcwo+ID4gPiA+ID4g
+PiArwqDCoMKgwqAgKiBub24temVybywgd2UgaGF2ZSByZXNldCByZWdpc3RlcnMgaW4gcGxhY2Uu
+IEFkZGl0aW9uYWxseQo+ID4gPiA+ID4gPiArwqDCoMKgwqAgKiB0aGUgZmxhZyBPTUFQX1BSTV9O
+T19SU1RTVCBpbXBsaWVzIHRoYXQgd2UgaGF2ZSByZXNldHMuCj4gPiA+ID4gPiA+ICvCoMKgwqDC
+oCAqLwo+ID4gPiA+ID4gPiArwqDCoMKgIGlmICghcHJtLT5kYXRhLT5yc3RjdGwgJiYgIXBybS0+
+ZGF0YS0+cnN0c3QgJiYKPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgICEocHJtLT5kYXRhLT5m
+bGFncyAmIE9NQVBfUFJNX05PX1JTVFNUKSkKPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgIHJl
+dHVybiAwOwo+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ICvCoMKgwqAgcmVzZXQgPSBkZXZtX2t6
+YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpyZXNldCksIEdGUF9LRVJORUwpOwo+ID4gPiA+ID4g
+PiArwqDCoMKgIGlmICghcmVzZXQpCj4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4g
+LUVOT01FTTsKPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiArwqDCoMKgIHJlc2V0LT5yY2Rldi5v
+d25lciA9IFRISVNfTU9EVUxFOwo+ID4gPiA+ID4gPiArwqDCoMKgIHJlc2V0LT5yY2Rldi5vcHMg
+PSAmb21hcF9yZXNldF9vcHM7Cj4gPiA+ID4gPiA+ICvCoMKgwqAgcmVzZXQtPnJjZGV2Lm9mX25v
+ZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsKPiA+ID4gPiA+ID4gK8KgwqDCoCByZXNldC0+cmNkZXYu
+bnJfcmVzZXRzID0gT01BUF9NQVhfUkVTRVRTOwo+ID4gPiAKPiA+ID4gU3VnZ2VzdCBhZGRpbmcg
+YSBudW1iZXIgb2YgcmVzZXRzIHRvIHBybS0+ZGF0YSwgYW5kIHVzaW5nIGl0IHNvIHRoYXQgd2UK
+PiA+ID4gZG9uJ3QgZXZlbiBlbnRlcnRhaW4gYW55IHJlc2V0cyBiZXlvbmQgdGhlIGFjdHVhbCBu
+dW1iZXIgb2YgcmVzZXRzLgo+ID4gCj4gPiBIbW0gd2h5IGJvdGhlcj8gQWNjZXNzaW5nIGEgc3Rh
+bGUgcmVzZXQgYml0IHdpbGwganVzdCBjYXVzZSBhY2Nlc3MgdG8gYQo+ID4gcmVzZXJ2ZWQgYml0
+IGluIHRoZSByZXNldCByZWdpc3RlciwgZG9pbmcgYmFzaWNhbGx5IG5vdGhpbmcuIEFsc28sIHRo
+aXMKPiA+IHdvdWxkIG5vdCB3b3JrIGZvciBhbTMvYW00IHdrdXAsIGFzIHRoZXJlIGlzIGEgc2lu
+Z2xlIHJlc2V0IGJpdCBhdCBhbgo+ID4gYXJiaXRyYXJ5IHBvc2l0aW9uLgo+IAo+IFRoZSBnZW5l
+cmljIGNvbnZlbnRpb24gc2VlbXMgdG8gYmUgZGVmaW5pbmcgYSByZXNldCBpZCB2YWx1ZSBkZWZp
+bmVkCj4gZnJvbSBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LyB0aGF0IGNhbiBiZSB1c2VkIHRv
+IG1hdGNoIGJldHdlZW4gdGhlCj4gZHQtbm9kZXMgYW5kIHRoZSByZXNldC1jb250cm9sbGVyIGRy
+aXZlci4KPiAKPiBQaGlsaXBwLAo+IEFueSBjb21tZW50cz8KCkFyZSB0aGVyZSBvbmx5IHJlc2V0
+IGJpdHMgYW5kIHJlc2VydmVkIGJpdHMgaW4gdGhlIHJhbmdlIGFjY2Vzc2libGUgYnkKWzAuLk9N
+QVBfTUFYX1JFU0VUU10gb3IgYXJlIHRoZXIgYml0cyB3aXRoIGFub3RoZXIgZnVuY3Rpb24gYXMg
+d2VsbD8KSWYgdGhlIGxhdHRlciBpcyB0aGUgY2FzZSwgSSB3b3VsZCBwcmVmZXIgZW51bWVyYXRp
+bmcgdGhlIHJlc2V0cyBpbiBhCmR0LWJpbmRpbmdzIGhlYWRlciwgd2l0aCB0aGUgZHJpdmVyIGNv
+bnRhaW5pbmcgYW4gZW51bSAtPiByZWcvYml0CnBvc2l0aW9uIGxvb2t1cCB0YWJsZS4KCkluIGdl
+bmVyYWwsIGFzc3VtaW5nIHRoZSBkZXZpY2UgdHJlZSBjb250YWlucyBubyBlcnJvcnMsIHRoaXMg
+c2hvdWxkIG5vdAptYXR0ZXIgbXVjaCwgYnV0IEkgdGhpbmsgaXQgaXMgbmljZSBpZiB0aGUgcmVz
+ZXQgZHJpdmVyLCBldmVuIHdpdGggYQptaXNjb25maWd1cmVkIGRldmljZSB0cmVlLCBjYW4ndCB3
+cml0ZSBpbnRvIGFyYml0cmFyeSBiaXQgZmllbGRzLgoKcmVnYXJkcwpQaGlsaXBwCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
