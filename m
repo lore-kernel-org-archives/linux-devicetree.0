@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
-Date: Wed, 21 Aug 2019 16:20:40 +0200
-Message-ID: <20190821142043.14649-12-narmstrong@baylibre.com>
+Subject: [PATCH v2 10/14] arm64: dts: meson-g12a: fix reset controller compatible
+Date: Wed, 21 Aug 2019 16:20:39 +0200
+Message-ID: <20190821142043.14649-11-narmstrong@baylibre.com>
 References: <20190821142043.14649-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,26 +13,28 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
+meson-g12a-u200.dt.yaml: reset-controller@1004: compatible:0: 'amlogic,meson-g12a-reset' is not one of ['amlogic,meson8b-reset', 'amlogic,meson-gxbb-reset', 'amlogic,meson-axg-reset']
+meson-g12a-sei510.dt.yaml: reset-controller@1004: compatible:0: 'amlogic,meson-g12a-reset' is not one of ['amlogic,meson8b-reset', 'amlogic,meson-gxbb-reset', 'amlogic,meson-axg-reset']
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index fe4013cca876..acb931cf3e7c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -11,7 +11,7 @@
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 465106d37289..74c587411306 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -2215,8 +2215,7 @@
+ 			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x100000>;
  
- / {
--	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-+	compatible = "amediatech,x96-max", "amlogic,g12a";
- 	model = "Shenzhen Amediatech Technology Co., Ltd X96 Max";
- 
- 	aliases {
+ 			reset: reset-controller@1004 {
+-				compatible = "amlogic,meson-g12a-reset",
+-					     "amlogic,meson-axg-reset";
++				compatible = "amlogic,meson-axg-reset";
+ 				reg = <0x0 0x1004 0x0 0x9c>;
+ 				#reset-cells = <1>;
+ 			};
 -- 
 2.22.0
