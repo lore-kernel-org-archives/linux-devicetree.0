@@ -1,66 +1,50 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v7 1/7] driver core: Add support for linking devices
- during device addition
-Date: Tue, 20 Aug 2019 21:24:11 -0700
-Message-ID: <113e6881-4c47-58fb-13fc-181e792818e5@gmail.com>
-References: <20190724001100.133423-1-saravanak@google.com>
- <20190724001100.133423-2-saravanak@google.com>
- <32a8abd2-b6a4-67df-eee9-0f006310e81e@gmail.com>
- <CAGETcx8Q27+Jnz+rHtt33muMV6U+S3cmKh02Ok_Ds_ZzfBqhrg@mail.gmail.com>
- <522e8375-5070-f579-6509-3e44fe66768e@gmail.com>
- <CAGETcx-9Bera+nU-3=ZNpHqdqKxO0TmNuVUsCMQ-yDm1VXn5zA@mail.gmail.com>
- <a4c139c1-c9d1-3e5a-f47f-cd790b42da1f@gmail.com>
- <CAGETcx-J7+d3pcArMZvO5zQbUhAhRW+1=FUf7C1fV9-QhkckBw@mail.gmail.com>
- <6028b35b-a4ca-18de-84c6-4a22dbd987c9@gmail.com>
- <20190821015647.GA12237@kroah.com>
- <CAGETcx8eVfJ0mn08E6pTDytjVE+RFcj_gOt_enide4E6G1NAWw@mail.gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH] ARM: dts: aspeed: swift: Add eMMC device
+Date: Wed, 21 Aug 2019 14:26:55 +0930
+Message-ID: <20190821045655.21752-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx8eVfJ0mn08E6pTDytjVE+RFcj_gOt_enide4E6G1NAWw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>, Adriana Kobylak <anoo@us.ibm.com>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/20/19 7:01 PM, Saravana Kannan wrote:
-> 
-> 
-> On Tue, Aug 20, 2019, 6:56 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org <mailto:gregkh@linuxfoundation.org>> wrote:
-> 
->     On Tue, Aug 20, 2019 at 06:06:55PM -0700, Frank Rowand wrote:
->     > On 8/20/19 3:10 PM, Saravana Kannan wrote:
->     > > On Mon, Aug 19, 2019 at 9:25 PM Frank Rowand <frowand.list@gmail.com <mailto:frowand.list@gmail.com>> wrote:
->     > >>
->     > >> On 8/19/19 5:00 PM, Saravana Kannan wrote:
->     > >>> On Sun, Aug 18, 2019 at 8:38 PM Frank Rowand <frowand.list@gmail.com <mailto:frowand.list@gmail.com>> wrote:
->     > >>>>
->     > >>>> On 8/15/19 6:50 PM, Saravana Kannan wrote:
->     > >>>>> On Wed, Aug 7, 2019 at 7:04 PM Frank Rowand <frowand.list@gmail.com <mailto:frowand.list@gmail.com>> wrote:
->     > >>>>>>
->     > >>>>>>> Date: Tue, 23 Jul 2019 17:10:54 -0700
->     > >>>>>>> Subject: [PATCH v7 1/7] driver core: Add support for linking devices during
->     > >>>>>>>  device addition
->     > >>>>>>> From: Saravana Kannan <saravanak@google.com <mailto:saravanak@google.com>>
-> 
->     This is a "fun" thread :(
-> 
->     You two should get together in person this week and talk.  I think you
->     both will be at ELC, can we do this tomorrow or Thursday so we can hash
->     it out in a way that doesn't end up talking past each other, like I feel
->     is happening here right now?
-> 
-> 
-> That would be great. Wednesday would be better for me. I might not make it to ELC on Thursday. Let us know Frank.
-> 
-> Thanks,
-> Saravana
+Swift contains an eMMC device attached to the second SDHCI controller.
 
-I am really glad that you are here at ELC.  It should be very productive to
-sit down together and figure some things out.
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I'll send a separate reply with my phone number off list.
-
--Frank
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+index f14f745b34ca..25bc0e1bbced 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
+@@ -963,4 +963,15 @@
+ 	status = "okay";
+ };
+ 
++&sdmmc {
++       status = "okay";
++};
++
++&sdhci1 {
++       status = "okay";
++
++       pinctrl-names = "default";
++       pinctrl-0 = <&pinctrl_sd2_default>;
++};
++
+ #include "ibm-power9-dual.dtsi"
+-- 
+2.23.0.rc1
