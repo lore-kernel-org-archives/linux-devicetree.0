@@ -1,27 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: usb-xhci: Add platform specific
- compatible for Stingray xHCI
-Date: Wed, 21 Aug 2019 13:22:39 -0500
-Message-ID: <20190821182239.GA5760@bogus>
-References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
- <1564568395-9980-5-git-send-email-srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v2] dt-bindings: arm-boards: Update pointer to ARM CPU
+ bindings
+Date: Wed, 21 Aug 2019 13:24:45 -0500
+Message-ID: <20190821182445.GA9101@bogus>
+References: <20190731114201.7884-1-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1564568395-9980-5-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <20190731114201.7884-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 31 Jul 2019 15:49:54 +0530, Srinath Mannam wrote:
-> Add Platform specific compatible, because xHCI of this SoC has an issue
-> with HS port which has to reset on disconnect event.
+On Wed, 31 Jul 2019 13:42:01 +0200, Geert Uytterhoeven wrote:
+> The ARM CPU DT bindings were converted from plain text to YAML, but not
+> all referrers were updated.
 > 
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Fixes: 672951cbd1b70a9e ("dt-bindings: arm: Convert cpu binding to json-schema")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+>   - Add Acked-by.
+> ---
+>  Documentation/devicetree/bindings/arm/arm-boards | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
