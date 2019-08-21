@@ -1,52 +1,64 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to
- use the regmap API
-Date: Wed, 21 Aug 2019 14:41:19 +0200
-Message-ID: <537999b7-b0e8-33a7-4bdc-c6952a0a5d06@samsung.com>
-References: <20190813150827.31972-1-s.nawrocki@samsung.com>
-        <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
-        <20190813150827.31972-3-s.nawrocki@samsung.com>
-        <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
-        <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
-        <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org>
-        <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
-        <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH v4 07/21] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Wed, 21 Aug 2019 12:49:50 +0000
+Message-ID: <94652d0c26732e159221bcfbca08e50e9e1f5f41.camel@toradex.com>
+References: <20190812142105.1995-1-philippe.schenker@toradex.com>
+         <20190812142105.1995-8-philippe.schenker@toradex.com>
+         <20190819111847.GQ5999@X250>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <20190819111847.GQ5999@X250>
+Content-Language: en-US
+Content-ID: <EAD4D12799869A40AA8BE48071850D29@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-tegra <linux-tegra@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, Stefan Agner <stefan.agner@toradex.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Max Krummenacher <max.krummenacher@toradex.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/21/19 14:16, Krzysztof Kozlowski wrote:
->>> I'm also inclined to have it converted to a regular driver.  We already
->>> have "exynos-asv" driver matching on the chipid node (patch 3/9).
->>> The ASV patches will not be merged soon anyway, all this needs some more
->>> thought. Krzysztof, can we abandon the chipid patches for now? Your
->>
->> chipid driver is good and useful on its own. The preferred solution
->> IMHO would be to just revert "soc: samsung: Convert exynos-chipid
->> driver to use the regmap API" commit.
->
-> I queued the chipid as a dependency for ASV but ASV requires the
-> regmap. What would be left after reverting the regmap part? Simple
-> unused printk driver? No need for such. If reverting, then let's drop
-> entire driver and rework it offline.
-
-In fact there is now no dependency between the chipid and the ASV 
-driver (patch 3/9), the regmap is provided by the syscon driver/API.
-I should have added "depends on REGMAP && MFD_SYSCON" to Kconfig.
-Both drivers (chipid, ASV) share the registers region so the regmap 
-API seemed appropriate here.
-Converting the chipid code to platform driver wouldn't make sense as
-it wouldn't be useful early in arch/arm/mach-exynos and we can't have
-two drivers for same device (the ASV driver matches on the chipid 
-compatible now).
-
--- 
-Regards,
-Sylwester
+T24gTW9uLCAyMDE5LTA4LTE5IGF0IDEzOjE4ICswMjAwLCBTaGF3biBHdW8gd3JvdGU6DQo+IE9u
+IE1vbiwgQXVnIDEyLCAyMDE5IGF0IDAyOjIxOjI1UE0gKzAwMDAsIFBoaWxpcHBlIFNjaGVua2Vy
+IHdyb3RlOg0KPiA+IEZyb206IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFnbmVyQHRvcmFkZXguY29t
+Pg0KPiA+IA0KPiA+IEFkZCBwaW5tdXhpbmcgYW5kIGRvIG5vdCBzcGVjaWZ5IHZvbHRhZ2UgcmVz
+dHJpY3Rpb25zIGZvciB0aGUgdXNkaGMNCj4gPiBpbnN0YW5jZSBhdmFpbGFibGUgb24gdGhlIG1v
+ZHVsZXMgZWRnZSBjb25uZWN0b3IuIFRoaXMgYWxsb3dzIHRvIHVzZQ0KPiA+IFNELWNhcmRzIHdp
+dGggaGlnaGVyIHRyYW5zZmVyIG1vZGVzIGlmIHN1cHBvcnRlZCBieSB0aGUgY2Fycmllcg0KPiA+
+IGJvYXJkLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuLmFn
+bmVyQHRvcmFkZXguY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFNjaGVua2VyIDxw
+aGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCj4gPiBBY2tlZC1ieTogTWFyY2VsIFppc3dp
+bGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQo+ID4gDQo+ID4gLS0tDQo+ID4gDQo+
+ID4gQ2hhbmdlcyBpbiB2NDoNCj4gPiAtIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCj4gPiAN
+Cj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+IC0gQWRkIG5ldyBjb21taXQgbWVzc2FnZSBmcm9tIFN0
+ZWZhbidzIHByb3Bvc2FsIG9uIE1MDQo+ID4gDQo+ID4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0KPiA+
+IA0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRzaSB8IDIzICsrKysrKysr
+KysrKysrKysrKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAx
+IGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDctY29saWJyaS5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmkuZHRz
+aQ0KPiA+IGluZGV4IDUzNDdlZDM4YWNiMi4uYzU2M2JiODIxYjVlIDEwMDY0NA0KPiA+IC0tLSBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14Ny1jb2xpYnJpLmR0c2kNCj4gPiBAQCAtMzI2LDcgKzMyNiw2IEBADQo+ID4g
+ICZ1c2RoYzEgew0KPiA+ICAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiAgCXBpbmN0
+cmwtMCA9IDwmcGluY3RybF91c2RoYzEgJnBpbmN0cmxfY2RfdXNkaGMxPjsNCj4gPiAtCW5vLTEt
+OC12Ow0KPiA+ICAJY2QtZ3Bpb3MgPSA8JmdwaW8xIDAgR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiAg
+CWRpc2FibGUtd3A7DQo+ID4gIAl2cW1tYy1zdXBwbHkgPSA8JnJlZ19MRE8yPjsNCj4gPiBAQCAt
+NjcxLDYgKzY3MCwyOCBAQA0KPiA+ICAJCT47DQo+ID4gIAl9Ow0KPiA+ICANCj4gPiArCXBpbmN0
+cmxfdXNkaGMxXzEwMG1oejogdXNkaGMxZ3JwXzEwMG1oeiB7DQo+ID4gKwkJZnNsLHBpbnMgPSA8
+DQo+ID4gKwkJCU1YN0RfUEFEX1NEMV9DTURfX1NEMV9DTUQJMHg1YQ0KPiA+ICsJCQlNWDdEX1BB
+RF9TRDFfQ0xLX19TRDFfQ0xLCTB4MWENCj4gPiArCQkJTVg3RF9QQURfU0QxX0RBVEEwX19TRDFf
+REFUQTAJMHg1YQ0KPiA+ICsJCQlNWDdEX1BBRF9TRDFfREFUQTFfX1NEMV9EQVRBMQkweDVhDQo+
+ID4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBMl9fU0QxX0RBVEEyCTB4NWENCj4gPiArCQkJTVg3RF9Q
+QURfU0QxX0RBVEEzX19TRDFfREFUQTMJMHg1YQ0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+ICsN
+Cj4gPiArCXBpbmN0cmxfdXNkaGMxXzIwMG1oejogdXNkaGMxZ3JwXzIwMG1oeiB7DQo+IA0KPiBO
+byByZWZlcmVuY2UgdG8gdGhlbSBmcm9tIHVzZGhjMSBub2RlPw0KPiANCj4gU2hhd24NCg0KTm8u
+IEknZCBsaWtlIHRvIGhhdmUgdGhhdCBwaW5tdXhpbmcgcHJlcGFyZWQgZm9yIHNvbWVvbmUgdG8g
+YWRkIFVIUw0Kc3VwcG9ydCB0byBTRC4gUHJpbWFyeSBmdW5jdGlvbmFsaXR5IG9mIHRoYXQgcGlu
+cyBpcyBzb21ldGhpbmcgZWxzZSBzbw0KdGhpcyB3aWxsIGhhdmUgcHJpb3JpdHkuDQoNClBoaWxp
+cHBlDQoNCj4gDQo+ID4gKwkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJCU1YN0RfUEFEX1NEMV9DTURf
+X1NEMV9DTUQJMHg1Yg0KPiA+ICsJCQlNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLCTB4MWINCj4g
+PiArCQkJTVg3RF9QQURfU0QxX0RBVEEwX19TRDFfREFUQTAJMHg1Yg0KPiA+ICsJCQlNWDdEX1BB
+RF9TRDFfREFUQTFfX1NEMV9EQVRBMQkweDViDQo+ID4gKwkJCU1YN0RfUEFEX1NEMV9EQVRBMl9f
+U0QxX0RBVEEyCTB4NWINCj4gPiArCQkJTVg3RF9QQURfU0QxX0RBVEEzX19TRDFfREFUQTMJMHg1
+Yg0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAgCXBpbmN0cmxfdXNkaGMzOiB1c2Ro
+YzNncnAgew0KPiA+ICAJCWZzbCxwaW5zID0gPA0KPiA+ICAJCQlNWDdEX1BBRF9TRDNfQ01EX19T
+RDNfQ01ECQkweDU5DQo+ID4gLS0gDQo+ID4gMi4yMi4wDQo+ID4gDQo=
