@@ -1,61 +1,61 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v4 08/21] ARM: dts: imx7-colibri: Add touch controllers
-Date: Wed, 21 Aug 2019 12:51:30 +0000
-Message-ID: <155f9dc45253baca7766e52c89bba614d57ad807.camel@toradex.com>
-References: <20190812142105.1995-1-philippe.schenker@toradex.com>
-         <20190812142105.1995-9-philippe.schenker@toradex.com>
-         <20190819112124.GR5999@X250>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to use
+ the regmap API
+Date: Wed, 21 Aug 2019 15:10:53 +0200
+Message-ID: <CAJKOXPdbPg-O6zh6LXrvSRSMG8psxW6_eREe+UEH=UZNhAT=rQ@mail.gmail.com>
+References: <20190813150827.31972-1-s.nawrocki@samsung.com>
+ <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
+ <20190813150827.31972-3-s.nawrocki@samsung.com> <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+ <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
+ <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org> <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
+ <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com> <537999b7-b0e8-33a7-4bdc-c6952a0a5d06@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190819112124.GR5999@X250>
-Content-Language: en-US
-Content-ID: <4EF4FACBA402A34093C425C4AA031E37@eurprd05.prod.outlook.com>
+In-Reply-To: <537999b7-b0e8-33a7-4bdc-c6952a0a5d06@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "stefan@agner.ch" <stefan@agner.ch>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "michal.vokac@ysoft.com" <michal.vokac@ysoft.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Max Krummenacher <max.krummenacher@toradex.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-tegra <linux-tegra@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA4LTE5IGF0IDEzOjIxICswMjAwLCBTaGF3biBHdW8gd3JvdGU6DQo+IE9u
-IE1vbiwgQXVnIDEyLCAyMDE5IGF0IDAyOjIxOjI2UE0gKzAwMDAsIFBoaWxpcHBlIFNjaGVua2Vy
-IHdyb3RlOg0KPiA+IEFkZCB0b3VjaCBjb250cm9sbGVyIHRoYXQgaXMgY29ubmVjdGVkIG92ZXIg
-YW4gSTJDIGJ1cy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8
-cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQo+ID4gQWNrZWQtYnk6IE1hcmNlbCBaaXN3
-aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0KPiA+IA0KPiA+IC0tLQ0KPiA+IA0K
-PiA+IENoYW5nZXMgaW4gdjQ6DQo+ID4gLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQo+ID4g
-DQo+ID4gQ2hhbmdlcyBpbiB2MzoNCj4gPiAtIEZpeCBjb21taXQgbWVzc2FnZQ0KPiA+IA0KPiA+
-IENoYW5nZXMgaW4gdjI6DQo+ID4gLSBEZWxldGVkIHRvdWNocmV2b2x1dGlvbiBkb3duc3RyZWFt
-IHN0dWZmDQo+ID4gLSBVc2UgZ2VuZXJpYyBub2RlIG5hbWUNCj4gPiAtIEJldHRlciBjb21tZW50
-DQo+ID4gDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0c2kg
-fCAyNA0KPiA+ICsrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjQg
-aW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9p
-bXg3LWNvbGlicmktZXZhbC12My5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9pbXg3LWNv
-bGlicmktZXZhbC12My5kdHNpDQo+ID4gaW5kZXggZDRkYmM0ZmMxYWRmLi41NzZkZWM5ZmY4MWMg
-MTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14Ny1jb2xpYnJpLWV2YWwtdjMu
-ZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS1ldmFsLXYzLmR0
-c2kNCj4gPiBAQCAtMTQ1LDYgKzE0NSwyMSBAQA0KPiA+ICAmaTJjNCB7DQo+ID4gIAlzdGF0dXMg
-PSAib2theSI7DQo+ID4gIA0KPiA+ICsJLyoNCj4gPiArCSAqIFRvdWNoc2NyZWVuIGlzIHVzaW5n
-IFNPRElNTSAyOC8zMCwgYWxzbyB1c2VkIGZvciBQV008Qj4sDQo+ID4gUFdNPEM+LA0KPiA+ICsJ
-ICogYWthIHB3bTIsIHB3bTMuIHNvIGlmIHlvdSBlbmFibGUgdG91Y2hzY3JlZW4sIGRpc2FibGUg
-dGhlDQo+ID4gcHdtcw0KPiA+ICsJICovDQo+ID4gKwl0b3VjaHNjcmVlbkA0YSB7DQo+ID4gKwkJ
-Y29tcGF0aWJsZSA9ICJhdG1lbCxtYXh0b3VjaCI7DQo+ID4gKwkJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsNCj4gPiArCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZ3Bpb3RvdWNoPjsNCj4gPiAr
-CQlyZWcgPSA8MHg0YT47DQo+ID4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzE+Ow0KPiA+
-ICsJCWludGVycnVwdHMgPSA8OSBJUlFfVFlQRV9FREdFX0ZBTExJTkc+OwkJLyoNCj4gPiBTT0RJ
-TU0gMjggKi8NCj4gPiArCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzEgMTAgR1BJT19BQ1RJVkVfSElH
-SD47CS8qIFNPRElNTSAzMA0KPiA+ICovDQo+ID4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4g
-DQo+IFdoeSBkaXNhYmxlZD8NCj4gDQo+IFNoYXduDQoNCkFsc28gaGVyZSwgdGhpcyBpcyBtZWFu
-dCBhcyBhbiBleGFtcGxlIHRvIGdldCBvdXIgdG91Y2hzY3JlZW4gZmFzdGVyDQpydW5uaW5nLiBC
-dXQgdGhvc2UgcGlucyBhcmUgcHJpbWFyaWx5IHVzZWQgYXMgUFdNJ3MgYW5kIHRoZXkgc2hvdWxk
-IGJ5DQpkZWZhdWx0IG11eGVkIGZvciBQV00ncy4NCklmIGEgY3VzdG9tZXIgd2FudCdzIHRvIGFk
-ZCB0aGF0IHRvdWNoc2NyZWVuIGhlIGp1c3QgaGF2ZSB0byBzd2l0Y2ggdGhlDQpzdGF0dXMgb2Yg
-dGhpcyBhbmQgUFdNLi4uDQoNClBoaWxpcHBlDQoNCj4gDQo+ID4gKwl9Ow0KPiA+ICsNCj4gPiAg
-CS8qIE00MVQwTTYgcmVhbCB0aW1lIGNsb2NrIG9uIGNhcnJpZXIgYm9hcmQgKi8NCj4gPiAgCXJ0
-YzogbTQxdDBtNkA2OCB7DQo+ID4gIAkJY29tcGF0aWJsZSA9ICJzdCxtNDF0MCI7DQo+ID4gQEAg
-LTIwMCwzICsyMTUsMTIgQEANCj4gPiAgCXZtbWMtc3VwcGx5ID0gPCZyZWdfM3YzPjsNCj4gPiAg
-CXN0YXR1cyA9ICJva2F5IjsNCj4gPiAgfTsNCj4gPiArDQo+ID4gKyZpb211eGMgew0KPiA+ICsJ
-cGluY3RybF9ncGlvdG91Y2g6IHRvdWNoZ3Bpb3Mgew0KPiA+ICsJCWZzbCxwaW5zID0gPA0KPiA+
-ICsJCQlNWDdEX1BBRF9HUElPMV9JTzA5X19HUElPMV9JTzkJCTB4NzQNCj4gPiArCQkJTVg3RF9Q
-QURfR1BJTzFfSU8xMF9fR1BJTzFfSU8xMAkJMHgxNA0KPiA+ICsJCT47DQo+ID4gKwl9Ow0KPiA+
-ICt9Ow0KPiA+IC0tIA0KPiA+IDIuMjIuMA0KPiA+IA0K
+On Wed, 21 Aug 2019 at 14:41, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>
+> On 8/21/19 14:16, Krzysztof Kozlowski wrote:
+> >>> I'm also inclined to have it converted to a regular driver.  We already
+> >>> have "exynos-asv" driver matching on the chipid node (patch 3/9).
+> >>> The ASV patches will not be merged soon anyway, all this needs some more
+> >>> thought. Krzysztof, can we abandon the chipid patches for now? Your
+> >>
+> >> chipid driver is good and useful on its own. The preferred solution
+> >> IMHO would be to just revert "soc: samsung: Convert exynos-chipid
+> >> driver to use the regmap API" commit.
+> >
+> > I queued the chipid as a dependency for ASV but ASV requires the
+> > regmap. What would be left after reverting the regmap part? Simple
+> > unused printk driver? No need for such. If reverting, then let's drop
+> > entire driver and rework it offline.
+>
+> In fact there is now no dependency between the chipid and the ASV
+> driver (patch 3/9), the regmap is provided by the syscon driver/API.
+> I should have added "depends on REGMAP && MFD_SYSCON" to Kconfig.
+> Both drivers (chipid, ASV) share the registers region so the regmap
+> API seemed appropriate here.
+
+Indeed, ASV needs only the header + DT change... Then actually we do
+not need chipid driver at all. Just to print the SoC and provide sysfs
+entry? If this is the only purpose, then it should be a driver.
+
+> Converting the chipid code to platform driver wouldn't make sense as
+> it wouldn't be useful early in arch/arm/mach-exynos and we can't have
+> two drivers for same device (the ASV driver matches on the chipid
+> compatible now).
+
+There is no use case for arm/mach-exynos. This code was not
+resubmitted and I doubt it will be (unless now someone wants to prove
+I am wrong and sends it again :) ). The two-device case is indeed a
+problem but it is possible. Clocks are doing it with PMU driver. See
+CLK_OF_DECLARE_DRIVER(), although I do not remember whether it is
+maybe obsolete pattern (discouraged).
+
+Best regards,
+Krzysztof
