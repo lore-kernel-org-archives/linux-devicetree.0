@@ -1,89 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-binding: spi: add NPCM FIU controller
-Date: Wed, 21 Aug 2019 15:56:50 -0500
-Message-ID: <20190821205650.GA14884@bogus>
-References: <20190808131448.349161-1-tmaimon77@gmail.com>
- <20190808131448.349161-2-tmaimon77@gmail.com>
+Subject: Re: [PATCH 5/6] dt-bindings: pinctrl: k3: Introduce pinmux
+ definitions for J721E
+Date: Wed, 21 Aug 2019 16:02:32 -0500
+Message-ID: <20190821210232.GA22578@bogus>
+References: <20190809082947.30590-1-lokeshvutla@ti.com>
+ <20190809082947.30590-6-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190808131448.349161-2-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: broonie@kernel.org, mark.rutland@arm.com, vigneshr@ti.com, bbrezillon@kernel.org, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190809082947.30590-6-lokeshvutla@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, linus.walleij@linaro.org, Tero Kristo <t-kristo@ti.com>, linux-gpio@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 08, 2019 at 04:14:47PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM Flash Interface Unit(FIU) SPI master controller
-> using SPI-MEM interface.
+On Fri, Aug 09, 2019 at 01:59:46PM +0530, Lokesh Vutla wrote:
+> Add pinctrl macros for J721E SoC. These macro definitions are
+> similar to that of AM6, but adding new definitions to avoid
+> any naming confusions in the soc dts files.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Acked-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 > ---
->  .../bindings/spi/nuvoton,npcm-fiu.txt         | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
+>  include/dt-bindings/pinctrl/k3.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt b/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
-> new file mode 100644
-> index 000000000000..ab37aae91d19
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
-> @@ -0,0 +1,47 @@
-> +* Nuvoton FLASH Interface Unit (FIU) SPI Controller
-> +
-> +NPCM FIU supports single, dual and quad communication interface.
-> +
-> +The NPCM7XX supports three FIU modules,
-> +FIU0 and FIUx supports two chip selects,
-> +FIU3 support four chip select.
-> +
-> +Required properties:
-> +  - compatible : "nuvoton,npcm750-fiu" for the NPCM7XX BMC
-> +  - #address-cells : should be 1.
-> +  - #size-cells : should be 0.
-> +  - reg : the first contains the register location and length,
-> +          the second contains the memory mapping address and length
-> +  - reg-names: Should contain the reg names "control" and "memory"
-> +  - clocks : phandle of FIU reference clock.
-> +
-> +Required properties in case the pins can be muxed:
-> +  - pinctrl-names : a pinctrl state named "default" must be defined.
-> +  - pinctrl-0 : phandle referencing pin configuration of the device.
-> +
-> +Optional property:
-> +  - spix-mode: enable spix-mode for an expansion bus to an ASIC or CPLD.
+> diff --git a/include/dt-bindings/pinctrl/k3.h b/include/dt-bindings/pinctrl/k3.h
+> index 45e11b6170ca..499de6216581 100644
+> --- a/include/dt-bindings/pinctrl/k3.h
+> +++ b/include/dt-bindings/pinctrl/k3.h
+> @@ -32,4 +32,7 @@
+>  #define AM65X_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+>  #define AM65X_WKUP_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
+>  
+> +#define J721E_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+> +#define J721E_WKUP_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
 
-Is this something standard? If not, add a vendor prefix.
+checkpatch reports a parentheses error:         (((pa) & 0x1fff) ((val) | (muxmode)))
 
 > +
-> +Aliases:
-> +- All the FIU controller nodes should be represented in the aliases node using
-> +  the following format 'fiu{n}' where n is a unique number for the alias.
-> +  In the NPCM7XX BMC:
-> +  		fiu0 represent fiu 0 controller
-> +  		fiu1 represent fiu 3 controller
-> +  		fiu2 represent fiu x controller
-> +
-> +Example:
-> +fiu3: fiu@c00000000 {
-
-spi@...
-
-> +	compatible = "nuvoton,npcm750-fiu";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0xfb000000 0x1000>, <0x80000000 0x10000000>;
-> +	reg-names = "control", "memory";
-> +	clocks = <&clk NPCM7XX_CLK_AHB>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi3_pins>;
-> +	spi-nor@0 {
-> +			...
-> +	};
-> +};
-> +
+>  #endif
 > -- 
-> 2.18.0
+> 2.22.0
 > 
