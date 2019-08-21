@@ -1,27 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/3] gpio: mpc8xxx: add ls1088a platform gpio node DT
- binding description
-Date: Wed, 21 Aug 2019 15:53:56 -0500
-Message-ID: <20190821205356.GA14637@bogus>
-References: <20190808101628.36782-1-hui.song_1@nxp.com>
+Subject: Re: [PATCH v2 1/2] dt-binding: spi: add NPCM FIU controller
+Date: Wed, 21 Aug 2019 15:56:50 -0500
+Message-ID: <20190821205650.GA14884@bogus>
+References: <20190808131448.349161-1-tmaimon77@gmail.com>
+ <20190808131448.349161-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190808101628.36782-1-hui.song_1@nxp.com>
+In-Reply-To: <20190808131448.349161-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: broonie@kernel.org, mark.rutland@arm.com, vigneshr@ti.com, bbrezillon@kernel.org, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  8 Aug 2019 18:16:26 +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
+On Thu, Aug 08, 2019 at 04:14:47PM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Flash Interface Unit(FIU) SPI master controller
+> using SPI-MEM interface.
 > 
-> ls1088a and ls1028a platform share common gpio node.
-> 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  .../bindings/spi/nuvoton,npcm-fiu.txt         | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt b/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
+> new file mode 100644
+> index 000000000000..ab37aae91d19
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.txt
+> @@ -0,0 +1,47 @@
+> +* Nuvoton FLASH Interface Unit (FIU) SPI Controller
+> +
+> +NPCM FIU supports single, dual and quad communication interface.
+> +
+> +The NPCM7XX supports three FIU modules,
+> +FIU0 and FIUx supports two chip selects,
+> +FIU3 support four chip select.
+> +
+> +Required properties:
+> +  - compatible : "nuvoton,npcm750-fiu" for the NPCM7XX BMC
+> +  - #address-cells : should be 1.
+> +  - #size-cells : should be 0.
+> +  - reg : the first contains the register location and length,
+> +          the second contains the memory mapping address and length
+> +  - reg-names: Should contain the reg names "control" and "memory"
+> +  - clocks : phandle of FIU reference clock.
+> +
+> +Required properties in case the pins can be muxed:
+> +  - pinctrl-names : a pinctrl state named "default" must be defined.
+> +  - pinctrl-0 : phandle referencing pin configuration of the device.
+> +
+> +Optional property:
+> +  - spix-mode: enable spix-mode for an expansion bus to an ASIC or CPLD.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is this something standard? If not, add a vendor prefix.
+
+> +
+> +Aliases:
+> +- All the FIU controller nodes should be represented in the aliases node using
+> +  the following format 'fiu{n}' where n is a unique number for the alias.
+> +  In the NPCM7XX BMC:
+> +  		fiu0 represent fiu 0 controller
+> +  		fiu1 represent fiu 3 controller
+> +  		fiu2 represent fiu x controller
+> +
+> +Example:
+> +fiu3: fiu@c00000000 {
+
+spi@...
+
+> +	compatible = "nuvoton,npcm750-fiu";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0xfb000000 0x1000>, <0x80000000 0x10000000>;
+> +	reg-names = "control", "memory";
+> +	clocks = <&clk NPCM7XX_CLK_AHB>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi3_pins>;
+> +	spi-nor@0 {
+> +			...
+> +	};
+> +};
+> +
+> -- 
+> 2.18.0
+> 
