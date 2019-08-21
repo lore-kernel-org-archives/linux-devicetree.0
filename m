@@ -1,50 +1,35 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH] ARM: dts: aspeed: swift: Add eMMC device
-Date: Wed, 21 Aug 2019 14:26:55 +0930
-Message-ID: <20190821045655.21752-1-joel@jms.id.au>
+From: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 31/49] ath11k: add mac.c
+Date: Wed, 21 Aug 2019 10:32:02 +0530
+Message-ID: <ac6e7dbbd53e7ba9e82e49baca22b73c@codeaurora.org>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
+ <8736hvu6e6.fsf@toke.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>, Adriana Kobylak <anoo@us.ibm.com>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8736hvu6e6.fsf-LJ9M9ZcSy1A@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Swift contains an eMMC device attached to the second SDHCI controller.
+On 2019-08-20 22:21, Toke Høiland-Jørgensen wrote:
+> [... snip ... ]
+> 
+>> +static const struct ieee80211_ops ath11k_ops = {
+>> +	.tx				= ath11k_mac_op_tx,
+> 
+> No wake_tx_queue? :(
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Yes, packet queueing is handled in firmware. This makes sense especially 
+when we enable 802.11 encap
+offload support where most of the data path processing in mac80211 will 
+be skipped and packet is given
+to driver/firmware in 802.3 format itself. Then firmware would take care 
+of all the classification,
+queueing and encapsulation operations.
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-index f14f745b34ca..25bc0e1bbced 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-@@ -963,4 +963,15 @@
- 	status = "okay";
- };
- 
-+&sdmmc {
-+       status = "okay";
-+};
-+
-+&sdhci1 {
-+       status = "okay";
-+
-+       pinctrl-names = "default";
-+       pinctrl-0 = <&pinctrl_sd2_default>;
-+};
-+
- #include "ibm-power9-dual.dtsi"
--- 
-2.23.0.rc1
+Vasanth
