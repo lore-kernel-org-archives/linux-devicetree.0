@@ -1,48 +1,54 @@
-Return-Path: <SRS0=xLqw=WB=bootlin.com=miquel.raynal@kernel.org>
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 2/8] dt-bindings: ap806: Document AP807 clock compatible
-Date: Mon,  5 Aug 2019 12:03:04 +0200
-Message-Id: <20190805100310.29048-3-miquel.raynal@bootlin.com>
-In-Reply-To: <20190805100310.29048-1-miquel.raynal@bootlin.com>
-References: <20190805100310.29048-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v8 08/13] media: tvp5150: initialize subdev before parsing device tree
+Date: Wed, 21 Aug 2019 09:30:58 +0200
+Message-Id: <20190821073103.19634-9-m.felsch@pengutronix.de>
+In-Reply-To: <20190821073103.19634-1-m.felsch@pengutronix.de>
+References: <20190821073103.19634-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Marcin Wojtas <mw@semihalf.com>, Stefan Chulski <stefanc@marvell.com>, Yan Markman <ymarkman@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Add AP807 clock compatible to the bindings.
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+There are several debug prints in the tvp5150_parse_dt() function, which
+do not print the prefix, because the v4l2_subdev is not initialized, yet.
+
+Initialize the v4l2_subdev before parsing the device tree to fix the
+debug messages.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- .../bindings/arm/marvell/ap806-system-controller.txt      | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/media/i2c/tvp5150.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-index 59b6b992fbc9..26410fbb85be 100644
---- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-@@ -18,8 +18,8 @@ Clocks:
- -------
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 62a1c7c3a7c0..c74410684675 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1953,6 +1953,9 @@ static int tvp5150_probe(struct i2c_client *c)
  
+ 	core->regmap = map;
+ 	sd = &core->sd;
++	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
++	sd->internal_ops = &tvp5150_internal_ops;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
  
--The Device Tree node representing the AP806 system controller provides
--a number of clocks:
-+The Device Tree node representing the AP806/AP807 system controller
-+provides a number of clocks:
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
+@@ -1965,10 +1968,6 @@ static int tvp5150_probe(struct i2c_client *c)
+ 		core->mbus_type = V4L2_MBUS_BT656;
+ 	}
  
-  - 0: reference clock of CPU cluster 0
-  - 1: reference clock of CPU cluster 1
-@@ -28,7 +28,9 @@ a number of clocks:
- 
- Required properties:
- 
-- - compatible: must be: "marvell,ap806-clock"
-+ - compatible: must be one of:
-+   * "marvell,ap806-clock"
-+   * "marvell,ap807-clock"
-  - #clock-cells: must be set to 1
- 
- Pinctrl:
+-	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+-	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-
+ 	res = tvp5150_mc_init(core);
+ 	if (res)
+ 		return res;
 -- 
 2.20.1
