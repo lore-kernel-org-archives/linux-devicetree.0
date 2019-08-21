@@ -1,37 +1,58 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date: Wed, 21 Aug 2019 13:34:19 +0800
-Message-ID: <d9a793ae-e66c-a6ae-ab05-d253b8eb27d7@linux.intel.com>
-References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820135602.GN30120@smile.fi.intel.com>
- <20190820135921.GO30120@smile.fi.intel.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 0/7] ARM: Add ASPEED AST2600 support
+Date: Wed, 21 Aug 2019 15:25:23 +0930
+Message-ID: <20190821055530.8720-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820135921.GO30120@smile.fi.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryan Chen <ryan_chen@aspeedtech.com>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/8/2019 9:59 PM, Andy Shevchenko wrote:
-> On Tue, Aug 20, 2019 at 04:56:02PM +0300, Andy Shevchenko wrote:
->> On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->>> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
->> For consistency it should be
->>
->> #define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
->>
->> with explanation about 50 Ohm in the code below.
->>> +	/* Drive impedance: 50 Ohm */
->> Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
-> It should be DR_TY_SHIFT(6) now since I dropped the negation.
+Hello,
 
-Thanks Andy, will update the review comments.
+This adds the architecture, device tree and configuration required to
+support a new ASPEED BMC chip.
 
-Best Regards
-Vadivel
+I'd appreciate a review from those on cc before I break the patches into
+their respective trees and send them as part of my ASPEED pull request
+for 5.4. Thanks!
+
+
+Joel Stanley (7):
+  dt-bindings: arm: cpus: Add ASPEED SMP
+  ARM: aspeed: Select timer in each SoC
+  ARM: aspeed: Add ASPEED AST2600 architecture
+  ARM: aspeed: Enable SMP boot
+  ARM: dts: aspeed: Add AST2600 and EVB
+  ARM: configs: multi_v7: Add ASPEED G6
+  ARM: configs: aspeed_g5: Enable AST2600
+
+ .../devicetree/bindings/arm/cpus.yaml         |   1 +
+ arch/arm/Makefile                             |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/aspeed-ast2600-evb.dts      |  44 +++
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 266 ++++++++++++++++++
+ arch/arm/configs/aspeed_g5_defconfig          |  17 +-
+ arch/arm/configs/multi_v7_defconfig           |  19 ++
+ arch/arm/mach-aspeed/Kconfig                  |  17 +-
+ arch/arm/mach-aspeed/Makefile                 |   5 +
+ arch/arm/mach-aspeed/platsmp.c                |  61 ++++
+ 10 files changed, 427 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/aspeed-ast2600-evb.dts
+ create mode 100644 arch/arm/boot/dts/aspeed-g6.dtsi
+ create mode 100644 arch/arm/mach-aspeed/Makefile
+ create mode 100644 arch/arm/mach-aspeed/platsmp.c
+
+-- 
+2.23.0.rc1
