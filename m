@@ -1,101 +1,106 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Document JZ47xx VPU auxiliary
- processor
-Date: Wed, 21 Aug 2019 12:47:39 +0200
-Message-ID: <1566384459.1884.0@crapouillou.net>
-References: <20190729183109.18283-1-paul@crapouillou.net>
-        <20190820205044.GA1223@bogus>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
+Date: Wed, 21 Aug 2019 14:05:43 +0300
+Message-ID: <20190821110542.GD31967@paasikivi.fi.intel.com>
+References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
+ <20190819034331.13098-3-dongchun.zhu@mediatek.com>
+ <20190821103038.GA148543@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820205044.GA1223@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, od@zcrc.me, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190821103038.GA148543@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Tomasz,
 
+On Wed, Aug 21, 2019 at 07:30:38PM +0900, Tomasz Figa wrote:
+...
+> > +
+> > +/*
+> > + * xvclk 24Mhz
+> 
+> This seems to assume 24MHz, but the driver allows a range in probe. Is that
+> correct?
 
-Le mar. 20 ao=FBt 2019 =E0 22:50, Rob Herring <robh@kernel.org> a =E9crit :
-> On Mon, Jul 29, 2019 at 02:31:07PM -0400, Paul Cercueil wrote:
->>  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs=20
->> from
->>  Ingenic is a second Xburst MIPS CPU very similar to the main core.
->>  This document describes the devicetree bindings for this auxiliary
->>  processor.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>=20
->>  Notes:
->>      v2: Update TCSM0 address in example
->>=20
->>   .../bindings/remoteproc/ingenic,vpu.txt       | 36=20
->> +++++++++++++++++++
->>   1 file changed, 36 insertions(+)
->>   create mode 100644=20
->> Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
->>=20
->>  diff --git=20
->> a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt=20
->> b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
->>  new file mode 100644
->>  index 000000000000..576f9e582780
->>  --- /dev/null
->>  +++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
->>  @@ -0,0 +1,36 @@
->>  +* Ingenic JZ47xx auxiliary processor
->>  +
->>  +Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs=20
->> from Ingenic
->>  +is a second Xburst MIPS CPU very similar to the main core.
->>  +This document describes the devicetree bindings for this auxiliary=20
->> processor.
->>  +
->>  +Required properties:
->>  +- compatible: Should be "ingenic,jz4770-vpu-rproc"
->>  +- reg: Must contain the registers location and length for:
->>  +  * the auxiliary processor,
->>  +  * the Tightly Coupled Shared Memory 0 (TCSM0),
->>  +  * the Tightly Coupled Shared Memory 1 (TCSM1),
->>  +  * the shared SRAM.
->>  +- reg-names: Must contain "aux", "tcsm0", "tcsm1", "sram".
->>  +- clocks: Clock specifier for the AUX and VPU clocks.
->>  +- clock-names: Must contain "aux", "vpu".
->>  +- interrupts: Interrupt specifier for the VPU hardware block.
->>  +
->>  +Example:
->>  +
->>  +vpu: cpu@132a0000 {
->=20
-> cpu is reserved for CPUs under /cpus/. Use video-codec or=20
-> video-decoder
-> or ?? It's not clear what type of video processing this does.
+I think it'd be better to check for an exact frequency: this is board
+specific and its exact value is known.
 
-Hardware decode and encode of mpeg-2 and h264. I guess I'll use=20
-'video-decoder' then.
+...
 
+> > +static int __ov02a10_power_on(struct ov02a10 *ov02a10)
+> > +{
+> > +	struct i2c_client *client = v4l2_get_subdevdata(&ov02a10->subdev);
+> > +	struct device *dev = &client->dev;
+> > +	int ret;
+> > +
+> > +	ret = clk_prepare_enable(ov02a10->xvclk);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Failed to enable xvclk\n");
+> > +		return ret;
+> > +	}
+> 
+> Is it really correct to enable the clock before the regulators?
+> 
+> According to the datasheet, it should be:
+>  - PD pin HIGH,
+>  - nRST pin LOW,
+>  - DVDDIO and AVDD28 power up and stabilize,
+>  - clock enabled,
+>  - min 5 ms delay,
+>  - PD pin LOW,
+>  - min 4 ms delay,
+>  - nRST pin HIGH,
+>  - min 5 ms delay,
+>  - I2C interface ready.
+> 
+> > +
+> > +	/* Note: set 0 is high, set 1 is low */
+> 
+> Why is that? If there is some inverter on the way that should be handled
+> outside of this driver. (GPIO DT bindings have flags for this purpose.
+> 
+> If the pins are nRESET and nPOWERDOWN in the hardware datasheet, we should
+> call them like this in the driver too (+/- the lowercase and underscore
+> convention).
+> 
+> According to the datasheet, the reset pin is called RST and inverted, so we should
+> call it n_rst, but the powerdown signal, called PD, is not inverted, so pd
+> would be the right name.
 
->=20
->>  +	compatible =3D "ingenic,jz4770-vpu-rproc";
->>  +
->>  +	reg =3D <0x132a0000 0x20 /* AUX */
->>  +		   0x132b0000 0x4000 /* TCSM0 */
->>  +		   0x132c0000 0xc000 /* TCSM1 */
->>  +		   0x132f0000 0x7000 /* SRAM */
->>  +	>;
->>  +	reg-names =3D "aux", "tcsm0", "tcsm1", "sram";
->>  +
->>  +	clocks =3D <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
->>  +	clock-names =3D "aux", "vpu";
->>  +
->>  +	interrupt-parent =3D <&cpuintc>;
->>  +	interrupts =3D <3>;
->>  +};
->>  --
->>  2.21.0.593.g511ec345e18
->>=20
+For what it's worth sensors generally have xshutdown (or reset) pin that is
+active high. Looking at the code, it is not the case here. It's a bit odd
+since the usual arrangement saves power when the camera is not in use; it's
+not a lot but still. Oh well.
 
-=
+...
+
+> > +static struct i2c_driver ov02a10_i2c_driver = {
+> > +	.driver = {
+> > +		.name = "ov02a10",
+> > +		.pm = &ov02a10_pm_ops,
+> > +		.of_match_table = ov02a10_of_match,
+> 
+> Please use of_match_ptr() wrapper.
+
+Not really needed; the driver does expect regulators, GPIOs etc., but by
+leaving out of_match_ptr(), the driver will also probe on ACPI based
+systems.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
