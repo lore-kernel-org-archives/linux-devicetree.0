@@ -1,92 +1,52 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 04/10] mailbox: sunxi-msgbox: Add a new
- mailbox driver
-Date: Wed, 21 Aug 2019 14:30:35 +0200
-Message-ID: <20190821123035.tl4aakijjhw3bwbk@flea>
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-5-samuel@sholland.org>
- <20190820111825.2w55fleehrnon27u@core.my.home>
- <bc09e14c-1cf5-8124-fc34-c651b78577ce@sholland.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to
+ use the regmap API
+Date: Wed, 21 Aug 2019 14:41:19 +0200
+Message-ID: <537999b7-b0e8-33a7-4bdc-c6952a0a5d06@samsung.com>
+References: <20190813150827.31972-1-s.nawrocki@samsung.com>
+        <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
+        <20190813150827.31972-3-s.nawrocki@samsung.com>
+        <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+        <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
+        <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org>
+        <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
+        <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mrpxrcur5riymvjn"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3XS6TVAKGQEIZPZJ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <bc09e14c-1cf5-8124-fc34-c651b78577ce-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-tegra <linux-tegra@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-
---mrpxrcur5riymvjn
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Aug 20, 2019 at 08:07:53AM -0500, Samuel Holland wrote:
-> On 8/20/19 6:18 AM, Ond=C5=99ej Jirman wrote:
-> >> +	reset =3D devm_reset_control_get(dev, NULL);
-> >> +	if (IS_ERR(reset)) {
-> >> +		ret =3D PTR_ERR(reset);
-> >> +		dev_err(dev, "Failed to get reset control: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >> +
-> >> +	ret =3D reset_control_deassert(reset);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Failed to deassert reset: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >
-> > You need to assert the reset again from now on, in error paths. devm
-> > will not do that for you.
+On 8/21/19 14:16, Krzysztof Kozlowski wrote:
+>>> I'm also inclined to have it converted to a regular driver.  We already
+>>> have "exynos-asv" driver matching on the chipid node (patch 3/9).
+>>> The ASV patches will not be merged soon anyway, all this needs some more
+>>> thought. Krzysztof, can we abandon the chipid patches for now? Your
+>>
+>> chipid driver is good and useful on its own. The preferred solution
+>> IMHO would be to just revert "soc: samsung: Convert exynos-chipid
+>> driver to use the regmap API" commit.
 >
-> I know, and that's intentional. This same message box device is used for =
-ATF to
-> communicate with SCP firmware (on a different channel). This could be hap=
-pening
-> on a different core while Linux is running. So Linux is not allowed to de=
-assert
-> the reset. clk_disable_unprepare() is only okay because the clock is mark=
-ed as
-> critical.
+> I queued the chipid as a dependency for ASV but ASV requires the
+> regmap. What would be left after reverting the regmap part? Simple
+> unused printk driver? No need for such. If reverting, then let's drop
+> entire driver and rework it offline.
 
-I agree with Ondrej that since this is clearly not the standard use of
-the API, this must have a big comment explaining why we're doing it
-this way.
+In fact there is now no dependency between the chipid and the ASV 
+driver (patch 3/9), the regmap is provided by the syscon driver/API.
+I should have added "depends on REGMAP && MFD_SYSCON" to Kconfig.
+Both drivers (chipid, ASV) share the registers region so the regmap 
+API seemed appropriate here.
+Converting the chipid code to platform driver wouldn't make sense as
+it wouldn't be useful early in arch/arm/mach-exynos and we can't have
+two drivers for same device (the ASV driver matches on the chipid 
+compatible now).
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190821123035.tl4aakijjhw3bwbk%40flea.
-
---mrpxrcur5riymvjn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV05awAKCRDj7w1vZxhR
-xbIJAP9yrpmQb5VASu0xwjQKiF8z6Qkk63ohQogxkr2k66hwcAEAulMS7ROeVRrO
-iA0Lo17qVmuTaZnBbSFPofjTOChqgAQ=
-=0XW2
------END PGP SIGNATURE-----
-
---mrpxrcur5riymvjn--
+-- 
+Regards,
+Sylwester
