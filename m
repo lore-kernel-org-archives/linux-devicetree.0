@@ -1,67 +1,62 @@
-From: Jonas Karlman <jonas@kwiboo.se>
-Subject: [RESEND PATCH] arm64: dts: rockchip: add rk3328 VPU node
-Date: Wed, 21 Aug 2019 17:54:38 +0000
-Message-ID: <HE1PR06MB4011C8496657B2C267A66327ACAA0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: arm: fsl: Add Kontron i.MX6UL N6310
+ compatibles
+Date: Wed, 21 Aug 2019 19:54:58 +0200
+Message-ID: <20190821175458.GA25168@kozik-lap>
+References: <1566315318-30320-1-git-send-email-krzk@kernel.org>
+ <1566315318-30320-3-git-send-email-krzk@kernel.org>
+ <CAL_JsqJLSZ50tdFcdPFc2ifcDoFZFuw=SoKsunzjtAhZ-11fBg@mail.gmail.com>
+ <CAJKOXPfkNcWw9sunwXGRz42jOL0cdRC-iiHLtWCYvo5oxCMwFQ@mail.gmail.com>
+ <CAL_JsqKAH6n1sMoWOhfiHKxgREr-EN1tw0QtC1H8Fm=a7PNzOA@mail.gmail.com>
+ <20190820202142.GA15866@kozik-lap>
+ <CAL_JsqKBWB2FiVjYo9O7DPw1JYJvan7uRgbR0VBG=FfHDVYdZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKBWB2FiVjYo9O7DPw1JYJvan7uRgbR0VBG=FfHDVYdZQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Rob Herring <robh+dt@kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add a VPU device node for rk3328.
+On Tue, Aug 20, 2019 at 03:27:39PM -0500, Rob Herring wrote:
+> > I see. If I understand the schema correctly, this should look like:
+> 
+> Looks correct, but a couple of comments.
+> 
+> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > index 7294ac36f4c0..eb263d1ccf13 100644
+> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > @@ -161,6 +161,22 @@ properties:
+> >          items:
+> >            - enum:
+> >                - fsl,imx6ul-14x14-evk      # i.MX6 UltraLite 14x14 EVK Board
+> > +              - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+> 
+> Is the SOM ever used alone? If not, then no point in listing this here.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
-It would be great if this can be considered for v5.4,
-related dt-bindings commit has been merged in media tree for v5.4.
+SoM alone: no, because it requires some type of base board. However it
+will be used by some customer designs with some amount of
+changes/addons.
 
-Decoding using hantro driver has been tested on a Pine64 Rock64 RK3328 device.
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Looking at other aproaches, usually SoMs have their own compatible.  In
+such case - I should document it somewhere.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index e9fefd8a7e02..4a175fff2861 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -278,6 +278,7 @@
- 			};
- 			pd_vpu@RK3328_PD_VPU {
- 				reg = <RK3328_PD_VPU>;
-+				clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 			};
- 		};
- 
-@@ -596,6 +597,17 @@
- 		status = "disabled";
- 	};
- 
-+	vpu: video-codec@ff350000 {
-+		compatible = "rockchip,rk3328-vpu";
-+		reg = <0x0 0xff350000 0x0 0x800>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vdpu";
-+		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vpu_mmu>;
-+		power-domains = <&power RK3328_PD_VPU>;
-+	};
-+
- 	vpu_mmu: iommu@ff350800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff350800 0x0 0x40>;
-@@ -604,7 +616,7 @@
- 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
--		status = "disabled";
-+		power-domains = <&power RK3328_PD_VPU>;
- 	};
- 
- 	rkvdec_mmu: iommu@ff360480 {
--- 
-2.17.1
+> 
+> > +          - const: fsl,imx6ul
+> > +
+> > +      - description: Kontron N6310 S Board
+> > +        items:
+> > +          - enum:
+> > +              - kontron,imx6ul-n6310-s
+> 
+> This could be a 'const' instead. It depends if you think there will
+> ever be more than one entry.
+
+Indeed, I'll make this and entry below for S 43 board const.
+
+
+Best regards,
+Krzysztof
