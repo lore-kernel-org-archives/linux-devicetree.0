@@ -1,74 +1,125 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v8 2/3] fdt: add support for rng-seed
-Date: Wed, 21 Aug 2019 09:39:28 +0300
-Message-ID: <CAKv+Gu-kp-LqCCx=h2TJxzns4KpM-UEjz3md0u3hbVOyp+iFtA@mail.gmail.com>
-References: <20190819071602.139014-1-hsinyi@chromium.org> <20190819071602.139014-3-hsinyi@chromium.org>
- <20190819181349.GE10349@mit.edu> <CAJMQK-ghQ8weMerXW7t0DFZTAg_c5M80Yp5DTAtyY2LA7YpS1A@mail.gmail.com>
- <CAKv+Gu_qJUU2hRujjv6e5yPqPQXRXokBU_2mSGD3civ2d2+xhw@mail.gmail.com> <CAJMQK-hdYz+pW5QL41nXkZAX1qiRynaWg7cne48qCaQsuPrSCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v3 1/2] dt-bindings: serial: lantiq: Convert to YAML schema
+Date: Wed, 21 Aug 2019 15:06:51 +0800
+Message-ID: <b8e0fa2981176dba29cd8e29f14532501cf962b4.1566370151.git.rahul.tanwar@linux.intel.com>
+References: <cover.1566370151.git.rahul.tanwar@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJMQK-hdYz+pW5QL41nXkZAX1qiRynaWg7cne48qCaQsuPrSCg@mail.gmail.com>
+In-Reply-To: <cover.1566370151.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1566370151.git.rahul.tanwar@linux.intel.com>
+References: <cover.1566370151.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: "Theodore Y. Ts'o" <tytso@mit.edu>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboy>
+To: robh+dt@kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Aug 2019 at 08:57, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> Then we'd still use add_device_randomness() in case that bootloader
-> provides weak entropy.
->
+Convert the existing DT binding document for Lantiq SoC ASC serial controller
+from txt format to YAML format.
 
-(please don't top post)
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ .../devicetree/bindings/serial/lantiq,asc.yaml     | 55 ++++++++++++++++++++++
+ .../devicetree/bindings/serial/lantiq_asc.txt      | 31 ------------
+ 2 files changed, 55 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/lantiq,asc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/serial/lantiq_asc.txt
 
-Whether to trust the firmware provided entropy is a policy decision,
-and typically, we try to avoid dictating policy in the kernel, and
-instead, we try to provide a sane default but give the user control
-over it.
-
-So in this case, we should probably introduce
-add_firmware_randomness() with a Kconfig/cmdline option pair to decide
-whether it should be trusted or not (or reuse the one we have for
-trusting RDRAND etc)
-
-
-> On Tue, Aug 20, 2019 at 7:14 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Tue, 20 Aug 2019 at 10:43, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> > >
-> > > Hi Ted,
-> > >
-> > > Thanks for raising this question.
-> > >
-> > > For UEFI based system, they have a config table that carries rng seed
-> > > and can be passed to device randomness. However, they also use
-> > > add_device_randomness (not sure if it's the same reason that they
-> > > can't guarantee _all_ bootloader can be trusted)
-> >
-> > The config table is actually a Linux invention: it is populated by the
-> > EFI stub code (which is part of the kernel) based on the output of a
-> > call into the EFI_RNG_PROTOCOL, which is defined in the UEFI spec, but
-> > optional and not widely available.
-> >
-> > I have opted for add_device_randomness() since there is no way to
-> > establish the quality level of the output of EFI_RNG_PROTOCOL, and so
-> > it is currently only used to prevent the bootup state of the entropy
-> > pool to be too predictable, and the output does not contribute to the
-> > entropy estimate kept by the RNG core.
-> >
-> >
-> > > This patch is to let DT based system also have similar features, which
-> > > can make initial random number stronger. (We only care initial
-> > > situation here, since more entropy would be added to kernel as time
-> > > goes on )
-> > >
-> > > Conservatively, we can use add_device_randomness() as well, which
-> > > would pass buffer to crng_slow_load() instead of crng_fast_load().
-> > > But I think we should trust bootloader here. Whoever wants to use this
-> > > feature should make sure their bootloader can pass valid (random
-> > > enough) seeds. If they are not sure, they can just don't add the
-> > > property to DT.
-> >
-> > It is the firmware that adds the property to the DT, not the user.
+diff --git a/Documentation/devicetree/bindings/serial/lantiq,asc.yaml b/Documentation/devicetree/bindings/serial/lantiq,asc.yaml
+new file mode 100644
+index 000000000000..72ea2a3d75c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/lantiq,asc.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/lantiq,asc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lantiq SoC ASC serial controller
++
++maintainers:
++  - Rahul Tanwar <rahul.tanwar@intel.com>
++
++allOf:
++  - $ref: /schemas/serial.yaml#
++
++properties:
++  compatible:
++    enum:
++      - lantiq,asc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 3
++
++  clocks:
++    items:
++      - description: phandle to the frequency clock
++      - description: phandle to the gate clock
++
++  clock-names:
++    items:
++      - const: freq
++      - const: asc
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++
++examples:
++  - |
++    asc0: serial@16600000 {
++            compatible = "lantiq,asc";
++            reg = <0x16600000 0x100000>;
++            interrupt-parent = <&gic>;
++            interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cgu CLK_SSX4>, <&cgu GCLK_UART>;
++            clock-names = "freq", "asc";
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
+deleted file mode 100644
+index 40e81a5818f6..000000000000
+--- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-Lantiq SoC ASC serial controller
+-
+-Required properties:
+-- compatible : Should be "lantiq,asc"
+-- reg : Address and length of the register set for the device
+-- interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
+-  depends on the interrupt-parent interrupt controller.
+-
+-Optional properties:
+-- clocks: Should contain frequency clock and gate clock
+-- clock-names: Should be "freq" and "asc"
+-
+-Example:
+-
+-asc0: serial@16600000 {
+-	compatible = "lantiq,asc";
+-	reg = <0x16600000 0x100000>;
+-	interrupt-parent = <&gic>;
+-	interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
+-		<GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
+-		<GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&cgu CLK_SSX4>, <&cgu GCLK_UART>;
+-	clock-names = "freq", "asc";
+-};
+-
+-asc1: serial@e100c00 {
+-	compatible = "lantiq,asc";
+-	reg = <0xE100C00 0x400>;
+-	interrupt-parent = <&icu0>;
+-	interrupts = <112 113 114>;
+-};
+-- 
+2.11.0
