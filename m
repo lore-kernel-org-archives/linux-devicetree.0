@@ -1,142 +1,208 @@
-Return-Path: <SRS0=uCLo=WE=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V6 4/8] dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
-Date: Thu, 8 Aug 2019 15:07:22 +0530
-Message-ID: <1565257046-9890-5-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
-References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=gnyv=WR=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v8 12/13] media: tvp5150: add support to limit sdtv standards
+Date: Wed, 21 Aug 2019 09:31:02 +0200
+Message-Id: <20190821073103.19634-13-m.felsch@pengutronix.de>
+In-Reply-To: <20190821073103.19634-1-m.felsch@pengutronix.de>
+References: <20190821073103.19634-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device-tree binding documentation for the XUSB device mode controller
-present on Tegra210 SoC. This controller supports the USB 3.0
-specification.
+The tvp5150 accepts NTSC(M,J,4.43), PAL (B,D,G,H,I,M,N) and SECAM video
+data and is able to auto-detect the input signal. The auto-detection
+does not work if the connector does not receive an input signal and the
+tvp5150 might not be configured correctly. This misconfiguration leads
+into wrong decoded video streams if the tvp5150 gets powered on before
+the video signal is present.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
+Limit the supported sdtv standards according to the actual selected
+connector to avoid a misconfiguration.
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  | 110 +++++++++++++++++++++
- 1 file changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
+[1] https://patchwork.kernel.org/cover/10794703/
 
-diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
-new file mode 100644
-index 0000000..ce15e26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/nvidia,tegra-xudc.txt
-@@ -0,0 +1,110 @@
-+Device tree binding for NVIDIA Tegra XUSB device mode controller (XUDC)
-+=======================================================================
+v8:
+- adapt commit message
+- fix rebasing issue
+- apdapt to new v4l2_fwnode_connector_analog naming
+- fix cur_connector update during tvp5150_link_setup()
+  -> Only update if we have of-connectors.
+- fix supported_stds detection during tvp5150_s_std()
+  -> use connectors_num to detect of-connectors presence
+
+v5:
+- probe() initialize supported tv-norms according the given connectors
+  if they are available.
+- check if media-controller is used. Don't limit the norm if it isn't
+  used.
+- add more logic to be smarter during connector changing so it is
+  intuitiver for the user space.
+
+v2-v4:
+- nothing since the patch was squashed from series [1] into this
+  series.
+
+ drivers/media/i2c/tvp5150.c | 78 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 76 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index c2fe14fc643e..b48b08421993 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -32,6 +32,13 @@
+ #define TVP5150_MBUS_FMT	MEDIA_BUS_FMT_UYVY8_2X8
+ #define TVP5150_FIELD		V4L2_FIELD_ALTERNATE
+ #define TVP5150_COLORSPACE	V4L2_COLORSPACE_SMPTE170M
++#define TVP5150_STD_MASK	(V4L2_STD_NTSC     | \
++				 V4L2_STD_NTSC_443 | \
++				 V4L2_STD_PAL      | \
++				 V4L2_STD_PAL_M    | \
++				 V4L2_STD_PAL_N    | \
++				 V4L2_STD_PAL_Nc   | \
++				 V4L2_STD_SECAM)
+ 
+ #define TVP5150_MAX_CONNECTORS	3 /* Check dt-bindings for more information */
+ 
+@@ -64,6 +71,7 @@ struct tvp5150 {
+ 
+ 	struct media_pad pads[TVP5150_NUM_PADS];
+ 	struct tvp5150_connector connectors[TVP5150_MAX_CONNECTORS];
++	struct tvp5150_connector *cur_connector;
+ 	unsigned int connectors_num;
+ 
+ 	struct v4l2_ctrl_handler hdl;
+@@ -783,17 +791,33 @@ static int tvp5150_g_std(struct v4l2_subdev *sd, v4l2_std_id *std)
+ static int tvp5150_s_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
++	struct tvp5150_connector *cur_con = decoder->cur_connector;
++	v4l2_std_id supported_stds;
+ 
+ 	if (decoder->norm == std)
+ 		return 0;
+ 
++	/* In case of no of-connectors are available no limitations are made */
++	if (!decoder->connectors_num)
++		supported_stds = V4L2_STD_ALL;
++	else
++		supported_stds = cur_con->base.connector.analog.sdtv_stds;
 +
-+The Tegra XUDC controller supports both USB 2.0 HighSpeed/FullSpeed and
-+USB 3.0 SuperSpeed protocols.
++	/*
++	 * Check if requested std or group of std's is/are supported by the
++	 * connector.
++	 */
++	if ((supported_stds & std) == 0)
++		return -EINVAL;
 +
-+Required properties:
-+--------------------
-+- compatible: For Tegra210, must contain "nvidia,tegra210-xudc".
-+- reg: Must contain the base and length of all registers used.
-+- interrupts: Must contain the XUSB device interrupt.
-+- clocks: Must contain an entry for all clocks used.
-+  See ../clock/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+   - dev: Clock to enable core XUSB dev clock.
-+   - ss: Clock to enable XUSB super speed clock.
-+   - ss_src: Clock to enable XUSB super speed dev clock.
-+   - hs_src: Clock to enable XUSB high speed dev clock.
-+   - fs_src: Clock to enable XUSB full speed dev clock.
-+- power-domains: A list of PM domain specifiers that reference each power-domain
-+  used by the XUSB device mode controller. This list must comprise of a specifier
-+  for the XUSBA and XUSBB power-domains. See ../power/power_domain.txt and
-+  ../arm/tegra/nvidia,tegra20-pmc.txt for details.
-+- power-domain-names: A list of names that represent each of the specifiers in
-+  the 'power-domains' property. Must include 'ss' and 'dev'.
-+- nvidia,xusb-padctl: phandle to the XUSB pad controller that is used to
-+  configure the USB pads used by the XUDC controller.
-+- phys: Must contain an entry for each entry in phy-names.
-+  See ../phy/phy-bindings.txt for details.
-+- phy-names: Should include an entry for each PHY used by the controller.
-+  Names must be "usb2", and "usb3" if support SuperSpeed device mode.
-+  - "usb3" phy, SuperSpeed (SSTX+/SSTX-/SSRX+/SSRX-) data lines.
-+  - "usb2" phy, USB 2.0 (D+/D-) data lines.
+ 	/* Change cropping height limits */
+ 	if (std & V4L2_STD_525_60)
+ 		decoder->rect.height = TVP5150_V_MAX_525_60;
+ 	else
+ 		decoder->rect.height = TVP5150_V_MAX_OTHERS;
+ 
+-	decoder->norm = std;
++	/* Set only the specific supported std in case of group of std's. */
++	decoder->norm = supported_stds & std;
+ 
+ 	return tvp5150_set_std(sd, std);
+ }
+@@ -1329,6 +1353,8 @@ static int tvp5150_link_setup(struct media_entity *entity,
+ 			  TVP5150_BLACK_SCREEN, 0);
+ 
+ 	if (flags & MEDIA_LNK_FL_ENABLED) {
++		u32 new_norm;
 +
-+For Tegra210:
-+- reg-names: Must include the following entries:
-+   - base: XUSB device controller registers.
-+   - fpci: XUSB device PCI Config registers.
-+   - ipfs: XUSB device registers.
-+- avddio-usb-supply: PCIe/USB3 analog logic power supply. Must supply 1.05 V.
-+- hvdd-usb-supply: USB controller power supply. Must supply 3.3 V.
+ 		/*
+ 		 * S-Video connector is conneted to both ports AIP1A and AIP1B.
+ 		 * Both links must be enabled in one-shot regardless which link
+@@ -1340,6 +1366,29 @@ static int tvp5150_link_setup(struct media_entity *entity,
+ 			if (err)
+ 				return err;
+ 		}
 +
++		if (!decoder->connectors_num)
++			return 0;
 +
-+Optional properties:
-+--------------------
-+- usb-role-switch: boolean property to indicate use of USB Role Switch driver.
++		/* Update the current connector */
++		decoder->cur_connector =
++			container_of(remote, struct tvp5150_connector, pad);
 +
-+Sub-nodes:
-+----------
-+- The port would be added as subnode if use "usb-role-switch" property.
-+  see graph.txt.
++		/*
++		 * Do nothing if the new connector supports the same tv-norms as
++		 * the old one.
++		 */
++		new_norm = decoder->norm &
++			decoder->cur_connector->base.connector.analog.sdtv_stds;
++		if (decoder->norm == new_norm)
++			return 0;
 +
-+Example:
-+--------
-+	pmc: pmc@7000e400 {
-+		compatible = "nvidia,tegra210-pmc";
-+		reg = <0x0 0x7000e400 0x0 0x400>;
-+		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
-+		clock-names = "pclk", "clk32k_in";
++		/*
++		 * Fallback to the new connector tv-norms if we can't find any
++		 * common between the current tv-norm and the new one.
++		 */
++		tvp5150_s_std(sd, new_norm ? new_norm :
++			decoder->cur_connector->base.connector.analog.sdtv_stds);
+ 	}
+ 
+ 	return 0;
+@@ -1557,6 +1606,9 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
+ 				TVP5150_COMPOSITE1;
+ 
+ 			tvp5150_selmux(sd);
++			decoder->cur_connector = &decoder->connectors[i];
++			tvp5150_s_std(sd,
++				decoder->connectors[i].base.connector.analog.sdtv_stds);
+ 		}
+ 	}
+ 
+@@ -1846,6 +1898,13 @@ tvp5150_add_connector(struct tvp5150 *decoder, struct device_node *np,
+ 		goto err;
+ 	}
+ 
++	if (!(vc->connector.analog.sdtv_stds & TVP5150_STD_MASK)) {
++		dev_err(dev, "Unsupported tv-norm on connector %s\n",
++			remote_np->name);
++		ret = -EINVAL;
++		goto err;
++	}
 +
-+		powergates {
-+			pd_xusbss: xusba {
-+				clocks = <&tegra_car TEGRA210_CLK_XUSB_SS>;
-+				resets = <&tegra_car 156>;
-+				#power-domain-cells = <0>;
-+			};
+ 	c->ent.flags = MEDIA_ENT_FL_CONNECTOR;
+ 	c->ent.name = vc->label;
+ 	c->ent.name = kasprintf(GFP_KERNEL, "%s %s", remote_np->name,
+@@ -1943,6 +2002,7 @@ static int tvp5150_probe(struct i2c_client *c)
+ 	struct v4l2_subdev *sd;
+ 	struct device_node *np = c->dev.of_node;
+ 	struct regmap *map;
++	unsigned int i;
+ 	int res;
+ 
+ 	/* Check if the adapter supports the needed features */
+@@ -1987,7 +2047,21 @@ static int tvp5150_probe(struct i2c_client *c)
+ 	if (res < 0)
+ 		return res;
+ 
+-	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
++	/*
++	 * Iterate over all available connectors in case they are supported and
++	 * successfully parsed. Fallback to default autodetect in case they
++	 * aren't supported.
++	 */
++	for (i = 0; i < core->connectors_num; i++) {
++		struct v4l2_fwnode_connector *vc;
 +
-+			pd_xusbdev: xusbb {
-+				clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>;
-+				resets = <&tegra_car 95>;
-+				#power-domain-cells = <0>;
-+			};
-+		};
-+	};
++		vc = &core->connectors[i].base;
++		core->norm |= vc->connector.analog.sdtv_stds;
++	}
 +
-+	usb@700d0000 {
-+		compatible = "nvidia,tegra210-xudc";
-+		reg = <0x0 0x700d0000 0x0 0x8000>,
-+		      <0x0 0x700d8000 0x0 0x1000>,
-+		      <0x0 0x700d9000 0x0 0x1000>;
-+		reg-names = "base", "fpci", "ipfs";
++	if (!core->connectors_num)
++		core->norm = V4L2_STD_ALL;
 +
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		clocks = <&tegra_car TEGRA210_CLK_XUSB_DEV>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SS>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_SSP_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_HS_SRC>,
-+			 <&tegra_car TEGRA210_CLK_XUSB_FS_SRC>;
-+		clock-names = "dev", "ss", "ss_src", "hs_src", "fs_src";
-+
-+		power-domains = <&pd_xusbdev>, <&pd_xusbss>;
-+		power-domain-names = "dev", "ss";
-+
-+		nvidia,xusb-padctl = <&padctl>;
-+
-+		phys = <&micro_b>;
-+		phy-names = "usb2";
-+
-+		avddio-usb-supply = <&vdd_pex_1v05>;
-+		hvdd-usb-supply = <&vdd_3v3_sys>;
-+
-+		usb-role-switch;
-+		port {
-+			usb_role_switch: endpoint {
-+				remote-endpoint = <&bconn_ep>;
-+			};
-+		};
-+
-+	};
+ 	core->detected_norm = V4L2_STD_UNKNOWN;
+ 	core->input = TVP5150_COMPOSITE1;
+ 	core->enable = true;
 -- 
-2.7.4
+2.20.1
