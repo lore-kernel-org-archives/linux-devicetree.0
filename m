@@ -1,158 +1,103 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH v2 2/2] dt-bindings: irq: Convert Allwinner NMI Controller to
- a schema
-Date: Wed, 21 Aug 2019 10:21:38 +0200
-Message-ID: <20190821082138.11049-2-mripard@kernel.org>
-References: <20190821082138.11049-1-mripard@kernel.org>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v3 5/8] arm64: dts: qcom: sm8150-mtp: add base dts file
+Date: Wed, 21 Aug 2019 13:58:58 +0530
+Message-ID: <CAHLCerP-VP=SguQz4nA2ZFMiKBsNajO9E-CqQivdQm-iviqToQ@mail.gmail.com>
+References: <20190820172351.24145-1-vkoul@kernel.org> <20190820172351.24145-7-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821082138.11049-1-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820172351.24145-7-vkoul@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+On Tue, Aug 20, 2019 at 10:55 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> This add base DTS file for sm8150-mtp and enables boot to console, adds
+> tlmm reserved range, resin node, volume down key and also includes pmic
+> file.
 
-The Allwinner SoCs have an interrupt controller called NMI supported in
-Linux, with a matching Device Tree binding.
+For some reason, your mailer sent out 2 patches 5/8. I was wondering
+why the patch 5 failed to apply, but it seems the two are identical.
+Lore seems to show the same.
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
----
-
-Changes from v1:
-  - Remove the custom select and rely on the deprecated property instead
----
- .../allwinner,sun7i-a20-sc-nmi.yaml           | 70 +++++++++++++++++++
- .../allwinner,sunxi-nmi.txt                   | 29 --------
- 2 files changed, 70 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-new file mode 100644
-index 000000000000..0eccf5551786
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A20 Non-Maskable Interrupt Controller Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell the trigger
-+      type as defined in interrupt.txt in this directory.
-+
-+  compatible:
-+    oneOf:
-+      - const: allwinner,sun6i-a31-r-intc
-+      - const: allwinner,sun6i-a31-sc-nmi
-+        deprecated: true
-+      - const: allwinner,sun7i-a20-sc-nmi
-+      - items:
-+        - const: allwinner,sun8i-a83t-r-intc
-+        - const: allwinner,sun6i-a31-r-intc
-+      - const: allwinner,sun9i-a80-sc-nmi
-+      - items:
-+        - const: allwinner,sun50i-a64-r-intc
-+        - const: allwinner,sun6i-a31-r-intc
-+      - items:
-+        - const: allwinner,sun50i-h6-r-intc
-+        - const: allwinner,sun6i-a31-r-intc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+required:
-+  - "#interrupt-cells"
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+
-+# FIXME: We should set it, but it would report all the generic
-+# properties as additional properties.
-+# additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@1c00030 {
-+        compatible = "allwinner,sun7i-a20-sc-nmi";
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        reg = <0x01c00030 0x0c>;
-+        interrupt-parent = <&gic>;
-+        interrupts = <0 0 4>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
-deleted file mode 100644
-index 24beadf7ba83..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Allwinner Sunxi NMI Controller
--==============================
--
--Required properties:
--
--- compatible : should be one of the following:
--  - "allwinner,sun7i-a20-sc-nmi"
--  - "allwinner,sun6i-a31-sc-nmi" (deprecated)
--  - "allwinner,sun6i-a31-r-intc"
--  - "allwinner,sun9i-a80-nmi"
--- reg : Specifies base physical address and size of the registers.
--- interrupt-controller : Identifies the node as an interrupt controller
--- #interrupt-cells : Specifies the number of cells needed to encode an
--  interrupt source. The value shall be 2. The first cell is the IRQ number, the
--  second cell the trigger type as defined in interrupt.txt in this directory.
--- interrupts: Specifies the interrupt line (NMI) which is handled by
--  the interrupt controller in the parent controller's notation. This value
--  shall be the NMI.
--
--Example:
--
--sc-nmi-intc@1c00030 {
--	compatible = "allwinner,sun7i-a20-sc-nmi";
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	reg = <0x01c00030 0x0c>;
--	interrupt-parent = <&gic>;
--	interrupts = <0 0 4>;
--};
--- 
-2.21.0
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile       |  1 +
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 51 +++++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0a7e5dfce6f7..1964dacaf19b 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)       += sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += sm8150-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> new file mode 100644
+> index 000000000000..6f5777f530ae
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2019, Linaro Limited
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sm8150.dtsi"
+> +#include "pm8150.dtsi"
+> +#include "pm8150b.dtsi"
+> +#include "pm8150l.dtsi"
+> +
+> +/ {
+> +       model = "Qualcomm Technologies, Inc. SM8150 MTP";
+> +       compatible = "qcom,sm8150-mtp";
+> +
+> +       aliases {
+> +               serial0 = &uart2;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +};
+> +
+> +&qupv3_id_1 {
+> +       status = "okay";
+> +};
+> +
+> +&pon {
+> +       pwrkey {
+> +               status = "okay";
+> +       };
+> +
+> +       resin {
+> +               compatible = "qcom,pm8941-resin";
+> +               interrupts = <0x0 0x8 0x1 IRQ_TYPE_EDGE_BOTH>;
+> +               debounce = <15625>;
+> +               bias-pull-up;
+> +               linux,code = <KEY_VOLUMEDOWN>;
+> +       };
+> +};
+> +
+> +&tlmm {
+> +       gpio-reserved-ranges = <0 4>, <126 4>;
+> +};
+> +
+> +&uart2 {
+> +       status = "okay";
+> +};
+> --
+> 2.20.1
+>
