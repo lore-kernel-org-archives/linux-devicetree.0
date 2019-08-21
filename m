@@ -1,119 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-Date: Wed, 21 Aug 2019 08:35:53 -0500
-Message-ID: <CAL_Jsq+pyaYD2C8G1WZm1fL-wgkJvDYBkp0TwJTmQVKP-gHPXQ@mail.gmail.com>
-References: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH 1/5] dt-bindings: power: add Amlogic Everything-Else power
+ domains bindings
+Date: Wed, 21 Aug 2019 08:46:38 -0500
+Message-ID: <CAL_JsqLy9etZtUYTJdvBRCRGuxPN_eXJQT8_xwdST5TNparJug@mail.gmail.com>
+References: <20190821114121.10430-1-narmstrong@baylibre.com> <20190821114121.10430-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20190821114121.10430-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 5:11 AM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On Wed, Aug 21, 2019 at 6:41 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Add the bindings for the Amlogic Everything-Else power domains,
+> controlling the Everything-Else peripherals power domains.
 >
-> Add a YAML schema to use the host controller driver with the
-> eMMC PHY on Intel's Lightning Mountain SoC.
+> The bindings targets the Amlogic G12A and SM1 compatible SoCs,
+> support for earlier SoCs will be added later.
 >
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
-> changes in v3:
->   - resolve 'make dt_binding_check' warnings
->
-> changes in v2:
->   As per Rob Herring review comments, the following updates
->  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
->  - filename is the compatible string plus .yaml
->  - LGM: Lightning Mountain
->  - update maintainer
->  - add intel,syscon under property list
->  - keep one example instead of two
-> ---
->  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->
-> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..9342e33d8b02
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    const: intel,lgm-emmc-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  syscon:
+>  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 93 +++++++++++++++++++
+>  include/dt-bindings/power/meson-g12a-power.h  | 13 +++
+>  include/dt-bindings/power/meson-sm1-power.h   | 18 ++++
+>  3 files changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+>  create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+>  create mode 100644 include/dt-bindings/power/meson-sm1-power.h
 
-intel,syscon like the example. You must have used 5.2 as on 5.3-rc the
-example will fail validation.
-
-> +    items:
-
-Drop items as there is only 1.
-
-> +      $ref: "/schemas/types.yaml#definitions/phandle"
-> +
-> +  clocks:
-> +    items:
-> +      - description: e-MMC phy module clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: emmcclk
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - ref
-
-Not documented.
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    emmc_phy: emmc_phy {
-> +        compatible = "intel,lgm-emmc-phy";
-> +        reg = <0xe0020000 0x100>;
-> +        intel,syscon = <&sysconf>;
-> +        clocks = <&emmc>;
-> +        clock-names = "emmcclk";
-> +        #phy-cells = <0>;
-> +    };
-> +
-> +...
-> --
-> 2.11.0
->
+Reviewed-by: Rob Herring <robh@kernel.org>
