@@ -1,68 +1,154 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
-Date: Wed, 21 Aug 2019 16:04:37 -0700
-Message-ID: <20190821230437.GC1892@tuxbook-pro>
-References: <20190821184239.12364-1-vkoul@kernel.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4 4/6] arm64: dts: meson: sei510: Add minimal thermal zone
+Date: Wed, 21 Aug 2019 16:29:52 -0700
+Message-ID: <7hsgpu5c7j.fsf@baylibre.com>
+References: <20190821222421.30242-1-glaroque@baylibre.com> <20190821222421.30242-5-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190821184239.12364-1-vkoul@kernel.org>
+In-Reply-To: <20190821222421.30242-5-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Guillaume La Roque <glaroque@baylibre.com>, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 21 Aug 11:42 PDT 2019, Vinod Koul wrote:
+Guillaume La Roque <glaroque@baylibre.com> writes:
 
-> This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
-> the MTP for SM8150.
-> 
+> Add minimal thermal zone for two temperature sensor
+> One is located close to the DDR and the other one is
+> located close to the PLLs (between the CPU and GPU)
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../boot/dts/amlogic/meson-g12a-sei510.dts    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> index c9fa23a56562..35d2ebbd6d4e 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/gpio/meson-g12a-gpio.h>
+>  #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	compatible = "seirobotics,sei510", "amlogic,g12a";
+> @@ -33,6 +34,67 @@
+>  		ethernet0 = &ethmac;
+>  	};
+>  
+> +	thermal-zones {
+> +		cpu-thermal {
+> +			polling-delay = <1000>;
+> +			polling-delay-passive = <100>;
+> +			thermal-sensors = <&cpu_temp>;
+> +
+> +			trips {
+> +				cpu_hot: cpu-hot {
+> +					temperature = <85000>; /* millicelsius */
+> +					hysteresis = <2000>; /* millicelsius */
+> +					type = "hot";
+> +				};
+> +
+> +				cpu_critical: cpu-critical {
+> +					temperature = <110000>; /* millicelsius */
+> +					hysteresis = <2000>; /* millicelsius */
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_hot>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +
+> +				map1 {
+> +					trip = <&cpu_critical>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +
+> +		ddr-thermal {
+> +			polling-delay = <1000>;
+> +			polling-delay-passive = <100>;
+> +			thermal-sensors = <&ddr_temp>;
+> +
+> +			trips {
+> +				ddr_critical: ddr-critical {
+> +					temperature = <110000>; /* millicelsius */
+> +					hysteresis = <2000>; /* millicelsius */
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map {
+> +					trip = <&ddr_critical>;
+> +					cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	mono_dac: audio-codec-0 {
+>  		compatible = "maxim,max98357a";
+>  		#sound-dai-cells = <0>;
+> @@ -321,6 +383,7 @@
+>  	operating-points-v2 = <&cpu_opp_table>;
+>  	clocks = <&clkc CLKID_CPU_CLK>;
+>  	clock-latency = <50000>;
+> +	#cooling-cells = <2>;
+>  };
+>  
+>  &cpu1 {
+> @@ -328,6 +391,7 @@
+>  	operating-points-v2 = <&cpu_opp_table>;
+>  	clocks = <&clkc CLKID_CPU_CLK>;
+>  	clock-latency = <50000>;
+> +	#cooling-cells = <2>;
+>  };
+>  
+>  &cpu2 {
+> @@ -335,6 +399,7 @@
+>  	operating-points-v2 = <&cpu_opp_table>;
+>  	clocks = <&clkc CLKID_CPU_CLK>;
+>  	clock-latency = <50000>;
+> +	#cooling-cells = <2>;
+>  };
+>  
+>  &cpu3 {
+> @@ -342,6 +407,7 @@
+>  	operating-points-v2 = <&cpu_opp_table>;
+>  	clocks = <&clkc CLKID_CPU_CLK>;
+>  	clock-latency = <50000>;
+> +	#cooling-cells = <2>;
+>  };
+>  
+>  &cvbs_vdac_port {
+> @@ -368,6 +434,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&mali {
+> +	#cooling-cells = <2>;
+> +};
+> +
 
-Applied, with Amit's acks.
+Is there a reason these #cooling-cells properties belong in the SoC
+.dtsi and not the board .dts.  Seems like you'll have to repeat this in
+every board .dts which doesn't seem necessary.
 
-> Changes in v4:
->  - Update the address and size cell to 2 and extend ranges and describe DMA
->    space
->  - Fix node location of spmi per sorted address
->  - Add Niklas's review tags
-> 
-> Changes in v3:
->  - Fix copyright comment style to Linux kernel style
->  - Make property values all hex or decimal
->  - Fix patch titles and logs and make them consistent
->  - Fix line breaks
-> 
-> Changes in v2:
->  - Squash patches
->  - Fix comments given by Stephen namely, lowercase for hex numbers,
->    making rpmhcc have xo_board as parent, rename pon controller to
->    power-on controller, make pmic nodes as disabled etc.
->  - removed the dependency on clk defines and use raw numbers
-> 
-> Vinod Koul (8):
->   arm64: dts: qcom: sm8150: Add base dts file
->   arm64: dts: qcom: pm8150: Add base dts file
->   arm64: dts: qcom: pm8150b: Add base dts file
->   arm64: dts: qcom: pm8150l: Add base dts file
->   arm64: dts: qcom: sm8150-mtp: Add base dts file
->   arm64: dts: qcom: sm8150-mtp: Add regulators
->   arm64: dts: qcom: sm8150: Add reserved-memory regions
->   arm64: dts: qcom: sm8150: Add apps shared nodes
-> 
->  arch/arm64/boot/dts/qcom/Makefile       |   1 +
->  arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
->  arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 375 ++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 482 ++++++++++++++++++++++++
->  6 files changed, 1121 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
-> 
-> -- 
-> 2.20.1
-> 
+Same comment for patch 5/6
+
+Kevin
