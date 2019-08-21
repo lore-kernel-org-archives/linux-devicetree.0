@@ -1,78 +1,94 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 2/8] soc: ti: add initial PRM driver with reset control
- support
-Date: Wed, 21 Aug 2019 10:45:45 -0500
-Message-ID: <5e82199f-2f75-ee05-ba65-1595d0526572@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-3-git-send-email-t-kristo@ti.com>
- <3b76f0e0-7530-e7b5-09df-2de9956f30ee@ti.com>
- <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
- <9372957c-9ab9-b0dd-fe07-815eb2cb2f16@ti.com>
- <0f335aec-bfdf-345a-8dfb-dad70aef1af6@ti.com>
- <a4196b73-63a0-f9d8-1c43-e6c4d1c1d6a4@ti.com>
- <1566400237.4193.15.camel@pengutronix.de>
+From: Jonathan Chocron <jonnyc@amazon.com>
+Subject: [PATCH v4 5/7] dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+Date: Wed, 21 Aug 2019 18:47:43 +0300
+Message-ID: <20190821154745.31834-1-jonnyc@amazon.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1566400237.4193.15.camel@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-T24gOC8yMS8xOSAxMDoxMCBBTSwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPiBPbiBUdWUsIDIwMTkt
-MDgtMjAgYXQgMTE6NDcgLTA1MDAsIFN1bWFuIEFubmEgd3JvdGU6Cj4+IE9uIDgvMjAvMTkgMjoz
-NyBBTSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4+PiBPbiAyMC44LjIwMTkgMi4wMSwgU3VtYW4gQW5u
-YSB3cm90ZToKPj4+PiBIaSBUZXJvLAo+Pj4+Cj4+Pj4gT24gOC8xOS8xOSA0OjMyIEFNLCBUZXJv
-IEtyaXN0byB3cm90ZToKPiBbLi4uXQo+Pj4+Pj4+ICt7Cj4+Pj4+Pj4gK8KgwqDCoCBzdHJ1Y3Qg
-b21hcF9yZXNldF9kYXRhICpyZXNldDsKPj4+Pj4+PiArCj4+Pj4+Pj4gK8KgwqDCoCAvKgo+Pj4+
-Pj4+ICvCoMKgwqDCoCAqIENoZWNrIGlmIHdlIGhhdmUgcmVzZXRzLiBJZiBlaXRoZXIgcnN0Y3Rs
-IG9yIHJzdHN0IGlzCj4+Pj4+Pj4gK8KgwqDCoMKgICogbm9uLXplcm8sIHdlIGhhdmUgcmVzZXQg
-cmVnaXN0ZXJzIGluIHBsYWNlLiBBZGRpdGlvbmFsbHkKPj4+Pj4+PiArwqDCoMKgwqAgKiB0aGUg
-ZmxhZyBPTUFQX1BSTV9OT19SU1RTVCBpbXBsaWVzIHRoYXQgd2UgaGF2ZSByZXNldHMuCj4+Pj4+
-Pj4gK8KgwqDCoMKgICovCj4+Pj4+Pj4gK8KgwqDCoCBpZiAoIXBybS0+ZGF0YS0+cnN0Y3RsICYm
-ICFwcm0tPmRhdGEtPnJzdHN0ICYmCj4+Pj4+Pj4gK8KgwqDCoMKgwqDCoMKgICEocHJtLT5kYXRh
-LT5mbGFncyAmIE9NQVBfUFJNX05PX1JTVFNUKSkKPj4+Pj4+PiArwqDCoMKgwqDCoMKgwqAgcmV0
-dXJuIDA7Cj4+Pj4+Pj4gKwo+Pj4+Pj4+ICvCoMKgwqAgcmVzZXQgPSBkZXZtX2t6YWxsb2MoJnBk
-ZXYtPmRldiwgc2l6ZW9mKCpyZXNldCksIEdGUF9LRVJORUwpOwo+Pj4+Pj4+ICvCoMKgwqAgaWYg
-KCFyZXNldCkKPj4+Pj4+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9NRU07Cj4+Pj4+Pj4g
-Kwo+Pj4+Pj4+ICvCoMKgwqAgcmVzZXQtPnJjZGV2Lm93bmVyID0gVEhJU19NT0RVTEU7Cj4+Pj4+
-Pj4gK8KgwqDCoCByZXNldC0+cmNkZXYub3BzID0gJm9tYXBfcmVzZXRfb3BzOwo+Pj4+Pj4+ICvC
-oMKgwqAgcmVzZXQtPnJjZGV2Lm9mX25vZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsKPj4+Pj4+PiAr
-wqDCoMKgIHJlc2V0LT5yY2Rldi5ucl9yZXNldHMgPSBPTUFQX01BWF9SRVNFVFM7Cj4+Pj4KPj4+
-PiBTdWdnZXN0IGFkZGluZyBhIG51bWJlciBvZiByZXNldHMgdG8gcHJtLT5kYXRhLCBhbmQgdXNp
-bmcgaXQgc28gdGhhdCB3ZQo+Pj4+IGRvbid0IGV2ZW4gZW50ZXJ0YWluIGFueSByZXNldHMgYmV5
-b25kIHRoZSBhY3R1YWwgbnVtYmVyIG9mIHJlc2V0cy4KPj4+Cj4+PiBIbW0gd2h5IGJvdGhlcj8g
-QWNjZXNzaW5nIGEgc3RhbGUgcmVzZXQgYml0IHdpbGwganVzdCBjYXVzZSBhY2Nlc3MgdG8gYQo+
-Pj4gcmVzZXJ2ZWQgYml0IGluIHRoZSByZXNldCByZWdpc3RlciwgZG9pbmcgYmFzaWNhbGx5IG5v
-dGhpbmcuIEFsc28sIHRoaXMKPj4+IHdvdWxkIG5vdCB3b3JrIGZvciBhbTMvYW00IHdrdXAsIGFz
-IHRoZXJlIGlzIGEgc2luZ2xlIHJlc2V0IGJpdCBhdCBhbgo+Pj4gYXJiaXRyYXJ5IHBvc2l0aW9u
-Lgo+Pgo+PiBUaGUgZ2VuZXJpYyBjb252ZW50aW9uIHNlZW1zIHRvIGJlIGRlZmluaW5nIGEgcmVz
-ZXQgaWQgdmFsdWUgZGVmaW5lZAo+PiBmcm9tIGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQvIHRo
-YXQgY2FuIGJlIHVzZWQgdG8gbWF0Y2ggYmV0d2VlbiB0aGUKPj4gZHQtbm9kZXMgYW5kIHRoZSBy
-ZXNldC1jb250cm9sbGVyIGRyaXZlci4KPj4KPj4gUGhpbGlwcCwKPj4gQW55IGNvbW1lbnRzPwo+
-IAo+IEFyZSB0aGVyZSBvbmx5IHJlc2V0IGJpdHMgYW5kIHJlc2VydmVkIGJpdHMgaW4gdGhlIHJh
-bmdlIGFjY2Vzc2libGUgYnkKPiBbMC4uT01BUF9NQVhfUkVTRVRTXSBvciBhcmUgdGhlciBiaXRz
-IHdpdGggYW5vdGhlciBmdW5jdGlvbiBhcyB3ZWxsPwoKVGhhbmtzIFBoaWxpcHAsIHRoZXNlIGFy
-ZSBqdXN0IHJlc2V0IGJpdHMgYW5kIHJlc2VydmVkIGJpdHMuCgo+IElmIHRoZSBsYXR0ZXIgaXMg
-dGhlIGNhc2UsIEkgd291bGQgcHJlZmVyIGVudW1lcmF0aW5nIHRoZSByZXNldHMgaW4gYQo+IGR0
-LWJpbmRpbmdzIGhlYWRlciwgd2l0aCB0aGUgZHJpdmVyIGNvbnRhaW5pbmcgYW4gZW51bSAtPiBy
-ZWcvYml0Cj4gcG9zaXRpb24gbG9va3VwIHRhYmxlLgo+IAo+IEluIGdlbmVyYWwsIGFzc3VtaW5n
-IHRoZSBkZXZpY2UgdHJlZSBjb250YWlucyBubyBlcnJvcnMsIHRoaXMgc2hvdWxkIG5vdAo+IG1h
-dHRlciBtdWNoLCBidXQgSSB0aGluayBpdCBpcyBuaWNlIGlmIHRoZSByZXNldCBkcml2ZXIsIGV2
-ZW4gd2l0aCBhCj4gbWlzY29uZmlndXJlZCBkZXZpY2UgdHJlZSwgY2FuJ3Qgd3JpdGUgaW50byBh
-cmJpdHJhcnkgYml0IGZpZWxkcy4KClRlcm8sCkNhbiB5b3UgYWRkIGEgY2hlY2sgZm9yIHRoaXMg
-aWYgcG9zc2libGU/CgpyZWdhcmRzClN1bWFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Document Amazon's Annapurna Labs PCIe host bridge.
+
+Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+---
+ .../devicetree/bindings/pci/pcie-al.txt       | 46 +++++++++++++++++++
+ MAINTAINERS                                   |  3 +-
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/pcie-al.txt b/Documentation/devicetree/bindings/pci/pcie-al.txt
+new file mode 100644
+index 000000000000..557a5089229d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/pcie-al.txt
+@@ -0,0 +1,46 @@
++* Amazon Annapurna Labs PCIe host bridge
++
++Amazon's Annapurna Labs PCIe Host Controller is based on the Synopsys DesignWare
++PCI core. It inherits common properties defined in
++Documentation/devicetree/bindings/pci/designware-pcie.txt.
++
++Properties of the host controller node that differ from it are:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain
++			- "amazon,al-alpine-v2-pcie" for alpine_v2
++			- "amazon,al-alpine-v3-pcie" for alpine_v3
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register ranges as listed in the reg-names property
++
++- reg-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Must include the following entries
++			- "config"	PCIe ECAM space
++			- "controller"	AL proprietary registers
++			- "dbi"		Designware PCIe registers
++
++Example:
++
++	pcie-external0: pcie@fb600000 {
++		compatible = "amazon,al-alpine-v3-pcie";
++		reg = <0x0 0xfb600000 0x0 0x00100000
++		       0x0 0xfd800000 0x0 0x00010000
++		       0x0 0xfd810000 0x0 0x00001000>;
++		reg-names = "config", "controller", "dbi";
++		bus-range = <0 255>;
++		device_type = "pci";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map-mask = <0x00 0 0 7>;
++		interrupt-map = <0x0000 0 0 1 &gic GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>; /* INTa */
++		ranges = <0x02000000 0x0 0xc0010000 0x0 0xc0010000 0x0 0x07ff0000>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783569e3c4b4..d200b16fa95c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12448,10 +12448,11 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+ S:	Supported
+ F:	drivers/pci/controller/
+ 
+-PCIE DRIVER FOR ANNAPURNA LABS
++PCIE DRIVER FOR AMAZON ANNAPURNA LABS
+ M:	Jonathan Chocron <jonnyc@amazon.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/pci/pcie-al.txt
+ F:	drivers/pci/controller/dwc/pcie-al.c
+ 
+ PCIE DRIVER FOR AMLOGIC MESON
+-- 
+2.17.1
