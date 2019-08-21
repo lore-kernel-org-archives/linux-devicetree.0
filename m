@@ -1,91 +1,105 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH RESEND v2 5/6] ARM: dts: sunxi: Add missing watchdog interrupts
-Date: Wed, 21 Aug 2019 16:38:34 +0200
-Message-ID: <20190821143835.7294-5-mripard@kernel.org>
-References: <20190821143835.7294-1-mripard@kernel.org>
+From: =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>
+Subject: [PATCH net-next v2 3/3] dt-bindings: net: ethernet: Update mt7622 docs and dts to reflect the new phylink API
+Date: Wed, 21 Aug 2019 16:43:36 +0200
+Message-ID: <20190821144336.9259-4-opensource@vdorst.com>
+References: <20190821144336.9259-1-opensource@vdorst.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821143835.7294-1-mripard@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, wim@linux-watchdog.org
-Cc: linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190821144336.9259-1-opensource@vdorst.com>
+Sender: netdev-owner@vger.kernel.org
+To: John Crispin <john@phrozen.org>, Sean Wang <sean.wang@mediatek.com>, Nelson Chang <nelson.chang@mediatek.com>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Stefan Roese <sr@denx.de>, =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+This patch the removes the recently added mediatek,physpeed property.
+Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
+See mt7622-bananapi-bpi-r64.dts for a working example.
 
-The watchdog has an interrupt on all our SoCs, but it wasn't always listed.
-Add it to the devicetree where it's missing.
-
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: René van Dorst <opensource@vdorst.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+--
+v1->v2:
+* SGMII port only support BASE-X at 2.5Gbit.
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi | 1 +
- arch/arm/boot/dts/sun5i.dtsi     | 1 +
- arch/arm/boot/dts/sun6i-a31.dtsi | 1 +
- arch/arm/boot/dts/sun7i-a20.dtsi | 1 +
- arch/arm/boot/dts/sun8i-r40.dtsi | 1 +
- 5 files changed, 5 insertions(+)
+ .../arm/mediatek/mediatek,sgmiisys.txt        |  2 --
+ .../dts/mediatek/mt7622-bananapi-bpi-r64.dts  | 28 +++++++++++++------
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      |  1 -
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 077d45c7db6f..eed9fcb46185 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -815,6 +815,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <24>;
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
+index f5518f26a914..30cb645c0e54 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
+@@ -9,8 +9,6 @@ Required Properties:
+ 	- "mediatek,mt7622-sgmiisys", "syscon"
+ 	- "mediatek,mt7629-sgmiisys", "syscon"
+ - #clock-cells: Must be 1
+-- mediatek,physpeed: Should be one of "auto", "1000" or "2500" to match up
+-		     the capability of the target PHY.
  
- 		rtc: rtc@1c20d00 {
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 4e725afe7203..29a825f7afd1 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -600,6 +600,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <24>;
- 		};
+ The SGMIISYS controller uses the common clk binding from
+ Documentation/devicetree/bindings/clock/clock-bindings.txt
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+index 710c5c3d87d3..83e10591e0e5 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+@@ -115,24 +115,34 @@
+ };
  
- 		ir0: ir@1c21800 {
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 8176da53dadf..cba8864bb8f9 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -744,6 +744,7 @@
- 		wdt1: watchdog@1c20ca0 {
- 			compatible = "allwinner,sun6i-a31-wdt";
- 			reg = <0x01c20ca0 0x20>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+ &eth {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&eth_pins>;
+ 	status = "okay";
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		phy-mode = "2500base-x";
++
++		fixed-link {
++			speed = <2500>;
++			full-duplex;
++			pause;
++		};
++	};
  
- 		spdif: spdif@1c21000 {
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 651d7fe6b8ba..8e31ed4a297c 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1115,6 +1115,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+ 	gmac1: mac@1 {
+ 		compatible = "mediatek,eth-mac";
+ 		reg = <1>;
+-		phy-handle = <&phy5>;
++		phy-mode = "rgmii";
++
++		fixed-link {
++			speed = <1000>;
++			full-duplex;
++			pause;
++		};
+ 	};
  
- 		rtc: rtc@1c20d00 {
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 09e20768228c..f1be554b5894 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -404,6 +404,7 @@
- 		wdt: watchdog@1c20c90 {
- 			compatible = "allwinner,sun4i-a10-wdt";
- 			reg = <0x01c20c90 0x10>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+-	mdio-bus {
++	mdio: mdio-bus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-
+-		phy5: ethernet-phy@5 {
+-			reg = <5>;
+-			phy-mode = "sgmii";
+-		};
+ 	};
+ };
  
- 		uart0: serial@1c28000 {
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index d1e13d340e26..dac51e98204c 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -931,6 +931,5 @@
+ 			     "syscon";
+ 		reg = <0 0x1b128000 0 0x3000>;
+ 		#clock-cells = <1>;
+-		mediatek,physpeed = "2500";
+ 	};
+ };
 -- 
-2.21.0
+2.20.1
