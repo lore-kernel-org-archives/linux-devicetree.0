@@ -1,25 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: fsl: dspi: Add fsl,ls1088a-dspi
- compatible string
-Date: Wed, 21 Aug 2019 13:34:11 -0500
-Message-ID: <20190821183411.GA26478@bogus>
-References: <20190801083105.30102-1-chuanhua.han@nxp.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Date: Thu, 22 Aug 2019 00:12:31 +0530
+Message-ID: <20190821184239.12364-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190801083105.30102-1-chuanhua.han@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chuanhua Han <chuanhua.han@nxp.com>
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  1 Aug 2019 16:31:03 +0800, Chuanhua Han wrote:
-> new compatible string: "fsl,ls1088a-dspi".
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+the MTP for SM8150.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes in v4:
+ - Update the address and size cell to 2 and extend ranges and describe DMA
+   space
+ - Fix node location of spmi per sorted address
+ - Add Niklas's review tags
+
+Changes in v3:
+ - Fix copyright comment style to Linux kernel style
+ - Make property values all hex or decimal
+ - Fix patch titles and logs and make them consistent
+ - Fix line breaks
+
+Changes in v2:
+ - Squash patches
+ - Fix comments given by Stephen namely, lowercase for hex numbers,
+   making rpmhcc have xo_board as parent, rename pon controller to
+   power-on controller, make pmic nodes as disabled etc.
+ - removed the dependency on clk defines and use raw numbers
+
+Vinod Koul (8):
+  arm64: dts: qcom: sm8150: Add base dts file
+  arm64: dts: qcom: pm8150: Add base dts file
+  arm64: dts: qcom: pm8150b: Add base dts file
+  arm64: dts: qcom: pm8150l: Add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add regulators
+  arm64: dts: qcom: sm8150: Add reserved-memory regions
+  arm64: dts: qcom: sm8150: Add apps shared nodes
+
+ arch/arm64/boot/dts/qcom/Makefile       |   1 +
+ arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 375 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi    | 482 ++++++++++++++++++++++++
+ 6 files changed, 1121 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+
+-- 
+2.20.1
