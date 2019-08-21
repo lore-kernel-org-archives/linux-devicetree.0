@@ -1,103 +1,53 @@
-From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH v4 4/7] PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs Root Port
-Date: Wed, 21 Aug 2019 18:35:44 +0300
-Message-ID: <20190821153545.17635-5-jonnyc@amazon.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v7 1/7] driver core: Add support for linking devices
+ during device addition
+Date: Wed, 21 Aug 2019 08:36:37 -0700
+Message-ID: <915b49b5-5511-afa2-d3d6-e4ede94d40be@gmail.com>
+References: <20190724001100.133423-1-saravanak@google.com>
+ <20190724001100.133423-2-saravanak@google.com>
+ <32a8abd2-b6a4-67df-eee9-0f006310e81e@gmail.com>
+ <CAGETcx8Q27+Jnz+rHtt33muMV6U+S3cmKh02Ok_Ds_ZzfBqhrg@mail.gmail.com>
+ <522e8375-5070-f579-6509-3e44fe66768e@gmail.com>
+ <CAGETcx-9Bera+nU-3=ZNpHqdqKxO0TmNuVUsCMQ-yDm1VXn5zA@mail.gmail.com>
+ <a4c139c1-c9d1-3e5a-f47f-cd790b42da1f@gmail.com>
+ <CAGETcx-J7+d3pcArMZvO5zQbUhAhRW+1=FUf7C1fV9-QhkckBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
+In-Reply-To: <CAGETcx-J7+d3pcArMZvO5zQbUhAhRW+1=FUf7C1fV9-QhkckBw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Collins <collinsd@codeaurora.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-The Root Port (identified by [1c36:0031]) doesn't support MSI-X. On some
-platforms it is configured to not advertise the capability at all, while
-on others it (mistakenly) does. This causes a panic during
-initialization by the pcieport driver, since it tries to configure the
-MSI-X capability. Specifically, when trying to access the MSI-X table
-a "non-existing addr" exception occurs.
+On 8/20/19 3:10 PM, Saravana Kannan wrote:
+> On Mon, Aug 19, 2019 at 9:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 8/19/19 5:00 PM, Saravana Kannan wrote:
+>>> On Sun, Aug 18, 2019 at 8:38 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>
 
-Example stacktrace snippet:
+< snip >
 
-[    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
-[    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
-[    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-[    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
-[    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
-[    1.632367] lr : __pci_enable_msix_range+0x498/0x608
-[    1.632367] sp : ffffff80117db700
-[    1.632368] x29: ffffff80117db700 x28: 0000000000000001
-[    1.632370] x27: 0000000000000001 x26: 0000000000000000
-[    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
-[    1.632373] x23: 0000000000000000 x22: 0000000000000000
-[    1.632375] x21: 0000000000000001 x20: 0000000000000000
-[    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
-[    1.632378] x17: 0000000000000000 x16: 0000000000000000
-[    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
-[    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
-[    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
-[    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
-[    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
-[    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
-[    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
-[    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
-[    1.632392] Kernel panic - not syncing: Asynchronous SError Interrupt
-[    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
-[    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-[    1.632394] Call trace:
-[    1.632395]  dump_backtrace+0x0/0x140
-[    1.632395]  show_stack+0x14/0x20
-[    1.632396]  dump_stack+0xa8/0xcc
-[    1.632396]  panic+0x140/0x334
-[    1.632397]  nmi_panic+0x6c/0x70
-[    1.632398]  arm64_serror_panic+0x74/0x88
-[    1.632398]  __pte_error+0x0/0x28
-[    1.632399]  el1_error+0x84/0xf8
-[    1.632400]  __pci_enable_msix_range+0x4e4/0x608
-[    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
-[    1.632401]  pcie_port_device_register+0x2b8/0x4e0
-[    1.632402]  pcie_portdrv_probe+0x34/0xf0
+>>>
+>>> 3. The supplier info doesn't always need to come from a firmware. So I
+>>> don't want to limit it to that?
+>>
+>> If you can find another source of topology info, then I would expect
+>> that another set of fwnode_operations functions would be created
+>> for the info source.
+> 
+> The other source could just be C files in the kernel. Using fwnodes
+> for that would be hacky. But let's sort (1) and (2) out first.
+> 
 
-Notice that this quirk also disables MSI (which may work, but hasn't
-been tested nor has a current use case), since currently there is no
-standard way to disable only MSI-X.
+< snip >
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/pci/quirks.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Just a piece of trivia.  I got curious enough about this to search.
+There is a third type of fwnode, software nodes.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 23672680dba7..b6e6e7df3f7b 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2925,6 +2925,24 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
- 			quirk_msi_intx_disable_qca_bug);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
- 			quirk_msi_intx_disable_qca_bug);
-+
-+/*
-+ * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
-+ * should be disabled on platforms where the device (mistakenly) advertises it.
-+ *
-+ * Notice that this quirk also disables MSI (which may work, but hasn't been
-+ * tested), since currently there is no standard way to disable only MSI-X.
-+ *
-+ * The 0031 device id is reused for other non Root Port device types,
-+ * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-+ */
-+static void quirk_al_msi_disable(struct pci_dev *dev)
-+{
-+	dev->no_msi = 1;
-+	pci_warn(dev, "Disabling MSI/MSI-X\n");
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-+			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
- #endif /* CONFIG_PCI_MSI */
- 
- /*
--- 
-2.17.1
+See commit 59abd83672f70cac4b6bf9b237506c5bc6837606 for a description.
+
+-Frank
