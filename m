@@ -1,76 +1,74 @@
-From: Brendan Higgins <brendanhiggins@google.com>
+From: shuah <shuah@kernel.org>
 Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
  testing framework
-Date: Tue, 20 Aug 2019 16:23:25 -0700
-Message-ID: <CAFd5g44aO40G7Wc-51EPyhWZgosN4ZHwwSjKe7CU_vi2OD7eKA@mail.gmail.com>
+Date: Tue, 20 Aug 2019 18:15:57 -0600
+Message-ID: <10e4190d-2a26-f51a-ba34-7afe8e640771@kernel.org>
 References: <20190814055108.214253-1-brendanhiggins@google.com>
- <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org> <20190820182450.GA38078@google.com>
- <e8eaf28e-75df-c966-809a-2e3631353cc9@kernel.org> <CAFd5g44JT_KQ+OxjVdG0qMWuaEB0Zq5x=r6tLsqJdncwZ_zbGA@mail.gmail.com>
+ <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
+ <20190820182450.GA38078@google.com>
+ <e8eaf28e-75df-c966-809a-2e3631353cc9@kernel.org>
+ <CAFd5g44JT_KQ+OxjVdG0qMWuaEB0Zq5x=r6tLsqJdncwZ_zbGA@mail.gmail.com>
+ <CAFd5g44aO40G7Wc-51EPyhWZgosN4ZHwwSjKe7CU_vi2OD7eKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g44JT_KQ+OxjVdG0qMWuaEB0Zq5x=r6tLsqJdncwZ_zbGA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAFd5g44aO40G7Wc-51EPyhWZgosN4ZHwwSjKe7CU_vi2OD7eKA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, Kevin Hilman <khilman@baylibre.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, shuah <shuah@kernel.org>, linux-kbuild <linux-kbuild@vger.k>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 2:26 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Tue, Aug 20, 2019 at 12:08 PM shuah <shuah@kernel.org> wrote:
-> >
-> > On 8/20/19 12:24 PM, Brendan Higgins wrote:
-> > > On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
-> > >> On 8/13/19 11:50 PM, Brendan Higgins wrote:
-> > >>> ## TL;DR
-> > >>>
-> > >>> This revision addresses comments from Stephen and Bjorn Helgaas. Most
-> > >>> changes are pretty minor stuff that doesn't affect the API in anyway.
-> > >>> One significant change, however, is that I added support for freeing
-> > >>> kunit_resource managed resources before the test case is finished via
-> > >>> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
-> > >>> KUnit on certain configurations (like the default one for x86, whoops).
-> > >>>
-> > >>> Based on Stephen's feedback on the previous change, I think we are
-> > >>> pretty close. I am not expecting any significant changes from here on
-> > >>> out.
-> > >>>
-> > >>
-> > >> Hi Brendan,
-> > >>
-> > >> I found checkpatch errors in one or two patches. Can you fix those and
-> > >> send v14.
-> > >
-> > > Hi Shuah,
-> > >
-> > > Are you refering to the following errors?
-> > >
-> > > ERROR: Macros with complex values should be enclosed in parentheses
-> > > #144: FILE: include/kunit/test.h:456:
-> > > +#define KUNIT_BINARY_CLASS \
-> > > +       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
-> > >
-> > > ERROR: Macros with complex values should be enclosed in parentheses
-> > > #146: FILE: include/kunit/test.h:458:
-> > > +#define KUNIT_BINARY_PTR_CLASS \
-> > > +       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
-> > >
-> > > These values should *not* be in parentheses. I am guessing checkpatch is
-> > > getting confused and thinks that these are complex expressions, when
-> > > they are not.
-> > >
-> > > I ignored the errors since I figured checkpatch was complaining
-> > > erroneously.
-> > >
-> > > I could refactor the code to remove these macros entirely, but I think
-> > > the code is cleaner with them.
-> > >
-> >
-> > Please do. I am not veru sure what value these macros add.
->
-> Alright, I will have something for you later today.
-
-I just sent a new revision with the fix.
-
-Cheers
+T24gOC8yMC8xOSA1OjIzIFBNLCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6Cj4gT24gVHVlLCBBdWcg
+MjAsIDIwMTkgYXQgMjoyNiBQTSBCcmVuZGFuIEhpZ2dpbnMKPiA8YnJlbmRhbmhpZ2dpbnNAZ29v
+Z2xlLmNvbT4gd3JvdGU6Cj4+Cj4+IE9uIFR1ZSwgQXVnIDIwLCAyMDE5IGF0IDEyOjA4IFBNIHNo
+dWFoIDxzaHVhaEBrZXJuZWwub3JnPiB3cm90ZToKPj4+Cj4+PiBPbiA4LzIwLzE5IDEyOjI0IFBN
+LCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6Cj4+Pj4gT24gVHVlLCBBdWcgMjAsIDIwMTkgYXQgMTE6
+MjQ6NDVBTSAtMDYwMCwgc2h1YWggd3JvdGU6Cj4+Pj4+IE9uIDgvMTMvMTkgMTE6NTAgUE0sIEJy
+ZW5kYW4gSGlnZ2lucyB3cm90ZToKPj4+Pj4+ICMjIFRMO0RSCj4+Pj4+Pgo+Pj4+Pj4gVGhpcyBy
+ZXZpc2lvbiBhZGRyZXNzZXMgY29tbWVudHMgZnJvbSBTdGVwaGVuIGFuZCBCam9ybiBIZWxnYWFz
+LiBNb3N0Cj4+Pj4+PiBjaGFuZ2VzIGFyZSBwcmV0dHkgbWlub3Igc3R1ZmYgdGhhdCBkb2Vzbid0
+IGFmZmVjdCB0aGUgQVBJIGluIGFueXdheS4KPj4+Pj4+IE9uZSBzaWduaWZpY2FudCBjaGFuZ2Us
+IGhvd2V2ZXIsIGlzIHRoYXQgSSBhZGRlZCBzdXBwb3J0IGZvciBmcmVlaW5nCj4+Pj4+PiBrdW5p
+dF9yZXNvdXJjZSBtYW5hZ2VkIHJlc291cmNlcyBiZWZvcmUgdGhlIHRlc3QgY2FzZSBpcyBmaW5p
+c2hlZCB2aWEKPj4+Pj4+IGt1bml0X3Jlc291cmNlX2Rlc3Ryb3koKS4gQWRkaXRpb25hbGx5LCBC
+am9ybiBwb2ludGVkIG91dCB0aGF0IEkgYnJva2UKPj4+Pj4+IEtVbml0IG9uIGNlcnRhaW4gY29u
+ZmlndXJhdGlvbnMgKGxpa2UgdGhlIGRlZmF1bHQgb25lIGZvciB4ODYsIHdob29wcykuCj4+Pj4+
+Pgo+Pj4+Pj4gQmFzZWQgb24gU3RlcGhlbidzIGZlZWRiYWNrIG9uIHRoZSBwcmV2aW91cyBjaGFu
+Z2UsIEkgdGhpbmsgd2UgYXJlCj4+Pj4+PiBwcmV0dHkgY2xvc2UuIEkgYW0gbm90IGV4cGVjdGlu
+ZyBhbnkgc2lnbmlmaWNhbnQgY2hhbmdlcyBmcm9tIGhlcmUgb24KPj4+Pj4+IG91dC4KPj4+Pj4+
+Cj4+Pj4+Cj4+Pj4+IEhpIEJyZW5kYW4sCj4+Pj4+Cj4+Pj4+IEkgZm91bmQgY2hlY2twYXRjaCBl
+cnJvcnMgaW4gb25lIG9yIHR3byBwYXRjaGVzLiBDYW4geW91IGZpeCB0aG9zZSBhbmQKPj4+Pj4g
+c2VuZCB2MTQuCj4+Pj4KPj4+PiBIaSBTaHVhaCwKPj4+Pgo+Pj4+IEFyZSB5b3UgcmVmZXJpbmcg
+dG8gdGhlIGZvbGxvd2luZyBlcnJvcnM/Cj4+Pj4KPj4+PiBFUlJPUjogTWFjcm9zIHdpdGggY29t
+cGxleCB2YWx1ZXMgc2hvdWxkIGJlIGVuY2xvc2VkIGluIHBhcmVudGhlc2VzCj4+Pj4gIzE0NDog
+RklMRTogaW5jbHVkZS9rdW5pdC90ZXN0Lmg6NDU2Ogo+Pj4+ICsjZGVmaW5lIEtVTklUX0JJTkFS
+WV9DTEFTUyBcCj4+Pj4gKyAgICAgICBrdW5pdF9iaW5hcnlfYXNzZXJ0LCBLVU5JVF9JTklUX0JJ
+TkFSWV9BU1NFUlRfU1RSVUNUCj4+Pj4KPj4+PiBFUlJPUjogTWFjcm9zIHdpdGggY29tcGxleCB2
+YWx1ZXMgc2hvdWxkIGJlIGVuY2xvc2VkIGluIHBhcmVudGhlc2VzCj4+Pj4gIzE0NjogRklMRTog
+aW5jbHVkZS9rdW5pdC90ZXN0Lmg6NDU4Ogo+Pj4+ICsjZGVmaW5lIEtVTklUX0JJTkFSWV9QVFJf
+Q0xBU1MgXAo+Pj4+ICsgICAgICAga3VuaXRfYmluYXJ5X3B0cl9hc3NlcnQsIEtVTklUX0lOSVRf
+QklOQVJZX1BUUl9BU1NFUlRfU1RSVUNUCj4+Pj4KPj4+PiBUaGVzZSB2YWx1ZXMgc2hvdWxkICpu
+b3QqIGJlIGluIHBhcmVudGhlc2VzLiBJIGFtIGd1ZXNzaW5nIGNoZWNrcGF0Y2ggaXMKPj4+PiBn
+ZXR0aW5nIGNvbmZ1c2VkIGFuZCB0aGlua3MgdGhhdCB0aGVzZSBhcmUgY29tcGxleCBleHByZXNz
+aW9ucywgd2hlbgo+Pj4+IHRoZXkgYXJlIG5vdC4KPj4+Pgo+Pj4+IEkgaWdub3JlZCB0aGUgZXJy
+b3JzIHNpbmNlIEkgZmlndXJlZCBjaGVja3BhdGNoIHdhcyBjb21wbGFpbmluZwo+Pj4+IGVycm9u
+ZW91c2x5Lgo+Pj4+Cj4+Pj4gSSBjb3VsZCByZWZhY3RvciB0aGUgY29kZSB0byByZW1vdmUgdGhl
+c2UgbWFjcm9zIGVudGlyZWx5LCBidXQgSSB0aGluawo+Pj4+IHRoZSBjb2RlIGlzIGNsZWFuZXIg
+d2l0aCB0aGVtLgo+Pj4+Cj4+Pgo+Pj4gUGxlYXNlIGRvLiBJIGFtIG5vdCB2ZXJ1IHN1cmUgd2hh
+dCB2YWx1ZSB0aGVzZSBtYWNyb3MgYWRkLgo+Pgo+PiBBbHJpZ2h0LCBJIHdpbGwgaGF2ZSBzb21l
+dGhpbmcgZm9yIHlvdSBsYXRlciB0b2RheS4KPiAKPiBJIGp1c3Qgc2VudCBhIG5ldyByZXZpc2lv
+biB3aXRoIHRoZSBmaXguCj4gCj4gQ2hlZXJzCj4gCgpUaGFua3MgQnJlbmRhbi4gSSB3aWxsIGdl
+dCB0aGVtIGluLgoKLS0gU2h1YWgKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVs
