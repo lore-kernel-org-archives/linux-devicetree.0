@@ -1,57 +1,104 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/3] dt-bindings: Convert Arm Mali GPUs to DT schema
-Date: Wed, 21 Aug 2019 09:13:39 +0200
-Message-ID: <bbfe4e3b-9e75-0447-544e-a0f8f6a19f20@baylibre.com>
-References: <20190820195959.6126-1-robh@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 6/8] soc: ti: omap_prm: add data for am33xx
+Date: Wed, 21 Aug 2019 10:23:21 +0300
+Message-ID: <8f5f86db-270a-7278-9d9c-e84c0fa9b73c@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-7-git-send-email-t-kristo@ti.com>
+ <ebb6e240-1252-5a4f-39a2-403ee699d8aa@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ebb6e240-1252-5a4f-39a2-403ee699d8aa@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suman Anna <s-anna@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyMC8wOC8yMDE5IDIxOjU5LCBSb2IgSGVycmluZyB3cm90ZToKPiBUaGlzIHNlcmll
-cyBjb252ZXJ0cyB0aGUgdmFyaW91cyBBcm0gTWFsaSBHUFUgYmluZGluZ3MgdG8gdXNlIHRoZSBE
-VAo+IHNjaGVtYSBmb3JtYXQuCj4gCj4gVGhlIE1pZGdhcmQgYW5kIEJpZnJvc3QgYmluZGluZ3Mg
-Z2VuZXJhdGUgd2FybmluZ3Mgb24gJ2ludGVycnVwdC1uYW1lcycKPiBiZWNhdXNlIHRoZXJlJ3Mg
-YWxsIGRpZmZlcmVudCBvcmRlcmluZy4gVGhlIFV0Z2FyZCBiaW5kaW5nIGdlbmVyYXRlcyAKPiB3
-YXJuaW5ncyBvbiBSb2NrY2hpcCBwbGF0Zm9ybXMgYmVjYXVzZSAnY2xvY2stbmFtZXMnIG9yZGVy
-IGlzIHJldmVyc2VkLgoKRXhjZXB0IHRoZSBmYWN0IGNsb2NrcyBzaG91bGQgYmUgcmVxdWlyZWQg
-b24gYWxsIGFtbG9naWMgYmluZGluZ3MsClJldmlld2VkLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFy
-bXN0cm9uZ0BiYXlsaWJyZS5jb20+CkknbGwgc2VuZCBhIGZpeHVwIHBhdGNoIHRvIGVuZm9yY2Ug
-Y2xvY2tzLgoKVGhhbmtzLApOZWlsCgo+IAo+IFJvYgo+IAo+IFJvYiBIZXJyaW5nICgzKToKPiAg
-IGR0LWJpbmRpbmdzOiBDb252ZXJ0IEFybSBNYWxpIE1pZGdhcmQgR1BVIHRvIERUIHNjaGVtYQo+
-ICAgZHQtYmluZGluZ3M6IENvbnZlcnQgQXJtIE1hbGkgQmlmcm9zdCBHUFUgdG8gRFQgc2NoZW1h
-Cj4gICBkdC1iaW5kaW5nczogQ29udmVydCBBcm0gTWFsaSBVdGdhcmQgR1BVIHRvIERUIHNjaGVt
-YQo+IAo+ICAuLi4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJpZnJvc3QudHh0ICAgICAgICAgfCAg
-OTIgLS0tLS0tLS0tLQo+ICAuLi4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJpZnJvc3QueWFtbCAg
-ICAgICAgfCAxMTUgKysrKysrKysrKysrCj4gIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlk
-Z2FyZC50eHQgICAgICAgICB8IDExOSAtLS0tLS0tLS0tLS0tCj4gIC4uLi9iaW5kaW5ncy9ncHUv
-YXJtLG1hbGktbWlkZ2FyZC55YW1sICAgICAgICB8IDE2NSArKysrKysrKysrKysrKysrKwo+ICAu
-Li4vYmluZGluZ3MvZ3B1L2FybSxtYWxpLXV0Z2FyZC50eHQgICAgICAgICAgfCAxMjkgLS0tLS0t
-LS0tLS0tLS0KPiAgLi4uL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS11dGdhcmQueWFtbCAgICAgICAg
-IHwgMTY2ICsrKysrKysrKysrKysrKysrKwo+ICA2IGZpbGVzIGNoYW5nZWQsIDQ0NiBpbnNlcnRp
-b25zKCspLCAzNDAgZGVsZXRpb25zKC0pCj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLWJpZnJvc3QudHh0Cj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxt
-YWxpLWJpZnJvc3QueWFtbAo+ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRn
-YXJkLnlhbWwKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJkLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS11dGdhcmQueWFtbAo+
-IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 20.8.2019 21.48, Suman Anna wrote:
+> Hi Tero,
+> 
+> On 8/7/19 2:48 AM, Tero Kristo wrote:
+>> Add PRM instance data for AM33xx SoC. Includes some basic register
+>> definitions and reset data for now.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   drivers/soc/ti/omap_prm.c | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+>> index 9b8d5945..fadfc7f 100644
+>> --- a/drivers/soc/ti/omap_prm.c
+>> +++ b/drivers/soc/ti/omap_prm.c
+>> @@ -73,8 +73,25 @@ struct omap_prm_data omap4_prm_data[] = {
+>>   	{ },
+>>   };
+>>   
+>> +struct omap_rst_map am3_wkup_rst_map[] = {
+>> +	{ .rst = 3, .st = 5 },
+>> +	{ .rst = -1 },
+>> +};
+>> +
+>> +struct omap_prm_data am3_prm_data[] = {
+>> +	{ .name = "per", .base = 0x44e00c00, .pwstctrl = 0xc, .pwstst = 0x8, .flags = OMAP_PRM_NO_RSTST },
+>> +	{ .name = "wkup", .base = 0x44e00d00, .pwstctrl = 0x4, .pwstst = 0x8, .rstst = 0xc, .rstmap = am3_wkup_rst_map },
+>> +	{ .name = "mpu", .base = 0x44e00e00, .pwstst = 0x4 },
+> 
+> Has a rstst but no rstctrl, but your registration logic takes care of
+> this. Somewhat confusing, when you just look at the data. Should you
+> limit the check to only rstctrl and OMAP_PRM_NO_RSTST?
+
+I think its probably better I invert the flags and explicitly state 
+OMAP_PRM_HAS_RSTST | OMAP_PRM_HAS_RSTCTRL, in case any zero value is 
+used for these.
+
+> 
+>> +	{ .name = "device", .base = 0x44e00f00, .rstctl = 0x0, .rstst = 0x8 },
+> 
+> No pwrstctrl and pwrstst registers, so same comment as on OMAP4 data.
+
+I should probably add some flag for this in future once the support for 
+power domains is added.
+
+Anyway, I'll ditch all pwstctrl / pwstst data for now as it seems to 
+bother you too much.
+
+-Tero
+
+> 
+>> +	{ .name = "rtc", .base = 0x44e01000, .pwstst = 0x4 },
+>> +	{ .name = "gfx", .base = 0x44e01100, .pwstst = 0x10, .rstctl = 0x4, .rstst = 0x14 },
+>> +	{ .name = "cefuse", .base = 0x44e01200, .pwstst = 0x4 },
+> 
+> I am not sure if it is better to explicitly list the registers at 0
+> offset rather than using the implied value of 0, since there are some
+> registers that do not exist on some PRM instances which are also not
+> defined.
+> 
+> regards
+> Suman
+> 
+>> +	{ },
+>> +};
+>> +
+>>   static const struct of_device_id omap_prm_id_table[] = {
+>>   	{ .compatible = "ti,omap4-prm-inst", .data = omap4_prm_data },
+>> +	{ .compatible = "ti,am3-prm-inst", .data = am3_prm_data },
+>>   	{ },
+>>   };
+>>   
+>>
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
