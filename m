@@ -1,341 +1,184 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V3 2/4] watchdog: Add i.MX7ULP watchdog support
-Date: Wed, 21 Aug 2019 07:13:55 -0700
-Message-ID: <20190821141355.GA10463@roeck-us.net>
-References: <1566353278-1884-1-git-send-email-Anson.Huang@nxp.com>
- <1566353278-1884-2-git-send-email-Anson.Huang@nxp.com>
+From: Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH v3 1/4] iio: adc: ad7606: Add support for AD7606B ADC
+Date: Wed, 21 Aug 2019 17:16:53 +0300
+Message-ID: <20190821141656.4815-1-beniamin.bia@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1566353278-1884-2-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: jic23@kernel.org
+Cc: devel@driverdev.osuosl.org, mark.rutland@arm.com, lars@metafoo.de, biabeniamin@outlook.com, Stefan Popa <stefan.popa@analog.com>, Michael.Hennerich@analog.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, mchehab+samsung@kernel.org, paulmck@linux.ibm.com, Beniamin Bia <beniamin.bia@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:07:56PM -0400, Anson Huang wrote:
-> The i.MX7ULP Watchdog Timer (WDOG) module is an independent timer
-> that is available for system use.
-> It provides a safety feature to ensure that software is executing
-> as planned and that the CPU is not stuck in an infinite loop or
-> executing unintended code. If the WDOG module is not serviced
-> (refreshed) within a certain period, it resets the MCU.
-> 
-> Add driver support for i.MX7ULP watchdog.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- add devm_add_action_or_reset to disable clk for remove action.
-> ---
->  drivers/watchdog/Kconfig       |  13 +++
->  drivers/watchdog/Makefile      |   1 +
->  drivers/watchdog/imx7ulp_wdt.c | 246 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 260 insertions(+)
->  create mode 100644 drivers/watchdog/imx7ulp_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index a8f5c81..d68e5b5 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -724,6 +724,19 @@ config IMX_SC_WDT
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called imx_sc_wdt.
->  
-> +config IMX7ULP_WDT
-> +	tristate "IMX7ULP Watchdog"
-> +	depends on ARCH_MXC || COMPILE_TEST
-> +	select WATCHDOG_CORE
-> +	help
-> +	  This is the driver for the hardware watchdog on the Freescale
-> +	  IMX7ULP and later processors. If you have one of these
-> +	  processors and wish to have watchdog support enabled,
-> +	  say Y, otherwise say N.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called imx7ulp_wdt.
-> +
->  config UX500_WATCHDOG
->  	tristate "ST-Ericsson Ux500 watchdog"
->  	depends on MFD_DB8500_PRCMU
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index b5a0aed..2ee352b 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -67,6 +67,7 @@ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
->  obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
->  obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
->  obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
-> +obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
->  obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
->  obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
->  obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
-> diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-> new file mode 100644
-> index 0000000..5d37957
-> --- /dev/null
-> +++ b/drivers/watchdog/imx7ulp_wdt.c
-> @@ -0,0 +1,246 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2019 NXP.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define WDOG_CS			0x0
-> +#define WDOG_CS_CMD32EN		BIT(13)
-> +#define WDOG_CS_ULK		BIT(11)
-> +#define WDOG_CS_RCS		BIT(10)
-> +#define WDOG_CS_EN		BIT(7)
-> +#define WDOG_CS_UPDATE		BIT(5)
-> +
-> +#define WDOG_CNT	0x4
-> +#define WDOG_TOVAL	0x8
-> +
-> +#define REFRESH_SEQ0	0xA602
-> +#define REFRESH_SEQ1	0xB480
-> +#define REFRESH		((REFRESH_SEQ1 << 16) | REFRESH_SEQ0)
-> +
-> +#define UNLOCK_SEQ0	0xC520
-> +#define UNLOCK_SEQ1	0xD928
-> +#define UNLOCK		((UNLOCK_SEQ1 << 16) | UNLOCK_SEQ0)
-> +
-> +#define DEFAULT_TIMEOUT	60
-> +#define MAX_TIMEOUT	128
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0000);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +struct imx7ulp_wdt_device {
-> +	struct notifier_block restart_handler;
-> +	struct watchdog_device wdd;
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +	int rate;
-> +};
-> +
-> +static inline void imx7ulp_wdt_enable(void __iomem *base, bool enable)
-> +{
-> +	u32 val = readl(base + WDOG_CS);
-> +
-> +	writel(UNLOCK, base + WDOG_CNT);
-> +	if (enable)
-> +		writel(val | WDOG_CS_EN, base + WDOG_CS);
-> +	else
-> +		writel(val & ~WDOG_CS_EN, base + WDOG_CS);
-> +}
-> +
-> +static inline bool imx7ulp_wdt_is_enabled(void __iomem *base)
-> +{
-> +	u32 val = readl(base + WDOG_CS);
-> +
-> +	return val & WDOG_CS_EN;
-> +}
-> +
-> +static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
-> +{
-> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> +
-> +	writel(REFRESH, wdt->base + WDOG_CNT);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx7ulp_wdt_start(struct watchdog_device *wdog)
-> +{
-> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> +
-> +	imx7ulp_wdt_enable(wdt->base, true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
-> +{
-> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> +
-> +	imx7ulp_wdt_enable(wdt->base, false);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
-> +				   unsigned int timeout)
-> +{
-> +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> +	u32 val = wdt->rate * timeout;
-> +
-> +	writel(UNLOCK, wdt->base + WDOG_CNT);
-> +	writel(val, wdt->base + WDOG_TOVAL);
-> +
-> +	wdog->timeout = timeout;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct watchdog_ops imx7ulp_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = imx7ulp_wdt_start,
-> +	.stop  = imx7ulp_wdt_stop,
-> +	.ping  = imx7ulp_wdt_ping,
-> +	.set_timeout = imx7ulp_wdt_set_timeout,
-> +};
-> +
-> +static const struct watchdog_info imx7ulp_wdt_info = {
-> +	.identity = "i.MX7ULP watchdog timer",
-> +	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> +		    WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static inline void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
-> +{
-> +	u32 val;
-> +
-> +	/* unlock the wdog for reconfiguration */
-> +	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
-> +	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
-> +
-> +	/* set an initial timeout value in TOVAL */
-> +	writel(timeout, base + WDOG_TOVAL);
-> +	/* enable 32bit command sequence and reconfigure */
-> +	val = BIT(13) | BIT(8) | BIT(5);
-> +	writel(val, base + WDOG_CS);
-> +}
-> +
-> +static void imx7ulp_wdt_action(void *data)
-> +{
-> +	struct imx7ulp_wdt_device *imx7ulp_wdt = data;
-> +
-> +	clk_disable_unprepare(imx7ulp_wdt->clk);
-
-If you had passed imx7ulp_wdt->clk as parameter, the dereference here
-would not be necessary.
-
-> +}
-> +
-> +static int imx7ulp_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct imx7ulp_wdt_device *imx7ulp_wdt;
-> +	struct device *dev = &pdev->dev;
-> +	struct watchdog_device *wdog;
-> +	int ret;
-> +
-> +	imx7ulp_wdt = devm_kzalloc(dev, sizeof(*imx7ulp_wdt), GFP_KERNEL);
-> +	if (!imx7ulp_wdt)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, imx7ulp_wdt);
-> +
-> +	imx7ulp_wdt->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(imx7ulp_wdt->base))
-> +		return PTR_ERR(imx7ulp_wdt->base);
-> +
-> +	imx7ulp_wdt->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(imx7ulp_wdt->clk)) {
-> +		dev_err(dev, "Failed to get watchdog clock\n");
-> +		return PTR_ERR(imx7ulp_wdt->clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(dev, imx7ulp_wdt_action, imx7ulp_wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	imx7ulp_wdt->rate = 1000;
-
-I forgot to ask (sorry, I had noticed, but I guess I forgot).
-
-Why not clk_get_rate() ? If the clock rate is fixed, why bother with a 'rate'
-variable ? You could use a constant instead whereever it is used.
-
-Thanks
-Guenter
-
-> +	wdog = &imx7ulp_wdt->wdd;
-> +	wdog->info = &imx7ulp_wdt_info;
-> +	wdog->ops = &imx7ulp_wdt_ops;
-> +	wdog->min_timeout = 1;
-> +	wdog->max_timeout = MAX_TIMEOUT;
-> +	wdog->parent = dev;
-> +	wdog->timeout = DEFAULT_TIMEOUT;
-> +
-> +	watchdog_init_timeout(wdog, 0, dev);
-> +	watchdog_stop_on_reboot(wdog);
-> +	watchdog_stop_on_unregister(wdog);
-> +	watchdog_set_drvdata(wdog, imx7ulp_wdt);
-> +	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * imx7ulp_wdt->rate);
-> +
-> +	return devm_watchdog_register_device(dev, wdog);
-> +}
-> +
-> +static int __maybe_unused imx7ulp_wdt_suspend(struct device *dev)
-> +{
-> +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(&imx7ulp_wdt->wdd))
-> +		imx7ulp_wdt_stop(&imx7ulp_wdt->wdd);
-> +
-> +	clk_disable_unprepare(imx7ulp_wdt->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused imx7ulp_wdt_resume(struct device *dev)
-> +{
-> +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
-> +	u32 timeout = imx7ulp_wdt->wdd.timeout * imx7ulp_wdt->rate;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (imx7ulp_wdt_is_enabled(imx7ulp_wdt->base))
-> +		imx7ulp_wdt_init(imx7ulp_wdt->base, timeout);
-> +
-> +	if (watchdog_active(&imx7ulp_wdt->wdd))
-> +		imx7ulp_wdt_start(&imx7ulp_wdt->wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(imx7ulp_wdt_pm_ops, imx7ulp_wdt_suspend,
-> +			 imx7ulp_wdt_resume);
-> +
-> +static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
-> +	{ .compatible = "fsl,imx7ulp-wdt", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, imx7ulp_wdt_dt_ids);
-> +
-> +static struct platform_driver imx7ulp_wdt_driver = {
-> +	.probe		= imx7ulp_wdt_probe,
-> +	.driver		= {
-> +		.name	= "imx7ulp-wdt",
-> +		.pm	= &imx7ulp_wdt_pm_ops,
-> +		.of_match_table = imx7ulp_wdt_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(imx7ulp_wdt_driver);
-> +
-> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> +MODULE_DESCRIPTION("Freescale i.MX7ULP watchdog driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.7.4
-> 
+RnJvbTogU3RlZmFuIFBvcGEgPHN0ZWZhbi5wb3BhQGFuYWxvZy5jb20+CgpUaGUgQUQ3NjA2QiBp
+cyBhIDE2LWJpdCBBREMgdGhhdCBzdXBwb3J0cyBzaW11bHRhbmVvdXMgc2FtcGxpbmcgb2YgOApj
+aGFubmVscy4gSXQgaXMgcGluIGNvbXBhdGlibGUgdG8gQUQ3NjA2LCBidXQgYWRkcyBleHRyYSBt
+b2RlcyBieQp3cml0aW5nIHRvIHRoZSByZWdpc3RlciBtYXAuCgpUaGUgQUQ3NjA2QiBjYW4gYmUg
+Y29uZmlndXJlZCB0byB3b3JrIGluIHNvZnR3YXJlIG1vZGUgYnkgc2V0dGluZyBhbGwKb3ZlcnNh
+bXBsaW5nIHBpbnMgdG8gaGlnaC4gVGhpcyBtb2RlIGlzIHNlbGVjdGVkIGJ5IGRlZmF1bHQuClRo
+ZSBvdmVyc2FtcGxpbmcgcmF0aW8gaXMgY29uZmlndXJlZCBmcm9tIHRoZSBPU19NT0RFIHJlZ2lz
+dGVyIChhZGRyZXNzCjB4MDgpIHdpdGggdGhlIGFkZGl0aW9uIG9mIE9TPTEyOCBhbmQgT1M9MjU2
+IHRoYXQgd2VyZSBub3QgYXZhaWxhYmxlIGluCmhhcmR3YXJlIG1vZGUuCgpUaGUgZGV2aWNlIGlz
+IGNvbmZpZ3VyZWQgdG8gb3V0cHV0IGRhdGEgb24gYSBzaW5nbGUgc3BpIGNoYW5uZWwsIGJ1dCB0
+aGlzCmNvbmZpZ3VyYXRpb24gbXVzdCBiZSBkb25lIHJpZ2h0IGFmdGVyIHJlc3RhcnQuIFRoYXQg
+aXMgd2h5IHRoZSBkZWxheSB3YXMKcmVtb3ZlZCBmb3IgZGV2aWNlcyB3aGljaCBkb2Vzbid0IHJl
+cXVpcmUgaXQuCgpNb3Jlb3ZlciwgaW4gc29mdHdhcmUgbW9kZSwgdGhlIHJhbmdlIGdwaW8gaGFz
+IG5vIGxvbmdlciBpdHMgZnVuY3Rpb24uCkluc3RlYWQsIHRoZSBzY2FsZSBjYW4gYmUgY29uZmln
+dXJlZCBpbmRpdmlkdWFsbHkgZm9yIGVhY2ggY2hhbm5lbCBmcm9tCnRoZSBSQU5HRV9DSCByZWdp
+c3RlcnMgKGFkZHJlc3MgMHgwMyB0byAweDA2KS4gQmVzaWRlcyB0aGUgYWxyZWFkeQpzdXBwb3J0
+ZWQgwrExMCBWIGFuZCDCsTUgViByYW5nZXMsIHNvZnR3YXJlIG1vZGUgY2FuIGFsc28gYWNjb21t
+b2RhdGUgdGhlCsKxMi41IFYgcmFuZ2UuCgpTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gUG9wYSA8c3Rl
+ZmFuLnBvcGFAYW5hbG9nLmNvbT4KQ28tZGV2ZWxvcGVkLWJ5OiBCZW5pYW1pbiBCaWEgPGJlbmlh
+bWluLmJpYUBhbmFsb2cuY29tPgpTaWduZWQtb2ZmLWJ5OiBCZW5pYW1pbiBCaWEgPGJlbmlhbWlu
+LmJpYUBhbmFsb2cuY29tPgotLS0KQ2hhbmdlcyBpbiB2MzoKLWNvbW1lbnRzIHJld29ya2VkCi1p
+c1dyaXRlT3AgcmVuYW1lZCB0byBpc193cml0ZV9vcAoKIGRyaXZlcnMvaWlvL2FkYy9hZDc2MDYu
+YyAgICAgfCAgMTMgKysrKy0KIGRyaXZlcnMvaWlvL2FkYy9hZDc2MDYuaCAgICAgfCAgIDQgKysK
+IGRyaXZlcnMvaWlvL2FkYy9hZDc2MDZfc3BpLmMgfCAxMDkgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKy0KIDMgZmlsZXMgY2hhbmdlZCwgMTIzIGluc2VydGlvbnMoKyksIDMgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL2FkNzYwNi5jIGIvZHJpdmVy
+cy9paW8vYWRjL2FkNzYwNi5jCmluZGV4IGVkMmQwODQzN2U1ZC4uZjViYTk0YzAzYThkIDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2lpby9hZGMvYWQ3NjA2LmMKKysrIGIvZHJpdmVycy9paW8vYWRjL2Fk
+NzYwNi5jCkBAIC00MTAsMTIgKzQxMCwxOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGFkNzYwNl9j
+aGlwX2luZm8gYWQ3NjA2X2NoaXBfaW5mb190YmxbXSA9IHsKIAkJLm92ZXJzYW1wbGluZ19hdmFp
+bCA9IGFkNzYwNl9vdmVyc2FtcGxpbmdfYXZhaWwsCiAJCS5vdmVyc2FtcGxpbmdfbnVtID0gQVJS
+QVlfU0laRShhZDc2MDZfb3ZlcnNhbXBsaW5nX2F2YWlsKSwKIAl9LAorCVtJRF9BRDc2MDZCXSA9
+IHsKKwkJLmNoYW5uZWxzID0gYWQ3NjA2X2NoYW5uZWxzLAorCQkubnVtX2NoYW5uZWxzID0gOSwK
+KwkJLm92ZXJzYW1wbGluZ19hdmFpbCA9IGFkNzYwNl9vdmVyc2FtcGxpbmdfYXZhaWwsCisJCS5v
+dmVyc2FtcGxpbmdfbnVtID0gQVJSQVlfU0laRShhZDc2MDZfb3ZlcnNhbXBsaW5nX2F2YWlsKSwK
+Kwl9LAogCVtJRF9BRDc2MTZdID0gewogCQkuY2hhbm5lbHMgPSBhZDc2MTZfY2hhbm5lbHMsCiAJ
+CS5udW1fY2hhbm5lbHMgPSAxNywKIAkJLm92ZXJzYW1wbGluZ19hdmFpbCA9IGFkNzYxNl9vdmVy
+c2FtcGxpbmdfYXZhaWwsCiAJCS5vdmVyc2FtcGxpbmdfbnVtID0gQVJSQVlfU0laRShhZDc2MTZf
+b3ZlcnNhbXBsaW5nX2F2YWlsKSwKIAkJLm9zX3JlcV9yZXNldCA9IHRydWUsCisJCS5pbml0X2Rl
+bGF5X21zID0gMTUsCiAJfSwKIH07CiAKQEAgLTYzMSw4ICs2MzgsMTAgQEAgaW50IGFkNzYwNl9w
+cm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpcnEsIHZvaWQgX19pb21lbSAqYmFzZV9hZGRy
+ZXNzLAogCQlkZXZfd2FybihzdC0+ZGV2LCAiZmFpbGVkIHRvIFJFU0VUOiBubyBSRVNFVCBHUElP
+IHNwZWNpZmllZFxuIik7CiAKIAkvKiBBRDc2MTYgcmVxdWlyZXMgYWwgbGVhc3QgMTVtcyB0byBy
+ZWNvbmZpZ3VyZSBhZnRlciBhIHJlc2V0ICovCi0JaWYgKG1zbGVlcF9pbnRlcnJ1cHRpYmxlKDE1
+KSkKLQkJcmV0dXJuIC1FUkVTVEFSVFNZUzsKKwlpZiAoc3QtPmNoaXBfaW5mby0+aW5pdF9kZWxh
+eV9tcykgeworCQlpZiAobXNsZWVwX2ludGVycnVwdGlibGUoc3QtPmNoaXBfaW5mby0+aW5pdF9k
+ZWxheV9tcykpCisJCQlyZXR1cm4gLUVSRVNUQVJUU1lTOworCX0KIAogCXN0LT53cml0ZV9zY2Fs
+ZSA9IGFkNzYwNl93cml0ZV9zY2FsZV9odzsKIAlzdC0+d3JpdGVfb3MgPSBhZDc2MDZfd3JpdGVf
+b3NfaHc7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvYWQ3NjA2LmggYi9kcml2ZXJzL2lp
+by9hZGMvYWQ3NjA2LmgKaW5kZXggZWVhYWE4YjkwNWRiLi45MzUwZWYxZjYzYjUgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvaWlvL2FkYy9hZDc2MDYuaAorKysgYi9kcml2ZXJzL2lpby9hZGMvYWQ3NjA2
+LmgKQEAgLTQ2LDYgKzQ2LDggQEAKICAqCQkJb3ZlcnNhbXBsaW5nIHJhdGlvcy4KICAqIEBvdmVy
+c2FtcGxpbmdfbnVtCW51bWJlciBvZiBlbGVtZW50cyBzdG9yZWQgaW4gb3ZlcnNhbXBsaW5nX2F2
+YWlsIGFycmF5CiAgKiBAb3NfcmVxX3Jlc2V0CXNvbWUgZGV2aWNlcyByZXF1aXJlIGEgcmVzZXQg
+dG8gdXBkYXRlIG92ZXJzYW1wbGluZworICogQGluaXRfZGVsYXlfbXMJcmVxdWlyZWQgZGVsYXkg
+aW4gbWlsaXNlY29uZHMgZm9yIGluaXRpYWxpemF0aW9uCisgKgkJCWFmdGVyIGEgcmVzdGFydAog
+ICovCiBzdHJ1Y3QgYWQ3NjA2X2NoaXBfaW5mbyB7CiAJY29uc3Qgc3RydWN0IGlpb19jaGFuX3Nw
+ZWMJKmNoYW5uZWxzOwpAQCAtNTMsNiArNTUsNyBAQCBzdHJ1Y3QgYWQ3NjA2X2NoaXBfaW5mbyB7
+CiAJY29uc3QgdW5zaWduZWQgaW50CQkqb3ZlcnNhbXBsaW5nX2F2YWlsOwogCXVuc2lnbmVkIGlu
+dAkJCW92ZXJzYW1wbGluZ19udW07CiAJYm9vbAkJCQlvc19yZXFfcmVzZXQ7CisJdW5zaWduZWQg
+bG9uZwkJCWluaXRfZGVsYXlfbXM7CiB9OwogCiAvKioKQEAgLTE1NSw2ICsxNTgsNyBAQCBlbnVt
+IGFkNzYwNl9zdXBwb3J0ZWRfZGV2aWNlX2lkcyB7CiAJSURfQUQ3NjA2XzgsCiAJSURfQUQ3NjA2
+XzYsCiAJSURfQUQ3NjA2XzQsCisJSURfQUQ3NjA2QiwKIAlJRF9BRDc2MTYsCiB9OwogCmRpZmYg
+LS1naXQgYS9kcml2ZXJzL2lpby9hZGMvYWQ3NjA2X3NwaS5jIGIvZHJpdmVycy9paW8vYWRjL2Fk
+NzYwNl9zcGkuYwppbmRleCA5OGVkNTJiNzQ1MDcuLjI5OTQ1YWQwN2RjYSAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9paW8vYWRjL2FkNzYwNl9zcGkuYworKysgYi9kcml2ZXJzL2lpby9hZGMvYWQ3NjA2
+X3NwaS5jCkBAIC0yOCw5ICsyOCwyMyBAQAogICogYW4gb2Zmc2V0IG9mIDIgZm9yIHJlZ2lzdGVy
+IGFkZHJlc3MuCiAgKi8KICNkZWZpbmUgQUQ3NjE2X1JBTkdFX0NIX0FERFIoY2gpCSgoY2gpID4+
+IDIpCi0vKiBUaGUgcmFuZ2Ugb2YgdGhlIGNoYW5uZWwgaXMgc3RvcmVkIG9uIDIgYml0cyovCisv
+KiBUaGUgcmFuZ2Ugb2YgdGhlIGNoYW5uZWwgaXMgc3RvcmVkIGluIDIgYml0cyAqLwogI2RlZmlu
+ZSBBRDc2MTZfUkFOR0VfQ0hfTVNLKGNoKQkJKDBiMTEgPDwgKCgoY2gpICYgMGIxMSkgKiAyKSkK
+ICNkZWZpbmUgQUQ3NjE2X1JBTkdFX0NIX01PREUoY2gsIG1vZGUpCSgobW9kZSkgPDwgKCgoKGNo
+KSAmIDBiMTEpKSAqIDIpKQorCisjZGVmaW5lIEFENzYwNl9DT05GSUdVUkFUSU9OX1JFR0lTVEVS
+CTB4MDIKKyNkZWZpbmUgQUQ3NjA2X1NJTkdMRV9ET1VUCQkweDAwCisKKy8qCisgKiBSYW5nZSBm
+b3IgQUQ3NjA2QiBjaGFubmVscyBhcmUgc3RvcmVkIGluIHJlZ2lzdGVycyBzdGFydGluZyB3aXRo
+IGFkZHJlc3MgMHgzLgorICogRWFjaCByZWdpc3RlciBzdG9yZXMgcmFuZ2UgZm9yIDIgY2hhbm5l
+bHMoNCBiaXRzIHBlciBjaGFubmVsKS4KKyAqLworI2RlZmluZSBBRDc2MDZfUkFOR0VfQ0hfTVNL
+KGNoKQkJKEdFTk1BU0soMywgMCkgPDwgKDQgKiAoKGNoKSAmIDB4MSkpKQorI2RlZmluZSBBRDc2
+MDZfUkFOR0VfQ0hfTU9ERShjaCwgbW9kZSkJXAorCSgoR0VOTUFTSygzLCAwKSAmIG1vZGUpIDw8
+ICg0ICogKChjaCkgJiAweDEpKSkKKyNkZWZpbmUgQUQ3NjA2X1JBTkdFX0NIX0FERFIoY2gpCSgw
+eDAzICsgKChjaCkgPj4gMSkpCisjZGVmaW5lIEFENzYwNl9PU19NT0RFCQkJMHgwOAorCiBzdGF0
+aWMgY29uc3Qgc3RydWN0IGlpb19jaGFuX3NwZWMgYWQ3NjE2X3N3X2NoYW5uZWxzW10gPSB7CiAJ
+SUlPX0NIQU5fU09GVF9USU1FU1RBTVAoMTYpLAogCUFENzYxNl9DSEFOTkVMKDApLApAQCAtNTEs
+NiArNjUsMjIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpaW9fY2hhbl9zcGVjIGFkNzYxNl9zd19j
+aGFubmVsc1tdID0gewogCUFENzYxNl9DSEFOTkVMKDE1KSwKIH07CiAKK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgaWlvX2NoYW5fc3BlYyBhZDc2MDZiX3N3X2NoYW5uZWxzW10gPSB7CisJSUlPX0NIQU5f
+U09GVF9USU1FU1RBTVAoOCksCisJQUQ3NjE2X0NIQU5ORUwoMCksCisJQUQ3NjE2X0NIQU5ORUwo
+MSksCisJQUQ3NjE2X0NIQU5ORUwoMiksCisJQUQ3NjE2X0NIQU5ORUwoMyksCisJQUQ3NjE2X0NI
+QU5ORUwoNCksCisJQUQ3NjE2X0NIQU5ORUwoNSksCisJQUQ3NjE2X0NIQU5ORUwoNiksCisJQUQ3
+NjE2X0NIQU5ORUwoNyksCit9OworCitzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50IGFkNzYwNkJf
+b3ZlcnNhbXBsaW5nX2F2YWlsWzldID0geworCTEsIDIsIDQsIDgsIDE2LCAzMiwgNjQsIDEyOCwg
+MjU2Cit9OworCiBzdGF0aWMgdTE2IGFkNzYxNl9zcGlfcmRfd3JfY21kKGludCBhZGRyLCBjaGFy
+IGlzV3JpdGVPcCkKIHsKIAkvKgpAQCAtNjAsNiArOTAsMTYgQEAgc3RhdGljIHUxNiBhZDc2MTZf
+c3BpX3JkX3dyX2NtZChpbnQgYWRkciwgY2hhciBpc1dyaXRlT3ApCiAJcmV0dXJuICgoYWRkciAm
+IDB4N0YpIDw8IDEpIHwgKChpc1dyaXRlT3AgJiAweDEpIDw8IDcpOwogfQogCitzdGF0aWMgdTE2
+IGFkNzYwNkJfc3BpX3JkX3dyX2NtZChpbnQgYWRkciwgY2hhciBpc193cml0ZV9vcCkKK3sKKwkv
+KgorCSAqIFRoZSBhZGRyZXNzIG9mIHJlZ2lzdGVyIGNvbnNpc3RzIG9mIG9uZSBiaXQgd2hpY2gK
+KwkgKiBzcGVjaWZpZXMgYSByZWFkIGNvbW1hbmQgcGxhY2VkIGluIGJpdCA2LCBmb2xsb3dlZCBi
+eQorCSAqIDYgYml0cyBvZiBhZGRyZXNzLgorCSAqLworCXJldHVybiAoYWRkciAmIDB4M0YpIHwg
+KCgofmlzX3dyaXRlX29wKSAmIDB4MSkgPDwgNik7Cit9CisKIHN0YXRpYyBpbnQgYWQ3NjA2X3Nw
+aV9yZWFkX2Jsb2NrKHN0cnVjdCBkZXZpY2UgKmRldiwKIAkJCQkgaW50IGNvdW50LCB2b2lkICpi
+dWYpCiB7CkBAIC0xNjksNiArMjA5LDIzIEBAIHN0YXRpYyBpbnQgYWQ3NjE2X3dyaXRlX29zX3N3
+KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsIGludCB2YWwpCiAJCQkJICAgICBBRDc2MTZfT1Nf
+TUFTSywgdmFsIDw8IDIpOwogfQogCitzdGF0aWMgaW50IGFkNzYwNl93cml0ZV9zY2FsZV9zdyhz
+dHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2LCBpbnQgY2gsIGludCB2YWwpCit7CisJc3RydWN0IGFk
+NzYwNl9zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOworCisJcmV0dXJuIGFkNzYwNl9z
+cGlfd3JpdGVfbWFzayhzdCwKKwkJCQkgICAgIEFENzYwNl9SQU5HRV9DSF9BRERSKGNoKSwKKwkJ
+CQkgICAgIEFENzYwNl9SQU5HRV9DSF9NU0soY2gpLAorCQkJCSAgICAgQUQ3NjA2X1JBTkdFX0NI
+X01PREUoY2gsIHZhbCkpOworfQorCitzdGF0aWMgaW50IGFkNzYwNl93cml0ZV9vc19zdyhzdHJ1
+Y3QgaWlvX2RldiAqaW5kaW9fZGV2LCBpbnQgdmFsKQoreworCXN0cnVjdCBhZDc2MDZfc3RhdGUg
+KnN0ID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsKKworCXJldHVybiBhZDc2MDZfc3BpX3JlZ193cml0
+ZShzdCwgQUQ3NjA2X09TX01PREUsIHZhbCk7Cit9CisKIHN0YXRpYyBpbnQgYWQ3NjE2X3N3X21v
+ZGVfY29uZmlnKHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYpCiB7CiAJc3RydWN0IGFkNzYwNl9z
+dGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOwpAQCAtMTg5LDYgKzI0Niw0MiBAQCBzdGF0
+aWMgaW50IGFkNzYxNl9zd19tb2RlX2NvbmZpZyhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KQog
+CQkJICAgICAgQUQ3NjE2X0JVUlNUX01PREUgfCBBRDc2MTZfU0VRRU5fTU9ERSk7CiB9CiAKK3N0
+YXRpYyBpbnQgYWQ3NjA2Ql9zd19tb2RlX2NvbmZpZyhzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2
+KQoreworCXN0cnVjdCBhZDc2MDZfc3RhdGUgKnN0ID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsKKwl1
+bnNpZ25lZCBsb25nIG9zWzNdID0gezF9OworCisJLyoKKwkgKiBTb2Z0d2FyZSBtb2RlIGlzIGVu
+YWJsZWQgd2hlbiBhbGwgdGhyZWUgb3ZlcnNhbXBsaW5nCisJICogcGlucyBhcmUgc2V0IHRvIGhp
+Z2guIElmIG92ZXJzYW1wbGluZyBncGlvcyBhcmUgZGVmaW5lZAorCSAqIGluIHRoZSBkZXZpY2Ug
+dHJlZSwgdGhlbiB0aGV5IG5lZWQgdG8gYmUgc2V0IHRvIGhpZ2gsCisJICogb3RoZXJ3aXNlLCB0
+aGV5IG11c3QgYmUgaGFyZHdpcmVkIHRvIFZERAorCSAqLworCWlmIChzdC0+Z3Bpb19vcykgewor
+CQlncGlvZF9zZXRfYXJyYXlfdmFsdWUoQVJSQVlfU0laRShvcyksCisJCQkJICAgICAgc3QtPmdw
+aW9fb3MtPmRlc2MsIHN0LT5ncGlvX29zLT5pbmZvLCBvcyk7CisJfQorCS8qIE9TIG9mIDEyOCBh
+bmQgMjU2IGFyZSBhdmFpbGFibGUgb25seSBpbiBzb2Z0d2FyZSBtb2RlICovCisJc3QtPm92ZXJz
+YW1wbGluZ19hdmFpbCA9IGFkNzYwNkJfb3ZlcnNhbXBsaW5nX2F2YWlsOworCXN0LT5udW1fb3Nf
+cmF0aW9zID0gQVJSQVlfU0laRShhZDc2MDZCX292ZXJzYW1wbGluZ19hdmFpbCk7CisKKwlzdC0+
+d3JpdGVfc2NhbGUgPSBhZDc2MDZfd3JpdGVfc2NhbGVfc3c7CisJc3QtPndyaXRlX29zID0gJmFk
+NzYwNl93cml0ZV9vc19zdzsKKworCS8qIENvbmZpZ3VyZSBkZXZpY2Ugc3BpIHRvIG91dHB1dCBv
+biBhIHNpbmdsZSBjaGFubmVsICovCisJc3QtPmJvcHMtPnJlZ193cml0ZShzdCwKKwkJCSAgICBB
+RDc2MDZfQ09ORklHVVJBVElPTl9SRUdJU1RFUiwKKwkJCSAgICBBRDc2MDZfU0lOR0xFX0RPVVQp
+OworCisJLyoKKwkgKiBTY2FsZSBjYW4gYmUgY29uZmlndXJlZCBpbmRpdmlkdWFsbHkgZm9yIGVh
+Y2ggY2hhbm5lbAorCSAqIGluIHNvZnR3YXJlIG1vZGUuCisJICovCisJaW5kaW9fZGV2LT5jaGFu
+bmVscyA9IGFkNzYwNmJfc3dfY2hhbm5lbHM7CisKKwlyZXR1cm4gMDsKK30KKwogc3RhdGljIGNv
+bnN0IHN0cnVjdCBhZDc2MDZfYnVzX29wcyBhZDc2MDZfc3BpX2JvcHMgPSB7CiAJLnJlYWRfYmxv
+Y2sgPSBhZDc2MDZfc3BpX3JlYWRfYmxvY2ssCiB9OwpAQCAtMjAyLDYgKzI5NSwxNSBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IGFkNzYwNl9idXNfb3BzIGFkNzYxNl9zcGlfYm9wcyA9IHsKIAkuc3df
+bW9kZV9jb25maWcgPSBhZDc2MTZfc3dfbW9kZV9jb25maWcsCiB9OwogCitzdGF0aWMgY29uc3Qg
+c3RydWN0IGFkNzYwNl9idXNfb3BzIGFkNzYwNkJfc3BpX2JvcHMgPSB7CisJLnJlYWRfYmxvY2sg
+PSBhZDc2MDZfc3BpX3JlYWRfYmxvY2ssCisJLnJlZ19yZWFkID0gYWQ3NjA2X3NwaV9yZWdfcmVh
+ZCwKKwkucmVnX3dyaXRlID0gYWQ3NjA2X3NwaV9yZWdfd3JpdGUsCisJLndyaXRlX21hc2sgPSBh
+ZDc2MDZfc3BpX3dyaXRlX21hc2ssCisJLnJkX3dyX2NtZCA9IGFkNzYwNkJfc3BpX3JkX3dyX2Nt
+ZCwKKwkuc3dfbW9kZV9jb25maWcgPSBhZDc2MDZCX3N3X21vZGVfY29uZmlnLAorfTsKKwogc3Rh
+dGljIGludCBhZDc2MDZfc3BpX3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCiB7CiAJY29u
+c3Qgc3RydWN0IHNwaV9kZXZpY2VfaWQgKmlkID0gc3BpX2dldF9kZXZpY2VfaWQoc3BpKTsKQEAg
+LTIxMSw2ICszMTMsOSBAQCBzdGF0aWMgaW50IGFkNzYwNl9zcGlfcHJvYmUoc3RydWN0IHNwaV9k
+ZXZpY2UgKnNwaSkKIAljYXNlIElEX0FENzYxNjoKIAkJYm9wcyA9ICZhZDc2MTZfc3BpX2JvcHM7
+CiAJCWJyZWFrOworCWNhc2UgSURfQUQ3NjA2QjoKKwkJYm9wcyA9ICZhZDc2MDZCX3NwaV9ib3Bz
+OworCQlicmVhazsKIAlkZWZhdWx0OgogCQlib3BzID0gJmFkNzYwNl9zcGlfYm9wczsKIAkJYnJl
+YWs7CkBAIC0yMjYsNiArMzMxLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzcGlfZGV2aWNlX2lk
+IGFkNzYwNl9pZF90YWJsZVtdID0gewogCXsgImFkNzYwNi00IiwgSURfQUQ3NjA2XzQgfSwKIAl7
+ICJhZDc2MDYtNiIsIElEX0FENzYwNl82IH0sCiAJeyAiYWQ3NjA2LTgiLCBJRF9BRDc2MDZfOCB9
+LAorCXsgImFkNzYwNmIiLCAgSURfQUQ3NjA2QiB9LAogCXsgImFkNzYxNiIsICAgSURfQUQ3NjE2
+IH0sCiAJe30KIH07CkBAIC0yMzYsNiArMzQyLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgYWQ3NjA2X29mX21hdGNoW10gPSB7CiAJeyAuY29tcGF0aWJsZSA9ICJhZGksYWQ3
+NjA2LTQiIH0sCiAJeyAuY29tcGF0aWJsZSA9ICJhZGksYWQ3NjA2LTYiIH0sCiAJeyAuY29tcGF0
+aWJsZSA9ICJhZGksYWQ3NjA2LTgiIH0sCisJeyAuY29tcGF0aWJsZSA9ICJhZGksYWQ3NjA2YiIg
+fSwKIAl7IC5jb21wYXRpYmxlID0gImFkaSxhZDc2MTYiIH0sCiAJeyB9LAogfTsKLS0gCjIuMTcu
+MQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwg
+bWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRl
+di5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVs
+Cg==
