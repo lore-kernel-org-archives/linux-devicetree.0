@@ -1,210 +1,203 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v12 3/9] drivers: memory: extend of_memory by LPDDR3
- support
-Date: Wed, 21 Aug 2019 11:17:27 +0200
-Message-ID: <21d22ba6-2254-ae5e-7ef4-5dfaa3f54229@partner.samsung.com>
-References: <CGME20190722094727eucas1p10041ba25819e6e62d639423a97435f2d@eucas1p1.samsung.com>
-        <20190722094646.13342-1-l.luba@partner.samsung.com>
-        <20190722094646.13342-4-l.luba@partner.samsung.com>
-        <CAJKOXPd96ExoCR-SiJfRqTbwO+_aQ6LSDVOQcrrt8JQHsoZBEw@mail.gmail.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH] ARM64: dts: allwinner: Add devicetree for pine H64
+ modelA evaluation board
+Date: Wed, 21 Aug 2019 17:19:42 +0800
+Message-ID: <759c0003961f627c3a172cb81d5779439a83b33b.camel@aosc.io>
+References: <20190808084253.10573-1-clabbe.montjoie@gmail.com>
+         <20190812094000.ebdmhyxx7xzbevef@flea> <20190814131741.GB24324@Red>
+         <20190814133322.dawzv3ityakxtqs4@flea> <20190816093513.GA25042@Red>
+         <20190816113650.hstbi5ntstx3wh4a@flea> <20190816115750.GA24545@Red>
+         <20190816135206.pnf3iperzyhcbg4h@flea> <20190816140016.GA30445@Red>
+         <20190820135831.hrvrgqhrvynntkbl@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPd96ExoCR-SiJfRqTbwO+_aQ6LSDVOQcrrt8JQHsoZBEw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190820135831.hrvrgqhrvynntkbl@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: Maxime Ripard <mripard@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+在 2019-08-20二的 15:58 +0200，Maxime Ripard写道：
+> On Fri, Aug 16, 2019 at 04:00:16PM +0200, Corentin Labbe wrote:
+> > On Fri, Aug 16, 2019 at 03:52:06PM +0200, Maxime Ripard wrote:
+> > > On Fri, Aug 16, 2019 at 01:57:50PM +0200, Corentin Labbe wrote:
+> > > > On Fri, Aug 16, 2019 at 01:36:50PM +0200, Maxime Ripard wrote:
+> > > > > On Fri, Aug 16, 2019 at 11:35:13AM +0200, Corentin Labbe
+> > > > > wrote:
+> > > > > > On Wed, Aug 14, 2019 at 03:33:22PM +0200, Maxime Ripard
+> > > > > > wrote:
+> > > > > > > On Wed, Aug 14, 2019 at 03:17:41PM +0200, Corentin Labbe
+> > > > > > > wrote:
+> > > > > > > > On Mon, Aug 12, 2019 at 11:40:00AM +0200, Maxime Ripard
+> > > > > > > > wrote:
+> > > > > > > > > On Thu, Aug 08, 2019 at 10:42:53AM +0200, Corentin
+> > > > > > > > > Labbe wrote:
+> > > > > > > > > > This patch adds the evaluation variant of the model
+> > > > > > > > > > A of the PineH64.
+> > > > > > > > > > The model A has the same size of the pine64 and has
+> > > > > > > > > > a PCIE slot.
+> > > > > > > > > > 
+> > > > > > > > > > The only devicetree difference with current
+> > > > > > > > > > pineH64, is the PHY
+> > > > > > > > > > regulator.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Corentin Labbe <
+> > > > > > > > > > clabbe.montjoie@gmail.com>
+> > > > > > > > > > ---
+> > > > > > > > > >  arch/arm64/boot/dts/allwinner/Makefile        |  1
+> > > > > > > > > > +
+> > > > > > > > > >  .../sun50i-h6-pine-h64-modelA-eval.dts        | 26
+> > > > > > > > > > +++++++++++++++++++
+> > > > > > > > > >  2 files changed, 27 insertions(+)
+> > > > > > > > > >  create mode 100644
+> > > > > > > > > > arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-
+> > > > > > > > > > modelA-eval.dts
+> > > > > > > > > > 
+> > > > > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > > > > > > b/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > > > > > > index f6db0611cb85..9a02166cbf72 100644
+> > > > > > > > > > --- a/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > > > > > > +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> > > > > > > > > > @@ -25,3 +25,4 @@ dtb-$(CONFIG_ARCH_SUNXI) +=
+> > > > > > > > > > sun50i-h6-orangepi-3.dtb
+> > > > > > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-
+> > > > > > > > > > lite2.dtb
+> > > > > > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-
+> > > > > > > > > > one-plus.dtb
+> > > > > > > > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+> > > > > > > > > > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64-
+> > > > > > > > > > modelA-eval.dtb
+> > > > > > > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-
+> > > > > > > > > > h6-pine-h64-modelA-eval.dts
+> > > > > > > > > > b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-
+> > > > > > > > > > modelA-eval.dts
+> > > > > > > > > > new file mode 100644
+> > > > > > > > > > index 000000000000..d8ff02747efe
+> > > > > > > > > > --- /dev/null
+> > > > > > > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-
+> > > > > > > > > > h64-modelA-eval.dts
+> > > > > > > > > > @@ -0,0 +1,26 @@
+> > > > > > > > > > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> > > > > > > > > > +/*
+> > > > > > > > > > + * Copyright (C) 2019 Corentin Labbe <
+> > > > > > > > > > clabbe.montjoie@gmail.com>
+> > > > > > > > > > + */
+> > > > > > > > > > +
+> > > > > > > > > > +#include "sun50i-h6-pine-h64.dts"
+> > > > > > > > > > +
+> > > > > > > > > > +/ {
+> > > > > > > > > > +	model = "Pine H64 model A evaluation board";
+> > > > > > > > > > +	compatible = "pine64,pine-h64-modelA-eval",
+> > > > > > > > > > "allwinner,sun50i-h6";
+> > > > > > > > > > +
+> > > > > > > > > > +	reg_gmac_3v3: gmac-3v3 {
+> > > > > > > > > > +		compatible = "regulator-fixed";
+> > > > > > > > > > +		regulator-name = "vcc-gmac-3v3";
+> > > > > > > > > > +		regulator-min-microvolt = <3300000>;
+> > > > > > > > > > +		regulator-max-microvolt = <3300000>;
+> > > > > > > > > > +		startup-delay-us = <100000>;
+> > > > > > > > > > +		gpio = <&pio 2 16 GPIO_ACTIVE_HIGH>;
+> > > > > > > > > > +		enable-active-high;
+> > > > > > > > > > +	};
+> > > > > > > > > > +
+> > > > > > > > > > +};
+> > > > > > > > > > +
+> > > > > > > > > > +&emac {
+> > > > > > > > > > +	phy-supply = <&reg_gmac_3v3>;
+> > > > > > > > > > +};
+> > > > > > > > > 
+> > > > > > > > > I might be missing some context here, but I'm pretty
+> > > > > > > > > sure that the
+> > > > > > > > > initial intent of the pine h64 DTS was to support the
+> > > > > > > > > model A all
+> > > > > > > > > along.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > The regulator changed between modelA and B.
+> > > > > > > > See this old patchset (supporting modelA) 
+> > > > > > > > https://patchwork.kernel.org/patch/10539149/ for
+> > > > > > > > example.
+> > > > > > > 
+> > > > > > > I'm not sure what your point is, but mine is that
+> > > > > > > everything about the
+> > > > > > > model A should be in sun50i-h6-pine-h64.dts.
+> > > > > > > 
+> > > > > > 
+> > > > > > model A and B are different enough for distinct dtb, (see
+> > > > > > sub-thread
+> > > > > > on HDMI difference for an other difference than PHY
+> > > > > > regulator)
+> > > > > 
+> > > > > I don't mind having separate DTBs for model A and model B.
+> > > > > 
+> > > > > > And clearly, the current dtb is for model B.
+> > > > > 
+> > > > > That DTS was added almost a year before the model B was
+> > > > > announced, and
+> > > > > no commit to that file mention the model B, so it's
+> > > > > definitely not
+> > > > > clear.
+> > > > 
+> > > > Normal it was added for model A (without any ethernet/HDMI
+> > > > support,
+> > > > so nothing distinct from model B), and the modelB ethernet/HDMI
+> > > > support cames after.
+> > > 
+> > > Changing the board a DT is meant to halfway through the
+> > > development is
+> > > definitely not ok.
+> > > 
+> > > > > > So do you mean that we need to create a new dtb for model B
+> > > > > > ? (and
+> > > > > > hack the current back to model A ?)
+> > > > > 
+> > > > > I'd prefer not to hack anything, but yes
+> > > > > 
+> > > > 
+> > > > Since model A is not public (only evaluations boards exists),
+> > > > the
+> > > > probability of a production model A is low and the current dtb
+> > > > is
+> > > > perfect for model B , could you reconsider this ?
+> > > 
+> > > I mean, you could buy it, so it's definitely public.
+> > 
+> > Where ? official pineh64 site speaks only of modelB.
+> 
+> It's not available anymore, but it used to be.
 
-On 7/24/19 1:31 PM, Krzysztof Kozlowski wrote:
-> On Mon, 22 Jul 2019 at 11:47, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> The patch adds AC timings information needed to support LPDDR3 and memory
->> controllers. The structure is used in of_memory and currently in Exynos
->> 5422 DMC. Add parsing data needed for LPDDR3 support.
->> It is currently used in Exynos5422 Dynamic Memory Controller.
->>
->> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/memory/jedec_ddr.h |  61 +++++++++++++++
->>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
->>   drivers/memory/of_memory.h |  18 +++++
->>   3 files changed, 233 insertions(+)
->>
->> diff --git a/drivers/memory/jedec_ddr.h b/drivers/memory/jedec_ddr.h
->> index 4a21b5044ff8..38e26d461bdb 100644
->> --- a/drivers/memory/jedec_ddr.h
->> +++ b/drivers/memory/jedec_ddr.h
->> @@ -29,6 +29,7 @@
->>   #define DDR_TYPE_LPDDR2_S4     3
->>   #define DDR_TYPE_LPDDR2_S2     4
->>   #define DDR_TYPE_LPDDR2_NVM    5
->> +#define DDR_TYPE_LPDDR3                6
->>
->>   /* DDR IO width */
->>   #define DDR_IO_WIDTH_4         1
->> @@ -169,4 +170,64 @@ extern const struct lpddr2_timings
->>          lpddr2_jedec_timings[NUM_DDR_TIMING_TABLE_ENTRIES];
->>   extern const struct lpddr2_min_tck lpddr2_jedec_min_tck;
->>
->> +/*
->> + * Structure for timings for LPDDR3 based on LPDDR2 plus additional fields.
->> + * All parameters are in pico seconds(ps) unless explicitly indicated
->> + * with a suffix like tRAS_max_ns below
-> 
-> To which tRAS_max_ns are you referring?
-The comment failed to stand the test of time, not for the first time
-though. I will update it according to the current struct.
+There're never model A boards that are really sold. When model A is put
+on the website, its stock is always 0.
+
+Only model B boards are really sold.
+
+BTW from my communication with TL Lim, model A will get redesigned to
+get the software compatiblity with model B, if it's going to be re-
+available on the market again. So all known difference will be not
+difference between models, but difference between sample version and
+final version. But even if the new model A is out, it will still need a
+different devicetree with model B, as PCIe is model-A-only feature, and
+model A will have no on-board Wi-Fi (model B has RTL8723BS on-board).
 
 > 
->> + */
->> +struct lpddr3_timings {
->> +       u32 max_freq;
->> +       u32 min_freq;
->> +       u32 tRFC;
->> +       u32 tRRD;
->> +       u32 tRPab;
->> +       u32 tRPpb;
->> +       u32 tRCD;
->> +       u32 tRC;
->> +       u32 tRAS;
->> +       u32 tWTR;
->> +       u32 tWR;
->> +       u32 tRTP;
->> +       u32 tW2W_C2C;
->> +       u32 tR2R_C2C;
->> +       u32 tWL;
->> +       u32 tDQSCK;
->> +       u32 tRL;
->> +       u32 tFAW;
->> +       u32 tXSR;
->> +       u32 tXP;
->> +       u32 tCKE;
->> +       u32 tCKESR;
->> +       u32 tMRD;
->> +};
->> +
->> +/*
->> + * Min value for some parameters in terms of number of tCK cycles(nCK)
->> + * Please set to zero parameters that are not valid for a given memory
->> + * type
->> + */
->> +struct lpddr3_min_tck {
->> +       u32 tRFC;
->> +       u32 tRRD;
->> +       u32 tRPab;
->> +       u32 tRPpb;
->> +       u32 tRCD;
->> +       u32 tRC;
->> +       u32 tRAS;
->> +       u32 tWTR;
->> +       u32 tWR;
->> +       u32 tRTP;
->> +       u32 tW2W_C2C;
->> +       u32 tR2R_C2C;
->> +       u32 tWL;
->> +       u32 tDQSCK;
->> +       u32 tRL;
->> +       u32 tFAW;
->> +       u32 tXSR;
->> +       u32 tXP;
->> +       u32 tCKE;
->> +       u32 tCKESR;
->> +       u32 tMRD;
->> +};
->> +
->>   #endif /* __JEDEC_DDR_H */
->> diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
->> index 46539b27a3fb..4f5b8c81669f 100644
->> --- a/drivers/memory/of_memory.c
->> +++ b/drivers/memory/of_memory.c
->> @@ -3,6 +3,12 @@
->>    * OpenFirmware helpers for memory drivers
->>    *
->>    * Copyright (C) 2012 Texas Instruments, Inc.
->> + * Copyright (C) 2019 Samsung Electronics Co., Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->>    */
->>
->>   #include <linux/device.h>
->> @@ -149,3 +155,151 @@ const struct lpddr2_timings *of_get_ddr_timings(struct device_node *np_ddr,
->>          return lpddr2_jedec_timings;
->>   }
->>   EXPORT_SYMBOL(of_get_ddr_timings);
->> +
->> +/**
->> + * of_lpddr3_get_min_tck() - extract min timing values for lpddr3
->> + * @np: pointer to ddr device tree node
->> + * @device: device requesting for min timing values
->> + *
->> + * Populates the lpddr3_min_tck structure by extracting data
->> + * from device tree node. Returns a pointer to the populated
->> + * structure. If any error in populating the structure, returns NULL.
->> + */
->> +const struct lpddr3_min_tck *of_lpddr3_get_min_tck(struct device_node *np,
->> +                                                  struct device *dev)
->> +{
->> +       int                     ret = 0;
->> +       struct lpddr3_min_tck   *min;
->> +
->> +       min = devm_kzalloc(dev, sizeof(*min), GFP_KERNEL);
->> +       if (!min)
->> +               goto default_min_tck;
->> +
->> +       ret |= of_property_read_u32(np, "tRFC-min-tck", &min->tRFC);
->> +       ret |= of_property_read_u32(np, "tRRD-min-tck", &min->tRRD);
->> +       ret |= of_property_read_u32(np, "tRPab-min-tck", &min->tRPab);
->> +       ret |= of_property_read_u32(np, "tRPpb-min-tck", &min->tRPpb);
->> +       ret |= of_property_read_u32(np, "tRCD-min-tck", &min->tRCD);
->> +       ret |= of_property_read_u32(np, "tRC-min-tck", &min->tRC);
->> +       ret |= of_property_read_u32(np, "tRAS-min-tck", &min->tRAS);
->> +       ret |= of_property_read_u32(np, "tWTR-min-tck", &min->tWTR);
->> +       ret |= of_property_read_u32(np, "tWR-min-tck", &min->tWR);
->> +       ret |= of_property_read_u32(np, "tRTP-min-tck", &min->tRTP);
->> +       ret |= of_property_read_u32(np, "tW2W-C2C-min-tck", &min->tW2W_C2C);
->> +       ret |= of_property_read_u32(np, "tR2R-C2C-min-tck", &min->tR2R_C2C);
->> +       ret |= of_property_read_u32(np, "tWL-min-tck", &min->tWL);
->> +       ret |= of_property_read_u32(np, "tDQSCK-min-tck", &min->tDQSCK);
->> +       ret |= of_property_read_u32(np, "tRL-min-tck", &min->tRL);
->> +       ret |= of_property_read_u32(np, "tFAW-min-tck", &min->tFAW);
->> +       ret |= of_property_read_u32(np, "tXSR-min-tck", &min->tXSR);
->> +       ret |= of_property_read_u32(np, "tXP-min-tck", &min->tXP);
->> +       ret |= of_property_read_u32(np, "tCKE-min-tck", &min->tCKE);
->> +       ret |= of_property_read_u32(np, "tCKESR-min-tck", &min->tCKESR);
->> +       ret |= of_property_read_u32(np, "tMRD-min-tck", &min->tMRD);
->> +
->> +       if (ret) {
->> +               dev_warn(dev, "%s: errors while parsing min-tck values\n",
->> +                        __func__);
->> +               devm_kfree(dev, min);
->> +               goto default_min_tck;
->> +       }
->> +
->> +       return min;
->> +
->> +default_min_tck:
->> +       dev_warn(dev, "%s: using default min-tck values\n", __func__);
+> > > Model A also had HDMI, and it doesn't look like there's anything
+> > > particularly specific with that board.
+> > 
+> > A subthread just say the opposite, modelA need something more for
+> > HDMI
+> > https://lkml.org/lkml/2019/8/12/394
 > 
-> Here and later - you return NULL, not default values. Your driver -
-> consumer - also behaves like with error condition, not like with
-> default values. Print just that you cannot get timings, I guess.
-OK, thank you. I will change the print.
-
-Thank you for the review.
-
-Regards,
-Lukasz
+> Right, but that's not in the DT at the moment.
 > 
-> Best regards,
-> Krzysztof
+> Maxime
 > 
-> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
