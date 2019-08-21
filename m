@@ -1,127 +1,58 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 4/7] ARM: aspeed: Enable SMP boot
-Date: Wed, 21 Aug 2019 15:25:27 +0930
-Message-ID: <20190821055530.8720-5-joel@jms.id.au>
-References: <20190821055530.8720-1-joel@jms.id.au>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Subject: Re: [PATCH v8 2/3] fdt: add support for rng-seed
+Date: Wed, 21 Aug 2019 13:57:05 +0800
+Message-ID: <CAJMQK-hdYz+pW5QL41nXkZAX1qiRynaWg7cne48qCaQsuPrSCg@mail.gmail.com>
+References: <20190819071602.139014-1-hsinyi@chromium.org> <20190819071602.139014-3-hsinyi@chromium.org>
+ <20190819181349.GE10349@mit.edu> <CAJMQK-ghQ8weMerXW7t0DFZTAg_c5M80Yp5DTAtyY2LA7YpS1A@mail.gmail.com>
+ <CAKv+Gu_qJUU2hRujjv6e5yPqPQXRXokBU_2mSGD3civ2d2+xhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821055530.8720-1-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryan Chen <ryan_chen@aspeedtech.com>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKv+Gu_qJUU2hRujjv6e5yPqPQXRXokBU_2mSGD3civ2d2+xhw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboy>
 List-Id: devicetree@vger.kernel.org
 
-This brings the secondary CPU into Linux. It depends on the setup
-performed by ASPEED's u-boot.
+Then we'd still use add_device_randomness() in case that bootloader
+provides weak entropy.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- arch/arm/Makefile              |  1 +
- arch/arm/mach-aspeed/Makefile  |  5 +++
- arch/arm/mach-aspeed/platsmp.c | 61 ++++++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
- create mode 100644 arch/arm/mach-aspeed/Makefile
- create mode 100644 arch/arm/mach-aspeed/platsmp.c
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index f96419135d35..be2fc3e79434 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -155,6 +155,7 @@ textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
- machine-$(CONFIG_ARCH_ACTIONS)		+= actions
- machine-$(CONFIG_ARCH_ALPINE)		+= alpine
- machine-$(CONFIG_ARCH_ARTPEC)		+= artpec
-+machine-$(CONFIG_ARCH_ASPEED)           += aspeed
- machine-$(CONFIG_ARCH_AT91)		+= at91
- machine-$(CONFIG_ARCH_AXXIA)		+= axxia
- machine-$(CONFIG_ARCH_BCM)		+= bcm
-diff --git a/arch/arm/mach-aspeed/Makefile b/arch/arm/mach-aspeed/Makefile
-new file mode 100644
-index 000000000000..1951b3317a76
---- /dev/null
-+++ b/arch/arm/mach-aspeed/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (C) ASPEED Technology Inc.
-+# Copyright IBM Corp.
-+
-+obj-$(CONFIG_SMP) += platsmp.o
-diff --git a/arch/arm/mach-aspeed/platsmp.c b/arch/arm/mach-aspeed/platsmp.c
-new file mode 100644
-index 000000000000..2324becf7991
---- /dev/null
-+++ b/arch/arm/mach-aspeed/platsmp.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (C) ASPEED Technology Inc.
-+// Copyright IBM Corp.
-+
-+#include <linux/of_address.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/smp.h>
-+
-+#define BOOT_ADDR	0x00
-+#define BOOT_SIG	0x04
-+
-+static struct device_node *secboot_node;
-+
-+static int aspeed_g6_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	void __iomem *base;
-+
-+	base = of_iomap(secboot_node, 0);
-+	if (!base) {
-+		pr_err("could not map the secondary boot base!");
-+		return -ENODEV;
-+	}
-+
-+	writel_relaxed(0, base + BOOT_ADDR);
-+	writel_relaxed(__pa_symbol(secondary_startup_arm), base + BOOT_ADDR);
-+	writel_relaxed((0xABBAAB00 | (cpu & 0xff)), base + BOOT_SIG);
-+
-+	dsb_sev();
-+
-+	iounmap(base);
-+
-+	return 0;
-+}
-+
-+static void __init aspeed_g6_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	void __iomem *base;
-+
-+	secboot_node = of_find_compatible_node(NULL, NULL, "aspeed,ast2600-smpmem");
-+	if (!secboot_node) {
-+		pr_err("secboot device node found!!\n");
-+		return;
-+	}
-+
-+	base = of_iomap(secboot_node, 0);
-+	if (!base) {
-+		pr_err("could not map the secondary boot base!");
-+		return;
-+	}
-+	__raw_writel(0xBADABABA, base + BOOT_SIG);
-+
-+	iounmap(base);
-+}
-+
-+static const struct smp_operations aspeed_smp_ops __initconst = {
-+	.smp_prepare_cpus	= aspeed_g6_smp_prepare_cpus,
-+	.smp_boot_secondary	= aspeed_g6_boot_secondary,
-+};
-+
-+CPU_METHOD_OF_DECLARE(aspeed_smp, "aspeed,ast2600-smp", &aspeed_smp_ops);
--- 
-2.23.0.rc1
+On Tue, Aug 20, 2019 at 7:14 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Tue, 20 Aug 2019 at 10:43, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> >
+> > Hi Ted,
+> >
+> > Thanks for raising this question.
+> >
+> > For UEFI based system, they have a config table that carries rng seed
+> > and can be passed to device randomness. However, they also use
+> > add_device_randomness (not sure if it's the same reason that they
+> > can't guarantee _all_ bootloader can be trusted)
+>
+> The config table is actually a Linux invention: it is populated by the
+> EFI stub code (which is part of the kernel) based on the output of a
+> call into the EFI_RNG_PROTOCOL, which is defined in the UEFI spec, but
+> optional and not widely available.
+>
+> I have opted for add_device_randomness() since there is no way to
+> establish the quality level of the output of EFI_RNG_PROTOCOL, and so
+> it is currently only used to prevent the bootup state of the entropy
+> pool to be too predictable, and the output does not contribute to the
+> entropy estimate kept by the RNG core.
+>
+>
+> > This patch is to let DT based system also have similar features, which
+> > can make initial random number stronger. (We only care initial
+> > situation here, since more entropy would be added to kernel as time
+> > goes on )
+> >
+> > Conservatively, we can use add_device_randomness() as well, which
+> > would pass buffer to crng_slow_load() instead of crng_fast_load().
+> > But I think we should trust bootloader here. Whoever wants to use this
+> > feature should make sure their bootloader can pass valid (random
+> > enough) seeds. If they are not sure, they can just don't add the
+> > property to DT.
+>
+> It is the firmware that adds the property to the DT, not the user.
