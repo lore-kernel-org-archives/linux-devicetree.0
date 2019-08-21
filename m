@@ -1,57 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 04/19] dt-bindings: phy-mmp3-usb: Add bindings
-Date: Wed, 21 Aug 2019 16:13:22 -0500
-Message-ID: <20190821211322.GA12457@bogus>
-References: <20190809093158.7969-1-lkundrak@v3.sk>
- <20190809093158.7969-5-lkundrak@v3.sk>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
+Date: Wed, 21 Aug 2019 23:14:28 +0200
+Message-ID: <CAFBinCA13xJHRmTrOHxSkoy2rMv3=+BBwZsLBmZn=cQ0pyE_Aw@mail.gmail.com>
+References: <20190814142918.11636-1-narmstrong@baylibre.com>
+ <20190814142918.11636-12-narmstrong@baylibre.com> <CAFBinCBWFNJNAWdeZ2LfEJA-MVpSf-A5SrLZEx+0z_P+-iBFDg@mail.gmail.com>
+ <c2d78c7c-d9a8-e486-d3b1-c1447e24284b@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190809093158.7969-5-lkundrak@v3.sk>
+In-Reply-To: <c2d78c7c-d9a8-e486-d3b1-c1447e24284b@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 11:31:43AM +0200, Lubomir Rintel wrote:
-> This is the PHY chip for USB OTG on MMP3 platform.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  .../devicetree/bindings/phy/phy-mmp3-usb.txt     | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt b/Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
-> new file mode 100644
-> index 0000000000000..b9623b98151bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
-> @@ -0,0 +1,16 @@
-> +Marvell MMP3 USB PHY
-> +--------------------
-> +
-> +Required properties:
-> +- compatible: must be "marvell,mmp3-usb-phy"
-> +- #phy-cells: must be 0
-> +
-> +Example:
-> +	usb-phy: usbphy@d4207000 {
-
-usb-phy@...
-
-> +		compatible = "marvell,mmp3-usb-phy";
-> +		reg = <0xd4207000 0x40>;
-> +		#phy-cells = <0>;
-> +	};
-> +
-> +This document explains the device tree binding. For general information
-> +about PHY subsystem refer to Documentation/phy.txt
-
-Drop this statement.
-
-
-> -- 
-> 2.21.0
-> 
+On Wed, Aug 21, 2019 at 4:08 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 20/08/2019 22:32, Martin Blumenstingl wrote:
+> > On Wed, Aug 14, 2019 at 4:33 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> This fixes the following DT schemas check errors:
+> >> meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> >
+> > [...]
+> >> -       compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
+> >> +       compatible = "amediatech,x96-max", "amlogic,g12a";
+> > only partially related: I wonder if we should add a s905x2 compatible
+> > string here and to the .dts filename (just like we separate the GXL
+> > variants s905x, s905d, s905w, ...)
+> >
+>
+> We could, but AFAIK no variants of G12A are planned yet...
+we already support two variants: S905X2 and S905D2 (I'm assuming that
+these are similar to S905X and S905D meaning both are almost
+identical)
+but I guess we can stay with what we have until there's a reason to
+have separate compatible strings (for example if we discover that
+there is a difference that matters - like the OPP table on S922X vs
+A311D)
