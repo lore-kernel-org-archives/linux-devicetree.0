@@ -1,102 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: counter: new bindings for TI eQEP
-Date: Wed, 21 Aug 2019 15:31:27 -0500
-Message-ID: <20190821203127.GA29308@bogus>
-References: <20190807194023.15318-1-david@lechnology.com>
- <20190807194023.15318-3-david@lechnology.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: opp: Introduce opp-peak-kBps and
+  opp-avg-kBps bindings
+Date: Wed, 21 Aug 2019 15:33:53 -0500
+Message-ID: <20190821203353.GA11783@bogus>
+References: <20190807223111.230846-1-saravanak@google.com>
+ <20190807223111.230846-2-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190807194023.15318-3-david@lechnology.com>
+In-Reply-To: <20190807223111.230846-2-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 07, 2019 at 02:40:20PM -0500, David Lechner wrote:
-> This documents device tree binding for the Texas Instruments Enhanced
-> Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
+On Wed,  7 Aug 2019 15:31:09 -0700, Saravana Kannan wrote:
+> Interconnects often quantify their performance points in terms of
+> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
+> allow specifying Bandwidth OPP tables in DT.
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
+> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
+> tables.
+> 
+> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
+> tables.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 > ---
+>  Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
+>  .../devicetree/bindings/property-units.txt        |  4 ++++
+>  2 files changed, 16 insertions(+), 3 deletions(-)
 > 
-> v2 changes:
-> - convert to .yaml format
-> - rename clock to "sysclkout"
-> 
->  .../devicetree/bindings/counter/ti-eqep.yaml  | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.yaml b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
-> new file mode 100644
-> index 000000000000..8f8b2e87e5c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/counter/ti-eqep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments Enhanced Quadrature Encoder Pulse (eQEP) Module
-> +
-> +maintainers:
-> +  - David Lechner <david@lechnology.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: "ti,am3352-eqep"
 
-No need for quotes
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: The eQEP event interrupt
-
-Don't really have to have a description when there is only 1 entry.
-
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: The clock that determines the SYSCLKOUT rate for the eQEP
-> +                 peripheral.
-
-Same here. 2 spaces in from description is the normal indentation.
-
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: sysclkout
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    eqep0: eqep@180 {
-
-counter@...
-
-> +        compatible = "ti,am3352-eqep";
-> +        reg = <0x180 0x80>;
-> +        clocks = <&l4ls_gclk>;
-> +        clock-names = "sysclkout";
-> +        interrupts = <79>;
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
