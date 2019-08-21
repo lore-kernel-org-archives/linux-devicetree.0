@@ -1,62 +1,82 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-Date: Wed, 21 Aug 2019 16:34:27 +0100
-Message-ID: <22a79977-5074-7af1-97b8-8a3e549b23c1@arm.com>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
- <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
- <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
+From: Jonathan Chocron <jonnyc@amazon.com>
+Subject: [PATCH v4 0/7] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date: Wed, 21 Aug 2019 18:35:40 +0300
+Message-ID: <20190821153545.17635-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On 21/08/2019 16:24, Will Deacon wrote:
-> On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
->> MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
->> the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
->> respectively. Meanwhile the iova still is 32bits.
->>
->> Regarding whether the pagetable address could be over 4GB, the mt8183
->> support it while the previous mt8173 don't, thus keep it as is.
->>
->> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
->> ---
->>   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
->>   include/linux/io-pgtable.h         |  7 +++----
->>   2 files changed, 28 insertions(+), 11 deletions(-)
-> 
-> [...]
-> 
->> @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
->>   {
->>   	struct arm_v7s_io_pgtable *data;
->>   
->> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
->> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
->> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
->> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> 
-> Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-You mean oas, right? I believe the hardware *does* actually support a 
-32-bit ias as well, but we shouldn't pretend to support that while 
-__arm_v7s_alloc_table() still only knows how to allocate normal-sized 
-tables.
+Changes since v3:
+- Removed PATCH 8/8 since the usage of the PCI flags will be discussed
+  in the upcoming LPC
+- Align commit subject with the folder convention
+- Added explanation regarding ECAM "overload" mechanism
+- Switched to read/write{_relaxed} APIs
+- Modified a dev_err to dev_dbg
+- Removed unnecessary variable
+- Removed driver details from dt-binding description
+- Changed to SoC specific compatibles
+- Fixed typo in a commit message
+- Added comment regarding MSI in the MSI-X quirk
 
-Robin.
+Changes since v2:
+- Added al_pcie_controller_readl/writel() wrappers
+- Reorganized local vars in several functions according to reverse
+  tree structure
+- Removed unnecessary check of ret value
+- Changed return type of al_pcie_config_prepare() from int to void
+- Removed check if link is up from probe() [done internally in
+  dw_pcie_rd/wr_conf()]
 
-> 
-> With that change:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
-> Will
-> 
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (6):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: dwc: al: Add support for DW based driver type
+  PCI: dwc: Add validation that PCIe core is set to correct mode
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |   8 +
+ drivers/pci/quirks.c                          |  37 ++
+ drivers/pci/vpd.c                             |  16 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 496 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+-- 
+2.17.1
