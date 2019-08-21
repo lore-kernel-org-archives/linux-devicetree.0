@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v4 1/6] dt-bindings: thermal: Add DT bindings documentation for Amlogic Thermal
-Date: Thu, 22 Aug 2019 00:24:16 +0200
-Message-ID: <20190821222421.30242-2-glaroque@baylibre.com>
+Subject: [PATCH v4 4/6] arm64: dts: meson: sei510: Add minimal thermal zone
+Date: Thu, 22 Aug 2019 00:24:19 +0200
+Message-ID: <20190821222421.30242-5-glaroque@baylibre.com>
 References: <20190821222421.30242-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190821222421.30242-1-glaroque@baylibre.com>
@@ -10,76 +10,138 @@ To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the devicetree binding documentation for the Amlogic temperature
-sensor found in the Amlogic Meson G12 SoCs.
-the G12A  and G12B SoCs are supported.
+Add minimal thermal zone for two temperature sensor
+One is located close to the DDR and the other one is
+located close to the PLLs (between the CPU and GPU)
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../bindings/thermal/amlogic,thermal.yaml     | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-new file mode 100644
-index 000000000000..f761681e4c0d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+index c9fa23a56562..35d2ebbd6d4e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/gpio/meson-g12a-gpio.h>
+ #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	compatible = "seirobotics,sei510", "amlogic,g12a";
+@@ -33,6 +34,67 @@
+ 		ethernet0 = &ethmac;
+ 	};
+ 
++	thermal-zones {
++		cpu-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <100>;
++			thermal-sensors = <&cpu_temp>;
 +
-+title: Amlogic Thermal
++			trips {
++				cpu_hot: cpu-hot {
++					temperature = <85000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "hot";
++				};
 +
-+maintainers:
-+  - Guillaume La Roque <glaroque@baylibre.com>
++				cpu_critical: cpu-critical {
++					temperature = <110000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "critical";
++				};
++			};
 +
-+description: Binding for Amlogic Thermal
++			cooling-maps {
++				map0 {
++					trip = <&cpu_hot>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
 +
-+properties:
-+  compatible:
-+      items:
-+        - enum:
-+            - amlogic,g12a-cpu-thermal
-+            - amlogic,g12a-ddr-thermal
-+        - const: amlogic,g12a-thermal
++				map1 {
++					trip = <&cpu_critical>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
 +
-+  reg:
-+    maxItems: 1
++		ddr-thermal {
++			polling-delay = <1000>;
++			polling-delay-passive = <100>;
++			thermal-sensors = <&ddr_temp>;
 +
-+  interrupts:
-+    maxItems: 1
++			trips {
++				ddr_critical: ddr-critical {
++					temperature = <110000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "critical";
++				};
++			};
 +
-+  clocks:
-+    maxItems: 1
++			cooling-maps {
++				map {
++					trip = <&ddr_critical>;
++					cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++	};
 +
-+  amlogic,ao-secure:
-+    description: phandle to the ao-secure syscon
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
+ 	mono_dac: audio-codec-0 {
+ 		compatible = "maxim,max98357a";
+ 		#sound-dai-cells = <0>;
+@@ -321,6 +383,7 @@
+ 	operating-points-v2 = <&cpu_opp_table>;
+ 	clocks = <&clkc CLKID_CPU_CLK>;
+ 	clock-latency = <50000>;
++	#cooling-cells = <2>;
+ };
+ 
+ &cpu1 {
+@@ -328,6 +391,7 @@
+ 	operating-points-v2 = <&cpu_opp_table>;
+ 	clocks = <&clkc CLKID_CPU_CLK>;
+ 	clock-latency = <50000>;
++	#cooling-cells = <2>;
+ };
+ 
+ &cpu2 {
+@@ -335,6 +399,7 @@
+ 	operating-points-v2 = <&cpu_opp_table>;
+ 	clocks = <&clkc CLKID_CPU_CLK>;
+ 	clock-latency = <50000>;
++	#cooling-cells = <2>;
+ };
+ 
+ &cpu3 {
+@@ -342,6 +407,7 @@
+ 	operating-points-v2 = <&cpu_opp_table>;
+ 	clocks = <&clkc CLKID_CPU_CLK>;
+ 	clock-latency = <50000>;
++	#cooling-cells = <2>;
+ };
+ 
+ &cvbs_vdac_port {
+@@ -368,6 +434,10 @@
+ 	status = "okay";
+ };
+ 
++&mali {
++	#cooling-cells = <2>;
++};
 +
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - amlogic,ao-secure
-+
-+examples:
-+  - |
-+        cpu_temp: temperature-sensor@ff634800 {
-+                compatible = "amlogic,g12a-cpu-thermal",
-+                             "amlogic,g12a-thermal";
-+                reg = <0xff634800 0x50>;
-+                interrupts = <0x0 0x24 0x0>;
-+                clocks = <&clk 164>;
-+                #thermal-sensor-cells = <0>;
-+                amlogic,ao-secure = <&sec_AO>;
-+        };
-+...
+ &hdmi_tx {
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
 -- 
 2.17.1
