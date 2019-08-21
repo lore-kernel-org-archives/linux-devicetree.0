@@ -1,35 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: opp: Introduce opp-peak-kBps and
-  opp-avg-kBps bindings
-Date: Wed, 21 Aug 2019 15:33:53 -0500
-Message-ID: <20190821203353.GA11783@bogus>
-References: <20190807223111.230846-1-saravanak@google.com>
- <20190807223111.230846-2-saravanak@google.com>
+Subject: Re: [RESEND PATCH v5 4/4] dt-bindings: devfreq: exynos-bus: remove
+ unused property
+Date: Wed, 21 Aug 2019 15:35:18 -0500
+Message-ID: <20190821203518.GA12770@bogus>
+References: <20190808090234.12577-1-k.konieczny@partner.samsung.com>
+ <CGME20190808090252eucas1p1be186b7a34fa75073fddca120c292f04@eucas1p1.samsung.com>
+ <20190808090234.12577-5-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190807223111.230846-2-saravanak@google.com>
+In-Reply-To: <20190808090234.12577-5-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Saravana Kannan <saravanak@google.com>, Georgi Djakov <georgi.djakov@linaro.org>, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org, bjorn.andersson@linaro.org, evgreen@chromium.org, kernel-team@android.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  7 Aug 2019 15:31:09 -0700, Saravana Kannan wrote:
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
+On Thu, Aug 08, 2019 at 11:02:34AM +0200, Kamil Konieczny wrote:
+> Remove unused DT property "exynos,voltage-tolerance".
 > 
-> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
-> tables.
-> 
-> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-> tables.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
->  Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
->  .../devicetree/bindings/property-units.txt        |  4 ++++
->  2 files changed, 16 insertions(+), 3 deletions(-)
-> 
+>  Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 2 --
+>  1 file changed, 2 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
