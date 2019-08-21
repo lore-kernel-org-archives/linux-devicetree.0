@@ -1,79 +1,74 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 5/8] soc: ti: omap-prm: add omap4 PRM data
-Date: Wed, 21 Aug 2019 09:38:12 +0300
-Message-ID: <6bb038b8-6bfc-196a-d1fc-b97931be9849@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-6-git-send-email-t-kristo@ti.com>
- <04bc6773-dbd4-e1ab-ce31-d93e99dafb33@ti.com>
- <9d684bdc-28b8-0772-2957-93e01c55aae4@ti.com>
- <ed0ec707-ddea-cbfa-ecdf-99faeb770f3f@ti.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v8 2/3] fdt: add support for rng-seed
+Date: Wed, 21 Aug 2019 09:39:28 +0300
+Message-ID: <CAKv+Gu-kp-LqCCx=h2TJxzns4KpM-UEjz3md0u3hbVOyp+iFtA@mail.gmail.com>
+References: <20190819071602.139014-1-hsinyi@chromium.org> <20190819071602.139014-3-hsinyi@chromium.org>
+ <20190819181349.GE10349@mit.edu> <CAJMQK-ghQ8weMerXW7t0DFZTAg_c5M80Yp5DTAtyY2LA7YpS1A@mail.gmail.com>
+ <CAKv+Gu_qJUU2hRujjv6e5yPqPQXRXokBU_2mSGD3civ2d2+xhw@mail.gmail.com> <CAJMQK-hdYz+pW5QL41nXkZAX1qiRynaWg7cne48qCaQsuPrSCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ed0ec707-ddea-cbfa-ecdf-99faeb770f3f@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJMQK-hdYz+pW5QL41nXkZAX1qiRynaWg7cne48qCaQsuPrSCg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, Miles Chen <miles.chen@mediatek.com>, James Morse <james.morse@arm.com>, Andrew Murray <andrew.murray@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>, Robin Murphy <robin.murphy@arm.com>, Laura Abbott <labbott@redhat.com>, Stephen Boyd <swboy>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAuOC4yMDE5IDIwLjIzLCBTdW1hbiBBbm5hIHdyb3RlOgo+IE9uIDgvMjAvMTkgMjo1MiBB
-TSwgVGVybyBLcmlzdG8gd3JvdGU6Cj4+IE9uIDIwLjguMjAxOSAyLjA4LCBTdW1hbiBBbm5hIHdy
-b3RlOgo+Pj4gT24gOC83LzE5IDI6NDggQU0sIFRlcm8gS3Jpc3RvIHdyb3RlOgo+Pj4+IEFkZCBQ
-Uk0gZGF0YSBmb3Igb21hcDQgZmFtaWx5IG9mIFNvQ3MuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5
-OiBUZXJvIEtyaXN0byA8dC1rcmlzdG9AdGkuY29tPgo+Pj4+IC0tLQo+Pj4+ICDCoCBkcml2ZXJz
-L3NvYy90aS9vbWFwX3BybS5jIHwgMjAgKysrKysrKysrKysrKysrKysrKysKPj4+PiAgwqAgMSBm
-aWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykKPj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL3NvYy90aS9vbWFwX3BybS5jIGIvZHJpdmVycy9zb2MvdGkvb21hcF9wcm0uYwo+Pj4+IGlu
-ZGV4IDg3MDUxNWUzLi45YjhkNTk0NSAxMDA2NDQKPj4+PiAtLS0gYS9kcml2ZXJzL3NvYy90aS9v
-bWFwX3BybS5jCj4+Pj4gKysrIGIvZHJpdmVycy9zb2MvdGkvb21hcF9wcm0uYwo+Pj4+IEBAIC01
-NCw3ICs1NCwyNyBAQCBzdHJ1Y3Qgb21hcF9yZXNldF9kYXRhIHsKPj4+PiAgwqAgwqAgI2RlZmlu
-ZSBPTUFQX1BSTV9OT19SU1RTVMKgwqDCoCBCSVQoMCkKPj4+PiAgwqAgK3N0cnVjdCBvbWFwX3By
-bV9kYXRhIG9tYXA0X3BybV9kYXRhW10gPSB7Cj4+Pgo+Pj4gc3RhdGljIGNvbnN0Cj4+Cj4+IFdp
-bGwgZml4IHRoaXMgYW5kIHJlc3Qgb2YgdGhlIHNpbWlsYXIgY29tbWVudHMuCj4+Cj4+IC1UZXJv
-Cj4+Cj4+Pgo+Pj4gcmVnYXJkcwo+Pj4gU3VtYW4KPj4+Cj4+Pj4gK8KgwqDCoCB7IC5uYW1lID0g
-Im1wdSIsIC5iYXNlID0gMHg0YTMwNjMwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4+ICvCoMKgwqAg
-eyAubmFtZSA9ICJ0ZXNsYSIsIC5iYXNlID0gMHg0YTMwNjQwMCwgLnB3c3RzdCA9IDB4NCwgLnJz
-dGN0bCA9Cj4+Pj4gMHgxMCwgLnJzdHN0ID0gMHgxNCB9LAo+Pj4+ICvCoMKgwqAgeyAubmFtZSA9
-ICJhYmUiLCAuYmFzZSA9IDB4NGEzMDY1MDAsIC5wd3N0c3QgPSAweDQgfSwKPj4+PiArwqDCoMKg
-IHsgLm5hbWUgPSAiYWx3YXlzX29uX2NvcmUiLCAuYmFzZSA9IDB4NGEzMDY2MDAsIC5wd3N0c3Qg
-PSAweDQgfSwKPj4+PiArwqDCoMKgIHsgLm5hbWUgPSAiY29yZSIsIC5iYXNlID0gMHg0YTMwNjcw
-MCwgLnB3c3RzdCA9IDB4NCwgLnJzdGN0bCA9Cj4+Pj4gMHgyMTAsIC5yc3RzdCA9IDB4MjE0IH0s
-Cj4+Pj4gK8KgwqDCoCB7IC5uYW1lID0gIml2YWhkIiwgLmJhc2UgPSAweDRhMzA2ZjAwLCAucHdz
-dHN0ID0gMHg0LCAucnN0Y3RsID0KPj4+PiAweDEwLCAucnN0c3QgPSAweDE0IH0sCj4+Pj4gK8Kg
-wqDCoCB7IC5uYW1lID0gImNhbSIsIC5iYXNlID0gMHg0YTMwNzAwMCwgLnB3c3RzdCA9IDB4NCB9
-LAo+Pj4+ICvCoMKgwqAgeyAubmFtZSA9ICJkc3MiLCAuYmFzZSA9IDB4NGEzMDcxMDAsIC5wd3N0
-c3QgPSAweDQgfSwKPj4+PiArwqDCoMKgIHsgLm5hbWUgPSAiZ2Z4IiwgLmJhc2UgPSAweDRhMzA3
-MjAwLCAucHdzdHN0ID0gMHg0IH0sCj4+Pj4gK8KgwqDCoCB7IC5uYW1lID0gImwzaW5pdCIsIC5i
-YXNlID0gMHg0YTMwNzMwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4+ICvCoMKgwqAgeyAubmFtZSA9
-ICJsNHBlciIsIC5iYXNlID0gMHg0YTMwNzQwMCwgLnB3c3RzdCA9IDB4NCB9LAo+Pj4+ICvCoMKg
-wqAgeyAubmFtZSA9ICJjZWZ1c2UiLCAuYmFzZSA9IDB4NGEzMDc2MDAsIC5wd3N0c3QgPSAweDQg
-fSwKPj4+PiArwqDCoMKgIHsgLm5hbWUgPSAid2t1cCIsIC5iYXNlID0gMHg0YTMwNzcwMCwgLnB3
-c3RzdCA9IDB4NCB9LAo+Pj4+ICvCoMKgwqAgeyAubmFtZSA9ICJlbXUiLCAuYmFzZSA9IDB4NGEz
-MDc5MDAsIC5wd3N0c3QgPSAweDQgfSwKPj4+PiArwqDCoMKgIHsgLm5hbWUgPSAiZGV2aWNlIiwg
-LmJhc2UgPSAweDRhMzA3YjAwLCAucnN0Y3RsID0gMHgwLCAucnN0c3QgPQo+Pj4+IDB4NCB9LAo+
-IAo+IFNvLCBsb29rcyBsaWtlIHlvdSBhcmUgdXNpbmcgcHdzdGN0cmwgYXMgMCBieSBkZWZhdWx0
-LCBidXQgc29tZSBvZiB0aGVtCj4gd2lsbCBuZWl0aGVyIGhhdmUgcHdzdGN0cmwgb3IgcHdzdHN0
-IGxpa2UgImRldmljZSIgUFJNIGhlcmUuIElzIHRoZSBwbGFuCj4gdG8gdXNlIC0xIGZvciB0aGUg
-ZmllbGRzLCBvciBhIGZsYWdzIGZpZWxkPwoKTXVsdGlwbGUgcGF0aHMgYXJlIHBvc3NpYmxlLCBJ
-IHdpbGwgc2VlIHdoYXQgbWFrZXMgbW9zdCBzZW5zZSBvbmNlIEkgCmltcGxlbWVudCBpdC4KCi1U
-ZXJvCgo+IAo+IHJlZ2FyZHMKPiBTdW1hbgo+IAo+Pj4+ICvCoMKgwqAgeyB9LAo+Pj4+ICt9Owo+
-Pj4+ICsKPj4+PiAgwqAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgb21hcF9wcm1f
-aWRfdGFibGVbXSA9IHsKPj4+PiArwqDCoMKgIHsgLmNvbXBhdGlibGUgPSAidGksb21hcDQtcHJt
-LWluc3QiLCAuZGF0YSA9IG9tYXA0X3BybV9kYXRhIH0sCj4+Pj4gIMKgwqDCoMKgwqAgeyB9LAo+
-Pj4+ICDCoCB9Owo+Pj4+ICAgCj4+Pgo+Pgo+PiAtLSAKPiAKCi0tClRleGFzIEluc3RydW1lbnRz
-IEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLiBZLXR1bm51cy9C
-dXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On Wed, 21 Aug 2019 at 08:57, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> Then we'd still use add_device_randomness() in case that bootloader
+> provides weak entropy.
+>
+
+(please don't top post)
+
+Whether to trust the firmware provided entropy is a policy decision,
+and typically, we try to avoid dictating policy in the kernel, and
+instead, we try to provide a sane default but give the user control
+over it.
+
+So in this case, we should probably introduce
+add_firmware_randomness() with a Kconfig/cmdline option pair to decide
+whether it should be trusted or not (or reuse the one we have for
+trusting RDRAND etc)
+
+
+> On Tue, Aug 20, 2019 at 7:14 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> >
+> > On Tue, 20 Aug 2019 at 10:43, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> > >
+> > > Hi Ted,
+> > >
+> > > Thanks for raising this question.
+> > >
+> > > For UEFI based system, they have a config table that carries rng seed
+> > > and can be passed to device randomness. However, they also use
+> > > add_device_randomness (not sure if it's the same reason that they
+> > > can't guarantee _all_ bootloader can be trusted)
+> >
+> > The config table is actually a Linux invention: it is populated by the
+> > EFI stub code (which is part of the kernel) based on the output of a
+> > call into the EFI_RNG_PROTOCOL, which is defined in the UEFI spec, but
+> > optional and not widely available.
+> >
+> > I have opted for add_device_randomness() since there is no way to
+> > establish the quality level of the output of EFI_RNG_PROTOCOL, and so
+> > it is currently only used to prevent the bootup state of the entropy
+> > pool to be too predictable, and the output does not contribute to the
+> > entropy estimate kept by the RNG core.
+> >
+> >
+> > > This patch is to let DT based system also have similar features, which
+> > > can make initial random number stronger. (We only care initial
+> > > situation here, since more entropy would be added to kernel as time
+> > > goes on )
+> > >
+> > > Conservatively, we can use add_device_randomness() as well, which
+> > > would pass buffer to crng_slow_load() instead of crng_fast_load().
+> > > But I think we should trust bootloader here. Whoever wants to use this
+> > > feature should make sure their bootloader can pass valid (random
+> > > enough) seeds. If they are not sure, they can just don't add the
+> > > property to DT.
+> >
+> > It is the firmware that adds the property to the DT, not the user.
