@@ -1,63 +1,91 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v3 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
-Date: Wed, 21 Aug 2019 11:06:57 +0200
-Message-ID: <20190821090657.GA560@centauri>
-References: <20190820172351.24145-1-vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
+Date: Wed, 21 Aug 2019 14:39:09 +0530
+Message-ID: <20190821090909.GJ12733@vkoul-mobl.Dlink>
+References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
+ <20190809133407.25918-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190820172351.24145-1-vkoul@kernel.org>
+In-Reply-To: <20190809133407.25918-2-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org, pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:53:42PM +0530, Vinod Koul wrote:
-> This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
-> the MTP for SM8150.
+On 09-08-19, 14:34, Srinivas Kandagatla wrote:
+> This patch adds bindings for Soundwire Slave devices that includes how
+> SoundWire enumeration address and Link ID are used to represented in
+> SoundWire slave device tree nodes.
+
+Rob does this look good to you, I intent to apply the soundwire parts
+
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../devicetree/bindings/soundwire/slave.txt   | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soundwire/slave.txt
 > 
-> Changes in v3:
->  - Fix copyright comment style to Linux kernel style
->  - Make property values all hex or decimal
->  - Fix patch titles and logs and make them consistent
->  - Fix line breaks
-> 
-> Changes in v2:
->  - Squash patches
->  - Fix comments given by Stephen namely, lowercase for hext numbers,
->    making rpmhcc have xo_board as parent, rename pon controller to
->    power-on controller, make pmic nodes as disabled etc.
->  - removed the dependency on clk defines and use raw numbers
-> 
-> 
-> Vinod Koul (8):
->   arm64: dts: qcom: sm8150: Add base dts file
->   arm64: dts: qcom: pm8150: Add base dts file
->   arm64: dts: qcom: pm8150b: Add base dts file
->   arm64: dts: qcom: pm8150l: Add base dts file
->   arm64: dts: qcom: sm8150-mtp: Add base dts file
->   arm64: dts: qcom: sm8150-mtp: Add regulators
->   arm64: dts: qcom: sm8150: Add reserved-memory regions
->   arm64: dts: qcom: sm8150: Add apps shared nodes
-> 
->  arch/arm64/boot/dts/qcom/Makefile       |   1 +
->  arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
->  arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 378 +++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 481 ++++++++++++++++++++++++
->  6 files changed, 1123 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
-> 
+> diff --git a/Documentation/devicetree/bindings/soundwire/slave.txt b/Documentation/devicetree/bindings/soundwire/slave.txt
+> new file mode 100644
+> index 000000000000..201f65d2fafa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soundwire/slave.txt
+> @@ -0,0 +1,51 @@
+> +SoundWire slave device bindings.
+> +
+> +SoundWire is a 2-pin multi-drop interface with data and clock line.
+> +It facilitates development of low cost, efficient, high performance systems.
+> +
+> +SoundWire slave devices:
+> +Every SoundWire controller node can contain zero or more child nodes
+> +representing slave devices on the bus. Every SoundWire slave device is
+> +uniquely determined by the enumeration address containing 5 fields:
+> +SoundWire Version, Instance ID, Manufacturer ID, Part ID
+> +and Class ID for a device. Addition to below required properties,
+> +child nodes can have device specific bindings.
+> +
+> +Required properties:
+> +- compatible:	 "sdw<LinkID><VersionID><InstanceID><MFD><PID><CID>".
+> +		  Is the textual representation of SoundWire Enumeration
+> +		  address along with Link ID. compatible string should contain
+> +		  SoundWire Link ID, SoundWire Version ID, Instance ID,
+> +		  Manufacturer ID, Part ID and Class ID in order
+> +		  represented as above and shall be in lower-case hexadecimal
+> +		  with leading zeroes. Vaild sizes of these fields are
+> +		  LinkID is 1 nibble,
+> +		  Version ID is 1 nibble
+> +		  Instance ID in 1 nibble
+> +		  MFD in 4 nibbles
+> +		  PID in 4 nibbles
+> +		  CID is 2 nibbles
+> +
+> +		  Version number '0x1' represents SoundWire 1.0
+> +		  Version number '0x2' represents SoundWire 1.1
+> +		  ex: "sdw0110217201000" represents 0 LinkID,
+> +		  SoundWire 1.0 version slave with Instance ID 1.
+> +		  More Information on detail of encoding of these fields can be
+> +		  found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
+> +
+> +SoundWire example for Qualcomm's SoundWire controller:
+> +
+> +soundwire@c2d0000 {
+> +	compatible = "qcom,soundwire-v1.5.0"
+> +	reg = <0x0c2d0000 0x2000>;
+> +
+> +	spkr_left:wsa8810-left{
+> +		compatible = "sdw0110217201000";
+> +		...
+> +	};
+> +
+> +	spkr_right:wsa8810-right{
+> +		compatible = "sdw0120217201000";
+> +		...
+> +	};
+> +};
 > -- 
-> 2.20.1
-> 
+> 2.21.0
 
-Whole series is:
-
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+-- 
+~Vinod
