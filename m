@@ -1,30 +1,63 @@
-Return-Path: <SRS0=5k37=WP=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH] dt-bindings: dmaengine: nbpfaxi: Rename bindings documentation file
-Date: Mon, 19 Aug 2019 15:52:44 +0200
-Message-Id: <20190819135244.18183-1-horms+renesas@verge.net.au>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190819163748.18318-4-tdas@codeaurora.org>
+References: <20190819163748.18318-1-tdas@codeaurora.org> <20190819163748.18318-4-tdas@codeaurora.org>
+Subject: Re: [PATCH v2 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Wed, 21 Aug 2019 11:01:59 -0700
+Message-Id: <20190821180200.1F7EF2082F@mail.kernel.org>
+To: robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Rename the device tree bindings for renesas "Type-AXI" NBPFAXI* DMA
-controllers from nbpfaxi.txt to renesas,nbpfaxi.txt.
+Quoting Taniya Das (2019-08-19 09:37:48)
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index e1ff83cc361e..ebd4902afd9f 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -322,5 +331,4 @@ config KRAITCC
+>         help
+>           Support for the Krait CPU clocks on Qualcomm devices.
+>           Say Y if you want to support CPU frequency scaling.
+> -
+>  endif
 
-This is part of an ongoing effort to name bindings documentation files for
-Renesas IP blocks consistently, in line with the compat strings they
-document.
+Please remove this hunk
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
-Based on v5.3-rc1
----
- .../devicetree/bindings/dma/{nbpfaxi.txt => renesas,nbpfaxi.txt}          | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/dma/{nbpfaxi.txt => renesas,nbpfaxi.txt} (100%)
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+> new file mode 100644
+> index 000000000000..8718b675d609
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+[...]
+> +       },
+> +};
+> +
+> +/* Camera Subsystem requires always ON. */
 
-diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/renesas,nbpfaxi.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/dma/nbpfaxi.txt
-rename to Documentation/devicetree/bindings/dma/renesas,nbpfaxi.txt
--- 
-2.11.0
+Yes, but why? This comment is useful unless it explains why.
+
+> +static struct clk_branch gcc_camera_ahb_clk =3D {
+> +       .halt_reg =3D 0xb008,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .hwcg_reg =3D 0xb008,
+> +       .hwcg_bit =3D 1,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0xb008,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_camera_ahb_clk",
+> +                       .flags =3D CLK_IS_CRITICAL,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_camera_hf_axi_clk =3D {
+> +       .halt_reg =3D 0xb020,
+> +       .halt_check =3D BRANCH_HALT,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0xb020,
+> +               .enable_mask =3D BIT(0),
