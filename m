@@ -1,47 +1,101 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v13 1/8] dt-bindings: ddr: rename lpddr2 directory
-Date: Wed, 21 Aug 2019 12:42:56 +0200
-Message-ID: <20190821104303.32079-2-l.luba@partner.samsung.com>
-References: <20190821104303.32079-1-l.luba@partner.samsung.com>
-        <CGME20190821104318eucas1p1065a4a9d8366095e4d758519f88e8aba@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Document JZ47xx VPU auxiliary
+ processor
+Date: Wed, 21 Aug 2019 12:47:39 +0200
+Message-ID: <1566384459.1884.0@crapouillou.net>
+References: <20190729183109.18283-1-paul@crapouillou.net>
+        <20190820205044.GA1223@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821104303.32079-1-l.luba@partner.samsung.com>
+In-Reply-To: <20190820205044.GA1223@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, od@zcrc.me, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Change directory name to be ready for new types of memories.
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- .../devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt      | 0
- Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt    | 2 +-
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
- rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
 
-diff --git a/Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt b/Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
-rename to Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
-diff --git a/Documentation/devicetree/bindings/lpddr2/lpddr2.txt b/Documentation/devicetree/bindings/ddr/lpddr2.txt
-similarity index 96%
-rename from Documentation/devicetree/bindings/lpddr2/lpddr2.txt
-rename to Documentation/devicetree/bindings/ddr/lpddr2.txt
-index 58354a075e13..ddd40121e6f6 100644
---- a/Documentation/devicetree/bindings/lpddr2/lpddr2.txt
-+++ b/Documentation/devicetree/bindings/ddr/lpddr2.txt
-@@ -36,7 +36,7 @@ Child nodes:
-   "lpddr2-timings" provides AC timing parameters of the device for
-   a given speed-bin. The user may provide the timings for as many
-   speed-bins as is required. Please see Documentation/devicetree/
--  bindings/lpddr2/lpddr2-timings.txt for more information on "lpddr2-timings"
-+  bindings/ddr/lpddr2-timings.txt for more information on "lpddr2-timings"
- 
- Example:
- 
--- 
-2.17.1
+Le mar. 20 ao=FBt 2019 =E0 22:50, Rob Herring <robh@kernel.org> a =E9crit :
+> On Mon, Jul 29, 2019 at 02:31:07PM -0400, Paul Cercueil wrote:
+>>  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs=20
+>> from
+>>  Ingenic is a second Xburst MIPS CPU very similar to the main core.
+>>  This document describes the devicetree bindings for this auxiliary
+>>  processor.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: Update TCSM0 address in example
+>>=20
+>>   .../bindings/remoteproc/ingenic,vpu.txt       | 36=20
+>> +++++++++++++++++++
+>>   1 file changed, 36 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt=20
+>> b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+>>  new file mode 100644
+>>  index 000000000000..576f9e582780
+>>  --- /dev/null
+>>  +++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+>>  @@ -0,0 +1,36 @@
+>>  +* Ingenic JZ47xx auxiliary processor
+>>  +
+>>  +Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs=20
+>> from Ingenic
+>>  +is a second Xburst MIPS CPU very similar to the main core.
+>>  +This document describes the devicetree bindings for this auxiliary=20
+>> processor.
+>>  +
+>>  +Required properties:
+>>  +- compatible: Should be "ingenic,jz4770-vpu-rproc"
+>>  +- reg: Must contain the registers location and length for:
+>>  +  * the auxiliary processor,
+>>  +  * the Tightly Coupled Shared Memory 0 (TCSM0),
+>>  +  * the Tightly Coupled Shared Memory 1 (TCSM1),
+>>  +  * the shared SRAM.
+>>  +- reg-names: Must contain "aux", "tcsm0", "tcsm1", "sram".
+>>  +- clocks: Clock specifier for the AUX and VPU clocks.
+>>  +- clock-names: Must contain "aux", "vpu".
+>>  +- interrupts: Interrupt specifier for the VPU hardware block.
+>>  +
+>>  +Example:
+>>  +
+>>  +vpu: cpu@132a0000 {
+>=20
+> cpu is reserved for CPUs under /cpus/. Use video-codec or=20
+> video-decoder
+> or ?? It's not clear what type of video processing this does.
+
+Hardware decode and encode of mpeg-2 and h264. I guess I'll use=20
+'video-decoder' then.
+
+
+>=20
+>>  +	compatible =3D "ingenic,jz4770-vpu-rproc";
+>>  +
+>>  +	reg =3D <0x132a0000 0x20 /* AUX */
+>>  +		   0x132b0000 0x4000 /* TCSM0 */
+>>  +		   0x132c0000 0xc000 /* TCSM1 */
+>>  +		   0x132f0000 0x7000 /* SRAM */
+>>  +	>;
+>>  +	reg-names =3D "aux", "tcsm0", "tcsm1", "sram";
+>>  +
+>>  +	clocks =3D <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
+>>  +	clock-names =3D "aux", "vpu";
+>>  +
+>>  +	interrupt-parent =3D <&cpuintc>;
+>>  +	interrupts =3D <3>;
+>>  +};
+>>  --
+>>  2.21.0.593.g511ec345e18
+>>=20
+
+=
