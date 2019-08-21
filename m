@@ -1,56 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: pinctrl: k3: Introduce pinmux
- definitions for J721E
-Date: Wed, 21 Aug 2019 16:02:32 -0500
-Message-ID: <20190821210232.GA22578@bogus>
-References: <20190809082947.30590-1-lokeshvutla@ti.com>
- <20190809082947.30590-6-lokeshvutla@ti.com>
+Subject: Re: [PATCH 02/19] dt-bindings: arm: mrvl: Document MMP3 compatible
+ string
+Date: Wed, 21 Aug 2019 16:03:49 -0500
+Message-ID: <20190821210349.GA29732@bogus>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+ <20190809093158.7969-3-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190809082947.30590-6-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, linus.walleij@linaro.org, Tero Kristo <t-kristo@ti.com>, linux-gpio@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190809093158.7969-3-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 01:59:46PM +0530, Lokesh Vutla wrote:
-> Add pinctrl macros for J721E SoC. These macro definitions are
-> similar to that of AM6, but adding new definitions to avoid
-> any naming confusions in the soc dts files.
+On Fri, Aug 09, 2019 at 11:31:41AM +0200, Lubomir Rintel wrote:
+> Marvel MMP3 is a successor to MMP2, containing similar peripherals with two
+> PJ4B cores.
 > 
-> Acked-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
->  include/dt-bindings/pinctrl/k3.h | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/include/dt-bindings/pinctrl/k3.h b/include/dt-bindings/pinctrl/k3.h
-> index 45e11b6170ca..499de6216581 100644
-> --- a/include/dt-bindings/pinctrl/k3.h
-> +++ b/include/dt-bindings/pinctrl/k3.h
-> @@ -32,4 +32,7 @@
->  #define AM65X_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
->  #define AM65X_WKUP_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
->  
-> +#define J721E_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
-> +#define J721E_WKUP_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
-
-checkpatch reports a parentheses error:         (((pa) & 0x1fff) ((val) | (muxmode)))
-
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> index 951687528efb0..66e1e1414245b 100644
+> --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> @@ -12,3 +12,7 @@ Required root node properties:
+>  MMP2 Brownstone Board
+>  Required root node properties:
+>  	- compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
 > +
->  #endif
-> -- 
-> 2.22.0
-> 
+> +MMP3 SoC
+> +Required root node properties:
+> +	- compatible = "marvell,mmp3";
+
+Please convert this file to DT schema before adding new SoCs.
+
+Rob
