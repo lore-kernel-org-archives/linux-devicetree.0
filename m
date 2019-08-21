@@ -1,41 +1,138 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v2 2/2] dt-bindings: arm: rockchip: remove reference to fennec board
-Date: Wed, 21 Aug 2019 11:11:24 +0800
-Message-ID: <20190821031124.17806-2-kever.yang@rock-chips.com>
-References: <20190821031124.17806-1-kever.yang@rock-chips.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v6 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
+Date: Wed, 21 Aug 2019 11:15:35 +0800
+Message-ID: <20190821031537.46824-1-ran.wang_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821031124.17806-1-kever.yang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, Douglas Anderson <dianders@chromium.org>, Jagan Teki <jagan@amarulasolutions.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The rk3288 fennec board has been removed, remove the binding document at
-the same time.
+Some user might want to go through all registered wakeup sources
+and doing things accordingly. For example, SoC PM driver might need to
+do HW programming to prevent powering down specific IP which wakeup
+source depending on. So add this API to help walk through all registered
+wakeup source objects on that list and return them one by one.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
+Change in v6:
+	- Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned 
+	with wakeup_sources_stats_seq_start/nex/stop.
 
-Changes in v2: None
+Change in v5:
+	- Update commit message, add decription of walk through all wakeup
+	source objects.
+	- Add SCU protection in function wakeup_source_get_next().
+	- Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+	(before wakeirq).
 
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 -----
- 1 file changed, 5 deletions(-)
+Change in v4:
+	- None.
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 34865042f4e4..cc2f1c2d0cd0 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -424,11 +424,6 @@ properties:
-               - rockchip,rk3288-evb-rk808
-           - const: rockchip,rk3288
+Change in v3:
+	- Adjust indentation of *attached_dev;.
+
+Change in v2:
+	- None.
+
+ drivers/base/power/wakeup.c | 39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_wakeup.h   |  5 +++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index ee31d4f..61bc16b 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -14,6 +14,7 @@
+ #include <linux/suspend.h>
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
++#include <linux/of_device.h>
+ #include <linux/pm_wakeirq.h>
+ #include <trace/events/power.h>
  
--      - description: Rockchip RK3288 Fennec
--        items:
--          - const: rockchip,rk3288-fennec
--          - const: rockchip,rk3288
--
-       - description: Rockchip RK3328 Evaluation board
-         items:
-           - const: rockchip,rk3328-evb
+@@ -228,6 +229,43 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+ EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+ 
+ /**
++ * wakeup_source_get_star - Begin a walk on wakeup source list
++ * @srcuidx: Lock index allocated for this caller.
++ */
++struct wakeup_source *wakeup_source_get_start(int *srcuidx)
++{
++	struct list_head *ws_head = &wakeup_sources;
++
++	*srcuidx = srcu_read_lock(&wakeup_srcu);
++
++	return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_start);
++
++/**
++ * wakeup_source_get_next - Get next wakeup source from the list
++ * @ws: Previous wakeup source object
++ */
++struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
++{
++	struct list_head *ws_head = &wakeup_sources;
++
++	return list_next_or_null_rcu(ws_head, &ws->entry,
++				struct wakeup_source, entry);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_next);
++
++/**
++ * wakeup_source_get_stop - Stop a walk on wakeup source list
++ * @idx: Dedicated lock index of this caller.
++ */
++void wakeup_source_get_stop(int idx)
++{
++	srcu_read_unlock(&wakeup_srcu, idx);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_stop);
++
++/**
+  * device_wakeup_attach - Attach a wakeup source object to a device object.
+  * @dev: Device to handle.
+  * @ws: Wakeup source object to attach to @dev.
+@@ -242,6 +280,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
+ 		return -EEXIST;
+ 	}
+ 	dev->power.wakeup = ws;
++	ws->dev = dev;
+ 	if (dev->power.wakeirq)
+ 		device_wakeup_attach_irq(dev, dev->power.wakeirq);
+ 	spin_unlock_irq(&dev->power.lock);
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 9102760..e6b47b6 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -23,6 +23,7 @@ struct wake_irq;
+  * @name: Name of the wakeup source
+  * @entry: Wakeup source list entry
+  * @lock: Wakeup source lock
++ * @dev: The device it attached to
+  * @wakeirq: Optional device specific wakeirq
+  * @timer: Wakeup timer list
+  * @timer_expires: Wakeup timer expiration
+@@ -42,6 +43,7 @@ struct wakeup_source {
+ 	const char 		*name;
+ 	struct list_head	entry;
+ 	spinlock_t		lock;
++	struct device		*dev;
+ 	struct wake_irq		*wakeirq;
+ 	struct timer_list	timer;
+ 	unsigned long		timer_expires;
+@@ -88,6 +90,9 @@ extern void wakeup_source_add(struct wakeup_source *ws);
+ extern void wakeup_source_remove(struct wakeup_source *ws);
+ extern struct wakeup_source *wakeup_source_register(const char *name);
+ extern void wakeup_source_unregister(struct wakeup_source *ws);
++extern struct wakeup_source *wakeup_source_get_start(int *srcuidx);
++extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
++extern void wakeup_source_get_stop(int idx);
+ extern int device_wakeup_enable(struct device *dev);
+ extern int device_wakeup_disable(struct device *dev);
+ extern void device_set_wakeup_capable(struct device *dev, bool capable);
 -- 
-2.17.1
+2.7.4
