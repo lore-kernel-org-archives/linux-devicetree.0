@@ -1,96 +1,67 @@
-From: Ashish Kumar <ashish.kumar@nxp.com>
-Subject: RE: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Date: Wed, 21 Aug 2019 14:18:43 +0000
-Message-ID: <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
-References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
- <20190821110640.GC5128@sirena.co.uk>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
+Date: Wed, 21 Aug 2019 16:20:29 +0200
+Message-ID: <20190821142043.14649-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821110640.GC5128@sirena.co.uk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
+To: khilman@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+This is the first set of DT fixes following the first YAML bindings conversion
+at [1], [2] and [3].
 
+After this set of fixes, the remaining errors are :
+meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
+meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Wednesday, August 21, 2019 4:37 PM
-> To: Ashish Kumar <ashish.kumar@nxp.com>
-> Cc: linux-kernel@vger.kernel.org; linux-spi@vger.kernel.org;
-> devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux-next@vger.kernel.org; Kuldeep Singh <kuldeep.singh@nxp.com>
-> Subject: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add ls2=
-080a
-> compatibility string to bindings
->=20
-> On Tue, Aug 13, 2019 at 03:53:09PM +0530, Ashish Kumar wrote:
->=20
-> > There are 2 version of QSPI-IP, according to which controller
-> > registers sets can be big endian or little endian.There are some other
-> > minor changes like RX fifo depth etc.
-> >
-> > The big endian version uses driver compatible "fsl,ls1021a-qspi" and
-> > little endian version uses driver compatible "fsl,ls2080a-qspi"
->=20
-> I'm not seeing the corresponding code changes anywhere?  I'd at least
-> expect to see the compatibles added, and it sounds like some actual code
-> updates are needed.
-Hi Mark,
+These are only cosmetic changes, and should not break drivers implementation
+following the bindings.
 
-Snippet from driver spi-fsl-qspi.c
-static const struct of_device_id fsl_qspi_dt_ids[] =3D {
-        { .compatible =3D "fsl,vf610-qspi", .data =3D &vybrid_data, },
-        { .compatible =3D "fsl,imx6sx-qspi", .data =3D &imx6sx_data, },
-        { .compatible =3D "fsl,imx7d-qspi", .data =3D &imx7d_data, },
-        { .compatible =3D "fsl,imx6ul-qspi", .data =3D &imx6ul_data, },
-        { .compatible =3D "fsl,ls1021a-qspi", .data =3D &ls1021a_data, },
-        { .compatible =3D "fsl,ls2080a-qspi", .data =3D &ls2080a_data, },
-        { /* sentinel */ }
-};
-I had previously sent dts patch based out of Shawn's tree with dependency o=
-n these dt binding patch. To which Shawn had replied to get dependency patc=
-h accepted first before sending this dts change.
-Reference conversion can be viewed here [1],[2].
+Changes since v1 at [4]:
+- Added suggested commit text from Martin in patches 1 & 2
+- Fixed NanoPi K2 model name
 
-This compatible can be seen here: file arch/arm64/boot/dts/freescale/fsl-ls=
-208xa.dtsi
+[1] https://patchwork.kernel.org/cover/11083597/
+[2] https://patchwork.kernel.org/cover/11103229/
+[3] https://patchwork.kernel.org/cover/11083649/
+[4] https://patchwork.kernel.org/cover/11094063/
 
-Snippet from previous dts patch based on Shawn tree, I will send next versi=
-on on this patch after dt-bindings are updated
-arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls208xa.dtsi
-index d7e78dcd153d..8e5ba513b24f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -606,7 +606,7 @@
-=20
- 		qspi: spi@20c0000 {
- 			status =3D "disabled";
--			compatible =3D "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
-+			compatible =3D "fsl,ls2080a-qspi";
- 			#address-cells =3D <1>;
- 			#size-cells =3D <0>;
- 			reg =3D <0x0 0x20c0000 0x0 0x10000>,
->=20
-> Please use subject lines matching the style for the subsystem.  This make=
-s it
-> easier for people to identify relevant patches.
-Could you please guide more, or point to documentation to follow sub-system=
- style.
-dt-bindings: spi: spi-fsl-qspi: Add ls2080a-qspi compatibility string to bi=
-ndings=20
-Is this a better now? if yes, I will send next version
+Neil Armstrong (14):
+  arm64: dts: meson: fix ethernet mac reg format
+  arm64: dts: meson-gx: drop the vpu dmc memory cell
+  arm64: dts: meson-gx: fix reset controller compatible
+  arm64: dts: meson-gx: fix spifc compatible
+  arm64: dts: meson-gx: fix watchdog compatible
+  arm64: dts: meson-gx: fix mhu compatible
+  arm64: dts: meson-gx: fix periphs bus node name
+  arm64: dts: meson-gxl: fix internal phy compatible
+  arm64: dts: meson-axg: fix MHU compatible
+  arm64: dts: meson-g12a: fix reset controller compatible
+  arm64: dts: meson-g12a-x96-max: fix compatible
+  arm64: dts: meson-gxbb-nanopi-k2: add missing model
+  arm64: dts: meson-gxbb-p201: fix snps,reset-delays-us format
+  arm64: dts: meson: fix boards regulators states format
 
-[1]: https://www.spinics.net/lists/arm-kernel/msg727403.html
-[2]: https://patchwork.kernel.org/patch/10192103/
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  6 +++---
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  7 +++----
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     | 19 +++++++++----------
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |  1 +
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++--
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  |  4 ++--
+ .../boot/dts/amlogic/meson-gxbb-p201.dts      |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  4 ++--
+ .../meson-gxl-s905x-hwacom-amazetv.dts        |  4 ++--
+ .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  5 +----
+ 13 files changed, 31 insertions(+), 35 deletions(-)
 
-Regards
-Ashish
+-- 
+2.22.0
