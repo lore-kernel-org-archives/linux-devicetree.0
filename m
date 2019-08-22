@@ -1,46 +1,81 @@
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v1 4/4] mmc: sdhci-of-esdhc: add erratum A011334 support
- in ls1028a 1.0 SoC
-Date: Thu, 22 Aug 2019 14:13:03 +0200
-Message-ID: <CAPDyKFpwGGPAShEoXPK8Ksg5FPEVrbD3-HfeTSMACPsDC_V5FA@mail.gmail.com>
-References: <20190814072649.8237-1-yinbo.zhu@nxp.com> <20190814072649.8237-4-yinbo.zhu@nxp.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
+Date: Thu, 22 Aug 2019 14:14:16 +0200
+Message-ID: <CAPDyKFrWMjaqv8z6HnmDn12c2SsjU6fEzjZesxj=nwbP9YRiPw@mail.gmail.com>
+References: <20190807003629.2974-1-andrew@aj.id.au> <20190807003629.2974-2-andrew@aj.id.au>
+ <CACPK8Xe6Zp1uOqEffEc0b6oGa7portEAifGPRqb876HmA+oZeg@mail.gmail.com>
+ <6c94aada-9c4a-4f55-9a43-349282ad12af@www.fastmail.com> <CAPDyKFrDPxFMm710Z25i-euOT2rrgCNXVa4na-fye0xamMXq_A@mail.gmail.com>
+ <c78d4c45-477b-4078-b269-aec72571c8cd@www.fastmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814072649.8237-4-yinbo.zhu@nxp.com>
+In-Reply-To: <c78d4c45-477b-4078-b269-aec72571c8cd@www.fastmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Li Yang <leoyang.li@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Ashish Kumar <Ashish.Kumar@nxp.com>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, Alison Wang <alison.wang@nxp.com>, Alex
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Joel Stanley <joel@jms.id.au>, linux-mmc <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 09:24, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
+On Thu, 22 Aug 2019 at 13:55, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
-> This patch is to add erratum A011334 support in ls1028a 1.0 SoC
 >
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+>
+> On Thu, 22 Aug 2019, at 21:15, Ulf Hansson wrote:
+> > On Thu, 15 Aug 2019 at 07:37, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > >
+> > >
+> > > On Thu, 15 Aug 2019, at 15:06, Joel Stanley wrote:
+> > > > On Wed, 7 Aug 2019 at 00:38, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > > >
+> > > > > The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
+> > > > > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
+> > > > > data bus if only a single slot is enabled.
+> > > > >
+> > > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > >
+> > > > Reviewed-by: Joel Stanley <joel@jms.id.au>
+> > > >
+> > > > Two minor comments below.
+> > > >
+> > > > > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> > > > > @@ -0,0 +1,105 @@
+> > > > > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > > >
+> > > > No "Copyright IBM" ?
+> > >
+> > > I'm going rogue.
+> > >
+> > > That reminds me I should chase up where we got to with the binding
+> > > licensing.
+> > >
+> > > >
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > >
+> > > > > +
+> > > > > +examples:
+> > > > > +  - |
+> > > > > +    #include <dt-bindings/clock/aspeed-clock.h>
+> > > > > +    sdc@1e740000 {
+> > > > > +            compatible = "aspeed,ast2500-sd-controller";
+> > > > > +            reg = <0x1e740000 0x100>;
+> > > > > +            #address-cells = <1>;
+> > > > > +            #size-cells = <1>;
+> > > > > +            ranges = <0 0x1e740000 0x10000>;
+> > > >
+> > > > According to the datasheet this could be 0x20000. It does not matter
+> > > > though, as there's nothing in it past 0x300.
+> > >
+> > > Good catch.
+> > >
+> >
+> > Are you planning on sending a v6 or you want me to apply this and you
+> > can post a patch on top?
+>
+> Yeah, sorry, I wasn't very clear there. I was hoping just to do a follow-up
+> patch with the cleanups if you're okay with that?
 
-Applied for next, thanks!
+That's fine. V5 applied for next, thanks!
 
 Kind regards
 Uffe
-
-
-> ---
->  drivers/mmc/host/sdhci-of-esdhc.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-> index b16f7d440f78..eb2b290447fc 100644
-> --- a/drivers/mmc/host/sdhci-of-esdhc.c
-> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
-> @@ -1006,6 +1006,7 @@ static struct soc_device_attribute soc_incorrect_hostver[] = {
->  static struct soc_device_attribute soc_fixup_sdhc_clkdivs[] = {
->         { .family = "QorIQ LX2160A", .revision = "1.0", },
->         { .family = "QorIQ LX2160A", .revision = "2.0", },
-> +       { .family = "QorIQ LS1028A", .revision = "1.0", },
->         { },
->  };
->
-> --
-> 2.17.1
->
