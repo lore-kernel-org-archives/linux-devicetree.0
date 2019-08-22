@@ -1,57 +1,86 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 1/4] iommu/arm-smmu: Introduce wrapper for writeq/readq
-Date: Thu, 22 Aug 2019 15:30:24 +0100
-Message-ID: <4ef6512d-701f-4fe8-8173-5f659dab0d32@arm.com>
-References: <20190711150242.25290-1-gregory.clement@bootlin.com>
- <20190711150242.25290-2-gregory.clement@bootlin.com>
- <20190820120848.2m6gytilrpil4stu@willie-the-truck>
+From: "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Date: Thu, 22 Aug 2019 14:36:24 +0000
+Message-ID: <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+         <20190821153545.17635-4-jonnyc@amazon.com>
+         <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190820120848.2m6gytilrpil4stu@willie-the-truck>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+Content-Language: en-US
+Content-ID: <4BEB828D57473A42AE30BC33D5008F5B@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "andrew.murray@arm.com" <andrew.murray@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, benh@kernel.crashing
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/2019 13:08, Will Deacon wrote:
-> Hi Gregory, Hanna,
-> 
-> On Thu, Jul 11, 2019 at 05:02:39PM +0200, Gregory CLEMENT wrote:
->> From: Hanna Hawa <hannah@marvell.com>
->>
->> This patch introduces the smmu_writeq_relaxed/smmu_readq_relaxed
->> helpers, as preparation to add specific Marvell work-around for
->> accessing 64 bits width registers of ARM SMMU.
->>
->> Signed-off-by: Hanna Hawa <hannah@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
->>   drivers/iommu/arm-smmu.c | 36 +++++++++++++++++++++++++++---------
->>   1 file changed, 27 insertions(+), 9 deletions(-)
-> 
-> Sorry for the delay in replying to this -- Robin's been reworking the driver
-> so that implementation quirks can be specified more cleanly. Please can you
-> take a look at:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/refactoring
-> 
-> and try to respin your patches on top of that?
-
-Right, the arm_smmu_impl design was specifically anticipating this quirk 
-as well - it should just be a case of a cfg_probe hook to hide the 
-features which can't work, plus {read,write}_reg64 hooks to override any 
-remaining 64-bit accesses with the explicit hi_lo_* variants, munged 
-together (either statically or dynamically) with the standard MMU-500 hooks.
-
-Robin.
+T24gVGh1LCAyMDE5LTA4LTIyIGF0IDEyOjQxICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
+PiBPbiBXZWQsIEF1ZyAyMSwgMjAxOSBhdCAwNjozNTo0M1BNICswMzAwLCBKb25hdGhhbiBDaG9j
+cm9uIHdyb3RlOg0KPiA+IFRoZSBBbWF6b24gQW5uYXB1cm5hIExhYnMgUENJZSBSb290IFBvcnQg
+ZXhwb3NlcyB0aGUgVlBEDQo+ID4gY2FwYWJpbGl0eSwNCj4gPiBidXQgdGhlcmUgaXMgbm8gYWN0
+dWFsIHN1cHBvcnQgZm9yIGl0Lg0KPiA+IA0KPiA+IFRoZSByZWFzb24gZm9yIG5vdCB1c2luZyB0
+aGUgYWxyZWFkeSBleGlzdGluZyBxdWlya19ibGFja2xpc3RfdnBkKCkNCj4gPiBpcyB0aGF0LCBh
+bHRob3VnaCB0aGlzIGZhaWxzIHBjaV92cGRfcmVhZC93cml0ZSwgdGhlICd2cGQnIHN5c2ZzDQo+
+ID4gZW50cnkgc3RpbGwgZXhpc3RzLiBXaGVuIHJ1bm5pbmcgbHNwY2kgLXZ2LCBmb3IgZXhhbXBs
+ZSwgdGhpcw0KPiA+IHJlc3VsdHMgaW4gdGhlIGZvbGxvd2luZyBlcnJvcjoNCj4gPiANCj4gPiBw
+Y2lsaWI6IHN5c2ZzX3JlYWRfdnBkOiByZWFkIGZhaWxlZDogSW5wdXQvb3V0cHV0IGVycm9yDQo+
+IA0KPiBPaCB0aGF0J3Mgbm90IG5pY2UuIEl0J3MgcHJvYmFibHkgdHJpZ2dlcmVkIGJ5IHRoZSAt
+RUlPIGluDQo+IHBjaV92cGRfcmVhZC4NCj4gQSBxdWljayBzZWFyY2ggb25saW5lIHNlZW1zIHRv
+IHNob3cgdGhhdCBvdGhlciBwZW9wbGUgaGF2ZQ0KPiBleHBlcmllbmNlZA0KPiB0aGlzIHRvbyAt
+IHRob3VnaCBmcm9tIGFzIGZhciBhcyBJIGNhbiB0ZWxsIHRoaXMganVzdCBnaXZlcyB5b3UgYQ0K
+PiB3YXJuaW5nIGFuZCBwY2lsaWIgd2lsbCBjb250aW5udWUgdG8gZ2l2ZSBvdGhlciBvdXRwdXQ/
+DQo+IA0KQ29ycmVjdC4NCg0KPiBJIGd1ZXNzIGV2ZXJ5IHZwZCBibGFja2xpc3QnZCBkcml2ZXIg
+d2lsbCBoYXZlIHRoZSBzYW1lIGlzc3VlLiBBbmQNCj4gZm9yDQo+IHRoaXMgcmVhc29uIEkgZG9u
+J3QgdGhpbmsgdGhhdCB0aGlzIHBhdGNoIGlzIHRoZSByaWdodCBzb2x1dGlvbiAtIGFzDQo+IG90
+aGVyd2lzZSBhbGwgdGhlIG90aGVyIGJsYWNrbGlzdGVkIGRyaXZlcnMgY291bGQgZm9sbG93IHlv
+dXIgbGVhZC4NCj4gDQpJIHRoaW5rIHRoYXQgZ29pbmcgZm9yd2FyZCwgdGhleSBzaG91bGQgZm9s
+bG93IG15IGxlYWQsIEkganVzdCBkaWRuJ3QNCndhbnQgdG8gcG9zc2libHkgYnJlYWsgYW55IGFz
+c3VtcHRpb25zIG90aGVyIHZlbmRvcnMnIHRvb2xzIG1pZ2h0IGhhdmUNCnJlZ2FyZGluZyB0aGUg
+ZXhpc3RlbmNlL25vbi1leGlzdGVuY2Ugb2YgdGhlIHZwZCBzeXNmcyBlbnRyeS4NCg0KPiBJIGRv
+bid0IHRoaW5rIHlvdSBuZWVkIHRvIGZpeCB0aGlzIHNwZWNpZmljYWxseSBmb3IgdGhlIEFMIGRy
+aXZlciBhbmQNCj4gc28NCj4gSSdkIHN1Z2dlc3QgdGhhdCB5b3UgY2FuIHByb2JhYmx5IGRyb3Ag
+dGhpcyBwYXRjaC4gKElkZWFsbHkgcGNpdXRpbHMNCj4gY291bGQgYmUgdXBkYXRlZCB0byBub3Qg
+d2FybiBmb3IgdGhpcyBzcGVjaWZpYyB1c2UtY2FzZSkuDQo+IA0KSSBkb24ndCB0aGluayB0aGF0
+IHNvbHV0aW9uIHNob3VsZCBiZSBpbXBsZW1lbnRlZCBpbiBwY2l0dWlscy4gSXQNCnJpZ2h0ZnVs
+bHkgd2FybnMgd2hlbiBpdCBmYWlscyB0byByZWFkIGZyb20gdGhlIHZwZCBzeXNmcyBmaWxlIC0g
+aXQNCmZpcnN0ICdvcGVuJ3MgdGhlIGZpbGUgd2hpY2ggc3VjY2VlZHMsIGFuZCB0aGVuIGZhaWxz
+IHdoZW4gdHJ5aW5nIHRvDQoncmVhZCcgZnJvbSBpdC4gSSBkb24ndCB0aGluayB0aGF0IGl0IHNo
+b3VsZCBzcGVjaWZpY2FsbHkgIm1hc2siIG91dA0KLUVJTywgc2luY2UgaXQgc2hvdWxkbid0IGhh
+dmUgdG8gImtub3ciIHRoYXQgdGhlIHVuZGVybHlpbmcgcmVhc29uIGlzIGENClZQRCBxdWlyayAo
+b3IgbW9yZSBwcmVjaXNlbHkgdnBkLT5sZW4gPT0gMCkuIEZ1cnRoZXJtb3JlLCBpdCBpcw0KcG9z
+c2libGUgdGhhdCB0aGlzIGVycm9yIGNvZGUgd291bGQgYmUgcmV0dXJuZWQgZm9yIHNvbWUgb3Ro
+ZXIgcmVhc29uDQoobm90IHN1cmUgaWYgY3VycmVudGx5IHRoaXMgb2NjdXJzKS4NCg0KSSB0aGlu
+ayB0aGF0IGlmIHRoZSBkZXZpY2UgZG9lc24ndCBwcm9wZXJseSBzdXBwb3J0IHZwZCwgdGhlIGtl
+cm5lbA0Kc2hvdWxkbid0IGV4cG9zZSB0aGUgImVtcHR5IiBzeXNmcyBmaWxlIGluIHRoZSBmaXJz
+dCBwbGFjZS4NCg0KSW4gdGhlIGxvbmcgcnVuLCBxdWlya19ibGFja2xpc3RfdnBkKCkgc2hvdWxk
+IHByb2JhYmx5IGJlIG1vZGlmaWVkIHRvDQpkbyB3aGF0IG91ciBxdWlyayBkb2VzIG9yIHNvbWV0
+aGluZyBzaW1pbGFyIChhbmQgdGhlbiB0aGUgYWwgcXVpcmsgY2FuDQpiZSByZW1vdmVkKS4gV2hh
+dCBkbyB5b3UgdGhpbms/DQoNCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3IE11cnJheQ0KPiANCj4g
+PiANCj4gPiBUaGlzIHF1aXJrIHJlbW92ZXMgdGhlIHN5c2ZzIGVudHJ5LCB3aGljaCBhdm9pZHMg
+dGhlIGVycm9yIHByaW50Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Ny
+b24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IFJldmlld2VkLWJ5OiBHdXN0YXZvIFBpbWVudGVs
+IDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9w
+Y2kvdnBkLmMgfCAxNiArKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBp
+bnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3ZwZC5jIGIv
+ZHJpdmVycy9wY2kvdnBkLmMNCj4gPiBpbmRleCA0OTYzYzJlMmJkNGMuLmMyM2E4ZWMwOGRiOSAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS92cGQuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNp
+L3ZwZC5jDQo+ID4gQEAgLTY0NCw0ICs2NDQsMjAgQEAgc3RhdGljIHZvaWQgcXVpcmtfY2hlbHNp
+b19leHRlbmRfdnBkKHN0cnVjdA0KPiA+IHBjaV9kZXYgKmRldikNCj4gPiAgREVDTEFSRV9QQ0lf
+RklYVVBfRklOQUwoUENJX1ZFTkRPUl9JRF9DSEVMU0lPLCBQQ0lfQU5ZX0lELA0KPiA+ICAJCQlx
+dWlya19jaGVsc2lvX2V4dGVuZF92cGQpOw0KPiA+ICANCj4gPiArc3RhdGljIHZvaWQgcXVpcmtf
+YWxfdnBkX3JlbGVhc2Uoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiArew0KPiA+ICsJaWYgKGRl
+di0+dnBkKSB7DQo+ID4gKwkJcGNpX3ZwZF9yZWxlYXNlKGRldik7DQo+ID4gKwkJZGV2LT52cGQg
+PSBOVUxMOw0KPiA+ICsJCXBjaV93YXJuKGRldiwgRldfQlVHICJSZWxlYXNpbmcgVlBEIGNhcGFi
+aWxpdHkgKE5vDQo+ID4gc3VwcG9ydCBmb3IgVlBEIHJlYWQvd3JpdGUgdHJhbnNhY3Rpb25zKVxu
+Iik7DQo+ID4gKwl9DQo+ID4gK30NCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIFRoZSAwMDMxIGRl
+dmljZSBpZCBpcyByZXVzZWQgZm9yIG90aGVyIG5vbiBSb290IFBvcnQgZGV2aWNlDQo+ID4gdHlw
+ZXMsDQo+ID4gKyAqIHRoZXJlZm9yZSB0aGUgcXVpcmsgaXMgcmVnaXN0ZXJlZCBmb3IgdGhlIFBD
+SV9DTEFTU19CUklER0VfUENJDQo+ID4gY2xhc3MuDQo+ID4gKyAqLw0KPiA+ICtERUNMQVJFX1BD
+SV9GSVhVUF9DTEFTU19GSU5BTChQQ0lfVkVORE9SX0lEX0FNQVpPTl9BTk5BUFVSTkFfTEFCUywN
+Cj4gPiAweDAwMzEsDQo+ID4gKwkJCSAgICAgIFBDSV9DTEFTU19CUklER0VfUENJLCA4LA0KPiA+
+IHF1aXJrX2FsX3ZwZF9yZWxlYXNlKTsNCj4gPiArDQo+ID4gICNlbmRpZg0KPiA+IC0tIA0KPiA+
+IDIuMTcuMQ0KPiA+IA0K
