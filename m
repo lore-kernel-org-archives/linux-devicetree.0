@@ -1,43 +1,107 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2 00/20] Initial support for Marvell MMP3 SoC
-Date: Thu, 22 Aug 2019 11:31:57 +0100
-Message-ID: <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: [PATCH v3 1/2] dt-bindings: display/bridge: Add binding for NWL mipi
+ dsi host controller
+Date: Thu, 22 Aug 2019 12:44:15 +0200
+Message-ID: <36f62b431f32bc76e92d21e04dc48464aef43869.1566470526.git.agx@sigxcpu.org>
+References: <cover.1566470526.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1566470526.git.agx@sigxcpu.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 22/08/2019 10:26, Lubomir Rintel wrote:
-> Hi, 
-> 
-> this is a second spin of a patch set that adds support for the Marvell
-> MMP3 processor. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad
-> FZ-A1 tablet and Dell Wyse 3020 Tx0D thin clients. 
-> 
-> Compared to v1, there's a handful of fixes in response to reviews. Patch
-> 02/20 is new. Details in individual patches.
->  
-> Apart from the adjustments in mach-mmp/, the patch makes necessary 
-> changes to the irqchip driver and adds an USB2 PHY driver. The latter 
-> has a dependency on the mach-mmp/ changes, so it can't be submitted 
-> separately.
->  
-> The patch set has been tested to work on Wyse Tx0D and not ruin MMP2 
-> support on XO-1.75. 
-
-How do you want this series to be merged? I'm happy to take the irqchip
-related patches as well as the corresponding DT change (once reviewed)
-through my tree.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead, it just smells funny...
+VGhlIE5vcnRod2VzdCBMb2dpYyBNSVBJIERTSSBJUCBjb3JlIGNhbiBiZSBmb3VuZCBpbiBOWFBz
+IGkuTVg4IFNvQ3MuCgpTaWduZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNpZ3hjcHUu
+b3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9ud2wtZHNpLnlhbWwgICAgICB8
+IDE1NSArKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNTUgaW5zZXJ0aW9ucygr
+KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9ud2wtZHNpLnlhbWwKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbndsLWRzaS55YW1sIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL253bC1kc2kueWFtbApuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjI0ZDE3YTYzMTBkYwotLS0gL2Rl
+di9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS9ud2wtZHNpLnlhbWwKQEAgLTAsMCArMSwxNTUgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9y
+Zy9zY2hlbWFzL2Rpc3BsYXkvYnJpZGdlL253bC1kc2kueWFtbCMKKyRzY2hlbWE6IGh0dHA6Ly9k
+ZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIworCit0aXRsZTogTm9ydGh3ZXN0
+IExvZ2ljIE1JUEktRFNJIGNvbnRyb2xsZXIgb24gaS5NWCBTb0NzCisKK21haW50YWluZXJzOgor
+ICAtIEd1aWRvIEfDum50aGVyIDxhZ3hAc2lneGNwdS5vcmc+CisgIC0gUm9iZXJ0IENoaXJhcyA8
+cm9iZXJ0LmNoaXJhc0BueHAuY29tPgorCitkZXNjcmlwdGlvbjogfAorICBOV0wgTUlQSS1EU0kg
+aG9zdCBjb250cm9sbGVyIGZvdW5kIG9uIGkuTVg4IHBsYXRmb3Jtcy4gVGhpcyBpcyBhIGRzaSBi
+cmlkZ2UgZm9yCisgIHRoZSBTT0NzIE5XTCBNSVBJLURTSSBob3N0IGNvbnRyb2xsZXIuCisKK3By
+b3BlcnRpZXM6CisgIGNvbXBhdGlibGU6CisgICAgY29uc3Q6IGZzbCxpbXg4bXEtbndsLWRzaQor
+CisgIHJlZzoKKyAgICBtYXhJdGVtczogMQorCisgIGludGVycnVwdHM6CisgICAgbWF4SXRlbXM6
+IDEKKworICBjbG9ja3M6CisgICAgaXRlbXM6CisgICAgICAtIGRlc2NyaXB0aW9uOiBEU0kgY29y
+ZSBjbG9jaworICAgICAgLSBkZXNjcmlwdGlvbjogUlhfRVNDIGNsb2NrICh1c2VkIGluIGVzY2Fw
+ZSBtb2RlKQorICAgICAgLSBkZXNjcmlwdGlvbjogVFhfRVNDIGNsb2NrICh1c2VkIGluIGVzY2Fw
+ZSBtb2RlKQorICAgICAgLSBkZXNjcmlwdGlvbjogUEhZX1JFRiBjbG9jaworCisgIGNsb2NrLW5h
+bWVzOgorICAgIGl0ZW1zOgorICAgICAgLSBjb25zdDogY29yZQorICAgICAgLSBjb25zdDogcnhf
+ZXNjCisgICAgICAtIGNvbnN0OiB0eF9lc2MKKyAgICAgIC0gY29uc3Q6IHBoeV9yZWYKKworICBt
+dXgtY29udHJvbHM6CisgICAgZGVzY3JpcHRpb246CisgICAgICBtdXggY29udHJvbGxlciBub2Rl
+IHRvIHVzZSBmb3Igb3BlcmF0aW5nIHRoZSBpbnB1dCBtdXgKKworICBwaHlzOgorICAgIG1heEl0
+ZW1zOiAxCisgICAgZGVzY3JpcHRpb246CisgICAgICBBIHBoYW5kbGUgdG8gdGhlIHBoeSBtb2R1
+bGUgcmVwcmVzZW50aW5nIHRoZSBEUEhZCisKKyAgcGh5LW5hbWVzOgorICAgIGl0ZW1zOgorICAg
+ICAgLSBjb25zdDogZHBoeQorCisgIHBvd2VyLWRvbWFpbnM6CisgICAgbWF4SXRlbXM6IDEKKyAg
+ICBkZXNjcmlwdGlvbjoKKyAgICAgIEEgcGhhbmRsZSB0byB0aGUgcG93ZXIgZG9tYWluCisKKyAg
+cmVzZXRzOgorICAgIGRlc2NyaXB0aW9uOgorICAgICAgcGhhbmRsZXMgdG8gdGhlIHJlc2V0IGNv
+bnRyb2xsZXIKKyAgICBpdGVtczoKKyAgICAgIC0gZGVzY3JpcHRpb246IGRzaSBieXRlIHJlc2V0
+IGxpbmUKKyAgICAgIC0gZGVzY3JpcHRpb246IGRzaSBkcGkgcmVzZXQgbGluZQorICAgICAgLSBk
+ZXNjcmlwdGlvbjogZHNpIGVzYyByZXNldCBsaW5lCisgICAgICAtIGRlc2NyaXB0aW9uOiBkc2kg
+cGNsayByZXNldCBsaW5lCisKKyAgcmVzZXQtbmFtZXM6CisgICAgaXRlbXM6CisgICAgICAtIGNv
+bnN0OiBieXRlCisgICAgICAtIGNvbnN0OiBkcGkKKyAgICAgIC0gY29uc3Q6IGVzYworICAgICAg
+LSBjb25zdDogcGNsaworCisgIHBvcnRzOgorICAgIHR5cGU6IG9iamVjdAorICAgIGRlc2NyaXB0
+aW9uOgorICAgICAgQSBub2RlIGNvbnRhaW5pbmcgRFNJIGlucHV0ICYgb3V0cHV0IHBvcnQgbm9k
+ZXMgd2l0aCBlbmRwb2ludAorICAgICAgZGVmaW5pdGlvbnMgYXMgZG9jdW1lbnRlZCBpbgorICAg
+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKworICBwb3J0
+QDA6CisgICAgdHlwZTogb2JqZWN0CisgICAgZGVzY3JpcHRpb246CisgICAgICBJbnB1dCBwb3J0
+IG5vZGUgdG8gcmVjZWl2ZSBwaXhlbCBkYXRhIGZyb20gdGhlCisgICAgICBkaXNwbGF5IGNvbnRy
+b2xsZXIKKworICBwb3J0QDE6CisgICAgdHlwZTogb2JqZWN0CisgICAgZGVzY3JpcHRpb246Cisg
+ICAgICBEU0kgb3V0cHV0IHBvcnQgbm9kZSB0byB0aGUgcGFuZWwgb3IgdGhlIG5leHQgYnJpZGdl
+CisgICAgICBpbiB0aGUgY2hhaW4KKworcGF0dGVyblByb3BlcnRpZXM6CisgICJecGFuZWxAWzAt
+OV0rJCI6IHRydWUKKworcmVxdWlyZWQ6CisgIC0gY2xvY2stbmFtZXMKKyAgLSBjbG9ja3MKKyAg
+LSBjb21wYXRpYmxlCisgIC0gaW50ZXJydXB0cworICAtIG11eC1jb250cm9scworICAtIHBoeS1u
+YW1lcworICAtIHBoeXMKKyAgLSBwb3J0cworICAtIHJlZworICAtIHJlc2V0LW5hbWVzCisgIC0g
+cmVzZXRzCisKK2V4YW1wbGVzOgorIC0gfAorCisgICBtaXBpX2RzaTogbWlwaV9kc2lAMzBhMDAw
+MDAgeworICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgICAgICAg
+I3NpemUtY2VsbHMgPSA8MD47CisgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDht
+cS1ud2wtZHNpIjsKKyAgICAgICAgICAgICAgcmVnID0gPDB4MzBBMDAwMDAgMHgzMDA+OworICAg
+ICAgICAgICAgICBjbG9ja3MgPSA8JmNsayAxNjM+LCA8JmNsayAyNDQ+LCA8JmNsayAyNDU+LCA8
+JmNsayAxNjQ+OworICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJjb3JlIiwgInJ4X2VzYyIs
+ICJ0eF9lc2MiLCAicGh5X3JlZiI7CisgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCAzNCA0
+PjsKKyAgICAgICAgICAgICAgbXV4LWNvbnRyb2xzID0gPCZtdXggMD47CisgICAgICAgICAgICAg
+IHBvd2VyLWRvbWFpbnMgPSA8JnBnY19taXBpPjsKKyAgICAgICAgICAgICAgcmVzZXRzID0gPCZz
+cmMgMD4sIDwmc3JjIDE+LCA8JnNyYyAyPiwgPCZzcmMgMz47CisgICAgICAgICAgICAgIHJlc2V0
+LW5hbWVzID0gImJ5dGUiLCAiZHBpIiwgImVzYyIsICJwY2xrIjsKKyAgICAgICAgICAgICAgcGh5
+cyA9IDwmZHBoeT47CisgICAgICAgICAgICAgIHBoeS1uYW1lcyA9ICJkcGh5IjsKKworICAgICAg
+ICAgICAgICBwYW5lbEAwIHsKKyAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJv
+Y2t0ZWNoLGpoMDU3bjAwOTAwIjsKKyAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cisg
+ICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHBhbmVsX2luOiBlbmRwb2ludCB7CisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcmVtb3RlLWVuZHBvaW50ID0gPCZtaXBpX2RzaV9vdXQ+OworICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfTsKKyAgICAgICAgICAgICAgICAgICAgICB9OworICAgICAgICAgICAgICB9Owor
+CisgICAgICAgICAgICAgIHBvcnRzIHsKKyAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47CisgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+OworCisgICAg
+ICAgICAgICAgICAgICAgIHBvcnRAMCB7CisgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcg
+PSA8MD47CisgICAgICAgICAgICAgICAgICAgICAgICAgICBtaXBpX2RzaV9pbjogZW5kcG9pbnQg
+eworICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2lu
+dCA9IDwmbGNkaWZfbWlwaV9kc2k+OworICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKKyAg
+ICAgICAgICAgICAgICAgICAgfTsKKyAgICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIG1pcGlfZHNpX291dDogZW5kcG9pbnQgeworICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsKKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIH07CisgICAgICAgICAgICAgICAgICAgIH07CisgICAgICAgICAgICAg
+IH07CisgICAgICB9OwotLSAKMi4yMC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWw=
