@@ -1,42 +1,38 @@
-From: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add compatible for H6 RTC
-Date: Thu, 22 Aug 2019 23:15:47 +0200
-Message-ID: <20190822211547.GE27031@piout.net>
-References: <20190820151934.3860-1-megous@megous.com>
- <20190820151934.3860-2-megous@megous.com>
-Reply-To: alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCKYNX7Y3IMBBBUM7TVAKGQET5WXUCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190820151934.3860-2-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
+Date: Fri, 23 Aug 2019 00:15:11 +0300
+Message-ID: <20190822211514.19288-3-olteanv@gmail.com>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190822211514.19288-1-olteanv@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/2019 17:19:32+0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> 
-> RTC on H6 is similar to the one on H5 SoC, but incompatible in small
-> details. See the driver for description of differences. For example
-> H6 RTC needs to enable the external low speed oscillator. Add new
-> compatible for this RTC.
-> 
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml       | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-Applied, thanks.
+The DSPI interrupt can be shared between two controllers at least on the
+LX2160A. In that case, the driver for one controller might misbehave and
+consume the other's interrupt. Fix this by actually checking if any of
+the bits in the status register have been asserted.
 
+Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index c90db7db4121..6ef2279a3699 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -659,7 +659,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
+ 
+ 	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
+-		return IRQ_HANDLED;
++		return IRQ_NONE;
+ 
+ 	/* Get transfer counter (in number of SPI transfers). It was
+ 	 * reset to 0 when transfer(s) were started.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
