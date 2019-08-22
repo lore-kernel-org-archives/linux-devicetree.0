@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/6] dt-bindings: clk: meson: add sm1 periph clock controller bindings
-Date: Thu, 22 Aug 2019 16:24:50 +0200
-Message-ID: <20190822142455.12506-2-narmstrong@baylibre.com>
+Subject: [PATCH 5/6] clk: meson: g12a: expose SM1 CPU 1, 2 & 3 clocks
+Date: Thu, 22 Aug 2019 16:24:54 +0200
+Message-ID: <20190822142455.12506-6-narmstrong@baylibre.com>
 References: <20190822142455.12506-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,41 @@ To: khilman@baylibre.com, jbrunet@baylibre.com, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the documentation to support clock driver for the Amlogic SM1 SoC.
-
-SM1 clock tree is very close, the main differences are :
-- each CPU core can achieve a different frequency, albeit a common PLL
-- a similar tree as the clock tree has been added for the DynamIQ Shared Unit
-- has a new GP1 PLL used for the DynamIQ Shared Unit
-- SM1 has additional clocks like for CSI, NanoQ an other components
+Expose the newly added CPU1, CPU2 and CPU3 clocks bindings for the Amlogic
+SM1 SoC.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/meson/g12a.h              | 3 ---
+ include/dt-bindings/clock/g12a-clkc.h | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 6eaa52092313..7ccecd5c02c1 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -11,6 +11,7 @@ Required Properties:
- 		"amlogic,axg-clkc" for AXG SoC.
- 		"amlogic,g12a-clkc" for G12A SoC.
- 		"amlogic,g12b-clkc" for G12B SoC.
-+		"amlogic,sm1-clkc" for SM1 SoC.
- - clocks : list of clock phandle, one for each entry clock-names.
- - clock-names : should contain the following:
-   * "xtal": the platform xtal
+diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
+index 4682a4442ae9..9c1dc6ade3d6 100644
+--- a/drivers/clk/meson/g12a.h
++++ b/drivers/clk/meson/g12a.h
+@@ -257,9 +257,6 @@
+ #define CLKID_DSU_CLK_DYN			250
+ #define CLKID_DSU_CLK_FINAL			251
+ #define CLKID_DSU_CLK				252
+-#define CLKID_CPU1_CLK				253
+-#define CLKID_CPU2_CLK				254
+-#define CLKID_CPU3_CLK				255
+ 
+ #define NR_CLKS					256
+ 
+diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+index 8ccc29ac7a72..3cfefaf43315 100644
+--- a/include/dt-bindings/clock/g12a-clkc.h
++++ b/include/dt-bindings/clock/g12a-clkc.h
+@@ -138,5 +138,8 @@
+ #define CLKID_VDEC_HEVCF			210
+ #define CLKID_TS				212
+ #define CLKID_CPUB_CLK				224
++#define CLKID_CPU1_CLK				253
++#define CLKID_CPU2_CLK				254
++#define CLKID_CPU3_CLK				255
+ 
+ #endif /* __G12A_CLKC_H */
 -- 
 2.22.0
