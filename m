@@ -1,47 +1,57 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 8/8] MAINTAINERS: Add entry for BM1880 SoC clock driver
-Date: Thu, 22 Aug 2019 22:54:26 +0530
-Message-ID: <20190822172426.25879-9-manivannan.sadhasivam@linaro.org>
-References: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
+ from Required properties
+Date: Thu, 22 Aug 2019 18:31:55 +0100
+Message-ID: <20190822173155.GB12855@e121166-lin.cambridge.arm.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, darren.tsao@bitmain.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fisher.cheng@bitmain.com, alec.lin@bitmain.com, linux-clk@vger.kernel.org, haitao.suo@bitmain.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for Bitmain BM1880 SoC clock driver.
+On Tue, Aug 20, 2019 at 07:28:43AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> The num-lanes is not a mandatory property, e.g. on FSL
+> Layerscape SoCs, the PCIe link training is completed
+> automatically base on the selected SerDes protocol, it
+> doesn't need the num-lanes to set-up the link width.
+> 
+> It is previously in both Required and Optional properties,
+> let's remove it from the Required properties.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V2:
+>  - Reworded the change log and subject.
+>  - Fixed a typo in subject.
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index 5561a1c060d0..bd880df39a79 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -11,7 +11,6 @@ Required properties:
+>  	     the ATU address space.
+>      (The old way of getting the configuration address space from "ranges"
+>      is deprecated and should be avoided.)
+> -- num-lanes: number of lanes to use
+>  RC mode:
+>  - #address-cells: set to <3>
+>  - #size-cells: set to <2>
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+The patch is fine but if I were to be picky, we should update the
+"Optional" entry to remove the "this property should be specified
+unless the link is brought already up in BIOS" AFAIK in this HW
+"BIOS" does not really play a role (and honestly the sentence above
+is vague enough to make it useless if not harmful in a DT binding).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 997a4f8fe88e..280defec35b2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1503,8 +1503,10 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm64/boot/dts/bitmain/
-+F:	drivers/clk/clk-bm1880.c
- F:	drivers/pinctrl/pinctrl-bm1880.c
- F:	Documentation/devicetree/bindings/arm/bitmain.yaml
-+F:	Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
- F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- 
- ARM/CALXEDA HIGHBANK ARCHITECTURE
--- 
-2.17.1
+Lorenzo
