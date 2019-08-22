@@ -1,91 +1,83 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
-Date: Thu, 22 Aug 2019 12:03:51 +0200
-Message-ID: <1566468231.3653.8.camel@pengutronix.de>
-References: <cover.1565367567.git.agx@sigxcpu.org>
-         <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
-         <CAK8P3a3Vrd+sttJrQwD-jA9p_egG4x-hc41eGK8H-_aVm-uoYw@mail.gmail.com>
-         <20190813101057.GB10751@bogon.m.sigxcpu.org>
-         <CAK8P3a1q9G8VKgNKh+6khzoW3bFTVR_Zorygy=Qqsq-PYzM4=g@mail.gmail.com>
-         <20190821174208.GA9486@bogon.m.sigxcpu.org>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
+ PA[33:32] for MediaTek
+Date: Thu, 22 Aug 2019 11:08:13 +0100
+Message-ID: <20190822100812.ketlgxxu64cy2bsk@willie-the-truck>
+References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
+ <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
+ <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
+ <1566464186.11621.7.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821174208.GA9486@bogon.m.sigxcpu.org>
+Content-Disposition: inline
+In-Reply-To: <1566464186.11621.7.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Daniel Vetter <daniel@ffwll.ch>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jonas Karlman <jonas@kwiboo.se>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Robert Chiras <robert.chiras@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Lee Jones <lee.jones@linaro.org>, Sam Ravnborg <sam@ravnborg.org>Linux ARM <linux>
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, chao.hao@mediatek.com, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, ming-fan.chen@mediatek.com, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-08-21 at 19:42 +0200, Guido Günther wrote:
-> Hi,
-> On Tue, Aug 13, 2019 at 01:07:52PM +0200, Arnd Bergmann wrote:
-> > On Tue, Aug 13, 2019 at 12:10 PM Guido Günther <agx@sigxcpu.org> wrote:
-> > > On Tue, Aug 13, 2019 at 10:08:44AM +0200, Arnd Bergmann wrote:
-> > > > On Fri, Aug 9, 2019 at 6:24 PM Guido Günther <agx@sigxcpu.org> wrote:
-> > > > > 
-> > > > > This adds all the gpr registers and the define needed for selecting
-> > > > > the input source in the imx-nwl drm bridge.
-> > > > > 
-> > > > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > > > > +
-> > > > > +#define IOMUXC_GPR0    0x00
-> > > > > +#define IOMUXC_GPR1    0x04
-> > > > > +#define IOMUXC_GPR2    0x08
-> > > > > +#define IOMUXC_GPR3    0x0c
-> > > > > +#define IOMUXC_GPR4    0x10
-> > > > > +#define IOMUXC_GPR5    0x14
-> > > > > +#define IOMUXC_GPR6    0x18
-> > > > > +#define IOMUXC_GPR7    0x1c
-> > > > 
-> > > > (more of the same)
-> > > > 
-> > > > huh?
+On Thu, Aug 22, 2019 at 04:56:26PM +0800, Yong Wu wrote:
+> On Wed, 2019-08-21 at 16:24 +0100, Will Deacon wrote:
+> > On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
+> > > MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
+> > > the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
+> > > respectively. Meanwhile the iova still is 32bits.
 > > > 
-> > > These are the names from the imx8MQ reference manual (general purpose
-> > > registers, they lump together all sorts of things), it's the same on
-> > > imx6/imx7):
+> > > Regarding whether the pagetable address could be over 4GB, the mt8183
+> > > support it while the previous mt8173 don't, thus keep it as is.
 > > > 
-> > >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
-> > >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
-> > > 
-> > > > > +/* i.MX8Mq iomux gpr register field defines */
-> > > > > +#define IMX8MQ_GPR13_MIPI_MUX_SEL              BIT(2)
-> > > > 
-> > > > I think this define should probably be local to the pinctrl driver, to
-> > > > ensure that no other drivers fiddle with the registers manually.
-> > > 
-> > > The purpose of these bits is for a driver to fiddle with them to select
-> > > the input source. Similar on imx7 it's already used for e.g. the phy
-> > > refclk in the pci controller:
-> > > 
-> > >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-imx6.c#n638
+> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > > ---
+> > >  drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
+> > >  include/linux/io-pgtable.h         |  7 +++----
+> > >  2 files changed, 28 insertions(+), 11 deletions(-)
 > > 
-> > That one should likely use either the clk interface or the phy
-> > interface instead.
+> > [...]
 > > 
-> > > The GPRs are not about pad configuration but gather all sorts of things
-> > > (section 8.2.4 of the imx8mq reference manual): pcie setup, dsi related
-> > > bits so I don't think this should be done via a pinctrl
-> > > driver. Should we handle that differently than on imx6/7?
+> > > @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+> > >  {
+> > >  	struct arm_v7s_io_pgtable *data;
+> > >  
+> > > -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
+> > > +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
+> > > +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
+> > > +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
 > > 
-> > It would be nice to fix the existing code as well, but for the moment,
-> > I only think we should not add more of that.
-> > 
-> > Generally speaking, we can use syscon to do random things that don't
-> > have a subsystem of their own, but we should not use it to do things
-> > that have an existing driver framework like pinctrl, clock, reset, phy
-> > etc.
+> > Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
+> > ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
 > 
-> Since it's not an external pin i opted to use MUX_MMIO instead which
-> seems like a good fit here. Does that make sense?
+> Here I only simply skip the oas checking for our case. then which way do
+> your prefer?  something like you commented before:?
+> 
+> 
+> 	if (cfg->ias > ARM_V7S_ADDR_BITS)
+> 		return NULL;
+> 
+> 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
+> 		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+> 			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
 
-Yes, I agree. The i.MX6 display subsystem predates the mux framework,
-otherwise I would have used it for the LVDS and HDMI muxes in the first
-place. We should probably switch imx-drm over as well, in a backwards
-compatible fashion. The &mux definitions are already there in
-arch/arm/boot/dts/imx6q.dtsi.
+Isn't this always 32 for your IOMMUs?
 
-regards
-Philipp
+> 		else if (cfg->oas > 34)
+> 			return NULL;
+> 	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
+> 		return NULL;
+> 	}
+
+How about:
+
+	unsigned int oas_max = ARM_V7S_ADDR_BITS;
+
+	if (cfg->ias > ARM_V7S_ADDR_BITS)
+		return NULL;
+
+	if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
+	    cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+		oas_max = 34;
+
+	if (cfg->oas > oas_max)
+		return NULL;
+
+Will
