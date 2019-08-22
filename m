@@ -1,43 +1,96 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH v3 06/14] dt-bindings: cpufreq: qcom-nvmem: Support
- pstates provided by a power domain
-Date: Thu, 22 Aug 2019 12:27:23 +0200
-Message-ID: <20190822102723.GB8494@centauri>
-References: <20190725104144.22924-7-niklas.cassel@linaro.org>
- <20190819100957.17095-1-niklas.cassel@linaro.org>
- <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "Ramuthevar,Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v4 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+Date: Thu, 22 Aug 2019 18:28:42 +0800
+Message-ID: <20190822102843.47964-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>, Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>, linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: kishon@ti.com, robh@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com, Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:59:36AM -0700, Stephen Boyd wrote:
-> Quoting Niklas Cassel (2019-08-19 03:09:57)
-> > +
-> > +soc {
-> > +....
-> > +       cprpd: cpr@b018000 {
-> 
-> Maybe node name should be 'avs' for the industry standard adaptive
-> voltage scaling acronym?
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-I see where this is coming from, but "git grep avs" gives a single result.
+Add a YAML schema to use the host controller driver with the
+eMMC PHY on Intel's Lightning Mountain SoC.
 
-Also, since the label is cprpd, it doesn't make sense to simply rename the
-node name, and I don't think that avspd would be a good name, since it is
-less correct.
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+changes in v4:
+  - As per Rob's review: validate 5.2 and 5.3
+  - drop unrelated items.
 
-So if you don't insist, I would prefer to leave it as it is.
+changes in v3:
+  - resolve 'make dt_binding_check' warnings
 
-> 
-> 
-> > +               compatible = "qcom,qcs404-cpr", "qcom,cpr";
-> > +               reg = <0x0b018000 0x1000>;
-> > +               ....
-> > +               vdd-apc-supply = <&pms405_s3>;
-> > +               #power-domain-cells = <0>;
+changes in v2:
+  As per Rob Herring review comments, the following updates
+ - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+ - filename is the compatible string plus .yaml
+ - LGM: Lightning Mountain
+ - update maintainer
+ - add intel,syscon under property list
+ - keep one example instead of two
+---
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+new file mode 100644
+index 000000000000..16c27e817665
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++description: Binding for eMMC PHY
++
++properties:
++  compatible:
++    const: intel,lgm-emmc-phy
++
++  intel,syscon:
++    description: phandle to the emmc through syscon
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - "#phy-cells"
++  - compatible
++  - intel,syscon
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    emmc_phy: emmc_phy {
++        compatible = "intel,lgm-emmc-phy";
++        intel,syscon = <&sysconf>;
++        clocks = <&emmc>;
++        clock-names = "emmcclk";
++        #phy-cells = <0>;
++    };
++
++...
+-- 
+2.11.0
