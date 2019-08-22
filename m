@@ -1,148 +1,47 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 08/20] irqchip/mmp: mask off interrupts from other cores
-Date: Thu, 22 Aug 2019 11:26:31 +0200
-Message-ID: <20190822092643.593488-9-lkundrak@v3.sk>
+Subject: [PATCH v2 11/20] ARM: mmp: don't select CACHE_TAUROS2 on all ARCH_MMP
+Date: Thu, 22 Aug 2019 11:26:34 +0200
+Message-ID: <20190822092643.593488-12-lkundrak@v3.sk>
 References: <20190822092643.593488-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Andres Salomon <dilinger@queued.net>, Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, Marc Zyngier <maz@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andres Salomon <dilinger@queued.net>
+MMP3 has a PJ4B with a Tauros 3 cache controller that uses CACHE_L2X0
+instead, while CACHE_TAUROS2 is present on PJ4 and PJ1 (Mohawk) based
+platforms only.
 
-On mmp3, there's an extra set of ICU registers (ICU2) that handle
-interrupts on the extra cores.  When masking off interrupts on MP1,
-these should be masked as well.
-
-We add a new interrupt controller via device tree to identify when we're
-looking at an mmp3 machine via compatible field of "marvell,mmp3-intc".
-
-[lkundrak@v3.sk: Changed "mrvl,mmp3-intc" compatible strings to
-"marvell,mmp3-intc". Tidied up the subject line a bit.]
-
-Signed-off-by: Andres Salomon <dilinger@queued.net>
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---
-Changes since v1:
-- Moved mmp3-specific mmp_icu2_base initialization from mmp_init_bases() =
-to
-  mmp3_of_init() so that we don't have to check for marvell,mmp3-intc
-  compatibility twice.
-- Drop an superfluous call to irq_set_default_host()
-
- arch/arm/mach-mmp/regs-icu.h |  3 +++
- drivers/irqchip/irq-mmp.c    | 48 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
-
-diff --git a/arch/arm/mach-mmp/regs-icu.h b/arch/arm/mach-mmp/regs-icu.h
-index 0375d5a7fcb2b..410743d2b4020 100644
---- a/arch/arm/mach-mmp/regs-icu.h
-+++ b/arch/arm/mach-mmp/regs-icu.h
-@@ -11,6 +11,9 @@
- #define ICU_VIRT_BASE	(AXI_VIRT_BASE + 0x82000)
- #define ICU_REG(x)	(ICU_VIRT_BASE + (x))
-=20
-+#define ICU2_VIRT_BASE	(AXI_VIRT_BASE + 0x84000)
-+#define ICU2_REG(x)	(ICU2_VIRT_BASE + (x))
-+
- #define ICU_INT_CONF(n)		ICU_REG((n) << 2)
- #define ICU_INT_CONF_MASK	(0xf)
-=20
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 126ffdbffdddf..25848d73f6792 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -44,6 +44,7 @@ struct icu_chip_data {
- 	unsigned int		conf_enable;
- 	unsigned int		conf_disable;
- 	unsigned int		conf_mask;
-+	unsigned int		conf2_mask;
- 	unsigned int		clr_mfp_irq_base;
- 	unsigned int		clr_mfp_hwirq;
- 	struct irq_domain	*domain;
-@@ -53,9 +54,11 @@ struct mmp_intc_conf {
- 	unsigned int	conf_enable;
- 	unsigned int	conf_disable;
- 	unsigned int	conf_mask;
-+	unsigned int	conf2_mask;
- };
-=20
- static void __iomem *mmp_icu_base;
-+static void __iomem *mmp_icu2_base;
- static struct icu_chip_data icu_data[MAX_ICU_NR];
- static int max_icu_nr;
-=20
-@@ -98,6 +101,16 @@ static void icu_mask_irq(struct irq_data *d)
- 		r &=3D ~data->conf_mask;
- 		r |=3D data->conf_disable;
- 		writel_relaxed(r, mmp_icu_base + (hwirq << 2));
-+
-+		if (data->conf2_mask) {
-+			/*
-+			 * ICU1 (above) only controls PJ4 MP1; if using SMP,
-+			 * we need to also mask the MP2 and MM cores via ICU2.
-+			 */
-+			r =3D readl_relaxed(mmp_icu2_base + (hwirq << 2));
-+			r &=3D ~data->conf2_mask;
-+			writel_relaxed(r, mmp_icu2_base + (hwirq << 2));
-+		}
- 	} else {
- 		r =3D readl_relaxed(data->reg_mask) | (1 << hwirq);
- 		writel_relaxed(r, data->reg_mask);
-@@ -201,6 +214,14 @@ static const struct mmp_intc_conf mmp2_conf =3D {
- 			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
- };
-=20
-+static struct mmp_intc_conf mmp3_conf =3D {
-+	.conf_enable	=3D 0x20,
-+	.conf_disable	=3D 0x0,
-+	.conf_mask	=3D MMP2_ICU_INT_ROUTE_PJ4_IRQ |
-+			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
-+	.conf2_mask	=3D 0xf0,
-+};
-+
- static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
- {
- 	int hwirq;
-@@ -428,6 +449,33 @@ static int __init mmp2_of_init(struct device_node *n=
-ode,
- }
- IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
-=20
-+static int __init mmp3_of_init(struct device_node *node,
-+			       struct device_node *parent)
-+{
-+	int ret;
-+
-+	mmp_icu2_base =3D of_iomap(node, 1);
-+	if (!mmp_icu2_base) {
-+		pr_err("Failed to get interrupt controller register #2\n");
-+		return -ENODEV;
-+	}
-+
-+	ret =3D mmp_init_bases(node);
-+	if (ret < 0) {
-+		iounmap(mmp_icu2_base);
-+		return ret;
-+	}
-+
-+	icu_data[0].conf_enable =3D mmp3_conf.conf_enable;
-+	icu_data[0].conf_disable =3D mmp3_conf.conf_disable;
-+	icu_data[0].conf_mask =3D mmp3_conf.conf_mask;
-+	icu_data[0].conf2_mask =3D mmp3_conf.conf2_mask;
-+	set_handle_irq(mmp2_handle_irq);
-+	max_icu_nr =3D 1;
-+	return 0;
-+}
-+IRQCHIP_DECLARE(mmp3_intc, "marvell,mmp3-intc", mmp3_of_init);
-+
- static int __init mmp2_mux_of_init(struct device_node *node,
- 				   struct device_node *parent)
- {
---=20
+diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+index c54cd7ed90ba5..8dabce4507025 100644
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -1045,7 +1045,7 @@ endif
+ 
+ config CACHE_TAUROS2
+ 	bool "Enable the Tauros2 L2 cache controller"
+-	depends on (ARCH_DOVE || ARCH_MMP || CPU_PJ4)
++	depends on (CPU_MOHAWK || CPU_PJ4)
+ 	default y
+ 	select OUTER_CACHE
+ 	help
+-- 
 2.21.0
