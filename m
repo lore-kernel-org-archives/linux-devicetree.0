@@ -1,73 +1,33 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 3/5] spi: spi-fsl-dspi: Remove impossible to reach error check
-Date: Fri, 23 Aug 2019 00:15:12 +0300
-Message-ID: <20190822211514.19288-4-olteanv@gmail.com>
-References: <20190822211514.19288-1-olteanv@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190822211514.19288-1-olteanv@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
+Date: Thu, 22 Aug 2019 15:26:24 -0700
+Message-ID: <7h36hs3khb.fsf@baylibre.com>
+References: <20190821142043.14649-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190821142043.14649-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-dspi->devtype_data is under the total control of the driver. Therefore,
-a bad value is a driver bug and checking it at runtime (and during an
-ISR, at that!) is pointless.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-The second "else if" check is only for clarity (instead of a broader
-"else") in case other transfer modes are added in the future. But the
-printing is dead code and can be removed.
+> This is the first set of DT fixes following the first YAML bindings conversion
+> at [1], [2] and [3].
+>
+> After this set of fixes, the remaining errors are :
+> meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+> meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+> meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
+> meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+> meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+>
+> These are only cosmetic changes, and should not break drivers implementation
+> following the bindings.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- drivers/spi/spi-fsl-dspi.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+Any chance you can rebase this on top of my v5.4/dt64 branch?
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 6ef2279a3699..6d2c7984ab0e 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -670,18 +670,10 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	msg->actual_length += spi_tcnt * dspi->bytes_per_word;
- 
- 	trans_mode = dspi->devtype_data->trans_mode;
--	switch (trans_mode) {
--	case DSPI_EOQ_MODE:
-+	if (trans_mode == DSPI_EOQ_MODE)
- 		dspi_eoq_read(dspi);
--		break;
--	case DSPI_TCFQ_MODE:
-+	else if (trans_mode == DSPI_TCFQ_MODE)
- 		dspi_tcfq_read(dspi);
--		break;
--	default:
--		dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
--			trans_mode);
--			return IRQ_HANDLED;
--	}
- 
- 	if (!dspi->len) {
- 		dspi->waitflags = 1;
-@@ -689,18 +681,10 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 		return IRQ_HANDLED;
- 	}
- 
--	switch (trans_mode) {
--	case DSPI_EOQ_MODE:
-+	if (trans_mode == DSPI_EOQ_MODE)
- 		dspi_eoq_write(dspi);
--		break;
--	case DSPI_TCFQ_MODE:
-+	else if (trans_mode == DSPI_TCFQ_MODE)
- 		dspi_tcfq_write(dspi);
--		break;
--	default:
--		dev_err(&dspi->pdev->dev,
--			"unsupported trans_mode %u\n",
--			trans_mode);
--	}
- 
- 	return IRQ_HANDLED;
- }
--- 
-2.17.1
+Thanks,
+
+Kevin
