@@ -1,114 +1,81 @@
-Return-Path: <SRS0=mEvB=WS=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v9 02/13] media: v4l2-fwnode: add v4l2_fwnode_connector
-Date: Thu, 22 Aug 2019 10:05:45 +0200
-Message-Id: <20190822080556.17109-3-m.felsch@pengutronix.de>
-In-Reply-To: <20190822080556.17109-1-m.felsch@pengutronix.de>
-References: <20190822080556.17109-1-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+Return-Path: <SRS0=VUGH=WS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mga07.intel.com ([134.134.136.100]:59989 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbfHVHcU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:32:20 -0400
+From: Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH 1/2] dt-bindings: reset: Add YAML schemas for the Intel Reset controller
+Date: Thu, 22 Aug 2019 15:32:10 +0800
+Message-Id: <c909a3a19a1c06ac3ed9e1c42da3193ff8e43b7a.1566454535.git.eswara.kota@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Currently every driver needs to parse the connector endpoints by it self.
-This is the initial work to make this generic. A generic connector has
-common members and connector specific members. The common members are:
-  - type
-  - label (optional)
-  - links
-  - nr_of_links
+Add YAML schemas for the reset controller on Intel
+Lightening Mountain (LGM) SoC.
 
-The specific members are stored within a union, since only one of them
-can be available at the time. Since this is the initial support the
-patch adds only the analog-connector specific ones.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 ---
-[1] https://patchwork.kernel.org/cover/10794703/
+ .../bindings/reset/intel,syscon-reset.yaml         | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
 
-v8:
-- rename CON -> CONN
-- supported_tvnorms_stds -> sdtv_stds and adapt description
-
-v7:
-- fix spelling issues
-- constify label
-- support variable label size
-- replace single remote_port/id members by links member of variable
-  size
-- squash v4l2-connector into v4l2-fwnode
-
-@Jacopo: I dropped your r b tag because I changed the port/id logic.
-
-v6:
-- fix some spelling and style issues
-- rm unnecessary comments
-- drop vga and dvi connector
-- fix misspelt connector
-
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
----
- include/media/v4l2-fwnode.h | 45 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index f6a7bcd13197..7ca5669ef6fa 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -123,6 +123,51 @@ struct v4l2_fwnode_link {
- 	unsigned int remote_port;
- };
- 
-+/**
-+ * enum v4l2_connector_type - connector type
-+ * @V4L2_CONN_UNKNOWN:   unknown connector type, no V4L2 connector configuration
-+ * @V4L2_CONN_COMPOSITE: analog composite connector
-+ * @V4L2_CONN_SVIDEO:    analog svideo connector
-+ * @V4L2_CONN_HDMI:      digital hdmi connector
-+ */
-+enum v4l2_connector_type {
-+	V4L2_CONN_UNKNOWN,
-+	V4L2_CONN_COMPOSITE,
-+	V4L2_CONN_SVIDEO,
-+	V4L2_CONN_HDMI,
-+};
+diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+new file mode 100644
+index 000000000000..298c60085486
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/**
-+ * struct v4l2_fwnode_connector_analog - analog connector data structure
-+ * @sdtv_stds: sdtv standards this connector supports, set to V4L2_STD_ALL
-+ *             if no restrictions are specified.
-+ */
-+struct v4l2_fwnode_connector_analog {
-+	v4l2_std_id sdtv_stds;
-+};
++title: Intel Lightening Mountain SoC System Reset Controller
 +
-+/**
-+ * struct v4l2_fwnode_connector - the connector data structure
-+ * @label: optional connector label
-+ * @type: connector type
-+ * @links: list of &struct v4l2_fwnode_link links the connector is connected to
-+ * @nr_of_links: total number of links
-+ * @connector: connector configuration
-+ * @connector.analog: analog connector configuration
-+ *                    &struct v4l2_fwnode_connector_analog
-+ */
-+struct v4l2_fwnode_connector {
-+	const char *label;
-+	enum v4l2_connector_type type;
-+	struct v4l2_fwnode_link *links;
-+	unsigned int nr_of_links;
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
 +
-+	union {
-+		struct v4l2_fwnode_connector_analog analog;
-+		/* future connectors */
-+	} connector;
-+};
++properties:
++  compatible:
++    allOf:
++      - items:
++          - enum:
++              - intel,rcu-lgm
++              - syscon
 +
- /**
-  * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
-  * @fwnode: pointer to the endpoint's fwnode handle
++  reg:
++    description: Reset controller register base address and size
++
++  intel,global-reset:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: Global reset register offset and bit offset.
++
++  "#reset-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - intel,global-reset
++  - "#reset-cells"
++
++examples:
++  - |
++    rcu0: reset-controller@00000000 {
++        compatible = "intel,rcu-lgm", "syscon";
++        reg = <0x000000 0x80000>;
++        intel,global-reset = <0x10 30>;
++        #reset-cells = <2>;
++    };
++
++    pcie_phy0: pciephy@... {
++        ...
++        /* address offset: 0x10, bit offset: 12 */
++        resets = <&rcu0 0x10 12>;
++        ...
++    };
 -- 
-2.20.1
+2.11.0
