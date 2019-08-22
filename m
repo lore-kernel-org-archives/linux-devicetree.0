@@ -1,55 +1,74 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
-Date: Thu, 22 Aug 2019 16:36:38 +0530
-Message-ID: <20190822110638.GN12733@vkoul-mobl.Dlink>
-References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
- <20190809133407.25918-2-srinivas.kandagatla@linaro.org>
- <20190821214436.GA13936@bogus>
- <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org>
+From: Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH 2/2] ARM: dts: ux500: Remove ab8500_ldo_usb regulator from device tree
+Date: Thu, 22 Aug 2019 13:07:20 +0200
+Message-ID: <20190822110720.118828-2-stephan@gerhold.net>
+References: <20190822110720.118828-1-stephan@gerhold.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org>
+In-Reply-To: <20190822110720.118828-1-stephan@gerhold.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org, pierre-louis.bossart@linux.intel.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
 List-Id: devicetree@vger.kernel.org
 
-On 22-08-19, 11:12, Srinivas Kandagatla wrote:
-> 
-> 
-> On 21/08/2019 22:44, Rob Herring wrote:
-> > On Fri, Aug 09, 2019 at 02:34:04PM +0100, Srinivas Kandagatla wrote:
-> > > This patch adds bindings for Soundwire Slave devices that includes how
-> > > SoundWire enumeration address and Link ID are used to represented in
-> > > SoundWire slave device tree nodes.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   .../devicetree/bindings/soundwire/slave.txt   | 51 +++++++++++++++++++
-> > >   1 file changed, 51 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/soundwire/slave.txt
-> > 
-> > Can you convert this to DT schema given it is a common binding.
-> > 
-> 
-> I will give that a go in next version!
-> 
-> > What does the host controller look like? You need to define the node
-> > hierarchy. Bus controller schemas should then include the bus schema.
-> > See spi-controller.yaml.
-> 
-> Host controller is always parent of these devices which is represented in
-> the example.
-> 
-> In my previous patches, i did put this slave bindings in bus.txt, but Vinod
-> suggested to move it to slave.txt.
-> 
-> Are you suggesting to add two yamls here, one for slave and one for bus
-> Or just document this in one bus bindings?
+Support for the USB regulator of AB8500 was removed in
+commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
+However, the configuration was never removed from the device tree.
 
-That would be fine by me :-)
+It does no longer have any effect, remove it from the device tree.
 
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ arch/arm/boot/dts/ste-ab8500.dtsi  | 4 ----
+ arch/arm/boot/dts/ste-href.dtsi    | 4 ----
+ arch/arm/boot/dts/ste-snowball.dts | 4 ----
+ 3 files changed, 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ste-ab8500.dtsi b/arch/arm/boot/dts/ste-ab8500.dtsi
+index 3ef1906e375c..55fff4d44277 100644
+--- a/arch/arm/boot/dts/ste-ab8500.dtsi
++++ b/arch/arm/boot/dts/ste-ab8500.dtsi
+@@ -182,10 +182,6 @@
+ 					ab8500_ldo_tvout_reg: ab8500_ldo_tvout {
+ 					};
+ 
+-					// supply for ab8500-usb; USB LDO
+-					ab8500_ldo_usb_reg: ab8500_ldo_usb {
+-					};
+-
+ 					// supply for ab8500-vaudio; VAUDIO LDO
+ 					ab8500_ldo_audio_reg: ab8500_ldo_audio {
+ 					};
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 6422c53f2046..4f6acbd8c040 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -234,10 +234,6 @@
+ 						regulator-name = "V-TVOUT";
+ 					};
+ 
+-					ab8500_ldo_usb_reg: ab8500_ldo_usb {
+-						regulator-name = "dummy";
+-					};
+-
+ 					ab8500_ldo_audio_reg: ab8500_ldo_audio {
+ 						regulator-name = "V-AUD";
+ 					};
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index 3428290644ba..c6074912c368 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -474,10 +474,6 @@
+ 						regulator-name = "V-TVOUT";
+ 					};
+ 
+-					ab8500_ldo_usb_reg: ab8500_ldo_usb {
+-						regulator-name = "dummy";
+-					};
+-
+ 					ab8500_ldo_audio_reg: ab8500_ldo_audio {
+ 						regulator-name = "V-AUD";
+ 					};
 -- 
-~Vinod
+2.22.1
