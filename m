@@ -1,42 +1,45 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
-Date: Thu, 22 Aug 2019 11:20:08 +0200
-Message-ID: <20190822092008.GR27031@piout.net>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
- <20190801110122.26834-3-ran.bi@mediatek.com>
- <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] arm64: dts: mt8183: fix pwrap gic number
+Date: Thu, 22 Aug 2019 11:26:12 +0200
+Message-ID: <4a12b168-23ce-03cf-d87f-b03f69f28e67@gmail.com>
+References: <1566464140-26977-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
+In-Reply-To: <1566464140-26977-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ran Bi <ran.bi@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>Sean Wang <s>
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 22/08/2019 11:12:29+0200, Matthias Brugger wrote:
-> 
-> 
-> On 01/08/2019 13:01, Ran Bi wrote:
-> > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
-> > had different architecture compared with MT7622 RTC.
-> > 
-> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > ---
-> >  drivers/rtc/Kconfig      |  10 +
-> >  drivers/rtc/Makefile     |   1 +
-> >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
-> 
-> Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
-> devices. What is the difference that we need to write a driver of our own?
-> 
-
-If they are compatible, this is the way to go but the file can't be
-renamed (and that is fine).
 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On 22/08/2019 10:55, Hsin-Hsiung Wang wrote:
+> The correct gic number of pwrap is 185 instead of 209. This patch fixes
+> it to avoid triggering error interrupt.
+> 
+> Fixes: e526c9bc11f8 ("arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and Makefile")
+> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index c2749c4..afb0996 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -248,7 +248,7 @@
+>  			compatible = "mediatek,mt8183-pwrap";
+>  			reg = <0 0x1000d000 0 0x1000>;
+>  			reg-names = "pwrap";
+> -			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&topckgen CLK_TOP_MUX_PMICSPI>,
+>  				 <&infracfg CLK_INFRA_PMIC_AP>;
+>  			clock-names = "spi", "wrap";
+> 
+
+Applied, thanks.
