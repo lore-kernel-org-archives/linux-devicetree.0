@@ -1,218 +1,131 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Date: Thu, 22 Aug 2019 12:49:34 +0200
-Message-ID: <20190822104934.GB28060@bogon.m.sigxcpu.org>
-References: <cover.1565367567.git.agx@sigxcpu.org>
- <9c906bb6592424acdb1a67447a482e010a113b49.1565367567.git.agx@sigxcpu.org>
- <20190821181518.GB26759@pendragon.ideasonboard.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
+ PA[33:32] for MediaTek
+Date: Thu, 22 Aug 2019 11:57:11 +0100
+Message-ID: <e6652176-763d-5298-9e10-8c1fbe1b3c0d@arm.com>
+References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
+ <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
+ <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
+ <1566464186.11621.7.camel@mhfsdcap03>
+ <10d5122d-3375-161b-9356-2ddfc1c835bd@arm.com>
+ <20190822101749.3kwzd5lb7zinsord@willie-the-truck>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190821181518.GB26759@pendragon.ideasonboard.com>
+In-Reply-To: <20190822101749.3kwzd5lb7zinsord@willie-the-truck>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Andrzej Hajda <a.hajda@samsung.com>, Neil Armstrong <narmstrong@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>, Sam Ravnborg <sam@ravnborg.org>
+To: Will Deacon <will@kernel.org>
+Cc: Yong Wu <yong.wu@mediatek.com>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, chao.hao@mediatek.com, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, ming-fan.chen@mediatek.com, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-thanks for having a look!
+On 2019-08-22 11:17 am, Will Deacon wrote:
+> On Thu, Aug 22, 2019 at 11:08:58AM +0100, Robin Murphy wrote:
+>> On 2019-08-22 9:56 am, Yong Wu wrote:
+>>> On Wed, 2019-08-21 at 16:24 +0100, Will Deacon wrote:
+>>>> On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
+>>>>> MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
+>>>>> the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
+>>>>> respectively. Meanwhile the iova still is 32bits.
+>>>>>
+>>>>> Regarding whether the pagetable address could be over 4GB, the mt8183
+>>>>> support it while the previous mt8173 don't, thus keep it as is.
+>>>>>
+>>>>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+>>>>> ---
+>>>>>    drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
+>>>>>    include/linux/io-pgtable.h         |  7 +++----
+>>>>>    2 files changed, 28 insertions(+), 11 deletions(-)
+>>>>
+>>>> [...]
+>>>>
+>>>>> @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+>>>>>    {
+>>>>>    	struct arm_v7s_io_pgtable *data;
+>>>>> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
+>>>>> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
+>>>>> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
+>>>>> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
+>>>>
+>>>> Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
+>>>> ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
+>>>
+>>> Here I only simply skip the oas checking for our case. then which way do
+>>> your prefer?  something like you commented before:?
+>>>
+>>>
+>>> 	if (cfg->ias > ARM_V7S_ADDR_BITS)
+>>> 		return NULL;
+>>>
+>>> 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
+>>> 		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
+>>> 			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
+>>> 		else if (cfg->oas > 34)
+>>> 			return NULL;
+>>> 	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
+>>> 		return NULL;
+>>> 	}
+>>
+>> All it should take is something like:
+>>
+>> 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+>> 		max_oas = 34;
+>> 	else
+>> 		max_oas = 32;
+>> 	if (cfg->oas > max_oas)
+>> 		return NULL;
+>>
+>> or even just:
+>>
+>> 	if (cfg->oas > 32 ||
+>> 	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT && cfg->oas > 34))
+>> 		return NULL;
+>>
+>> (and if we prefer the latter style, perhaps we could introduce some kind of
+>> "is_mtk_4gb()" helper to save on verbosity)
+> 
+> I wondered the same thing, but another place we'd want the check is in
+> iopte_to_paddr() which probably needs the PHYS_ADDR_T check to avoid GCC
+> warnings, although I didn't try it.
 
-On Wed, Aug 21, 2019 at 09:15:18PM +0300, Laurent Pinchart wrote:
-> Hi Guido,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Aug 09, 2019 at 06:24:22PM +0200, Guido Günther wrote:
-> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  .../bindings/display/bridge/nwl-dsi.yaml      | 155 ++++++++++++++++++
-> >  1 file changed, 155 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > new file mode 100644
-> > index 000000000000..5ed8bc4a4d18
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > @@ -0,0 +1,155 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/bridge/imx-nwl-dsi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Northwest Logic MIPI-DSI on imx SoCs
-> > +
-> > +maintainers:
-> > +  - Guido Gúnther <agx@sigxcpu.org>
-> > +  - Robert Chiras <robert.chiras@nxp.com>
-> > +
-> > +description: |
-> > +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> > +  the SOCs NWL MIPI-DSI host controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - const: fsl,imx8mq-nwl-dsi
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: DSI core clock
-> > +      - description: RX_ESC clock (used in escape mode)
-> > +      - description: TX_ESC clock (used in escape mode)
-> > +      - description: PHY_REF clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: core
-> > +      - const: rx_esc
-> > +      - const: tx_esc
-> > +      - const: phy_ref
-> > +
-> > +  phys:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the phy module representing the DPHY
-> > +
-> > +  phy-names:
-> > +    items:
-> > +      - const: dphy
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the power domain
-> > +
-> > +  resets:
-> > +    maxItems: 4
-> > +    description:
-> > +      A phandle to the reset controller
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: byte
-> > +      - const: dpi
-> > +      - const: esc
-> > +      - const: pclk
-> > +
-> > +  mux-sel:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the MUX register set
-> 
-> Did you mean the MUX syscon ? A phandle to a register set sounds a bit
-> strange.
+I'm pretty sure I confirmed that "paddr |= BIT_ULL(32)" doesn't warn 
+when phys_addt_t is 32-bit - it's well-defined unsigned integer 
+truncation after all, and if GCC starts warning about all the valid 
+no-op code it optimises away then it's going to run up against 
+IS_ENABLED() first and foremost ;)
 
-That one is gone in v3 in favour of mux-controls.
+> So if we did:
+> 
+> static bool cfg_mtk_ext_enabled(struct io_pgtable_cfg *cfg)
+> {
+> 	return IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
+> 	       cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT;
+> }
+> 
+> Then I suppose we could do this in _alloc():
+> 
+> 	if (cfg->oas > cfg_mtk_ext_enabled(cfg) ? 34 : ARM_V7S_ADDR_BITS)
+> 		return NULL;
+> 
+> and then this in iopte_to_paddr():
+> 
+> 	[...]
+> 
+> 	paddr = pte & mask;
+> 	if (!cfg_mtk_ext_enabled(cfg))
+> 		return paddr;
+> 
+> 	if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
+> 		paddr |= ...
+> 
+> 	[...]
+> 
+> What do you reckon?
 
-> 
-> > +
-> > +  port:
-> > +    type: object
-> > +    description:
-> > +      A input put or output port node.
-> 
-> s/input put/input/
+Yeah, that's the general shape of things I was picturing - I'm not that 
+fussed about the PHYS_ADDR_T_64BIT thing, especially if it's wrapped up 
+in just one place, so if you do want to keep it as belt-and-braces I'll 
+just consider it a slight code size optimisation for 32-bit builds.
 
-Thanks! I've shuffled this around in v3 and added some more detail.
-Cheers,
- -- Guido
-
-> 
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description:
-> > +      A node containing DSI input & output port nodes with endpoint
-> > +      definitions as documented in
-> > +      Documentation/devicetree/bindings/graph.txt.
-> > +
-> > +patternProperties:
-> > +  "^panel@[0-9]+$": true
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - fsl,imx8mq-nwl-dsi
-> > +    then:
-> > +      required:
-> > +        - resets
-> > +        - reset-names
-> > +        - mux-sel
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - phys
-> > +  - phy-names
-> > +
-> > +examples:
-> > + - |
-> > +
-> > +   mipi_dsi: mipi_dsi@30a00000 {
-> > +              #address-cells = <1>;
-> > +              #size-cells = <0>;
-> > +              compatible = "fsl,imx8mq-nwl-dsi";
-> > +              reg = <0x30A00000 0x300>;
-> > +              clocks = <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
-> > +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
-> > +              interrupts = <0 34 4>;
-> > +              power-domains = <&pgc_mipi>;
-> > +              resets = <&src 0>, <&src 1>, <&src 2>, <&src 3>;
-> > +              reset-names = "byte", "dpi", "esc", "pclk";
-> > +              mux-sel = <&iomuxc_gpr>;
-> > +              phys = <&dphy>;
-> > +              phy-names = "dphy";
-> > +
-> > +              panel@0 {
-> > +                      compatible = "...";
-> > +                      port@0 {
-> > +                           panel_in: endpoint {
-> > +                                     remote-endpoint = <&mipi_dsi_out>;
-> > +                           };
-> > +                      };
-> > +              };
-> > +
-> > +              ports {
-> > +                    #address-cells = <1>;
-> > +                    #size-cells = <0>;
-> > +
-> > +                    port@0 {
-> > +                           reg = <0>;
-> > +                           mipi_dsi_in: endpoint {
-> > +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> > +                           };
-> > +                    };
-> > +                    port@1 {
-> > +                           reg = <1>;
-> > +                           mipi_dsi_out: endpoint {
-> > +                                         remote-endpoint = <&panel_in>;
-> > +                           };
-> > +                    };
-> > +              };
-> > +      };
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+Robin.
