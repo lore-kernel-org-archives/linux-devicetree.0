@@ -1,16 +1,16 @@
 From: Jungo Lin <jungo.lin@mediatek.com>
 Subject: Re: [RFC,v4,1/4] media: dt-bindings: mt8183: Added camera ISP Pass 1
-Date: Thu, 22 Aug 2019 20:47:40 +0800
-Message-ID: <1566478060.5044.0.camel@mtksdccf07>
+Date: Thu, 22 Aug 2019 20:48:43 +0800
+Message-ID: <1566478123.5044.1.camel@mtksdccf07>
 References: <jungo.lin@mediatek.com>
  <20190807124803.29884-1-jungo.lin@mediatek.com>
  <20190807124803.29884-2-jungo.lin@mediatek.com>
- <20190821194752.GA15270@bogus>
+ <20190821201758.GB15270@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821194752.GA15270@bogus>
+In-Reply-To: <20190821201758.GB15270@bogus>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,8 +25,7 @@ Cc: ryan.yu@mediatek.com, frankie.chiu@mediatek.com, laurent.pinchart@ideasonboa
 List-Id: devicetree@vger.kernel.org
 
 Hi, Rob:
-
-On Wed, 2019-08-21 at 14:47 -0500, Rob Herring wrote:
+On Wed, 2019-08-21 at 15:17 -0500, Rob Herring wrote:
 > On Wed, Aug 07, 2019 at 08:48:00PM +0800, Jungo Lin wrote:
 > > This patch adds DT binding document for the Pass 1 (P1) unit
 > > in Mediatek's camera ISP system. The Pass 1 unit grabs the sensor
@@ -89,18 +88,18 @@ On Wed, 2019-08-21 at 14:47 -0500, Rob Herring wrote:
 > > +SoC specific DT entry:
 > > +
 > > +		camisp: camisp@1a000000 {
-> > +			compatible = "mediatek,mt8183-camisp", "syscon";
 > 
-> syscon doesn't seem appropriate nor is it documented.
+> Also, you can remove 2 levels of indentation here.
 > 
 
-Thanks for your comment.
-I will remove "syscon" in next patch.
+Ok, got it.
+We will change to use one level of indentation.
 
-Best regards,
+Thanks,
 
 Jungo
 
+> > +			compatible = "mediatek,mt8183-camisp", "syscon";
 > > +			reg = <0 0x1a000000 0 0x1000>,
 > > +					<0 0x1a003000 0 0x1000>,
 > > +					<0 0x1a004000 0 0x2000>,
