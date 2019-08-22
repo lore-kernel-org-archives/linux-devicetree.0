@@ -1,161 +1,61 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime
-Date: Thu, 22 Aug 2019 15:51:44 +0200
-Message-ID: <be3242e4-cde2-d9bd-5eff-aa5c62c58dea@gmail.com>
-References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RFC v1 2/2] mmc: host: meson-mx-sdhc: new driver for the
+ Amlogic Meson SDHC host
+Date: Thu, 22 Aug 2019 15:52:24 +0200
+Message-ID: <CAPDyKFoFQ_QvHD-+Mg_VAR5rqs3CM_h7dw25p81JTzE1Yz7d1A@mail.gmail.com>
+References: <20190708173330.13217-1-martin.blumenstingl@googlemail.com> <20190708173330.13217-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <20190708173330.13217-3-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, fan.chen@mediatek.com, Stephen Boyd <sboyd@codeaurora.org>, Roger Lu <roger.lu@mediatek.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, jianxin.pan@amlogic.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 8 Jul 2019 at 19:33, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> WiP - only partially working - see performance numbers.
+>
+> Odroid-C1 eMMC (HS-200):
+> Amlogic's vendor driver @ Linux 3.10:
+>   7781351936 bytes (7.8 GB) copied, 134.714 s, 57.8 MB/s
+> This driver:
+>   7781351936 bytes (7.8 GB, 7.2 GiB) copied, 189.02 s, 41.2 MB/s
+>
+> EC-100 eMMC (HS MMC):
+> Amlogic's vendor driver @ Linux 3.10:
+>   15762194432 bytes (16 GB) copied, 422.967 s, 37.3 MB/s
+> This driver:
+>   15762194432 bytes (16 GB, 15 GiB) copied, 9232.65 s, 1.7 MB/s
+>
+> 1) Amlogic's vendor driver does some magic with the divider:
+>       clk_div = input_rate / clk_ios - !(input_rate%clk_ios);
+>       if (!(clk_div & 0x01)) // if even number, turn it to an odd one
+>          clk_div++;
+>    It's not clear to me whether what the reason behind this is, what is
+>    supposed to be achieved with this?
+>
+> 2) The hardcoded RX clock phases are taken from the vendor driver. It
+>    seems that these are only valid when fclk_div3 is used as input
+>    clock (however, there are four more inputs). It's not clear to me how
+>    to calculate the RX clock phases in set_ios based on the input clock
+>    and the ios rate.
+>
+> 3) The hardware supports a timeout IRQ but the max_busy_timeout is not
+>    documented anywhere.
+>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
+Martin, overall this looks good to me. Once you moved from RFC to a
+formal patch I will check again, of course.
 
-On 13/08/2019 15:31, Andrew-sh.Cheng wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
-> 
-> On some SoCs the Adaptive Voltage Scaling (AVS) technique is
-> employed to optimize the operating voltage of a device. At a
-> given frequency, the hardware monitors dynamic factors and either
-> makes a suggestion for how much to adjust a voltage for the
-> current frequency, or it automatically adjusts the voltage
-> without software intervention. Add an API to the OPP library for
-> the former case, so that AVS type devices can update the voltages
-> for an OPP when the hardware determines the voltage should
-> change. The assumption is that drivers like CPUfreq or devfreq
-> will register for the OPP notifiers and adjust the voltage
-> according to suggestions that AVS makes.
-> 
-> This patch is devired from [1] submitted by Stephen.
-> [1] https://lore.kernel.org/patchwork/patch/599279/
-> 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+There are a couple of calls to readl_poll_timeout(), for different
+reasons, that I have some questions about, but we can discuss those in
+the next step.
 
-Nit: your signed-off-by tag is missing.
+[...]
 
-Regards,
-Matthias
-
-> ---
->  drivers/opp/core.c     | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm_opp.h | 11 +++++++++
->  2 files changed, 74 insertions(+)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index c094d5d20fd7..407a07f29b12 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2054,6 +2054,69 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
->  }
->  
->  /**
-> + * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
-> + * @dev:		device for which we do this operation
-> + * @freq:		OPP frequency to adjust voltage of
-> + * @u_volt:		new OPP voltage
-> + *
-> + * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
-> + * copy operation, returns 0 if no modifcation was done OR modification was
-> + * successful.
-> + */
-> +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> +			      unsigned long u_volt)
-> +{
-> +	struct opp_table *opp_table;
-> +	struct dev_pm_opp *tmp_opp, *opp = ERR_PTR(-ENODEV);
-> +	int r = 0;
-> +
-> +	/* Find the opp_table */
-> +	opp_table = _find_opp_table(dev);
-> +	if (IS_ERR(opp_table)) {
-> +		r = PTR_ERR(opp_table);
-> +		dev_warn(dev, "%s: Device OPP not found (%d)\n", __func__, r);
-> +		return r;
-> +	}
-> +
-> +	mutex_lock(&opp_table->lock);
-> +
-> +	/* Do we have the frequency? */
-> +	list_for_each_entry(tmp_opp, &opp_table->opp_list, node) {
-> +		if (tmp_opp->rate == freq) {
-> +			opp = tmp_opp;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (IS_ERR(opp)) {
-> +		r = PTR_ERR(opp);
-> +		goto adjust_unlock;
-> +	}
-> +
-> +	/* Is update really needed? */
-> +	if (opp->supplies->u_volt == u_volt)
-> +		goto adjust_unlock;
-> +
-> +	opp->supplies->u_volt = u_volt;
-> +
-> +	dev_pm_opp_get(opp);
-> +	mutex_unlock(&opp_table->lock);
-> +
-> +	/* Notify the voltage change of the OPP */
-> +	blocking_notifier_call_chain(&opp_table->head, OPP_EVENT_ADJUST_VOLTAGE,
-> +				     opp);
-> +
-> +	dev_pm_opp_put(opp);
-> +	goto adjust_put_table;
-> +
-> +adjust_unlock:
-> +	mutex_unlock(&opp_table->lock);
-> +adjust_put_table:
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +	return r;
-> +}
-> +
-> +/**
->   * dev_pm_opp_enable() - Enable a specific OPP
->   * @dev:	device for which we do this operation
->   * @freq:	OPP frequency to enable
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index af5021f27cb7..86947d53e8c4 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -22,6 +22,7 @@ struct opp_table;
->  
->  enum dev_pm_opp_event {
->  	OPP_EVENT_ADD, OPP_EVENT_REMOVE, OPP_EVENT_ENABLE, OPP_EVENT_DISABLE,
-> +	OPP_EVENT_ADJUST_VOLTAGE,
->  };
->  
->  /**
-> @@ -111,6 +112,9 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq,
->  void dev_pm_opp_remove(struct device *dev, unsigned long freq);
->  void dev_pm_opp_remove_all_dynamic(struct device *dev);
->  
-> +int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> +			      unsigned long u_volt);
-> +
->  int dev_pm_opp_enable(struct device *dev, unsigned long freq);
->  
->  int dev_pm_opp_disable(struct device *dev, unsigned long freq);
-> @@ -234,6 +238,13 @@ static inline void dev_pm_opp_remove_all_dynamic(struct device *dev)
->  {
->  }
->  
-> +static inline int
-> +dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
-> +			  unsigned long u_volt)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int dev_pm_opp_enable(struct device *dev, unsigned long freq)
->  {
->  	return 0;
-> 
+Kind regards
+Uffe
