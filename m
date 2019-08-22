@@ -1,84 +1,61 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 0/2] arm64: dts: allwinner: a64: Add A64 OlinuXino
- board (with eMMC)
-Date: Thu, 22 Aug 2019 16:09:35 +0200
-Message-ID: <20190822140935.pwtpu7pzbd7y2xdg@flea>
-References: <20190821195217.4166-1-sunil@medhas.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: iommu/arm,smmu: add compatible string
+ for Marvell
+Date: Thu, 22 Aug 2019 15:16:25 +0100
+Message-ID: <5208b371-c81a-23a0-0870-2810fce3c7fa@arm.com>
+References: <20190711150242.25290-1-gregory.clement@bootlin.com>
+ <20190711150242.25290-4-gregory.clement@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2741552821829658258=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821195217.4166-1-sunil@medhas.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sunil Mohan Adapa <sunil@medhas.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190711150242.25290-4-gregory.clement@bootlin.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Antoine Tenart <antoine.tenart@bootlin.com>, =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11/07/2019 16:02, Gregory CLEMENT wrote:
+> From: Hanna Hawa <hannah@marvell.com>
+> 
+> Add specific compatible string for Marvell usage due errata of
+> accessing 64bits registers of ARM SMMU, in AP806.
+> 
+> AP806 SoC uses the generic ARM-MMU500, and there's no specific
+> implementation of Marvell, this compatible is used for errata only.
 
---===============2741552821829658258==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o357ly3g6xw34l2g"
-Content-Disposition: inline
+Forgive me for repeating myself[1], but:
 
+"Given that, I think something more specific like:
 
---o357ly3g6xw34l2g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+	"marvell,ap806-smmu", "arm,mmu-500";
 
-On Wed, Aug 21, 2019 at 12:52:15PM -0700, Sunil Mohan Adapa wrote:
-> A64 OLinuXino board from Olimex has three variants with onboard eMMC:
-> A64-OLinuXino-1Ge16GW, A64-OLinuXino-1Ge4GW and A64-OLinuXino-2Ge8G-IND. In
-> addition, there are two variants without eMMC. One without eMMC and one with SPI
-> flash. This suggests the need for separate device tree for the three eMMC
-> variants.
->
-> Changes:
->
->   v3: Separate dts for eMMC variants
->
->   v2: Fix descriptions for VCC and VCCQ
->
-> Version 2 of this series already committed in linux-sunxi tree as
-> 8d3071f3e85894be35a1b35bcf6fdef970c81018 must be reverted before applying this.
+would be most appropriate. Otherwise, if some future Marvell SoC were to
+ever come out with a *different* MMU-500 integration problem, you'd
+already have painted yourself into a corner."
 
-Applied, thanks!
-Maxime
+Robin.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+[1] 
+https://lore.kernel.org/linux-arm-kernel/3ce1d67a-4e3c-e8d8-f7fc-79649f1def68@arm.com/
 
---o357ly3g6xw34l2g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV6iHgAKCRDj7w1vZxhR
-xWLhAQDOkw9X6DlCQETlzeftJrXZtaROlRQI7eMcpSHu1NX55QD9GLwat/8lSR48
-phvN3wKPU67uCQ7L3ceu7WVMPjUoFQY=
-=G4R+
------END PGP SIGNATURE-----
-
---o357ly3g6xw34l2g--
-
-
---===============2741552821829658258==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2741552821829658258==--
+> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index 3133f3ba7567..7ed58d51846e 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -16,6 +16,7 @@ conditions.
+>                           "arm,mmu-400"
+>                           "arm,mmu-401"
+>                           "arm,mmu-500"
+> +                        "marvell,mmu-500"
+>                           "cavium,smmu-v2"
+>                           "qcom,smmu-v2"
+>   
+> 
