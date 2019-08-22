@@ -1,40 +1,50 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 04/10] dt-bindings: pci: layerscape-pci: add compatible strings for ls1088a and ls2088a
-Date: Thu, 22 Aug 2019 19:22:36 +0800
-Message-ID: <20190822112242.16309-4-xiaowei.bao@nxp.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/1] arm64: dts: imx8mq: Add mux controller to iomuxc_gpr
+Date: Thu, 22 Aug 2019 13:38:25 +0200
+Message-ID: <1566473905.3653.10.camel@pengutronix.de>
+References: <cover.1566471985.git.agx@sigxcpu.org>
+         <fa3b1df7fc5e74f375df5de53061d1a93d154b51.1566471985.git.agx@sigxcpu.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+In-Reply-To: <fa3b1df7fc5e74f375df5de53061d1a93d154b51.1566471985.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.co, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, andrew.murray@arm.com
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatible strings for ls1088a and ls2088a.
+On Thu, 2019-08-22 at 13:10 +0200, Guido Günther wrote:
+> The only mux controls the MIPI DSI input selection.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+regards
+Philipp
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e20ceaa..16f592e 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -22,7 +22,10 @@ Required properties:
-         "fsl,ls1043a-pcie"
-         "fsl,ls1012a-pcie"
-   EP mode:
--	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls-pcie-ep"
-+	"fsl,ls1046a-pcie-ep"
-+	"fsl,ls1088a-pcie-ep"
-+	"fsl,ls2088a-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
--- 
-2.9.5
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 4fdd60f2c51e..3f3594d9485c 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -440,8 +440,15 @@
+>  			};
+>  
+>  			iomuxc_gpr: syscon@30340000 {
+> -				compatible = "fsl,imx8mq-iomuxc-gpr", "fsl,imx6q-iomuxc-gpr", "syscon";
+> +				compatible = "fsl,imx8mq-iomuxc-gpr", "fsl,imx6q-iomuxc-gpr",
+> +					     "syscon", "simple-mfd";
+>  				reg = <0x30340000 0x10000>;
+> +
+> +				mux: mux-controller {
+> +					compatible = "mmio-mux";
+> +					#mux-control-cells = <1>;
+> +					mux-reg-masks = <0x34 0x00000004>; /* MIPI_MUX_SEL */
+> +				};
+>  			};
+>  
+>  			ocotp: ocotp-ctrl@30350000 {
