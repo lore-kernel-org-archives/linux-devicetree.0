@@ -1,117 +1,85 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-Date: Thu, 22 Aug 2019 11:17:50 +0100
-Message-ID: <20190822101749.3kwzd5lb7zinsord@willie-the-truck>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
- <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
- <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
- <1566464186.11621.7.camel@mhfsdcap03>
- <10d5122d-3375-161b-9356-2ddfc1c835bd@arm.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v2 10/14] dt-bindings: power: avs: Add support for CPR
+ (Core Power Reduction)
+Date: Thu, 22 Aug 2019 12:20:02 +0200
+Message-ID: <20190822102002.GA8494@centauri>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
+ <20190725104144.22924-11-niklas.cassel@linaro.org>
+ <5d579b36.1c69fb81.85eba.ff51@mx.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <10d5122d-3375-161b-9356-2ddfc1c835bd@arm.com>
+In-Reply-To: <5d579b36.1c69fb81.85eba.ff51@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, chao.hao@mediatek.com, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, ming-fan.chen@mediatek.com, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, linux-arm-msm@vger.kernel.org, vireshk@kernel.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:08:58AM +0100, Robin Murphy wrote:
-> On 2019-08-22 9:56 am, Yong Wu wrote:
-> > On Wed, 2019-08-21 at 16:24 +0100, Will Deacon wrote:
-> > > On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
-> > > > MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
-> > > > the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
-> > > > respectively. Meanwhile the iova still is 32bits.
-> > > > 
-> > > > Regarding whether the pagetable address could be over 4GB, the mt8183
-> > > > support it while the previous mt8173 don't, thus keep it as is.
-> > > > 
-> > > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > > > ---
-> > > >   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
-> > > >   include/linux/io-pgtable.h         |  7 +++----
-> > > >   2 files changed, 28 insertions(+), 11 deletions(-)
-> > > 
-> > > [...]
-> > > 
-> > > > @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
-> > > >   {
-> > > >   	struct arm_v7s_io_pgtable *data;
-> > > > -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
-> > > > +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
-> > > > +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
-> > > > +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> > > 
-> > > Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> > > ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
-> > 
-> > Here I only simply skip the oas checking for our case. then which way do
-> > your prefer?  something like you commented before:?
-> > 
-> > 
-> > 	if (cfg->ias > ARM_V7S_ADDR_BITS)
-> > 		return NULL;
-> > 
-> > 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
-> > 		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
-> > 			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
-> > 		else if (cfg->oas > 34)
-> > 			return NULL;
-> > 	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
-> > 		return NULL;
-> > 	}
+On Fri, Aug 16, 2019 at 11:14:13PM -0700, Stephen Boyd wrote:
+> Quoting Niklas Cassel (2019-07-25 03:41:38)
+> > +       cpr@b018000 {
+> > +               compatible = "qcom,qcs404-cpr", "qcom,cpr";
+> > +               reg = <0x0b018000 0x1000>;
+> > +               interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
+> > +               clocks = <&xo_board>;
+> > +               clock-names = "ref";
+> > +               vdd-apc-supply = <&pms405_s3>;
+> > +               #power-domain-cells = <0>;
+> > +               operating-points-v2 = <&cpr_opp_table>;
+> > +               acc-syscon = <&tcsr>;
+> > +
+> > +               nvmem-cells = <&cpr_efuse_quot_offset1>,
+> > +                       <&cpr_efuse_quot_offset2>,
+> > +                       <&cpr_efuse_quot_offset3>,
+> > +                       <&cpr_efuse_init_voltage1>,
+> > +                       <&cpr_efuse_init_voltage2>,
+> > +                       <&cpr_efuse_init_voltage3>,
+> > +                       <&cpr_efuse_quot1>,
+> > +                       <&cpr_efuse_quot2>,
+> > +                       <&cpr_efuse_quot3>,
+> > +                       <&cpr_efuse_ring1>,
+> > +                       <&cpr_efuse_ring2>,
+> > +                       <&cpr_efuse_ring3>,
+> > +                       <&cpr_efuse_revision>;
+> > +               nvmem-cell-names = "cpr_quotient_offset1",
+> > +                       "cpr_quotient_offset2",
+> > +                       "cpr_quotient_offset3",
+> > +                       "cpr_init_voltage1",
+> > +                       "cpr_init_voltage2",
+> > +                       "cpr_init_voltage3",
+> > +                       "cpr_quotient1",
+> > +                       "cpr_quotient2",
+> > +                       "cpr_quotient3",
+> > +                       "cpr_ring_osc1",
+> > +                       "cpr_ring_osc2",
+> > +                       "cpr_ring_osc3",
+> > +                       "cpr_fuse_revision";
+> > +
+> > +               qcom,cpr-timer-delay-us = <5000>;
+> > +               qcom,cpr-timer-cons-up = <0>;
+> > +               qcom,cpr-timer-cons-down = <2>;
+> > +               qcom,cpr-up-threshold = <1>;
+> > +               qcom,cpr-down-threshold = <3>;
+> > +               qcom,cpr-idle-clocks = <15>;
+> > +               qcom,cpr-gcnt-us = <1>;
+> > +               qcom,vdd-apc-step-up-limit = <1>;
+> > +               qcom,vdd-apc-step-down-limit = <1>;
 > 
-> All it should take is something like:
+> Are any of these qcom,* properties going to change for a particular SoC?
+> They look like SoC config data that should just go into the driver and
+> change based on the SoC compatible string.
 > 
-> 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
-> 		max_oas = 34;
-> 	else
-> 		max_oas = 32;
-> 	if (cfg->oas > max_oas)
-> 		return NULL;
-> 
-> or even just:
-> 
-> 	if (cfg->oas > 32 ||
-> 	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT && cfg->oas > 34))
-> 		return NULL;
-> 
-> (and if we prefer the latter style, perhaps we could introduce some kind of
-> "is_mtk_4gb()" helper to save on verbosity)
 
-I wondered the same thing, but another place we'd want the check is in
-iopte_to_paddr() which probably needs the PHYS_ADDR_T check to avoid GCC
-warnings, although I didn't try it.
+Hello Stephen,
+thanks a lot for your reviews.
 
-So if we did:
+I agree with you, will drop these properties from the dt-binding
+and the driver once I respin the series.
 
-static bool cfg_mtk_ext_enabled(struct io_pgtable_cfg *cfg)
-{
-	return IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
-	       cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT;
-}
+I'm hoping to get the cpufreq part of the patch series merged this
+merge window, so that the patch pile will decrease.
 
-Then I suppose we could do this in _alloc():
 
-	if (cfg->oas > cfg_mtk_ext_enabled(cfg) ? 34 : ARM_V7S_ADDR_BITS)
-		return NULL;
-
-and then this in iopte_to_paddr():
-
-	[...]
-
-	paddr = pte & mask;
-	if (!cfg_mtk_ext_enabled(cfg))
-		return paddr;
-
-	if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-		paddr |= ...
-
-	[...]
-
-What do you reckon?
-
-Will
+Kind regards,
+Niklas
