@@ -1,65 +1,51 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in poll mode
-Date: Fri, 23 Aug 2019 00:15:14 +0300
-Message-ID: <20190822211514.19288-6-olteanv@gmail.com>
-References: <20190822211514.19288-1-olteanv@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190822211514.19288-1-olteanv@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
+Date: Thu, 22 Aug 2019 23:16:01 +0200
+Message-ID: <20190822211601.GF27031@piout.net>
+References: <20190820151934.3860-1-megous@megous.com>
+ <20190820151934.3860-3-megous@megous.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190820151934.3860-3-megous@megous.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: megous@megous.com
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Connected to the LS1021A DSPI is the SJA1105 DSA switch. This
-constitutes 4 of the 6 Ethernet ports on this board.
+On 20/08/2019 17:19:33+0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> RTC on H6 is mostly the same as on H5 and H3. It has slight differences
+> mostly in features that are not yet supported by this driver.
+> 
+> Some differences are already stated in the comments in existing code.
+> One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
+> EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
+> 
+> It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
+> external low speed oscillator is working correctly.
+> 
+> This patch adds support for enabling LOSC when necessary:
+> 
+> - during reparenting
+> - when probing the clock
+> 
+> H6 also has capacbility to automatically reparent RTC clock from
+> external crystal oscillator, to internal RC oscillator, if external
+> oscillator fails. This is enabled by default. Disable it during
+> probe.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
+> 
+Applied, thanks.
 
-As the SJA1105 is a PTP switch, constant disciplining of its PTP clock
-is necessary, and that translates into a lot of SPI I/O even when
-otherwise idle.
-
-Switching to using the DSPI in poll mode has several distinct
-benefits:
-
-- With interrupts, the DSPI driver in TCFQ mode raises an IRQ after each
-  transmitted byte. There is more time wasted for the "waitq" event than
-  for actual I/O. And the DSPI IRQ count is by far the largest in
-  /proc/interrupts on this board (larger than Ethernet). I should
-  mention that due to various LS1021A errata, other operating modes than
-  TCFQ are not available.
-
-- The SPI I/O time is both lower, and more consistently so. For a TSN
-  switch it is important that all SPI transfers take a deterministic
-  time to complete.
-  Reading the PTP clock is an important example.
-  Egressing through the switch requires some setup in advance (an SPI
-  write command). Without this patch, that operation required a
-  --tx_timestamp_timeout 50 (ms), now it can be done with
-  --tx_timestamp_timeout 10.
-  Yet another example is reconstructing timestamps, which has a hard
-  deadline because the PTP timestamping counter wraps around in 0.135
-  seconds. Combined with other I/O needed for that to happen, there is
-  a real risk that the deadline is not always met.
-
-See drivers/net/dsa/sja1105/ for more info about the above.
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- arch/arm/boot/dts/ls1021a-tsn.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-index 5b7689094b70..1c09cfc766af 100644
---- a/arch/arm/boot/dts/ls1021a-tsn.dts
-+++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-@@ -33,6 +33,7 @@
- };
- 
- &dspi0 {
-+	/delete-property/ interrupts;
- 	bus-num = <0>;
- 	status = "okay";
- 
 -- 
-2.17.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
