@@ -1,723 +1,209 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v8 04/14] media: rkisp1: add Rockchip MIPI Synopsys DPHY
- driver
-Date: Thu, 22 Aug 2019 05:32:32 +0300
-Message-ID: <20190822023232.GE17402@pendragon.ideasonboard.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-5-helen.koike@collabora.com>
- <20190807130558.GF822@valkosipuli.retiisi.org.uk>
- <c61498b0-dd4c-53af-db82-169f8dfdc6bd@collabora.com>
- <20190815175440.GW5011@pendragon.ideasonboard.com>
- <28b05c0e-2f68-aecb-536a-c543bcd43de1@collabora.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 2/4] watchdog: Add i.MX7ULP watchdog support
+Date: Thu, 22 Aug 2019 02:44:14 +0000
+Message-ID: <DB3PR0402MB39164B25757FF8718929A3DBF5A50@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1566353278-1884-1-git-send-email-Anson.Huang@nxp.com>
+ <1566353278-1884-2-git-send-email-Anson.Huang@nxp.com>
+ <20190821141355.GA10463@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <28b05c0e-2f68-aecb-536a-c543bcd43de1@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Helen Koike <helen.koike@collabora.com>
-Cc: devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, kernel@collabora.com, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, Sakari Ailus <sakari.ailus@iki.fi>, sakari.ailus@linux.intel.com, zhengsq@rock-chips.com, hans.verkuil@cisco.com, mchehab@kernel.org, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190821141355.GA10463@roeck-us.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "otavio@ossystems.com.br" <otavio@ossystems.com.br>, Leonard Crestez <leonard.crestez@nxp.com>, "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>, "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>, "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>linux-
 List-Id: devicetree@vger.kernel.org
 
-Hi Helen,
-
-On Wed, Aug 21, 2019 at 06:46:15PM -0300, Helen Koike wrote:
-> On 8/15/19 2:54 PM, Laurent Pinchart wrote:
-> > On Wed, Aug 07, 2019 at 10:37:55AM -0300, Helen Koike wrote:
-> >> On 8/7/19 10:05 AM, Sakari Ailus wrote:
-> >>> On Tue, Jul 30, 2019 at 03:42:46PM -0300, Helen Koike wrote:
-> >>>> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> >>>>
-> >>>> This commit adds a subdev driver for Rockchip MIPI Synopsys DPHY driver
-> >>>>
-> >>>> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-> >>>> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> >>>> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> >>>> [migrate to phy framework]
-> >>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> >>>> [update for upstream]
-> >>>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >>>>
-> >>>> ---
-> >>>>
-> >>>> Changes in v8:
-> >>>> - Remove boiler plate license text
-> >>>>
-> >>>> Changes in v7:
-> >>>> - Migrate dphy specific code from
-> >>>> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
-> >>>> to drivers/phy/rockchip/phy-rockchip-dphy.c
-> >>>> - Drop support for rk3288
-> >>>> - Drop support for dphy txrx
-> >>>> - code styling and checkpatch fixes
-> >>>>
-> >>>>  drivers/phy/rockchip/Kconfig             |   8 +
-> >>>>  drivers/phy/rockchip/Makefile            |   1 +
-> >>>>  drivers/phy/rockchip/phy-rockchip-dphy.c | 408 +++++++++++++++++++++++
-> >>>>  3 files changed, 417 insertions(+)
-> >>>>  create mode 100644 drivers/phy/rockchip/phy-rockchip-dphy.c
-> >>>>
-> >>>> diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
-> >>>> index c454c90cd99e..afd072f135e6 100644
-> >>>> --- a/drivers/phy/rockchip/Kconfig
-> >>>> +++ b/drivers/phy/rockchip/Kconfig
-> >>>> @@ -9,6 +9,14 @@ config PHY_ROCKCHIP_DP
-> >>>>  	help
-> >>>>  	  Enable this to support the Rockchip Display Port PHY.
-> >>>>  
-> >>>> +config PHY_ROCKCHIP_DPHY
-> >>>> +	tristate "Rockchip MIPI Synopsys DPHY driver"
-> > 
-> > How much of this PHY is Rockchip-specific ? Would it make sense to turn
-> > it into a Synopsys DPHY driver, with some Rockchip glue ? I suppose this
-> > could always be done later, if needed (and I also suppose there's no
-> > existing driver in drivers/phy/ that support the same Synopsys IP).
-> > 
-> >>>> +	depends on ARCH_ROCKCHIP && OF
-> >>>
-> >>> How about (...) || COMPILE_TEST ?
-> >>>
-> >>>> +	select GENERIC_PHY_MIPI_DPHY
-> >>>> +	select GENERIC_PHY
-> >>>> +	help
-> >>>> +	  Enable this to support the Rockchip MIPI Synopsys DPHY.
-> >>>> +
-> >>>>  config PHY_ROCKCHIP_EMMC
-> >>>>  	tristate "Rockchip EMMC PHY Driver"
-> >>>>  	depends on ARCH_ROCKCHIP && OF
-> >>>> diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
-> >>>> index fd21cbaf40dd..f62e9010bcaf 100644
-> >>>> --- a/drivers/phy/rockchip/Makefile
-> >>>> +++ b/drivers/phy/rockchip/Makefile
-> >>>> @@ -1,5 +1,6 @@
-> >>>>  # SPDX-License-Identifier: GPL-2.0
-> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
-> >>>> +obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy.o
-> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_EMMC)		+= phy-rockchip-emmc.o
-> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
-> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
-> >>>> diff --git a/drivers/phy/rockchip/phy-rockchip-dphy.c b/drivers/phy/rockchip/phy-rockchip-dphy.c
-> >>>> new file mode 100644
-> >>>> index 000000000000..3a29976c2dff
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/phy/rockchip/phy-rockchip-dphy.c
-> >>>> @@ -0,0 +1,408 @@
-> >>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >>>> +/*
-> >>>> + * Rockchip MIPI Synopsys DPHY driver
-> >>>> + *
-> >>>> + * Based on:
-> >>>> + *
-> >>>> + * Copyright (C) 2016 FuZhou Rockchip Co., Ltd.
-> >>>> + * Author: Yakir Yang <ykk@@rock-chips.com>
-> >>>> + */
-> >>>> +
-> >>>> +#include <linux/clk.h>
-> >>>> +#include <linux/io.h>
-> >>>> +#include <linux/mfd/syscon.h>
-> >>>> +#include <linux/module.h>
-> >>>> +#include <linux/of.h>
-> >>>> +#include <linux/of_device.h>
-> >>>> +#include <linux/phy/phy.h>
-> >>>> +#include <linux/phy/phy-mipi-dphy.h>
-> >>>> +#include <linux/platform_device.h>
-> >>>> +#include <linux/regmap.h>
-> >>>> +
-> >>>> +#define RK3399_GRF_SOC_CON9	0x6224
-> >>>> +#define RK3399_GRF_SOC_CON21	0x6254
-> >>>> +#define RK3399_GRF_SOC_CON22	0x6258
-> >>>> +#define RK3399_GRF_SOC_CON23	0x625c
-> >>>> +#define RK3399_GRF_SOC_CON24	0x6260
-> >>>> +#define RK3399_GRF_SOC_CON25	0x6264
-> >>>> +#define RK3399_GRF_SOC_STATUS1	0xe2a4
-> >>>> +
-> >>>> +#define CLOCK_LANE_HS_RX_CONTROL		0x34
-> >>>> +#define LANE0_HS_RX_CONTROL			0x44
-> >>>> +#define LANE1_HS_RX_CONTROL			0x54
-> >>>> +#define LANE2_HS_RX_CONTROL			0x84
-> >>>> +#define LANE3_HS_RX_CONTROL			0x94
-> >>>> +#define HS_RX_DATA_LANES_THS_SETTLE_CONTROL	0x75
-> >>>> +
-> >>>> +#define MAX_DPHY_CLK 8
-> >>>> +
-> >>>> +#define PHY_TESTEN_ADDR			(0x1 << 16)
-> >>>> +#define PHY_TESTEN_DATA			(0x0 << 16)
-> >>>> +#define PHY_TESTCLK			(0x1 << 1)
-> >>>> +#define PHY_TESTCLR			(0x1 << 0)
-> > 
-> > Maybe s/0x// for the previous four lines ?
-> > 
-> >>>> +#define THS_SETTLE_COUNTER_THRESHOLD	0x04
-> >>>> +
-> >>>> +#define HIWORD_UPDATE(val, mask, shift) \
-> >>>> +	((val) << (shift) | (mask) << ((shift) + 16))
-> > 
-> > As you use this in a single place, I would inline it, possibly with a
-> > small comment that explains what's happening.
-> > 
-> >>>> +
-> >>>> +#define GRF_SOC_CON12                           0x0274
-> >>>> +
-> >>>> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(20)
-> >>>> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
-> >>>> +
-> >>>> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
-> >>>> +#define GRF_EDP_PHY_SIDDQ_ON                    0
-> >>>> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
-> > 
-> > I would recommend aligning the value of of all macros in the same way.
-> > 
-> >>>> +
-> >>>> +struct hsfreq_range {
-> >>>> +	u32 range_h;
-> > 
-> > The structure would be more compact if you turned this into a u16.
-> > 
-> >>>> +	u8 cfg_bit;
-> >>>> +};
-> >>>> +
-> >>>> +static const struct hsfreq_range rk3399_mipidphy_hsfreq_ranges[] = {
-> >>>> +	{  89, 0x00}, {  99, 0x10}, { 109, 0x20}, { 129, 0x01},
-> >>>> +	{ 139, 0x11}, { 149, 0x21}, { 169, 0x02}, { 179, 0x12},
-> >>>> +	{ 199, 0x22}, { 219, 0x03}, { 239, 0x13}, { 249, 0x23},
-> >>>> +	{ 269, 0x04}, { 299, 0x14}, { 329, 0x05}, { 359, 0x15},
-> >>>> +	{ 399, 0x25}, { 449, 0x06}, { 499, 0x16}, { 549, 0x07},
-> >>>> +	{ 599, 0x17}, { 649, 0x08}, { 699, 0x18}, { 749, 0x09},
-> >>>> +	{ 799, 0x19}, { 849, 0x29}, { 899, 0x39}, { 949, 0x0a},
-> >>>> +	{ 999, 0x1a}, {1049, 0x2a}, {1099, 0x3a}, {1149, 0x0b},
-> >>>> +	{1199, 0x1b}, {1249, 0x2b}, {1299, 0x3b}, {1349, 0x0c},
-> >>>> +	{1399, 0x1c}, {1449, 0x2c}, {1500, 0x3c}
-> > 
-> > Maybe s/{/{ / and s/}/ }/ to give it a bit more air ? :-)
-> > 
-> >>>> +};
-> >>>> +
-> >>>> +static const char * const rk3399_mipidphy_clks[] = {
-> >>>> +	"dphy-ref",
-> >>>> +	"dphy-cfg",
-> >>>> +	"grf",
-> >>>> +};
-> >>>> +
-> >>>> +enum dphy_reg_id {
-> >>>> +	GRF_DPHY_RX0_TURNDISABLE = 0,
-> >>>> +	GRF_DPHY_RX0_FORCERXMODE,
-> >>>> +	GRF_DPHY_RX0_FORCETXSTOPMODE,
-> >>>> +	GRF_DPHY_RX0_ENABLE,
-> >>>> +	GRF_DPHY_RX0_TESTCLR,
-> >>>> +	GRF_DPHY_RX0_TESTCLK,
-> >>>> +	GRF_DPHY_RX0_TESTEN,
-> >>>> +	GRF_DPHY_RX0_TESTDIN,
-> >>>> +	GRF_DPHY_RX0_TURNREQUEST,
-> >>>> +	GRF_DPHY_RX0_TESTDOUT,
-> >>>> +	GRF_DPHY_TX0_TURNDISABLE,
-> >>>> +	GRF_DPHY_TX0_FORCERXMODE,
-> >>>> +	GRF_DPHY_TX0_FORCETXSTOPMODE,
-> >>>> +	GRF_DPHY_TX0_TURNREQUEST,
-> >>>> +	GRF_DPHY_TX1RX1_TURNDISABLE,
-> >>>> +	GRF_DPHY_TX1RX1_FORCERXMODE,
-> >>>> +	GRF_DPHY_TX1RX1_FORCETXSTOPMODE,
-> >>>> +	GRF_DPHY_TX1RX1_ENABLE,
-> >>>> +	GRF_DPHY_TX1RX1_MASTERSLAVEZ,
-> >>>> +	GRF_DPHY_TX1RX1_BASEDIR,
-> >>>> +	GRF_DPHY_TX1RX1_ENABLECLK,
-> >>>> +	GRF_DPHY_TX1RX1_TURNREQUEST,
-> >>>> +	GRF_DPHY_RX1_SRC_SEL,
-> >>>> +	/* rk3288 only */
-> >>>> +	GRF_CON_DISABLE_ISP,
-> >>>> +	GRF_CON_ISP_DPHY_SEL,
-> >>>> +	GRF_DSI_CSI_TESTBUS_SEL,
-> >>>> +	GRF_DVP_V18SEL,
-> >>>> +	/* below is for rk3399 only */
-> >>>> +	GRF_DPHY_RX0_CLK_INV_SEL,
-> >>>> +	GRF_DPHY_RX1_CLK_INV_SEL,
-> >>>> +};
-> >>>> +
-> >>>> +struct dphy_reg {
-> >>>> +	u32 offset;
-> >>>> +	u32 mask;
-> >>>> +	u32 shift;
-> > 
-> > The offset should hold in 16 bits and the mask and shift in 8 bits. That
-> > would save space in the table below.
-> > 
-> >>>> +};
-> >>>> +
-> >>>> +#define PHY_REG(_offset, _width, _shift) \
-> >>>> +	{ .offset = _offset, .mask = BIT(_width) - 1, .shift = _shift, }
-> >>>> +
-> >>>> +static const struct dphy_reg rk3399_grf_dphy_regs[] = {
-> >>>> +	[GRF_DPHY_RX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON9, 4, 0),
-> >>>> +	[GRF_DPHY_RX0_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 10),
-> >>>> +	[GRF_DPHY_RX1_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 11),
-> >>>> +	[GRF_DPHY_RX0_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 0),
-> >>>> +	[GRF_DPHY_RX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 4),
-> >>>> +	[GRF_DPHY_RX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 8),
-> >>>> +	[GRF_DPHY_RX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 12),
-> >>>> +	[GRF_DPHY_TX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 0),
-> >>>> +	[GRF_DPHY_TX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 4),
-> >>>> +	[GRF_DPHY_TX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 8),
-> >>>> +	[GRF_DPHY_TX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 12),
-> >>>> +	[GRF_DPHY_TX1RX1_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 0),
-> >>>> +	[GRF_DPHY_TX1RX1_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 4),
-> >>>> +	[GRF_DPHY_TX1RX1_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 8),
-> >>>> +	[GRF_DPHY_TX1RX1_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 12),
-> >>>> +	[GRF_DPHY_TX1RX1_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON24, 4, 0),
-> >>>> +	[GRF_DPHY_RX1_SRC_SEL] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 4),
-> >>>> +	[GRF_DPHY_TX1RX1_BASEDIR] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 5),
-> >>>> +	[GRF_DPHY_TX1RX1_ENABLECLK] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 6),
-> >>>> +	[GRF_DPHY_TX1RX1_MASTERSLAVEZ] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 7),
-> >>>> +	[GRF_DPHY_RX0_TESTDIN] = PHY_REG(RK3399_GRF_SOC_CON25, 8, 0),
-> >>>> +	[GRF_DPHY_RX0_TESTEN] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 8),
-> >>>> +	[GRF_DPHY_RX0_TESTCLK] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 9),
-> >>>> +	[GRF_DPHY_RX0_TESTCLR] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 10),
-> >>>> +	[GRF_DPHY_RX0_TESTDOUT] = PHY_REG(RK3399_GRF_SOC_STATUS1, 8, 0),
-> > 
-> > The annoying part with such an indirection is that you can't really
-> > write multiple fields in a single register with a single operation.
-> > Is the register mapping completely different between the rk3288 and the
-> > rk3399, or are the fields grouped in registers in a similar way ? In the
-> > latter case we could possibly optimise it.
-> 
-> This would be the rk3288 version:
-> 
-> +static const struct dphy_reg rk3288_grf_dphy_regs[] = {
-> +	[GRF_CON_DISABLE_ISP] = PHY_REG(RK3288_GRF_SOC_CON6, 1, 0),
-> +	[GRF_CON_ISP_DPHY_SEL] = PHY_REG(RK3288_GRF_SOC_CON6, 1, 1),
-> +	[GRF_DSI_CSI_TESTBUS_SEL] = PHY_REG(RK3288_GRF_SOC_CON6, 1, 14),
-> +	[GRF_DPHY_TX0_TURNDISABLE] = PHY_REG(RK3288_GRF_SOC_CON8, 4, 0),
-> +	[GRF_DPHY_TX0_FORCERXMODE] = PHY_REG(RK3288_GRF_SOC_CON8, 4, 4),
-> +	[GRF_DPHY_TX0_FORCETXSTOPMODE] = PHY_REG(RK3288_GRF_SOC_CON8, 4, 8),
-> +	[GRF_DPHY_TX1RX1_TURNDISABLE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 0),
-> +	[GRF_DPHY_TX1RX1_FORCERXMODE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 4),
-> +	[GRF_DPHY_TX1RX1_FORCETXSTOPMODE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 8),
-> +	[GRF_DPHY_TX1RX1_ENABLE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 12),
-> +	[GRF_DPHY_RX0_TURNDISABLE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 0),
-> +	[GRF_DPHY_RX0_FORCERXMODE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 4),
-> +	[GRF_DPHY_RX0_FORCETXSTOPMODE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 8),
-> +	[GRF_DPHY_RX0_ENABLE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 12),
-> +	[GRF_DPHY_RX0_TESTCLR] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 0),
-> +	[GRF_DPHY_RX0_TESTCLK] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 1),
-> +	[GRF_DPHY_RX0_TESTEN] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 2),
-> +	[GRF_DPHY_RX0_TESTDIN] = PHY_REG(RK3288_GRF_SOC_CON14, 8, 3),
-> +	[GRF_DPHY_TX1RX1_ENABLECLK] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 12),
-> +	[GRF_DPHY_RX1_SRC_SEL] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 13),
-> +	[GRF_DPHY_TX1RX1_MASTERSLAVEZ] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 14),
-> +	[GRF_DPHY_TX1RX1_BASEDIR] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 15),
-> +	[GRF_DPHY_RX0_TURNREQUEST] = PHY_REG(RK3288_GRF_SOC_CON15, 4, 0),
-> +	[GRF_DPHY_TX1RX1_TURNREQUEST] = PHY_REG(RK3288_GRF_SOC_CON15, 4, 4),
-> +	[GRF_DPHY_TX0_TURNREQUEST] = PHY_REG(RK3288_GRF_SOC_CON15, 3, 8),
-> +	[GRF_DVP_V18SEL] = PHY_REG(RK3288_GRF_IO_VSEL, 1, 1),
-> +	[GRF_DPHY_RX0_TESTDOUT] = PHY_REG(RK3288_GRF_SOC_STATUS21, 8, 0),
-> +};
-> 
-> Which seems different mask and shifts from rk3399. If you have any ideas in
-> how to optimize this I would appreciate it.
-
-It would be tricky indeed :-( Nevermind for now.
-
-> >>>> +};
-> >>>> +
-> >>>> +struct dphy_drv_data {
-> >>>> +	const char * const *clks;
-> >>>> +	int num_clks;
-> > 
-> > This is never negative, you can make it an unsigned int.
-> > 
-> >>>> +	const struct hsfreq_range *hsfreq_ranges;
-> >>>> +	int num_hsfreq_ranges;
-> > 
-> > Same here.
-> > 
-> >>>> +	const struct dphy_reg *regs;
-> >>>> +};
-> >>>> +
-> >>>> +struct rockchip_dphy {
-> >>>> +	struct device *dev;
-> >>>> +	struct regmap *grf;
-> >>>> +	const struct dphy_reg *grf_regs;
-> >>>> +	struct clk_bulk_data clks[MAX_DPHY_CLK];
-> >>>> +
-> >>>> +	const struct dphy_drv_data *drv_data;
-> >>>> +	struct phy_configure_opts_mipi_dphy config;
-> >>>> +};
-> >>>> +
-> >>>> +static inline void write_grf_reg(struct rockchip_dphy *priv,
-> >>>> +				 int index, u8 value)
-> > 
-> > Maybe unsigned int index ?
-> > 
-> >>>> +{
-> >>>> +	const struct dphy_reg *reg = &priv->grf_regs[index];
-> >>>> +	unsigned int val = HIWORD_UPDATE(value, reg->mask, reg->shift);
-> >>>> +
-> >>>> +	WARN_ON(!reg->offset);
-> >>>> +	regmap_write(priv->grf, reg->offset, val);
-> >>>> +}
-> >>>> +
-> >>>> +static void mipidphy0_wr_reg(struct rockchip_dphy *priv,
-> >>>> +			     u8 test_code, u8 test_data)
-> > 
-> > Function (and structure) names have different prefixes, would it make
-> > sense to standardise them ? Maybe rockchip_dphy_ ? Or rk_dphy_ for a
-> > shorter version ? This could become rk_dphy_write_dphy(), and the
-> > previous function rk_dphy_write_grf().
-> > 
-> >>>> +{
-> >>>> +	/*
-> >>>> +	 * With the falling edge on TESTCLK, the TESTDIN[7:0] signal content
-> >>>> +	 * is latched internally as the current test code. Test data is
-> >>>> +	 * programmed internally by rising edge on TESTCLK.
-> >>>> +	 */
-> > 
-> > I've never understood why PHYs tend to have a register named TEST that
-> > contains way more than test data :-)
-> > 
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTDIN, test_code);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTEN, 1);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 0);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTEN, 0);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTDIN, test_data);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
-> >>>> +}
-> >>>> +
-> >>>> +/* should be move to power_on */
-> > 
-> > s/move/moved/
-> > 
-> > Do you mean merging the two functions together ? What prevents from
-> > doing so ? 
-> 
-> Nothing really, this is a left over command as mipidphy_rx_stream_on() is already
-> being called from power_on, and I don't think we should merge it because
-> in the future we'll probably going to have mipidphy_txrx_stream_on() for dphy1.
-
-Fine with me, let's just remove the comment then.
-
-> >>>> +static int mipidphy_rx_stream_on(struct rockchip_dphy *priv)
-> >>>> +{
-> >>>> +	const struct dphy_drv_data *drv_data = priv->drv_data;
-> >>>> +	const struct hsfreq_range *hsfreq_ranges = drv_data->hsfreq_ranges;
-> >>>> +	struct phy_configure_opts_mipi_dphy *config = &priv->config;
-> >>>> +	unsigned int i, hsfreq = 0, data_rate_mbps = config->hs_clk_rate;
-> >>>> +	int num_hsfreq_ranges = drv_data->num_hsfreq_ranges;
-> >>>> +
-> >>>> +	do_div(data_rate_mbps, 1000 * 1000);
-> >>>> +
-> >>>> +	dev_dbg(priv->dev, "%s: lanes %d - data_rate_mbps %u\n",
-> >>>> +		__func__, config->lanes, data_rate_mbps);
-> >>>> +
-> >>>> +	for (i = 0; i < num_hsfreq_ranges; i++) {
-> >>>> +		if (hsfreq_ranges[i].range_h >= data_rate_mbps) {
-> >>>> +			hsfreq = hsfreq_ranges[i].cfg_bit;
-> >>>> +			break;
-> >>>> +		}
-> >>>> +	}
-> > 
-> > As num_hsfreq_ranges and hsfreq_ranges are only used in this loop, I
-> > would remove the local variables.
-> > 
-> >>>> +
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_FORCERXMODE, 0);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_FORCETXSTOPMODE, 0);
-> >>>> +
-> >>>> +	/* Disable lan turn around, which is ignored in receive mode */
-> > 
-> > Is it "lan turn around", or "lane turn around" ?
-> > 
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TURNREQUEST, 0);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TURNDISABLE, 0xf);
-> >>>> +
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_ENABLE, GENMASK(config->lanes - 1, 0));
-> >>>> +
-> >>>> +	/* dphy start */
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLR, 1);
-> >>>> +	usleep_range(100, 150);
-> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLR, 0);
-> >>>> +	usleep_range(100, 150);
-> >>>> +
-> >>>> +	/* set clock lane */
-> >>>> +	/* HS hsfreq_range & lane 0  settle bypass */
-> >>>> +	mipidphy0_wr_reg(priv, CLOCK_LANE_HS_RX_CONTROL, 0);
-> >>>> +	/* HS RX Control of lane0 */
-> >>>> +	mipidphy0_wr_reg(priv, LANE0_HS_RX_CONTROL, hsfreq << 1);
-> >>>> +	/* HS RX Control of lane1 */
-> >>>> +	mipidphy0_wr_reg(priv, LANE1_HS_RX_CONTROL, 0);
-> >>>> +	/* HS RX Control of lane2 */
-> >>>> +	mipidphy0_wr_reg(priv, LANE2_HS_RX_CONTROL, 0);
-> >>>> +	/* HS RX Control of lane3 */
-> >>>> +	mipidphy0_wr_reg(priv, LANE3_HS_RX_CONTROL, 0);
-> > 
-> > Does this hardcode usage of a single lane ?
-> 
-> Rockchip seems to uses TEST* registers to set the hsfreqrange.
-> It mentions the test code 0x44 (which is LANE0_HS_RX_CONTROL)
-> but it doesn't mention the others lanes.
-> 
-> Replacing those call by
-> mipidphy0_wr_reg(priv, LANEx_HS_RX_CONTROL, hsfreq << 1);
-> seems to be working.
-> 
-> I can check if this changes the datarate (I just need to figure a proper
-> way to test this or get some docs).
-> 
-> Thanks for spotting this.
-
-We've discussed this on IRC, it's not clear if the above code is
-incorrect or not. Let's add this to a list of open issues.
-
-> >>>> +	/* HS RX Data Lanes Settle State Time Control */
-> >>>> +	mipidphy0_wr_reg(priv, HS_RX_DATA_LANES_THS_SETTLE_CONTROL,
-> >>>> +			 THS_SETTLE_COUNTER_THRESHOLD);
-> >>>> +
-> >>>> +	/* Normal operation */
-> >>>> +	mipidphy0_wr_reg(priv, 0x0, 0);
-> >>>> +
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int rockchip_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-> >>>> +{
-> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	/* pass with phy_mipi_dphy_get_default_config (with pixel rate?) */
-> > 
-> > I'm not sure to understand what this means.
-> 
-> iirc, the question is if we should fail when phy_mipi_dphy_config_validate() fails,
-> or if we should use a default config.
-> 
-> Looking at other examples, is seems that only two drivers call
-> phy_mipi_dphy_get_default_config() in a totally diferent context, not in mipi path.
-> So I guess I would just remove this comment if this is ok with you.
-
-OK.
-
-> >>>> +	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
-> >>>> +	if (ret)
-> >>>> +		return ret;
-> >>>> +
-> >>>> +	memcpy(&priv->config, opts, sizeof(priv->config));
-> >>>
-> >>> You could to:
-> >>>
-> >>> 	priv->config = *opts;
-> >>>
-> >>> Up to you. Some people like memcpy(). :-)
-> >>
-> >> your way is better thanks!
-> >>
-> >>>> +
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int rockchip_dphy_power_on(struct phy *phy)
-> >>>> +{
-> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	ret = clk_bulk_enable(priv->drv_data->num_clks, priv->clks);
-> >>>> +	if (ret)
-> >>>> +		return ret;
-> >>>> +
-> >>>> +	return mipidphy_rx_stream_on(priv);
-> > 
-> > Should you call clk_bulk_disable() if mipidphy_rx_stream_on() fails ?
-> > Actually that function never fails, so I'd make it a void function, and
-> > return 0 here.
-> 
-> Ack, I made it void, I'll send it in the next version.
-> 
-> > What happens if the clock rate is higher than the maximum supported by
-> > the PHY ? Shouldn't rockchip_dphy_configure() fail in that case ?
-> 
-> This is checked in function mipidphy_rx_stream_on(), if it is higher we just
-> configure the maximum supported rate. Is this ok?
-
-I think it would be better to reject that in rockchip_dphy_configure()
-in order to let the user of the PHY handle the error as early as
-possible.
-
-> >>>> +}
-> >>>> +
-> >>>> +static int rockchip_dphy_power_off(struct phy *phy)
-> >>>> +{
-> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-> >>>> +
-> > 
-> > No need to write any register ? That's scary, what will happen on the
-> > next power on, when the clocks gets enabled ?
-> 
-> Just for testing, I hacked the code to only call mipidphy_rx_stream_on() once,
-> when streaming for the first time, then I don't call it anymore and starting/stopping
-> streaming always works, so I guess it keeps the previous configuration when clocks
-> get enabled.
-> I wonder if this can be a problem when switching from dphy rx to txrx, but for now
-> we just support rx.
-> 
-> Maybe just calling rk_dphy_write_grf(priv, GRF_DPHY_RX0_ENABLE, 0) is enough.
-
-If that works with disable/enable sequences I think it would be good to
-include it.
-
-> >>>> +	clk_bulk_disable(priv->drv_data->num_clks, priv->clks);
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int rockchip_dphy_init(struct phy *phy)
-> >>>> +{
-> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	ret = clk_bulk_prepare(priv->drv_data->num_clks, priv->clks);
-> >>>
-> >>> return ...;
-> >>>
-> >>>> +	if (ret)
-> >>>> +		return ret;
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int rockchip_dphy_exit(struct phy *phy)
-> >>>> +{
-> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
-> >>>> +
-> >>>> +	clk_bulk_unprepare(priv->drv_data->num_clks, priv->clks);
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static const struct phy_ops rockchip_dphy_ops = {
-> >>>> +	.power_on	= rockchip_dphy_power_on,
-> >>>> +	.power_off	= rockchip_dphy_power_off,
-> >>>> +	.init		= rockchip_dphy_init,
-> >>>> +	.exit		= rockchip_dphy_exit,
-> >>>> +	.configure	= rockchip_dphy_configure,
-> >>>> +	.owner		= THIS_MODULE,
-> >>>> +};
-> >>>> +
-> >>>> +static const struct dphy_drv_data rk3399_mipidphy_drv_data = {
-> >>>> +	.clks = rk3399_mipidphy_clks,
-> >>>> +	.num_clks = ARRAY_SIZE(rk3399_mipidphy_clks),
-> >>>> +	.hsfreq_ranges = rk3399_mipidphy_hsfreq_ranges,
-> >>>> +	.num_hsfreq_ranges = ARRAY_SIZE(rk3399_mipidphy_hsfreq_ranges),
-> >>>> +	.regs = rk3399_grf_dphy_regs,
-> >>>
-> >>> Do you expect to support more of the similar PHY(s) --- are there such? If
-> >>> not, you could put these in the code that uses them.
-> >>
-> >> Yes, for rk3288 in the future.
-> >>
-> >>>> +};
-> >>>> +
-> >>>> +static const struct of_device_id rockchip_dphy_dt_ids[] = {
-> >>>> +	{
-> >>>> +		.compatible = "rockchip,rk3399-mipi-dphy",
-> >>>> +		.data = &rk3399_mipidphy_drv_data,
-> >>>> +	},
-> >>>> +	{}
-> >>>> +};
-> >>>> +MODULE_DEVICE_TABLE(of, rockchip_dphy_dt_ids);
-> >>>> +
-> >>>> +static int rockchip_dphy_probe(struct platform_device *pdev)
-> >>>> +{
-> >>>> +	struct device *dev = &pdev->dev;
-> >>>> +	struct device_node *np = dev->of_node;
-> >>>> +	const struct dphy_drv_data *drv_data;
-> >>>> +	struct phy_provider *phy_provider;
-> >>>> +	const struct of_device_id *of_id;
-> >>>> +	struct rockchip_dphy *priv;
-> >>>> +	struct regmap *grf;
-> >>>> +	struct phy *phy;
-> >>>> +	unsigned int i;
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	if (!dev->parent || !dev->parent->of_node)
-> >>>> +		return -ENODEV;
-> >>>> +
-> >>>> +	if (platform_get_resource(pdev, IORESOURCE_MEM, 0)) {
-> >>>> +		dev_err(&pdev->dev, "Rockchip DPHY driver only suports rx\n");
-> > 
-> > You can replace pdev->dev with dev here and below.
-> > 
-> > s/rx/RX mode/ ?
-> > 
-> >>>> +		return -EINVAL;
-> >>>> +	}
-> >>>> +
-> >>>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >>>> +	if (!priv)
-> >>>> +		return -ENOMEM;
-> >>>> +	priv->dev = dev;
-> >>>> +
-> >>>> +	grf = syscon_node_to_regmap(dev->parent->of_node);
-> >>>> +	if (IS_ERR(grf)) {
-> >>>> +		grf = syscon_regmap_lookup_by_phandle(dev->of_node,
-> >>>> +						      "rockchip,grf");
-> >>>> +		if (IS_ERR(grf)) {
-> >>>> +			dev_err(dev, "Can't find GRF syscon\n");
-> >>>> +			return -ENODEV;
-> >>>> +		}
-> >>>> +	}
-> >>>> +	priv->grf = grf;
-> >>>> +
-> >>>> +	of_id = of_match_device(rockchip_dphy_dt_ids, dev);
-> >>>> +	if (!of_id)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	drv_data = of_id->data;
-> >>>> +	priv->grf_regs = drv_data->regs;
-> > 
-> > Do you have to store grf_regs in priv, or could it be accessed through
-> > priv->drv_data->regs ?
-> > 
-> >>>> +	priv->drv_data = drv_data;
-> >>>> +	for (i = 0; i < drv_data->num_clks; i++)
-> >>>> +		priv->clks[i].id = drv_data->clks[i];
-> >>>> +	ret = devm_clk_bulk_get(&pdev->dev, drv_data->num_clks, priv->clks);
-> >>>> +	if (ret)
-> >>>> +		return ret;
-> >>>> +
-> >>>> +	phy = devm_phy_create(dev, np, &rockchip_dphy_ops);
-> >>>> +	if (IS_ERR(phy)) {
-> >>>> +		dev_err(dev, "failed to create phy\n");
-> >>>> +		return PTR_ERR(phy);
-> >>>> +	}
-> >>>> +	phy_set_drvdata(phy, priv);
-> >>>> +
-> >>>> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> >>>> +
-> >>>> +	return PTR_ERR_OR_ZERO(phy_provider);
-> >>>> +}
-> >>>> +
-> >>>> +static struct platform_driver rockchip_dphy_driver = {
-> >>>> +	.probe = rockchip_dphy_probe,
-> >>>> +	.driver = {
-> >>>> +		.name	= "rockchip-mipi-dphy",
-> >>>> +		.of_match_table = rockchip_dphy_dt_ids,
-> >>>> +	},
-> >>>> +};
-> >>>> +module_platform_driver(rockchip_dphy_driver);
-> >>>> +
-> >>>> +MODULE_AUTHOR("Ezequiel Garcia <ezequiel@collabora.com>");
-> >>>> +MODULE_DESCRIPTION("Rockchip MIPI Synopsys DPHY driver");
-> >>>> +MODULE_LICENSE("Dual MIT/GPL");
-> > 
-> > Overall this is quite good, there are only small issues.
-> 
-> Thank you a lot for your review
-
--- 
-Regards,
-
-Laurent Pinchart
+SGksIEd1ZW50ZXINCg0KPiBPbiBUdWUsIEF1ZyAyMCwgMjAxOSBhdCAxMDowNzo1NlBNIC0wNDAw
+LCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBUaGUgaS5NWDdVTFAgV2F0Y2hkb2cgVGltZXIgKFdE
+T0cpIG1vZHVsZSBpcyBhbiBpbmRlcGVuZGVudCB0aW1lcg0KPiB0aGF0DQo+ID4gaXMgYXZhaWxh
+YmxlIGZvciBzeXN0ZW0gdXNlLg0KPiA+IEl0IHByb3ZpZGVzIGEgc2FmZXR5IGZlYXR1cmUgdG8g
+ZW5zdXJlIHRoYXQgc29mdHdhcmUgaXMgZXhlY3V0aW5nIGFzDQo+ID4gcGxhbm5lZCBhbmQgdGhh
+dCB0aGUgQ1BVIGlzIG5vdCBzdHVjayBpbiBhbiBpbmZpbml0ZSBsb29wIG9yIGV4ZWN1dGluZw0K
+PiA+IHVuaW50ZW5kZWQgY29kZS4gSWYgdGhlIFdET0cgbW9kdWxlIGlzIG5vdCBzZXJ2aWNlZA0K
+PiA+IChyZWZyZXNoZWQpIHdpdGhpbiBhIGNlcnRhaW4gcGVyaW9kLCBpdCByZXNldHMgdGhlIE1D
+VS4NCj4gPg0KPiA+IEFkZCBkcml2ZXIgc3VwcG9ydCBmb3IgaS5NWDdVTFAgd2F0Y2hkb2cuDQo+
+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4N
+Cj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYyOg0KPiA+IAktIGFkZCBkZXZtX2FkZF9hY3Rp
+b25fb3JfcmVzZXQgdG8gZGlzYWJsZSBjbGsgZm9yIHJlbW92ZSBhY3Rpb24uDQo+ID4gLS0tDQo+
+ID4gIGRyaXZlcnMvd2F0Y2hkb2cvS2NvbmZpZyAgICAgICB8ICAxMyArKysNCj4gPiAgZHJpdmVy
+cy93YXRjaGRvZy9NYWtlZmlsZSAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVycy93YXRjaGRvZy9p
+bXg3dWxwX3dkdC5jIHwgMjQ2DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAyNjAgaW5zZXJ0aW9ucygrKQ0KPiA+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy93YXRjaGRvZy9pbXg3dWxwX3dkdC5jDQo+ID4NCj4g
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9LY29uZmlnIGIvZHJpdmVycy93YXRjaGRv
+Zy9LY29uZmlnIGluZGV4DQo+ID4gYThmNWM4MS4uZDY4ZTViNSAxMDA2NDQNCj4gPiAtLS0gYS9k
+cml2ZXJzL3dhdGNoZG9nL0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL3dhdGNoZG9nL0tjb25m
+aWcNCj4gPiBAQCAtNzI0LDYgKzcyNCwxOSBAQCBjb25maWcgSU1YX1NDX1dEVA0KPiA+ICAJICBU
+byBjb21waWxlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBoZXJlOiB0aGUNCj4g
+PiAgCSAgbW9kdWxlIHdpbGwgYmUgY2FsbGVkIGlteF9zY193ZHQuDQo+ID4NCj4gPiArY29uZmln
+IElNWDdVTFBfV0RUDQo+ID4gKwl0cmlzdGF0ZSAiSU1YN1VMUCBXYXRjaGRvZyINCj4gPiArCWRl
+cGVuZHMgb24gQVJDSF9NWEMgfHwgQ09NUElMRV9URVNUDQo+ID4gKwlzZWxlY3QgV0FUQ0hET0df
+Q09SRQ0KPiA+ICsJaGVscA0KPiA+ICsJICBUaGlzIGlzIHRoZSBkcml2ZXIgZm9yIHRoZSBoYXJk
+d2FyZSB3YXRjaGRvZyBvbiB0aGUgRnJlZXNjYWxlDQo+ID4gKwkgIElNWDdVTFAgYW5kIGxhdGVy
+IHByb2Nlc3NvcnMuIElmIHlvdSBoYXZlIG9uZSBvZiB0aGVzZQ0KPiA+ICsJICBwcm9jZXNzb3Jz
+IGFuZCB3aXNoIHRvIGhhdmUgd2F0Y2hkb2cgc3VwcG9ydCBlbmFibGVkLA0KPiA+ICsJICBzYXkg
+WSwgb3RoZXJ3aXNlIHNheSBOLg0KPiA+ICsNCj4gPiArCSAgVG8gY29tcGlsZSB0aGlzIGRyaXZl
+ciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlDQo+ID4gKwkgIG1vZHVsZSB3aWxsIGJl
+IGNhbGxlZCBpbXg3dWxwX3dkdC4NCj4gPiArDQo+ID4gIGNvbmZpZyBVWDUwMF9XQVRDSERPRw0K
+PiA+ICAJdHJpc3RhdGUgIlNULUVyaWNzc29uIFV4NTAwIHdhdGNoZG9nIg0KPiA+ICAJZGVwZW5k
+cyBvbiBNRkRfREI4NTAwX1BSQ01VDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cv
+TWFrZWZpbGUgYi9kcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlDQo+ID4gaW5kZXggYjVhMGFlZC4u
+MmVlMzUyYiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL01ha2VmaWxlDQo+ID4g
+KysrIGIvZHJpdmVycy93YXRjaGRvZy9NYWtlZmlsZQ0KPiA+IEBAIC02Nyw2ICs2Nyw3IEBAIG9i
+ai0kKENPTkZJR19UUzQ4MDBfV0FUQ0hET0cpICs9IHRzNDgwMF93ZHQubw0KPiA+ICBvYmotJChD
+T05GSUdfVFM3MlhYX1dBVENIRE9HKSArPSB0czcyeHhfd2R0Lm8NCj4gPiAgb2JqLSQoQ09ORklH
+X0lNWDJfV0RUKSArPSBpbXgyX3dkdC5vDQo+ID4gIG9iai0kKENPTkZJR19JTVhfU0NfV0RUKSAr
+PSBpbXhfc2Nfd2R0Lm8NCj4gPiArb2JqLSQoQ09ORklHX0lNWDdVTFBfV0RUKSArPSBpbXg3dWxw
+X3dkdC5vDQo+ID4gIG9iai0kKENPTkZJR19VWDUwMF9XQVRDSERPRykgKz0gdXg1MDBfd2R0Lm8N
+Cj4gPiAgb2JqLSQoQ09ORklHX1JFVFVfV0FUQ0hET0cpICs9IHJldHVfd2R0Lm8NCj4gPiAgb2Jq
+LSQoQ09ORklHX0JDTTI4MzVfV0RUKSArPSBiY20yODM1X3dkdC5vIGRpZmYgLS1naXQNCj4gPiBh
+L2RyaXZlcnMvd2F0Y2hkb2cvaW14N3VscF93ZHQuYyBiL2RyaXZlcnMvd2F0Y2hkb2cvaW14N3Vs
+cF93ZHQuYw0KPiBuZXcNCj4gPiBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLjVkMzc5
+NTcNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy93YXRjaGRvZy9pbXg3dWxw
+X3dkdC5jDQo+ID4gQEAgLTAsMCArMSwyNDYgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IEdQTC0yLjANCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0IDIwMTkgTlhQLg0KPiA+
+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gPiArI2luY2x1ZGUg
+PGxpbnV4L2luaXQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gKyNpbmNsdWRl
+IDxsaW51eC9rZXJuZWwuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICsj
+aW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2Rldmlj
+ZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVib290Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51
+eC93YXRjaGRvZy5oPg0KPiA+ICsNCj4gPiArI2RlZmluZSBXRE9HX0NTCQkJMHgwDQo+ID4gKyNk
+ZWZpbmUgV0RPR19DU19DTUQzMkVOCQlCSVQoMTMpDQo+ID4gKyNkZWZpbmUgV0RPR19DU19VTEsJ
+CUJJVCgxMSkNCj4gPiArI2RlZmluZSBXRE9HX0NTX1JDUwkJQklUKDEwKQ0KPiA+ICsjZGVmaW5l
+IFdET0dfQ1NfRU4JCUJJVCg3KQ0KPiA+ICsjZGVmaW5lIFdET0dfQ1NfVVBEQVRFCQlCSVQoNSkN
+Cj4gPiArDQo+ID4gKyNkZWZpbmUgV0RPR19DTlQJMHg0DQo+ID4gKyNkZWZpbmUgV0RPR19UT1ZB
+TAkweDgNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVGUkVTSF9TRVEwCTB4QTYwMg0KPiA+ICsjZGVm
+aW5lIFJFRlJFU0hfU0VRMQkweEI0ODANCj4gPiArI2RlZmluZSBSRUZSRVNICQkoKFJFRlJFU0hf
+U0VRMSA8PCAxNikgfCBSRUZSRVNIX1NFUTApDQo+ID4gKw0KPiA+ICsjZGVmaW5lIFVOTE9DS19T
+RVEwCTB4QzUyMA0KPiA+ICsjZGVmaW5lIFVOTE9DS19TRVExCTB4RDkyOA0KPiA+ICsjZGVmaW5l
+IFVOTE9DSwkJKChVTkxPQ0tfU0VRMSA8PCAxNikgfCBVTkxPQ0tfU0VRMCkNCj4gPiArDQo+ID4g
+KyNkZWZpbmUgREVGQVVMVF9USU1FT1VUCTYwDQo+ID4gKyNkZWZpbmUgTUFYX1RJTUVPVVQJMTI4
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgYm9vbCBub3dheW91dCA9IFdBVENIRE9HX05PV0FZT1VUOw0K
+PiBtb2R1bGVfcGFyYW0obm93YXlvdXQsDQo+ID4gK2Jvb2wsIDAwMDApOyBNT0RVTEVfUEFSTV9E
+RVNDKG5vd2F5b3V0LCAiV2F0Y2hkb2cgY2Fubm90IGJlDQo+IHN0b3BwZWQNCj4gPiArb25jZSBz
+dGFydGVkIChkZWZhdWx0PSINCj4gPiArCQkgX19NT0RVTEVfU1RSSU5HKFdBVENIRE9HX05PV0FZ
+T1VUKSAiKSIpOw0KPiA+ICsNCj4gPiArc3RydWN0IGlteDd1bHBfd2R0X2RldmljZSB7DQo+ID4g
+KwlzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgcmVzdGFydF9oYW5kbGVyOw0KPiA+ICsJc3RydWN0IHdh
+dGNoZG9nX2RldmljZSB3ZGQ7DQo+ID4gKwl2b2lkIF9faW9tZW0gKmJhc2U7DQo+ID4gKwlzdHJ1
+Y3QgY2xrICpjbGs7DQo+ID4gKwlpbnQgcmF0ZTsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRp
+YyBpbmxpbmUgdm9pZCBpbXg3dWxwX3dkdF9lbmFibGUodm9pZCBfX2lvbWVtICpiYXNlLCBib29s
+DQo+ID4gK2VuYWJsZSkgew0KPiA+ICsJdTMyIHZhbCA9IHJlYWRsKGJhc2UgKyBXRE9HX0NTKTsN
+Cj4gPiArDQo+ID4gKwl3cml0ZWwoVU5MT0NLLCBiYXNlICsgV0RPR19DTlQpOw0KPiA+ICsJaWYg
+KGVuYWJsZSkNCj4gPiArCQl3cml0ZWwodmFsIHwgV0RPR19DU19FTiwgYmFzZSArIFdET0dfQ1Mp
+Ow0KPiA+ICsJZWxzZQ0KPiA+ICsJCXdyaXRlbCh2YWwgJiB+V0RPR19DU19FTiwgYmFzZSArIFdE
+T0dfQ1MpOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW5saW5lIGJvb2wgaW14N3VscF93ZHRfaXNf
+ZW5hYmxlZCh2b2lkIF9faW9tZW0gKmJhc2UpIHsNCj4gPiArCXUzMiB2YWwgPSByZWFkbChiYXNl
+ICsgV0RPR19DUyk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHZhbCAmIFdET0dfQ1NfRU47DQo+ID4g
+K30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaW14N3VscF93ZHRfcGluZyhzdHJ1Y3Qgd2F0Y2hk
+b2dfZGV2aWNlICp3ZG9nKSB7DQo+ID4gKwlzdHJ1Y3QgaW14N3VscF93ZHRfZGV2aWNlICp3ZHQg
+PSB3YXRjaGRvZ19nZXRfZHJ2ZGF0YSh3ZG9nKTsNCj4gPiArDQo+ID4gKwl3cml0ZWwoUkVGUkVT
+SCwgd2R0LT5iYXNlICsgV0RPR19DTlQpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGlteDd1bHBfd2R0X3N0YXJ0KHN0cnVjdCB3YXRjaGRv
+Z19kZXZpY2UgKndkb2cpIHsNCj4gPiArCXN0cnVjdCBpbXg3dWxwX3dkdF9kZXZpY2UgKndkdCA9
+IHdhdGNoZG9nX2dldF9kcnZkYXRhKHdkb2cpOw0KPiA+ICsNCj4gPiArCWlteDd1bHBfd2R0X2Vu
+YWJsZSh3ZHQtPmJhc2UsIHRydWUpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+
+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGlteDd1bHBfd2R0X3N0b3Aoc3RydWN0IHdhdGNoZG9nX2Rl
+dmljZSAqd2RvZykgew0KPiA+ICsJc3RydWN0IGlteDd1bHBfd2R0X2RldmljZSAqd2R0ID0gd2F0
+Y2hkb2dfZ2V0X2RydmRhdGEod2RvZyk7DQo+ID4gKw0KPiA+ICsJaW14N3VscF93ZHRfZW5hYmxl
+KHdkdC0+YmFzZSwgZmFsc2UpOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgaW50IGlteDd1bHBfd2R0X3NldF90aW1lb3V0KHN0cnVjdCB3YXRjaGRv
+Z19kZXZpY2UgKndkb2csDQo+ID4gKwkJCQkgICB1bnNpZ25lZCBpbnQgdGltZW91dCkNCj4gPiAr
+ew0KPiA+ICsJc3RydWN0IGlteDd1bHBfd2R0X2RldmljZSAqd2R0ID0gd2F0Y2hkb2dfZ2V0X2Ry
+dmRhdGEod2RvZyk7DQo+ID4gKwl1MzIgdmFsID0gd2R0LT5yYXRlICogdGltZW91dDsNCj4gPiAr
+DQo+ID4gKwl3cml0ZWwoVU5MT0NLLCB3ZHQtPmJhc2UgKyBXRE9HX0NOVCk7DQo+ID4gKwl3cml0
+ZWwodmFsLCB3ZHQtPmJhc2UgKyBXRE9HX1RPVkFMKTsNCj4gPiArDQo+ID4gKwl3ZG9nLT50aW1l
+b3V0ID0gdGltZW91dDsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4g
+PiArc3RhdGljIGNvbnN0IHN0cnVjdCB3YXRjaGRvZ19vcHMgaW14N3VscF93ZHRfb3BzID0gew0K
+PiA+ICsJLm93bmVyID0gVEhJU19NT0RVTEUsDQo+ID4gKwkuc3RhcnQgPSBpbXg3dWxwX3dkdF9z
+dGFydCwNCj4gPiArCS5zdG9wICA9IGlteDd1bHBfd2R0X3N0b3AsDQo+ID4gKwkucGluZyAgPSBp
+bXg3dWxwX3dkdF9waW5nLA0KPiA+ICsJLnNldF90aW1lb3V0ID0gaW14N3VscF93ZHRfc2V0X3Rp
+bWVvdXQsIH07DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHdhdGNoZG9nX2luZm8g
+aW14N3VscF93ZHRfaW5mbyA9IHsNCj4gPiArCS5pZGVudGl0eSA9ICJpLk1YN1VMUCB3YXRjaGRv
+ZyB0aW1lciIsDQo+ID4gKwkub3B0aW9ucyAgPSBXRElPRl9TRVRUSU1FT1VUIHwgV0RJT0ZfS0VF
+UEFMSVZFUElORyB8DQo+ID4gKwkJICAgIFdESU9GX01BR0lDQ0xPU0UsDQo+ID4gK307DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgaW14N3VscF93ZHRfaW5pdCh2b2lkIF9faW9tZW0g
+KmJhc2UsIHVuc2lnbmVkIGludA0KPiA+ICt0aW1lb3V0KSB7DQo+ID4gKwl1MzIgdmFsOw0KPiA+
+ICsNCj4gPiArCS8qIHVubG9jayB0aGUgd2RvZyBmb3IgcmVjb25maWd1cmF0aW9uICovDQo+ID4g
+Kwl3cml0ZWxfcmVsYXhlZChVTkxPQ0tfU0VRMCwgYmFzZSArIFdET0dfQ05UKTsNCj4gPiArCXdy
+aXRlbF9yZWxheGVkKFVOTE9DS19TRVExLCBiYXNlICsgV0RPR19DTlQpOw0KPiA+ICsNCj4gPiAr
+CS8qIHNldCBhbiBpbml0aWFsIHRpbWVvdXQgdmFsdWUgaW4gVE9WQUwgKi8NCj4gPiArCXdyaXRl
+bCh0aW1lb3V0LCBiYXNlICsgV0RPR19UT1ZBTCk7DQo+ID4gKwkvKiBlbmFibGUgMzJiaXQgY29t
+bWFuZCBzZXF1ZW5jZSBhbmQgcmVjb25maWd1cmUgKi8NCj4gPiArCXZhbCA9IEJJVCgxMykgfCBC
+SVQoOCkgfCBCSVQoNSk7DQo+ID4gKwl3cml0ZWwodmFsLCBiYXNlICsgV0RPR19DUyk7DQo+ID4g
+K30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGlteDd1bHBfd2R0X2FjdGlvbih2b2lkICpkYXRh
+KSB7DQo+ID4gKwlzdHJ1Y3QgaW14N3VscF93ZHRfZGV2aWNlICppbXg3dWxwX3dkdCA9IGRhdGE7
+DQo+ID4gKw0KPiA+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGlteDd1bHBfd2R0LT5jbGspOw0K
+PiANCj4gSWYgeW91IGhhZCBwYXNzZWQgaW14N3VscF93ZHQtPmNsayBhcyBwYXJhbWV0ZXIsIHRo
+ZSBkZXJlZmVyZW5jZSBoZXJlDQo+IHdvdWxkIG5vdCBiZSBuZWNlc3NhcnkuDQoNCll1cCwgSSB0
+aG91Z2h0IHdlIG1heSBuZWVkIG90aGVyIGRhdGEgbGF0ZXIsIHNvIEkganVzdCBwYXNzZWQgd2hv
+bGUgc3RydWN0dXJlLg0KSSBhZ3JlZSB3aXRoIHlvdXIgaWRlYSwgZm9yIG5vdywgd2UgT05MWSBu
+ZWVkIHRoZSBjbGssIHNvIEkgd2lsbCBPTkxZIHBhc3MgdGhlIGNsaw0KdG8gc2F2ZSB0aGUgZGVy
+ZWZlcmVuY2Ugb3BlcmF0aW9uLiBXaWxsIHNlbmQgb3V0IFY0Lg0KDQo+IA0KPiA+ICt9DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgaW50IGlteDd1bHBfd2R0X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UgKnBkZXYpIHsNCj4gPiArCXN0cnVjdCBpbXg3dWxwX3dkdF9kZXZpY2UgKmlteDd1bHBfd2R0
+Ow0KPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArCXN0cnVjdCB3
+YXRjaGRvZ19kZXZpY2UgKndkb2c7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCWlteDd1
+bHBfd2R0ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCppbXg3dWxwX3dkdCksDQo+IEdGUF9L
+RVJORUwpOw0KPiA+ICsJaWYgKCFpbXg3dWxwX3dkdCkNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsN
+Cj4gPiArDQo+ID4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBpbXg3dWxwX3dkdCk7DQo+
+ID4gKw0KPiA+ICsJaW14N3VscF93ZHQtPmJhc2UgPSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVz
+b3VyY2UocGRldiwgMCk7DQo+ID4gKwlpZiAoSVNfRVJSKGlteDd1bHBfd2R0LT5iYXNlKSkNCj4g
+PiArCQlyZXR1cm4gUFRSX0VSUihpbXg3dWxwX3dkdC0+YmFzZSk7DQo+ID4gKw0KPiA+ICsJaW14
+N3VscF93ZHQtPmNsayA9IGRldm1fY2xrX2dldChkZXYsIE5VTEwpOw0KPiA+ICsJaWYgKElTX0VS
+UihpbXg3dWxwX3dkdC0+Y2xrKSkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGdl
+dCB3YXRjaGRvZyBjbG9ja1xuIik7DQo+ID4gKwkJcmV0dXJuIFBUUl9FUlIoaW14N3VscF93ZHQt
+PmNsayk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGlt
+eDd1bHBfd2R0LT5jbGspOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+
+ICsNCj4gPiArCXJldCA9IGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldChkZXYsIGlteDd1bHBfd2R0
+X2FjdGlvbiwNCj4gaW14N3VscF93ZHQpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4g
+cmV0Ow0KPiA+ICsNCj4gPiArCWlteDd1bHBfd2R0LT5yYXRlID0gMTAwMDsNCj4gDQo+IEkgZm9y
+Z290IHRvIGFzayAoc29ycnksIEkgaGFkIG5vdGljZWQsIGJ1dCBJIGd1ZXNzIEkgZm9yZ290KS4N
+Cj4gDQo+IFdoeSBub3QgY2xrX2dldF9yYXRlKCkgPyBJZiB0aGUgY2xvY2sgcmF0ZSBpcyBmaXhl
+ZCwgd2h5IGJvdGhlciB3aXRoIGEgJ3JhdGUnDQo+IHZhcmlhYmxlID8gWW91IGNvdWxkIHVzZSBh
+IGNvbnN0YW50IGluc3RlYWQgd2hlcmVldmVyIGl0IGlzIHVzZWQuDQoNCk9LLCB0aGUgY2xvY2sg
+cmF0ZSBpcyBmaXhlZCBvbiA3VUxQLCBJIHdpbGwgdXNlIGEgY29uc3RhbnQgaW5zdGVhZCBvZiB0
+aGUgdmFyaWFibGUuDQoNClRoYW5rcywNCkFuc29uDQoNCj4gDQo+IFRoYW5rcw0KPiBHdWVudGVy
+DQo+IA0KPiA+ICsJd2RvZyA9ICZpbXg3dWxwX3dkdC0+d2RkOw0KPiA+ICsJd2RvZy0+aW5mbyA9
+ICZpbXg3dWxwX3dkdF9pbmZvOw0KPiA+ICsJd2RvZy0+b3BzID0gJmlteDd1bHBfd2R0X29wczsN
+Cj4gPiArCXdkb2ctPm1pbl90aW1lb3V0ID0gMTsNCj4gPiArCXdkb2ctPm1heF90aW1lb3V0ID0g
+TUFYX1RJTUVPVVQ7DQo+ID4gKwl3ZG9nLT5wYXJlbnQgPSBkZXY7DQo+ID4gKwl3ZG9nLT50aW1l
+b3V0ID0gREVGQVVMVF9USU1FT1VUOw0KPiA+ICsNCj4gPiArCXdhdGNoZG9nX2luaXRfdGltZW91
+dCh3ZG9nLCAwLCBkZXYpOw0KPiA+ICsJd2F0Y2hkb2dfc3RvcF9vbl9yZWJvb3Qod2RvZyk7DQo+
+ID4gKwl3YXRjaGRvZ19zdG9wX29uX3VucmVnaXN0ZXIod2RvZyk7DQo+ID4gKwl3YXRjaGRvZ19z
+ZXRfZHJ2ZGF0YSh3ZG9nLCBpbXg3dWxwX3dkdCk7DQo+ID4gKwlpbXg3dWxwX3dkdF9pbml0KGlt
+eDd1bHBfd2R0LT5iYXNlLCB3ZG9nLT50aW1lb3V0ICoNCj4gPiAraW14N3VscF93ZHQtPnJhdGUp
+Ow0KPiA+ICsNCj4gPiArCXJldHVybiBkZXZtX3dhdGNoZG9nX3JlZ2lzdGVyX2RldmljZShkZXYs
+IHdkb2cpOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGlteDd1bHBf
+d2R0X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KSB7DQo+ID4gKwlzdHJ1Y3QgaW14N3VscF93
+ZHRfZGV2aWNlICppbXg3dWxwX3dkdCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+ICsNCj4g
+PiArCWlmICh3YXRjaGRvZ19hY3RpdmUoJmlteDd1bHBfd2R0LT53ZGQpKQ0KPiA+ICsJCWlteDd1
+bHBfd2R0X3N0b3AoJmlteDd1bHBfd2R0LT53ZGQpOw0KPiA+ICsNCj4gPiArCWNsa19kaXNhYmxl
+X3VucHJlcGFyZShpbXg3dWxwX3dkdC0+Y2xrKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4g
+PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBpbXg3dWxwX3dkdF9y
+ZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KSB7DQo+ID4gKwlzdHJ1Y3QgaW14N3VscF93ZHRfZGV2
+aWNlICppbXg3dWxwX3dkdCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+ICsJdTMyIHRpbWVv
+dXQgPSBpbXg3dWxwX3dkdC0+d2RkLnRpbWVvdXQgKiBpbXg3dWxwX3dkdC0+cmF0ZTsNCj4gPiAr
+CWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGlteDd1bHBf
+d2R0LT5jbGspOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4g
+PiArCWlmIChpbXg3dWxwX3dkdF9pc19lbmFibGVkKGlteDd1bHBfd2R0LT5iYXNlKSkNCj4gPiAr
+CQlpbXg3dWxwX3dkdF9pbml0KGlteDd1bHBfd2R0LT5iYXNlLCB0aW1lb3V0KTsNCj4gPiArDQo+
+ID4gKwlpZiAod2F0Y2hkb2dfYWN0aXZlKCZpbXg3dWxwX3dkdC0+d2RkKSkNCj4gPiArCQlpbXg3
+dWxwX3dkdF9zdGFydCgmaW14N3VscF93ZHQtPndkZCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7
+DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhpbXg3dWxwX3dk
+dF9wbV9vcHMsDQo+IGlteDd1bHBfd2R0X3N1c3BlbmQsDQo+ID4gKwkJCSBpbXg3dWxwX3dkdF9y
+ZXN1bWUpOw0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW14
+N3VscF93ZHRfZHRfaWRzW10gPSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg3dWxw
+LXdkdCIsIH0sDQo+ID4gKwl7IC8qIHNlbnRpbmVsICovIH0NCj4gPiArfTsNCj4gPiArTU9EVUxF
+X0RFVklDRV9UQUJMRShvZiwgaW14N3VscF93ZHRfZHRfaWRzKTsNCj4gPiArDQo+ID4gK3N0YXRp
+YyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGlteDd1bHBfd2R0X2RyaXZlciA9IHsNCj4gPiArCS5w
+cm9iZQkJPSBpbXg3dWxwX3dkdF9wcm9iZSwNCj4gPiArCS5kcml2ZXIJCT0gew0KPiA+ICsJCS5u
+YW1lCT0gImlteDd1bHAtd2R0IiwNCj4gPiArCQkucG0JPSAmaW14N3VscF93ZHRfcG1fb3BzLA0K
+PiA+ICsJCS5vZl9tYXRjaF90YWJsZSA9IGlteDd1bHBfd2R0X2R0X2lkcywNCj4gPiArCX0sDQo+
+ID4gK307DQo+ID4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoaW14N3VscF93ZHRfZHJpdmVyKTsN
+Cj4gPiArDQo+ID4gK01PRFVMRV9BVVRIT1IoIkFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAu
+Y29tPiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIkZyZWVzY2FsZSBpLk1YN1VMUCB3YXRj
+aGRvZyBkcml2ZXIiKTsNCj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiA+IC0tDQo+
+ID4gMi43LjQNCj4gPg0K
