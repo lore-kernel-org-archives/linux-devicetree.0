@@ -1,46 +1,77 @@
-From: Ran Bi <ran.bi@mediatek.com>
-Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
-Date: Thu, 22 Aug 2019 19:50:11 +0800
-Message-ID: <1566474611.12318.9.camel@mhfsdcap03>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
-         <20190801110122.26834-3-ran.bi@mediatek.com>
-         <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
-         <20190822092008.GR27031@piout.net>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
+Date: Thu, 22 Aug 2019 21:25:24 +0930
+Message-ID: <c78d4c45-477b-4078-b269-aec72571c8cd@www.fastmail.com>
+References: <20190807003629.2974-1-andrew@aj.id.au>
+ <20190807003629.2974-2-andrew@aj.id.au>
+ <CACPK8Xe6Zp1uOqEffEc0b6oGa7portEAifGPRqb876HmA+oZeg@mail.gmail.com>
+ <6c94aada-9c4a-4f55-9a43-349282ad12af@www.fastmail.com>
+ <CAPDyKFrDPxFMm710Z25i-euOT2rrgCNXVa4na-fye0xamMXq_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822092008.GR27031@piout.net>
+In-Reply-To: <CAPDyKFrDPxFMm710Z25i-euOT2rrgCNXVa4na-fye0xamMXq_A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>, linux-mmc <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ryan Chen <ryanchen.aspeed@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-22 at 11:20 +0200, Alexandre Belloni wrote:
-> On 22/08/2019 11:12:29+0200, Matthias Brugger wrote:
-> > 
-> > 
-> > On 01/08/2019 13:01, Ran Bi wrote:
-> > > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
-> > > had different architecture compared with MT7622 RTC.
-> > > 
-> > > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > > ---
-> > >  drivers/rtc/Kconfig      |  10 +
-> > >  drivers/rtc/Makefile     |   1 +
-> > >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
-> > 
-> > Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
-> > devices. What is the difference that we need to write a driver of our own?
-> > 
-> 
-> If they are compatible, this is the way to go but the file can't be
-> renamed (and that is fine).
-> 
-> 
 
-They are not compatible. Both registers and operating methods are
-different.
 
-Best Regards,
-Ran
+On Thu, 22 Aug 2019, at 21:15, Ulf Hansson wrote:
+> On Thu, 15 Aug 2019 at 07:37, Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> >
+> >
+> > On Thu, 15 Aug 2019, at 15:06, Joel Stanley wrote:
+> > > On Wed, 7 Aug 2019 at 00:38, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > >
+> > > > The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
+> > > > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
+> > > > data bus if only a single slot is enabled.
+> > > >
+> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > >
+> > > Reviewed-by: Joel Stanley <joel@jms.id.au>
+> > >
+> > > Two minor comments below.
+> > >
+> > > > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> > > > @@ -0,0 +1,105 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > >
+> > > No "Copyright IBM" ?
+> >
+> > I'm going rogue.
+> >
+> > That reminds me I should chase up where we got to with the binding
+> > licensing.
+> >
+> > >
+> > > > +%YAML 1.2
+> > > > +---
+> > >
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/aspeed-clock.h>
+> > > > +    sdc@1e740000 {
+> > > > +            compatible = "aspeed,ast2500-sd-controller";
+> > > > +            reg = <0x1e740000 0x100>;
+> > > > +            #address-cells = <1>;
+> > > > +            #size-cells = <1>;
+> > > > +            ranges = <0 0x1e740000 0x10000>;
+> > >
+> > > According to the datasheet this could be 0x20000. It does not matter
+> > > though, as there's nothing in it past 0x300.
+> >
+> > Good catch.
+> >
+> 
+> Are you planning on sending a v6 or you want me to apply this and you
+> can post a patch on top?
+
+Yeah, sorry, I wasn't very clear there. I was hoping just to do a follow-up
+patch with the cleanups if you're okay with that?
+
+Andrew
