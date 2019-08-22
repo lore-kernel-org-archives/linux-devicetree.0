@@ -1,38 +1,42 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] pwm: pwm-mediatek: Add MT8516 SoC support
-Date: Thu, 22 Aug 2019 11:18:10 +0200
-Message-ID: <20190822091810.5t3inn56npdvwnfy@pengutronix.de>
-References: <20190805125848.15751-1-fparent@baylibre.com>
- <20190805125848.15751-2-fparent@baylibre.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+Date: Thu, 22 Aug 2019 11:20:08 +0200
+Message-ID: <20190822092008.GR27031@piout.net>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+ <20190801110122.26834-3-ran.bi@mediatek.com>
+ <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190805125848.15751-2-fparent@baylibre.com>
+In-Reply-To: <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Parent <fparent@baylibre.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Ran Bi <ran.bi@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>Sean Wang <s>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 02:58:48PM +0200, Fabien Parent wrote:
-> Add the compatible and the platform data to support PWM on the MT8516
-> SoC.
+On 22/08/2019 11:12:29+0200, Matthias Brugger wrote:
 > 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> 
+> On 01/08/2019 13:01, Ran Bi wrote:
+> > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
+> > had different architecture compared with MT7622 RTC.
+> > 
+> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > ---
+> >  drivers/rtc/Kconfig      |  10 +
+> >  drivers/rtc/Makefile     |   1 +
+> >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
+> 
+> Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
+> devices. What is the difference that we need to write a driver of our own?
+> 
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+If they are compatible, this is the way to go but the file can't be
+renamed (and that is fine).
 
-The change looks fine, there is however another series currently waiting
-for application for this driver that conflicts with this one (I think).
-
-Maybe it would be sensible to join your forces and produce a single
-series without conflicts?
-
-Best regards
-Uwe
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
