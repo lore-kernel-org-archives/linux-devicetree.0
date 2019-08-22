@@ -1,51 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/19] dt-bindings: arm: mrvl: Document MMP3 compatible string
-Date: Thu, 22 Aug 2019 07:42:42 -0500
-Message-ID: <CAL_Jsq+BVUX3MMjsjK+hhjgDzdiqoo8dwEMD_98OrkGMOQf8GA@mail.gmail.com>
-References: <20190809093158.7969-1-lkundrak@v3.sk> <20190809093158.7969-3-lkundrak@v3.sk>
- <20190821210349.GA29732@bogus> <c859d12167d18c21dda13b30c2dd3256f407d1d9.camel@v3.sk>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+Date: Thu, 22 Aug 2019 14:46:28 +0200
+Message-ID: <20190822124628.GS27031@piout.net>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+ <20190801110122.26834-3-ran.bi@mediatek.com>
+ <20190820201744.GZ3545@piout.net>
+ <1566477254.12318.41.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c859d12167d18c21dda13b30c2dd3256f407d1d9.camel@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <1566477254.12318.41.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Ran Bi <ran.bi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 3:12 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> On Wed, 2019-08-21 at 16:03 -0500, Rob Herring wrote:
-> > On Fri, Aug 09, 2019 at 11:31:41AM +0200, Lubomir Rintel wrote:
-> > > Marvel MMP3 is a successor to MMP2, containing similar peripherals with two
-> > > PJ4B cores.
-> > >
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > > index 951687528efb0..66e1e1414245b 100644
-> > > --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > > @@ -12,3 +12,7 @@ Required root node properties:
-> > >  MMP2 Brownstone Board
-> > >  Required root node properties:
-> > >     - compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
-> > > +
-> > > +MMP3 SoC
-> > > +Required root node properties:
-> > > +   - compatible = "marvell,mmp3";
-> >
-> > Please convert this file to DT schema before adding new SoCs.
->
-> Is this something that should generally be done for all new or changed
-> DT bindings?
+On 22/08/2019 20:34:14+0800, Ran Bi wrote:
+> > > +	/* RTC need POWERKEY1/2 match, then goto normal work mode */
+> > > +	mt2712_writel(rtc, MT2712_POWERKEY1, MT2712_POWERKEY1_KEY);
+> > > +	mt2712_writel(rtc, MT2712_POWERKEY2, MT2712_POWERKEY2_KEY);
+> > 
+> > This should be written when setting the time after power was lost.
+> > 
+> 
+> I suppose we can move this into mt2712_rtc_read_time function's "if
+> (p1 != MT2712_POWERKEY1_KEY || p2 != MT2712_POWERKEY2_KEY)" condition
+> which will be added at next patch. We need additional flag to mark this
+> condition or another if condition in mt2712_rtc_set_time fucntion if we
+> put these code in mt2712_rtc_set_time function.
+> 
 
-Preferred, but not quite yet required everywhere. It depends on the
-maintainer/subsystem still. But for board level bindings, you'll
-notice most of them are converted. Marvell, Broadcom, and TI are the
-main ones left.
+It is fine to test both in read_time and in set_time.
 
-Rob
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
