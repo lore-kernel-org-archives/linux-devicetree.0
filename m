@@ -1,50 +1,82 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/1] arm64: dts: imx8mq: Add mux controller to iomuxc_gpr
-Date: Thu, 22 Aug 2019 13:38:25 +0200
-Message-ID: <1566473905.3653.10.camel@pengutronix.de>
-References: <cover.1566471985.git.agx@sigxcpu.org>
-         <fa3b1df7fc5e74f375df5de53061d1a93d154b51.1566471985.git.agx@sigxcpu.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Date: Thu, 22 Aug 2019 12:41:47 +0100
+Message-ID: <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821153545.17635-4-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fa3b1df7fc5e74f375df5de53061d1a93d154b51.1566471985.git.agx@sigxcpu.org>
+Content-Disposition: inline
+In-Reply-To: <20190821153545.17635-4-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-22 at 13:10 +0200, Guido Günther wrote:
-> The only mux controls the MIPI DSI input selection.
+On Wed, Aug 21, 2019 at 06:35:43PM +0300, Jonathan Chocron wrote:
+> The Amazon Annapurna Labs PCIe Root Port exposes the VPD capability,
+> but there is no actual support for it.
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> The reason for not using the already existing quirk_blacklist_vpd()
+> is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
+> entry still exists. When running lspci -vv, for example, this
+> results in the following error:
+> 
+> pcilib: sysfs_read_vpd: read failed: Input/output error
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Oh that's not nice. It's probably triggered by the -EIO in pci_vpd_read.
+A quick search online seems to show that other people have experienced
+this too - though from as far as I can tell this just gives you a
+warning and pcilib will continnue to give other output?
 
-regards
-Philipp
+I guess every vpd blacklist'd driver will have the same issue. And for
+this reason I don't think that this patch is the right solution - as
+otherwise all the other blacklisted drivers could follow your lead.
 
+I don't think you need to fix this specifically for the AL driver and so
+I'd suggest that you can probably drop this patch. (Ideally pciutils
+could be updated to not warn for this specific use-case).
+
+Thanks,
+
+Andrew Murray
+
+> 
+> This quirk removes the sysfs entry, which avoids the error print.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>  drivers/pci/vpd.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 4fdd60f2c51e..3f3594d9485c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -440,8 +440,15 @@
->  			};
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 4963c2e2bd4c..c23a8ec08db9 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -644,4 +644,20 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+>  			quirk_chelsio_extend_vpd);
 >  
->  			iomuxc_gpr: syscon@30340000 {
-> -				compatible = "fsl,imx8mq-iomuxc-gpr", "fsl,imx6q-iomuxc-gpr", "syscon";
-> +				compatible = "fsl,imx8mq-iomuxc-gpr", "fsl,imx6q-iomuxc-gpr",
-> +					     "syscon", "simple-mfd";
->  				reg = <0x30340000 0x10000>;
+> +static void quirk_al_vpd_release(struct pci_dev *dev)
+> +{
+> +	if (dev->vpd) {
+> +		pci_vpd_release(dev);
+> +		dev->vpd = NULL;
+> +		pci_warn(dev, FW_BUG "Releasing VPD capability (No support for VPD read/write transactions)\n");
+> +	}
+> +}
 > +
-> +				mux: mux-controller {
-> +					compatible = "mmio-mux";
-> +					#mux-control-cells = <1>;
-> +					mux-reg-masks = <0x34 0x00000004>; /* MIPI_MUX_SEL */
-> +				};
->  			};
->  
->  			ocotp: ocotp-ctrl@30350000 {
+> +/*
+> + * The 0031 device id is reused for other non Root Port device types,
+> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> + */
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_vpd_release);
+> +
+>  #endif
+> -- 
+> 2.17.1
+> 
