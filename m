@@ -1,161 +1,129 @@
-Return-Path: <SRS0=geGc=WT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53410 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfHWAMR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2019 20:12:17 -0400
-Date: Fri, 23 Aug 2019 03:12:09 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] arm64: dts: renesas: Add LIF channel index to 'vsps'
-Message-ID: <20190823001209.GO5027@pendragon.ideasonboard.com>
-References: <20190822195600.30787-1-jacopo+renesas@jmondi.org>
+Return-Path: <SRS0=VUGH=WS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:41583 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbfHVTyo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2019 15:54:44 -0400
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH] arm64: dts: renesas: Add LIF channel index to 'vsps'
+Date: Thu, 22 Aug 2019 21:56:00 +0200
+Message-Id: <20190822195600.30787-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190822195600.30787-1-jacopo+renesas@jmondi.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Jacopo,
+According to the Renesas R-Car DU bindings documentation, the 'vsps'
+property should be composed by a phandle to the VSP instance and the
+index of the LIF channel assigned to the DU channel. Some SoC device
+tree source files do not specify any LIF channel index, relying on the
+driver defaulting it to 0 if not specified.
 
-Thank you for the patch.
+Align all device tree files by specifying the LIF channel index as
+prescribed by the bindings documentation. While at it, add a comment to
+the 'vsps' property parsing routine to point out the LIF channel index
+is still defaulted to 0 for backward compatibility with non-standard DTB
+found in the wild.
 
-On Thu, Aug 22, 2019 at 09:56:00PM +0200, Jacopo Mondi wrote:
-> According to the Renesas R-Car DU bindings documentation, the 'vsps'
-> property should be composed by a phandle to the VSP instance and the
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
 
-s/composed by/composed of/
+Patch based on Geert's latest renesas-devel master branch
+---
 
-> index of the LIF channel assigned to the DU channel. Some SoC device
-> tree source files do not specify any LIF channel index, relying on the
-> driver defaulting it to 0 if not specified.
-> 
-> Align all device tree files by specifying the LIF channel index as
-> prescribed by the bindings documentation. While at it, add a comment to
-> the 'vsps' property parsing routine to point out the LIF channel index
-> is still defaulted to 0 for backward compatibility with non-standard DTB
-> found in the wild.
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi    | 2 +-
+ arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi     | 2 +-
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi    | 2 +-
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi    | 2 +-
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c        | 9 ++++++++-
+ 6 files changed, 13 insertions(+), 6 deletions(-)
 
-I wouldn't say non-standard, I would instead mention compatible with a
-previous version of the DT bindings.
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index 06c7c849c8ab..d179ee3da308 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -2651,7 +2651,7 @@
+ 			clock-names = "du.0", "du.1", "du.2";
+ 			status = "disabled";
 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
-> 
-> Patch based on Geert's latest renesas-devel master branch
-> ---
-> 
->  arch/arm64/boot/dts/renesas/r8a774a1.dtsi    | 2 +-
->  arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a7796.dtsi     | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77970.dtsi    | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi    | 2 +-
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c        | 9 ++++++++-
->  6 files changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> index 06c7c849c8ab..d179ee3da308 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> @@ -2651,7 +2651,7 @@
->  			clock-names = "du.0", "du.1", "du.2";
->  			status = "disabled";
-> 
-> -			vsps = <&vspd0 &vspd1 &vspd2>;
-> +			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
-> 
->  			ports {
->  				#address-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-> index e4650ae5b75a..14d8513d2a47 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-> @@ -30,7 +30,7 @@
->  };
-> 
->  &du {
-> -	vsps = <&vspd0 &vspd1 &vspd2 &vspd3>;
-> +	vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd3 0>;
->  };
-> 
->  &fcpvb1 {
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> index 3dc9d73f589a..8c9bf985d436 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> @@ -2765,7 +2765,7 @@
->  			clock-names = "du.0", "du.1", "du.2";
->  			status = "disabled";
-> 
-> -			vsps = <&vspd0 &vspd1 &vspd2>;
-> +			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
-> 
->  			ports {
->  				#address-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> index 0cd3b376635d..2c4ab70e2a39 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> @@ -1120,7 +1120,7 @@
->  			clock-names = "du.0";
->  			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
->  			resets = <&cpg 724>;
-> -			vsps = <&vspd0>;
-> +			vsps = <&vspd0 0>;
->  			status = "disabled";
-> 
->  			ports {
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> index 461a47ea656d..042f4089e546 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -1495,7 +1495,7 @@
->  			clock-names = "du.0";
->  			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
->  			resets = <&cpg 724>;
-> -			vsps = <&vspd0>;
-> +			vsps = <&vspd0 0>;
->  			status = "disabled";
-> 
->  			ports {
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index 2dc9caee8767..1a9e182b2b55 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -585,7 +585,14 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
-> 
->  		vsps[j].crtcs_mask |= BIT(i);
-> 
-> -		/* Store the VSP pointer and pipe index in the CRTC. */
-> +		/*
-> +		 * Store the VSP pointer and pipe index in the CRTC.
-> +		 *
-> +		 * FIXME: According to the DT bindings, the LIF pipe instance
-> +		 * index shall always be specified. For backward compatibility
-> +		 * with older DTB without any index specified, default it to 0
-> +		 * if cells < 1.
+-			vsps = <&vspd0 &vspd1 &vspd2>;
++			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
 
-No need for a FIXME, there's nothing to be fixed here. I would write
-this as
+ 			ports {
+ 				#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+index e4650ae5b75a..14d8513d2a47 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+@@ -30,7 +30,7 @@
+ };
 
-		 * If the second cell of the VSP specifier isn't
-		 * present, default to 0 to remain compatible with older
-		 * DT bindings.
+ &du {
+-	vsps = <&vspd0 &vspd1 &vspd2 &vspd3>;
++	vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd3 0>;
+ };
 
-With this fixed here and in the commit message,
+ &fcpvb1 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 3dc9d73f589a..8c9bf985d436 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -2765,7 +2765,7 @@
+ 			clock-names = "du.0", "du.1", "du.2";
+ 			status = "disabled";
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+-			vsps = <&vspd0 &vspd1 &vspd2>;
++			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
 
-Note that Simon or Geert will likely ask you to split this patch in two,
-in which case I'll take the driver part in my tree.
+ 			ports {
+ 				#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+index 0cd3b376635d..2c4ab70e2a39 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -1120,7 +1120,7 @@
+ 			clock-names = "du.0";
+ 			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
+ 			resets = <&cpg 724>;
+-			vsps = <&vspd0>;
++			vsps = <&vspd0 0>;
+ 			status = "disabled";
 
-> +		 */
->  		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
->  		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
->  	}
+ 			ports {
+diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+index 461a47ea656d..042f4089e546 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -1495,7 +1495,7 @@
+ 			clock-names = "du.0";
+ 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+ 			resets = <&cpg 724>;
+-			vsps = <&vspd0>;
++			vsps = <&vspd0 0>;
+ 			status = "disabled";
 
--- 
-Regards,
+ 			ports {
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+index 2dc9caee8767..1a9e182b2b55 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+@@ -585,7 +585,14 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
 
-Laurent Pinchart
+ 		vsps[j].crtcs_mask |= BIT(i);
+
+-		/* Store the VSP pointer and pipe index in the CRTC. */
++		/*
++		 * Store the VSP pointer and pipe index in the CRTC.
++		 *
++		 * FIXME: According to the DT bindings, the LIF pipe instance
++		 * index shall always be specified. For backward compatibility
++		 * with older DTB without any index specified, default it to 0
++		 * if cells < 1.
++		 */
+ 		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
+ 		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
+ 	}
+--
+2.22.0
