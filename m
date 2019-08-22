@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 09/10] arm64: dts: layerscape: Add PCIe EP node for ls1088a
-Date: Thu, 22 Aug 2019 19:22:41 +0800
-Message-ID: <20190822112242.16309-9-xiaowei.bao@nxp.com>
+Subject: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+Date: Thu, 22 Aug 2019 19:22:40 +0800
+Message-ID: <20190822112242.16309-8-xiaowei.bao@nxp.com>
 References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
@@ -10,71 +10,148 @@ To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kern
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe EP node for ls1088a to support EP mode.
+Add PCIe EP mode support for ls1088a and ls2088a, there are some
+difference between LS1 and LS2 platform, so refactor the code of
+the EP driver.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
 v2:
- - Remove the pf-offset proparty.
+ - New mechanism for layerscape EP driver.
 
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 76 ++++++++++++++++++++------
+ 1 file changed, 58 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dfbead4..79109ad 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -471,6 +471,17 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index 7ca5fe8..2a66f07 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -20,27 +20,29 @@
  
-+		pcie_ep@3400000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03400000 0x0 0x00100000
-+			       0x20 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <24>;
-+			num-ob-windows = <128>;
-+			max-functions = /bits/ 8 <2>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3500000 {
- 			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-@@ -497,6 +508,16 @@
- 			status = "disabled";
- 		};
+ #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
  
-+		pcie_ep@3500000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03500000 0x0 0x00100000
-+			       0x28 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <6>;
-+			num-ob-windows = <8>;
-+			status = "disabled";
-+		};
+-struct ls_pcie_ep {
+-	struct dw_pcie		*pci;
+-	struct pci_epc_features	*ls_epc;
++#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
 +
- 		pcie@3600000 {
- 			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-@@ -523,6 +544,16 @@
- 			status = "disabled";
- 		};
++struct ls_pcie_ep_drvdata {
++	u32				func_offset;
++	const struct dw_pcie_ep_ops	*ops;
++	const struct dw_pcie_ops	*dw_pcie_ops;
+ };
  
-+		pcie_ep@3600000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03600000 0x0 0x00100000
-+			       0x30 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <6>;
-+			num-ob-windows = <8>;
-+			status = "disabled";
-+		};
+-#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
++struct ls_pcie_ep {
++	struct dw_pcie			*pci;
++	struct pci_epc_features		*ls_epc;
++	const struct ls_pcie_ep_drvdata *drvdata;
++};
+ 
+ static int ls_pcie_establish_link(struct dw_pcie *pci)
+ {
+ 	return 0;
+ }
+ 
+-static const struct dw_pcie_ops ls_pcie_ep_ops = {
++static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+ 	.start_link = ls_pcie_establish_link,
+ };
+ 
+-static const struct of_device_id ls_pcie_ep_of_match[] = {
+-	{ .compatible = "fsl,ls-pcie-ep",},
+-	{ },
+-};
+-
+ static const struct pci_epc_features*
+ ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+ {
+@@ -82,10 +84,44 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	}
+ }
+ 
+-static const struct dw_pcie_ep_ops pcie_ep_ops = {
++static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
++						u8 func_no)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
++	u8 header_type;
 +
- 		smmu: iommu@5000000 {
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x5000000 0 0x800000>;
++	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
++
++	if (header_type & (1 << 7))
++		return pcie->drvdata->func_offset * func_no;
++	else
++		return 0;
++}
++
++static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+ 	.ep_init = ls_pcie_ep_init,
+ 	.raise_irq = ls_pcie_ep_raise_irq,
+ 	.get_features = ls_pcie_ep_get_features,
++	.func_conf_select = ls_pcie_ep_func_conf_select,
++};
++
++static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
++	.ops = &ls_pcie_ep_ops,
++	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
++};
++
++static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
++	.func_offset = 0x20000,
++	.ops = &ls_pcie_ep_ops,
++	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
++};
++
++static const struct of_device_id ls_pcie_ep_of_match[] = {
++	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
++	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
++	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
++	{ },
+ };
+ 
+ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+@@ -98,7 +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+ 	int ret;
+ 
+ 	ep = &pci->ep;
+-	ep->ops = &pcie_ep_ops;
++	ep->ops = pcie->drvdata->ops;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+ 	if (!res)
+@@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 	if (!ls_epc)
+ 		return -ENOMEM;
+ 
+-	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+-	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+-	if (IS_ERR(pci->dbi_base))
+-		return PTR_ERR(pci->dbi_base);
++	pcie->drvdata = of_device_get_match_data(dev);
+ 
+-	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+ 	pci->dev = dev;
+-	pci->ops = &ls_pcie_ep_ops;
++	pci->ops = pcie->drvdata->dw_pcie_ops;
++
+ 	pcie->pci = pci;
+ 
+ 	ls_epc->linkup_notifier = false,
+@@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 
+ 	pcie->ls_epc = ls_epc;
+ 
++	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
++	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
++	if (IS_ERR(pci->dbi_base))
++		return PTR_ERR(pci->dbi_base);
++
++	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
++
+ 	platform_set_drvdata(pdev, pcie);
+ 
+ 	ret = ls_add_pcie_ep(pcie, pdev);
 -- 
 2.9.5
