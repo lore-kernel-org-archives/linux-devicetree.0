@@ -1,50 +1,38 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [v7,2/2] dt-bindings: rtc: add bindings for FlexTimer Module
-Date: Thu, 22 Aug 2019 23:12:33 +0200
-Message-ID: <20190822211233.GD27031@piout.net>
-References: <20190813030157.48590-1-biwen.li@nxp.com>
- <20190813030157.48590-2-biwen.li@nxp.com>
+From: Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add compatible for H6 RTC
+Date: Thu, 22 Aug 2019 23:15:47 +0200
+Message-ID: <20190822211547.GE27031@piout.net>
+References: <20190820151934.3860-1-megous@megous.com>
+ <20190820151934.3860-2-megous@megous.com>
+Reply-To: alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCKYNX7Y3IMBBBUM7TVAKGQET5WXUCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190813030157.48590-2-biwen.li@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com, mark.rutland@arm.com, devicetree@vger.kernel.org
+In-Reply-To: <20190820151934.3860-2-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/08/2019 11:01:57+0800, Biwen Li wrote:
-> The patch adds bindings for FlexTimer Module
+On 20/08/2019 17:19:32+0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
+> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> RTC on H6 is similar to the one on H5 SoC, but incompatible in small
+> details. See the driver for description of differences. For example
+> H6 RTC needs to enable the external low speed oscillator. Add new
+> compatible for this RTC.
+> 
+> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
 > ---
-> Change in v7:
->     - delete aliases
-> 
-> Change in v6:
->     - correct subject
->     - delete note
->     - remove reg property about IP Powerdown exception register
-> 
-> Change in v5:
->     - None
-> 
-> Change in v4:
->     - add note about dts and kernel options
->     - add aliases in example
-> 
-> Change in v3:
-> 	- remove reg-names property
-> 	- correct cells number
-> 
-> Change in v2:
-> 	- replace ls1043a with ls1088a as example
-> 	- add rcpm node and fsl,rcpm-wakeup property
-> 
->  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
+>  .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml       | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 Applied, thanks.
 
