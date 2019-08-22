@@ -1,50 +1,35 @@
 From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V4 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
-Date: Wed, 21 Aug 2019 22:37:40 -0400
-Message-ID: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V4 3/4] ARM: imx_v6_v7_defconfig: Enable CONFIG_IMX7ULP_WDT by default
+Date: Wed, 21 Aug 2019 22:37:42 -0400
+Message-ID: <1566441463-11911-3-git-send-email-Anson.Huang@nxp.com>
+References: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add the watchdog bindings for Freescale i.MX7ULP.
+Select CONFIG_IMX7ULP_WDT by default to support i.MX7ULP watchdog.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-new file mode 100644
-index 0000000..d83fc5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-@@ -0,0 +1,22 @@
-+* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
-+
-+Required properties:
-+- compatible : Should be "fsl,imx7ulp-wdt"
-+- reg : Should contain WDT registers location and length
-+- interrupts : Should contain WDT interrupt
-+- clocks: Should contain a phandle pointing to the gated peripheral clock.
-+
-+Optional properties:
-+- timeout-sec : Contains the watchdog timeout in seconds
-+
-+Examples:
-+
-+wdog1: wdog@403d0000 {
-+	compatible = "fsl,imx7ulp-wdt";
-+	reg = <0x403d0000 0x10000>;
-+	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-+	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-+	timeout-sec = <40>;
-+};
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 9bfffbe..be2a694 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -236,6 +236,7 @@ CONFIG_DA9062_WATCHDOG=y
+ CONFIG_DA9063_WATCHDOG=m
+ CONFIG_RN5T618_WATCHDOG=y
+ CONFIG_IMX2_WDT=y
++CONFIG_IMX7ULP_WDT=y
+ CONFIG_MFD_DA9052_I2C=y
+ CONFIG_MFD_DA9062=y
+ CONFIG_MFD_DA9063=y
 -- 
 2.7.4
