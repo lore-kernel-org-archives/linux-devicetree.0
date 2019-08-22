@@ -1,33 +1,57 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
-Date: Thu, 22 Aug 2019 15:26:24 -0700
-Message-ID: <7h36hs3khb.fsf@baylibre.com>
-References: <20190821142043.14649-1-narmstrong@baylibre.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date: Thu, 22 Aug 2019 23:36:02 +0100
+Message-ID: <20190822223606.6775-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821142043.14649-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Thanks for reviewing v3 patchset, here is v4 with addressing the comments in v3
 
-> This is the first set of DT fixes following the first YAML bindings conversion
-> at [1], [2] and [3].
->
-> After this set of fixes, the remaining errors are :
-> meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
-> meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->
-> These are only cosmetic changes, and should not break drivers implementation
-> following the bindings.
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
 
-Any chance you can rebase this on top of my v5.4/dt64 branch?
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
+
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+TODO:
+	Add thermal sensor support in WSA881x.
 
 Thanks,
+srini
 
-Kevin
+Changes since v3:
+ - updated slave bindings according to Rob's Suggestion.
+ - moved bindings to yaml
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   44 +
+ .../soundwire/soudwire-controller.yaml        |   75 ++
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   52 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soudwire-controller.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
+
+-- 
+2.21.0
