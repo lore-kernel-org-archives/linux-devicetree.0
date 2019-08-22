@@ -1,61 +1,74 @@
-Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v7 00/13] Add TVP5150 features
-Date: Thu, 15 Aug 2019 13:57:34 +0200
-Message-Id: <20190815115747.24018-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=+0hH=WS=codeaurora.org=sibis@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Thu, 22 Aug 2019 12:09:46 +0530
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH 1/4] dt-bindings: reset: aoss: Add AOSS reset binding for
+ SC7180 SoCs
+In-Reply-To: <1566383523.4193.5.camel@pengutronix.de>
+References: <20190821095442.24495-1-sibis@codeaurora.org>
+ <20190821095442.24495-2-sibis@codeaurora.org>
+ <1566383523.4193.5.camel@pengutronix.de>
+Message-ID: <f6f36181660057325742318519e541ad@codeaurora.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Hey Philipp,
+Thanks for the review!
 
-many thanks to Mauro, Hans, Jacopo and Laurent for the
-feedack :)
-Hopefully I got all the comments and concerns and fixed those
-with this v7.
+On 2019-08-21 16:02, Philipp Zabel wrote:
+> On Wed, 2019-08-21 at 15:24 +0530, Sibi Sankar wrote:
+>> Add SC7180 AOSS reset to the list of possible bindings.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt 
+>> b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> index 510c748656ec5..8f0bbdc6afd91 100644
+>> --- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+>> @@ -8,7 +8,8 @@ Required properties:
+>>  - compatible:
+>>  	Usage: required
+>>  	Value type: <string>
+>> -	Definition: must be:
+>> +	Definition: must be one of:
+>> +		    "qcom,sc7180-aoss-cc"
+>>  		    "qcom,sdm845-aoss-cc"
+>> 
+>>  - reg:
+> 
+> Does sc7180 have exactly the same resets (mss, camss, venus, gpu,
+> dispss, wcss, and lpass) as sdm845? If so, it could be considered
+> compatible, and the driver changes wouldn't be needed at all:
 
-In short:
- - v4l2-connector label isn't set anymore if not specified
- - tvp5150 connectors are now static
-   -> reduces code and is easier to review and maintain
+Yes they are identical both
+AOSS and PDC resets.
 
-Each changed patch contains a more detailed changelog.
+> 
+> -	Definition: must be:
+> +	Definition: must be one of:
+> +		    "qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
+> 
+> 	    "qcom,sdm845-aoss-cc"
+> 
+> Is there a reason not to do this?
 
-Hopefully we get this series done :)
+I am fine with ^^, will change
+them in v2.
 
-Regards,
-  Marco
-
-Javier Martinez Canillas (1):
-  partial revert of "[media] tvp5150: add HW input connectors support"
-
-Marco Felsch (11):
-  dt-bindings: connector: analog: add tv norms property
-  media: v4l2-fwnode: add v4l2_fwnode_connector
-  media: v4l2-fwnode: add initial connector parsing support
-  media: tvp5150: add input source selection of_graph support
-  media: dt-bindings: tvp5150: Add input port connectors DT bindings
-  media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-  media: tvp5150: add s_power callback
-  media: dt-bindings: tvp5150: cleanup bindings stlye
-  media: dt-bindings: tvp5150: add optional tvnorms documentation
-  media: tvp5150: add support to limit tv norms on connector
-  media: tvp5150: make debug output more readable
-
-Michael Tretter (1):
-  media: tvp5150: initialize subdev before parsing device tree
-
- .../display/connector/analog-tv-connector.txt |   4 +
- .../devicetree/bindings/media/i2c/tvp5150.txt | 145 +++-
- drivers/media/i2c/tvp5150.c                   | 644 +++++++++++++-----
- drivers/media/v4l2-core/v4l2-fwnode.c         | 137 ++++
- include/dt-bindings/media/tvnorms.h           |  72 ++
- include/dt-bindings/media/tvp5150.h           |   2 -
- include/media/v4l2-fwnode.h                   |  83 +++
- 7 files changed, 895 insertions(+), 192 deletions(-)
- create mode 100644 include/dt-bindings/media/tvnorms.h
+> 
+> regards
+> Philipp
 
 -- 
-2.20.1
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
