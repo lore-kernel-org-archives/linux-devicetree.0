@@ -1,7 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 06/20] irqchip/mmp: do not use of_address_to_resource() to get mux regs
-Date: Thu, 22 Aug 2019 11:26:29 +0200
-Message-ID: <20190822092643.593488-7-lkundrak@v3.sk>
+Subject: [PATCH v2 08/20] irqchip/mmp: mask off interrupts from other cores
+Date: Thu, 22 Aug 2019 11:26:31 +0200
+Message-ID: <20190822092643.593488-9-lkundrak@v3.sk>
 References: <20190822092643.593488-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,78 +9,140 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Andres Salomon <dilinger@queued.net>, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-The "regs" property of the "mrvl,mmp2-mux-intc" devices are silly. They
-are offsets from intc's base, not addresses on the parent bus. At this
-point it probably can't be fixed.
+From: Andres Salomon <dilinger@queued.net>
 
-On an OLPC XO-1.75 machine, the muxes are children of the intc, not the
-axi bus, and thus of_address_to_resource() won't work. We should treat
-the values as mere integers as opposed to bus addresses.
+On mmp3, there's an extra set of ICU registers (ICU2) that handle
+interrupts on the extra cores.  When masking off interrupts on MP1,
+these should be masked as well.
 
+We add a new interrupt controller via device tree to identify when we're
+looking at an mmp3 machine via compatible field of "marvell,mmp3-intc".
+
+[lkundrak@v3.sk: Changed "mrvl,mmp3-intc" compatible strings to
+"marvell,mmp3-intc". Tidied up the subject line a bit.]
+
+Signed-off-by: Andres Salomon <dilinger@queued.net>
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
 
----
-Changes since v4 of "MMP platform fixes" set:
-- Add a comment, as suggested by Pavel
-
+--
 Changes since v1:
-- Fix up typoes in the comment
-- Do not allow the regs property be larger than the bindings document.
+- Moved mmp3-specific mmp_icu2_base initialization from mmp_init_bases() =
+to
+  mmp3_of_init() so that we don't have to check for marvell,mmp3-intc
+  compatibility twice.
+- Drop an superfluous call to irq_set_default_host()
 
- drivers/irqchip/irq-mmp.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ arch/arm/mach-mmp/regs-icu.h |  3 +++
+ drivers/irqchip/irq-mmp.c    | 48 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
+diff --git a/arch/arm/mach-mmp/regs-icu.h b/arch/arm/mach-mmp/regs-icu.h
+index 0375d5a7fcb2b..410743d2b4020 100644
+--- a/arch/arm/mach-mmp/regs-icu.h
++++ b/arch/arm/mach-mmp/regs-icu.h
+@@ -11,6 +11,9 @@
+ #define ICU_VIRT_BASE	(AXI_VIRT_BASE + 0x82000)
+ #define ICU_REG(x)	(ICU_VIRT_BASE + (x))
+=20
++#define ICU2_VIRT_BASE	(AXI_VIRT_BASE + 0x84000)
++#define ICU2_REG(x)	(ICU2_VIRT_BASE + (x))
++
+ #define ICU_INT_CONF(n)		ICU_REG((n) << 2)
+ #define ICU_INT_CONF_MASK	(0xf)
+=20
 diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 14618dc0bd396..e41e47ab71d3b 100644
+index 126ffdbffdddf..25848d73f6792 100644
 --- a/drivers/irqchip/irq-mmp.c
 +++ b/drivers/irqchip/irq-mmp.c
-@@ -424,9 +424,9 @@ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_=
-init);
+@@ -44,6 +44,7 @@ struct icu_chip_data {
+ 	unsigned int		conf_enable;
+ 	unsigned int		conf_disable;
+ 	unsigned int		conf_mask;
++	unsigned int		conf2_mask;
+ 	unsigned int		clr_mfp_irq_base;
+ 	unsigned int		clr_mfp_hwirq;
+ 	struct irq_domain	*domain;
+@@ -53,9 +54,11 @@ struct mmp_intc_conf {
+ 	unsigned int	conf_enable;
+ 	unsigned int	conf_disable;
+ 	unsigned int	conf_mask;
++	unsigned int	conf2_mask;
+ };
+=20
+ static void __iomem *mmp_icu_base;
++static void __iomem *mmp_icu2_base;
+ static struct icu_chip_data icu_data[MAX_ICU_NR];
+ static int max_icu_nr;
+=20
+@@ -98,6 +101,16 @@ static void icu_mask_irq(struct irq_data *d)
+ 		r &=3D ~data->conf_mask;
+ 		r |=3D data->conf_disable;
+ 		writel_relaxed(r, mmp_icu_base + (hwirq << 2));
++
++		if (data->conf2_mask) {
++			/*
++			 * ICU1 (above) only controls PJ4 MP1; if using SMP,
++			 * we need to also mask the MP2 and MM cores via ICU2.
++			 */
++			r =3D readl_relaxed(mmp_icu2_base + (hwirq << 2));
++			r &=3D ~data->conf2_mask;
++			writel_relaxed(r, mmp_icu2_base + (hwirq << 2));
++		}
+ 	} else {
+ 		r =3D readl_relaxed(data->reg_mask) | (1 << hwirq);
+ 		writel_relaxed(r, data->reg_mask);
+@@ -201,6 +214,14 @@ static const struct mmp_intc_conf mmp2_conf =3D {
+ 			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+ };
+=20
++static struct mmp_intc_conf mmp3_conf =3D {
++	.conf_enable	=3D 0x20,
++	.conf_disable	=3D 0x0,
++	.conf_mask	=3D MMP2_ICU_INT_ROUTE_PJ4_IRQ |
++			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
++	.conf2_mask	=3D 0xf0,
++};
++
+ static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
+ {
+ 	int hwirq;
+@@ -428,6 +449,33 @@ static int __init mmp2_of_init(struct device_node *n=
+ode,
+ }
+ IRQCHIP_DECLARE(mmp2_intc, "mrvl,mmp2-intc", mmp2_of_init);
+=20
++static int __init mmp3_of_init(struct device_node *node,
++			       struct device_node *parent)
++{
++	int ret;
++
++	mmp_icu2_base =3D of_iomap(node, 1);
++	if (!mmp_icu2_base) {
++		pr_err("Failed to get interrupt controller register #2\n");
++		return -ENODEV;
++	}
++
++	ret =3D mmp_init_bases(node);
++	if (ret < 0) {
++		iounmap(mmp_icu2_base);
++		return ret;
++	}
++
++	icu_data[0].conf_enable =3D mmp3_conf.conf_enable;
++	icu_data[0].conf_disable =3D mmp3_conf.conf_disable;
++	icu_data[0].conf_mask =3D mmp3_conf.conf_mask;
++	icu_data[0].conf2_mask =3D mmp3_conf.conf2_mask;
++	set_handle_irq(mmp2_handle_irq);
++	max_icu_nr =3D 1;
++	return 0;
++}
++IRQCHIP_DECLARE(mmp3_intc, "marvell,mmp3-intc", mmp3_of_init);
++
  static int __init mmp2_mux_of_init(struct device_node *node,
  				   struct device_node *parent)
  {
--	struct resource res;
- 	int i, ret, irq, j =3D 0;
- 	u32 nr_irqs, mfp_irq;
-+	u32 reg[4];
-=20
- 	if (!parent)
- 		return -ENODEV;
-@@ -438,18 +438,22 @@ static int __init mmp2_mux_of_init(struct device_no=
-de *node,
- 		pr_err("Not found mrvl,intc-nr-irqs property\n");
- 		return -EINVAL;
- 	}
--	ret =3D of_address_to_resource(node, 0, &res);
-+
-+	/*
-+	 * For historical reasons, the "regs" property of the
-+	 * mrvl,mmp2-mux-intc is not a regular "regs" property containing
-+	 * addresses on the parent bus, but offsets from the intc's base.
-+	 * That is why we can't use of_address_to_resource() here.
-+	 */
-+	ret =3D of_property_read_variable_u32_array(node, "reg", reg,
-+						  ARRAY_SIZE(reg),
-+						  ARRAY_SIZE(reg));
- 	if (ret < 0) {
- 		pr_err("Not found reg property\n");
- 		return -EINVAL;
- 	}
--	icu_data[i].reg_status =3D mmp_icu_base + res.start;
--	ret =3D of_address_to_resource(node, 1, &res);
--	if (ret < 0) {
--		pr_err("Not found reg property\n");
--		return -EINVAL;
--	}
--	icu_data[i].reg_mask =3D mmp_icu_base + res.start;
-+	icu_data[i].reg_status =3D mmp_icu_base + reg[0];
-+	icu_data[i].reg_mask =3D mmp_icu_base + reg[2];
- 	icu_data[i].cascade_irq =3D irq_of_parse_and_map(node, 0);
- 	if (!icu_data[i].cascade_irq)
- 		return -EINVAL;
 --=20
 2.21.0
