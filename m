@@ -1,72 +1,98 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-Date: Thu, 22 Aug 2019 16:59:35 +0800
-Message-ID: <1566464375.11621.10.camel@mhfsdcap03>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
-         <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
-         <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
-         <22a79977-5074-7af1-97b8-8a3e549b23c1@arm.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 2/4] nvmem: meson-efuse: bindings: Add secure-monitor
+ phandle
+Date: Thu, 22 Aug 2019 10:59:43 +0200
+Message-ID: <1jftltpocg.fsf@starbuckisacylon.baylibre.com>
+References: <20190731082339.20163-1-ccaione@baylibre.com>
+ <20190731082339.20163-3-ccaione@baylibre.com> <20190821181458.GA2886@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22a79977-5074-7af1-97b8-8a3e549b23c1@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Will Deacon <will@kernel.org>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, chao.hao@mediatek.com, Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, ming-fan.chen@mediatek.com, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190821181458.GA2886@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Carlo Caione <ccaione@baylibre.com>
+Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, srinivas.kandagatla@linaro.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-08-21 at 16:34 +0100, Robin Murphy wrote:
-> On 21/08/2019 16:24, Will Deacon wrote:
-> > On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
-> >> MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
-> >> the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
-> >> respectively. Meanwhile the iova still is 32bits.
-> >>
-> >> Regarding whether the pagetable address could be over 4GB, the mt8183
-> >> support it while the previous mt8173 don't, thus keep it as is.
-> >>
-> >> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> >> ---
-> >>   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
-> >>   include/linux/io-pgtable.h         |  7 +++----
-> >>   2 files changed, 28 insertions(+), 11 deletions(-)
-> > 
-> > [...]
-> > 
-> >> @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
-> >>   {
-> >>   	struct arm_v7s_io_pgtable *data;
-> >>   
-> >> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
-> >> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
-> >> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
-> >> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> > 
-> > Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> > ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
-> 
-> You mean oas, right? I believe the hardware *does* actually support a 
-> 32-bit ias as well, but we shouldn't pretend to support that while 
-> __arm_v7s_alloc_table() still only knows how to allocate normal-sized 
-> tables.
+On Wed 21 Aug 2019 at 13:14, Rob Herring <robh@kernel.org> wrote:
 
-Yes. The HW double the lvl1 pgtable, thus it supports 33bit iova
-actually. We may extend ias in the future.
+> On Wed, Jul 31, 2019 at 09:23:37AM +0100, Carlo Caione wrote:
+>> Add a new property to link the nvmem driver to the secure-monitor. The
+>> nvmem driver needs to access the secure-monitor to be able to access the
+>> fuses.
+>> 
+>> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+>> ---
+>>  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> index 2e0723ab3384..f7b3ed74db54 100644
+>> --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> @@ -4,6 +4,7 @@ Required properties:
+>>  - compatible: should be "amlogic,meson-gxbb-efuse"
+>>  - clocks: phandle to the efuse peripheral clock provided by the
+>>  	  clock controller.
+>> +- secure-monitor: phandle to the secure-monitor node
+>>  
+>>  = Data cells =
+>>  Are child nodes of eFuse, bindings of which as described in
+>> @@ -16,6 +17,7 @@ Example:
+>>  		clocks = <&clkc CLKID_EFUSE>;
+>>  		#address-cells = <1>;
+>>  		#size-cells = <1>;
+>> +		secure-monitor = <&sm>;
+>>  
+>>  		sn: sn@14 {
+>>  			reg = <0x14 0x10>;
+>> @@ -30,6 +32,10 @@ Example:
+>>  		};
+>>  	};
+>>  
+>> +	sm: secure-monitor {
+>> +		compatible = "amlogic,meson-gxbb-sm";
+>> +	};
+>
+> I guess I acked this a while back, but I'm not sure I would today. It 
+> seems incomplete and a node with only a compatible string and no 
+> resources doesn't need to be in DT. But that's already done...
 
-> 
-> Robin.
-> 
-> > 
-> > With that change:
-> > 
-> > Acked-by: Will Deacon <will@kernel.org>
-> > 
-> > Will
-> > 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+It does have ressources (the shared memory) but the mistake (we should maybe think about
+fixing) is not expressing these in DT
+
+I think the shared memory is already in our DT, maybe the secure monitor
+should get a phandle to it ?
+
+>
+> There's no need for 'secure-monitor' anyways. Just do 
+> 'of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm")' or search 
+> for the driver directly. It's not like there's more than one secure 
+> monitor...
+
+IMO the two methods show different constraints:
+- Carlo's proposition show that the efuse driver need a ressource, which
+is *a* secure monitor, whatever the variant is.
+
+- Your proposition shows that the efuse driver depends on a particular
+  secure monitor variant, which is the one provided by
+  "amlogic,meson-gxbb-sm"
+
+Yes, we could make your proposition work by the keeping the
+"amlogic,meson-gxbb-sm" last in the compatible list but it isn't great
+if a newer variant is actually not compatible with it.
+
+Carlo represent the HW the way it is. It seems more flexible to me,
+without adding (unbearable) complexity
+
+>
+> Rob
