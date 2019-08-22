@@ -1,42 +1,89 @@
-From: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
-Date: Thu, 22 Aug 2019 17:26:33 +0800
-Message-ID: <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
-References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
- <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
- <20190822090208.GJ30120@smile.fi.intel.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2 02/20] dt-bindings: arm: Convert Marvell MMP board/soc bindings to json-schema
+Date: Thu, 22 Aug 2019 11:26:25 +0200
+Message-ID: <20190822092643.593488-3-lkundrak@v3.sk>
+References: <20190822092643.593488-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822090208.GJ30120@smile.fi.intel.com>
-Content-Language: en-US
+In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, alan@linux.intel.com, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+To: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
+Convert Marvell MMP SoC bindings to DT schema format using json-schema.
 
-Hi Andy,
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
-> On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
->> Use a newly introduced optional "status" property of "motorola,mc146818"
->> compatible DT node to determine if RTC is supported. Skip read/write from
->> RTC device only when this node is present and status is "disabled". In all
->> other cases, proceed as before.
-> Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
+---
+Changes since v1:
+- Added this patch
 
+ .../devicetree/bindings/arm/mrvl/mrvl.txt     | 14 ---------
+ .../devicetree/bindings/arm/mrvl/mrvl.yaml    | 31 +++++++++++++++++++
+ 2 files changed, 31 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
 
-get_wallclock() and set_wallclock() are function pointers of platform_ops
-
-which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
-
-at init time. Since adding a new platform to override these functions is
-
-discouraged, so the only way is to modify RTC get/set functions.
-
-
-Regards,
-
-Rahul
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Docume=
+ntation/devicetree/bindings/arm/mrvl/mrvl.txt
+deleted file mode 100644
+index 951687528efb0..0000000000000
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-Marvell Platforms Device Tree Bindings
+-----------------------------------------------------
+-
+-PXA168 Aspenite Board
+-Required root node properties:
+-	- compatible =3D "mrvl,pxa168-aspenite", "mrvl,pxa168";
+-
+-PXA910 DKB Board
+-Required root node properties:
+-	- compatible =3D "mrvl,pxa910-dkb";
+-
+-MMP2 Brownstone Board
+-Required root node properties:
+-	- compatible =3D "mrvl,mmp2-brownstone", "mrvl,mmp2";
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Docum=
+entation/devicetree/bindings/arm/mrvl/mrvl.yaml
+new file mode 100644
+index 0000000000000..dc9de506ac6e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+@@ -0,0 +1,31 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/mrvl/mrvl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell Platforms Device Tree Bindings
++
++maintainers:
++  - Lubomir Rintel <lkundrak@v3.sk>
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: PXA168 Aspenite Board
++        items:
++          - enum:
++              - mrvl,pxa168-aspenite
++          - const: mrvl,pxa168
++      - description: PXA910 DKB Board
++        items:
++          - enum:
++              - mrvl,pxa910-dkb
++      - description: MMP2 Brownstone Board
++        items:
++          - enum:
++              - mrvl,mmp2-brownstone
++          - const: mrvl,mmp2
++...
+--=20
+2.21.0
