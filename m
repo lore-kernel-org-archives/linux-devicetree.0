@@ -1,46 +1,50 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v5 08/13] dt-bindings: pwm: update bindings for MT7628
- SoC
-Date: Thu, 22 Aug 2019 16:12:20 +0800
-Message-ID: <1566461540.16302.4.camel@mtksdaap41>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
-         <1566457123-20791-9-git-send-email-sam.shih@mediatek.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 02/19] dt-bindings: arm: mrvl: Document MMP3 compatible
+ string
+Date: Thu, 22 Aug 2019 10:12:38 +0200
+Message-ID: <c859d12167d18c21dda13b30c2dd3256f407d1d9.camel@v3.sk>
+References: <20190809093158.7969-1-lkundrak@v3.sk>
+         <20190809093158.7969-3-lkundrak@v3.sk> <20190821210349.GA29732@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566457123-20791-9-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <20190821210349.GA29732@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Shih <sam.shih@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-22 at 14:58 +0800, Sam Shih wrote:
-> This updates bindings for MT7628 pwm controller.
+On Wed, 2019-08-21 at 16:03 -0500, Rob Herring wrote:
+> On Fri, Aug 09, 2019 at 11:31:41AM +0200, Lubomir Rintel wrote:
+> > Marvel MMP3 is a successor to MMP2, containing similar peripherals with two
+> > PJ4B cores.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> > index 951687528efb0..66e1e1414245b 100644
+> > --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> > +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> > @@ -12,3 +12,7 @@ Required root node properties:
+> >  MMP2 Brownstone Board
+> >  Required root node properties:
+> >  	- compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
+> > +
+> > +MMP3 SoC
+> > +Required root node properties:
+> > +	- compatible = "marvell,mmp3";
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> Please convert this file to DT schema before adding new SoCs.
+
+Is this something that should generally be done for all new or changed
+DT bindings?
+
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> index ea95b490a913..93980e3da261 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> @@ -21,6 +21,10 @@ Required properties:
->     See pinctrl/pinctrl-bindings.txt for details of the property values.
->   - num-pwms: the number of PWM channels.
-> +
-> + Optional properties:
-> + - clock-frequency: fix clock frequency, this is only used in MT7628 SoC
-> +                    for period calculation. This SoC has no complex clock tree.
+> Rob
 
-I'm sorry if this has been discussed before. 
-
-Would it be simpler if you just provide a fixed-clock as clock in device
-tree? This way you don't need this optional properties and don't need to
-special handle it in driver code. 
-
-After all, the hw is still connected to a simple clock tree.
-
-Joe.C
+Thanks
+Lubo
