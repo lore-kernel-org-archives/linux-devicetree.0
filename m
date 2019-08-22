@@ -1,56 +1,38 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 1/4] bindings: rtc: add bindings for MT2712 RTC
-Date: Thu, 22 Aug 2019 11:17:53 +0200
-Message-ID: <84bd8752-f437-781f-9f08-cedfca6cc06a@gmail.com>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
- <20190801110122.26834-2-ran.bi@mediatek.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/2] pwm: pwm-mediatek: Add MT8516 SoC support
+Date: Thu, 22 Aug 2019 11:18:10 +0200
+Message-ID: <20190822091810.5t3inn56npdvwnfy@pengutronix.de>
+References: <20190805125848.15751-1-fparent@baylibre.com>
+ <20190805125848.15751-2-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190801110122.26834-2-ran.bi@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190805125848.15751-2-fparent@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Bi <ran.bi@mediatek.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu <flora.fu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
+To: Fabien Parent <fparent@baylibre.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/08/2019 13:01, Ran Bi wrote:
-> Document the binding for MT2712 RTC implemented by rtc-mt2712.
+On Mon, Aug 05, 2019 at 02:58:48PM +0200, Fabien Parent wrote:
+> Add the compatible and the platform data to support PWM on the MT8516
+> SoC.
 > 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/rtc/rtc-mt2712.txt         | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt2712.txt b/Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
-> new file mode 100644
-> index 000000000000..c33d87e5e753
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-mt2712.txt
-> @@ -0,0 +1,14 @@
-> +Device-Tree bindings for MediaTek SoC based RTC
-> +
-> +Required properties:
-> +- compatible	    : Should be "mediatek,mt2712-rtc" : for MT2712 SoC
-> +- reg 		    : Specifies base physical address and size of the registers;
-> +- interrupts	    : Should contain the interrupt for RTC alarm;
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-No clocks for the RTC? What about CLK_TOP_RTC_SEL from the clk driver?
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Regards,
-Matthias
+The change looks fine, there is however another series currently waiting
+for application for this driver that conflicts with this one (I think).
 
-> +
-> +Example:
-> +
-> +rtc: rtc@10011000 {
-> +	compatible = "mediatek,mt2712-rtc";
-> +	reg = <0 0x10011000 0 0x1000>;
-> +	interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_LOW>;
-> +};
-> 
+Maybe it would be sensible to join your forces and produce a single
+series without conflicts?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
