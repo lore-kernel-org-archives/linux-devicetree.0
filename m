@@ -1,94 +1,83 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 16/20] ARM: mmp: add SMP support
-Date: Thu, 22 Aug 2019 09:36:41 -0700
-Message-ID: <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
- <20190822092643.593488-17-lkundrak@v3.sk>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
+ nodes
+Date: Thu, 22 Aug 2019 17:48:15 +0100
+Message-ID: <20190822164815.GA12855@e121166-lin.cambridge.arm.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822092643.593488-17-lkundrak@v3.sk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>, Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, Marc Zyngier <maz@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/22/19 2:26 AM, Lubomir Rintel wrote:
-> Used to bring up the second core on MMP3.
+On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+> controller is not fixed, it is determined by the selected
+> SerDes protocol. The current num-lanes indicates the max lanes
+> PCIe controller can support up to, instead of the lanes assigned
+> to the PCIe controller. This can result in PCIe link training fail
+> after hot-reset.
 > 
-> ---
-> Changes since v1:
-> - Wrap SW_BRANCH_VIRT_ADDR with __pa_symbol()
+> Hou Zhiqiang (4):
+>   dt-bindings: PCI: designware: Remove the num-lanes from Required
+>     properties
+>   PCI: dwc: Return directly when num-lanes is not found
+>   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
+>   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
 > 
->  arch/arm/mach-mmp/Makefile  |  3 +++
->  arch/arm/mach-mmp/platsmp.c | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
->  create mode 100644 arch/arm/mach-mmp/platsmp.c
-> 
-> diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
-> index 322c1c97dc900..7b3a7f979eece 100644
-> --- a/arch/arm/mach-mmp/Makefile
-> +++ b/arch/arm/mach-mmp/Makefile
-> @@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
->  obj-$(CONFIG_CPU_PXA910)	+= pm-pxa910.o
->  obj-$(CONFIG_CPU_MMP2)		+= pm-mmp2.o
->  endif
-> +ifeq ($(CONFIG_SMP),y)
-> +obj-$(CONFIG_MACH_MMP3_DT)	+= platsmp.o
-> +endif
->  
->  # board support
->  obj-$(CONFIG_MACH_ASPENITE)	+= aspenite.o
-> diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
-> new file mode 100644
-> index 0000000000000..98d5ef23623cb
-> --- /dev/null
-> +++ b/arch/arm/mach-mmp/platsmp.c
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
-> + */
-> +#include <linux/io.h>
-> +#include <asm/smp_scu.h>
-> +#include <asm/smp.h>
-> +#include "addr-map.h"
-> +
-> +#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
-> +
-> +static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> +{
-> +	/*
-> +	 * Apparently, the boot ROM on the second core spins on this
-> +	 * register becoming non-zero and then jumps to the address written
-> +	 * there. No IPIs involved.
-> +	 */
-> +	__raw_writel(virt_to_phys(secondary_startup),
-> +			__pa_symbol(SW_BRANCH_VIRT_ADDR));
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+>  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
+>  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
+>  8 files changed, 4 insertions(+), 22 deletions(-)
 
+What a mess.
 
-That looks wrong, the __pa_symbol() is applicable to secondary_startup,
-while SW_BRANCH_VIRT_ADDR does not need that.
+I am going to apply these but first if anyone can explain to
+me what commit 907fce090253 was _supposed_ to to I would
+be grateful, I read it multiple times but I still have not
+understood it. This series does the right thing but why things
+are they way they are in the mainline honestly I have no
+idea, this does not make any sense in the slightest:
 
-> +	return 0;
-> +}
-> +
-> +static void mmp3_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +	scu_enable(SCU_VIRT_BASE);
-> +}
-> +
-> +static const struct smp_operations mmp3_smp_ops __initconst = {
-> +	.smp_prepare_cpus	= mmp3_smp_prepare_cpus,
-> +	.smp_boot_secondary	= mmp3_boot_secondary,
-> +};
-> +CPU_METHOD_OF_DECLARE(mmp3_smp, "marvell,mmp3-smp", &mmp3_smp_ops);
-> 
+ret = of_property_read_u32(np, "num-lanes", &lanes);
+if (ret)
+	lanes = 0;
 
+/* Set the number of lanes */
+val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+val &= ~PORT_LINK_MODE_MASK;
+switch (lanes) {
+case 1:
+	val |= PORT_LINK_MODE_1_LANES;
+	break;
+case 2:
+	val |= PORT_LINK_MODE_2_LANES;
+	break;
+case 4:
+	val |= PORT_LINK_MODE_4_LANES;
+	break;
+case 8:
+	val |= PORT_LINK_MODE_8_LANES;
+	break;
+default:
+	dev_err(pci->dev, "num-lanes %u: invalid value\n", lanes);
+	return;
+}
 
--- 
-Florian
+why do we need to set lanes to 0 if num-lanes is not present ? To print
+an error message ?
+
+I really do not understand this code.
+
+Lorenzo
