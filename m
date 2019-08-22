@@ -1,7 +1,7 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: sm8150: Update parent clock for rpmhcc
-Date: Thu, 22 Aug 2019 22:35:33 +0530
-Message-ID: <20190822170533.8056-1-vkoul@kernel.org>
+Subject: [PATCH] arm64: dts: sdm845: Add parent clock for rpmhcc
+Date: Thu, 22 Aug 2019 22:41:35 +0530
+Message-ID: <20190822171135.26488-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -10,26 +10,26 @@ To: Andy Gross <agross@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since rphmcc expects the parent clock name as 'xo_board', update the
-parent clock name.
+RPM clock controller has parent as xo, so specify that in DT node for
+rpmhcc
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 379c40b9a52f..f92c590fd3dc 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -650,7 +650,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 9be6acb0650e..8a19ed601470 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3028,6 +3028,8 @@
  			rpmhcc: clock-controller {
- 				compatible = "qcom,sm8150-rpmh-clk";
+ 				compatible = "qcom,sdm845-rpmh-clk";
  				#clock-cells = <1>;
--				clock-names = "xo";
-+				clock-names = "xo_board";
- 				clocks = <&xo_board>;
++				clock-names = "xo-board";
++				clocks = <&xo_board>;
  			};
- 		};
+ 
+ 			rpmhpd: power-controller {
 -- 
 2.20.1
