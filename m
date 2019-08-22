@@ -1,50 +1,45 @@
-From: Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v5 13/13] arm: dts: mediatek: add mt7629 pwm support
-Date: Thu, 22 Aug 2019 14:58:43 +0800
-Message-ID: <1566457123-20791-14-git-send-email-sam.shih@mediatek.com>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: timer: renesas, cmt: Add CMT0234 to
+ sh73a0 and r8a7740
+Date: Thu, 22 Aug 2019 09:07:43 +0200
+Message-ID: <CAMuHMdX2MLeAHGMCAcsc1CnMrUYfJzsv4ut=dn435B8Zw_49gg@mail.gmail.com>
+References: <156630449239.17444.11157306180861080402.sendpatchset@octo> <156630450374.17444.10813153921641289392.sendpatchset@octo>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <156630450374.17444.10813153921641289392.sendpatchset@octo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sam Shih <sam.shih@mediatek.com>
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This adds pwm support for MT7629.
+On Tue, Aug 20, 2019 at 2:33 PM Magnus Damm <magnus.damm@gmail.com> wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
+>
+> Document the on-chip CMT devices included in r8a7740 and sh73a0.
+>
+> Included in this patch is DT binding documentation for 32-bit CMTs
+> CMT0, CMT2, CMT3 and CMT4. They all contain a single channel and are
+> quite similar however some minor differences still exist:
+>  - "Counter input clock" (clock input and on-device divider)
+>     One example is that RCLK 1/1 is supported by CMT2, CMT3 and CMT4.
+>  - "Wakeup request" (supported by CMT0 and CMT2)
+>
+> Because of this one unique compat string per CMT device is selected.
+>
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm/boot/dts/mt7629.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..493be9a9453b 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -241,6 +241,22 @@
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm@11006000 {
-+			compatible = "mediatek,mt7629-pwm",
-+				     "mediatek,mt7622-pwm";
-+			reg = <0 0x11006000 0 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+				 <&pericfg CLK_PERI_PWM_PD>,
-+				 <&pericfg CLK_PERI_PWM1_PD>;
-+			clock-names = "top", "main", "pwm1";
-+			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-+			assigned-clock-parents =
-+					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-+			num-pwms = <1>;
-+			status = "disabled";
-+		};
-+
- 		i2c: i2c@11007000 {
- 			compatible = "mediatek,mt7629-i2c",
- 				     "mediatek,mt2712-i2c";
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
