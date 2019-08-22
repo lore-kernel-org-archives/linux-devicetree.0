@@ -1,43 +1,55 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH v2 2/4] nvmem: meson-efuse: bindings: Add secure-monitor
- phandle
-Date: Thu, 22 Aug 2019 09:36:33 +0100
-Message-ID: <7c5307fe-2762-eefd-5c65-4ff7c4bd2f5d@baylibre.com>
-References: <20190731082339.20163-1-ccaione@baylibre.com>
- <20190731082339.20163-3-ccaione@baylibre.com> <20190821181458.GA2886@bogus>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: pwm-mediatek: Add MT8516 SoC support
+Date: Thu, 22 Aug 2019 10:52:11 +0200
+Message-ID: <d9b1f0a3-bd10-9fe8-af9f-17dafd7a509c@gmail.com>
+References: <20190805125848.15751-1-fparent@baylibre.com>
+ <20190805125848.15751-2-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821181458.GA2886@bogus>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190805125848.15751-2-fparent@baylibre.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, srinivas.kandagatla@linaro.org, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabien Parent <fparent@baylibre.com>, thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/08/2019 19:14, Rob Herring wrote:
-> On Wed, Jul 31, 2019 at 09:23:37AM +0100, Carlo Caione wrote:
 
-> There's no need for 'secure-monitor' anyways. Just do
-> 'of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm")' or search
-> for the driver directly. It's not like there's more than one secure
-> monitor...
 
-How is hardcoding the secure-monitor directly into the efuse driver 
-better than having it referenced in the DT?
+On 05/08/2019 14:58, Fabien Parent wrote:
+> Add the compatible and the platform data to support PWM on the MT8516
+> SoC.
+> 
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-Yes, there is one single secure monitor but (even if this is not 
-currently the case) several drivers can use it making the secure-monitor 
-a resource to be potentially used by several devices.
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
---
-Carlo Caione
+> ---
+>  drivers/pwm/pwm-mediatek.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index eb6674ce995f..6697e30811e7 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -302,11 +302,18 @@ static const struct mtk_pwm_platform_data mt7628_pwm_data = {
+>  	.has_clks = false,
+>  };
+>  
+> +static const struct mtk_pwm_platform_data mt8516_pwm_data = {
+> +	.num_pwms = 5,
+> +	.pwm45_fixup = false,
+> +	.has_clks = true,
+> +};
+> +
+>  static const struct of_device_id mtk_pwm_of_match[] = {
+>  	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
+>  	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
+>  	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
+>  	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
+> +	{ .compatible = "mediatek,mt8516-pwm", .data = &mt8516_pwm_data },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+> 
