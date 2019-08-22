@@ -1,42 +1,108 @@
-From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH 1/1] arm64: dts: imx8mq: Add mux controller to iomuxc_gpr
-Date: Thu, 22 Aug 2019 13:10:23 +0200
-Message-ID: <fa3b1df7fc5e74f375df5de53061d1a93d154b51.1566471985.git.agx@sigxcpu.org>
-References: <cover.1566471985.git.agx@sigxcpu.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
+ correct mode
+Date: Thu, 22 Aug 2019 12:13:16 +0100
+Message-ID: <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821154745.31834-3-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1566471985.git.agx@sigxcpu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190821154745.31834-3-jonnyc@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIG9ubHkgbXV4IGNvbnRyb2xzIHRoZSBNSVBJIERTSSBpbnB1dCBzZWxlY3Rpb24uCgpTaWdu
-ZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNpZ3hjcHUub3JnPgotLS0KIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpIHwgOSArKysrKysrKy0KIDEgZmlsZSBj
-aGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCmluZGV4IDRmZGQ2MGYyYzUxZS4uM2YzNTk0ZDk0ODVj
-IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQor
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQpAQCAtNDQwLDgg
-KzQ0MCwxNSBAQAogCQkJfTsKIAogCQkJaW9tdXhjX2dwcjogc3lzY29uQDMwMzQwMDAwIHsKLQkJ
-CQljb21wYXRpYmxlID0gImZzbCxpbXg4bXEtaW9tdXhjLWdwciIsICJmc2wsaW14NnEtaW9tdXhj
-LWdwciIsICJzeXNjb24iOworCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1pb211eGMtZ3By
-IiwgImZzbCxpbXg2cS1pb211eGMtZ3ByIiwKKwkJCQkJICAgICAic3lzY29uIiwgInNpbXBsZS1t
-ZmQiOwogCQkJCXJlZyA9IDwweDMwMzQwMDAwIDB4MTAwMDA+OworCisJCQkJbXV4OiBtdXgtY29u
-dHJvbGxlciB7CisJCQkJCWNvbXBhdGlibGUgPSAibW1pby1tdXgiOworCQkJCQkjbXV4LWNvbnRy
-b2wtY2VsbHMgPSA8MT47CisJCQkJCW11eC1yZWctbWFza3MgPSA8MHgzNCAweDAwMDAwMDA0Pjsg
-LyogTUlQSV9NVVhfU0VMICovCisJCQkJfTsKIAkJCX07CiAKIAkJCW9jb3RwOiBvY290cC1jdHJs
-QDMwMzUwMDAwIHsKLS0gCjIuMjAuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Aug 21, 2019 at 06:47:45PM +0300, Jonathan Chocron wrote:
+> Some PCIe controllers can be set to either Host or EP according to some
+> early boot FW. To make sure there is no discrepancy (e.g. FW configured
+> the port to EP mode while the DT specifies it as a host bridge or vice
+> versa), a check has been added for each mode.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 2bf5a35c0570..00e59a134b93 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	int ret;
+>  	u32 reg;
+>  	void *addr;
+> +	u8 hdr_type;
+>  	unsigned int nbars;
+>  	unsigned int offset;
+>  	struct pci_epc *epc;
+> @@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		return -EINVAL;
+>  	}
+>  
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> +		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+>  	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Unable to read *num-ib-windows* property\n");
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f93252d0da5b..d2ca748e4c85 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *cfg_res;
+> +	u8 hdr_type;
+>  	int ret;
+>  
+>  	raw_spin_lock_init(&pci->pp.lock);
+> @@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+
+Do we know if it's always safe to read these registers at this point in time?
+
+Later in dw_pcie_host_init we call pp->ops->host_init - looking at the
+implementations of .host_init I can see:
+
+ - resets being performed (qcom_ep_reset_assert,
+   artpec6_pcie_assert_core_reset, imx6_pcie_assert_core_reset)
+ - changes to config space registers (ks_pcie_init_id, dw_pcie_setup_rc)
+   including setting PCI_CLASS_DEVICE
+ - and clocks being enabled (qcom_pcie_init_1_0_0)
+
+I'm not sure if your changes would cause anything to break for these other
+controllers (or future controllers) as I couldn't see any other reads to the
+config.
+
+Given that we are reading config space should dw_pcie_rd_own_conf be used?
+(For example kirin_pcie_rd_own_conf does something special).
+
+Thanks,
+
+Andrew Murray
+
+> +	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+> +		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+>  	pp->mem_base = pp->mem->start;
+>  
+>  	if (!pp->va_cfg0_base) {
+> -- 
+> 2.17.1
+> 
