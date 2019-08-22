@@ -1,33 +1,59 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next v4 0/2] dt-bindings: net: meson-dwmac: convert
- to yaml
-Date: Thu, 22 Aug 2019 15:42:12 -0700 (PDT)
-Message-ID: <20190822.154212.249670304042273740.davem@davemloft.net>
-References: <20190820075742.14857-1-narmstrong@baylibre.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [RESEND PATCH v4 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date: Fri, 23 Aug 2019 00:37:55 +0100
+Message-ID: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820075742.14857-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: narmstrong@baylibre.com
-Cc: robh+dt@kernel.org, martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
-Date: Tue, 20 Aug 2019 09:57:40 +0200
+Resending this series due to a typo in yaml filename!
 
-> This patchsets converts the Amlogic Meson DWMAC glue bindings over to
-> YAML schemas using the already converted dwmac bindings.
-> 
-> The first patch is needed because the Amlogic glue needs a supplementary
-> reg cell to access the DWMAC glue registers.
-> 
-> Changes since v3:
-> - Specified net-next target tree
-> 
-> Changes since v2:
-> - Added review tags
-> - Updated allwinner,sun7i-a20-gmac.yaml reg maxItems
+Thanks for reviewing v3 patchset, here is v4 with addressing the comments in v3
 
-Series applied, thanks.
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
+
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
+
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+TODO:
+	Add thermal sensor support in WSA881x.
+
+Thanks,
+srini
+
+Changes since v3:
+ - updated slave bindings according to Rob's Suggestion.
+ - moved bindings to yaml
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   44 +
+ .../soundwire/soundwire-controller.yaml       |   75 ++
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   52 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
+
+-- 
+2.21.0
