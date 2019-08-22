@@ -1,8 +1,8 @@
 From: Andrew Murray <andrew.murray@arm.com>
 Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
  Annapurna Labs Root Port
-Date: Thu, 22 Aug 2019 16:07:53 +0100
-Message-ID: <20190822150752.GQ23903@e119886-lin.cambridge.arm.com>
+Date: Thu, 22 Aug 2019 16:08:27 +0100
+Message-ID: <20190822150827.GR23903@e119886-lin.cambridge.arm.com>
 References: <20190821153545.17635-1-jonnyc@amazon.com>
  <20190821153545.17635-4-jonnyc@amazon.com>
  <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
@@ -16,6 +16,10 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: "Chocron, Jonathan" <jonnyc@amazon.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, benh@kernel.crashing
 List-Id: devicetree@vger.kernel.org
+
+
+[+CC Babu Moger <babu.moger@oracle.com>]
+
 
 On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
 > On Thu, 2019-08-22 at 12:41 +0100, Andrew Murray wrote:
@@ -57,19 +61,8 @@ On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
 > I don't think that solution should be implemented in pcituils. It
 > rightfully warns when it fails to read from the vpd sysfs file - it
 > first 'open's the file which succeeds, and then fails when trying to
-> 'read' from it.
-
-Indeed - this is correct.
-
-> I don't think that it should specifically "mask" out
+> 'read' from it. I don't think that it should specifically "mask" out
 > -EIO, since it shouldn't have to "know" that the underlying reason is a
-
-You're probably right - I guess the kernel should document somewhere
-(ABI/testing/sysfs-bus-pci?) what the kernel does when such a quirk exists,
-then userspace can conform. For example if -EIO cannot be returned any
-other way then it would be OK for pciutils to mask it out - but its
-ambigious at the moment.
-
 > VPD quirk (or more precisely vpd->len == 0). Furthermore, it is
 > possible that this error code would be returned for some other reason
 > (not sure if currently this occurs).
@@ -80,23 +73,6 @@ ambigious at the moment.
 > In the long run, quirk_blacklist_vpd() should probably be modified to
 > do what our quirk does or something similar (and then the al quirk can
 > be removed). What do you think?
-
-When I first saw your quirk, I did wonder why quirk_blacklist_vpd doesn't
-do what your quirk does. Perhaps there isn't a reason. It was first
-introduced in 2016:
-
-7c20078a8197 ("PCI: Prevent VPD access for buggy devices")
-
-Some may argue that actually because your hardware has a VPD capability
-it should have the sysfs file - but the capability doesn't work and so
-the sysfs file should return an error.
-
-I'd be keen to change quirk_blacklist_vpd - Babu, Bjorn any objections?
-
-Thanks,
-
-Andrew Murray
-
 > 
 > > Thanks,
 > > 
