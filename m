@@ -1,48 +1,60 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 2/2] rtc: Add Amlogic Virtual Wake RTC
-Date: Thu, 22 Aug 2019 23:11:47 +0200
-Message-ID: <20190822211147.GB27031@piout.net>
-References: <20190812232850.8016-1-khilman@kernel.org>
- <20190812232850.8016-3-khilman@kernel.org>
+Subject: Re: [v7,1/2] rtc/fsl: add FTM alarm driver as the wakeup source
+Date: Thu, 22 Aug 2019 23:12:16 +0200
+Message-ID: <20190822211216.GC27031@piout.net>
+References: <20190813030157.48590-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190812232850.8016-3-khilman@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: linux-rtc@vger.kernel.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+In-Reply-To: <20190813030157.48590-1-biwen.li@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Biwen Li <biwen.li@nxp.com>
+Cc: a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/2019 16:28:50-0700, Kevin Hilman wrote:
-> From: Neil Armstrong <narmstrong@baylibre.com>
+On 13/08/2019 11:01:56+0800, Biwen Li wrote:
+> For the paltforms including LS1012A, LS1021A, LS1028A, LS1043A,
+> LS1046A, LS1088A, LS208xA that has the FlexTimer
+> module, implementing alarm functions within RTC subsystem
+> to wakeup the system when system going to sleep (work with RCPM driver).
 > 
-> The Amlogic Meson GX SoCs uses a special register to store the
-> time in seconds to wakeup after a system suspend.
-> 
-> In order to be able to reuse the RTC wakealarm feature, this
-> driver implements a fake RTC device which uses the system time
-> to deduce a suspend delay.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> [khilman: rebase to v5.3-rc, rework and modernization]
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
->  MAINTAINERS                  |   1 +
->  drivers/rtc/Kconfig          |  11 +++
->  drivers/rtc/Makefile         |   1 +
->  drivers/rtc/rtc-meson-vrtc.c | 156 +++++++++++++++++++++++++++++++++++
->  4 files changed, 169 insertions(+)
->  create mode 100644 drivers/rtc/rtc-meson-vrtc.c
+> Change in v7:
+>     - None
+> 
+> Change in v6:
+>     - None
+> 
+> Change in v5:
+>     - replace devm_rtc_device_register with devm_rtc_allocate_device
+>     and rtc_register_device
+> 
+> Change in v4:
+>     - clean code
+>     - correct requesting irq
+>     - register as a regular RTC driver
+>     - change return value of ftm_rtc_set_alarm from -EINVAL to -ERANGE
+>     - replace pr_err with dev_err
+>     - sort alphabetically
+>     - auto select RCPM driver
+>     - correct UTC time in ftm_rtc_read_time
+> 
+> Change in v3:
+> 	- add some comments about clock source and errata
+> 	- adjust format
+> 	- replace endian with big_endian of struct ftm_rtc
+> 	- remove compatible "fsl,ftm-alarm"
+> 
+> Change in v2:
+> 	- remove code about setting rcpm
+> 
+>  drivers/rtc/Kconfig             |  15 ++
+>  drivers/rtc/Makefile            |   1 +
+>  drivers/rtc/rtc-fsl-ftm-alarm.c | 336 ++++++++++++++++++++++++++++++++
+>  3 files changed, 352 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-fsl-ftm-alarm.c
 > 
 Applied, thanks.
 
