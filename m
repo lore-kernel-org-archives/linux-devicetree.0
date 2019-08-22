@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell way
-Date: Thu, 22 Aug 2019 19:22:39 +0800
-Message-ID: <20190822112242.16309-7-xiaowei.bao@nxp.com>
+Subject: [PATCH v2 10/10] misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+Date: Thu, 22 Aug 2019 19:22:42 +0800
+Message-ID: <20190822112242.16309-10-xiaowei.bao@nxp.com>
 References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
@@ -10,30 +10,28 @@ To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kern
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The layerscape platform use the doorbell way to trigger MSIX
-interrupt in EP mode.
+Add LS1088a in pci_device_id table so that pci-epf-test can be used
+for testing PCIe EP in LS1088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
 v2:
  - No change.
 
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/misc/pci_endpoint_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 8461f62..7ca5fe8 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -74,7 +74,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	case PCI_EPC_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 	case PCI_EPC_IRQ_MSIX:
--		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
-+							  interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
- 		return -EINVAL;
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 6e208a0..d531951 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -793,6 +793,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x80c0) },
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
 -- 
 2.9.5
