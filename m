@@ -1,81 +1,44 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
-Date: Thu, 22 Aug 2019 13:56:05 +0100
-Message-ID: <90b9fa33-3a49-c414-4352-66e26673a05d@linaro.org>
-References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
- <20190809133407.25918-2-srinivas.kandagatla@linaro.org>
- <20190821214436.GA13936@bogus>
- <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org>
- <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
+Date: Thu, 22 Aug 2019 16:04:29 +0300
+Message-ID: <20190822130429.GN30120@smile.fi.intel.com>
+References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
+ <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
+ <20190822090208.GJ30120@smile.fi.intel.com>
+ <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Linux-ALSA <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, alan@linux.intel.com, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 22/08/2019 13:36, Rob Herring wrote:
->>>> +soundwire@c2d0000 {
->>>> +    compatible = "qcom,soundwire-v1.5.0"
->>>> +    reg = <0x0c2d0000 0x2000>;
->>>> +
->>>> +    spkr_left:wsa8810-left{
->>>> +            compatible = "sdw0110217201000";
->>>> +            ...
->>>> +    };
->>>> +
->>>> +    spkr_right:wsa8810-right{
->>>> +            compatible = "sdw0120217201000";
->>> The normal way to distinguish instances is with 'reg'. So I think you
->>> need 'reg' with Instance ID moved there at least. Just guessing, but
->>> perhaps Link ID, too? And for 2 different classes of device is that
->>> enough?
->> In previous bindings (https://lists.gt.net/linux/kernel/3403276  ) we
->> did have instance-id as different property, however Pierre had some good
->> suggestion to make it align with _ADR encoding as per MIPI DisCo spec.
->>
->> Do you still think that we should split the instance id to reg property?
-> Assuming you could have more than 1 of the same device on the bus,
-> then you need some way to distinguish them and the way that's done for
-> DT is unit-address/reg. And compatible strings should be constant for
-> each instance.
-That is a good point!
-Okay that makes more sense keep compatible string constant.
-Class ID would be constant for given functionality that the driver will 
-provide.
-
-So we will end up with some thing like this:
-
-soundwire@c2d0000 {
-	compatible = "qcom,soundwire-v1.5.0"
-	reg = <0x0c2d0000 0x2000>;	
-         #address-cells = <1>;
-         #size-cells = <0>;
-
-	spkr_left:skpr@1{
-		compatible = "sdw10217201000";
-		reg = <0x1>
-		sdw-link-id = <0>;
-		...
-	};
-
-	spkr_right:spkr@2{
-		compatible = "sdw10217201000";
-		reg = <0x2>
-		sdw-link-id = <0>;
-	};
-};
-
-I will spin this in next version!
-
-Thanks,
-srini
-
+On Thu, Aug 22, 2019 at 05:26:33PM +0800, Tanwar, Rahul wrote:
+> On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
+> > On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
+> > > Use a newly introduced optional "status" property of "motorola,mc146818"
+> > > compatible DT node to determine if RTC is supported. Skip read/write from
+> > > RTC device only when this node is present and status is "disabled". In all
+> > > other cases, proceed as before.
+> > Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
 > 
-> Rob
+> 
+> get_wallclock() and set_wallclock() are function pointers of platform_ops
+> 
+> which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
+> 
+> at init time. Since adding a new platform to override these functions is
+> 
+> discouraged, so the only way is to modify RTC get/set functions.
+
+Shouldn't it be platform agnostic code?
+So, my point is, instead of hacking two functions, perhaps better to avoid them
+at all.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
