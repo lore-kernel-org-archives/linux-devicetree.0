@@ -1,74 +1,147 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH v3 0/9] i2c: add support for filters
-Date: Thu, 22 Aug 2019 15:00:14 +0000
-Message-ID: <867070c3-02c8-da1b-04d9-0a1b628577de@microchip.com>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <20190712082044.6eteunzehyptsibk@M43218.corp.atmel.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Date: Thu, 22 Aug 2019 16:07:53 +0100
+Message-ID: <20190822150752.GQ23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821153545.17635-4-jonnyc@amazon.com>
+ <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+ <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190712082044.6eteunzehyptsibk@M43218.corp.atmel.com>
-Content-Language: en-US
-Content-ID: <19D95610CCA5FD42B389A130ED300BED@namprd11.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org
-Cc: peda@axentia.se, mark.rutland@arm.com, Nicolas.Ferre@microchip.com
+To: "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, benh@kernel.crashing
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDEyLjA3LjIwMTkgMTE6MjAsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBU
-dWUsIEp1bCAwOSwgMjAxOSBhdCAwMzoxOToyNlBNICswMjAwLCBFdWdlbiBIcmlzdGV2IC0gTTE4
-MjgyIHdyb3RlOg0KPj4gRnJvbTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2No
-aXAuY29tPg0KPj4NCj4+IEhlbGxvLA0KPj4NCj4+IFRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBm
-b3IgYW5hbG9nIGFuZCBkaWdpdGFsIGZpbHRlcnMgZm9yIGkyYyBjb250cm9sbGVycw0KPj4NCj4+
-IFRoaXMgc2VyaWVzIGlzIGJhc2VkIG9uIHRoZSBzZXJpZXM6DQo+PiBbUEFUQ0ggdjIgMC85XSBp
-MmM6IGF0OTE6IGZpbHRlcnMgc3VwcG9ydCBmb3IgYXQ5MSBTb0NzDQo+PiBhbmQgZW5oYW5jZWQg
-dG8gYWRkIHRoZSBiaW5kaW5ncyBmb3IgYWxsIGNvbnRyb2xsZXJzIHBsdXMgYW4gZXh0cmEgYmlu
-ZGluZw0KPj4gZm9yIHRoZSB3aWR0aCBvZiB0aGUgc3Bpa2VzIGluIG5hbm9zZWNvbmRzLg0KPj4N
-Cj4+IEZpcnN0LCBiaW5kaW5ncyBhcmUgY3JlYXRlZCBmb3INCj4+ICdpMmMtYW5hLWZpbHRlcicN
-Cj4+ICdpMmMtZGlnLWZpbHRlcicNCj4+ICdpMmMtZmlsdGVyLXdpZHRoLW5zJw0KPj4NCj4+IFRo
-ZSBzdXBwb3J0IGlzIGFkZGVkIGluIHRoZSBpMmMgY29yZSB0byByZXRyaWV2ZSBmaWx0ZXIgd2lk
-dGggYW5kIGFkZCBpdA0KPj4gdG8gdGhlIHRpbWluZ3Mgc3RydWN0dXJlLg0KPj4gTmV4dCwgdGhl
-IGF0OTEgZHJpdmVyIGlzIGVuaGFuY2VkIGZvciBzdXBwb3J0aW5nIGRpZ2l0YWwgZmlsdGVyLCBh
-ZHZhbmNlZA0KPj4gZGlnaXRhbCBmaWx0ZXIgKHdpdGggc2VsZWN0YWJsZSBzcGlrZSB3aWR0aCkg
-YW5kIHRoZSBhbmFsb2cgZmlsdGVyLg0KPj4NCj4+IEZpbmFsbHkgdGhlIGRldmljZSB0cmVlIGZv
-ciB0d28gYm9hcmRzIGFyZSBtb2RpZmllZCB0byBtYWtlIHVzZSBvZiB0aGUNCj4+IG5ldyBwcm9w
-ZXJ0aWVzLg0KPj4NCj4+IFRoaXMgc2VyaWVzIGlzIHRoZSByZXN1bHQgb2YgdGhlIGNvbW1lbnRz
-IG9uIHRoZSBNTCBpbiB0aGUgZGlyZWN0aW9uDQo+PiByZXF1ZXN0ZWQ6IHRvIG1ha2UgdGhlIGJp
-bmRpbmdzIGdsb2JhbGx5IGF2YWlsYWJsZSBmb3IgaTJjIGRyaXZlcnMuDQo+Pg0KPj4gQ2hhbmdl
-cyBpbiB2MzoNCj4+IC0gbWFkZSBiaW5kaW5ncyBnbG9iYWwgZm9yIGkyYyBjb250cm9sbGVycyBh
-bmQgbW9kaWZpZWQgYWNjb3JkaW5nbHkNCj4+IC0gZ2F2ZSB1cCBQQURGQ0RGIGJpdCBiZWNhdXNl
-IGl0J3MgYSBsYWNrIGluIGRhdGFzaGVldA0KPj4gLSB0aGUgY29tcHV0YXRpb24gb24gdGhlIHdp
-ZHRoIG9mIHRoZSBzcGlrZSBpcyBiYXNlZCBvbiBwZXJpcGggY2xvY2sgYXMgaXQNCj4+IGlzIGRv
-bmUgZm9yIGhvbGQgdGltZS4NCj4+DQo+PiBDaGFuZ2VzIGluIHYyOg0KPj4gLSBhZGRlZCBkZXZp
-Y2UgdHJlZSBiaW5kaW5ncyBhbmQgc3VwcG9ydCBmb3IgZW5hYmxlLWFuYS1maWx0IGFuZA0KPj4g
-ZW5hYmxlLWRpZy1maWx0DQo+PiAtIGFkZGVkIHRoZSBuZXcgcHJvcGVydGllcyB0byB0aGUgRFQg
-Zm9yIHNhbWE1ZDRfeHBsYWluZWQvc2FtYTVkMl94cGxhaW5lZA0KPj4NCj4+IEV1Z2VuIEhyaXN0
-ZXYgKDkpOg0KPj4gICAgZHQtYmluZGluZ3M6IGkyYzogYXQ5MTogYWRkIG5ldyBjb21wYXRpYmxl
-DQo+PiAgICBkdC1iaW5kaW5nczogaTJjOiBhZGQgYmluZGluZ3MgZm9yIGkyYyBhbmFsb2cgYW5k
-IGRpZ2l0YWwgZmlsdGVyDQo+PiAgICBpMmM6IGFkZCBzdXBwb3J0IGZvciBmaWx0ZXItd2lkdGgt
-bnMgb3B0aW9uYWwgcHJvcGVydHkNCj4+ICAgIGkyYzogYXQ5MTogYWRkIG5ldyBwbGF0Zm9ybSBz
-dXBwb3J0IGZvciBzYW05eDYwDQo+PiAgICBpMmM6IGF0OTE6IGFkZCBzdXBwb3J0IGZvciBkaWdp
-dGFsIGZpbHRlcmluZw0KPj4gICAgaTJjOiBhdDkxOiBhZGQgc3VwcG9ydCBmb3IgYWR2YW5jZWQg
-ZGlnaXRhbCBmaWx0ZXJpbmcNCj4+ICAgIGkyYzogYXQ5MTogYWRkIHN1cHBvcnQgZm9yIGFuYWxv
-ZyBmaWx0ZXJpbmcNCj4+ICAgIEFSTTogZHRzOiBhdDkxOiBzYW1hNWQyX3hwbGFpbmVkOiBhZGQg
-YW5hbG9nIGFuZCBkaWdpdGFsIGZpbHRlciBmb3INCj4+ICAgICAgaTJjDQo+PiAgICBBUk06IGR0
-czogYXQ5MTogc2FtYTVkNF94cGxhaW5lZDogYWRkIGFuYWxvZyBmaWx0ZXIgZm9yIGkyYw0KPj4N
-Cj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQg
-fCAgMyArLQ0KPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy50
-eHQgICAgICB8IDExICsrKysrDQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl94
-cGxhaW5lZC5kdHMgICAgICAgIHwgIDYgKysrDQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTEt
-c2FtYTVkNF94cGxhaW5lZC5kdHMgICAgICAgIHwgIDEgKw0KPj4gICBkcml2ZXJzL2kyYy9idXNz
-ZXMvaTJjLWF0OTEtY29yZS5jICAgICAgICAgICAgICAgICB8IDM4ICsrKysrKysrKysrKysrKysr
-DQo+PiAgIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtYXQ5MS1tYXN0ZXIuYyAgICAgICAgICAgICAg
-IHwgNDkgKysrKysrKysrKysrKysrKysrKystLQ0KPj4gICBkcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LWF0OTEuaCAgICAgICAgICAgICAgICAgICAgICB8IDEzICsrKysrKw0KPj4gICBkcml2ZXJzL2ky
-Yy9pMmMtY29yZS1iYXNlLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICsNCj4+ICAgaW5j
-bHVkZS9saW51eC9pMmMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArDQo+
-PiAgIDkgZmlsZXMgY2hhbmdlZCwgMTIxIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+
-IA0KPiBIaSwNCj4gDQo+IEkgZG9uJ3Qga25vdyBpZiBpdCB3aWxsIGZpdCBvdGhlciB2ZW5kb3Jz
-IG5lZWQgY29uY2VybmluZyB0aGUgYmluZGluZw0KPiBidXQgZm9yIE1pY3JvY2hpcCBpdCBzb3Vu
-ZHMgZ29vZC4NCj4gDQo+IEFja2VkLWJ5OiBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3ZpYy5kZXNy
-b2NoZXNAbWljcm9jaGlwLmNvbT4NCj4gZm9yIHRoZSB3aG9sZSBzZXJpZS4NCj4gDQo+IFJlZ2Fy
-ZHMNCj4gDQo+IEx1ZG92aWMNCj4gDQoNCkhlbGxvIFdvbGZyYW0sDQoNCldoYXQgaXMgdGhlIHBs
-YW4gZm9yIHRoaXMgcGF0Y2ggc2VyaWVzPw0KDQpUaGFua3MsDQpFdWdlbg0K
+On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
+> On Thu, 2019-08-22 at 12:41 +0100, Andrew Murray wrote:
+> > On Wed, Aug 21, 2019 at 06:35:43PM +0300, Jonathan Chocron wrote:
+> > > The Amazon Annapurna Labs PCIe Root Port exposes the VPD
+> > > capability,
+> > > but there is no actual support for it.
+> > > 
+> > > The reason for not using the already existing quirk_blacklist_vpd()
+> > > is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
+> > > entry still exists. When running lspci -vv, for example, this
+> > > results in the following error:
+> > > 
+> > > pcilib: sysfs_read_vpd: read failed: Input/output error
+> > 
+> > Oh that's not nice. It's probably triggered by the -EIO in
+> > pci_vpd_read.
+> > A quick search online seems to show that other people have
+> > experienced
+> > this too - though from as far as I can tell this just gives you a
+> > warning and pcilib will continnue to give other output?
+> > 
+> Correct.
+> 
+> > I guess every vpd blacklist'd driver will have the same issue. And
+> > for
+> > this reason I don't think that this patch is the right solution - as
+> > otherwise all the other blacklisted drivers could follow your lead.
+> > 
+> I think that going forward, they should follow my lead, I just didn't
+> want to possibly break any assumptions other vendors' tools might have
+> regarding the existence/non-existence of the vpd sysfs entry.
+> 
+> > I don't think you need to fix this specifically for the AL driver and
+> > so
+> > I'd suggest that you can probably drop this patch. (Ideally pciutils
+> > could be updated to not warn for this specific use-case).
+> > 
+> I don't think that solution should be implemented in pcituils. It
+> rightfully warns when it fails to read from the vpd sysfs file - it
+> first 'open's the file which succeeds, and then fails when trying to
+> 'read' from it.
+
+Indeed - this is correct.
+
+> I don't think that it should specifically "mask" out
+> -EIO, since it shouldn't have to "know" that the underlying reason is a
+
+You're probably right - I guess the kernel should document somewhere
+(ABI/testing/sysfs-bus-pci?) what the kernel does when such a quirk exists,
+then userspace can conform. For example if -EIO cannot be returned any
+other way then it would be OK for pciutils to mask it out - but its
+ambigious at the moment.
+
+> VPD quirk (or more precisely vpd->len == 0). Furthermore, it is
+> possible that this error code would be returned for some other reason
+> (not sure if currently this occurs).
+> 
+> I think that if the device doesn't properly support vpd, the kernel
+> shouldn't expose the "empty" sysfs file in the first place.
+> 
+> In the long run, quirk_blacklist_vpd() should probably be modified to
+> do what our quirk does or something similar (and then the al quirk can
+> be removed). What do you think?
+
+When I first saw your quirk, I did wonder why quirk_blacklist_vpd doesn't
+do what your quirk does. Perhaps there isn't a reason. It was first
+introduced in 2016:
+
+7c20078a8197 ("PCI: Prevent VPD access for buggy devices")
+
+Some may argue that actually because your hardware has a VPD capability
+it should have the sysfs file - but the capability doesn't work and so
+the sysfs file should return an error.
+
+I'd be keen to change quirk_blacklist_vpd - Babu, Bjorn any objections?
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > 
+> > > This quirk removes the sysfs entry, which avoids the error print.
+> > > 
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > ---
+> > >  drivers/pci/vpd.c | 16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > > index 4963c2e2bd4c..c23a8ec08db9 100644
+> > > --- a/drivers/pci/vpd.c
+> > > +++ b/drivers/pci/vpd.c
+> > > @@ -644,4 +644,20 @@ static void quirk_chelsio_extend_vpd(struct
+> > > pci_dev *dev)
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+> > >  			quirk_chelsio_extend_vpd);
+> > >  
+> > > +static void quirk_al_vpd_release(struct pci_dev *dev)
+> > > +{
+> > > +	if (dev->vpd) {
+> > > +		pci_vpd_release(dev);
+> > > +		dev->vpd = NULL;
+> > > +		pci_warn(dev, FW_BUG "Releasing VPD capability (No
+> > > support for VPD read/write transactions)\n");
+> > > +	}
+> > > +}
+> > > +
+> > > +/*
+> > > + * The 0031 device id is reused for other non Root Port device
+> > > types,
+> > > + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI
+> > > class.
+> > > + */
+> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS,
+> > > 0x0031,
+> > > +			      PCI_CLASS_BRIDGE_PCI, 8,
+> > > quirk_al_vpd_release);
+> > > +
+> > >  #endif
+> > > -- 
+> > > 2.17.1
+> > > 
