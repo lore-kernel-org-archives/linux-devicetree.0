@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH next v10 05/11] usb: roles: Introduce stubs for the exiting functions in role.h
-Date: Fri, 23 Aug 2019 15:57:15 +0800
-Message-ID: <1566547041-20804-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v10 02/11] dt-bindings: connector: add optional properties for Type-B
+Date: Fri, 23 Aug 2019 15:57:12 +0800
+Message-ID: <1566547041-20804-3-git-send-email-chunfeng.yun@mediatek.com>
 References: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,82 +9,56 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>, Yu Chen <chenyu56@huawei.com>, John Stultz <john.stultz@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+usb-b-connector
 
-This patch adds stubs for the exiting functions while
-CONFIG_USB_ROLE_SWITCH does not enabled.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v8~v10 no changes
+v6~v10 no changes
 
-v7:
-  add Signed-off-by Chunfeng
+v5 changes:
+ 1. add reviewed by Rob
 
-v6:
-  merge this patch [1] into this series to add new API
+v4 no changes
 
-	[1] https://patchwork.kernel.org/patch/10909971/
+v3 changes:
+ 1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
+
+v2 changes:
+ 1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
 ---
- include/linux/usb/role.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ .../bindings/connector/usb-connector.txt           | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index c05ffa6abda9..da2b9641b877 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -42,6 +42,8 @@ struct usb_role_switch_desc {
- 	bool allow_userspace_control;
- };
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+index cef556d4e5ee..d357987181ee 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.txt
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -17,6 +17,20 @@ Optional properties:
+ - self-powered: Set this property if the usb device that has its own power
+   source.
  
++Optional properties for usb-b-connector:
++- id-gpios: an input gpio for USB ID pin.
++- vbus-gpios: an input gpio for USB VBUS pin, used to detect presence of
++  VBUS 5V.
++  see gpio/gpio.txt.
++- vbus-supply: a phandle to the regulator for USB VBUS if needed when host
++  mode or dual role mode is supported.
++  Particularly, if use an output GPIO to control a VBUS regulator, should
++  model it as a regulator.
++  see regulator/fixed-regulator.yaml
++- pinctrl-names : a pinctrl state named "default" is optional
++- pinctrl-0 : pin control group
++  see pinctrl/pinctrl-bindings.txt
 +
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
-@@ -51,5 +53,33 @@ struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc);
- void usb_role_switch_unregister(struct usb_role_switch *sw);
-+#else
-+static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-+		enum usb_role role)
-+{
-+	return 0;
-+}
-+
-+static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-+{
-+	return USB_ROLE_NONE;
-+}
-+
-+static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
-+
-+static inline struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-+#endif
- 
- #endif /* __LINUX_USB_ROLE_H */
+ Optional properties for usb-c-connector:
+ - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+   connector has power support.
 -- 
 2.23.0
