@@ -1,68 +1,128 @@
-From: megous@megous.com
-Subject: [RESEND PATCH 2/5] bluetooth: bcm: Add support for loading firmware for BCM4345C5
-Date: Fri, 23 Aug 2019 12:31:36 +0200
-Message-ID: <20190823103139.17687-3-megous@megous.com>
-References: <20190823103139.17687-1-megous@megous.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
+ nodes
+Date: Fri, 23 Aug 2019 11:35:36 +0100
+Message-ID: <20190823103529.GA6956@e121166-lin.cambridge.arm.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190822164815.GA12855@e121166-lin.cambridge.arm.com>
+ <20190823094424.GB14582@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823103139.17687-1-megous@megous.com>
+Content-Disposition: inline
+In-Reply-To: <20190823094424.GB14582@e119886-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, Ondrej Jirman <megous@megous.com>
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+On Fri, Aug 23, 2019 at 10:44:25AM +0100, Andrew Murray wrote:
+> On Thu, Aug 22, 2019 at 05:48:15PM +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > 
+> > > On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+> > > controller is not fixed, it is determined by the selected
+> > > SerDes protocol. The current num-lanes indicates the max lanes
+> > > PCIe controller can support up to, instead of the lanes assigned
+> > > to the PCIe controller. This can result in PCIe link training fail
+> > > after hot-reset.
+> > > 
+> > > Hou Zhiqiang (4):
+> > >   dt-bindings: PCI: designware: Remove the num-lanes from Required
+> > >     properties
+> > >   PCI: dwc: Return directly when num-lanes is not found
+> > >   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
+> > >   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
+> > > 
+> > >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+> > >  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
+> > >  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
+> > >  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
+> > >  8 files changed, 4 insertions(+), 22 deletions(-)
+> > 
+> > What a mess.
+> > 
+> > I am going to apply these but first if anyone can explain to
+> > me what commit 907fce090253 was _supposed_ to to I would
+> > be grateful, I read it multiple times but I still have not
+> > understood it. This series does the right thing but why things
+> 
+> The DWC controller drivers all implement a .host_init callback -
+> some of the drivers choose to call dw_pcie_setup_rc from their
+> callback which, amongst other things will set up/train the link.
+> 
+> As far as I can tell, dw_pcie_setup_rc is the only user of pp->lanes.
+> Therefore for hardware where the link is already set up by firmware
+> and thus dw_pcie_setup_rc is never called - it is unnecessary to
+> read the DT value for pp->lanes. So the first hunk in 907fce090253
+> gets rid of the error and makes the num-lanes property optional.
+> 
+> However this opens up the possibility of a DT misconfiguration for
+> other controllers that do call dw_pcie_setup_rc, i.e. they set
+> num-lanes to 0 when it is required. Therefore the second hunk
+> ensures that an error is emitted when num-lanes was needed but not
+> provided.
 
-Detect BCM4345C5 and load a corresponding firmware file.
+Yes, the problem is not 907fce090253, it is subsequent changes
+(ie feb85d9b1c47 AFAICS).
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
-Checkpatch reports a spurious error.
+> > are they way they are in the mainline honestly I have no
+> > idea, this does not make any sense in the slightest:
+> > 
+> > ret = of_property_read_u32(np, "num-lanes", &lanes);
+> > if (ret)
+> > 	lanes = 0;
+> 
+> Please note that the code below is in a different function to the
+> code above.
 
- drivers/bluetooth/btbcm.c   | 3 +++
- drivers/bluetooth/hci_bcm.c | 1 +
- 2 files changed, 4 insertions(+)
+In the mainline kernel they are in the same function
+ie dw_pcie_setup() and as reported here current code
+does not make any sense.
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 124ef0a3e1dd..2d2e6d862068 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -23,6 +23,7 @@
- #define BDADDR_BCM43430A0 (&(bdaddr_t) {{0xac, 0x1f, 0x12, 0xa0, 0x43, 0x43}})
- #define BDADDR_BCM4324B3 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb3, 0x24, 0x43}})
- #define BDADDR_BCM4330B1 (&(bdaddr_t) {{0x00, 0x00, 0x00, 0xb1, 0x30, 0x43}})
-+#define BDADDR_BCM4345C5 (&(bdaddr_t) {{0xac, 0x1f, 0x00, 0xc5, 0x45, 0x43}})
- #define BDADDR_BCM43341B (&(bdaddr_t) {{0xac, 0x1f, 0x00, 0x1b, 0x34, 0x43}})
- 
- int btbcm_check_bdaddr(struct hci_dev *hdev)
-@@ -73,6 +74,7 @@ int btbcm_check_bdaddr(struct hci_dev *hdev)
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM2076B1) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4324B3) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM4330B1) ||
-+	    !bacmp(&bda->bdaddr, BDADDR_BCM4345C5) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM43430A0) ||
- 	    !bacmp(&bda->bdaddr, BDADDR_BCM43341B)) {
- 		bt_dev_info(hdev, "BCM: Using default device address (%pMR)",
-@@ -332,6 +334,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
- 	{ 0x2122, "BCM4343A0"	},	/* 001.001.034 */
- 	{ 0x2209, "BCM43430A1"  },	/* 001.002.009 */
- 	{ 0x6119, "BCM4345C0"	},	/* 003.001.025 */
-+	{ 0x6606, "BCM4345C5"	},	/* 003.006.006 */
- 	{ 0x230f, "BCM4356A2"	},	/* 001.003.015 */
- 	{ 0x220e, "BCM20702A1"  },	/* 001.002.014 */
- 	{ 0x4217, "BCM4329B1"   },	/* 002.002.023 */
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 4d9de20bab7b..95c312ae94cf 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -1419,6 +1419,7 @@ static void bcm_serdev_remove(struct serdev_device *serdev)
- #ifdef CONFIG_OF
- static const struct of_device_id bcm_bluetooth_of_match[] = {
- 	{ .compatible = "brcm,bcm20702a1" },
-+	{ .compatible = "brcm,bcm4345c5" },
- 	{ .compatible = "brcm,bcm4330-bt" },
- 	{ .compatible = "brcm,bcm43438-bt" },
- 	{ },
--- 
-2.23.0
+Anyway merging these patches, thanks for having a look.
+
+Lorenzo
+
+> > /* Set the number of lanes */
+> > val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+> > val &= ~PORT_LINK_MODE_MASK;
+> > switch (lanes) {
+> > case 1:
+> > 	val |= PORT_LINK_MODE_1_LANES;
+> > 	break;
+> > case 2:
+> > 	val |= PORT_LINK_MODE_2_LANES;
+> > 	break;
+> > case 4:
+> > 	val |= PORT_LINK_MODE_4_LANES;
+> > 	break;
+> > case 8:
+> > 	val |= PORT_LINK_MODE_8_LANES;
+> > 	break;
+> > default:
+> > 	dev_err(pci->dev, "num-lanes %u: invalid value\n", lanes);
+> > 	return;
+> > }
+> > 
+> > why do we need to set lanes to 0 if num-lanes is not present ? To print
+> > an error message ?
+> 
+> At this point in time, the controller is trying to train the link but
+> it doesn't know how many lanes, so we need to error. We don't error when
+> reading the device tree earlier - because at that point in time we don't
+> know if num-lanes is optional or not.
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+> > 
+> > I really do not understand this code.
+> > 
+> > Lorenzo
