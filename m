@@ -1,82 +1,93 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 0/4] Lantiq VRX200/ARX300 PCIe PHY driver
-Date: Fri, 23 Aug 2019 08:06:13 +0530
-Message-ID: <1d5212e1-aeb4-1f05-d5d4-6b944cf328cc@ti.com>
-References: <20190727120415.15859-1-martin.blumenstingl@googlemail.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Date: Fri, 23 Aug 2019 02:39:13 +0000
+Message-ID: <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-6-xiaowei.bao@nxp.com>
+ <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190727120415.15859-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, paul.burton@mips.com, ralf@linux-mips.org
-Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, hauke@hauke-m.de, mark.rutland@arm.com, ms@dev.tdt.de
+To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.ker>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 27/07/19 5:34 PM, Martin Blumenstingl wrote:
-> Various Lantiq (now Intel) SoCs contain one or more PCIe controllers
-> and PHYs.
-> This adds a driver for the PCIe PHYs found on the Lantiq VRX200 and
-> ARX300 SoCs. GRX390 should also be supported as far as I can tell,
-> but I don't have any of these devices to further verify that.
-> 
-> I have tested this PCIe PHY driver with the out-of-tree PCIe controller
-> driver in OpenWrt: [0]
-> 
-> dependencies for this series:
-> none
-> 
-> patches 1-3 should go through the PHY tree
-
-merged the phy patches.
-
-Thanks
-Kishon
-> patch 4 should go through the mips tree
-> 
-> I am aware that this series is too late for the v5.3 development cycle.
-> Getting review comments is still appreciated so this can be queued early
-> in the v5.4 development cycle.
-> 
-> 
-> Changes since v2 at [2]:
-> - added Rob's Reviewed-by to the dt-bindings patch (thank you!)
-> 
-> Changes since v1 at [1]:
-> - many thanks to Rob for giving me many hints regarding the .yaml bindings!
-> - update the .yaml binding license to (GPL-2.0-only OR BSD-2-Clause)
-> - changed the property lantiq,rcu to type phandle
-> - add the optional big-endian and little-endian boolean properties
-> - use numeric values for the clock phandles in the example to make the
->   dt_binding_check build happy
-> - replaced two mdelay(1); with usleep_range(1000, 2000); in patch #2
->   (spotted and reported by Hauke off-list)
-> 
-> 
-> [0] https://github.com/xdarklight/openwrt/commits/lantiq-mainline-pcie-phy-20190702
-> [1] https://patchwork.kernel.org/cover/11028797/
-> [2] https://patchwork.kernel.org/cover/11031421/
-> 
-> 
-> Martin Blumenstingl (4):
->   dt-bindings: phy: add binding for the Lantiq VRX200 and ARX300 PCIe
->     PHYs
->   phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY
->   phy: enable compile-testing for the Lantiq PHY drivers
->   MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
-> 
->  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  |  95 ++++
->  arch/mips/lantiq/xway/sysctrl.c               |  16 +-
->  drivers/phy/Makefile                          |   2 +-
->  drivers/phy/lantiq/Kconfig                    |  11 +
->  drivers/phy/lantiq/Makefile                   |   1 +
->  drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c   | 494 ++++++++++++++++++
->  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  |  11 +
->  7 files changed, 621 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
->  create mode 100644 drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
->  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgyMuaXpSAxOTo0NA0K
+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUu
+Y29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1
+b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGll
+cmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
+cmc7IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaQ0KPiBIdSA8bWlu
+Z2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+Ow0KPiBqaW5nb29o
+YW4xQGdtYWlsLmNvbTsgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207DQo+IGxpbnV4LXBj
+aUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBhbmRyZXcubXVycmF5QGFybS5j
+b20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNi8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2Rp
+ZnkgdGhlIHdheSBvZiBnZXR0aW5nDQo+IGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJlbnQgUEVYDQo+
+IA0KPiBIaSwNCj4gDQo+IE9uIDIyLzA4LzE5IDQ6NTIgUE0sIFhpYW93ZWkgQmFvIHdyb3RlOg0K
+PiA+IFRoZSBkaWZmZXJlbnQgUENJZSBjb250cm9sbGVyIGluIG9uZSBib2FyZCBtYXkgYmUgaGF2
+ZSBkaWZmZXJlbnQNCj4gPiBjYXBhYmlsaXR5IG9mIE1TSSBvciBNU0lYLCBzbyBjaGFuZ2UgdGhl
+IHdheSBvZiBnZXR0aW5nIHRoZSBNU0kNCj4gPiBjYXBhYmlsaXR5LCBtYWtlIGl0IG1vcmUgZmxl
+eGlibGUuDQo+IA0KPiBwbGVhc2UgdXNlIGRpZmZlcmVudCBwY2lfZXBjX2ZlYXR1cmVzIHRhYmxl
+IGZvciBkaWZmZXJlbnQgYm9hcmRzLg0KVGhhbmtzLCBJIHRoaW5rIHRoYXQgaXQgd2lsbCBiZSBt
+b3JlIGZsZXhpYmxlIHRvIGR5bmFtaWNhbGx5IGdldCBNU0kgb3IgTVNJWCBjYXBhYmlsaXR5LA0K
+VGh1cywgd2Ugd2lsbCBub3QgbmVlZCB0byBkZWZpbmUgdGhlIHBjaV9lcGNfZmVhdHVyZSBmb3Ig
+ZGlmZmVyZW50IGJvYXJkcy4NCj4gDQo+IFRoYW5rcw0KPiBLaXNob24NCj4gPg0KPiA+IFNpZ25l
+ZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+
+IHYyOg0KPiA+ICAtIFJlbW92ZSB0aGUgcmVwZWF0ZWQgYXNzaWdubWVudCBjb2RlLg0KPiA+DQo+
+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAyNg0K
+PiA+ICsrKysrKysrKysrKysrKysrKystLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxOSBp
+bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBiL2RyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBpbmRleCA0ZTkyYTk1
+Li44NDYxZjYyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
+aS1sYXllcnNjYXBlLWVwLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
+Y2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gQEAgLTIyLDYgKzIyLDcgQEANCj4gPg0KPiA+ICBzdHJ1
+Y3QgbHNfcGNpZV9lcCB7DQo+ID4gIAlzdHJ1Y3QgZHdfcGNpZQkJKnBjaTsNCj4gPiArCXN0cnVj
+dCBwY2lfZXBjX2ZlYXR1cmVzCSpsc19lcGM7DQo+ID4gIH07DQo+ID4NCj4gPiAgI2RlZmluZSB0
+b19sc19wY2llX2VwKHgpCWRldl9nZXRfZHJ2ZGF0YSgoeCktPmRldikNCj4gPiBAQCAtNDAsMjUg
+KzQxLDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkDQo+IGxzX3BjaWVfZXBf
+b2ZfbWF0Y2hbXSA9IHsNCj4gPiAgCXsgfSwNCj4gPiAgfTsNCj4gPg0KPiA+IC1zdGF0aWMgY29u
+c3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgbHNfcGNpZV9lcGNfZmVhdHVyZXMgPSB7DQo+ID4g
+LQkubGlua3VwX25vdGlmaWVyID0gZmFsc2UsDQo+ID4gLQkubXNpX2NhcGFibGUgPSB0cnVlLA0K
+PiA+IC0JLm1zaXhfY2FwYWJsZSA9IGZhbHNlLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKiAgbHNfcGNpZV9lcF9nZXRfZmVhdHVyZXMo
+c3RydWN0DQo+ID4gZHdfcGNpZV9lcCAqZXApICB7DQo+ID4gLQlyZXR1cm4gJmxzX3BjaWVfZXBj
+X2ZlYXR1cmVzOw0KPiA+ICsJc3RydWN0IGR3X3BjaWUgKnBjaSA9IHRvX2R3X3BjaWVfZnJvbV9l
+cChlcCk7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNp
+KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gcGNpZS0+bHNfZXBjOw0KPiA+ICB9DQo+ID4NCj4gPiAg
+c3RhdGljIHZvaWQgbHNfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkgIHsNCj4g
+PiAgCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsJ
+c3RydWN0IGxzX3BjaWVfZXAgKnBjaWUgPSB0b19sc19wY2llX2VwKHBjaSk7DQo+ID4gIAllbnVt
+IHBjaV9iYXJubyBiYXI7DQo+ID4NCj4gPiAgCWZvciAoYmFyID0gQkFSXzA7IGJhciA8PSBCQVJf
+NTsgYmFyKyspDQo+ID4gIAkJZHdfcGNpZV9lcF9yZXNldF9iYXIocGNpLCBiYXIpOw0KPiA+ICsN
+Cj4gPiArCXBjaWUtPmxzX2VwYy0+bXNpX2NhcGFibGUgPSBlcC0+bXNpX2NhcCA/IHRydWUgOiBm
+YWxzZTsNCj4gPiArCXBjaWUtPmxzX2VwYy0+bXNpeF9jYXBhYmxlID0gZXAtPm1zaXhfY2FwID8g
+dHJ1ZSA6IGZhbHNlOw0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGludCBsc19wY2llX2VwX3Jh
+aXNlX2lycShzdHJ1Y3QgZHdfcGNpZV9lcCAqZXAsIHU4IGZ1bmNfbm8sIEBADQo+ID4gLTExOCw2
+ICsxMjAsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+
+ZGV2Ow0KPiA+ICAJc3RydWN0IGR3X3BjaWUgKnBjaTsNCj4gPiAgCXN0cnVjdCBsc19wY2llX2Vw
+ICpwY2llOw0KPiA+ICsJc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgKmxzX2VwYzsNCj4gPiAgCXN0
+cnVjdCByZXNvdXJjZSAqZGJpX2Jhc2U7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4gQEAgLTEy
+OSw2ICsxMzIsMTAgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QN
+Cj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJaWYgKCFwY2kpDQo+ID4gIAkJcmV0dXJu
+IC1FTk9NRU07DQo+ID4NCj4gPiArCWxzX2VwYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
+bHNfZXBjKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIWxzX2VwYykNCj4gPiArCQlyZXR1cm4g
+LUVOT01FTTsNCj4gPiArDQo+ID4gIAlkYmlfYmFzZSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9i
+eW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sDQo+ICJyZWdzIik7DQo+ID4gIAlwY2ktPmRiaV9i
+YXNlID0gZGV2bV9wY2lfcmVtYXBfY2ZnX3Jlc291cmNlKGRldiwgZGJpX2Jhc2UpOw0KPiA+ICAJ
+aWYgKElTX0VSUihwY2ktPmRiaV9iYXNlKSkNCj4gPiBAQCAtMTM5LDYgKzE0NiwxMSBAQCBzdGF0
+aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYpDQo+ID4gIAlwY2ktPm9wcyA9ICZsc19wY2llX2VwX29wczsNCj4gPiAgCXBjaWUtPnBj
+aSA9IHBjaTsNCj4gPg0KPiA+ICsJbHNfZXBjLT5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4g
+PiArCWxzX2VwYy0+YmFyX2ZpeGVkXzY0Yml0ID0gKDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQp
+LA0KPiA+ICsNCj4gPiArCXBjaWUtPmxzX2VwYyA9IGxzX2VwYzsNCj4gPiArDQo+ID4gIAlwbGF0
+Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBwY2llKTsNCj4gPg0KPiA+ICAJcmV0ID0gbHNfYWRkX3Bj
+aWVfZXAocGNpZSwgcGRldik7DQo+ID4NCg==
