@@ -1,185 +1,278 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [v3 2/2] clk: ls1028a: Add clock driver for Display output interface
-Date: Thu, 22 Aug 2019 18:26:58 -0700
-Message-ID: <20190823012658.DB213233A2@mail.kernel.org>
-References: <20190822020847.10159-1-wen.he_1@nxp.com> <20190822020847.10159-2-wen.he_1@nxp.com>
+From: Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Subject: Re: [PATCH v4 06/10] mfd: Add support for the MediaTek MT6358 PMIC
+Date: Fri, 23 Aug 2019 09:57:07 +0800
+Message-ID: <1566525427.2871.14.camel@mtksdaap41>
+References: <1564982518-32163-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1564982518-32163-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <20190812105933.GO26727@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822020847.10159-2-wen.he_1@nxp.com>
+In-Reply-To: <20190812105933.GO26727@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-devel@linux.nxdi.nxp.com, linux-kernel@vger.kernel.org
-Cc: leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Wen He (2019-08-21 19:08:47)
-> Add clock driver for QorIQ LS1028A Display output interfaces(LCD, DPHY),
-> as implemented in TSMC CLN28HPM PLL, this PLL supports the programmable
-> integer division and range of the display output pixel clock's 27-594MHz.
->=20
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
-> ---
-> change in v3:
->         - remove the OF dependency
->         - use clk_parent_data instead of parent_name
->=20
->  drivers/clk/Kconfig      |  10 ++
->  drivers/clk/Makefile     |   1 +
->  drivers/clk/clk-plldig.c | 283 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 294 insertions(+)
->  create mode 100644 drivers/clk/clk-plldig.c
->=20
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 801fa1cd0321..ab05f342af04 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -223,6 +223,16 @@ config CLK_QORIQ
->           This adds the clock driver support for Freescale QorIQ platforms
->           using common clock framework.
-> =20
-> +config CLK_LS1028A_PLLDIG
-> +        bool "Clock driver for LS1028A Display output"
-> +        depends on ARCH_LAYERSCAPE || COMPILE_TEST
-> +        default ARCH_LAYERSCAPE
-> +        help
-> +          This driver support the Display output interfaces(LCD, DPHY) p=
-ixel clocks
-> +          of the QorIQ Layerscape LS1028A, as implemented TSMC CLN28HPM =
-PLL. Not all
-> +          features of the PLL are currently supported by the driver. By =
-default,
-> +          configured bypass mode with this PLL.
-> +
->  config COMMON_CLK_XGENE
->         bool "Clock driver for APM XGene SoC"
->         default ARCH_XGENE
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 0cad76021297..c8e22a764c4d 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -44,6 +44,7 @@ obj-$(CONFIG_COMMON_CLK_OXNAS)                +=3D clk-=
-oxnas.o
->  obj-$(CONFIG_COMMON_CLK_PALMAS)                +=3D clk-palmas.o
->  obj-$(CONFIG_COMMON_CLK_PWM)           +=3D clk-pwm.o
->  obj-$(CONFIG_CLK_QORIQ)                        +=3D clk-qoriq.o
-> +obj-$(CONFIG_CLK_LS1028A_PLLDIG)       +=3D clk-plldig.o
->  obj-$(CONFIG_COMMON_CLK_RK808)         +=3D clk-rk808.o
->  obj-$(CONFIG_COMMON_CLK_HI655X)                +=3D clk-hi655x.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11)       +=3D clk-s2mps11.o
-> diff --git a/drivers/clk/clk-plldig.c b/drivers/clk/clk-plldig.c
-> new file mode 100644
-> index 000000000000..c5ce80a46fd4
-> --- /dev/null
-> +++ b/drivers/clk/clk-plldig.c
-> @@ -0,0 +1,283 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright 2019 NXP
+Hi,
 
-Please leave this as C style /* */ comment for the NXP part, but comply
-with the SPDX comment style of // on the first line.
+On Mon, 2019-08-12 at 11:59 +0100, Lee Jones wrote:
+> On Mon, 05 Aug 2019, Hsin-Hsiung Wang wrote:
+> 
+> > This adds support for the MediaTek MT6358 PMIC. This is a
+> > multifunction device with the following sub modules:
+> > 
+> > - Regulator
+> > - RTC
+> > - Codec
+> > - Interrupt
+> > 
+> > It is interfaced to the host controller using SPI interface
+> > by a proprietary hardware called PMIC wrapper or pwrap.
+> > MT6358 MFD is a child device of the pwrap.
+> > 
+> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > ---
+> >  drivers/mfd/Makefile                 |   3 +-
+> >  drivers/mfd/mt6358-irq.c             | 229 ++++++++++++++++++++++++++++
+> >  drivers/mfd/mt6397-core.c            |  52 ++++++-
+> >  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+> >  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/mt6397/core.h      |   3 +
+> >  6 files changed, 725 insertions(+), 2 deletions(-)
+> >  create mode 100644 drivers/mfd/mt6358-irq.c
+> >  create mode 100644 include/linux/mfd/mt6358/core.h
+> >  create mode 100644 include/linux/mfd/mt6358/registers.h
+> > 
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index 9a96325..36d088b 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -241,7 +241,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+> > -mt6397-objs	:= mt6397-core.o mt6397-irq.o
+> > +
+> > +mt6397-objs			:= mt6397-core.o mt6397-irq.o mt6358-irq.o
+> >  obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+> >  
+> >  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+> > diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> > new file mode 100644
+> > index 0000000..2f55079
+> > --- /dev/null
+> > +++ b/drivers/mfd/mt6358-irq.c
+> > @@ -0,0 +1,229 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +//
+> > +// Copyright (c) 2019 MediaTek Inc.
+> > +
+> > +#include <linux/interrupt.h>
+> > +#include <linux/mfd/mt6358/core.h>
+> > +#include <linux/mfd/mt6358/registers.h>
+> > +#include <linux/mfd/mt6397/core.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> 
+> [...]
+> 
+> > +static void pmic_irq_sync_unlock(struct irq_data *data)
+> > +{
+> > +	unsigned int i, top_gp, en_reg, int_regs, shift;
+> > +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> > +	struct pmic_irq_data *irqd = chip->irq_data;
+> > +
+> > +	for (i = 0; i < irqd->num_pmic_irqs; i++) {
+> > +		if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
+> > +			continue;
+> > +
+> > +		top_gp = 0;
+> > +		while ((top_gp + 1) < ARRAY_SIZE(mt6358_ints) &&
+> > +		       i >= mt6358_ints[top_gp + 1].hwirq_base)
+> > +			top_gp++;
+> 
+> A comment here would make this easier to follow.
+> 
+I will add it in next version.
+> > +		if (top_gp >= ARRAY_SIZE(mt6358_ints)) {
+> > +			mutex_unlock(&chip->irqlock);
+> > +			dev_err(chip->dev,
+> > +				"Failed to get top_group: %d\n", top_gp);
+> > +			return;
+> > +		}
+> > +
+> > +		int_regs = (i - mt6358_ints[top_gp].hwirq_base) /
+> > +			    MT6358_REG_WIDTH;
+> > +		en_reg = mt6358_ints[top_gp].en_reg +
+> > +			mt6358_ints[top_gp].en_reg_shift * int_regs;
+> > +		shift = (i - mt6358_ints[top_gp].hwirq_base) % MT6358_REG_WIDTH;
+> > +		regmap_update_bits(chip->regmap, en_reg, BIT(shift),
+> > +				   irqd->enable_hwirq[i] << shift);
+> > +		irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
+> > +	}
+> > +	mutex_unlock(&chip->irqlock);
+> > +}
+> 
+> [...]
+> 
+> > +int mt6358_irq_init(struct mt6397_chip *chip)
+> > +{
+> > +	int i, j, ret;
+> > +	struct pmic_irq_data *irqd;
+> > +
+> > +	irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
+> > +			    GFP_KERNEL);
+> > +	if (!irqd)
+> > +		return -ENOMEM;
+> > +
+> > +	chip->irq_data = irqd;
+> > +
+> > +	mutex_init(&chip->irqlock);
+> > +	irqd->top_int_status_reg = MT6358_TOP_INT_STATUS0;
+> > +	irqd->num_pmic_irqs = MT6358_IRQ_NR;
+> > +	irqd->num_top = ARRAY_SIZE(mt6358_ints);
+> > +
+> > +	irqd->enable_hwirq = devm_kcalloc(chip->dev,
+> > +					  irqd->num_pmic_irqs,
+> > +					  sizeof(bool),
+> > +					  GFP_KERNEL);
+> > +	if (!irqd->enable_hwirq)
+> > +		return -ENOMEM;
+> > +
+> > +	irqd->cache_hwirq = devm_kcalloc(chip->dev,
+> > +					 irqd->num_pmic_irqs,
+> > +					 sizeof(bool),
+> > +					 GFP_KERNEL);
+> > +	if (!irqd->cache_hwirq)
+> > +		return -ENOMEM;
+> > +
+> > +	/* Disable all interrupt for initializing */
+> 
+> s/interrupt/interrupts/
+> 
+I will fix it in the next version.
+> > +	for (i = 0; i < irqd->num_top; i++) {
+> > +		for (j = 0; j < mt6358_ints[i].num_int_regs; j++)
+> > +			regmap_write(chip->regmap,
+> > +				     mt6358_ints[i].en_reg +
+> > +				     mt6358_ints[i].en_reg_shift * j, 0);
+> > +	}
+> > +
+> > +	chip->irq_domain = irq_domain_add_linear(chip->dev->of_node,
+> > +						 irqd->num_pmic_irqs,
+> > +						 &mt6358_irq_domain_ops, chip);
+> > +	if (!chip->irq_domain) {
+> > +		dev_err(chip->dev, "could not create irq domain\n");
+> 
+> s/irq/IRQ/
+> 
+I will fix it in the next version.
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	ret = devm_request_threaded_irq(chip->dev, chip->irq, NULL,
+> > +					mt6358_irq_handler, IRQF_ONESHOT,
+> > +					mt6358_irq_chip.name, chip);
+> > +	if (ret) {
+> > +		dev_err(chip->dev, "failed to register irq=%d; err: %d\n",
+> > +			chip->irq, ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	enable_irq_wake(chip->irq);
+> > +	return ret;
+> > +}
+> 
+> [...]
+> 
+> >  static const struct chip_data mt6397_core = {
+> >  	.cid_addr = MT6397_CID,
+> >  	.cid_shift = 0,
+> > @@ -135,7 +172,11 @@ static int mt6397_probe(struct platform_device *pdev)
+> >  	if (pmic->irq <= 0)
+> >  		return pmic->irq;
+> >  
+> > -	ret = mt6397_irq_init(pmic);
+> > +	if (pmic->chip_id == MT6358_CHIP_ID)
+> > +		ret = mt6358_irq_init(pmic);
+> > +	else
+> > +		ret = mt6397_irq_init(pmic);
+> > +
+> 
+> You may with so to check for both and error out on an unsupported chip
+> ID.
+> 
+Thanks for the comments.
+For now, we have two kinds of irq desigen, new (mt6358) and others
+(including mt6391/mt6397/mt6323).
+For the unsupported chip, we have a check in the mt6397_irq_init.
 
-> +
-> +static long plldig_round_rate(struct clk_hw *hw, unsigned long rate,
-> +               unsigned long *parent)
-> +{
-> +       unsigned long parent_rate =3D *parent;
-> +       unsigned long round_rate;
-> +       u32 mult =3D 0, rfdphi1 =3D 0;
-> +       bool found =3D false;
-> +
-> +       found =3D plldig_is_valid_range(rate, parent_rate, &mult,
-> +                                       &rfdphi1, &round_rate);
-> +       if (!found) {
-> +               pr_warn("%s: unable to round rate %lu, parent rate :%lu\n=
-",
-> +                               clk_hw_get_name(hw), rate, parent_rate);
-> +               return 0;
-
-This can return an error instead? In fact, you may want to use
-determine_rate clk op instead.
-
-> +       }
-> +
-> +       return round_rate / rfdphi1;
-> +}
-> +
-> +static int plldig_set_rate(struct clk_hw *hw, unsigned long rate,
-> +               unsigned long parent_rate)
-> +{
-> +       struct clk_plldig *data =3D to_clk_plldig(hw);
-> +       bool valid =3D false;
-> +       unsigned long round_rate =3D 0;
-> +       u32 rfdphi1 =3D 0, val, mult =3D 0, cond =3D 0;
-> +       int ret =3D -ETIMEDOUT;
-> +
-> +       valid =3D plldig_is_valid_range(rate, parent_rate, &mult,
-> +                                       &rfdphi1, &round_rate);
-> +       if (!valid) {
-> +               pr_warn("%s: unable to support rate %lu, parent_rate: %lu=
-\n",
-> +                               clk_hw_get_name(hw), rate, parent_rate);
-
-Shouldn't determine_rate or round_rate make this impossible to hit in
-practice? I mean that those ops should prevent the rate from being
-rounded to such a frequency that it becomes invalid.
-
-> +               return -EINVAL;
-> +       }
-> +
-> +       val =3D readl(data->regs + PLLDIG_REG_PLLDV);
-> +       val =3D mult;
-> +       rfdphi1 =3D PLLDIG_SET_RFDPHI1(rfdphi1);
-> +       val |=3D rfdphi1;
-> +
-> +       writel(val, data->regs + PLLDIG_REG_PLLDV);
-> +
-> +       /* delay 200us make sure that old lock state is cleared */
-> +       udelay(200);
-> +
-> +       /* Wait until PLL is locked or timeout (maximum 1000 usecs) */
-> +       ret =3D readl_poll_timeout_atomic(data->regs + PLLDIG_REG_PLLSR, =
-cond,
-> +                                       cond & PLLDIG_LOCK_MASK, 0,
-> +                                       USEC_PER_MSEC);
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct clk_ops plldig_clk_ops =3D {
-> +       .enable =3D plldig_enable,
-> +       .disable =3D plldig_disable,
-> +       .is_enabled =3D plldig_is_enabled,
-> +       .recalc_rate =3D plldig_recalc_rate,
-> +       .round_rate =3D plldig_round_rate,
-> +       .set_rate =3D plldig_set_rate,
-> +};
-[...]
-> +
-> +       ret =3D devm_clk_hw_register(dev, &data->hw);
-> +       if (ret) {
-> +               dev_err(dev, "failed to register %s clock\n", init.name);
-> +               return ret;
-> +       }
-> +
-> +       ret =3D devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, &d=
-ata->hw);
-> +       if (ret)
-> +               dev_err(dev, "failed adding the clock provider\n");
-> +
-> +       return ret;
-> +}
-> +
-> +static int plldig_clk_remove(struct platform_device *pdev)
-> +{
-> +       of_clk_del_provider(pdev->dev.of_node);
-
-This isn't required. devm already does it.
-
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id plldig_clk_id[] =3D {
-> +       { .compatible =3D "fsl,ls1028a-plldig", .data =3D NULL},
-
-You can leave out the data assignment.
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -146,6 +187,12 @@ static int mt6397_probe(struct platform_device *pdev)
+> >  					   0, pmic->irq_domain);
+> >  		break;
+> >  
+> > +	case MT6358_CHIP_ID:
+> > +		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6358_devs,
+> 
+> Not -1.  Please use the defines.
+> 
+> > +					   ARRAY_SIZE(mt6358_devs), NULL,
+> > +					   0, pmic->irq_domain);
+> > +		break;
+> > +
+> >  	case MT6391_CHIP_ID:
+> >  	case MT6397_CHIP_ID:
+> >  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+> > @@ -171,6 +218,9 @@ static const struct of_device_id mt6397_of_match[] = {
+> >  		.compatible = "mediatek,mt6323",
+> >  		.data = &mt6323_core,
+> >  	}, {
+> > +		.compatible = "mediatek,mt6358",
+> > +		.data = &mt6358_core,
+> > +	}, {
+> >  		.compatible = "mediatek,mt6397",
+> >  		.data = &mt6397_core,
+> >  	}, {
+> > diff --git a/include/linux/mfd/mt6358/core.h b/include/linux/mfd/mt6358/core.h
+> > new file mode 100644
+> > index 0000000..05108617
+> > --- /dev/null
+> > +++ b/include/linux/mfd/mt6358/core.h
+> > @@ -0,0 +1,158 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (c) 2019 MediaTek Inc.
+> > + */
+> > +
+> > +#ifndef __MFD_MT6358_CORE_H__
+> > +#define __MFD_MT6358_CORE_H__
+> > +
+> > +#define MT6358_REG_WIDTH 16
+> 
+> [...]
+> 
+> > +#define MT6358_TOP_GEN(sp)	\
+> > +{	\
+> > +	.hwirq_base = MT6358_IRQ_##sp##_BASE,	\
+> > +	.num_int_regs =	\
+> > +		((MT6358_IRQ_##sp##_BITS - 1) / MT6358_REG_WIDTH) + 1,	\
+> > +	.num_int_bits = MT6358_IRQ_##sp##_BITS, \
+> > +	.en_reg = MT6358_##sp##_TOP_INT_CON0,		\
+> > +	.en_reg_shift = 0x6,	\
+> > +	.sta_reg = MT6358_##sp##_TOP_INT_STATUS0,		\
+> > +	.sta_reg_shift = 0x2,	\
+> > +	.top_offset = MT6358_##sp##_TOP,	\
+> > +}
+> 
+> Please tab out the '\'s.
+> 
+I will fix it in the next version.
