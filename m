@@ -1,69 +1,135 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus
- probe
-Date: Fri, 23 Aug 2019 10:42:49 -0500
-Message-ID: <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
-References: <20190820145834.7301-1-dinguyen@kernel.org>
- <20190820145834.7301-2-dinguyen@kernel.org>
- <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [RESEND PATCH v4 2/4] soundwire: core: add device
+ tree support for slave devices
+Date: Fri, 23 Aug 2019 10:44:30 -0500
+Message-ID: <2f1b5e2e-4699-1d06-e28e-708d5ed99b6a@linux.intel.com>
+References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+ <20190822233759.12663-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
+In-Reply-To: <20190822233759.12663-3-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 8/23/19 4:19 AM, Linus Walleij wrote:
-> On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
+On 8/22/19 6:37 PM, Srinivas Kandagatla wrote:
+> This patch adds support to parsing device tree based
+> SoundWire slave devices.
 > 
->> @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->>         ret = amba_get_enable_pclk(dev);
->>         if (ret == 0) {
->>                 u32 pid, cid;
->> +               int count;
->> +               struct reset_control *rstc;
->> +
->> +               /*
->> +                * Find reset control(s) of the amba bus and de-assert them.
->> +                */
->> +               count = reset_control_get_count(&dev->dev);
->> +               while (count > 0) {
->> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
->> +                       if (IS_ERR(rstc)) {
->> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
->> +                                       ret = -EPROBE_DEFER;
->> +                               else
->> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
->> +                               break;
->> +                       }
->> +                       reset_control_deassert(rstc);
->> +                       reset_control_put(rstc);
->> +                       count--;
->> +               }
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   drivers/soundwire/bus.c   |  2 ++
+>   drivers/soundwire/bus.h   |  1 +
+>   drivers/soundwire/slave.c | 52 +++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 55 insertions(+)
 > 
-> I'm not normally a footprint person, but the looks of the stubs in
-> <linux/reset.h> makes me suspicious whether this will have zero impact
-> in size on platforms without reset controllers.
-> 
-> Can you just ls -al on the kernel without CONFIG_RESET_CONTROLLER
-> before and after this patch and ascertain that it has zero footprint effect?
+> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> index 49f64b2115b9..c2eaeb5c38ed 100644
+> --- a/drivers/soundwire/bus.c
+> +++ b/drivers/soundwire/bus.c
+> @@ -77,6 +77,8 @@ int sdw_add_bus_master(struct sdw_bus *bus)
+>   	 */
+>   	if (IS_ENABLED(CONFIG_ACPI) && ACPI_HANDLE(bus->dev))
+>   		ret = sdw_acpi_find_slaves(bus);
+> +	else if (IS_ENABLED(CONFIG_OF) && bus->dev->of_node)
+> +		ret = sdw_of_find_slaves(bus);
+>   	else
+>   		ret = -ENOTSUPP; /* No ACPI/DT so error out */
+>   
+> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+> index 3048ca153f22..ee46befedbd1 100644
+> --- a/drivers/soundwire/bus.h
+> +++ b/drivers/soundwire/bus.h
+> @@ -15,6 +15,7 @@ static inline int sdw_acpi_find_slaves(struct sdw_bus *bus)
+>   }
+>   #endif
+>   
+> +int sdw_of_find_slaves(struct sdw_bus *bus);
+>   void sdw_extract_slave_id(struct sdw_bus *bus,
+>   			  u64 addr, struct sdw_slave_id *id);
+>   
+> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+> index f39a5815e25d..3ef265d2ee89 100644
+> --- a/drivers/soundwire/slave.c
+> +++ b/drivers/soundwire/slave.c
+> @@ -2,6 +2,7 @@
+>   // Copyright(c) 2015-17 Intel Corporation.
+>   
+>   #include <linux/acpi.h>
+> +#include <linux/of.h>
+>   #include <linux/soundwire/sdw.h>
+>   #include <linux/soundwire/sdw_type.h>
+>   #include "bus.h"
+> @@ -35,6 +36,7 @@ static int sdw_slave_add(struct sdw_bus *bus,
+>   
+>   	slave->dev.release = sdw_slave_release;
+>   	slave->dev.bus = &sdw_bus_type;
+> +	slave->dev.of_node = of_node_get(to_of_node(fwnode));
+>   	slave->bus = bus;
+>   	slave->status = SDW_SLAVE_UNATTACHED;
+>   	slave->dev_num = 0;
+> @@ -112,3 +114,53 @@ int sdw_acpi_find_slaves(struct sdw_bus *bus)
+>   }
+>   
+>   #endif
+> +
+> +/*
+> + * sdw_of_find_slaves() - Find Slave devices in master device tree node
+> + * @bus: SDW bus instance
+> + *
+> + * Scans Master DT node for SDW child Slave devices and registers it.
+> + */
+> +int sdw_of_find_slaves(struct sdw_bus *bus)
+> +{
+> +	struct device *dev = bus->dev;
+> +	struct device_node *node;
+> +
+> +	for_each_child_of_node(bus->dev->of_node, node) {
+> +		int link_id, sdw_version, ret, len;
+> +		const char *compat = NULL;
+> +		struct sdw_slave_id id;
+> +		const __be32 *addr;
+> +
+> +		compat = of_get_property(node, "compatible", NULL);
+> +		if (!compat)
+> +			continue;
+> +
+> +		ret = sscanf(compat, "sdw%01x%04hx%04hx%02hhx", &sdw_version,
+> +			     &id.mfg_id, &id.part_id, &id.class_id);
+> +
+> +		if (ret != 4) {
+> +			dev_err(dev, "Invalid compatible string found %s\n",
+> +				compat);
+> +			continue;
+> +		}
+> +
+> +		addr = of_get_property(node, "reg", &len);
+> +		if (!addr || (len < 2 * sizeof(u32))) {
+> +			dev_err(dev, "Invalid Instance and Link ID\n");
+> +			continue;
+> +		}
+> +
+> +		id.unique_id = be32_to_cpup(addr++);
+> +		link_id = be32_to_cpup(addr);
 
-Thanks for the review. I checked it, and indeed, it does have a zero
-footprint effect.
+So here the link ID is obviously not in the address, so you are not 
+using the MIPI spec as we discussed initially?
 
+> +		id.sdw_version = sdw_version;
+> +
+> +		/* Check for link_id match */
+> +		if (link_id != bus->link_id)
+> +			continue;
+> +
+> +		sdw_slave_add(bus, &id, of_fwnode_handle(node));
+> +	}
+> +
+> +	return 0;
+> +}
 > 
-> If it doesn't I'd sure like to break this into its own function and
-> stick a if (!IS_ENABLED(CONFIG_RESET_CONTROLLER)) return 0;
-> in there to make sure the compiler drops it.
-> 
-> Also it'd be nice to get Philipp's ACK on the semantics, though they
-> look correct to me.
-> 
-
-Dinh
