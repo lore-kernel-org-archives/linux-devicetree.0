@@ -1,53 +1,25 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: sun50i-h6: Add support
- for RTC and fix the clock tree
-Date: Fri, 23 Aug 2019 10:19:20 +0200
-Message-ID: <20190823081920.xxqg6w7tlnvvkzlx@flea>
-References: <20190820151934.3860-1-megous@megous.com>
- <20190820151934.3860-4-megous@megous.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [RESEND PATCH v2 2/2] usb: xhci-mtk: add an optional xhci_ck
+ clock
+Date: Fri, 23 Aug 2019 11:28:50 +0300
+Message-ID: <e1e4d220-9540-2001-13aa-89ff8ce829f5@linux.intel.com>
+References: <1566542425-20082-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1566542425-20082-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bvvuqig3adpl6wgr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCWD73VAKGQERYYGCII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190820151934.3860-4-megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566542425-20082-2-git-send-email-chunfeng.yun@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 23.8.2019 9.40, Chunfeng Yun wrote:
+> Some SoCs may have an optional clock xhci_ck (125M or 200M), it
+> usually uses the same PLL as sys_ck, so support it.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
---bvvuqig3adpl6wgr
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Aug 20, 2019 at 05:19:34PM +0200, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org wrote:
-> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->
-> This patch adds RTC node and fixes the clock properties and nodes
-> to reflect the real clock tree.
->
-> The device nodes for the internal oscillator and osc32k are removed,
-> as these clocks are now provided by the RTC device. Clock references
-> are fixed accordingly, too.
->
-> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-
-The prefix should be "arm64: dts: allwinner: h6:"
-
-I've fixed it up and applied it.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---bvvuqig3adpl6wgr--
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
