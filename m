@@ -1,57 +1,49 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v1] arm64: dts: ls1028a: Remove some fixed-clock definiation
-Date: Fri, 23 Aug 2019 18:17:31 +0800
-Message-ID: <20190823101731.12609-1-wen.he_1@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE
+ when it's not ours
+Date: Fri, 23 Aug 2019 11:28:16 +0100
+Message-ID: <20190823102816.GN23391@sirena.co.uk>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+ <20190822211514.19288-3-olteanv@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SLfjTIIQuAzj8yil"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190822211514.19288-3-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Replace pclk/aclk/mclk fixed-clock clock provider with platform clockgen
-pre-divider provider, those clocks should be driven by the CGA_PLL2/2.
 
-More details please refer Reference Manual.
+--SLfjTIIQuAzj8yil
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+On Fri, Aug 23, 2019 at 12:15:11AM +0300, Vladimir Oltean wrote:
+> The DSPI interrupt can be shared between two controllers at least on the
+> LX2160A. In that case, the driver for one controller might misbehave and
+> consume the other's interrupt. Fix this by actually checking if any of
+> the bits in the status register have been asserted.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 024d6fbd07ea..0fa3e29cb603 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -90,20 +90,6 @@
- 		clocks = <&osc_27m>;
- 	};
- 
--	aclk: clock-axi {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <650000000>;
--		clock-output-names= "aclk";
--	};
--
--	pclk: clock-apb {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <650000000>;
--		clock-output-names= "pclk";
--	};
--
- 	reboot {
- 		compatible ="syscon-reboot";
- 		regmap = <&dcfg>;
-@@ -885,7 +871,8 @@
- 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "DE", "SE";
--		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
-+		clocks = <&dpclk>, <&clockgen 2 2>, <&clockgen 2 2>,
-+			 <&clockgen 2 2>;
- 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
- 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
- 		arm,malidp-arqos-value = <0xd000d000>;
--- 
-2.17.1
+It would be better to have done this as the first patch before
+the restructuring, that way we could send this as a fix - the
+refactoring while good doesn't really fit with stable.
+
+--SLfjTIIQuAzj8yil
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fv78ACgkQJNaLcl1U
+h9Cv4gf+PlempNcDKec7OiBxdWny+wFPRO1wq7OKtAEtzU2wFvuZYAjGYbCciUyw
+cKlSUJ9T9Lg4Rq9PTM7CbmY3FobaqJyqTeZT6cADZE1QZoTJD78lQxB8XmJtRBu1
+r8z6XPbgLbRnws9lzRQIDdRvdIX4DO9sFiY/M+9nbbMGbGbkYKbHNk5461pHEV45
+c9lCEgHX62vJerrt0jxfomw50W8tEaqhZ9q6dg1zXwuXjXMmPBPQNnTkexYuco8L
+PIfr5fq2cFMOH0hvXdim2H8spTU3tizQQlZS7NeXkaC8tgE4vBYibF1BYnoCfuos
+AYL6TZxFXh9I5JM/fUCBs+qbLtbneg==
+=lQOn
+-----END PGP SIGNATURE-----
+
+--SLfjTIIQuAzj8yil--
