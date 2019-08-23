@@ -1,82 +1,64 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Date: Fri, 23 Aug 2019 11:50:20 +0100
-Message-ID: <20190823105020.GZ13294@shell.armlinux.org.uk>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
- <20190823104621.GY13294@shell.armlinux.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE
+ when it's not ours
+Date: Fri, 23 Aug 2019 11:50:44 +0100
+Message-ID: <20190823105044.GO23391@sirena.co.uk>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+ <20190822211514.19288-3-olteanv@gmail.com>
+ <20190823102816.GN23391@sirena.co.uk>
+ <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hl1kWnBARzJiTscN"
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190823104621.GY13294@shell.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com, patches@armlinux.org.uk, mchehab@kernel.org, james.morse@arm.com, jlu@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>
+In-Reply-To: <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 11:46:21AM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Jul 12, 2019 at 03:48:57PM +1200, Chris Packham wrote:
-> > From: Jan Luebbe <jlu@pengutronix.de>
-> > 
-> > The macro name is too generic, so add a AURORA_ prefix.
-> > 
-> > Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-> > Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > ---
-> >  arch/arm/include/asm/hardware/cache-aurora-l2.h | 2 +-
-> 
-> I can't apply this series - this file does not exist in my tree, and
-> from what git tells me, it never has existed.  Maybe it's in someone
-> elses tree?
 
-I think the file is in my tree, just as arch/arm/mm/cache-aurora-l2.h
-which is where it has been since it was originally submitted in 2012.
+--hl1kWnBARzJiTscN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> >  arch/arm/mm/cache-l2x0.c                        | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/include/asm/hardware/cache-aurora-l2.h
-> > index c86124769831..dc5c479ec4c3 100644
-> > --- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
-> > +++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
-> > @@ -41,7 +41,7 @@
-> >  #define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
-> >  	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
-> >  
-> > -#define MAX_RANGE_SIZE		1024
-> > +#define AURORA_MAX_RANGE_SIZE	1024
-> >  
-> >  #define AURORA_WAY_SIZE_SHIFT	2
-> >  
-> > diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> > index 428d08718107..83b733a1f1e6 100644
-> > --- a/arch/arm/mm/cache-l2x0.c
-> > +++ b/arch/arm/mm/cache-l2x0.c
-> > @@ -1352,8 +1352,8 @@ static unsigned long aurora_range_end(unsigned long start, unsigned long end)
-> >  	 * since cache range operations stall the CPU pipeline
-> >  	 * until completion.
-> >  	 */
-> > -	if (end > start + MAX_RANGE_SIZE)
-> > -		end = start + MAX_RANGE_SIZE;
-> > +	if (end > start + AURORA_MAX_RANGE_SIZE)
-> > +		end = start + AURORA_MAX_RANGE_SIZE;
-> >  
-> >  	/*
-> >  	 * Cache range operations can't straddle a page boundary.
-> > -- 
-> > 2.22.0
-> > 
-> > 
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+On Fri, Aug 23, 2019 at 01:30:27PM +0300, Vladimir Oltean wrote:
+> On Fri, 23 Aug 2019 at 13:28, Mark Brown <broonie@kernel.org> wrote:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> > It would be better to have done this as the first patch before
+> > the restructuring, that way we could send this as a fix - the
+> > refactoring while good doesn't really fit with stable.
+
+> Did you see this?
+> https://lkml.org/lkml/2019/8/22/1542
+
+I'm not online enough to readily follow that link right now, I
+did apply another patch for a similar issue though.  If that's
+a different version of the same change please don't do that,
+sending multiple conflicting versions of the same thing creates
+conflicts and makes everything harder to work with.
+
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
+
+--hl1kWnBARzJiTscN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fxQMACgkQJNaLcl1U
+h9AOHgf8CAS5RBRoxTFZUsrmCEnLyMFYb7aueuSKLUE+iKi+G3NldiLt7pzFIU9d
+svVlmYRKAks8vzJMW/BxQgaB+YfMGd8dUWEqCs2XORYRDLRd8MM5OIXZ89kda74l
+SOBsfcmjetVLeO9Ws85HuXjl+zSyl3Rxa4AjW5B9hgIjw6gDZqCuA8bkUFq3xmTN
+GMB3B+QB+friWpL3FuMcJiv6+PQU5Ing/NzphvWj18U6o5pzfxwQkv0iYVdhxsbN
+2CtENUmGQ7A9IffnFv1FrRykxq16/VWEUjYblhuiTS5sYNRKiOmywWILnghWEGZZ
+betTGkaDXFODaV43fus34BO8Ynd/7g==
+=/HjI
+-----END PGP SIGNATURE-----
+
+--hl1kWnBARzJiTscN--
