@@ -1,60 +1,88 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 2/8] soc: ti: add initial PRM driver with reset control
- support
-Date: Fri, 23 Aug 2019 14:27:00 +0300
-Message-ID: <11f3c842-d90c-6923-2adf-0635d9e780bd@ti.com>
-References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
- <1565164139-21886-3-git-send-email-t-kristo@ti.com>
- <3b76f0e0-7530-e7b5-09df-2de9956f30ee@ti.com>
- <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
- <9372957c-9ab9-b0dd-fe07-815eb2cb2f16@ti.com>
- <0f335aec-bfdf-345a-8dfb-dad70aef1af6@ti.com>
- <a4196b73-63a0-f9d8-1c43-e6c4d1c1d6a4@ti.com>
- <1566400237.4193.15.camel@pengutronix.de>
- <5e82199f-2f75-ee05-ba65-1595d0526572@ti.com>
- <e75eed22-1bed-4c8a-930d-e05890d58c47@ti.com>
- <1566550205.3023.4.camel@pengutronix.de>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [RESEND, PATCH v13 04/12] mailbox: mediatek: cmdq: move the
+ CMDQ_IRQ_MASK into cmdq driver data
+Date: Fri, 23 Aug 2019 13:32:54 +0200
+Message-ID: <7e282a0e-6366-0cb5-29af-5fef4278d17c@gmail.com>
+References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+ <20190820084932.22282-5-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1566550205.3023.4.camel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190820084932.22282-5-bibby.hsieh@mediatek.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
-Cc: tony@atomide.com, devicetree@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 23.8.2019 11.50, Philipp Zabel wrote:
-> On Wed, 2019-08-21 at 21:15 +0300, Tero Kristo wrote:
->> On 21.8.2019 18.45, Suman Anna wrote:
->>> On 8/21/19 10:10 AM, Philipp Zabel wrote:
-> [...]
->>>> In general, assuming the device tree contains no errors, this should not
->>>> matter much, but I think it is nice if the reset driver, even with a
->>>> misconfigured device tree, can't write into arbitrary bit fields.
->>>
->>> Tero,
->>> Can you add a check for this if possible?
->>
->> Well, I can enforce the usage of reset bit mapping, which I have already
->> implemented for some SoCs like am33xx. If the specific ID is not found,
->> I can bail out. So, basically in this example requesting reset at index
->> 3 would succeed, but it would fail for any other ID; this would be
->> direct HW bit mapping.
+
+
+On 20/08/2019 10:49, Bibby Hsieh wrote:
+> The interrupt mask and thread number has positive correlation,
+> so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+> it by thread number.
 > 
-> That should be fine.
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-Ok, I am re-working it like this locally right now.
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> ---
+>  drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 00d5219094e5..8fddd26288e8 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/of_device.h>
+>  
+>  #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+> -#define CMDQ_IRQ_MASK			0xffff
+>  #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+>  
+>  #define CMDQ_CURR_IRQ_STATUS		0x10
+> @@ -72,6 +71,7 @@ struct cmdq {
+>  	void __iomem		*base;
+>  	u32			irq;
+>  	u32			thread_nr;
+> +	u32			irq_mask;
+>  	struct cmdq_thread	*thread;
+>  	struct clk		*clock;
+>  	bool			suspended;
+> @@ -285,11 +285,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+>  	unsigned long irq_status, flags = 0L;
+>  	int bit;
+>  
+> -	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+> -	if (!(irq_status ^ CMDQ_IRQ_MASK))
+> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
+> +	if (!(irq_status ^ cmdq->irq_mask))
+>  		return IRQ_NONE;
+>  
+> -	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
+> +	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+>  		struct cmdq_thread *thread = &cmdq->thread[bit];
+>  
+>  		spin_lock_irqsave(&thread->chan->lock, flags);
+> @@ -473,6 +473,9 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		dev_err(dev, "failed to get irq\n");
+>  		return -EINVAL;
+>  	}
+> +
+> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+> +	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+>  	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+>  			       "mtk_cmdq", cmdq);
+>  	if (err < 0) {
+> @@ -489,7 +492,6 @@ static int cmdq_probe(struct platform_device *pdev)
+>  		return PTR_ERR(cmdq->clock);
+>  	}
+>  
+> -	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+>  	cmdq->mbox.dev = dev;
+>  	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+>  					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
+> 
