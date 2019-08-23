@@ -1,25 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm8150l support
-Date: Fri, 23 Aug 2019 10:00:19 +0200
-Message-ID: <CACRpkdbANSzMbO2dDGrfFK=KP_ZCkoaOA7xG4zirhzo7hHG_ag@mail.gmail.com>
-References: <20190814123512.6017-1-vkoul@kernel.org> <20190814123512.6017-3-vkoul@kernel.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/3] amlogic: arm: add Amlogic SM1 based Khadas VIM3 variant bindings
+Date: Fri, 23 Aug 2019 10:14:26 +0200
+Message-ID: <20190823081427.17228-3-narmstrong@baylibre.com>
+References: <20190823081427.17228-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814123512.6017-3-vkoul@kernel.org>
+In-Reply-To: <20190823081427.17228-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: khilman@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 2:36 PM Vinod Koul <vkoul@kernel.org> wrote:
+The Khadas VIM3 is also available with the Pin-to-pin compatible
+Amlogic SM1 SoC in the S905D3 variant package.
 
-> Add support for the PM8150l GPIO support to the Qualcomm PMIC GPIO
-> binding.
->
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Change the description to match the S905X3/D3/Y3 variants like the G12A
+description, and add the vim3 compatible.
 
-Patch applied.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index b48ea1e4913a..2751dd778ce0 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -150,9 +150,10 @@ properties:
+           - const: amlogic,s922x
+           - const: amlogic,g12b
+ 
+-      - description: Boards with the Amlogic Meson SM1 S905X3 SoC
++      - description: Boards with the Amlogic Meson SM1 S905X3/D3/Y3 SoC
+         items:
+           - enum:
+               - seirobotics,sei610
++              - khadas,vim3
+           - const: amlogic,sm1
+ ...
+-- 
+2.22.0
