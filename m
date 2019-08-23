@@ -1,46 +1,60 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
- nodes
-Date: Fri, 23 Aug 2019 12:07:22 +0100
-Message-ID: <20190823110714.GA10257@e121166-lin.cambridge.arm.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 2/8] soc: ti: add initial PRM driver with reset control
+ support
+Date: Fri, 23 Aug 2019 14:27:00 +0300
+Message-ID: <11f3c842-d90c-6923-2adf-0635d9e780bd@ti.com>
+References: <1565164139-21886-1-git-send-email-t-kristo@ti.com>
+ <1565164139-21886-3-git-send-email-t-kristo@ti.com>
+ <3b76f0e0-7530-e7b5-09df-2de9956f30ee@ti.com>
+ <59709a2d-f13a-bd55-8aba-864c1cf2f19e@ti.com>
+ <9372957c-9ab9-b0dd-fe07-815eb2cb2f16@ti.com>
+ <0f335aec-bfdf-345a-8dfb-dad70aef1af6@ti.com>
+ <a4196b73-63a0-f9d8-1c43-e6c4d1c1d6a4@ti.com>
+ <1566400237.4193.15.camel@pengutronix.de>
+ <5e82199f-2f75-ee05-ba65-1595d0526572@ti.com>
+ <e75eed22-1bed-4c8a-930d-e05890d58c47@ti.com>
+ <1566550205.3023.4.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1566550205.3023.4.camel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Suman Anna <s-anna@ti.com>, Keerthy <j-keerthy@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On 23.8.2019 11.50, Philipp Zabel wrote:
+> On Wed, 2019-08-21 at 21:15 +0300, Tero Kristo wrote:
+>> On 21.8.2019 18.45, Suman Anna wrote:
+>>> On 8/21/19 10:10 AM, Philipp Zabel wrote:
+> [...]
+>>>> In general, assuming the device tree contains no errors, this should not
+>>>> matter much, but I think it is nice if the reset driver, even with a
+>>>> misconfigured device tree, can't write into arbitrary bit fields.
+>>>
+>>> Tero,
+>>> Can you add a check for this if possible?
+>>
+>> Well, I can enforce the usage of reset bit mapping, which I have already
+>> implemented for some SoCs like am33xx. If the specific ID is not found,
+>> I can bail out. So, basically in this example requesting reset at index
+>> 3 would succeed, but it would fail for any other ID; this would be
+>> direct HW bit mapping.
 > 
-> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> controller is not fixed, it is determined by the selected
-> SerDes protocol. The current num-lanes indicates the max lanes
-> PCIe controller can support up to, instead of the lanes assigned
-> to the PCIe controller. This can result in PCIe link training fail
-> after hot-reset.
-> 
-> Hou Zhiqiang (4):
->   dt-bindings: PCI: designware: Remove the num-lanes from Required
->     properties
->   PCI: dwc: Return directly when num-lanes is not found
->   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
->   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
->  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
->  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
->  8 files changed, 4 insertions(+), 22 deletions(-)
+> That should be fine.
 
-Applied to pci/dwc for v5.4, thanks.
+Ok, I am re-working it like this locally right now.
 
-Lorenzo
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
