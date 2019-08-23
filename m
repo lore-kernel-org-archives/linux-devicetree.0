@@ -1,73 +1,35 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/11] pinctrl: mediatek: avoid virtual gpio trying to
- set reg
-Date: Fri, 23 Aug 2019 10:57:03 +0200
-Message-ID: <CACRpkdZa_sQgvWC3ic0NxrVi9gS1cNTsV-wa-SDpA0e5kutBRw@mail.gmail.com>
-References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com> <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+Subject: Re: [PATCH v2 06/11] pinctrl: mediatek: add pinctrl support for
+ MT6779 SoC
+Date: Fri, 23 Aug 2019 10:59:08 +0200
+Message-ID: <CACRpkdbZY2vZBaEXDMsjLxA1NGYWirhCdspu0W-foXJX=Fd4yg@mail.gmail.com>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+ <1566206502-4347-7-git-send-email-mars.cheng@mediatek.com> <CAGp9LzoVwNxY8Q3G4hxpa7=orsEox+J0mNamag70wyjrGvDiZw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+In-Reply-To: <CAGp9LzoVwNxY8Q3G4hxpa7=orsEox+J0mNamag70wyjrGvDiZw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mars Cheng <mars.cheng@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sean Wang <sean.wang@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk <linux-clk@vger.kernel.org>
+To: Sean Wang <sean.wang@kernel.org>
+Cc: Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk <linux-clk@vger.kernel.org>, Andy Teng <andy.teng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
-
-> for virtual gpios, they should not do reg setting and
-> should behave as expected for eint function.
+On Thu, Aug 22, 2019 at 8:12 PM Sean Wang <sean.wang@kernel.org> wrote:
+> On Mon, Aug 19, 2019 at 2:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
+> >
+> > This adds MT6779 pinctrl driver based on MediaTek pinctrl-paris core.
+> >
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > Signed-off-by: Andy Teng <andy.teng@mediatek.com>
 >
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
 
-This does not explain what a "virtual GPIO" is in this
-context, so please elaborate. What is this? Why does
-it exist? What is it used for?
+Please look at the DT bindings as well when you have time, and
+especially the "virtual GPIO" patch, I don't understand that at all.
 
-GPIO is "general purpose input/output" and it is a
-pretty rubbery category already as it is, so we need
-to define our terms pretty strictly.
-
-> +bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
-> +{
-> +       const struct mtk_pin_desc *desc;
-> +       bool virt_gpio = false;
-> +
-> +       if (gpio_n >= hw->soc->npins)
-> +               return virt_gpio;
-> +
-> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
-> +
-> +       if (desc->funcs &&
-> +           desc->funcs[desc->eint.eint_m].name == 0)
-
-NULL check is done like this:
-
-if (desc->funcs && !desc->funcs[desc->eint.eint_m].name)
-
-> +               virt_gpio = true;
-
-So why is this GPIO "virtual" because it does not have
-a name in the funcs table?
-
-> @@ -278,6 +295,9 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
->         if (err)
->                 return err;
->
-> +       if (mtk_is_virt_gpio(hw, gpio_n))
-> +               return 0;
-
-So does this mean we always succeed in setting a GPIO as eint
-if it is virtual? Why? Explanatory comment is needed.
-
-> @@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
->         const struct mtk_pin_desc *desc;
->         int value, err;
->
-> +       if (mtk_is_virt_gpio(hw, gpio))
-> +               return 1;
-
-Why are "virtual GPIOs" always inputs?
+I suspect the "virtual GPIO" is maybe more about something that
+should be done by setting up the valid_mask in the gpio_chip
+or something.
 
 Yours,
 Linus Walleij
