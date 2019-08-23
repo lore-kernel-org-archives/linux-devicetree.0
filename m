@@ -1,125 +1,56 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [RESEND PATCH v4 1/4] dt-bindings: soundwire: add slave bindings
-Date: Fri, 23 Aug 2019 12:23:40 +0530
-Message-ID: <20190823065340.GD2672@vkoul-mobl>
-References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
- <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 02/11] dt-bindings: phy-mtk-tphy: make the ref clock optional
+Date: Fri, 23 Aug 2019 15:00:09 +0800
+Message-ID: <a31d78484b64f853a16e7dcb16fae9fc0de45ebb.1566542696.git.chunfeng.yun@mediatek.com>
+References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, robh+dt@kernel.org, spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23-08-19, 00:37, Srinivas Kandagatla wrote:
-> This patch adds bindings for Soundwire Slave devices that includes how
-> SoundWire enumeration address and Link ID are used to represented in
-> SoundWire slave device tree nodes.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../soundwire/soundwire-controller.yaml       | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> new file mode 100644
-> index 000000000000..91aa6c6d6266
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SoundWire Controller Generic Binding
+Make the ref clock optional, then we no need refer to a fixed-clock
+in DTS anymore when the clock of USB3 PHY comes from oscillator
+directly
 
-Controller does not make sense here, why not use spec terminology and
-say "SoundWire Slave Generic Binding"
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  SoundWire busses can be described with a node for the SoundWire controller
-> +  device and a set of child nodes for each SoundWire slave on the bus.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
-> +      description:
-> +	  Is the textual representation of SoundWire Enumeration
-> +	  address. compatible string should contain SoundWire Version ID,
-> +	  Manufacturer ID, Part ID and Class ID in order and shall be in
-> +	  lower-case hexadecimal with leading zeroes.
-> +	  Valid sizes of these fields are
-> +	  Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
-> +	  and '0x2' represents SoundWire 1.1 and so on.
-> +	  MFD is 4 nibbles
-> +	  PID is 4 nibbles
-> +	  CID is 2 nibbles
-> +	  More Information on detail of encoding of these fields can be
-> +	  found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
-> +
-> +      reg:
-> +        maxItems: 1
-> +        description:
-> +          Instance ID and Link ID of SoundWire Device Address.
-
-This looks better :) Thanks.
-
-Apart from the minor nit above this looks good to me, I can merge the
-sdw parts if Rob is fine with them.
-
-Thanks
-
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    soundwire@c2d0000 {
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +        compatible = "qcom,soundwire-v1.5.0";
-> +        reg = <0x0c2d0000 0x2000>;
-> +
-> +        speaker@1 {
-> +            compatible = "sdw10217201000";
-> +            reg = <1 0>;
-> +        };
-> +
-> +        speaker@2 {
-> +            compatible = "sdw10217201000";
-> +            reg = <2 0>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
-
+diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+index d5b327f85fa2..1c18bf10b2fe 100644
+--- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
++++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+@@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
+ 
+ Required properties (port (child) node):
+ - reg		: address and length of the register set for the port.
+-- clocks	: a list of phandle + clock-specifier pairs, one for each
+-		  entry in clock-names
+-- clock-names	: must contain
+-		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
+-			reference clock for SuperSpeed analog phy, sometimes is
+-			24M, 25M or 27M, depended on platform.
+ - #phy-cells	: should be 1 (See second example)
+ 		  cell after port phandle is phy type from:
+ 			- PHY_TYPE_USB2
+@@ -48,6 +42,13 @@ Required properties (port (child) node):
+ 			- PHY_TYPE_SATA
+ 
+ Optional properties (PHY_TYPE_USB2 port (child) node):
++- clocks	: a list of phandle + clock-specifier pairs, one for each
++		  entry in clock-names
++- clock-names	: may contain
++		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
++			reference clock for SuperSpeed anolog phy, sometimes is
++			24M, 25M or 27M, depended on platform.
++
+ - mediatek,eye-src	: u32, the value of slew rate calibrate
+ - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
+ - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
 -- 
-~Vinod
+2.23.0
