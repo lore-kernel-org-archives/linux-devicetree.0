@@ -1,38 +1,83 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 03/14] arm64: dts: meson-gx: fix reset controller compatible
-Date: Fri, 23 Aug 2019 09:02:37 +0200
-Message-ID: <20190823070248.25832-4-narmstrong@baylibre.com>
-References: <20190823070248.25832-1-narmstrong@baylibre.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 06/11] phy: phy-mtk-tphy: add a property for disconnect
+ threshold
+Date: Fri, 23 Aug 2019 15:00:13 +0800
+Message-ID: <5ef3767e2f91e7626fe6eb7062fb323c0a13e28a.1566542697.git.chunfeng.yun@mediatek.com>
+References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-gxbb-nanopi-k2.dt.yaml: reset-controller@4404: compatible:0: 'amlogic,meson-gx-reset' is not one of ['amlogic,meson8b-reset', 'amlogic,meson-gxbb-reset', 'amlogic,meson-axg-reset']
+This is used to tune the threshold of disconnect
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/mediatek/phy-mtk-tphy.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 239ec08b3023..08c01e11ba1b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -220,7 +220,7 @@
- 			};
+diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
+index cb2ed3b25068..5afe33621dbc 100644
+--- a/drivers/phy/mediatek/phy-mtk-tphy.c
++++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+@@ -60,6 +60,8 @@
+ #define U3P_USBPHYACR6		0x018
+ #define PA6_RG_U2_BC11_SW_EN		BIT(23)
+ #define PA6_RG_U2_OTG_VBUSCMP_EN	BIT(20)
++#define PA6_RG_U2_DISCTH		GENMASK(7, 4)
++#define PA6_RG_U2_DISCTH_VAL(x)	((0xf & (x)) << 4)
+ #define PA6_RG_U2_SQTH		GENMASK(3, 0)
+ #define PA6_RG_U2_SQTH_VAL(x)	(0xf & (x))
  
- 			reset: reset-controller@4404 {
--				compatible = "amlogic,meson-gx-reset", "amlogic,meson-gxbb-reset";
-+				compatible = "amlogic,meson-gxbb-reset";
- 				reg = <0x0 0x04404 0x0 0x9c>;
- 				#reset-cells = <1>;
- 			};
+@@ -300,6 +302,7 @@ struct mtk_phy_instance {
+ 	int eye_src;
+ 	int eye_vrt;
+ 	int eye_term;
++	int discth;
+ 	bool bc12_en;
+ };
+ 
+@@ -850,9 +853,12 @@ static void phy_parse_property(struct mtk_tphy *tphy,
+ 				 &instance->eye_vrt);
+ 	device_property_read_u32(dev, "mediatek,eye-term",
+ 				 &instance->eye_term);
+-	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d\n",
++	device_property_read_u32(dev, "mediatek,discth",
++				 &instance->discth);
++	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, disc:%d\n",
+ 		instance->bc12_en, instance->eye_src,
+-		instance->eye_vrt, instance->eye_term);
++		instance->eye_vrt, instance->eye_term,
++		instance->discth);
+ }
+ 
+ static void u2_phy_props_set(struct mtk_tphy *tphy,
+@@ -888,6 +894,13 @@ static void u2_phy_props_set(struct mtk_tphy *tphy,
+ 		tmp |= PA1_RG_TERM_SEL_VAL(instance->eye_term);
+ 		writel(tmp, com + U3P_USBPHYACR1);
+ 	}
++
++	if (instance->discth) {
++		tmp = readl(com + U3P_USBPHYACR6);
++		tmp &= ~PA6_RG_U2_DISCTH;
++		tmp |= PA6_RG_U2_DISCTH_VAL(instance->discth);
++		writel(tmp, com + U3P_USBPHYACR6);
++	}
+ }
+ 
+ static int mtk_phy_init(struct phy *phy)
 -- 
-2.22.0
+2.23.0
