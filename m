@@ -1,55 +1,108 @@
-From: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
-Date: Fri, 23 Aug 2019 11:37:38 +0800
-Message-ID: <a6717e97-01cf-771c-8467-be5946528dd0@linux.intel.com>
-References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
- <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
- <20190822090208.GJ30120@smile.fi.intel.com>
- <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
- <20190822130429.GN30120@smile.fi.intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Date: Fri, 23 Aug 2019 09:09:46 +0530
+Message-ID: <11e9b2c3-f4d0-2f82-bb14-45c38a1419e4@ti.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-6-xiaowei.bao@nxp.com>
+ <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+ <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822130429.GN30120@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, alan@linux.intel.com, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev@lists.oz
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-On 22/8/2019 9:04 PM, Andy Shevchenko wrote:
-> On Thu, Aug 22, 2019 at 05:26:33PM +0800, Tanwar, Rahul wrote:
->> On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
->>> On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
->>>> Use a newly introduced optional "status" property of "motorola,mc146818"
->>>> compatible DT node to determine if RTC is supported. Skip read/write from
->>>> RTC device only when this node is present and status is "disabled". In all
->>>> other cases, proceed as before.
->>> Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
->>
->> get_wallclock() and set_wallclock() are function pointers of platform_ops
->>
->> which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
->>
->> at init time. Since adding a new platform to override these functions is
->>
->> discouraged, so the only way is to modify RTC get/set functions.
-> Shouldn't it be platform agnostic code?
-> So, my point is, instead of hacking two functions, perhaps better to avoid them
-> at all.
-
-Sorry, i could not understand your point. The changes are platform
-
-agnostic i.e. it doesn't break existing use cases. Are you recommending
-
-to add a new platform and make changes there ?
-
-Regards,
-
-Rahul
-
->
->
+SGksCgooRml4ZWQgTG9yZW56bydzIGVtYWlsIGFkZHJlc3MuIEFsbCB0aGUgcGF0Y2hlcyBpbiB0
+aGUgc2VyaWVzIGhhdmUgd3JvbmcgZW1haWwgaWQpCgpPbiAyMy8wOC8xOSA4OjA5IEFNLCBYaWFv
+d2VpIEJhbyB3cm90ZToKPiAKPiAKPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4gRnJv
+bTogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4KPj4gU2VudDogMjAxOeW5
+tDjmnIgyMuaXpSAxOTo0NAo+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+
+OyBiaGVsZ2Fhc0Bnb29nbGUuY29tOwo+PiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFu
+ZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkKPj4gPGxlb3lhbmcubGlAbnhw
+LmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsKPj4gZ3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc7IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsg
+TWluZ2thaQo+PiBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54
+cC5jb20+Owo+PiBqaW5nb29oYW4xQGdtYWlsLmNvbTsgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5
+cy5jb207Cj4+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOwo+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7Cj4+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBh
+bmRyZXcubXVycmF5QGFybS5jb20KPj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNi8xMF0gUENJ
+OiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIHdheSBvZiBnZXR0aW5nCj4+IGNhcGFiaWxpdHkgd2l0
+aCBkaWZmZXJlbnQgUEVYCj4+Cj4+IEhpLAo+Pgo+PiBPbiAyMi8wOC8xOSA0OjUyIFBNLCBYaWFv
+d2VpIEJhbyB3cm90ZToKPj4+IFRoZSBkaWZmZXJlbnQgUENJZSBjb250cm9sbGVyIGluIG9uZSBi
+b2FyZCBtYXkgYmUgaGF2ZSBkaWZmZXJlbnQKPj4+IGNhcGFiaWxpdHkgb2YgTVNJIG9yIE1TSVgs
+IHNvIGNoYW5nZSB0aGUgd2F5IG9mIGdldHRpbmcgdGhlIE1TSQo+Pj4gY2FwYWJpbGl0eSwgbWFr
+ZSBpdCBtb3JlIGZsZXhpYmxlLgo+Pgo+PiBwbGVhc2UgdXNlIGRpZmZlcmVudCBwY2lfZXBjX2Zl
+YXR1cmVzIHRhYmxlIGZvciBkaWZmZXJlbnQgYm9hcmRzLgo+IFRoYW5rcywgSSB0aGluayB0aGF0
+IGl0IHdpbGwgYmUgbW9yZSBmbGV4aWJsZSB0byBkeW5hbWljYWxseSBnZXQgTVNJIG9yIE1TSVgg
+Y2FwYWJpbGl0eSwKPiBUaHVzLCB3ZSB3aWxsIG5vdCBuZWVkIHRvIGRlZmluZSB0aGUgcGNpX2Vw
+Y19mZWF0dXJlIGZvciBkaWZmZXJlbnQgYm9hcmRzLgoKSXMgdGhlIHJlc3RyaWN0aW9uIGJlY2F1
+c2UgeW91IGNhbm5vdCBoYXZlIGRpZmZlcmVudCBjb21wYXRpYmxlIGZvciBkaWZmZXJlbnQKYm9h
+cmRzPwoKVGhhbmtzCktpc2hvbgoKPj4KPj4gVGhhbmtzCj4+IEtpc2hvbgo+Pj4KPj4+IFNpZ25l
+ZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPgo+Pj4gLS0tCj4+PiB2
+MjoKPj4+ICAtIFJlbW92ZSB0aGUgcmVwZWF0ZWQgYXNzaWdubWVudCBjb2RlLgo+Pj4KPj4+ICBk
+cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jIHwgMjYKPj4+ICsr
+KysrKysrKysrKysrKysrKystLS0tLS0tCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlv
+bnMoKyksIDcgZGVsZXRpb25zKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMKPj4+IGIvZHJpdmVycy9wY2kvY29udHJv
+bGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYwo+Pj4gaW5kZXggNGU5MmE5NS4uODQ2MWY2MiAx
+MDA2NDQKPj4+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBl
+LWVwLmMKPj4+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBl
+LWVwLmMKPj4+IEBAIC0yMiw2ICsyMiw3IEBACj4+Pgo+Pj4gIHN0cnVjdCBsc19wY2llX2VwIHsK
+Pj4+ICAJc3RydWN0IGR3X3BjaWUJCSpwY2k7Cj4+PiArCXN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVz
+CSpsc19lcGM7Cj4+PiAgfTsKPj4+Cj4+PiAgI2RlZmluZSB0b19sc19wY2llX2VwKHgpCWRldl9n
+ZXRfZHJ2ZGF0YSgoeCktPmRldikKPj4+IEBAIC00MCwyNSArNDEsMjYgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBvZl9kZXZpY2VfaWQKPj4gbHNfcGNpZV9lcF9vZl9tYXRjaFtdID0gewo+Pj4gIAl7
+IH0sCj4+PiAgfTsKPj4+Cj4+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVz
+IGxzX3BjaWVfZXBjX2ZlYXR1cmVzID0gewo+Pj4gLQkubGlua3VwX25vdGlmaWVyID0gZmFsc2Us
+Cj4+PiAtCS5tc2lfY2FwYWJsZSA9IHRydWUsCj4+PiAtCS5tc2l4X2NhcGFibGUgPSBmYWxzZSwK
+Pj4+IC19Owo+Pj4gLQo+Pj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyog
+IGxzX3BjaWVfZXBfZ2V0X2ZlYXR1cmVzKHN0cnVjdAo+Pj4gZHdfcGNpZV9lcCAqZXApICB7Cj4+
+PiAtCXJldHVybiAmbHNfcGNpZV9lcGNfZmVhdHVyZXM7Cj4+PiArCXN0cnVjdCBkd19wY2llICpw
+Y2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOwo+Pj4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNp
+ZSA9IHRvX2xzX3BjaWVfZXAocGNpKTsKPj4+ICsKPj4+ICsJcmV0dXJuIHBjaWUtPmxzX2VwYzsK
+Pj4+ICB9Cj4+Pgo+Pj4gIHN0YXRpYyB2b2lkIGxzX3BjaWVfZXBfaW5pdChzdHJ1Y3QgZHdfcGNp
+ZV9lcCAqZXApICB7Cj4+PiAgCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21f
+ZXAoZXApOwo+Pj4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNp
+KTsKPj4+ICAJZW51bSBwY2lfYmFybm8gYmFyOwo+Pj4KPj4+ICAJZm9yIChiYXIgPSBCQVJfMDsg
+YmFyIDw9IEJBUl81OyBiYXIrKykKPj4+ICAJCWR3X3BjaWVfZXBfcmVzZXRfYmFyKHBjaSwgYmFy
+KTsKPj4+ICsKPj4+ICsJcGNpZS0+bHNfZXBjLT5tc2lfY2FwYWJsZSA9IGVwLT5tc2lfY2FwID8g
+dHJ1ZSA6IGZhbHNlOwo+Pj4gKwlwY2llLT5sc19lcGMtPm1zaXhfY2FwYWJsZSA9IGVwLT5tc2l4
+X2NhcCA/IHRydWUgOiBmYWxzZTsKPj4+ICB9Cj4+Pgo+Pj4gIHN0YXRpYyBpbnQgbHNfcGNpZV9l
+cF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1OCBmdW5jX25vLCBAQAo+Pj4gLTEx
+OCw2ICsxMjAsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UKPj4gKnBkZXYpCj4+PiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2
+LT5kZXY7Cj4+PiAgCXN0cnVjdCBkd19wY2llICpwY2k7Cj4+PiAgCXN0cnVjdCBsc19wY2llX2Vw
+ICpwY2llOwo+Pj4gKwlzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyAqbHNfZXBjOwo+Pj4gIAlzdHJ1
+Y3QgcmVzb3VyY2UgKmRiaV9iYXNlOwo+Pj4gIAlpbnQgcmV0Owo+Pj4KPj4+IEBAIC0xMjksNiAr
+MTMyLDEwIEBAIHN0YXRpYyBpbnQgX19pbml0IGxzX3BjaWVfZXBfcHJvYmUoc3RydWN0Cj4+IHBs
+YXRmb3JtX2RldmljZSAqcGRldikKPj4+ICAJaWYgKCFwY2kpCj4+PiAgCQlyZXR1cm4gLUVOT01F
+TTsKPj4+Cj4+PiArCWxzX2VwYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbHNfZXBjKSwg
+R0ZQX0tFUk5FTCk7Cj4+PiArCWlmICghbHNfZXBjKQo+Pj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4+
+PiArCj4+PiAgCWRiaV9iYXNlID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2LCBJ
+T1JFU09VUkNFX01FTSwKPj4gInJlZ3MiKTsKPj4+ICAJcGNpLT5kYmlfYmFzZSA9IGRldm1fcGNp
+X3JlbWFwX2NmZ19yZXNvdXJjZShkZXYsIGRiaV9iYXNlKTsKPj4+ICAJaWYgKElTX0VSUihwY2kt
+PmRiaV9iYXNlKSkKPj4+IEBAIC0xMzksNiArMTQ2LDExIEBAIHN0YXRpYyBpbnQgX19pbml0IGxz
+X3BjaWVfZXBfcHJvYmUoc3RydWN0Cj4+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4+ICAJcGNp
+LT5vcHMgPSAmbHNfcGNpZV9lcF9vcHM7Cj4+PiAgCXBjaWUtPnBjaSA9IHBjaTsKPj4+Cj4+PiAr
+CWxzX2VwYy0+bGlua3VwX25vdGlmaWVyID0gZmFsc2UsCj4+PiArCWxzX2VwYy0+YmFyX2ZpeGVk
+XzY0Yml0ID0gKDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQpLAo+Pj4gKwo+Pj4gKwlwY2llLT5s
+c19lcGMgPSBsc19lcGM7Cj4+PiArCj4+PiAgCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHBj
+aWUpOwo+Pj4KPj4+ICAJcmV0ID0gbHNfYWRkX3BjaWVfZXAocGNpZSwgcGRldik7Cj4+PgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
