@@ -1,45 +1,125 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings
- schemas conversion
-Date: Fri, 23 Aug 2019 08:53:42 +0200
-Message-ID: <2fd4a768-f167-715e-7e77-df45c20a6487@baylibre.com>
-References: <20190821142043.14649-1-narmstrong@baylibre.com>
- <7h36hs3khb.fsf@baylibre.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RESEND PATCH v4 1/4] dt-bindings: soundwire: add slave bindings
+Date: Fri, 23 Aug 2019 12:23:40 +0530
+Message-ID: <20190823065340.GD2672@vkoul-mobl>
+References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+ <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7h36hs3khb.fsf@baylibre.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, robh+dt@kernel.org, spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/08/2019 00:26, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong@baylibre.com> writes:
+On 23-08-19, 00:37, Srinivas Kandagatla wrote:
+> This patch adds bindings for Soundwire Slave devices that includes how
+> SoundWire enumeration address and Link ID are used to represented in
+> SoundWire slave device tree nodes.
 > 
->> This is the first set of DT fixes following the first YAML bindings conversion
->> at [1], [2] and [3].
->>
->> After this set of fixes, the remaining errors are :
->> meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->> meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->> meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
->> meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->> meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->>
->> These are only cosmetic changes, and should not break drivers implementation
->> following the bindings.
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../soundwire/soundwire-controller.yaml       | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
 > 
-> Any chance you can rebase this on top of my v5.4/dt64 branch?
+> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> new file mode 100644
+> index 000000000000..91aa6c6d6266
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SoundWire Controller Generic Binding
 
-Sure, will resend today.
+Controller does not make sense here, why not use spec terminology and
+say "SoundWire Slave Generic Binding"
 
-Neil
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  SoundWire busses can be described with a node for the SoundWire controller
+> +  device and a set of child nodes for each SoundWire slave on the bus.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
+> +      description:
+> +	  Is the textual representation of SoundWire Enumeration
+> +	  address. compatible string should contain SoundWire Version ID,
+> +	  Manufacturer ID, Part ID and Class ID in order and shall be in
+> +	  lower-case hexadecimal with leading zeroes.
+> +	  Valid sizes of these fields are
+> +	  Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
+> +	  and '0x2' represents SoundWire 1.1 and so on.
+> +	  MFD is 4 nibbles
+> +	  PID is 4 nibbles
+> +	  CID is 2 nibbles
+> +	  More Information on detail of encoding of these fields can be
+> +	  found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
+> +
+> +      reg:
+> +        maxItems: 1
+> +        description:
+> +          Instance ID and Link ID of SoundWire Device Address.
 
-> 
-> Thanks,
-> 
-> Kevin
-> 
+This looks better :) Thanks.
+
+Apart from the minor nit above this looks good to me, I can merge the
+sdw parts if Rob is fine with them.
+
+Thanks
+
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    soundwire@c2d0000 {
+> +        #address-cells = <2>;
+> +        #size-cells = <0>;
+> +        compatible = "qcom,soundwire-v1.5.0";
+> +        reg = <0x0c2d0000 0x2000>;
+> +
+> +        speaker@1 {
+> +            compatible = "sdw10217201000";
+> +            reg = <1 0>;
+> +        };
+> +
+> +        speaker@2 {
+> +            compatible = "sdw10217201000";
+> +            reg = <2 0>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+
+-- 
+~Vinod
