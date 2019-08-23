@@ -1,76 +1,185 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RESEND PATCH v4 3/4] dt-bindings: ASoC: Add WSA881x bindings
-Date: Fri, 23 Aug 2019 00:37:58 +0100
-Message-ID: <20190822233759.12663-4-srinivas.kandagatla@linaro.org>
-References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [v3 2/2] clk: ls1028a: Add clock driver for Display output interface
+Date: Thu, 22 Aug 2019 18:26:58 -0700
+Message-ID: <20190823012658.DB213233A2@mail.kernel.org>
+References: <20190822020847.10159-1-wen.he_1@nxp.com> <20190822020847.10159-2-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20190822020847.10159-2-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-devel@linux.nxdi.nxp.com, linux-kernel@vger.kernel.org
+Cc: leoyang.li@nxp.com, liviu.dudau@arm.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
-Amplifier. This Amplifier also has a simple thermal sensor for
-over temperature and speaker protection.
+Quoting Wen He (2019-08-21 19:08:47)
+> Add clock driver for QorIQ LS1028A Display output interfaces(LCD, DPHY),
+> as implemented in TSMC CLN28HPM PLL, this PLL supports the programmable
+> integer division and range of the display output pixel clock's 27-594MHz.
+>=20
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+> change in v3:
+>         - remove the OF dependency
+>         - use clk_parent_data instead of parent_name
+>=20
+>  drivers/clk/Kconfig      |  10 ++
+>  drivers/clk/Makefile     |   1 +
+>  drivers/clk/clk-plldig.c | 283 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 294 insertions(+)
+>  create mode 100644 drivers/clk/clk-plldig.c
+>=20
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 801fa1cd0321..ab05f342af04 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -223,6 +223,16 @@ config CLK_QORIQ
+>           This adds the clock driver support for Freescale QorIQ platforms
+>           using common clock framework.
+> =20
+> +config CLK_LS1028A_PLLDIG
+> +        bool "Clock driver for LS1028A Display output"
+> +        depends on ARCH_LAYERSCAPE || COMPILE_TEST
+> +        default ARCH_LAYERSCAPE
+> +        help
+> +          This driver support the Display output interfaces(LCD, DPHY) p=
+ixel clocks
+> +          of the QorIQ Layerscape LS1028A, as implemented TSMC CLN28HPM =
+PLL. Not all
+> +          features of the PLL are currently supported by the driver. By =
+default,
+> +          configured bypass mode with this PLL.
+> +
+>  config COMMON_CLK_XGENE
+>         bool "Clock driver for APM XGene SoC"
+>         default ARCH_XGENE
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 0cad76021297..c8e22a764c4d 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_COMMON_CLK_OXNAS)                +=3D clk-=
+oxnas.o
+>  obj-$(CONFIG_COMMON_CLK_PALMAS)                +=3D clk-palmas.o
+>  obj-$(CONFIG_COMMON_CLK_PWM)           +=3D clk-pwm.o
+>  obj-$(CONFIG_CLK_QORIQ)                        +=3D clk-qoriq.o
+> +obj-$(CONFIG_CLK_LS1028A_PLLDIG)       +=3D clk-plldig.o
+>  obj-$(CONFIG_COMMON_CLK_RK808)         +=3D clk-rk808.o
+>  obj-$(CONFIG_COMMON_CLK_HI655X)                +=3D clk-hi655x.o
+>  obj-$(CONFIG_COMMON_CLK_S2MPS11)       +=3D clk-s2mps11.o
+> diff --git a/drivers/clk/clk-plldig.c b/drivers/clk/clk-plldig.c
+> new file mode 100644
+> index 000000000000..c5ce80a46fd4
+> --- /dev/null
+> +++ b/drivers/clk/clk-plldig.c
+> @@ -0,0 +1,283 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright 2019 NXP
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../bindings/sound/qcom,wsa881x.yaml          | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+Please leave this as C style /* */ comment for the NXP part, but comply
+with the SPDX comment style of // on the first line.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-new file mode 100644
-index 000000000000..ad718d75c660
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
-+
-+maintainers:
-+  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-+
-+allOf:
-+  - $ref: "soundwire-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: sdw10217201000
-+
-+  reg:
-+    maxItems: 1
-+
-+  pd-gpios:
-+    description: GPIO spec for Powerdown/Shutdown line to use
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - pd-gpios
-+  - #thermal-sensor-cells
-+
-+examples:
-+  - |
-+    efuse@1c23800 {
-+        compatible = "allwinner,sun4i-a10-sid";
-+        reg = <0x01c23800 0x10>;
-+        pd-gpios = <&wcdpinctrl 2 0>;
-+        #thermal-sensor-cells = <0>;
-+    };
-+
-+...
--- 
-2.21.0
+> +
+> +static long plldig_round_rate(struct clk_hw *hw, unsigned long rate,
+> +               unsigned long *parent)
+> +{
+> +       unsigned long parent_rate =3D *parent;
+> +       unsigned long round_rate;
+> +       u32 mult =3D 0, rfdphi1 =3D 0;
+> +       bool found =3D false;
+> +
+> +       found =3D plldig_is_valid_range(rate, parent_rate, &mult,
+> +                                       &rfdphi1, &round_rate);
+> +       if (!found) {
+> +               pr_warn("%s: unable to round rate %lu, parent rate :%lu\n=
+",
+> +                               clk_hw_get_name(hw), rate, parent_rate);
+> +               return 0;
+
+This can return an error instead? In fact, you may want to use
+determine_rate clk op instead.
+
+> +       }
+> +
+> +       return round_rate / rfdphi1;
+> +}
+> +
+> +static int plldig_set_rate(struct clk_hw *hw, unsigned long rate,
+> +               unsigned long parent_rate)
+> +{
+> +       struct clk_plldig *data =3D to_clk_plldig(hw);
+> +       bool valid =3D false;
+> +       unsigned long round_rate =3D 0;
+> +       u32 rfdphi1 =3D 0, val, mult =3D 0, cond =3D 0;
+> +       int ret =3D -ETIMEDOUT;
+> +
+> +       valid =3D plldig_is_valid_range(rate, parent_rate, &mult,
+> +                                       &rfdphi1, &round_rate);
+> +       if (!valid) {
+> +               pr_warn("%s: unable to support rate %lu, parent_rate: %lu=
+\n",
+> +                               clk_hw_get_name(hw), rate, parent_rate);
+
+Shouldn't determine_rate or round_rate make this impossible to hit in
+practice? I mean that those ops should prevent the rate from being
+rounded to such a frequency that it becomes invalid.
+
+> +               return -EINVAL;
+> +       }
+> +
+> +       val =3D readl(data->regs + PLLDIG_REG_PLLDV);
+> +       val =3D mult;
+> +       rfdphi1 =3D PLLDIG_SET_RFDPHI1(rfdphi1);
+> +       val |=3D rfdphi1;
+> +
+> +       writel(val, data->regs + PLLDIG_REG_PLLDV);
+> +
+> +       /* delay 200us make sure that old lock state is cleared */
+> +       udelay(200);
+> +
+> +       /* Wait until PLL is locked or timeout (maximum 1000 usecs) */
+> +       ret =3D readl_poll_timeout_atomic(data->regs + PLLDIG_REG_PLLSR, =
+cond,
+> +                                       cond & PLLDIG_LOCK_MASK, 0,
+> +                                       USEC_PER_MSEC);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct clk_ops plldig_clk_ops =3D {
+> +       .enable =3D plldig_enable,
+> +       .disable =3D plldig_disable,
+> +       .is_enabled =3D plldig_is_enabled,
+> +       .recalc_rate =3D plldig_recalc_rate,
+> +       .round_rate =3D plldig_round_rate,
+> +       .set_rate =3D plldig_set_rate,
+> +};
+[...]
+> +
+> +       ret =3D devm_clk_hw_register(dev, &data->hw);
+> +       if (ret) {
+> +               dev_err(dev, "failed to register %s clock\n", init.name);
+> +               return ret;
+> +       }
+> +
+> +       ret =3D devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, &d=
+ata->hw);
+> +       if (ret)
+> +               dev_err(dev, "failed adding the clock provider\n");
+> +
+> +       return ret;
+> +}
+> +
+> +static int plldig_clk_remove(struct platform_device *pdev)
+> +{
+> +       of_clk_del_provider(pdev->dev.of_node);
+
+This isn't required. devm already does it.
+
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id plldig_clk_id[] =3D {
+> +       { .compatible =3D "fsl,ls1028a-plldig", .data =3D NULL},
+
+You can leave out the data assignment.
