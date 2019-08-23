@@ -1,104 +1,38 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
-Date: Fri, 23 Aug 2019 09:48:08 -0700
-Message-ID: <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
-References: <20190820232046.50175-1-brendanhiggins@google.com>
- <20190820232046.50175-2-brendanhiggins@google.com> <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [1/3] rtc/fsl: support flextimer for lx2160a
+Date: Fri, 23 Aug 2019 16:56:28 +0000
+Message-ID: <1566579388.5029.8.camel@impinj.com>
+References: <20190823095740.12280-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
+In-Reply-To: <20190823095740.12280-1-biwen.li@nxp.com>
+Content-Language: en-US
+Content-ID: <3C3797AA81BCF84B8CB1E3A7DE501830@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shuah <shuah@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+To: "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "biwen.li@nxp.com" <biwen.li@nxp.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
->
-> Hi Brendan,
->
-> On 8/20/19 5:20 PM, Brendan Higgins wrote:
-> > Add core facilities for defining unit tests; this provides a common way
-> > to define test cases, functions that execute code which is under test
-> > and determine whether the code under test behaves as expected; this also
-> > provides a way to group together related test cases in test suites (here
-> > we call them test_modules).
-> >
-> > Just define test cases and how to execute them for now; setting
-> > expectations on code will be defined later.
-> >
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> > Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >   include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
-> >   kunit/Kconfig        |  17 ++++
-> >   kunit/Makefile       |   1 +
-> >   kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
-> >   4 files changed, 388 insertions(+)
-> >   create mode 100644 include/kunit/test.h
-> >   create mode 100644 kunit/Kconfig
-> >   create mode 100644 kunit/Makefile
-> >   create mode 100644 kunit/test.c
-> >
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > new file mode 100644
-> > index 0000000000000..e0b34acb9ee4e
-> > --- /dev/null
-> > +++ b/include/kunit/test.h
-> > @@ -0,0 +1,179 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Base unit test (KUnit) API.
-> > + *
-> > + * Copyright (C) 2019, Google LLC.
-> > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > + */
-> > +
-> > +#ifndef _KUNIT_TEST_H
-> > +#define _KUNIT_TEST_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +struct kunit;
-> > +
-> > +/**
-> > + * struct kunit_case - represents an individual test case.
-> > + * @run_case: the function representing the actual test case.
-> > + * @name: the name of the test case.
-> > + *
-> > + * A test case is a function with the signature, ``void (*)(struct kunit *)``
-> > + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
-> > + * test case is associated with a &struct kunit_suite and will be run after the
-> > + * suite's init function and followed by the suite's exit function.
-> > + *
-> > + * A test case should be static and should only be created with the KUNIT_CASE()
-> > + * macro; additionally, every array of test cases should be terminated with an
-> > + * empty test case.
-> > + *
-> > + * Example:
->
-> Can you fix these line continuations. It makes it very hard to read.
-> Sorry for this late comment. These comments lines are longer than 80
-> and wrap.
-
-None of the lines in this commit are over 80 characters in column
-width. Some are exactly 80 characters (like above).
-
-My guess is that you are seeing the diff added text (+ ), which when
-you add that to a line which is exactly 80 char in length ends up
-being over 80 char in email. If you apply the patch you will see that
-they are only 80 chars.
-
->
-> There are several comment lines in the file that are way too long.
-
-Note that checkpatch also does not complain about any over 80 char
-lines in this file.
-
-Sorry if I am misunderstanding what you are trying to tell me. Please
-confirm either way.
-
-Thanks
+T24gRnJpLCAyMDE5LTA4LTIzIGF0IDE3OjU3ICswODAwLCBCaXdlbiBMaSB3cm90ZToNCj4gVGhl
+IHBhdGNoIHN1cHBvcnRzIGZsZXh0aW1lciBmb3IgbHgyMTYwYQ0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ydGMvcnRj
+LWZzbC1mdG0tYWxhcm0uYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCsp
+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0uYyBiL2Ry
+aXZlcnMvcnRjL3J0Yy1mc2wtDQo+IGZ0bS1hbGFybS5jDQo+IGluZGV4IDRmNzI1OWMyZDZhMy4u
+MmI4MTUyNWY2ZGI4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3J0Yy9ydGMtZnNsLWZ0bS1hbGFy
+bS5jDQo+ICsrKyBiL2RyaXZlcnMvcnRjL3J0Yy1mc2wtZnRtLWFsYXJtLmMNCj4gQEAgLTMxMyw2
+ICszMTMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBmdG1fcnRjX21hdGNo
+W10NCj4gPSB7DQo+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iLCB9
+LA0KPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMjA4eGEtZnRtLWFsYXJtIiwgfSwNCj4gIAl7
+IC5jb21wYXRpYmxlID0gImZzbCxsczEwMjhhLWZ0bS1hbGFybSIsIH0sDQo+ICsJeyAuY29tcGF0
+aWJsZSA9ICJmc2wsbHgyMTYwYS1mdG0tYWxhcm0iLCB9LA0KPiAgCXsgfSwNCj4gIH07DQo+ICAN
+Cg0KU2luY2UgdGhlcmUncyBubyBkYXRhIGFzc29jaWF0ZWQgd2l0aCBlYWNoIGNvbXBhdGlibGUs
+IGl0IGRvZXNuJ3Qgc2VlbQ0KbGlrZSB0aGVyZSdzIGFueSBuZWVkIHRvIGFkZCBhIG5ldyBvbmUu
+DQoNCldoYXQncyBub3JtYWxseSBkb25lIGlzIGFkZCB0d28gY29tcGF0aWJsZXMgaW4gdGhlIGR0
+cywgdGhlIGJhc2UNCnZlcnNpb24gYW5kIHRoZSBzcGVjaWZpYyB2ZXJzaW9uLCBlLmcuOg0KDQor
+CQlyY3BtOiByY3BtQDFlMzQwNDAgew0KKwkJCWNvbXBhdGlibGUgPSAiZnNsLGx4MjE2MGEtcmNw
+bSIsICJmc2wscW9yaXEtY3BtLTIuMSsiOw0KDQpPciBpbiB0aGlzIGNhc2UsIGNvbXBhdGlibGUg
+PSAiZnNsLGx4MjE2MGEtZnRtLWFsYXJtIiwgImZzbCxsczEwODhhLWZ0bS1hbGFybSI7DQoNClRo
+ZW4gdGhlcmUncyBubyBuZWVkIHRvIGFkZCB0byB0aGUgZHJpdmVyIGxpc3Qu
