@@ -1,30 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH next v10 03/11] dt-bindings: usb: add binding for USB GPIO
- based connection detection driver
-Date: Fri, 23 Aug 2019 12:07:20 +0200
-Message-ID: <CACRpkdbr9PjFAvrq14DJmX1OSKYJxYFPaQZpVJaT_Q1_DUW=sw@mail.gmail.com>
-References: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com> <1566547041-20804-4-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [1/3] rtc/fsl: support flextimer for lx2160a
+Date: Fri, 23 Aug 2019 17:57:38 +0800
+Message-ID: <20190823095740.12280-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566547041-20804-4-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, moderated list:ARM/Mediatek So
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 9:58 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+The patch supports flextimer for lx2160a
 
-> It's used to support dual role switch via GPIO when use Type-B
-> receptacle, typically the USB ID pin is connected to an input
-> GPIO, and also used to enable/disable device when the USB Vbus
-> pin is connected to an input GPIO.
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v9~v10 no changes
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ drivers/rtc/rtc-fsl-ftm-alarm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
+index 4f7259c2d6a3..2b81525f6db8 100644
+--- a/drivers/rtc/rtc-fsl-ftm-alarm.c
++++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+@@ -313,6 +313,7 @@ static const struct of_device_id ftm_rtc_match[] = {
+ 	{ .compatible = "fsl,ls1088a-ftm-alarm", },
+ 	{ .compatible = "fsl,ls208xa-ftm-alarm", },
+ 	{ .compatible = "fsl,ls1028a-ftm-alarm", },
++	{ .compatible = "fsl,lx2160a-ftm-alarm", },
+ 	{ },
+ };
+ 
+-- 
+2.17.1
