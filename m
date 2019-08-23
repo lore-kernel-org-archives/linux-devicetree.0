@@ -1,90 +1,121 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
-Date: Fri, 23 Aug 2019 09:33:13 -0600
-Message-ID: <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
-References: <20190820232046.50175-1-brendanhiggins@google.com>
- <20190820232046.50175-2-brendanhiggins@google.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v5 09/10] rtc: mt6397: fix alarm register overwrite
+Date: Fri, 23 Aug 2019 17:35:19 +0200
+Message-ID: <bf8435a7-db97-5ed8-bccc-9d197396aeb6@gmail.com>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-10-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820232046.50175-2-brendanhiggins@google.com>
+In-Reply-To: <1566531931-9772-10-git-send-email-hsin-hsiung.wang@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, shuah <shuah@kernel.org>, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com, Ran Bi <ran.bi@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brendan,
 
-On 8/20/19 5:20 PM, Brendan Higgins wrote:
-> Add core facilities for defining unit tests; this provides a common way
-> to define test cases, functions that execute code which is under test
-> and determine whether the code under test behaves as expected; this also
-> provides a way to group together related test cases in test suites (here
-> we call them test_modules).
+
+On 23/08/2019 05:45, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
 > 
-> Just define test cases and how to execute them for now; setting
-> expectations on code will be defined later.
+> Alarm registers high byte was reserved for other functions.
+> This add mask in alarm registers operation functions.
+> This also fix error condition in interrupt handler.
 > 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+> 
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+
+Misses your Signed-off-by.
+
+Regards,
+Matthias
+
 > ---
->   include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
->   kunit/Kconfig        |  17 ++++
->   kunit/Makefile       |   1 +
->   kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
->   4 files changed, 388 insertions(+)
->   create mode 100644 include/kunit/test.h
->   create mode 100644 kunit/Kconfig
->   create mode 100644 kunit/Makefile
->   create mode 100644 kunit/test.c
+>  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
 > 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> new file mode 100644
-> index 0000000000000..e0b34acb9ee4e
-> --- /dev/null
-> +++ b/include/kunit/test.h
-> @@ -0,0 +1,179 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Base unit test (KUnit) API.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index b46ed4d..828def7 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -47,6 +47,14 @@
+>  
+>  #define RTC_AL_SEC		0x0018
+>  
+> +#define RTC_AL_SEC_MASK		0x003f
+> +#define RTC_AL_MIN_MASK		0x003f
+> +#define RTC_AL_HOU_MASK		0x001f
+> +#define RTC_AL_DOM_MASK		0x001f
+> +#define RTC_AL_DOW_MASK		0x0007
+> +#define RTC_AL_MTH_MASK		0x000f
+> +#define RTC_AL_YEA_MASK		0x007f
 > +
-> +#ifndef _KUNIT_TEST_H
-> +#define _KUNIT_TEST_H
+>  #define RTC_PDN2		0x002e
+>  #define RTC_PDN2_PWRON_ALARM	BIT(4)
+>  
+> @@ -103,7 +111,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+>  		irqen = irqsta & ~RTC_IRQ_EN_AL;
+>  		mutex_lock(&rtc->lock);
+>  		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+> -				 irqen) < 0)
+> +				 irqen) == 0)
+>  			mtk_rtc_write_trigger(rtc);
+>  		mutex_unlock(&rtc->lock);
+>  
+> @@ -225,12 +233,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>  	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+>  	mutex_unlock(&rtc->lock);
+>  
+> -	tm->tm_sec = data[RTC_OFFSET_SEC];
+> -	tm->tm_min = data[RTC_OFFSET_MIN];
+> -	tm->tm_hour = data[RTC_OFFSET_HOUR];
+> -	tm->tm_mday = data[RTC_OFFSET_DOM];
+> -	tm->tm_mon = data[RTC_OFFSET_MTH];
+> -	tm->tm_year = data[RTC_OFFSET_YEAR];
+> +	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
+> +	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
+> +	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
+> +	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
+> +	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
+> +	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+>  
+>  	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+>  	tm->tm_mon--;
+> @@ -251,14 +259,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>  	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+>  	tm->tm_mon++;
+>  
+> -	data[RTC_OFFSET_SEC] = tm->tm_sec;
+> -	data[RTC_OFFSET_MIN] = tm->tm_min;
+> -	data[RTC_OFFSET_HOUR] = tm->tm_hour;
+> -	data[RTC_OFFSET_DOM] = tm->tm_mday;
+> -	data[RTC_OFFSET_MTH] = tm->tm_mon;
+> -	data[RTC_OFFSET_YEAR] = tm->tm_year;
+> -
+>  	mutex_lock(&rtc->lock);
+> +	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
+> +			       data, RTC_OFFSET_COUNT);
+> +	if (ret < 0)
+> +		goto exit;
 > +
-> +#include <linux/types.h>
+> +	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
+> +				(tm->tm_sec & RTC_AL_SEC_MASK));
+> +	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
+> +				(tm->tm_min & RTC_AL_MIN_MASK));
+> +	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
+> +				(tm->tm_hour & RTC_AL_HOU_MASK));
+> +	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
+> +				(tm->tm_mday & RTC_AL_DOM_MASK));
+> +	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
+> +				(tm->tm_mon & RTC_AL_MTH_MASK));
+> +	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
+> +				(tm->tm_year & RTC_AL_YEA_MASK));
 > +
-> +struct kunit;
-> +
-> +/**
-> + * struct kunit_case - represents an individual test case.
-> + * @run_case: the function representing the actual test case.
-> + * @name: the name of the test case.
-> + *
-> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
-> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
-> + * test case is associated with a &struct kunit_suite and will be run after the
-> + * suite's init function and followed by the suite's exit function.
-> + *
-> + * A test case should be static and should only be created with the KUNIT_CASE()
-> + * macro; additionally, every array of test cases should be terminated with an
-> + * empty test case.
-> + *
-> + * Example:
-
-Can you fix these line continuations. It makes it very hard to read.
-Sorry for this late comment. These comments lines are longer than 80
-and wrap.
-
-There are several comment lines in the file that are way too long.
-
-thanks,
--- Shuah
+>  	if (alm->enabled) {
+>  		ret = regmap_bulk_write(rtc->regmap,
+>  					rtc->addr_base + RTC_AL_SEC,
+> 
