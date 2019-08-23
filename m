@@ -1,120 +1,42 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Fri, 23 Aug 2019 16:21:44 +0200
-Message-ID: <ccd3782e-b1bb-7887-f4a5-d7774183c7b7@gmail.com>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
- <20190820084932.22282-12-bibby.hsieh@mediatek.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [1/3] rtc/fsl: support flextimer for lx2160a
+Date: Fri, 23 Aug 2019 16:25:04 +0200
+Message-ID: <20190823142504.GA30479@piout.net>
+References: <20190823095740.12280-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820084932.22282-12-bibby.hsieh@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190823095740.12280-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Biwen Li <biwen.li@nxp.com>
+Cc: a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20/08/2019 10:49, Bibby Hsieh wrote:
-> GCE cannot know the register base address, this function
-> can help cmdq client to get the cmdq_client_reg structure.
+On 23/08/2019 17:57:38+0800, Biwen Li wrote:
+> The patch supports flextimer for lx2160a
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
->  2 files changed, 50 insertions(+)
+>  drivers/rtc/rtc-fsl-ftm-alarm.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index c53f8476c68d..80f75a1075b4 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -27,6 +27,35 @@ struct cmdq_instruction {
->  	u8 op;
+> diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
+> index 4f7259c2d6a3..2b81525f6db8 100644
+> --- a/drivers/rtc/rtc-fsl-ftm-alarm.c
+> +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
+> @@ -313,6 +313,7 @@ static const struct of_device_id ftm_rtc_match[] = {
+>  	{ .compatible = "fsl,ls1088a-ftm-alarm", },
+>  	{ .compatible = "fsl,ls208xa-ftm-alarm", },
+>  	{ .compatible = "fsl,ls1028a-ftm-alarm", },
+> +	{ .compatible = "fsl,lx2160a-ftm-alarm", },
+>  	{ },
 >  };
->  
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx)
-> +{
 
-Can't we do/call this in cmdq_mbox_create parsing the number of gce-client-reg
-properties we have and allocating these using a pointer to cmdq_client_reg in
-cmdq_client?
-We will have to free the pointer then in cmdq_mbox_destroy.
+I've squashed it with 3/3 and in the patch adding the driver. I also
+added proper documentation.
 
-Regards,
-Matthias
-
-> +	struct of_phandle_args spec;
-> +	int err;
-> +
-> +	if (!client_reg)
-> +		return -ENOENT;
-> +
-> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
-> +					       "mediatek,gce-client-reg",
-> +					       3, idx, &spec);
-> +	if (err < 0) {
-> +		dev_err(dev,
-> +			"error %d can't parse gce-client-reg property (%d)",
-> +			err, idx);
-> +
-> +		return err;
-> +	}
-> +
-> +	client_reg->subsys = (u8)spec.args[0];
-> +	client_reg->offset = (u16)spec.args[1];
-> +	client_reg->size = (u16)spec.args[2];
-> +	of_node_put(spec.np);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index a345870a6d10..02ddd60b212f 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -15,6 +15,12 @@
->  
->  struct cmdq_pkt;
->  
-> +struct cmdq_client_reg {
-> +	u8 subsys;
-> +	u16 offset;
-> +	u16 size;
-> +};
-> +
->  struct cmdq_client {
->  	spinlock_t lock;
->  	u32 pkt_cnt;
-> @@ -24,6 +30,21 @@ struct cmdq_client {
->  	u32 timeout_ms; /* in unit of microsecond */
->  };
->  
-> +/**
-> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-> + *			       node of CMDQ client
-> + * @dev:	device of CMDQ mailbox client
-> + * @client_reg: CMDQ client reg pointer
-> + * @idx:	the index of desired reg
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Help CMDQ client parsing the cmdq client reg
-> + * from the device node of CMDQ client.
-> + */
-> +int cmdq_dev_get_client_reg(struct device *dev,
-> +			    struct cmdq_client_reg *client_reg, int idx);
-> +
->  /**
->   * cmdq_mbox_create() - create CMDQ mailbox client and channel
->   * @dev:	device of CMDQ mailbox client
-> 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
