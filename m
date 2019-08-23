@@ -1,98 +1,55 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 00/19] Enhance CP110 COMPHY support
-Date: Fri, 23 Aug 2019 08:46:14 +0530
-Message-ID: <4e1c4d27-3676-5efa-1126-8149a8635eb5@ti.com>
-References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
+From: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
+Date: Fri, 23 Aug 2019 11:37:38 +0800
+Message-ID: <a6717e97-01cf-771c-8467-be5946528dd0@linux.intel.com>
+References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
+ <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
+ <20190822090208.GJ30120@smile.fi.intel.com>
+ <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
+ <20190822130429.GN30120@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731122126.3049-1-miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190822130429.GN30120@smile.fi.intel.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, alan@linux.intel.com, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAzMS8wNy8xOSA1OjUxIFBNLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+IEFybWFkYSBDUDEx
-MCBoYXZlIGEgQ09NUEhZIElQIHdoaWNoIHN1cHBvcnRzIGNvbmZpZ3VyaW5nIFNFUkRFUyBsYW5l
-cwo+IGluIG9uZSBtb2RlLCBlaXRoZXI6Cj4gLSBTQVRBCj4gLSBVU0IzIGhvc3QKPiAtIFBDSWUg
-KHNldmVyYWwgd2lkdGgpCj4gLSBFdGhlcm5ldCAoc2V2ZXJhbCBtb2RlcykKPiAKPiBBcyBvZiB0
-b2RheSwgb25seSBhIGZldyBFdGhlcm5ldCBtb2RlcyBhcmUgc3VwcG9ydGVkIGFuZCB0aGUgY29k
-ZSBpcwo+IGVtYmVkZGVkIGluIHRoZSBMaW51eCBkcml2ZXIuIEEgbW9yZSBjb21wbGV0ZSBDT01Q
-SFkgZHJpdmVyIHRoYXQgY2FuCj4gYmUgdXNlZCBieSBib3RoIExpbnV4IGFuZCBVLUJvb3QgaXMg
-ZW1iZWRkZWQgaW4gdGhlIGZpcm13YXJlIGFuZCBjYW4KPiBiZSBydW4gdGhyb3VnaCBTTUMgY2Fs
-bHMuCj4gCj4gRmlyc3QgdGhlIGN1cnJlbnQgQ09NUEhZIGRyaXZlciBpcyB1cGRhdGVkIHRvIHVz
-ZSBTTUMgY2FsbHMgYnV0Cj4gZmFsbGJhY2tzIHRvIHRoZSBhbHJlYWR5IGV4aXN0aW5nIGZ1bmN0
-aW9ucyBpZiB0aGUgZmlybXdhcmUgaXMgbm90Cj4gdXAtdG8tZGF0ZS4gVGhlbiwgbW9yZSBFdGhl
-cm5ldCBtb2RlcyBhcmUgYWRkZWQgKHRocm91Z2ggU01DIGNhbGxzCj4gb25seSkuIFNBVEEsIFVT
-QjNIIGFuZCBQQ0llIG1vZGVzIGFyZSBhbHNvIHN1cHBvcnRlZCBvbmUgYnkgb25lLgo+IAo+IFRo
-ZXJlIGlzIG9uZSBzdWJ0bGUgZGlmZmVyZW5jZSB3aXRoIHRoZSBQQ0llIGZ1bmN0aW9uczogd2Ug
-bXVzdCB0ZWxsCj4gdGhlIGZpcm13YXJlIHRoZSBudW1iZXIgb2YgbGFuZXMgdG8gY29uZmlndXJl
-ICh4MSwgeDIgb3IgeDQpLiBUaGlzCj4gcGFyYW1ldGVyIGRlcGVuZHMgb24gdGhlIG51bWJlciBv
-ZiBlbnRyaWVzIGluIHRoZSAncGh5cycgcHJvcGVydHkKPiBkZXNjcmliaW5nIHRoZSBQQ0llIFBI
-WS4gV2UgdXNlIHRoZSAic3VibW9kZSIgcGFyYW1ldGVyIG9mIHRoZSBnZW5lcmljCj4gUEhZIEFQ
-SSB0byBjYXJyeSB0aGlzIHZhbHVlLiBUaGUgQXJtYWRhLThrIFBDSWUgZHJpdmVyIGhhcyBiZWVu
-Cj4gdXBkYXRlZCB0byBmb2xsb3cgdGhpcyBpZGVhIGFuZCB0aGlzIGNoYW5nZSBoYXMgYmVlbiBt
-ZXJnZWQgYWxyZWFkeToKPiBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTA3Mjc2
-My8KClNvbWUgb2YgdGhlIHBhdGNoZXMgYXJlIG5vdCBhcHBseWluZyBjbGVhbmx5LiBDYXJlIHRv
-IHJlc2VuZCB0aGUgc2VyaWVzIGFmdGVyCnJlYmFzaW5nIHRvIHBoeSAtbmV4dD8KClRoYW5rcwpL
-aXNob24KCj4gCj4gVGhhbmtzLAo+IE1pcXXDqGwKPiAKPiAKPiBDaGFuZ2VzIHNpbmNlIHYyOgo+
-IC0tLS0tLS0tLS0tLS0tLS0tCj4gKiBJbnZlcnRlZCB0d28gYXJndW1lbnRzIGluIGEgdHJhY2Uu
-Cj4gKiBBdm9pZCB3YXJuaW5nIHRoZSB1c2VyIHdoZW4gRVBST0JFX0RFRkVSIGlzIHJldHVybmVk
-IChjbG9ja3MgY2FzZSkuCj4gKiBBZGRlZCBNYXhpbWUgQy4gYW5kIEdyemVnb3J6IEouICdzIFRl
-c3RlZC1ieSB0YWdzIChvbmx5IG9uIHRoZQo+ICAgImludHJvZHVjaW5nIFNNQyBjYWxscyIgcGF0
-Y2gsIGJ1dCB0aGV5IHRlc3RlZCB0aGUgd2hvbGUgc2VyaWVzKS4KPiAqIEFkZGVkIFJvYidzIFJl
-dmlld2VkLWJ5IG9uIHRoZSBiaW5kaW5ncy4KPiAqIEFsc28gdXBkYXRlZCB0aGUgYmluZGluZ3Mg
-YXMgc3VnZ2VzdGVkIGJ5IFJvYiB0byByZWZsZWN0IHRoYXQgdGhlcmUKPiAgIGNhbiBiZSBmcm9t
-IG9uZSB0byBmb3VyIFBIWXMgaW4gdGhlIFBDSWUgbm9kZXMgKGhlbmNlLCB0aGUgbmVlZCBmb3IK
-PiAgIHRoZSBwaHktbmFtZXMgcHJvcGVydHkpLgo+IAo+IENoYW5nZXMgc2luY2UgdjE6Cj4gLS0t
-LS0tLS0tLS0tLS0tLS0KPiAqIEFsbCBtb2RlcyByZXBvcnQgdGhlaXIgZXJyb3JzIHRvIHRoZSB1
-c2VyLgo+ICogSWYgdGhlIGZpcm13YXJlIGlzIHRvbyBvbGQsIGFkdmlzZSB0aGUgdXNlciB0byB1
-cGRhdGUgaXQuCj4gKiBDcmVkaXQgR3J6ZWdvcnogZm9yIGhpcyB3b3JrLgo+ICogRml4IHdyb25n
-IHNwZWVkIGluIEV0aGVybmV0IG1vZGVzLgo+ICogQWRkIENPTVBIWSBuZWNlc3NhcnkgY2xvY2tz
-Lgo+ICogVXBkYXRlIGJpbmRpbmdzLgo+ICogVGhlIHNlY3VyaXR5IGZsYXcgcmVsYXRlZCB0byB0
-aGUgZmFjdCB0aGF0IHdlIG11c3QgZ2l2ZSB0aGUgQ1AKPiAgIGFkZHJlc3MgdG8gdGhlIGZpcm13
-YXJlIGhhcyBiZWVuIG1pdGlnYXRlZCBieSB0aGUgYWRkaXRpb24gb2YgZXh0cmEKPiAgIGNoZWNr
-cyBpbiBBVEYgcmVjZW50bHkuCj4gCj4gCj4gR3J6ZWdvcnogSmFzemN6eWsgKDUpOgo+ICAgcGh5
-OiBtdmVidS1jcDExMC1jb21waHk6IEFkZCBTTUMgY2FsbCBzdXBwb3J0Cj4gICBwaHk6IG12ZWJ1
-LWNwMTEwLWNvbXBoeTogQWRkIFJYQVVJIHN1cHBvcnQKPiAgIHBoeTogbXZlYnUtY3AxMTAtY29t
-cGh5OiBBZGQgVVNCMyBob3N0L2RldmljZSBzdXBwb3J0Cj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNv
-bXBoeTogQWRkIFNBVEEgc3VwcG9ydAo+ICAgcGh5OiBtdmVidS1jcDExMC1jb21waHk6IEFkZCBQ
-Q0llIHN1cHBvcnQKPiAKPiBNaXF1ZWwgUmF5bmFsICgxNCk6Cj4gICBwaHk6IG12ZWJ1LWNwMTEw
-LWNvbXBoeTogQWRkIGNsb2NrcyBzdXBwb3J0Cj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTog
-RXhwbGljaXRseSBpbml0aWFsaXplIHRoZSBsYW5lIHN1Ym1vZGUKPiAgIHBoeTogbXZlYnUtY3Ax
-MTAtY29tcGh5OiBMaXN0IGFscmVhZHkgc3VwcG9ydGVkIEV0aGVybmV0IG1vZGVzCj4gICBwaHk6
-IG12ZWJ1LWNwMTEwLWNvbXBoeTogUmVuYW1lIHRoZSBtYWNybyBoYW5kbGluZyBvbmx5IEV0aGVy
-bmV0IG1vZGVzCj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQWxsb3cgbm9uLUV0aGVybmV0
-IG1vZGVzIHRvIGJlIGNvbmZpZ3VyZWQKPiAgIHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBDb3Nt
-ZXRpYyBjaGFuZ2UgaW4gYSBoZWxwZXIKPiAgIHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBVcGRh
-dGUgY29tbWVudCBhYm91dCBwb3dlcmluZyBvZmYgYWxsIGxhbmVzCj4gICAgIGF0IGJvb3QKPiAg
-IGR0LWJpbmRpbmdzOiBwaHk6IEFkZCBNYXJ2ZWxsIENPTVBIWSBjbG9ja3MKPiAgIGR0LWJpbmRp
-bmdzOiBwY2k6IGFkZCBQSFkgcHJvcGVydGllcyB0byBBcm1hZGEgN0svOEsgY29udHJvbGxlcgo+
-ICAgICBiaW5kaW5ncwo+ICAgYXJtNjQ6IGR0czogbWFydmVsbDogQWRkIENQMTEwIENPTVBIWSBj
-bG9ja3MKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBwZXItcG9ydCBQSFlzIGlu
-IFNBVEEgbm9kZXMKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBQSFlzIGluIFVT
-QjMgbm9kZXMKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBQSFlzIGluIFBDSWUg
-bm9kZXMKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IENvbnZlcnQgN2svOGsgdXNiLXBoeSBwcm9w
-ZXJ0aWVzIHRvIHBoeS1zdXBwbHkKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3Bj
-aS1hcm1hZGE4ay50eHQgIHwgICA2ICsKPiAgLi4uL2JpbmRpbmdzL3BoeS9waHktbXZlYnUtY29t
-cGh5LnR4dCAgICAgICAgIHwgIDEwICsKPiAgLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJt
-YWRhLTcwNDAtZGIuZHRzIHwgIDM3ICstCj4gIC4uLi9tYXJ2ZWxsL2FybWFkYS04MDQwLWNsZWFy
-Zm9nLWd0LThrLmR0cyAgICB8ICAyMiArLQo+ICAuLi4vYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9h
-cm1hZGEtODA0MC1kYi5kdHMgfCAgNDMgKy0KPiAgLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRh
-LTgwNDAtbWNiaW4uZHRzaSAgIHwgIDM4ICstCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVs
-bC9hcm1hZGEtY3AxMTAuZHRzaSB8ICAxMyArCj4gIGRyaXZlcnMvcGh5L21hcnZlbGwvcGh5LW12
-ZWJ1LWNwMTEwLWNvbXBoeS5jICB8IDQxMiArKysrKysrKysrKysrKystLS0KPiAgOCBmaWxlcyBj
-aGFuZ2VkLCA0OTkgaW5zZXJ0aW9ucygrKSwgODIgZGVsZXRpb25zKC0pCj4gCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Andy,
+
+On 22/8/2019 9:04 PM, Andy Shevchenko wrote:
+> On Thu, Aug 22, 2019 at 05:26:33PM +0800, Tanwar, Rahul wrote:
+>> On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
+>>> On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
+>>>> Use a newly introduced optional "status" property of "motorola,mc146818"
+>>>> compatible DT node to determine if RTC is supported. Skip read/write from
+>>>> RTC device only when this node is present and status is "disabled". In all
+>>>> other cases, proceed as before.
+>>> Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
+>>
+>> get_wallclock() and set_wallclock() are function pointers of platform_ops
+>>
+>> which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
+>>
+>> at init time. Since adding a new platform to override these functions is
+>>
+>> discouraged, so the only way is to modify RTC get/set functions.
+> Shouldn't it be platform agnostic code?
+> So, my point is, instead of hacking two functions, perhaps better to avoid them
+> at all.
+
+Sorry, i could not understand your point. The changes are platform
+
+agnostic i.e. it doesn't break existing use cases. Are you recommending
+
+to add a new platform and make changes there ?
+
+Regards,
+
+Rahul
+
+>
+>
