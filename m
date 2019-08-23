@@ -1,66 +1,119 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/3] arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
-Date: Fri, 23 Aug 2019 13:55:22 -0700
-Message-ID: <7hv9uny539.fsf@baylibre.com>
-References: <1566565717-5182-1-git-send-email-christianshewitt@gmail.com> <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE
+ when it's not ours
+Date: Fri, 23 Aug 2019 22:03:56 +0100
+Message-ID: <20190823210356.GU23391@sirena.co.uk>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+ <20190822211514.19288-3-olteanv@gmail.com>
+ <20190823102816.GN23391@sirena.co.uk>
+ <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
+ <20190823105044.GO23391@sirena.co.uk>
+ <20190823105949.GQ23391@sirena.co.uk>
+ <CA+h21hrj6VjceGJFz7XuS9DFjy=Fb5SHTYUuOWkagtsWf0Egbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Chrisitian Hewitt <christianshewitt@gmail.com>, Oleg Ivanov <balbes-150@yandex.ru>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="25rOlkxR6a4U87uN"
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+h21hrj6VjceGJFz7XuS9DFjy=Fb5SHTYUuOWkagtsWf0Egbg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Christian Hewitt <christianshewitt@gmail.com> writes:
 
-> Tested-by: Oleg Ivanov <balbes-150@yandex.ru>
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+--25rOlkxR6a4U87uN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-nit: empty changelog.  I'd rather see the changelog from patch2 here.
+On Fri, Aug 23, 2019 at 03:06:52PM +0300, Vladimir Oltean wrote:
 
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
->  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 567 +++++++++++++++++++++
->  2 files changed, 568 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 07b861f..21e2810 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-> new file mode 100644
-> index 0000000..27d1d62
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-> @@ -0,0 +1,567 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
+> - You left change requests in the initial patchset I submitted, but
+> you partially applied the series anyway. You didn't give me a chance
+> to respin the whole series and put the shared IRQ fix on top, so it
+> applies on old trees as well. No problem, I sent two versions of the
+> patch.
 
-This is a bit confusing.
+Right, and this is fine.  A big part of this is that it's just
+generally bad practice to not have fixes at the front of the
+series, I'd flag this up as a problem even if the code was all
+new and there was no question of applying as a bug fix.  It's
+something that's noticable just at the level of looking at the
+shape of the series without even looking at the contents of the
+patches, if the fix is actually a good one or anything like that.
+In the context of this it made it look like the reason you'd had
+to do two versions.
 
-I'm assuming you kept Neil's authorship because you copied from another
-g12b board.  If so, it would be helpful in the changelog to describe the
-origins of this file.  I'm assuming it was copied from odroid-n2 and
-then tweaked.  That's fine, just note that as "originally based on
-meson-g12b-odroid-c2".
+> So I didn't put any target version in the patch titles this time,
+> although arguably it would have been clearer to you that there's a
+> patch for-5.4 and another version of it for-4.20 (which i *think* is
+> how I should submit a fix, I don't see any branch for inclusion in
+> stable trees per se).
 
-Other than that, thanks a lot for your work on adding these new boards!
+Not for 4.20, for v5.3 - we basically only fix Linus' tree
+directly, anything else gets backported from there unless it's
+super important.  I don't think anyone is updating v4.20 at all
+these days, the version number change from v4 to v5 was totally
+arbatrary.
 
-Neil, I'm starting to see a lot of duplication in the g12b .dtb files.
-Should we start thinking about factoring out some of the common stuff
-that's standard across all these boards?
+> Yes, I did send a cover letter for a single patch. I thought it's
+> harder to miss than a note hidden under patch 2/5 of one series, and
+> in the note section of the other's. I think you could have also made
 
-Kevin
+If you're sending a multi-patch series it's of course good to
+send a cover letter, it's just single patches where it's adding
+overhead.
+
+> No problem, you missed the link between the two. I sent you a link to
+> the lkml archive. You said "I'm not online enough to readily follow
+> that link right now". Please teach me - I really don't know - how can
+
+It's not that I missed the link between them, it's that what I'd
+expected to see was the fix being the first patch in the series
+for -next and for that fix to look substantially the same with at
+most some context difference.  I wasn't expecting to see a
+completely different patch that wasn't at the start of the
+series, had the fix been at the start of the series it'd have
+been fairly clear what was going on but the refactoring patch
+looked like the main reason you'd needed different versions (it's
+certainly why they don't visually resemble each other).
+
+In other words it looked like you'd sent a different fix because
+the fix you'd done for -next was based on the first patch in the
+series rather than there also being some context changes.
+
+> I make links between patchsets easier for you to follow, if you don't
+> read cover letters and you can't access lkml? I promise I'll use that
+> method next time.
+
+Like I said include a plain text description of what you're
+linking to (eg, the subject line from a mail).
+
+> > I do frequently catch up on my mail on flights or while otherwise
+> > travelling so this is even more pressing for me than just being about
+> > making things a bit easier to read.
+
+> Maybe you simply should do something else while traveling, just saying.
+
+I could also add in the coffee shop I sometimes work from which
+doesn't have WiFi or mobile coverage.  Besides, like that part of
+the text does say it's also a usability thing, having to fire up
+a web browser to figure out what's being described is a stumbling
+block.
+
+--25rOlkxR6a4U87uN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1gVLsACgkQJNaLcl1U
+h9B2pAf+OqEH0c/ir0i5HzOOu3foBEg4ijLDLobzCWquMYtExGnWzATCgFiBeNua
+ukOy2G0NaRiaIVws5VQXj5y9+okcAFfjfVVwMIKTjqT6CwmTmGZb9Xlg/mgk1yJs
+OzKiKXM2b+vc3QyIFHI1EqmLqdz750Pdh6Lnulsl9TYm6zdsv7ecc2lIlnnRP79d
+eWCN2wNbGO8WUXLr/W83nXUfm03qs6KVes765JTaYqDLeYx8QoIV9Lf4UqPFtLDI
+iWT2+NUTPUP2oR7wokomqY8Ql7woJYFr5Okbl33288iJL1XLmM1j8BKxWg+207Cj
+BgnfvF9wzTpzBVO6dTlqlOZK7s6SQA==
+=vtug
+-----END PGP SIGNATURE-----
+
+--25rOlkxR6a4U87uN--
