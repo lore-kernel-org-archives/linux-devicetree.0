@@ -1,37 +1,69 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFC 9/9] ARM: dts: exynos: Remove not accurate secondary ADC compatible
-Date: Fri, 23 Aug 2019 16:53:56 +0200
-Message-ID: <20190823145356.6341-9-krzk@kernel.org>
-References: <20190823145356.6341-1-krzk@kernel.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from
+ core driver
+Date: Fri, 23 Aug 2019 16:56:13 +0200
+Message-ID: <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823145356.6341-1-krzk@kernel.org>
+In-Reply-To: <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: notify@kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+To: Frank Wunderlich <frank-w@public-files.de>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>
 List-Id: devicetree@vger.kernel.org
 
-The Exynos3250 ADC has its own compatible because of differences from
-other Exynos SoCs.  Therefore it is not entirely compatible with
-samsung,exynos-adc-v2.  Remove the samsung,exynos-adc-v2.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos3250.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index 5659c4a10729..784818490376 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -450,8 +450,7 @@
- 		};
- 
- 		adc: adc@126c0000 {
--			compatible = "samsung,exynos3250-adc",
--				     "samsung,exynos-adc-v2";
-+			compatible = "samsung,exynos3250-adc";
- 			reg = <0x126C0000 0x100>;
- 			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "adc", "sclk";
--- 
-2.17.1
+On 23/08/2019 14:13, Frank Wunderlich wrote:
+> Hi,
+> 
+> this commit breaks mt6323 pmic on BananaPi-R2
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a4872e80ce7d2a1844328176dbf279d0a2b89bdb
+> 
+> resulting in this message in dmesg:
+> 
+> mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
+> and multiple
+> mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
+> 
+> see discussion here:
+> http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022505.html
+> 
+> after reverting this one the errors are gone, please provide a fix
+
+are you sure that you provide the correct chip_id here? I saw 0x2023 (if I
+remember correctly), while this switch checks for 0x23, 0x91 and 0x97, so I'm
+not sure if the problem really lies here. I didn't dig into the code to find out
+how the chip_id is created.
+
+Regards,
+Matthias
+
+> 
+> regards Frank
+> 
+> 
+>> Gesendet: Freitag, 23. August 2019 um 05:45 Uhr
+>> Von: "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>
+>> Betreff: [PATCH v5 02/10] mfd: mt6397: extract irq related code from core driver
+>>
+>> In order to support different types of irq design, we decide to add
+>> separate irq drivers for different design and keep mt6397 mfd core
+>> simple and reusable to all generations of PMICs so far.
+>>
+>> Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
+>> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+>> ---
+>>  drivers/mfd/Makefile            |   3 +-
+>>  drivers/mfd/mt6397-core.c       | 146 --------------------------------
+>>  drivers/mfd/mt6397-irq.c        | 181 ++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/mfd/mt6397/core.h |   9 ++
+>>  4 files changed, 192 insertions(+), 147 deletions(-)
+>>  create mode 100644 drivers/mfd/mt6397-irq.c
+> 
