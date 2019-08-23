@@ -1,35 +1,175 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 06/11] pinctrl: mediatek: add pinctrl support for
- MT6779 SoC
-Date: Fri, 23 Aug 2019 10:59:08 +0200
-Message-ID: <CACRpkdbZY2vZBaEXDMsjLxA1NGYWirhCdspu0W-foXJX=Fd4yg@mail.gmail.com>
-References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
- <1566206502-4347-7-git-send-email-mars.cheng@mediatek.com> <CAGp9LzoVwNxY8Q3G4hxpa7=orsEox+J0mNamag70wyjrGvDiZw@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/5] dt-bindings: power: add Amlogic Everything-Else power domains bindings
+Date: Fri, 23 Aug 2019 11:04:14 +0200
+Message-ID: <20190823090418.17148-2-narmstrong@baylibre.com>
+References: <20190823090418.17148-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGp9LzoVwNxY8Q3G4hxpa7=orsEox+J0mNamag70wyjrGvDiZw@mail.gmail.com>
+In-Reply-To: <20190823090418.17148-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@kernel.org>
-Cc: Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk <linux-clk@vger.kernel.org>, Andy Teng <andy.teng@mediatek.com>
+To: khilman@baylibre.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 8:12 PM Sean Wang <sean.wang@kernel.org> wrote:
-> On Mon, Aug 19, 2019 at 2:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
-> >
-> > This adds MT6779 pinctrl driver based on MediaTek pinctrl-paris core.
-> >
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > Signed-off-by: Andy Teng <andy.teng@mediatek.com>
->
-> Acked-by: Sean Wang <sean.wang@kernel.org>
+Add the bindings for the Amlogic Everything-Else power domains,
+controlling the Everything-Else peripherals power domains.
 
-Please look at the DT bindings as well when you have time, and
-especially the "virtual GPIO" patch, I don't understand that at all.
+The bindings targets the Amlogic G12A and SM1 compatible SoCs,
+support for earlier SoCs will be added later.
 
-I suspect the "virtual GPIO" is maybe more about something that
-should be done by setting up the valid_mask in the gpio_chip
-or something.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml | 93 +++++++++++++++++++
+ include/dt-bindings/power/meson-g12a-power.h  | 13 +++
+ include/dt-bindings/power/meson-sm1-power.h   | 18 ++++
+ 3 files changed, 124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+ create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+ create mode 100644 include/dt-bindings/power/meson-sm1-power.h
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+new file mode 100644
+index 000000000000..aab70e8b681e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/amlogic,meson-ee-pwrc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Meson Everything-Else Power Domains
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++
++description: |+
++  The Everything-Else Power Domains node should be the child of a syscon
++  node with the required property:
++
++  - compatible: Should be the following:
++                "amlogic,meson-gx-hhi-sysctrl", "simple-mfd", "syscon"
++
++  Refer to the the bindings described in
++  Documentation/devicetree/bindings/mfd/syscon.txt
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson-g12a-pwrc
++      - amlogic,meson-sm1-pwrc
++
++  clocks:
++    minItems: 2
++
++  clock-names:
++    items:
++      - const: vpu
++      - const: vapb
++
++  resets:
++    minItems: 11
++
++  reset-names:
++    items:
++      - const: viu
++      - const: venc
++      - const: vcbus
++      - const: bt656
++      - const: rdma
++      - const: venci
++      - const: vencp
++      - const: vdac
++      - const: vdi6
++      - const: vencl
++      - const: vid_lock
++
++  "#power-domain-cells":
++    const: 1
++
++  amlogic,ao-sysctrl:
++    description: phandle to the AO sysctrl node
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - "#power-domain-cells"
++  - amlogic,ao-sysctrl
++
++examples:
++  - |
++    pwrc: power-controller {
++          compatible = "amlogic,meson-sm1-pwrc";
++          #power-domain-cells = <1>;
++          amlogic,ao-sysctrl = <&rti>;
++          resets = <&reset_viu>,
++                   <&reset_venc>,
++                   <&reset_vcbus>,
++                   <&reset_bt656>,
++                   <&reset_rdma>,
++                   <&reset_venci>,
++                   <&reset_vencp>,
++                   <&reset_vdac>,
++                   <&reset_vdi6>,
++                   <&reset_vencl>,
++                   <&reset_vid_lock>;
++          reset-names = "viu", "venc", "vcbus", "bt656",
++                        "rdma", "venci", "vencp", "vdac",
++                        "vdi6", "vencl", "vid_lock";
++          clocks = <&clk_vpu>, <&clk_vapb>;
++          clock-names = "vpu", "vapb";
++    };
+diff --git a/include/dt-bindings/power/meson-g12a-power.h b/include/dt-bindings/power/meson-g12a-power.h
+new file mode 100644
+index 000000000000..bb5e67a842de
+--- /dev/null
++++ b/include/dt-bindings/power/meson-g12a-power.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON_G12A_POWER_H
++#define _DT_BINDINGS_MESON_G12A_POWER_H
++
++#define PWRC_G12A_VPU_ID		0
++#define PWRC_G12A_ETH_ID		1
++
++#endif
+diff --git a/include/dt-bindings/power/meson-sm1-power.h b/include/dt-bindings/power/meson-sm1-power.h
+new file mode 100644
+index 000000000000..a020ab00c134
+--- /dev/null
++++ b/include/dt-bindings/power/meson-sm1-power.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#ifndef _DT_BINDINGS_MESON_SM1_POWER_H
++#define _DT_BINDINGS_MESON_SM1_POWER_H
++
++#define PWRC_SM1_VPU_ID		0
++#define PWRC_SM1_NNA_ID		1
++#define PWRC_SM1_USB_ID		2
++#define PWRC_SM1_PCIE_ID	3
++#define PWRC_SM1_GE2D_ID	4
++#define PWRC_SM1_AUDIO_ID	5
++#define PWRC_SM1_ETH_ID		6
++
++#endif
+-- 
+2.22.0
