@@ -1,64 +1,60 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE
  when it's not ours
-Date: Fri, 23 Aug 2019 11:50:44 +0100
-Message-ID: <20190823105044.GO23391@sirena.co.uk>
+Date: Fri, 23 Aug 2019 11:59:49 +0100
+Message-ID: <20190823105949.GQ23391@sirena.co.uk>
 References: <20190822211514.19288-1-olteanv@gmail.com>
  <20190822211514.19288-3-olteanv@gmail.com>
  <20190823102816.GN23391@sirena.co.uk>
  <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
+ <20190823105044.GO23391@sirena.co.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hl1kWnBARzJiTscN"
-Return-path: <netdev-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="9ToWwKEyhugL+MAz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
+In-Reply-To: <20190823105044.GO23391@sirena.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Vladimir Oltean <olteanv@gmail.com>
 Cc: linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hl1kWnBARzJiTscN
+--9ToWwKEyhugL+MAz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Aug 23, 2019 at 01:30:27PM +0300, Vladimir Oltean wrote:
-> On Fri, 23 Aug 2019 at 13:28, Mark Brown <broonie@kernel.org> wrote:
+On Fri, Aug 23, 2019 at 11:50:44AM +0100, Mark Brown wrote:
+> On Fri, Aug 23, 2019 at 01:30:27PM +0300, Vladimir Oltean wrote:
 
-> > It would be better to have done this as the first patch before
-> > the restructuring, that way we could send this as a fix - the
-> > refactoring while good doesn't really fit with stable.
+> > Did you see this?
+> > https://lkml.org/lkml/2019/8/22/1542
 
-> Did you see this?
-> https://lkml.org/lkml/2019/8/22/1542
+> I'm not online enough to readily follow that link right now, I
+> did apply another patch for a similar issue though.  If that's
+> a different version of the same change please don't do that,
+> sending multiple conflicting versions of the same thing creates
+> conflicts and makes everything harder to work with.
 
-I'm not online enough to readily follow that link right now, I
-did apply another patch for a similar issue though.  If that's
-a different version of the same change please don't do that,
-sending multiple conflicting versions of the same thing creates
-conflicts and makes everything harder to work with.
+Oh, I guess this was due to there being an existing refactoring
+in -next that meant the fix wouldn't apply directly.  I sorted
+that out now I think, but in general the same thing applies -
+it's better to put fixes before anything else in the series,
+it'll flag up when reviewing.
 
-Please include human readable descriptions of things like commits and
-issues being discussed in e-mail in your mails, this makes them much
-easier for humans to read especially when they have no internet access.
-I do frequently catch up on my mail on flights or while otherwise
-travelling so this is even more pressing for me than just being about
-making things a bit easier to read.
-
---hl1kWnBARzJiTscN
+--9ToWwKEyhugL+MAz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fxQMACgkQJNaLcl1U
-h9AOHgf8CAS5RBRoxTFZUsrmCEnLyMFYb7aueuSKLUE+iKi+G3NldiLt7pzFIU9d
-svVlmYRKAks8vzJMW/BxQgaB+YfMGd8dUWEqCs2XORYRDLRd8MM5OIXZ89kda74l
-SOBsfcmjetVLeO9Ws85HuXjl+zSyl3Rxa4AjW5B9hgIjw6gDZqCuA8bkUFq3xmTN
-GMB3B+QB+friWpL3FuMcJiv6+PQU5Ing/NzphvWj18U6o5pzfxwQkv0iYVdhxsbN
-2CtENUmGQ7A9IffnFv1FrRykxq16/VWEUjYblhuiTS5sYNRKiOmywWILnghWEGZZ
-betTGkaDXFODaV43fus34BO8Ynd/7g==
-=/HjI
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1fxyQACgkQJNaLcl1U
+h9DqNwf/QNh0rvN7VFuAHpO+9fAuH2a16emof71uPK515M62lfJjwg0Q29hWXiuS
+Operl313jrRdaddOr+bqos+xnevzFqwrcP8f5klFa7Nmofx0La8XaIk9lbrn+FKd
+erNLzFHeq+Ot9Oe+NYGSoCS1NigyIFpmm017334bJ2Z/dqBEBUWj8PPSVzeUKqvG
+xCjBsN/sCThnstMDwhmQA6uTP8FIu+Q+iLOSjM3jP5qRV03+M7m2o+QOAbVFZpKb
+0Ls4dA70Cma3t0i0B8ZT1/NODz2A8Tm2HW3kFnjDH+LxtmpGNyvYqfvD+JOQiFRD
+n++9Eg+abR59AW6YMBxsNiIzFdWBFQ==
+=4GBH
 -----END PGP SIGNATURE-----
 
---hl1kWnBARzJiTscN--
+--9ToWwKEyhugL+MAz--
