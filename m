@@ -1,69 +1,59 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from
- core driver
-Date: Fri, 23 Aug 2019 16:56:13 +0200
-Message-ID: <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
- <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 05/10] ARM: dts: sunxi: a80: Add msgbox node
+Date: Fri, 23 Aug 2019 16:56:21 +0200
+Message-ID: <20190823145621.pxl4jrux7izflzmg@flea>
+References: <20190820032311.6506-1-samuel@sholland.org>
+ <20190820032311.6506-6-samuel@sholland.org>
+ <20190820081528.7g2lo4njkut5lanu@flea>
+ <f3e3420e-450a-7d41-edf8-776c0cd5a320@sholland.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, linux-rtc@vger.kernel.org, =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="c4vbgluuko4stj5s"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF7577VAKGQEFSZIHTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <f3e3420e-450a-7d41-edf8-776c0cd5a320-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--c4vbgluuko4stj5s
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-On 23/08/2019 14:13, Frank Wunderlich wrote:
-> Hi,
-> 
-> this commit breaks mt6323 pmic on BananaPi-R2
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a4872e80ce7d2a1844328176dbf279d0a2b89bdb
-> 
-> resulting in this message in dmesg:
-> 
-> mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
-> and multiple
-> mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
-> 
-> see discussion here:
-> http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022505.html
-> 
-> after reverting this one the errors are gone, please provide a fix
+Hi,
 
-are you sure that you provide the correct chip_id here? I saw 0x2023 (if I
-remember correctly), while this switch checks for 0x23, 0x91 and 0x97, so I'm
-not sure if the problem really lies here. I didn't dig into the code to find out
-how the chip_id is created.
+On Tue, Aug 20, 2019 at 08:17:49AM -0500, Samuel Holland wrote:
+> On 8/20/19 3:15 AM, Maxime Ripard wrote:
+> > On Mon, Aug 19, 2019 at 10:23:06PM -0500, Samuel Holland wrote:
+> >> The A80 SoC contains a message box that can be used to send messages and
+> >> interrupts back and forth between the ARM application CPUs and the ARISC
+> >> coprocessor. Add a device tree node for it.
+> >>
+> >> Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+> >
+> > I think you mentionned that crust has been tested only on the A64 and
+> > the H3/H5, did you test the mailbox on those other SoCs as well?
+>
+> No, I only have A64/H3/H5, and recently H6, hardware to test. I've looked
+> through the manuals to verify that the registers are all the same, but I haven't
+> run the driver on earlier SoCs.
 
-Regards,
-Matthias
+I'd rather not merge them until they've been properly tested. We've
+had some surprises with the documentation in the past :/
 
-> 
-> regards Frank
-> 
-> 
->> Gesendet: Freitag, 23. August 2019 um 05:45 Uhr
->> Von: "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>
->> Betreff: [PATCH v5 02/10] mfd: mt6397: extract irq related code from core driver
->>
->> In order to support different types of irq design, we decide to add
->> separate irq drivers for different design and keep mt6397 mfd core
->> simple and reusable to all generations of PMICs so far.
->>
->> Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
->> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
->> ---
->>  drivers/mfd/Makefile            |   3 +-
->>  drivers/mfd/mt6397-core.c       | 146 --------------------------------
->>  drivers/mfd/mt6397-irq.c        | 181 ++++++++++++++++++++++++++++++++++++++++
->>  include/linux/mfd/mt6397/core.h |   9 ++
->>  4 files changed, 192 insertions(+), 147 deletions(-)
->>  create mode 100644 drivers/mfd/mt6397-irq.c
-> 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--c4vbgluuko4stj5s--
