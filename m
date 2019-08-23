@@ -1,26 +1,144 @@
-From: Frank Wunderlich <frank-w@public-files.de>
-Subject: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from core driver
-Date: Fri, 23 Aug 2019 17:53:15 +0200
-Message-ID: <4F1618E8-7D0E-41D1-AF27-5FCD2CFB41E4@public-files.de>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com> <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11> <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
-Reply-To: frank-w@public-files.de
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [RESEND PATCH v4 1/4] dt-bindings: soundwire: add
+ slave bindings
+Date: Fri, 23 Aug 2019 16:57:25 +0100
+Message-ID: <37be6b6d-7e7f-2cd6-f9e9-f0cac48791ad@linaro.org>
+References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+ <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
+ <7da8aa89-2119-21d1-0e29-8894a8d40bf0@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
+In-Reply-To: <7da8aa89-2119-21d1-0e29-8894a8d40bf0@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, =?ISO-8859-1?Q?Ren=E9_van_Dorst?= <opensource@vdorst.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, linux-rtc@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Seems chip-id in 5=2E3 is read here
 
-https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/t=
-ree/drivers/mfd/mt6397-core=2Ec?h=3Dv5=2E3-rc5#n282
 
-It is before platform_get_irq which may call irq-init changed in the probl=
-ematic commit=2E
+On 23/08/2019 16:41, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 8/22/19 6:37 PM, Srinivas Kandagatla wrote:
+>> This patch adds bindings for Soundwire Slave devices that includes how
+>> SoundWire enumeration address and Link ID are used to represented in
+>> SoundWire slave device tree nodes.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../soundwire/soundwire-controller.yaml       | 75 +++++++++++++++++++
+>>   1 file changed, 75 insertions(+)
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml 
+>>
+>> new file mode 100644
+>> index 000000000000..91aa6c6d6266
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+>> @@ -0,0 +1,75 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: SoundWire Controller Generic Binding
+>> +
+>> +maintainers:
+>> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> +
+>> +description: |
+>> +  SoundWire busses can be described with a node for the SoundWire 
+>> controller
+>> +  device and a set of child nodes for each SoundWire slave on the bus.
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
+>> +
+>> +  "#address-cells":
+>> +    const: 2
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +patternProperties:
+>> +  "^.*@[0-9a-f]+$":
+>> +    type: object
+>> +
+>> +    properties:
+>> +      compatible:
+>> +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
+> 
+> So is this a 64-bit value, as in the MIPI spec, or is this part of the 
+> _ADR description?
 
-I will add a dev_info here in next-code to see value of id
+Rob did not like encoding compatible string exactly like _ADR encoding.
+
+https://lkml.org/lkml/2019/8/22/490
+
+> I also don't get why the first item in in base10?
+> 
+
+As this corresponds to Soundwire Version, and I have no visibility of 
+version number encoding after reaching number 9 in this field.
+
+This can be updated once we have more info on how the Version encoding 
+will look like in future.
+
+Idea of limiting regex to [0-9] for version is to enforce some checking!
+
+--srini
+
+> 
+>> +      description:
+>> +      Is the textual representation of SoundWire Enumeration
+>> +      address. compatible string should contain SoundWire Version ID,
+>> +      Manufacturer ID, Part ID and Class ID in order and shall be in
+>> +      lower-case hexadecimal with leading zeroes.
+>> +      Valid sizes of these fields are
+>> +      Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
+>> +      and '0x2' represents SoundWire 1.1 and so on.
+>> +      MFD is 4 nibbles
+>> +      PID is 4 nibbles
+>> +      CID is 2 nibbles
+>> +      More Information on detail of encoding of these fields can be
+>> +      found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
+>> +
+>> +      reg:
+>> +        maxItems: 1
+>> +        description:
+>> +          Instance ID and Link ID of SoundWire Device Address.
+>> +
+>> +    required:
+>> +      - compatible
+>> +      - reg
+>> +
+>> +examples:
+>> +  - |
+>> +    soundwire@c2d0000 {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <0>;
+>> +        compatible = "qcom,soundwire-v1.5.0";
+>> +        reg = <0x0c2d0000 0x2000>;
+>> +
+>> +        speaker@1 {
+>> +            compatible = "sdw10217201000";
+>> +            reg = <1 0>;
+>> +        };
+>> +
+>> +        speaker@2 {
+>> +            compatible = "sdw10217201000";
+>> +            reg = <2 0>;
+>> +        };
+>> +    };
+>> +
+>> +...
+>>
