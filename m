@@ -1,135 +1,57 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: orange-pi-3: Enable WiFi
-Date: Fri, 23 Aug 2019 12:25:03 +0200
-Message-ID: <20190823102503.ymndnooyzahoi522@core.my.home>
-References: <20190823094228.6540-1-megous@megous.com>
- <20190823100807.22heh2gahi7owo4e@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v1] arm64: dts: ls1028a: Remove some fixed-clock definiation
+Date: Fri, 23 Aug 2019 18:17:31 +0800
+Message-ID: <20190823101731.12609-1-wen.he_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190823100807.22heh2gahi7owo4e@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
+Replace pclk/aclk/mclk fixed-clock clock provider with platform clockgen
+pre-divider provider, those clocks should be driven by the CGA_PLL2/2.
 
-On Fri, Aug 23, 2019 at 12:08:07PM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Fri, Aug 23, 2019 at 11:42:28AM +0200, megous@megous.com wrote:
-> > From: Ondrej Jirman <megous@megous.com>
-> >
-> > Orange Pi 3 has AP6256 WiFi/BT module. WiFi part of the module is called
-> > bcm43356 and can be used with the brcmfmac driver. The module is powered by
-> > the two always on regulators (not AXP805).
-> >
-> > WiFi uses a PG port with 1.8V voltage level signals. SoC needs to be
-> > configured so that it sets up an 1.8V input bias on this port. This is done
-> > by the pio driver by reading the vcc-pg-supply voltage.
-> >
-> > You'll need a fw_bcm43456c5_ag.bin firmware file and nvram.txt
-> > configuration that can be found in the Xulongs's repository for H6:
-> >
-> > https://github.com/orangepi-xunlong/OrangePiH6_external/tree/master/ap6256
-> >
-> > Mainline brcmfmac driver expects the firmware and nvram at the following
-> > paths relative to the firmware directory:
-> >
-> >   brcm/brcmfmac43456-sdio.bin
-> >   brcm/brcmfmac43456-sdio.txt
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >
-> > Since RTC patches for H6 were merged, this can now go in too, if it looks ok.
-> >
-> > Other patches for this WiFi chip support were merged in previous cycles,
-> > so this just needs enabling in DTS now.
-> >
-> > Sorry for the links in the commit log, but this information is useful,
-> > even if the link itself goes bad. Any pointer what to google for
-> > (file names, tree name) is great for anyone searching in the future.
-> 
-> I understand, but this should (also?) be in the wiki. Please add it
-> there too.
+More details please refer Reference Manual.
 
-Added. Thank you.
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
-  http://linux-sunxi.org/Xunlong_Orange_Pi_3#Firmware_files
-
-regards,
-	Ondrej
-
-> > Please take a look.
-> >
-> > Thank you,
-> > 	Ondrej
-> >
-> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 48 +++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > index eda9d5f640b9..49d954369087 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> > @@ -56,6 +56,34 @@
-> >  		regulator-max-microvolt = <5000000>;
-> >  		regulator-always-on;
-> >  	};
-> > +
-> > +	reg_vcc33_wifi: vcc33-wifi {
-> > +		/* Always on 3.3V regulator for WiFi and BT */
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc33-wifi";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		regulator-always-on;
-> > +		vin-supply = <&reg_vcc5v>;
-> > +	};
-> > +
-> > +	reg_vcc_wifi_io: vcc-wifi-io {
-> > +		/* Always on 1.8V/300mA regulator for WiFi and BT IO */
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc-wifi-io";
-> > +		regulator-min-microvolt = <1800000>;
-> > +		regulator-max-microvolt = <1800000>;
-> > +		regulator-always-on;
-> > +		vin-supply = <&reg_vcc33_wifi>;
-> > +	};
-> > +
-> > +	wifi_pwrseq: wifi_pwrseq {
-> > +		compatible = "mmc-pwrseq-simple";
-> > +		clocks = <&rtc 1>;
-> > +		clock-names = "ext_clock";
-> > +		reset-gpios = <&r_pio 1 3 GPIO_ACTIVE_LOW>; /* PM3 */
-> > +		post-power-on-delay-ms = <200>;
-> > +	};
-> >  };
-> >
-> >  &cpu0 {
-> > @@ -91,6 +119,25 @@
-> >  	status = "okay";
-> >  };
-> >
-> > +&mmc1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc1_pins>;
-> 
-> This is the default already. I've removed it and applied.
-> 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 024d6fbd07ea..0fa3e29cb603 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -90,20 +90,6 @@
+ 		clocks = <&osc_27m>;
+ 	};
+ 
+-	aclk: clock-axi {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <650000000>;
+-		clock-output-names= "aclk";
+-	};
+-
+-	pclk: clock-apb {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <650000000>;
+-		clock-output-names= "pclk";
+-	};
+-
+ 	reboot {
+ 		compatible ="syscon-reboot";
+ 		regmap = <&dcfg>;
+@@ -885,7 +871,8 @@
+ 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "DE", "SE";
+-		clocks = <&dpclk>, <&aclk>, <&aclk>, <&pclk>;
++		clocks = <&dpclk>, <&clockgen 2 2>, <&clockgen 2 2>,
++			 <&clockgen 2 2>;
+ 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+ 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+ 		arm,malidp-arqos-value = <0xd000d000>;
+-- 
+2.17.1
