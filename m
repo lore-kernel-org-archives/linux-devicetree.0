@@ -1,121 +1,58 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND, PATCH v13 08/12] soc: mediatek: cmdq: change the type of
- input parameter
-Date: Fri, 23 Aug 2019 14:09:19 +0200
-Message-ID: <71911fc7-c44a-b8b1-d5e1-278c2a3767ea@gmail.com>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
- <20190820084932.22282-9-bibby.hsieh@mediatek.com>
+From: "Frank Wunderlich" <frank-w@public-files.de>
+Subject: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from
+ core driver
+Date: Fri, 23 Aug 2019 14:13:53 +0200
+Message-ID: <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820084932.22282-9-bibby.hsieh@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Hsin-
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+this commit breaks mt6323 pmic on BananaPi-R2
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
+/?id=3Da4872e80ce7d2a1844328176dbf279d0a2b89bdb
+
+resulting in this message in dmesg:
+
+mt6397 1000d000.pwrap:mt6323: unsupported chip: 0x0
+and multiple
+mtk-cpufreq mtk-cpufreq: failed to initialize dvfs info for cpu0
+
+see discussion here:
+http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022505.htm=
+l
+
+after reverting this one the errors are gone, please provide a fix
+
+regards Frank
 
 
-On 20/08/2019 10:49, Bibby Hsieh wrote:
-> According to the cmdq hardware design, the subsys is u8,
-> the offset is u16 and the event id is u16.
-> This patch changes the type of subsys, offset and event id
-> to the correct type.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-Applied, thanks
-
+> Gesendet: Freitag, 23. August 2019 um 05:45 Uhr
+> Von: "Hsin-Hsiung Wang" <hsin-hsiung.wang@mediatek.com>
+> Betreff: [PATCH v5 02/10] mfd: mt6397: extract irq related code from cor=
+e driver
+>
+> In order to support different types of irq design, we decide to add
+> separate irq drivers for different design and keep mt6397 mfd core
+> simple and reusable to all generations of PMICs so far.
+>
+> Acked-for-mfd-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 > ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
->  include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
->  2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 082b8978651e..7aa0517ff2f3 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  	return 0;
->  }
->  
-> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
-> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  {
->  	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
->  		    (subsys << CMDQ_SUBSYS_SHIFT);
-> @@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
-> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-> -			u32 offset, u32 value, u32 mask)
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
-> +			u16 offset, u32 value, u32 mask)
->  {
->  	u32 offset_mask = offset;
->  	int err = 0;
-> @@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write_mask);
->  
-> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->  {
->  	u32 arg_b;
->  
-> @@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_wfe);
->  
-> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  {
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 39d813dde4b4..9618debb9ceb 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
-> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
->  
->  /**
->   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-> @@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
-> -			u32 offset, u32 value, u32 mask);
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
-> +			u16 offset, u32 value, u32 mask);
->  
->  /**
->   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
->  
->  /**
->   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
-> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
->  
->  /**
->   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-> 
+>  drivers/mfd/Makefile            |   3 +-
+>  drivers/mfd/mt6397-core.c       | 146 --------------------------------
+>  drivers/mfd/mt6397-irq.c        | 181 +++++++++++++++++++++++++++++++++=
++++++++
+>  include/linux/mfd/mt6397/core.h |   9 ++
+>  4 files changed, 192 insertions(+), 147 deletions(-)
+>  create mode 100644 drivers/mfd/mt6397-irq.c
