@@ -1,110 +1,125 @@
-From: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: [PATCH v5 09/10] rtc: mt6397: fix alarm register overwrite
-Date: Fri, 23 Aug 2019 11:45:30 +0800
-Message-ID: <1566531931-9772-10-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
+ capability with different PEX
+Date: Fri, 23 Aug 2019 04:13:30 +0000
+Message-ID: <AM5PR04MB32995566CD6DF0AAAD1AE52EF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-6-xiaowei.bao@nxp.com>
+ <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+ <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <11e9b2c3-f4d0-2f82-bb14-45c38a1419e4@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <11e9b2c3-f4d0-2f82-bb14-45c38a1419e4@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Fontana <rfontana@redhat.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com, Ran Bi <ran.bi@mediatek.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.ke>
 List-Id: devicetree@vger.kernel.org
 
-From: Ran Bi <ran.bi@mediatek.com>
-
-Alarm registers high byte was reserved for other functions.
-This add mask in alarm registers operation functions.
-This also fix error condition in interrupt handler.
-
-Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
-
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
----
- drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index b46ed4d..828def7 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -47,6 +47,14 @@
- 
- #define RTC_AL_SEC		0x0018
- 
-+#define RTC_AL_SEC_MASK		0x003f
-+#define RTC_AL_MIN_MASK		0x003f
-+#define RTC_AL_HOU_MASK		0x001f
-+#define RTC_AL_DOM_MASK		0x001f
-+#define RTC_AL_DOW_MASK		0x0007
-+#define RTC_AL_MTH_MASK		0x000f
-+#define RTC_AL_YEA_MASK		0x007f
-+
- #define RTC_PDN2		0x002e
- #define RTC_PDN2_PWRON_ALARM	BIT(4)
- 
-@@ -103,7 +111,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
- 		irqen = irqsta & ~RTC_IRQ_EN_AL;
- 		mutex_lock(&rtc->lock);
- 		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
--				 irqen) < 0)
-+				 irqen) == 0)
- 			mtk_rtc_write_trigger(rtc);
- 		mutex_unlock(&rtc->lock);
- 
-@@ -225,12 +233,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
- 	mutex_unlock(&rtc->lock);
- 
--	tm->tm_sec = data[RTC_OFFSET_SEC];
--	tm->tm_min = data[RTC_OFFSET_MIN];
--	tm->tm_hour = data[RTC_OFFSET_HOUR];
--	tm->tm_mday = data[RTC_OFFSET_DOM];
--	tm->tm_mon = data[RTC_OFFSET_MTH];
--	tm->tm_year = data[RTC_OFFSET_YEAR];
-+	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-+	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-+	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-+	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-+	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-+	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
- 
- 	tm->tm_year += RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon--;
-@@ -251,14 +259,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon++;
- 
--	data[RTC_OFFSET_SEC] = tm->tm_sec;
--	data[RTC_OFFSET_MIN] = tm->tm_min;
--	data[RTC_OFFSET_HOUR] = tm->tm_hour;
--	data[RTC_OFFSET_DOM] = tm->tm_mday;
--	data[RTC_OFFSET_MTH] = tm->tm_mon;
--	data[RTC_OFFSET_YEAR] = tm->tm_year;
--
- 	mutex_lock(&rtc->lock);
-+	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-+			       data, RTC_OFFSET_COUNT);
-+	if (ret < 0)
-+		goto exit;
-+
-+	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-+				(tm->tm_sec & RTC_AL_SEC_MASK));
-+	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-+				(tm->tm_min & RTC_AL_MIN_MASK));
-+	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-+				(tm->tm_hour & RTC_AL_HOU_MASK));
-+	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-+				(tm->tm_mday & RTC_AL_DOM_MASK));
-+	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-+				(tm->tm_mon & RTC_AL_MTH_MASK));
-+	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-+				(tm->tm_year & RTC_AL_YEA_MASK));
-+
- 	if (alm->enabled) {
- 		ret = regmap_bulk_write(rtc->regmap,
- 					rtc->addr_base + RTC_AL_SEC,
--- 
-1.9.1
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
+cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgyM+aXpSAxMTo0MA0K
+PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUu
+Y29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1
+b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGll
+cmFsaXNpQGFybS5jbw0KPiA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT47IGFybmRAYXJuZGIu
+ZGU7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiBNLmguIExpYW4gPG1pbmdodWFuLmxp
+YW5AbnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47DQo+IFJveSBaYW5n
+IDxyb3kuemFuZ0BueHAuY29tPjsgamluZ29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGlt
+ZW50ZWxAc3lub3BzeXMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3ps
+YWJzLm9yZzsNCj4gYW5kcmV3Lm11cnJheUBhcm0uY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djIgMDYvMTBdIFBDSTogbGF5ZXJzY2FwZTogTW9kaWZ5IHRoZSB3YXkgb2YgZ2V0dGluZw0KPiBj
+YXBhYmlsaXR5IHdpdGggZGlmZmVyZW50IFBFWA0KPiANCj4gSGksDQo+IA0KPiAoRml4ZWQgTG9y
+ZW56bydzIGVtYWlsIGFkZHJlc3MuIEFsbCB0aGUgcGF0Y2hlcyBpbiB0aGUgc2VyaWVzIGhhdmUg
+d3JvbmcgZW1haWwNCj4gaWQpDQo+IA0KPiBPbiAyMy8wOC8xOSA4OjA5IEFNLCBYaWFvd2VpIEJh
+byB3cm90ZToNCj4gPg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+
+IEZyb206IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+ID4+IFNlbnQ6
+IDIwMTnlubQ45pyIMjLml6UgMTk6NDQNCj4gPj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJh
+b0BueHAuY29tPjsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gPj4gcm9iaCtkdEBrZXJuZWwub3Jn
+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvDQo+IExpDQo+
+ID4+IDxsZW95YW5nLmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY287IGFybmRA
+YXJuZGIuZGU7DQo+ID4+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBNLmguIExpYW4gPG1p
+bmdodWFuLmxpYW5AbnhwLmNvbT47DQo+ID4+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNv
+bT47IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsNCj4gPj4gamluZ29vaGFuMUBnbWFpbC5j
+b207IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiA+PiBsaW51eC1wY2lAdmdlci5r
+ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPj4gbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
+PiA+PiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgYW5kcmV3Lm11cnJheUBhcm0uY29t
+DQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMDYvMTBdIFBDSTogbGF5ZXJzY2FwZTogTW9k
+aWZ5IHRoZSB3YXkgb2YNCj4gPj4gZ2V0dGluZyBjYXBhYmlsaXR5IHdpdGggZGlmZmVyZW50IFBF
+WA0KPiA+Pg0KPiA+PiBIaSwNCj4gPj4NCj4gPj4gT24gMjIvMDgvMTkgNDo1MiBQTSwgWGlhb3dl
+aSBCYW8gd3JvdGU6DQo+ID4+PiBUaGUgZGlmZmVyZW50IFBDSWUgY29udHJvbGxlciBpbiBvbmUg
+Ym9hcmQgbWF5IGJlIGhhdmUgZGlmZmVyZW50DQo+ID4+PiBjYXBhYmlsaXR5IG9mIE1TSSBvciBN
+U0lYLCBzbyBjaGFuZ2UgdGhlIHdheSBvZiBnZXR0aW5nIHRoZSBNU0kNCj4gPj4+IGNhcGFiaWxp
+dHksIG1ha2UgaXQgbW9yZSBmbGV4aWJsZS4NCj4gPj4NCj4gPj4gcGxlYXNlIHVzZSBkaWZmZXJl
+bnQgcGNpX2VwY19mZWF0dXJlcyB0YWJsZSBmb3IgZGlmZmVyZW50IGJvYXJkcy4NCj4gPiBUaGFu
+a3MsIEkgdGhpbmsgdGhhdCBpdCB3aWxsIGJlIG1vcmUgZmxleGlibGUgdG8gZHluYW1pY2FsbHkg
+Z2V0IE1TSQ0KPiA+IG9yIE1TSVggY2FwYWJpbGl0eSwgVGh1cywgd2Ugd2lsbCBub3QgbmVlZCB0
+byBkZWZpbmUgdGhlIHBjaV9lcGNfZmVhdHVyZSBmb3INCj4gZGlmZmVyZW50IGJvYXJkcy4NCj4g
+DQo+IElzIHRoZSByZXN0cmljdGlvbiBiZWNhdXNlIHlvdSBjYW5ub3QgaGF2ZSBkaWZmZXJlbnQg
+Y29tcGF0aWJsZSBmb3IgZGlmZmVyZW50DQo+IGJvYXJkcz8NClNvcnJ5LCBJIGFtIG5vdCB2ZXJ5
+IGNsZWFyIHdoYXQgeW91ciBtZWFuLCBJIHRoaW5rIGV2ZW4gaWYgSSB1c2UgdGhlIHNhbWUgY29t
+cGF0aWJsZQ0Kd2l0aCBkaWZmZXJlbnQgYm9hcmRzLCBlYWNoIGJvYXJkcyB3aWxsIGVudGVyIHRo
+ZSBwcm9iZSBmdW5jdGlvbiwgaW4gdGhlcmUgSSB3aWxsIGdldA0KdGhlIE1TSSBvciBNU0lYIFBD
+SWUgY2FwYWJpbGl0eSBvZiB0aGUgY3VycmVudCBjb250cm9sbGVyIGluIHRoaXMgYm9hcmQuIFdo
+eSBkbyBJIG5lZWQNCnRvIGRlZmluZSB0aGUgcGNpX2VwY19mZWF0dXJlIGZvciBkaWZmZXJlbnQg
+Ym9hcmRzPyANCj4gDQo+IFRoYW5rcw0KPiBLaXNob24NCj4gDQo+ID4+DQo+ID4+IFRoYW5rcw0K
+PiA+PiBLaXNob24NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlh
+b3dlaS5iYW9AbnhwLmNvbT4NCj4gPj4+IC0tLQ0KPiA+Pj4gdjI6DQo+ID4+PiAgLSBSZW1vdmUg
+dGhlIHJlcGVhdGVkIGFzc2lnbm1lbnQgY29kZS4NCj4gPj4+DQo+ID4+PiAgZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyB8IDI2DQo+ID4+PiArKysrKysrKysr
+KysrKysrKysrLS0tLS0tLQ0KPiA+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCsp
+LCA3IGRlbGV0aW9ucygtKQ0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9j
+b250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4+PiBiL2RyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPj4+IGluZGV4IDRlOTJhOTUuLjg0
+NjFmNjIgMTAwNjQ0DQo+ID4+PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2kt
+bGF5ZXJzY2FwZS1lcC5jDQo+ID4+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
+Y2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4+PiBAQCAtMjIsNiArMjIsNyBAQA0KPiA+Pj4NCj4gPj4+
+ICBzdHJ1Y3QgbHNfcGNpZV9lcCB7DQo+ID4+PiAgCXN0cnVjdCBkd19wY2llCQkqcGNpOw0KPiA+
+Pj4gKwlzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcwkqbHNfZXBjOw0KPiA+Pj4gIH07DQo+ID4+Pg0K
+PiA+Pj4gICNkZWZpbmUgdG9fbHNfcGNpZV9lcCh4KQlkZXZfZ2V0X2RydmRhdGEoKHgpLT5kZXYp
+DQo+ID4+PiBAQCAtNDAsMjUgKzQxLDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkDQo+ID4+IGxzX3BjaWVfZXBfb2ZfbWF0Y2hbXSA9IHsNCj4gPj4+ICAJeyB9LA0KPiA+Pj4g
+IH07DQo+ID4+Pg0KPiA+Pj4gLXN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyBs
+c19wY2llX2VwY19mZWF0dXJlcyA9IHsNCj4gPj4+IC0JLmxpbmt1cF9ub3RpZmllciA9IGZhbHNl
+LA0KPiA+Pj4gLQkubXNpX2NhcGFibGUgPSB0cnVlLA0KPiA+Pj4gLQkubXNpeF9jYXBhYmxlID0g
+ZmFsc2UsDQo+ID4+PiAtfTsNCj4gPj4+IC0NCj4gPj4+ICBzdGF0aWMgY29uc3Qgc3RydWN0IHBj
+aV9lcGNfZmVhdHVyZXMqDQo+ID4+PiBsc19wY2llX2VwX2dldF9mZWF0dXJlcyhzdHJ1Y3QgZHdf
+cGNpZV9lcCAqZXApICB7DQo+ID4+PiAtCXJldHVybiAmbHNfcGNpZV9lcGNfZmVhdHVyZXM7DQo+
+ID4+PiArCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+
+Pj4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNpKTsNCj4gPj4+
+ICsNCj4gPj4+ICsJcmV0dXJuIHBjaWUtPmxzX2VwYzsNCj4gPj4+ICB9DQo+ID4+Pg0KPiA+Pj4g
+IHN0YXRpYyB2b2lkIGxzX3BjaWVfZXBfaW5pdChzdHJ1Y3QgZHdfcGNpZV9lcCAqZXApICB7DQo+
+ID4+PiAgCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+
+Pj4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNpKTsNCj4gPj4+
+ICAJZW51bSBwY2lfYmFybm8gYmFyOw0KPiA+Pj4NCj4gPj4+ICAJZm9yIChiYXIgPSBCQVJfMDsg
+YmFyIDw9IEJBUl81OyBiYXIrKykNCj4gPj4+ICAJCWR3X3BjaWVfZXBfcmVzZXRfYmFyKHBjaSwg
+YmFyKTsNCj4gPj4+ICsNCj4gPj4+ICsJcGNpZS0+bHNfZXBjLT5tc2lfY2FwYWJsZSA9IGVwLT5t
+c2lfY2FwID8gdHJ1ZSA6IGZhbHNlOw0KPiA+Pj4gKwlwY2llLT5sc19lcGMtPm1zaXhfY2FwYWJs
+ZSA9IGVwLT5tc2l4X2NhcCA/IHRydWUgOiBmYWxzZTsNCj4gPj4+ICB9DQo+ID4+Pg0KPiA+Pj4g
+IHN0YXRpYyBpbnQgbHNfcGNpZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1
+OCBmdW5jX25vLA0KPiA+Pj4gQEANCj4gPj4+IC0xMTgsNiArMTIwLDcgQEAgc3RhdGljIGludCBf
+X2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QNCj4gPj4+IHBsYXRmb3JtX2RldmljZQ0KPiA+
+PiAqcGRldikNCj4gPj4+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPj4+
+ICAJc3RydWN0IGR3X3BjaWUgKnBjaTsNCj4gPj4+ICAJc3RydWN0IGxzX3BjaWVfZXAgKnBjaWU7
+DQo+ID4+PiArCXN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzICpsc19lcGM7DQo+ID4+PiAgCXN0cnVj
+dCByZXNvdXJjZSAqZGJpX2Jhc2U7DQo+ID4+PiAgCWludCByZXQ7DQo+ID4+Pg0KPiA+Pj4gQEAg
+LTEyOSw2ICsxMzIsMTAgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1
+Y3QNCj4gPj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+Pj4gIAlpZiAoIXBjaSkNCj4gPj4+
+ICAJCXJldHVybiAtRU5PTUVNOw0KPiA+Pj4NCj4gPj4+ICsJbHNfZXBjID0gZGV2bV9remFsbG9j
+KGRldiwgc2l6ZW9mKCpsc19lcGMpLCBHRlBfS0VSTkVMKTsNCj4gPj4+ICsJaWYgKCFsc19lcGMp
+DQo+ID4+PiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPj4+ICsNCj4gPj4+ICAJZGJpX2Jhc2UgPSBw
+bGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsDQo+IElPUkVTT1VSQ0VfTUVNLA0KPiA+
+PiAicmVncyIpOw0KPiA+Pj4gIAlwY2ktPmRiaV9iYXNlID0gZGV2bV9wY2lfcmVtYXBfY2ZnX3Jl
+c291cmNlKGRldiwgZGJpX2Jhc2UpOw0KPiA+Pj4gIAlpZiAoSVNfRVJSKHBjaS0+ZGJpX2Jhc2Up
+KQ0KPiA+Pj4gQEAgLTEzOSw2ICsxNDYsMTEgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9l
+cF9wcm9iZShzdHJ1Y3QNCj4gPj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+Pj4gIAlwY2kt
+Pm9wcyA9ICZsc19wY2llX2VwX29wczsNCj4gPj4+ICAJcGNpZS0+cGNpID0gcGNpOw0KPiA+Pj4N
+Cj4gPj4+ICsJbHNfZXBjLT5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4gPj4+ICsJbHNfZXBj
+LT5iYXJfZml4ZWRfNjRiaXQgPSAoMSA8PCBCQVJfMikgfCAoMSA8PCBCQVJfNCksDQo+ID4+PiAr
+DQo+ID4+PiArCXBjaWUtPmxzX2VwYyA9IGxzX2VwYzsNCj4gPj4+ICsNCj4gPj4+ICAJcGxhdGZv
+cm1fc2V0X2RydmRhdGEocGRldiwgcGNpZSk7DQo+ID4+Pg0KPiA+Pj4gIAlyZXQgPSBsc19hZGRf
+cGNpZV9lcChwY2llLCBwZGV2KTsNCj4gPj4+DQo=
