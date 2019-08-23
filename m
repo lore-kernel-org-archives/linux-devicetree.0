@@ -1,25 +1,40 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [RESEND PATCH v2 2/2] usb: xhci-mtk: add an optional xhci_ck
- clock
-Date: Fri, 23 Aug 2019 11:28:50 +0300
-Message-ID: <e1e4d220-9540-2001-13aa-89ff8ce829f5@linux.intel.com>
-References: <1566542425-20082-1-git-send-email-chunfeng.yun@mediatek.com>
- <1566542425-20082-2-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v4 1/3] dt-bindings: pci: layerscape-pci: add compatible strings "fsl,ls1028a-pcie"
+Date: Fri, 23 Aug 2019 16:26:41 +0800
+Message-ID: <20190823082643.10903-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566542425-20082-2-git-send-email-chunfeng.yun@mediatek.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, zhiqiang.hou@nxp.com
+Cc: bhelgaas@google.com, Xiaowei Bao <xiaowei.bao@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23.8.2019 9.40, Chunfeng Yun wrote:
-> Some SoCs may have an optional clock xhci_ck (125M or 200M), it
-> usually uses the same PLL as sys_ck, so support it.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Add the PCIe compatible string for LS1028A
 
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - No change.
+v3:
+ - No change.
+v4:
+ - No change.
+
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaa..99a386e 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -21,6 +21,7 @@ Required properties:
+         "fsl,ls1046a-pcie"
+         "fsl,ls1043a-pcie"
+         "fsl,ls1012a-pcie"
++        "fsl,ls1028a-pcie"
+   EP mode:
+ 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
+-- 
+2.9.5
