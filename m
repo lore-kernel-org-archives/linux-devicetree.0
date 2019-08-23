@@ -1,106 +1,121 @@
-From: Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when
- it's not ours
-Date: Fri, 23 Aug 2019 15:06:52 +0300
-Message-ID: <CA+h21hrj6VjceGJFz7XuS9DFjy=Fb5SHTYUuOWkagtsWf0Egbg@mail.gmail.com>
-References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-3-olteanv@gmail.com>
- <20190823102816.GN23391@sirena.co.uk> <CA+h21hoUfbW8Gpyfa+a-vqVp_qARYoq1_eyFfZFh-5USNGNE2g@mail.gmail.com>
- <20190823105044.GO23391@sirena.co.uk> <20190823105949.GQ23391@sirena.co.uk>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [RESEND, PATCH v13 08/12] soc: mediatek: cmdq: change the type of
+ input parameter
+Date: Fri, 23 Aug 2019 14:09:19 +0200
+Message-ID: <71911fc7-c44a-b8b1-d5e1-278c2a3767ea@gmail.com>
+References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+ <20190820084932.22282-9-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823105949.GQ23391@sirena.co.uk>
+In-Reply-To: <20190820084932.22282-9-bibby.hsieh@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Fri, 23 Aug 2019 at 13:59, Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Aug 23, 2019 at 11:50:44AM +0100, Mark Brown wrote:
-> > On Fri, Aug 23, 2019 at 01:30:27PM +0300, Vladimir Oltean wrote:
->
-> > > Did you see this?
-> > > https://lkml.org/lkml/2019/8/22/1542
->
-> > I'm not online enough to readily follow that link right now, I
-> > did apply another patch for a similar issue though.  If that's
-> > a different version of the same change please don't do that,
-> > sending multiple conflicting versions of the same thing creates
-> > conflicts and makes everything harder to work with.
->
-> Oh, I guess this was due to there being an existing refactoring
-> in -next that meant the fix wouldn't apply directly.  I sorted
-> that out now I think, but in general the same thing applies -
-> it's better to put fixes before anything else in the series,
-> it'll flag up when reviewing.
 
-I try to require as little attention span as possible from you and I
-apologize that I'm sending patches like a noob, but I'm not used to
-this sort of interaction with a maintainer. It's taking me some time
-to adjust expectations.
-- You left change requests in the initial patchset I submitted, but
-you partially applied the series anyway. You didn't give me a chance
-to respin the whole series and put the shared IRQ fix on top, so it
-applies on old trees as well. No problem, I sent two versions of the
-patch.
-- On my previous series you left this comment:
+On 20/08/2019 10:49, Bibby Hsieh wrote:
+> According to the cmdq hardware design, the subsys is u8,
+> the offset is u16 and the event id is u16.
+> This patch changes the type of subsys, offset and event id
+> to the correct type.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-> Please don't include all the extra tags you've got in your subject
-> lines.  In my inbox this series looks like:
->
->    790 N T 08/18 Vladimir Oltean ( 16K) =E2=94=9C=E2=94=80>[PATCH spi for=
--5.4 01/14] spi: spi-f
->
-> so I can't tell what it's actually about just from looking at it.  Just
-> [PATCH 01/14] would be enough, putting a target version in or versioning
-> the patch series can be OK but you usually don't use a target version
-> for -next and adding spi in there is redundant given that it's also in
-> the changelog.
+Applied, thanks
 
-So I didn't put any target version in the patch titles this time,
-although arguably it would have been clearer to you that there's a
-patch for-5.4 and another version of it for-4.20 (which i *think* is
-how I should submit a fix, I don't see any branch for inclusion in
-stable trees per se).
-No problem, I explained in the cover letters that one patchset is for
--next and the other is for inclusion in stable trees. Maintainers do
-read cover letters, right?
-Message from the -next cover letter:
-
-> The series also contains a bug fix for the shared IRQ of the DSPI
-> driver. I am going to respin a version of it as a separate patch for
-> inclusion in stable trees, independent of this patchset.
-
-Message from the fix's cover letter:
-
-> This patch is taken out of the "Poll mode for NXP DSPI driver" series
-> and respun against the "for-4.20" branch.
-> $(git describe --tags 13aed2392741) shows:
-> v4.20-rc1-18-g13aed2392741
-
-Yes, I did send a cover letter for a single patch. I thought it's
-harder to miss than a note hidden under patch 2/5 of one series, and
-in the note section of the other's. I think you could have also made
-an argument about me not doing it the other way around. In the end,
-you can not read a note just as well as not read a cover letter, and
-there's little I can do.
-
-No problem, you missed the link between the two. I sent you a link to
-the lkml archive. You said "I'm not online enough to readily follow
-that link right now". Please teach me - I really don't know - how can
-I make links between patchsets easier for you to follow, if you don't
-read cover letters and you can't access lkml? I promise I'll use that
-method next time.
-
-> I do frequently catch up on my mail on flights or while otherwise
-> travelling so this is even more pressing for me than just being about
-> making things a bit easier to read.
-
-Maybe you simply should do something else while traveling, just saying.
-
-Regards,
--Vladimir
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 10 +++++-----
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 082b8978651e..7aa0517ff2f3 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  	return 0;
+>  }
+>  
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+>  	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+>  		    (subsys << CMDQ_SUBSYS_SHIFT);
+> @@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+> -			u32 offset, u32 value, u32 mask)
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+> +			u16 offset, u32 value, u32 mask)
+>  {
+>  	u32 offset_mask = offset;
+>  	int err = 0;
+> @@ -161,7 +161,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+>  	u32 arg_b;
+>  
+> @@ -181,7 +181,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 39d813dde4b4..9618debb9ceb 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -66,7 +66,7 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
+>  
+>  /**
+>   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+> @@ -78,8 +78,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+> -			u32 offset, u32 value, u32 mask);
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+> +			u16 offset, u32 value, u32 mask);
+>  
+>  /**
+>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+> 
