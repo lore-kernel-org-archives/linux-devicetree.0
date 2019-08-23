@@ -1,175 +1,57 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 1/5] dt-bindings: power: add Amlogic Everything-Else power domains bindings
-Date: Fri, 23 Aug 2019 11:04:14 +0200
-Message-ID: <20190823090418.17148-2-narmstrong@baylibre.com>
-References: <20190823090418.17148-1-narmstrong@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus probe
+Date: Fri, 23 Aug 2019 11:19:42 +0200
+Message-ID: <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
+References: <20190820145834.7301-1-dinguyen@kernel.org> <20190820145834.7301-2-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823090418.17148-1-narmstrong@baylibre.com>
+In-Reply-To: <20190820145834.7301-2-dinguyen@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Dinh Nguyen <dinguyen@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the bindings for the Amlogic Everything-Else power domains,
-controlling the Everything-Else peripherals power domains.
+On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
 
-The bindings targets the Amlogic G12A and SM1 compatible SoCs,
-support for earlier SoCs will be added later.
+> @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>         ret = amba_get_enable_pclk(dev);
+>         if (ret == 0) {
+>                 u32 pid, cid;
+> +               int count;
+> +               struct reset_control *rstc;
+> +
+> +               /*
+> +                * Find reset control(s) of the amba bus and de-assert them.
+> +                */
+> +               count = reset_control_get_count(&dev->dev);
+> +               while (count > 0) {
+> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
+> +                       if (IS_ERR(rstc)) {
+> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
+> +                                       ret = -EPROBE_DEFER;
+> +                               else
+> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
+> +                               break;
+> +                       }
+> +                       reset_control_deassert(rstc);
+> +                       reset_control_put(rstc);
+> +                       count--;
+> +               }
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/power/amlogic,meson-ee-pwrc.yaml | 93 +++++++++++++++++++
- include/dt-bindings/power/meson-g12a-power.h  | 13 +++
- include/dt-bindings/power/meson-sm1-power.h   | 18 ++++
- 3 files changed, 124 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
- create mode 100644 include/dt-bindings/power/meson-g12a-power.h
- create mode 100644 include/dt-bindings/power/meson-sm1-power.h
+I'm not normally a footprint person, but the looks of the stubs in
+<linux/reset.h> makes me suspicious whether this will have zero impact
+in size on platforms without reset controllers.
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
-new file mode 100644
-index 000000000000..aab70e8b681e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/amlogic,meson-ee-pwrc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic Meson Everything-Else Power Domains
-+
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+
-+description: |+
-+  The Everything-Else Power Domains node should be the child of a syscon
-+  node with the required property:
-+
-+  - compatible: Should be the following:
-+                "amlogic,meson-gx-hhi-sysctrl", "simple-mfd", "syscon"
-+
-+  Refer to the the bindings described in
-+  Documentation/devicetree/bindings/mfd/syscon.txt
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson-g12a-pwrc
-+      - amlogic,meson-sm1-pwrc
-+
-+  clocks:
-+    minItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: vpu
-+      - const: vapb
-+
-+  resets:
-+    minItems: 11
-+
-+  reset-names:
-+    items:
-+      - const: viu
-+      - const: venc
-+      - const: vcbus
-+      - const: bt656
-+      - const: rdma
-+      - const: venci
-+      - const: vencp
-+      - const: vdac
-+      - const: vdi6
-+      - const: vencl
-+      - const: vid_lock
-+
-+  "#power-domain-cells":
-+    const: 1
-+
-+  amlogic,ao-sysctrl:
-+    description: phandle to the AO sysctrl node
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - "#power-domain-cells"
-+  - amlogic,ao-sysctrl
-+
-+examples:
-+  - |
-+    pwrc: power-controller {
-+          compatible = "amlogic,meson-sm1-pwrc";
-+          #power-domain-cells = <1>;
-+          amlogic,ao-sysctrl = <&rti>;
-+          resets = <&reset_viu>,
-+                   <&reset_venc>,
-+                   <&reset_vcbus>,
-+                   <&reset_bt656>,
-+                   <&reset_rdma>,
-+                   <&reset_venci>,
-+                   <&reset_vencp>,
-+                   <&reset_vdac>,
-+                   <&reset_vdi6>,
-+                   <&reset_vencl>,
-+                   <&reset_vid_lock>;
-+          reset-names = "viu", "venc", "vcbus", "bt656",
-+                        "rdma", "venci", "vencp", "vdac",
-+                        "vdi6", "vencl", "vid_lock";
-+          clocks = <&clk_vpu>, <&clk_vapb>;
-+          clock-names = "vpu", "vapb";
-+    };
-diff --git a/include/dt-bindings/power/meson-g12a-power.h b/include/dt-bindings/power/meson-g12a-power.h
-new file mode 100644
-index 000000000000..bb5e67a842de
---- /dev/null
-+++ b/include/dt-bindings/power/meson-g12a-power.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_G12A_POWER_H
-+#define _DT_BINDINGS_MESON_G12A_POWER_H
-+
-+#define PWRC_G12A_VPU_ID		0
-+#define PWRC_G12A_ETH_ID		1
-+
-+#endif
-diff --git a/include/dt-bindings/power/meson-sm1-power.h b/include/dt-bindings/power/meson-sm1-power.h
-new file mode 100644
-index 000000000000..a020ab00c134
---- /dev/null
-+++ b/include/dt-bindings/power/meson-sm1-power.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2019 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_SM1_POWER_H
-+#define _DT_BINDINGS_MESON_SM1_POWER_H
-+
-+#define PWRC_SM1_VPU_ID		0
-+#define PWRC_SM1_NNA_ID		1
-+#define PWRC_SM1_USB_ID		2
-+#define PWRC_SM1_PCIE_ID	3
-+#define PWRC_SM1_GE2D_ID	4
-+#define PWRC_SM1_AUDIO_ID	5
-+#define PWRC_SM1_ETH_ID		6
-+
-+#endif
--- 
-2.22.0
+Can you just ls -al on the kernel without CONFIG_RESET_CONTROLLER
+before and after this patch and ascertain that it has zero footprint effect?
+
+If it doesn't I'd sure like to break this into its own function and
+stick a if (!IS_ENABLED(CONFIG_RESET_CONTROLLER)) return 0;
+in there to make sure the compiler drops it.
+
+Also it'd be nice to get Philipp's ACK on the semantics, though they
+look correct to me.
+
+Yours,
+Linus Walleij
