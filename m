@@ -1,65 +1,204 @@
 Return-Path: <SRS0=geGc=WT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35306 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728519AbfHWHZp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2019 03:25:45 -0400
-MIME-Version: 1.0
-References: <20190822195600.30787-1-jacopo+renesas@jmondi.org>
- <20190823001209.GO5027@pendragon.ideasonboard.com> <20190823063227.7soxv2gx7t7acsqq@uno.localdomain>
-In-Reply-To: <20190823063227.7soxv2gx7t7acsqq@uno.localdomain>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 Aug 2019 09:25:32 +0200
-Message-ID: <CAMuHMdWA6R93obZ+cq9M2XOn-vHGXaPxwP_Nzp_t1CfDE5mDHw@mail.gmail.com>
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:44703 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404394AbfHWGbG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2019 02:31:06 -0400
+Date: Fri, 23 Aug 2019 08:32:27 +0200
+From: Jacopo Mondi <jacopo@jmondi.org>
 Subject: Re: [PATCH] arm64: dts: renesas: Add LIF channel index to 'vsps'
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20190823063227.7soxv2gx7t7acsqq@uno.localdomain>
+References: <20190822195600.30787-1-jacopo+renesas@jmondi.org>
+ <20190823001209.GO5027@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yt4wyxlnmndfww2i"
+Content-Disposition: inline
+In-Reply-To: <20190823001209.GO5027@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Jacopo,
 
-On Fri, Aug 23, 2019 at 8:31 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
-> On Fri, Aug 23, 2019 at 03:12:09AM +0300, Laurent Pinchart wrote:
-> > On Thu, Aug 22, 2019 at 09:56:00PM +0200, Jacopo Mondi wrote:
-> > > According to the Renesas R-Car DU bindings documentation, the 'vsps'
-> > > property should be composed by a phandle to the VSP instance and the
-> >
-> > > index of the LIF channel assigned to the DU channel. Some SoC device
-> > > tree source files do not specify any LIF channel index, relying on the
-> > > driver defaulting it to 0 if not specified.
-> > >
-> > > Align all device tree files by specifying the LIF channel index as
-> > > prescribed by the bindings documentation. While at it, add a comment to
-> > > the 'vsps' property parsing routine to point out the LIF channel index
-> > > is still defaulted to 0 for backward compatibility with non-standard DTB
-> > > found in the wild.
-> >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+--yt4wyxlnmndfww2i
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> > Note that Simon or Geert will likely ask you to split this patch in two,
-> > in which case I'll take the driver part in my tree.
+Hi Laurent,
+
+On Fri, Aug 23, 2019 at 03:12:09AM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
 >
-> I was not sure how to split this in facts.. Simon, Geert, would you
-> like a v2 with DT changes separated from the driver comment update?
+> Thank you for the patch.
+>
+> On Thu, Aug 22, 2019 at 09:56:00PM +0200, Jacopo Mondi wrote:
+> > According to the Renesas R-Car DU bindings documentation, the 'vsps'
+> > property should be composed by a phandle to the VSP instance and the
+>
+> s/composed by/composed of/
+>
+> > index of the LIF channel assigned to the DU channel. Some SoC device
+> > tree source files do not specify any LIF channel index, relying on the
+> > driver defaulting it to 0 if not specified.
+> >
+> > Align all device tree files by specifying the LIF channel index as
+> > prescribed by the bindings documentation. While at it, add a comment to
+> > the 'vsps' property parsing routine to point out the LIF channel index
+> > is still defaulted to 0 for backward compatibility with non-standard DTB
+> > found in the wild.
+>
+> I wouldn't say non-standard, I would instead mention compatible with a
+> previous version of the DT bindings.
+>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >
+> > Patch based on Geert's latest renesas-devel master branch
+> > ---
+> >
+> >  arch/arm64/boot/dts/renesas/r8a774a1.dtsi    | 2 +-
+> >  arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 +-
+> >  arch/arm64/boot/dts/renesas/r8a7796.dtsi     | 2 +-
+> >  arch/arm64/boot/dts/renesas/r8a77970.dtsi    | 2 +-
+> >  arch/arm64/boot/dts/renesas/r8a77980.dtsi    | 2 +-
+> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c        | 9 ++++++++-
+> >  6 files changed, 13 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > index 06c7c849c8ab..d179ee3da308 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > @@ -2651,7 +2651,7 @@
+> >  			clock-names = "du.0", "du.1", "du.2";
+> >  			status = "disabled";
+> >
+> > -			vsps = <&vspd0 &vspd1 &vspd2>;
+> > +			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+> >
+> >  			ports {
+> >  				#address-cells = <1>;
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+> > index e4650ae5b75a..14d8513d2a47 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
+> > @@ -30,7 +30,7 @@
+> >  };
+> >
+> >  &du {
+> > -	vsps = <&vspd0 &vspd1 &vspd2 &vspd3>;
+> > +	vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd3 0>;
+> >  };
+> >
+> >  &fcpvb1 {
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > index 3dc9d73f589a..8c9bf985d436 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > @@ -2765,7 +2765,7 @@
+> >  			clock-names = "du.0", "du.1", "du.2";
+> >  			status = "disabled";
+> >
+> > -			vsps = <&vspd0 &vspd1 &vspd2>;
+> > +			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
+> >
+> >  			ports {
+> >  				#address-cells = <1>;
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > index 0cd3b376635d..2c4ab70e2a39 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > @@ -1120,7 +1120,7 @@
+> >  			clock-names = "du.0";
+> >  			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
+> >  			resets = <&cpg 724>;
+> > -			vsps = <&vspd0>;
+> > +			vsps = <&vspd0 0>;
+> >  			status = "disabled";
+> >
+> >  			ports {
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > index 461a47ea656d..042f4089e546 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> > @@ -1495,7 +1495,7 @@
+> >  			clock-names = "du.0";
+> >  			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> >  			resets = <&cpg 724>;
+> > -			vsps = <&vspd0>;
+> > +			vsps = <&vspd0 0>;
+> >  			status = "disabled";
+> >
+> >  			ports {
+> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > index 2dc9caee8767..1a9e182b2b55 100644
+> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > @@ -585,7 +585,14 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+> >
+> >  		vsps[j].crtcs_mask |= BIT(i);
+> >
+> > -		/* Store the VSP pointer and pipe index in the CRTC. */
+> > +		/*
+> > +		 * Store the VSP pointer and pipe index in the CRTC.
+> > +		 *
+> > +		 * FIXME: According to the DT bindings, the LIF pipe instance
+> > +		 * index shall always be specified. For backward compatibility
+> > +		 * with older DTB without any index specified, default it to 0
+> > +		 * if cells < 1.
+>
+> No need for a FIXME, there's nothing to be fixed here. I would write
+> this as
+>
+> 		 * If the second cell of the VSP specifier isn't
+> 		 * present, default to 0 to remain compatible with older
+> 		 * DT bindings.
+>
+> With this fixed here and in the commit message,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
 
-Yes please.
+Thanks
 
-> (for the DT changes, one patch per SoC, or a single one?)
+> Note that Simon or Geert will likely ask you to split this patch in two,
+> in which case I'll take the driver part in my tree.
 
-One patch for all SoCs is fine:
+I was not sure how to split this in facts.. Simon, Geert, would you
+like a v2 with DT changes separated from the driver comment update?
+(for the DT changes, one patch per SoC, or a single one?)
 
-    arm64: dts: renesas: Add LIF channel indices to vsps properties
+Thanks
+   j
 
-Thanks!
+>
+> > +		 */
+> >  		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
+> >  		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
+> >  	}
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
-Gr{oetje,eeting}s,
+--yt4wyxlnmndfww2i
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1fiHcACgkQcjQGjxah
+VjxJBg/+OyiyMiX0o2eBDPbpMzuuug800NK7NJNkHwiGDCzk3VBXdsQF4oT4hkSF
+A6SoRwGvx5Wl024MwiJPCiUXRdRfCN3OKMhPnUemvsD7PrlLBjD8wiml0eQsHHHr
+D2hXdk9z2znogruZ0Zo+p/LElVHCBFwKRNppexlzCqF+Pd9tRCTqVEvPAaxHSyn0
+PTlavm4AtB59NWlA7pZ2jh8j1t3cVNmok2CWeZ0SdedpdM08M4whnDOr3jqESY0Z
+5TPlZOfSuMdHNpKdvwVRVf+O3lEaF40OgBmXE0klgmHdi8BCa8qO0G+/mPIYK8GB
+b7NrQCFZGHeL8+xUZqB/0ekIslX8aoWIKUtuNhcJNW3GdlVuniTqIbbx4xLobIdQ
+wLUb6pF8ndV6lVpxDmVFz7zIPOy0y/waHw/B+wkhV4bCKQBeNTNAOG3e8fCPgd6e
+rTPVAZZ4aeWKtC+7YyNR9WpmG56XmeivQPWwaJ0B4sTTYlCoiPJD6Ls+W9SEufDZ
+vuvEfU+7u7/pOYl1LdBXqAWylTLsCWfsT3XhvLC3Mh9CuMRymy/D79+8Z/sOHgt8
+snSuhKWP5rxeyfboWJAI3+pvlNdptplmtfdRzH3cDnYd41fNhlSBh9h/oMfjQmhr
+wL+IDb/lHHNDwOPZB9QrK5SpfIUbvfXB50QP55rj8lD55scyQ+E=
+=e5Zv
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--yt4wyxlnmndfww2i--
