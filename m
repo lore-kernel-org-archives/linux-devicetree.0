@@ -1,100 +1,62 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND PATCH v2 2/2] usb: xhci-mtk: add an optional xhci_ck clock
-Date: Fri, 23 Aug 2019 09:43:42 +0200
-Message-ID: <e4aa560c-c524-8098-cd7f-3d1a6aa2082e@gmail.com>
-References: <1566542425-20082-1-git-send-email-chunfeng.yun@mediatek.com>
- <1566542425-20082-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v8 0/5] media: Allwinner A10 CSI support
+Date: Fri, 23 Aug 2019 09:47:54 +0200
+Message-ID: <20190823074754.z23rx62o5do4pu3z@flea>
+References: <cover.85d78dd1a3b44fe4cde1b65a9b1eb3b95daea7cc.1566462064.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1566542425-20082-2-git-send-email-chunfeng.yun@mediatek.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p5b5zggpj4lv77ke"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.85d78dd1a3b44fe4cde1b65a9b1eb3b95daea7cc.1566462064.git-series.maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--p5b5zggpj4lv77ke
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 23/08/2019 08:40, Chunfeng Yun wrote:
-> Some SoCs may have an optional clock xhci_ck (125M or 200M), it
-> usually uses the same PLL as sys_ck, so support it.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+On Thu, Aug 22, 2019 at 10:21:11AM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> Hi,
+>
+> Here is a series introducing the support for the A10 (and SoCs of the same
+> generation) CMOS Sensor Interface (called CSI, not to be confused with
+> MIPI-CSI, which isn't support by that IP).
+>
+> That interface is pretty straightforward, but the driver has a few issues
+> that I wanted to bring up:
+>
+>   * The only board I've been testing this with has an ov5640 sensor
+>     attached, which doesn't work with the upstream driver. Copying the
+>     Allwinner init sequence works though, and this is how it has been
+>     tested. Testing with a second sensor would allow to see if it's an
+>     issue on the CSI side or the sensor side.
+>   * We don't have support for the ISP at the moment, but this can be added
+>     eventually.
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Applied patch 4.
 
-> ---
-> v2 no changes
-> ---
->  drivers/usb/host/xhci-mtk.c | 13 +++++++++++++
->  drivers/usb/host/xhci-mtk.h |  1 +
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index 026fe18972d3..b18a6baef204 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -216,6 +216,10 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
->  		return PTR_ERR(mtk->sys_clk);
->  	}
->  
-> +	mtk->xhci_clk = devm_clk_get_optional(dev, "xhci_ck");
-> +	if (IS_ERR(mtk->xhci_clk))
-> +		return PTR_ERR(mtk->xhci_clk);
-> +
->  	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
->  	if (IS_ERR(mtk->ref_clk))
->  		return PTR_ERR(mtk->ref_clk);
-> @@ -244,6 +248,12 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
->  		goto sys_clk_err;
->  	}
->  
-> +	ret = clk_prepare_enable(mtk->xhci_clk);
-> +	if (ret) {
-> +		dev_err(mtk->dev, "failed to enable xhci_clk\n");
-> +		goto xhci_clk_err;
-> +	}
-> +
->  	ret = clk_prepare_enable(mtk->mcu_clk);
->  	if (ret) {
->  		dev_err(mtk->dev, "failed to enable mcu_clk\n");
-> @@ -261,6 +271,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
->  dma_clk_err:
->  	clk_disable_unprepare(mtk->mcu_clk);
->  mcu_clk_err:
-> +	clk_disable_unprepare(mtk->xhci_clk);
-> +xhci_clk_err:
->  	clk_disable_unprepare(mtk->sys_clk);
->  sys_clk_err:
->  	clk_disable_unprepare(mtk->ref_clk);
-> @@ -272,6 +284,7 @@ static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
->  {
->  	clk_disable_unprepare(mtk->dma_clk);
->  	clk_disable_unprepare(mtk->mcu_clk);
-> +	clk_disable_unprepare(mtk->xhci_clk);
->  	clk_disable_unprepare(mtk->sys_clk);
->  	clk_disable_unprepare(mtk->ref_clk);
->  }
-> diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
-> index 8be8c5f7ff62..5ac458b7d2e0 100644
-> --- a/drivers/usb/host/xhci-mtk.h
-> +++ b/drivers/usb/host/xhci-mtk.h
-> @@ -139,6 +139,7 @@ struct xhci_hcd_mtk {
->  	struct regulator *vusb33;
->  	struct regulator *vbus;
->  	struct clk *sys_clk;	/* sys and mac clock */
-> +	struct clk *xhci_clk;
->  	struct clk *ref_clk;
->  	struct clk *mcu_clk;
->  	struct clk *dma_clk;
-> 
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--p5b5zggpj4lv77ke
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV+aKgAKCRDj7w1vZxhR
+xRMwAP0fMmxNQd3iwRCBEhylWiBgjth2nBRFWwaoecI6PiXhjQD8Cr8Op739M9P5
+ELbAfEs0KtHW7ro3qTMi5KruzloAGgU=
+=+ikl
+-----END PGP SIGNATURE-----
+
+--p5b5zggpj4lv77ke--
