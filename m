@@ -1,15 +1,15 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND, PATCH v13 10/12] soc: mediatek: cmdq: add polling
- function
-Date: Fri, 23 Aug 2019 16:05:27 +0200
-Message-ID: <2dfb6a69-c325-9caf-e11b-bf0f0fbf4bb6@gmail.com>
+Subject: Re: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+Date: Fri, 23 Aug 2019 16:21:44 +0200
+Message-ID: <ccd3782e-b1bb-7887-f4a5-d7774183c7b7@gmail.com>
 References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
- <20190820084932.22282-11-bibby.hsieh@mediatek.com>
+ <20190820084932.22282-12-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190820084932.22282-11-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190820084932.22282-12-bibby.hsieh@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bibby Hsieh <bibby.hsieh@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
@@ -19,103 +19,102 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 20/08/2019 10:49, Bibby Hsieh wrote:
-> add polling function in cmdq helper functions
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 > 
 > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > Reviewed-by: CK Hu <ck.hu@mediatek.com>
 > ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
->  include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
->  3 files changed, 44 insertions(+)
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
+>  2 files changed, 50 insertions(+)
 > 
 > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index e3d5b0be8e79..c53f8476c68d 100644
+> index c53f8476c68d..80f75a1075b4 100644
 > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -221,6 +221,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+> @@ -27,6 +27,35 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
 >  
-> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-> +		  u16 offset, u32 value, u32 mask)
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx)
 > +{
-> +	struct cmdq_instruction *inst;
+
+Can't we do/call this in cmdq_mbox_create parsing the number of gce-client-reg
+properties we have and allocating these using a pointer to cmdq_client_reg in
+cmdq_client?
+We will have to free the pointer then in cmdq_mbox_destroy.
+
+Regards,
+Matthias
+
+> +	struct of_phandle_args spec;
+> +	int err;
 > +
-> +	if (mask != 0xffffffff) {
-
-Is this necessary? Can't we just always set the mask, even if it's 0xffffffff?
-
-Regarding interfaces, depending on how often you expect the mask being ~0 we
-might think of adding a cmdq_pkt_poll_mask call.
-What I want to say, if in the end most of the callers will use the mask with
-0xffffffff, then we should add a call cmdq_pkt_poll_mask which actually allows
-to set the mask and let cmdq_pkt_poll set the mask in it's function body.
-As I already said, this depends on how often you think a caller will use/not-use
-the mask.
-Does this make sense?
-
-> +		inst = cmdq_pkt_append_command(pkt);
-> +		if (!inst)
-> +			return -ENOMEM;
+> +	if (!client_reg)
+> +		return -ENOENT;
 > +
-> +		inst->op = CMDQ_CODE_MASK;
-> +		inst->value = ~mask;
-> +		offset = offset | 0x1;
+> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
+> +					       "mediatek,gce-client-reg",
+> +					       3, idx, &spec);
+> +	if (err < 0) {
+> +		dev_err(dev,
+> +			"error %d can't parse gce-client-reg property (%d)",
+> +			err, idx);
+> +
+> +		return err;
 > +	}
 > +
-> +	inst = cmdq_pkt_append_command(pkt);
-> +	if (!inst)
-> +		return -ENOMEM;
-> +
-> +	inst->op = CMDQ_CODE_POLL;
-> +	inst->value = value;
-> +	inst->offset = offset;
-> +	inst->subsys = subsys;
+> +	client_reg->subsys = (u8)spec.args[0];
+> +	client_reg->offset = (u16)spec.args[1];
+> +	client_reg->size = (u16)spec.args[2];
+> +	of_node_put(spec.np);
 > +
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL(cmdq_pkt_poll);
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
 > +
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  static void cmdq_client_timeout(struct timer_list *t)
 >  {
->  	struct cmdq_instruction *inst;
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index c8adedefaf42..9e3502945bc1 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -46,6 +46,7 @@
->  enum cmdq_code {
->  	CMDQ_CODE_MASK = 0x02,
->  	CMDQ_CODE_WRITE = 0x04,
-> +	CMDQ_CODE_POLL = 0x08,
->  	CMDQ_CODE_JUMP = 0x10,
->  	CMDQ_CODE_WFE = 0x20,
->  	CMDQ_CODE_EOC = 0x40,
+>  	struct cmdq_client *client = from_timer(client, t, timer);
 > diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 9618debb9ceb..a345870a6d10 100644
+> index a345870a6d10..02ddd60b212f 100644
 > --- a/include/linux/soc/mediatek/mtk-cmdq.h
 > +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
->   */
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+> @@ -15,6 +15,12 @@
+>  
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -24,6 +30,21 @@ struct cmdq_client {
+>  	u32 timeout_ms; /* in unit of microsecond */
+>  };
 >  
 > +/**
-> + * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
-> + *		     execute an instruction that wait for a specified hardware
-> + *		     register to check for the value. All GCE hardware
-> + *		     threads will be blocked by this instruction.
-> + * @pkt:	the CMDQ packet
-> + * @subsys:	the CMDQ sub system code
-> + * @offset:	register offset from CMDQ sub system
-> + * @value:	the specified target register value
-> + * @mask:	the specified target register mask
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
+> + *			       node of CMDQ client
+> + * @dev:	device of CMDQ mailbox client
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:	the index of desired reg
 > + *
 > + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client parsing the cmdq client reg
+> + * from the device node of CMDQ client.
 > + */
-> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-> +		  u16 offset, u32 value, u32 mask);
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx);
+> +
 >  /**
->   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
->   *                          packet and call back at the end of done packet
+>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
+>   * @dev:	device of CMDQ mailbox client
 > 
