@@ -1,82 +1,86 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 00/14] arm64: dts: meson: fixes following YAML
- bindings schemas conversion
-Date: Fri, 23 Aug 2019 09:02:34 +0200
-Message-ID: <20190823070248.25832-1-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC 3/3] cpuidle/powernv : Add flags to identify stop state type
+Date: Fri, 23 Aug 2019 02:09:40 -0500
+Message-ID: <20190823070940.43220-4-huntbag@linux.vnet.ibm.com>
+References: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, paulus@samba.org
+Cc: ego@linux.vnet.ibm.com, mikey@neuling.org, daniel.lezcano@linaro.org, rjw@rjwysocki.net, npiggin@gmail.com, Abhishek Goel <huntbag@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the first set of DT fixes following the first YAML bindings conversion
-at [1], [2] and [3].
+Removed threshold latency which was being used to decide if a state
+is cpuidle type or not. This decision can be taken using flags, as this
+information has been encapsulated in the state->flags and being read
+from idle device-tree.
 
-After this set of fixes, the remaining errors are :
-meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
-meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+---
+ arch/powerpc/include/asm/opal-api.h |  7 +++++++
+ drivers/cpuidle/cpuidle-powernv.c   | 16 +++++++++-------
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
-These are only cosmetic changes, and should not break drivers implementation
-following the bindings.
-
-Changes since v2 at [5]:
-- Rebased on khilman's v5.4/dt64 tree
-- Collected Acked-by and Reviewed-by tags from martin
-
-Changes since v1 at [4]:
-- Added suggested commit text from Martin in patches 1 & 2
-- Fixed NanoPi K2 model name
-
-[1] https://patchwork.kernel.org/cover/11083597/
-[2] https://patchwork.kernel.org/cover/11103229/
-[3] https://patchwork.kernel.org/cover/11083649/
-[4] https://patchwork.kernel.org/cover/11094063/
-[5] https://patchwork.kernel.org/cover/11106927/
-
-Neil Armstrong (14):
-  arm64: dts: meson: fix ethernet mac reg format
-  arm64: dts: meson-gx: drop the vpu dmc memory cell
-  arm64: dts: meson-gx: fix reset controller compatible
-  arm64: dts: meson-gx: fix spifc compatible
-  arm64: dts: meson-gx: fix watchdog compatible
-  arm64: dts: meson-gx: fix mhu compatible
-  arm64: dts: meson-gx: fix periphs bus node name
-  arm64: dts: meson-gxl: fix internal phy compatible
-  arm64: dts: meson-axg: fix MHU compatible
-  arm64: dts: meson-g12a: fix reset controller compatible
-  arm64: dts: meson-g12a-x96-max: fix compatible
-  arm64: dts: meson-gxbb-nanopi-k2: add missing model
-  arm64: dts: meson-gxbb-p201: fix snps, reset-delays-us format
-  arm64: dts: meson: fix boards regulators states format
-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  6 +++---
- .../boot/dts/amlogic/meson-g12-common.dtsi    |  7 +++----
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  2 +-
- .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  4 ++--
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi     | 19 +++++++++----------
- .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |  1 +
- .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++--
- .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  |  4 ++--
- .../boot/dts/amlogic/meson-gxbb-p201.dts      |  2 +-
- .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  4 ++--
- .../meson-gxl-s905x-hwacom-amazetv.dts        |  4 ++--
- .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |  4 ++--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  5 +----
- 13 files changed, 31 insertions(+), 35 deletions(-)
-
+diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+index 383242eb0dea..b9068fee21d8 100644
+--- a/arch/powerpc/include/asm/opal-api.h
++++ b/arch/powerpc/include/asm/opal-api.h
+@@ -233,6 +233,13 @@
+ #define OPAL_PM_STOP_INST_FAST		0x00100000
+ #define OPAL_PM_STOP_INST_DEEP		0x00200000
+ 
++/*
++ * Flags for stop states to distinguish between cpuidle and
++ * cpuoffline type of states.
++ */
++#define OPAL_PM_STOP_CPUIDLE		0x01000000
++#define OPAL_PM_STOP_CPUHOTPLUG		0x02000000
++
+ /*
+  * OPAL_CONFIG_CPU_IDLE_STATE parameters
+  */
+diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
+index 1b6c84d4ac77..1a33a548b769 100644
+--- a/drivers/cpuidle/cpuidle-powernv.c
++++ b/drivers/cpuidle/cpuidle-powernv.c
+@@ -270,8 +270,13 @@ static int powernv_add_idle_states(void)
+ 		goto out;
+ 	}
+ 
+-	/* TODO: Count only states which are eligible for cpuidle */
+-	dt_idle_states = nr_pnv_idle_states;
++	/* Count only cpuidle states*/
++	for (i = 0; i < nr_pnv_idle_states; i++) {
++		if (pnv_idle_states[i].flags & OPAL_PM_STOP_CPUIDLE)
++			dt_idle_states++;
++	}
++	pr_info("idle states in dt = %d , states with idle flag = %d",
++				nr_pnv_idle_states, dt_idle_states);
+ 
+ 	/*
+ 	 * Since snooze is used as first idle state, max idle states allowed is
+@@ -300,11 +305,8 @@ static int powernv_add_idle_states(void)
+ 			continue;
+ 		}
+ 
+-		/*
+-		 * If an idle state has exit latency beyond
+-		 * POWERNV_THRESHOLD_LATENCY_NS then don't use it in cpu-idle.
+-		 */
+-		if (state->latency_ns > POWERNV_THRESHOLD_LATENCY_NS) {
++		/* Check whether a state is of cpuidle type */
++		if ((state->flags & OPAL_PM_STOP_CPUIDLE) != state->flags) {
+ 			pr_info("State %d is not idletype\n", i);
+ 			continue;
+ 		}
 -- 
-2.22.0
+2.17.1
