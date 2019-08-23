@@ -1,91 +1,105 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 09/11] phy: phy-mtk-tphy: remove unused u3phya_ref clock
-Date: Fri, 23 Aug 2019 15:00:16 +0800
-Message-ID: <e570f4d2e73da704e51a9c4da6e464988e0cc173.1566542697.git.chunfeng.yun@mediatek.com>
-References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [RFC 0/3] New idle device-tree format and support for versioned stop state
+Date: Fri, 23 Aug 2019 02:09:37 -0500
+Message-ID: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, paulus@samba.org
+Cc: npiggin@gmail.com, mpe@ellerman.id.au, ego@linux.vnet.ibm.com, svaidy@linux.ibm.com, mikey@neuling.org, rjw@rjwysocki.net, daniel.lezcano@linaro.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The u3phya_ref clock is already moved into sub-node, and
-renamed as ref clock, no used anymore now, so remove it,
-this can avoid confusion when support new platforms
+Background
+------------------
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+Previously if a older kernel runs on a newer firmware, it may enable
+all available states irrespective of its capability of handling it.
+Consider a case that some stop state has a bug, we end up disabling all
+the stop states. This patch introduces selective control to solve this
+problem.
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 96c62e3a3300..c6424fd2a06d 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -312,8 +312,6 @@ struct mtk_phy_instance {
- struct mtk_tphy {
- 	struct device *dev;
- 	void __iomem *sif_base;	/* only shared sif */
--	/* deprecated, use @ref_clk instead in phy instance */
--	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
- 	const struct mtk_phy_pdata *pdata;
- 	struct mtk_phy_instance **phys;
- 	int nphys;
-@@ -921,12 +919,6 @@ static int mtk_phy_init(struct phy *phy)
- 	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
- 	int ret;
- 
--	ret = clk_prepare_enable(tphy->u3phya_ref);
--	if (ret) {
--		dev_err(tphy->dev, "failed to enable u3phya_ref\n");
--		return ret;
--	}
--
- 	ret = clk_prepare_enable(instance->ref_clk);
- 	if (ret) {
- 		dev_err(tphy->dev, "failed to enable ref_clk\n");
-@@ -992,7 +984,6 @@ static int mtk_phy_exit(struct phy *phy)
- 		u2_phy_instance_exit(tphy, instance);
- 
- 	clk_disable_unprepare(instance->ref_clk);
--	clk_disable_unprepare(tphy->u3phya_ref);
- 	return 0;
- }
- 
-@@ -1127,11 +1118,6 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	/* it's deprecated, make it optional for backward compatibility */
--	tphy->u3phya_ref = devm_clk_get_optional(dev, "u3phya_ref");
--	if (IS_ERR(tphy->u3phya_ref))
--		return PTR_ERR(tphy->u3phya_ref);
--
- 	tphy->src_ref_clk = U3P_REF_CLK;
- 	tphy->src_coef = U3P_SLEW_RATE_COEF;
- 	/* update parameters of slew rate calibrate if exist */
-@@ -1178,10 +1164,6 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		phy_set_drvdata(phy, instance);
- 		port++;
- 
--		/* if deprecated clock is provided, ignore instance's one */
--		if (tphy->u3phya_ref)
--			continue;
--
- 		instance->ref_clk = devm_clk_get_optional(&phy->dev, "ref");
- 		if (IS_ERR(instance->ref_clk)) {
- 			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
+Previous version of these patches can be found at:
+https://lkml.org/lkml/2018/10/11/544
+These patch however also had patches for support of opal save-restore
+which now I am decoupling and will take them seperately.
+I have posted the corresponding skiboot patches for this kernel patchset
+here : https://patchwork.ozlabs.org/cover/1144587/
+
+What's new?
+--------------------
+
+Add stop states under ibm,idle-states in addition to the current array
+based device tree properties.
+
+New device tree format adds a compatible flag which has version
+corresponding to every state, so that only kernel which has the capability
+to handle the version of stop state will enable it. Drawback of the array
+based dt node is that versioning of idle states is not possible.
+
+Older kernel will still see stop0 and stop0_lite in older format and we
+will deprecate it after some time.
+
+Consider a case that stop4 has a bug. We take the following steps to
+mitigate the problem.
+
+1) Change compatible string for stop4 in OPAL to "stop4,v2" from
+"stop4,v1", i.e. basicallly bump up the previous version and ship the
+new firmware.
+
+2) The kernel will ignore stop4 as it won't be able to recognize this
+new version. Kernel will also ignore all the deeper states because its
+possible that a cpu have requested for a deeper state but was never able
+to enter into it. But we will still have shallower states that are there
+before stop 4. This, thus prevents from completely disabling stop states.
+
+Linux kernel can now look at the version string and decide if it has the
+ability to handle that idle state. Henceforth, if kernel does not know
+about a version, it will skip that state and all the deeper state.
+
+Once when the workaround are implemented into the kernel, we can bump up
+the known version in kernel for that state, so that support can be
+enabled once again in kernel.
+
+New Device-tree :
+
+Final output
+       power-mgt {
+            ...
+         ibm,enabled-stop-levels = <0xec000000>;
+         ibm,cpu-idle-state-psscr-mask = <0x0 0x3003ff 0x0 0x3003ff>;
+         ibm,cpu-idle-state-latencies-ns = <0x3e8 0x7d0>;
+         ibm,cpu-idle-state-psscr = <0x0 0x330 0x0 0x300330>;
+         ibm,cpu-idle-state-flags = <0x100000 0x101000>;
+         ibm,cpu-idle-state-residency-ns = <0x2710 0x4e20>;
+         ibm,idle-states {
+                     stop4 {
+                         flags = <0x207000>;
+                         compatible = "stop4,v1",
+                         psscr-mask = <0x0 0x3003ff>;
+                         latency-ns = <0x186a0>;
+                         residency-ns = <0x989680>;
+                         psscr = <0x0 0x300374>;
+			 ...
+                  };
+                    ...
+                    stop11 {
+                         ...
+                         compatible = "stop11,v1",
+                         ...
+                  };
+             };
+
+
+Abhishek Goel (3):
+  cpuidle/powernv : Pass state pointer instead of values to stop loop
+  cpuidle/powernv: Add support for versioned stop states
+  cpuidle/powernv : Add flags to identify stop state type
+
+ arch/powerpc/include/asm/cpuidle.h    |   8 +-
+ arch/powerpc/include/asm/opal-api.h   |   7 +
+ arch/powerpc/include/asm/processor.h  |   5 +-
+ arch/powerpc/platforms/powernv/idle.c | 371 +++++++++++++++++++++-----
+ drivers/cpuidle/cpuidle-powernv.c     |  81 +++---
+ 5 files changed, 363 insertions(+), 109 deletions(-)
+
 -- 
-2.23.0
+2.17.1
