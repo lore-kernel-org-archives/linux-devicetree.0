@@ -1,150 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt" to the spi tree
-Date: Fri, 23 Aug 2019 12:02:27 +0100 (BST)
-Message-ID: <20190823110227.4885AD02CD3@fitzroy.sirena.org.uk>
-References: <20190822211514.19288-2-olteanv@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
+ nodes
+Date: Fri, 23 Aug 2019 12:07:22 +0100
+Message-ID: <20190823110714.GA10257@e121166-lin.cambridge.arm.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822211514.19288-2-olteanv@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.orgMark Brown <broonie@kernel.org>, netdev@vger.kernel.org
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
+> controller is not fixed, it is determined by the selected
+> SerDes protocol. The current num-lanes indicates the max lanes
+> PCIe controller can support up to, instead of the lanes assigned
+> to the PCIe controller. This can result in PCIe link training fail
+> after hot-reset.
+> 
+> Hou Zhiqiang (4):
+>   dt-bindings: PCI: designware: Remove the num-lanes from Required
+>     properties
+>   PCI: dwc: Return directly when num-lanes is not found
+>   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
+>   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+>  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
+>  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
+>  8 files changed, 4 insertions(+), 22 deletions(-)
 
-   spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
+Applied to pci/dwc for v5.4, thanks.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 12fb61a973935c63f2580b3b053017cc14b51f42 Mon Sep 17 00:00:00 2001
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Fri, 23 Aug 2019 00:15:10 +0300
-Subject: [PATCH] spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
-
-If the entire function depends on the SPI status register having the
-interrupt bits asserted, then just check it and exit early if those bits
-aren't set (such as in the case of the shared IRQ being triggered for
-the other peripheral). Cosmetic patch.
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Link: https://lore.kernel.org/r/20190822211514.19288-2-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-fsl-dspi.c | 79 +++++++++++++++++++-------------------
- 1 file changed, 40 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 790cb02fc181..c90db7db4121 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -658,47 +658,48 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
- 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
- 
-+	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
-+		return IRQ_HANDLED;
-+
-+	/* Get transfer counter (in number of SPI transfers). It was
-+	 * reset to 0 when transfer(s) were started.
-+	 */
-+	regmap_read(dspi->regmap, SPI_TCR, &spi_tcr);
-+	spi_tcnt = SPI_TCR_GET_TCNT(spi_tcr);
-+	/* Update total number of bytes that were transferred */
-+	msg->actual_length += spi_tcnt * dspi->bytes_per_word;
-+
-+	trans_mode = dspi->devtype_data->trans_mode;
-+	switch (trans_mode) {
-+	case DSPI_EOQ_MODE:
-+		dspi_eoq_read(dspi);
-+		break;
-+	case DSPI_TCFQ_MODE:
-+		dspi_tcfq_read(dspi);
-+		break;
-+	default:
-+		dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
-+			trans_mode);
-+			return IRQ_HANDLED;
-+	}
- 
--	if (spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)) {
--		/* Get transfer counter (in number of SPI transfers). It was
--		 * reset to 0 when transfer(s) were started.
--		 */
--		regmap_read(dspi->regmap, SPI_TCR, &spi_tcr);
--		spi_tcnt = SPI_TCR_GET_TCNT(spi_tcr);
--		/* Update total number of bytes that were transferred */
--		msg->actual_length += spi_tcnt * dspi->bytes_per_word;
--
--		trans_mode = dspi->devtype_data->trans_mode;
--		switch (trans_mode) {
--		case DSPI_EOQ_MODE:
--			dspi_eoq_read(dspi);
--			break;
--		case DSPI_TCFQ_MODE:
--			dspi_tcfq_read(dspi);
--			break;
--		default:
--			dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
--				trans_mode);
--				return IRQ_HANDLED;
--		}
-+	if (!dspi->len) {
-+		dspi->waitflags = 1;
-+		wake_up_interruptible(&dspi->waitq);
-+		return IRQ_HANDLED;
-+	}
- 
--		if (!dspi->len) {
--			dspi->waitflags = 1;
--			wake_up_interruptible(&dspi->waitq);
--		} else {
--			switch (trans_mode) {
--			case DSPI_EOQ_MODE:
--				dspi_eoq_write(dspi);
--				break;
--			case DSPI_TCFQ_MODE:
--				dspi_tcfq_write(dspi);
--				break;
--			default:
--				dev_err(&dspi->pdev->dev,
--					"unsupported trans_mode %u\n",
--					trans_mode);
--			}
--		}
-+	switch (trans_mode) {
-+	case DSPI_EOQ_MODE:
-+		dspi_eoq_write(dspi);
-+		break;
-+	case DSPI_TCFQ_MODE:
-+		dspi_tcfq_write(dspi);
-+		break;
-+	default:
-+		dev_err(&dspi->pdev->dev,
-+			"unsupported trans_mode %u\n",
-+			trans_mode);
- 	}
- 
- 	return IRQ_HANDLED;
--- 
-2.20.1
+Lorenzo
