@@ -1,93 +1,44 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 2/2] arm64: dts: meson: g12a: add reset to tdm formatters
-Date: Fri, 23 Aug 2019 17:44:32 +0200
-Message-ID: <20190823154432.16268-3-jbrunet@baylibre.com>
-References: <20190823154432.16268-1-jbrunet@baylibre.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 03/11] dt-bindings: irq: mtk,sysirq: add support for
+ mt6779
+Date: Fri, 23 Aug 2019 17:44:52 +0200
+Message-ID: <72f68d3b-1011-5746-7bb0-8bc40ce0961d@gmail.com>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+ <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823154432.16268-1-jbrunet@baylibre.com>
+In-Reply-To: <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+To: Mars Cheng <mars.cheng@mediatek.com>, Rob Herring <robh@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the reset to the TDM formatters of the g12a. This helps
-with channel mapping when a playback/capture uses more than 1 lane.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index edbc30572958..ee1b71284a83 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
-+#include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
- #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
- 
- / {
-@@ -1543,6 +1544,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x300 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_A";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_A>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_A>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_A_SCLK_SEL>,
-@@ -1558,6 +1560,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x340 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_B";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_B>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_B>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_B_SCLK_SEL>,
-@@ -1573,6 +1576,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x380 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_C";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_C>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_C>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_C_SCLK_SEL>,
-@@ -1588,6 +1592,7 @@
- 						     "amlogic,axg-tdmin";
- 					reg = <0x0 0x3c0 0x0 0x40>;
- 					sound-name-prefix = "TDMIN_LB";
-+					resets = <&clkc_audio AUD_RESET_TDMIN_LB>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMIN_LB>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMIN_LB_SCLK_SEL>,
-@@ -1627,6 +1632,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x500 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_A";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_A>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-@@ -1641,6 +1647,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x540 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_B";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_B>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
-@@ -1655,6 +1662,7 @@
- 					compatible = "amlogic,g12a-tdmout";
- 					reg = <0x0 0x580 0x0 0x40>;
- 					sound-name-prefix = "TDMOUT_C";
-+					resets = <&clkc_audio AUD_RESET_TDMOUT_C>;
- 					clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
- 						 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
--- 
-2.21.0
+On 19/08/2019 11:21, Mars Cheng wrote:
+> Add binding documentation of mediatek,sysirq for mt6779 SoC.
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> index 0e312fe..84ced3f 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>  	"mediatek,mt7629-sysirq", "mediatek,mt6577-sysirq": for MT7629
+>  	"mediatek,mt6795-sysirq", "mediatek,mt6577-sysirq": for MT6795
+>  	"mediatek,mt6797-sysirq", "mediatek,mt6577-sysirq": for MT6797
+> +	"mediatek,mt6779-sysirq", "mediatek,mt6577-sysirq": for MT6779
+>  	"mediatek,mt6765-sysirq", "mediatek,mt6577-sysirq": for MT6765
+>  	"mediatek,mt6755-sysirq", "mediatek,mt6577-sysirq": for MT6755
+>  	"mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq": for MT6592
+> 
