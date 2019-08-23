@@ -1,7 +1,7 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [RFCv4 6/7] soc: imx8mm: Register interconnect platform device
-Date: Fri, 23 Aug 2019 17:36:59 +0300
-Message-ID: <d900252a824b9a5f34fa6d2b49343bc359e62a14.1566570260.git.leonard.crestez@nxp.com>
+Subject: [RFCv4 7/7] arm64: dts: imx8mm: Add interconnect properties
+Date: Fri, 23 Aug 2019 17:37:00 +0300
+Message-ID: <8c3fb831b3c146cf3267c05e4b1f6c88613dceed.1566570260.git.leonard.crestez@nxp.com>
 References: <cover.1566570260.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,57 +23,55 @@ To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org, Saravana Kannan <saravanak@google.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Since there is no virtual devicetree node representing the interconnect
-we need to probe the icc device externally. Probing this from the SOC
-driver allows the interconnect device to be built as a module.
-
-This is very similar to imx-cpufreq-dt.
+Add #interconnect-cells and interconnect-node-id properties on devfreq
+nodes. The imx interconnect provider will scan these.
 
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- drivers/soc/imx/soc-imx8.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
-index b9831576dd25..24d515a9fdb2 100644
---- a/drivers/soc/imx/soc-imx8.c
-+++ b/drivers/soc/imx/soc-imx8.c
-@@ -22,10 +22,11 @@
- /* Same as ANADIG_DIGPROG_IMX7D */
- #define ANADIG_DIGPROG_IMX8MM	0x800
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 5474c50784c2..8b5442d8b1b2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -6,10 +6,11 @@
+ #include <dt-bindings/clock/imx8mm-clock.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/thermal/thermal.h>
++#include <dt-bindings/interconnect/imx8mm.h>
  
- struct imx8_soc_data {
- 	char *name;
-+	char *icc_driver;
- 	u32 (*soc_revision)(void);
- };
+ #include "imx8mm-pinfunc.h"
  
- static u64 soc_uid;
+ / {
+ 	compatible = "fsl,imx8mm";
+@@ -806,10 +807,12 @@
+ 		noc: noc@32700000 {
+ 			compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
+ 			reg = <0x32700000 0x100000>;
+ 			clocks = <&clk IMX8MM_CLK_NOC>;
+ 			devfreq = <&ddrc>;
++			#interconnect-cells = <1>;
++			interconnect-node-id = <IMX8MM_ICN_NOC>;
+ 			operating-points-v2 = <&noc_opp_table>;
+ 		};
  
-@@ -115,10 +116,11 @@ static const struct imx8_soc_data imx8mq_soc_data = {
- };
+ 		aips4: bus@32c00000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+@@ -896,10 +899,12 @@
+ 		};
  
- static const struct imx8_soc_data imx8mm_soc_data = {
- 	.name = "i.MX8MM",
- 	.soc_revision = imx8mm_soc_revision,
-+	.icc_driver = "imx8mm-interconnect",
- };
- 
- static const struct imx8_soc_data imx8mn_soc_data = {
- 	.name = "i.MX8MN",
- 	.soc_revision = imx8mm_soc_revision,
-@@ -185,10 +187,12 @@ static int __init imx8_soc_init(void)
- 	if (ret)
- 		goto free_rev;
- 
- 	if (IS_ENABLED(CONFIG_ARM_IMX_CPUFREQ_DT))
- 		platform_device_register_simple("imx-cpufreq-dt", -1, NULL, 0);
-+	if (IS_ENABLED(CONFIG_INTERCONNECT_IMX))
-+		platform_device_register_simple(data->icc_driver, -1, NULL, 0);
- 
- 	return 0;
- 
- free_rev:
- 	if (strcmp(soc_dev_attr->revision, "unknown"))
+ 		ddrc: dram-controller@3d400000 {
+ 			compatible = "fsl,imx8mm-ddrc", "fsl,imx8m-ddrc";
+ 			reg = <0x3d400000 0x400000>;
++			#interconnect-cells = <1>;
++			interconnect-node-id = <IMX8MM_ICS_DRAM>;
+ 			clock-names = "dram_core",
+ 				      "dram_pll",
+ 				      "dram_alt",
+ 				      "dram_apb";
+ 			clocks = <&clk IMX8MM_CLK_DRAM_CORE>,
 -- 
 2.17.1
