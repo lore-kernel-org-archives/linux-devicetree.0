@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH next v10 09/11] usb: common: create Kconfig file
-Date: Fri, 23 Aug 2019 15:57:19 +0800
-Message-ID: <1566547041-20804-10-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v10 08/11] usb: roles: get usb-role-switch from parent
+Date: Fri, 23 Aug 2019 15:57:18 +0800
+Message-ID: <1566547041-20804-9-git-send-email-chunfeng.yun@mediatek.com>
 References: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,116 +12,79 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Create Kconfig file for USB common core, and move USB_LED_TRIG
-and USB_ULPI_BUS configs into the new file from the parent Kconfig,
-it will help to add new configs later.
+when the USB host controller is the parent of the connector,
+usually type-B, sometimes don't need the graph, so we should
+check whether it's parent registers usb-role-switch or not
+firstly, and get it if exists.
 
+Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v9~v10: no changes
+v10: no changes
 
-v8:
+v9:
+  1. replace signed-off-by by suggested-by Heikki
+  2. use class_find_device_by_fwnode()
+
+v8: no changes
+v7:
+  add signed-off-by Chunfeng
+
+v6:
   new patch
 ---
- drivers/usb/Kconfig        | 35 +----------------------------------
- drivers/usb/common/Kconfig | 38 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 34 deletions(-)
- create mode 100644 drivers/usb/common/Kconfig
+ drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-index 6e59d370ef81..7bf94e65ed2f 100644
---- a/drivers/usb/Kconfig
-+++ b/drivers/usb/Kconfig
-@@ -36,8 +36,7 @@ menuconfig USB_SUPPORT
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index 2abb6fe384ca..94b4e7db2b94 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -102,6 +102,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+ }
  
- if USB_SUPPORT
++static struct usb_role_switch *
++usb_role_switch_is_parent(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
++	struct device *dev;
++
++	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
++		return NULL;
++
++	dev = class_find_device_by_fwnode(role_class, parent);
++	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
++}
++
+ /**
+  * usb_role_switch_get - Find USB role switch linked with the caller
+  * @dev: The caller device
+@@ -113,8 +126,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ {
+ 	struct usb_role_switch *sw;
  
--config USB_COMMON
--	tristate
-+source "drivers/usb/common/Kconfig"
+-	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(dev_fwnode(dev));
++	if (!sw)
++		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
++						  usb_role_switch_match);
  
- config USB_ARCH_HAS_HCD
- 	def_bool y
-@@ -175,36 +174,4 @@ source "drivers/usb/typec/Kconfig"
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
+@@ -134,8 +149,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
+ {
+ 	struct usb_role_switch *sw;
  
- source "drivers/usb/roles/Kconfig"
+-	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
+-					  usb_role_switch_match);
++	sw = usb_role_switch_is_parent(fwnode);
++	if (!sw)
++		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
++						  NULL, usb_role_switch_match);
+ 	if (!IS_ERR_OR_NULL(sw))
+ 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
  
--config USB_LED_TRIG
--	bool "USB LED Triggers"
--	depends on LEDS_CLASS && LEDS_TRIGGERS
--	select USB_COMMON
--	help
--	  This option adds LED triggers for USB host and/or gadget activity.
--
--	  Say Y here if you are working on a system with led-class supported
--	  LEDs and you want to use them as activity indicators for USB host or
--	  gadget.
--
--config USB_ULPI_BUS
--	tristate "USB ULPI PHY interface support"
--	select USB_COMMON
--	help
--	  UTMI+ Low Pin Interface (ULPI) is specification for a commonly used
--	  USB 2.0 PHY interface. The ULPI specification defines a standard set
--	  of registers that can be used to detect the vendor and product which
--	  allows ULPI to be handled as a bus. This module is the driver for that
--	  bus.
--
--	  The ULPI interfaces (the buses) are registered by the drivers for USB
--	  controllers which support ULPI register access and have ULPI PHY
--	  attached to them. The ULPI PHY drivers themselves are normal PHY
--	  drivers.
--
--	  ULPI PHYs provide often functions such as ADP sensing/probing (OTG
--	  protocol) and USB charger detection.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called ulpi.
--
- endif # USB_SUPPORT
-diff --git a/drivers/usb/common/Kconfig b/drivers/usb/common/Kconfig
-new file mode 100644
-index 000000000000..848545b099cf
---- /dev/null
-+++ b/drivers/usb/common/Kconfig
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+config USB_COMMON
-+	tristate
-+
-+
-+config USB_LED_TRIG
-+	bool "USB LED Triggers"
-+	depends on LEDS_CLASS && LEDS_TRIGGERS
-+	select USB_COMMON
-+	help
-+	  This option adds LED triggers for USB host and/or gadget activity.
-+
-+	  Say Y here if you are working on a system with led-class supported
-+	  LEDs and you want to use them as activity indicators for USB host or
-+	  gadget.
-+
-+config USB_ULPI_BUS
-+	tristate "USB ULPI PHY interface support"
-+	select USB_COMMON
-+	help
-+	  UTMI+ Low Pin Interface (ULPI) is specification for a commonly used
-+	  USB 2.0 PHY interface. The ULPI specification defines a standard set
-+	  of registers that can be used to detect the vendor and product which
-+	  allows ULPI to be handled as a bus. This module is the driver for that
-+	  bus.
-+
-+	  The ULPI interfaces (the buses) are registered by the drivers for USB
-+	  controllers which support ULPI register access and have ULPI PHY
-+	  attached to them. The ULPI PHY drivers themselves are normal PHY
-+	  drivers.
-+
-+	  ULPI PHYs provide often functions such as ADP sensing/probing (OTG
-+	  protocol) and USB charger detection.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called ulpi.
-+
 -- 
 2.23.0
