@@ -1,286 +1,374 @@
-From: Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
-Date: Fri, 23 Aug 2019 13:28:35 +0800
-Message-ID: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH v4 6/8] arm64: dts: qcom: sm8150-mtp: Add regulators
+Date: Fri, 23 Aug 2019 11:35:35 +0530
+Message-ID: <2000d2ae8b0c3ee079cce75233b53330@codeaurora.org>
+References: <20190821184239.12364-1-vkoul@kernel.org>
+ <20190821184239.12364-7-vkoul@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
-In-Reply-To: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+In-Reply-To: <20190821184239.12364-7-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add driver for the reset controller present on Intel
-Lightening Mountain (LGM) SoC for performing reset
-management of the devices present on the SoC. Driver also
-registers a reset handler to peform the entire device reset.
-
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
-Changes on v2:
-	No changes
-
- drivers/reset/Kconfig              |  10 ++
- drivers/reset/Makefile             |   1 +
- drivers/reset/reset-intel-syscon.c | 215 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 226 insertions(+)
- create mode 100644 drivers/reset/reset-intel-syscon.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 6d5d76db55b0..e0fd14cb4cf5 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -64,6 +64,16 @@ config RESET_IMX7
- 	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
- 
-+config RESET_INTEL_SYSCON
-+	bool "Intel SYSCON Reset Driver"
-+	depends on HAS_IOMEM
-+	select MFD_SYSCON
-+	help
-+	  This enables the reset driver support for Intel SoC devices with
-+	  memory-mapped reset registers as part of a syscon device node. If
-+	  you wish to use the reset framework for such memory-mapped devices,
-+	  say Y here. Otherwise, say N.
-+
- config RESET_LANTIQ
- 	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
- 	default SOC_TYPE_XWAY
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 61456b8f659c..6d68c50c7e89 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-+obj-$(CONFIG_RESET_INTEL_SYSCON) += reset-intel-syscon.o
- obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
- obj-$(CONFIG_RESET_MESON) += reset-meson.o
-diff --git a/drivers/reset/reset-intel-syscon.c b/drivers/reset/reset-intel-syscon.c
-new file mode 100644
-index 000000000000..6377a0cac1e7
---- /dev/null
-+++ b/drivers/reset/reset-intel-syscon.c
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+
-+struct intel_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct notifier_block restart_nb;
-+	struct device *dev;
-+	struct regmap *regmap;
-+	u32 reboot_id;
-+};
-+
-+/* reset platform data */
-+#define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
-+
-+/*
-+ * Reset status register offset relative to
-+ * the reset control register(X) is X + 4
-+ */
-+static inline u32 id_to_reg_bit_and_offset(unsigned long id,
-+					   u32 *regbit, u32 *regoff)
-+{
-+	*regoff = id >> 8;
-+	*regbit = id & 0x1f;
-+	return *regoff + 0x4;
-+}
-+
-+static int intel_set_clr_bits(struct intel_reset_data *data,
-+			      unsigned long id, bool set, u64 timeout)
-+{
-+	u32 regoff, regbit;
-+	u32 stat_off;
-+	u32 val;
-+	int ret;
-+
-+	stat_off = id_to_reg_bit_and_offset(id, &regbit, &regoff);
-+
-+	val = set ? BIT(regbit) : 0;
-+	ret = regmap_update_bits(data->regmap, regoff,  BIT(regbit), val);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_read_poll_timeout(data->regmap, stat_off, val,
-+					set == !!(val & BIT(regbit)),
-+					20, timeout);
-+}
-+
-+static int intel_assert_device(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, 1, 200);
-+	if (ret)
-+		dev_err(data->dev, "Failed to set reset assert bit %d\n", ret);
-+	return ret;
-+}
-+
-+static int intel_deassert_device(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, 0, 200);
-+	if (ret)
-+		dev_err(data->dev,
-+			"Failed to set reset deassert bit %d\n", ret);
-+	return ret;
-+}
-+
-+static int intel_reset_device(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, 1, 20000);
-+	if (ret)
-+		dev_err(data->dev, "Failed to reset device %d\n", ret);
-+	return ret;
-+}
-+
-+static int intel_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	u32 regoff, regbit;
-+	u32 stat_off;
-+	u32 val;
-+	int ret;
-+
-+	stat_off = id_to_reg_bit_and_offset(id, &regbit, &regoff);
-+	ret = regmap_read(data->regmap, stat_off, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(regbit));
-+}
-+
-+static const struct reset_control_ops intel_reset_ops = {
-+	.reset		= intel_reset_device,
-+	.assert		= intel_assert_device,
-+	.deassert	= intel_deassert_device,
-+	.status		= intel_reset_status,
-+};
-+
-+static int intel_reset_xlate(struct reset_controller_dev *rcdev,
-+			     const struct of_phandle_args *spec)
-+{
-+	u32 offset, bit;
-+
-+	offset = spec->args[0];
-+	bit = spec->args[1];
-+
-+	return (offset << 8) | (bit & 0x1f);
-+}
-+
-+static int intel_reset_restart_handler(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct intel_reset_data *reset_data =
-+		container_of(nb, struct intel_reset_data, restart_nb);
-+
-+	intel_assert_device(&reset_data->rcdev, reset_data->reboot_id);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int intel_reset_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct intel_reset_data *data;
-+	struct regmap *regmap;
-+	u32 rb_id[2];
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to get reset controller regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	ret = device_property_read_u32_array(dev, "intel,global-reset",
-+					     rb_id, ARRAY_SIZE(rb_id));
-+	if (ret) {
-+		dev_err(dev, "Failed to get global reset offset!\n");
-+		return ret;
-+	}
-+
-+	data->dev		= dev;
-+	data->reboot_id		= (rb_id[0] << 8) | rb_id[1];
-+	data->regmap		= regmap;
-+	data->rcdev.of_node	= np;
-+	data->rcdev.owner	= dev->driver->owner;
-+	data->rcdev.ops		= &intel_reset_ops;
-+	data->rcdev.of_xlate	= intel_reset_xlate;
-+	data->rcdev.of_reset_n_cells = 2;
-+
-+	ret = devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+	if (ret)
-+		return ret;
-+
-+	data->restart_nb.notifier_call	= intel_reset_restart_handler;
-+	data->restart_nb.priority	= 128;
-+
-+	register_restart_handler(&data->restart_nb);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id intel_reset_match[] = {
-+	{ .compatible = "intel,rcu-lgm" },
-+	{}
-+};
-+
-+static struct platform_driver intel_reset_driver = {
-+	.probe = intel_reset_probe,
-+	.driver = {
-+		.name = "intel-reset-syscon",
-+		.of_match_table = intel_reset_match,
-+	},
-+};
-+
-+static int __init intel_reset_init(void)
-+{
-+	return platform_driver_register(&intel_reset_driver);
-+}
-+
-+/*
-+ * RCU is system core entity which is in Always On Domain whose clocks
-+ * or resource initialization happens in system core initialization.
-+ * Also, it is required for most of the platform or architecture
-+ * specific devices to perform reset operation as part of initialization.
-+ * So perform RCU as post core initialization.
-+ */
-+postcore_initcall(intel_reset_init);
--- 
-2.11.0
+On 2019-08-22 00:12, Vinod Koul wrote:
+> Add the regulators found in the mtp platform. This platform consists of
+> pmic PM8150, PM8150L and PM8009.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 324 ++++++++++++++++++++++++
+>  1 file changed, 324 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> index 6f5777f530ae..aa5de42fcae4 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -6,6 +6,7 @@
+> 
+>  /dts-v1/;
+> 
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>  #include "sm8150.dtsi"
+>  #include "pm8150.dtsi"
+>  #include "pm8150b.dtsi"
+> @@ -22,6 +23,329 @@
+>  	chosen {
+>  		stdout-path = "serial0:115200n8";
+>  	};
+> +
+> +	vph_pwr: vph-pwr-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vph_pwr";
+> +		regulator-min-microvolt = <3700000>;
+> +		regulator-max-microvolt = <3700000>;
+> +	};
+> +
+> +	/*
+> +	 * Apparently RPMh does not provide support for PM8150 S4 because it
+> +	 * is always-on; model it as a fixed regulator.
+> +	 */
+> +	vreg_s4a_1p8: pm8150-s4 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_s4a_1p8";
+> +
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +
+> +		vin-supply = <&vph_pwr>;
+> +	};
+> +};
+> +
+> +&apps_rsc {
+> +	pm8150-rpmh-regulators {
+> +		compatible = "qcom,pm8150-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s2-supply = <&vph_pwr>;
+> +		vdd-s3-supply = <&vph_pwr>;
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +		vdd-s6-supply = <&vph_pwr>;
+> +		vdd-s7-supply = <&vph_pwr>;
+> +		vdd-s8-supply = <&vph_pwr>;
+> +		vdd-s9-supply = <&vph_pwr>;
+> +		vdd-s10-supply = <&vph_pwr>;
+> +
+> +		vdd-l1-l8-l11-supply = <&vreg_s6a_0p9>;
+> +		vdd-l2-l10-supply = <&vreg_bob>;
+> +		vdd-l3-l4-l5-l18-supply = <&vreg_s6a_0p9>;
+You no need to vote for the parent supply from the Linux driver. The 
+parent/child dependency is completely taken care by the
+AOP/RPMh. Voting on the parent will create unnecessary additional RPMh 
+transactions, which may degrade the performance.
+> +		vdd-l6-l9-supply = <&vreg_s8c_1p3>;
+> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p0>;
+> +		vdd-l13-l16-l17-supply = <&vreg_bob>;
+> +
+> +		vreg_s5a_2p0: smps5 {
+> +			regulator-min-microvolt = <1904000>;
+> +			regulator-max-microvolt = <2000000>;
+> +		};
+> +
+> +		vreg_s6a_0p9: smps6 {
+> +			regulator-min-microvolt = <920000>;
+> +			regulator-max-microvolt = <1128000>;
+> +		};
+> +
+> +		vdda_wcss_pll:
+> +		vreg_l1a_0p75: ldo1 {
+> +			regulator-min-microvolt = <752000>;
+> +			regulator-max-microvolt = <752000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vdd_pdphy:
+> +		vdda_usb_hs_3p1:
+> +		vreg_l2a_3p1: ldo2 {
+> +			regulator-min-microvolt = <3072000>;
+> +			regulator-max-microvolt = <3072000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l3a_0p8: ldo3 {
+> +			regulator-min-microvolt = <480000>;
+> +			regulator-max-microvolt = <932000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vdd_usb_hs_core:
+> +		vdda_csi_0_0p9:
+> +		vdda_csi_1_0p9:
+> +		vdda_csi_2_0p9:
+> +		vdda_csi_3_0p9:
+> +		vdda_dsi_0_0p9:
+> +		vdda_dsi_1_0p9:
+> +		vdda_dsi_0_pll_0p9:
+> +		vdda_dsi_1_pll_0p9:
+> +		vdda_pcie_1ln_core:
+> +		vdda_pcie_2ln_core:
+> +		vdda_pll_hv_cc_ebi01:
+> +		vdda_pll_hv_cc_ebi23:
+> +		vdda_qrefs_0p875_5:
+> +		vdda_sp_sensor:
+> +		vdda_ufs_2ln_core_1:
+> +		vdda_ufs_2ln_core_2:
+> +		vdda_usb_ss_dp_core_1:
+> +		vdda_usb_ss_dp_core_2:
+> +		vdda_qlink_lv:
+> +		vdda_qlink_lv_ck:
+> +		vreg_l5a_0p875: ldo5 {
+> +			regulator-min-microvolt = <880000>;
+> +			regulator-max-microvolt = <880000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l6a_1p2: ldo6 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l7a_1p8: ldo7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_10:
+> +		vreg_l9a_1p2: ldo9 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l10a_2p5: ldo10 {
+> +			regulator-min-microvolt = <2504000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l11a_0p8: ldo11 {
+> +			regulator-min-microvolt = <800000>;
+> +			regulator-max-microvolt = <800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vdd_qfprom:
+> +		vdd_qfprom_sp:
+> +		vdda_apc_cs_1p8:
+> +		vdda_gfx_cs_1p8:
+> +		vdda_usb_hs_1p8:
+> +		vdda_qrefs_vref_1p8:
+> +		vddpx_10_a:
+> +		vreg_l12a_1p8: ldo12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l13a_2p7: ldo13 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2704000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l14a_1p8: ldo14 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1880000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l15a_1p7: ldo15 {
+> +			regulator-min-microvolt = <1704000>;
+> +			regulator-max-microvolt = <1704000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l16a_2p7: ldo16 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l17a_3p0: ldo17 {
+> +			regulator-min-microvolt = <2856000>;
+> +			regulator-max-microvolt = <3008000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +	};
+> +
+> +	pm8150l-rpmh-regulators {
+> +		compatible = "qcom,pm8150l-rpmh-regulators";
+> +		qcom,pmic-id = "c";
+> +
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s2-supply = <&vph_pwr>;
+> +		vdd-s3-supply = <&vph_pwr>;
+> +		vdd-s4-supply = <&vph_pwr>;
+> +		vdd-s5-supply = <&vph_pwr>;
+> +		vdd-s6-supply = <&vph_pwr>;
+> +		vdd-s7-supply = <&vph_pwr>;
+> +		vdd-s8-supply = <&vph_pwr>;
+> +
+> +		vdd-l1-l8-supply = <&vreg_s4a_1p8>;
+> +		vdd-l2-l3-supply = <&vreg_s8c_1p3>;
+> +		vdd-l4-l5-l6-supply = <&vreg_bob>;
+> +		vdd-l7-l11-supply = <&vreg_bob>;
+> +		vdd-l9-l10-supply = <&vreg_bob>;
+> +
+> +		vdd-bob-supply = <&vph_pwr>;
+> +		vdd-flash-supply = <&vreg_bob>;
+> +		vdd-rgb-supply = <&vreg_bob>;
+> +
+> +		vreg_bob: bob {
+> +			regulator-min-microvolt = <3008000>;
+> +			regulator-max-microvolt = <4000000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
+> +			regulator-allow-bypass;
+> +		};
+> +
+> +		vreg_s8c_1p3: smps8 {
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+> +		};
+> +
+> +		vreg_l1c_1p8: ldo1 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vdda_wcss_adcdac_1:
+> +		vdda_wcss_adcdac_22:
+> +		vreg_l2c_1p3: ldo2 {
+> +			regulator-min-microvolt = <1304000>;
+> +			regulator-max-microvolt = <1304000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vdda_hv_ebi0:
+> +		vdda_hv_ebi1:
+> +		vdda_hv_ebi2:
+> +		vdda_hv_ebi3:
+> +		vdda_hv_refgen0:
+> +		vdda_qlink_hv_ck:
+> +		vreg_l3c_1p2: ldo3 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_5:
+> +		vreg_l4c_1p8: ldo4 {
+> +			regulator-min-microvolt = <1704000>;
+> +			regulator-max-microvolt = <2928000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_6:
+> +		vreg_l5c_1p8: ldo5 {
+> +			regulator-min-microvolt = <1704000>;
+> +			regulator-max-microvolt = <2928000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_2:
+> +		vreg_l6c_2p9: ldo6 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l7c_3p0: ldo7 {
+> +			regulator-min-microvolt = <2856000>;
+> +			regulator-max-microvolt = <3104000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l8c_1p8: ldo8 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l9c_2p9: ldo9 {
+> +			regulator-min-microvolt = <2704000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l10c_3p3: ldo10 {
+> +			regulator-min-microvolt = <3000000>;
+> +			regulator-max-microvolt = <3312000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l11c_3p3: ldo11 {
+> +			regulator-min-microvolt = <3000000>;
+> +			regulator-max-microvolt = <3312000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +	};
+> +
+> +	pm8009-rpmh-regulators {
+> +		compatible = "qcom,pm8009-rpmh-regulators";
+> +		qcom,pmic-id = "f";
+> +
+> +		vdd-s1-supply = <&vph_pwr>;
+> +		vdd-s2-supply = <&vreg_bob>;
+> +
+> +		vdd-l2-supply = <&vreg_s8c_1p3>;
+> +		vdd-l5-l6-supply = <&vreg_bob>;
+> +
+> +		vreg_l2f_1p2: ldo2 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l5f_2p85: ldo5 {
+> +			regulator-min-microvolt = <2800000>;
+> +			regulator-max-microvolt = <2800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l6f_2p85: ldo6 {
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +			regulator-min-microvolt = <2856000>;
+> +			regulator-max-microvolt = <2856000>;
+> +		};
+> +	};
+>  };
+> 
+>  &qupv3_id_1 {
