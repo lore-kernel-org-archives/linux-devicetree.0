@@ -1,46 +1,69 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from
- core driver
-Date: Fri, 23 Aug 2019 17:42:05 +0200
-Message-ID: <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
- <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
- <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
- <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus
+ probe
+Date: Fri, 23 Aug 2019 10:42:49 -0500
+Message-ID: <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
+References: <20190820145834.7301-1-dinguyen@kernel.org>
+ <20190820145834.7301-2-dinguyen@kernel.org>
+ <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
+In-Reply-To: <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: frank-w@public-files.de, linux-mediatek@lists.infradead.org, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, linux-rtc@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 23/08/2019 17:26, Frank Wunderlich wrote:
+On 8/23/19 4:19 AM, Linus Walleij wrote:
+> On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
 > 
+>> @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>>         ret = amba_get_enable_pclk(dev);
+>>         if (ret == 0) {
+>>                 u32 pid, cid;
+>> +               int count;
+>> +               struct reset_control *rstc;
+>> +
+>> +               /*
+>> +                * Find reset control(s) of the amba bus and de-assert them.
+>> +                */
+>> +               count = reset_control_get_count(&dev->dev);
+>> +               while (count > 0) {
+>> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
+>> +                       if (IS_ERR(rstc)) {
+>> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
+>> +                                       ret = -EPROBE_DEFER;
+>> +                               else
+>> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
+>> +                               break;
+>> +                       }
+>> +                       reset_control_deassert(rstc);
+>> +                       reset_control_put(rstc);
+>> +                       count--;
+>> +               }
 > 
-> Am 23. August 2019 16:56:13 MESZ schrieb Matthias Brugger <matthias.bgg@gmail.com>:
->> are you sure that you provide the correct chip_id here? I saw 0x2023
->> (if I
->> remember correctly), while this switch checks for 0x23, 0x91 and 0x97,
->> so I'm
->> not sure if the problem really lies here. I didn't dig into the code to
->> find out
->> how the chip_id is created.
+> I'm not normally a footprint person, but the looks of the stubs in
+> <linux/reset.h> makes me suspicious whether this will have zero impact
+> in size on platforms without reset controllers.
 > 
-> The chip-id 0x2023 is reported with 5.3-rc5, next-code says 0x0. So i guess the chipid is read out/calculated the wrong way. If calculation is not changed the read is changed compared to 5.3
+> Can you just ls -al on the kernel without CONFIG_RESET_CONTROLLER
+> before and after this patch and ascertain that it has zero footprint effect?
+
+Thanks for the review. I checked it, and indeed, it does have a zero
+footprint effect.
+
+> 
+> If it doesn't I'd sure like to break this into its own function and
+> stick a if (!IS_ENABLED(CONFIG_RESET_CONTROLLER)) return 0;
+> in there to make sure the compiler drops it.
+> 
+> Also it'd be nice to get Philipp's ACK on the semantics, though they
+> look correct to me.
 > 
 
-I suppose that's because 3/10 has code that should be in 2/10 and for some
-reason 3/10 was not pushed for linux-next inclusion. Although it has the same
-Acked-for-mfd-by tag.
-
-@Frank, can you test if adding 3/10 to your code base fixes the issue?
-
-Regards,
-Matthias
+Dinh
