@@ -1,158 +1,315 @@
-Return-Path: <SRS0=Op4i=V6=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH/RFC 12/12] arm64: dts: renesas: Add EK874 board with idk-2121wr display support
-Date: Fri,  2 Aug 2019 08:34:09 +0100
-Message-Id: <1564731249-22671-13-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1564731249-22671-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, ebiharaml@si-linux.co.jp
+Return-Path: <SRS0=Y/5d=WT=codeaurora.org=govinds@kernel.org>
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH_v3 2/2] clk: qcom: Add Q6SSTOP clock controller for QCS404
+Date: Fri, 23 Aug 2019 18:44:01 +0530
+Message-Id: <20190823131401.4011-3-govinds@codeaurora.org>
+In-Reply-To: <20190823131401.4011-1-govinds@codeaurora.org>
+References: <20190823131401.4011-1-govinds@codeaurora.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: sboyd@kernel.org, robh@kernel.org
+Cc: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, linux-remoteproc@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The EK874 is advertised as compatible with panel IDK-2121WR from
-Advantech, however the panel isn't sold alongside the board.
-A new dts, adding everything that's required to get the panel to
-to work with the EK874, is the most convenient way to support the
-EK874 when it's connected to the IDK-2121WR.
+Add support for the Q6SSTOP clock control used on qcs404
+based devices. This would allow wcss remoteproc driver to
+control the required WCSS Q6SSTOP clock/reset controls to
+bring the subsystem out of reset and shutdown the WCSS Q6DSP.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
- arch/arm64/boot/dts/renesas/Makefile               |   3 +-
- .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 112 +++++++++++++++++++++
- 2 files changed, 114 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+ drivers/clk/qcom/Kconfig                      |   8 +
+ drivers/clk/qcom/Makefile                     |   1 +
+ drivers/clk/qcom/q6sstop-qcs404.c             | 223 ++++++++++++++++++
+ .../dt-bindings/clock/qcom,q6sstopcc-qcs404.h |  18 ++
+ 4 files changed, 250 insertions(+)
+ create mode 100644 drivers/clk/qcom/q6sstop-qcs404.c
+ create mode 100644 include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 42b74c2..ce48478 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
- dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
--dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
-+dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
-+			       r8a774c0-ek874-idk-2121wr.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index e1ff83cc361e..1b3c87a97521 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -250,6 +250,14 @@ config QCS_TURING_404
+ 	  Support for the Turing Clock Controller on QCS404, provides clocks
+ 	  and resets for the Turing subsystem.
+ 
++config QCS_Q6SSTOP_404
++	tristate "QCS404 Q6SSTOP Clock Controller"
++	select QCS_GCC_404
++	help
++	  Support for the Q6SSTOP clock controller on QCS404 devices.
++	  Say Y if you want to use the Q6SSTOP branch clocks of the WCSS clock
++	  controller to reset the Q6SSTOP subsystem.
++
+ config SDM_GCC_845
+ 	tristate "SDM845 Global Clock Controller"
+ 	select QCOM_GDSC
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index f0768fb1f037..086c053e0e03 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -43,6 +43,7 @@ obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
+ obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
+ obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
+ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
++obj-$(CONFIG_QCS_Q6SSTOP_404) += q6sstop-qcs404.o
+ obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
+ obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
+ obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
+diff --git a/drivers/clk/qcom/q6sstop-qcs404.c b/drivers/clk/qcom/q6sstop-qcs404.c
 new file mode 100644
-index 0000000..d989998
+index 000000000000..b0f54a4c9365
 --- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
-@@ -0,0 +1,112 @@
++++ b/drivers/clk/qcom/q6sstop-qcs404.c
+@@ -0,0 +1,223 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
-+ * connected to an Advantech IDK-2121WR 21.5" LVDS panel
-+ *
-+ * Copyright (C) 2019 Renesas Electronics Corp.
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
 + */
 +
-+#include "r8a774c0-ek874.dts"
++#include <linux/bitops.h>
++#include <linux/err.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/pm_clock.h>
++#include <linux/pm_runtime.h>
++#include <linux/regmap.h>
 +
-+/ {
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm5 0 50000>;
++#include <dt-bindings/clock/qcom,q6sstopcc-qcs404.h>
 +
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
++#include "clk-regmap.h"
++#include "clk-branch.h"
++#include "common.h"
++#include "reset.h"
 +
-+		power-supply = <&reg_12p0v>;
-+		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	panel-lvds {
-+		compatible = "advantech,idk-2121wr", "panel-lvds";
-+
-+		width-mm = <476>;
-+		height-mm = <268>;
-+
-+		data-mapping = "vesa-24";
-+
-+		panel-timing {
-+			clock-frequency = <148500000>;
-+			hactive = <1920>;
-+			vactive = <1080>;
-+			hsync-len = <44>;
-+			hfront-porch = <88>;
-+			hback-porch = <148>;
-+			vfront-porch = <4>;
-+			vback-porch = <36>;
-+			vsync-len = <5>;
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				lvds0_panel_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				lvds1_panel_in: endpoint {
-+					remote-endpoint = <&lvds1_out>;
-+				};
-+			};
-+		};
-+	};
++static struct clk_branch lcc_ahbfabric_cbc_clk = {
++	.halt_reg = 0x1b004,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x1b004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lcc_ahbfabric_cbc_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
 +};
 +
-+&gpio0 {
-+	lvds-connector-en-gpio{
-+		gpio-hog;
-+		gpios = <17 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "lvds-connector-en-gpio";
-+	};
++static struct clk_branch lcc_q6ss_ahbs_cbc_clk = {
++	.halt_reg = 0x22000,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x22000,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lcc_q6ss_ahbs_cbc_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
 +};
 +
-+&lvds0 {
-+	renesas,swap-data;
-+
-+	ports {
-+		port@1 {
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&lvds0_panel_in>;
-+			};
-+		};
-+	};
++static struct clk_branch lcc_q6ss_tcm_slave_cbc_clk = {
++	.halt_reg = 0x1c000,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x1c000,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lcc_q6ss_tcm_slave_cbc_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
 +};
 +
-+&lvds1 {
-+	status = "okay";
-+
-+	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
-+	clock-names = "fck", "dclkin.0", "extal";
-+
-+	ports {
-+		port@1 {
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&lvds1_panel_in>;
-+			};
-+		};
-+	};
++static struct clk_branch lcc_q6ss_ahbm_cbc_clk = {
++	.halt_reg = 0x22004,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x22004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lcc_q6ss_ahbm_cbc_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
 +};
 +
-+&pfc {
-+	pwm5_pins: pwm5 {
-+		groups = "pwm5_a";
-+		function = "pwm5";
-+	};
++static struct clk_branch lcc_q6ss_axim_cbc_clk = {
++	.halt_reg = 0x1c004,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x1c004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lcc_q6ss_axim_cbc_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
 +};
 +
-+&pwm5 {
-+	pinctrl-0 = <&pwm5_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
++static struct clk_branch lcc_q6ss_bcr_sleep_clk = {
++	.halt_reg = 0x6004,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x6004,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "lcc_q6ss_bcr_sleep_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
 +};
++
++/* TCSR clock */
++static struct clk_branch tcsr_lcc_csr_cbcr_clk = {
++	.halt_reg = 0x8008,
++	.halt_check = BRANCH_VOTED,
++	.clkr = {
++		.enable_reg = 0x8008,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "tcsr_lcc_csr_cbcr_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct regmap_config q6sstop_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.fast_io	= true,
++};
++
++static struct clk_regmap *q6sstop_qcs404_clocks[] = {
++	[LCC_AHBFABRIC_CBC_CLK] = &lcc_ahbfabric_cbc_clk.clkr,
++	[LCC_Q6SS_AHBS_CBC_CLK] = &lcc_q6ss_ahbs_cbc_clk.clkr,
++	[LCC_Q6SS_TCM_SLAVE_CBC_CLK] = &lcc_q6ss_tcm_slave_cbc_clk.clkr,
++	[LCC_Q6SS_AHBM_CBC_CLK] = &lcc_q6ss_ahbm_cbc_clk.clkr,
++	[LCC_Q6SS_AXIM_CBC_CLK] = &lcc_q6ss_axim_cbc_clk.clkr,
++	[LCC_Q6SS_BCR_SLEEP_CLK] = &lcc_q6ss_bcr_sleep_clk.clkr,
++};
++
++static const struct qcom_reset_map q6sstop_qcs404_resets[] = {
++	[Q6SSTOP_BCR_RESET] = { 0x6000 },
++};
++
++static const struct qcom_cc_desc q6sstop_qcs404_desc = {
++	.config = &q6sstop_regmap_config,
++	.clks = q6sstop_qcs404_clocks,
++	.num_clks = ARRAY_SIZE(q6sstop_qcs404_clocks),
++	.resets = q6sstop_qcs404_resets,
++	.num_resets = ARRAY_SIZE(q6sstop_qcs404_resets),
++};
++
++static struct clk_regmap *tcsr_qcs404_clocks[] = {
++	[TCSR_Q6SS_LCC_CBCR_CLK] = &tcsr_lcc_csr_cbcr_clk.clkr,
++};
++
++static const struct qcom_cc_desc tcsr_qcs404_desc = {
++	.config = &q6sstop_regmap_config,
++	.clks = tcsr_qcs404_clocks,
++	.num_clks = ARRAY_SIZE(tcsr_qcs404_clocks),
++};
++
++static const struct of_device_id q6sstopcc_qcs404_match_table[] = {
++	{ .compatible = "qcom,qcs404-q6sstopcc" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, q6sstopcc_qcs404_match_table);
++
++static int q6sstopcc_qcs404_probe(struct platform_device *pdev)
++{
++	const struct qcom_cc_desc *desc;
++	int ret;
++
++	pm_runtime_enable(&pdev->dev);
++	ret = pm_clk_create(&pdev->dev);
++	if (ret)
++		goto disable_pm_runtime;
++
++	ret = pm_clk_add(&pdev->dev, NULL);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to acquire iface clock\n");
++		goto destroy_pm_clk;
++	}
++
++	q6sstop_regmap_config.name = "q6sstop_tcsr";
++	desc = &tcsr_qcs404_desc;
++
++	ret = qcom_cc_probe_by_index(pdev, 1, desc);
++	if (ret)
++		goto destroy_pm_clk;
++
++	q6sstop_regmap_config.name = "q6sstop_cc";
++	desc = &q6sstop_qcs404_desc;
++
++	ret = qcom_cc_probe_by_index(pdev, 0, desc);
++	if (ret)
++		goto destroy_pm_clk;
++
++	return 0;
++
++destroy_pm_clk:
++	pm_clk_destroy(&pdev->dev);
++
++disable_pm_runtime:
++	pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int q6sstopcc_qcs404_remove(struct platform_device *pdev)
++{
++	pm_clk_destroy(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static const struct dev_pm_ops q6sstopcc_pm_ops = {
++	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
++};
++
++static struct platform_driver q6sstopcc_qcs404_driver = {
++	.probe		= q6sstopcc_qcs404_probe,
++	.remove		= q6sstopcc_qcs404_remove,
++	.driver		= {
++		.name	= "qcs404-q6sstopcc",
++		.of_match_table = q6sstopcc_qcs404_match_table,
++		.pm = &q6sstopcc_pm_ops,
++	},
++};
++
++module_platform_driver(q6sstopcc_qcs404_driver);
++
++MODULE_DESCRIPTION("QTI QCS404 Q6SSTOP Clock Controller Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h b/include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
+new file mode 100644
+index 000000000000..c6f5290f0914
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_CLK_Q6SSTOP_QCS404_H
++#define _DT_BINDINGS_CLK_Q6SSTOP_QCS404_H
++
++#define LCC_AHBFABRIC_CBC_CLK			0
++#define LCC_Q6SS_AHBS_CBC_CLK			1
++#define LCC_Q6SS_TCM_SLAVE_CBC_CLK		2
++#define LCC_Q6SS_AHBM_CBC_CLK			3
++#define LCC_Q6SS_AXIM_CBC_CLK			4
++#define LCC_Q6SS_BCR_SLEEP_CLK			5
++#define TCSR_Q6SS_LCC_CBCR_CLK			6
++
++#define Q6SSTOP_BCR_RESET			1
++#endif
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
