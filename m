@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 11/14] arm64: dts: meson-g12a-x96-max: fix compatible
-Date: Fri, 23 Aug 2019 09:02:45 +0200
-Message-ID: <20190823070248.25832-12-narmstrong@baylibre.com>
+Subject: [RESEND PATCH v2 08/14] arm64: dts: meson-gxl: fix internal phy compatible
+Date: Fri, 23 Aug 2019 09:02:42 +0200
+Message-ID: <20190823070248.25832-9-narmstrong@baylibre.com>
 References: <20190823070248.25832-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,26 +13,26 @@ Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, lin
 List-Id: devicetree@vger.kernel.org
 
 This fixes the following DT schemas check errors:
-meson-g12a-x96-max.dt.yaml: /: compatible: ['amediatech,x96-max', 'amlogic,u200', 'amlogic,g12a'] is not valid under any of the given schemas
+meson-gxl-s805x-libretech-ac.dt.yaml: ethernet-phy@8: compatible: ['ethernet-phy-id0181.4400', 'ethernet-phy-ieee802.3-c22'] is not valid under any of the given schemas
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index c1e58a69d434..4770ecac3d85 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -11,7 +11,7 @@
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 7a3b674db11f..49ff0a7d0210 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -709,7 +709,7 @@
+ 			#size-cells = <0>;
  
- / {
--	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-+	compatible = "amediatech,x96-max", "amlogic,g12a";
- 	model = "Shenzhen Amediatech Technology Co., Ltd X96 Max";
- 
- 	aliases {
+ 			internal_phy: ethernet-phy@8 {
+-				compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
++				compatible = "ethernet-phy-id0181.4400";
+ 				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 				reg = <8>;
+ 				max-speed = <100>;
 -- 
 2.22.0
