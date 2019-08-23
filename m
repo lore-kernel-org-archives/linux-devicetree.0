@@ -1,93 +1,56 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v2 06/10] PCI: layerscape: Modify the way of getting
- capability with different PEX
-Date: Fri, 23 Aug 2019 02:39:13 +0000
-Message-ID: <AM5PR04MB3299DE7B57F31EA405E4FCBCF5A40@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-6-xiaowei.bao@nxp.com>
- <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
+ for LGM eMMC PHY
+Date: Fri, 23 Aug 2019 10:46:31 +0800
+Message-ID: <bb31715a-64de-3b44-ef43-09bc73819f73@linux.intel.com>
+References: <20190822102843.47964-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJEW0UDqYDTvOeRsZh9WJTeT99JZP8PtkvbnBU2dhYJEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0c02ac52-e4b1-8071-bf9e-d10b28fc9029@ti.com>
+In-Reply-To: <CAL_JsqJEW0UDqYDTvOeRsZh9WJTeT99JZP8PtkvbnBU2dhYJEQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.ker>
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFi
-cmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gU2VudDogMjAxOeW5tDjmnIgyMuaXpSAxOTo0NA0K
-PiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBiaGVsZ2Fhc0Bnb29nbGUu
-Y29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1
-b0BrZXJuZWwub3JnOyBMZW8gTGkNCj4gPGxlb3lhbmcubGlAbnhwLmNvbT47IGxvcmVuem8ucGll
-cmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
-cmc7IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaQ0KPiBIdSA8bWlu
-Z2thaS5odUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+Ow0KPiBqaW5nb29o
-YW4xQGdtYWlsLmNvbTsgZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207DQo+IGxpbnV4LXBj
-aUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBhbmRyZXcubXVycmF5QGFybS5j
-b20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNi8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2Rp
-ZnkgdGhlIHdheSBvZiBnZXR0aW5nDQo+IGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJlbnQgUEVYDQo+
-IA0KPiBIaSwNCj4gDQo+IE9uIDIyLzA4LzE5IDQ6NTIgUE0sIFhpYW93ZWkgQmFvIHdyb3RlOg0K
-PiA+IFRoZSBkaWZmZXJlbnQgUENJZSBjb250cm9sbGVyIGluIG9uZSBib2FyZCBtYXkgYmUgaGF2
-ZSBkaWZmZXJlbnQNCj4gPiBjYXBhYmlsaXR5IG9mIE1TSSBvciBNU0lYLCBzbyBjaGFuZ2UgdGhl
-IHdheSBvZiBnZXR0aW5nIHRoZSBNU0kNCj4gPiBjYXBhYmlsaXR5LCBtYWtlIGl0IG1vcmUgZmxl
-eGlibGUuDQo+IA0KPiBwbGVhc2UgdXNlIGRpZmZlcmVudCBwY2lfZXBjX2ZlYXR1cmVzIHRhYmxl
-IGZvciBkaWZmZXJlbnQgYm9hcmRzLg0KVGhhbmtzLCBJIHRoaW5rIHRoYXQgaXQgd2lsbCBiZSBt
-b3JlIGZsZXhpYmxlIHRvIGR5bmFtaWNhbGx5IGdldCBNU0kgb3IgTVNJWCBjYXBhYmlsaXR5LA0K
-VGh1cywgd2Ugd2lsbCBub3QgbmVlZCB0byBkZWZpbmUgdGhlIHBjaV9lcGNfZmVhdHVyZSBmb3Ig
-ZGlmZmVyZW50IGJvYXJkcy4NCj4gDQo+IFRoYW5rcw0KPiBLaXNob24NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+
-IHYyOg0KPiA+ICAtIFJlbW92ZSB0aGUgcmVwZWF0ZWQgYXNzaWdubWVudCBjb2RlLg0KPiA+DQo+
-ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAyNg0K
-PiA+ICsrKysrKysrKysrKysrKysrKystLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxOSBp
-bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBiL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBpbmRleCA0ZTkyYTk1
-Li44NDYxZjYyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
-aS1sYXllcnNjYXBlLWVwLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
-Y2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gQEAgLTIyLDYgKzIyLDcgQEANCj4gPg0KPiA+ICBzdHJ1
-Y3QgbHNfcGNpZV9lcCB7DQo+ID4gIAlzdHJ1Y3QgZHdfcGNpZQkJKnBjaTsNCj4gPiArCXN0cnVj
-dCBwY2lfZXBjX2ZlYXR1cmVzCSpsc19lcGM7DQo+ID4gIH07DQo+ID4NCj4gPiAgI2RlZmluZSB0
-b19sc19wY2llX2VwKHgpCWRldl9nZXRfZHJ2ZGF0YSgoeCktPmRldikNCj4gPiBAQCAtNDAsMjUg
-KzQxLDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkDQo+IGxzX3BjaWVfZXBf
-b2ZfbWF0Y2hbXSA9IHsNCj4gPiAgCXsgfSwNCj4gPiAgfTsNCj4gPg0KPiA+IC1zdGF0aWMgY29u
-c3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgbHNfcGNpZV9lcGNfZmVhdHVyZXMgPSB7DQo+ID4g
-LQkubGlua3VwX25vdGlmaWVyID0gZmFsc2UsDQo+ID4gLQkubXNpX2NhcGFibGUgPSB0cnVlLA0K
-PiA+IC0JLm1zaXhfY2FwYWJsZSA9IGZhbHNlLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKiAgbHNfcGNpZV9lcF9nZXRfZmVhdHVyZXMo
-c3RydWN0DQo+ID4gZHdfcGNpZV9lcCAqZXApICB7DQo+ID4gLQlyZXR1cm4gJmxzX3BjaWVfZXBj
-X2ZlYXR1cmVzOw0KPiA+ICsJc3RydWN0IGR3X3BjaWUgKnBjaSA9IHRvX2R3X3BjaWVfZnJvbV9l
-cChlcCk7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNp
-KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gcGNpZS0+bHNfZXBjOw0KPiA+ICB9DQo+ID4NCj4gPiAg
-c3RhdGljIHZvaWQgbHNfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkgIHsNCj4g
-PiAgCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsJ
-c3RydWN0IGxzX3BjaWVfZXAgKnBjaWUgPSB0b19sc19wY2llX2VwKHBjaSk7DQo+ID4gIAllbnVt
-IHBjaV9iYXJubyBiYXI7DQo+ID4NCj4gPiAgCWZvciAoYmFyID0gQkFSXzA7IGJhciA8PSBCQVJf
-NTsgYmFyKyspDQo+ID4gIAkJZHdfcGNpZV9lcF9yZXNldF9iYXIocGNpLCBiYXIpOw0KPiA+ICsN
-Cj4gPiArCXBjaWUtPmxzX2VwYy0+bXNpX2NhcGFibGUgPSBlcC0+bXNpX2NhcCA/IHRydWUgOiBm
-YWxzZTsNCj4gPiArCXBjaWUtPmxzX2VwYy0+bXNpeF9jYXBhYmxlID0gZXAtPm1zaXhfY2FwID8g
-dHJ1ZSA6IGZhbHNlOw0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGludCBsc19wY2llX2VwX3Jh
-aXNlX2lycShzdHJ1Y3QgZHdfcGNpZV9lcCAqZXAsIHU4IGZ1bmNfbm8sIEBADQo+ID4gLTExOCw2
-ICsxMjAsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+
-ZGV2Ow0KPiA+ICAJc3RydWN0IGR3X3BjaWUgKnBjaTsNCj4gPiAgCXN0cnVjdCBsc19wY2llX2Vw
-ICpwY2llOw0KPiA+ICsJc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgKmxzX2VwYzsNCj4gPiAgCXN0
-cnVjdCByZXNvdXJjZSAqZGJpX2Jhc2U7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4gQEAgLTEy
-OSw2ICsxMzIsMTAgQEAgc3RhdGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QN
-Cj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJaWYgKCFwY2kpDQo+ID4gIAkJcmV0dXJu
-IC1FTk9NRU07DQo+ID4NCj4gPiArCWxzX2VwYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
-bHNfZXBjKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIWxzX2VwYykNCj4gPiArCQlyZXR1cm4g
-LUVOT01FTTsNCj4gPiArDQo+ID4gIAlkYmlfYmFzZSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9i
-eW5hbWUocGRldiwgSU9SRVNPVVJDRV9NRU0sDQo+ICJyZWdzIik7DQo+ID4gIAlwY2ktPmRiaV9i
-YXNlID0gZGV2bV9wY2lfcmVtYXBfY2ZnX3Jlc291cmNlKGRldiwgZGJpX2Jhc2UpOw0KPiA+ICAJ
-aWYgKElTX0VSUihwY2ktPmRiaV9iYXNlKSkNCj4gPiBAQCAtMTM5LDYgKzE0NiwxMSBAQCBzdGF0
-aWMgaW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpDQo+ID4gIAlwY2ktPm9wcyA9ICZsc19wY2llX2VwX29wczsNCj4gPiAgCXBjaWUtPnBj
-aSA9IHBjaTsNCj4gPg0KPiA+ICsJbHNfZXBjLT5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4g
-PiArCWxzX2VwYy0+YmFyX2ZpeGVkXzY0Yml0ID0gKDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQp
-LA0KPiA+ICsNCj4gPiArCXBjaWUtPmxzX2VwYyA9IGxzX2VwYzsNCj4gPiArDQo+ID4gIAlwbGF0
-Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBwY2llKTsNCj4gPg0KPiA+ICAJcmV0ID0gbHNfYWRkX3Bj
-aWVfZXAocGNpZSwgcGRldik7DQo+ID4NCg==
+Hi Rob,
+
+On 22/8/2019 8:49 PM, Rob Herring wrote:
+> On Thu, Aug 22, 2019 at 5:28 AM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add a YAML schema to use the host controller driver with the
+>> eMMC PHY on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>> changes in v4:
+>>    - As per Rob's review: validate 5.2 and 5.3
+>>    - drop unrelated items.
+>>
+>> changes in v3:
+>>    - resolve 'make dt_binding_check' warnings
+>>
+>> changes in v2:
+>>    As per Rob Herring review comments, the following updates
+>>   - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+>>   - filename is the compatible string plus .yaml
+>>   - LGM: Lightning Mountain
+>>   - update maintainer
+>>   - add intel,syscon under property list
+>>   - keep one example instead of two
+>> ---
+>>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 50 ++++++++++++++++++++++
+>>   1 file changed, 50 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thank you so much for the review and your time.
+
+With Best Regards
+Vadivel Murugan
