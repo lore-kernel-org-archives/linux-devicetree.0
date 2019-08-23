@@ -1,42 +1,189 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [1/3] rtc/fsl: support flextimer for lx2160a
-Date: Fri, 23 Aug 2019 16:25:04 +0200
-Message-ID: <20190823142504.GA30479@piout.net>
-References: <20190823095740.12280-1-biwen.li@nxp.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Date: Fri, 23 Aug 2019 15:27:57 +0100
+Message-ID: <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-8-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190823095740.12280-1-biwen.li@nxp.com>
+In-Reply-To: <20190822112242.16309-8-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.co, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/08/2019 17:57:38+0800, Biwen Li wrote:
-> The patch supports flextimer for lx2160a
+On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
+> Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> difference between LS1 and LS2 platform, so refactor the code of
+> the EP driver.
 > 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
->  drivers/rtc/rtc-fsl-ftm-alarm.c | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+>  - New mechanism for layerscape EP driver.
+
+Was there a v1 of this patch?
+
 > 
-> diff --git a/drivers/rtc/rtc-fsl-ftm-alarm.c b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> index 4f7259c2d6a3..2b81525f6db8 100644
-> --- a/drivers/rtc/rtc-fsl-ftm-alarm.c
-> +++ b/drivers/rtc/rtc-fsl-ftm-alarm.c
-> @@ -313,6 +313,7 @@ static const struct of_device_id ftm_rtc_match[] = {
->  	{ .compatible = "fsl,ls1088a-ftm-alarm", },
->  	{ .compatible = "fsl,ls208xa-ftm-alarm", },
->  	{ .compatible = "fsl,ls1028a-ftm-alarm", },
-> +	{ .compatible = "fsl,lx2160a-ftm-alarm", },
->  	{ },
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 76 ++++++++++++++++++++------
+>  1 file changed, 58 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 7ca5fe8..2a66f07 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -20,27 +20,29 @@
+>  
+>  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+>  
+> -struct ls_pcie_ep {
+> -	struct dw_pcie		*pci;
+> -	struct pci_epc_features	*ls_epc;
+> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +
+> +struct ls_pcie_ep_drvdata {
+> +	u32				func_offset;
+> +	const struct dw_pcie_ep_ops	*ops;
+> +	const struct dw_pcie_ops	*dw_pcie_ops;
 >  };
+>  
+> -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +struct ls_pcie_ep {
+> +	struct dw_pcie			*pci;
+> +	struct pci_epc_features		*ls_epc;
+> +	const struct ls_pcie_ep_drvdata *drvdata;
+> +};
+>  
+>  static int ls_pcie_establish_link(struct dw_pcie *pci)
+>  {
+>  	return 0;
+>  }
+>  
+> -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+>  	.start_link = ls_pcie_establish_link,
+>  };
+>  
+> -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> -	{ .compatible = "fsl,ls-pcie-ep",},
+> -	{ },
+> -};
+> -
+>  static const struct pci_epc_features*
+>  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+>  {
+> @@ -82,10 +84,44 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  }
+>  
+> -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+> +						u8 func_no)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> +	u8 header_type;
+> +
+> +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
+> +
+> +	if (header_type & (1 << 7))
+> +		return pcie->drvdata->func_offset * func_no;
+> +	else
+> +		return 0;
 
-I've squashed it with 3/3 and in the patch adding the driver. I also
-added proper documentation.
+It looks like there isn't a PCI define for multi function, the nearest I
+could find was PCI_HEADER_TYPE_MULTIDEVICE in hotplug/ibmphp.h. A comment
+above the test might be helpful to explain the test.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+As the ls_pcie_ep_drvdata structures are static, the unset .func_offset
+will be initialised to 0, so you could just drop the test above.
+
+However something to the effect of the following may help spot
+misconfiguration:
+
+WARN_ON(func_no && !pcie->drvdata->func_offset);
+return pcie->drvdata->func_offset * func_no;
+
+The WARN is probably quite useful as if you are attempting to use
+non-zero functions and func_offset isn't set - then things may appear to work
+normally but actually will break horribly.
+
+Thanks,
+
+Andrew Murray
+
+> +}
+> +
+> +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+>  	.ep_init = ls_pcie_ep_init,
+>  	.raise_irq = ls_pcie_ep_raise_irq,
+>  	.get_features = ls_pcie_ep_get_features,
+> +	.func_conf_select = ls_pcie_ep_func_conf_select,
+> +};
+> +
+> +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> +	.ops = &ls_pcie_ep_ops,
+> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> +};
+> +
+> +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> +	.func_offset = 0x20000,
+> +	.ops = &ls_pcie_ep_ops,
+> +	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
+> +};
+> +
+> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> +	{ },
+>  };
+>  
+>  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> @@ -98,7 +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+>  	int ret;
+>  
+>  	ep = &pci->ep;
+> -	ep->ops = &pcie_ep_ops;
+> +	ep->ops = pcie->drvdata->ops;
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+>  	if (!res)
+> @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	if (!ls_epc)
+>  		return -ENOMEM;
+>  
+> -	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> -	if (IS_ERR(pci->dbi_base))
+> -		return PTR_ERR(pci->dbi_base);
+> +	pcie->drvdata = of_device_get_match_data(dev);
+>  
+> -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+>  	pci->dev = dev;
+> -	pci->ops = &ls_pcie_ep_ops;
+> +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> +
+>  	pcie->pci = pci;
+>  
+>  	ls_epc->linkup_notifier = false,
+> @@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  
+>  	pcie->ls_epc = ls_epc;
+>  
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> +
+>  	platform_set_drvdata(pdev, pcie);
+>  
+>  	ret = ls_add_pcie_ep(pcie, pdev);
+> -- 
+> 2.9.5
+> 
