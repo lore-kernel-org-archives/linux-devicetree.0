@@ -1,119 +1,46 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [RESEND PATCH v4 1/4] dt-bindings: soundwire: add
- slave bindings
-Date: Fri, 23 Aug 2019 10:41:33 -0500
-Message-ID: <7da8aa89-2119-21d1-0e29-8894a8d40bf0@linux.intel.com>
-References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
- <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from
+ core driver
+Date: Fri, 23 Aug 2019 17:42:05 +0200
+Message-ID: <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+ <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
+ <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+To: frank-w@public-files.de, linux-mediatek@lists.infradead.org, Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Ren=c3=a9_van_Dorst?= <opensource@vdorst.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 8/22/19 6:37 PM, Srinivas Kandagatla wrote:
-> This patch adds bindings for Soundwire Slave devices that includes how
-> SoundWire enumeration address and Link ID are used to represented in
-> SoundWire slave device tree nodes.
+On 23/08/2019 17:26, Frank Wunderlich wrote:
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   .../soundwire/soundwire-controller.yaml       | 75 +++++++++++++++++++
->   1 file changed, 75 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> new file mode 100644
-> index 000000000000..91aa6c6d6266
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SoundWire Controller Generic Binding
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  SoundWire busses can be described with a node for the SoundWire controller
-> +  device and a set of child nodes for each SoundWire slave on the bus.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
-
-So is this a 64-bit value, as in the MIPI spec, or is this part of the 
-_ADR description?
-I also don't get why the first item in in base10?
-
-
-> +      description:
-> +	  Is the textual representation of SoundWire Enumeration
-> +	  address. compatible string should contain SoundWire Version ID,
-> +	  Manufacturer ID, Part ID and Class ID in order and shall be in
-> +	  lower-case hexadecimal with leading zeroes.
-> +	  Valid sizes of these fields are
-> +	  Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
-> +	  and '0x2' represents SoundWire 1.1 and so on.
-> +	  MFD is 4 nibbles
-> +	  PID is 4 nibbles
-> +	  CID is 2 nibbles
-> +	  More Information on detail of encoding of these fields can be
-> +	  found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
-> +
-> +      reg:
-> +        maxItems: 1
-> +        description:
-> +          Instance ID and Link ID of SoundWire Device Address.
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    soundwire@c2d0000 {
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +        compatible = "qcom,soundwire-v1.5.0";
-> +        reg = <0x0c2d0000 0x2000>;
-> +
-> +        speaker@1 {
-> +            compatible = "sdw10217201000";
-> +            reg = <1 0>;
-> +        };
-> +
-> +        speaker@2 {
-> +            compatible = "sdw10217201000";
-> +            reg = <2 0>;
-> +        };
-> +    };
-> +
-> +...
+> Am 23. August 2019 16:56:13 MESZ schrieb Matthias Brugger <matthias.bgg@gmail.com>:
+>> are you sure that you provide the correct chip_id here? I saw 0x2023
+>> (if I
+>> remember correctly), while this switch checks for 0x23, 0x91 and 0x97,
+>> so I'm
+>> not sure if the problem really lies here. I didn't dig into the code to
+>> find out
+>> how the chip_id is created.
 > 
+> The chip-id 0x2023 is reported with 5.3-rc5, next-code says 0x0. So i guess the chipid is read out/calculated the wrong way. If calculation is not changed the read is changed compared to 5.3
+> 
+
+I suppose that's because 3/10 has code that should be in 2/10 and for some
+reason 3/10 was not pushed for linux-next inclusion. Although it has the same
+Acked-for-mfd-by tag.
+
+@Frank, can you test if adding 3/10 to your code base fixes the issue?
+
+Regards,
+Matthias
