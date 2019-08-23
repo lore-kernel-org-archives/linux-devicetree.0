@@ -1,134 +1,66 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Date: Fri, 23 Aug 2019 12:58:09 -0700
-Message-ID: <f1fd7aba-b36f-8cc4-9ed7-9977c0912b9d@gmail.com>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org> <20190816201342.GB1646@bug>
- <20190816212728.GW250418@google.com>
- <31dc724d-77ba-3400-6abe-4cf2e3c2a20a@gmail.com>
- <CAD=FV=WvWjcVX1YNxKsi_TmJP6vdBZ==bYOVGs2VjUqVhEjpuA@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 3/3] arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
+Date: Fri, 23 Aug 2019 13:55:22 -0700
+Message-ID: <7hv9uny539.fsf@baylibre.com>
+References: <1566565717-5182-1-git-send-email-christianshewitt@gmail.com> <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WvWjcVX1YNxKsi_TmJP6vdBZ==bYOVGs2VjUqVhEjpuA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1566565717-5182-4-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Pavel Machek <pavel@ucw.cz>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Chrisitian Hewitt <christianshewitt@gmail.com>, Oleg Ivanov <balbes-150@yandex.ru>
 List-Id: devicetree@vger.kernel.org
 
-On 8/16/19 3:39 PM, Doug Anderson wrote:
-> Hi,
-> 
-> On Fri, Aug 16, 2019 at 3:12 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> On 8/16/19 2:27 PM, Matthias Kaehlcke wrote:
->>> On Fri, Aug 16, 2019 at 10:13:42PM +0200, Pavel Machek wrote:
->>>> On Tue 2019-08-13 12:11:47, Matthias Kaehlcke wrote:
->>>>> Add a .config_led hook which is called by the PHY core when
->>>>> configuration data for a PHY LED is available. Each LED can be
->>>>> configured to be solid 'off, solid 'on' for certain (or all)
->>>>> link speeds or to blink on RX/TX activity.
->>>>>
->>>>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->>>>
->>>> THis really needs to go through the LED subsystem,
->>>
->>> Sorry, I used what get_maintainers.pl threw at me, I should have
->>> manually cc-ed the LED list.
->>>
->>>> and use the same userland interfaces as the rest of the system.
->>>
->>> With the PHY maintainers we discussed to define a binding that is
->>> compatible with that of the LED one, to have the option to integrate
->>> it with the LED subsystem later. The integration itself is beyond the
->>> scope of this patchset.
->>>
->>> The PHY LED configuration is a low priority for the project I'm
->>> working on. I wanted to make an attempt to upstream it and spent
->>> already significantly more time on it than planned, if integration
->>> with the LED framework now is a requirement please consider this
->>> series abandonded.
->>
->> While I have an appreciation for how hard it can be to work in a
->> corporate environment while doing upstream first and working with
->> virtually unbounded goals (in time or scope) due to maintainers and
->> reviewers, that kind of statement can hinder your ability to establish
->> trust with peers in the community as it can be read as take it or leave it.
-> 
-> You think so?  I feel like Matthias is simply expressing the reality
-> of the situation here and I'd rather see a statement like this posted
-> than the series just silently dropped.  Communication is good.
-> 
-> In general on Chrome OS we don't spent lots of time tweaking with
-> Ethernet and even less time tweaking with Ethernet on ARM boards where
-> you might need a binding like this, so it's pretty hard to justify up
-> the management chain spending massive amounts of resources on it.  In
-> this case we have two existing ARM boards which we're trying to uprev
-> from 3.14 to 4.19 which were tweaking the Ethernet driver in some
-> downstream code.  We thought it would be nice to try to come up with a
-> solution that could land upstream, which is usually what we try to do
-> in these cases.
-> 
-> Normally if there is some major architecture needed that can't fit in
-> the scope of a project, we would do a downstream solution for the
-> project and then fork off the task (maybe by a different Engineer or a
-> contractor) to get a solution that can land upstream.  ...but in this
-> case it seems hard to justify because it's unlikely we would need it
-> again anytime remotely soon.
-> 
-> So I guess the alternatives to what Matthias did would have been:
-> 
-> A) Don't even try to upstream.  Seems worse.  At least this way
-> there's something a future person can start from and the discussion is
-> rolling.
-> 
-> B) Keep spending tons of time on something even though management
-> doesn't want him to.  Seems worse.
-> 
-> C) Spend his nights and weekends working on this.  Seems worse.
-> 
-> D) Silently stop working on it without saying "I'm going to stop".  Seems worse.
-> 
-> ...unless you have a brilliant "E)" I think what Matthias did here is
-> exactly right.
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-I must apologize for making that statement since it was not fair to
-Matthias, and he has been clear about how much time he can spend on that
-specific, please accept my apologies for that.
+> Tested-by: Oleg Ivanov <balbes-150@yandex.ru>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 
-Having had many recent encounters with various people not driving
-projects to completion lately (not specifically within Linux), it looks
-like I am overly sensitive about flagging words and patch status that
-may fall within that lexicon. The choice of word is what triggered me.
+nit: empty changelog.  I'd rather see the changelog from patch2 here.
 
-> 
-> BTW: I'm giving a talk on this topic next week at ELC [1].  If you're
-> going to be there feel free to attend.  ...or just read the slides if
-> not.
+> ---
+>  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+>  .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 567 +++++++++++++++++++++
+>  2 files changed, 568 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 07b861f..21e2810 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+> new file mode 100644
+> index 0000000..27d1d62
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+> @@ -0,0 +1,567 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 BayLibre, SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
 
-I wish I could be there but that was not possible this year.
+This is a bit confusing.
 
-> 
-> 
->> The LED subsystem integration can definitively come in later from my 2
->> cents perspective and this patch series as it stands is valuable and
->> avoids inventing new bindings.
-> 
-> If something like this series can land and someone can later try to
-> make the situation better then I think that would be awesome.  I don't
-> think Matthias is saying "I won't spin" or "I won't take feedback".
-> He's just expressing that he can't keep working on this indefinitely.
-> 
-> 
-> 
-> [1] https://ossna19.sched.com/event/PVSV/how-chrome-os-works-with-upstream-linux-douglas-anderson-google
-> 
-> -Doug
-> 
+I'm assuming you kept Neil's authorship because you copied from another
+g12b board.  If so, it would be helpful in the changelog to describe the
+origins of this file.  I'm assuming it was copied from odroid-n2 and
+then tweaked.  That's fine, just note that as "originally based on
+meson-g12b-odroid-c2".
 
+Other than that, thanks a lot for your work on adding these new boards!
 
--- 
-Florian
+Neil, I'm starting to see a lot of duplication in the g12b .dtb files.
+Should we start thinking about factoring out some of the common stuff
+that's standard across all these boards?
+
+Kevin
