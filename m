@@ -1,52 +1,57 @@
-From: Ran Bi <ran.bi@mediatek.com>
-Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
-Date: Fri, 23 Aug 2019 14:37:20 +0800
-Message-ID: <1566542240.12318.53.camel@mhfsdcap03>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
-         <20190801110122.26834-3-ran.bi@mediatek.com>
-         <20190820201744.GZ3545@piout.net> <1566477254.12318.41.camel@mhfsdcap03>
-         <20190822124628.GS27031@piout.net> <1566480361.12318.50.camel@mhfsdcap03>
-         <20190822133649.GT27031@piout.net>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [RESEND PATCH v2 1/2] dt-bindings: usb: mtk-xhci: add an optional
+ xhci_ck clock
+Date: Fri, 23 Aug 2019 14:40:24 +0800
+Message-ID: <1566542425-20082-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822133649.GT27031@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S . Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, YT Shen <yt.shen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Flora Fu
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-22 at 15:36 +0200, Alexandre Belloni wrote:
-> On 22/08/2019 21:26:01+0800, Ran Bi wrote:
-> > On Thu, 2019-08-22 at 14:46 +0200, Alexandre Belloni wrote:
-> > > On 22/08/2019 20:34:14+0800, Ran Bi wrote:
-> > > > > > +	/* RTC need POWERKEY1/2 match, then goto normal work mode */
-> > > > > > +	mt2712_writel(rtc, MT2712_POWERKEY1, MT2712_POWERKEY1_KEY);
-> > > > > > +	mt2712_writel(rtc, MT2712_POWERKEY2, MT2712_POWERKEY2_KEY);
-> > > > > 
-> > > > > This should be written when setting the time after power was lost.
-> > > > > 
-> > > > 
-> > > > I suppose we can move this into mt2712_rtc_read_time function's "if
-> > > > (p1 != MT2712_POWERKEY1_KEY || p2 != MT2712_POWERKEY2_KEY)" condition
-> > > > which will be added at next patch. We need additional flag to mark this
-> > > > condition or another if condition in mt2712_rtc_set_time fucntion if we
-> > > > put these code in mt2712_rtc_set_time function.
-> > > > 
-> > > 
-> > > It is fine to test both in read_time and in set_time.
-> > > 
-> > 
-> > Do you mean that we can test powerkey and then set powerkey both in
-> > read_time and in set_time?
-> > 
-> 
-> I mean that can test in read_time and test and set in set_time
-> 
-> 
+Add a new optional clock xhci_ck
 
-Ok, I will change it at next patch.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v2 changes:
+  1. add the new clock at the end, suggested by Rob
+---
+ Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Best Regards,
-Ran
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+index 266c2d917a28..f3e4acecabe8 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+@@ -30,7 +30,8 @@ Required properties:
+ 	the following ones are optional:
+ 	"ref_ck": reference clock used by low power mode etc,
+ 	"mcu_ck": mcu_bus clock for register access,
+-	"dma_ck": dma_bus clock for data transfer by DMA
++	"dma_ck": dma_bus clock for data transfer by DMA,
++	"xhci_ck": controller clock
+ 
+  - phys : see usb-hcd.txt in the current directory
+ 
+@@ -100,7 +101,7 @@ Required properties:
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+  - clock-names : must contain "sys_ck", and the following ones are optional:
+-	"ref_ck", "mcu_ck" and "dma_ck"
++	"ref_ck", "mcu_ck" and "dma_ck", "xhci_ck"
+ 
+ Optional properties:
+  - vbus-supply : reference to the VBUS regulator;
+-- 
+2.23.0
