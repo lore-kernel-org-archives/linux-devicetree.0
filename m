@@ -1,400 +1,98 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v4 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date: Fri, 23 Aug 2019 10:49:50 +0800
-Message-ID: <3fc56164-e193-f43e-2377-ceb52ce48d88@linux.intel.com>
-References: <20190822102843.47964-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190822102843.47964-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190822130848.GO30120@smile.fi.intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 00/19] Enhance CP110 COMPHY support
+Date: Fri, 23 Aug 2019 08:46:14 +0530
+Message-ID: <4e1c4d27-3676-5efa-1126-8149a8635eb5@ti.com>
+References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822130848.GO30120@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190731122126.3049-1-miquel.raynal@bootlin.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: kishon@ti.com, robh@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-On 22/8/2019 9:08 PM, Andy Shevchenko wrote:
-> On Thu, Aug 22, 2019 at 06:28:43PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
->>
-> Thanks for an update!
-> One minor comment below. After addressing it
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Thank you so much for review comments and your time.
-will update minor comment and also Reviewed-by tag as well.
-
----
-With Best Regards
-Vadivel Murugan
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->> chnages in v4:
->>   - As per Andy's review comments,the following update
->>   - add license_tag, macro, blank_line, error_check and grouping
->>
->> changes in v3:
->>   - As per Andy's review comments macro optimization,aligned
->>     function call in proper order and udelay added.
->>
->> changes in v2:
->>   - optimize IS_CALDONE() and IS_DLLRDY() macro
->>   - remove unneccessary comment
->>   - remove redundant assignment
->>   - add return the error ptr
->> ---
->>   drivers/phy/Kconfig                |   1 +
->>   drivers/phy/Makefile               |   1 +
->>   drivers/phy/intel/Kconfig          |   9 ++
->>   drivers/phy/intel/Makefile         |   2 +
->>   drivers/phy/intel/phy-intel-emmc.c | 281 +++++++++++++++++++++++++++++++++++++
->>   5 files changed, 294 insertions(+)
->>   create mode 100644 drivers/phy/intel/Kconfig
->>   create mode 100644 drivers/phy/intel/Makefile
->>   create mode 100644 drivers/phy/intel/phy-intel-emmc.c
->>
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 0263db2ac874..b3ed94b98d9b 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -69,5 +69,6 @@ source "drivers/phy/socionext/Kconfig"
->>   source "drivers/phy/st/Kconfig"
->>   source "drivers/phy/tegra/Kconfig"
->>   source "drivers/phy/ti/Kconfig"
->> +source "drivers/phy/intel/Kconfig"
->>   
->>   endmenu
->> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->> index 0d9fddc498a6..3f1fc9efbbed 100644
->> --- a/drivers/phy/Makefile
->> +++ b/drivers/phy/Makefile
->> @@ -19,6 +19,7 @@ obj-y					+= broadcom/	\
->>   					   cadence/	\
->>   					   freescale/	\
->>   					   hisilicon/	\
->> +					   intel/	\
->>   					   marvell/	\
->>   					   motorola/	\
->>   					   mscc/	\
->> diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
->> new file mode 100644
->> index 000000000000..4ea6a8897cd7
->> --- /dev/null
->> +++ b/drivers/phy/intel/Kconfig
->> @@ -0,0 +1,9 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +#
->> +# Phy drivers for Intel Lightning Mountain(LGM) platform
->> +#
->> +config PHY_INTEL_EMMC
->> +	tristate "Intel EMMC PHY driver"
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support the Intel EMMC PHY
->> diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
->> new file mode 100644
->> index 000000000000..6b876a75599d
->> --- /dev/null
->> +++ b/drivers/phy/intel/Makefile
->> @@ -0,0 +1,2 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
->> diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-emmc.c
->> new file mode 100644
->> index 000000000000..4f0226f37ab0
->> --- /dev/null
->> +++ b/drivers/phy/intel/phy-intel-emmc.c
->> @@ -0,0 +1,281 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Intel eMMC PHY driver
->> + * Copyright (C) 2019 Intel, Corp.
->> + */
->> +
->> +#include <linux/bits.h>
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +/* eMMC phy register definitions */
->> +#define EMMC_PHYCTRL0_REG	0xa8
->> +#define DR_TY_MASK		GENMASK(30, 28)
->> +#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
->> +#define OTAPDLYENA		BIT(14)
->> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
->> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
->> +
->> +#define EMMC_PHYCTRL1_REG	0xac
->> +#define PDB_MASK		BIT(0)
->> +#define PDB_SHIFT(x)		(((x) << 0) & PDB_MASK)
->> +#define ENDLL_MASK		BIT(7)
->> +#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
->> +
->> +#define EMMC_PHYCTRL2_REG	0xb0
->> +#define FRQSEL_25M		0
->> +#define FRQSEL_50M		1
->> +#define FRQSEL_100M		2
->> +#define FRQSEL_150M		3
->> +#define FRQSEL_MASK		GENMASK(24, 22)
->> +#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
->> +
->> +#define EMMC_PHYSTAT_REG	0xbc
->> +#define CALDONE_MASK		BIT(9)
->> +#define DLLRDY_MASK		BIT(8)
->> +#define IS_CALDONE(x)	((x) & CALDONE_MASK)
->> +#define IS_DLLRDY(x)	((x) & DLLRDY_MASK)
->> +
->> +struct intel_emmc_phy {
->> +	struct regmap *syscfg;
->> +	struct clk *emmcclk;
->> +};
->> +
->> +static int intel_emmc_phy_power(struct phy *phy, bool on_off)
->> +{
->> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
->> +	unsigned int caldone;
->> +	unsigned int dllrdy;
->> +	unsigned int freqsel;
->> +	unsigned long rate;
->> +	int ret, quot;
->> +
->> +	/*
->> +	 * Keep phyctrl_pdb and phyctrl_endll low to allow
->> +	 * initialization of CALIO state M/C DFFs
->> +	 */
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
->> +				 PDB_SHIFT(0));
->> +	if (ret) {
->> +		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Already finish power_off above */
->> +	if (!on_off)
->> +		return 0;
->> +
->> +	rate = clk_get_rate(priv->emmcclk);
->> +	quot = DIV_ROUND_CLOSEST(rate, 50000000);
->> +	if (quot > FRQSEL_150M)
->> +		dev_warn(&phy->dev, "Unsupported rate: %lu\n", rate);
->> +	freqsel = clamp_t(int, quot, FRQSEL_25M, FRQSEL_150M);
->> +
->> +	/*
->> +	 * According to the user manual, calpad calibration
->> +	 * cycle takes more than 2us without the minimal recommended
->> +	 * value, so we may need a little margin here
->> +	 */
->> +	udelay(5);
->> +
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
-> 1 is magic.
->
->> +	if (ret) {
->> +		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/*
->> +	 * According to the user manual, it asks driver to wait 5us for
->> +	 * calpad busy trimming. However it is documented that this value is
->> +	 * PVT(A.K.A process,voltage and temperature) relevant, so some
->> +	 * failure cases are found which indicates we should be more tolerant
->> +	 * to calpad busy trimming.
->> +	 */
->> +	ret = regmap_read_poll_timeout(priv->syscfg, EMMC_PHYSTAT_REG,
->> +				       caldone, IS_CALDONE(caldone),
->> +				       0, 50);
->> +	if (ret) {
->> +		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Set the frequency of the DLL operation */
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL2_REG, FRQSEL_MASK,
->> +				 FRQSEL_SHIFT(freqsel));
->> +	if (ret) {
->> +		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Turn on the DLL */
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, ENDLL_MASK,
->> +				 ENDLL_SHIFT(1));
->> +	if (ret) {
->> +		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/*
->> +	 * After enabling analog DLL circuits docs say that we need 10.2 us if
->> +	 * our source clock is at 50 MHz and that lock time scales linearly
->> +	 * with clock speed.  If we are powering on the PHY and the card clock
->> +	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
->> +	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
->> +	 * Hopefully we won't be running at 100 kHz, but we should still make
->> +	 * sure we wait long enough.
->> +	 *
->> +	 * NOTE: There appear to be corner cases where the DLL seems to take
->> +	 * extra long to lock for reasons that aren't understood.  In some
->> +	 * extreme cases we've seen it take up to over 10ms (!).  We'll be
->> +	 * generous and give it 50ms.
->> +	 */
->> +	ret = regmap_read_poll_timeout(priv->syscfg,
->> +				       EMMC_PHYSTAT_REG,
->> +				       dllrdy, IS_DLLRDY(dllrdy),
->> +				       0, 50 * USEC_PER_MSEC);
->> +	if (ret) {
->> +		dev_err(&phy->dev, "dllrdy failed. ret=%d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int intel_emmc_phy_init(struct phy *phy)
->> +{
->> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
->> +
->> +	/*
->> +	 * We purposely get the clock here and not in probe to avoid the
->> +	 * circular dependency problem. We expect:
->> +	 * - PHY driver to probe
->> +	 * - SDHCI driver to start probe
->> +	 * - SDHCI driver to register it's clock
->> +	 * - SDHCI driver to get the PHY
->> +	 * - SDHCI driver to init the PHY
->> +	 *
->> +	 * The clock is optional, so upon any error just return it like
->> +	 * any other error to user.
->> +	 *
->> +	 */
->> +	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
->> +	if (IS_ERR(priv->emmcclk)) {
->> +		dev_err(&phy->dev, "ERROR: getting emmcclk\n");
->> +		return PTR_ERR(priv->emmcclk);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int intel_emmc_phy_exit(struct phy *phy)
->> +{
->> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
->> +
->> +	clk_put(priv->emmcclk);
->> +
->> +	return 0;
->> +}
->> +
->> +static int intel_emmc_phy_power_on(struct phy *phy)
->> +{
->> +	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
->> +	int ret;
->> +
->> +	/* Drive impedance: 50 Ohm */
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
->> +				 DR_TY_SHIFT(6));
->> +	if (ret) {
->> +		dev_err(&phy->dev, "ERROR set drive-impednce-50ohm: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Output tap delay: disable */
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA, 0);
->> +	if (ret) {
->> +		dev_err(&phy->dev, "ERROR Set output tap delay : %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Output tap delay */
->> +	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG,
->> +				 OTAPDLYSEL_MASK, OTAPDLYSEL_SHIFT(4));
->> +	if (ret) {
->> +		dev_err(&phy->dev, "ERROR: output tap dly select: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	/* Power up eMMC phy analog blocks */
->> +	return intel_emmc_phy_power(phy, true);
->> +}
->> +
->> +static int intel_emmc_phy_power_off(struct phy *phy)
->> +{
->> +	/* Power down eMMC phy analog blocks */
->> +	return intel_emmc_phy_power(phy, false);
->> +}
->> +
->> +static const struct phy_ops ops = {
->> +	.init		= intel_emmc_phy_init,
->> +	.exit		= intel_emmc_phy_exit,
->> +	.power_on	= intel_emmc_phy_power_on,
->> +	.power_off	= intel_emmc_phy_power_off,
->> +	.owner		= THIS_MODULE,
->> +};
->> +
->> +static int intel_emmc_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = dev->of_node;
->> +	struct intel_emmc_phy *priv;
->> +	struct phy *generic_phy;
->> +	struct phy_provider *phy_provider;
->> +
->> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	/* Get eMMC phy (accessed via chiptop) regmap */
->> +	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
->> +	if (IS_ERR(priv->syscfg)) {
->> +		dev_err(dev, "failed to find syscon\n");
->> +		return PTR_ERR(priv->syscfg);
->> +	}
->> +
->> +	generic_phy = devm_phy_create(dev, np, &ops);
->> +	if (IS_ERR(generic_phy)) {
->> +		dev_err(dev, "failed to create PHY\n");
->> +		return PTR_ERR(generic_phy);
->> +	}
->> +
->> +	phy_set_drvdata(generic_phy, priv);
->> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->> +
->> +	return PTR_ERR_OR_ZERO(phy_provider);
->> +}
->> +
->> +static const struct of_device_id intel_emmc_phy_dt_ids[] = {
->> +	{ .compatible = "intel,lgm-emmc-phy" },
->> +	{}
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, intel_emmc_phy_dt_ids);
->> +
->> +static struct platform_driver intel_emmc_driver = {
->> +	.probe		= intel_emmc_phy_probe,
->> +	.driver		= {
->> +		.name	= "intel-emmc-phy",
->> +		.of_match_table = intel_emmc_phy_dt_ids,
->> +	},
->> +};
->> +
->> +module_platform_driver(intel_emmc_driver);
->> +
->> +MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
->> +MODULE_DESCRIPTION("Intel eMMC PHY driver");
->> -- 
->> 2.11.0
->>
+CgpPbiAzMS8wNy8xOSA1OjUxIFBNLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+IEFybWFkYSBDUDEx
+MCBoYXZlIGEgQ09NUEhZIElQIHdoaWNoIHN1cHBvcnRzIGNvbmZpZ3VyaW5nIFNFUkRFUyBsYW5l
+cwo+IGluIG9uZSBtb2RlLCBlaXRoZXI6Cj4gLSBTQVRBCj4gLSBVU0IzIGhvc3QKPiAtIFBDSWUg
+KHNldmVyYWwgd2lkdGgpCj4gLSBFdGhlcm5ldCAoc2V2ZXJhbCBtb2RlcykKPiAKPiBBcyBvZiB0
+b2RheSwgb25seSBhIGZldyBFdGhlcm5ldCBtb2RlcyBhcmUgc3VwcG9ydGVkIGFuZCB0aGUgY29k
+ZSBpcwo+IGVtYmVkZGVkIGluIHRoZSBMaW51eCBkcml2ZXIuIEEgbW9yZSBjb21wbGV0ZSBDT01Q
+SFkgZHJpdmVyIHRoYXQgY2FuCj4gYmUgdXNlZCBieSBib3RoIExpbnV4IGFuZCBVLUJvb3QgaXMg
+ZW1iZWRkZWQgaW4gdGhlIGZpcm13YXJlIGFuZCBjYW4KPiBiZSBydW4gdGhyb3VnaCBTTUMgY2Fs
+bHMuCj4gCj4gRmlyc3QgdGhlIGN1cnJlbnQgQ09NUEhZIGRyaXZlciBpcyB1cGRhdGVkIHRvIHVz
+ZSBTTUMgY2FsbHMgYnV0Cj4gZmFsbGJhY2tzIHRvIHRoZSBhbHJlYWR5IGV4aXN0aW5nIGZ1bmN0
+aW9ucyBpZiB0aGUgZmlybXdhcmUgaXMgbm90Cj4gdXAtdG8tZGF0ZS4gVGhlbiwgbW9yZSBFdGhl
+cm5ldCBtb2RlcyBhcmUgYWRkZWQgKHRocm91Z2ggU01DIGNhbGxzCj4gb25seSkuIFNBVEEsIFVT
+QjNIIGFuZCBQQ0llIG1vZGVzIGFyZSBhbHNvIHN1cHBvcnRlZCBvbmUgYnkgb25lLgo+IAo+IFRo
+ZXJlIGlzIG9uZSBzdWJ0bGUgZGlmZmVyZW5jZSB3aXRoIHRoZSBQQ0llIGZ1bmN0aW9uczogd2Ug
+bXVzdCB0ZWxsCj4gdGhlIGZpcm13YXJlIHRoZSBudW1iZXIgb2YgbGFuZXMgdG8gY29uZmlndXJl
+ICh4MSwgeDIgb3IgeDQpLiBUaGlzCj4gcGFyYW1ldGVyIGRlcGVuZHMgb24gdGhlIG51bWJlciBv
+ZiBlbnRyaWVzIGluIHRoZSAncGh5cycgcHJvcGVydHkKPiBkZXNjcmliaW5nIHRoZSBQQ0llIFBI
+WS4gV2UgdXNlIHRoZSAic3VibW9kZSIgcGFyYW1ldGVyIG9mIHRoZSBnZW5lcmljCj4gUEhZIEFQ
+SSB0byBjYXJyeSB0aGlzIHZhbHVlLiBUaGUgQXJtYWRhLThrIFBDSWUgZHJpdmVyIGhhcyBiZWVu
+Cj4gdXBkYXRlZCB0byBmb2xsb3cgdGhpcyBpZGVhIGFuZCB0aGlzIGNoYW5nZSBoYXMgYmVlbiBt
+ZXJnZWQgYWxyZWFkeToKPiBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTA3Mjc2
+My8KClNvbWUgb2YgdGhlIHBhdGNoZXMgYXJlIG5vdCBhcHBseWluZyBjbGVhbmx5LiBDYXJlIHRv
+IHJlc2VuZCB0aGUgc2VyaWVzIGFmdGVyCnJlYmFzaW5nIHRvIHBoeSAtbmV4dD8KClRoYW5rcwpL
+aXNob24KCj4gCj4gVGhhbmtzLAo+IE1pcXXDqGwKPiAKPiAKPiBDaGFuZ2VzIHNpbmNlIHYyOgo+
+IC0tLS0tLS0tLS0tLS0tLS0tCj4gKiBJbnZlcnRlZCB0d28gYXJndW1lbnRzIGluIGEgdHJhY2Uu
+Cj4gKiBBdm9pZCB3YXJuaW5nIHRoZSB1c2VyIHdoZW4gRVBST0JFX0RFRkVSIGlzIHJldHVybmVk
+IChjbG9ja3MgY2FzZSkuCj4gKiBBZGRlZCBNYXhpbWUgQy4gYW5kIEdyemVnb3J6IEouICdzIFRl
+c3RlZC1ieSB0YWdzIChvbmx5IG9uIHRoZQo+ICAgImludHJvZHVjaW5nIFNNQyBjYWxscyIgcGF0
+Y2gsIGJ1dCB0aGV5IHRlc3RlZCB0aGUgd2hvbGUgc2VyaWVzKS4KPiAqIEFkZGVkIFJvYidzIFJl
+dmlld2VkLWJ5IG9uIHRoZSBiaW5kaW5ncy4KPiAqIEFsc28gdXBkYXRlZCB0aGUgYmluZGluZ3Mg
+YXMgc3VnZ2VzdGVkIGJ5IFJvYiB0byByZWZsZWN0IHRoYXQgdGhlcmUKPiAgIGNhbiBiZSBmcm9t
+IG9uZSB0byBmb3VyIFBIWXMgaW4gdGhlIFBDSWUgbm9kZXMgKGhlbmNlLCB0aGUgbmVlZCBmb3IK
+PiAgIHRoZSBwaHktbmFtZXMgcHJvcGVydHkpLgo+IAo+IENoYW5nZXMgc2luY2UgdjE6Cj4gLS0t
+LS0tLS0tLS0tLS0tLS0KPiAqIEFsbCBtb2RlcyByZXBvcnQgdGhlaXIgZXJyb3JzIHRvIHRoZSB1
+c2VyLgo+ICogSWYgdGhlIGZpcm13YXJlIGlzIHRvbyBvbGQsIGFkdmlzZSB0aGUgdXNlciB0byB1
+cGRhdGUgaXQuCj4gKiBDcmVkaXQgR3J6ZWdvcnogZm9yIGhpcyB3b3JrLgo+ICogRml4IHdyb25n
+IHNwZWVkIGluIEV0aGVybmV0IG1vZGVzLgo+ICogQWRkIENPTVBIWSBuZWNlc3NhcnkgY2xvY2tz
+Lgo+ICogVXBkYXRlIGJpbmRpbmdzLgo+ICogVGhlIHNlY3VyaXR5IGZsYXcgcmVsYXRlZCB0byB0
+aGUgZmFjdCB0aGF0IHdlIG11c3QgZ2l2ZSB0aGUgQ1AKPiAgIGFkZHJlc3MgdG8gdGhlIGZpcm13
+YXJlIGhhcyBiZWVuIG1pdGlnYXRlZCBieSB0aGUgYWRkaXRpb24gb2YgZXh0cmEKPiAgIGNoZWNr
+cyBpbiBBVEYgcmVjZW50bHkuCj4gCj4gCj4gR3J6ZWdvcnogSmFzemN6eWsgKDUpOgo+ICAgcGh5
+OiBtdmVidS1jcDExMC1jb21waHk6IEFkZCBTTUMgY2FsbCBzdXBwb3J0Cj4gICBwaHk6IG12ZWJ1
+LWNwMTEwLWNvbXBoeTogQWRkIFJYQVVJIHN1cHBvcnQKPiAgIHBoeTogbXZlYnUtY3AxMTAtY29t
+cGh5OiBBZGQgVVNCMyBob3N0L2RldmljZSBzdXBwb3J0Cj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNv
+bXBoeTogQWRkIFNBVEEgc3VwcG9ydAo+ICAgcGh5OiBtdmVidS1jcDExMC1jb21waHk6IEFkZCBQ
+Q0llIHN1cHBvcnQKPiAKPiBNaXF1ZWwgUmF5bmFsICgxNCk6Cj4gICBwaHk6IG12ZWJ1LWNwMTEw
+LWNvbXBoeTogQWRkIGNsb2NrcyBzdXBwb3J0Cj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTog
+RXhwbGljaXRseSBpbml0aWFsaXplIHRoZSBsYW5lIHN1Ym1vZGUKPiAgIHBoeTogbXZlYnUtY3Ax
+MTAtY29tcGh5OiBMaXN0IGFscmVhZHkgc3VwcG9ydGVkIEV0aGVybmV0IG1vZGVzCj4gICBwaHk6
+IG12ZWJ1LWNwMTEwLWNvbXBoeTogUmVuYW1lIHRoZSBtYWNybyBoYW5kbGluZyBvbmx5IEV0aGVy
+bmV0IG1vZGVzCj4gICBwaHk6IG12ZWJ1LWNwMTEwLWNvbXBoeTogQWxsb3cgbm9uLUV0aGVybmV0
+IG1vZGVzIHRvIGJlIGNvbmZpZ3VyZWQKPiAgIHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBDb3Nt
+ZXRpYyBjaGFuZ2UgaW4gYSBoZWxwZXIKPiAgIHBoeTogbXZlYnUtY3AxMTAtY29tcGh5OiBVcGRh
+dGUgY29tbWVudCBhYm91dCBwb3dlcmluZyBvZmYgYWxsIGxhbmVzCj4gICAgIGF0IGJvb3QKPiAg
+IGR0LWJpbmRpbmdzOiBwaHk6IEFkZCBNYXJ2ZWxsIENPTVBIWSBjbG9ja3MKPiAgIGR0LWJpbmRp
+bmdzOiBwY2k6IGFkZCBQSFkgcHJvcGVydGllcyB0byBBcm1hZGEgN0svOEsgY29udHJvbGxlcgo+
+ICAgICBiaW5kaW5ncwo+ICAgYXJtNjQ6IGR0czogbWFydmVsbDogQWRkIENQMTEwIENPTVBIWSBj
+bG9ja3MKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBwZXItcG9ydCBQSFlzIGlu
+IFNBVEEgbm9kZXMKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBQSFlzIGluIFVT
+QjMgbm9kZXMKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IEFkZCA3ay84ayBQSFlzIGluIFBDSWUg
+bm9kZXMKPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IENvbnZlcnQgN2svOGsgdXNiLXBoeSBwcm9w
+ZXJ0aWVzIHRvIHBoeS1zdXBwbHkKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3Bj
+aS1hcm1hZGE4ay50eHQgIHwgICA2ICsKPiAgLi4uL2JpbmRpbmdzL3BoeS9waHktbXZlYnUtY29t
+cGh5LnR4dCAgICAgICAgIHwgIDEwICsKPiAgLi4uL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJt
+YWRhLTcwNDAtZGIuZHRzIHwgIDM3ICstCj4gIC4uLi9tYXJ2ZWxsL2FybWFkYS04MDQwLWNsZWFy
+Zm9nLWd0LThrLmR0cyAgICB8ICAyMiArLQo+ICAuLi4vYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9h
+cm1hZGEtODA0MC1kYi5kdHMgfCAgNDMgKy0KPiAgLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRh
+LTgwNDAtbWNiaW4uZHRzaSAgIHwgIDM4ICstCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVs
+bC9hcm1hZGEtY3AxMTAuZHRzaSB8ICAxMyArCj4gIGRyaXZlcnMvcGh5L21hcnZlbGwvcGh5LW12
+ZWJ1LWNwMTEwLWNvbXBoeS5jICB8IDQxMiArKysrKysrKysrKysrKystLS0KPiAgOCBmaWxlcyBj
+aGFuZ2VkLCA0OTkgaW5zZXJ0aW9ucygrKSwgODIgZGVsZXRpb25zKC0pCj4gCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
