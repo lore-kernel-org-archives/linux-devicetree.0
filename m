@@ -1,7 +1,7 @@
 From: Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v2 3/6] dt-bindings: soc: qcom: Add RSC power domain specifier
-Date: Fri, 23 Aug 2019 13:47:00 +0530
-Message-ID: <20190823081703.17325-4-mkshah@codeaurora.org>
+Subject: [PATCH v2 5/6] arm64: dts: Convert to the hierarchical CPU topology layout for sdm845
+Date: Fri, 23 Aug 2019 13:47:02 +0530
+Message-ID: <20190823081703.17325-6-mkshah@codeaurora.org>
 References: <20190823081703.17325-1-mkshah@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,49 +12,202 @@ To: swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org, linux-arm-ms
 Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org, Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In addition to transmitting resource state requests to the remote
-processor, the RSC is responsible for powering off/lowering the
-requirements from CPUs subsystem for the associated hardware like
-buses, clocks, and regulators when all CPUs and cluster is powered down.
+In the hierarchical layout, we are creating power domains around each CPU
+and describes the idle states for them inside the power domain provider
+node. Note that, the CPU's idle states still needs to be compatible with
+"arm,idle-state".
 
-The power domain is configured to a low power state and when all the
-CPUs are powered down, the RSC can lower resource state requirements
-and power down the rails that power the CPUs.
+Furthermore, represent the CPU cluster as a separate master power domain,
+powering the CPU's power domains. The cluster node, contains the idle
+states for the cluster and each idle state needs to be compatible with
+the "domain-idle-state".
 
-Add PM domain specifier property for RSC controller.
+If the running platform is using a PSCI FW that supports the OS initiated
+CPU suspend mode, which likely should be the case unless the PSCI FW is
+very old, this change triggers the PSCI driver to enable it.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 103 ++++++++++++++++++++-------
+ 1 file changed, 78 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-index 9b86d1eff219..d0ab6e9b6745 100644
---- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-@@ -83,6 +83,13 @@ Properties:
- 	Value type: <string>
- 	Definition: Name for the RSC. The name would be used in trace logs.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 4babff5f19b5..0e7f36d2a7d9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -190,9 +190,8 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+-			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+-					   &LITTLE_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD0>;
++			power-domain-names = "psci";
+ 			capacity-dmips-mhz = <607>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			#cooling-cells = <2>;
+@@ -211,9 +210,8 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
+-			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+-					   &LITTLE_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD1>;
++			power-domain-names = "psci";
+ 			capacity-dmips-mhz = <607>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			#cooling-cells = <2>;
+@@ -229,9 +227,8 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
+-			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+-					   &LITTLE_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD2>;
++			power-domain-names = "psci";
+ 			capacity-dmips-mhz = <607>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			#cooling-cells = <2>;
+@@ -247,9 +244,8 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
+-			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+-					   &LITTLE_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD3>;
++			power-domain-names = "psci";
+ 			capacity-dmips-mhz = <607>;
+ 			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			#cooling-cells = <2>;
+@@ -266,9 +262,8 @@
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			cpu-idle-states = <&BIG_CPU_SLEEP_0
+-					   &BIG_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD4>;
++			power-domain-names = "psci";
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_400>;
+@@ -284,9 +279,8 @@
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			cpu-idle-states = <&BIG_CPU_SLEEP_0
+-					   &BIG_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD5>;
++			power-domain-names = "psci";
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_500>;
+@@ -302,9 +296,8 @@
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			cpu-idle-states = <&BIG_CPU_SLEEP_0
+-					   &BIG_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD6>;
++			power-domain-names = "psci";
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_600>;
+@@ -320,9 +313,8 @@
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
+ 			capacity-dmips-mhz = <1024>;
+-			cpu-idle-states = <&BIG_CPU_SLEEP_0
+-					   &BIG_CPU_SLEEP_1
+-					   &CLUSTER_SLEEP_0>;
++			power-domains = <&CPU_PD7>;
++			power-domain-names = "psci";
+ 			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			#cooling-cells = <2>;
+ 			next-level-cache = <&L2_700>;
+@@ -412,7 +404,7 @@
+ 			};
  
-+- #power-domain-cells:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Number of cells in power domain specifier. Optional for
-+		    controllers that may be in 'solver' state where they can
-+		    be in autonomous mode executing low power modes.
+ 			CLUSTER_SLEEP_0: cluster-sleep-0 {
+-				compatible = "arm,idle-state";
++				compatible = "domain-idle-state";
+ 				idle-state-name = "cluster-power-down";
+ 				arm,psci-suspend-param = <0x400000F4>;
+ 				entry-latency-us = <3263>;
+@@ -618,6 +610,67 @@
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
 +
- Drivers that want to use the RSC to communicate with RPMH must specify their
- bindings as child nodes of the RSC controllers they wish to communicate with.
- 
-@@ -112,6 +119,7 @@ TCS-OFFSET: 0xD00
- 				  <SLEEP_TCS   3>,
- 				  <WAKE_TCS    3>,
- 				  <CONTROL_TCS 1>;
-+		#power-domain-cells = <0>;
++		CPU_PD0: cpu-pd0 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&LITTLE_CPU_SLEEP_0>,
++						<&LITTLE_CPU_SLEEP_1>;
++		};
++
++		CPU_PD1: cpu-pd1 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&LITTLE_CPU_SLEEP_0>,
++						<&LITTLE_CPU_SLEEP_1>;
++		};
++
++		CPU_PD2: cpu-pd2 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&LITTLE_CPU_SLEEP_0>,
++						<&LITTLE_CPU_SLEEP_1>;
++		};
++
++		CPU_PD3: cpu-pd3 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&LITTLE_CPU_SLEEP_0>,
++						<&LITTLE_CPU_SLEEP_1>;
++		};
++
++		CPU_PD4: cpu-pd4 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&BIG_CPU_SLEEP_0>,
++						<&BIG_CPU_SLEEP_1>;
++		};
++
++		CPU_PD5: cpu-pd5 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&BIG_CPU_SLEEP_0>,
++						<&BIG_CPU_SLEEP_1>;
++		};
++
++		CPU_PD6: cpu-pd6 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&BIG_CPU_SLEEP_0>,
++						<&BIG_CPU_SLEEP_1>;
++		};
++
++		CPU_PD7: cpu-pd7 {
++			#power-domain-cells = <0>;
++			power-domains = <&CLUSTER_PD>;
++			domain-idle-states = <&BIG_CPU_SLEEP_0>,
++						<&BIG_CPU_SLEEP_1>;
++		};
++
++		CLUSTER_PD: cluster-pd {
++			#power-domain-cells = <0>;
++			domain-idle-states = <&CLUSTER_SLEEP_0>;
++		};
  	};
  
- Example 2:
+ 	soc: soc {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
