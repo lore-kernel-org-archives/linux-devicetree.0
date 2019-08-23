@@ -1,192 +1,99 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v14 01/18] kunit: test: add KUnit test runner core
-Date: Fri, 23 Aug 2019 13:04:28 -0600
-Message-ID: <bb9384cd-bd62-2190-e0da-ed3537aff171@kernel.org>
-References: <20190820232046.50175-1-brendanhiggins@google.com>
- <20190820232046.50175-2-brendanhiggins@google.com>
- <7f2c8908-75f6-b793-7113-ad57c51777ce@kernel.org>
- <CAFd5g44mRK9t4f58i_YMEt=e9RTxwrrhFY_V2LW_E7bUwR3cdg@mail.gmail.com>
- <4513d9f3-a69b-a9a4-768b-86c2962b62e0@kernel.org>
- <CAFd5g446J=cVW4QW+QeZMLDi+ANqshAW6KTrFFBTusPcdr6-GA@mail.gmail.com>
- <42c6235c-c586-8de1-1913-7cf1962c6066@kernel.org>
- <CAFd5g44hLgeqPtNw1zQ5k_+apBm=ri_6=wAgHk=oPOvQs6xgNg@mail.gmail.com>
- <54f3c011-d666-e828-5e77-359b7a7374e7@kernel.org>
- <CAFd5g44NAs6KK0_sG9itgT5qxujpyx36XV6tT8=zMynG-ZyVhQ@mail.gmail.com>
+From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Subject: [PATCH v3 0/7] Add initial support for S32V234-EVB
+Date: Fri, 23 Aug 2019 19:11:30 +0000
+Message-ID: <20190823191115.18490-1-stefan-gabriel.mirea@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g44NAs6KK0_sG9itgT5qxujpyx36XV6tT8=zMynG-ZyVhQ@mail.gmail.com>
 Content-Language: en-US
+Content-ID: <FC40214232A0B445B098DD4713A8872C@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
+To: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
+Cc: "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/23/19 12:56 PM, Brendan Higgins wrote:
-> On Fri, Aug 23, 2019 at 11:32 AM shuah <shuah@kernel.org> wrote:
->>
->> On 8/23/19 11:54 AM, Brendan Higgins wrote:
->>> On Fri, Aug 23, 2019 at 10:34 AM shuah <shuah@kernel.org> wrote:
->>>>
->>>> On 8/23/19 11:27 AM, Brendan Higgins wrote:
->>>>> On Fri, Aug 23, 2019 at 10:05 AM shuah <shuah@kernel.org> wrote:
->>>>>>
->>>>>> On 8/23/19 10:48 AM, Brendan Higgins wrote:
->>>>>>> On Fri, Aug 23, 2019 at 8:33 AM shuah <shuah@kernel.org> wrote:
->>>>>>>>
->>>>>>>> Hi Brendan,
->>>>>>>>
->>>>>>>> On 8/20/19 5:20 PM, Brendan Higgins wrote:
->>>>>>>>> Add core facilities for defining unit tests; this provides a common way
->>>>>>>>> to define test cases, functions that execute code which is under test
->>>>>>>>> and determine whether the code under test behaves as expected; this also
->>>>>>>>> provides a way to group together related test cases in test suites (here
->>>>>>>>> we call them test_modules).
->>>>>>>>>
->>>>>>>>> Just define test cases and how to execute them for now; setting
->>>>>>>>> expectations on code will be defined later.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>>>>>>>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>>>>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->>>>>>>>> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
->>>>>>>>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->>>>>>>>> ---
->>>>>>>>>       include/kunit/test.h | 179 ++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>       kunit/Kconfig        |  17 ++++
->>>>>>>>>       kunit/Makefile       |   1 +
->>>>>>>>>       kunit/test.c         | 191 +++++++++++++++++++++++++++++++++++++++++++
->>>>>>>>>       4 files changed, 388 insertions(+)
->>>>>>>>>       create mode 100644 include/kunit/test.h
->>>>>>>>>       create mode 100644 kunit/Kconfig
->>>>>>>>>       create mode 100644 kunit/Makefile
->>>>>>>>>       create mode 100644 kunit/test.c
->>>>>>>>>
->>>>>>>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
->>>>>>>>> new file mode 100644
->>>>>>>>> index 0000000000000..e0b34acb9ee4e
->>>>>>>>> --- /dev/null
->>>>>>>>> +++ b/include/kunit/test.h
->>>>>>>>> @@ -0,0 +1,179 @@
->>>>>>>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>>>>>>> +/*
->>>>>>>>> + * Base unit test (KUnit) API.
->>>>>>>>> + *
->>>>>>>>> + * Copyright (C) 2019, Google LLC.
->>>>>>>>> + * Author: Brendan Higgins <brendanhiggins@google.com>
->>>>>>>>> + */
->>>>>>>>> +
->>>>>>>>> +#ifndef _KUNIT_TEST_H
->>>>>>>>> +#define _KUNIT_TEST_H
->>>>>>>>> +
->>>>>>>>> +#include <linux/types.h>
->>>>>>>>> +
->>>>>>>>> +struct kunit;
->>>>>>>>> +
->>>>>>>>> +/**
->>>>>>>>> + * struct kunit_case - represents an individual test case.
->>>>>>>>> + * @run_case: the function representing the actual test case.
->>>>>>>>> + * @name: the name of the test case.
->>>>>>>>> + *
->>>>>>>>> + * A test case is a function with the signature, ``void (*)(struct kunit *)``
->>>>>>>>> + * that makes expectations (see KUNIT_EXPECT_TRUE()) about code under test. Each
->>>>>>>>> + * test case is associated with a &struct kunit_suite and will be run after the
->>>>>>>>> + * suite's init function and followed by the suite's exit function.
->>>>>>>>> + *
->>>>>>>>> + * A test case should be static and should only be created with the KUNIT_CASE()
->>>>>>>>> + * macro; additionally, every array of test cases should be terminated with an
->>>>>>>>> + * empty test case.
->>>>>>>>> + *
->>>>>>>>> + * Example:
->>>>>>>>
->>>>>>>> Can you fix these line continuations. It makes it very hard to read.
->>>>>>>> Sorry for this late comment. These comments lines are longer than 80
->>>>>>>> and wrap.
->>>>>>>
->>>>>>> None of the lines in this commit are over 80 characters in column
->>>>>>> width. Some are exactly 80 characters (like above).
->>>>>>>
->>>>>>> My guess is that you are seeing the diff added text (+ ), which when
->>>>>>> you add that to a line which is exactly 80 char in length ends up
->>>>>>> being over 80 char in email. If you apply the patch you will see that
->>>>>>> they are only 80 chars.
->>>>>>>
->>>>>>>>
->>>>>>>> There are several comment lines in the file that are way too long.
->>>>>>>
->>>>>>> Note that checkpatch also does not complain about any over 80 char
->>>>>>> lines in this file.
->>>>>>>
->>>>>>> Sorry if I am misunderstanding what you are trying to tell me. Please
->>>>>>> confirm either way.
->>>>>>>
->>>>>>
->>>>>> WARNING: Avoid unnecessary line continuations
->>>>>> #258: FILE: include/kunit/test.h:137:
->>>>>> +                */                                                            \
->>>>>>
->>>>>> total: 0 errors, 2 warnings, 388 lines checked
->>>>>
->>>>> Ah, okay so you don't like the warning about the line continuation.
->>>>> That's not because it is over 80 char, but because there is a line
->>>>> continuation after a comment. I don't really see a way to get rid of
->>>>> it without removing the comment from inside the macro.
->>>>>
->>>>> I put this TODO there in the first place a Luis' request, and I put it
->>>>> in the body of the macro because this macro already had a kernel-doc
->>>>> comment and I didn't think that an implementation detail TODO belonged
->>>>> in the user documentation.
->>>>>
->>>>>> Go ahead fix these. It appears there are few lines that either longer
->>>>>> than 80. In general, I keep them around 75, so it is easier read.
->>>>>
->>>>> Sorry, the above is the only checkpatch warning other than the
->>>>> reminder to update the MAINTAINERS file.
->>>>>
->>>>> Are you saying you want me to go through and make all the lines fit in
->>>>> 75 char column width? I hope not because that is going to be a pretty
->>>>> substantial change to make.
->>>>>
->>>>
->>>> There are two things with these comment lines. One is checkpatch
->>>> complaining and the other is general readability.
->>>
->>> So for the checkpatch warning, do you want me to move the comment out
->>> of the macro body into the kernel-doc comment? I don't really think it
->>> is the right place for a comment of this nature, but I think it is
->>> probably better than dropping it entirely (I don't see how else to do
->>> it without just removing the comment entirely).
->>>
->>
->> Don't drop the comments. It makes perfect sense to turn this into a
->> kernel-doc comment.
-> 
-> I am fine with that. I will do that in a subsequent revision once we
-> figure out the column limit issue.
-> 
->> We are going back forth on this a lot. I see several lines 81+ in
->> this file. I am at 5.3-rc5 and my commit hooks aren't happy. I am
->> fine with it if you want to convert these to kernel-doc comments.
->> I think it makes perfect sense.
-> 
-> Okay, so this is interesting. When I look at the applied patches in my
-> local repo, I don't see any 81+ lines. So it seems that something
-> interesting is going on here.
-> 
-> To be clear (sorry for the stupid question) you are seeing the issue
-> after you applied the patch, and not in the patch file itself?
-> 
-
-I am using my normal workflow. My pre-commit check is catching this.
-Just this patch. All others are good other than the 9/18 BUG() issue.
-
-> Since we are still at OSS, would you mind if we meet up this afternoon
-> so I can see this issue you are seeing? I imagine we should get this
-> figured out pretty quickly.
-> 
-
-Yeah. Would have been nice. I am not at oss today.
-
-thanks,
--- Shuah
+SGVsbG8sDQoNCk5YUCdzIFMzMlYyMzRbMV0gKCJUcmVlcnVubmVyIikgdmlzaW9uIG1pY3JvcHJv
+Y2Vzc29ycyBhcmUgdGFyZ2V0ZWQgZm9yDQpoaWdoLXBlcmZvcm1hbmNlLCBjb21wdXRhdGlvbmFs
+bHkgaW50ZW5zaXZlIHZpc2lvbiBhbmQgc2Vuc29yIGZ1c2lvbg0KYXBwbGljYXRpb25zIHRoYXQg
+cmVxdWlyZSBhdXRvbW90aXZlIHNhZmV0eSBsZXZlbHMuIFRoZXkgaW5jbHVkZSBsZWFkaW5nDQpl
+ZGdlIENhbWVyYSBWaXNpb24gbW9kdWxlcyBsaWtlIEFQRVgtMiwgSVNQIGFuZCBHUFUuIFRoZSBT
+MzJWMjM0LUVWQiBhbmQNClMzMlYyMzQtU0JDIGJvYXJkcyBhcmUgYXZhaWxhYmxlIGZvciBjdXN0
+b21lciBldmFsdWF0aW9uLg0KDQpUaGUgZm9sbG93aW5nIHBhdGNoIHNlcmllcyBpbnRyb2R1Y2Vz
+IG1pbmltYWwgZW5hYmxlbWVudCBzdXBwb3J0IGZvciB0aGUNCk5YUCBTMzJWMjM0LUVWQjJbMl0g
+Ym9hcmQsIHdoaWNoIGxldmVyYWdlcyBtb3N0IG9mIHRoZSBTb0MgY2FwYWJpbGl0aWVzLg0KVXAg
+dG8gdjIsIHRoaXMgc2VyaWVzIGFsc28gaW5jbHVkZWQgdGhlIGZzbF9saW5mbGV4dWFydCBkcml2
+ZXIsIHdoaWNoIGhhcw0KYmVlbiBpbmNsdWRlZCBpbiBHcmVnIEtyb2FoLUhhcnRtYW4ncyB0dHkg
+Z2l0IHRyZWVbM10uDQoNCkluIHRoZSBmdXR1cmUsIHdlIGFpbSB0byBzdWJtaXQgbXVsdGlwbGUg
+ZHJpdmVycyB1cHN0cmVhbSwgd2hpY2ggY2FuIGJlDQpmb3VuZCBpbiB0aGUga2VybmVsIG9mIG91
+ciBBdXRvIExpbnV4IEJTUFs0XSAoIkFMQiIpLCBzdGFydGluZyB3aXRoIGJhc2ljDQpwaW5tdXhp
+bmcsIGNsb2NrIGFuZCB1U0RIQyBkcml2ZXJzLg0KDQpGb3IgdmFsaWRhdGlvbiwgeW91IGNhbiB1
+c2UgdGhlIFUtQm9vdCBib290bG9hZGVyIGluIHRoZSBBTEJbNV0sIHdoaWNoIHdlDQpidWlsZCBh
+bmQgdGVzdCB3aXRoIG91ciBwYXRjaGVkIHZlcnNpb24gb2YgdGhlIExpbmFybyBHQ0MgNi4zLjEg
+MjAxNy4wNQ0KdG9vbGNoYWluIGZvciBBUk0gNjQtYml0LCB3aXRoIHNvdXJjZXMgYXZhaWxhYmxl
+IG9uIFs2XS4NCg0KQ2hhbmdlcyBpbiB2MzoNCiogUmVtb3ZlIHRoZSBwYXRjaCAndHR5OiBzZXJp
+YWw6IEFkZCBsaW5mbGV4dWFydCBkcml2ZXIgZm9yIFMzMlYyMzQnDQogIGZvbGxvd2luZyBpdHMg
+YWNjZXB0YW5jZVszXTsNCiogUmVwbGFjZSAnRnJlZXNjYWxlJyB3aXRoICdOWFAnIGluIHRoZSBB
+UkNIX1MzMiBjb25maWcgZGVmaW5pdGlvbiBhbmQgdGhlDQogICdtb2RlbCcgcHJvcGVydHkgZnJv
+bSB0aGUgZGV2aWNlIHRyZWU7DQoqIFJlbW92ZSB0aGUgJ2ZzbC0nIHByZWZpeGVzIGZyb20gdGhl
+IGR0c2kgYW5kIGR0cyBmaWxlIG5hbWVzOw0KKiBNb3ZlIHRoZSAnbW9kZWwnIHByb3BlcnR5IGZy
+b20gKGZzbC0pczMydjIzNC5kdHNpIHRvIHMzMnYyMzQtZXZiLmR0czsNCiogQWRkIG5ld2xpbmVz
+IGJldHdlZW4gdGhlIGNwdSBub2RlcyBpbiBzMzJ2MjM0LmR0c2k7DQoqIE1ha2UgdXNlIG9mIEdJ
+Q19TUEksIEdJQ19QUEksIEdJQ19DUFVfTUFTS19TSU1QTEUgYW5kIElSUV9UWVBFXyogaW4gdGhl
+DQogICdpbnRlcnJ1cHRzJyB0dXBsZXM7DQoqIE1vdmUgdGhlICd0aW1lcicgYW5kICdpbnRlcnJ1
+cHQtY29udHJvbGxlcicgbm9kZXMgYmVmb3JlICdzb2MnIGluDQogIHMzMnYyMzQuZHRzaTsNCiog
+QmUgY29uc2lzdGVudCB3aXRoIHRoZSAnTElORmxleEQnIHNwZWxsaW5nIGluIGRvY3VtZW50YXRp
+b24sIHN0cmluZ3MgYW5kDQogIGNvbW1lbnRzOyBhZGQgbmV3IHBhdGNoICdzZXJpYWw6IGZzbF9s
+aW5mbGV4dWFydDogQmUgY29uc2lzdGVudCB3aXRoIHRoZQ0KICBuYW1lJyB0byB1cGRhdGUgdGhl
+IExJTkZsZXhEIGRyaXZlciBhcyB3ZWxsOw0KKiBSZW1vdmUgZnJvbSBmc2wsczMyLWxpbmZsZXh1
+YXJ0LnR4dCBhIHN0YXRlbWVudCByZWdhcmRpbmcgdGhlIGxpbWl0YXRpb24NCiAgdG8gVUFSVCBt
+b2RlOw0KKiBNYWtlIHRoZSBjb21wYXRpYmxlIHN0cmluZyBTb0Mgc3BlY2lmaWMgKCJmc2wsczMy
+djIzNC1saW5mbGV4dWFydCIpOyBhZGQNCiAgbmV3IHBhdGNoICdzZXJpYWw6IGZzbF9saW5mbGV4
+dWFydDogVXBkYXRlIGNvbXBhdGlibGUgc3RyaW5nJyB0byB1cGRhdGUNCiAgdGhlIExJTkZsZXhE
+IGRyaXZlciBhcyB3ZWxsOw0KKiBJbiB0aGUgTElORmxleEQgYmluZGluZyBkb2N1bWVudGF0aW9u
+LCBpbnNlcnQgYSBzcGFjZSBiZXR3ZWVuIGxhYmVsIGFuZA0KICBub2RlIG5hbWUgYW5kIHJlbW92
+ZSB0aGUgJ3N0YXR1cycgcHJvcGVydHkuDQoNCkNoYW5nZXMgaW4gdjI6DQoqIFVwZGF0ZSB0aGUg
+ZW50cnkgaW4gZnNsLnlhbWwgdG8gYXBwbHkgdG8gYWxsIFMzMlYyMzQgYmFzZWQgYm9hcmRzOw0K
+KiBBZGQgY2hvc2VuIG5vZGUgdG8gZHRzLCB3aXRoIGEgJ3N0ZG91dC1wYXRoJyBwcm9wZXJ0eSBm
+b3IgZWFybHljb247DQoqIFJlbW92ZSBsaW5mbGV4X3ZlcmlmeV9wb3J0KCksIGJlY2F1c2UgaXQg
+d2FzIG9ubHkgY2FsbGVkIGZyb20NCiAgdWFydF9zZXRfaW5mbygpLCB3aGljaCB3YXMgZ29pbmcg
+dG8gYWx3YXlzIGZhaWwgYXQgdGhlICJiYXVkX2Jhc2UgPCA5NjAwIg0KICBjaGVjaywgYXMgd2Ug
+YXJlIG5vdCB1c2luZyB1YXJ0Y2xrIGZyb20gdWFydF9wb3J0IHlldDsNCiogRml4IGNvbXBhdGli
+bGUgc3RyaW5nIHVzZWQgaW4gT0ZfRUFSTFlDT05fREVDTEFSRS4NCg0KWzFdIGh0dHBzOi8vd3d3
+Lm54cC5jb20vcHJvZHVjdHMvcHJvY2Vzc29ycy1hbmQtbWljcm9jb250cm9sbGVycy9hcm0tYmFz
+ZWQtcHJvY2Vzc29ycy1hbmQtbWN1cy9zMzItYXV0b21vdGl2ZS1wbGF0Zm9ybS92aXNpb24tcHJv
+Y2Vzc29yLWZvci1mcm9udC1hbmQtc3Vycm91bmQtdmlldy1jYW1lcmEtbWFjaGluZS1sZWFybmlu
+Zy1hbmQtc2Vuc29yLWZ1c2lvbjpTMzJWMjM0DQpbMl0gaHR0cHM6Ly93d3cubnhwLmNvbS9zdXBw
+b3J0L2RldmVsb3Blci1yZXNvdXJjZXMvZXZhbHVhdGlvbi1hbmQtZGV2ZWxvcG1lbnQtYm9hcmRz
+L3VsdHJhLXJlbGlhYmxlLWRldi1wbGF0Zm9ybXMvczMydi1tcHVzLXBsYXRmb3Jtcy9zMzJ2LXZp
+c2lvbi1hbmQtc2Vuc29yLWZ1c2lvbi1ldmFsdWF0aW9uLXN5c3RlbTpTMzJWMjM0RVZCDQpbM10g
+aHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZ3JlZ2toL3R0
+eS5naXQvY29tbWl0Lz9oPXR0eS1uZXh0JmlkPWI5NTM4MTViODE5YjBmMzI3YjU1MzhmZWJhMzYz
+OWQ1MmRiNzAxNzINCls0XSBodHRwczovL3NvdXJjZS5jb2RlYXVyb3JhLm9yZy9leHRlcm5hbC9h
+dXRvYnNwczMyL2xpbnV4Lw0KWzVdIGh0dHBzOi8vc291cmNlLmNvZGVhdXJvcmEub3JnL2V4dGVy
+bmFsL2F1dG9ic3BzMzIvdS1ib290Lw0KWzZdIGh0dHBzOi8vc291cmNlLmNvZGVhdXJvcmEub3Jn
+L2V4dGVybmFsL3MzMmRzL2NvbXBpbGVyL2djYy8NCg0KRWRkeSBQZXRyaciZb3IgKDEpOg0KICBk
+dC1iaW5kaW5nczogYXJtOiBmc2w6IEFkZCB0aGUgUzMyVjIzNC1FVkIgYm9hcmQNCg0KTWloYWVs
+YSBNYXJ0aW5hcyAoMik6DQogIGFybTY0OiBJbnRyb2R1Y2UgY29uZmlnIGZvciBTMzINCiAgYXJt
+NjQ6IGRlZmNvbmZpZzogRW5hYmxlIGNvbmZpZ3MgZm9yIFMzMlYyMzQNCg0KU3RlZmFuLUdhYnJp
+ZWwgTWlyZWEgKDIpOg0KICBzZXJpYWw6IGZzbF9saW5mbGV4dWFydDogVXBkYXRlIGNvbXBhdGli
+bGUgc3RyaW5nDQogIHNlcmlhbDogZnNsX2xpbmZsZXh1YXJ0OiBCZSBjb25zaXN0ZW50IHdpdGgg
+dGhlIG5hbWUNCg0KU3RvaWNhIENvc21pbi1TdGVmYW4gKDIpOg0KICBhcm02NDogZHRzOiBmc2w6
+IEFkZCBkZXZpY2UgdHJlZSBmb3IgUzMyVjIzNC1FVkINCiAgZHQtYmluZGluZ3M6IHNlcmlhbDog
+RG9jdW1lbnQgRnJlZXNjYWxlIExJTkZsZXhEIFVBUlQNCg0KIC4uLi9hZG1pbi1ndWlkZS9rZXJu
+ZWwtcGFyYW1ldGVycy50eHQgICAgICAgICB8ICAgMiArLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9mc2wueWFtbCAgICAgICAgICB8ICAgNiArDQogLi4uL2JpbmRpbmdzL3NlcmlhbC9m
+c2wsczMyLWxpbmZsZXh1YXJ0LnR4dCAgIHwgIDIyICsrKw0KIGFyY2gvYXJtNjQvS2NvbmZpZy5w
+bGF0Zm9ybXMgICAgICAgICAgICAgICAgICB8ICAgNSArDQogYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvTWFrZWZpbGUgICAgICAgIHwgICAyICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2Zy
+ZWVzY2FsZS9zMzJ2MjM0LWV2Yi5kdHMgfCAgMjUgKysrKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+ZnJlZXNjYWxlL3MzMnYyMzQuZHRzaSAgICB8IDEzOSArKysrKysrKysrKysrKysrKysNCiBhcmNo
+L2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDMgKw0KIGRyaXZl
+cnMvdHR5L3NlcmlhbC9LY29uZmlnICAgICAgICAgICAgICAgICAgICB8ICAgOCArLQ0KIGRyaXZl
+cnMvdHR5L3NlcmlhbC9mc2xfbGluZmxleHVhcnQuYyAgICAgICAgICB8ICAgOCArLQ0KIGluY2x1
+ZGUvdWFwaS9saW51eC9zZXJpYWxfY29yZS5oICAgICAgICAgICAgICB8ICAgNCArLQ0KIDExIGZp
+bGVzIGNoYW5nZWQsIDIxMyBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NlcmlhbC9mc2ws
+czMyLWxpbmZsZXh1YXJ0LnR4dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9zMzJ2MjM0LWV2Yi5kdHMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvczMydjIzNC5kdHNpDQoNCi0tIA0KMi4yMi4wDQoNCg==
