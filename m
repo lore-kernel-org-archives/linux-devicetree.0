@@ -1,81 +1,47 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 16/20] ARM: mmp: add SMP support
-Date: Fri, 23 Aug 2019 09:13:33 +0200
-Message-ID: <0897fa54f487f481bf8770ed516578b6f4f53380.camel@v3.sk>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
-         <20190822092643.593488-17-lkundrak@v3.sk>
-         <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH v2 06/14] arm64: dts: meson-gx: fix mhu compatible
+Date: Fri, 23 Aug 2019 09:02:40 +0200
+Message-ID: <20190823070248.25832-7-narmstrong@baylibre.com>
+References: <20190823070248.25832-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6f9d2285-5ca4-a63a-610e-890b49a4f816@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, Marc Zyngier <maz@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: khilman@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-22 at 09:36 -0700, Florian Fainelli wrote:
-> On 8/22/19 2:26 AM, Lubomir Rintel wrote:
-> > Used to bring up the second core on MMP3.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v1:
-> > - Wrap SW_BRANCH_VIRT_ADDR with __pa_symbol()
-> > 
-> >  arch/arm/mach-mmp/Makefile  |  3 +++
-> >  arch/arm/mach-mmp/platsmp.c | 33 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 36 insertions(+)
-> >  create mode 100644 arch/arm/mach-mmp/platsmp.c
-> > 
-> > diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
-> > index 322c1c97dc900..7b3a7f979eece 100644
-> > --- a/arch/arm/mach-mmp/Makefile
-> > +++ b/arch/arm/mach-mmp/Makefile
-> > @@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
-> >  obj-$(CONFIG_CPU_PXA910)	+= pm-pxa910.o
-> >  obj-$(CONFIG_CPU_MMP2)		+= pm-mmp2.o
-> >  endif
-> > +ifeq ($(CONFIG_SMP),y)
-> > +obj-$(CONFIG_MACH_MMP3_DT)	+= platsmp.o
-> > +endif
-> >  
-> >  # board support
-> >  obj-$(CONFIG_MACH_ASPENITE)	+= aspenite.o
-> > diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
-> > new file mode 100644
-> > index 0000000000000..98d5ef23623cb
-> > --- /dev/null
-> > +++ b/arch/arm/mach-mmp/platsmp.c
-> > @@ -0,0 +1,33 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
-> > + */
-> > +#include <linux/io.h>
-> > +#include <asm/smp_scu.h>
-> > +#include <asm/smp.h>
-> > +#include "addr-map.h"
-> > +
-> > +#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
-> > +
-> > +static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> > +{
-> > +	/*
-> > +	 * Apparently, the boot ROM on the second core spins on this
-> > +	 * register becoming non-zero and then jumps to the address written
-> > +	 * there. No IPIs involved.
-> > +	 */
-> > +	__raw_writel(virt_to_phys(secondary_startup),
-> > +			__pa_symbol(SW_BRANCH_VIRT_ADDR));
-> 
-> That looks wrong, the __pa_symbol() is applicable to secondary_startup,
-> while SW_BRANCH_VIRT_ADDR does not need that.
+This fixes the following DT schemas check errors:
+meson-gxbb-nanopi-k2.dt.yaml: mailbox@404: compatible:0: 'amlogic,meson-gx-mhu' is not one of ['amlogic,meson-gxbb-mhu']
+meson-gxl-s805x-libretech-ac.dt.yaml: mailbox@404: compatible:0: 'amlogic,meson-gx-mhu' is not one of ['amlogic,meson-gxbb-mhu']
 
-Whoops, sorry for that. Will fix in the next patch version in a few
-days.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Lubo
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index b3fe3268af3e..74a2cdff0563 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -490,7 +490,7 @@
+ 			};
+ 
+ 			mailbox: mailbox@404 {
+-				compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
++				compatible = "amlogic,meson-gxbb-mhu";
+ 				reg = <0 0x404 0 0x4c>;
+ 				interrupts = <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
+ 					     <GIC_SPI 209 IRQ_TYPE_EDGE_RISING>,
+-- 
+2.22.0
