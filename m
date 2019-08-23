@@ -1,11 +1,15 @@
 From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [RFCv4 0/7] interconnect: Add imx support via devfreq
-Date: Fri, 23 Aug 2019 17:36:53 +0300
-Message-ID: <cover.1566570260.git.leonard.crestez@nxp.com>
+Subject: [RFCv4 2/7] interconnect: Add of_icc_add_proxy
+Date: Fri, 23 Aug 2019 17:36:55 +0300
+Message-ID: <022a38c6c1d461b6e0b0337a1364888cfa7aa8cc.1566570260.git.leonard.crestez@nxp.com>
+References: <cover.1566570260.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1566570260.git.leonard.crestez@nxp.com>
+In-Reply-To: <cover.1566570260.git.leonard.crestez@nxp.com>
+References: <cover.1566570260.git.leonard.crestez@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,69 +23,223 @@ To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org, Saravana Kannan <saravanak@google.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-This series add imx support for interconnect via devfreq: the ICC
-framework is used to aggregate requests from devices and then those are
-converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
+On many SOCs there is no single node that describes the "interconnect",
+instead are multiple pieces of bus fabric which already support scaling.
 
-The devfreq parts are posted separately, this series only intersects in
-devicetree: https://patchwork.kernel.org/cover/11104113/
+Add support for mapping multiple device nodes to the same icc_provider
+(likely a platform-level singleton). This is implemented at the
+devicetree parsing level: just add more device nodes which map to the
+same icc_provider instead.
 
-Since there is no single devicetree node that can represent the "interconnect"
-new API is added to allow individual devfreq nodes to act as parsing proxies
-all mapping to a single soc-level icc provider. This is still RFC
-because this
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+---
+ drivers/interconnect/core.c           | 88 ++++++++++++++++++++++++---
+ include/linux/interconnect-provider.h |  7 +++
+ 2 files changed, 88 insertions(+), 7 deletions(-)
 
-The rest of the changes are small and deal with review comments.
-
-Changes since RFCv3:
-* Remove the virtual "icc" node and add devfreq nodes as proxy providers
-* Fix build on 32-bit arm (reported by kbuilt test robot)
-* Remove ARCH_MXC_ARM64 (never existed in upstream)
-* Remove _numlinks, calculate instead
-* Replace __BUSFREQ_H header guard
-* Improve commit message and comment spelling
-* Fix checkpatch issues
-Link to RFCv3: https://patchwork.kernel.org/cover/11078671/
-
-Changes since RFCv2 and initial work by Alexandre Bailon:
-* Relying on devfreq and dev_pm_qos instead of CLK
-* No more "platform opp" stuff
-* No more special suspend handling: use suspend-opp on devfreq instead.
-* Replace all mentions of "busfreq" with "interconnect"
-Link to v2: https://patchwork.kernel.org/patch/11056789/
-
-Leonard Crestez (7):
-  PM / devfreq: Add devfreq_get_devfreq_by_node
-  interconnect: Add of_icc_add_proxy
-  dt-bindings: devfreq: imx: Describe interconnect properties
-  interconnect: Add imx core driver
-  interconnect: imx: Add platform driver for imx8mm
-  soc: imx8mm: Register interconnect platform device
-  arm64: dts: imx8mm: Add interconnect properties
-
- .../devicetree/bindings/devfreq/imx-ddrc.yaml |   5 +
- .../devicetree/bindings/devfreq/imx.yaml      |   5 +
- arch/arm64/boot/dts/freescale/imx8mm.dtsi     |   5 +
- drivers/devfreq/devfreq.c                     |  42 ++-
- drivers/interconnect/Kconfig                  |   1 +
- drivers/interconnect/Makefile                 |   1 +
- drivers/interconnect/core.c                   |  88 +++++-
- drivers/interconnect/imx/Kconfig              |   9 +
- drivers/interconnect/imx/Makefile             |   2 +
- drivers/interconnect/imx/imx.c                | 279 ++++++++++++++++++
- drivers/interconnect/imx/imx.h                |  60 ++++
- drivers/interconnect/imx/imx8mm.c             | 105 +++++++
- drivers/soc/imx/soc-imx8.c                    |   4 +
- include/dt-bindings/interconnect/imx8mm.h     |  49 +++
- include/linux/devfreq.h                       |   1 +
- include/linux/interconnect-provider.h         |   7 +
- 16 files changed, 645 insertions(+), 18 deletions(-)
- create mode 100644 drivers/interconnect/imx/Kconfig
- create mode 100644 drivers/interconnect/imx/Makefile
- create mode 100644 drivers/interconnect/imx/imx.c
- create mode 100644 drivers/interconnect/imx/imx.h
- create mode 100644 drivers/interconnect/imx/imx8mm.c
- create mode 100644 include/dt-bindings/interconnect/imx8mm.h
-
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 7b971228df38..01109e335baf 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -17,12 +17,19 @@
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
+ #include <linux/overflow.h>
+ 
++struct of_icc_proxy {
++	struct device_node *of_node;
++	struct icc_provider *provider;
++	struct list_head list_node;
++};
++
+ static DEFINE_IDR(icc_idr);
+ static LIST_HEAD(icc_providers);
++static LIST_HEAD(icc_proxy_list);
+ static DEFINE_MUTEX(icc_lock);
+ static struct dentry *icc_debugfs_dir;
+ 
+ /**
+  * struct icc_req - constraints that are attached to each node
+@@ -267,10 +274,61 @@ struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
+ 
+ 	return icc_data->nodes[idx];
+ }
+ EXPORT_SYMBOL_GPL(of_icc_xlate_onecell);
+ 
++struct icc_provider *__of_icc_get_provider(struct device_node *np)
++{
++	struct of_icc_proxy *proxy;
++
++	lockdep_assert_held(&icc_lock);
++	list_for_each_entry(proxy, &icc_proxy_list, list_node)
++		if (proxy->of_node == np)
++			return proxy->provider;
++
++	return NULL;
++}
++
++static int __of_icc_add_proxy(struct device_node *np,
++			      struct icc_provider *provider)
++{
++	struct of_icc_proxy *proxy;
++
++	lockdep_assert_held(&icc_lock);
++	proxy = kmalloc(sizeof(*proxy), GFP_KERNEL);
++	if (!proxy)
++		return -ENOMEM;
++	proxy->of_node = np;
++	proxy->provider = provider;
++	list_add_tail(&proxy->list_node, &icc_proxy_list);
++
++	return 0;
++}
++
++/**
++ * of_icc_add_proxy() - Add another device_node for a provider
++ * @np: OF node to alias from
++ * @provider: Interconnect provider to map to
++ *
++ * Make another device_node map to the same provider.
++ *
++ * This lasts until icc_provider_del.
++ */
++int of_icc_add_proxy(struct device_node *np, struct icc_provider *provider)
++{
++	int ret;
++
++	mutex_lock(&icc_lock);
++
++	ret = __of_icc_add_proxy(np, provider);
++
++	mutex_unlock(&icc_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_icc_add_proxy);
++
+ /**
+  * of_icc_get_from_provider() - Look-up interconnect node
+  * @spec: OF phandle args to use for look-up
+  *
+  * Looks for interconnect provider under the node specified by @spec and if
+@@ -279,23 +337,22 @@ EXPORT_SYMBOL_GPL(of_icc_xlate_onecell);
+  * Returns a valid pointer to struct icc_node on success or ERR_PTR()
+  * on failure.
+  */
+ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
+ {
+-	struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
+ 	struct icc_provider *provider;
++	struct icc_node *node;
+ 
+ 	if (!spec || spec->args_count != 1)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	mutex_lock(&icc_lock);
+-	list_for_each_entry(provider, &icc_providers, provider_list) {
+-		if (provider->dev->of_node == spec->np)
+-			node = provider->xlate(spec, provider->data);
+-		if (!IS_ERR(node))
+-			break;
+-	}
++	provider = __of_icc_get_provider(spec->np);
++	if (provider)
++		node = provider->xlate(spec, provider->data);
++	else
++		node = ERR_PTR(-EPROBE_DEFER);
+ 	mutex_unlock(&icc_lock);
+ 
+ 	return node;
+ }
+ 
+@@ -744,17 +801,26 @@ EXPORT_SYMBOL_GPL(icc_node_del);
+  *
+  * Return: 0 on success, or an error code otherwise
+  */
+ int icc_provider_add(struct icc_provider *provider)
+ {
++	int ret;
++
+ 	if (WARN_ON(!provider->set))
+ 		return -EINVAL;
+ 	if (WARN_ON(!provider->xlate))
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&icc_lock);
+ 
++	if (provider->dev) {
++		ret = __of_icc_add_proxy(provider->dev->of_node, provider);
++		if (ret) {
++			mutex_unlock(&icc_lock);
++			return ret;
++		}
++	}
+ 	INIT_LIST_HEAD(&provider->nodes);
+ 	list_add_tail(&provider->provider_list, &icc_providers);
+ 
+ 	mutex_unlock(&icc_lock);
+ 
+@@ -770,10 +836,12 @@ EXPORT_SYMBOL_GPL(icc_provider_add);
+  *
+  * Return: 0 on success, or an error code otherwise
+  */
+ int icc_provider_del(struct icc_provider *provider)
+ {
++	struct of_icc_proxy *proxy, *tmp;
++
+ 	mutex_lock(&icc_lock);
+ 	if (provider->users) {
+ 		pr_warn("interconnect provider still has %d users\n",
+ 			provider->users);
+ 		mutex_unlock(&icc_lock);
+@@ -785,10 +853,16 @@ int icc_provider_del(struct icc_provider *provider)
+ 		mutex_unlock(&icc_lock);
+ 		return -EBUSY;
+ 	}
+ 
+ 	list_del(&provider->provider_list);
++	list_for_each_entry_safe(proxy, tmp, &icc_proxy_list, list_node)
++		if (proxy->provider == provider) {
++			list_del(&proxy->list_node);
++			of_node_put(proxy->of_node);
++			kfree(proxy);
++		}
+ 	mutex_unlock(&icc_lock);
+ 
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(icc_provider_del);
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index b16f9effa555..e6773ecac164 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -98,10 +98,11 @@ int icc_link_create(struct icc_node *node, const int dst_id);
+ int icc_link_destroy(struct icc_node *src, struct icc_node *dst);
+ void icc_node_add(struct icc_node *node, struct icc_provider *provider);
+ void icc_node_del(struct icc_node *node);
+ int icc_provider_add(struct icc_provider *provider);
+ int icc_provider_del(struct icc_provider *provider);
++int of_icc_add_proxy(struct device_node *np, struct icc_provider *provider);
+ 
+ #else
+ 
+ static inline struct icc_node *icc_node_create(int id)
+ {
+@@ -138,8 +139,14 @@ static inline int icc_provider_add(struct icc_provider *provider)
+ static inline int icc_provider_del(struct icc_provider *provider)
+ {
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int of_icc_add_proxy(struct device_node *np,
++				   struct icc_provider *provider)
++{
++	return -ENOTSUPP;
++}
++
+ #endif /* CONFIG_INTERCONNECT */
+ 
+ #endif /* __LINUX_INTERCONNECT_PROVIDER_H */
 -- 
 2.17.1
