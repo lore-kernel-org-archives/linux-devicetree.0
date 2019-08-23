@@ -1,47 +1,55 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 04/14] arm64: dts: meson-gx: fix spifc compatible
-Date: Fri, 23 Aug 2019 09:02:38 +0200
-Message-ID: <20190823070248.25832-5-narmstrong@baylibre.com>
-References: <20190823070248.25832-1-narmstrong@baylibre.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v2 00/20] Initial support for Marvell MMP3 SoC
+Date: Fri, 23 Aug 2019 09:21:17 +0200
+Message-ID: <424d2881edcaf7cedbfa5cbbf2e73aaff5355df3.camel@v3.sk>
+References: <20190822092643.593488-1-lkundrak@v3.sk>
+         <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: khilman@baylibre.com
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: spi@8c80: compatible:0: 'amlogic,meson-gx-spifc' is not one of ['amlogic,meson6-spifc', 'amlogic,meson-gxbb-spifc']
+On Thu, 2019-08-22 at 11:31 +0100, Marc Zyngier wrote:
+> On 22/08/2019 10:26, Lubomir Rintel wrote:
+> > Hi, 
+> > 
+> > this is a second spin of a patch set that adds support for the Marvell
+> > MMP3 processor. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad
+> > FZ-A1 tablet and Dell Wyse 3020 Tx0D thin clients. 
+> > 
+> > Compared to v1, there's a handful of fixes in response to reviews. Patch
+> > 02/20 is new. Details in individual patches.
+> >  
+> > Apart from the adjustments in mach-mmp/, the patch makes necessary 
+> > changes to the irqchip driver and adds an USB2 PHY driver. The latter 
+> > has a dependency on the mach-mmp/ changes, so it can't be submitted 
+> > separately.
+> >  
+> > The patch set has been tested to work on Wyse Tx0D and not ruin MMP2 
+> > support on XO-1.75. 
+> 
+> How do you want this series to be merged? I'm happy to take the irqchip
+> related patches as well as the corresponding DT change (once reviewed)
+> through my tree.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I was hoping for the Arm SoC tree, because there are some dependencies
+(MMP3 USB PHY depends on MMP3 SoC).
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 08c01e11ba1b..1c580f42e818 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -317,7 +317,7 @@
- 			};
- 
- 			spifc: spi@8c80 {
--				compatible = "amlogic,meson-gx-spifc", "amlogic,meson-gxbb-spifc";
-+				compatible = "amlogic,meson-gxbb-spifc";
- 				reg = <0x0 0x08c80 0x0 0x80>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--- 
-2.22.0
+That said, the irqchip patches are rather independent and the only
+downside of them going in via a different tree will be that the other
+tree that will lack them won't boot on MMP3 (things will compile
+though). I don't know if that's okay. What's typically done in cases
+like these?
+
+
+> Thanks,
+> 
+> 	M.
+
+Thank you
+Lubo
