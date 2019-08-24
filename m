@@ -1,7 +1,7 @@
 From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v2,2/3] dt-bindings: arm: amlogic: Add support for the Ugoos AM6
-Date: Sat, 24 Aug 2019 12:04:09 +0400
-Message-ID: <1566633850-9421-3-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH v2,1/3] dt-bindings: Add vendor prefix for Ugoos
+Date: Sat, 24 Aug 2019 12:04:08 +0400
+Message-ID: <1566633850-9421-2-git-send-email-christianshewitt@gmail.com>
 References: <1566633850-9421-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566633850-9421-1-git-send-email-christianshewitt@gmail.com>
@@ -10,25 +10,28 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin
 Cc: Chrisitian Hewitt <christianshewitt@gmail.com>, Oleg Ivanov <balbes-150@yandex.ru>
 List-Id: devicetree@vger.kernel.org
 
-The Ugoos AM6 is based on the Amlogic W400 (G12B) reference design using the
-S922X chipset.
+Ugoos Industrial Co., Ltd. are a manufacturer of ARM based TV Boxes,
+Dongles, Digital Signage and Advertisement Solutions [0].
+
+[0] (https://ugoos.com)
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 325c6fd..2ded61d 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -139,6 +139,7 @@ properties:
-         items:
-           - enum:
-               - hardkernel,odroid-n2
-+              - ugoos,am6
-           - const: amlogic,g12b
- 
- ...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 6992bbb..d962be9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -965,6 +965,8 @@ patternProperties:
+     description: Ubiquiti Networks
+   "^udoo,.*":
+     description: Udoo
++  "^ugoos,.*":
++    description: Ugoos Industrial Co., Ltd.
+   "^uniwest,.*":
+     description: United Western Technologies Corp (UniWest)
+   "^upisemi,.*":
 -- 
 2.7.4
