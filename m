@@ -1,137 +1,81 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
-Date: Sat, 24 Aug 2019 23:27:46 +0200
-Message-ID: <20190824212746.a5pyilkrrvysjjbd@core.my.home>
-References: <20190820151934.3860-1-megous@megous.com>
- <10880274.nteIY8W56H@jernej-laptop>
- <20190824133057.rhpj3xuzr3vymdiy@core.my.home>
- <1690798.2HKiRSsjat@jernej-laptop>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2, 3/3] arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
+Date: Sat, 24 Aug 2019 23:29:05 +0200
+Message-ID: <CAFBinCC-ncHtni9-Ve1_eQROTrJg0WPkA_rOi1We7T-uSOyYHg@mail.gmail.com>
+References: <1566633850-9421-1-git-send-email-christianshewitt@gmail.com> <1566633850-9421-4-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBVGXQ3VQKGQEFB7C3CQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1690798.2HKiRSsjat@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566633850-9421-4-git-send-email-christianshewitt@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Oleg Ivanov <balbes-150@yandex.ru>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jernej,
+Hi Christian,
 
-On Sat, Aug 24, 2019 at 11:09:49PM +0200, Jernej =C5=A0krabec wrote:
-> > Visually?
-> >=20
-> > That would explain why it doesn't work for you. The mainline RTC driver
-> > disables auto-switch feature, and if your board doesn't have a crystal =
-for
-> > LOSC, RTC will not generate a clock for the RTC.
-> >=20
-> > H6's dtsi describes by default a situatiuon with external 32k crystal
-> > oscillator. See ext_osc32k node. That's incorrect for your board if it
-> > doesn't have the crystal. You need to fix this in the DTS for your boar=
-d
-> > instead of patching the driver.
->=20
-> I see that reparenting is supported, but I'm not sure how to fix that in =
-DT.=20
-> Any suggestion?
+On Sat, Aug 24, 2019 at 10:06 AM Christian Hewitt
+<christianshewitt@gmail.com> wrote:
+>
+> The Ugoos AM6 is based on the Amlogic W400 (G12B) reference design using the
+> S922X chipset. Hardware specifications:
+>
+> - 2GB LPDDR4 RAM
+> - 16GB eMMC storage
+> - 10/100/1000 Base-T Ethernet using External RGMII PHY
+> - 802.11 a/b/g/b/ac + BT 5.0 sdio wireless (Ampak 6398S)
+> - HDMI 2.0 (4k@60p) video
+> - Composite video + 2-channel audio output on 3.5mm jack
+> - S/PDIF audio output
+> - Aux input
+> - 1x USB 3.0
+> - 3x USB 2.0
+> - 1x micro SD card slot
+>
+> The device-tree is laregly based on meson-g12b-odroid-n2 but with audio
+typo -> largely
 
-You may try removing the clocks property from rtc node.
+[...]
+> +       tflash_vdd: regulator-tflash_vdd {
+> +               compatible = "regulator-fixed";
+> +
+> +               regulator-name = "TFLASH_VDD";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +
+> +               gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+do we need regulator-always-on here as well, see [0]?
 
-> >=20
-> > The driver has parent clock selection logic in case the LOSC crystal is=
- not
-> > used.
-> >=20
-> > Your patch enables automatic detection of LOSC failure and RTC changes =
-clock
-> > to LOSC automatically, despite what's described in the DTS. That may fi=
-x
-> > the issue, but is not the correct solution.
-> >=20
-> > Registers on my board look like this (external 32k osc is used) for
-> > reference:
-> >=20
-> > LOSC_CTRL_REG[7000000]: 8011
-> > 	KEY_FIELD                      ???                  (0)
-> > 	LOSC_AUTO_SWT_BYPASS           EN                   (1)
-> > 	LOSC_AUTO_SWT_EN               DIS                  (0)
-> > 	EXT_LOSC_EN                    EN                   (1)
-> > 	EXT_LOSC_GSM                   LOW                  (0)
-> > 	BATTERY_DIR                    DISCHARGE            (0)
-> > 	LOSC_SRC_SEL                   EXT32k               (1)
-> >=20
-> > LOSC_AUTO_SWT_STA_REG[7000004]: 1
-> > 	EXT_LOSC_STA                   OK                   (0)
-> > 	LOSC_AUTO_SWT_PEND             NOEFF                (0)
-> > 	LOSC_SRC_SEL_STA               EXT32K               (1)
-> >=20
->=20
-> In my case LOSC_CTRL_REG has value 0x4010 and LOSC_AUTO_SWT_STA_REG
-> has value 0x4, so there is issue with external crystal (it's missing) and=
- RTC=20
-> switched to internal one.
->=20
-> BTW, what's wrong with automatic switching? Why is it disabled?
+[...]
+> +       usb_pwr_en: regulator-usb_pwr_en {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "USB_PWR_EN";
+> +               regulator-min-microvolt = <5000000>;
+> +               regulator-max-microvolt = <5000000>;
+> +               vin-supply = <&vcc_5v>;
+> +
+> +               /* Connected to the microUSB port power enable */
+> +               gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+the photos I found don't show a micro USB port (but 3x USB A 2.0 and
+1x USB A 3.0 - just like you mentioned in the patch description)
+does this regulator exist?
 
-It always was disabled on mainline (bit 14 was set to 0 even before my patc=
-h).
-H6 just probably has another extra undocummented bit, that's needed to disa=
-bles
-it properly.
+[...]
+> +&ethmac {
+> +       pinctrl-0 = <&eth_pins>, <&eth_rgmii_pins>;
+> +       pinctrl-names = "default";
+> +       status = "okay";
+> +       phy-mode = "rgmii";
+> +       phy-handle = <&external_phy>;
+> +       amlogic,tx-delay-ns = <2>;
+> +};
+is the PHY reset GPIO not wired to GPIOZ_15 like on Odroid-N2 and X96 Max?
 
-You probably don't want a glitch to switch your RTC from high-precision
-clock to a low precision one possibly without any indication in the userspa=
-ce
-or a kernel log.
 
-Regardless of all this, DTS needs to have a correct description of the HW,
-which means if RTC module is not connected to the 32.757kHz crystal/clock,
-clocks property should be empty.
+Martin
 
-regards,
-	o.
 
-> Best regards,
-> Jernej
->=20
-> > regards,
-> > 	o.
-> >=20
-> > > > The real issue probably is that the mainline driver is missing this=
-:
-> > > >=20
-> > > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dh6-4.=
-9-bsp#n
-> > > > 650
-> > >=20
-> > > Not sure what you mean by that. ext vs. int source selection?
-> > >=20
-> > >=20
-> > >=20
-> > > Best regards,
-> > > Jernej
-> > >=20
-> > > > regards,
-> > > >=20
-> > > > 	o.
->=20
->=20
->=20
->=20
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/20190824212746.a5pyilkrrvysjjbd%40core.my.home.
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts?id=dc7f2cb218b5ef65ab3d455a0e62d27e44075203
