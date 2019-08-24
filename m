@@ -1,57 +1,34 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/3] arm64: dts: ls1088a: Add the DSPI controller node
-Date: Sat, 24 Aug 2019 20:36:48 +0200
-Message-ID: <20190824183647.GC14936@X250>
-References: <20190801083105.30102-1-chuanhua.han@nxp.com>
- <20190801083105.30102-2-chuanhua.han@nxp.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCHv4 0/3] Odroid c2 usb fixs
+Date: Sat, 24 Aug 2019 18:49:09 +0000
+Message-ID: <20190824184912.795-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190801083105.30102-2-chuanhua.han@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chuanhua Han <chuanhua.han@nxp.com>
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 01, 2019 at 04:31:04PM +0800, Chuanhua Han wrote:
-> This patch adds the DSPI controller node for ls1088a boards.
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index dacd8cf..fe8f1bd 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -252,6 +252,19 @@
->  			#thermal-sensor-cells = <1>;
->  		};
->  
-> +		dspi: spi@2100000 {
-> +			compatible = "fsl,ls1088a-dspi",
-> +						"fsl,ls1021a-v1.0-dspi";
+Some time ago I had tired to enable usb bus 1 for Odroid C2/C1
+but it's look like some more work is needed to u-boot and
+usb_phy driver to initialize this port.
 
-I fixed the indent to have two compatible strings aligned on same
-column when applying.
+Below patches tries to address the issue regarding usb bus 2 (4 port)
+while disable the usb bus 1 on this board.
 
-Shawn
+Prevoius patch
+[0] https://lkml.org/lkml/2019/1/29/325
+I have tried to split the patchs for now.
 
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x2100000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +			clock-names = "dspi";
-> +			clocks = <&clockgen 4 1>;
-> +			spi-num-chipselects = <6>;
-> +			status = "disabled";
-> +		};
-> +
->  		duart0: serial@21c0500 {
->  			compatible = "fsl,ns16550", "ns16550a";
->  			reg = <0x0 0x21c0500 0x0 0x100>;
-> -- 
-> 2.9.5
-> 
+Anand Moon (3):
+  arm64: dts: meson: odroid-c2: p5v0 is the main 5V power input
+  arm64: dts: meson: odroid-c2: Add missing linking regulator to usb bus
+  arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power
+    failed warning
+
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+-- 
+2.23.0
