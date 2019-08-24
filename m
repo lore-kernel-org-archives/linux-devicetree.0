@@ -1,500 +1,237 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: RE: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-Date: Sat, 24 Aug 2019 23:03:02 +0200
-Message-ID: <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
+Date: Sat, 24 Aug 2019 23:09:49 +0200
+Message-ID: <1690798.2HKiRSsjat@jernej-laptop>
+References: <20190820151934.3860-1-megous@megous.com> <10880274.nteIY8W56H@jernej-laptop> <20190824133057.rhpj3xuzr3vymdiy@core.my.home>
+Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: eswara.kota@linux.intel.com
-Cc: andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDP4JJM5QYGRBIOPQ3VQKGQEKXGTF2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190824133057.rhpj3xuzr3vymdiy-9v8tmBix7cb9zxVx7UNMDg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dilip,
+Dne sobota, 24. avgust 2019 ob 15:30:57 CEST je Ond=C5=99ej Jirman napisal(=
+a):
+> On Sat, Aug 24, 2019 at 03:16:41PM +0200, Jernej =C5=A0krabec wrote:
+> > Dne sobota, 24. avgust 2019 ob 15:05:44 CEST je Ond=C5=99ej Jirman napi=
+sal(a):
+> > > On Sat, Aug 24, 2019 at 02:51:54PM +0200, Jernej =C5=A0krabec wrote:
+> > > > Dne sobota, 24. avgust 2019 ob 14:46:54 CEST je Ond=C5=99ej Jirman=
+=20
+napisal(a):
+> > > > > Hi,
+> > > > >=20
+> > > > > On Sat, Aug 24, 2019 at 02:32:32PM +0200, Jernej =C5=A0krabec wro=
+te:
+> > > > > > Hi!
+> > > > > >=20
+> > > > > > Dne torek, 20. avgust 2019 ob 17:19:33 CEST je megous-5qf/QAjKc81hl2p70BpVqQ@public.gmane.org=
+m
+> > > >=20
+> > > > napisal(a):
+> > > > > > > From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > > > > > >=20
+> > > > > > > RTC on H6 is mostly the same as on H5 and H3. It has slight
+> > > > > > > differences
+> > > > > > > mostly in features that are not yet supported by this driver.
+> > > > > > >=20
+> > > > > > > Some differences are already stated in the comments in existi=
+ng
+> > > > > > > code.
+> > > > > > > One other difference is that H6 has extra bit in LOSC_CTRL_RE=
+G,
+> > > > > > > called
+> > > > > > > EXT_LOSC_EN to enable/disable external low speed crystal
+> > > > > > > oscillator.
+> > > > > > >=20
+> > > > > > > It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to che=
+ck
+> > > > > > > whether
+> > > > > > > external low speed oscillator is working correctly.
+> > > > > > >=20
+> > > > > > > This patch adds support for enabling LOSC when necessary:
+> > > > > > >=20
+> > > > > > > - during reparenting
+> > > > > > > - when probing the clock
+> > > > > > >=20
+> > > > > > > H6 also has capacbility to automatically reparent RTC clock f=
+rom
+> > > > > > > external crystal oscillator, to internal RC oscillator, if
+> > > > > > > external
+> > > > > > > oscillator fails. This is enabled by default. Disable it duri=
+ng
+> > > > > > > probe.
+> > > > > > >=20
+> > > > > > > Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+> > > > > > > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > > > > > > ---
+> > > > > > >=20
+> > > > > > >  drivers/rtc/rtc-sun6i.c | 40
+> > > > > > >  ++++++++++++++++++++++++++++++++++++++--
+> > > > > > >  1 file changed, 38 insertions(+), 2 deletions(-)
+> > > > > > >=20
+> > > > > > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.=
+c
+> > > > > > > index d50ee023b559..b0c3752bed3f 100644
+> > > > > > > --- a/drivers/rtc/rtc-sun6i.c
+> > > > > > > +++ b/drivers/rtc/rtc-sun6i.c
+> > > > > > > @@ -32,9 +32,11 @@
+> > > > > > >=20
+> > > > > > >  /* Control register */
+> > > > > > >  #define SUN6I_LOSC_CTRL			=09
+0x0000
+> > > > > > >  #define SUN6I_LOSC_CTRL_KEY			(0x16aa
+> >=20
+> > << 16)
+> >=20
+> > > > > > > +#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS		BIT(15)
+> > > > > >=20
+> > > > > > User manual says that above field is bit 14.
+> > > > >=20
+> > > > > See the previous discussion, this is from BSP.
+> > > >=20
+> > > > I have two versions of BSP (don't ask me which) which have this set=
+ as
+> > > > bit
+> > > > 14 and changing this to 14 actually solves all my problems with LOS=
+C
+> > > > (no
+> > > > more issues with setting RTC and HDMI-CEC works now - it uses LOSC =
+as
+> > > > parent) on Tanix TX6 box.
+> > >=20
+> > > Interesting. Is LOSC fed externally generated clock, or is it setup a=
+s a
+> > > crystal oscillator on your board?
+> >=20
+> > I really don't know, but here is DT: http://ix.io/1ThI
+> >=20
+> > > Anyway, see here:
+> > >=20
+> > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.h?h=3Dh6-4.9-=
+bsp#n
+> > > 649
+> > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dh6-4.9-=
+bsp#n
+> > > 652
+> >=20
+> > Interesting, 4.9 BSP has additional bit definition, which is not
+> > documented in manual and 3.10 BSP to which I refer.
+> >=20
+> > I was referring to 3.10 BSP, which uses only bit 14. I thought that you
+> > named it differently.
+> >=20
+> > > It would be nice to know what's really happening.
+> > >=20
+> > > My output is:
+> > >=20
+> > > [    0.832252] sun6i-rtc 7000000.rtc: registered as rtc0
+> > > [    0.832257] sun6i-rtc 7000000.rtc: RTC enabled
+> > > [    1.728968] sun6i-rtc 7000000.rtc: setting system clock to
+> > > 1970-01-01T00:00:07 UTC (7)
+> >=20
+> > With change, I get same output.
+> >=20
+> > > I think, you may have just enabled the auto switch feature, and runni=
+ng
+> > > the
+> > > clock from low precision RC oscillator with your patch.
+> >=20
+> > True, now I think there is no external crystal, but I'm still not sure =
+how
+> > to confirm that.
+>=20
+> Visually?
+>=20
+> That would explain why it doesn't work for you. The mainline RTC driver
+> disables auto-switch feature, and if your board doesn't have a crystal fo=
+r
+> LOSC, RTC will not generate a clock for the RTC.
+>=20
+> H6's dtsi describes by default a situatiuon with external 32k crystal
+> oscillator. See ext_osc32k node. That's incorrect for your board if it
+> doesn't have the crystal. You need to fix this in the DTS for your board
+> instead of patching the driver.
 
-first of all: thank you for submitting this upstream!
-I hope that we can use this driver to replace the out-of-tree PCIe
-driver that's used in OpenWrt for the Lantiq VRX200 SoCs.
+I see that reparenting is supported, but I'm not sure how to fix that in DT=
+.=20
+Any suggestion?
 
-a small disclaimer: I don't have access to any Lantiq, Intel or
-DesignWare datasheets. so everything I write below is based on my own
-understanding of the Tegra public datasheet (which describes the
-DesignWare PCIe registers) as well as the public Lantiq UGW code drops
-with out-of-tree drivers for an older version of this PCIe IP.
-thus some of my statements below may be wrong - in this case I would
-appreciate an explanation of how the hardware really works.
+>=20
+> The driver has parent clock selection logic in case the LOSC crystal is n=
+ot
+> used.
+>=20
+> Your patch enables automatic detection of LOSC failure and RTC changes cl=
+ock
+> to LOSC automatically, despite what's described in the DTS. That may fix
+> the issue, but is not the correct solution.
+>=20
+> Registers on my board look like this (external 32k osc is used) for
+> reference:
+>=20
+> LOSC_CTRL_REG[7000000]: 8011
+> 	KEY_FIELD                      ???                  (0)
+> 	LOSC_AUTO_SWT_BYPASS           EN                   (1)
+> 	LOSC_AUTO_SWT_EN               DIS                  (0)
+> 	EXT_LOSC_EN                    EN                   (1)
+> 	EXT_LOSC_GSM                   LOW                  (0)
+> 	BATTERY_DIR                    DISCHARGE            (0)
+> 	LOSC_SRC_SEL                   EXT32k               (1)
+>=20
+> LOSC_AUTO_SWT_STA_REG[7000004]: 1
+> 	EXT_LOSC_STA                   OK                   (0)
+> 	LOSC_AUTO_SWT_PEND             NOEFF                (0)
+> 	LOSC_SRC_SEL_STA               EXT32K               (1)
+>=20
 
-please keep me CC'ed on further revisions of this series. I am highly
-interested in making this driver work on the Lantiq VRX200 SoCs once
-the initial version has landed in linux-next.
+In my case LOSC_CTRL_REG has value 0x4010 and LOSC_AUTO_SWT_STA_REG
+has value 0x4, so there is issue with external crystal (it's missing) and R=
+TC=20
+switched to internal one.
 
-> +config PCIE_INTEL_AXI
-> +        bool "Intel AHB/AXI PCIe host controller support"
-I believe that this is mostly the same IP block as it's used in Lantiq
-(xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
-(before Intel acquired Lantiq).
-This is why I would have personally called the driver PCIE_LANTIQ
+BTW, what's wrong with automatic switching? Why is it disabled?
 
-[...]
-> +#define PCIE_CCRID				0x8
-> +
-> +#define PCIE_LCAP				0x7C
-> +#define PCIE_LCAP_MAX_LINK_SPEED		GENMASK(3, 0)
-> +#define PCIE_LCAP_MAX_LENGTH_WIDTH		GENMASK(9, 4)
-> +
-> +/* Link Control and Status Register */
-> +#define PCIE_LCTLSTS				0x80
-> +#define PCIE_LCTLSTS_ASPM_ENABLE		GENMASK(1, 0)
-> +#define PCIE_LCTLSTS_RCB128			BIT(3)
-> +#define PCIE_LCTLSTS_LINK_DISABLE		BIT(4)
-> +#define PCIE_LCTLSTS_COM_CLK_CFG		BIT(6)
-> +#define PCIE_LCTLSTS_HW_AW_DIS			BIT(9)
-> +#define PCIE_LCTLSTS_LINK_SPEED			GENMASK(19, 16)
-> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH	GENMASK(25, 20)
-> +#define PCIE_LCTLSTS_SLOT_CLK_CFG		BIT(28)
-> +
-> +#define PCIE_LCTLSTS2				0xA0
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED		GENMASK(3, 0)
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT	0x1
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT	0x2
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT	0x3
-> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT	0x4
-> +#define PCIE_LCTLSTS2_HW_AUTO_DIS		BIT(5)
-> +
-> +/* Ack Frequency Register */
-> +#define PCIE_AFR				0x70C
-> +#define PCIE_AFR_FTS_NUM			GENMASK(15, 8)
-> +#define PCIE_AFR_COM_FTS_NUM			GENMASK(23, 16)
-> +#define PCIE_AFR_GEN12_FTS_NUM_DFT		(SZ_128 - 1)
-> +#define PCIE_AFR_GEN3_FTS_NUM_DFT		180
-> +#define PCIE_AFR_GEN4_FTS_NUM_DFT		196
-> +
-> +#define PCIE_PLCR_DLL_LINK_EN			BIT(5)
-> +#define PCIE_PORT_LOGIC_FTS			GENMASK(7, 0)
-> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM		(SZ_128 - 1)
-> +
-> +#define PCIE_MISC_CTRL				0x8BC
-> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN		BIT(0)
-> +
-> +#define PCIE_MULTI_LANE_CTRL			0x8C0
-> +#define PCIE_UPCONFIG_SUPPORT			BIT(7)
-> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE		BIT(6)
-> +#define PCIE_TARGET_LINK_WIDTH			GENMASK(5, 0)
-> +
-> +#define PCIE_IOP_CTRL				0x8C4
-> +#define PCIE_IOP_RX_STANDBY_CTRL		GENMASK(6, 0)
-are you sure that you need any of the registers above?
-as far as I can tell most (all?) of them are part of the DesignWare
-register set. why doesn't pcie-designware-host initialize these?
-I don't have any datasheet or register documentation for the DesignWare
-PCIe core. In my own experiment from a month ago on the Lantiq VRX200
-SoC I didn't need any of this: [0]
+Best regards,
+Jernej
 
-this also makes me wonder if various functions below like
-intel_pcie_link_setup() and intel_pcie_max_speed_setup() (and probably
-more) are really needed or if it's just cargo cult / copy paste from
-an out-of-tree driver).
-
-> +/* APP RC Core Control Register */
-> +#define PCIE_RC_CCR				0x10
-> +#define PCIE_RC_CCR_LTSSM_ENABLE		BIT(0)
-> +#define PCIE_DEVICE_TYPE			GENMASK(7, 4)
-> +#define PCIE_RC_CCR_RC_MODE			BIT(2)
-> +
-> +/* PCIe Message Control */
-> +#define PCIE_MSG_CR				0x30
-> +#define PCIE_XMT_PM_TURNOFF			BIT(0)
-> +
-> +/* PCIe Power Management Control */
-> +#define PCIE_PMC				0x44
-> +#define PCIE_PM_IN_L2				BIT(20)
-> +
-> +/* Interrupt Enable Register */
-> +#define PCIE_IRNEN				0xF4
-> +#define PCIE_IRNCR				0xF8
-> +#define PCIE_IRN_AER_REPORT			BIT(0)
-> +#define PCIE_IRN_PME				BIT(2)
-> +#define PCIE_IRN_HOTPLUG			BIT(3)
-> +#define PCIE_IRN_RX_VDM_MSG			BIT(4)
-> +#define PCIE_IRN_PM_TO_ACK			BIT(9)
-> +#define PCIE_IRN_PM_TURNOFF_ACK			BIT(10)
-> +#define PCIE_IRN_LINK_AUTO_BW_STATUS		BIT(11)
-> +#define PCIE_IRN_BW_MGT				BIT(12)
-> +#define PCIE_IRN_WAKEUP				BIT(17)
-> +#define PCIE_IRN_MSG_LTR			BIT(18)
-> +#define PCIE_IRN_SYS_INT			BIT(28)
-> +#define PCIE_IRN_SYS_ERR_RC			BIT(29)
-> +
-> +#define PCIE_IRN_IR_INT	(PCIE_IRN_AER_REPORT | PCIE_IRN_PME | \
-> +			PCIE_IRN_RX_VDM_MSG | PCIE_IRN_SYS_ERR_RC | \
-> +			PCIE_IRN_PM_TO_ACK | PCIE_IRN_LINK_AUTO_BW_STATUS | \
-> +			PCIE_IRN_BW_MGT | PCIE_IRN_MSG_LTR)
-I would rename all of the APP register #defines to match the pattern
-PCIE_APP_*
-That makes it easy to differentiate the PCIe (DBI) registers from the
-APP registers.
-
-[...]
-> +static inline u32 pcie_app_rd(struct intel_pcie_port *lpp, u32 ofs)
-> +{
-> +	return readl(lpp->app_base + ofs);
-> +}
-> +
-> +static inline void pcie_app_wr(struct intel_pcie_port *lpp, u32 val, u32 ofs)
-> +{
-> +	writel(val, lpp->app_base + ofs);
-> +}
-> +
-> +static void pcie_app_wr_mask(struct intel_pcie_port *lpp,
-> +			     u32 mask, u32 val, u32 ofs)
-> +{
-> +	pcie_update_bits(lpp->app_base, mask, val, ofs);
-> +}
-do you have plans to support the MIPS SoCs (VRX200, ARX300, XRX350,
-XRX550)?
-These will need register writes in big endian. in my own experiment [0]
-I simply used the regmap interface which will default to little endian
-register access but switch to big endian when the devicetree node is
-marked with big-endian.
-
-[...]
-> +static int intel_pcie_bios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> +{
-> +
-> +	struct pcie_port *pp = dev->bus->sysdata;
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
-> +	struct device *pdev = lpp->pci->dev;
-> +	u32 irq_bit;
-> +	int irq;
-> +
-> +	if (pin == PCI_INTERRUPT_UNKNOWN || pin > PCI_NUM_INTX) {
-> +		dev_warn(pdev, "WARNING: dev %s: invalid interrupt pin %d\n",
-> +			 pci_name(dev), pin);
-> +		return -1;
-> +	}
-> +	irq = of_irq_parse_and_map_pci(dev, slot, pin);
-> +	if (!irq) {
-> +		dev_err(pdev, "trying to map irq for unknown slot:%d pin:%d\n",
-> +			slot, pin);
-> +		return -1;
-> +	}
-> +	/* Pin to irq offset bit position */
-> +	irq_bit = BIT(pin + PCIE_INTX_OFFSET);
-> +
-> +	/* Clear possible pending interrupts first */
-> +	pcie_app_wr(lpp, irq_bit, PCIE_IRNCR);
-> +
-> +	pcie_app_wr_mask(lpp, irq_bit, irq_bit, PCIE_IRNEN);
-> +	return irq;
-> +}
-my interpretation is that there's an interrupt controller embedded into
-the APP registers. The integrated interrupt controller takes 5
-interrupts and provides the legacy PCI_INTA/B/C/D interrupts as well as
-a WAKEUP IRQ. Each of it's own interrupts is tied to one of the parent
-interrupts.
-
-my solution (in the experiment on the VRX200 SoC [1]) was to implement an
-interrupt controller and have it as a child devicetree node. then I used
-interrupt-map to route the interrupts to the PCIe interrupt controller.
-with that I didn't have to overwrite .map_irq.
-
-(note that this comment is only related to the PCI_INTx and WAKE
-interrupts but not the other interrupt configuration bits, because as
-far as I understand the other ones are only related to the controller)
-
-> +static void intel_pcie_bridge_class_code_setup(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_rc_cfg_wr_mask(lpp, PCIE_MISC_CTRL_DBI_RO_WR_EN,
-> +			    PCIE_MISC_CTRL_DBI_RO_WR_EN, PCIE_MISC_CTRL);
-> +	pcie_rc_cfg_wr_mask(lpp, 0xffffff00, PCI_CLASS_BRIDGE_PCI << 16,
-> +			    PCIE_CCRID);
-> +	pcie_rc_cfg_wr_mask(lpp, PCIE_MISC_CTRL_DBI_RO_WR_EN, 0,
-> +			    PCIE_MISC_CTRL);
-> +}
-in my own experiments I didn't need this - have you confirmed that it's
-required? and if it is required: why is that?
-if others are curious as well then maybe add the explanation as comment
-to the driver
-
-[...]
-> +static const char *pcie_link_gen_to_str(int gen)
-> +{
-> +	switch (gen) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +		return "2.5";
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		return "5.0";
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		return "8.0";
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		return "16.0";
-> +	default:
-> +		return "???";
-> +	}
-> +}
-why duplicate PCIE_SPEED2STR from drivers/pci/pci.h?
-
-> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
-> +{
-> +	struct device *dev = lpp->pci->dev;
-> +	int ret = 0;
-> +
-> +	lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(lpp->reset_gpio)) {
-> +		ret = PTR_ERR(lpp->reset_gpio);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
-> +		return ret;
-> +	}
-> +	/* Make initial reset last for 100ms */
-> +	msleep(100);
-why is there lpp->rst_interval when you hardcode 100ms here?
-
-[...]
-> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
-> +{
-> +	struct device *dev = lpp->pci->dev;
-> +	struct platform_device *pdev;
-> +	char *irq_name;
-> +	int irq, ret;
-> +
-> +	pdev = to_platform_device(dev);
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "missing sys integrated irq resource\n");
-> +		return irq;
-> +	}
-> +
-> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
-> +	if (!irq_name) {
-> +		dev_err(dev, "failed to alloc irq name\n");
-> +		return -ENOMEM;
-you are only requesting one IRQ line for the whole driver. personally
-I would drop the custom irq_name and pass NULL to devm_request_irq
-because that will then fall-back to auto-generating an IRQ name based
-on the devicetree node. I assume it's the same for ACPI but I haven't
-tried that yet.
-
-> +static void intel_pcie_disable_clks(struct intel_pcie_port *lpp)
-> +{
-> +	clk_disable_unprepare(lpp->core_clk);
-> +}
-> +
-> +static int intel_pcie_enable_clks(struct intel_pcie_port *lpp)
-> +{
-> +	int ret = clk_prepare_enable(lpp->core_clk);
-> +
-> +	if (ret)
-> +		dev_err(lpp->pci->dev, "Core clock enable failed: %d\n", ret);
-> +
-> +	return ret;
-> +}
-you have some functions (using these two as an example) which are only
-used once. they add some boilerplate and (in my opinion) make the code
-harder to read.
-
-> +static int intel_pcie_get_resources(struct platform_device *pdev)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	lpp = platform_get_drvdata(pdev);
-> +	dev = lpp->pci->dev;
-> +
-> +	lpp->core_clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(lpp->core_clk)) {
-> +		ret = PTR_ERR(lpp->core_clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get clks: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	lpp->core_rst = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(lpp->core_rst)) {
-> +		ret = PTR_ERR(lpp->core_rst);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get resets: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = device_property_match_string(dev, "device_type", "pci");
-> +	if (ret) {
-> +		dev_err(dev, "failed to find pci device type: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (device_property_read_u32(dev, "intel,rst-interval",
-> +				     &lpp->rst_interval))
-> +		lpp->rst_interval = RST_INTRVL_DFT_MS;
-> +
-> +	if (device_property_read_u32(dev, "max-link-speed", &lpp->link_gen))
-> +		lpp->link_gen = 0; /* Fallback to auto */
-> +
-> +	lpp->app_base = devm_platform_ioremap_resource(pdev, 2);
-I suggest using platform_get_resource_byname(pdev, "app") because
-pcie-designware uses named resources for the "config" space already
-
-that said, devm_platform_ioremap_resource_byname would be a great
-addition in my opinion ;)
-
-> +	if (IS_ERR(lpp->app_base))
-> +		return PTR_ERR(lpp->app_base);
-> +
-> +	ret = intel_pcie_ep_rst_init(lpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	lpp->phy = devm_phy_get(dev, "phy");
-I suggest to use "pcie" as phy-name, otherwise the binding looks odd:
-  phys = <&pcie0_phy>;
-  phy-names = "phy";
-versus:
-  phys = <&pcie0_phy>;
-  phy-names = "pcie";
-
-> +static ssize_t
-> +pcie_link_status_show(struct device *dev, struct device_attribute *attr,
-> +		      char *buf)
-> +{
-> +	u32 reg, width, gen;
-> +	struct intel_pcie_port *lpp;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	reg = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
-> +	width = FIELD_GET(PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH, reg);
-> +	gen = FIELD_GET(PCIE_LCTLSTS_LINK_SPEED, reg);
-> +	if (gen > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	return sprintf(buf, "Port %2u Width x%u Speed %s GT/s\n", lpp->id,
-> +		       width, pcie_link_gen_to_str(gen));
-> +}
-> +static DEVICE_ATTR_RO(pcie_link_status);
-"lspci -vv | grep LnkSta" already shows the link speed and width.
-why do you need this?
-
-> +static ssize_t pcie_speed_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val > lpp->max_speed)
-> +		return -EINVAL;
-> +
-> +	lpp->link_gen = val;
-> +	intel_pcie_max_speed_setup(lpp);
-> +	intel_pcie_speed_change_disable(lpp);
-> +	intel_pcie_speed_change_enable(lpp);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_speed);
-this is already configurable via devicetree, why do you need this?
-
-> +/*
-> + * Link width change on the fly is not always successful.
-> + * It also depends on the partner.
-> + */
-> +static ssize_t pcie_width_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	unsigned long val;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-> +	if (kstrtoul(buf, 10, &val))
-> +		return -EINVAL;
-> +
-> +	if (val > lpp->max_width)
-> +		return -EINVAL;
-> +
-> +	lpp->lanes = val;
-> +	intel_pcie_max_link_width_setup(lpp);
-> +
-> +	return len;
-> +}
-> +static DEVICE_ATTR_WO(pcie_width);
-is it needed because of a bug somewhere? who do you expect to use this
-sysfs attribute and when (which condition) do you expect people to use
-this?
-
-[...]
-> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
-> +{
-> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
-> +			    0, PCI_COMMAND);
-I expect logic like this to be part of the PCI subsystem in Linux.
-why is this needed?
-
-[...]
-> +int intel_pcie_msi_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +
-> +	dev_dbg(pci->dev, "MSI is handled in x86 arch\n");
-I would rephrase this to "MSI is handled by a separate MSI interrupt
-controller"
-on the VRX200 SoC there's also a MSI interrupt controller and it seems
-that "x86" has this as well (even though it might be two different MSI
-IRQ IP blocks).
-
-[...]
-> +static int intel_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	const struct intel_pcie_soc *data;
-> +	struct intel_pcie_port *lpp;
-> +	struct pcie_port *pp;
-> +	struct dw_pcie *pci;
-> +	int ret;
-> +
-> +	lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
-> +	if (!lpp)
-> +		return -ENOMEM;
-> +
-> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-> +	if (!pci)
-> +		return -ENOMEM;
-other drivers have a "struct dw_pcie	pci" struct member (I assume
-that it's to prevent memory fragmentation). why not do the same here
-and embed it into struct intel_pcie_port?
-
-> +	platform_set_drvdata(pdev, lpp);
-> +	lpp->pci = pci;
-> +	pci->dev = dev;
-> +	pp = &pci->pp;
-> +
-> +	ret = device_property_read_u32(dev, "linux,pci-domain", &lpp->id);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get domain id, errno %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	pci->dbi_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(pci->dbi_base))
-> +		return PTR_ERR(pci->dbi_base);
-> +
-as stated above I would use the _byname variant
+> regards,
+> 	o.
+>=20
+> > > The real issue probably is that the mainline driver is missing this:
+> > >=20
+> > > https://megous.com/git/linux/tree/drivers/rtc/rtc-sunxi.c?h=3Dh6-4.9-=
+bsp#n
+> > > 650
+> >=20
+> > Not sure what you mean by that. ext vs. int source selection?
+> >=20
+> >=20
+> >=20
+> > Best regards,
+> > Jernej
+> >=20
+> > > regards,
+> > >=20
+> > > 	o.
 
 
-Martin
 
 
-[0] https://github.com/xdarklight/linux/blob/lantiq-pcie-driver-next-20190727/drivers/pci/controller/dwc/pcie-lantiq.c
-[1] https://github.com/xdarklight/linux/blob/lantiq-pcie-driver-next-20190727/Documentation/devicetree/bindings/pci/lantiq%2Cdw-pcie.yaml
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/1690798.2HKiRSsjat%40jernej-laptop.
