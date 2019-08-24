@@ -1,63 +1,35 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v2 03/10] PCI: designware-ep: Move the function of getting
- MSI capability forward
-Date: Sat, 24 Aug 2019 00:20:24 +0000
-Message-ID: <AM5PR04MB3299145781322FCBB134A8B1F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-3-xiaowei.bao@nxp.com>
- <20190823133837.GF14582@e119886-lin.cambridge.arm.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 01/13] pwm: mediatek: add a property "num-pwms"
+Date: Sat, 24 Aug 2019 02:28:38 +0200
+Message-ID: <20190824002838.tamrztzxv2wj6vyj@pengutronix.de>
+References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+ <1566457123-20791-2-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823133837.GF14582@e119886-lin.cambridge.arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1566457123-20791-2-git-send-email-sam.shih@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sam Shih <sam.shih@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo41MIyM8jVIDIxOjM5DQo+IFRv
-OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdvb2ds
-ZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNoYXdu
-Z3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNv
-bTsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBN
-aW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdAbnhw
-LmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lz
-LmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2MiAwMy8xMF0gUENJOiBkZXNpZ253YXJlLWVwOiBNb3ZlIHRoZSBm
-dW5jdGlvbiBvZg0KPiBnZXR0aW5nIE1TSSBjYXBhYmlsaXR5IGZvcndhcmQNCj4gDQo+IE9uIFRo
-dSwgQXVnIDIyLCAyMDE5IGF0IDA3OjIyOjM1UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0K
-PiA+IE1vdmUgdGhlIGZ1bmN0aW9uIG9mIGdldHRpbmcgTVNJIGNhcGFiaWxpdHkgdG8gdGhlIGZy
-b250IG9mIGluaXQNCj4gPiBmdW5jdGlvbiwgYmVjYXVzZSB0aGUgaW5pdCBmdW5jdGlvbiBvZiB0
-aGUgRVAgcGxhdGZvcm0gZHJpdmVyIHdpbGwgdXNlDQo+ID4gdGhlIHJldHVybiB2YWx1ZSBieSB0
-aGUgZnVuY3Rpb24gb2YgZ2V0dGluZyBNU0kgY2FwYWJpbGl0eS4NCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiANCj4gUmV2aWV3ZWQt
-Ynk6IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCg0KVGhhbmtzIGEgbG90
-LCBJIHRoaW5rIG1vdmUgdGhpcyB0byBlcF9pbml0IGlzIGJldHRlci4NCg0KPiANCj4gPiAtLS0N
-Cj4gPiB2MjoNCj4gPiAgLSBObyBjaGFuZ2UuDQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJv
-bGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMgfCA3ICsrKystLS0NCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYw0KPiA+
-IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMNCj4gPiBp
-bmRleCBiODM4OGY4Li4wYTZjMTk5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRy
-b2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMNCj4gPiBAQCAtNjU2LDYgKzY1NiwxMCBA
-QCBpbnQgZHdfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkNCj4gPiAgCWlmIChy
-ZXQgPCAwKQ0KPiA+ICAJCWVwYy0+bWF4X2Z1bmN0aW9ucyA9IDE7DQo+ID4NCj4gPiArCWVwLT5t
-c2lfY2FwID0gZHdfcGNpZV9lcF9maW5kX2NhcGFiaWxpdHkocGNpLCBQQ0lfQ0FQX0lEX01TSSk7
-DQo+ID4gKw0KPiA+ICsJZXAtPm1zaXhfY2FwID0gZHdfcGNpZV9lcF9maW5kX2NhcGFiaWxpdHko
-cGNpLCBQQ0lfQ0FQX0lEX01TSVgpOw0KPiA+ICsNCj4gPiAgCWlmIChlcC0+b3BzLT5lcF9pbml0
-KQ0KPiA+ICAJCWVwLT5vcHMtPmVwX2luaXQoZXApOw0KPiA+DQo+ID4gQEAgLTY3Miw5ICs2NzYs
-NiBAQCBpbnQgZHdfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkNCj4gPiAgCQlk
-ZXZfZXJyKGRldiwgIkZhaWxlZCB0byByZXNlcnZlIG1lbW9yeSBmb3IgTVNJL01TSS1YXG4iKTsN
-Cj4gPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gPiAgCX0NCj4gPiAtCWVwLT5tc2lfY2FwID0gZHdf
-cGNpZV9lcF9maW5kX2NhcGFiaWxpdHkocGNpLCBQQ0lfQ0FQX0lEX01TSSk7DQo+ID4gLQ0KPiA+
-IC0JZXAtPm1zaXhfY2FwID0gZHdfcGNpZV9lcF9maW5kX2NhcGFiaWxpdHkocGNpLCBQQ0lfQ0FQ
-X0lEX01TSVgpOw0KPiA+DQo+ID4gIAlvZmZzZXQgPSBkd19wY2llX2VwX2ZpbmRfZXh0X2NhcGFi
-aWxpdHkocGNpLCBQQ0lfRVhUX0NBUF9JRF9SRUJBUik7DQo+ID4gIAlpZiAob2Zmc2V0KSB7DQo+
-ID4gLS0NCj4gPiAyLjkuNQ0KPiA+DQo=
+On Thu, Aug 22, 2019 at 02:58:31PM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This adds a property "num-pwms" to avoid having an endless
+> list of compatibles with no differences for the same driver.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
