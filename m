@@ -1,7 +1,7 @@
 From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v11 14/23] iommu/mediatek: Move reset_axi into plat_data
-Date: Sat, 24 Aug 2019 11:01:59 +0800
-Message-ID: <1566615728-26388-15-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v11 11/23] iommu/mediatek: Add bclk can be supported optionally
+Date: Sat, 24 Aug 2019 11:01:56 +0800
+Message-ID: <1566615728-26388-12-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,56 +21,67 @@ To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugge
 Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ming-fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In mt8173 and mt8183, 0x48 is REG_MMU_STANDARD_AXI_MODE while it is
-REG_MMU_CTRL in the other SoCs, and the bits meaning is completely
-different with the REG_MMU_STANDARD_AXI_MODE.
+In some SoCs, M4U doesn't have its "bclk", it will use the EMI
+clock instead which has always been enabled when entering kernel.
 
-This patch moves this property to plat_data, it's also a preparing
-patch for mt8183.
+Currently mt2712 and mt8173 have this bclk while mt8183 doesn't.
+
+This also is a preparing patch for mt8183.
 
 Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Reviewed-by: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iommu/mtk_iommu.c | 4 ++--
- drivers/iommu/mtk_iommu.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/iommu/mtk_iommu.c | 10 +++++++---
+ drivers/iommu/mtk_iommu.h |  3 +++
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 947a8c6b8..b43f36a 100644
+index b5a40a4..4df3cb4 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -577,8 +577,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 	}
- 	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+@@ -633,9 +633,11 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+ 	if (data->irq < 0)
+ 		return data->irq;
  
--	/* It's MISC control register whose default value is ok except mt8173.*/
--	if (data->plat_data->m4u_plat == M4U_MT8173)
-+	if (data->plat_data->reset_axi)
- 		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+-	data->bclk = devm_clk_get(dev, "bclk");
+-	if (IS_ERR(data->bclk))
+-		return PTR_ERR(data->bclk);
++	if (data->plat_data->has_bclk) {
++		data->bclk = devm_clk_get(dev, "bclk");
++		if (IS_ERR(data->bclk))
++			return PTR_ERR(data->bclk);
++	}
  
- 	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
-@@ -774,6 +773,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+ 	larb_nr = of_count_phandle_with_args(dev->of_node,
+ 					     "mediatek,larbs", NULL);
+@@ -763,11 +765,13 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+ static const struct mtk_iommu_plat_data mt2712_data = {
+ 	.m4u_plat     = M4U_MT2712,
+ 	.has_4gb_mode = true,
++	.has_bclk     = true,
+ };
+ 
+ static const struct mtk_iommu_plat_data mt8173_data = {
  	.m4u_plat     = M4U_MT8173,
  	.has_4gb_mode = true,
- 	.has_bclk     = true,
-+	.reset_axi    = true,
- 	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
++	.has_bclk     = true,
  };
  
+ static const struct of_device_id mtk_iommu_of_ids[] = {
 diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index d1a1d88..8d3b525 100644
+index c281c01..821172b 100644
 --- a/drivers/iommu/mtk_iommu.h
 +++ b/drivers/iommu/mtk_iommu.h
-@@ -38,7 +38,7 @@ struct mtk_iommu_plat_data {
- 
- 	/* HW will use the EMI clock if there isn't the "bclk". */
- 	bool                has_bclk;
--
-+	bool                reset_axi;
- 	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+@@ -35,6 +35,9 @@ enum mtk_iommu_plat {
+ struct mtk_iommu_plat_data {
+ 	enum mtk_iommu_plat m4u_plat;
+ 	bool                has_4gb_mode;
++
++	/* HW will use the EMI clock if there isn't the "bclk". */
++	bool                has_bclk;
  };
  
+ struct mtk_iommu_domain;
 -- 
 1.9.1
