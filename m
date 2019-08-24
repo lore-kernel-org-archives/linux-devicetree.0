@@ -1,28 +1,80 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 2/2] arm64: dts: imx: Add i.mx8mq nitrogen8m basic dts
- support
-Date: Sat, 24 Aug 2019 21:03:25 +0200
-Message-ID: <20190824190324.GB16308@X250.getinternet.no>
-References: <20190819172606.6410-1-dafna.hirschfeld@collabora.com>
- <20190819172606.6410-3-dafna.hirschfeld@collabora.com>
+Subject: Re: [PATCH v4] arm64: dts: ls1088a: fix gpio node
+Date: Sat, 24 Aug 2019 21:14:39 +0200
+Message-ID: <20190824191438.GE16308@X250.getinternet.no>
+References: <20190820055438.43469-1-hui.song_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190819172606.6410-3-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20190820055438.43469-1-hui.song_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com, kernel@collabora.com, Gary Bisson <gary.bisson@boundarydevices.com>, Troy Kisky <troy.kisky@boundarydevices.com>
+To: Hui Song <hui.song_1@nxp.com>
+Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:26:06PM +0200, Dafna Hirschfeld wrote:
-> From: Gary Bisson <gary.bisson@boundarydevices.com>
+On Tue, Aug 20, 2019 at 01:54:38PM +0800, Hui Song wrote:
+> From: Song Hui <hui.song_1@nxp.com>
 > 
-> Add basic dts support for i.MX8MQ NITROGEN8M.
+> add ls1088a gpio specify compatible.
 > 
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> [Dafna: porting vendor's code to mainline]
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
 
-Applied, thanks.
+I updated the patch subject as below, and applied the patch.
+
+  arm64: dts: ls1088a: update gpio compatible
+
+Shawn
+
+> ---
+> Changes in v4:
+> 	- update the patch description.
+> Changes in v3:
+> 	- delete the attribute of little-endian.
+> Changes in v2:
+> 	- update the subject.
+>  
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index dfbead4..ff669c8 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -269,7 +269,7 @@
+>  		};
+>  
+>  		gpio0: gpio@2300000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2300000 0x0 0x10000>;
+>  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+>  			little-endian;
+> @@ -280,7 +280,7 @@
+>  		};
+>  
+>  		gpio1: gpio@2310000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2310000 0x0 0x10000>;
+>  			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
+>  			little-endian;
+> @@ -291,7 +291,7 @@
+>  		};
+>  
+>  		gpio2: gpio@2320000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2320000 0x0 0x10000>;
+>  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+>  			little-endian;
+> @@ -302,7 +302,7 @@
+>  		};
+>  
+>  		gpio3: gpio@2330000 {
+> -			compatible = "fsl,qoriq-gpio";
+> +			compatible = "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
+>  			reg = <0x0 0x2330000 0x0 0x10000>;
+>  			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
+>  			little-endian;
+> -- 
+> 2.9.5
+> 
