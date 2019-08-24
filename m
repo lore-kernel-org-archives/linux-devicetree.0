@@ -1,66 +1,39 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 00/19] Enhance CP110 COMPHY support
-Date: Sat, 24 Aug 2019 13:54:14 +0200
-Message-ID: <20190824135414.5c490337@xps13>
-References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
- <4e1c4d27-3676-5efa-1126-8149a8635eb5@ti.com>
+From: Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 00/23] MT8183 IOMMU SUPPORT
+Date: Sat, 24 Aug 2019 12:57:28 +0100
+Message-ID: <20190824115728.hsdsp3ut5mywplaw@willie-the-truck>
+References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4e1c4d27-3676-5efa-1126-8149a8635eb5@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Matt Pelland <mpelland@starry.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ming-fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9uLAoKKyBNYXR0IFBlbGxhbmQKCktpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hv
-bkB0aS5jb20+IHdyb3RlIG9uIEZyaSwgMjMgQXVnIDIwMTkKMDg6NDY6MTQgKzA1MzA6Cgo+IE9u
-IDMxLzA3LzE5IDU6NTEgUE0sIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gPiBBcm1hZGEgQ1AxMTAg
-aGF2ZSBhIENPTVBIWSBJUCB3aGljaCBzdXBwb3J0cyBjb25maWd1cmluZyBTRVJERVMgbGFuZXMK
-PiA+IGluIG9uZSBtb2RlLCBlaXRoZXI6Cj4gPiAtIFNBVEEKPiA+IC0gVVNCMyBob3N0Cj4gPiAt
-IFBDSWUgKHNldmVyYWwgd2lkdGgpCj4gPiAtIEV0aGVybmV0IChzZXZlcmFsIG1vZGVzKQo+ID4g
-Cj4gPiBBcyBvZiB0b2RheSwgb25seSBhIGZldyBFdGhlcm5ldCBtb2RlcyBhcmUgc3VwcG9ydGVk
-IGFuZCB0aGUgY29kZSBpcwo+ID4gZW1iZWRkZWQgaW4gdGhlIExpbnV4IGRyaXZlci4gQSBtb3Jl
-IGNvbXBsZXRlIENPTVBIWSBkcml2ZXIgdGhhdCBjYW4KPiA+IGJlIHVzZWQgYnkgYm90aCBMaW51
-eCBhbmQgVS1Cb290IGlzIGVtYmVkZGVkIGluIHRoZSBmaXJtd2FyZSBhbmQgY2FuCj4gPiBiZSBy
-dW4gdGhyb3VnaCBTTUMgY2FsbHMuCj4gPiAKPiA+IEZpcnN0IHRoZSBjdXJyZW50IENPTVBIWSBk
-cml2ZXIgaXMgdXBkYXRlZCB0byB1c2UgU01DIGNhbGxzIGJ1dAo+ID4gZmFsbGJhY2tzIHRvIHRo
-ZSBhbHJlYWR5IGV4aXN0aW5nIGZ1bmN0aW9ucyBpZiB0aGUgZmlybXdhcmUgaXMgbm90Cj4gPiB1
-cC10by1kYXRlLiBUaGVuLCBtb3JlIEV0aGVybmV0IG1vZGVzIGFyZSBhZGRlZCAodGhyb3VnaCBT
-TUMgY2FsbHMKPiA+IG9ubHkpLiBTQVRBLCBVU0IzSCBhbmQgUENJZSBtb2RlcyBhcmUgYWxzbyBz
-dXBwb3J0ZWQgb25lIGJ5IG9uZS4KPiA+IAo+ID4gVGhlcmUgaXMgb25lIHN1YnRsZSBkaWZmZXJl
-bmNlIHdpdGggdGhlIFBDSWUgZnVuY3Rpb25zOiB3ZSBtdXN0IHRlbGwKPiA+IHRoZSBmaXJtd2Fy
-ZSB0aGUgbnVtYmVyIG9mIGxhbmVzIHRvIGNvbmZpZ3VyZSAoeDEsIHgyIG9yIHg0KS4gVGhpcwo+
-ID4gcGFyYW1ldGVyIGRlcGVuZHMgb24gdGhlIG51bWJlciBvZiBlbnRyaWVzIGluIHRoZSAncGh5
-cycgcHJvcGVydHkKPiA+IGRlc2NyaWJpbmcgdGhlIFBDSWUgUEhZLiBXZSB1c2UgdGhlICJzdWJt
-b2RlIiBwYXJhbWV0ZXIgb2YgdGhlIGdlbmVyaWMKPiA+IFBIWSBBUEkgdG8gY2FycnkgdGhpcyB2
-YWx1ZS4gVGhlIEFybWFkYS04ayBQQ0llIGRyaXZlciBoYXMgYmVlbgo+ID4gdXBkYXRlZCB0byBm
-b2xsb3cgdGhpcyBpZGVhIGFuZCB0aGlzIGNoYW5nZSBoYXMgYmVlbiBtZXJnZWQgYWxyZWFkeToK
-PiA+IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDcyNzYzLyAgCj4gCj4gU29t
-ZSBvZiB0aGUgcGF0Y2hlcyBhcmUgbm90IGFwcGx5aW5nIGNsZWFubHkuIENhcmUgdG8gcmVzZW5k
-IHRoZSBzZXJpZXMgYWZ0ZXIKPiByZWJhc2luZyB0byBwaHkgLW5leHQ/CgpCZXNpZGVzIHR3byBj
-b25mbGljdHMgdGhhdCBJIGNhbiBmaXggdmVyeSBlYXNpbHkgYWJvdXQgbWlzc2luZwpvZl9ub2Rl
-X3B1dCgpIGNhbGxzLCB5b3UganVzdCBtZXJnZWQgaW4gcGh5LW5leHQgdGhpcyBwYXRjaDoKCnBo
-eTogbWFydmVsbDogcGh5LW12ZWJ1LWNwMTEwLWNvbXBoeTogaW1wbGVtZW50IFJYQVVJIHN1cHBv
-cnQKCldoaWNoIHRvdGFsbHkgY29uZmxpY3RzIHdpdGggbXkgc2VyaWVzIHdoaWxlIEkgYWxzbyBh
-ZGQgUlhBVUkgc3VwcG9ydAppbiBwYXRjaCA1LiBQbGVhc2Ugbm90ZSB0aGF0IGV2ZW4gdGhlIHRo
-aXJkIHZlcnNpb24gb2YgbXkgc2VyaWVzCndhcyBjb250cmlidXRlZCBiZWZvcmUgdGhpcyBwYXRj
-aC4KClRoZXJlIGlzIG9uZSBkaWZmZXJlbmNlIHRvIG5vdGUgdGhvdWdoOiBpbiB0aGUgcGF0Y2gg
-ZnJvbSBNYXR0IFBlbGFuZCwKUlhBVUkgc3VwcG9ydCBpcyBlbWJlZGRlZCBpbiB0aGUgZHJpdmVy
-IHdoaWxlIEkgZG8gU01DIGNhbGxzLgoKQW55d2F5LCB3b3VsZCBpdCBiZSBwb3NzaWJsZSB0byBj
-aGFuZ2UgdGhlIG9yZGVyIG9mIGFwcGxpY2F0aW9uIGlmCnlvdSB3YW50IGJvdGggbWV0aG9kcyBp
-biB0aGUgZHJpdmVyIGJlY2F1c2UgaXQgd2lsbCBiZSBtdWNoIGVhc2llcgp0byBhZGQgTWF0dCdz
-IHBhdGNoIG9uIHRvcCBvZiBteSBzZXJpZXMgdGhhbiB0aGUgb3Bwb3NpdGUuIEkgY2FuCmV2ZW4g
-ZG8gaXQgbXlzZWxmIGlmIHlvdSB3aXNoLgoKVGhhbmtzLApNaXF1w6hsCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Sat, Aug 24, 2019 at 11:01:45AM +0800, Yong Wu wrote:
+> This patchset mainly adds support for mt8183 IOMMU and SMI.
+
+Thanks for persevering with this, and sorry it took me so long to get
+to grips with the io-pgtable changes.
+
+Joerg -- this is good for you to pick up from my side now, but if you run
+into any fiddly conflicts with any of my other changes then I'm happy to
+resolve them on a separate branch for you to pull.
+
+Just let me know.
+
+Cheers,
+
+Will
