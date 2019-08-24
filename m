@@ -1,108 +1,102 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v11 05/23] iommu/mediatek: Fix iova_to_phys PA start for 4GB
- mode
-Date: Sat, 24 Aug 2019 11:01:50 +0800
-Message-ID: <1566615728-26388-6-git-send-email-yong.wu@mediatek.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v11 08/23] iommu/io-pgtable-arm-v7s: Rename the quirk from
+ MTK_4GB to MTK_EXT
+Date: Sat, 24 Aug 2019 11:01:53 +0800
+Message-ID: <1566615728-26388-9-git-send-email-yong.wu@mediatek.com>
 References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>
-Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, chao.hao@mediatek.com, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yong.wu@mediatek.com, ming-fan.chen@mediatek.com, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ming-fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In M4U 4GB mode, the physical address is remapped as below:
+In previous mt2712/mt8173, MediaTek extend the v7s to support 4GB dram.
+But in the latest mt8183, We extend it to support the PA up to 34bit.
+Then the "MTK_4GB" name is not so fit, This patch only change the quirk
+name to "MTK_EXT".
 
-CPU Physical address:
-
-====================
-
-0      1G       2G     3G       4G     5G
-|---A---|---B---|---C---|---D---|---E---|
-+--I/O--+------------Memory-------------+
-
-IOMMU output physical address:
- =============================
-
-                                4G      5G     6G      7G      8G
-                                |---E---|---B---|---C---|---D---|
-                                +------------Memory-------------+
-
-The Region 'A'(I/O) can not be mapped by M4U; For Region 'B'/'C'/'D', the
-bit32 of the CPU physical address always is needed to set, and for Region
-'E', the CPU physical address keep as is. something looks like this:
-CPU PA         ->    M4U OUTPUT PA
-0x4000_0000          0x1_4000_0000 (Add bit32)
-0x8000_0000          0x1_8000_0000 ...
-0xc000_0000          0x1_c000_0000 ...
-0x1_0000_0000        0x1_0000_0000 (No change)
-
-Additionally, the iommu consumers always use the CPU phyiscal address.
-
-The PA in the iova_to_phys that is got from v7s always is u32, But
-from the CPU point of view, PA only need add BIT(32) when PA < 0x4000_0000.
-
-Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
-for 4GB mode")
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Will Deacon <will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/iommu/mtk_iommu.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ drivers/iommu/io-pgtable-arm-v7s.c | 6 +++---
+ drivers/iommu/mtk_iommu.c          | 2 +-
+ include/linux/io-pgtable.h         | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index fa1b38f..77cc1eb 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -315,7 +315,7 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot, int lvl,
+ 	if (lvl == 1 && (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS))
+ 		pte |= ARM_V7S_ATTR_NS_SECTION;
+ 
+-	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB)
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+ 		pte |= ARM_V7S_ATTR_MTK_4GB;
+ 
+ 	return pte;
+@@ -737,12 +737,12 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+ 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+ 			    IO_PGTABLE_QUIRK_NO_PERMS |
+ 			    IO_PGTABLE_QUIRK_TLBI_ON_MAP |
+-			    IO_PGTABLE_QUIRK_ARM_MTK_4GB |
++			    IO_PGTABLE_QUIRK_ARM_MTK_EXT |
+ 			    IO_PGTABLE_QUIRK_NON_STRICT))
+ 		return NULL;
+ 
+ 	/* If ARM_MTK_4GB is enabled, the NO_PERMS is also expected. */
+-	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB &&
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT &&
+ 	    !(cfg->quirks & IO_PGTABLE_QUIRK_NO_PERMS))
+ 			return NULL;
+ 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index c6e6dc3..9ba2706 100644
+index 9ba2706..62edce7 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -107,6 +107,30 @@ struct mtk_iommu_domain {
+@@ -296,7 +296,7 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
+ 	};
  
- static const struct iommu_ops mtk_iommu_ops;
+ 	if (data->enable_4GB)
+-		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_4GB;
++		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_EXT;
  
-+/*
-+ * In M4U 4GB mode, the physical address is remapped as below:
-+ *
-+ * CPU Physical address:
-+ * ====================
-+ *
-+ * 0      1G       2G     3G       4G     5G
-+ * |---A---|---B---|---C---|---D---|---E---|
-+ * +--I/O--+------------Memory-------------+
-+ *
-+ * IOMMU output physical address:
-+ *  =============================
-+ *
-+ *                                 4G      5G     6G      7G      8G
-+ *                                 |---E---|---B---|---C---|---D---|
-+ *                                 +------------Memory-------------+
-+ *
-+ * The Region 'A'(I/O) can NOT be mapped by M4U; For Region 'B'/'C'/'D', the
-+ * bit32 of the CPU physical address always is needed to set, and for Region
-+ * 'E', the CPU physical address keep as is.
-+ * Additionally, The iommu consumers always use the CPU phyiscal address.
-+ */
-+#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
-+
- static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
- 
- #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
-@@ -401,7 +425,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
- 	pa = dom->iop->iova_to_phys(dom->iop, iova);
- 	spin_unlock_irqrestore(&dom->pgtlock, flags);
- 
--	if (data->enable_4GB)
-+	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
- 		pa |= BIT_ULL(32);
- 
- 	return pa;
+ 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
+ 	if (!dom->iop) {
+diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+index b5a450a..915fb73 100644
+--- a/include/linux/io-pgtable.h
++++ b/include/linux/io-pgtable.h
+@@ -65,7 +65,7 @@ struct io_pgtable_cfg {
+ 	 *	(unmapped) entries but the hardware might do so anyway, perform
+ 	 *	TLB maintenance when mapping as well as when unmapping.
+ 	 *
+-	 * IO_PGTABLE_QUIRK_ARM_MTK_4GB: (ARM v7s format) Set bit 9 in all
++	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) Set bit 9 in all
+ 	 *	PTEs, for Mediatek IOMMUs which treat it as a 33rd address bit
+ 	 *	when the SoC is in "4GB mode" and they can only access the high
+ 	 *	remap of DRAM (0x1_00000000 to 0x1_ffffffff).
+@@ -77,7 +77,7 @@ struct io_pgtable_cfg {
+ 	#define IO_PGTABLE_QUIRK_ARM_NS		BIT(0)
+ 	#define IO_PGTABLE_QUIRK_NO_PERMS	BIT(1)
+ 	#define IO_PGTABLE_QUIRK_TLBI_ON_MAP	BIT(2)
+-	#define IO_PGTABLE_QUIRK_ARM_MTK_4GB	BIT(3)
++	#define IO_PGTABLE_QUIRK_ARM_MTK_EXT	BIT(3)
+ 	#define IO_PGTABLE_QUIRK_NON_STRICT	BIT(4)
+ 	unsigned long			quirks;
+ 	unsigned long			pgsize_bitmap;
 -- 
 1.9.1
