@@ -1,215 +1,56 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [RESEND PATCH v4 1/4] dt-bindings: soundwire: add
- slave bindings
-Date: Sat, 24 Aug 2019 10:28:09 +0100
-Message-ID: <7ee47f26-12f8-6028-cb83-7f59e669979f@linaro.org>
-References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
- <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
- <7da8aa89-2119-21d1-0e29-8894a8d40bf0@linux.intel.com>
- <37be6b6d-7e7f-2cd6-f9e9-f0cac48791ad@linaro.org>
- <d538238d-25d8-f179-c900-90be50ce814d@linux.intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 14/19] dt-bindings: pci: add PHY properties to Armada
+ 7K/8K controller bindings
+Date: Sat, 24 Aug 2019 12:15:31 +0200
+Message-ID: <20190824121531.3dda75bd@xps13>
+References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
+ <20190731122126.3049-15-miquel.raynal@bootlin.com>
+ <20190821182857.GA9660@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d538238d-25d8-f179-c900-90be50ce814d@linux.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190821182857.GA9660@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 23/08/2019 17:44, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 8/23/19 10:57 AM, Srinivas Kandagatla wrote:
->>
->>
->> On 23/08/2019 16:41, Pierre-Louis Bossart wrote:
->>>
->>>
->>> On 8/22/19 6:37 PM, Srinivas Kandagatla wrote:
->>>> This patch adds bindings for Soundwire Slave devices that includes how
->>>> SoundWire enumeration address and Link ID are used to represented in
->>>> SoundWire slave device tree nodes.
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> ---
->>>>   .../soundwire/soundwire-controller.yaml       | 75 
->>>> +++++++++++++++++++
->>>>   1 file changed, 75 insertions(+)
->>>>   create mode 100644 
->>>> Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
->>>>
->>>> diff --git 
->>>> a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml 
->>>> b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
->>>> new file mode 100644
->>>> index 000000000000..91aa6c6d6266
->>>> --- /dev/null
->>>> +++ 
->>>> b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
->>>> @@ -0,0 +1,75 @@
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: 
->>>> http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: SoundWire Controller Generic Binding
->>>> +
->>>> +maintainers:
->>>> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> +
->>>> +description: |
->>>> +  SoundWire busses can be described with a node for the SoundWire 
->>>> controller
->>>> +  device and a set of child nodes for each SoundWire slave on the bus.
->>>> +
->>>> +properties:
->>>> +  $nodename:
->>>> +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
-> 
-> re-reading this, it looks like you are defining the controller bindings, 
-> but there are no real controller-level properties except for the fact 
-> that they include slave bindings?
-> 
-Yes, Each vendor specific master can have there specific properties 
-here, this is just to represent how slave nodes represented w.r.t to 
-master nodes.
-
-> In MIPI the notion of controller is that it can deal with multiple 
-> links, each of which having specific properties (clock speed, clock stop 
-> properties, etc).
-> 
->>>> +
->>>> +  "#address-cells":
->>>> +    const: 2
->>>> +
->>>> +  "#size-cells":
->>>> +    const: 0
->>>> +
->>>> +patternProperties:
->>>> +  "^.*@[0-9a-f]+$":
->>>> +    type: object
->>>> +
->>>> +    properties:
->>>> +      compatible:
->>>> +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
->>>
->>> So is this a 64-bit value, as in the MIPI spec, or is this part of 
->>> the _ADR description?
->>
->> Rob did not like encoding compatible string exactly like _ADR encoding.
->>
->> https://lkml.org/lkml/2019/8/22/490
-> 
-> Wondering if we are talking about different concepts?
-> 
-> Rob's point was about the InstanceID
-> 
-> "Assuming you could have more than 1 of the same device on the bus,
-> then you need some way to distinguish them and the way that's done for
-> DT is unit-address/reg. And compatible strings should be constant for
-> each instance."
-> 
-> You can use the MIPI encoding *except* for the InstanceID, that'd be 
-> fine. It'll just be a bit weird since the Slave device will report the 
-> 48 bits that include the Instance ID, so you'll have to special case 
-> this field, but if this is a DT requirement then fine.
-> 
-> Rob's point does not apply to the link ID - which is used when you have 
-> multiple masters in your controller. The Slave device is attached in one 
-> location and will never move, so that is a constant value.
-
-Point is that this compatible is for slave device, it should not matter 
-where and how the slave is connected, compatible should be constant 
-irrespective of Link ID.
-Lets say for example if WSA881x slave device is connected to a 
-single-Link Controller and the same device is connected to a 
-MultiLink-controller then we would endup in more than one compatible 
-string for WSA881x driver.
-
-
- From Disco Specic it clearly says that LinkID values are relative
-to the immediate parent Device. So having LinkID in compatible string is 
-very fragile.
-
-> 
->>
->>> I also don't get why the first item in in base10?
->>>
->>
->> As this corresponds to Soundwire Version, and I have no visibility of 
->> version number encoding after reaching number 9 in this field.
->>
->> This can be updated once we have more info on how the Version encoding 
->> will look like in future.
->>
->> Idea of limiting regex to [0-9] for version is to enforce some checking!
-> 
-> the version is a 4 bit value starting at 1 for SoundWire 1.0. There is 
-> nothing in the spec that talks about a limit to 9.
-> 
-> It's unlikely we'll ever reach that but you are interpreting a spec 
-> here. plus just below you mention all fields as being hexadecimal.
-> 
-Am happy to change this to
-
-pattern: "^sdw[0-9a-f][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
-
-if you are okay with rest of the stuff.
-
-thanks,
-srini
->>
->> --srini
->>
->>>
->>>> +      description:
->>>> +      Is the textual representation of SoundWire Enumeration
->>>> +      address. compatible string should contain SoundWire Version ID,
->>>> +      Manufacturer ID, Part ID and Class ID in order and shall be in
->>>> +      lower-case hexadecimal with leading zeroes.
->>>> +      Valid sizes of these fields are
->>>> +      Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
->>>> +      and '0x2' represents SoundWire 1.1 and so on.
->>>> +      MFD is 4 nibbles
->>>> +      PID is 4 nibbles
->>>> +      CID is 2 nibbles
->>>> +      More Information on detail of encoding of these fields can be
->>>> +      found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
->>>> +
->>>> +      reg:
->>>> +        maxItems: 1
->>>> +        description:
->>>> +          Instance ID and Link ID of SoundWire Device Address.
->>>> +
->>>> +    required:
->>>> +      - compatible
->>>> +      - reg
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    soundwire@c2d0000 {
->>>> +        #address-cells = <2>;
->>>> +        #size-cells = <0>;
->>>> +        compatible = "qcom,soundwire-v1.5.0";
->>>> +        reg = <0x0c2d0000 0x2000>;
->>>> +
->>>> +        speaker@1 {
->>>> +            compatible = "sdw10217201000";
->>>> +            reg = <1 0>;
->>>> +        };
->>>> +
->>>> +        speaker@2 {
->>>> +            compatible = "sdw10217201000";
->>>> +            reg = <2 0>;
->>>> +        };
->>>> +    };
->>>> +
->>>> +...
->>>>
+SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gV2VkLCAyMSBB
+dWcgMjAxOSAxMzoyODo1NyAtMDUwMDoKCj4gT24gV2VkLCBKdWwgMzEsIDIwMTkgYXQgMDI6MjE6
+MjFQTSArMDIwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IEFybWFkYSBDUDExMCBQQ0llIGNv
+bnRyb2xsZXIgY2FuIGhhdmUgZnJvbSBvbmUgdG8gZm91ciBQSFlzIGZvcgo+ID4gY29uZmlndXJp
+bmcgU0VSREVTIGxhbmVzIChQQ0llIHgxLCBQQ0llIHgyIG9yIFBDSWUgeDQpLiBEZXNjcmliZSB0
+aGUKPiA+IHBoeXMgYW5kIHBoeS1uYW1lcyBwcm9wZXJ0aWVzIGluIHRoZSBiaW5kaW5ncy4KPiA+
+IAo+ID4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGlu
+LmNvbT4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kv
+cGNpLWFybWFkYThrLnR4dCB8IDYgKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0
+aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BjaS9wY2ktYXJtYWRhOGsudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BjaS9wY2ktYXJtYWRhOGsudHh0Cj4gPiBpbmRleCA5ZTNmYzE1ZTFhZjguLjdjZjEy
+MTYyYWE0ZSAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wY2kvcGNpLWFybWFkYThrLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BjaS9wY2ktYXJtYWRhOGsudHh0Cj4gPiBAQCAtMTcsNiArMTcsMTIgQEAgUmVx
+dWlyZWQgcHJvcGVydGllczoKPiA+ICAgICBuYW1lIG11c3QgYmUgImNvcmUiIGZvciB0aGUgZmly
+c3QgY2xvY2sgYW5kICJyZWciIGZvciB0aGUgc2Vjb25kCj4gPiAgICAgb25lCj4gPiAgCj4gPiAr
+T3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIHBoeXM6IHBoYW5kbGUocykgdG8gUEhZIG5vZGUo
+cykgZm9sbG93aW5nIHRoZSBnZW5lcmljIFBIWSBiaW5kaW5ncy4KPiA+ICsJRWl0aGVyIDEsIDIg
+b3IgNCBQSFlzIG1pZ2h0IGJlIG5lZWRlZCBkZXBlbmRpbmcgb24gdGhlIG51bWJlciBvZgo+ID4g
+KwlQQ0llIGxhbmVzLgo+ID4gKy0gcGh5LW5hbWVzOiBuYW1lcyBvZiB0aGUgUEhZcy4gIAo+IAo+
+IFlvdSBuZWVkIHRvIGVudW1lcmF0ZSB3aGF0IHRoZSBuYW1lcyBhcmUuIEJhc2VkIG9uIHlvdXIg
+ZXhhbXBsZSBpbiB2MiwgSSAKPiBkb24ndCB0aGluayB0aGUgbmFtZXMgYXJlIHJlYWxseSB2YWx1
+YWJsZSB1bmxlc3MgeW91IGNhbiBza2lwIGxhbmVzLgoKSSBkb24ndCBrbm93IGFueSBzZXR1cCBk
+b2luZyBpdCBidXQgeWVzLCBJIHN1cHBvc2UgeW91IGNvdWxkIHNraXAgbGFuZXMuCgpLaXNob24g
+YXNrZWQgbWUgdG8gcmViYXNlIG9uIHBoeS1uZXh0LCBJJ2xsIGVudW1lcmF0ZSB0aGUgbmFtZXMg
+d2hlbgpyZXNlbmRpbmcuCgpUaGFua3MsCk1pcXXDqGwKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
