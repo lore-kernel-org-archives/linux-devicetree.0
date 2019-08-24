@@ -1,43 +1,39 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v3 4/4] MIPS: lantiq: update the clock alias' for the
- mainline  PCIe PHY driver
-Date: Sat, 24 Aug 2019 14:13:54 +0000
-Message-ID: <CY4PR2201MB1272F47798E4002689E89D01C1A70@CY4PR2201MB1272.namprd22.prod.outlook.com>
-References: <20190727120415.15859-5-martin.blumenstingl@googlemail.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 1/2] dt-bindings: reset: aoss: Add AOSS reset binding for SC7180 SoCs
+Date: Sat, 24 Aug 2019 20:41:16 +0530
+Message-ID: <20190824151117.18906-2-sibis@codeaurora.org>
+References: <20190824151117.18906-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190727120415.15859-5-martin.blumenstingl@googlemail.com>
-Content-Language: en-US
+In-Reply-To: <20190824151117.18906-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "john@phrozen.org" <john@phrozen.org>, "kishon@ti.com" <kishon@ti.com>, Paul Burton <pburton@wavecomp.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ms@dev.tdt.de" <ms@dev.tdt.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+To: p.zabel@pengutronix.de, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc: agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add SC7180 AOSS reset to the list of possible bindings.
 
-Martin Blumenstingl wrote:
-> The mainline PCIe PHY driver has it's own devicetree node. Update the
-> clock alias so the mainline driver finds the clocks.
->=20
-> The first PCIe PHY is located at 0x1f106800 and exists on VRX200, ARX300
-> and GRX390.
-> The second PCIe PHY is located at 0x1f700400 and exists on ARX300 and
-> GRX390.
-> The third PCIe PHY is located at 0x1f106a00 and exists onl on GRX390.
-> Lantiq's board support package (called "UGW") names these registers
-> "PDI".
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied to mips-next.
-
-> commit ed90302be64a
-> https://git.kernel.org/mips/c/ed90302be64a
->=20
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+index 510c748656ec5..438a3e5173846 100644
+--- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
++++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+@@ -8,8 +8,8 @@ Required properties:
+ - compatible:
+ 	Usage: required
+ 	Value type: <string>
+-	Definition: must be:
+-		    "qcom,sdm845-aoss-cc"
++	Definition: must be on of:
++		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
+ 
+ - reg:
+ 	Usage: required
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
