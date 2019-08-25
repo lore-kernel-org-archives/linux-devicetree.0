@@ -1,48 +1,67 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH] arm64: dts: allwinner: a64: pine64-plus: Add
- PHY regulator delay
-Date: Sun, 25 Aug 2019 15:03:36 +0200
-Message-ID: <20190825130336.14154-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+Date: Sun, 25 Aug 2019 15:51:41 +0200
+Message-ID: <20190825135154.11488-2-jacopo+renesas@jmondi.org>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBMUORLVQKGQE2WRSMLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, uli@fpond.eu, airlied@linux.ie, daniel@ffwll.ch
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Depending on kernel and bootloader configuration, it's possible that
-Realtek ethernet PHY isn't powered on properly. It needs some time
-before it can be used.
+Add device tree bindings documentation for the Renesas R-Car Display
+Unit Color Management Module.
 
-Fix that by adding 100ms ramp delay to regulator responsible for
-powering PHY.
+CMM is the image enhancement module available on each R-Car DU video
+channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
 
-Fixes: 94dcfdc77fc5 ("arm64: allwinner: pine64-plus: Enable dwmac-sun8i")
-Suggested-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/display/renesas,cmm.txt          | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.txt
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index 24f1aac366d6..9612a34c1762 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -63,3 +63,7 @@
- 		reg = <1>;
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.txt b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+new file mode 100644
+index 000000000000..bc599b69c278
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+@@ -0,0 +1,33 @@
++* Renesas R-Car Color Management Module (CMM)
 +
-+&reg_dc1sw {
-+	regulator-enable-ramp-delay = <100000>;
-+};
--- 
-2.23.0
++Renesas R-Car image enhancement module connected to R-Car DU video channels.
++
++Required properties:
++ - compatible: shall be one or more of the following:
++   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
++   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
++   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
++   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
++   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
++   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
++   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
++
++   When the generic compatible string is specified, the SoC-specific
++   version corresponding to the platform should be listed first.
++
++ - reg: the address base and length of the memory area where CMM control
++   registers are mapped to.
++
++ - clocks: phandle and clock-specifier pair to the CMM functional clock
++   supplier.
++
++Example:
++--------
++
++	cmm0: cmm@fea40000 {
++		compatible = "renesas,cmm-r8a7796";
++		reg = <0 0xfea40000 0 0x1000>;
++		power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++		clocks = <&cpg CPG_MOD 711>;
++		resets = <&cpg 711>;
++	};
+--
+2.22.0
