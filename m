@@ -1,7 +1,7 @@
 From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 7/7] arm64: dts: meson-gxm-khadas-vim2: use rc-khadas keymap
-Date: Sun, 25 Aug 2019 08:01:28 +0400
-Message-ID: <1566705688-18442-8-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 5/7] arm64: dts: meson-gxl-s905x-khadas-vim: use rc-khadas keymap
+Date: Sun, 25 Aug 2019 08:01:26 +0400
+Message-ID: <1566705688-18442-6-git-send-email-christianshewitt@gmail.com>
 References: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
@@ -14,21 +14,21 @@ Swap to the rc-khadas keymap that maps the mouse button to KEY_MUTE.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-index 989d33a..f25ddd1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -299,7 +299,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&remote_input_ao_pins>;
- 	pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+index 5499e8d..2a5cd30 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+@@ -110,7 +110,7 @@
+ };
+ 
+ &ir {
 -	linux,rc-map-name = "rc-geekbox";
 +	linux,rc-map-name = "rc-khadas";
  };
  
- &pwm_AO_ab {
+ &gpio_ao {
 -- 
 2.7.4
