@@ -1,45 +1,47 @@
-Return-Path: <SRS0=5R+x=WI=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mx2.mailbox.org ([80.241.60.215]:35316 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727276AbfHLKhI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 12 Aug 2019 06:37:08 -0400
-From: Stefan Roese <sr@denx.de>
-Subject: [PATCH 2/4 v4] dt-bindings: mips: Add missing mt7688a-soc compatible
-Date: Mon, 12 Aug 2019 12:36:53 +0200
-Message-Id: <20190812103655.11070-2-sr@denx.de>
-In-Reply-To: <20190812103655.11070-1-sr@denx.de>
-References: <20190812103655.11070-1-sr@denx.de>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 25 Aug 2019 19:11:09 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: iio: light: isl29501: Rename bindings
+ documentation file
+Message-ID: <20190825191109.510e91b5@archlinux>
+In-Reply-To: <20190819141708.20456-1-horms+renesas@verge.net.au>
+References: <20190819141708.20456-1-horms+renesas@verge.net.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: Paul Burton <paul.burton@mips.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the "ralink,mt7688a-soc" compatible to the ralink DT
-bindings documentation. This compatible is already used by some MIPS
-boards (e.g. omega2p.dts) but not yet documented. It will also be used
-by the upcoming "GARDENA smart Gateway" support.
+On Mon, 19 Aug 2019 16:17:08 +0200
+Simon Horman <horms+renesas@verge.net.au> wrote:
 
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
-v4:
-- New patch
+> Rename the bindings documentation file for Renesas ISL29501 Time-of-flight
+> sensor from isl29501.txt to renesas,isl29501.txt.
+> 
+> This is part of an ongoing effort to name bindings documentation files for
+> Renesas IP blocks consistently, in line with the compat strings they
+> document.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
- Documentation/devicetree/bindings/mips/ralink.txt | 1 +
- 1 file changed, 1 insertion(+)
+Applied,
 
-diff --git a/Documentation/devicetree/bindings/mips/ralink.txt b/Documentation/devicetree/bindings/mips/ralink.txt
-index a16e8d7fe56c..3341945b51d9 100644
---- a/Documentation/devicetree/bindings/mips/ralink.txt
-+++ b/Documentation/devicetree/bindings/mips/ralink.txt
-@@ -16,3 +16,4 @@ value must be one of the following values:
-   ralink,mt7620a-soc
-   ralink,mt7620n-soc
-   ralink,mt7628a-soc
-+  ralink,mt7688a-soc
--- 
-2.22.0
+Thanks,
+
+Jonathan
+
+> ---
+> Based on v5.3-rc1
+> 
+> v2
+> * Drop spurious top-level Makefile hunk
+> ---
+>  .../devicetree/bindings/iio/light/{isl29501.txt => renesas,isl29501.txt}  | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/iio/light/{isl29501.txt => renesas,isl29501.txt} (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/isl29501.txt b/Documentation/devicetree/bindings/iio/light/renesas,isl29501.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/iio/light/isl29501.txt
+> rename to Documentation/devicetree/bindings/iio/light/renesas,isl29501.txt
