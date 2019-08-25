@@ -1,224 +1,72 @@
-Return-Path: <SRS0=uCLo=WE=nvidia.com=nkristam@kernel.org>
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V6 2/8] phy: tegra: xusb: Add usb3 port fake support on Tegra210
-Date: Thu, 8 Aug 2019 15:07:20 +0530
-Message-ID: <1565257046-9890-3-git-send-email-nkristam@nvidia.com>
-In-Reply-To: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
-References: <1565257046-9890-1-git-send-email-nkristam@nvidia.com>
+Return-Path: <SRS0=uMCE=WV=onstation.org=masneyb@kernel.org>
+Date: Sun, 25 Aug 2019 16:41:55 -0400
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v5 4/5] interconnect: qcom: Add QCS404 interconnect
+ provider driver
+Message-ID: <20190825204155.GA6879@onstation.org>
+References: <20190723142339.27772-1-georgi.djakov@linaro.org>
+ <20190723142339.27772-5-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, Nagarjuna Kristam <nkristam@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723142339.27772-5-georgi.djakov@linaro.org>
+To: Georgi Djakov <georgi.djakov@linaro.org>, bjorn.andersson@linaro.org
+Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tegra210, usb2 only otg/peripheral ports dont work in device mode.
-They need an assosciated usb3 port to work in device mode. Identify
-an unused usb3 port and assign it as a fake USB3 port to USB2 only
-port whose mode is otg/peripheral.
+Hi Georgi and Bjorn,
 
-Based on work by BH Hsieh <bhsieh@nvidia.com>.
+I'm finishing up a msm8974 interconnect driver and I used qcs404 as a
+starting point. I have a question below.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
- drivers/phy/tegra/xusb-tegra210.c | 56 +++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.c          | 65 +++++++++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.h          |  2 ++
- 3 files changed, 123 insertions(+)
+On Tue, Jul 23, 2019 at 05:23:38PM +0300, Georgi Djakov wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Add driver for the interconnect buses found in Qualcomm QCS404-based
+> platforms. The topology consists of three NoCs that are controlled by
+> a remote processor. This remote processor collects the aggregated
+> bandwidth for each master-slave pairs.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 0351c4a..8c31f03 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -50,6 +50,7 @@
- #define XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP_SHIFT(x) ((x) * 5)
- #define XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP_MASK(x) (0x7 << ((x) * 5))
- #define XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP(x, v) (((v) & 0x7) << ((x) * 5))
-+#define XUSB_PADCTL_SS_PORT_MAP_PORT_DISABLED 0x7
- 
- #define XUSB_PADCTL_ELPG_PROGRAM1 0x024
- #define XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_VCORE_DOWN (1 << 31)
-@@ -944,6 +945,34 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	priv = to_tegra210_xusb_padctl(padctl);
- 
-+	if (port->usb3_port_fake != -1) {
-+		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP);
-+		value &= ~XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP_MASK(
-+					port->usb3_port_fake);
-+		value |= XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP(
-+					port->usb3_port_fake, index);
-+		padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_MAP);
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
-+		value &= ~XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_VCORE_DOWN(
-+					port->usb3_port_fake);
-+		padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
-+
-+		usleep_range(100, 200);
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
-+		value &= ~XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN_EARLY(
-+					port->usb3_port_fake);
-+		padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
-+
-+		usleep_range(100, 200);
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
-+		value &= ~XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN(
-+					port->usb3_port_fake);
-+		padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
-+	}
-+
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
- 	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_MASK <<
- 		    XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_SHIFT) |
-@@ -1078,6 +1107,32 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
- 
- 	mutex_lock(&padctl->lock);
- 
-+	if (port->usb3_port_fake != -1) {
-+		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
-+		value |= XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN_EARLY(
-+					port->usb3_port_fake);
-+		padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
-+
-+		usleep_range(100, 200);
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
-+		value |= XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN(
-+					port->usb3_port_fake);
-+		padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
-+
-+		usleep_range(250, 350);
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
-+		value |= XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_VCORE_DOWN(
-+					port->usb3_port_fake);
-+		padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP);
-+		value |= XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP(port->usb3_port_fake,
-+					XUSB_PADCTL_SS_PORT_MAP_PORT_DISABLED);
-+		padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_MAP);
-+	}
-+
- 	if (WARN_ON(pad->enable == 0))
- 		goto out;
- 
-@@ -2052,6 +2107,7 @@ const struct tegra_xusb_padctl_soc tegra210_xusb_padctl_soc = {
- 	.ops = &tegra210_xusb_padctl_ops,
- 	.supply_names = tegra210_xusb_padctl_supply_names,
- 	.num_supplies = ARRAY_SIZE(tegra210_xusb_padctl_supply_names),
-+	.need_fake_usb3_port = true,
- };
- EXPORT_SYMBOL_GPL(tegra210_xusb_padctl_soc);
- 
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index 2ea8497..b4b217e 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -800,9 +800,62 @@ static void __tegra_xusb_remove_ports(struct tegra_xusb_padctl *padctl)
- 	}
- }
- 
-+static int tegra_xusb_find_unused_usb3_port(struct tegra_xusb_padctl *padctl)
-+{
-+	struct device_node *np;
-+	unsigned int i;
-+
-+	for (i = 0; i < padctl->soc->ports.usb3.count; i++) {
-+		np = tegra_xusb_find_port_node(padctl, "usb3", i);
-+		if (!np || !of_device_is_available(np))
-+			return i;
-+	}
-+
-+	return -ENODEV;
-+}
-+
-+static bool tegra_xusb_port_is_companion(struct tegra_xusb_usb2_port *usb2)
-+{
-+	unsigned int i;
-+	struct tegra_xusb_usb3_port *usb3;
-+	struct tegra_xusb_padctl *padctl = usb2->base.padctl;
-+
-+	for (i = 0; i < padctl->soc->ports.usb3.count; i++) {
-+		usb3 = tegra_xusb_find_usb3_port(padctl, i);
-+		if (usb3 && usb3->port == usb2->base.index)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int tegra_xusb_update_usb3_fake_port(struct tegra_xusb_usb2_port *usb2)
-+{
-+	int fake;
-+
-+	/* Disable usb3_port_fake usage by default and assign if needed */
-+	usb2->usb3_port_fake = -1;
-+
-+	if ((usb2->mode == USB_DR_MODE_OTG ||
-+	     usb2->mode == USB_DR_MODE_PERIPHERAL) &&
-+		!tegra_xusb_port_is_companion(usb2)) {
-+		fake = tegra_xusb_find_unused_usb3_port(usb2->base.padctl);
-+		if (fake < 0) {
-+			dev_err(&usb2->base.dev, "no unused USB3 ports available\n");
-+			return -ENODEV;
-+		}
-+
-+		dev_dbg(&usb2->base.dev, "Found unused usb3 port: %d\n", fake);
-+		usb2->usb3_port_fake = fake;
-+	}
-+
-+	return 0;
-+}
-+
- static int tegra_xusb_setup_ports(struct tegra_xusb_padctl *padctl)
- {
- 	struct tegra_xusb_port *port;
-+	struct tegra_xusb_usb2_port *usb2;
- 	unsigned int i;
- 	int err = 0;
- 
-@@ -832,6 +885,18 @@ static int tegra_xusb_setup_ports(struct tegra_xusb_padctl *padctl)
- 			goto remove_ports;
- 	}
- 
-+	if (padctl->soc->need_fake_usb3_port) {
-+		for (i = 0; i < padctl->soc->ports.usb2.count; i++) {
-+			usb2 = tegra_xusb_find_usb2_port(padctl, i);
-+			if (!usb2)
-+				continue;
-+
-+			err = tegra_xusb_update_usb3_fake_port(usb2);
-+			if (err < 0)
-+				goto remove_ports;
-+		}
-+	}
-+
- 	list_for_each_entry(port, &padctl->ports, list) {
- 		err = port->ops->enable(port);
- 		if (err < 0)
-diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index 093076c..bd91832 100644
---- a/drivers/phy/tegra/xusb.h
-+++ b/drivers/phy/tegra/xusb.h
-@@ -291,6 +291,7 @@ struct tegra_xusb_usb2_port {
- 	struct regulator *supply;
- 	enum usb_dr_mode mode;
- 	bool internal;
-+	int usb3_port_fake;
- };
- 
- static inline struct tegra_xusb_usb2_port *
-@@ -389,6 +390,7 @@ struct tegra_xusb_padctl_soc {
- 
- 	const char * const *supply_names;
- 	unsigned int num_supplies;
-+	bool need_fake_usb3_port;
- };
- 
- struct tegra_xusb_padctl {
--- 
-2.7.4
+[snip]
+
+> +enum {
+> +       QCS404_MASTER_AMPSS_M0 = 1,
+
+[snip]
+
+> +#define DEFINE_QNODE(_name, _id, _buswidth, _mas_rpm_id, _slv_rpm_id,	\
+> +		     ...)						\
+> +		static struct qcom_icc_node _name = {			\
+> +		.name = #_name,						\
+> +		.id = _id,						\
+> +		.buswidth = _buswidth,					\
+> +		.mas_rpm_id = _mas_rpm_id,				\
+> +		.slv_rpm_id = _slv_rpm_id,				\
+> +		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
+> +		.links = { __VA_ARGS__ },				\
+> +	}
+> +
+> +DEFINE_QNODE(mas_apps_proc, QCS404_MASTER_AMPSS_M0, 8, 0, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
+
+[snip]
+
+> +static struct qcom_icc_node *qcs404_bimc_nodes[] = {
+> +	[MASTER_AMPSS_M0] = &mas_apps_proc,
+
+Should the id in DEFINE_QNODE() above be MASTER_AMPSS_M0 instead of
+QCS404_MASTER_AMPSS_M0?
+
+of_icc_xlate_onecell() looks up the id by the array index
+MASTER_AMPSS_M0 (1), however qnoc_probe() passes the id that's
+in struct qcom_icc_node to icc_node_create(), which is
+QCS404_MASTER_AMPSS_M0 (0). They have different values and I'm unsure
+why we can't just use the ids that are in qcom,qcs404.h and drop the
+enum above.
+
+Thanks,
+
+Brian
