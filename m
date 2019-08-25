@@ -1,7 +1,7 @@
 From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 1/7] arm64: dts: meson-g12b-odroid-n2: add rc-odroid keymap
-Date: Sun, 25 Aug 2019 08:01:22 +0400
-Message-ID: <1566705688-18442-2-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 4/7] arm64: dts: meson-gxbb-wetek-play2: add rc-wetek-play2 keymap
+Date: Sun, 25 Aug 2019 08:01:25 +0400
+Message-ID: <1566705688-18442-5-git-send-email-christianshewitt@gmail.com>
 References: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
@@ -10,24 +10,24 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin
 Cc: Chrisitian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-add the rc-odroid keymap to the ir node
+add the rc-wetek-play2 keymap to the ir node
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index 81780ff..35cef76 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -314,6 +314,7 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+index 0038522..1d32d1f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+@@ -54,3 +54,7 @@
+ &usb1 {
  	status = "okay";
- 	pinctrl-0 = <&remote_input_ao_pins>;
- 	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-odroid";
  };
- 
- /* SD card */
++
++&ir {
++	linux,rc-map-name = "rc-wetek-play2";
++};
 -- 
 2.7.4
