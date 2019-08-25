@@ -1,66 +1,39 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 4/4] dt-bindings: iio: adc: Add AD7606B ADC
- documentation
-Date: Sun, 25 Aug 2019 18:26:53 +0100
-Message-ID: <20190825182653.25a685d4@archlinux>
-References: <20190821141656.4815-1-beniamin.bia@analog.com>
-        <20190821141656.4815-4-beniamin.bia@analog.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/7] arm64: dts: meson: ir keymap updates
+Date: Sun, 25 Aug 2019 21:38:37 +0200
+Message-ID: <CAFBinCD0uhE9Fj1we2MkaTbk7RwtmKh7Fn1C-2nn9wiWqCoNfg@mail.gmail.com>
+References: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821141656.4815-4-beniamin.bia@analog.com>
+In-Reply-To: <1566705688-18442-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamin Bia <beniamin.bia@analog.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, paulmck@linux.ibm.com, mchehab+samsung@kernel.org, linus.walleij@linaro.org, nicolas.ferre@microchip.com, biabeniamin@outlook.com
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Aug 2019 17:16:56 +0300
-Beniamin Bia <beniamin.bia@analog.com> wrote:
-
-> Documentation for AD7606B Analog to Digital Converter and software
-> mode was added.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Tweaked as per Peter's comment and added Rob's Reviewed-by from v2
-Seems everyone decided to review this one just as you were posting
-the new version ;)
-
-Jonathan
-
-> ---
-> Changes in v3:
-> -nothing changed
-> 
->  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> index 509dbe9c84d2..2afe31747a70 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> @@ -13,6 +13,7 @@ maintainers:
->  description: |
->    Analog Devices AD7606 Simultaneous Sampling ADC
->    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606_7606-6_7606-4.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD7606B.pdf
->    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7616.pdf
->  
->  properties:
-> @@ -22,6 +23,7 @@ properties:
->        - adi,ad7606-8
->        - adi,ad7606-6
->        - adi,ad7606-4
-> +      - adi,ad7606b
->        - adi,ad7616
->  
->    reg:
-> @@ -87,7 +89,7 @@ properties:
->  
->    adi,sw-mode:
->      description:
-> -      Software mode of operation, so far available only for ad7616.
-> +      Software mode of operation, so far available only for ad7616 and ad7606B.
->        It is enabled when all three oversampling mode pins are connected to
->        high level. The device is configured by the corresponding registers. If the
->        adi,oversampling-ratio-gpios property is defined, then the driver will set the
+On Sun, Aug 25, 2019 at 6:03 AM Christian Hewitt
+<christianshewitt@gmail.com> wrote:
+>
+> This series adds keymaps for several box/board vendor IR remote devices
+> to respective device-tree files. The keymaps were submitted in [0] and
+> have been queued for inclusion in Linux 5.4.
+>
+> The Khadas remote change swaps the rc-geekbox keymap for rc-khadas. The
+> Geekbox branded remote was only sold for a brief period when VIM(1) was
+> a new device. The Khadas branded remote that replaced it exchanged the
+> Geekbox full-screen key for an Android mouse button using a different IR
+> keycode. The rc-khadas keymap supports the mouse button keycode and maps
+> it to KEY_MUTE.
+>
+> [0] https://patchwork.kernel.org/project/linux-media/list/?series=160309
+>
+> Christian Hewitt (7):
+>   arm64: dts: meson-g12b-odroid-n2: add rc-odroid keymap
+>   arm64: dts: meson-g12a-x96-max: add rc-x96max keymap
+>   arm64: dts: meson-gxbb-wetek-hub: add rc-wetek-hub keymap
+>   arm64: dts: meson-gxbb-wetek-play2: add rc-wetek-play2 keymap
+>   arm64: dts: meson-gxl-s905x-khadas-vim: use rc-khadas keymap
+>   arm64: dts: meson-gxl-s905w-tx3-mini: add rc-tx3mini keymap
+>   arm64: dts: meson-gxm-khadas-vim2: use rc-khadas keymap
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
