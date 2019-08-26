@@ -1,108 +1,155 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
-Date: Mon, 26 Aug 2019 14:05:48 +0200
-Message-ID: <20190826120548.GA14316@bogon.m.sigxcpu.org>
-References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC 7/9] dt-bindings: rtc: s3c: Convert S3C/Exynos RTC bindings
+ to json-schema
+Date: Mon, 26 Aug 2019 07:06:02 -0500
+Message-ID: <CAL_JsqKCpKuc=-4UyWFFv_RenKuSJcr9cdSKjbkL8F1ni+VODw@mail.gmail.com>
+References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-7-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <20190823145356.6341-7-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, notify@kernel.orgArnd Bergmann <ar>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Wed, Aug 21, 2019 at 01:15:40PM +0300, Robert Chiras wrote:
-> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
-> and 8QXP). Following, are the new features added and fixes from this
-> patch-set:
+On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Convert Samsung S3C/Exynos Real Time Clock bindings to DT schema format
+> using json-schema.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/rtc/s3c-rtc.txt       | 31 ------
+>  .../devicetree/bindings/rtc/s3c-rtc.yaml      | 95 +++++++++++++++++++
+>  2 files changed, 95 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
 
-I've applied this whole series on top of my NWL work and it looks good
-with a DSI panel. Applying the whole series also fixes an issue where
-after unblank the output was sometimes shifted about half a screen width
-to the right (which didn't happen with DCSS). So at least from the parts
-I could test:
 
-  Tested-by: Guido Günther <agx@sigxcpu.org> 
+> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> new file mode 100644
+> index 000000000000..44b021812a83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/s3c-rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C, S5P and Exynos Real Time Clock controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +# Select also deprecated compatibles (for finding deprecate usage)
+> +select:
+> +  properties:
+> +    compatible:
+> +      items:
+> +        - enum:
+> +            - samsung,s3c2410-rtc
+> +            - samsung,s3c2416-rtc
+> +            - samsung,s3c2443-rtc
+> +            - samsung,s3c6410-rtc
+> +            # Deprecated, use samsung,s3c6410-rtc
+> +            - samsung,exynos3250-rtc
 
-for the whole thing.
-Cheers,
- -- Guido
-> 
-> 1. Add support for drm_bridge
-> On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
-> display connector, where an LCD panel can be attached, but instead it is
-> connected to DSI controller. Since this DSI stands between the display
-> controller (eLCDIF) and the physical connector, the DSI can be implemented
-> as a DRM bridge. So, in order to be able to connect the mxsfb driver to
-> the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
-> driver (the actual driver for the eLCDIF block).
-> 
-> 2. Add support for additional pixel formats
-> Some of the pixel formats needed by Android were not implemented in this
-> driver, but they were actually supported. So, add support for them.
-> 
-> 3. Add support for horizontal stride
-> Having support for horizontal stride allows the use of eLCDIF with a GPU
-> (for example) that can only output resolution sizes multiple of a power of
-> 8. For example, 1080 is not a power of 16, so in order to support 1920x1080
-> output from GPUs that can produce linear buffers only in sizes multiple to 16,
-> this feature is needed.
-> 
-> 3. Few minor features and bug-fixing
-> The addition of max-res DT property was actually needed in order to limit
-> the bandwidth usage of the eLCDIF block. This is need on systems where
-> multiple display controllers are presend and the memory bandwidth is not
-> enough to handle all of them at maximum capacity (like it is the case on
-> 8MQ, where there are two display controllers: DCSS and eLCDIF).
-> The rest of the patches are bug-fixes.
-> 
-> v3:
-> - Removed the max-res property patches and added support for
->   max-memory-bandwidth property, as it is also implemented in other drivers
-> - Removed unnecessary drm_vblank_off in probe
-> 
-> v2:
-> - Collected Tested-by from Guido
-> - Split the first patch, which added more than one feature into relevant
->   patches, explaining each feature added
-> - Also split the second patch into more patches, to differentiate between
->   the feature itself (additional pixel formats support) and the cleanup
->   of the register definitions for a better representation (guido)
-> - Included a patch submitted by Guido, while he was testing my patch-set
-> 
-> Guido Günther (1):
->   drm/mxsfb: Read bus flags from bridge if present
-> 
-> Mirela Rabulea (1):
->   drm/mxsfb: Signal mode changed when bpp changed
-> 
-> Robert Chiras (13):
->   drm/mxsfb: Update mxsfb to support a bridge
->   drm/mxsfb: Add defines for the rest of registers
->   drm/mxsfb: Reset vital registers for a proper initialization
->   drm/mxsfb: Update register definitions using bit manipulation defines
->   drm/mxsfb: Update mxsfb with additional pixel formats
->   drm/mxsfb: Fix the vblank events
->   drm/mxsfb: Add max-memory-bandwidth property for MXSFB
->   dt-bindings: display: Add max-memory-bandwidth property for mxsfb
->   drm/mxsfb: Update mxsfb to support LCD reset
->   drm/mxsfb: Improve the axi clock usage
->   drm/mxsfb: Clear OUTSTANDING_REQS bits
->   drm/mxsfb: Add support for horizontal stride
->   drm/mxsfb: Add support for live pixel format change
-> 
->  .../devicetree/bindings/display/mxsfb.txt          |   5 +
->  drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
->  drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 203 +++++++++++++--
->  drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  12 +-
->  drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
->  drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
->  6 files changed, 589 insertions(+), 137 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+We've come up with a better way of doing this that doesn't need a
+custom 'select'. Add a 'oneOf' to compatible and add another entry:
+
+- const: samsung,exynos3250-rtc
+  deprecated: true
+
+It's not implemented yet in the tool, but we'll keep the compatible
+for 'select' and otherwise drop schema marked deprecated.
+
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+
+You can drop 'items' when there's only 1 entry.
+
+> +          - samsung,s3c2410-rtc
+> +          - samsung,s3c2416-rtc
+> +          - samsung,s3c2443-rtc
+> +          - samsung,s3c6410-rtc
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description:
+> +      Must contain a list of phandle and clock specifier for the rtc
+> +      clock and in the case of a s3c6410 compatible controller, also
+> +      a source clock.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    description:
+> +      Must contain "rtc" and for a s3c6410 compatible controller,
+> +      a "rtc_src" sorted in the same order as the clocks property.
+> +    oneOf:
+> +      - items:
+> +          - const: rtc
+> +      - items:
+> +          # TODO: This can be in any order matching clocks, how to express it?
+
+It shouldn't be in any order. Fix the dts files.
+
+> +          - const: rtc
+> +          - const: rtc_src
+
+You should drop all this and add an else clause below.
+
+> +
+> +  interrupts:
+> +    description:
+> +      Two interrupt numbers to the cpu should be specified. First
+> +      interrupt number is the rtc alarm interrupt and second interrupt number
+> +      is the rtc tick interrupt. The number of cells representing a interrupt
+> +      depends on the parent interrupt controller.
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - samsung,s3c6410-rtc
+> +              - samsung,exynos3250-rtc
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 2
+> +          maxItems: 2
+> +        clock-names:
+> +          items:
+> +          - const: rtc
+> +          - const: rtc_src
+
+Should be indented 2 more spaces.
+
+> +
+> +examples:
+> +  - |
+> +    rtc@10070000 {
+> +      compatible = "samsung,s3c6410-rtc";
+> +      reg = <0x10070000 0x100>;
+> +      interrupts = <0 44 4>, <0 45 4>;
+> +      clocks = <&clock 0>, // CLK_RTC
+> +               <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> +      clock-names = "rtc", "rtc_src";
+> +    };
+> --
+> 2.17.1
+>
