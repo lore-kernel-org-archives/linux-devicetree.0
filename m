@@ -1,109 +1,93 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH v4 00/13] Support CPU frequency scaling on QCS404
-Date: Mon, 26 Aug 2019 08:54:20 +0200
-Message-ID: <f34a75d0-c479-267d-b4a1-c2418d4efb22@linaro.org>
-References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
+Date: Mon, 26 Aug 2019 15:54:25 +0900
+Message-ID: <CAAFQd5A-ze9FgDqNpPgyu7gA3nQPUW_G0zEG8ThNGjVEb=_jjA@mail.gmail.com>
+References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
+ <20190819034331.13098-3-dongchun.zhu@mediatek.com>
+ <20190821103038.GA148543@chromium.org>
+ <20190821110542.GD31967@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net
-Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190821110542.GD31967-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, shengnan.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Louis Kuo <louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cao Bing Bu <bingbu.cao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/31/19 22:29, Jorge Ramirez-Ortiz wrote:
-> The following patchset enables CPU frequency scaling support on the
-> QCS404 (with dynamic voltage scaling).
-> 
-> It is important to notice that this functionality will be superseded
-> by Core Power Reduction (CPR), a more accurate form of AVS found on
-> certain Qualcomm SoCs.
-> 
-> Some of the changes required to support CPR do conflict with the
-> configuration required for CPUFreq.
-> 
-> In particular, the following commit for CPR - already merged - will
-> need to be reverted in order to enable CPUFreq.
-> 
->    Author: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->    Date:   Thu Jul 25 12:41:36 2019 +0200
->        cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
->     
-> Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
-> in this platform, this PLL provides the clock signal to a CPU
-> core. But in others it might not.
-> 
-> We opted for the minimal ammount of changes without affecting the
-> default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
-> framework and letting the firwmare chose whether to enable or disable
-> the clock at boot. However maybe a DT property and marking the clock
-> as critical would be more appropriate for this PLL. we'd appreciate the
-> maintainer's input on this topic.
-> 
-> v2:
->    - dts: ms8916: apcs mux/divider: new bindings
->      (the driver can still support the old bindings)
-> 
->    - qcs404.dtsi
->      fix apcs-hfpll definition
->      fix cpu_opp_table definition
-> 
->    - GPLL0_AO_OUT operating frequency
->      define new alpha_pll_fixed_ops to limit the operating frequency
-> 
-> v3:
->   - qcom-apcs-ipc-mailbox
->     replace goto to ease readability
-> 
->   - apcs-msm8916.c
->     rework patch to use of_clk_parent_fill
-> 
->   - hfpll.c
->     add relevant comments to the code
-> 
->   - qcs404.dtsi
->     add voltage scaling support
-> 
-> v4:
->  - squash OPP definition and DVFS enablement in dts
->    (patches 10 and 13 in previous version)
->    
->  - qcom-apcs-ipc-mailbox
->    replace return condition for readability
->    
->  - answer one question on CLK_IGNORE_UNUSED in mailing list
-> 
-> Jorge Ramirez-Ortiz, Niklas Cassel (13):
->   clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
->   mbox: qcom: add APCS child device for QCS404
->   mbox: qcom: replace integer with valid macro
->   dt-bindings: mailbox: qcom: Add clock-name optional property
->   clk: qcom: apcs-msm8916: get parent clock names from DT
->   clk: qcom: hfpll: get parent clock names from DT
->   clk: qcom: hfpll: register as clock provider
->   clk: qcom: hfpll: CLK_IGNORE_UNUSED
->   arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
->   arm64: dts: qcom: qcs404: Add HFPLL node
->   arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
->   arm64: dts: qcom: qcs404: Add DVFS support
->   arm64: defconfig: Enable HFPLL
-> 
->  .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
->  arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
->  arch/arm64/boot/dts/qcom/qcs404.dtsi          | 43 +++++++++++++++++++
->  arch/arm64/configs/defconfig                  |  1 +
->  drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
->  drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
->  drivers/clk/qcom/clk-alpha-pll.h              |  1 +
->  drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
->  drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 11 +++--
->  10 files changed, 128 insertions(+), 13 deletions(-)
-> 
+On Wed, Aug 21, 2019 at 8:05 PM Sakari Ailus
+<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>
+> Hi Tomasz,
+>
+> On Wed, Aug 21, 2019 at 07:30:38PM +0900, Tomasz Figa wrote:
+[snip]
+> > Is it really correct to enable the clock before the regulators?
+> >
+> > According to the datasheet, it should be:
+> >  - PD pin HIGH,
+> >  - nRST pin LOW,
+> >  - DVDDIO and AVDD28 power up and stabilize,
+> >  - clock enabled,
+> >  - min 5 ms delay,
+> >  - PD pin LOW,
+> >  - min 4 ms delay,
+> >  - nRST pin HIGH,
+> >  - min 5 ms delay,
+> >  - I2C interface ready.
+> >
+> > > +
+> > > +   /* Note: set 0 is high, set 1 is low */
+> >
+> > Why is that? If there is some inverter on the way that should be handled
+> > outside of this driver. (GPIO DT bindings have flags for this purpose.
+> >
+> > If the pins are nRESET and nPOWERDOWN in the hardware datasheet, we should
+> > call them like this in the driver too (+/- the lowercase and underscore
+> > convention).
+> >
+> > According to the datasheet, the reset pin is called RST and inverted, so we should
+> > call it n_rst, but the powerdown signal, called PD, is not inverted, so pd
+> > would be the right name.
+>
+> For what it's worth sensors generally have xshutdown (or reset) pin that is
+> active high. Looking at the code, it is not the case here. It's a bit odd
+> since the usual arrangement saves power when the camera is not in use; it's
+> not a lot but still. Oh well.
+>
 
-any feedback on this set?
+I guess we could drive powerdown low after disabling the regulators
+and clocks, but that wouldn't work for the cases where the regulators
+are actually shared with something else, especially if that is not
+related to the same camera module.
 
-TIA
+> ...
+>
+> > > +static struct i2c_driver ov02a10_i2c_driver = {
+> > > +   .driver = {
+> > > +           .name = "ov02a10",
+> > > +           .pm = &ov02a10_pm_ops,
+> > > +           .of_match_table = ov02a10_of_match,
+> >
+> > Please use of_match_ptr() wrapper.
+>
+> Not really needed; the driver does expect regulators, GPIOs etc., but by
+> leaving out of_match_ptr(), the driver will also probe on ACPI based
+> systems.
+
+Good point, I always keep forgetting about the ability to probe OF
+drivers from ACPI. Then we also need to remove the #if
+IS_ENABLED(CONFIG_OF) from ov02a10_of_match.
+
+Best regards,
+Tomasz
