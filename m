@@ -1,57 +1,84 @@
-From: <Codrin.Ciubotariu@microchip.com>
-Subject: Re: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source in
- frame-slave mode
-Date: Mon, 26 Aug 2019 15:05:06 +0000
-Message-ID: <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
-References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
- <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus
+ probe
+Date: Mon, 26 Aug 2019 10:27:14 -0500
+Message-ID: <c080d163-720c-7a15-857a-fc619eb8d048@kernel.org>
+References: <20190820145834.7301-1-dinguyen@kernel.org>
+ <20190820145834.7301-2-dinguyen@kernel.org>
+ <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
+ <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
+ <1566809829.3842.4.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <1566809829.3842.4.camel@pengutronix.de>
 Content-Language: en-US
-Content-ID: <51A4D2C1067F1A4EB790CFCDD9CDF311@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mirq-linux@rere.qmqm.pl, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: alexandre.belloni@bootlin.com, arnd@arndb.de, 3chas3@gmail.com, gregkh@linuxfoundation.org, perex@perex.cz, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, robh-dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjQuMDguMjAxOSAyMzoyNiwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+IFNTQyBkcml2
-ZXIgYWxsb3dzIG9ubHkgc3luY2hyb25vdXMgVFggYW5kIFJYLiBJbiBzbGF2ZSBtb2RlIGZvciBC
-Q0xLDQo+IGl0IHVzZXMgb25seSBvbmUgb2YgVEsgb3IgUksgcGluLCBidXQgZm9yIExSQ0xLIGl0
-IGNvbmZpZ3VyZWQgc2VwYXJhdGUNCj4gaW5wdXRzIGZyb20gVEYgYW5kIFJGIHBpbnMuIEFsbG93
-IGNvbmZpZ3VyYXRpb24gd2l0aCBjb21tb24gRlMgc2lnbmFsLg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogTWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPg0KPiANCj4gLS0t
-DQo+ICAgdjI6IHVzZSBhbHRlcm5hdGUgRFQgYmluZGluZw0KPiAgICAgICBzcGxpdCBEVCBhbmQg
-ZHJpdmVycy9taXNjIGNoYW5nZXMNCj4gDQo+IC0tLQ0KPiAgIHNvdW5kL3NvYy9hdG1lbC9hdG1l
-bF9zc2NfZGFpLmMgfCAyNiArKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiAgIDEgZmlsZSBj
-aGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL3NvdW5kL3NvYy9hdG1lbC9hdG1lbF9zc2NfZGFpLmMgYi9zb3VuZC9zb2MvYXRtZWwvYXRt
-ZWxfc3NjX2RhaS5jDQo+IGluZGV4IDQ4ZTllZWYzNGMwZi4uMDM1ZDRkYTU4ZjJiIDEwMDY0NA0K
-PiAtLS0gYS9zb3VuZC9zb2MvYXRtZWwvYXRtZWxfc3NjX2RhaS5jDQo+ICsrKyBiL3NvdW5kL3Nv
-Yy9hdG1lbC9hdG1lbF9zc2NfZGFpLmMNCj4gQEAgLTYwNSwxNCArNjA1LDMyIEBAIHN0YXRpYyBp
-bnQgYXRtZWxfc3NjX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVh
-bSwNCj4gICAJCXJldHVybiAtRUlOVkFMOw0KPiAgIAl9DQo+ICAgDQo+IC0JaWYgKCFhdG1lbF9z
-c2NfY2ZzKHNzY19wKSkgew0KPiArCWlmIChhdG1lbF9zc2NfY2ZzKHNzY19wKSkgew0KPiArCQkv
-Kg0KPiArCQkgKiBTU0MgcHJvdmlkZXMgTFJDTEsNCj4gKwkJICoNCj4gKwkJICogQm90aCBURiBh
-bmQgUkYgYXJlIGdlbmVyYXRlZCwgc28gdXNlIHRoZW0gZGlyZWN0bHkuDQo+ICsJCSAqLw0KPiAr
-CQlyY21yIHw9CSAgU1NDX0JGKFJDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KPiArCQl0Y21yIHw9CSAg
-U1NDX0JGKFRDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KDQpIbW0sIGhvdyB3b3VsZCB0aGlzIHdvcmsg
-aWYgY2FwdHVyZSBhbmQgcGxheWJhY2sgc3RhcnQvcnVuIGF0IHRoZSBzYW1lIHRpbWU/DQoNCj4g
-Kwl9IGVsc2Ugew0KPiAgIAkJZnNsZW4gPSBmc2xlbl9leHQgPSAwOw0KPiAgIAkJcmNtcl9wZXJp
-b2QgPSB0Y21yX3BlcmlvZCA9IDA7DQo+ICAgCQlmc19vc3luYyA9IFNTQ19GU09TX05PTkU7DQo+
-IC0JfQ0KPiAgIA0KPiAtCXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwgZnNfZWRnZSk7DQo+
-IC0JdGNtciB8PQkgIFNTQ19CRihUQ01SX1NUQVJULCBmc19lZGdlKTsNCj4gKwkJaWYgKHNzYy0+
-bHJjbGtfZnJvbV90Zl9waW4pIHsNCj4gKwkJCXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwg
-U1NDX1NUQVJUX1RYX1JYKTsNCj4gKwkJCXRjbXIgfD0JICBTU0NfQkYoVENNUl9TVEFSVCwgZnNf
-ZWRnZSk7DQo+ICsJCX0gZWxzZSBpZiAoc3NjLT5scmNsa19mcm9tX3JmX3Bpbikgew0KPiArCQkJ
-LyogYXNzdW1lIFJGIGlzIHRvIGJlIHVzZWQgd2hlbiBSSyBpcyB1c2VkIGFzIEJDTEsgaW5wdXQg
-Ki8NCg0KVGhpcyBjb21tZW50IGlzIG5vdCBsb25nZXIgdHJ1ZS4uLg0KDQo+ICsJCQkvKiBOb3Rl
-OiB3b24ndCB3b3JrIGNvcnJlY3RseSBvbiBTQU1BNUQyIGR1ZSB0byBlcnJhdGEgKi8NCj4gKwkJ
-CXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwgZnNfZWRnZSk7DQo+ICsJCQl0Y21yIHw9CSAg
-U1NDX0JGKFRDTVJfU1RBUlQsIFNTQ19TVEFSVF9UWF9SWCk7DQo+ICsJCX0gZWxzZSB7DQo+ICsJ
-CQlyY21yIHw9CSAgU1NDX0JGKFJDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KPiArCQkJdGNtciB8PQkg
-IFNTQ19CRihUQ01SX1NUQVJULCBmc19lZGdlKTsNCj4gKwkJfQ0KPiArCX0NCj4gICANCj4gICAJ
-aWYgKGF0bWVsX3NzY19jYnMoc3NjX3ApKSB7DQo+ICAgCQkvKg0KPiANCg0KVGhhbmtzIGFuZCBi
-ZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg==
+Hi Philipp,
+
+On 8/26/19 3:57 AM, Philipp Zabel wrote:
+> Hi Dinh, Linus,
+> 
+> On Fri, 2019-08-23 at 10:42 -0500, Dinh Nguyen wrote:
+>>
+>> On 8/23/19 4:19 AM, Linus Walleij wrote:
+>>> On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
+>>>
+>>>> @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>>>>         ret = amba_get_enable_pclk(dev);
+>>>>         if (ret == 0) {
+>>>>                 u32 pid, cid;
+>>>> +               int count;
+>>>> +               struct reset_control *rstc;
+>>>> +
+>>>> +               /*
+>>>> +                * Find reset control(s) of the amba bus and de-assert them.
+>>>> +                */
+>>>> +               count = reset_control_get_count(&dev->dev);
+> 
+> The reset_control_get_count() inline stub returns -ENOENT, so the
+> compiler can throw away the complete loop.
+> 
+>>>> +               while (count > 0) {
+>>>> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
+> 
+> Since resets are looked up with of_reset_control_get, I'd use
+> of_reset_control_get_count() above for consistency. But see below:
+> 
+
+reset_control_get_count() ultimately calls of_reset_control_get_count()
+and it looks like of_reset_control_get_count() is not exported.
+
+>>>> +                       if (IS_ERR(rstc)) {
+>>>> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
+>>>> +                                       ret = -EPROBE_DEFER;
+>>>> +                               else
+>>>> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
+>>>> +                               break;
+>>>> +                       }
+>>>> +                       reset_control_deassert(rstc);
+>>>> +                       reset_control_put(rstc);
+>>>> +                       count--;
+>>>> +               }
+> 
+> It looks like the order of deassertions is irrelevant. If so,
+> You can use of_reset_control_array_get() to simplify this:
+> 
+> +		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
+> +		if (IS_ERR(rstc)) {
+> +			if (PTR_ERR(rstc) != -EPROBE_DEFER)
+> +				dev_err(&dev->dev, "Can't get amba reset!\n");
+> +			return PTR_ERR(rstc);
+> +		}
+> +		reset_control_deassert(rstc);
+> +		reset_control_put(rstc);
+> 
+
+Thanks for the review! I'll post v5 shortly.
+
+Dinh
