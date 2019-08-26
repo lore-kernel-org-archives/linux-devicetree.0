@@ -1,54 +1,91 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH v5 0/3] soc: ti: k3: Allow for exclusive and shared device
- requests
-Date: Mon, 26 Aug 2019 15:41:28 +0530
-Message-ID: <ad77afd4-feb6-8123-3207-2518d7a98106@ti.com>
-References: <20190729122453.32252-1-lokeshvutla@ti.com>
- <05218f41-9601-9a6c-8ac1-3bf1482e1c3d@ti.com>
- <226a7b55-8a4d-aa25-9392-004d5ea097e4@oracle.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Date: Mon, 26 Aug 2019 13:15:50 +0300
+Message-ID: <20190826101550.GB5031@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
+ <20190826075943.h7ivwagape3glym5@uno.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <226a7b55-8a4d-aa25-9392-004d5ea097e4@oracle.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: santosh.shilimkar@oracle.com, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190826075943.h7ivwagape3glym5@uno.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo@jmondi.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacopo,
 
+On Mon, Aug 26, 2019 at 09:59:43AM +0200, Jacopo Mondi wrote:
+> On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
+> > On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > > Add device tree bindings documentation for the Renesas R-Car Display
+> > > Unit Color Management Module.
+> > >
+> > > CMM is the image enhancement module available on each R-Car DU video
+> > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > > @@ -0,0 +1,33 @@
+> > > +* Renesas R-Car Color Management Module (CMM)
+> > > +
+> > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > > +
+> > > +Required properties:
+> > > + - compatible: shall be one or more of the following:
+> > > +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
+> > > +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
+> > > +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
+> > > +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
+> > > +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
+> >
+> > Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
+> 
+> I actually copied it from the r-car gpio bindings, and I liked
+> cmm-<soctype> better. If you prefer I can change it though.
+> 
+> > > +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
+> > > +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
+> > > +
+> > > +   When the generic compatible string is specified, the SoC-specific
+> > > +   version corresponding to the platform should be listed first.
+> > > +
+> > > + - reg: the address base and length of the memory area where CMM control
+> > > +   registers are mapped to.
+> > > +
+> > > + - clocks: phandle and clock-specifier pair to the CMM functional clock
+> > > +   supplier.
+> >
+> > Thinking about yaml validation:
+> >
+> > power-domains?
+> > resets?
+> 
+> They should indeed be documented.
 
-On 21/08/19 1:36 PM, santosh.shilimkar@oracle.com wrote:
-> On 8/20/19 2:48 PM, Lokesh Vutla wrote:
->>
->>
->> On 29/07/19 5:54 PM, Lokesh Vutla wrote:
->>> Sysfw provides an option for requesting exclusive access for a
->>> device using the flags MSG_FLAG_DEVICE_EXCLUSIVE. If this flag is
->>> not used, the device is meant to be shared across hosts. Once a device
->>> is requested from a host with this flag set, any request to this
->>> device from a different host will be nacked by sysfw.
->>>
->>> Current tisci firmware and pm drivers always requests for device with
->>> exclusive permissions set. But this is not be true for certain devices
->>> that are expcted to be shared across different host contexts.
->>> So add support for getting the shared or exclusive permissions from DT
->>> and request firmware accordingly.
->>
->> Gentle Ping on this series.
->>
-> I can queue this up.
+How about converting this binding to yaml alreay ? It should be fairly
+simple.
 
-Thanks Santosh.
+> > > +Example:
+> > > +--------
+> > > +
+> > > +       cmm0: cmm@fea40000 {
+> > > +               compatible = "renesas,cmm-r8a7796";
+> > > +               reg = <0 0xfea40000 0 0x1000>;
+> > > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > > +               clocks = <&cpg CPG_MOD 711>;
+> > > +               resets = <&cpg 711>;
+> > > +       };
 
+-- 
 Regards,
-Lokesh
+
+Laurent Pinchart
