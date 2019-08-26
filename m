@@ -1,29 +1,59 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
-Date: Mon, 26 Aug 2019 09:09:39 +0200
-Message-ID: <20190826070939.GD11331@lst.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de> <20190820145821.27214-2-nsaenzjulienne@suse.de>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/5] dt-bindings: clk: meson: add sm1 periph clock controller bindings
+Date: Mon, 26 Aug 2019 09:25:35 +0200
+Message-ID: <20190826072539.27725-2-narmstrong@baylibre.com>
+References: <20190826072539.27725-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820145821.27214-2-nsaenzjulienne@suse.de>
+In-Reply-To: <20190826072539.27725-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com, robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, linux-kernel@vger.kernel.org, eric@anholt.net, mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com
+To: khilman@baylibre.com, jbrunet@baylibre.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
-> Some architectures have platform specific DMA addressing limitations.
-> This will allow for hardware description code to provide the constraints
-> in a generic manner, so as for arch code to properly setup it's memory
-> zones and DMA mask.
+Update the documentation to support clock driver for the Amlogic SM1 SoC
+and expose the GP1, DSU and the CPU 1, 2 & 3 clocks.
 
-I know this just spreads the arm code, but I still kinda hate it.
+SM1 clock tree is very close, the main differences are :
+- each CPU core can achieve a different frequency, albeit a common PLL
+- a similar tree as the clock tree has been added for the DynamIQ Shared Unit
+- has a new GP1 PLL used for the DynamIQ Shared Unit
+- SM1 has additional clocks like for CSI, NanoQ an other components
 
-MAX_DMA_ADDRESS is such an oddly defined concepts.  We have the mm
-code that uses it to start allocating after the dma zones, but
-I think that would better be done using a function returning
-1 << max(zone_dma_bits, 32) or so.  Then we have about a handful
-of drivers using it that all seem rather bogus, and one of which
-I think are usable on arm64.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+---
+ .../devicetree/bindings/clock/amlogic,gxbb-clkc.txt          | 1 +
+ include/dt-bindings/clock/g12a-clkc.h                        | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+index 6eaa52092313..7ccecd5c02c1 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
+@@ -11,6 +11,7 @@ Required Properties:
+ 		"amlogic,axg-clkc" for AXG SoC.
+ 		"amlogic,g12a-clkc" for G12A SoC.
+ 		"amlogic,g12b-clkc" for G12B SoC.
++		"amlogic,sm1-clkc" for SM1 SoC.
+ - clocks : list of clock phandle, one for each entry clock-names.
+ - clock-names : should contain the following:
+   * "xtal": the platform xtal
+diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
+index 8ccc29ac7a72..0837c1a7ae49 100644
+--- a/include/dt-bindings/clock/g12a-clkc.h
++++ b/include/dt-bindings/clock/g12a-clkc.h
+@@ -138,5 +138,10 @@
+ #define CLKID_VDEC_HEVCF			210
+ #define CLKID_TS				212
+ #define CLKID_CPUB_CLK				224
++#define CLKID_GP1_PLL				243
++#define CLKID_DSU_CLK				252
++#define CLKID_CPU1_CLK				253
++#define CLKID_CPU2_CLK				254
++#define CLKID_CPU3_CLK				255
+ 
+ #endif /* __G12A_CLKC_H */
+-- 
+2.22.0
