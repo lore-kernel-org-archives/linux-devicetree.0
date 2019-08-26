@@ -1,8 +1,8 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
 Subject: RE: [PATCH V4 02/11] dt-bindings: clock: imx-lpcg: add support to
  parse clocks from device tree
-Date: Mon, 26 Aug 2019 03:14:41 +0000
-Message-ID: <AM0PR04MB4211047E7632FD0E48D53B9F80A10@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Date: Mon, 26 Aug 2019 03:21:24 +0000
+Message-ID: <AM0PR04MB421181E4376070636898906F80A10@AM0PR04MB4211.eurprd04.prod.outlook.com>
 References: <1566299605-15641-1-git-send-email-aisheng.dong@nxp.com>
  <1566299605-15641-3-git-send-email-aisheng.dong@nxp.com>
  <20190824192101.GG16308@X250.getinternet.no>
@@ -24,8 +24,6 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 To: Shawn Guo <shawnguo@kernel.org>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
-
-Hi Shawn,
 
 > From: Shawn Guo <shawnguo@kernel.org>
 > Sent: Sunday, August 25, 2019 3:21 AM
@@ -55,9 +53,11 @@ Hi Shawn,
 > 
 > Acked-by: Shawn Guo <shawnguo@kernel.org>
 
-Thanks for the review.
-Do you think if we have a chance to catch up v5.4?
-Will this patch set go through Clock tree or your tree?
+Thanks Shawn.
+
+Stephen & Rob,
+Would you help review if you're also ok with this binding?
+We need this to be finalized early for the following work.
 
 Regards
 Aisheng
