@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 4/6] arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
-Date: Mon, 26 Aug 2019 18:48:05 +0200
-Message-ID: <20190826164807.7028-4-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH 6/6] arm64: defconfig: Enable HFPLL
+Date: Mon, 26 Aug 2019 18:48:07 +0200
+Message-ID: <20190826164807.7028-6-jorge.ramirez-ortiz@linaro.org>
 References: <20190826164807.7028-1-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,28 @@ To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.o
 Cc: niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Specify the clocks that feed the APCS mux/divider instead of using
-default hardcoded values in the source code.
+The high frequency pll is required on compatible Qualcomm SoCs to
+support the CPU frequency scaling feature.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 75ea356a3fb0..34360b2d3e0d 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -867,6 +867,9 @@
- 			compatible = "qcom,qcs404-apcs-apps-global", "syscon";
- 			reg = <0x0b011000 0x1000>;
- 			#mbox-cells = <1>;
-+			clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+			clock-names = "aux", "pll";
-+			#clock-cells = <0>;
- 		};
- 
- 		apcs_hfpll: clock-controller@b016000 {
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 74f82901aa2d..af13602c3987 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -703,6 +703,7 @@ CONFIG_MSM_GCC_8998=y
+ CONFIG_QCS_GCC_404=y
+ CONFIG_SDM_GCC_845=y
+ CONFIG_SM_GCC_8150=y
++CONFIG_QCOM_HFPLL=y
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_ARM_MHU=y
 -- 
 2.22.0
