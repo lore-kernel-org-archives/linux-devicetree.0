@@ -1,59 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/8] regulator: add support for SY8824C regulator
-Date: Tue, 27 Aug 2019 20:44:37 +0100
-Message-ID: <20190827194437.GO23391@sirena.co.uk>
-References: <20190827163252.4982af95@xhacker.debian>
- <20190827163418.1a32fc48@xhacker.debian>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v5 4/4] dt-bindings: iio: imu: st_lsm6dsx: add lsm9ds1
+ device bindings
+Date: Mon, 26 Aug 2019 09:10:24 +0100
+Message-ID: <20190826091024.50bbf6ba@archlinux>
+References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
+        <20190821132520.28225-5-martin.kepplinger@puri.sm>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ch6x/diZ8cQC324S"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190827163418.1a32fc48@xhacker.debian>
+In-Reply-To: <20190821132520.28225-5-martin.kepplinger@puri.sm>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc: lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 21 Aug 2019 15:25:20 +0200
+Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
 
---ch6x/diZ8cQC324S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Tweaked to add the -imu plus some text in the patch description to say
+why.
 
-On Tue, Aug 27, 2019 at 08:45:33AM +0000, Jisheng Zhang wrote:
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to ignore.
 
-This looks mostly good and I'll apply it, a couple of small
-things though:
+Thanks,
 
-> @@ -0,0 +1,192 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SY8824C regulator driver
-> + *
+Jonathan
 
-Please send a patch which updates the entire comment block to be
-C++ style so it looks consistent.
-
-> +#define BUCK_EN		(1 << 7)
-> +#define MODE		(1 << 6)
-> +
-
-Please also add prefixes to these to namespace them, especially
-MODE is likely to collide with something later.
-
---ch6x/diZ8cQC324S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1liCQACgkQJNaLcl1U
-h9C9rgf/Xy1nABMJdavfpBaTNK/T0dAqzeL4PbecKw+JWZ95N5qd8YzDvedjAyT1
-ZZNNKYyF6i8+gLPjEs2h3CCLfZqnYMyGrNnLSOGzW9k/a0DtnLg8+4lIFdls9qKc
-CcZyOdp+UrPirPfxpjJCG4hvqXPfex1LNX0T7TU5XL84vPnFaq7LUM5l8bLW4QfQ
-xCTK4Fx1UzFGodW/24DpXvI1OI5suqnS2e+PtMPxM56sT8KgjE9Y/ZsGWUi//SLH
-ogxrcoA6YG49Y/JWd52cFGiFkLvkrkfPdnqLM+2XtpRSwItqOkdVFnQkIFEg8wQF
-KHNnU8/HPD+izR09pC/BF2AB4NgebQ==
-=Zq5D
------END PGP SIGNATURE-----
-
---ch6x/diZ8cQC324S--
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+> index 87407d110bb7..0b0a74d9ab89 100644
+> --- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+> +++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+> @@ -13,6 +13,7 @@ Required properties:
+>    "st,lsm6dsr"
+>    "st,lsm6ds3tr-c"
+>    "st,ism330dhcx"
+> +  "st,lsm9ds1"
+>  - reg: i2c address of the sensor / spi cs line
+>  
+>  Optional properties:
