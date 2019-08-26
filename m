@@ -1,138 +1,82 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
-Date: Mon, 26 Aug 2019 13:01:43 +0530
-Message-ID: <20190826073143.4582-7-vidyas@nvidia.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
+Date: Mon, 26 Aug 2019 09:34:41 +0200
+Message-ID: <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org> <20190825135154.11488-2-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826073143.4582-1-vidyas@nvidia.com>
+In-Reply-To: <20190825135154.11488-2-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc: kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-slot from the respective controller's device-tree node and enable those
-supplies. This is required in platforms like p2972-0000 where the supplies
-to x16 slot owned by C5 controller need to be enabled before attempting to
-enumerate the devices.
+Hi Jacopo,
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
+>
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 8a27b25893c9..97de2151a738 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -278,6 +278,8 @@ struct tegra_pcie_dw {
- 	u32 aspm_l0s_enter_lat;
- 
- 	struct regulator *pex_ctl_supply;
-+	struct regulator *slot_ctl_3v3;
-+	struct regulator *slot_ctl_12v;
- 
- 	unsigned int phy_count;
- 	struct phy **phys;
-@@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
- 	}
- }
- 
-+static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-+{
-+	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-+	if (IS_ERR(pcie->slot_ctl_3v3))
-+		pcie->slot_ctl_3v3 = NULL;
-+
-+	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-+	if (IS_ERR(pcie->slot_ctl_12v))
-+		pcie->slot_ctl_12v = NULL;
-+}
-+
-+static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
-+{
-+	int ret;
-+
-+	if (pcie->slot_ctl_3v3) {
-+		ret = regulator_enable(pcie->slot_ctl_3v3);
-+		if (ret < 0) {
-+			dev_err(pcie->dev,
-+				"Failed to enable 3V3 slot supply: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (pcie->slot_ctl_12v) {
-+		ret = regulator_enable(pcie->slot_ctl_12v);
-+		if (ret < 0) {
-+			dev_err(pcie->dev,
-+				"Failed to enable 12V slot supply: %d\n", ret);
-+			if (pcie->slot_ctl_3v3)
-+				regulator_disable(pcie->slot_ctl_3v3);
-+			return ret;
-+		}
-+	}
-+
-+	/*
-+	 * According to PCI Express Card Electromechanical Specification
-+	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
-+	 * should be a minimum of 100ms.
-+	 */
-+	msleep(100);
-+
-+	return 0;
-+}
-+
-+static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
-+{
-+	if (pcie->slot_ctl_12v)
-+		regulator_disable(pcie->slot_ctl_12v);
-+	if (pcie->slot_ctl_3v3)
-+		regulator_disable(pcie->slot_ctl_3v3);
-+}
-+
- static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
- 					bool en_hw_hot_rst)
- {
-@@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
- 		return ret;
- 	}
- 
-+	ret = tegra_pcie_enable_slot_regulators(pcie);
-+	if (ret < 0)
-+		goto fail_slot_reg_en;
-+
- 	ret = regulator_enable(pcie->pex_ctl_supply);
- 	if (ret < 0) {
- 		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
-@@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
- fail_core_clk:
- 	regulator_disable(pcie->pex_ctl_supply);
- fail_reg_en:
-+	tegra_pcie_disable_slot_regulators(pcie);
-+fail_slot_reg_en:
- 	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
- 
- 	return ret;
-@@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
- 		return ret;
- 	}
- 
-+	tegra_pcie_disable_slot_regulators(pcie);
-+
- 	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
- 	if (ret) {
- 		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
-@@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	tegra_pcie_get_slot_regulators(pcie);
-+
- 	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
- 	if (IS_ERR(pcie->pex_ctl_supply)) {
- 		dev_err(dev, "Failed to get regulator: %ld\n",
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> @@ -0,0 +1,33 @@
+> +* Renesas R-Car Color Management Module (CMM)
+> +
+> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> +
+> +Required properties:
+> + - compatible: shall be one or more of the following:
+> +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
+> +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
+> +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
+> +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
+> +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
+
+Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
+
+> +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
+> +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
+> +
+> +   When the generic compatible string is specified, the SoC-specific
+> +   version corresponding to the platform should be listed first.
+> +
+> + - reg: the address base and length of the memory area where CMM control
+> +   registers are mapped to.
+> +
+> + - clocks: phandle and clock-specifier pair to the CMM functional clock
+> +   supplier.
+
+Thinking about yaml validation:
+
+power-domains?
+resets?
+
+> +Example:
+> +--------
+> +
+> +       cmm0: cmm@fea40000 {
+> +               compatible = "renesas,cmm-r8a7796";
+> +               reg = <0 0xfea40000 0 0x1000>;
+> +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +               clocks = <&cpg CPG_MOD 711>;
+> +               resets = <&cpg 711>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
