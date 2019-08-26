@@ -1,49 +1,81 @@
-From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-Subject: [PATCH 08/12] ARM: dts: imx7d: cl-som-imx7: update UART1 (debug) clock
-Date: Mon, 26 Aug 2019 16:37:56 +0100
-Message-ID: <20190826153800.35400-8-git@andred.net>
-References: <20190826153800.35400-1-git@andred.net>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv5] drivers/amba: add reset control to amba bus probe
+Date: Mon, 26 Aug 2019 10:42:52 -0500
+Message-ID: <20190826154252.22952-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826153800.35400-1-git@andred.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Ilya Ledvich <ilya@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org, linux@armlinux.org.uk, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, daniel.thompson@linaro.org, linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-assign OSC as uart1 (debug) clock to achieve low power,
-so that the PLL doesn't need to be kept on
+The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+default. Until recently, the DMA controller was brought out of reset by the
+bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
+that are not used are held in reset and are left to Linux to bring them
+out of reset.
 
-Signed-off-by: André Draszik <git@andred.net>
-Cc: Ilya Ledvich <ilya@compulab.co.il>
-Cc: Igor Grinberg <grinberg@compulab.co.il>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Add a mechanism for getting the reset property and de-assert the primecell
+module from reset if found. This is a not a hard fail if the reset properti
+is not present in the device tree node, so the driver will continue to
+probe.
+
+Because there are different variants of the controller that may have
+multiple reset signals, the code will find all reset(s) specified and
+de-assert them.
+
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v5: use of_reset_control_array_get_optional_shared()
+v4: cleaned up indentation in loop
+    fix up a few checkpatch warnings
+    add Reviewed-by:
+v3: add a reset_control_put()
+    add error handling
+v2: move reset control to bus code
+    find all reset properties and de-assert them
+---
+ drivers/amba/bus.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index d4637a8ca223..f80be855b4ec 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -222,7 +222,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
- 	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
--	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
- 	status = "okay";
- };
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 100e798a5c82..f8a7cb74c3cf 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -18,6 +18,7 @@
+ #include <linux/limits.h>
+ #include <linux/clk/clk-conf.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
  
+ #include <asm/irq.h>
+ 
+@@ -401,6 +402,24 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 	ret = amba_get_enable_pclk(dev);
+ 	if (ret == 0) {
+ 		u32 pid, cid;
++		int count;
++		struct reset_control *rstc;
++
++		/*
++		 * Find reset control(s) of the amba bus and de-assert them.
++		 */
++		count = reset_control_get_count(&dev->dev);
++		while (count > 0) {
++			rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
++			if (IS_ERR(rstc)) {
++				if (PTR_ERR(rstc) != -EPROBE_DEFER)
++					dev_err(&dev->dev, "Can't get amba reset!\n");
++				return PTR_ERR(rstc);
++			}
++			reset_control_deassert(rstc);
++			reset_control_put(rstc);
++			count--;
++		}
+ 
+ 		/*
+ 		 * Read pid and cid based on size of resource
 -- 
-2.23.0.rc1
+2.20.0
