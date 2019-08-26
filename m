@@ -1,113 +1,77 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
- Reset controller
-Date: Mon, 26 Aug 2019 06:23:13 -0500
-Message-ID: <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
- <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com> <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
+Subject: Re: [PATCH 5/6] dt-bindings: pinctrl: k3: Introduce pinmux
+ definitions for J721E
+Date: Mon, 26 Aug 2019 06:25:47 -0500
+Message-ID: <CAL_JsqKpWhmKJUEWD-hKzmxLnHG4VVZbFR04BeQevP0zOoHKiw@mail.gmail.com>
+References: <20190809082947.30590-1-lokeshvutla@ti.com>
+ <20190809082947.30590-6-lokeshvutla@ti.com>
+ <20190821210232.GA22578@bogus> <da0286cb-8e4c-e12c-240c-b6de72bdd0ee@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <eswara.kota@linux.intel.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <da0286cb-8e4c-e12c-240c-b6de72bdd0ee@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Tero Kristo <t-kristo@ti.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 4:52 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+On Mon, Aug 26, 2019 at 5:27 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
 >
 > Hi Rob,
 >
-> On 8/23/2019 8:25 PM, Rob Herring wrote:
-> > On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-> >> Add YAML schemas for the reset controller on Intel
-> >> Lightening Mountain (LGM) SoC.
+> On 22/08/19 2:32 AM, Rob Herring wrote:
+> > On Fri, Aug 09, 2019 at 01:59:46PM +0530, Lokesh Vutla wrote:
+> >> Add pinctrl macros for J721E SoC. These macro definitions are
+> >> similar to that of AM6, but adding new definitions to avoid
+> >> any naming confusions in the soc dts files.
 > >>
-> >> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> >> Acked-by: Nishanth Menon <nm@ti.com>
+> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> >> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 > >> ---
-> >> Changes on v2:
-> >>      Address review comments
-> >>        Update the compatible property definition
-> >>        Add description for reset-cells
-> >>        Add 'additionalProperties: false' property
+> >>  include/dt-bindings/pinctrl/k3.h | 3 +++
+> >>  1 file changed, 3 insertions(+)
 > >>
-> >>   .../bindings/reset/intel,syscon-reset.yaml         | 53 ++++++++++++++++++++++
-> >>   1 file changed, 53 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >> diff --git a/include/dt-bindings/pinctrl/k3.h b/include/dt-bindings/pinctrl/k3.h
+> >> index 45e11b6170ca..499de6216581 100644
+> >> --- a/include/dt-bindings/pinctrl/k3.h
+> >> +++ b/include/dt-bindings/pinctrl/k3.h
+> >> @@ -32,4 +32,7 @@
+> >>  #define AM65X_IOPAD(pa, val, muxmode)               (((pa) & 0x1fff)) ((val) | (muxmode))
+> >>  #define AM65X_WKUP_IOPAD(pa, val, muxmode)  (((pa) & 0x1fff)) ((val) | (muxmode))
 > >>
-> >> diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
-> >> new file mode 100644
-> >> index 000000000000..3403a967190a
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
-> >> @@ -0,0 +1,53 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Intel Lightening Mountain SoC System Reset Controller
-> >> +
-> >> +maintainers:
-> >> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    items:
-> >> +      - const: intel,rcu-lgm
-> >> +      - const: syscon
-> >> +
-> >> +  reg:
-> >> +    description: Reset controller register base address and size
-> >> +
-> >> +  intel,global-reset:
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +    description: Global reset register offset and bit offset.
-> >> +
-> >> +  "#reset-cells":
-> >> +    const: 2
-> >> +    description: |
-> >> +      The 1st cell is the register offset.
-> >> +      The 2nd cell is the bit offset in the register.
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - intel,global-reset
-> >> +  - "#reset-cells"
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    rcu0: reset-controller@00000000 {
-> >> +        compatible = "intel,rcu-lgm", "syscon";
-> >> +        reg = <0x000000 0x80000>;
-> >> +        intel,global-reset = <0x10 30>;
-> >> +        #reset-cells = <2>;
-> >> +    };
-> >> +
-> >> +    pcie_phy0: pciephy@... {
-> >> +        ...
-> > You need to run 'make dt_binding_check' and fix the warnings. The
-> > example has to be buildable and it is not.
+> >> +#define J721E_IOPAD(pa, val, muxmode)               (((pa) & 0x1fff)) ((val) | (muxmode))
+> >> +#define J721E_WKUP_IOPAD(pa, val, muxmode)  (((pa) & 0x1fff)) ((val) | (muxmode))
+> >
+> > checkpatch reports a parentheses error:         (((pa) & 0x1fff) ((val) | (muxmode)))
 >
-> Sure, i  will correct this pcie_phy0 node. But i didn't get any warnings
-> for make dt_binding_check
+> This was left intentionally as this macro is giving out two entries in DT like
+> below:
 >
->    CHKDT Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
-> DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
-> FATAL ERROR: Unknown output format "yaml"
+>         pinctrl-single,pins = <
+>                 J721E_IOPAD(0x0, PIN_INPUT, 7)
+>         >;
 >
-> Will DTC report about the example node errors? But, DTC is failing with
-> FATAL_ERROR.
-> I tried it even after installing libyaml and headers in my local
-> directory and export the path, but no luck.(ref:
-> https://lkml.org/lkml/2018/12/3/951)
-> Could you please let me know if i miss anything and help me to proceed
-> further.
+> comes out as
+>
+>         pinctrl-single,pins = <
+>                 0x0 (PIN_INPUT | 7)
+>         >;
+>
+> If parenthesis are added for the whole macro, the following build error occurs:
+>   DTC     arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dtb
+> Error: arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:41.24-25 syntax error
+> FATAL ERROR: Unable to parse input tree
 
-See Documentation/devicetree/writing-schema.md
+Okay, NM.
 
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
