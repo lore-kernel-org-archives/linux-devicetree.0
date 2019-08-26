@@ -1,519 +1,333 @@
-Return-Path: <SRS0=qcrC=WF=nvidia.com=skomatineni@kernel.org>
-Subject: Re: [PATCH v8 14/21] clk: tegra210: Add suspend and resume support
-References: <1565308020-31952-1-git-send-email-skomatineni@nvidia.com>
- <1565308020-31952-15-git-send-email-skomatineni@nvidia.com>
- <a21b7464-62c3-8461-04c2-a0e863bdde85@gmail.com>
- <7d101ec9-c559-8b40-1764-6bf67a9c7a7a@nvidia.com>
- <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <cbe94f84-a17b-7e1a-811d-89db571784e1@nvidia.com>
-Date: Fri, 9 Aug 2019 11:40:52 -0700
+Return-Path: <SRS0=d6og=WW=linux.intel.com=sakari.ailus@kernel.org>
+Date: Mon, 26 Aug 2019 13:03:30 +0300
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] media: tc358746: add Toshiba TC358746 Parallel to
+ CSI-2 bridge driver
+Message-ID: <20190826100330.GO31967@paasikivi.fi.intel.com>
+References: <20190619152838.25079-1-m.felsch@pengutronix.de>
+ <20190619152838.25079-3-m.felsch@pengutronix.de>
+ <20190625122719.xcl3gxxs4gpuvetf@paasikivi.fi.intel.com>
+ <20190729104044.svemh7jvt2kiyn36@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <aa823801-00c7-df88-0f63-45338bffa854@gmail.com>
-Content-Type: multipart/alternative;
-	boundary="------------20F5CCAC959D9D5D07C55658"
-Content-Language: en-US
-To: Dmitry Osipenko <digetx@gmail.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com
-Cc: pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190729104044.svemh7jvt2kiyn36@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, Jacopo Mondi <jacopo@jmondi.org>, devicetree@vger.kernel.org, graphics@pengutronix.de, linux-media@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
---------------20F5CCAC959D9D5D07C55658
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Hi Marco,
 
+On Mon, Jul 29, 2019 at 12:40:44PM +0200, Marco Felsch wrote:
 
-On 8/9/19 11:18 AM, Dmitry Osipenko wrote:
-> 09.08.2019 19:19, Sowjanya Komatineni пишет:
->> On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
->>> 09.08.2019 2:46, Sowjanya Komatineni пишет:
->>>> This patch adds support for clk: tegra210: suspend-resume.
->>>>
->>>> All the CAR controller settings are lost on suspend when core
->>>> power goes off.
->>>>
->>>> This patch has implementation for saving and restoring all PLLs
->>>> and clocks context during system suspend and resume to have the
->>>> clocks back to same state for normal operation.
->>>>
->>>> Clock driver suspend and resume are registered as syscore_ops as clocks
->>>> restore need to happen before the other drivers resume to have all their
->>>> clocks back to the same state as before suspend.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>    drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
->>>>    drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
->>>>    drivers/clk/tegra/clk.h          |   3 ++
->>>>    3 files changed, 166 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->>>> index 998bf60b219a..8dd6f4f4debb 100644
->>>> --- a/drivers/clk/tegra/clk-tegra210.c
->>>> +++ b/drivers/clk/tegra/clk-tegra210.c
->>>> @@ -9,13 +9,13 @@
->>>>    #include <linux/clkdev.h>
->>>>    #include <linux/of.h>
->>>>    #include <linux/of_address.h>
->>>> +#include <linux/syscore_ops.h>
->>>>    #include <linux/delay.h>
->>>>    #include <linux/export.h>
->>>>    #include <linux/mutex.h>
->>>>    #include <linux/clk/tegra.h>
->>>>    #include <dt-bindings/clock/tegra210-car.h>
->>>>    #include <dt-bindings/reset/tegra210-car.h>
->>>> -#include <linux/iopoll.h>
->>>>    #include <linux/sizes.h>
->>>>    #include <soc/tegra/pmc.h>
->>>>    @@ -220,11 +220,15 @@
->>>>    #define CLK_M_DIVISOR_SHIFT 2
->>>>    #define CLK_M_DIVISOR_MASK 0x3
->>>>    +#define CLK_MASK_ARM    0x44
->>>> +#define MISC_CLK_ENB    0x48
->>>> +
->>>>    #define RST_DFLL_DVCO 0x2f4
->>>>    #define DVFS_DFLL_RESET_SHIFT 0
->>>>      #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>>>    #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->>>> +#define CPU_SOFTRST_CTRL 0x380
->>>>      #define LVL2_CLK_GATE_OVRA 0xf8
->>>>    #define LVL2_CLK_GATE_OVRC 0x3a0
->>>> @@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
->>>>        struct tegra_clk_pll_freq_table *fentry;
->>>>        struct tegra_clk_pll pllu;
->>>>        u32 reg;
->>>> +    int ret;
->>>>          for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>>>            if (fentry->input_rate == pll_ref_freq)
->>>> @@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
->>>>        reg |= PLL_ENABLE;
->>>>        writel(reg, clk_base + PLLU_BASE);
->>>>    -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->>>> -                      reg & PLL_BASE_LOCK, 2, 1000);
->>>> -    if (!(reg & PLL_BASE_LOCK)) {
->>>> +    /*
->>>> +     * During clocks resume, same PLLU init and enable sequence get
->>>> +     * executed. So, readx_poll_timeout_atomic can't be used here as it
->>>> +     * uses ktime_get() and timekeeping resume doesn't happen by that
->>>> +     * time. So, using tegra210_wait_for_mask for PLL LOCK.
->>>> +     */
->>>> +    ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->>>> +    if (ret) {
->>>>            pr_err("Timed out waiting for PLL_U to lock\n");
->>>>            return -ETIMEDOUT;
->>>>        }
->>>> @@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>>>    }
->>>>      #ifdef CONFIG_PM_SLEEP
->>>> +/*
->>>> + * This array lists mask values for each peripheral clk bank
->>>> + * to mask out reserved bits during the clocks state restore
->>>> + * on SC7 resume to prevent accidental writes to these reserved
->>>> + * bits.
->>>> + */
->>>> +static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
->>> Should be more natural to have a "valid_mask" instead of "rsvd_mask".
->>>
->>> What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
->>> reserved bits are actually some kind of "secret" bits? If those bits have some use-case
->>> outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
->>> have to keep the workaround locally in the downstream kernel or whatever.
->> Will rename as valid_mask.
->>
->> some bits in these registers are undefined and is not good to write to these bits as they
->> can cause pslverr.
-> Okay, it should be explained in the comment.
->
-> Is it possible to disable trapping of changing the undefined bits?
-No its internal to design
->
->>>> +    0x23282006,
->>>> +    0x782e0c18,
->>>> +    0x0c012c05,
->>>> +    0x003e7304,
->>>> +    0x86c04800,
->>>> +    0xc0199000,
->>>> +    0x03e03800,
->>>> +};
->>>> +
->>>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
->>>> +#define car_writel(_val, _base, _off) \
->>>> +        writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->>>> +
->>>> +static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
->>>> +static u32 cpu_softrst_ctx[3];
->>>> +
->>>> +static int tegra210_clk_suspend(void)
->>>> +{
->>>> +    unsigned int i;
->>>> +
->>>> +    clk_save_context();
->>>> +
->>>> +    /*
->>>> +     * Save the bootloader configured clock registers SPARE_REG0,
->>>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
->>>> +     */
->>>> +    spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
->>>> +    misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
->>>> +    clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
->>>> +
->>>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>>> +        cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
->>>> +
->>>> +    tegra_clk_periph_suspend();
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +static void tegra210_clk_resume(void)
->>>> +{
->>>> +    unsigned int i;
->>>> +
->>>> +    tegra_clk_osc_resume(clk_base);
->>>> +
->>>> +    /*
->>>> +     * Restore the bootloader configured clock registers SPARE_REG0,
->>>> +     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
->>>> +     */
->>>> +    writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
->>>> +    writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
->>>> +    writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
->>>> +
->>>> +    for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->>>> +        car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->>>> +
->>>> +    fence_udelay(5, clk_base);
->>>> +
->>>> +    /* enable all the clocks before changing the clock sources */
->>>> +    tegra_clk_periph_force_on(periph_clk_rsvd_mask);
->>> Why clocks need to be enabled before changing the sources?
->> To prevent glitchless frequency switch, Tegra clock programming recommended sequence is to
->> change MUX control or divisor or both with the clocks running.
-> This should be explained in the comment.
->
->> Actual state of clocks before suspend are restored later after all PLL's and peripheral
->> clocks are restored.
->>
->>>> +    /* wait for all writes to happen to have all the clocks enabled */
->>>> +    wmb();
->>> fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
->>> duplicate it here.
-> Actually, readl does the rmb() and it should be a more correct variant of fencing because it
-> actually ensures that the write reached hardware. I suppose that something like fence_udelay
-> should be used for the pinctrl as well.
->
->>>> +    fence_udelay(2, clk_base);
->>>> +
->>>> +    /* restore PLLs and all peripheral clock rates */
->>>> +    tegra210_init_pllu();
->>> Why USB PLL need to be restored at first?
->> USB PLL restore is independent to all other clocks restore. So this can be done either
->> before clk_restore_context or even after.
-> Then why not to implement restore_context for PLLU?
+...
 
-pllu is registered as fixed_rate clock and we using clk core 
-clk_register_fixed_rate which uses clk_fixed_rate_ops from the same 
-generic clk-fixed-rate driver.
+> > > +#define I2C_MAX_XFER_SIZE	(512 + 2)
+> > > +#define TC358746_MAX_FIFO_SIZE	512
+> > > +#define TC358746_DEF_LINK_FREQ	0
+> > > +
+> > > +#define TC358746_LINEINIT_MIN_US	110
+> > > +#define TC358746_TWAKEUP_MIN_US		1200
+> > > +#define TC358746_LPTXTIME_MIN_NS	55
+> > > +#define TC358746_TCLKZERO_MIN_NS	305
+> > > +#define TC358746_TCLKTRAIL_MIN_NS	65
+> > > +#define TC358746_TCLKPOST_MIN_NS	65
+> > > +#define TC358746_THSZERO_MIN_NS		150
+> > > +#define TC358746_THSTRAIL_MIN_NS	65
+> > > +#define TC358746_THSPREPARE_MIN_NS	45
+> > > +
+> > > +static const struct v4l2_mbus_framefmt tc358746_def_fmt = {
+> > > +	.width		= 640,
+> > > +	.height		= 480,
+> > > +	.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+> > > +	.field		= V4L2_FIELD_NONE,
+> > > +	.colorspace	= V4L2_COLORSPACE_DEFAULT,
+> > > +	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
+> > > +	.quantization	= V4L2_QUANTIZATION_DEFAULT,
+> > > +	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
+> > > +};
+> > > +
+> > > +struct tc358746_csi_param {
+> > > +	unsigned char speed_range;
+> > > +	unsigned int  unit_clk_hz;
+> > > +	unsigned char unit_clk_mul;
+> > > +	unsigned int speed_per_lane; /* bps / lane */
+> > > +	unsigned short lane_num;
+> > > +	bool is_continuous_clk;
+> > > +
+> > > +	/* CSI2-TX Parameters */
+> > > +	u32 lineinitcnt;
+> > > +	u32 lptxtimecnt;
+> > > +	u32 twakeupcnt;
+> > > +	u32 tclk_preparecnt;
+> > > +	u32 tclk_zerocnt;
+> > > +	u32 tclk_trailcnt;
+> > > +	u32 tclk_postcnt;
+> > > +	u32 ths_preparecnt;
+> > > +	u32 ths_zerocnt;
+> > > +	u32 ths_trailcnt;
+> > > +
+> > > +	unsigned int csi_hs_lp_hs_ps;
+> > > +};
+> > 
+> > Would it be possible to use struct phy_configure_opts_mipi_dphy and perhaps
+> > phy_mipi_dphy_get_default_config() as well? The result of the latter will
+> > surely be different though, but still expected to be valid.
+> 
+> I've checked the struct phy_configure_opts_mipi_dphy and have a few
+> points to think about:
+> 1) The values I need here are counter values. The struct you mentioned
+>    uses time based values. This is good but needs a retranslation into
+>    the count values.
+> 2) The tclk_zerocnt and tclk_zerocnt has a other meaning here:
+>      tclk_zerocnt = ckl_prepare + clk_zero > 300ns
+>      ths_zerocnt  =  hs_prepare +  hs_zero > 145ns + 10 * ui
+> 
+> I can use the struct phy_configure_opts_mipi_dphy but then the
+> meaning are not the same..
+> 
+> If I should use the phy_mipi_dphy_get_default_config() helper I had to
+> reconstruct the whole logic. Currently the driver is based on the
+> following behaviour:
+>   - the fw (DT in our case) defines possible link frequencies and data
+>     lane numbers
+>   - based on that information I calculate possible counter values to
+>     confirm the mipi-spec
+>   - now the user specifies a format and I try to serve the request by
+>     - adjusting the fifo-size
+>       if not possible
+>       - use other link frequency setting and retry adjusting fifo_size
+>       if till not possible
+>       - begin to reduce the resultion
+> 
+> Imagine it that way: I configure the dphy side and adjust the parallel
+> side.
+> 
+> Now phy_mipi_dphy_get_default_config() uses the format bpp and the
+> pixel_clk to calculate the exact default config. Those configs must be
+> converted to the counter values. This wouldn't be a big deal but the
+> excel-sheet I used to calculate the timings adds some "random"
+> undocumented constants. So it would not be just a conversion from a
+> time-val to a counter-val. After that we need to verify the
+> parallel-input settings against the dphy-settings and do proper
+> fifo/picture-soze adjustments.
 
-Also pllu init happens in the same clk-tegra210, so invoking it during 
-resume which is the same sequence needed during resume as well.
+Does the parallel interface configuration really affect the CSI-2 timings,
+apart from the data rate? There are many valid CSI-2 timing configurations
+as what's needed in general is to stay within a range instead of using an
+exact value for a given parameter.
 
->>>> +    clk_restore_context();
->>>> +
->>>> +    /* restore all peripheral clocks enable and reset state */
->>>> +    tegra_clk_periph_resume();
->>>> +}
->>> [snip]
+Cc'ing Maxime.
 
---------------20F5CCAC959D9D5D07C55658
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+> 
+> I would keep my approach beacause of the "random" undocumented constants
+> and the other meaning of the struct phy_configure_opts_mipi_dphy
+> members. Maybe I can convert it later if I have more time to verify that
+> the "random" undocumented constants aren't important and can be dropped.
+> Also I checked a few other Toshiba TC convert chips and it seems that
+> all off them uses the same DPHY. So maybe we should split out the
+> phy-part to share it.
 
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <p><br>
-    </p>
-    <div class="moz-cite-prefix">On 8/9/19 11:18 AM, Dmitry Osipenko
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:aa823801-00c7-df88-0f63-45338bffa854@gmail.com">
-      <pre class="moz-quote-pre" wrap="">09.08.2019 19:19, Sowjanya Komatineni пишет:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">
-On 8/9/19 6:56 AM, Dmitry Osipenko wrote:
-</pre>
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap="">09.08.2019 2:46, Sowjanya Komatineni пишет:
-</pre>
-          <blockquote type="cite">
-            <pre class="moz-quote-pre" wrap="">This patch adds support for clk: tegra210: suspend-resume.
+This would be quite favourable, indeed.
 
-All the CAR controller settings are lost on suspend when core
-power goes off.
+> 
+> > > +
+> > > +enum tc358746_csi_direction {
+> > > +	TC358746_CSI_RX, /* CSI-in -> Parallel-out */
+> > > +	TC358746_CSI_TX  /* Parallel-in -> CSI-out */
+> > > +};
+> > > +
+> > > +struct tc358746_state {
+> > > +	struct v4l2_subdev sd;
+> > > +	struct i2c_client *i2c_client;
+> > > +	struct gpio_desc *reset_gpio;
+> > > +
+> > > +	/*
+> > > +	 * Generic
+> > > +	 */
+> > > +	struct media_pad pads[2];
+> > > +	struct mutex confctl_mutex;
+> > > +	struct v4l2_mbus_framefmt fmt;
+> > > +	struct v4l2_ctrl_handler hdl;
+> > > +	bool fmt_changed;
+> > > +	bool test;
+> > > +
+> > > +	/*
+> > > +	 * Chip Clocks
+> > > +	 */
+> > > +	struct clk  *refclk;
+> > > +	/* internal pll */
+> > > +	unsigned int pllinclk_hz;
+> > > +	u16 pll_prd;
+> > > +	u16 pll_fbd;
+> > > +
+> > > +	/*
+> > > +	 * Video Buffer
+> > > +	 */
+> > > +	u16 vb_fifo; /* The FIFO size is 511x32 */
+> > > +
+> > > +	/* currently only TC358746_CSI_TX supported */
+> > > +	enum tc358746_csi_direction csi_dir;
+> > > +
+> > > +	/*
+> > > +	 * CSI TX
+> > > +	 */
+> > > +	struct v4l2_ctrl	  *link_freq;
+> > > +	struct tc358746_csi_param *link_freq_settings;
+> > > +	u64			  *link_frequencies;
+> > > +	unsigned int		   link_frequencies_num;
+> > > +
+> > > +	/*
+> > > +	 * Parallel input
+> > > +	 */
+> > > +	struct v4l2_ctrl *sensor_pclk_ctrl;
+> > > +	struct v4l2_ctrl *sensor_hblank_ctrl;
+> > > +	unsigned int pclk;
+> > > +	unsigned int hblank;
+> > > +};
+> > > +
+> > > +struct tc358746_mbus_fmt {
+> > > +	u32 code;
+> > > +	u8 bus_width;
+> > > +	u8 bpp;		 /* total bpp */
+> > > +	u8 pdformat;	 /* peripheral data format */
+> > > +	u8 pdataf;	 /* parallel data format option */
+> > > +	u8 ppp;		 /* pclk per pixel */
+> > > +	bool csitx_only; /* format only in csi-tx mode supported */
+> > > +};
+> > > +
+> > > +/* TODO: Add other formats as required */
+> > > +static const struct tc358746_mbus_fmt tc358746_formats[] = {
+> > > +	{
+> > > +		.code = MEDIA_BUS_FMT_UYVY8_2X8,
+> > 
+> > Note that on CSI-2 V4L2 uses the one pixel / sample variants. I.e. this
+> > would be MEDIA_BUS_FMT_UYVY8_1X16.
+> 
+> Sorry but I didn't get you. The format you mentioned is...
+> 
+> > > +		.bus_width = 8,
+> > > +		.bpp = 16,
+> > > +		.pdformat = DATAFMT_PDFMT_YCBCRFMT_422_8_BIT,
+> > > +		.pdataf = CONFCTL_PDATAF_MODE0,
+> > > +		.ppp = 2,
+> > > +	}, {
+> > > +		.code = MEDIA_BUS_FMT_UYVY8_1X16,
+> 
+> here.
 
-This patch has implementation for saving and restoring all PLLs
-and clocks context during system suspend and resume to have the
-clocks back to same state for normal operation.
+You can support both MEDIA_BUS_FMT_UYVY8_1X16 and MEDIA_BUS_FMT_UYVY8_2X8
+on the parallel interface, but on CSI-2 they're both called
+MEDIA_BUS_FMT_UYVY8_1X16.
 
-Clock driver suspend and resume are registered as syscore_ops as clocks
-restore need to happen before the other drivers resume to have all their
-clocks back to the same state as before suspend.
+...
 
-Signed-off-by: Sowjanya Komatineni <a class="moz-txt-link-rfc2396E" href="mailto:skomatineni@nvidia.com">&lt;skomatineni@nvidia.com&gt;</a>
----
-  drivers/clk/tegra/clk-tegra210.c | 103 +++++++++++++++++++++++++++++++++++++--
-  drivers/clk/tegra/clk.c          |  64 ++++++++++++++++++++++++
-  drivers/clk/tegra/clk.h          |   3 ++
-  3 files changed, 166 insertions(+), 4 deletions(-)
+> > > +static int tc358746_s_power(struct v4l2_subdev *sd, int on)
+> > > +{
+> > > +	struct tc358746_state *state = to_state(sd);
+> > > +
+> > > +	/*
+> > > +	 * REF_01:
+> > > +	 * Softreset don't reset configuration registers content but is needed
+> > 
+> > "doesn't"
+> > 
+> > > +	 * during power-on to trigger a csi LP-11 state change and during
+> > > +	 * power-off to disable the csi-module.
+> > > +	 */
+> > > +	tc358746_sreset(sd);
+> > > +
+> > > +	if (state->fmt_changed) {
+> > > +		tc358746_set_buffers(sd);
+> > > +		tc358746_set_csi(sd);
+> > > +		tc358746_set_csi_color_space(sd);
+> > > +
+> > > +		/* as recommend in REF_01 */
+> > > +		tc358746_sleep_mode(sd, 1);
+> > > +		tc358746_set_pll(sd);
+> > > +		tc358746_sleep_mode(sd, 0);
+> > > +
+> > > +		state->fmt_changed = false;
+> > > +	}
+> > > +
+> > > +	tc358746_enable_csi_lanes(sd, on);
+> > > +	tc358746_enable_csi_module(sd, on);
+> > > +	tc358746_sleep_mode(sd, !on);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int tc358746_s_stream(struct v4l2_subdev *sd, int enable)
+> > > +{
+> > > +	tc358746_enable_stream(sd, enable);
+> > 
+> > Could you use tc358746_enable_stream() directly as the s_stream op?
+> 
+> Of course, added it for naming consistency since the enable_stream() is
+> a internal function and I didn't wanted to mix those.
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index 998bf60b219a..8dd6f4f4debb 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -9,13 +9,13 @@
-  #include &lt;linux/clkdev.h&gt;
-  #include &lt;linux/of.h&gt;
-  #include &lt;linux/of_address.h&gt;
-+#include &lt;linux/syscore_ops.h&gt;
-  #include &lt;linux/delay.h&gt;
-  #include &lt;linux/export.h&gt;
-  #include &lt;linux/mutex.h&gt;
-  #include &lt;linux/clk/tegra.h&gt;
-  #include &lt;dt-bindings/clock/tegra210-car.h&gt;
-  #include &lt;dt-bindings/reset/tegra210-car.h&gt;
--#include &lt;linux/iopoll.h&gt;
-  #include &lt;linux/sizes.h&gt;
-  #include &lt;soc/tegra/pmc.h&gt;
-  @@ -220,11 +220,15 @@
-  #define CLK_M_DIVISOR_SHIFT 2
-  #define CLK_M_DIVISOR_MASK 0x3
-  +#define CLK_MASK_ARM    0x44
-+#define MISC_CLK_ENB    0x48
-+
-  #define RST_DFLL_DVCO 0x2f4
-  #define DVFS_DFLL_RESET_SHIFT 0
-    #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
-  #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
-+#define CPU_SOFTRST_CTRL 0x380
-    #define LVL2_CLK_GATE_OVRA 0xf8
-  #define LVL2_CLK_GATE_OVRC 0x3a0
-@@ -2825,6 +2829,7 @@ static int tegra210_enable_pllu(void)
-      struct tegra_clk_pll_freq_table *fentry;
-      struct tegra_clk_pll pllu;
-      u32 reg;
-+    int ret;
-        for (fentry = pll_u_freq_table; fentry-&gt;input_rate; fentry++) {
-          if (fentry-&gt;input_rate == pll_ref_freq)
-@@ -2853,9 +2858,14 @@ static int tegra210_enable_pllu(void)
-      reg |= PLL_ENABLE;
-      writel(reg, clk_base + PLLU_BASE);
-  -    readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
--                      reg &amp; PLL_BASE_LOCK, 2, 1000);
--    if (!(reg &amp; PLL_BASE_LOCK)) {
-+    /*
-+     * During clocks resume, same PLLU init and enable sequence get
-+     * executed. So, readx_poll_timeout_atomic can't be used here as it
-+     * uses ktime_get() and timekeeping resume doesn't happen by that
-+     * time. So, using tegra210_wait_for_mask for PLL LOCK.
-+     */
-+    ret = tegra210_wait_for_mask(&amp;pllu, PLLU_BASE, PLL_BASE_LOCK);
-+    if (ret) {
-          pr_err("Timed out waiting for PLL_U to lock\n");
-          return -ETIMEDOUT;
-      }
-@@ -3288,6 +3298,84 @@ static void tegra210_disable_cpu_clock(u32 cpu)
-  }
-    #ifdef CONFIG_PM_SLEEP
-+/*
-+ * This array lists mask values for each peripheral clk bank
-+ * to mask out reserved bits during the clocks state restore
-+ * on SC7 resume to prevent accidental writes to these reserved
-+ * bits.
-+ */
-+static u32 periph_clk_rsvd_mask[TEGRA210_CAR_BANK_COUNT] = {
-</pre>
-          </blockquote>
-          <pre class="moz-quote-pre" wrap="">Should be more natural to have a "valid_mask" instead of "rsvd_mask".
+Please; it improves readability.
 
-What's actually wrong with touching of the reserved bits? They must be NO-OP.. or the
-reserved bits are actually some kind of "secret" bits? If those bits have some use-case
-outside of Silicon HW (like FPGA simulation), then this doesn't matter for upstream and you
-have to keep the workaround locally in the downstream kernel or whatever.
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">
-Will rename as valid_mask.
+> 
+> > Note that you need to call the upstream sub-device's s_stream op from here
+> > as well.
+> 
+> I tought this is done by the host driver trough iterating over the whole
+> graph?
 
-some bits in these registers are undefined and is not good to write to these bits as they
-can cause pslverr.
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Okay, it should be explained in the comment.
+The driver starting the pipeline is only expected to call s_stream on the
+next sub-device in the pipeline.
 
-Is it possible to disable trapping of changing the undefined bits?</pre>
-    </blockquote>
-    No its internal to design<br>
-    <blockquote type="cite"
-      cite="mid:aa823801-00c7-df88-0f63-45338bffa854@gmail.com">
-      <pre class="moz-quote-pre" wrap="">
+...
 
-</pre>
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap="">
-</pre>
-          <blockquote type="cite">
-            <pre class="moz-quote-pre" wrap="">+    0x23282006,
-+    0x782e0c18,
-+    0x0c012c05,
-+    0x003e7304,
-+    0x86c04800,
-+    0xc0199000,
-+    0x03e03800,
-+};
-+
-+#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
-+#define car_writel(_val, _base, _off) \
-+        writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
-+
-+static u32 spare_reg_ctx, misc_clk_enb_ctx, clk_msk_arm_ctx;
-+static u32 cpu_softrst_ctx[3];
-+
-+static int tegra210_clk_suspend(void)
-+{
-+    unsigned int i;
-+
-+    clk_save_context();
-+
-+    /*
-+     * Save the bootloader configured clock registers SPARE_REG0,
-+     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL.
-+     */
-+    spare_reg_ctx = readl_relaxed(clk_base + SPARE_REG0);
-+    misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
-+    clk_msk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
-+
-+    for (i = 0; i &lt; ARRAY_SIZE(cpu_softrst_ctx); i++)
-+        cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
-+
-+    tegra_clk_periph_suspend();
-+    return 0;
-+}
-+
-+static void tegra210_clk_resume(void)
-+{
-+    unsigned int i;
-+
-+    tegra_clk_osc_resume(clk_base);
-+
-+    /*
-+     * Restore the bootloader configured clock registers SPARE_REG0,
-+     * MISC_CLK_ENB, CLK_MASK_ARM, CPU_SOFTRST_CTRL from saved context.
-+     */
-+    writel_relaxed(spare_reg_ctx, clk_base + SPARE_REG0);
-+    writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
-+    writel_relaxed(clk_msk_arm_ctx, clk_base + CLK_MASK_ARM);
-+
-+    for (i = 0; i &lt; ARRAY_SIZE(cpu_softrst_ctx); i++)
-+        car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
-+
-+    fence_udelay(5, clk_base);
-+
-+    /* enable all the clocks before changing the clock sources */
-+    tegra_clk_periph_force_on(periph_clk_rsvd_mask);
-</pre>
-          </blockquote>
-          <pre class="moz-quote-pre" wrap="">Why clocks need to be enabled before changing the sources?
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">
-To prevent glitchless frequency switch, Tegra clock programming recommended sequence is to
-change MUX control or divisor or both with the clocks running.
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-This should be explained in the comment.
+> > > +static int tc358746_apply_fw(struct tc358746_state *state)
+> > > +{
+> > > +	struct v4l2_subdev *sd = &state->sd;
+> > > +	struct tc358746_csi_param *csi_setting;
+> > > +	int err, i;
+> > 
+> > unsigned int i
+> 
+> Yes.
+> 
+> > > +
+> > > +	for (i = 0; i < state->link_frequencies_num; i++) {
+> > > +		csi_setting = &state->link_freq_settings[i];
+> > > +
+> > > +		err = tc358746_calculate_csi_txtimings(state, csi_setting);
+> > > +		if (err) {
+> > > +			v4l2_err(sd, "Failed to calc csi-tx tminings\n");
+> > > +			return err;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * Set it to the hw default value. The correct value will be set during
+> > > +	 * set_fmt(), since it depends on the pclk and and the resulution.
+> > > +	 */
+> > > +	state->vb_fifo = 1;
+> > > +
+> > > +	err = clk_prepare_enable(state->refclk);
+> > > +	if (err) {
+> > > +		v4l2_err(sd, "Failed to enable clock\n");
+> > > +		return err;
+> > > +	}
+> > 
+> > Is there a need to keep the clock running even if the device is not
+> > streaming? Please consider adding runtime PM support. That's not strictly
+> > needed for the patch to be merged though IMO.
+> 
+> Thats a good point. The Chip can act as clk-provider fo rother devices.
+> So I would probably say yes.
 
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">Actual state of clocks before suspend are restored later after all PLL's and peripheral
-clocks are restored.
+If this is the case, wouldn't it be appropriate to take that into account
+in DT bindings? If there's no need for that clock, then this chip could be
+powered off. If the support for that is impelemented later on, then there's
+a small risk of breaking systems where declaring those clocks was
+forgotten.
 
-</pre>
-        <blockquote type="cite">
-          <pre class="moz-quote-pre" wrap="">
-</pre>
-          <blockquote type="cite">
-            <pre class="moz-quote-pre" wrap="">+    /* wait for all writes to happen to have all the clocks enabled */
-+    wmb();
-</pre>
-          </blockquote>
-          <pre class="moz-quote-pre" wrap="">fence_udelay() has exactly the same barrier at the very beginning of readl(), no need to
-duplicate it here.
-</pre>
-        </blockquote>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Actually, readl does the rmb() and it should be a more correct variant of fencing because it
-actually ensures that the write reached hardware. I suppose that something like fence_udelay
-should be used for the pinctrl as well.
+-- 
+Regards,
 
-</pre>
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <blockquote type="cite">
-            <pre class="moz-quote-pre" wrap="">+    fence_udelay(2, clk_base);
-+
-+    /* restore PLLs and all peripheral clock rates */
-+    tegra210_init_pllu();
-</pre>
-          </blockquote>
-          <pre class="moz-quote-pre" wrap="">Why USB PLL need to be restored at first?
-</pre>
-        </blockquote>
-        <pre class="moz-quote-pre" wrap="">USB PLL restore is independent to all other clocks restore. So this can be done either
-before clk_restore_context or even after.
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Then why not to implement restore_context for PLLU?
-</pre>
-    </blockquote>
-    <p>pllu is registered as fixed_rate clock and we using clk core
-      clk_register_fixed_rate which uses clk_fixed_rate_ops from the
-      same generic clk-fixed-rate driver.</p>
-    <p>Also pllu init happens in the same clk-tegra210, so invoking it
-      during resume which is the same sequence needed during resume as
-      well.<br>
-    </p>
-    <pre><span class="nf">
-</span><span class="p"></span><span class="p"></span></pre>
-    <blockquote type="cite"
-      cite="mid:aa823801-00c7-df88-0f63-45338bffa854@gmail.com">
-      <pre class="moz-quote-pre" wrap="">
-</pre>
-      <blockquote type="cite">
-        <blockquote type="cite">
-          <blockquote type="cite">
-            <pre class="moz-quote-pre" wrap="">+    clk_restore_context();
-+
-+    /* restore all peripheral clocks enable and reset state */
-+    tegra_clk_periph_resume();
-+}
-</pre>
-          </blockquote>
-          <pre class="moz-quote-pre" wrap="">[snip]
-</pre>
-        </blockquote>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-</pre>
-    </blockquote>
-  </body>
-</html>
-
---------------20F5CCAC959D9D5D07C55658--
+Sakari Ailus
+sakari.ailus@linux.intel.com
