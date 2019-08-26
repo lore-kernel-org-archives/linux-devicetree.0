@@ -1,149 +1,113 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v11 4/6] usb:common Simplify usb_decode_get_set_descriptor function.
-Date: Mon, 26 Aug 2019 12:19:29 +0100
-Message-ID: <1566818371-27721-5-git-send-email-pawell@cadence.com>
-References: <1566818371-27721-1-git-send-email-pawell@cadence.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
+ Reset controller
+Date: Mon, 26 Aug 2019 06:23:13 -0500
+Message-ID: <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
+References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+ <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com> <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566818371-27721-1-git-send-email-pawell@cadence.com>
+In-Reply-To: <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: felipe.balbi@linux.intel.com
-Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, sparmar@cadence.com, Pawel Laszczak <pawell@cadence.com>
+To: Dilip Kota <eswara.kota@linux.intel.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Patch moves switch responsible for decoding descriptor type
-outside snprintf. It improves code readability a little.
+On Mon, Aug 26, 2019 at 4:52 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+> On 8/23/2019 8:25 PM, Rob Herring wrote:
+> > On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+> >> Add YAML schemas for the reset controller on Intel
+> >> Lightening Mountain (LGM) SoC.
+> >>
+> >> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> >> ---
+> >> Changes on v2:
+> >>      Address review comments
+> >>        Update the compatible property definition
+> >>        Add description for reset-cells
+> >>        Add 'additionalProperties: false' property
+> >>
+> >>   .../bindings/reset/intel,syscon-reset.yaml         | 53 ++++++++++++++++++++++
+> >>   1 file changed, 53 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >> new file mode 100644
+> >> index 000000000000..3403a967190a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> >> @@ -0,0 +1,53 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Intel Lightening Mountain SoC System Reset Controller
+> >> +
+> >> +maintainers:
+> >> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: intel,rcu-lgm
+> >> +      - const: syscon
+> >> +
+> >> +  reg:
+> >> +    description: Reset controller register base address and size
+> >> +
+> >> +  intel,global-reset:
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >> +    description: Global reset register offset and bit offset.
+> >> +
+> >> +  "#reset-cells":
+> >> +    const: 2
+> >> +    description: |
+> >> +      The 1st cell is the register offset.
+> >> +      The 2nd cell is the bit offset in the register.
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - intel,global-reset
+> >> +  - "#reset-cells"
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    rcu0: reset-controller@00000000 {
+> >> +        compatible = "intel,rcu-lgm", "syscon";
+> >> +        reg = <0x000000 0x80000>;
+> >> +        intel,global-reset = <0x10 30>;
+> >> +        #reset-cells = <2>;
+> >> +    };
+> >> +
+> >> +    pcie_phy0: pciephy@... {
+> >> +        ...
+> > You need to run 'make dt_binding_check' and fix the warnings. The
+> > example has to be buildable and it is not.
+>
+> Sure, i  will correct this pcie_phy0 node. But i didn't get any warnings
+> for make dt_binding_check
+>
+>    CHKDT Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+> DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+> FATAL ERROR: Unknown output format "yaml"
+>
+> Will DTC report about the example node errors? But, DTC is failing with
+> FATAL_ERROR.
+> I tried it even after installing libyaml and headers in my local
+> directory and export the path, but no luck.(ref:
+> https://lkml.org/lkml/2018/12/3/951)
+> Could you please let me know if i miss anything and help me to proceed
+> further.
 
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
----
- drivers/usb/common/debug.c | 113 +++++++++++++++++++------------------
- 1 file changed, 58 insertions(+), 55 deletions(-)
+See Documentation/devicetree/writing-schema.md
 
-diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
-index 60a9f70a0904..92a986aeaa5d 100644
---- a/drivers/usb/common/debug.c
-+++ b/drivers/usb/common/debug.c
-@@ -105,62 +105,65 @@ static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
- 					  __u16 wValue, __u16 wIndex,
- 					  __u16 wLength, char *str, size_t size)
- {
-+	char *s;
-+
-+	switch (wValue >> 8) {
-+	case USB_DT_DEVICE:
-+		s = "Device";
-+		break;
-+	case USB_DT_CONFIG:
-+		s = "Configuration";
-+		break;
-+	case USB_DT_STRING:
-+		s = "String";
-+		break;
-+	case USB_DT_INTERFACE:
-+		s = "Interface";
-+		break;
-+	case USB_DT_ENDPOINT:
-+		s = "Endpoint";
-+		break;
-+	case USB_DT_DEVICE_QUALIFIER:
-+		s = "Device Qualifier";
-+		break;
-+	case USB_DT_OTHER_SPEED_CONFIG:
-+		s = "Other Speed Config";
-+		break;
-+	case USB_DT_INTERFACE_POWER:
-+		s = "Interface Power";
-+		break;
-+	case USB_DT_OTG:
-+		s = "OTG";
-+		break;
-+	case USB_DT_DEBUG:
-+		s = "Debug";
-+		break;
-+	case USB_DT_INTERFACE_ASSOCIATION:
-+		s = "Interface Association";
-+		break;
-+	case USB_DT_BOS:
-+		s = "BOS";
-+		break;
-+	case USB_DT_DEVICE_CAPABILITY:
-+		s = "Device Capability";
-+		break;
-+	case USB_DT_PIPE_USAGE:
-+		s = "Pipe Usage";
-+		break;
-+	case USB_DT_SS_ENDPOINT_COMP:
-+		s = "SS Endpoint Companion";
-+		break;
-+	case USB_DT_SSP_ISOC_ENDPOINT_COMP:
-+		s = "SSP Isochronous Endpoint Companion";
-+		break;
-+	default:
-+		s = "UNKNOWN";
-+		break;
-+	}
-+
- 	snprintf(str, size, "%s %s Descriptor(Index = %d, Length = %d)",
--		 bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
--		 ({ char *s;
--			switch (wValue >> 8) {
--			case USB_DT_DEVICE:
--				s = "Device";
--				break;
--			case USB_DT_CONFIG:
--				s = "Configuration";
--				break;
--			case USB_DT_STRING:
--				s = "String";
--				break;
--			case USB_DT_INTERFACE:
--				s = "Interface";
--				break;
--			case USB_DT_ENDPOINT:
--				s = "Endpoint";
--				break;
--			case USB_DT_DEVICE_QUALIFIER:
--				s = "Device Qualifier";
--				break;
--			case USB_DT_OTHER_SPEED_CONFIG:
--				s = "Other Speed Config";
--				break;
--			case USB_DT_INTERFACE_POWER:
--				s = "Interface Power";
--				break;
--			case USB_DT_OTG:
--				s = "OTG";
--				break;
--			case USB_DT_DEBUG:
--				s = "Debug";
--				break;
--			case USB_DT_INTERFACE_ASSOCIATION:
--				s = "Interface Association";
--				break;
--			case USB_DT_BOS:
--				s = "BOS";
--				break;
--			case USB_DT_DEVICE_CAPABILITY:
--				s = "Device Capability";
--				break;
--			case USB_DT_PIPE_USAGE:
--				s = "Pipe Usage";
--				break;
--			case USB_DT_SS_ENDPOINT_COMP:
--				s = "SS Endpoint Companion";
--				break;
--			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
--				s = "SSP Isochronous Endpoint Companion";
--				break;
--			default:
--				s = "UNKNOWN";
--				break;
--			} s; }), wValue & 0xff, wLength);
-+		bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
-+		s, wValue & 0xff, wLength);
- }
- 
- static void usb_decode_get_configuration(__u16 wLength, char *str, size_t size)
--- 
-2.17.1
+Rob
