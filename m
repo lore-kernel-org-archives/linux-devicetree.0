@@ -1,27 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2,2/3] dt-bindings: arm: amlogic: Add support for the
- Ugoos AM6
-Date: Mon, 26 Aug 2019 07:11:15 -0500
-Message-ID: <CAL_JsqKJvyYpAb2n1aq7RRKrgnt+oL2yd47b4jh=QiZdu6t39A@mail.gmail.com>
-References: <1566633850-9421-1-git-send-email-christianshewitt@gmail.com> <1566633850-9421-3-git-send-email-christianshewitt@gmail.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 0/4] clk: qcom: Add support for SM8150
+Date: Mon, 26 Aug 2019 17:44:49 +0530
+Message-ID: <20190826121453.21732-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566633850-9421-3-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oleg Ivanov <balbes-150@yandex.ru>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 3:05 AM Christian Hewitt
-<christianshewitt@gmail.com> wrote:
->
-> The Ugoos AM6 is based on the Amlogic W400 (G12B) reference design using the
-> S922X chipset.
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
->  1 file changed, 1 insertion(+)
+Add support for rpm clock controller found in SM8150 and while at it update
+the driver to support parent data clock scheme as suggested by Stephen.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes since v3:
+ - Make clock parent name as xo instead of xo_board
+
+Changes since v2:
+ - Add reviewed-by from Bjorn
+ - Update the parent name as xo_board
+ - Fix style issue
+
+Changes since v1:
+ - Describe parent clocks for rpmhcc
+ - Add support for parent data scheme for rpmhcc
+
+Vinod Koul (4):
+  dt-bindings: clock: Document the parent clocks
+  clk: qcom: clk-rpmh: Convert to parent data scheme
+  dt-bindings: clock: Document SM8150 rpmh-clock compatible
+  clk: qcom: clk-rpmh: Add support for SM8150
+
+ .../bindings/clock/qcom,rpmh-clk.txt          |  7 +++-
+ drivers/clk/qcom/clk-rpmh.c                   | 38 ++++++++++++++++++-
+ 2 files changed, 42 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
