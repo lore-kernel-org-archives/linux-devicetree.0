@@ -1,55 +1,38 @@
-From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-Subject: [PATCH 09/12] ARM: dts: imx7d: cl-som-imx7: add SMSC USB3503 usb hub
-Date: Mon, 26 Aug 2019 16:37:57 +0100
-Message-ID: <20190826153800.35400-9-git@andred.net>
-References: <20190826153800.35400-1-git@andred.net>
+From: Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH 1/2] dt-bindings: remoteproc: stm32: add wakeup-source
+Date: Mon, 26 Aug 2019 17:38:42 +0200
+Message-ID: <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
+References: <1566833923-16718-1-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826153800.35400-1-git@andred.net>
+In-Reply-To: <1566833923-16718-1-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Ilya Ledvich <ilya@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Cc: Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
 List-Id: devicetree@vger.kernel.org
 
-As per the SoM design, add the SMSC USB3503 that is
-used as a PHY in hardware-only mode, connected
-to the imx7d's &usbh interface, providing additional
-USB ports for USB and mini-PCIe.
+Add the "wakeup-source" property: if the optional wdg interrupt is
+defined, then this property may be defined too.
 
-Signed-off-by: André Draszik <git@andred.net>
-Cc: Ilya Ledvich <ilya@compulab.co.il>
-Cc: Igor Grinberg <grinberg@compulab.co.il>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index f80be855b4ec..a16cbb070a12 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -22,6 +22,12 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
- 	};
-+
-+	/* SMSC USB3503 connected to &usbh */
-+	usb_hub: usb-hub {
-+		compatible = "smsc,usb3503";
-+		reset-gpios = <&pca9555 6 GPIO_ACTIVE_LOW>;
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+index 5fa915a..ac54b5b 100644
+--- a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
++++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+@@ -21,6 +21,9 @@ Required properties:
  
- &cpu0 {
+ Optional properties:
+ - interrupts:	Should contain the watchdog interrupt
++- wakeup-source: Flag indicating whether remoteproc can wake up the system by
++		the watchdog interrupt. Only meaningful if the "interrupts"
++		property is defined.
+ - mboxes:	This property is required only if the rpmsg/virtio functionality
+ 		is used. List of phandle and mailbox channel specifiers:
+ 		- a channel (a) used to communicate through virtqueues with the
 -- 
-2.23.0.rc1
+2.7.4
