@@ -1,108 +1,123 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 5/6] arm64: dts: qcom: qcs404: Add DVFS support
-Date: Mon, 26 Aug 2019 18:48:06 +0200
-Message-ID: <20190826164807.7028-5-jorge.ramirez-ortiz@linaro.org>
-References: <20190826164807.7028-1-jorge.ramirez-ortiz@linaro.org>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v4 00/13] Support CPU frequency scaling on QCS404
+Date: Mon, 26 Aug 2019 18:49:56 +0200
+Message-ID: <0098ab9d-9abc-ac9d-5f36-67ad7cbc4f9c@linaro.org>
+References: <20190731202929.16443-1-jorge.ramirez-ortiz@linaro.org>
+ <f34a75d0-c479-267d-b4a1-c2418d4efb22@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826164807.7028-1-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <f34a75d0-c479-267d-b4a1-c2418d4efb22@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
-Cc: niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: bjorn.andersson@linaro.org, sboyd@kernel.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, sibis@codeaurora.org, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net
+Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Support dynamic voltage and frequency scaling on qcs404.
+On 8/26/19 08:54, Jorge Ramirez wrote:
+> On 7/31/19 22:29, Jorge Ramirez-Ortiz wrote:
+>> The following patchset enables CPU frequency scaling support on the
+>> QCS404 (with dynamic voltage scaling).
+>>
+>> It is important to notice that this functionality will be superseded
+>> by Core Power Reduction (CPR), a more accurate form of AVS found on
+>> certain Qualcomm SoCs.
+>>
+>> Some of the changes required to support CPR do conflict with the
+>> configuration required for CPUFreq.
+>>
+>> In particular, the following commit for CPR - already merged - will
+>> need to be reverted in order to enable CPUFreq.
+>>
+>>    Author: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>>    Date:   Thu Jul 25 12:41:36 2019 +0200
+>>        cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+>>     
+>> Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
+>> in this platform, this PLL provides the clock signal to a CPU
+>> core. But in others it might not.
+>>
+>> We opted for the minimal ammount of changes without affecting the
+>> default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
+>> framework and letting the firwmare chose whether to enable or disable
+>> the clock at boot. However maybe a DT property and marking the clock
+>> as critical would be more appropriate for this PLL. we'd appreciate the
+>> maintainer's input on this topic.
+>>
+>> v2:
+>>    - dts: ms8916: apcs mux/divider: new bindings
+>>      (the driver can still support the old bindings)
+>>
+>>    - qcs404.dtsi
+>>      fix apcs-hfpll definition
+>>      fix cpu_opp_table definition
+>>
+>>    - GPLL0_AO_OUT operating frequency
+>>      define new alpha_pll_fixed_ops to limit the operating frequency
+>>
+>> v3:
+>>   - qcom-apcs-ipc-mailbox
+>>     replace goto to ease readability
+>>
+>>   - apcs-msm8916.c
+>>     rework patch to use of_clk_parent_fill
+>>
+>>   - hfpll.c
+>>     add relevant comments to the code
+>>
+>>   - qcs404.dtsi
+>>     add voltage scaling support
+>>
+>> v4:
+>>  - squash OPP definition and DVFS enablement in dts
+>>    (patches 10 and 13 in previous version)
+>>    
+>>  - qcom-apcs-ipc-mailbox
+>>    replace return condition for readability
+>>    
+>>  - answer one question on CLK_IGNORE_UNUSED in mailing list
+>>
+>> Jorge Ramirez-Ortiz, Niklas Cassel (13):
+>>   clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
+>>   mbox: qcom: add APCS child device for QCS404
+>>   mbox: qcom: replace integer with valid macro
+>>   dt-bindings: mailbox: qcom: Add clock-name optional property
+>>   clk: qcom: apcs-msm8916: get parent clock names from DT
+>>   clk: qcom: hfpll: get parent clock names from DT
+>>   clk: qcom: hfpll: register as clock provider
+>>   clk: qcom: hfpll: CLK_IGNORE_UNUSED
+>>   arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+>>   arm64: dts: qcom: qcs404: Add HFPLL node
+>>   arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
+>>   arm64: dts: qcom: qcs404: Add DVFS support
+>>   arm64: defconfig: Enable HFPLL
+>>
+>>  .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
+>>  arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
+>>  arch/arm64/boot/dts/qcom/qcs404.dtsi          | 43 +++++++++++++++++++
+>>  arch/arm64/configs/defconfig                  |  1 +
+>>  drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
+>>  drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
+>>  drivers/clk/qcom/clk-alpha-pll.h              |  1 +
+>>  drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
+>>  drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
+>>  drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 11 +++--
+>>  10 files changed, 128 insertions(+), 13 deletions(-)
+>>
+> 
+> any feedback on this set?
+> 
+> TIA
+> 
 
-CPUFreq will soon be superseded by Core Power Reduction (CPR, a form
-of Adaptive Voltage Scaling found on some Qualcomm SoCs like the
-qcs404).
+trying to ease the maintainers task, I have resent the series split in
+three individual sets:
 
-Due to the CPR upstreaming already being in progress - and some
-commits already merged -  the following commit will need to be
-reverted to enable CPUFreq support
+- device tree
+- clk
+- mbox
 
-   Author: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-   Date:   Thu Jul 25 12:41:36 2019 +0200
-       cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+for full functionality obviously all of them are required
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 31 ++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 34360b2d3e0d..e425e54e1af9 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -36,6 +36,10 @@
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
-+			clocks = <&apcs_glb>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&pms405_s3>;
-+
- 		};
- 
- 		CPU1: cpu@101 {
-@@ -46,6 +50,9 @@
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
-+			clocks = <&apcs_glb>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&pms405_s3>;
- 		};
- 
- 		CPU2: cpu@102 {
-@@ -56,6 +63,9 @@
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
-+			clocks = <&apcs_glb>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&pms405_s3>;
- 		};
- 
- 		CPU3: cpu@103 {
-@@ -66,6 +76,9 @@
- 			cpu-idle-states = <&CPU_SLEEP_0>;
- 			next-level-cache = <&L2_0>;
- 			#cooling-cells = <2>;
-+			clocks = <&apcs_glb>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&pms405_s3>;
- 		};
- 
- 		L2_0: l2-cache {
-@@ -88,6 +101,24 @@
- 		};
- 	};
- 
-+	cpu_opp_table: cpu-opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-1094400000 {
-+			opp-hz = /bits/ 64 <1094400000>;
-+			opp-microvolt = <1224000 1224000 1224000>;
-+		};
-+		opp-1248000000 {
-+			opp-hz = /bits/ 64 <1248000000>;
-+			opp-microvolt = <1288000 1288000 1288000>;
-+		};
-+		opp-1401600000 {
-+			opp-hz = /bits/ 64 <1401600000>;
-+			opp-microvolt = <1384000 1384000 1384000>;
-+		};
-+	};
-+
- 	firmware {
- 		scm: scm {
- 			compatible = "qcom,scm-qcs404", "qcom,scm";
--- 
-2.22.0
+please let me know if there is anything else I can do.
