@@ -1,148 +1,107 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-Date: Mon, 26 Aug 2019 06:54:02 -0500
-Message-ID: <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC PATCH V3 3/4] dt-bindings: mt8183: Add sensor interface
+ dt-bindings
+Date: Mon, 26 Aug 2019 14:52:19 +0300
+Message-ID: <20190826115219.GB826@valkosipuli.retiisi.org.uk>
+References: <1559815233-24796-1-git-send-email-louis.kuo@mediatek.com>
+ <1559815233-24796-4-git-send-email-louis.kuo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823145356.6341-5-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, notify@kernel.orgArnd Bergmann <ar>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1559815233-24796-4-git-send-email-louis.kuo@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Louis Kuo <louis.kuo@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, holmes.chiou@mediatek.com, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, keiichiw@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> format using json-schema.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Hi Louis,
+
+On Thu, Jun 06, 2019 at 06:00:32PM +0800, Louis Kuo wrote:
+> This patch adds the DT binding documentation for the sensor interface
+> module in Mediatek SoCs.
+> 
+> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
 > ---
->  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
->  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
->  2 files changed, 93 insertions(+), 72 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-
-
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+>  .../devicetree/bindings/media/mediatek-seninf.txt  | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.txt b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
 > new file mode 100644
-> index 000000000000..818c6f3488ef
+> index 0000000..979063a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> @@ -0,0 +1,93 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - samsung,exynos3250-pmu
-> +          - samsung,exynos4210-pmu
-> +          - samsung,exynos4412-pmu
-> +          - samsung,exynos5250-pmu
-> +          - samsung,exynos5260-pmu
-> +          - samsung,exynos5410-pmu
-> +          - samsung,exynos5420-pmu
-> +          - samsung,exynos5433-pmu
-> +          - samsung,exynos7-pmu
-> +      - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  clock-names:
-> +    description:
-> +      list of clock names for particular CLKOUT mux inputs
-> +    # TODO: what is the maximum number of elements (mux inputs)?
-> +    minItems: 1
-> +    maxItems: 32
-> +    items:
-> +      - enum:
+> +++ b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
+> @@ -0,0 +1,31 @@
+> +* Mediatek seninf MIPI-CSI2 host driver
 
-This isn't correct as you are only defining possible names for the
-first item. Drop the '-' (making items a schema instead of a list) and
-then it applies to all. However, doing that will cause a meta-schema
-error which I need to fix to allow. Or if there's a small set of
-possibilities of number of inputs, you can list them under a 'oneOf'
-list.
+Note that DT bindings document the hardware, not the driver implementation.
 
-> +          - clkout0
-> +          - clkout1
-> +          - clkout2
-> +          - clkout3
-> +          - clkout4
-> +          - clkout5
-> +          - clkout6
-> +          - clkout7
-> +          - clkout8
-> +          - clkout9
-> +          - clkout10
-> +          - clkout11
-> +          - clkout12
-> +          - clkout13
-> +          - clkout14
-> +          - clkout15
-> +          - clkout16
 > +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 32
-> +
-> +  interrupt-controller:
-> +    description:
-> +      Some PMUs are capable of behaving as an interrupt controller (mostly
-> +      to wake up a suspended PMU).
-> +
-> +  '#interrupt-cells':
-> +    # TODO: must be identical to the that of the parent interrupt controller.
+> +Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support a widely adopted,
 
-There's not really a way to express that. Just state that in the
-description if you want.
+Same here; driver apparently refers to software.
 
-> +    const: 3
-> +
-> +  # TODO: Mark interrupt-controller and #interrupt-cells as required, if one is present
+Please wrap before or at 80 characters per line.
 
-No need, the core schemas handle that dependency. It would be good to
-define for which compatibles the properties are required. You can do
-this with if/then schema. There's several examples in the tree.
+> +simple, high-speed protocol primarily intended for point-to-point image and video
+> +transmission between cameras and host devices.
 
-> +  # TODO: nodes defining the restart and poweroff syscon children
+Could you elaborate the properties of the hardware in a bit more detail,
+such as how many ports there are and how many lanes they can support? See
+e.g. Documentation/devicetree/bindings/media/ti,omap3isp.txt .
+
+Please also refer to video-interfaces.txt and document the port nodes and
+the relevant properties in the endpoint nodes, as in the binding example I
+referred to.
+
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +  - clock-names
-> +  - clocks
+> +Required properties:
+> +  - compatible: "mediatek,mt8183-seninf"
+> +  - reg: Must contain an entry for each entry in reg-names.
+> +  - reg-names: Must include the following entries:
+> +    "base_reg": seninf registers base
+> +    "rx_reg": Rx analog registers base
+> +  - interrupts: interrupt number to the cpu.
+> +  - clocks : clock name from clock manager
+> +  - clock-names: must be CLK_CAM_SENINF and CLK_TOP_MUX_SENINF.
+> +    It is the clocks of seninf
 > +
-> +examples:
-> +  - |
-> +    pmu_system_controller: system-controller@10040000 {
-> +      compatible = "samsung,exynos5250-pmu", "syscon";
-> +      reg = <0x10040000 0x5000>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <3>;
-> +       interrupt-parent = <&gic>;
-> +      #clock-cells = <1>;
-> +      clock-names = "clkout16";
-> +      clocks = <&clock 0>; // CLK_FIN_PLL
-> +    };
-> --
-> 2.17.1
->
+> +Example:
+> +	seninf: seninf@1a040000 {
+> +		compatible = "mediatek,mt8183-seninf";
+> +		reg = <0 0x1a040000 0 0x8000>,
+> +		      <0 0x11C80000 0 0x6000>;
+> +		reg-names = "base_reg", "rx_reg";
+> +		interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_LOW>;
+> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
+> +		clocks =
+> +				<&camsys CLK_CAM_SENINF>, <&topckgen CLK_TOP_MUX_SENINF>;
+
+Please wrap before 80 and align the above two lines.
+
+> +		clock-names =
+> +			"CLK_CAM_SENINF", "CLK_TOP_MUX_SENINF";
+
+No need to wrap here.
+
+> +	}
+> +
+> -- 
+> 1.9.1
+
+This must be old.
+
+-- 
+Regards,
+
+Sakari Ailus
