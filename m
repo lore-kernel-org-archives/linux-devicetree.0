@@ -1,34 +1,41 @@
-Return-Path: <SRS0=Amyu=WR=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2] dt-bindings: clk: emev2: Rename bindings documentation file
-Date: Wed, 21 Aug 2019 11:15:16 +0200
-Message-Id: <20190821091516.16372-1-horms+renesas@verge.net.au>
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=gJgO=WW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:58710 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729144AbfHZSCm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Aug 2019 14:02:42 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 0/6] drop more platform data for dra7
+Date: Mon, 26 Aug 2019 11:02:31 -0700
+Message-Id: <20190826180237.31571-1-tony@atomide.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Vignesh R <vigneshr@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Rename the device tree clock bindings for Renesas EMMA Mobile EV2
-from emev2-clock.txt to renesas,emev2-smu.txt.
+Hi all,
 
-This is part of an ongoing effort to name bindings documentation files for
-Renesas IP blocks consistently, in line with the compat strings they
-document.
+Here are few more trivial changes to drop legacy platform data for dra7.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
-Based on v5.3-rc1
+These are based on my omap-for-v5.4/ti-sysc-drop-pdata branch.
 
-v2
-* Drop emev2 prefix from new filename, it was unintentional
-  and does not match the proposed naming scheme
----
- .../devicetree/bindings/clock/{emev2-clock.txt => renesas,emev2-smu.txt}  | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/clock/{emev2-clock.txt => renesas,emev2-smu.txt} (100%)
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/clock/emev2-clock.txt b/Documentation/devicetree/bindings/clock/renesas,emev2-smu.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/clock/emev2-clock.txt
-rename to Documentation/devicetree/bindings/clock/renesas,emev2-smu.txt
+Tony
+
+
+Tony Lindgren (6):
+  ARM: OMAP2+: Drop legacy platform data for dra7 mcspi
+  ARM: OMAP2+: Drop legacy platform data for dra7 mcasp
+  ARM: dts: Drop legacy custom hwmods property for dra7 uart
+  ARM: dts: Drop legacy custom hwmods property for dra7 i2c
+  ARM: dts: Drop legacy custom hwmods property for dra7 mmc
+  ARM: dts: Drop legacy custom hwmods property for dra7 gpio
+
+ arch/arm/boot/dts/dra7-l4.dtsi            |  39 --
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 410 ----------------------
+ 2 files changed, 449 deletions(-)
+
 -- 
-2.11.0
+2.23.0
