@@ -1,42 +1,53 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [1/3] rtc/fsl: support flextimer for lx2160a
-Date: Mon, 26 Aug 2019 03:37:43 +0000
-Message-ID: <DB7PR04MB4490B7AD75C6EE49F5208F738FA10@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190823095740.12280-1-biwen.li@nxp.com>
- <1566579388.5029.8.camel@impinj.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v4 1/3] dt-bindings: pci: layerscape-pci: add compatible
+ strings "fsl,ls1028a-pcie"
+Date: Mon, 26 Aug 2019 03:51:34 +0000
+Message-ID: <AM5PR04MB3299C9DB7F9F21F6362ADDB2F5A10@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190823082643.10903-1-xiaowei.bao@nxp.com>
+ <20190823140447.GA19283@e121166-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="gb2312"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566579388.5029.8.camel@impinj.com>
+In-Reply-To: <20190823140447.GA19283@e121166-lin.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>, Leo Li <leoyang.li@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gT24gRnJpLCAyMDE5LTA4LTIzIGF0IDE3OjU3ICswODAwLCBCaXdlbiBMaSB3cm90ZToN
-Cj4gPiBUaGUgcGF0Y2ggc3VwcG9ydHMgZmxleHRpbWVyIGZvciBseDIxNjBhDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAg
-ZHJpdmVycy9ydGMvcnRjLWZzbC1mdG0tYWxhcm0uYyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMt
-ZnNsLWZ0bS1hbGFybS5jIGIvZHJpdmVycy9ydGMvcnRjLWZzbC0NCj4gPiBmdG0tYWxhcm0uYyBp
-bmRleCA0ZjcyNTljMmQ2YTMuLjJiODE1MjVmNmRiOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L3J0Yy9ydGMtZnNsLWZ0bS1hbGFybS5jDQo+ID4gKysrIGIvZHJpdmVycy9ydGMvcnRjLWZzbC1m
-dG0tYWxhcm0uYw0KPiA+IEBAIC0zMTMsNiArMzEzLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgZnRtX3J0Y19tYXRjaFtdID0NCj4gPiB7DQo+ID4gICAgICAgeyAuY29tcGF0
-aWJsZSA9ICJmc2wsbHMxMDg4YS1mdG0tYWxhcm0iLCB9LA0KPiA+ICAgICAgIHsgLmNvbXBhdGli
-bGUgPSAiZnNsLGxzMjA4eGEtZnRtLWFsYXJtIiwgfSwNCj4gPiAgICAgICB7IC5jb21wYXRpYmxl
-ID0gImZzbCxsczEwMjhhLWZ0bS1hbGFybSIsIH0sDQo+ID4gKyAgICAgeyAuY29tcGF0aWJsZSA9
-ICJmc2wsbHgyMTYwYS1mdG0tYWxhcm0iLCB9LA0KPiA+ICAgICAgIHsgfSwNCj4gPiAgfTsNCj4g
-Pg0KPiANCj4gU2luY2UgdGhlcmUncyBubyBkYXRhIGFzc29jaWF0ZWQgd2l0aCBlYWNoIGNvbXBh
-dGlibGUsIGl0IGRvZXNuJ3Qgc2VlbSBsaWtlDQo+IHRoZXJlJ3MgYW55IG5lZWQgdG8gYWRkIGEg
-bmV3IG9uZS4NCj4gDQo+IFdoYXQncyBub3JtYWxseSBkb25lIGlzIGFkZCB0d28gY29tcGF0aWJs
-ZXMgaW4gdGhlIGR0cywgdGhlIGJhc2UgdmVyc2lvbiBhbmQNCj4gdGhlIHNwZWNpZmljIHZlcnNp
-b24sIGUuZy46DQo+IA0KPiArICAgICAgICAgICAgICAgcmNwbTogcmNwbUAxZTM0MDQwIHsNCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHgyMTYwYS1yY3BtIiwN
-Cj4gKyAiZnNsLHFvcmlxLWNwbS0yLjErIjsNCj4gDQo+IE9yIGluIHRoaXMgY2FzZSwgY29tcGF0
-aWJsZSA9ICJmc2wsbHgyMTYwYS1mdG0tYWxhcm0iLCAiZnNsLGxzMTA4OGEtZnRtLWFsYXJtIjsN
-Cj4gDQo+IFRoZW4gdGhlcmUncyBubyBuZWVkIHRvIGFkZCB0byB0aGUgZHJpdmVyIGxpc3QuDQpZ
-ZXMsIGl0IHdpbGwgYmUgd29yay4gQnV0IGl0IHdpbGwgYmUgY29uZnVzaW5nLiBJcyBsczEwODhh
-IHNhbWUgd2l0aCBseDIxNjBhPyBOby4NCg==
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jjUwjIzyNUgMjI6
+MDUNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtk
+dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsg
+TGVvDQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5A
+bnhwLmNvbT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5nIDxy
+b3kuemFuZ0BueHAuY29tPjsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96
+bGFicy5vcmc7IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47DQo+IGJoZWxnYWFzQGdv
+b2dsZS5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAxLzNdIGR0LWJpbmRpbmdzOiBwY2k6
+IGxheWVyc2NhcGUtcGNpOiBhZGQgY29tcGF0aWJsZQ0KPiBzdHJpbmdzICJmc2wsbHMxMDI4YS1w
+Y2llIg0KPiANCj4gT24gRnJpLCBBdWcgMjMsIDIwMTkgYXQgMDQ6MjY6NDFQTSArMDgwMCwgWGlh
+b3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHRoZSBQQ0llIGNvbXBhdGlibGUgc3RyaW5nIGZvciBM
+UzEwMjhBDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9A
+bnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBu
+eHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
+PiA+IC0tLQ0KPiA+IHYyOg0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2MzoNCj4gPiAgLSBObyBj
+aGFuZ2UuDQo+ID4gdjQ6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0IHwgMSArDQo+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50
+eHQNCj4gPiBpbmRleCBlMjBjZWFhLi45OWEzODZlIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50
+eHQNCj4gPiBAQCAtMjEsNiArMjEsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAg
+ICAgICJmc2wsbHMxMDQ2YS1wY2llIg0KPiA+ICAgICAgICAgICJmc2wsbHMxMDQzYS1wY2llIg0K
+PiA+ICAgICAgICAgICJmc2wsbHMxMDEyYS1wY2llIg0KPiA+ICsgICAgICAgICJmc2wsbHMxMDI4
+YS1wY2llIg0KPiA+ICAgIEVQIG1vZGU6DQo+ID4gIAkiZnNsLGxzMTA0NmEtcGNpZS1lcCIsICJm
+c2wsbHMtcGNpZS1lcCINCj4gPiAgLSByZWc6IGJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9m
+IHRoZSBQQ0llIGNvbnRyb2xsZXIgcmVnaXN0ZXIgYmxvY2tzLg0KPiANCj4gVGhpcyBzZXJpZXMg
+ZG9lcyBub3QgYXBwbHkgdG8gdjUuMy1yYzEsIHdoYXQgaXMgaXQgYmFzZWQgb24gPw0KDQp0aGVz
+ZSBzZXQgcGF0Y2hlcyBiYXNlIG9uIHY1LjMtcmMzLCB0aGFua3MuDQoNCj4gDQo+IExvcmVuem8N
+Cg==
