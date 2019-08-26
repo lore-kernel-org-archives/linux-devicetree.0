@@ -1,53 +1,77 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
-Date: Mon, 26 Aug 2019 19:19:17 +0000
-Message-ID: <VI1PR04MB70233374E91F85119FD21FD5EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
- <20190826120548.GA14316@bogon.m.sigxcpu.org>
- <3bd35686e046048d35cd4987567a13cf@agner.ch>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Mon, 26 Aug 2019 22:14:25 +0200
+Message-ID: <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>, Robert Chiras <robert.chiras@nxp.com>
-Cc: =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Dilip Kota <eswara.kota@linux.intel.com>
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 26.08.2019 17:35, Stefan Agner wrote:=0A=
-> On 2019-08-26 14:05, Guido G=FCnther wrote:=0A=
->> Hi,=0A=
->> On Wed, Aug 21, 2019 at 01:15:40PM +0300, Robert Chiras wrote:=0A=
->>> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ=
-, 8MM=0A=
->>> and 8QXP). Following, are the new features added and fixes from this=0A=
->>> patch-set:=0A=
->>=0A=
->> I've applied this whole series on top of my NWL work and it looks good=
-=0A=
->> with a DSI panel. Applying the whole series also fixes an issue where=0A=
->> after unblank the output was sometimes shifted about half a screen width=
-=0A=
->> to the right (which didn't happen with DCSS). So at least from the parts=
-=0A=
->> I could test:=0A=
->>=0A=
->>    Tested-by: Guido G=FCnther <agx@sigxcpu.org>=0A=
->>=0A=
->> for the whole thing.=0A=
-> =0A=
-> Thanks for testing! What SoC did you use? I think it would be good to=0A=
-> also give this a try on i.MX 7 or i.MX 6ULL before merging.=0A=
-=0A=
-I did a quick test on imx6sx-sdb and it seems that [PATCH 07/15] =0A=
-"drm/mxsfb: Fix the vblank events" causes a hang on boot, even without a =
-=0A=
-panel.=0A=
-=0A=
-If I revert that particular patch it seems to be fine: the new pixel =0A=
-formats seem to work in modetest (checked with sii,43wvf1g panel).=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+Hi Dilip,
+
+On Mon, Aug 26, 2019 at 8:42 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+[...]
+> intel_pcie_port structure is having "struct dw_pcie" as mentioned below:
+>
+> struct intel_pcie_port {
+>         struct dw_pcie          *pci;
+>         unsigned int            id; /* Physical RC Index */
+>         void __iomem            *app_base;
+>         struct gpio_desc        *reset_gpio;
+> [...]
+> };
+>
+> Almost all the drivers are following the same way. I don't see any issue in this way.
+> Please help me with more description if you see an issue here.
+>
+> struct qcom_pcie {
+> struct dw_pcie *pci;
+> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-qcom.c
+>
+> struct armada8k_pcie {
+> struct dw_pcie *pci;
+> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-armada8k.c
+>
+> struct artpec6_pcie {
+> struct dw_pcie *pci;
+> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-artpec6.c
+>
+> struct kirin_pcie {
+> struct dw_pcie *pci;
+> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-kirin.c
+>
+> struct spear13xx_pcie {
+> struct dw_pcie *pci;
+> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-spear13xx.c
+thank you for this detailed list.
+it seems that I picked the minority of drivers as "reference" where
+it's implemented differently:
+
+first example: pci-meson
+  struct meson_pcie {
+    struct dw_pcie pci;
+    ...
+  };
+
+second example: pcie-tegra194 (only in -next, will be part of v5.4)
+  struct tegra_pcie_dw {
+    ...
+    struct dw_pcie pci;
+    ...
+  };
+
+so some drivers store a pointer pointer to the dw_pcie struct vs.
+embedding the dw_pcie struct directly.
+as far as I know the result will be equal, except that you don't have
+to use a second devm_kzalloc for struct dw_pcie (and thus reducing
+memory fragmentation).
+
+
+Martin
