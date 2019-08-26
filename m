@@ -1,117 +1,48 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
-Date: Mon, 26 Aug 2019 16:35:10 +0200
-Message-ID: <3bd35686e046048d35cd4987567a13cf@agner.ch>
-References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
- <20190826120548.GA14316@bogon.m.sigxcpu.org>
+From: <Codrin.Ciubotariu@microchip.com>
+Subject: Re: [PATCH v2 5/6] misc: atmel-ssc: get LRCLK pin selection from DT
+Date: Mon, 26 Aug 2019 14:38:17 +0000
+Message-ID: <5174bac2-294d-177a-b30c-6a7326820bfb@microchip.com>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826120548.GA14316@bogon.m.sigxcpu.org>
+In-Reply-To: <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
+Content-Language: en-US
+Content-ID: <22A5BB8587FCE34A9D008F56EDF2B7A0@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc: Robert Chiras <robert.chiras@nxp.com>, Marek Vasut <marex@denx.de>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: mirq-linux@rere.qmqm.pl, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: alexandre.belloni@bootlin.com, arnd@arndb.de, 3chas3@gmail.com, gregkh@linuxfoundation.org, perex@perex.cz, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, robh-dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-08-26 14:05, Guido Günther wrote:
-> Hi,
-> On Wed, Aug 21, 2019 at 01:15:40PM +0300, Robert Chiras wrote:
->> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
->> and 8QXP). Following, are the new features added and fixes from this
->> patch-set:
-> 
-> I've applied this whole series on top of my NWL work and it looks good
-> with a DSI panel. Applying the whole series also fixes an issue where
-> after unblank the output was sometimes shifted about half a screen width
-> to the right (which didn't happen with DCSS). So at least from the parts
-> I could test:
-> 
->   Tested-by: Guido Günther <agx@sigxcpu.org> 
-> 
-> for the whole thing.
-
-Thanks for testing! What SoC did you use? I think it would be good to
-also give this a try on i.MX 7 or i.MX 6ULL before merging.
-
---
-Stefan
-
-
-> Cheers,
->  -- Guido
->>
->> 1. Add support for drm_bridge
->> On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
->> display connector, where an LCD panel can be attached, but instead it is
->> connected to DSI controller. Since this DSI stands between the display
->> controller (eLCDIF) and the physical connector, the DSI can be implemented
->> as a DRM bridge. So, in order to be able to connect the mxsfb driver to
->> the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
->> driver (the actual driver for the eLCDIF block).
->>
->> 2. Add support for additional pixel formats
->> Some of the pixel formats needed by Android were not implemented in this
->> driver, but they were actually supported. So, add support for them.
->>
->> 3. Add support for horizontal stride
->> Having support for horizontal stride allows the use of eLCDIF with a GPU
->> (for example) that can only output resolution sizes multiple of a power of
->> 8. For example, 1080 is not a power of 16, so in order to support 1920x1080
->> output from GPUs that can produce linear buffers only in sizes multiple to 16,
->> this feature is needed.
->>
->> 3. Few minor features and bug-fixing
->> The addition of max-res DT property was actually needed in order to limit
->> the bandwidth usage of the eLCDIF block. This is need on systems where
->> multiple display controllers are presend and the memory bandwidth is not
->> enough to handle all of them at maximum capacity (like it is the case on
->> 8MQ, where there are two display controllers: DCSS and eLCDIF).
->> The rest of the patches are bug-fixes.
->>
->> v3:
->> - Removed the max-res property patches and added support for
->>   max-memory-bandwidth property, as it is also implemented in other drivers
->> - Removed unnecessary drm_vblank_off in probe
->>
->> v2:
->> - Collected Tested-by from Guido
->> - Split the first patch, which added more than one feature into relevant
->>   patches, explaining each feature added
->> - Also split the second patch into more patches, to differentiate between
->>   the feature itself (additional pixel formats support) and the cleanup
->>   of the register definitions for a better representation (guido)
->> - Included a patch submitted by Guido, while he was testing my patch-set
->>
->> Guido Günther (1):
->>   drm/mxsfb: Read bus flags from bridge if present
->>
->> Mirela Rabulea (1):
->>   drm/mxsfb: Signal mode changed when bpp changed
->>
->> Robert Chiras (13):
->>   drm/mxsfb: Update mxsfb to support a bridge
->>   drm/mxsfb: Add defines for the rest of registers
->>   drm/mxsfb: Reset vital registers for a proper initialization
->>   drm/mxsfb: Update register definitions using bit manipulation defines
->>   drm/mxsfb: Update mxsfb with additional pixel formats
->>   drm/mxsfb: Fix the vblank events
->>   drm/mxsfb: Add max-memory-bandwidth property for MXSFB
->>   dt-bindings: display: Add max-memory-bandwidth property for mxsfb
->>   drm/mxsfb: Update mxsfb to support LCD reset
->>   drm/mxsfb: Improve the axi clock usage
->>   drm/mxsfb: Clear OUTSTANDING_REQS bits
->>   drm/mxsfb: Add support for horizontal stride
->>   drm/mxsfb: Add support for live pixel format change
->>
->>  .../devicetree/bindings/display/mxsfb.txt          |   5 +
->>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
->>  drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 203 +++++++++++++--
->>  drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  12 +-
->>  drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
->>  drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
->>  6 files changed, 589 insertions(+), 137 deletions(-)
->>
->> --
->> 2.7.4
->>
+T24gMjQuMDguMjAxOSAyMzoyNiwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+IFN0b3JlIExS
+Q0xLIHBpbiBzZWxlY3Rpb24gZm9yIHVzZSBieSBBU29DIERBSSBkcml2ZXIuDQo+IA0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBNaWNoYcWCIE1pcm9zxYJhdyA8bWlycS1saW51eEByZXJlLnFtcW0ucGw+DQoN
+ClJldmlld2VkLWJ5OiBDb2RyaW4gQ2l1Ym90YXJpdSA8Y29kcmluLmNpdWJvdGFyaXVAbWljcm9j
+aGlwLmNvbT4NCg0KVGhhbmtzIGFuZCBiZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg0KPiANCj4gLS0t
+DQo+ICAgIHYyOiBzcGxpdCBmcm9tIEFTb0MgaW1wbGVtZW50YXRpb24NCj4gDQo+IC0tLQ0KPiAg
+IGRyaXZlcnMvbWlzYy9hdG1lbC1zc2MuYyAgfCA5ICsrKysrKysrKw0KPiAgIGluY2x1ZGUvbGlu
+dXgvYXRtZWwtc3NjLmggfCAyICsrDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
+KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2F0bWVsLXNzYy5jIGIvZHJpdmVy
+cy9taXNjL2F0bWVsLXNzYy5jDQo+IGluZGV4IGFiNDE0NGVhMWYxMS4uMTMyMmUyOWJjMzdhIDEw
+MDY0NA0KPiAtLS0gYS9kcml2ZXJzL21pc2MvYXRtZWwtc3NjLmMNCj4gKysrIGIvZHJpdmVycy9t
+aXNjL2F0bWVsLXNzYy5jDQo+IEBAIC0yMTAsNiArMjEwLDE1IEBAIHN0YXRpYyBpbnQgc3NjX3By
+b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCQlzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7DQo+ICAgCQlzc2MtPmNsa19mcm9tX3JrX3BpbiA9
+DQo+ICAgCQkJb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiYXRtZWwsY2xrLWZyb20tcmstcGlu
+Iik7DQo+ICsJCXNzYy0+bHJjbGtfZnJvbV90Zl9waW4gPQ0KPiArCQkJb2ZfcHJvcGVydHlfcmVh
+ZF9ib29sKG5wLCAiYXRtZWwsbHJjbGstZnJvbS10Zi1waW4iKTsNCj4gKwkJc3NjLT5scmNsa19m
+cm9tX3JmX3BpbiA9DQo+ICsJCQlvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJhdG1lbCxscmNs
+ay1mcm9tLXJmLXBpbiIpOw0KPiArDQo+ICsJCWlmIChzc2MtPmxyY2xrX2Zyb21fdGZfcGluICYm
+IHNzYy0+bHJjbGtfZnJvbV9yZl9waW4pIHsNCj4gKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImJv
+dGggTFJDTEsgZnJvbSBSSy9USyBvcHRpb25zIGZvdW5kIGluIERUIG5vZGUiKTsNCj4gKwkJCXJl
+dHVybiAtRUlOVkFMOw0KPiArCQl9DQo+ICAgCX0NCj4gICANCj4gICAJcmVncyA9IHBsYXRmb3Jt
+X2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQo+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L2F0bWVsLXNzYy5oIGIvaW5jbHVkZS9saW51eC9hdG1lbC1zc2MuaA0KPiBp
+bmRleCA2MDkxZDJhYmMxZWIuLmZiZTFjMmZmYWE4MSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9s
+aW51eC9hdG1lbC1zc2MuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2F0bWVsLXNzYy5oDQo+IEBA
+IC0yMSw2ICsyMSw4IEBAIHN0cnVjdCBzc2NfZGV2aWNlIHsNCj4gICAJaW50CQkJdXNlcjsNCj4g
+ICAJaW50CQkJaXJxOw0KPiAgIAlib29sCQkJY2xrX2Zyb21fcmtfcGluOw0KPiArCWJvb2wJCQls
+cmNsa19mcm9tX3RmX3BpbjsNCj4gKwlib29sCQkJbHJjbGtfZnJvbV9yZl9waW47DQo+ICAgCWJv
+b2wJCQlzb3VuZF9kYWk7DQo+ICAgfTsNCj4gICANCj4gDQoNCg==
