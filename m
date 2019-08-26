@@ -1,77 +1,23 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 00/19] Enhance CP110 COMPHY support
-Date: Mon, 26 Aug 2019 14:23:23 +0200
-Message-ID: <20190826142323.5a434543@xps13>
-References: <20190731122126.3049-1-miquel.raynal@bootlin.com>
- <4e1c4d27-3676-5efa-1126-8149a8635eb5@ti.com>
- <20190824135414.5c490337@xps13>
- <8c91e2e3-2a83-a6f0-c98a-d0dbfcddfee3@ti.com>
+Subject: Re: [PATCH v7 2/2] dt-bindings: mtd: Document Macronix raw NAND controller bindings
+Date: Mon, 26 Aug 2019 14:59:32 +0200
+Message-ID: <20190826125932.15051-1-miquel.raynal@bootlin.com>
+References: <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8c91e2e3-2a83-a6f0-c98a-d0dbfcddfee3@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Matt Pelland <mpelland@starry.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566199149-5669-3-git-send-email-masonccyang@mxic.com.tw>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com, richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org, bbrezillon@kernel.org, computersforpeace@gmail.com, vigneshr@ti.com, robh+dt@kernel.org, stefan@agner.ch, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, anders.roxell@linaro.org, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org, paul@crapouillou.net, paul.burton@mips.com, liang.yang@amlogic.com, linux-mtd@lists.infradead.org, christophe.kerello@st.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9uLAoKS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4gd3JvdGUg
-b24gTW9uLCAyNiBBdWcgMjAxOQoxNzoyMTo1NSArMDUzMDoKCj4gSGksCj4gCj4gT24gMjQvMDgv
-MTkgNToyNCBQTSwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IEhpIEtpc2hvbiwKPiA+IAo+ID4g
-KyBNYXR0IFBlbGxhbmQKPiA+IAo+ID4gS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRp
-LmNvbT4gd3JvdGUgb24gRnJpLCAyMyBBdWcgMjAxOQo+ID4gMDg6NDY6MTQgKzA1MzA6Cj4gPiAg
-IAo+ID4+IE9uIDMxLzA3LzE5IDU6NTEgUE0sIE1pcXVlbCBSYXluYWwgd3JvdGU6ICAKPiA+Pj4g
-QXJtYWRhIENQMTEwIGhhdmUgYSBDT01QSFkgSVAgd2hpY2ggc3VwcG9ydHMgY29uZmlndXJpbmcg
-U0VSREVTIGxhbmVzCj4gPj4+IGluIG9uZSBtb2RlLCBlaXRoZXI6Cj4gPj4+IC0gU0FUQQo+ID4+
-PiAtIFVTQjMgaG9zdAo+ID4+PiAtIFBDSWUgKHNldmVyYWwgd2lkdGgpCj4gPj4+IC0gRXRoZXJu
-ZXQgKHNldmVyYWwgbW9kZXMpCj4gPj4+Cj4gPj4+IEFzIG9mIHRvZGF5LCBvbmx5IGEgZmV3IEV0
-aGVybmV0IG1vZGVzIGFyZSBzdXBwb3J0ZWQgYW5kIHRoZSBjb2RlIGlzCj4gPj4+IGVtYmVkZGVk
-IGluIHRoZSBMaW51eCBkcml2ZXIuIEEgbW9yZSBjb21wbGV0ZSBDT01QSFkgZHJpdmVyIHRoYXQg
-Y2FuCj4gPj4+IGJlIHVzZWQgYnkgYm90aCBMaW51eCBhbmQgVS1Cb290IGlzIGVtYmVkZGVkIGlu
-IHRoZSBmaXJtd2FyZSBhbmQgY2FuCj4gPj4+IGJlIHJ1biB0aHJvdWdoIFNNQyBjYWxscy4KPiA+
-Pj4KPiA+Pj4gRmlyc3QgdGhlIGN1cnJlbnQgQ09NUEhZIGRyaXZlciBpcyB1cGRhdGVkIHRvIHVz
-ZSBTTUMgY2FsbHMgYnV0Cj4gPj4+IGZhbGxiYWNrcyB0byB0aGUgYWxyZWFkeSBleGlzdGluZyBm
-dW5jdGlvbnMgaWYgdGhlIGZpcm13YXJlIGlzIG5vdAo+ID4+PiB1cC10by1kYXRlLiBUaGVuLCBt
-b3JlIEV0aGVybmV0IG1vZGVzIGFyZSBhZGRlZCAodGhyb3VnaCBTTUMgY2FsbHMKPiA+Pj4gb25s
-eSkuIFNBVEEsIFVTQjNIIGFuZCBQQ0llIG1vZGVzIGFyZSBhbHNvIHN1cHBvcnRlZCBvbmUgYnkg
-b25lLgo+ID4+Pgo+ID4+PiBUaGVyZSBpcyBvbmUgc3VidGxlIGRpZmZlcmVuY2Ugd2l0aCB0aGUg
-UENJZSBmdW5jdGlvbnM6IHdlIG11c3QgdGVsbAo+ID4+PiB0aGUgZmlybXdhcmUgdGhlIG51bWJl
-ciBvZiBsYW5lcyB0byBjb25maWd1cmUgKHgxLCB4MiBvciB4NCkuIFRoaXMKPiA+Pj4gcGFyYW1l
-dGVyIGRlcGVuZHMgb24gdGhlIG51bWJlciBvZiBlbnRyaWVzIGluIHRoZSAncGh5cycgcHJvcGVy
-dHkKPiA+Pj4gZGVzY3JpYmluZyB0aGUgUENJZSBQSFkuIFdlIHVzZSB0aGUgInN1Ym1vZGUiIHBh
-cmFtZXRlciBvZiB0aGUgZ2VuZXJpYwo+ID4+PiBQSFkgQVBJIHRvIGNhcnJ5IHRoaXMgdmFsdWUu
-IFRoZSBBcm1hZGEtOGsgUENJZSBkcml2ZXIgaGFzIGJlZW4KPiA+Pj4gdXBkYXRlZCB0byBmb2xs
-b3cgdGhpcyBpZGVhIGFuZCB0aGlzIGNoYW5nZSBoYXMgYmVlbiBtZXJnZWQgYWxyZWFkeToKPiA+
-Pj4gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzEwNzI3NjMvICAgIAo+ID4+Cj4g
-Pj4gU29tZSBvZiB0aGUgcGF0Y2hlcyBhcmUgbm90IGFwcGx5aW5nIGNsZWFubHkuIENhcmUgdG8g
-cmVzZW5kIHRoZSBzZXJpZXMgYWZ0ZXIKPiA+PiByZWJhc2luZyB0byBwaHkgLW5leHQ/ICAKPiA+
-IAo+ID4gQmVzaWRlcyB0d28gY29uZmxpY3RzIHRoYXQgSSBjYW4gZml4IHZlcnkgZWFzaWx5IGFi
-b3V0IG1pc3NpbmcKPiA+IG9mX25vZGVfcHV0KCkgY2FsbHMsIHlvdSBqdXN0IG1lcmdlZCBpbiBw
-aHktbmV4dCB0aGlzIHBhdGNoOgo+ID4gCj4gPiBwaHk6IG1hcnZlbGw6IHBoeS1tdmVidS1jcDEx
-MC1jb21waHk6IGltcGxlbWVudCBSWEFVSSBzdXBwb3J0Cj4gPiAKPiA+IFdoaWNoIHRvdGFsbHkg
-Y29uZmxpY3RzIHdpdGggbXkgc2VyaWVzIHdoaWxlIEkgYWxzbyBhZGQgUlhBVUkgc3VwcG9ydAo+
-ID4gaW4gcGF0Y2ggNS4gUGxlYXNlIG5vdGUgdGhhdCBldmVuIHRoZSB0aGlyZCB2ZXJzaW9uIG9m
-IG15IHNlcmllcwo+ID4gd2FzIGNvbnRyaWJ1dGVkIGJlZm9yZSB0aGlzIHBhdGNoLgo+ID4gCj4g
-PiBUaGVyZSBpcyBvbmUgZGlmZmVyZW5jZSB0byBub3RlIHRob3VnaDogaW4gdGhlIHBhdGNoIGZy
-b20gTWF0dCBQZWxhbmQsCj4gPiBSWEFVSSBzdXBwb3J0IGlzIGVtYmVkZGVkIGluIHRoZSBkcml2
-ZXIgd2hpbGUgSSBkbyBTTUMgY2FsbHMuCj4gPiAKPiA+IEFueXdheSwgd291bGQgaXQgYmUgcG9z
-c2libGUgdG8gY2hhbmdlIHRoZSBvcmRlciBvZiBhcHBsaWNhdGlvbiBpZgo+ID4geW91IHdhbnQg
-Ym90aCBtZXRob2RzIGluIHRoZSBkcml2ZXIgYmVjYXVzZSBpdCB3aWxsIGJlIG11Y2ggZWFzaWVy
-Cj4gPiB0byBhZGQgTWF0dCdzIHBhdGNoIG9uIHRvcCBvZiBteSBzZXJpZXMgdGhhbiB0aGUgb3Bw
-b3NpdGUuIEkgY2FuCj4gPiBldmVuIGRvIGl0IG15c2VsZiBpZiB5b3Ugd2lzaC4gIAo+IAo+IEkn
-dmUgcmVzb2x2ZWQgdGhpcy4gQ2FuIHlvdSByZXZpZXcgaW4gcGh5IC1uZXh0IGlmIHRoZSBjaGFu
-Z2VzIGxvb2tzIG9rYXk/CgpHcmVhdCEgVGhhbmtzIGZvciBkb2luZyBpdCB5b3Vyc2VsZiEKCkkg
-aGFkIGEgbG9vayBhbmQgZXZlcnl0aGluZyBsb29rcyBmaW5lIGJ5IG1lLgoKQ2hlZXJzLApNaXF1
-w6hsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On Mon, 2019-08-19 at 07:19:09 UTC, Mason Yang wrote:
+> Document the bindings used by the Macronix raw NAND controller.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+
+Miquel
