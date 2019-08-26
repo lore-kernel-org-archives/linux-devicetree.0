@@ -1,24 +1,27 @@
 From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
-Subject: [PATCH 01/12] ARM: dts: imx7d: cl-som-imx7 imx7d-sbc-imx7: move USB
-Date: Mon, 26 Aug 2019 16:37:49 +0100
-Message-ID: <20190826153800.35400-1-git@andred.net>
+Subject: [PATCH 02/12] ARM: dts: imx7d: cl-som-imx7: add phy-reset-gpios
+Date: Mon, 26 Aug 2019 16:37:50 +0100
+Message-ID: <20190826153800.35400-2-git@andred.net>
+References: <20190826153800.35400-1-git@andred.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190826153800.35400-1-git@andred.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Ilya Ledvich <ilya@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Whether and which USB port is enabled and how they
-are powered is a function of the carrier board, not
-of the SoM. Different carrier boards can have different
-ports enabled / wired up, and power them differently;
-so this should really move into the respective DTS.
+According to the design team:
+* reset input PHY0 is directly connected to the
+  corresponding pin GPIO1_4 in the i.MX7
+* reset for PHY1 is done using the gpio expander bit 4
 
-Do so and update the USB power supply to reflect
-the actual situation on the sbc-imx7 carrier board.
+While touching this area, also add a 'compatible'
+to the phy to make it more clear what this is and
+which driver handles this - an Ethernet phy attached
+to mdio, handled by of_mdio.c
 
 Signed-off-by: André Draszik <git@andred.net>
 Cc: Ilya Ledvich <ilya@compulab.co.il>
@@ -33,86 +36,61 @@ Cc: NXP Linux Team <linux-imx@nxp.com>
 Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 24 ------------------------
- arch/arm/boot/dts/imx7d-sbc-imx7.dts    | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 24 deletions(-)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 62d5e9a4a781..6f7e85cf0c28 100644
+index 6f7e85cf0c28..e0432a3aa36f 100644
 --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
 +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -22,15 +22,6 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
- 	};
--
--	reg_usb_otg1_vbus: regulator-vbus {
--		compatible = "regulator-fixed";
--		regulator-name = "usb_otg1_vbus";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--	};
- };
+@@ -30,13 +30,14 @@
  
- &cpu0 {
-@@ -193,13 +184,6 @@
+ &fec1 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_enet1>;
++	pinctrl-0 = <&pinctrl_enet1 &pinctrl_enet1phy>;
+ 	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+ 	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
++	phy-reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 	fsl,magic-packet;
+ 	status = "okay";
+ 
+@@ -45,10 +46,12 @@
+ 		#size-cells = <0>;
+ 
+ 		ethphy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
+ 		};
+ 
+ 		ethphy1: ethernet-phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
+ 			reg = <1>;
+ 		};
+ 	};
+@@ -63,6 +66,7 @@
+ 	assigned-clock-rates = <0>, <100000000>;
+ 	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy1>;
++	phy-reset-gpios = <&pca9555 4 GPIO_ACTIVE_LOW>;
+ 	fsl,magic-packet;
  	status = "okay";
  };
- 
--&usbotg1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usbotg1>;
--	vbus-supply = <&reg_usb_otg1_vbus>;
--	status = "okay";
--};
--
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -278,11 +262,3 @@
+@@ -262,3 +266,11 @@
  		>;
  	};
  };
--
--&iomuxc_lpsr {
--	pinctrl_usbotg1: usbotg1grp {
--		fsl,pins = <
--			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
--		>;
--	};
--};
-diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-index f8a868552707..aab646903de3 100644
---- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-@@ -15,6 +15,14 @@
- / {
- 	model = "CompuLab SBC-iMX7";
- 	compatible = "compulab,sbc-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
 +
-+	reg_usb_vbus: regulator-usb-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
++&iomuxc_lpsr {
++	pinctrl_enet1phy: enet1phygrp {
++		fsl,pins = <
++			MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x34
++		>;
 +	};
- };
- 
- &usdhc1 {
-@@ -26,6 +34,11 @@
- 	status = "okay";
- };
- 
-+&&usbotg1 {
-+	vbus-supply = <&reg_usb_vbus>;
-+	status = "okay";
 +};
-+
- &iomuxc {
- 	pinctrl_usdhc1: usdhc1grp {
- 		fsl,pins = <
 -- 
 2.23.0.rc1
