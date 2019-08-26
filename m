@@ -1,68 +1,41 @@
-From: "Ramuthevar,Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM eMMC
-Date: Mon, 26 Aug 2019 15:28:00 +0800
-Message-ID: <20190826072800.38413-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20190826072800.38413-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194 in p2972-0000 platform
+Date: Mon, 26 Aug 2019 13:01:37 +0530
+Message-ID: <20190826073143.4582-1-vidyas@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826072800.38413-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, adrian.hunter@intel.com, ulf.hansson@linaro.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, Ramuthevar Vadivel Muruganx <vadivel.muruganx.ramuthevar@linux.intel.com>
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Muruganx <vadivel.muruganx.ramuthevar@linux.intel.com>
+This patch series enables Tegra194's C5 controller which owns x16 slot in
+p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+output and bi-directional signals by default and hence they need to be
+configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+through GPIOs and hence they need to be enabled through regulator framework.
+This patch series adds required infrastructural support to address both the
+aforementioned requirements.
+Testing done on p2972-0000 platform
+- Able to enumerate devices connected to x16 slot (owned by C5 controller)
+- Enumerated device's functionality verified
+- Suspend-Resume sequence is verified with device connected to x16 slot
 
-The current arasan sdhci PHY configuration isn't compatible
-with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
+Vidya Sagar (6):
+  dt-bindings: PCI: tegra: Add sideband pins configuration entries
+  arm64: tegra: Add configuration for PCIe C5 sideband signals
+  PCI: tegra: Add support to configure sideband pins
+  dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+  arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+  PCI: tegra: Add support to enable slot regulators
 
-Therefore, add a new compatible, to adapt the Intel's LGM
-eMMC PHY with arasan-sdhc controller to configure the PHY.
+ .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 +++++
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++++
+ .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++++-
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 71 +++++++++++++++++++
+ 5 files changed, 151 insertions(+), 2 deletions(-)
 
-Signed-off-by: Ramuthevar Vadivel Muruganx <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- drivers/mmc/host/sdhci-of-arasan.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index b12abf9b15f2..7023cbec4017 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -114,6 +114,12 @@ static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
- 	.hiword_update = true,
- };
- 
-+static const struct sdhci_arasan_soc_ctl_map intel_lgm_emmc_soc_ctl_map = {
-+	.baseclkfreq = { .reg = 0xa0, .width = 8, .shift = 2 },
-+	.clockmultiplier = { .reg = 0, .width = -1, .shift = -1 },
-+	.hiword_update = false,
-+};
-+
- /**
-  * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
-  *
-@@ -373,6 +379,11 @@ static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
- 	.pdata = &sdhci_arasan_cqe_pdata,
- };
- 
-+static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
-+	.soc_ctl_map = &intel_lgm_emmc_soc_ctl_map,
-+	.pdata = &sdhci_arasan_cqe_pdata,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- /**
-  * sdhci_arasan_suspend - Suspend method for the driver
-@@ -474,6 +485,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
- 		.compatible = "rockchip,rk3399-sdhci-5.1",
- 		.data = &sdhci_arasan_rk3399_data,
- 	},
-+	{
-+		.compatible = "intel,lgm-sdhci-5.1-emmc",
-+		.data = &intel_lgm_emmc_data,
-+	},
- 	/* Generic compatible below here */
- 	{
- 		.compatible = "arasan,sdhci-8.9a",
 -- 
-2.11.0
+2.17.1
