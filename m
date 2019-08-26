@@ -1,91 +1,59 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba
- bus probe
-Date: Mon, 26 Aug 2019 10:57:09 +0200
-Message-ID: <1566809829.3842.4.camel@pengutronix.de>
-References: <20190820145834.7301-1-dinguyen@kernel.org>
-         <20190820145834.7301-2-dinguyen@kernel.org>
-         <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
-         <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
+From: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
+Date: Mon, 26 Aug 2019 17:01:31 +0800
+Message-ID: <1628049a-e7f7-6f07-db9d-ef716b5a95df@linux.intel.com>
+References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
+ <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
+ <20190822090208.GJ30120@smile.fi.intel.com>
+ <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
+ <20190822130429.GN30120@smile.fi.intel.com>
+ <a6717e97-01cf-771c-8467-be5946528dd0@linux.intel.com>
+ <20190823125604.GS30120@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
+In-Reply-To: <20190823125604.GS30120@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, alan@linux.intel.com, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh, Linus,
 
-On Fri, 2019-08-23 at 10:42 -0500, Dinh Nguyen wrote:
-> 
-> On 8/23/19 4:19 AM, Linus Walleij wrote:
-> > On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
-> > 
-> > > @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
-> > >         ret = amba_get_enable_pclk(dev);
-> > >         if (ret == 0) {
-> > >                 u32 pid, cid;
-> > > +               int count;
-> > > +               struct reset_control *rstc;
-> > > +
-> > > +               /*
-> > > +                * Find reset control(s) of the amba bus and de-assert them.
-> > > +                */
-> > > +               count = reset_control_get_count(&dev->dev);
+Hi Andy,
 
-The reset_control_get_count() inline stub returns -ENOENT, so the
-compiler can throw away the complete loop.
+On 23/8/2019 8:56 PM, Andy Shevchenko wrote:
+>>>> get_wallclock() and set_wallclock() are function pointers of platform_ops
+>>>>
+>>>> which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
+>>>>
+>>>> at init time. Since adding a new platform to override these functions is
+>>>>
+>>>> discouraged, so the only way is to modify RTC get/set functions.
+>>> Shouldn't it be platform agnostic code?
+>>> So, my point is, instead of hacking two functions, perhaps better to avoid them
+>>> at all.
+>> Sorry, i could not understand your point. The changes are platform
+>>
+>> agnostic i.e. it doesn't break existing use cases. Are you recommending
+>>
+>> to add a new platform and make changes there ?
+> Nope, I propose to do something like
+>
+> void __init foo()
+> {
+> 	if (platform has RTC)
+> 		return;
+>
+> 	set_wallclock = noop;
+> 	get_wallclock = noop;
+> }
 
-> > > +               while (count > 0) {
-> > > +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
+Thanks. I will work out a V2 patch as per your suggestion
 
-Since resets are looked up with of_reset_control_get, I'd use
-of_reset_control_get_count() above for consistency. But see below:
+and send out for review again.
 
-> > > +                       if (IS_ERR(rstc)) {
-> > > +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
-> > > +                                       ret = -EPROBE_DEFER;
-> > > +                               else
-> > > +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
-> > > +                               break;
-> > > +                       }
-> > > +                       reset_control_deassert(rstc);
-> > > +                       reset_control_put(rstc);
-> > > +                       count--;
-> > > +               }
+Regards,
 
-It looks like the order of deassertions is irrelevant. If so,
-You can use of_reset_control_array_get() to simplify this:
-
-+		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
-+		if (IS_ERR(rstc)) {
-+			if (PTR_ERR(rstc) != -EPROBE_DEFER)
-+				dev_err(&dev->dev, "Can't get amba reset!\n");
-+			return PTR_ERR(rstc);
-+		}
-+		reset_control_deassert(rstc);
-+		reset_control_put(rstc);
-
-> > I'm not normally a footprint person, but the looks of the stubs in
-> > <linux/reset.h> makes me suspicious whether this will have zero impact
-> > in size on platforms without reset controllers.
-> > 
-> > Can you just ls -al on the kernel without CONFIG_RESET_CONTROLLER
-> > before and after this patch and ascertain that it has zero footprint effect?
-> 
-> Thanks for the review. I checked it, and indeed, it does have a zero
-> footprint effect.
-> 
-> > 
-> > If it doesn't I'd sure like to break this into its own function and
-> > stick a if (!IS_ENABLED(CONFIG_RESET_CONTROLLER)) return 0;
-> > in there to make sure the compiler drops it.
-> > 
-> > Also it'd be nice to get Philipp's ACK on the semantics, though they
-> > look correct to me.
-
-regards
-Philipp
+Rahul
