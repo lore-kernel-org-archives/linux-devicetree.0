@@ -1,48 +1,43 @@
-From: <Codrin.Ciubotariu@microchip.com>
-Subject: Re: [PATCH v2 5/6] misc: atmel-ssc: get LRCLK pin selection from DT
-Date: Mon, 26 Aug 2019 14:38:17 +0000
-Message-ID: <5174bac2-294d-177a-b30c-6a7326820bfb@microchip.com>
-References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
- <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Mon, 26 Aug 2019 14:45:40 +0000
+Message-ID: <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5f1fd1b8f646c5ced1d838c381b6973e5abccd53.1566677788.git.mirq-linux@rere.qmqm.pl>
 Content-Language: en-US
-Content-ID: <22A5BB8587FCE34A9D008F56EDF2B7A0@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mirq-linux@rere.qmqm.pl, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: alexandre.belloni@bootlin.com, arnd@arndb.de, 3chas3@gmail.com, gregkh@linuxfoundation.org, perex@perex.cz, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, robh-dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, Eduardo Valentin <edubezval@gmail.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjQuMDguMjAxOSAyMzoyNiwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+IFN0b3JlIExS
-Q0xLIHBpbiBzZWxlY3Rpb24gZm9yIHVzZSBieSBBU29DIERBSSBkcml2ZXIuDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBNaWNoYcWCIE1pcm9zxYJhdyA8bWlycS1saW51eEByZXJlLnFtcW0ucGw+DQoN
-ClJldmlld2VkLWJ5OiBDb2RyaW4gQ2l1Ym90YXJpdSA8Y29kcmluLmNpdWJvdGFyaXVAbWljcm9j
-aGlwLmNvbT4NCg0KVGhhbmtzIGFuZCBiZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg0KPiANCj4gLS0t
-DQo+ICAgIHYyOiBzcGxpdCBmcm9tIEFTb0MgaW1wbGVtZW50YXRpb24NCj4gDQo+IC0tLQ0KPiAg
-IGRyaXZlcnMvbWlzYy9hdG1lbC1zc2MuYyAgfCA5ICsrKysrKysrKw0KPiAgIGluY2x1ZGUvbGlu
-dXgvYXRtZWwtc3NjLmggfCAyICsrDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
-KCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2F0bWVsLXNzYy5jIGIvZHJpdmVy
-cy9taXNjL2F0bWVsLXNzYy5jDQo+IGluZGV4IGFiNDE0NGVhMWYxMS4uMTMyMmUyOWJjMzdhIDEw
-MDY0NA0KPiAtLS0gYS9kcml2ZXJzL21pc2MvYXRtZWwtc3NjLmMNCj4gKysrIGIvZHJpdmVycy9t
-aXNjL2F0bWVsLXNzYy5jDQo+IEBAIC0yMTAsNiArMjEwLDE1IEBAIHN0YXRpYyBpbnQgc3NjX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCQlzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7DQo+ICAgCQlzc2MtPmNsa19mcm9tX3JrX3BpbiA9
-DQo+ICAgCQkJb2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiYXRtZWwsY2xrLWZyb20tcmstcGlu
-Iik7DQo+ICsJCXNzYy0+bHJjbGtfZnJvbV90Zl9waW4gPQ0KPiArCQkJb2ZfcHJvcGVydHlfcmVh
-ZF9ib29sKG5wLCAiYXRtZWwsbHJjbGstZnJvbS10Zi1waW4iKTsNCj4gKwkJc3NjLT5scmNsa19m
-cm9tX3JmX3BpbiA9DQo+ICsJCQlvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJhdG1lbCxscmNs
-ay1mcm9tLXJmLXBpbiIpOw0KPiArDQo+ICsJCWlmIChzc2MtPmxyY2xrX2Zyb21fdGZfcGluICYm
-IHNzYy0+bHJjbGtfZnJvbV9yZl9waW4pIHsNCj4gKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgImJv
-dGggTFJDTEsgZnJvbSBSSy9USyBvcHRpb25zIGZvdW5kIGluIERUIG5vZGUiKTsNCj4gKwkJCXJl
-dHVybiAtRUlOVkFMOw0KPiArCQl9DQo+ICAgCX0NCj4gICANCj4gICAJcmVncyA9IHBsYXRmb3Jt
-X2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQo+IGRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L2F0bWVsLXNzYy5oIGIvaW5jbHVkZS9saW51eC9hdG1lbC1zc2MuaA0KPiBp
-bmRleCA2MDkxZDJhYmMxZWIuLmZiZTFjMmZmYWE4MSAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9s
-aW51eC9hdG1lbC1zc2MuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2F0bWVsLXNzYy5oDQo+IEBA
-IC0yMSw2ICsyMSw4IEBAIHN0cnVjdCBzc2NfZGV2aWNlIHsNCj4gICAJaW50CQkJdXNlcjsNCj4g
-ICAJaW50CQkJaXJxOw0KPiAgIAlib29sCQkJY2xrX2Zyb21fcmtfcGluOw0KPiArCWJvb2wJCQls
-cmNsa19mcm9tX3RmX3BpbjsNCj4gKwlib29sCQkJbHJjbGtfZnJvbV9yZl9waW47DQo+ICAgCWJv
-b2wJCQlzb3VuZF9kYWk7DQo+ICAgfTsNCj4gICANCj4gDQoNCg==
+On 7/30/2019 5:31 AM, Anson.Huang@nxp.com wrote:=0A=
+> From: Anson Huang <Anson.Huang@nxp.com>=0A=
+> =0A=
+> Some platforms like i.MX8MQ has clock control for this module,=0A=
+> need to add clock operations to make sure the driver is working=0A=
+> properly.=0A=
+> =0A=
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
+> Reviewed-by: Guido G=FCnther <agx@sigxcpu.org>=0A=
+=0A=
+This series looks good, do you think it can be merged in time for v5.4? =0A=
+Today was v5.3-rc6.=0A=
+=0A=
+In an earlier series the CLK_IS_CRITICAL flags was removed from the TMU =0A=
+clock so if the thermal driver doesn't explicitly enable it the system =0A=
+will hang on probe. This is what happens in linux-next right now!=0A=
+=0A=
+Unless this patches is merged soon we'll end up with a 5.4-rc1 that =0A=
+doesn't boot on imx8mq. An easy fix would be to drop/revert commit =0A=
+951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for =0A=
+IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.=0A=
+=0A=
+Merging patches out-of-order when they have hard (boot-breaking) =0A=
+dependencies also breaks bisect.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
