@@ -1,77 +1,41 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
-Date: Mon, 26 Aug 2019 22:14:25 +0200
-Message-ID: <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
-References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
- <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
- <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: opp: Introduce opp-peak-kBps and
+ opp-avg-kBps bindings
+Date: Mon, 26 Aug 2019 13:26:07 -0700
+Message-ID: <CAGETcx_vPtPoqtXRmoOuJp9fx10-121YG64rADPh2W=3r8KrDg@mail.gmail.com>
+References: <20190807223111.230846-1-saravanak@google.com> <20190807223111.230846-2-saravanak@google.com>
+ <20190821203353.GA11783@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
+In-Reply-To: <20190821203353.GA11783@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <eswara.kota@linux.intel.com>
-Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Georgi Djakov <georgi.djakov@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, "Sweeney, Sean" <seansw@qti.qualcomm.com>, David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, Android Kernel Team <kernel-team@android.com>, Linux PM <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dilip,
+On Wed, Aug 21, 2019 at 1:33 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed,  7 Aug 2019 15:31:09 -0700, Saravana Kannan wrote:
+> > Interconnects often quantify their performance points in terms of
+> > bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
+> > allow specifying Bandwidth OPP tables in DT.
+> >
+> > opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
+> > tables.
+> >
+> > opp-avg-kBps is an optional property that can be used in Bandwidth OPP
+> > tables.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
+> >  .../devicetree/bindings/property-units.txt        |  4 ++++
+> >  2 files changed, 16 insertions(+), 3 deletions(-)
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On Mon, Aug 26, 2019 at 8:42 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-[...]
-> intel_pcie_port structure is having "struct dw_pcie" as mentioned below:
->
-> struct intel_pcie_port {
->         struct dw_pcie          *pci;
->         unsigned int            id; /* Physical RC Index */
->         void __iomem            *app_base;
->         struct gpio_desc        *reset_gpio;
-> [...]
-> };
->
-> Almost all the drivers are following the same way. I don't see any issue in this way.
-> Please help me with more description if you see an issue here.
->
-> struct qcom_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-qcom.c
->
-> struct armada8k_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-armada8k.c
->
-> struct artpec6_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-artpec6.c
->
-> struct kirin_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-kirin.c
->
-> struct spear13xx_pcie {
-> struct dw_pcie *pci;
-> Ref: https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/pci/controller/dwc/pcie-spear13xx.c
-thank you for this detailed list.
-it seems that I picked the minority of drivers as "reference" where
-it's implemented differently:
+Thanks Rob!
 
-first example: pci-meson
-  struct meson_pcie {
-    struct dw_pcie pci;
-    ...
-  };
-
-second example: pcie-tegra194 (only in -next, will be part of v5.4)
-  struct tegra_pcie_dw {
-    ...
-    struct dw_pcie pci;
-    ...
-  };
-
-so some drivers store a pointer pointer to the dw_pcie struct vs.
-embedding the dw_pcie struct directly.
-as far as I know the result will be equal, except that you don't have
-to use a second devm_kzalloc for struct dw_pcie (and thus reducing
-memory fragmentation).
-
-
-Martin
+-Saravana
