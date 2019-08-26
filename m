@@ -1,39 +1,39 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v4 0/4] clk: qcom: Add support for SM8150
-Date: Mon, 26 Aug 2019 17:44:49 +0530
-Message-ID: <20190826121453.21732-1-vkoul@kernel.org>
+Subject: [PATCH v4 1/4] dt-bindings: clock: Document the parent clocks
+Date: Mon, 26 Aug 2019 17:44:50 +0530
+Message-ID: <20190826121453.21732-2-vkoul@kernel.org>
+References: <20190826121453.21732-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190826121453.21732-1-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for rpm clock controller found in SM8150 and while at it update
-the driver to support parent data clock scheme as suggested by Stephen.
+With clock parent data scheme we must specify the parent clocks for the
+rpmhcc nodes. So describe the parent clock for rpmhcc in the bindings.
 
-Changes since v3:
- - Make clock parent name as xo instead of xo_board
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes since v2:
- - Add reviewed-by from Bjorn
- - Update the parent name as xo_board
- - Fix style issue
-
-Changes since v1:
- - Describe parent clocks for rpmhcc
- - Add support for parent data scheme for rpmhcc
-
-Vinod Koul (4):
-  dt-bindings: clock: Document the parent clocks
-  clk: qcom: clk-rpmh: Convert to parent data scheme
-  dt-bindings: clock: Document SM8150 rpmh-clock compatible
-  clk: qcom: clk-rpmh: Add support for SM8150
-
- .../bindings/clock/qcom,rpmh-clk.txt          |  7 +++-
- drivers/clk/qcom/clk-rpmh.c                   | 38 ++++++++++++++++++-
- 2 files changed, 42 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+index 3c007653da31..8b97968f9c88 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmh-clk.txt
+@@ -9,6 +9,9 @@ Required properties :
+ - compatible : shall contain "qcom,sdm845-rpmh-clk"
+ 
+ - #clock-cells : must contain 1
++- clocks: a list of phandles and clock-specifier pairs,
++	  one for each entry in clock-names.
++- clock-names: Parent board clock: "xo".
+ 
+ Example :
+ 
 -- 
 2.20.1
