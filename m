@@ -1,67 +1,108 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 00/20] Initial support for Marvell MMP3 SoC
-Date: Mon, 26 Aug 2019 13:59:27 +0200
-Message-ID: <481e832401c148baf222639f10f494b90dcd23c9.camel@v3.sk>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
-         <244fdc87-0fe5-be79-d9cd-2395d0ac3f57@kernel.org>
-         <424d2881edcaf7cedbfa5cbbf2e73aaff5355df3.camel@v3.sk>
-         <08a0e65e-4a80-f611-e36e-8e3f70fa8113@kernel.org>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
+Date: Mon, 26 Aug 2019 14:05:48 +0200
+Message-ID: <20190826120548.GA14316@bogon.m.sigxcpu.org>
+References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <08a0e65e-4a80-f611-e36e-8e3f70fa8113@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>, Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-08-23 at 10:42 +0100, Marc Zyngier wrote:
-> On 23/08/2019 08:21, Lubomir Rintel wrote:
-> > On Thu, 2019-08-22 at 11:31 +0100, Marc Zyngier wrote:
-> > > On 22/08/2019 10:26, Lubomir Rintel wrote:
-> > > > Hi, 
-> > > > 
-> > > > this is a second spin of a patch set that adds support for the Marvell
-> > > > MMP3 processor. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad
-> > > > FZ-A1 tablet and Dell Wyse 3020 Tx0D thin clients. 
-> > > > 
-> > > > Compared to v1, there's a handful of fixes in response to reviews. Patch
-> > > > 02/20 is new. Details in individual patches.
-> > > >  
-> > > > Apart from the adjustments in mach-mmp/, the patch makes necessary 
-> > > > changes to the irqchip driver and adds an USB2 PHY driver. The latter 
-> > > > has a dependency on the mach-mmp/ changes, so it can't be submitted 
-> > > > separately.
-> > > >  
-> > > > The patch set has been tested to work on Wyse Tx0D and not ruin MMP2 
-> > > > support on XO-1.75. 
-> > > 
-> > > How do you want this series to be merged? I'm happy to take the irqchip
-> > > related patches as well as the corresponding DT change (once reviewed)
-> > > through my tree.
-> > 
-> > I was hoping for the Arm SoC tree, because there are some dependencies
-> > (MMP3 USB PHY depends on MMP3 SoC).
-> > 
-> > That said, the irqchip patches are rather independent and the only
-> > downside of them going in via a different tree will be that the other
-> > tree that will lack them won't boot on MMP3 (things will compile
-> > though). I don't know if that's okay. What's typically done in cases
-> > like these?
-> 
-> I usually take the irqchip patches that can be built standalone (without
-> dependency on header files, for example). If you want them to go via
-> another tree, stick my
-> 
-> 	Acked-by: Marc Zyngier <maz@kernel.org>
-> 
-> on patches #6 through #9.
+Hi,
+On Wed, Aug 21, 2019 at 01:15:40PM +0300, Robert Chiras wrote:
+> This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
+> and 8QXP). Following, are the new features added and fixes from this
+> patch-set:
 
-Actually, please go ahead and pick the irqchip patches into your tree.
+I've applied this whole series on top of my NWL work and it looks good
+with a DSI panel. Applying the whole series also fixes an issue where
+after unblank the output was sometimes shifted about half a screen width
+to the right (which didn't happen with DCSS). So at least from the parts
+I could test:
 
-The rest of the patch set may need a couple more spins, and it will be
-nice if it gets shorter.
+  Tested-by: Guido Günther <agx@sigxcpu.org> 
 
-Thank you
-Lubo
+for the whole thing.
+Cheers,
+ -- Guido
+> 
+> 1. Add support for drm_bridge
+> On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
+> display connector, where an LCD panel can be attached, but instead it is
+> connected to DSI controller. Since this DSI stands between the display
+> controller (eLCDIF) and the physical connector, the DSI can be implemented
+> as a DRM bridge. So, in order to be able to connect the mxsfb driver to
+> the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
+> driver (the actual driver for the eLCDIF block).
+> 
+> 2. Add support for additional pixel formats
+> Some of the pixel formats needed by Android were not implemented in this
+> driver, but they were actually supported. So, add support for them.
+> 
+> 3. Add support for horizontal stride
+> Having support for horizontal stride allows the use of eLCDIF with a GPU
+> (for example) that can only output resolution sizes multiple of a power of
+> 8. For example, 1080 is not a power of 16, so in order to support 1920x1080
+> output from GPUs that can produce linear buffers only in sizes multiple to 16,
+> this feature is needed.
+> 
+> 3. Few minor features and bug-fixing
+> The addition of max-res DT property was actually needed in order to limit
+> the bandwidth usage of the eLCDIF block. This is need on systems where
+> multiple display controllers are presend and the memory bandwidth is not
+> enough to handle all of them at maximum capacity (like it is the case on
+> 8MQ, where there are two display controllers: DCSS and eLCDIF).
+> The rest of the patches are bug-fixes.
+> 
+> v3:
+> - Removed the max-res property patches and added support for
+>   max-memory-bandwidth property, as it is also implemented in other drivers
+> - Removed unnecessary drm_vblank_off in probe
+> 
+> v2:
+> - Collected Tested-by from Guido
+> - Split the first patch, which added more than one feature into relevant
+>   patches, explaining each feature added
+> - Also split the second patch into more patches, to differentiate between
+>   the feature itself (additional pixel formats support) and the cleanup
+>   of the register definitions for a better representation (guido)
+> - Included a patch submitted by Guido, while he was testing my patch-set
+> 
+> Guido Günther (1):
+>   drm/mxsfb: Read bus flags from bridge if present
+> 
+> Mirela Rabulea (1):
+>   drm/mxsfb: Signal mode changed when bpp changed
+> 
+> Robert Chiras (13):
+>   drm/mxsfb: Update mxsfb to support a bridge
+>   drm/mxsfb: Add defines for the rest of registers
+>   drm/mxsfb: Reset vital registers for a proper initialization
+>   drm/mxsfb: Update register definitions using bit manipulation defines
+>   drm/mxsfb: Update mxsfb with additional pixel formats
+>   drm/mxsfb: Fix the vblank events
+>   drm/mxsfb: Add max-memory-bandwidth property for MXSFB
+>   dt-bindings: display: Add max-memory-bandwidth property for mxsfb
+>   drm/mxsfb: Update mxsfb to support LCD reset
+>   drm/mxsfb: Improve the axi clock usage
+>   drm/mxsfb: Clear OUTSTANDING_REQS bits
+>   drm/mxsfb: Add support for horizontal stride
+>   drm/mxsfb: Add support for live pixel format change
+> 
+>  .../devicetree/bindings/display/mxsfb.txt          |   5 +
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 203 +++++++++++++--
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  12 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
+>  6 files changed, 589 insertions(+), 137 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
