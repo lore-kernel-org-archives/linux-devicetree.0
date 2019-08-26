@@ -1,71 +1,53 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Date: Mon, 26 Aug 2019 00:46:44 +0000
-Message-ID: <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-         <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
-         <20190823104621.GY13294@shell.armlinux.org.uk>
-         <20190823105020.GZ13294@shell.armlinux.org.uk>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH] dt-bindings: mmc: aspeed: Update example ranges property
+Date: Mon, 26 Aug 2019 11:46:19 +0930
+Message-ID: <20190826021620.11915-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823105020.GZ13294@shell.armlinux.org.uk>
-Content-Language: en-US
-Content-ID: <EA9848220D51A84EA5A0DD1FA608AE4E@atlnz.lc>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "jlu@pengutronix.de" <jlu@pengutronix.de>, "bp@alien8.de" <bp@alien8.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@armlinux.org.uk" <patches@armlinux.org.uk>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+To: linux-mmc@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUnVzc2VsbCwNCg0KT24gRnJpLCAyMDE5LTA4LTIzIGF0IDExOjUwICswMTAwLCBSdXNzZWxs
-IEtpbmcgLSBBUk0gTGludXggYWRtaW4NCndyb3RlOg0KPiBPbiBGcmksIEF1ZyAyMywgMjAxOSBh
-dCAxMTo0NjoyMUFNICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgNCj4gYWRtaW4gd3Jv
-dGU6DQo+ID4gT24gRnJpLCBKdWwgMTIsIDIwMTkgYXQgMDM6NDg6NTdQTSArMTIwMCwgQ2hyaXMg
-UGFja2hhbSB3cm90ZToNCj4gPiA+IEZyb206IEphbiBMdWViYmUgPGpsdUBwZW5ndXRyb25peC5k
-ZT4NCj4gPiA+IA0KPiA+ID4gVGhlIG1hY3JvIG5hbWUgaXMgdG9vIGdlbmVyaWMsIHNvIGFkZCBh
-IEFVUk9SQV8gcHJlZml4Lg0KPiA+ID4gDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKYW4gTHVlYmJl
-IDxqbHVAcGVuZ3V0cm9uaXguZGU+DQo+ID4gPiBSZXZpZXdlZC1ieTogR3JlZ29yeSBDTEVNRU5U
-IDxncmVnb3J5LmNsZW1lbnRAZnJlZS1lbGVjdHJvbnMuY29tPg0KPiA+ID4gU2lnbmVkLW9mZi1i
-eTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+
-ID4gLS0tDQo+ID4gPiAgYXJjaC9hcm0vaW5jbHVkZS9hc20vaGFyZHdhcmUvY2FjaGUtYXVyb3Jh
-LWwyLmggfCAyICstDQo+ID4gDQo+ID4gSSBjYW4ndCBhcHBseSB0aGlzIHNlcmllcyAtIHRoaXMg
-ZmlsZSBkb2VzIG5vdCBleGlzdCBpbiBteSB0cmVlLA0KPiA+IGFuZA0KPiA+IGZyb20gd2hhdCBn
-aXQgdGVsbHMgbWUsIGl0IG5ldmVyIGhhcyBleGlzdGVkLiAgTWF5YmUgaXQncyBpbg0KPiA+IHNv
-bWVvbmUNCj4gPiBlbHNlcyB0cmVlPw0KPiANCj4gSSB0aGluayB0aGUgZmlsZSBpcyBpbiBteSB0
-cmVlLCBqdXN0IGFzIGFyY2gvYXJtL21tL2NhY2hlLWF1cm9yYS1sMi5oDQo+IHdoaWNoIGlzIHdo
-ZXJlIGl0IGhhcyBiZWVuIHNpbmNlIGl0IHdhcyBvcmlnaW5hbGx5IHN1Ym1pdHRlZCBpbiAyMDEy
-Lg0KPiANCg0KU29ycnkgdGhlcmUgaXMgYSBtaXNzaW5nIHBhdGNoIHRoYXQgbW92ZXMgaXQgbmV4
-dCB0byB0aGUNCmhhcmR3YXJlL2NhY2hlLSouaC4gSSBjYW4gc2VuZCB0aGUgbWlzc2luZyBwYXRj
-aCBvciBJIGNhbiByZS1zZW5kIHRoZQ0Kd2hvbGUgc2VyaWVzLiBJZiBJIGRvIHNlbmQgdGhlIHdo
-b2xlIHNlcmllcyBkbyB5b3Ugd2FudCBtZSB0byByZWJhc2UgaXQNCmFnYWluc3QgYSBwYXJ0aWN1
-bGFyIHRhZy90cmVlPw0KDQo+ID4gDQo+ID4gPiAgYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jICAg
-ICAgICAgICAgICAgICAgICAgICAgfCA0ICsrLS0NCj4gPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDMg
-aW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPiA+IA0KPiA+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWF1cm9yYS1sMi5oDQo+ID4gPiBi
-L2FyY2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWF1cm9yYS1sMi5oDQo+ID4gPiBp
-bmRleCBjODYxMjQ3Njk4MzEuLmRjNWM0NzllYzRjMyAxMDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gv
-YXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2NhY2hlLWF1cm9yYS1sMi5oDQo+ID4gPiArKysgYi9h
-cmNoL2FybS9pbmNsdWRlL2FzbS9oYXJkd2FyZS9jYWNoZS1hdXJvcmEtbDIuaA0KPiA+ID4gQEAg
-LTQxLDcgKzQxLDcgQEANCj4gPiA+ICAjZGVmaW5lIEFVUk9SQV9BQ1JfRk9SQ0VfV1JJVEVfVEhS
-T19QT0xJQ1kJXA0KPiA+ID4gIAkoMiA8PCBBVVJPUkFfQUNSX0ZPUkNFX1dSSVRFX1BPTElDWV9P
-RkZTRVQpDQo+ID4gPiAgDQo+ID4gPiAtI2RlZmluZSBNQVhfUkFOR0VfU0laRQkJMTAyNA0KPiA+
-ID4gKyNkZWZpbmUgQVVST1JBX01BWF9SQU5HRV9TSVpFCTEwMjQNCj4gPiA+ICANCj4gPiA+ICAj
-ZGVmaW5lIEFVUk9SQV9XQVlfU0laRV9TSElGVAkyDQo+ID4gPiAgDQo+ID4gPiBkaWZmIC0tZ2l0
-IGEvYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jIGIvYXJjaC9hcm0vbW0vY2FjaGUtbDJ4MC5jDQo+
-ID4gPiBpbmRleCA0MjhkMDg3MTgxMDcuLjgzYjczM2ExZjFlNiAxMDA2NDQNCj4gPiA+IC0tLSBh
-L2FyY2gvYXJtL21tL2NhY2hlLWwyeDAuYw0KPiA+ID4gKysrIGIvYXJjaC9hcm0vbW0vY2FjaGUt
-bDJ4MC5jDQo+ID4gPiBAQCAtMTM1Miw4ICsxMzUyLDggQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcN
-Cj4gPiA+IGF1cm9yYV9yYW5nZV9lbmQodW5zaWduZWQgbG9uZyBzdGFydCwgdW5zaWduZWQgbG9u
-ZyBlbmQpDQo+ID4gPiAgCSAqIHNpbmNlIGNhY2hlIHJhbmdlIG9wZXJhdGlvbnMgc3RhbGwgdGhl
-IENQVSBwaXBlbGluZQ0KPiA+ID4gIAkgKiB1bnRpbCBjb21wbGV0aW9uLg0KPiA+ID4gIAkgKi8N
-Cj4gPiA+IC0JaWYgKGVuZCA+IHN0YXJ0ICsgTUFYX1JBTkdFX1NJWkUpDQo+ID4gPiAtCQllbmQg
-PSBzdGFydCArIE1BWF9SQU5HRV9TSVpFOw0KPiA+ID4gKwlpZiAoZW5kID4gc3RhcnQgKyBBVVJP
-UkFfTUFYX1JBTkdFX1NJWkUpDQo+ID4gPiArCQllbmQgPSBzdGFydCArIEFVUk9SQV9NQVhfUkFO
-R0VfU0laRTsNCj4gPiA+ICANCj4gPiA+ICAJLyoNCj4gPiA+ICAJICogQ2FjaGUgcmFuZ2Ugb3Bl
-cmF0aW9ucyBjYW4ndCBzdHJhZGRsZSBhIHBhZ2UgYm91bmRhcnkuDQo+ID4gPiAtLSANCj4gPiA+
-IDIuMjIuMA0KPiA+ID4gDQo+ID4gPiANCj4gPiANCj4gPiAtLSANCj4gPiBSTUsncyBQYXRjaCBz
-eXN0ZW06IGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hlcy8NCj4g
-PiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lIGluIHN1YnVyYmlhOiBzeW5jIGF0IDEy
-LjFNYnBzIGRvd24NCj4gPiA2MjJrYnBzIHVwDQo+ID4gQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5u
-ZXQ6IDExLjlNYnBzIGRvd24gNTAwa2JwcyB1cA0KPiANCj4gDQo=
+The example node in the binding uses the AST2500 compatible string for
+the SD controller with a 64kiB ranges property, but the SD controller is
+allocated 128kiB of MMIO space according to the AST2500 datasheet. Fix
+the example to correctly reflect the hardware in the AST2500, however it
+should be noted that the MMIO region is reduced to 64kiB in the AST2600
+where a second SD controller block has been introduced into the address
+space.
+
+Also add the IBM copyright header that I left out of the initial patch.
+
+Suggested-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+Hi Ulf, this is the follow-up fix as discussed here:
+
+http://patchwork.ozlabs.org/patch/1143090/
+
+ Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+index 570f8c72662b..200de9396036 100644
+--- a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright 2019 IBM Corp.
+ %YAML 1.2
+ ---
+ $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+@@ -84,7 +85,7 @@ examples:
+             reg = <0x1e740000 0x100>;
+             #address-cells = <1>;
+             #size-cells = <1>;
+-            ranges = <0 0x1e740000 0x10000>;
++            ranges = <0 0x1e740000 0x20000>;
+             clocks = <&syscon ASPEED_CLK_GATE_SDCLK>;
+ 
+             sdhci0: sdhci@100 {
+-- 
+2.20.1
