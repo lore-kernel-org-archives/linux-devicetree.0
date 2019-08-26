@@ -1,78 +1,127 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/3] amlogic: arm: add Amlogic SM1 based Khadas VIM3
- variant bindings
-Date: Mon, 26 Aug 2019 09:42:01 +0200
-Message-ID: <c853d934-113c-2305-f229-1e2c7138fc3f@baylibre.com>
-References: <20190823081427.17228-1-narmstrong@baylibre.com>
- <20190823081427.17228-3-narmstrong@baylibre.com>
- <CAFBinCBLVDVWPbDZ+_cPTbJNCavvzJH4A6U8D9XWVSR-j3fzFQ@mail.gmail.com>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Date: Mon, 26 Aug 2019 09:59:43 +0200
+Message-ID: <20190826075943.h7ivwagape3glym5@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6ypjwqqmzlry6ejt"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBLVDVWPbDZ+_cPTbJNCavvzJH4A6U8D9XWVSR-j3fzFQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/08/2019 21:51, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> the subject should be: dt-bindings: arm: amlogic: ...
 
-damn sure
+--6ypjwqqmzlry6ejt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> 
-> On Fri, Aug 23, 2019 at 10:15 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> The Khadas VIM3 is also available with the Pin-to-pin compatible
->> Amlogic SM1 SoC in the S905D3 variant package.
->>
->> Change the description to match the S905X3/D3/Y3 variants like the G12A
->> description, and add the vim3 compatible.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  Documentation/devicetree/bindings/arm/amlogic.yaml | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
->> index b48ea1e4913a..2751dd778ce0 100644
->> --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
->> +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
->> @@ -150,9 +150,10 @@ properties:
->>            - const: amlogic,s922x
->>            - const: amlogic,g12b
->>
->> -      - description: Boards with the Amlogic Meson SM1 S905X3 SoC
->> +      - description: Boards with the Amlogic Meson SM1 S905X3/D3/Y3 SoC
->>          items:
->>            - enum:
->>                - seirobotics,sei610
->> +              - khadas,vim3
+Hi Geert,
 
-Khadas asked me to rename the board to "vim3l", which is the commercial name,
-should I only change the DT name or also the compatible "khadas,vim3l" ?
+On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > Add device tree bindings documentation for the Renesas R-Car Display
+> > Unit Color Management Module.
+> >
+> > CMM is the image enhancement module available on each R-Car DU video
+> > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > @@ -0,0 +1,33 @@
+> > +* Renesas R-Car Color Management Module (CMM)
+> > +
+> > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > +
+> > +Required properties:
+> > + - compatible: shall be one or more of the following:
+> > +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
+> > +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
+> > +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
+> > +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
+> > +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
+>
+> Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
+>
 
->>            - const: amlogic,sm1
-> on the GXL we differentiate between S905X and S905D
-> do we need to differentiate S905X3 from S905D3 (for example)?
+I actually copied it from the r-car gpio bindings, and I liked
+cmm-<soctype> better. If you prefer I can change it though.
 
->From a pure SoC die perspective they are the same, exactly like
-the S905X and S905D, only the package changes.
-So only the board DT will determine which eth PHY is used,
-if a DSI panel is connected, a demodulator is connected.. even
-if the underlying package is S905Y3 without any of these pins
-available.
+> > +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
+> > +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
+> > +
+> > +   When the generic compatible string is specified, the SoC-specific
+> > +   version corresponding to the platform should be listed first.
+> > +
+> > + - reg: the address base and length of the memory area where CMM control
+> > +   registers are mapped to.
+> > +
+> > + - clocks: phandle and clock-specifier pair to the CMM functional clock
+> > +   supplier.
+>
+> Thinking about yaml validation:
+>
+> power-domains?
+> resets?
+>
 
-I'll need kevin's feedback anyway.
+They should indeed be documented.
 
-Neil
+Thanks
+   j
 
+> > +Example:
+> > +--------
+> > +
+> > +       cmm0: cmm@fea40000 {
+> > +               compatible = "renesas,cmm-r8a7796";
+> > +               reg = <0 0xfea40000 0 0x1000>;
+> > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > +               clocks = <&cpg CPG_MOD 711>;
+> > +               resets = <&cpg 711>;
+> > +       };
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-> 
-> 
-> Martin
-> 
+--6ypjwqqmzlry6ejt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1jkW8ACgkQcjQGjxah
+VjxB3w//d3VYx+uJJKBX383/pCXEkl5iaMUHMgZ4mxsCzn3gM1E/3uGgWJOZpjdz
+sHAvl1p7ybG4abmbXOKJH0ltitBderyFLPbagGW4SDTi7hFe8AbiRNm9sPWyBjYk
+OORU2Upt91N++sTh7xHoxq8bJhqWYL0ZhGOE+tbbwl2LgMAjOXaQFYXTX5Tnl/Mm
+7XNVATlhfhpN7Xc9ddijtNasUBFYNAvaBdme/d1h/FOD9gy3nFO2i/w828g+zlIM
+MSBpZCcfRSoUmjc2CSJzHW7DHAhdVxm7J9qbSGDRz7I5FMfrH3ICS2ufDoHyNmlr
+fqB18iTbkwktkDQwm5rcUGhDEGp19hFCr7qmu4NPeQ+FhTM9TtkxYB+E4gZm74Tu
+OvUoI4fbMJIlcLoKw8OBT+l8eX2e5CuWqpHokpwDLdXxjHZwtQIoSKLJvRQliGw0
+fs7UR7wHhTWCmSwx1bhghcCLHDLQewjZzS0gqX957ks33+Djq7I2dX3EUUdwd+15
+bGgsTiSmr6p8hFzPm2t0ZIyg2g9Lj2cGk+O36FYJtvps9VfiBcK9+CecZbQ73Zs5
+godvAr3BPCDAKJlGekXOztiK5EoYN6XmGB09IR+0inCfMv6o9jFn7AiUqDjNVq2i
+e3762EZuD8nKwv8FlWsj2LIkD0g/6B+mwTJ/WPBNYWzr2o1RuD8=
+=Y5PQ
+-----END PGP SIGNATURE-----
+
+--6ypjwqqmzlry6ejt--
