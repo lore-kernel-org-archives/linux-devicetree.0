@@ -1,65 +1,131 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune
- dma-direct min mask
-Date: Mon, 26 Aug 2019 13:08:50 +0200
-Message-ID: <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-         <20190820145821.27214-11-nsaenzjulienne@suse.de>
-         <20190826070633.GB11331@lst.de>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: [PATCH v11 3/6] usb:common Patch simplify usb_decode_set_clear_feature function.
+Date: Mon, 26 Aug 2019 12:19:28 +0100
+Message-ID: <1566818371-27721-4-git-send-email-pawell@cadence.com>
+References: <1566818371-27721-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-RvTUUUche1DA67AZeVhb"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826070633.GB11331@lst.de>
+In-Reply-To: <1566818371-27721-1-git-send-email-pawell@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: catalin.marinas@arm.com, wahrenst@gmx.net, marc.zyngier@arm.com, robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, eric@anholt.net, mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com
+To: felipe.balbi@linux.intel.com
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, jpawar@cadence.com, kurahul@cadence.com, sparmar@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
+Patch adds usb_decode_test_mode and usb_decode_device_feature functions,
+which allow to make more readable and simplify the
+usb_decode_set_clear_feature function.
 
---=-RvTUUUche1DA67AZeVhb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+---
+ drivers/usb/common/debug.c | 89 ++++++++++++++++++--------------------
+ 1 file changed, 43 insertions(+), 46 deletions(-)
 
-On Mon, 2019-08-26 at 09:06 +0200, Christoph Hellwig wrote:
-> On Tue, Aug 20, 2019 at 04:58:18PM +0200, Nicolas Saenz Julienne wrote:
-> > -	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> > +	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-> >  		arm64_dma_phys_limit =3D max_zone_dma_phys();
-> > +		zone_dma_bits =3D ilog2((arm64_dma_phys_limit - 1) &
-> > GENMASK_ULL(31, 0)) + 1;
->
-Hi Christoph,
-thanks for the rewiews.
-
-> This adds a way too long line.
-
-I know, I couldn't find a way to split the operation without making it even
-harder to read. I'll find a solution.
-
-> I also find the use of GENMASK_ULL
-> horribly obsfucating, but I know that opinion is't shared by everyone.
-
-Don't have any preference so I'll happily change it. Any suggestions? Using=
- the
-explicit 0xffffffffULL seems hard to read, how about SZ_4GB - 1?
-
-
---=-RvTUUUche1DA67AZeVhb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1jvcIACgkQlfZmHno8
-x/6y/wf/XTe7dlASMoYApyVt+lL6chBcap2r7MVKOVhCbC1oJQb7UdRyW7MVDO6k
-gwdo2WmXqD3wUwhY5djX0adczLOJye1iGEdrrQfheRqm1rh07um3quT3TzgCSPat
-OuX+vHuNsUE+3GyI+0OoOF0tu/TzOKJjgs4H645cnbuCaXbQFbL94yBctsDTF5hc
-m4Bx+nksz99ddodUnw9CF4Ss5DPwkX23I3h7okwMMjvVuegIPUa9edppw3Za0Kby
-k8b9QGCiMsGcwyq3+uSXTCq4iIU8reLTfvpZmVZ9QugMn8TkjjIQFyWS0HrXt2pz
-r9iNomMe9w20W9Y9jS5Aj8bxByoK+Q==
-=nQ/V
------END PGP SIGNATURE-----
-
---=-RvTUUUche1DA67AZeVhb--
+diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
+index d5a469bc67a3..60a9f70a0904 100644
+--- a/drivers/usb/common/debug.c
++++ b/drivers/usb/common/debug.c
+@@ -30,58 +30,55 @@ static void usb_decode_get_status(__u8 bRequestType, __u16 wIndex,
+ 	}
+ }
+ 
+-static void usb_decode_set_clear_feature(__u8 bRequestType, __u8 bRequest,
+-					 __u16 wValue, __u16 wIndex,
+-					 char *str, size_t size)
++static const char *usb_decode_device_feature(u16 wValue)
++{
++	switch (wValue) {
++	case USB_DEVICE_SELF_POWERED:
++		return "Self Powered";
++	case USB_DEVICE_REMOTE_WAKEUP:
++		return "Remote Wakeup";
++	case USB_DEVICE_TEST_MODE:
++		return "Test Mode";
++	case USB_DEVICE_U1_ENABLE:
++		return "U1 Enable";
++	case USB_DEVICE_U2_ENABLE:
++		return "U2 Enable";
++	case USB_DEVICE_LTM_ENABLE:
++		return "LTM Enable";
++	default:
++		return "UNKNOWN";
++	}
++}
++
++static const char *usb_decode_test_mode(u16 wIndex)
++{
++	switch (wIndex) {
++	case TEST_J:
++		return ": TEST_J";
++	case TEST_K:
++		return ": TEST_K";
++	case TEST_SE0_NAK:
++		return ": TEST_SE0_NAK";
++	case TEST_PACKET:
++		return ": TEST_PACKET";
++	case TEST_FORCE_EN:
++		return ": TEST_FORCE_EN";
++	default:
++		return ": UNKNOWN";
++	}
++}
++
++static void usb_decode_set_clear_feature(__u8 bRequestType,
++					 __u8 bRequest, __u16 wValue,
++					 __u16 wIndex, char *str, size_t size)
+ {
+ 	switch (bRequestType & USB_RECIP_MASK) {
+ 	case USB_RECIP_DEVICE:
+ 		snprintf(str, size, "%s Device Feature(%s%s)",
+ 			 bRequest == USB_REQ_CLEAR_FEATURE ? "Clear" : "Set",
+-			 ({char *s;
+-				switch (wValue) {
+-				case USB_DEVICE_SELF_POWERED:
+-					s = "Self Powered";
+-					break;
+-				case USB_DEVICE_REMOTE_WAKEUP:
+-					s = "Remote Wakeup";
+-					break;
+-				case USB_DEVICE_TEST_MODE:
+-					s = "Test Mode";
+-					break;
+-				case USB_DEVICE_U1_ENABLE:
+-					s = "U1 Enable";
+-					break;
+-				case USB_DEVICE_U2_ENABLE:
+-					s = "U2 Enable";
+-					break;
+-				case USB_DEVICE_LTM_ENABLE:
+-					s = "LTM Enable";
+-					break;
+-				default:
+-					s = "UNKNOWN";
+-				} s; }),
++			 usb_decode_device_feature(wValue),
+ 			 wValue == USB_DEVICE_TEST_MODE ?
+-			 ({ char *s;
+-				switch (wIndex) {
+-				case TEST_J:
+-					s = ": TEST_J";
+-					break;
+-				case TEST_K:
+-					s = ": TEST_K";
+-					break;
+-				case TEST_SE0_NAK:
+-					s = ": TEST_SE0_NAK";
+-					break;
+-				case TEST_PACKET:
+-					s = ": TEST_PACKET";
+-					break;
+-				case TEST_FORCE_EN:
+-					s = ": TEST_FORCE_EN";
+-					break;
+-				default:
+-					s = ": UNKNOWN";
+-				} s; }) : "");
++			 usb_decode_test_mode(wIndex) : "");
+ 		break;
+ 	case USB_RECIP_INTERFACE:
+ 		snprintf(str, size, "%s Interface Feature(%s)",
+-- 
+2.17.1
