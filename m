@@ -1,69 +1,100 @@
-Return-Path: <SRS0=ECyj=W2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49759 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbfH3KQ5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Aug 2019 06:16:57 -0400
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v10 12/14] media: dt-bindings: tvp5150: add optional sdtv standards documentation
-Date: Fri, 30 Aug 2019 12:16:44 +0200
-Message-Id: <20190830101646.6530-13-m.felsch@pengutronix.de>
-In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
-References: <20190830101646.6530-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=gJgO=WW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:58744 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731879AbfHZSCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Aug 2019 14:02:52 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 6/6] ARM: dts: Drop legacy custom hwmods property for dra7 gpio
+Date: Mon, 26 Aug 2019 11:02:37 -0700
+Message-Id: <20190826180237.31571-7-tony@atomide.com>
+In-Reply-To: <20190826180237.31571-1-tony@atomide.com>
+References: <20190826180237.31571-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Vignesh R <vigneshr@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the optional binding to limit the possible sdtv standards on the
-input connectors.
+With recent ti-sysc driver changes, we can probe most devices with device
+tree data only and drop the custom "ti,hwmods" property.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
+We have already added the related device tree data earlier, and have
+already dropped the platform data. But we have been still dynamically
+allocating the platform data based on "ti,hwmods" property. With recent
+ti-sysc driver changes this is no longer needed.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
-v8:
-- adapt to new sdtv-standards
-- adapt commit message
-- fix missing include within example code
+ arch/arm/boot/dts/dra7-l4.dtsi | 8 --------
+ 1 file changed, 8 deletions(-)
 
- .../devicetree/bindings/media/i2c/tvp5150.txt          | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-index cc98b38c7e73..f876b79c335f 100644
---- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -49,13 +49,22 @@ Required Endpoint Properties for parallel synchronization on output port:
- Note: Do not specify any of these properties if you want to use the embedded
-       BT.656 synchronization.
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -1262,7 +1262,6 @@
  
-+Optional Connector Properties:
-+==============================
-+
-+- sdtv-standards: Set the possible signals to which the hardware tries to lock
-+                  instead of using the autodetection mechnism. Please look at
-+                  [1] for more information.
-+
- [1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
+ 		gpio7_target: target-module@51000 {		/* 0x48051000, ap 45 2e.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio7";
+ 			reg = <0x51000 0x4>,
+ 			      <0x51010 0x4>,
+ 			      <0x51114 0x4>;
+@@ -1296,7 +1295,6 @@
  
- Example - three input sources:
-+#include <dt-bindings/display/sdtv-standards.h>
+ 		target-module@53000 {			/* 0x48053000, ap 35 36.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio8";
+ 			reg = <0x53000 0x4>,
+ 			      <0x53010 0x4>,
+ 			      <0x53114 0x4>;
+@@ -1330,7 +1328,6 @@
  
- comp_connector_0 {
- 	compatible = "composite-video-connector";
- 	label = "Composite0";
-+	sdtv-standards = <TVNORM_PAL_M>; /* limit to pal-m signals */
+ 		target-module@55000 {			/* 0x48055000, ap 13 0e.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio2";
+ 			reg = <0x55000 0x4>,
+ 			      <0x55010 0x4>,
+ 			      <0x55114 0x4>;
+@@ -1364,7 +1361,6 @@
  
- 	port {
- 		composite0_to_tvp5150: endpoint {
-@@ -67,6 +76,7 @@ comp_connector_0 {
- comp_connector_1 {
- 	compatible = "composite-video-connector";
- 	label = "Composite1";
-+	sdtv-standards = <TVNORM_NTSC_M>; /* limit to ntsc-m signals */
+ 		target-module@57000 {			/* 0x48057000, ap 15 06.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio3";
+ 			reg = <0x57000 0x4>,
+ 			      <0x57010 0x4>,
+ 			      <0x57114 0x4>;
+@@ -1398,7 +1394,6 @@
  
- 	port {
- 		composite1_to_tvp5150: endpoint {
+ 		target-module@59000 {			/* 0x48059000, ap 17 16.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio4";
+ 			reg = <0x59000 0x4>,
+ 			      <0x59010 0x4>,
+ 			      <0x59114 0x4>;
+@@ -1432,7 +1427,6 @@
+ 
+ 		target-module@5b000 {			/* 0x4805b000, ap 19 1e.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio5";
+ 			reg = <0x5b000 0x4>,
+ 			      <0x5b010 0x4>,
+ 			      <0x5b114 0x4>;
+@@ -1466,7 +1460,6 @@
+ 
+ 		target-module@5d000 {			/* 0x4805d000, ap 21 26.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio6";
+ 			reg = <0x5d000 0x4>,
+ 			      <0x5d010 0x4>,
+ 			      <0x5d114 0x4>;
+@@ -4281,7 +4274,6 @@
+ 
+ 		target-module@0 {			/* 0x4ae10000, ap 5 20.0 */
+ 			compatible = "ti,sysc-omap2", "ti,sysc";
+-			ti,hwmods = "gpio1";
+ 			reg = <0x0 0x4>,
+ 			      <0x10 0x4>,
+ 			      <0x114 0x4>;
 -- 
-2.20.1
+2.23.0
