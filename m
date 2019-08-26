@@ -1,37 +1,57 @@
-From: "Hawa, Hanna" <hhhawa@amazon.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-Date: Mon, 26 Aug 2019 17:49:11 +0300
-Message-ID: <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
+From: <Codrin.Ciubotariu@microchip.com>
+Subject: Re: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source in
+ frame-slave mode
+Date: Mon, 26 Aug 2019 15:05:06 +0000
+Message-ID: <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821191704.GA32425@bogus>
+In-Reply-To: <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
 Content-Language: en-US
+Content-ID: <51A4D2C1067F1A4EB790CFCDD9CDF311@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, linus.walleij@linaro.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+To: mirq-linux@rere.qmqm.pl, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: alexandre.belloni@bootlin.com, arnd@arndb.de, 3chas3@gmail.com, gregkh@linuxfoundation.org, perex@perex.cz, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, robh-dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 8/21/2019 10:17 PM, Rob Herring wrote:
-> Why is this even in DT? AFAICT, this is all just CortexA57 core features
-> (i.e. nothing Amazon specific). The core type and the ECC capabilities
-> are discoverable.
-
-Added to the DT in order to easily enable/disable the driver. You are 
-correct that they are CortexA57 core features and nothing Amazon 
-specific, but it's IMPLEMENTATION DEFINED, meaning that in different 
-cortex revisions (e.g. A57) the register bitmap may change. Because of 
-that we added an Amazon compatible which corresponds to the specific 
-core we are using.
-
-Thanks,
-Hanna
-
-> 
-> Rob
+T24gMjQuMDguMjAxOSAyMzoyNiwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6DQo+IFNTQyBkcml2
+ZXIgYWxsb3dzIG9ubHkgc3luY2hyb25vdXMgVFggYW5kIFJYLiBJbiBzbGF2ZSBtb2RlIGZvciBC
+Q0xLDQo+IGl0IHVzZXMgb25seSBvbmUgb2YgVEsgb3IgUksgcGluLCBidXQgZm9yIExSQ0xLIGl0
+IGNvbmZpZ3VyZWQgc2VwYXJhdGUNCj4gaW5wdXRzIGZyb20gVEYgYW5kIFJGIHBpbnMuIEFsbG93
+IGNvbmZpZ3VyYXRpb24gd2l0aCBjb21tb24gRlMgc2lnbmFsLg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogTWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPg0KPiANCj4gLS0t
+DQo+ICAgdjI6IHVzZSBhbHRlcm5hdGUgRFQgYmluZGluZw0KPiAgICAgICBzcGxpdCBEVCBhbmQg
+ZHJpdmVycy9taXNjIGNoYW5nZXMNCj4gDQo+IC0tLQ0KPiAgIHNvdW5kL3NvYy9hdG1lbC9hdG1l
+bF9zc2NfZGFpLmMgfCAyNiArKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiAgIDEgZmlsZSBj
+aGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL3NvdW5kL3NvYy9hdG1lbC9hdG1lbF9zc2NfZGFpLmMgYi9zb3VuZC9zb2MvYXRtZWwvYXRt
+ZWxfc3NjX2RhaS5jDQo+IGluZGV4IDQ4ZTllZWYzNGMwZi4uMDM1ZDRkYTU4ZjJiIDEwMDY0NA0K
+PiAtLS0gYS9zb3VuZC9zb2MvYXRtZWwvYXRtZWxfc3NjX2RhaS5jDQo+ICsrKyBiL3NvdW5kL3Nv
+Yy9hdG1lbC9hdG1lbF9zc2NfZGFpLmMNCj4gQEAgLTYwNSwxNCArNjA1LDMyIEBAIHN0YXRpYyBp
+bnQgYXRtZWxfc3NjX2h3X3BhcmFtcyhzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVh
+bSwNCj4gICAJCXJldHVybiAtRUlOVkFMOw0KPiAgIAl9DQo+ICAgDQo+IC0JaWYgKCFhdG1lbF9z
+c2NfY2ZzKHNzY19wKSkgew0KPiArCWlmIChhdG1lbF9zc2NfY2ZzKHNzY19wKSkgew0KPiArCQkv
+Kg0KPiArCQkgKiBTU0MgcHJvdmlkZXMgTFJDTEsNCj4gKwkJICoNCj4gKwkJICogQm90aCBURiBh
+bmQgUkYgYXJlIGdlbmVyYXRlZCwgc28gdXNlIHRoZW0gZGlyZWN0bHkuDQo+ICsJCSAqLw0KPiAr
+CQlyY21yIHw9CSAgU1NDX0JGKFJDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KPiArCQl0Y21yIHw9CSAg
+U1NDX0JGKFRDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KDQpIbW0sIGhvdyB3b3VsZCB0aGlzIHdvcmsg
+aWYgY2FwdHVyZSBhbmQgcGxheWJhY2sgc3RhcnQvcnVuIGF0IHRoZSBzYW1lIHRpbWU/DQoNCj4g
+Kwl9IGVsc2Ugew0KPiAgIAkJZnNsZW4gPSBmc2xlbl9leHQgPSAwOw0KPiAgIAkJcmNtcl9wZXJp
+b2QgPSB0Y21yX3BlcmlvZCA9IDA7DQo+ICAgCQlmc19vc3luYyA9IFNTQ19GU09TX05PTkU7DQo+
+IC0JfQ0KPiAgIA0KPiAtCXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwgZnNfZWRnZSk7DQo+
+IC0JdGNtciB8PQkgIFNTQ19CRihUQ01SX1NUQVJULCBmc19lZGdlKTsNCj4gKwkJaWYgKHNzYy0+
+bHJjbGtfZnJvbV90Zl9waW4pIHsNCj4gKwkJCXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwg
+U1NDX1NUQVJUX1RYX1JYKTsNCj4gKwkJCXRjbXIgfD0JICBTU0NfQkYoVENNUl9TVEFSVCwgZnNf
+ZWRnZSk7DQo+ICsJCX0gZWxzZSBpZiAoc3NjLT5scmNsa19mcm9tX3JmX3Bpbikgew0KPiArCQkJ
+LyogYXNzdW1lIFJGIGlzIHRvIGJlIHVzZWQgd2hlbiBSSyBpcyB1c2VkIGFzIEJDTEsgaW5wdXQg
+Ki8NCg0KVGhpcyBjb21tZW50IGlzIG5vdCBsb25nZXIgdHJ1ZS4uLg0KDQo+ICsJCQkvKiBOb3Rl
+OiB3b24ndCB3b3JrIGNvcnJlY3RseSBvbiBTQU1BNUQyIGR1ZSB0byBlcnJhdGEgKi8NCj4gKwkJ
+CXJjbXIgfD0JICBTU0NfQkYoUkNNUl9TVEFSVCwgZnNfZWRnZSk7DQo+ICsJCQl0Y21yIHw9CSAg
+U1NDX0JGKFRDTVJfU1RBUlQsIFNTQ19TVEFSVF9UWF9SWCk7DQo+ICsJCX0gZWxzZSB7DQo+ICsJ
+CQlyY21yIHw9CSAgU1NDX0JGKFJDTVJfU1RBUlQsIGZzX2VkZ2UpOw0KPiArCQkJdGNtciB8PQkg
+IFNTQ19CRihUQ01SX1NUQVJULCBmc19lZGdlKTsNCj4gKwkJfQ0KPiArCX0NCj4gICANCj4gICAJ
+aWYgKGF0bWVsX3NzY19jYnMoc3NjX3ApKSB7DQo+ICAgCQkvKg0KPiANCg0KVGhhbmtzIGFuZCBi
+ZXN0IHJlZ2FyZHMsDQpDb2RyaW4NCg==
