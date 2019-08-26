@@ -1,59 +1,55 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 1/5] dt-bindings: clk: meson: add sm1 periph clock controller bindings
-Date: Mon, 26 Aug 2019 09:25:35 +0200
-Message-ID: <20190826072539.27725-2-narmstrong@baylibre.com>
-References: <20190826072539.27725-1-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Ramuthevar,Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v1 1/2] dt-bindings: mmc: sdhci-of-arasan: Add new compatible for Intel LGM eMMC
+Date: Mon, 26 Aug 2019 15:27:59 +0800
+Message-ID: <20190826072800.38413-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826072539.27725-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, jbrunet@baylibre.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, adrian.hunter@intel.com, ulf.hansson@linaro.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the documentation to support clock driver for the Amlogic SM1 SoC
-and expose the GP1, DSU and the CPU 1, 2 & 3 clocks.
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-SM1 clock tree is very close, the main differences are :
-- each CPU core can achieve a different frequency, albeit a common PLL
-- a similar tree as the clock tree has been added for the DynamIQ Shared Unit
-- has a new GP1 PLL used for the DynamIQ Shared Unit
-- SM1 has additional clocks like for CSI, NanoQ an other components
+Add a new compatible to use the sdhc-arasan host controller driver
+with the eMMC PHY on Intel's Lightning Mountain SoC.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 ---
- .../devicetree/bindings/clock/amlogic,gxbb-clkc.txt          | 1 +
- include/dt-bindings/clock/g12a-clkc.h                        | 5 +++++
- 2 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 6eaa52092313..7ccecd5c02c1 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -11,6 +11,7 @@ Required Properties:
- 		"amlogic,axg-clkc" for AXG SoC.
- 		"amlogic,g12a-clkc" for G12A SoC.
- 		"amlogic,g12b-clkc" for G12B SoC.
-+		"amlogic,sm1-clkc" for SM1 SoC.
- - clocks : list of clock phandle, one for each entry clock-names.
- - clock-names : should contain the following:
-   * "xtal": the platform xtal
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index 8ccc29ac7a72..0837c1a7ae49 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -138,5 +138,10 @@
- #define CLKID_VDEC_HEVCF			210
- #define CLKID_TS				212
- #define CLKID_CPUB_CLK				224
-+#define CLKID_GP1_PLL				243
-+#define CLKID_DSU_CLK				252
-+#define CLKID_CPU1_CLK				253
-+#define CLKID_CPU2_CLK				254
-+#define CLKID_CPU3_CLK				255
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 1edbb049cccb..7ca0aa7ccc0b 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -17,6 +17,8 @@ Required Properties:
+       For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+     - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
+ 	Note: This binding has been deprecated and moved to [5].
++    - "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel LGM eMMC PHY
++      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
  
- #endif /* __G12A_CLKC_H */
+   [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+ 
+@@ -80,3 +82,18 @@ Example:
+ 		phy-names = "phy_arasan";
+ 		#clock-cells = <0>;
+ 	};
++
++	emmc: sdhci@ec700000 {
++		compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
++		reg = <0xec700000 0x300>;
++		interrupt-parent = <&ioapic1>;
++		interrupts = <44 1>;
++		clocks = <&cgu0 LGM_CLK_EMMC5>, <&cgu0 LGM_CLK_NGI>,
++			 <&cgu0 LGM_GCLK_EMMC>;
++		clock-names = "clk_xin", "clk_ahb", "gate";
++		clock-output-names = "emmc_cardclock";
++		#clock-cells = <0>;
++		phys = <&emmc_phy>;
++		phy-names = "phy_arasan";
++		arasan,soc-ctl-syscon = <&sysconf>;
++	};
 -- 
-2.22.0
+2.11.0
