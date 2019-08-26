@@ -1,43 +1,65 @@
-From: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Subject: [PATCH v2 2/4] vesnin: add secondary SPI flash chip
-Date: Mon, 26 Aug 2019 13:46:34 +0300
-Message-ID: <20190826104636.19324-3-i.mikhaylov@yadro.com>
-References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune
+ dma-direct min mask
+Date: Mon, 26 Aug 2019 13:08:50 +0200
+Message-ID: <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+         <20190820145821.27214-11-nsaenzjulienne@suse.de>
+         <20190826070633.GB11331@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-RvTUUUche1DA67AZeVhb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+In-Reply-To: <20190826070633.GB11331@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: catalin.marinas@arm.com, wahrenst@gmx.net, marc.zyngier@arm.com, robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org, eric@anholt.net, mbrugger@suse.com, linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org, frowand.list@gmail.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Adds secondary SPI flash chip into dts for vesnin.
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+--=-RvTUUUche1DA67AZeVhb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-index 2ee26c86a32e..db4cc3df61ce 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
-@@ -81,6 +81,14 @@
-         label = "bmc";
- #include "openbmc-flash-layout.dtsi"
- 	};
-+
-+	flash@1 {
-+		status = "okay";
-+		reg = < 1 >;
-+		compatible = "jedec,spi-nor";
-+		m25p,fast-read;
-+		label = "alt";
-+	};
- };
- 
- &spi {
--- 
-2.20.1
+On Mon, 2019-08-26 at 09:06 +0200, Christoph Hellwig wrote:
+> On Tue, Aug 20, 2019 at 04:58:18PM +0200, Nicolas Saenz Julienne wrote:
+> > -	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> > +	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+> >  		arm64_dma_phys_limit =3D max_zone_dma_phys();
+> > +		zone_dma_bits =3D ilog2((arm64_dma_phys_limit - 1) &
+> > GENMASK_ULL(31, 0)) + 1;
+>
+Hi Christoph,
+thanks for the rewiews.
+
+> This adds a way too long line.
+
+I know, I couldn't find a way to split the operation without making it even
+harder to read. I'll find a solution.
+
+> I also find the use of GENMASK_ULL
+> horribly obsfucating, but I know that opinion is't shared by everyone.
+
+Don't have any preference so I'll happily change it. Any suggestions? Using=
+ the
+explicit 0xffffffffULL seems hard to read, how about SZ_4GB - 1?
+
+
+--=-RvTUUUche1DA67AZeVhb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1jvcIACgkQlfZmHno8
+x/6y/wf/XTe7dlASMoYApyVt+lL6chBcap2r7MVKOVhCbC1oJQb7UdRyW7MVDO6k
+gwdo2WmXqD3wUwhY5djX0adczLOJye1iGEdrrQfheRqm1rh07um3quT3TzgCSPat
+OuX+vHuNsUE+3GyI+0OoOF0tu/TzOKJjgs4H645cnbuCaXbQFbL94yBctsDTF5hc
+m4Bx+nksz99ddodUnw9CF4Ss5DPwkX23I3h7okwMMjvVuegIPUa9edppw3Za0Kby
+k8b9QGCiMsGcwyq3+uSXTCq4iIU8reLTfvpZmVZ9QugMn8TkjjIQFyWS0HrXt2pz
+r9iNomMe9w20W9Y9jS5Aj8bxByoK+Q==
+=nQ/V
+-----END PGP SIGNATURE-----
+
+--=-RvTUUUche1DA67AZeVhb--
