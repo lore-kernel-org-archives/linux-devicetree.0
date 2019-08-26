@@ -1,64 +1,286 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 14/20] dt-bindings: timer: renesas, cmt: Add CMT0234 to sh73a0 and r8a7740
-Date: Mon, 26 Aug 2019 22:44:01 +0200
-Message-ID: <20190826204407.17759-14-daniel.lezcano@linaro.org>
-References: <df27caba-d9f8-e64d-0563-609f8785ecb3@linaro.org>
- <20190826204407.17759-1-daniel.lezcano@linaro.org>
+From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
+Subject: [PATCH v2] ARM: dts: imx7d: sbc-iot-imx7: add basic board support
+Date: Mon, 26 Aug 2019 21:51:56 +0100
+Message-ID: <20190826205156.10174-1-git@andred.net>
+References: <20190826153800.35400-12-git@andred.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826204407.17759-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20190826153800.35400-12-git@andred.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, festevam@gmail.com, grinberg@compulab.co.il, ilya@compulab.co.il, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, mark.rutland@arm.com, robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org, =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+This is a forward-port of Compulab's downstream commit
+against linux 4.9.11.
 
-Document the on-chip CMT devices included in r8a7740 and sh73a0.
+Original commit message:
+    The SB-IOT-iMX7 base board together with CL-SOM-iMX7
+    SoM forms SBC-IOT-iMX7 single board computer.
+    SBC-IOT-iMX7 is a single board computer optimized for
+    industrial control and monitoring, extensive wireless
+    and wired connectivity, ideal solution for
+    cost-sensitive systems. It is based on the Freescale
+    i.MX7 system-on-chip. SBC-IOT-iMX7 is implemented with
+    the CL-SOM-iMX7 System-on-Module providing most of the
+    functions,and SB-IOT-iMX7 carrier board providing
+    additional peripheral functions and connectors.
 
-Included in this patch is DT binding documentation for 32-bit CMTs
-CMT0, CMT2, CMT3 and CMT4. They all contain a single channel and are
-quite similar however some minor differences still exist:
- - "Counter input clock" (clock input and on-device divider)
-    One example is that RCLK 1/1 is supported by CMT2, CMT3 and CMT4.
- - "Wakeup request" (supported by CMT0 and CMT2)
+    https://www.compulab.com/products/computer-on-modules/cl-som-imx7-freescale-i-mx-7-system-on-module/
+    https://www.compulab.com/products/sbcs/sbc-iot-imx7-nxp-i-mx-7-internet-of-things-single-board-computer/
 
-Because of this one unique compat string per CMT device is selected.
+This commit adds basic board support, including:
+* SD-card (note that write-protect is not connected
+  on this carrier board)
+* SPI (available on expansion header)
+* i2c3 & i2c4 (including bus recovery information)
+* additional UARTs
+* all USB ports
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Compared to the downtream commit, this commit doesn't
+add / enable the PCIe and LCD interface, as PCIe
+support needs an additional patch to the PCI controller
+first, and I can't test the LCD.
+
+Signed-off-by: André Draszik <git@andred.net>
+Cc: Ilya Ledvich <ilya@compulab.co.il>
+Cc: Igor Grinberg <grinberg@compulab.co.il>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+
 ---
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v2:
+* use standard uart-has-rtscts instead of fsl,uart-has-rtscts
+---
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts | 198 +++++++++++++++++++++++
+ 2 files changed, 199 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index c5220bcd852b..45840d475050 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -22,6 +22,10 @@ Required Properties:
- 
-     - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
-     - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
-+    - "renesas,r8a7740-cmt0" for the 32-bit CMT0 device included in r8a7740.
-+    - "renesas,r8a7740-cmt2" for the 32-bit CMT2 device included in r8a7740.
-+    - "renesas,r8a7740-cmt3" for the 32-bit CMT3 device included in r8a7740.
-+    - "renesas,r8a7740-cmt4" for the 32-bit CMT4 device included in r8a7740.
-     - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
-     - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
-     - "renesas,r8a7744-cmt0" for the 32-bit CMT0 device included in r8a7744.
-@@ -54,6 +58,10 @@ Required Properties:
-     - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
-     - "renesas,r8a77990-cmt0" for the 32-bit CMT0 device included in r8a77990.
-     - "renesas,r8a77990-cmt1" for the 48-bit CMT1 device included in r8a77990.
-+    - "renesas,sh73a0-cmt0" for the 32-bit CMT0 device included in sh73a0.
-+    - "renesas,sh73a0-cmt2" for the 32-bit CMT2 device included in sh73a0.
-+    - "renesas,sh73a0-cmt3" for the 32-bit CMT3 device included in sh73a0.
-+    - "renesas,sh73a0-cmt4" for the 32-bit CMT4 device included in sh73a0.
- 
-     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
- 		and RZ/G1.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9159fa2cea90..78d51f2f9930 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -591,6 +591,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-pico-hobbit.dtb \
+ 	imx7d-pico-pi.dtb \
+ 	imx7d-sbc-imx7.dtb \
++	imx7d-sbc-iot-imx7.dtb \
+ 	imx7d-sdb.dtb \
+ 	imx7d-sdb-reva.dtb \
+ 	imx7d-sdb-sht11.dtb \
+diff --git a/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
+new file mode 100644
+index 000000000000..5e72927b05be
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
+@@ -0,0 +1,198 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++//
++// Copyright 2017 CompuLab Ltd. - http://www.compulab.co.il/
++/*
++ * Support for CompuLab SBC-IOT-iMX7 Single Board Computer
++ */
++
++#include "imx7d-cl-som-imx7.dts"
++
++/ {
++	model = "CompuLab,SBC-IOT-iMX7";
++	compatible = "compulab,sbc-iot-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
++
++	reg_usb_vbus: regulator-usb-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++};
++
++&ecspi3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs>;
++	cs-gpios = <&gpio4 11 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default", "gpio";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	pinctrl-1 = <&pinctrl_i2c3_recovery>;
++	sda-gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&gpio1 8 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	status = "okay";
++};
++
++&i2c4 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default", "gpio";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	pinctrl-1 = <&pinctrl_i2c4_recovery>;
++	sda-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&gpio1 10 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	status = "okay";
++
++	eeprom_iot@54 {
++		compatible = "atmel,24c08";
++		reg = <0x54>;
++		pagesize = <16>;
++	};
++};
++
++&iomuxc {
++	pinctrl-1 = <&pinctrl_xpen>;
++
++	/* SB-IOT-iMX7 Xpension Header P7 */
++	pinctrl_xpen: xpengrp {
++		fsl,pins = <
++			MX7D_PAD_LCD_DATA13__GPIO3_IO18		0x34 /* P7-4 - gpio82 */
++			MX7D_PAD_LCD_DATA12__GPIO3_IO17		0x34 /* P7-5 - gpio81 */
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX7D_PAD_I2C1_SDA__ECSPI3_MOSI		0xf /* P7-7 */
++			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0xf /* P7-8 */
++			MX7D_PAD_I2C2_SCL__ECSPI3_SCLK		0xf /* P7-6 */
++		>;
++	};
++
++	pinctrl_ecspi3_cs: ecspi3_cs_grp {
++		fsl,pins = <
++			MX7D_PAD_I2C2_SDA__GPIO4_IO11		0x34 /* P7-9 */
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO09__I2C3_SDA		0x4000000f /* P7-3 */
++			MX7D_PAD_GPIO1_IO08__I2C3_SCL		0x4000000f /* P7-2 */
++		>;
++	};
++
++	pinctrl_i2c3_recovery: i2c3recoverygrp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO09__GPIO1_IO9		0x4000000f /* P7-3 */
++			MX7D_PAD_GPIO1_IO08__GPIO1_IO8		0x4000000f /* P7-2 */
++		>;
++	};
++
++	pinctrl_i2c4: i2c4grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO11__I2C4_SDA		0x4000000f
++			MX7D_PAD_GPIO1_IO10__I2C4_SCL		0x4000000f
++		>;
++	};
++
++	pinctrl_i2c4_recovery: i2c4recoverygrp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO11__GPIO1_IO11		0x4000000f
++			MX7D_PAD_GPIO1_IO10__GPIO1_IO10		0x4000000f
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX7D_PAD_LCD_ENABLE__UART2_DCE_TX	0x79 /* P7-12 */
++			MX7D_PAD_LCD_CLK__UART2_DCE_RX		0x79 /* P7-13 */
++			MX7D_PAD_LCD_VSYNC__UART2_DCE_CTS	0x79 /* P7-11 */
++			MX7D_PAD_LCD_HSYNC__UART2_DCE_RTS	0x79 /* P7-10 */
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX7D_PAD_I2C4_SDA__UART5_DCE_TX		0x79 /* RS232-TX */
++			MX7D_PAD_I2C4_SCL__UART5_DCE_RX		0x79 /* RS232-RX */
++			MX7D_PAD_I2C3_SDA__UART5_DCE_RTS	0x79 /* RS232-RTS */
++			MX7D_PAD_I2C3_SCL__UART5_DCE_CTS	0x79 /* RS232-CTS */
++		>;
++	};
++
++	pinctrl_uart7: uart7grp {
++		fsl,pins = <
++			MX7D_PAD_ECSPI2_MOSI__UART7_DCE_TX	0x79 /* R485-TX */
++			MX7D_PAD_ECSPI2_SCLK__UART7_DCE_RX	0x79 /* R485-RX */
++			MX7D_PAD_ECSPI2_SS0__UART7_DCE_CTS	0x79 /* R485-CTS */
++			MX7D_PAD_ECSPI2_MISO__UART7_DCE_RTS	0x79 /* R485-TTS */
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
++			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
++			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
++			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
++			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
++			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
++			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
++		>;
++	};
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart7 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart7>;
++	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&usbotg1 {
++	vbus-supply = <&reg_usb_vbus>;
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	vbus-supply = <&reg_usb_vbus>;
++	status = "okay";
++};
++
++&usbh {
++	vbus-supply = <&reg_usb_vbus>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
++	wakeup-source;
++	status = "okay";
++};
 -- 
-2.17.1
+2.23.0.rc1
