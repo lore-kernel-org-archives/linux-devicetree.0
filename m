@@ -1,187 +1,103 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
- correct mode
-Date: Tue, 27 Aug 2019 10:48:28 +0100
-Message-ID: <20190827094827.GJ14582@e119886-lin.cambridge.arm.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
- <20190821154745.31834-3-jonnyc@amazon.com>
- <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
- <f8fca74c8d252f000d60c52ead3fc41ed5d50b6d.camel@amazon.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH v4 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Tue, 27 Aug 2019 09:51:50 +0000
+Message-ID: <1566942646-18015-1-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f8fca74c8d252f000d60c52ead3fc41ed5d50b6d.camel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, benh@kernel.crashing
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 04:30:09PM +0000, Chocron, Jonathan wrote:
-> On Thu, 2019-08-22 at 12:13 +0100, Andrew Murray wrote:
-> > On Wed, Aug 21, 2019 at 06:47:45PM +0300, Jonathan Chocron wrote:
-> > > Some PCIe controllers can be set to either Host or EP according to
-> > > some
-> > > early boot FW. To make sure there is no discrepancy (e.g. FW
-> > > configured
-> > > the port to EP mode while the DT specifies it as a host bridge or
-> > > vice
-> > > versa), a check has been added for each mode.
-> > > 
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
-> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
-> > >  2 files changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 2bf5a35c0570..00e59a134b93 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >  	int ret;
-> > >  	u32 reg;
-> > >  	void *addr;
-> > > +	u8 hdr_type;
-> > >  	unsigned int nbars;
-> > >  	unsigned int offset;
-> > >  	struct pci_epc *epc;
-> > > @@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >  		return -EINVAL;
-> > >  	}
-> > >  
-> > > +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> > > +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> > > +		dev_err(pci->dev, "PCIe controller is not set to EP
-> > > mode (hdr_type:0x%x)!\n",
-> > > +			hdr_type);
-> > > +		return -EIO;
-> > > +	}
-> > > +
-> > >  	ret = of_property_read_u32(np, "num-ib-windows", &ep-
-> > > >num_ib_windows);
-> > >  	if (ret < 0) {
-> > >  		dev_err(dev, "Unable to read *num-ib-windows*
-> > > property\n");
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index f93252d0da5b..d2ca748e4c85 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  	struct pci_bus *child;
-> > >  	struct pci_host_bridge *bridge;
-> > >  	struct resource *cfg_res;
-> > > +	u8 hdr_type;
-> > >  	int ret;
-> > >  
-> > >  	raw_spin_lock_init(&pci->pp.lock);
-> > > @@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >  		}
-> > >  	}
-> > >  
-> > > +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> > 
-> > Do we know if it's always safe to read these registers at this point
-> > in time?
-> > 
-> > Later in dw_pcie_host_init we call pp->ops->host_init - looking at
-> > the
-> > implementations of .host_init I can see:
-> > 
-> >  - resets being performed (qcom_ep_reset_assert,
-> >    artpec6_pcie_assert_core_reset, imx6_pcie_assert_core_reset)
-> >  - changes to config space registers (ks_pcie_init_id,
-> > dw_pcie_setup_rc)
-> >    including setting PCI_CLASS_DEVICE
-> >  - and clocks being enabled (qcom_pcie_init_1_0_0)
-> > 
-> Good point! This indeed might break host drivers which actually setup
-> the rc in the kernel, and don't depend on early boot FW. So the
-> validation should probably be moved to after pp->ops->host_init() (and
-> similarly after ep->ops->ep_init() for the ep driver), right?
+From: Peng Fan <peng.fan@nxp.com>
 
-Yes I think so.
+V4:
+yaml fix for num-chans in patch 1/2.
 
+V3:
+Drop interrupt
+Introduce transports for mem/reg usage
+Add chan-id for mem usage
+Convert to yaml format
+https://patchwork.kernel.org/cover/11043541/
+ 
+V2:
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
 
-> 
-> > I'm not sure if your changes would cause anything to break for these
-> > other
-> > controllers (or future controllers) as I couldn't see any other reads
-> > to the
-> > config.
-> > 
-> > Given that we are reading config space should dw_pcie_rd_own_conf be
-> > used?
-> 
-> The config space of the DW core is located at the beginning of the DBI
-> regspace. Furthermore, this would break the "symmetry" between the host
-> and ep validations (since the ep has no notion of reading from config
-> space nor a .read callback in struct dw_pcie_ep_ops).
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
 
-This is true, though given how different the two drivers are - this is only
-really 'nice to have'.
+The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+IP to signal a condition to some other processing unit, typically a dedicated
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
 
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
 
-> I agree that
-> there is some sort of overlap between the dw_pcie_read{/write}_dbi
-> dw_pcie_rd{/wr}_own_conf APIs, when accessing the host mode config
-> space, but I assume that any host driver which supplies a callback for
-> .rd_own_conf() must supply an equivalent .read_dbi() one as well.
-> 
-> > (For example kirin_pcie_rd_own_conf does something special).
-> > 
-> They specifically define an equivalent kirin_pcie_read_dbi().
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI requests.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced via
+this new driver.
 
-This may also be true. However given that the dwc framework gives host drivers
-the ability to provide their own rd_own_conf callback - it's very possible
-that these drivers can use the callback to handle quirks - now or in the
-future. Potentially a quirk that your direct reading won't handle.
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hypervisors
+or firmware layers running in the EL2 exception level.
 
-Looking at the existing drivers which provide a .rd_own_conf:
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
 
-pci-exynos.c:
- - Uses dw_pcie_read to directly read from registers, sandwich'd between writes
-   to set/clear PCIE_ELBI_SLV_ARMISC. This driver provides a .read_dbi which
-   means dw_pcie_readb_dbi probably does the same thing as rd_own_conf.
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used generically
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
 
-pci-menson.c:
- - Uses dw_pcie_read to directly read from registers, it then applies a read
-   quirk for the PCI_CLASS_DEVICE register. This driver doesn't provide a
-   .read_dbi - thus dw_pcie_readb_dbi probably does the same thing as
-   rd_own_conf provided you don't read the PCI_CLASS_DEVICE register.
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
 
-pcie-hisi.c:
- - Uses dw_pcie_readl_dbi to read from registers, but the controller only
-   supports 32bit aligned reads - it doesn't provide a .read_dbi. This means
-   that if you used dw_pcie_readb_dbi it'd probably break because you can't
-   read 1 byte at the offset where HEADER_TYPE is.
+Peng Fan (2):
+  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+  mailbox: introduce ARM SMC based mailbox
 
-pcie-histb.c, pcie-kirin.c: looks like pci-exynos.c
+ .../devicetree/bindings/mailbox/arm-smc.yaml       | 126 ++++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 215 +++++++++++++++++++++
+ 4 files changed, 350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
 
-It looks like we're going to have to break symmetry...
-
-Thanks,
-
-Andrew Murray
-
-> 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-> > > +		dev_err(pci->dev, "PCIe controller is not set to bridge
-> > > type (hdr_type: 0x%x)!\n",
-> > > +			hdr_type);
-> > > +		return -EIO;
-> > > +	}
-> > > +
-> > >  	pp->mem_base = pp->mem->start;
-> > >  
-> > >  	if (!pp->va_cfg0_base) {
-> > > -- 
-> > > 2.17.1
-> > > 
+-- 
+2.16.4
