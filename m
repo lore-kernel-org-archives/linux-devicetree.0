@@ -1,118 +1,108 @@
-From: Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC 0/3] New idle device-tree format and support for versioned
- stop state
-Date: Tue, 27 Aug 2019 19:31:02 +1000
-Message-ID: <1566894003.kb57vy8ri2.astroid@bobo.none>
-References: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: RE: [PATCH 06/14] serial: tegra: report error to upper tty layer
+Date: Tue, 27 Aug 2019 09:29:44 +0000
+Message-ID: <SN6PR12MB273439430F80C358B6DB663DC3A00@SN6PR12MB2734.namprd12.prod.outlook.com>
+References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
+ <1565609303-27000-7-git-send-email-kyarlagadda@nvidia.com>
+ <20190813095219.GK1137@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
+In-Reply-To: <20190813095219.GK1137@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, paulus@samba.org
-Cc: daniel.lezcano@linaro.org, ego@linux.vnet.ibm.com, mikey@neuling.org, mpe@ellerman.id.au, rjw@rjwysocki.net, svaidy@linux.ibm.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shardar Mohammed <smohammed@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Abhishek Goel's on August 23, 2019 5:09 pm:
-> Background
-> ------------------
+> -----Original Message-----
+> From: Thierry Reding <thierry.reding@gmail.com>
+> Sent: Tuesday, August 13, 2019 3:22 PM
+> To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> Cc: gregkh@linuxfoundation.org; robh+dt@kernel.org;=20
+> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>; Laxman=20
+> Dewangan <ldewangan@nvidia.com>; jslaby@suse.com; linux-=20
+> serial@vger.kernel.org; devicetree@vger.kernel.org; linux-=20
+> tegra@vger.kernel.org; linux-kernel@vger.kernel.org; Shardar Mohammed=20
+> <smohammed@nvidia.com>
+> Subject: Re: [PATCH 06/14] serial: tegra: report error to upper tty=20
+> layer
 >=20
-> Previously if a older kernel runs on a newer firmware, it may enable
-> all available states irrespective of its capability of handling it.
-> Consider a case that some stop state has a bug, we end up disabling all
-> the stop states. This patch introduces selective control to solve this
-> problem.
+> On Mon, Aug 12, 2019 at 04:58:15PM +0530, Krishna Yarlagadda wrote:
+> > Report overrun/parity/frame/break errors to top tty layer. Add=20
+> > support to ignore break character if IGNBRK is set.
+> >
+> > Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
+> > Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> > ---
+> >  drivers/tty/serial/serial-tegra.c | 19 ++++++++++++++++---
+> >  1 file changed, 16 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/tty/serial/serial-tegra.c
+> > b/drivers/tty/serial/serial-tegra.c
+> > index f6a3f4e..7ab81bb 100644
+> > --- a/drivers/tty/serial/serial-tegra.c
+> > +++ b/drivers/tty/serial/serial-tegra.c
+> > @@ -374,13 +374,21 @@ static char tegra_uart_decode_rx_error(struct
+> tegra_uart_port *tup,
+> >  			tup->uport.icount.frame++;
+> >  			dev_err(tup->uport.dev, "Got frame errors\n");
+> >  		} else if (lsr & UART_LSR_BI) {
+> > -			dev_err(tup->uport.dev, "Got Break\n");
+> > -			tup->uport.icount.brk++;
+> > -			/* If FIFO read error without any data, reset Rx FIFO
+> */
+> > +			/*
+> > +			 * Break error
+> > +			 * If FIFO read error without any data, reset Rx FIFO
+> > +			 */
+> >  			if (!(lsr & UART_LSR_DR) && (lsr & UART_LSR_FIFOE))
+> >  				tegra_uart_fifo_reset(tup,
+> UART_FCR_CLEAR_RCVR);
+> > +			if (tup->uport.ignore_status_mask & UART_LSR_BI)
+> > +				return TTY_BREAK;
+> > +			flag =3D TTY_BREAK;
+> > +			tup->uport.icount.brk++;
+> > +			dev_err(tup->uport.dev, "Got Break\n");
 >=20
-> Previous version of these patches can be found at:
-> https://lkml.org/lkml/2018/10/11/544
-> These patch however also had patches for support of opal save-restore
-> which now I am decoupling and will take them seperately.
-> I have posted the corresponding skiboot patches for this kernel patchset
-> here : https://patchwork.ozlabs.org/cover/1144587/
+> I know this is preexisting, but why do we want to output an error=20
+> message in these cases. Isn't it perfectly legal for this to happen?
 >=20
-> What's new?
-> --------------------
+> Thierry
 >=20
-> Add stop states under ibm,idle-states in addition to the current array
-> based device tree properties.
->=20
-> New device tree format adds a compatible flag which has version
-> corresponding to every state, so that only kernel which has the capabilit=
-y
-> to handle the version of stop state will enable it. Drawback of the array
-> based dt node is that versioning of idle states is not possible.
->=20
-> Older kernel will still see stop0 and stop0_lite in older format and we
-> will deprecate it after some time.
->=20
-> Consider a case that stop4 has a bug. We take the following steps to
-> mitigate the problem.
->=20
-> 1) Change compatible string for stop4 in OPAL to "stop4,v2" from
-> "stop4,v1", i.e. basicallly bump up the previous version and ship the
-> new firmware.
->=20
-> 2) The kernel will ignore stop4 as it won't be able to recognize this
-> new version. Kernel will also ignore all the deeper states because its
-> possible that a cpu have requested for a deeper state but was never able
-> to enter into it. But we will still have shallower states that are there
-> before stop 4. This, thus prevents from completely disabling stop states.
->=20
-> Linux kernel can now look at the version string and decide if it has the
-> ability to handle that idle state. Henceforth, if kernel does not know
-> about a version, it will skip that state and all the deeper state.
->=20
-> Once when the workaround are implemented into the kernel, we can bump up
-> the known version in kernel for that state, so that support can be
-> enabled once again in kernel.
->=20
-> New Device-tree :
->=20
-> Final output
->        power-mgt {
->             ...
->          ibm,enabled-stop-levels =3D <0xec000000>;
->          ibm,cpu-idle-state-psscr-mask =3D <0x0 0x3003ff 0x0 0x3003ff>;
->          ibm,cpu-idle-state-latencies-ns =3D <0x3e8 0x7d0>;
->          ibm,cpu-idle-state-psscr =3D <0x0 0x330 0x0 0x300330>;
->          ibm,cpu-idle-state-flags =3D <0x100000 0x101000>;
->          ibm,cpu-idle-state-residency-ns =3D <0x2710 0x4e20>;
->          ibm,idle-states {
->                      stop4 {
->                          flags =3D <0x207000>;
->                          compatible =3D "stop4,v1",
->                          psscr-mask =3D <0x0 0x3003ff>;
->                          latency-ns =3D <0x186a0>;
->                          residency-ns =3D <0x989680>;
->                          psscr =3D <0x0 0x300374>;
-> 			 ...
->                   };
->                     ...
->                     stop11 {
->                          ...
->                          compatible =3D "stop11,v1",
->                          ...
->                   };
->              };
+It is valid to have breaks for sysrq requests. But they also indicate possi=
+ble mismatch in baud rate. So warning user as this could be potential issue=
+. I will change this to dev_dbg to avoid spamming user in valid cases.
 
-I'm not sure about this. I think the real problem we have is that the
-OPAL stop API is not actually implementation independent. Because we
-*can* selectively disable stop states in the firmware if there is a
-hardware/firmware problem with them.
-
-So we need a way to rev ISA/Book4/OPAL stuff so the kernel won't try
-to use it if it's incapable.
-
-We have that today in dt-cpu-ftrs. POWER9 advertises the "idle-stop"
-feature. An incompatible implementation could advertise idle-stop-v4.
-
-That won't allow individual states to remain back compatible, but if=20
-there is a new implementation which changes any behaviour it needs to be=20
-incopmatible, even if Linux happens to not rely on said behaviour yet. =20
-So I don't think we can keep any of them (except stop0 lite) compatible,=20
-so I don't see a real downside (we'll have to discuss this offline).
-
-Thanks,
-Nick
-=
+KY
+> >  		}
+> > +		uart_insert_char(&tup->uport, lsr, UART_LSR_OE, 0, flag);
+> >  	}
+> > +
+> >  	return flag;
+> >  }
+> >
+> > @@ -562,6 +570,9 @@ static void tegra_uart_handle_rx_pio(struct
+> tegra_uart_port *tup,
+> >  			break;
+> >
+> >  		flag =3D tegra_uart_decode_rx_error(tup, lsr);
+> > +		if (flag !=3D TTY_NORMAL)
+> > +			continue;
+> > +
+> >  		ch =3D (unsigned char) tegra_uart_read(tup, UART_RX);
+> >  		tup->uport.icount.rx++;
+> >
+> > @@ -1224,6 +1235,8 @@ static void tegra_uart_set_termios(struct
+> uart_port *u,
+> >  	/* Ignore all characters if CREAD is not set */
+> >  	if ((termios->c_cflag & CREAD) =3D=3D 0)
+> >  		tup->uport.ignore_status_mask |=3D UART_LSR_DR;
+> > +	if (termios->c_iflag & IGNBRK)
+> > +		tup->uport.ignore_status_mask |=3D UART_LSR_BI;
+> >
+> >  	spin_unlock_irqrestore(&u->lock, flags);  }
+> > --
+> > 2.7.4
+> >
