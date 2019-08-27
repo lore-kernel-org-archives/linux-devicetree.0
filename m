@@ -1,65 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Date: Tue, 27 Aug 2019 20:56:06 +0100
-Message-ID: <20190827195606.GA28879@sirena.org.uk>
-References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
- <20190821110640.GC5128@sirena.co.uk>
- <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
- <VI1PR04MB4015474B3086AE99354FE65395A50@VI1PR04MB4015.eurprd04.prod.outlook.com>
- <20190822184927.GH23391@sirena.co.uk>
- <20190827155005.GA18581@bogus>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v5 2/4] iio: imu: st_lsm6sdx: move register definitions
+ to sensor_settings struct
+Date: Tue, 27 Aug 2019 20:59:24 +0100
+Message-ID: <20190827205924.313344e4@archlinux>
+References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
+        <20190821132520.28225-3-martin.kepplinger@puri.sm>
+        <d3cb1cf5-f17f-38ef-66a2-23c1b7a7d08f@puri.sm>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190827155005.GA18581@bogus>
+In-Reply-To: <d3cb1cf5-f17f-38ef-66a2-23c1b7a7d08f@puri.sm>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ashish Kumar <ashish.kumar@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
+To: Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc: lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 27 Aug 2019 08:54:57 +0200
+Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 21.08.19 15:25, Martin Kepplinger wrote:
+> > Move some register definitions to the per-device array of struct
+> > st_lsm6dsx_sensor_settings in order to simplify adding new sensor
+> > devices to the driver.
+> > 
+> > Also, remove completely unused register definitions.
+> > 
+> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
+> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
+> >  2 files changed, 28 insertions(+), 9 deletions(-)
+> >   
+> 
+> I just notices the commit message header typo "st_lsm6sdx" should be
+> "st_lsm6dsx" of course. If you can still rebase/force-push to testing,
+> would you be able to fix that? If it's too far out there already, so be
+> it :) sorry for the typo, and thanks for adding "-imu" yourself where
+> applicable.
 
-On Tue, Aug 27, 2019 at 10:50:05AM -0500, Rob Herring wrote:
-> On Thu, Aug 22, 2019 at 07:49:27PM +0100, Mark Brown wrote:
+I can indeed. Fixed up.
 
-> > Drop the dt-bindings:.
+Added Rob's ack to the dt patch as well.
 
-> If you do 'git log --oneline Documentation/devicetree/bindings/' you'll=
-=20
-> notice that SPI and ASoC are the oddballs now. I don't really care
-> except it does add to tribal knowledge needed regarding maintainers'=20
-> requirements.
+Thanks,
 
-Well, you have been pushing people to change over to using
-dt-bindings: so I guess you do care :(  It really does cause me
-to miss stuff, especially where people don't even include the
-subsystem name in the header.  I get quite a lot of CCs for
-things where I once reviewed a patch for a subsystem that made
-use of some subsystem I do maintain or where one patch in a
-series (perhaps even an already applied one) was relevant at some
-point so I'm doing quite a bit of triage that's purely based on
-the subject lines.
+Jonathan
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1litUACgkQJNaLcl1U
-h9CT3Qf/blNHGchHmk2gQ8FvcJr6UsKNmtbrNv1Zov3/pMDT0H/NiFlJzdL4A6lh
-F/4aSXaqEoR8Ns/IBrQ+geoVVr8dzb0P44QVSOPBlP2PlnMH1lKtLjtGoVYMwd9s
-WtByb4e5KTeuOGUWdVC7+//RwjZyx5dMiV5qTv7f6yEZb+bq208Lrm30mluybDiF
-8xj3c1HFSN4S+U0qvDcgsTjPOP0sOSP/DxXQUpKBPjf04446WOB7D8f7z8E+avI3
-y22TeatnvVC9KDuGM136rHNNpWnO7X7wB2HQKs12JwOjQJCcNNx8/WbGaQFgZ1Zp
-fdK3xIKw8dtN4DMr9QAh2R8lLLOunw==
-=8aqH
------END PGP SIGNATURE-----
-
---r5Pyd7+fXNt84Ff3--
+> 
+> thanks,
+> 
+>                       martin
