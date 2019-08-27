@@ -1,76 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: sound: sun4i-spdif: Fix dma-names warning
-Date: Tue, 27 Aug 2019 19:14:09 +0100
-Message-ID: <20190827181409.GH23391@sirena.co.uk>
-References: <20190827142547.14577-1-mripard@kernel.org>
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
+ poll mode
+Date: Tue, 27 Aug 2019 21:16:39 +0300
+Message-ID: <CA+h21hqMVdsUjBdtiHKtKGpyvuaOf25tc4h-GdDEBQqa3EB7tw@mail.gmail.com>
+References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-6-olteanv@gmail.com>
+ <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
+ <20190827180502.GF23391@sirena.co.uk> <CA+h21hr3qmTG1LyWsEp+hZZW2NJFtg9Dh1k6SXVDd+A_YSQjjw@mail.gmail.com>
+ <20190827181318.GG23391@sirena.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0330511891581656483=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190827142547.14577-1-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190827181318.GG23391@sirena.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 27 Aug 2019 at 21:13, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Aug 27, 2019 at 09:06:14PM +0300, Vladimir Oltean wrote:
+> > On Tue, 27 Aug 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
+> > > On Mon, Aug 26, 2019 at 04:10:51PM +0300, Vladimir Oltean wrote:
+>
+> > > > I noticed you skipped applying this patch, and I'm not sure that Shawn
+> > > > will review it/take it.
+> > > > Do you have a better suggestion how I can achieve putting the DSPI
+> > > > driver in poll mode for this board? A Kconfig option maybe?
+>
+> > > DT changes go through the relevant platform trees, not the
+> > > subsystem trees, so it's not something I'd expect to apply.
+>
+> > But at least is it something that you expect to see done through a
+> > device tree change?
+>
+> Well, it's not ideal - if it performs better all the time the
+> driver should probably just do it unconditionally.  If there's
+> some threashold where it tends to perform better then the driver
+> should check for that but IIRC it sounds like the interrupt just
+> isn't at all helpful here.
 
---===============0330511891581656483==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fez1/uVX7m6GpeOd"
-Content-Disposition: inline
-
-
---fez1/uVX7m6GpeOd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Aug 27, 2019 at 04:25:43PM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
->=20
-> Even though the H6 compatible has been properly added, the exeption for t=
-he
-> number of DMA channels hasn't been updated, leading in a validation
-> warning.
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.  This
-doesn't even have ASoC in it...
-
---fez1/uVX7m6GpeOd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1lcvAACgkQJNaLcl1U
-h9AQNwf/Wko2ywl/1pCNlhI8r5T9icdRCSO3aCusrcNdTqFPwCKGaybfQwcs7T1i
-0ljLfvQoPvxUH1pj+ed4D4e1D+L2MNaGgm30zRQvPmoldJ23rYC3scQgom5ejb8Z
-EfLTB7ogGLiwIysbn4eZojzA9AfJwkXdCsFPSR55iSGop/lztHREVQEGnW6Ktw+7
-U52qHI6sJ0mYGJgA39HQarp4lwVuSHRgouhsvA/6CXQ4sLUxTwZYNZwh4hKd/c3u
-+T0CZ022i3XwoWwGrD5VreO1Yas3ZU3jf7vT4gnpOrSH+oonnwHBfFl9nDCMMJB6
-IDS3MJpUDnm64N8iliKuxAO3z3Jgow==
-=7aoP
------END PGP SIGNATURE-----
-
---fez1/uVX7m6GpeOd--
-
-
---===============0330511891581656483==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0330511891581656483==--
+I can't seem to find any situation where it performs worse. Hence my
+question on whether it's a better idea to condition this behavior on a
+Kconfig option rather than a DT blob which may or may not be in sync.
