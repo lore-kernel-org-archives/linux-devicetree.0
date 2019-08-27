@@ -1,64 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
-Date: Tue, 27 Aug 2019 15:08:55 -0500
-Message-ID: <20190827200855.GA5260@bogus>
-References: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 7/7] ARM: configs: aspeed_g5: Enable AST2600
+Date: Tue, 27 Aug 2019 22:12:33 +0200
+Message-ID: <CAK8P3a1Dgzrw7nuQR_YJYXSF7Owop2Hpd80bAL0OPhzHMHcbPg@mail.gmail.com>
+References: <20190821055530.8720-1-joel@jms.id.au>
+ <20190821055530.8720-8-joel@jms.id.au>
+ <faf79f9d-baa1-4c8c-a35b-c5d97ad6df8b@www.fastmail.com>
+ <CACPK8Xe=mq_Zuw6vsFtb=42ZodbHcizX9QwUoRzY0cDdoWr-Fw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: wim@linux-watchdog.org, linux@roeck-us.net, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACPK8Xe=mq_Zuw6vsFtb=42ZodbHcizX9QwUoRzY0cDdoWr-Fw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Olof Johansson <olof@lixom.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:37:40PM -0400, Anson Huang wrote:
-> Add the watchdog bindings for Freescale i.MX7ULP.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-> new file mode 100644
-> index 0000000..d83fc5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
-> @@ -0,0 +1,22 @@
-> +* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,imx7ulp-wdt"
-> +- reg : Should contain WDT registers location and length
-> +- interrupts : Should contain WDT interrupt
-> +- clocks: Should contain a phandle pointing to the gated peripheral clock.
-> +
-> +Optional properties:
-> +- timeout-sec : Contains the watchdog timeout in seconds
-> +
-> +Examples:
-> +
-> +wdog1: wdog@403d0000 {
+On Thu, Aug 22, 2019 at 6:43 AM Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Thu, 22 Aug 2019 at 02:07, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > +CONFIG_MMC=y
+> > > +CONFIG_MMC_SDHCI=y
+> > > +CONFIG_MMC_SDHCI_PLTFM=y
+> > > +CONFIG_MMC_SDHCI_OF_ASPEED=y
+> >
+> > The patches haven't yet been applied to the MMC tree, maybe we should
+> > add this later?
+>
+> When enabling drivers in the same merge window as they go into the
+> tree we will always be in this situation.
+>
+> If the driver doesn't make it in this merge window, or first has has
+> changes, the worst that will happen is the kconfig name changes and I
+> need to update it later. I think we're safe to include it as-is.
 
-watchdog@...
+Yes, that's fine.
 
-With that,
+Please also enable all the drivers you need in multi_v7_defconfig
+now, preferably as loadable modules.
 
-Reviewed-by: Rob Herring <rohb@kernel.org>
 
-> +	compatible = "fsl,imx7ulp-wdt";
-> +	reg = <0x403d0000 0x10000>;
-> +	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-> +	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
-> +	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
-> +	timeout-sec = <40>;
-> +};
-> -- 
-> 2.7.4
-> 
+      Arnd
