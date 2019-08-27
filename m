@@ -1,128 +1,118 @@
-From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: RE: [PATCH 11/14] serial: tegra: DT for Adjusted baud rates
-Date: Tue, 27 Aug 2019 09:31:27 +0000
-Message-ID: <SN6PR12MB27349055DDF3C324B49E148EC3A00@SN6PR12MB2734.namprd12.prod.outlook.com>
-References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
- <1565609303-27000-12-git-send-email-kyarlagadda@nvidia.com>
- <20190813102448.GO1137@ulmo>
+From: Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC 0/3] New idle device-tree format and support for versioned
+ stop state
+Date: Tue, 27 Aug 2019 19:31:02 +1000
+Message-ID: <1566894003.kb57vy8ri2.astroid@bobo.none>
+References: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813102448.GO1137@ulmo>
-Content-Language: en-US
+In-Reply-To: <20190823070940.43220-1-huntbag@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: devicetree@vger.kernel.org, Abhishek Goel <huntbag@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, paulus@samba.org
+Cc: daniel.lezcano@linaro.org, ego@linux.vnet.ibm.com, mikey@neuling.org, mpe@ellerman.id.au, rjw@rjwysocki.net, svaidy@linux.ibm.com
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Thierry Reding <thierry.reding@gmail.com>
-> Sent: Tuesday, August 13, 2019 3:55 PM
-> To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> Cc: gregkh@linuxfoundation.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>; Laxman
-> Dewangan <ldewangan@nvidia.com>; jslaby@suse.com; linux-
-> serial@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> tegra@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 11/14] serial: tegra: DT for Adjusted baud rates
+Abhishek Goel's on August 23, 2019 5:09 pm:
+> Background
+> ------------------
 >=20
-> On Mon, Aug 12, 2019 at 04:58:20PM +0530, Krishna Yarlagadda wrote:
-> > Tegra186 chip has a hardware issue resulting in frame errors when
-> > tolerance level for baud rate is negative. Provided entries to adjust
-> > baud rate to be within acceptable range and work with devices that can
-> > send negative baud rate. Also report error when baud rate set is out
-> > of tolerance range of controller updated in device tree.
-> >
-> > Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> > ---
-> >  .../bindings/serial/nvidia,tegra20-hsuart.txt      | 32
-> ++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> > b/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> > index 187ec78..1ce3fd4 100644
-> > ---
-> > a/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt
-> > +++ b/Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.t
-> > +++ xt
-> > @@ -20,6 +20,37 @@ Required properties:
-> >  Optional properties:
-> >  - nvidia,enable-modem-interrupt: Enable modem interrupts. Should be
-> enable
-> >  		only if all 8 lines of UART controller are pinmuxed.
-> > +- nvidia,adjust-baud-rates: List of entries providing percentage of
-> > +baud rate
-> > +  adjustment within a range.
-> > +  Each entry contains sets of 3 values. Range low/high and adjusted ra=
-te.
-> > +  <range_low range_high adjusted_rate>
-> > +  When baud rate set on controller falls within the range mentioned
-> > +in this
-> > +  field, baud rate will be adjusted by percentage mentioned here.
-> > +  Ex: <9600 115200 200>
-> > +  Increase baud rate by 2% when set baud rate falls within range 9600
-> > +to 115200
-> > +
-> > +Baud Rate tolerance:
-> > +  Standard UART devices are expected to have tolerance for baud rate
-> > +error by
-> > +  -4 to +4 %. All Tegra devices till Tegra210 had this support.
-> > +However,
-> > +  Tegra186 chip has a known hardware issue. UART Rx baud rate
-> > +tolerance level
-> > +  is 0% to +4% in 1-stop config. Otherwise, the received data will
-> > +have
-> > +  corruption/invalid framing errors. Parker errata suggests adjusting
-> > +baud
-> > +  rate to be higher than the deviations observed in Tx.
+> Previously if a older kernel runs on a newer firmware, it may enable
+> all available states irrespective of its capability of handling it.
+> Consider a case that some stop state has a bug, we end up disabling all
+> the stop states. This patch introduces selective control to solve this
+> problem.
 >=20
-> The above sounds like the tolerance deviation is a characteristic of the
-> Tegra186 chip. If the board design does not influence the deviation, why
-> can't we encode this in the driver? Why do we need a description of this =
-in
-> device tree?
+> Previous version of these patches can be found at:
+> https://lkml.org/lkml/2018/10/11/544
+> These patch however also had patches for support of opal save-restore
+> which now I am decoupling and will take them seperately.
+> I have posted the corresponding skiboot patches for this kernel patchset
+> here : https://patchwork.ozlabs.org/cover/1144587/
 >=20
-> Thierry
+> What's new?
+> --------------------
 >=20
-Tolerance is chip specific and info regarding this is part of chip data.
-Explained it here to set context for adjusting baud rates based on slave de=
-vice
-as below. Slave device clock might not be accurate and if the actual clock =
-of
-slave device would end up out of tolernace range then we will see frame err=
-ors.
+> Add stop states under ibm,idle-states in addition to the current array
+> based device tree properties.
+>=20
+> New device tree format adds a compatible flag which has version
+> corresponding to every state, so that only kernel which has the capabilit=
+y
+> to handle the version of stop state will enable it. Drawback of the array
+> based dt node is that versioning of idle states is not possible.
+>=20
+> Older kernel will still see stop0 and stop0_lite in older format and we
+> will deprecate it after some time.
+>=20
+> Consider a case that stop4 has a bug. We take the following steps to
+> mitigate the problem.
+>=20
+> 1) Change compatible string for stop4 in OPAL to "stop4,v2" from
+> "stop4,v1", i.e. basicallly bump up the previous version and ship the
+> new firmware.
+>=20
+> 2) The kernel will ignore stop4 as it won't be able to recognize this
+> new version. Kernel will also ignore all the deeper states because its
+> possible that a cpu have requested for a deeper state but was never able
+> to enter into it. But we will still have shallower states that are there
+> before stop 4. This, thus prevents from completely disabling stop states.
+>=20
+> Linux kernel can now look at the version string and decide if it has the
+> ability to handle that idle state. Henceforth, if kernel does not know
+> about a version, it will skip that state and all the deeper state.
+>=20
+> Once when the workaround are implemented into the kernel, we can bump up
+> the known version in kernel for that state, so that support can be
+> enabled once again in kernel.
+>=20
+> New Device-tree :
+>=20
+> Final output
+>        power-mgt {
+>             ...
+>          ibm,enabled-stop-levels =3D <0xec000000>;
+>          ibm,cpu-idle-state-psscr-mask =3D <0x0 0x3003ff 0x0 0x3003ff>;
+>          ibm,cpu-idle-state-latencies-ns =3D <0x3e8 0x7d0>;
+>          ibm,cpu-idle-state-psscr =3D <0x0 0x330 0x0 0x300330>;
+>          ibm,cpu-idle-state-flags =3D <0x100000 0x101000>;
+>          ibm,cpu-idle-state-residency-ns =3D <0x2710 0x4e20>;
+>          ibm,idle-states {
+>                      stop4 {
+>                          flags =3D <0x207000>;
+>                          compatible =3D "stop4,v1",
+>                          psscr-mask =3D <0x0 0x3003ff>;
+>                          latency-ns =3D <0x186a0>;
+>                          residency-ns =3D <0x989680>;
+>                          psscr =3D <0x0 0x300374>;
+> 			 ...
+>                   };
+>                     ...
+>                     stop11 {
+>                          ...
+>                          compatible =3D "stop11,v1",
+>                          ...
+>                   };
+>              };
 
-KY
-> > +
-> > +  Tx deviation of connected device can be captured over scope (or
-> > + noted from  its spec) for valid range and Tegra baud rate has to be
-> > + set above actual  Tx baud rate observed. To do this we use
-> > + nvidia,adjust-baud-rates
-> > +
-> > +  As an example, consider there is deviation observed in Tx for baud
-> > + rates as  listed below.
-> > +  0 to 9600 has 1% deviation
-> > +  9600 to 115200 2% deviation
-> > +  This slight deviation is expcted and Tegra UART is expected to
-> > + handle it. Due  to the issue stated above, baud rate on Tegra UART
-> > + should be set equal to or  above deviation observed for avoiding fram=
-e
-> errors.
-> > +  Property should be set like this
-> > +  nvidia,adjust-baud-rates =3D <0 9600 100>,
-> > +  			     <9600 115200 200>;
-> >
-> >  Example:
-> >
-> > @@ -34,4 +65,5 @@ serial@70006000 {
-> >  	reset-names =3D "serial";
-> >  	dmas =3D <&apbdma 8>, <&apbdma 8>;
-> >  	dma-names =3D "rx", "tx";
-> > +	nvidia,adjust-baud-rates =3D <1000000 4000000 136>; /* 1.36% shift */
-> >  };
-> > --
-> > 2.7.4
-> >
+I'm not sure about this. I think the real problem we have is that the
+OPAL stop API is not actually implementation independent. Because we
+*can* selectively disable stop states in the firmware if there is a
+hardware/firmware problem with them.
+
+So we need a way to rev ISA/Book4/OPAL stuff so the kernel won't try
+to use it if it's incapable.
+
+We have that today in dt-cpu-ftrs. POWER9 advertises the "idle-stop"
+feature. An incompatible implementation could advertise idle-stop-v4.
+
+That won't allow individual states to remain back compatible, but if=20
+there is a new implementation which changes any behaviour it needs to be=20
+incopmatible, even if Linux happens to not rely on said behaviour yet. =20
+So I don't think we can keep any of them (except stop0 lite) compatible,=20
+so I don't see a real downside (we'll have to discuss this offline).
+
+Thanks,
+Nick
+=
