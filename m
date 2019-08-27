@@ -1,39 +1,50 @@
-Return-Path: <SRS0=6nC3=V5=linaro.org=viresh.kumar@kernel.org>
-Date: Thu, 1 Aug 2019 11:10:55 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v7 11/20] cpufreq: tegra124: Add suspend and resume
- support
-Message-ID: <20190801054055.trmabmcaj3cpe4pc@vireshk-i7>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-12-git-send-email-skomatineni@nvidia.com>
+Return-Path: <SRS0=NDqP=WX=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1564607463-28802-12-git-send-email-skomatineni@nvidia.com>
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com, devicetree@vger.kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org
+References: <20190823071021.5598-1-linus.walleij@linaro.org> <20190826220022.GA7663@dtor-ws>
+In-Reply-To: <20190826220022.GA7663@dtor-ws>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 27 Aug 2019 09:42:46 +0200
+Message-ID: <CACRpkdbv8yVP==WDo-wBgotyvnPhApTCD2x7oamCHBQKuNp3RQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Input: tsc2007 - use GPIO descriptor
+Content-Type: text/plain; charset="UTF-8"
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Harish Jenny K N <harish_kandiga@mentor.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Linux Input <linux-input@vger.kernel.org>, Denis Carikli <denis@eukrea.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 31-07-19, 14:10, Sowjanya Komatineni wrote:
-> This patch adds suspend and resume pm ops for cpufreq driver.
-> 
-> PLLP is the safe clock source for CPU during system suspend and
-> resume as PLLP rate is below the CPU Fmax at Vmin.
-> 
-> CPUFreq driver suspend switches the CPU clock source to PLLP and
-> disables the DFLL clock.
-> 
-> During system resume, warmboot code powers up the CPU with PLLP
-> clock source. So CPUFreq driver resume enabled DFLL clock and
-> switches CPU back to DFLL clock source.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/cpufreq/tegra124-cpufreq.c | 60 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
+On Tue, Aug 27, 2019 at 12:00 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-Is there any hard dependency of this patch on the rest of the patches?
-Can I apply it alone to cpufreq tree ?
+> >  Optional properties:
+> >  - gpios: the interrupt gpio the chip is connected to (trough the penirq pin).
+> > -  The penirq pin goes to low when the panel is touched.
+> > +  The penirq pin goes to low when the panel is touched, so make sure to tag
+> > +  the GPIO line with GPIO_ACTIVE_LOW.
+>
+> I think this is too strong. I am sure that one can come up with a way to
+> connect the attention signal though polarity inverter and then one would
+> have to specify GPIO_ACTIVE_HIGH in the DT.
 
--- 
-viresh
+Yeah this is something that has been discussed recently as
+Harish is suggesting to add an actual inverter to the device
+tree model. As the description of reality in the device tree is
+incomplete, these flags, which should nominally be consumer
+flags and indicate the behavior of the consumer, becomes
+a panacea for solving shortcomings in the device tree model.
+
+I am in favor of introducing explicit inverters in device tree,
+as it makes the descriptions more consistent: e.g. regulators
+are consumer oriented, they even model rails to make things
+very clear on where a voltage applies, whereas GPIO polarity
+is defined as "trial-and-error until whatever makes the system
+run" more or less.
+
+> Can we say:
+>
+> The penirq pin goes to low when the panel is touched, so GPIO line
+> should normally be tagged with GPIO_ACTIVE_LOW.
+
+Sure, this is not the place for hashing out DT design issues,
+can you fix when applying or should I send a new version?
+
+Yours,
+Linus Walleij
