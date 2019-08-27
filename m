@@ -1,25 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 08/10] dt-bindings: PCI: Add the pf-offset property
-Date: Tue, 27 Aug 2019 11:26:47 -0500
-Message-ID: <20190827162647.GA21347@bogus>
-References: <20190815083716.4715-1-xiaowei.bao@nxp.com>
- <20190815083716.4715-8-xiaowei.bao@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Add Spreadtrum eFuse controller
+ documentation
+Date: Tue, 27 Aug 2019 11:30:05 -0500
+Message-ID: <20190827163005.GA26471@bogus>
+References: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190815083716.4715-8-xiaowei.bao@nxp.com>
+In-Reply-To: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, freeman.liu@unisoc.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Aug 2019 16:37:14 +0800, Xiaowei Bao wrote:
-> Add the pf-offset property for multiple PF.
+On Fri, 16 Aug 2019 19:44:16 +0800, Baolin Wang wrote:
+> From: Freeman Liu <freeman.liu@unisoc.com>
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> This patch adds the binding documentation for Spreadtrum eFuse controller.
+> 
+> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/nvmem/sprd-efuse.txt       |   39 ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
