@@ -1,29 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: nvmem: Add Spreadtrum eFuse controller
- documentation
-Date: Tue, 27 Aug 2019 11:30:05 -0500
-Message-ID: <20190827163005.GA26471@bogus>
-References: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
+ Milbeaut HDMAC bindings
+Date: Tue, 27 Aug 2019 11:31:12 -0500
+Message-ID: <20190827163112.GA28297@bogus>
+References: <20190818051647.17475-1-jassisinghbrar@gmail.com>
+ <20190818051754.17548-1-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <80b6cf41d2dc2660a710e611e06faae753e2e09a.1565955745.git.baolin.wang@linaro.org>
+In-Reply-To: <20190818051754.17548-1-jassisinghbrar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org, freeman.liu@unisoc.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: jassisinghbrar@gmail.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, robh+dt@kernel.org, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Aug 2019 19:44:16 +0800, Baolin Wang wrote:
-> From: Freeman Liu <freeman.liu@unisoc.com>
+On Sun, 18 Aug 2019 00:17:54 -0500, jassisinghbrar@gmail.com wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
 > 
-> This patch adds the binding documentation for Spreadtrum eFuse controller.
+> Document the devicetree bindings for Socionext Milbeaut HDMAC
+> controller. Controller has upto 8 floating channels, that need
+> a predefined slave-id to work from a set of slaves.
 > 
-> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 > ---
->  .../devicetree/bindings/nvmem/sprd-efuse.txt       |   39 ++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
+>  .../bindings/dma/milbeaut-m10v-hdmac.txt      | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
