@@ -1,54 +1,26 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 2/4] iio: imu: st_lsm6sdx: move register definitions
- to sensor_settings struct
-Date: Tue, 27 Aug 2019 20:59:24 +0100
-Message-ID: <20190827205924.313344e4@archlinux>
-References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
-        <20190821132520.28225-3-martin.kepplinger@puri.sm>
-        <d3cb1cf5-f17f-38ef-66a2-23c1b7a7d08f@puri.sm>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v4 1/2] dt/bindings: display: Add optional property node define
+ for Mali DP500
+Date: Tue, 27 Aug 2019 15:07:53 -0500
+Message-ID: <20190827200753.GA5081@bogus>
+References: <20190822021135.10288-1-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d3cb1cf5-f17f-38ef-66a2-23c1b7a7d08f@puri.sm>
+Content-Disposition: inline
+In-Reply-To: <20190822021135.10288-1-wen.he_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc: lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Aug 2019 08:54:57 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
-
-> On 21.08.19 15:25, Martin Kepplinger wrote:
-> > Move some register definitions to the per-device array of struct
-> > st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-> > devices to the driver.
-> > 
-> > Also, remove completely unused register definitions.
-> > 
-> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
-> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
-> >  2 files changed, 28 insertions(+), 9 deletions(-)
-> >   
+On Thu, 22 Aug 2019 10:11:34 +0800, Wen He wrote:
+> Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
+> This property describe the ARQoS levels of DP500's QoS signaling.
 > 
-> I just notices the commit message header typo "st_lsm6sdx" should be
-> "st_lsm6dsx" of course. If you can still rebase/force-push to testing,
-> would you be able to fix that? If it's too far out there already, so be
-> it :) sorry for the typo, and thanks for adding "-imu" yourself where
-> applicable.
-
-I can indeed. Fixed up.
-
-Added Rob's ack to the dt patch as well.
-
-Thanks,
-
-Jonathan
-
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> thanks,
-> 
->                       martin
+
+Reviewed-by: Rob Herring <robh@kernel.org>
