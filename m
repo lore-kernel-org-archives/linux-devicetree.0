@@ -1,42 +1,103 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: sunxi: Add compatible for A64
- OlinuXino with eMMC
-Date: Tue, 27 Aug 2019 06:55:10 -0500
-Message-ID: <CAL_JsqKLLUX+CZOuBWqxB3UZv7uY74snqqz8fHPqnw4Zrz-p0A@mail.gmail.com>
-References: <20190821195217.4166-1-sunil@medhas.org>
- <20190821195217.4166-2-sunil@medhas.org>
+Subject: Re: [PATCH v2 02/20] dt-bindings: arm: Convert Marvell MMP board/soc
+ bindings to json-schema
+Date: Tue, 27 Aug 2019 06:59:45 -0500
+Message-ID: <CAL_JsqJ4_h+M=6L-nzK2N+A9TAy-N8SoiFv1SSTk_kCcKt0eXw@mail.gmail.com>
+References: <20190822092643.593488-1-lkundrak@v3.sk> <20190822092643.593488-3-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821195217.4166-2-sunil@medhas.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sunil Mohan Adapa <sunil@medhas.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190822092643.593488-3-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 2:53 PM Sunil Mohan Adapa <sunil@medhas.org> wrote:
+On Thu, Aug 22, 2019 at 4:27 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
 >
-> A64 OLinuXino board from Olimex has three variants with onboard eMMC:
-> A64-OLinuXino-1Ge16GW, A64-OLinuXino-1Ge4GW and A64-OLinuXino-2Ge8G-IND. In
-> addition, there are two variants without eMMC. One without eMMC and one with SPI
-> flash. This suggests the need for separate device tree for the three eMMC
-> variants.
+> Convert Marvell MMP SoC bindings to DT schema format using json-schema.
 >
-> Add new compatible string to the bindings documentation for the A64 OlinuXino
-> board variant with on-board eMMC.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 >
-> Signed-off-by: Sunil Mohan Adapa <sunil@medhas.org>
 > ---
->  Documentation/devicetree/bindings/arm/sunxi.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+> Changes since v1:
+> - Added this patch
+>
+>  .../devicetree/bindings/arm/mrvl/mrvl.txt     | 14 ---------
+>  .../devicetree/bindings/arm/mrvl/mrvl.yaml    | 31 +++++++++++++++++++
+>  2 files changed, 31 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> deleted file mode 100644
+> index 951687528efb0..0000000000000
+> --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> +++ /dev/null
+> @@ -1,14 +0,0 @@
+> -Marvell Platforms Device Tree Bindings
+> -----------------------------------------------------
+> -
+> -PXA168 Aspenite Board
+> -Required root node properties:
+> -       - compatible = "mrvl,pxa168-aspenite", "mrvl,pxa168";
+> -
+> -PXA910 DKB Board
+> -Required root node properties:
+> -       - compatible = "mrvl,pxa910-dkb";
+> -
+> -MMP2 Brownstone Board
+> -Required root node properties:
+> -       - compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+> new file mode 100644
+> index 0000000000000..dc9de506ac6e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+> @@ -0,0 +1,31 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/mrvl/mrvl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell Platforms Device Tree Bindings
+> +
+> +maintainers:
+> +  - Lubomir Rintel <lkundrak@v3.sk>
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +      - description: PXA168 Aspenite Board
+> +        items:
+> +          - enum:
+> +              - mrvl,pxa168-aspenite
+> +          - const: mrvl,pxa168
+> +      - description: PXA910 DKB Board
+> +        items:
+> +          - enum:
+> +              - mrvl,pxa910-dkb
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Doesn't match what's in dts file:
+
+arch/arm/boot/dts/pxa910-dkb.dts:       compatible =
+"mrvl,pxa910-dkb", "mrvl,pxa910";
+
+> +      - description: MMP2 Brownstone Board
+
+If this entry is only for this board...
+
+> +        items:
+> +          - enum:
+> +              - mrvl,mmp2-brownstone
+
+...then this can be a 'const' instead. Same for the others.
+
+> +          - const: mrvl,mmp2
+> +...
+> --
+> 2.21.0
+>
