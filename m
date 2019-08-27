@@ -1,140 +1,58 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-Date: Tue, 27 Aug 2019 16:53:00 +0800
-Message-ID: <20190827085302.5197-12-jiaxun.yang@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+From: Anilkumar Kolli <akolli-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 10/49] ath11k: add debug.c
+Date: Tue, 27 Aug 2019 14:34:23 +0530
+Message-ID: <6622b83f754404ec05b9442027757c5e@codeaurora.org>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <2708501.D2hezO5Rnt@bentobox>
+ <80bdedf3740960e0ce05b02a77d1b457@codeaurora.org>
+ <4441194.D8eDD6Tzdi@bentobox>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4441194.D8eDD6Tzdi@bentobox>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sven Eckelmann <sven-KaDOiPu9UxWEi8DpZVb4nw@public.gmane.org>
+Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Prepare for later dts.
+On 2019-08-27 13:05, Sven Eckelmann wrote:
+> On Tuesday, 27 August 2019 09:33:39 CEST Anilkumar Kolli wrote:
+> [...]
+>> >     [ 4312.884650] The reading for sensor 4 is 0x002041f7
+>> >     [ 4312.891499] The reading for sensor 5 is 0x002051f4
+>> >     [ 4312.896415] Couldn't get reading for sensor 6
+>> >     [ 4312.901189] Couldn't get reading for sensor 7
+>> >     [ 4312.905561] The reading for sensor 8 is 0x002081e0
+>> >     [ 4312.909902] The reading for sensor 9 is 0x002091f7
+>> >     [ 4312.914645] Couldn't get reading for sensor 10
+>> >     [ 4312.919364] The reading for sensor 11 is 0x0020b1fa
+>> >     [ 4312.923791] The reading for sensor 12 is 0x0020c1fa
+>> >     [ 4312.928621] Couldn't get reading for sensor 13
+>> >     [ 4312.933425] The reading for sensor 14 is 0x0020e1f4
+>> >     [ 4312.937941] The reading for sensor 15 is 0x0020f1e7
+>> >     [ 4313.942700] Rebooting in 3 seconds..
+>> >
+>> > Maybe can be fixed by a different kernel (for the remoteproc). But I
+>> > don't
+>> > have this kernel at the moment.
+>> >
+>> 
+>> The write of an "assert", sends 'WMI_FORCE_FW_HANG_CMDID' WMI command 
+>> to
+>> target firmware.
+>> This WMI command forces the target to assert.
+> 
+> Yes, but it shouldn't kill the complete system.
+> 
+This will not kill the whole system, This will crash target and we have 
+mechanism to recover the system.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
- .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
- 2 files changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+Hope u have generated the crash with below patch,
+https://source.codeaurora.org/quic/qsdk/oss/system/feeds/wlan-open/tree/mac80211/patches/019-ath11k-disable-q6-recovery-to-crash-kernel.patch?h=win_ap.1.0
 
-diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-new file mode 100644
-index 000000000000..410d896a0078
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson CPUs bindings
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description: |+
-+  The device tree allows to describe the layout of CPUs in a system through
-+  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-+  defining properties for every cpu.
-+
-+  Bindings for CPU nodes follow the Devicetree Specification, available from:
-+
-+  https://www.devicetree.org/specifications/
-+
-+properties:
-+  reg:
-+    maxItems: 1
-+    description: |
-+      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-+
-+  compatible:
-+    enum:
-+      - loongson,gs464
-+      - loongson,gs464e
-+      - loongson,gs264
-+      - loongson,gs464v
-+
-+required:
-+  - device_type
-+  - reg
-+  - compatible
-+...
-diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-new file mode 100644
-index 000000000000..181881a9f4a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek SoC based Platforms Device Tree Bindings
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+description: |
-+  Devices with a Loongson CPU shall have the following properties.
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+
-+      - description: Loongson 3A1000 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3a1000-780e-1way
-+
-+      - description: Loongson 3A1000 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3a1000-780e-2way
-+
-+      - description: Loongson 3A1000 + RS780E 4Way
-+        items:
-+          - const: loongson,ls3a1000-780e-4way
-+
-+      - description: Loongson 3B1000/1500 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3b-780e-1way
-+
-+      - description: Loongson 3B1000/1500 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3b-780e-2way
-+
-+      - description: Loongson 3A2000 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3a2000-780e-1way
-+
-+      - description: Loongson 3A2000 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3a2000-780e-2way
-+
-+      - description: Loongson 3A2000 + RS780E 4Way
-+        items:
-+          - const: loongson,ls3a2000-780e-4way
-+
-+      - description: Loongson 3A3000 + RS780E 1Way
-+        items:
-+          - const: loongson,ls3a3000-780e-1way
-+
-+      - description: Loongson 3A3000 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3a3000-780e-2way
-+
-+      - description: Loongson 3A3000 + RS780E 4Way
-+        items:
-+          - const: loongson,ls3a3000-780e-4way
-+
-+...
--- 
-2.22.0
+Please remove this patch to see the target recover after the crash.
+
+Thanks
+Anil
