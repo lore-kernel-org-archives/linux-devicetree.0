@@ -1,60 +1,156 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Date: Tue, 27 Aug 2019 21:13:11 +0000
-Message-ID: <0e9c7c7cb17b6fdea8d49b06925badb0b3d2ff8b.camel@alliedtelesis.co.nz>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
-         <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
-         <20190823104621.GY13294@shell.armlinux.org.uk>
-         <20190823105020.GZ13294@shell.armlinux.org.uk>
-         <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
-         <20190827091336.GI13294@shell.armlinux.org.uk>
-         <b1e2e5b325b3c4453e2ed63c17e1e11d6b24f099.camel@alliedtelesis.co.nz>
-         <20190827210713.GO13294@shell.armlinux.org.uk>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Tue, 27 Aug 2019 23:15:37 +0200
+Message-ID: <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
+References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
+ <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
+ <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com> <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
+ <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827210713.GO13294@shell.armlinux.org.uk>
-Content-Language: en-US
-Content-ID: <4419FE1761C1324BB3ED319618247254@atlnz.lc>
+In-Reply-To: <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jlu@pengutronix.de" <jlu@pengutronix.de>, "bp@alien8.de" <bp@alien8.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "patches@armlinux.org.uk" <patches@armlinux.org.uk>
+To: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Cc: eswara.kota@linux.intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTI3IGF0IDIyOjA3ICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggYWRtaW4NCndyb3RlOg0KPiBPbiBUdWUsIEF1ZyAyNywgMjAxOSBhdCAwODo1NjowNVBNICsw
-MDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOS0wOC0yNyBhdCAxMDox
-MyArMDEwMCwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IGFkbWluDQo+ID4gd3JvdGU6DQo+ID4g
-PiBKdXN0IHNlbmQgdGhlIHNpbmdsZSBwYXRjaCB0byB0aGUgcGF0Y2ggdHJhY2tlciAtIGhhdmlu
-ZyBpdCBhZ2FpbnN0DQo+ID4gPiA1LjMtcmMgaXMgZmluZSAoSSBkb24ndCB0aGluayBhbnl0aGlu
-ZyBoYXMgY2hhbmdlZCBmb3IgYSBsb25nIHRpbWUNCj4gPiA+IHdpdGggdGhhdCBmaWxlLikNCj4g
-PiANCj4gPiBEb25lIA0KPiA+IGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIv
-cGF0Y2hlcy92aWV3cGF0Y2gucGhwP2lkPTg5MDIvMQ0KPiA+IA0KPiA+IEknbSBzdGlsbCBub3Qg
-ZW50aXJlbHkgc3VyZSB3aGF0IHRvIHB1dCBmb3IgdGhlIEtlcm5lbFZlcnNpb24gdGFnLiBJbg0K
-PiA+IGhpbmRzaWdodCB0aGluayBJIG1pc2ludGVycHJldGVkIHlvdXIgY29tbWVudCBhYm92ZSBh
-bmQgc2V0IGl0IHRvIDUuM3JjDQo+ID4gKHdoZXJlIHlvdSBtZWFudCBhIHNlcmllcyBiYXNlZCBv
-biA1LjMtcmNYIHNob3VsZCBhcHBseSBjbGVhbmx5KS4gSXQNCj4gPiBwcm9iYWJseSBzaG91bGQg
-aGF2ZSBiZWVuIG5leHQgb3IgbWFzdGVyIGJlY2F1c2UgaXQncyB3YXkgcGFzdCB0aGUNCj4gPiBt
-ZXJnZSB3aW5kb3cgZm9yIDUuMy4NCj4gDQo+IFRoaW5rIGFib3V0IGl0IGFzICJ3aGljaCBrZXJu
-ZWwgdmVyc2lvbiB3YXMgX3RoaXNfIHBhdGNoIGdlbmVyYXRlZA0KPiBhZ2FpbnN0IiAtIGl0J3Mg
-YSBndWlkZSBmb3IgbWUgdG8ga25vdyB3aGljaCBrZXJuZWwgdmVyc2lvbiBpdA0KPiBzaG91bGQg
-YmUgYXBwbGllZCB0by4gIFRoZSBuZWFyZXN0IExpbnVzIHJlbGVhc2UgKHJjIG9yIGZpbmFsKSBp
-cw0KPiBnZW5lcmFsbHkgc3VmZmljaWVudC4NCj4gDQo+IElmIGl0IGRvZXNuJ3QgYXBwbHkgdG8g
-bXkgY3VycmVudCBiYXNlLCB0aGVuIEkgbWlnaHQgY2hlY2sgb3V0IHRoYXQNCj4gdmVyc2lvbiwg
-YXBwbHkgaXQgdGhlcmUsIGFuZCB0aGVuIG1lcmdlIGl0IGluLCByZXNvbHZpbmcgYW55DQo+IGNv
-bmZsaWN0cyBkdXJpbmcgdGhlIG1lcmdlLg0KPiANCj4gSXQgc3RhcnRlZCBvZmYgd2l0aCBhIGRp
-ZmZlcmVudCBwdXJwb3NlOiB3aGVuIHdlIGhhZCB0aGUgb2xkZXINCj4gZGV2ZWxvcG1lbnQgc3lz
-dGVtLCBzdWNoIGFzIHRoZSAyLnggc2VyaWVzIGtlcm5lbHMsIHdlIHdvdWxkIGhhdmUNCj4gZXZl
-biB4IGJlaW5nIHRoZSBjdXJyZW50IHN0YWJsZSBrZXJuZWxzLCBhbmQgY29uY3VycmVudGx5IHdl
-J2QNCj4gYWxzbyBoYXZlIHgrMSBhcyB0aGUgZGV2ZWxvcG1lbnQgc2VyaWVzLiAgV2hlbiBzb21l
-b25lIHNlbnQgbWUgYQ0KPiBwYXRjaCBiYWNrIHRoZW4sIGl0IHdhcyBpbXBvcnRhbnQgdG8ga25v
-dyB3aGljaCBrZXJuZWwgc2VyaWVzIGl0DQo+IHdhcyBtZWFudCBmb3IuDQo+IA0KPiBJIGRlY2lk
-ZWQgbm90IHRvIGdldCByaWQgb2YgaXQgYmVjYXVzZSBpdCBwcm92aWRlcyB1c2VmdWwNCj4gaW5m
-b3JtYXRpb24gd2hlbiBwYXRjaGVzIGRvbid0IGFwcGx5LCBhbmQgZ2l2ZXMgbW9yZSBvcHRpb25z
-DQo+IHRoYW4gbWUganVzdCBkaXNjYXJkaW5nIHRoZSBwYXRjaCB3aXRoIGEgY29tbWVudCBzYXlp
-bmcgaXQNCj4gZG9lc24ndCBhcHBseS4NCj4gDQoNClRoYW5rcyBmb3IgdGhlIGluZm8uIFNvIDUu
-My1yYyBpcyBub3QgYXMgd3JvbmcgYXMgSSB0aG91Z2h0IGl0IHdhcy4NCg0KT25lIGNvdWxkIGV2
-ZW4gc3VtbWFyaXplIHRoZSBhYm92ZSBhcy4NCg0KICBnaXQgZm9ybWF0LXBhdGNoIC0tYWRkLWhl
-YWRlciBcDQogICAgICAiS2VybmVsVmVyc2lvbjogJChnaXQgZGVzY3JpYmUgLS1hYmJyZXY9MCBI
-RUFEKSINCg0K
+Hi,
+
+On Tue, Aug 27, 2019 at 4:23 AM Chuan Hua, Lei
+<chuanhua.lei@linux.intel.com> wrote:
+[...]
+> >> 1. reset-lantiq.c use index instead of register offset + bit position.
+> >> index reset is good for a small system (< 64). However, it will become very
+> >> difficult to use if you have  > 100 reset. So we use register offset +
+> >> bit position
+> > reset-lantiq uses bit bit positions for specifying the reset line.
+> > for example this is from OpenWrt's vr9.dtsi:
+> >    reset0: reset-controller@10 {
+> >      ...
+> >      reg = <0x10 4>, <0x14 4>;
+> >      #reset-cells = <2>;
+> >    };
+> >
+> >    gphy0: gphy@20 {
+> >      ...
+> >      resets = <&reset0 31 30>, <&reset1 7 7>;
+> >      reset-names = "gphy", "gphy2";
+> >    };
+> >
+> > in my own words this means:
+> > - all reset0 reset bits are at offset 0x10 (parent is RCU)
+> > - all reset0 status bits are at offset 0x14 (parent is RCU)
+> > - the first reset line uses reset bit 31 and status bit 30
+> > - the second reset line uses reset bit 7 and status bit 7
+> > - there can be multiple reset-controller instances, each taking the
+> > reset and status offsets (OpenWrt's vr9.dtsi specifies the second RCU
+> > reset controller "reset1" with reset offset 0x48 and status offset
+> > 0x24)
+>
+> in reset-lantiq.c, we split each reset request /status pair into one
+> reset controller.
+>
+> Each reset controller handles up to 32 resets. It will create up to 9
+> even more
+> reset controllers in the new SoCs. In reality, there is only one RCU
+> controller for all
+> SoCs. These designs worked but did not follow what hardware implemented.
+>
+> After checking the existing code and referring to other implementation,
+> we decided to
+> use register offset + bit position method. It can support all SoCs with
+> this methods
+> without code change(device tree change only).
+maybe I have a different interpretation of what "RCU" does.
+let me explain it in my own words based on my knowledge about VRX200:
+- in my own words it is a multi function device with the following
+functionality:
+- it contains two reset controllers (reset at 0x10, status 0x14 and
+reset at 0x48, status at 0x24)
+- it contains two USB2 PHYs (PHY registers at 0x18, ANA cfg at 0x38
+and PHY registers at 0x34, ANA cfg at 0x3c)
+- it contains the configuration for the two GPHY IP blocks (at 0x20 and 0x68)
+- it contains endianness configuration registers (for PCI, PCIe, ...)
+- it contains the watchdog boot status (whether the SoC was previously
+reset by the WDT)
+- maybe more, but I don't know anything else about it
+
+we tried our best to document this in
+Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+
+I'm not sure about the details of the RCU on the LGM SoCs:
+if it contains more than just reset controllers then please let Rob
+Herring (dt-bindings maintainer) know about this.
+we may only have one chance to do it right, if we start with a
+"broken" binding then devices with incompatible bootloaders etc. may
+have already shipped
+(in general: that is why the devicetree maintainers want to have all
+device properties documented in the binding, even if the driver does
+not support all of them yet)
+
+> >> 2. reset-lantiq.c does not support device restart which is part of the
+> >> reset in
+> >> old lantiq SoC. It moved this part into arch/mips/lantiq directory.
+> > it was moved to the .dts instead of the arch code. again from
+> > OpenWrt's vr9.dtsi [0]:
+> >    reboot {
+> >      compatible = "syscon-reboot";
+> >      regmap = <&rcu0>;
+> >      offset = <0x10>;
+> >      mask = <0xe0000000>;
+> >    };
+> >
+> > this sets the reset0 reset bits 31, 30 and 29 at reboot
+> ok. but not sure why we need to reset bit 31 and 29. global softwre
+> reset is bit 30.
+I don't know either. depending on what the LGM SoCs need you can
+change the "mask" property to the value that fits that SoC best
+
+[...]
+> > - other reset lines only support reset pulses. the _reset function
+> > should be used in this case
+> > - the _reset function should only assert the reset line, then wait
+> > until the hardware automatically de-asserts it (without any further
+> > write)
+> Yes, this is called hardware reset. We can't control reset duration.
+> > is this the same for all, old and new SoCs?
+>
+> New SoCs have removed support for hardware reset after software's feedback.
+>
+> Old SoCs such as VRX200/ARX300 has both software/hardware resets
+nice, it's good to see teamwork between hardware and software teams!
+
+[...]
+> >> 4. Code not optimized and intel internal review not assessed.
+> > insights from you (like the issue with the reset callback) are very
+> > valuable - this shows that we should focus on having one driver.
+> >
+> >> Based on the above findings, I would suggest reset-lantiq.c to move to
+> >> reset-intel-syscon.c
+> > my concern with having two separate drivers is that it will be hard to
+> > migrate from reset-lantiq to the "optimized" reset-intel-syscon
+> > driver.
+> > I don't have access to the datasheets for the any Lantiq/Intel SoC
+> > (VRX200 and even older).
+> > so debugging issues after switching from one driver to another is
+> > tedious because I cannot tell which part of the driver is causing a
+> > problem (it's either "all code from driver A" vs "all code from driver
+> > B", meaning it's hard to narrow it down).
+> > with separate commits/patches that are improving the reset-lantiq
+> > driver I can do git bisect to find the cause of a problem on the older
+> > SoCs (VRX200 for example)
+>
+> Our internal version supports XRX350/XRX500/PRX300(MIPS based) and
+> latest Lighting Mountain(X86 based). Migration to reset-intel-syscon.c
+> should be straight forward.
+what about the _reset callback on the XRX350/XRX500/PRX300 SoCs - do
+they only use level resets (_assert and _deassert) or are some reset
+lines using reset pulses (_reset)?
+
+when we wanted to switch from reset-lantiq.c to reset-intel-syscon.c
+we still had to add support for the _reset callback as this is missing
+in reset-intel-syscon.c currently
+
+
+Martin
