@@ -1,72 +1,39 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Date: Tue, 27 Aug 2019 03:24:30 +0000
-Message-ID: <AM6PR0402MB39115FEE1E53EC047F54C4F6F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
- <57ecab7c3600802d544683fcb968f9455b2b25d8.camel@intel.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH v2 0/2] hwmon: a new driver for Synaptics AS370 PVT sensor
+Date: Tue, 27 Aug 2019 03:43:30 +0000
+Message-ID: <20190827113214.13773d45@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57ecab7c3600802d544683fcb968f9455b2b25d8.camel@intel.com>
 Content-Language: en-US
+Content-ID: <F0FE8A303FA1D74489DBBEF4AAF4DEB1@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>, Eduardo Valentin <edubezval@gmail.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJ1aQ0KDQo+IE9uIFR1ZSwgMjAxOS0wOC0yNyBhdCAwMTo1MSArMDAwMCwgQW5zb24gSHVh
-bmcgd3JvdGU6DQo+ID4gPiBPbiA3LzMwLzIwMTkgNTozMSBBTSwgQW5zb24uSHVhbmdAbnhwLmNv
-bSB3cm90ZToNCj4gPiA+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
-DQo+ID4gPiA+DQo+ID4gPiA+IFNvbWUgcGxhdGZvcm1zIGxpa2UgaS5NWDhNUSBoYXMgY2xvY2sg
-Y29udHJvbCBmb3IgdGhpcyBtb2R1bGUsDQo+ID4gPiA+IG5lZWQgdG8gYWRkIGNsb2NrIG9wZXJh
-dGlvbnMgdG8gbWFrZSBzdXJlIHRoZSBkcml2ZXIgaXMgd29ya2luZw0KPiA+ID4gPiBwcm9wZXJs
-eS4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1
-YW5nQG54cC5jb20+DQo+ID4gPiA+IFJldmlld2VkLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNp
-Z3hjcHUub3JnPg0KPiA+ID4NCj4gPiA+IFRoaXMgc2VyaWVzIGxvb2tzIGdvb2QsIGRvIHlvdSB0
-aGluayBpdCBjYW4gYmUgbWVyZ2VkIGluIHRpbWUgZm9yDQo+ID4gPiB2NS40Pw0KPiA+ID4gVG9k
-YXkgd2FzIHY1LjMtcmM2Lg0KPiA+DQo+ID4gSWYgdGhlIHF1ZXN0aW9uIGlzIGZvciBtZSwgdGhl
-biBJIGFtIE5PVCBzdXJlLCB0aGUgdGhlcm1hbCBwYXRjaGVzIGFyZQ0KPiA+IHBlbmRpbmcgdGhl
-cmUgZm9yIGFsbW9zdCBoYWxmIHllYXIgYW5kIEkgZGlkIE5PVCByZWNlaXZlIGFueSByZXNwb25z
-ZSwNCj4gDQo+IHdoaWNoIHBhdGNoIHNlcmllcyB5b3UncmUgcmVmZXJyaW5nIHRvPw0KDQpCZWxv
-dyBpLk1YOFFYUCBwYXRjaCBzZXJpZXMsIEkgbWVhbnQgSSBzdGFydGVkIGl0IGZyb20gbGFzdCB5
-ZWFyLCB0aGUgbGF0ZXN0IHJlc2VuZA0KdmVyc2lvbiBpcyAyIG1vbnRocyBhZ286IA0KDQpodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDAwODA5LyANCg0KDQo+IA0KPiA+ICBs
-b29rcyBsaWtlIG5vIG9uZQ0KPiA+IGlzIG1haW50YWluaW5nIHRoZSB0aGVybWFsIHN1Yi1zeXN0
-ZW0/DQoNCkJlbG93IHR3byBwYXRjaCBzZXJpZXMgYXJlIGFsc28gcGVuZGluZyB0aGVyZSBmb3Ig
-c29tZSB0aW1lOg0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDMyNzc3
-LyANCg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTAzMTI5Ny8gDQoNCj4g
-Pg0KPiANCj4gRWR1YXJkbyBpcyBtYWludGFpbmluZyBhbGwgdGhlIHRoZXJtYWwtc29jIGRyaXZl
-ciBjaGFuZ2VzLiBUaHVzIEkgdXN1YWxseQ0KPiBmaWx0ZXJlZCBvdXQgdGhlIHNvYyBkcml2ZXIg
-cGF0Y2hlcyBpbiBteSBtYWlsYm94Lg0KPiANCj4gVGhlIGxhc3QgZW1haWwgZnJvbSBFZHVhcmRv
-IGlzIHRoYXQgaGUgaXMgb2ZmbGluZSBkdXJpbmcgdGhpcyBKdWx5IGFuZCB3aWxsIGJlDQo+IGJh
-Y2sgYW5kIHRha2luZyBwYXRjaGVzIGluIEF1Z3VzdC4NCj4gDQo+IEkgd2lsbCBkb3VibGUgY2hl
-Y2sgd2l0aCBFZHVhcmRvIGFueXdheS4NCg0KVGhhbmtzLCBlc3BlY2lhbGx5IG91ciBpLk1YOFFY
-UCB0aGVybWFsIGRyaXZlciBwYXRjaCwgSSBzdGFydGVkIGl0IGZyb20gbGFzdCB5ZWFyIGFuZA0K
-ZHVlIHRvIHNvbWUgZGlmZmVyZW50IG9waW5pb24gZnJvbSBkaWZmZXJlbnQgcmV2aWV3ZXJzLCB0
-aGlzIHBhdGNoIHNlcmllcyB2ZXJzaW9uIGlzDQp1cCB0byB2MTUsIGJ1dCBJIGRpZCBOT1QgcmVj
-ZWl2ZSByZXNwb25zZSBzaW5jZSBKdW5lLCBhcHByZWNpYXRlZCBpZiB5b3UgZ3V5cyBjYW4gdGFr
-ZQ0KYSBsb29rIGF0IHRoaXMsIEkgcGluZyBpdCBtYW55IHRpbWVzIGJ1dCBubyBmZWVkYmFjay4g
-VGhhbmtzIQ0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDAwODA5Lw0K
-DQpBbnNvbi4NCg0KPiANCj4gdGhhbmtzLA0KPiBydWkNCj4gDQo+IA0KPiA+ID4NCj4gPiA+IElu
-IGFuIGVhcmxpZXIgc2VyaWVzIHRoZSBDTEtfSVNfQ1JJVElDQUwgZmxhZ3Mgd2FzIHJlbW92ZWQg
-ZnJvbSB0aGUNCj4gPiA+IFRNVSBjbG9jayBzbyBpZiB0aGUgdGhlcm1hbCBkcml2ZXIgZG9lc24n
-dCBleHBsaWNpdGx5IGVuYWJsZSBpdCB0aGUNCj4gPiA+IHN5c3RlbSB3aWxsIGhhbmcgb24gcHJv
-YmUuIFRoaXMgaXMgd2hhdCBoYXBwZW5zIGluIGxpbnV4LW5leHQgcmlnaHQNCj4gPiA+IG5vdyEN
-Cj4gPg0KPiA+IFRoZSB0aGVybWFsIGRyaXZlciBzaG91bGQgYmUgYnVpbHQgd2l0aCBtb2R1bGUs
-IHNvIGRlZmF1bHQga2VybmVsDQo+ID4gc2hvdWxkIGNhbiBib290IHVwLCBkbyB5b3UgbW9kaWZ5
-IHRoZSB0aGVybWFsIGRyaXZlciBhcyBidWlsdC1pbj8NCj4gPg0KPiA+ID4NCj4gPiA+IFVubGVz
-cyB0aGlzIHBhdGNoZXMgaXMgbWVyZ2VkIHNvb24gd2UnbGwgZW5kIHVwIHdpdGggYSA1LjQtcmMx
-IHRoYXQNCj4gPiA+IGRvZXNuJ3QgYm9vdCBvbiBpbXg4bXEuIEFuIGVhc3kgZml4IHdvdWxkIGJl
-IHRvIGRyb3AvcmV2ZXJ0IGNvbW1pdA0KPiA+ID4gOTUxYzFhZWY5NjkxICgiY2xrOiBpbXg4bXE6
-IFJlbW92ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBmb3INCj4gPiA+IElNWDhNUV9DTEtfVE1VX1JP
-T1QiKSB1bnRpbCB0aGUgdGhlcm1hbCBwYXRjaGVzIGFyZSBhY2NlcHRlZC4NCj4gPg0KPiA+IElm
-IHRoZSB0aGVybWFsIGRyaXZlciBpcyBidWlsdCBhcyBtb2R1bGUsIEkgdGhpbmsgbm8gbmVlZCB0
-byByZXZlcnQNCj4gPiB0aGUgY29tbWl0LCBidXQgaWYgYnkgZGVmYXVsdCB0aGVybWFsIGRyaXZl
-ciBpcyBidWlsdC1pbiBvciBtb2QNCj4gPiBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9U
-IGJyZWFrIGtlcm5lbCBib290IHVwLg0KPiA+DQo+ID4gQW5zb24uDQo+ID4NCj4gPiA+DQo+ID4g
-PiBNZXJnaW5nIHBhdGNoZXMgb3V0LW9mLW9yZGVyIHdoZW4gdGhleSBoYXZlIGhhcmQgKGJvb3Qt
-YnJlYWtpbmcpDQo+ID4gPiBkZXBlbmRlbmNpZXMgYWxzbyBicmVha3MgYmlzZWN0Lg0KPiA+ID4N
-Cj4gPiA+IC0tDQo+ID4gPiBSZWdhcmRzLA0KPiA+ID4gTGVvbmFyZA0KDQo=
+Add a new driver for Synaptics AS370 PVT sensor. Currently only
+temperature is supported.
+
+Jisheng Zhang (2):
+  hwmon: Add Synaptics AS370 PVT sensor driver
+  hwmon: (as370-hwmon) Add DT bindings for Synaptics AS370 PVT
+
+Changes since v1
+  - remove useless <linux/delay.h>
+  - use GENMASK
+  - remove useless bit operation
+  - remove read_pvt()
+  - use DIV_ROUND_CLOSEST()
+
+ .../devicetree/bindings/hwmon/as370.txt       |  11 ++
+ drivers/hwmon/Kconfig                         |  10 ++
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/as370-hwmon.c                   | 147 ++++++++++++++++++
+ 4 files changed, 169 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/as370.txt
+ create mode 100644 drivers/hwmon/as370-hwmon.c
+
+--=20
+2.23.0.rc1
