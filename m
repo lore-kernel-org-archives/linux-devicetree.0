@@ -1,43 +1,30 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from laurent.telenet-ops.be ([195.130.137.89]:60564 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbfHNJRr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2019 05:17:47 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] scripts/dtc: dtx_diff - make help text formatting consistent
-Date: Wed, 14 Aug 2019 11:17:43 +0200
-Message-Id: <20190814091743.12577-1-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 27 Aug 2019 11:21:58 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] of: unittest: Add of_node_put() before return
+Message-ID: <20190827162158.GA14084@bogus>
+References: <20190815062218.5428-1-nishkadg.linux@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815062218.5428-1-nishkadg.linux@gmail.com>
+To: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc: robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-None of the help texts use capitalization, except the one for the -T
-option.  Drop the capitalization for consistency.
-Split the single long line that doesn't fit in 80 characters.
+On Thu, 15 Aug 2019 11:52:18 +0530, Nishka Dasgupta wrote:
+> The local variable np in function of_unittest_platform_populate takes
+> the return value of of_find_node_by_path, which gets a node but does not
+> put it. If np is not put before return it may cause a memory leak. Hence
+> put np before a return statement.
+> Issue found with Coccinelle.
+> 
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/of/unittest.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Frank Rowand <frowand.list@gmail.com>
----
-v2:
-  - Add Reviewed-by.
----
- scripts/dtc/dtx_diff | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied, thanks.
 
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index 00fd4738a5877948..e9ad7834a22d9459 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -27,7 +27,8 @@ Usage:
-        -s SRCTREE   linux kernel source tree is at path SRCTREE
-                         (default is current directory)
-        -S           linux kernel source tree is at root of current git repo
--       -T           Annotate output .dts with input source file and line (-T -T for more details)
-+       -T           annotate output .dts with input source file and line
-+                        (-T -T for more details)
-        -u           unsorted, do not sort DTx
- 
- 
--- 
-2.17.1
+Rob
