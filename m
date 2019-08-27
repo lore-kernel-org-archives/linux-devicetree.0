@@ -1,190 +1,85 @@
-Return-Path: <SRS0=mEvB=WS=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v9 06/13] media: dt-bindings: tvp5150: Add input port connectors DT bindings
-Date: Thu, 22 Aug 2019 10:05:49 +0200
-Message-Id: <20190822080556.17109-7-m.felsch@pengutronix.de>
-In-Reply-To: <20190822080556.17109-1-m.felsch@pengutronix.de>
-References: <20190822080556.17109-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=Pkj0=WX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46806 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfH0NX7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 27 Aug 2019 09:23:59 -0400
+Date: Tue, 27 Aug 2019 16:23:51 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/2] drm: rcar-du: kms: Expand comment in vsps parsing
+ routine
+Message-ID: <20190827132351.GY5054@pendragon.ideasonboard.com>
+References: <20190825140135.12150-1-jacopo+renesas@jmondi.org>
+ <20190825140135.12150-3-jacopo+renesas@jmondi.org>
+ <20190825180603.GB5436@pendragon.ideasonboard.com>
+ <20190826072330.ymx52yr35tcaafrh@uno.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190826072330.ymx52yr35tcaafrh@uno.localdomain>
+Sender: devicetree-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The TVP5150/1 decoders support different video input sources to their
-AIP1A/B pins.
+Hi Jacopo,
 
-Possible configurations are as follows:
-  - Analog Composite signal connected to AIP1A.
-  - Analog Composite signal connected to AIP1B.
-  - Analog S-Video Y (luminance) and C (chrominance)
-    signals connected to AIP1A and AIP1B respectively.
+On Mon, Aug 26, 2019 at 09:23:30AM +0200, Jacopo Mondi wrote:
+> On Sun, Aug 25, 2019 at 09:06:03PM +0300, Laurent Pinchart wrote:
+> > Hi Jacopo,
+> >
+> > Thank you for the patch.
+> >
+> > How about changing the subject to "drm: rcar-du: Document DT backward
+> > compatibility" ?
+> >
+> > On Sun, Aug 25, 2019 at 04:01:35PM +0200, Jacopo Mondi wrote:
+> >> Exand comment in the 'vsps' parsing routine to specify why the LIF
+> >
+> > s/Exand/Expand/
+> >
+> >> channel index is defaulted to 0 in case the second cell of the property
+> >
+> > s/is defaulted to 0/defaults to 0/
+> >
+> >> is not specified.
+> >
+> > You could explain it here too :-)
+> 
+> Expand comment in the 'vsps' parsing routine to specify the LIF
+> channel index defaults to 0 in case the second cell of the property
+> is not specified to remain compatible with older DT bindings.
+> 
+> Could you take this in when applying this patch or want me to resend?
 
-This patch extends the device tree bindings documentation to describe
-how the input connectors for these devices should be defined in a DT.
+I would have, but you have forgotten to CC the dri-devel mailing list
+I'm afraid. Could you post a v3 of this patch to the list ? I'll then
+pick it up.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changelog:
+> >> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> ---
+> >>  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 6 +++++-
+> >>  1 file changed, 5 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> >> index 2dc9caee8767..0d59f390de19 100644
+> >> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> >> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> >> @@ -585,7 +585,11 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
+> >>
+> >>  		vsps[j].crtcs_mask |= BIT(i);
+> >>
+> >> -		/* Store the VSP pointer and pipe index in the CRTC. */
+> >> +		/*
+> >> +		 * Store the VSP pointer and pipe index in the CRTC. If the
+> >> +		 * second cell of the 'vsps' specifier isn't present, default
+> >> +		 * to 0 to remain compatible with older DT bindings.
+> >> +		 */
+> >>  		rcdu->crtcs[i].vsp = &rcdu->vsps[j];
+> >>  		rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
+> >>  	}
 
-v7:
-Hi Rob,
-I droped your r b tag because I changed the bindings in this
-patch version. Please can you have a look on it again?
-
-- fix missing AIP1B svideo connection (description and examples)
-
-v3:
-- remove examples for one and two inputs
-- replace space by tabs
-
-v2:
-- adapt port layout in accordance with
-  https://www.spinics.net/lists/linux-media/msg138546.html with the
-  svideo-connector deviation (use only one endpoint)
----
- .../devicetree/bindings/media/i2c/tvp5150.txt | 112 ++++++++++++++++--
- 1 file changed, 105 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-index 8c0fc1a26bf0..28b64ad149ef 100644
---- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -12,11 +12,32 @@ Optional Properties:
- - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
- - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
- 
--The device node must contain one 'port' child node for its digital output
--video port, in accordance with the video interface bindings defined in
--Documentation/devicetree/bindings/media/video-interfaces.txt.
-+The device node must contain one 'port' child node per device physical input
-+and output port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-+are numbered as follows
- 
--Required Endpoint Properties for parallel synchronization:
-+	  Name		Type		Port
-+	--------------------------------------
-+	  AIP1A		sink		0
-+	  AIP1B		sink		1
-+	  Y-OUT		src		2
-+
-+The device node must contain at least one sink port and the src port. Each input
-+port must be linked to an endpoint defined in
-+Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
-+port/connector layout is as follows
-+
-+tvp-5150 port@0 (AIP1A)
-+	endpoint@0 -----------> Comp0-Con  port
-+	endpoint@1 ------+----> Svideo-Con port
-+tvp-5150 port@1 (AIP1B)  |
-+	endpoint@1 ------+
-+	endpoint@0 -----------> Comp1-Con  port
-+tvp-5150 port@2
-+	endpoint (video bitstream output at YOUT[0-7] parallel bus)
-+
-+Required Endpoint Properties for parallel synchronization on output port:
- 
- - hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
- - vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
-@@ -26,17 +47,94 @@ Required Endpoint Properties for parallel synchronization:
- If none of hsync-active, vsync-active and field-even-active is specified,
- the endpoint is assumed to use embedded BT.656 synchronization.
- 
--Example:
-+Example - three input sources:
-+
-+comp_connector_0 {
-+	compatible = "composite-video-connector";
-+	label = "Composite0";
-+
-+	port {
-+		composite0_to_tvp5150: endpoint {
-+			remote-endpoint = <&tvp5150_to_composite0>;
-+		};
-+	};
-+};
-+
-+comp_connector_1 {
-+	compatible = "composite-video-connector";
-+	label = "Composite1";
-+
-+	port {
-+		composite1_to_tvp5150: endpoint {
-+			remote-endpoint = <&tvp5150_to_composite1>;
-+		};
-+	};
-+};
-+
-+svideo_connector {
-+	compatible = "svideo-connector";
-+	label = "S-Video";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		svideo_luma_to_tvp5150: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&tvp5150_to_svideo_luma>;
-+		};
-+
-+		svideo_chroma_to_tvp5150: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&tvp5150_to_svideo_chroma>;
-+		};
-+	};
-+};
- 
- &i2c2 {
--	...
- 	tvp5150@5c {
- 		compatible = "ti,tvp5150";
- 		reg = <0x5c>;
- 		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
- 		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			tvp5150_to_composite0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&composite0_to_tvp5150>;
-+			};
-+
-+			tvp5150_to_svideo_luma: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&svideo_luma_to_tvp5150>;
-+			};
-+		};
-+
-+		port@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			tvp5150_to_composite1: endpoint@0 {
-+				reg = <0>;
-+                                remote-endpoint = <&composite1_to_tvp5150>;
-+			};
-+
-+			tvp5150_to_svideo_chroma: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&svideo_chroma_to_tvp5150>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
- 
--		port {
- 			tvp5150_1: endpoint {
- 				remote-endpoint = <&ccdc_ep>;
- 			};
 -- 
-2.20.1
+Regards,
+
+Laurent Pinchart
