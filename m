@@ -1,39 +1,46 @@
-From: Robin van der Gracht <robin@protonic.nl>
-Subject: [PATCH v2 2/2] arm: dts: imx6qdl: snvs-pwrkey: Change compatible string
-Date: Tue, 27 Aug 2019 14:32:16 +0200
-Message-ID: <20190827123216.32728-2-robin@protonic.nl>
-References: <20190827123216.32728-1-robin@protonic.nl>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: mmc: aspeed: Update example ranges property
+Date: Tue, 27 Aug 2019 07:36:12 -0500
+Message-ID: <CAL_JsqJsLt5FjKayO9ksksrpXDFs3cbAngcQ21xhZYz3JLG=7g@mail.gmail.com>
+References: <20190826021620.11915-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827123216.32728-1-robin@protonic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Robin van der Gracht <robin@protonic.nl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190826021620.11915-1-andrew@aj.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-aspeed@lists.ozlabs.org, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The older imx6 SoCs do not send a power key press interrupt, instead it
-sends a power down request interrupt when the key is released between
-750ms and 5 seconds. The driver uses a different compatible string to ID
-the older SoCs.
+On Sun, Aug 25, 2019 at 9:15 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The example node in the binding uses the AST2500 compatible string for
+> the SD controller with a 64kiB ranges property, but the SD controller is
+> allocated 128kiB of MMIO space according to the AST2500 datasheet. Fix
+> the example to correctly reflect the hardware in the AST2500, however it
+> should be noted that the MMIO region is reduced to 64kiB in the AST2600
+> where a second SD controller block has been introduced into the address
+> space.
+>
+> Also add the IBM copyright header that I left out of the initial patch.
+>
+> Suggested-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+> Hi Ulf, this is the follow-up fix as discussed here:
+>
+> http://patchwork.ozlabs.org/patch/1143090/
+>
+>  Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Signed-off-by: Robin van der Gracht <robin@protonic.nl>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index b3a77bcf00d5..91b97816881c 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -836,7 +836,7 @@
- 				};
- 
- 				snvs_pwrkey: snvs-powerkey {
--					compatible = "fsl,sec-v4.0-pwrkey";
-+					compatible = "fsl,imx6qdl-snvs-pwrkey";
- 					regmap = <&snvs>;
- 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
- 					linux,keycode = <KEY_POWER>;
--- 
-2.20.1
+Acked-by: Rob Herring <robh@kernel.org>
