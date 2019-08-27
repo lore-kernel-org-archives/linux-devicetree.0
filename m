@@ -1,81 +1,78 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 07/13] dt-bindings: interrupt-controller: Add Loongson-3
- HTINTC
-Date: Tue, 27 Aug 2019 22:08:49 +0800
-Message-ID: <e4b0c346-928e-380c-02f7-11c9d4e7864b@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-8-jiaxun.yang@flygoat.com>
- <CAL_JsqJzkKDVm_DBpp4_w5YZQkg0yo9TJtvxzN5beTf45gtohw@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv6] drivers/amba: add reset control to amba bus probe
+Date: Tue, 27 Aug 2019 09:11:53 -0500
+Message-ID: <20190827141153.20254-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJzkKDVm_DBpp4_w5YZQkg0yo9TJtvxzN5beTf45gtohw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Paul Burton <paul.burton@mips.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org, linux@armlinux.org.uk, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, daniel.thompson@linaro.org, linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+default. Until recently, the DMA controller was brought out of reset by the
+bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
+that are not used are held in reset and are left to Linux to bring them
+out of reset.
 
-On 2019/8/27 下午8:49, Rob Herring wrote:
-> On Tue, Aug 27, 2019 at 3:59 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> Document Loongson-3 HyperTransport Interrupt controller.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
->>   .../loongson,ls3-htintc.yaml                  | 53 +++++++++++++++++++
->>   1 file changed, 53 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
->> new file mode 100644
->> index 000000000000..c1bc0faca656
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
->> @@ -0,0 +1,53 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,ls3-htintc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Loongson-3 HyperTransport Interrupt Controller
->> +
->> +maintainers:
->> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
->> +
->> +description: |
->> +  This interrupt controller is found in the Loongson-3 family of chips to transfer
->> +  interrupts from PCH connected on HyperTransport bus.
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +        - loongson,ls3-htintc
-> Can be simplified to:
->
-> compatible
->    const: loongson,ls3-htintc
->
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 4
-> Need to list out what each of the 4 are.
+Add a mechanism for getting the reset property and de-assert the primecell
+module from reset if found. This is a not a hard fail if the reset properti
+is not present in the device tree node, so the driver will continue to
+probe.
 
-Hi Rob
+Because there are different variants of the controller that may have
+multiple reset signals, the code will find all reset(s) specified and
+de-assert them.
 
-These 4 interrupts a just delivered randomly, So it's hard to give out a 
-name.
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v6: remove the need to reset_control_get_count as
+    of_reset_control_array_get_optional_shared is already doing that
+v5: use of_reset_control_array_get_optional_shared()
+v4: cleaned up indentation in loop
+    fix up a few checkpatch warnings
+    add Reviewed-by:
+v3: add a reset_control_put()
+    add error handling
+v2: move reset control to bus code
+    find all reset properties and de-assert them
+---
+ drivers/amba/bus.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Should I add a description for this?
-
-Thanks,
-
---
-
-Jiaxun Yang
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 100e798a5c82..f39f075abff9 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -18,6 +18,7 @@
+ #include <linux/limits.h>
+ #include <linux/clk/clk-conf.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -401,6 +402,19 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 	ret = amba_get_enable_pclk(dev);
+ 	if (ret == 0) {
+ 		u32 pid, cid;
++		struct reset_control *rstc;
++
++		/*
++		 * Find reset control(s) of the amba bus and de-assert them.
++		 */
++		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
++		if (IS_ERR(rstc)) {
++			if (PTR_ERR(rstc) != -EPROBE_DEFER)
++				dev_err(&dev->dev, "Can't get amba reset!\n");
++			return PTR_ERR(rstc);
++		}
++		reset_control_deassert(rstc);
++		reset_control_put(rstc);
+ 
+ 		/*
+ 		 * Read pid and cid based on size of resource
+-- 
+2.20.0
