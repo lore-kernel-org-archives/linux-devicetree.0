@@ -1,149 +1,41 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
-Date: Tue, 27 Aug 2019 16:47:25 +0100
-Message-ID: <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190826073143.4582-7-vidyas@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+Date: Tue, 27 Aug 2019 10:50:05 -0500
+Message-ID: <20190827155005.GA18581@bogus>
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20190821110640.GC5128@sirena.co.uk>
+ <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <VI1PR04MB4015474B3086AE99354FE65395A50@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <20190822184927.GH23391@sirena.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190826073143.4582-7-vidyas@nvidia.com>
+In-Reply-To: <20190822184927.GH23391@sirena.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Mark Brown <broonie@kernel.org>
+Cc: Ashish Kumar <ashish.kumar@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
-> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-> slot from the respective controller's device-tree node and enable those
-> supplies. This is required in platforms like p2972-0000 where the supplies
-> to x16 slot owned by C5 controller need to be enabled before attempting to
-> enumerate the devices.
+On Thu, Aug 22, 2019 at 07:49:27PM +0100, Mark Brown wrote:
+> On Thu, Aug 22, 2019 at 06:39:18AM +0000, Ashish Kumar wrote:
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
+> > > > Please use subject lines matching the style for the subsystem.  This
+> > > > makes it easier for people to identify relevant patches.
+> > Hi Mark,
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 8a27b25893c9..97de2151a738 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
->  	u32 aspm_l0s_enter_lat;
->  
->  	struct regulator *pex_ctl_supply;
-> +	struct regulator *slot_ctl_3v3;
-> +	struct regulator *slot_ctl_12v;
->  
->  	unsigned int phy_count;
->  	struct phy **phys;
-> @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
->  	}
->  }
->  
-> +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> +	if (IS_ERR(pcie->slot_ctl_3v3))
-> +		pcie->slot_ctl_3v3 = NULL;
-> +
-> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-> +	if (IS_ERR(pcie->slot_ctl_12v))
-> +		pcie->slot_ctl_12v = NULL;
-
-Do these need to take into consideration -EPROBE_DEFER?
-
-Thanks,
-
-Andrew Murray
-
-> +}
-> +
-> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	int ret;
-> +
-> +	if (pcie->slot_ctl_3v3) {
-> +		ret = regulator_enable(pcie->slot_ctl_3v3);
-> +		if (ret < 0) {
-> +			dev_err(pcie->dev,
-> +				"Failed to enable 3V3 slot supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (pcie->slot_ctl_12v) {
-> +		ret = regulator_enable(pcie->slot_ctl_12v);
-> +		if (ret < 0) {
-> +			dev_err(pcie->dev,
-> +				"Failed to enable 12V slot supply: %d\n", ret);
-> +			if (pcie->slot_ctl_3v3)
-> +				regulator_disable(pcie->slot_ctl_3v3);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * According to PCI Express Card Electromechanical Specification
-> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
-> +	 * should be a minimum of 100ms.
-> +	 */
-> +	msleep(100);
-> +
-> +	return 0;
-> +}
-> +
-> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
-> +{
-> +	if (pcie->slot_ctl_12v)
-> +		regulator_disable(pcie->slot_ctl_12v);
-> +	if (pcie->slot_ctl_3v3)
-> +		regulator_disable(pcie->slot_ctl_3v3);
-> +}
-> +
->  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  					bool en_hw_hot_rst)
->  {
-> @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  		return ret;
->  	}
->  
-> +	ret = tegra_pcie_enable_slot_regulators(pcie);
-> +	if (ret < 0)
-> +		goto fail_slot_reg_en;
-> +
->  	ret = regulator_enable(pcie->pex_ctl_supply);
->  	if (ret < 0) {
->  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
-> @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->  fail_core_clk:
->  	regulator_disable(pcie->pex_ctl_supply);
->  fail_reg_en:
-> +	tegra_pcie_disable_slot_regulators(pcie);
-> +fail_slot_reg_en:
->  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->  
->  	return ret;
-> @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
->  		return ret;
->  	}
->  
-> +	tegra_pcie_disable_slot_regulators(pcie);
-> +
->  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->  	if (ret) {
->  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
-> @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	tegra_pcie_get_slot_regulators(pcie);
-> +
->  	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
->  	if (IS_ERR(pcie->pex_ctl_supply)) {
->  		dev_err(dev, "Failed to get regulator: %ld\n",
-> -- 
-> 2.17.1
+> > After looking at some patch in Documentation/devicetree/bindings/spi/
+> > I think I should update subject line to
+> > dt-bindings: spi: Add ls2080-qspi compatible string for FSL QSPI driver
+> > or 
+> > doc: qspi: Add ls2080-qspi compatible to DT bindings for FSL QSPI driver
 > 
+> Drop the dt-bindings:.
+
+If you do 'git log --oneline Documentation/devicetree/bindings/' you'll 
+notice that SPI and ASoC are the oddballs now. I don't really care
+except it does add to tribal knowledge needed regarding maintainers' 
+requirements.
+
+Rob
