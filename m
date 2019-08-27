@@ -1,54 +1,53 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 0/2] Add HwSpinlock nodes for TI K3 SoCs
-Date: Tue, 27 Aug 2019 17:34:28 -0500
-Message-ID: <715d61be-c881-cde8-38f0-451637767909@ti.com>
-References: <20190722190539.27816-1-s-anna@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/6] dt-bindings: misc: atmel-ssc: LRCLK from TF/RF
+ pin option
+Date: Tue, 27 Aug 2019 17:37:16 -0500
+Message-ID: <20190827223716.GA31605@bogus>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <9b85d5a7c7e788e9ed87d020323ad9292e3aeab7.1566677788.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722190539.27816-1-s-anna@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9b85d5a7c7e788e9ed87d020323ad9292e3aeab7.1566677788.git.mirq-linux@rere.qmqm.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Chas Williams <3chas3@gmail.com>, Codrin Ciubotariu <codrin.ciubotariu@microchip.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jaroslav Kysela <perex@perex.cz>, Liam Girdwood <lgirdwood@gmail.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tero,
+On Sat, Aug 24, 2019 at 10:26:55PM +0200, Michał Mirosław wrote:
+> Add single-pin LRCLK source options for Atmel SSC module.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> 
+> ---
+>   v2: split from implementation patch
+> 
+> ---
+>  Documentation/devicetree/bindings/misc/atmel-ssc.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> index f9fb412642fe..c98e96dbec3a 100644
+> --- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> +++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> @@ -24,6 +24,11 @@ Optional properties:
+>         this parameter to choose where the clock from.
+>       - By default the clock is from TK pin, if the clock from RK pin, this
+>         property is needed.
+> +  - atmel,lrclk-from-tf-pin: bool property.
+> +  - atmel,lrclk-from-rf-pin: bool property.
+> +     - SSC in slave mode gets LRCLK from RF for receive and TF for transmit
+> +       data direction. This property makes both use single TF (or RF) pin
+> +       as LRCLK. At most one can be present.
 
-On 7/22/19 2:05 PM, Suman Anna wrote:
-> Hi Tero,
-> 
-> The following series adds the HwSpinlock DT nodes for the
-> TI K3 AM65x and J721E SoC families. Patches are based on
-> v5.3-rc1.
+A single property taking 1 of possible 2 values would prevent the error 
+of more than 1 property present.
 
-I am not sure if you have already staged these, but if haven't,
-can you please pick these and the mailbox nodes for 5.4 merge window?
-
-Thanks,
-Suman
-
-> 
-> The bindings and driver support for the same have been
-> merged in v5.3-rc1.
-> 
-> regards
-> Suman
-> 
-> Suman Anna (2):
->   arm64: dts: ti: k3-am65-main: Add hwspinlock node
->   arm64: dts: ti: k3-j721e-main: Add hwspinlock node
-> 
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi  | 6 ++++++
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 6 ++++++
->  2 files changed, 12 insertions(+)
+>    - #sound-dai-cells: Should contain <0>.
+>       - This property makes the SSC into an automatically registered DAI.
+>  
+> -- 
+> 2.20.1
 > 
