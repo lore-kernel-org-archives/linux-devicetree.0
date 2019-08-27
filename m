@@ -1,57 +1,91 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v5 13/13] ARM: dts: imx6ull-colibri: Add touchscreen used with
- Eval Board
-Date: Tue, 27 Aug 2019 13:18:42 +0000
-Message-ID: <20190827131806.6816-14-philippe.schenker@toradex.com>
+Subject: [PATCH v5 02/13] ARM: dts: imx7-colibri: fix 1.8V/UHS support
+Date: Tue, 27 Aug 2019 13:18:20 +0000
+Message-ID: <20190827131806.6816-3-philippe.schenker@toradex.com>
 References: <20190827131806.6816-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190827131806.6816-1-philippe.schenker@toradex.com>
 Content-Language: en-US
-Content-ID: <6625A000C6DDED4F94A0DF53AA4BE792@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan @ agner . ch" <stefan@agner.ch>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan @ agner . ch" <stefan@agner.ch>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Stefan Agner <stefan.agner@toradex.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Philippe Schenker <philippe.schenker@toradex.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSBjb21tb24gdG91Y2hzY3JlZW4gdGhhdCBpcyB1c2VkIHdpdGggVG9yYWRl
-eCdzDQpFdmFsIEJvYXJkcy4NCkl0IGlzIGRpc2FibGVkIGJ5IGRlZmF1bHQgYmVjYXVzZSB0aGUg
-cGlucyBhcmUgYWxzbyB1c2VkIGZvciBQV00sDQp3aGljaCBpcyB0aGUgc3RhbmRhcmQgdXNlIGZv
-ciBjb2xpYnJpIGJvYXJkcy4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBo
-aWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KUmV2aWV3ZWQtYnk6IE9sZWtzYW5kciBTdXZv
-cm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4NCg0KTWFyY2VsIFppc3dpbGVyIDxt
-YXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQpNYXggS3J1bW1lbmFjaGVyIDxtYXgua3J1bW1l
-bmFjaGVyQHRvcmFkZXguY29tPg0Kc3RlZmFuQGFnbmVyLmNoIDxzdGVmYW5AYWduZXIuY2g+DQpk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+DQpS
-b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
-ZWwub3JnPg0KTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCk1pY2hhbCBWb2vD
-ocSNIDxtaWNoYWwudm9rYWNAeXNvZnQuY29tPg0KRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21h
-aWwuY29tPg0KDQotLS0NCg0KQ2hhbmdlcyBpbiB2NToNCi0gQWRkZWQgbm90ZSB0byBjb21taXQg
-bWVzc2FnZSBhYm91dCBkaXNhYmxlZCBzdGF0dXMNCi0gQWRkIE9sZWsncyBSZXZpZXdlZC1ieQ0K
-DQpDaGFuZ2VzIGluIHY0OiBOb25lDQpDaGFuZ2VzIGluIHYzOiBOb25lDQpDaGFuZ2VzIGluIHYy
-Og0KLSBSZW1vdmVkIGYwNzEwYQ0KdGhhdCBpcyBkb3duc3RyZWFtIG9ubHkNCi0gQ2hhbmdlZCB0
-byBnZW5lcmljIG5vZGUgbmFtZQ0KLSBCZXR0ZXIgY29tbWVudA0KDQogLi4uL2FybS9ib290L2R0
-cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpIHwgMjQgKysrKysrKysrKysrKysrKysrKw0K
-IDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KaW5kZXggYTc4ODQ5ZmQyYWZhLi40NThh
-NDA4NGU1M2MgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmkt
-ZXZhbC12My5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktZXZh
-bC12My5kdHNpDQpAQCAtMTAwLDYgKzEwMCwyMSBAQA0KICZpMmMxIHsNCiAJc3RhdHVzID0gIm9r
-YXkiOw0KIA0KKwkvKg0KKwkgKiBUb3VjaHNjcmVlbiBpcyB1c2luZyBTT0RJTU0gMjgvMzAsIGFs
-c28gdXNlZCBmb3IgUFdNPEI+LCBQV008Qz4sDQorCSAqIGFrYSBwd20yLCBwd20zLiBzbyBpZiB5
-b3UgZW5hYmxlIHRvdWNoc2NyZWVuLCBkaXNhYmxlIHRoZSBwd21zDQorCSAqLw0KKwl0b3VjaHNj
-cmVlbkA0YSB7DQorCQljb21wYXRpYmxlID0gImF0bWVsLG1heHRvdWNoIjsNCisJCXBpbmN0cmwt
-bmFtZXMgPSAiZGVmYXVsdCI7DQorCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZ3Bpb3RvdWNoPjsN
-CisJCXJlZyA9IDwweDRhPjsNCisJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW80PjsNCisJCWlu
-dGVycnVwdHMgPSA8MTYgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsJLyogU09ESU1NIDI4ICovDQor
-CQlyZXNldC1ncGlvcyA9IDwmZ3BpbzIgNSBHUElPX0FDVElWRV9ISUdIPjsJLyogU09ESU1NIDMw
-ICovDQorCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KKwl9Ow0KKw0KIAkvKiBNNDFUME02IHJlYWwg
-dGltZSBjbG9jayBvbiBjYXJyaWVyIGJvYXJkICovDQogCW00MXQwbTY6IHJ0Y0A2OCB7DQogCQlj
-b21wYXRpYmxlID0gInN0LG00MXQwIjsNCkBAIC0xNzYsMyArMTkxLDEyIEBADQogCXNkLXVocy1z
-ZHIxMDQ7DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9Ow0KKw0KKyZpb211eGMgew0KKwlwaW5jdHJs
-X2dwaW90b3VjaDogdG91Y2hncGlvcyB7DQorCQlmc2wscGlucyA9IDwNCisJCQlNWDZVTF9QQURf
-TkFORF9EUVNfX0dQSU80X0lPMTYJCTB4NzQNCisJCQlNWDZVTF9QQURfRU5FVDFfVFhfRU5fX0dQ
-SU8yX0lPMDUJMHgxNA0KKwkJPjsNCisJfTsNCit9Ow0KLS0gDQoyLjIzLjANCg0K
+From: Stefan Agner <stefan.agner@toradex.com>
+
+Add pinmuxing and do not specify voltage restrictions for the usdhc
+instance available on the modules edge connector. This allows to use
+SD-cards with higher transfer modes if supported by the carrier board.
+
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
+---
+
+Changes in v5: None
+Changes in v4:
+- Add Marcel Ziswiler's Ack
+
+Changes in v3:
+- Add new commit message from Stefan's proposal on ML
+
+Changes in v2: None
+
+ arch/arm/boot/dts/imx7-colibri.dtsi | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index b72940e7d00b..cbcb97886e80 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -304,7 +304,6 @@
+ &usdhc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_cd_usdhc1>;
+-	no-1-8-v;
+ 	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	vqmmc-supply = <&reg_LDO2>;
+@@ -612,6 +611,28 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
++		fsl,pins = <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5a
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1a
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5a
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5a
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5a
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5a
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
++		fsl,pins = <
++			MX7D_PAD_SD1_CMD__SD1_CMD	0x5b
++			MX7D_PAD_SD1_CLK__SD1_CLK	0x1b
++			MX7D_PAD_SD1_DATA0__SD1_DATA0	0x5b
++			MX7D_PAD_SD1_DATA1__SD1_DATA1	0x5b
++			MX7D_PAD_SD1_DATA2__SD1_DATA2	0x5b
++			MX7D_PAD_SD1_DATA3__SD1_DATA3	0x5b
++		>;
++	};
++
+ 	pinctrl_usdhc3: usdhc3grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+-- 
+2.23.0
