@@ -1,66 +1,44 @@
 From: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Subject: [PATCH v3 4/4] aspeed/watchdog: Add access_cs0 option for alt-boot
-Date: Tue, 27 Aug 2019 19:54:26 +0300
-Message-ID: <20190827165426.17037-5-i.mikhaylov@yadro.com>
+Subject: [PATCH v3 1/4] vesnin: add wdt2 section with alt-boot option
+Date: Tue, 27 Aug 2019 19:54:23 +0300
+Message-ID: <20190827165426.17037-2-i.mikhaylov@yadro.com>
 References: <20190827165426.17037-1-i.mikhaylov@yadro.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190827165426.17037-1-i.mikhaylov@yadro.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org, Alexander Amelkin <a.amelkin@yadro.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Ivan Mikhaylov <i.mikhaylov@yadro.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The option for the ast2400/2500 to get access to CS0 at runtime.
+Adds wdt2 section with 'alt-boot' option into dts for vesnin.
 
 Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 ---
- .../ABI/testing/sysfs-class-watchdog          | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
-index 6317ade5ad19..675f9b537661 100644
---- a/Documentation/ABI/testing/sysfs-class-watchdog
-+++ b/Documentation/ABI/testing/sysfs-class-watchdog
-@@ -72,3 +72,37 @@ Description:
- 		It is a read/write file. When read, the currently assigned
- 		pretimeout governor is returned.  When written, it sets
- 		the pretimeout governor.
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+index 0b9e29c3212e..2ee26c86a32e 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+@@ -222,3 +222,7 @@
+ &vuart {
+ 	status = "okay";
+ };
 +
-+What:		/sys/class/watchdog/watchdog1/access_cs0
-+Date:		August 2019
-+Contact:	Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-+		Alexander Amelkin <a.amelkin@yadro.com>
-+Description:
-+		It is a read/write file. This attribute exists only if the
-+		system has booted from the alternate flash chip due to
-+		expiration of a watchdog timer of AST2400/AST2500 when
-+		alternate boot function was enabled with 'aspeed,alt-boot'
-+		devicetree option for that watchdog or with an appropriate
-+		h/w strapping (for WDT2 only).
-+
-+		At alternate flash the 'access_cs0' sysfs node provides:
-+			ast2400: a way to get access to the primary SPI flash
-+				chip at CS0 after booting from the alternate
-+				chip at CS1.
-+			ast2500: a way to restore the normal address mapping
-+				from (CS0->CS1, CS1->CS0) to (CS0->CS0,
-+				CS1->CS1).
-+
-+		Clearing the boot code selection and timeout counter also
-+		resets to the initial state the chip select line mapping. When
-+		the SoC is in normal mapping state (i.e. booted from CS0),
-+		clearing those bits does nothing for both versions of the SoC.
-+		For alternate boot mode (booted from CS1 due to wdt2
-+		expiration) the behavior differs as described above.
-+
-+		This option can be used with wdt2 (watchdog1) only.
-+
-+		When read, the current status of the boot code selection is
-+		shown. When written with any non-zero value, it clears
-+		the boot code selection and the timeout counter, which results
-+		in chipselect reset for AST2400/AST2500.
++&wdt2 {
++	aspeed,alt-boot;
++};
 -- 
 2.20.1
