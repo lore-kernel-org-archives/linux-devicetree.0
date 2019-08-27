@@ -1,33 +1,38 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RESEND PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
-Date: Tue, 27 Aug 2019 14:59:11 -0700
-Message-ID: <7htva2uv68.fsf@baylibre.com>
-References: <20190823070248.25832-1-narmstrong@baylibre.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 02/13] MIPS: Loongson64: Sepreate loongson2ef/loongson64
+ code
+Date: Wed, 28 Aug 2019 01:05:07 +0300
+Message-ID: <20190827220506.GK30291@darkstar.musicnaut.iki.fi>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+ <20190827085302.5197-3-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190827085302.5197-3-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Hi,
 
-> This is the first set of DT fixes following the first YAML bindings conversion
-> at [1], [2] and [3].
->
-> After this set of fixes, the remaining errors are :
-> meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
-> meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
-> meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
->
-> These are only cosmetic changes, and should not break drivers implementation
-> following the bindings.
+On Tue, Aug 27, 2019 at 04:52:51PM +0800, Jiaxun Yang wrote:
+> As later model of GSx64 family processors including 2-series-soc have
+> similar design with initial loongson3a while loongson2e/f seems less
+> identical, we seprate loongson2e/f support code out of mach-loongson64
+                ^^^^^^^
 
-Queued for v5.4,
+separate (typo in patch title as well)
 
-Thanks,
+> to make our life easier.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Kevin
+[...]
+
+> +config MACH_LOONGSON2EF
+
+You need to update lemote2f_defconfig with his patch.
+
+A.
