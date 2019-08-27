@@ -1,105 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH next v10 03/11] dt-bindings: usb: add binding for USB
- GPIO based connection detection driver
-Date: Tue, 27 Aug 2019 13:31:54 -0500
-Message-ID: <20190827183154.GA10374@bogus>
-References: <1566547041-20804-1-git-send-email-chunfeng.yun@mediatek.com>
- <1566547041-20804-4-git-send-email-chunfeng.yun@mediatek.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
+ poll mode
+Date: Tue, 27 Aug 2019 19:31:54 +0100
+Message-ID: <20190827183154.GI23391@sirena.co.uk>
+References: <20190822211514.19288-1-olteanv@gmail.com>
+ <20190822211514.19288-6-olteanv@gmail.com>
+ <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
+ <20190827180502.GF23391@sirena.co.uk>
+ <CA+h21hr3qmTG1LyWsEp+hZZW2NJFtg9Dh1k6SXVDd+A_YSQjjw@mail.gmail.com>
+ <20190827181318.GG23391@sirena.co.uk>
+ <CA+h21hqMVdsUjBdtiHKtKGpyvuaOf25tc4h-GdDEBQqa3EB7tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gIORF5nGxIt+AP0s"
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566547041-20804-4-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
+In-Reply-To: <CA+h21hqMVdsUjBdtiHKtKGpyvuaOf25tc4h-GdDEBQqa3EB7tw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>, Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 03:57:13PM +0800, Chunfeng Yun wrote:
-> It's used to support dual role switch via GPIO when use Type-B
-> receptacle, typically the USB ID pin is connected to an input
-> GPIO, and also used to enable/disable device when the USB Vbus
-> pin is connected to an input GPIO.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v9~v10 no changes
-> 
-> v8 changes:
->  1. rename the title
->  2. change the compatible as "linux,usb-conn-gpio" instead of
->     "linux,typeb-conn-gpio"
 
-I don't think that is an improvement. How about 'gpio-usb-b-connector' 
-to be consistent.
+--gIORF5nGxIt+AP0s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> v7 changes:
->  1. add description for device only mode
-> 
-> v6 changes:
->  1. remove status and port nodes in example
->  2. make vbus-supply as optional property
-> 
-> v5 changes:
->  1. treat type-B connector as child device of USB controller's, but not
->     as a separate virtual device, suggested by Rob
->  2. put connector's port node under connector node, suggested by Rob
-> 
-> v4 no changes
-> 
-> v3 changes:
->  1. treat type-B connector as a virtual device, but not child device of
->     USB controller's
-> 
-> v2 changes:
->   1. new patch to make binding clear suggested by Hans
-> ---
->  .../devicetree/bindings/usb/usb-conn-gpio.txt | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-> new file mode 100644
-> index 000000000000..d4d107fedc22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-> @@ -0,0 +1,31 @@
-> +USB GPIO Based Connection Detection
-> +
-> +This is typically used to switch dual role mode from the USB ID pin connected
-> +to an input GPIO, and also used to enable/disable device mode from the USB
-> +Vbus pin connected to an input GPIO.
-> +
-> +Required properties:
-> +- compatible : should include "linux,usb-conn-gpio" and "usb-b-connector".
-> +- id-gpios, vbus-gpios : input gpios, either one of them must be present,
-> +	and both can be present as well.
-> +	see connector/usb-connector.txt
-> +
-> +Optional properties:
-> +- vbus-supply : can be present if needed when supports dual role mode.
-> +	see connector/usb-connector.txt
-> +
-> +- Sub-nodes:
-> +	- port : can be present.
-> +		see graph.txt
-> +
-> +Example:
-> +
-> +&mtu3 {
-> +	connector {
-> +		compatible = "linux,usb-conn-gpio", "usb-b-connector";
-> +		label = "micro-USB";
+On Tue, Aug 27, 2019 at 09:16:39PM +0300, Vladimir Oltean wrote:
 
-'label' is for a human identifying a particular connector when there are 
-multiple (of the same type). So not a great example here.
+> I can't seem to find any situation where it performs worse. Hence my
+> question on whether it's a better idea to condition this behavior on a
+> Kconfig option rather than a DT blob which may or may not be in sync.
 
-> +		type = "micro";
-> +		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-> +		vbus-supply = <&usb_p0_vbus>;
-> +	};
-> +};
-> -- 
-> 2.23.0
-> 
+If it's unconditionally worse then it shouldn't even be a Kconfig
+option, just make the driver just never use the interrupt.
+
+--gIORF5nGxIt+AP0s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1ldxkACgkQJNaLcl1U
+h9ARswf6A+M4PLUEgqtq4LS9LU7LpH/qbPKXT1byjJNJOzZJhiaNOdOfiQUXTpHH
+bipXfDjoA+Bq5QZyp0VX6qO8heo7sSdZzmNKx3wnydsKCGck5e3Ste7Yru5PY2sn
+r9pdyH1nFG5BSfaxxx4fDzBArcNXJM0fo2lVxpwk4tNuviBMKON55SrJ8maV1Krm
+1Tut3wZxZC7UtS5GQE6TDTGpSRSKjEMLNodsZYLRcbh+FimChm5jEHHegB4hLv4b
+o9+IhSlpp+NHkSCoYN2kQmEEi03g95O4mbHSqonF3mpmM4qXQuGsM8brK+UoRgpe
+koyv59Xv//Wv79iCrMHH3tiK8FCRKg==
+=OKu8
+-----END PGP SIGNATURE-----
+
+--gIORF5nGxIt+AP0s--
