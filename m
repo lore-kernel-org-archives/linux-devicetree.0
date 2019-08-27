@@ -1,38 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add ast2600 compatible
-Date: Tue, 27 Aug 2019 11:49:52 -0500
-Message-ID: <20190827164952.GA24417@bogus>
-References: <20190819051738.17370-1-joel@jms.id.au>
- <20190819051738.17370-2-joel@jms.id.au>
+Subject: Re: [PATCH v2 03/11] dt-bindings: irq: mtk,sysirq: add support for
+ mt6779
+Date: Tue, 27 Aug 2019 11:50:50 -0500
+Message-ID: <20190827165050.GA25969@bogus>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+ <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190819051738.17370-2-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, Ryan Chen <ryan_chen@aspeedtech.com>, linux-watchdog@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, linux-arm-kernel@lists.infradead.org, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <1566206502-4347-4-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org, Mars Cheng <mars.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Aug 2019 14:47:37 +0930, Joel Stanley wrote:
-> This adds a compatible for the ast2600, a new ASPEED SoC.
+On Mon, 19 Aug 2019 17:21:34 +0800, Mars Cheng wrote:
+> Add binding documentation of mediatek,sysirq for mt6779 SoC.
 > 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 > ---
-> v2:
->  - Add Andrew's r-b
-> ---
->  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 1 +
+>  .../interrupt-controller/mediatek,sysirq.txt       |    1 +
 >  1 file changed, 1 insertion(+)
 > 
 
