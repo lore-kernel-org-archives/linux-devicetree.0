@@ -1,49 +1,286 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH] dt-bindings: Clarify interrupts-extended usage
-Date: Mon, 26 Aug 2019 19:55:11 -0700
-Message-ID: <20190827025511.22166-1-swboyd@chromium.org>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: Re: [PATCH 1/2] hwmon: Add Synaptics AS370 PVT sensor driver
+Date: Tue, 27 Aug 2019 03:02:40 +0000
+Message-ID: <20190827105110.0be8d669@xhacker.debian>
+References: <20190826174942.2b28ff05@xhacker.debian>
+        <20190826175029.433632f6@xhacker.debian>
+        <35b05950-4a72-9e00-50ab-ecd0a7e759a4@roeck-us.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <35b05950-4a72-9e00-50ab-ecd0a7e759a4@roeck-us.net>
+Content-Language: en-US
+Content-ID: <00884E76A2EEC34784622FEA13882DD8@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Reading the description about when to use interrupts-extended leads some
-developers to think that it shouldn't be used unless a device has
-interrupts from more than one interrupt controller. This isn't true. We
-should encourage devicetree writers to use this property in situations
-where it isn't the inherited interrupt-parent so that we have less
-properties in a DT node by virtue of not having to specify an
-interrupt-parent and an interrupts property.
+Hi Guenter,
 
-Reported-by: Alexandru M Stan <amstan@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- .../bindings/interrupt-controller/interrupts.txt          | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Mon, 26 Aug 2019 06:44:34 -0700 Guenter Roeck wrote:
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-index 8a3c40829899..4a3ee253f7f0 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-@@ -22,10 +22,10 @@ controller node. This property is inherited, so it may be specified in an
- interrupt client node or in any of its parent nodes. Interrupts listed in the
- "interrupts" property are always in reference to the node's interrupt parent.
- 
--The "interrupts-extended" property is a special form for use when a node needs
--to reference multiple interrupt parents. Each entry in this property contains
--both the parent phandle and the interrupt specifier. "interrupts-extended"
--should only be used when a device has multiple interrupt parents.
-+The "interrupts-extended" property is a special form; useful when a node needs
-+to reference multiple interrupt parents or a different interrupt parent than
-+the inherited one. Each entry in this property contains both the parent phandle
-+and the interrupt specifier.
- 
-   Example:
- 	interrupts-extended = <&intc1 5 1>, <&intc2 1 0>;
+>=20
+>=20
+> On 8/26/19 3:01 AM, Jisheng Zhang wrote:
+> > Add a new driver for Synaptics AS370 PVT sensors. Currently, only
+> > temperature is supported.
+> >
+> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > ---
+> >   drivers/hwmon/Kconfig       |  10 +++
+> >   drivers/hwmon/Makefile      |   1 +
+> >   drivers/hwmon/as370-hwmon.c | 158 +++++++++++++++++++++++++++++++++++=
++
+> >   3 files changed, 169 insertions(+)
+> >   create mode 100644 drivers/hwmon/as370-hwmon.c
+> >
+> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> > index 650dd71f9724..d31610933faa 100644
+> > --- a/drivers/hwmon/Kconfig
+> > +++ b/drivers/hwmon/Kconfig
+> > @@ -246,6 +246,16 @@ config SENSORS_ADT7475
+> >         This driver can also be built as a module. If so, the module
+> >         will be called adt7475.
+> >
+> > +config SENSORS_AS370
+> > +     tristate "Synaptics AS370 SoC hardware monitoring driver" =20
+>=20
+> I think this needs "depends on HAS_IOMEM".
 
-base-commit: 609488bc979f99f805f34e9a32c1e3b71179d10b
--- 
-Sent by a computer through tubes
+HWMON depends on HAS_IOMEM, so the dependency has been required
+by the common HWMON, we don't need it here.
+
+>=20
+> > +     help
+> > +       If you say yes here you get support for the PVT sensors of
+> > +       the Synaptics AS370 SoC
+> > +
+> > +       This driver can also be built as a module. If so, the module
+> > +       will be called as370-hwmon.
+> > +
+> > +
+> >   config SENSORS_ASC7621
+> >       tristate "Andigilog aSC7621"
+> >       depends on I2C
+> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> > index 8db472ea04f0..252e8a4c9781 100644
+> > --- a/drivers/hwmon/Makefile
+> > +++ b/drivers/hwmon/Makefile
+> > @@ -48,6 +48,7 @@ obj-$(CONFIG_SENSORS_ADT7475)       +=3D adt7475.o
+> >   obj-$(CONFIG_SENSORS_APPLESMC)      +=3D applesmc.o
+> >   obj-$(CONFIG_SENSORS_ARM_SCMI)      +=3D scmi-hwmon.o
+> >   obj-$(CONFIG_SENSORS_ARM_SCPI)      +=3D scpi-hwmon.o
+> > +obj-$(CONFIG_SENSORS_AS370)  +=3D as370-hwmon.o
+> >   obj-$(CONFIG_SENSORS_ASC7621)       +=3D asc7621.o
+> >   obj-$(CONFIG_SENSORS_ASPEED)        +=3D aspeed-pwm-tacho.o
+> >   obj-$(CONFIG_SENSORS_ATXP1) +=3D atxp1.o
+> > diff --git a/drivers/hwmon/as370-hwmon.c b/drivers/hwmon/as370-hwmon.c
+> > new file mode 100644
+> > index 000000000000..98dfba45e1b0
+> > --- /dev/null
+> > +++ b/drivers/hwmon/as370-hwmon.c
+> > @@ -0,0 +1,158 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Synaptics AS370 SoC Hardware Monitoring Driver
+> > + *
+> > + * Copyright (C) 2018 Synaptics Incorporated
+> > + * Author: Jisheng Zhang <jszhang@kernel.org>
+> > + */
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/delay.h> =20
+>=20
+> Unnecessary include file.
+
+will remove it in newer version.
+
+>=20
+> > +#include <linux/hwmon.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +
+> > +#define CTRL         0x0
+> > +#define  PD          BIT(0)
+> > +#define  EN          BIT(1)
+> > +#define  T_SEL               BIT(2)
+> > +#define  V_SEL               BIT(3)
+> > +#define  NMOS_SEL    BIT(8)
+> > +#define  PMOS_SEL    BIT(9)
+> > +#define STS          0x4
+> > +#define  BN_MASK     (0xfff << 0) =20
+>=20
+> How about using GENMASK() ?
+
+Good idea.
+
+>=20
+> > +#define  EOC         BIT(12)
+> > +
+> > +struct as370_hwmon {
+> > +     void __iomem *base;
+> > +};
+> > +
+> > +static void init_pvt(struct as370_hwmon *hwmon)
+> > +{
+> > +     u32 val;
+> > +     void __iomem *addr =3D hwmon->base + CTRL;
+> > +
+> > +     val =3D PD;
+> > +     writel_relaxed(val, addr);
+> > +     val |=3D T_SEL;
+> > +     val &=3D ~V_SEL;
+> > +     val &=3D ~NMOS_SEL;
+> > +     val &=3D ~PMOS_SEL; =20
+>=20
+> What is the point of this ? We know that val =3D=3D PD here.
+
+yes, could be removed
+
+>=20
+> > +     writel_relaxed(val, addr);
+> > +     val |=3D EN;
+> > +     writel_relaxed(val, addr);
+> > +     val &=3D ~PD;
+> > +     writel_relaxed(val, addr);
+> > +}
+> > +
+> > +static int read_pvt(struct as370_hwmon *hwmon)
+> > +{
+> > +     return readl_relaxed(hwmon->base + STS) & BN_MASK;
+> > +} =20
+>=20
+> Please fold into the calling code.
+>=20
+> > +
+> > +static int as370_hwmon_read(struct device *dev, enum hwmon_sensor_type=
+s type,
+> > +                         u32 attr, int channel, long *temp)
+> > +{
+> > +     int val;
+> > +     struct as370_hwmon *hwmon =3D dev_get_drvdata(dev);
+> > +
+> > +     switch (attr) {
+> > +     case hwmon_temp_input:
+> > +             val =3D read_pvt(hwmon);
+> > +             if (val < 0)
+> > +                     return val; =20
+>=20
+> read_pvt() doesn't return a negative error code. This check is unnecessar=
+y.
+>=20
+> > +             *temp =3D val * 251802 / 4096 - 85525; =20
+>=20
+> This results in rounding down the reported temperature. It is ok if it is
+> what you want; otherwise, I would suggest to use DIV_ROUND_CLOSEST().
+
+Good idea.
+
+Thanks for your review,
+Jisheng
+
+>=20
+> > +             break;
+> > +     default:
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static umode_t
+> > +as370_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
+> > +                    u32 attr, int channel)
+> > +{
+> > +     if (type !=3D hwmon_temp)
+> > +             return 0;
+> > +
+> > +     switch (attr) {
+> > +     case hwmon_temp_input:
+> > +             return 0444;
+> > +     default:
+> > +             return 0;
+> > +     }
+> > +}
+> > +
+> > +static const u32 as370_hwmon_temp_config[] =3D {
+> > +     HWMON_T_INPUT,
+> > +     0
+> > +};
+> > +
+> > +static const struct hwmon_channel_info as370_hwmon_temp =3D {
+> > +     .type =3D hwmon_temp,
+> > +     .config =3D as370_hwmon_temp_config,
+> > +};
+> > +
+> > +static const struct hwmon_channel_info *as370_hwmon_info[] =3D {
+> > +     &as370_hwmon_temp,
+> > +     NULL
+> > +};
+> > +
+> > +static const struct hwmon_ops as370_hwmon_ops =3D {
+> > +     .is_visible =3D as370_hwmon_is_visible,
+> > +     .read =3D as370_hwmon_read,
+> > +};
+> > +
+> > +static const struct hwmon_chip_info as370_chip_info =3D {
+> > +     .ops =3D &as370_hwmon_ops,
+> > +     .info =3D as370_hwmon_info,
+> > +};
+> > +
+> > +static int as370_hwmon_probe(struct platform_device *pdev)
+> > +{
+> > +     struct resource *res;
+> > +     struct device *hwmon_dev;
+> > +     struct as370_hwmon *hwmon;
+> > +     struct device *dev =3D &pdev->dev;
+> > +
+> > +     hwmon =3D devm_kzalloc(dev, sizeof(*hwmon), GFP_KERNEL);
+> > +     if (!hwmon)
+> > +             return -ENOMEM;
+> > +
+> > +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +     hwmon->base =3D devm_ioremap_resource(&pdev->dev, res);
+> > +     if (IS_ERR(hwmon->base))
+> > +             return PTR_ERR(hwmon->base);
+> > +
+> > +     init_pvt(hwmon);
+> > +
+> > +     hwmon_dev =3D devm_hwmon_device_register_with_info(dev,
+> > +                                                      "as370_hwmon", =
+=20
+>=20
+> The "_hwmon" seems unnecessary. It will show up in "sensors" as part
+> of the sensor name. Is this really what you want ?
+>=20
+> > +                                                      hwmon,
+> > +                                                      &as370_chip_info=
+,
+> > +                                                      NULL);
+> > +     return PTR_ERR_OR_ZERO(hwmon_dev);
+> > +}
+> > +
+> > +static const struct of_device_id as370_hwmon_match[] =3D {
+> > +     { .compatible =3D "syna,as370-hwmon" },
+> > +     {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, as370_hwmon_match);
+> > +
+> > +static struct platform_driver as370_hwmon_driver =3D {
+> > +     .probe =3D as370_hwmon_probe,
+> > +     .driver =3D {
+> > +             .name =3D "as370-hwmon",
+> > +             .of_match_table =3D as370_hwmon_match,
+> > +     },
+> > +};
+> > +module_platform_driver(as370_hwmon_driver);
+> > +
+> > +MODULE_AUTHOR("Jisheng Zhang<jszhang@kernel.org>");
+> > +MODULE_DESCRIPTION("Synaptics AS370 SoC hardware monitor");
+> > +MODULE_LICENSE("GPL v2");
+> > =20
+>=20
