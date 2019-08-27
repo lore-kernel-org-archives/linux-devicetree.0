@@ -1,46 +1,93 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: mmc: aspeed: Update example ranges property
-Date: Tue, 27 Aug 2019 07:36:12 -0500
-Message-ID: <CAL_JsqJsLt5FjKayO9ksksrpXDFs3cbAngcQ21xhZYz3JLG=7g@mail.gmail.com>
-References: <20190826021620.11915-1-andrew@aj.id.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Tue, 27 Aug 2019 07:39:32 -0500
+Message-ID: <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190826021620.11915-1-andrew@aj.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-aspeed@lists.ozlabs.org, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 25, 2019 at 9:15 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >
-> The example node in the binding uses the AST2500 compatible string for
-> the SD controller with a 64kiB ranges property, but the SD controller is
-> allocated 128kiB of MMIO space according to the AST2500 datasheet. Fix
-> the example to correctly reflect the hardware in the AST2500, however it
-> should be noted that the MMIO region is reduced to 64kiB in the AST2600
-> where a second SD controller block has been introduced into the address
-> space.
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 >
-> Also add the IBM copyright header that I left out of the initial patch.
+> Add a YAML schema to use the host controller driver with the
+> SDXC PHY on Intel's Lightning Mountain SoC.
 >
-> Suggested-by: Joel Stanley <joel@jms.id.au>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
-> Hi Ulf, this is the follow-up fix as discussed here:
+>  .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
 >
-> http://patchwork.ozlabs.org/patch/1143090/
->
->  Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> new file mode 100644
+> index 000000000000..be05020880bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +description: Binding for SDXC PHY
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-sdxc-phy
+> +
+> +  intel,syscon:
+> +    description: phandle to the sdxc through syscon
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - intel,syscon
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    sdxc_phy: sdxc_phy {
+> +        compatible = "intel,lgm-sdxc-phy";
+> +        intel,syscon = <&sysconf>;
 
-Acked-by: Rob Herring <robh@kernel.org>
+Rather than a phandle, can this be a child node of sysconf? You need a
+binding for sysconf first anyways.
+
+> +        clocks = <&sdxc>;
+> +        clock-names = "sdxcclk";
+> +        #phy-cells = <0>;
+> +    };
+> +
+> +...
+> --
+> 2.11.0
+>
