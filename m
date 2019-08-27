@@ -1,57 +1,142 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: Adding depends-on DT binding to break cyclic dependencies
-Date: Tue, 27 Aug 2019 13:18:43 -0700
-Message-ID: <CAGETcx8FRVN9L3hDag8woYdJ3RszVBTvtAYrG5o-e_w24wYTUg@mail.gmail.com>
-References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v4 1/4] dt-bindings: soundwire: add slave bindings
+Date: Tue, 27 Aug 2019 15:20:22 -0500
+Message-ID: <20190827202022.GA7783@bogus>
+References: <20190822233759.12663-1-srinivas.kandagatla@linaro.org>
+ <20190822233759.12663-2-srinivas.kandagatla@linaro.org>
+ <20190823065340.GD2672@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190823065340.GD2672@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Vinod Koul <vkoul@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: broonie@kernel.org, spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Hi Rob,
->
-> Frank, Greg and I got together during ELC and had an extensive and
-> very productive discussion about my "postboot supplier state cleanup"
-> patch series [1]. The three of us are on the same page now -- the
-> series as it stands is the direction we want to go in, with some minor
-> refactoring, documentation and naming changes.
->
-> However, one of the things Frank is concerned about (and Greg and I
-> agree) in the current patch series is that the "cyclic dependency
-> breaking" logic has been pushed off to individual drivers using the
-> edit_links() callback.
->
-> The concern being, there are going to be multiple device specific ad
-> hoc implementations to break a cyclic dependency. Also, if a device
-> can be part of a cyclic dependency, the driver for that device has to
-> check for specific system/products in which the device is part of a
-> cyclic dependency (because it might not always be part of a cycle),
-> and then potentially have cycle/product specific code to break the
-> cycle (since the cycle can be different on each system/product).
->
-> One way to avoid all of the device/driver specific code and simplify
-> my patch series by a non-trivial amount would be by adding a
-> "depends-on" DT binding that can ONLY be used to break cycles. We can
-> document it as such and reject any attempts to use it for other
-> purposes. When a depends-on property is present in a device node, that
-> specific device's supplier list will be parsed ONLY from the
-> depends-on property and the other properties won't be parsed for
-> deriving dependency information for that device.
->
-> Frank, Greg and I like this usage model for a new depends-on DT
-> binding. Is this something you'd be willing to accept?
->
-> Thanks,
-> Saravana
->
-> [1] - https://lore.kernel.org/lkml/20190731221721.187713-1-saravanak@google.com/
+On Fri, Aug 23, 2019 at 12:23:40PM +0530, Vinod Koul wrote:
+> On 23-08-19, 00:37, Srinivas Kandagatla wrote:
+> > This patch adds bindings for Soundwire Slave devices that includes how
+> > SoundWire enumeration address and Link ID are used to represented in
+> > SoundWire slave device tree nodes.
+> > 
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > ---
+> >  .../soundwire/soundwire-controller.yaml       | 75 +++++++++++++++++++
+> >  1 file changed, 75 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> > new file mode 100644
+> > index 000000000000..91aa6c6d6266
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+> > @@ -0,0 +1,75 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soundwire/soundwire-controller.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SoundWire Controller Generic Binding
+> 
+> Controller does not make sense here, why not use spec terminology and
+> say "SoundWire Slave Generic Binding"
 
-Friendly reminder.
+It's both IMO. It's describing the structure of child devices of a 
+controller (aka a bus).
 
--Saravana
+> 
+> > +
+> > +maintainers:
+> > +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > +
+> > +description: |
+> > +  SoundWire busses can be described with a node for the SoundWire controller
+> > +  device and a set of child nodes for each SoundWire slave on the bus.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^soundwire(@.*|-[0-9a-f])*$"
+
+'-[0-9a-f]' was to handle cases like spi-gpio or i2c-gpio. Would a 
+bit banged interface be possible here?
+
+> > +
+> > +  "#address-cells":
+> > +    const: 2
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +patternProperties:
+> > +  "^.*@[0-9a-f]+$":
+
+If there are distinct fields in the address, they are typically comma 
+separated in the unit-address.
+
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +      pattern: "^sdw[0-9][0-9a-f]{4}[0-9a-f]{4}[0-9a-f]{2}$"
+> > +      description:
+> > +	  Is the textual representation of SoundWire Enumeration
+> > +	  address. compatible string should contain SoundWire Version ID,
+> > +	  Manufacturer ID, Part ID and Class ID in order and shall be in
+> > +	  lower-case hexadecimal with leading zeroes.
+> > +	  Valid sizes of these fields are
+> > +	  Version ID is 1 nibble, number '0x1' represents SoundWire 1.0
+> > +	  and '0x2' represents SoundWire 1.1 and so on.
+> > +	  MFD is 4 nibbles
+> > +	  PID is 4 nibbles
+> > +	  CID is 2 nibbles
+> > +	  More Information on detail of encoding of these fields can be
+> > +	  found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +        description:
+> > +          Instance ID and Link ID of SoundWire Device Address.
+> 
+> This looks better :) Thanks.
+> 
+> Apart from the minor nit above this looks good to me, I can merge the
+> sdw parts if Rob is fine with them.
+> 
+> Thanks
+> 
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    soundwire@c2d0000 {
+> > +        #address-cells = <2>;
+> > +        #size-cells = <0>;
+> > +        compatible = "qcom,soundwire-v1.5.0";
+
+This will probably change once I review it. :)
+
+> > +        reg = <0x0c2d0000 0x2000>;
+> > +
+> > +        speaker@1 {
+> > +            compatible = "sdw10217201000";
+> > +            reg = <1 0>;
+> > +        };
+> > +
+> > +        speaker@2 {
+> > +            compatible = "sdw10217201000";
+> > +            reg = <2 0>;
+> > +        };
+> > +    };
+> > +
+> > +...
+> > -- 
+> > 2.21.0
+> 
+> -- 
+> ~Vinod
