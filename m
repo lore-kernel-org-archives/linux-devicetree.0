@@ -1,81 +1,102 @@
-From: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Subject: Re: [PATCH v2 3/4] watchdog/aspeed: add support for dual boot
-Date: Tue, 27 Aug 2019 12:24:45 +0300
-Message-ID: <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
-References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
-         <20190826104636.19324-4-i.mikhaylov@yadro.com>
-         <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
+From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: RE: [PATCH 02/14] serial: tegra: add support to ignore read
+Date: Tue, 27 Aug 2019 09:29:21 +0000
+Message-ID: <SN6PR12MB2734D67C01A97D87D1735EDBC3A00@SN6PR12MB2734.namprd12.prod.outlook.com>
+References: <1565609303-27000-1-git-send-email-kyarlagadda@nvidia.com>
+ <1565609303-27000-3-git-send-email-kyarlagadda@nvidia.com>
+ <20190813094208.GG1137@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
+In-Reply-To: <20190813094208.GG1137@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shardar Mohammed <smohammed@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-08-26 at 17:14 -0700, Guenter Roeck wrote:
-> > +/*
-> > + * At alternate side the 'access_cs0' sysfs node provides:
-> > + *   ast2400: a way to get access to the primary SPI flash chip at CS0
-> > + *            after booting from the alternate chip at CS1.
-> > + *   ast2500: a way to restore the normal address mapping from
-> > + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
-> > + *
-> > + * Clearing the boot code selection and timeout counter also resets to the
-> > + * initial state the chip select line mapping. When the SoC is in normal
-> > + * mapping state (i.e. booted from CS0), clearing those bits does nothing
-> > for
-> > + * both versions of the SoC. For alternate boot mode (booted from CS1 due
-> > to
-> > + * wdt2 expiration) the behavior differs as described above.
-> > + *
-> The above needs to be in the sysfs attribute documentation as well.
-
-My apologies but I didn't find any suitable, only watchdog parameters with
-dtbindings file, where should I put it? Documentation/watchdog/aspeed-wdt-
-sysfs.rst?
-
-> > + * This option can be used with wdt2 (watchdog1) only.
-> 
-> This implies a specific watchdog numbering which is not guaranteed.
-> Someone might implement a system with some external watchdog.
-> 
-> > + */
-> > +static DEVICE_ATTR_RW(access_cs0);
+> -----Original Message-----
+> From: linux-tegra-owner@vger.kernel.org <linux-tegra-
+> owner@vger.kernel.org> On Behalf Of Thierry Reding
+> Sent: Tuesday, August 13, 2019 3:12 PM
+> To: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> Cc: gregkh@linuxfoundation.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>; Laxman
+> Dewangan <ldewangan@nvidia.com>; jslaby@suse.com; linux-
+> serial@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> tegra@vger.kernel.org; linux-kernel@vger.kernel.org; Shardar Mohammed
+> <smohammed@nvidia.com>
+> Subject: Re: [PATCH 02/14] serial: tegra: add support to ignore read
+>=20
+> On Mon, Aug 12, 2019 at 04:58:11PM +0530, Krishna Yarlagadda wrote:
+> > From: Shardar Shariff Md <smohammed@nvidia.com>
+> >
+> > Add support to ignore read characters if CREAD flag is not set.
+> >
+> > Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
+> > Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+> > ---
+> >  drivers/tty/serial/serial-tegra.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/drivers/tty/serial/serial-tegra.c
+> > b/drivers/tty/serial/serial-tegra.c
+> > index 19f4c24..93d299e 100644
+> > --- a/drivers/tty/serial/serial-tegra.c
+> > +++ b/drivers/tty/serial/serial-tegra.c
+> > @@ -542,6 +542,9 @@ static void tegra_uart_handle_rx_pio(struct
+> tegra_uart_port *tup,
+> >  		ch =3D (unsigned char) tegra_uart_read(tup, UART_RX);
+> >  		tup->uport.icount.rx++;
+> >
+> > +		if (tup->uport.ignore_status_mask & UART_LSR_DR)
+> > +			continue;
 > > +
-> > +static struct attribute *bswitch_attrs[] = {
-> > +	&dev_attr_access_cs0.attr,
-> > +	NULL
-> > +};
-> > +ATTRIBUTE_GROUPS(bswitch);
+> >  		if (!uart_handle_sysrq_char(&tup->uport, ch) && tty)
+> >  			tty_insert_flip_char(tty, ch, flag);
+>=20
+> Is it a good idea to ignore even sysrq characters if CREAD is not set?
+> According to termios, CREAD enables the receiver, so technically if it is=
+n't set
+> you can't even receive sysrq characters. But I don't know if there are an=
+y
+> rules regarding this.
+>=20
+> Is this the same way that other drivers work?
+>=20
+> Thierry
+>=20
+Looked into few drivers and sysrq characters are not ignored. This driver d=
+oes
+not support console driver. So this might not be needed.
+
+KY
+> >  	} while (1);
+> > @@ -562,6 +565,10 @@ static void tegra_uart_copy_rx_to_tty(struct
+> tegra_uart_port *tup,
+> >  		dev_err(tup->uport.dev, "No tty port\n");
+> >  		return;
+> >  	}
 > > +
-> >   static const struct watchdog_ops aspeed_wdt_ops = {
-> >   	.start		= aspeed_wdt_start,
-> >   	.stop		= aspeed_wdt_stop,
-> > @@ -306,9 +359,16 @@ static int aspeed_wdt_probe(struct platform_device
-> > *pdev)
-> >   	}
-> >   
-> >   	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
-> > -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
-> > +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
-> >   		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-> >   
-> > +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
-> > +			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
-> > +			wdt->wdd.groups = bswitch_groups;
-
-> Kind of odd that the attribute only exists if the system booted from the
-> second flash, but if that is what you want I won't object. Just make sure
-> that this is explained properly.
-Perhaps dts configuration option would be better solution for it then? "force-
-cs0-switch" as example? Also, if it would be an option, dtbindings/wdt file for
-documentation will be the right place for it. Usage of this at side 0 will not
-get any good/bad results, it just makes user confused, so I decided to put it
-only at side 1. It works only for ast2400/2500 board unfortunately, for 2600
-there is big difference in switching mechanism. Any other thoughts how to make
-it better?
-
-Thanks.
+> > +	if (tup->uport.ignore_status_mask & UART_LSR_DR)
+> > +		return;
+> > +
+> >  	dma_sync_single_for_cpu(tup->uport.dev, tup->rx_dma_buf_phys,
+> >  				TEGRA_UART_RX_DMA_BUFFER_SIZE,
+> DMA_FROM_DEVICE);
+> >  	copied =3D tty_insert_flip_string(tty, @@ -1190,6 +1197,11 @@ static
+> > void tegra_uart_set_termios(struct uart_port *u,
+> >  	tegra_uart_write(tup, tup->ier_shadow, UART_IER);
+> >  	tegra_uart_read(tup, UART_IER);
+> >
+> > +	tup->uport.ignore_status_mask =3D 0;
+> > +	/* Ignore all characters if CREAD is not set */
+> > +	if ((termios->c_cflag & CREAD) =3D=3D 0)
+> > +		tup->uport.ignore_status_mask |=3D UART_LSR_DR;
+> > +
+> >  	spin_unlock_irqrestore(&u->lock, flags);  }
+> >
+> > --
+> > 2.7.4
+> >
