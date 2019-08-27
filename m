@@ -1,75 +1,57 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v5 09/13] ARM: dts: imx6ull-colibri: reduce v_batt current in
- power off
-Date: Tue, 27 Aug 2019 13:18:34 +0000
-Message-ID: <20190827131806.6816-10-philippe.schenker@toradex.com>
+Subject: [PATCH v5 13/13] ARM: dts: imx6ull-colibri: Add touchscreen used with
+ Eval Board
+Date: Tue, 27 Aug 2019 13:18:42 +0000
+Message-ID: <20190827131806.6816-14-philippe.schenker@toradex.com>
 References: <20190827131806.6816-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190827131806.6816-1-philippe.schenker@toradex.com>
 Content-Language: en-US
+Content-ID: <6625A000C6DDED4F94A0DF53AA4BE792@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan @ agner . ch" <stefan@agner.ch>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan @ agner . ch" <stefan@agner.ch>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
-
-Reduce the current drawn from VCC_BATT when the main power on the 3V3
-pins to the module are switched off.
-
-This switches off SoC internal pull resistors which are provided on the
-module for TAMPER7 and TAMPER9 SoC pin and switches on a pull down
-instead of a pullup for the USBC_DET module pin (TAMPER2).
-
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-
----
-
-Changes in v5:
-- Added Olek's Reviewd-by
-
-Changes in v4:
-- Add Marcel Ziswiler's Ack
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index 1019ce69a242..1f112ec55e5c 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -533,19 +533,19 @@
-=20
- 	pinctrl_snvs_ad7879_int: snvs-ad7879-int-grp { /* TOUCH Interrupt */
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x100b0
- 		>;
- 	};
-=20
- 	pinctrl_snvs_reg_sd: snvs-reg-sd-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x4001b8b0
-+			MX6ULL_PAD_SNVS_TAMPER9__GPIO5_IO09	0x400100b0
- 		>;
- 	};
-=20
- 	pinctrl_snvs_usbc_det: snvs-usbc-det-grp {
- 		fsl,pins =3D <
--			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x1b0b0
-+			MX6ULL_PAD_SNVS_TAMPER2__GPIO5_IO02	0x130b0
- 		>;
- 	};
-=20
---=20
-2.23.0
+VGhpcyBhZGRzIHRoZSBjb21tb24gdG91Y2hzY3JlZW4gdGhhdCBpcyB1c2VkIHdpdGggVG9yYWRl
+eCdzDQpFdmFsIEJvYXJkcy4NCkl0IGlzIGRpc2FibGVkIGJ5IGRlZmF1bHQgYmVjYXVzZSB0aGUg
+cGlucyBhcmUgYWxzbyB1c2VkIGZvciBQV00sDQp3aGljaCBpcyB0aGUgc3RhbmRhcmQgdXNlIGZv
+ciBjb2xpYnJpIGJvYXJkcy4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBo
+aWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KUmV2aWV3ZWQtYnk6IE9sZWtzYW5kciBTdXZv
+cm92IDxvbGVrc2FuZHIuc3V2b3JvdkB0b3JhZGV4LmNvbT4NCg0KTWFyY2VsIFppc3dpbGVyIDxt
+YXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQpNYXggS3J1bW1lbmFjaGVyIDxtYXgua3J1bW1l
+bmFjaGVyQHRvcmFkZXguY29tPg0Kc3RlZmFuQGFnbmVyLmNoIDxzdGVmYW5AYWduZXIuY2g+DQpk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+DQpS
+b2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
+ZWwub3JnPg0KTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCk1pY2hhbCBWb2vD
+ocSNIDxtaWNoYWwudm9rYWNAeXNvZnQuY29tPg0KRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21h
+aWwuY29tPg0KDQotLS0NCg0KQ2hhbmdlcyBpbiB2NToNCi0gQWRkZWQgbm90ZSB0byBjb21taXQg
+bWVzc2FnZSBhYm91dCBkaXNhYmxlZCBzdGF0dXMNCi0gQWRkIE9sZWsncyBSZXZpZXdlZC1ieQ0K
+DQpDaGFuZ2VzIGluIHY0OiBOb25lDQpDaGFuZ2VzIGluIHYzOiBOb25lDQpDaGFuZ2VzIGluIHYy
+Og0KLSBSZW1vdmVkIGYwNzEwYQ0KdGhhdCBpcyBkb3duc3RyZWFtIG9ubHkNCi0gQ2hhbmdlZCB0
+byBnZW5lcmljIG5vZGUgbmFtZQ0KLSBCZXR0ZXIgY29tbWVudA0KDQogLi4uL2FybS9ib290L2R0
+cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpIHwgMjQgKysrKysrKysrKysrKysrKysrKw0K
+IDEgZmlsZSBjaGFuZ2VkLCAyNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktZXZhbC12My5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaQ0KaW5kZXggYTc4ODQ5ZmQyYWZhLi40NThh
+NDA4NGU1M2MgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmkt
+ZXZhbC12My5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktZXZh
+bC12My5kdHNpDQpAQCAtMTAwLDYgKzEwMCwyMSBAQA0KICZpMmMxIHsNCiAJc3RhdHVzID0gIm9r
+YXkiOw0KIA0KKwkvKg0KKwkgKiBUb3VjaHNjcmVlbiBpcyB1c2luZyBTT0RJTU0gMjgvMzAsIGFs
+c28gdXNlZCBmb3IgUFdNPEI+LCBQV008Qz4sDQorCSAqIGFrYSBwd20yLCBwd20zLiBzbyBpZiB5
+b3UgZW5hYmxlIHRvdWNoc2NyZWVuLCBkaXNhYmxlIHRoZSBwd21zDQorCSAqLw0KKwl0b3VjaHNj
+cmVlbkA0YSB7DQorCQljb21wYXRpYmxlID0gImF0bWVsLG1heHRvdWNoIjsNCisJCXBpbmN0cmwt
+bmFtZXMgPSAiZGVmYXVsdCI7DQorCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZ3Bpb3RvdWNoPjsN
+CisJCXJlZyA9IDwweDRhPjsNCisJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW80PjsNCisJCWlu
+dGVycnVwdHMgPSA8MTYgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsJLyogU09ESU1NIDI4ICovDQor
+CQlyZXNldC1ncGlvcyA9IDwmZ3BpbzIgNSBHUElPX0FDVElWRV9ISUdIPjsJLyogU09ESU1NIDMw
+ICovDQorCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KKwl9Ow0KKw0KIAkvKiBNNDFUME02IHJlYWwg
+dGltZSBjbG9jayBvbiBjYXJyaWVyIGJvYXJkICovDQogCW00MXQwbTY6IHJ0Y0A2OCB7DQogCQlj
+b21wYXRpYmxlID0gInN0LG00MXQwIjsNCkBAIC0xNzYsMyArMTkxLDEyIEBADQogCXNkLXVocy1z
+ZHIxMDQ7DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9Ow0KKw0KKyZpb211eGMgew0KKwlwaW5jdHJs
+X2dwaW90b3VjaDogdG91Y2hncGlvcyB7DQorCQlmc2wscGlucyA9IDwNCisJCQlNWDZVTF9QQURf
+TkFORF9EUVNfX0dQSU80X0lPMTYJCTB4NzQNCisJCQlNWDZVTF9QQURfRU5FVDFfVFhfRU5fX0dQ
+SU8yX0lPMDUJMHgxNA0KKwkJPjsNCisJfTsNCit9Ow0KLS0gDQoyLjIzLjANCg0K
