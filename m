@@ -1,60 +1,30 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
-Date: Mon, 26 Aug 2019 21:31:29 -0700
-Message-ID: <20190827043129.GB26807@tuxbook-pro>
-References: <20190826173120.2971-1-vkoul@kernel.org>
- <20190826173120.2971-3-vkoul@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2 0/2] Update ethernet compatible string for SiFive FU540
+Date: Tue, 27 Aug 2019 10:36:02 +0530
+Message-ID: <1566882364-23891-1-git-send-email-yash.shah@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190826173120.2971-3-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 26 Aug 10:31 PDT 2019, Vinod Koul wrote:
+This patch series renames the compatible property to a more appropriate
+string. The patchset is based on Linux-5.3-rc6 and tested on SiFive
+Unleashed board
 
-> Convert the rpmh clock driver to use the new parent data scheme by
-> specifying the parent data for board clock.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Change history:
+Since v1:
+- Dropped PATCH3 because it's already merged
+- Change the reference url in the patch descriptions to point to a
+  'lore.kernel.org' link instead of 'lkml.org'
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Yash Shah (2):
+  macb: bindings doc: update sifive fu540-c000 binding
+  macb: Update compatibility string for SiFive FU540-C000
 
-> ---
->  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> index c3fd632af119..35d55aee6a01 100644
-> --- a/drivers/clk/qcom/clk-rpmh.c
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
->  		.hw.init = &(struct clk_init_data){			\
->  			.ops = &clk_rpmh_ops,				\
->  			.name = #_name,					\
-> -			.parent_names = (const char *[]){ "xo_board" },	\
-> +			.parent_data =  &(const struct clk_parent_data){ \
-> +					.fw_name = "xo",		\
-> +					.name = "xo_board",		\
-> +			},						\
->  			.num_parents = 1,				\
->  		},							\
->  	};								\
-> @@ -110,7 +113,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
->  		.hw.init = &(struct clk_init_data){			\
->  			.ops = &clk_rpmh_ops,				\
->  			.name = #_name_active,				\
-> -			.parent_names = (const char *[]){ "xo_board" },	\
-> +			.parent_data =  &(const struct clk_parent_data){ \
-> +					.fw_name = "xo",		\
-> +					.name = "xo_board",		\
-> +			},						\
->  			.num_parents = 1,				\
->  		},							\
->  	}
-> -- 
-> 2.20.1
-> 
+ Documentation/devicetree/bindings/net/macb.txt | 4 ++--
+ drivers/net/ethernet/cadence/macb_main.c       | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
