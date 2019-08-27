@@ -1,39 +1,54 @@
-From: Denis Efremov <efremov@linux.com>
-Subject: [PATCH] scripts/dtc: Simplify condition in get_node_by_path
-Date: Tue, 27 Aug 2019 17:57:27 +0300
-Message-ID: <20190827145727.16791-1-efremov@linux.com>
+From: Gerald BAEZA <gerald.baeza@st.com>
+Subject: [PATCH v3 2/5] dt-bindings: perf: stm32: ddrperfm support
+Date: Tue, 27 Aug 2019 15:08:19 +0000
+Message-ID: <1566918464-23927-3-git-send-email-gerald.baeza@st.com>
+References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Denis Efremov <efremov@linux.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "will@kernel.org" <will@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc: Gerald BAEZA <gerald.baeza@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The strlen && strprefixeq check in get_node_by_path is
-excessive, since strlen is checked in strprefixeq macro
-internally. Thus, 'strlen(child->name) == p-path'
-conjunct duplicates after macro expansion and could
-be removed.
+The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
+This documentation indicates how to enable stm32-ddr-pmu driver on
+DDRPERFM peripheral, via the device tree.
+
+Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 ---
- scripts/dtc/livetree.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt | 16 ++++++++++++=
+++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
+t
 
-diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
-index 0c039993953a..032df5878ccc 100644
---- a/scripts/dtc/livetree.c
-+++ b/scripts/dtc/livetree.c
-@@ -526,8 +526,7 @@ struct node *get_node_by_path(struct node *tree, const char *path)
- 	p = strchr(path, '/');
- 
- 	for_each_child(tree, child) {
--		if (p && (strlen(child->name) == p-path) &&
--		    strprefixeq(path, p - path, child->name))
-+		if (p && strprefixeq(path, p - path, child->name))
- 			return get_node_by_path(child, p+1);
- 		else if (!p && streq(path, child->name))
- 			return child;
--- 
-2.21.0
+diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
+umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+new file mode 100644
+index 0000000..87ab12e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
+@@ -0,0 +1,16 @@
++* STM32 DDR Performance Monitor (DDRPERFM)
++
++Required properties:
++- compatible: must be "st,stm32-ddr-pmu".
++- reg: physical address and length of the registers set.
++- clocks: phandle and specifier for DDRPERFM input clock
++- resets: phandle and specifier for DDRPERFM reset
++
++Example:
++	ddrperfm: perf@5a007000 {
++		compatible =3D "st,stm32-ddr-pmu";
++		reg =3D <0x5a007000 0x400>;
++		clocks =3D <&rcc DDRPERFM>;
++		resets =3D <&rcc DDRPERFM_R>;
++	};
++
+--=20
+2.7.4
