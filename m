@@ -1,28 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: usb: mtk-xhci: add an
- optional xhci_ck clock
-Date: Tue, 27 Aug 2019 17:27:09 -0500
-Message-ID: <20190827222709.GA20468@bogus>
-References: <1566542425-20082-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: soc: qcom: Add RSC power domain
+ specifier
+Date: Tue, 27 Aug 2019 17:32:52 -0500
+Message-ID: <20190827223252.GA26039@bogus>
+References: <20190823081703.17325-1-mkshah@codeaurora.org>
+ <20190823081703.17325-4-mkshah@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566542425-20082-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20190823081703.17325-4-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Maulik Shah <mkshah@codeaurora.org>
+Cc: swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Aug 2019 14:40:24 +0800, Chunfeng Yun wrote:
-> Add a new optional clock xhci_ck
+On Fri, Aug 23, 2019 at 01:47:00PM +0530, Maulik Shah wrote:
+> In addition to transmitting resource state requests to the remote
+> processor, the RSC is responsible for powering off/lowering the
+> requirements from CPUs subsystem for the associated hardware like
+> buses, clocks, and regulators when all CPUs and cluster is powered down.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v2 changes:
->   1. add the new clock at the end, suggested by Rob
-> ---
->  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> The power domain is configured to a low power state and when all the
+> CPUs are powered down, the RSC can lower resource state requirements
+> and power down the rails that power the CPUs.
 > 
+> Add PM domain specifier property for RSC controller.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> index 9b86d1eff219..d0ab6e9b6745 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> @@ -83,6 +83,13 @@ Properties:
+>  	Value type: <string>
+>  	Definition: Name for the RSC. The name would be used in trace logs.
+>  
+> +- #power-domain-cells:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: Number of cells in power domain specifier. Optional for
+> +		    controllers that may be in 'solver' state where they can
+> +		    be in autonomous mode executing low power modes.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+What's the value? It's always 0?
+
+> +
+>  Drivers that want to use the RSC to communicate with RPMH must specify their
+>  bindings as child nodes of the RSC controllers they wish to communicate with.
+>  
+> @@ -112,6 +119,7 @@ TCS-OFFSET: 0xD00
+>  				  <SLEEP_TCS   3>,
+>  				  <WAKE_TCS    3>,
+>  				  <CONTROL_TCS 1>;
+> +		#power-domain-cells = <0>;
+>  	};
+>  
+>  Example 2:
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+> 
