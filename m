@@ -1,26 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: lantiq: Update for new SoC
-Date: Tue, 27 Aug 2019 12:22:02 -0500
-Message-ID: <20190827172202.GA10615@bogus>
-References: <cover.1566370151.git.rahul.tanwar@linux.intel.com>
- <ffb6855d4c8d47412775b5fa4ce6ae4dd1161cb8.1566370151.git.rahul.tanwar@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: irq: Convert Allwinner IRQ
+ Controller to a schema
+Date: Tue, 27 Aug 2019 12:23:20 -0500
+Message-ID: <20190827172320.GA12595@bogus>
+References: <20190821082138.11049-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <ffb6855d4c8d47412775b5fa4ce6ae4dd1161cb8.1566370151.git.rahul.tanwar@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, qi-ming.wu@intel.com, cheol.yong.kim@intel.com, rahul.tanwar@intel.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+In-Reply-To: <20190821082138.11049-1-mripard@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jason@lakedaemon.net, Maxime Ripard <maxime.ripard@bootlin.com>, maz@kernel.org, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Aug 2019 15:06:52 +0800, Rahul Tanwar wrote:
-> Intel Lightning Mountain(LGM) reuses Lantiq ASC serial controller IP.
-> Update the dt bindings to support LGM as well.
+On Wed, 21 Aug 2019 10:21:37 +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> The Allwinner SoCs have an interrupt controller supported in Linux, with a
+> matching Device Tree binding.
+> 
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for that controller over to a YAML schemas.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> 
 > ---
->  .../devicetree/bindings/serial/lantiq,asc.yaml     | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+> 
+> Changes from v1:
+>   - Remove Fixme and add additionalProperties to false
+>   - Add unit address for the example
+> ---
+>  .../allwinner,sun4i-a10-ic.yaml               | 47 +++++++++++++++++++
+>  .../allwinner,sun4i-ic.txt                    | 20 --------
+>  2 files changed, 47 insertions(+), 20 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-a10-ic.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
