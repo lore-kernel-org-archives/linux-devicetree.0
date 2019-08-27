@@ -1,286 +1,87 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH 1/2] hwmon: Add Synaptics AS370 PVT sensor driver
-Date: Tue, 27 Aug 2019 03:02:40 +0000
-Message-ID: <20190827105110.0be8d669@xhacker.debian>
-References: <20190826174942.2b28ff05@xhacker.debian>
-        <20190826175029.433632f6@xhacker.debian>
-        <35b05950-4a72-9e00-50ab-ecd0a7e759a4@roeck-us.net>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Tue, 27 Aug 2019 11:09:16 +0800
+Message-ID: <57ecab7c3600802d544683fcb968f9455b2b25d8.camel@intel.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <35b05950-4a72-9e00-50ab-ecd0a7e759a4@roeck-us.net>
-Content-Language: en-US
-Content-ID: <00884E76A2EEC34784622FEA13882DD8@namprd03.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Eduardo Valentin <edubezval@gmail.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Tue, 2019-08-27 at 01:51 +0000, Anson Huang wrote:
+> > On 7/30/2019 5:31 AM, Anson.Huang@nxp.com wrote:
+> > > From: Anson Huang <Anson.Huang@nxp.com>
+> > > 
+> > > Some platforms like i.MX8MQ has clock control for this module,
+> > > need to
+> > > add clock operations to make sure the driver is working properly.
+> > > 
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > Reviewed-by: Guido Günther <agx@sigxcpu.org>
+> > 
+> > This series looks good, do you think it can be merged in time for
+> > v5.4?
+> > Today was v5.3-rc6.
+> 
+> If the question is for me, then I am NOT sure, the thermal patches
+> are pending
+> there for almost half year and I did NOT receive any response,
 
-On Mon, 26 Aug 2019 06:44:34 -0700 Guenter Roeck wrote:
+which patch series you're referring to?
 
->=20
->=20
-> On 8/26/19 3:01 AM, Jisheng Zhang wrote:
-> > Add a new driver for Synaptics AS370 PVT sensors. Currently, only
-> > temperature is supported.
-> >
-> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > ---
-> >   drivers/hwmon/Kconfig       |  10 +++
-> >   drivers/hwmon/Makefile      |   1 +
-> >   drivers/hwmon/as370-hwmon.c | 158 +++++++++++++++++++++++++++++++++++=
-+
-> >   3 files changed, 169 insertions(+)
-> >   create mode 100644 drivers/hwmon/as370-hwmon.c
-> >
-> > diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> > index 650dd71f9724..d31610933faa 100644
-> > --- a/drivers/hwmon/Kconfig
-> > +++ b/drivers/hwmon/Kconfig
-> > @@ -246,6 +246,16 @@ config SENSORS_ADT7475
-> >         This driver can also be built as a module. If so, the module
-> >         will be called adt7475.
-> >
-> > +config SENSORS_AS370
-> > +     tristate "Synaptics AS370 SoC hardware monitoring driver" =20
->=20
-> I think this needs "depends on HAS_IOMEM".
+>  looks like no one
+> is maintaining the thermal sub-system?
+> 
 
-HWMON depends on HAS_IOMEM, so the dependency has been required
-by the common HWMON, we don't need it here.
+Eduardo is maintaining all the thermal-soc driver changes. Thus I
+usually filtered out the soc driver patches in my mailbox.
 
->=20
-> > +     help
-> > +       If you say yes here you get support for the PVT sensors of
-> > +       the Synaptics AS370 SoC
-> > +
-> > +       This driver can also be built as a module. If so, the module
-> > +       will be called as370-hwmon.
-> > +
-> > +
-> >   config SENSORS_ASC7621
-> >       tristate "Andigilog aSC7621"
-> >       depends on I2C
-> > diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> > index 8db472ea04f0..252e8a4c9781 100644
-> > --- a/drivers/hwmon/Makefile
-> > +++ b/drivers/hwmon/Makefile
-> > @@ -48,6 +48,7 @@ obj-$(CONFIG_SENSORS_ADT7475)       +=3D adt7475.o
-> >   obj-$(CONFIG_SENSORS_APPLESMC)      +=3D applesmc.o
-> >   obj-$(CONFIG_SENSORS_ARM_SCMI)      +=3D scmi-hwmon.o
-> >   obj-$(CONFIG_SENSORS_ARM_SCPI)      +=3D scpi-hwmon.o
-> > +obj-$(CONFIG_SENSORS_AS370)  +=3D as370-hwmon.o
-> >   obj-$(CONFIG_SENSORS_ASC7621)       +=3D asc7621.o
-> >   obj-$(CONFIG_SENSORS_ASPEED)        +=3D aspeed-pwm-tacho.o
-> >   obj-$(CONFIG_SENSORS_ATXP1) +=3D atxp1.o
-> > diff --git a/drivers/hwmon/as370-hwmon.c b/drivers/hwmon/as370-hwmon.c
-> > new file mode 100644
-> > index 000000000000..98dfba45e1b0
-> > --- /dev/null
-> > +++ b/drivers/hwmon/as370-hwmon.c
-> > @@ -0,0 +1,158 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Synaptics AS370 SoC Hardware Monitoring Driver
-> > + *
-> > + * Copyright (C) 2018 Synaptics Incorporated
-> > + * Author: Jisheng Zhang <jszhang@kernel.org>
-> > + */
-> > +
-> > +#include <linux/bitops.h>
-> > +#include <linux/delay.h> =20
->=20
-> Unnecessary include file.
+The last email from Eduardo is that he is offline during this July and
+will be back and taking patches in August.
 
-will remove it in newer version.
+I will double check with Eduardo anyway.
 
->=20
-> > +#include <linux/hwmon.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +
-> > +#define CTRL         0x0
-> > +#define  PD          BIT(0)
-> > +#define  EN          BIT(1)
-> > +#define  T_SEL               BIT(2)
-> > +#define  V_SEL               BIT(3)
-> > +#define  NMOS_SEL    BIT(8)
-> > +#define  PMOS_SEL    BIT(9)
-> > +#define STS          0x4
-> > +#define  BN_MASK     (0xfff << 0) =20
->=20
-> How about using GENMASK() ?
+thanks,
+rui
 
-Good idea.
 
->=20
-> > +#define  EOC         BIT(12)
-> > +
-> > +struct as370_hwmon {
-> > +     void __iomem *base;
-> > +};
-> > +
-> > +static void init_pvt(struct as370_hwmon *hwmon)
-> > +{
-> > +     u32 val;
-> > +     void __iomem *addr =3D hwmon->base + CTRL;
-> > +
-> > +     val =3D PD;
-> > +     writel_relaxed(val, addr);
-> > +     val |=3D T_SEL;
-> > +     val &=3D ~V_SEL;
-> > +     val &=3D ~NMOS_SEL;
-> > +     val &=3D ~PMOS_SEL; =20
->=20
-> What is the point of this ? We know that val =3D=3D PD here.
-
-yes, could be removed
-
->=20
-> > +     writel_relaxed(val, addr);
-> > +     val |=3D EN;
-> > +     writel_relaxed(val, addr);
-> > +     val &=3D ~PD;
-> > +     writel_relaxed(val, addr);
-> > +}
-> > +
-> > +static int read_pvt(struct as370_hwmon *hwmon)
-> > +{
-> > +     return readl_relaxed(hwmon->base + STS) & BN_MASK;
-> > +} =20
->=20
-> Please fold into the calling code.
->=20
-> > +
-> > +static int as370_hwmon_read(struct device *dev, enum hwmon_sensor_type=
-s type,
-> > +                         u32 attr, int channel, long *temp)
-> > +{
-> > +     int val;
-> > +     struct as370_hwmon *hwmon =3D dev_get_drvdata(dev);
-> > +
-> > +     switch (attr) {
-> > +     case hwmon_temp_input:
-> > +             val =3D read_pvt(hwmon);
-> > +             if (val < 0)
-> > +                     return val; =20
->=20
-> read_pvt() doesn't return a negative error code. This check is unnecessar=
-y.
->=20
-> > +             *temp =3D val * 251802 / 4096 - 85525; =20
->=20
-> This results in rounding down the reported temperature. It is ok if it is
-> what you want; otherwise, I would suggest to use DIV_ROUND_CLOSEST().
-
-Good idea.
-
-Thanks for your review,
-Jisheng
-
->=20
-> > +             break;
-> > +     default:
-> > +             return -EOPNOTSUPP;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static umode_t
-> > +as370_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
-> > +                    u32 attr, int channel)
-> > +{
-> > +     if (type !=3D hwmon_temp)
-> > +             return 0;
-> > +
-> > +     switch (attr) {
-> > +     case hwmon_temp_input:
-> > +             return 0444;
-> > +     default:
-> > +             return 0;
-> > +     }
-> > +}
-> > +
-> > +static const u32 as370_hwmon_temp_config[] =3D {
-> > +     HWMON_T_INPUT,
-> > +     0
-> > +};
-> > +
-> > +static const struct hwmon_channel_info as370_hwmon_temp =3D {
-> > +     .type =3D hwmon_temp,
-> > +     .config =3D as370_hwmon_temp_config,
-> > +};
-> > +
-> > +static const struct hwmon_channel_info *as370_hwmon_info[] =3D {
-> > +     &as370_hwmon_temp,
-> > +     NULL
-> > +};
-> > +
-> > +static const struct hwmon_ops as370_hwmon_ops =3D {
-> > +     .is_visible =3D as370_hwmon_is_visible,
-> > +     .read =3D as370_hwmon_read,
-> > +};
-> > +
-> > +static const struct hwmon_chip_info as370_chip_info =3D {
-> > +     .ops =3D &as370_hwmon_ops,
-> > +     .info =3D as370_hwmon_info,
-> > +};
-> > +
-> > +static int as370_hwmon_probe(struct platform_device *pdev)
-> > +{
-> > +     struct resource *res;
-> > +     struct device *hwmon_dev;
-> > +     struct as370_hwmon *hwmon;
-> > +     struct device *dev =3D &pdev->dev;
-> > +
-> > +     hwmon =3D devm_kzalloc(dev, sizeof(*hwmon), GFP_KERNEL);
-> > +     if (!hwmon)
-> > +             return -ENOMEM;
-> > +
-> > +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     hwmon->base =3D devm_ioremap_resource(&pdev->dev, res);
-> > +     if (IS_ERR(hwmon->base))
-> > +             return PTR_ERR(hwmon->base);
-> > +
-> > +     init_pvt(hwmon);
-> > +
-> > +     hwmon_dev =3D devm_hwmon_device_register_with_info(dev,
-> > +                                                      "as370_hwmon", =
-=20
->=20
-> The "_hwmon" seems unnecessary. It will show up in "sensors" as part
-> of the sensor name. Is this really what you want ?
->=20
-> > +                                                      hwmon,
-> > +                                                      &as370_chip_info=
-,
-> > +                                                      NULL);
-> > +     return PTR_ERR_OR_ZERO(hwmon_dev);
-> > +}
-> > +
-> > +static const struct of_device_id as370_hwmon_match[] =3D {
-> > +     { .compatible =3D "syna,as370-hwmon" },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, as370_hwmon_match);
-> > +
-> > +static struct platform_driver as370_hwmon_driver =3D {
-> > +     .probe =3D as370_hwmon_probe,
-> > +     .driver =3D {
-> > +             .name =3D "as370-hwmon",
-> > +             .of_match_table =3D as370_hwmon_match,
-> > +     },
-> > +};
-> > +module_platform_driver(as370_hwmon_driver);
-> > +
-> > +MODULE_AUTHOR("Jisheng Zhang<jszhang@kernel.org>");
-> > +MODULE_DESCRIPTION("Synaptics AS370 SoC hardware monitor");
-> > +MODULE_LICENSE("GPL v2");
-> > =20
->=20
+> > 
+> > In an earlier series the CLK_IS_CRITICAL flags was removed from the
+> > TMU
+> > clock so if the thermal driver doesn't explicitly enable it the
+> > system will hang
+> > on probe. This is what happens in linux-next right now!
+> 
+> The thermal driver should be built with module, so default kernel
+> should can boot
+> up, do you modify the thermal driver as built-in?
+> 
+> > 
+> > Unless this patches is merged soon we'll end up with a 5.4-rc1 that
+> > doesn't
+> > boot on imx8mq. An easy fix would be to drop/revert commit
+> > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.
+> 
+> If the thermal driver is built as module, I think no need to revert
+> the commit, but
+> if by default thermal driver is built-in or mod probed, then yes, it
+> should NOT break
+> kernel boot up.
+> 
+> Anson.
+> 
+> > 
+> > Merging patches out-of-order when they have hard (boot-breaking)
+> > dependencies also breaks bisect.
+> > 
+> > --
+> > Regards,
+> > Leonard
