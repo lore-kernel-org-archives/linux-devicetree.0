@@ -1,183 +1,79 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Tue, 27 Aug 2019 08:13:47 -0500
-Message-ID: <CAL_JsqK7xPTYFzSXt52m+Z0LRcFy2TUfa45XzY1YGH0-JRA-WQ@mail.gmail.com>
-References: <1566942646-18015-1-git-send-email-peng.fan@nxp.com> <1566942646-18015-2-git-send-email-peng.fan@nxp.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH v5 00/13] Common patches from downstream development
+Date: Tue, 27 Aug 2019 13:18:16 +0000
+Message-ID: <20190827131806.6816-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566942646-18015-2-git-send-email-peng.fan@nxp.com>
+Content-Language: en-US
+Content-ID: <E9D7C2CC8883B8409492F23CF1D14A42@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummenacher@toradex.com>, "stefan @ agner . ch" <stefan@agner.ch>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Fabio Estevam <festevam@gmail.com>
+Cc: Philippe Schenker <philippe.schenker@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 4:51 AM Peng Fan <peng.fan@nxp.com> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-> actions in software layers running in the EL2 or EL3 exception levels.
-> The term "ARM" here relates to the SMC instruction as part of the ARM
-> instruction set, not as a standard endorsed by ARM Ltd.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/mailbox/arm-smc.yaml       | 126 +++++++++++++++++++++
->  1 file changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> new file mode 100644
-> index 000000000000..ae677e0c0910
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> @@ -0,0 +1,126 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM SMC Mailbox Interface
-> +
-> +maintainers:
-> +  - Peng Fan <peng.fan@nxp.com>
-> +
-> +description: |
-> +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
-> +  call) instruction to trigger a mailbox-connected activity in firmware,
-> +  executing on the very same core as the caller. By nature this operation
-> +  is synchronous and this mailbox provides no way for asynchronous messages
-> +  to be delivered the other way round, from firmware to the OS, but
-> +  asynchronous notification could also be supported. However the value of
-> +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
-> +  message to the mailbox framework, so a synchronous communication can be
-> +  established, for a asynchronous notification, no value will be returned.
-> +  The exact meaning of both the action the mailbox triggers as well as the
-> +  return value is defined by their users and is not subject to this binding.
-> +
-> +  One use case of this mailbox is the SCMI interface, which uses shared memory
-> +  to transfer commands and parameters, and a mailbox to trigger a function
-> +  call. This allows SoCs without a separate management processor (or when
-> +  such a processor is not available or used) to use this standardized
-> +  interface anyway.
-> +
-> +  This binding describes no hardware, but establishes a firmware interface.
-> +  Upon receiving an SMC using one of the described SMC function identifiers,
-> +  the firmware is expected to trigger some mailbox connected functionality.
-> +  The communication follows the ARM SMC calling convention.
-> +  Firmware expects an SMC function identifier in r0 or w0. The supported
-> +  identifiers are passed from consumers, or listed in the the arm,func-ids
-> +  properties as described below. The firmware can return one value in
-> +  the first SMC result register, it is expected to be an error value,
-> +  which shall be propagated to the mailbox client.
-> +
-> +  Any core which supports the SMC or HVC instruction can be used, as long as
-> +  a firmware component running in EL3 or EL2 is handling these calls.
-> +
-> +properties:
-> +  compatible:
-> +    const: arm,smc-mbox
-> +
-> +  "#mbox-cells":
-> +    const: 1
-> +
-> +  arm,num-chans:
-> +    description: The number of channels supported.
-> +    items:
-> +     minimum: 1
-> +     maximum: 4096 # Should be enough?
-> +
-> +  method:
-> +    items:
-
-You can drop 'items' as this is a single entry.
-
-> +      - enum:
-> +          - smc
-> +          - hvc
-> +
-> +  transports:
-> +    items:
-
-same here
-
-> +      - enum:
-> +          - mem
-> +          - reg
-> +
-> +  arm,func-ids:
-
-Needs a $ref to a type (uint32-array).
-
-> +    description: |
-> +      An array of 32-bit values specifying the function IDs used by each
-> +      mailbox channel. Those function IDs follow the ARM SMC calling
-> +      convention standard [1].
-> +
-> +      There is one identifier per channel and the number of supported
-> +      channels is determined by the length of this array.
-> +    minItems: 0
-> +    maxItems: 4096   # Should be enough?
-> +
-> +required:
-> +  - compatible
-> +  - "#mbox-cells"
-> +  - arm,num-chans
-> +  - transports
-> +  - method
-> +
-> +examples:
-> +  - |
-> +    sram@910000 {
-> +      compatible = "mmio-sram";
-> +      reg = <0x0 0x93f000 0x0 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges = <0 0x0 0x93f000 0x1000>;
-> +
-> +        cpu_scp_lpri: scp-shmem@0 {
-
-Looks like some indentation problem...
-
-> +          compatible = "arm,scmi-shmem";
-> +          reg = <0x0 0x200>;
-> +        };
-> +
-> +        cpu_scp_hpri: scp-shmem@200 {
-> +          compatible = "arm,scmi-shmem";
-> +          reg = <0x200 0x200>;
-> +        };
-> +    };
-> +
-> +    firmware {
-> +      smc_mbox: mailbox {
-> +        #mbox-cells = <1>;
-> +        compatible = "arm,smc-mbox";
-> +        method = "smc";
-> +        arm,num-chans = <0x2>;
-> +        transports = "mem";
-> +        /* Optional */
-> +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
-> +      };
-> +
-> +      scmi {
-> +        compatible = "arm,scmi";
-> +        mboxes = <&mailbox 0 &mailbox 1>;
-
-&smc_mbox and <> each entry.
-
-> +        mbox-names = "tx", "rx";
-> +        shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-
-<> each entry
-
-> +      };
-> +    };
-> +
-> +...
-> --
-> 2.16.4
->
+DQpUaGlzIHBhdGNoc2V0IGhvbGRzIHNvbWUgY29tbW9uIGNoYW5nZXMgdGhhdCB3ZXJlIG5ldmVy
+IHVwc3RyZWFtZWQuDQpXaXRoIGxhdGVzdCBkb3duc3RyZWFtIGtlcm5lbCB1cGdyYWRlLCBJIHRv
+b2sgdGhlIGFwcm9hY2ggdG8gc2VsZWN0DQptYWlubGluZSBkZXZpY2V0cmVlcyBhbmQgYXRvbWlj
+YWxseSBhZGQgbWlzc2luZyBzdHVmZiBmb3IgZG93bnN0cmVhbS4NCg0KVGhlc2UgcGF0Y2hlcyBJ
+IHNlbmQgaGVyZSBhcmUgc2VwYXJhdGVkIG91dCB3aXRoIGNoYW5nZXMgdGhhdCBhbHNvDQpoYXZl
+IGEgYmVuZWZpdCBmb3IgbWFpbmxpbmUuDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLSBVcGRhdGUg
+dmVyc2lvbiA0IGFuZCBsYXRlciAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KUGF0Y2hlcyB0aGF0
+IGdvdCBwdWxsZWQgaW4gYW4gZWFybGllciBwYXRjaHNldCB2ZXJzaW9uIGdvdCBkcm9wcGVkIGlu
+DQp0aGlzIHBhdGNoc2V0Lg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNClBoaWxpcHBlDQoNCkNoYW5nZXMg
+aW4gdjU6DQotIGNoYW5nZWQgbGVnYWN5IGdwaW8ta2V5LHdha2V1cCB0byB3YWtldXAtc291cmNl
+DQotIEFkZCBub3RlIGluIGNvbW1pdCBtZXNzYWdlIGFib3V0IGRpc2FibGVkIHN0YXR1cw0KLSBB
+ZGRlZCBPbGVrJ3MgcmV2aWV3ZWQtYnkNCi0gY2hhbmdlIGdyb3VwIG5hbWUNCi0gQWRkIHBpbm11
+eCB0byBpb211eGMNCi0gQWRqdXN0ZWQgY29tbWl0IG1lc3NhZ2UNCi0gU3dpdGNoZWQgdG8gY29u
+c2lzdGVudCBuYW1pbmc6IHBpbmN0cmxfeHh4OiB4eHhncnANCi0gQWRkZWQgT2xlaydzIFJldmll
+d2VkLWJ5DQotIEFkZGVkIE9sZWsncyBSZXZpZXdlZC1ieQ0KLSBBZGRlZCBPbGVrJ3MgUmV2aWV3
+ZWQtYnkNCi0gQWRkZWQgT2xlaydzIFJldmlld2QtYnkNCi0gQWRkZWQgT2xlaydzIFJldmlld2Vk
+LWJ5DQotIEFkZCBPbGVrJ3MgUmV2aWV3ZWQtYnkNCi0gQWRkZWQgbm90ZSB0byBjb21taXQgbWVz
+c2FnZSBhYm91dCBkaXNhYmxlZCBzdGF0dXMNCi0gQWRkIE9sZWsncyBSZXZpZXdlZC1ieQ0KDQpD
+aGFuZ2VzIGluIHY0Og0KLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQotIEFkZCBNYXJjZWwg
+Wmlzd2lsZXIncyBBY2sNCi0gQWRkIE1hcmNlbCBaaXN3aWxlcidzIEFjaw0KLSBBZGQgTWFyY2Vs
+IFppc3dpbGVyJ3MgQWNrDQotIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBBY2sNCi0gQWRkIE1hcmNl
+bCBaaXN3aWxlcidzIEFjaw0KLSBBZGQgTWFyY2VsIFppc3dpbGVyJ3MgQWNrDQotIEFkZCBNYXJj
+ZWwgWmlzd2lsZXIncyBBY2sNCi0gQWRkIE1hcmNlbCBaaXN3aWxlcidzIEFjaw0KLSBBZGQgTWFy
+Y2VsIFppc3dpbGVyJ3MgQWNrDQotIE1vdmUgY2FuIG5vZGVzIHRvIG1vZHVsZSBkZXZpY2V0ZXJl
+ZSBpbmNsdWRlIGlteDZ1bGwtY29saWJyaS5kdHNpDQotIEFkZCBNYXJjZWwgWmlzd2lsZXIncyBB
+Y2sNCg0KQ2hhbmdlcyBpbiB2MzoNCi0gQWRkIG5ldyBjb21taXQgbWVzc2FnZSBmcm9tIFN0ZWZh
+bidzIHByb3Bvc2FsIG9uIE1MDQotIEZpeCBjb21taXQgbWVzc2FnZQ0KLSBGaXggY29tbWl0IHRp
+dGxlIHRvICIuLi5pbXg2LWFwYWxpczouLi4iDQoNCkNoYW5nZXMgaW4gdjI6DQotIERlbGV0ZWQg
+dG91Y2hyZXZvbHV0aW9uIGRvd25zdHJlYW0gc3R1ZmYNCi0gVXNlIGdlbmVyaWMgbm9kZSBuYW1l
+DQotIEJldHRlciBjb21tZW50DQotIENoYW5nZWQgY29tbWl0IHRpdGxlIHRvICcuLi5pbXg2cWRs
+LWFwYWxpczouLi4nDQotIERlbGV0ZWQgdG91Y2hyZXZvbHV0aW9uIGRvd25zdHJlYW0gc3R1ZmYN
+Ci0gVXNlIGdlbmVyaWMgbm9kZSBuYW1lDQotIFB1dCBhIGJldHRlciBjb21tZW50IGluIHRoZXJl
+DQotIENvbW1pdCB0aXRsZQ0KLSBSZW1vdmVkIGYwNzEwYQ0KdGhhdCBpcyBkb3duc3RyZWFtIG9u
+bHkNCi0gQ2hhbmdlZCB0byBnZW5lcmljIG5vZGUgbmFtZQ0KLSBCZXR0ZXIgY29tbWVudA0KDQpN
+YXggS3J1bW1lbmFjaGVyICgyKToNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogcmVkdWNl
+IHZfYmF0dCBjdXJyZW50IGluIHBvd2VyIG9mZg0KICBBUk06IGR0czogaW14NnVsbDogaW1wcm92
+ZSBjYW4gdGVtcGxhdGVzDQoNClBoaWxpcHBlIFNjaGVua2VyICg5KToNCiAgQVJNOiBkdHM6IGlt
+eDctY29saWJyaTogQWRkIHRvdWNoIGNvbnRyb2xsZXJzDQogIEFSTTogZHRzOiBpbXg2cWRsLWNv
+bGlicmk6IEFkZCBtaXNzaW5nIHBpbiBkZWNsYXJhdGlvbiBpbiBpb211eGMNCiAgQVJNOiBkdHM6
+IGlteDZxZGwtYXBhbGlzOiBBZGQgc2xlZXAgc3RhdGUgdG8gY2FuIGludGVyZmFjZXMNCiAgQVJN
+OiBkdHM6IGlteDYtYXBhbGlzOiBBZGQgdG91Y2hzY3JlZW5zIHVzZWQgb24gVG9yYWRleCBldmFs
+IGJvYXJkcw0KICBBUk06IGR0czogaW14Ni1jb2xpYnJpOiBBZGQgbWlzc2luZyBwaW5tdXhpbmcg
+dG8gVG9yYWRleCBldmFsIGJvYXJkDQogIEFSTTogZHRzOiBpbXg2dWxsLWNvbGlicmk6IEFkZCBz
+bGVlcCBtb2RlIHRvIGZlYw0KICBBUk06IGR0czogaW14NnVsbC1jb2xpYnJpOiBBZGQgd2F0Y2hk
+b2cNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogQWRkIGdlbmVyYWwgd2FrZXVwIGtleSB1
+c2VkIG9uIENvbGlicmkNCiAgQVJNOiBkdHM6IGlteDZ1bGwtY29saWJyaTogQWRkIHRvdWNoc2Ny
+ZWVuIHVzZWQgd2l0aCBFdmFsIEJvYXJkDQoNClN0ZWZhbiBBZ25lciAoMik6DQogIEFSTTogZHRz
+OiBpbXg3LWNvbGlicmk6IGFkZCBHUElPIHdha2V1cCBrZXkNCiAgQVJNOiBkdHM6IGlteDctY29s
+aWJyaTogZml4IDEuOFYvVUhTIHN1cHBvcnQNCg0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC1j
+b2xpYnJpLWV2YWwtdjMuZHRzICB8IDM5ICsrKysrKysrKysrDQogYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnEtYXBhbGlzLWV2YWwuZHRzICAgICAgIHwgMTMgKysrKw0KIGFyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZxLWFwYWxpcy1peG9yYS12MS4xLmR0cyB8IDEzICsrKysNCiBhcmNoL2FybS9ib290L2R0
+cy9pbXg2cS1hcGFsaXMtaXhvcmEuZHRzICAgICAgfCAxMyArKysrDQogYXJjaC9hcm0vYm9vdC9k
+dHMvaW14NnFkbC1hcGFsaXMuZHRzaSAgICAgICAgIHwgMjcgKysrKysrLS0NCiBhcmNoL2FybS9i
+b290L2R0cy9pbXg2cWRsLWNvbGlicmkuZHRzaSAgICAgICAgfCAxNyArKysrKw0KIC4uLi9hcm0v
+Ym9vdC9kdHMvaW14NnVsbC1jb2xpYnJpLWV2YWwtdjMuZHRzaSB8IDM4ICsrKysrKysrKysrDQog
+Li4uL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktbm9ud2lmaS5kdHNpIHwgIDIgKy0NCiBh
+cmNoL2FybS9ib290L2R0cy9pbXg2dWxsLWNvbGlicmktd2lmaS5kdHNpICAgfCAgMiArLQ0KIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwtY29saWJyaS5kdHNpICAgICAgICB8IDY0ICsrKysrKysr
+KysrKysrKysrLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg3LWNvbGlicmktZXZhbC12My5kdHNp
+ICAgfCAzOCArKysrKysrKysrKw0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDctY29saWJyaS5kdHNp
+ICAgICAgICAgICB8IDMwICsrKysrKysrLQ0KIDEyIGZpbGVzIGNoYW5nZWQsIDI4MCBpbnNlcnRp
+b25zKCspLCAxNiBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjIzLjANCg0K
