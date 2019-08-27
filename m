@@ -1,114 +1,104 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
-Date: Tue, 27 Aug 2019 12:18:32 -0500
-Message-ID: <CAL_JsqJ8h7fH_pnQp7OYpNXJexG_wvDvv5SNEEyxcrpXzJc_Jw@mail.gmail.com>
-References: <20190821091132.14994-1-sibis@codeaurora.org> <20190821091132.14994-2-sibis@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/7] dt-bindings: mmc: Add Actions Semi SD/MMC/SDIO
+ controller binding
+Date: Tue, 27 Aug 2019 12:19:59 -0500
+Message-ID: <20190827171959.GA30843@bogus>
+References: <20190821025629.15470-1-manivannan.sadhasivam@linaro.org>
+ <20190821025629.15470-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821091132.14994-2-sibis@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190821025629.15470-3-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Evan Green <evgreen@chromium.org>, daidavid1@codeaurora.org, Saravana Kannan <saravanak@google.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: ulf.hansson@linaro.org, afaerber@suse.de, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 4:11 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Add bindings for Operating State Manager (OSM) L3 interconnect provider
-> on SDM845 SoCs.
->
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+On Wed, Aug 21, 2019 at 08:26:24AM +0530, Manivannan Sadhasivam wrote:
+> Add devicetree YAML binding for Actions Semi Owl SoC's SD/MMC/SDIO
+> controller.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  .../bindings/interconnect/qcom,osm-l3.yaml    | 56 +++++++++++++++++++
->  .../dt-bindings/interconnect/qcom,osm-l3.h    | 12 ++++
->  2 files changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
->
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>  .../devicetree/bindings/mmc/owl-mmc.yaml      | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/owl-mmc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/owl-mmc.yaml b/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
 > new file mode 100644
-> index 0000000000000..dab2b6875ab27
+> index 000000000000..f7eff4c43017
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: BSD-2-Clause
+> +++ b/Documentation/devicetree/bindings/mmc/owl-mmc.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
 (GPL-2.0-only OR BSD-2-Clause) for new bindings please.
 
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
+> +$id: http://devicetree.org/schemas/mmc/owl-mmc.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect Provider
+> +title: Actions Semi Owl SoCs SD/MMC/SDIO controller
+> +
+> +allOf:
+> +  - $ref: "mmc-controller.yaml"
 > +
 > +maintainers:
-> +  - Sibi Sankar <sibis@codeaurora.org>
-> +
-> +description:
-> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the OSM.
-> +  The OSM L3 interconnect provider aggregates the L3 bandwidth requests
-> +  from CPU/GPU and relays it to the OSM.
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > +
 > +properties:
+> +  "#address-cells": true
+> +  "#size-cells": true
+
+You can drop these.
+
+> +
 > +  compatible:
-> +    const: "qcom,sdm845-osm-l3"
+> +    const: actions,owl-mmc
 > +
 > +  reg:
 > +    maxItems: 1
 > +
+> +  interrupts:
+> +    maxItems: 1
+> +
 > +  clocks:
-> +    items:
-> +      - description: xo clock
-> +      - description: alternate clock
+> +    minItems: 1
 > +
-> +  clock-names:
-> +    items:
-> +      - const: xo
-> +      - const: alternate
+> +  resets:
+> +    maxItems: 1
 > +
-> +  '#interconnect-cells':
-> +    const: 1
+> +  dmas:
+> +    maxItems: 1
+> +
+> +  dma-names:
+> +    const: mmc
 > +
 > +required:
 > +  - compatible
 > +  - reg
+> +  - interrupts
 > +  - clocks
-> +  - clock-names
-> +  - '#interconnect-cells'
-> +
-> +additionalProperties: false
+> +  - resets
+> +  - dmas
+> +  - dma-names
 > +
 > +examples:
 > +  - |
-> +    osm_l3: interconnect@17d41000 {
-> +      compatible = "qcom,sdm845-osm-l3";
-> +      reg = <0x17d41000 0x1400>;
-> +
-> +      clocks = <&rpmhcc 0>, <&gcc 165>;
-> +      clock-names = "xo", "alternate";
-> +
-> +      #interconnect-cells = <1>;
+> +    mmc0: mmc@e0330000 {
+> +        compatible = "actions,owl-mmc";
+> +        reg = <0x0 0xe0330000 0x0 0x4000>;
+> +        interrupts = <0 42 4>;
+> +        clocks = <&cmu 56>;
+> +        resets = <&cmu 23>;
+> +        dmas = <&dma 2>;
+> +        dma-names = "mmc";
+> +        bus-width = <4>;
 > +    };
-> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h b/include/dt-bindings/interconnect/qcom,osm-l3.h
-> new file mode 100644
-> index 0000000000000..54858ff7674d7
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
-> + */
 > +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-> +
-> +#define MASTER_OSM_L3_APPS     0
-> +#define SLAVE_OSM_L3           1
-> +
-> +#endif
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+> +...
+> -- 
+> 2.17.1
+> 
