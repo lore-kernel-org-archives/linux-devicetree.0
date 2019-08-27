@@ -1,193 +1,65 @@
-Return-Path: <SRS0=qJz7=W2=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v10 01/14] dt-bindings: connector: analog: add sdtv standards property
-Date: Fri, 30 Aug 2019 12:16:33 +0200
-Message-Id: <20190830101646.6530-2-m.felsch@pengutronix.de>
-In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
-References: <20190830101646.6530-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=dUwE=WX=nic.cz=marek.behun@kernel.org>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH mvebu-dt64 0/3] Add Turris Mox device-tree
+Date: Tue, 27 Aug 2019 17:16:41 +0200
+Message-Id: <20190827151644.12532-1-marek.behun@nic.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: arm@kernel.org
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 List-ID: <devicetree@vger.kernel.org>
 
-Some connectors no matter if in- or output supports only a limited
-range of sdtv standards. It doesn't matter if the hardware behind that
-connector supports more than the listed formats since the users are
-restriced by a label e.g. to plug only a camera into this connector
-which uses the PAL format.
+Hello,
+this patch series adds device-tree for Turris Mox.
 
-This patch adds the capability to describe such limitation within the
-firmware. There are no format restrictions if the property isn't
-present, so it's completely backward compatible.
+All the devices described in this device-tree are supported, although
+the moxtet bus driver and moxtet GPIO driver are now only in
+soc/for-next.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-[1] https://patchwork.kernel.org/cover/10794703/
+The device-tree includes <dt-bindings/bus/moxtet.h>. This file is not
+present in mvebu/dt64, but is in soc/for-next.
 
-v10:
-- fix typo within comment s/TV_STD_*/SDTV_STD_*/
+I have addressed the issues Rob Herring had with this device-tree when
+I sent a RFC in November 2018. These include:
+ - since there are whole hierarchy of nodes that may be disabled since
+   the modules are not connected, U-Boot removes these nodes
+ - the documentation for board compatible flag was moved into
+   armada-37xx dt-bindings documentation
+ - reset_button was renamed to reset
+ - reset-gpio was renamed to reset-gpios
+ - flash partitions nodes are now contained in one 'partitions' node
+ - moxtet node now has a driver in soc/for-next and has documented
+   dt-bindings
+Not addressed:
+ - the switch nodes have names:
+     switch0@10   switch1@11   switch2@12
+     switch0@2    switch1@2    switch2@2
+   Rob said that 'Ideally, we shouldn't have this switch0, switch1,
+   etc.'
+   The problem here is that the 4-port switch is always on the same MDIO
+   address (0x2), but depending on it's position in this module topology
+   it has different settings. Therefore we have three nodes, and only
+   one of them can be ever enabled (only one 4-port switch can be
+   connected). Since I did not change this for the 4-port switch, I left
+   this naming also for 8-port switch.
+   Hopefully this is not a major problem.
+There were also other changes since the RFC, since there are new drivers
+now in the kernel (for example the comphy driver for Armada 37xx).
 
-v8:
-Hi Rob,
+Marek
 
-I dropped your r b tag becuase of the changes I made in this version.
-Please can you have look on it again? Luckily this would be the last
-time ;-)
+Marek Behún (3):
+  arm64: dts: marvell: armada-37xx: add SPI CS1 pinctrl
+  dt-bindings: marvell: document Turris Mox compatible
+  arm64: dts: marvell: add DTS for Turris Mox
 
-- move definition to include/dt-bindings/display
-- rename tvnorms.h to sdtv-standards.h
-- TVORMS_* -> SDTV_STD_*
-- add sync comments
-- adapt commit message
-- fix bindings documentation
+ .../bindings/arm/marvell/armada-37xx.txt      |   8 +
+ arch/arm64/boot/dts/marvell/Makefile          |   1 +
+ .../dts/marvell/armada-3720-turris-mox.dts    | 841 ++++++++++++++++++
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   5 +
+ 4 files changed, 855 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
 
-v7:
-I kept Robs r b tag because I only changed the example and extended
-TVNORM_* macros.
-
-- fix some style issues
-- add TVNORM_NTSC, TVNORM_525_60 and TVNORM_625_50
-
-v6:
-- tvnorms.h: use tabs instead of spaces
-- tvnorms.h: add TVNORM_PAL and TVNORM_SECAM
-- tvnorms.h: drop rarely used TVNORM_ATSC_* norms
-
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
-
- .../display/connector/analog-tv-connector.txt |  6 ++
- include/dt-bindings/display/sdtv-standards.h  | 76 +++++++++++++++++++
- include/uapi/linux/videodev2.h                |  4 +
- 3 files changed, 86 insertions(+)
- create mode 100644 include/dt-bindings/display/sdtv-standards.h
-
-diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-index 0c0970c210ab..883bcb2604c7 100644
---- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-+++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-@@ -6,16 +6,22 @@ Required properties:
- 
- Optional properties:
- - label: a symbolic name for the connector
-+- sdtv-standards: limit the supported TV standards on a connector to the given
-+                  ones. If not specified all TV standards are allowed.
-+                  Possible TV standards are defined in
-+                  include/dt-bindings/display/sdtv-standards.h.
- 
- Required nodes:
- - Video port for TV input
- 
- Example
- -------
-+#include <dt-bindings/display/sdtv-standards.h>
- 
- tv: connector {
- 	compatible = "composite-video-connector";
- 	label = "tv";
-+	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
- 
- 	port {
- 		tv_connector_in: endpoint {
-diff --git a/include/dt-bindings/display/sdtv-standards.h b/include/dt-bindings/display/sdtv-standards.h
-new file mode 100644
-index 000000000000..fbc1a3db2ea7
---- /dev/null
-+++ b/include/dt-bindings/display/sdtv-standards.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0-only or X11 */
-+/*
-+ * Copyright 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+ */
-+
-+#ifndef _DT_BINDINGS_DISPLAY_SDTV_STDS_H
-+#define _DT_BINDINGS_DISPLAY_SDTV_STDS_H
-+
-+/*
-+ * Attention: Keep the SDTV_STD_* bit definitions in sync with
-+ * include/uapi/linux/videodev2.h V4L2_STD_* bit definitions.
-+ */
-+/* One bit for each standard */
-+#define SDTV_STD_PAL_B		0x00000001
-+#define SDTV_STD_PAL_B1		0x00000002
-+#define SDTV_STD_PAL_G		0x00000004
-+#define SDTV_STD_PAL_H		0x00000008
-+#define SDTV_STD_PAL_I		0x00000010
-+#define SDTV_STD_PAL_D		0x00000020
-+#define SDTV_STD_PAL_D1		0x00000040
-+#define SDTV_STD_PAL_K		0x00000080
-+
-+#define SDTV_STD_PAL		(SDTV_STD_PAL_B		| \
-+				 SDTV_STD_PAL_B1	| \
-+				 SDTV_STD_PAL_G		| \
-+				 SDTV_STD_PAL_H		| \
-+				 SDTV_STD_PAL_I		| \
-+				 SDTV_STD_PAL_D		| \
-+				 SDTV_STD_PAL_D1	| \
-+				 SDTV_STD_PAL_K)
-+
-+#define SDTV_STD_PAL_M		0x00000100
-+#define SDTV_STD_PAL_N		0x00000200
-+#define SDTV_STD_PAL_Nc		0x00000400
-+#define SDTV_STD_PAL_60		0x00000800
-+
-+#define SDTV_STD_NTSC_M		0x00001000	/* BTSC */
-+#define SDTV_STD_NTSC_M_JP	0x00002000	/* EIA-J */
-+#define SDTV_STD_NTSC_443	0x00004000
-+#define SDTV_STD_NTSC_M_KR	0x00008000	/* FM A2 */
-+
-+#define SDTV_STD_NTSC		(SDTV_STD_NTSC_M	| \
-+				 SDTV_STD_NTSC_M_JP	| \
-+				 SDTV_STD_NTSC_M_KR)
-+
-+#define SDTV_STD_SECAM_B	0x00010000
-+#define SDTV_STD_SECAM_D	0x00020000
-+#define SDTV_STD_SECAM_G	0x00040000
-+#define SDTV_STD_SECAM_H	0x00080000
-+#define SDTV_STD_SECAM_K	0x00100000
-+#define SDTV_STD_SECAM_K1	0x00200000
-+#define SDTV_STD_SECAM_L	0x00400000
-+#define SDTV_STD_SECAM_LC	0x00800000
-+
-+#define SDTV_STD_SECAM		(SDTV_STD_SECAM_B	| \
-+				 SDTV_STD_SECAM_D	| \
-+				 SDTV_STD_SECAM_G	| \
-+				 SDTV_STD_SECAM_H	| \
-+				 SDTV_STD_SECAM_K	| \
-+				 SDTV_STD_SECAM_K1	| \
-+				 SDTV_STD_SECAM_L	| \
-+				 SDTV_STD_SECAM_LC)
-+
-+/* Standards for Countries with 60Hz Line frequency */
-+#define SDTV_STD_525_60		(SDTV_STD_PAL_M		| \
-+				 SDTV_STD_PAL_60	| \
-+				 SDTV_STD_NTSC		| \
-+				 SDTV_STD_NTSC_443)
-+
-+/* Standards for Countries with 50Hz Line frequency */
-+#define SDTV_STD_625_50		(SDTV_STD_PAL		| \
-+				 SDTV_STD_PAL_N		| \
-+				 SDTV_STD_PAL_Nc	| \
-+				 SDTV_STD_SECAM)
-+
-+#endif /* _DT_BINDINGS_DISPLAY_SDTV_STDS_H */
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 530638dffd93..bc7acade02a0 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -1208,6 +1208,10 @@ struct v4l2_selection {
- 
- typedef __u64 v4l2_std_id;
- 
-+/*
-+ * Attention: Keep the V4L2_STD_* bit definitions in sync with
-+ * include/dt-bindings/display/sdtv-standards.h SDTV_STD_* bit definitions.
-+ */
- /* one bit for each */
- #define V4L2_STD_PAL_B          ((v4l2_std_id)0x00000001)
- #define V4L2_STD_PAL_B1         ((v4l2_std_id)0x00000002)
 -- 
-2.20.1
+2.21.0
