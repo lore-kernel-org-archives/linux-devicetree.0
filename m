@@ -1,265 +1,60 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: Re: [RESEND, PATCH v13 09/12] soc: mediatek: cmdq: define the
- instruction struct
-Date: Tue, 27 Aug 2019 12:12:01 +0800
-Message-ID: <1566879121.29523.8.camel@mtksdaap41>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
-         <20190820084932.22282-10-bibby.hsieh@mediatek.com>
-         <486deaa3-d139-d4af-e0cf-e324b3270f3b@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v5 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
+Date: Mon, 26 Aug 2019 21:31:29 -0700
+Message-ID: <20190827043129.GB26807@tuxbook-pro>
+References: <20190826173120.2971-1-vkoul@kernel.org>
+ <20190826173120.2971-3-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <486deaa3-d139-d4af-e0cf-e324b3270f3b@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190826173120.2971-3-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-08-23 at 15:50 +0200, Matthias Brugger wrote:
-> 
-> On 20/08/2019 10:49, Bibby Hsieh wrote:
-> > Define an instruction structure for gce driver to append command.
-> > This structure can make the client's code more readability.
-> > 
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> > ---
-> >  drivers/soc/mediatek/mtk-cmdq-helper.c   | 106 +++++++++++++++--------
-> >  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
-> >  2 files changed, 74 insertions(+), 34 deletions(-)
-> > 
-> > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > index 7aa0517ff2f3..e3d5b0be8e79 100644
-> > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > @@ -9,12 +9,24 @@
-> >  #include <linux/mailbox_controller.h>
-> >  #include <linux/soc/mediatek/mtk-cmdq.h>
-> >  
-> > -#define CMDQ_ARG_A_WRITE_MASK	0xffff
-> >  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
-> >  #define CMDQ_EOC_IRQ_EN		BIT(0)
-> >  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
-> >  				<< 32 | CMDQ_EOC_IRQ_EN)
-> >  
-> > +struct cmdq_instruction {
-> > +	union {
-> > +		u32 value;
-> > +		u32 mask;
-> > +	};
-> > +	union {
-> > +		u16 offset;
-> > +		u16 event;
-> > +	};
-> > +	u8 subsys;
-> > +	u8 op;
-> > +};
-> > +
-> >  static void cmdq_client_timeout(struct timer_list *t)
-> >  {
-> >  	struct cmdq_client *client = from_timer(client, t, timer);
-> > @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
-> >  }
-> >  EXPORT_SYMBOL(cmdq_pkt_destroy);
-> >  
-> > -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> > -				   u32 arg_a, u32 arg_b)
-> > +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
-> >  {
-> > -	u64 *cmd_ptr;
-> >  
-> >  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
-> >  		/*
-> > @@ -127,81 +137,109 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> >  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
-> >  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
-> >  			__func__, (u32)pkt->buf_size);
-> > -		return -ENOMEM;
-> > +		return NULL;
-> >  	}
-> > -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> > -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> > +
-> > +	*(u64 *)(pkt->va_base + pkt->cmd_buf_size) = 0;>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
-> >  
-> > -	return 0;
-> > +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
-> >  }
-> >  
-> >  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
-> >  {
-> > -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> > -		    (subsys << CMDQ_SUBSYS_SHIFT);
-> > +	struct cmdq_instruction *inst;
-> > +
-> > +	inst = cmdq_pkt_append_command(pkt);
-> > +	if (!inst)
-> > +		return -ENOMEM;
-> > +
-> > +	inst->op = CMDQ_CODE_WRITE;
-> > +	inst->value = value;
-> > +	inst->offset = offset;
-> > +	inst->subsys = subsys;
-> >  
-> 
-> I can see that using cmdq_instruction will make the code more readable, but I
-> dislike the approach that cmdq_pkt_append_command returns a pointer where we
-> write the instruction to. Better we pass inst to cmdq_pkt_append_command() and
-> write it there to cmd_ptr.
-> 
-> I think this way we can get rid of explicitly setting the memory to zero:
-> *(u64 *)(pkt->va_base + pkt->cmd_buf_size) = 0;
-> 
-> And if we pass the inst to the append_command we don't have to change the return
-> value handling of cmdq_pkt_append_command(), which makes the patch easier to
-> understand.
+On Mon 26 Aug 10:31 PDT 2019, Vinod Koul wrote:
 
-Ok, I will change and resend it.
+> Convert the rpmh clock driver to use the new parent data scheme by
+> specifying the parent data for board clock.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-> 
-> > -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-> > +	return 0;
-> >  }
-> >  EXPORT_SYMBOL(cmdq_pkt_write);
-> >  
-> >  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
-> >  			u16 offset, u32 value, u32 mask)
-> >  {
-> > -	u32 offset_mask = offset;
-> > -	int err = 0;
-> > +	struct cmdq_instruction *inst;
-> > +	u16 offset_mask = offset;
-> >  
-> >  	if (mask != 0xffffffff) {
-> > -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> > +		inst = cmdq_pkt_append_command(pkt);
-> > +		if (!inst)
-> > +			return -ENOMEM;
-> > +
-> > +		inst->op = CMDQ_CODE_MASK;
-> > +		inst->mask = ~mask;
-> >  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-> >  	}
-> > -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
-> >  
-> > -	return err;
-> > +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
-> >  }
-> >  EXPORT_SYMBOL(cmdq_pkt_write_mask);
-> >  
-> >  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
-> >  {
-> > -	u32 arg_b;
-> > +	struct cmdq_instruction *inst;
-> >  
-> >  	if (event >= CMDQ_MAX_EVENT)
-> >  		return -EINVAL;
-> >  
-> > -	/*
-> > -	 * WFE arg_b
-> > -	 * bit 0-11: wait value
-> > -	 * bit 15: 1 - wait, 0 - no wait
-> > -	 * bit 16-27: update value
-> > -	 * bit 31: 1 - update, 0 - no update
-> > -	 */
-> 
-> I have no strong opinion of CMDQ_WFE_OPTION but if you want to introduce it,
-> then please copy the comment over to include/linux/mailbox/mtk-cmdq-mailbox.h
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Ok. let's move the descriptions to header.
+> ---
+>  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> Just one question, why did you call it _OPTION? It's not really expressive for me.
-
-Actually, _OPTION is come from our hardware design name...
-
+> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> index c3fd632af119..35d55aee6a01 100644
+> --- a/drivers/clk/qcom/clk-rpmh.c
+> +++ b/drivers/clk/qcom/clk-rpmh.c
+> @@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
+>  		.hw.init = &(struct clk_init_data){			\
+>  			.ops = &clk_rpmh_ops,				\
+>  			.name = #_name,					\
+> -			.parent_names = (const char *[]){ "xo_board" },	\
+> +			.parent_data =  &(const struct clk_parent_data){ \
+> +					.fw_name = "xo",		\
+> +					.name = "xo_board",		\
+> +			},						\
+>  			.num_parents = 1,				\
+>  		},							\
+>  	};								\
+> @@ -110,7 +113,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
+>  		.hw.init = &(struct clk_init_data){			\
+>  			.ops = &clk_rpmh_ops,				\
+>  			.name = #_name_active,				\
+> -			.parent_names = (const char *[]){ "xo_board" },	\
+> +			.parent_data =  &(const struct clk_parent_data){ \
+> +					.fw_name = "xo",		\
+> +					.name = "xo_board",		\
+> +			},						\
+>  			.num_parents = 1,				\
+>  		},							\
+>  	}
+> -- 
+> 2.20.1
 > 
-> > -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> > +	inst = cmdq_pkt_append_command(pkt);
-> > +	if (!inst)
-> > +		return -ENOMEM;
-> > +
-> > +	inst->op = CMDQ_CODE_WFE;
-> > +	inst->value = CMDQ_WFE_OPTION;
-> > +	inst->event = event;
-> >  
-> > -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> > +	return 0;
-> >  }
-> >  EXPORT_SYMBOL(cmdq_pkt_wfe);
-> >  
-> >  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
-> >  {
-> > +	struct cmdq_instruction *inst;
-> > +
-> >  	if (event >= CMDQ_MAX_EVENT)
-> >  		return -EINVAL;
-> >  
-> > -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> > -				       CMDQ_WFE_UPDATE);
-> > +	inst = cmdq_pkt_append_command(pkt);
-> > +	if (!inst)
-> > +		return -ENOMEM;
-> > +
-> > +	inst->op = CMDQ_CODE_WFE;
-> > +	inst->value = CMDQ_WFE_UPDATE;
-> > +	inst->event = event;
-> > +
-> > +	return 0;
-> >  }
-> >  EXPORT_SYMBOL(cmdq_pkt_clear_event);
-> >  
-> >  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
-> >  {
-> > -	int err;
-> > +	struct cmdq_instruction *inst;
-> > +
-> > +	inst = cmdq_pkt_append_command(pkt);
-> > +	if (!inst)
-> > +		return -ENOMEM;
-> >  
-> > -	/* insert EOC and generate IRQ for each command iteration */
-> 
-> Please don't delete the comment.
-> 
-> > -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> > +	inst->op = CMDQ_CODE_EOC;
-> > +	inst->value = CMDQ_EOC_IRQ_EN;
-> >  
-> > -	/* JUMP to end */
-> 
-> Same here.
-> 
-> Regards,
-> Matthias
-> 
-> > -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> > +	inst = cmdq_pkt_append_command(pkt);
-> > +	if (!inst)
-> > +		return -ENOMEM;
-> > +
-> > +	inst->op = CMDQ_CODE_JUMP;
-> > +	inst->value = CMDQ_JUMP_PASS;
-> >  
-> > -	return err;
-> > +	return 0;
-> >  }
-> >  
-> >  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
-> > diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> > index 911475da7a53..c8adedefaf42 100644
-> > --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> > +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> > @@ -19,6 +19,8 @@
-> >  #define CMDQ_WFE_UPDATE			BIT(31)
-> >  #define CMDQ_WFE_WAIT			BIT(15)
-> >  #define CMDQ_WFE_WAIT_VALUE		0x1
-> > +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
-> > +					CMDQ_WFE_WAIT_VALUE)
-> >  /** cmdq event maximum */
-> >  #define CMDQ_MAX_EVENT			0x3ff
-> >  
-> > 
-
--- 
-Bibby
