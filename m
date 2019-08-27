@@ -1,7 +1,8 @@
 From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [PATCH v5 08/13] ARM: dts: imx6ull-colibri: Add sleep mode to fec
-Date: Tue, 27 Aug 2019 13:18:32 +0000
-Message-ID: <20190827131806.6816-9-philippe.schenker@toradex.com>
+Subject: [PATCH v5 12/13] ARM: dts: imx6ull-colibri: Add general wakeup key
+ used on Colibri
+Date: Tue, 27 Aug 2019 13:18:40 +0000
+Message-ID: <20190827131806.6816-13-philippe.schenker@toradex.com>
 References: <20190827131806.6816-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-2"
@@ -14,8 +15,8 @@ To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Max Krummenacher <max.krummen
 Cc: Philippe Schenker <philippe.schenker@toradex.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Do not change the clock as the power for this phy is switched
-with that clock.
+This adds the possibility to wake the module with an external signal
+as defined in the Colibri standard
 
 Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
@@ -24,7 +25,7 @@ Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 ---
 
 Changes in v5:
-- Added Olek's Reviewed-by
+- Add Olek's Reviewed-by
 
 Changes in v4:
 - Add Marcel Ziswiler's Ack
@@ -32,46 +33,34 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/imx6ull-colibri.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx=
-6ull-colibri.dtsi
-index d56728f03c35..1019ce69a242 100644
---- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
-@@ -62,8 +62,9 @@
- };
-=20
- &fec2 {
--	pinctrl-names =3D "default";
-+	pinctrl-names =3D "default", "sleep";
- 	pinctrl-0 =3D <&pinctrl_enet2>;
-+	pinctrl-1 =3D <&pinctrl_enet2_sleep>;
- 	phy-mode =3D "rmii";
- 	phy-handle =3D <&ethphy1>;
- 	status =3D "okay";
-@@ -220,6 +221,21 @@
- 		>;
+diff --git a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi b/arch/arm/boot=
+/dts/imx6ull-colibri-eval-v3.dtsi
+index b6147c76d159..a78849fd2afa 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtsi
+@@ -8,6 +8,20 @@
+ 		stdout-path =3D "serial0:115200n8";
  	};
 =20
-+	pinctrl_enet2_sleep: enet2sleepgrp {
-+		fsl,pins =3D <
-+			MX6UL_PAD_GPIO1_IO06__GPIO1_IO06	0x0
-+			MX6UL_PAD_GPIO1_IO07__GPIO1_IO07	0x0
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x0
-+			MX6UL_PAD_ENET2_RX_DATA1__GPIO2_IO09	0x0
-+			MX6UL_PAD_ENET2_RX_EN__GPIO2_IO10	0x0
-+			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x0
-+			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
-+			MX6UL_PAD_ENET2_TX_DATA0__GPIO2_IO11	0x0
-+			MX6UL_PAD_ENET2_TX_DATA1__GPIO2_IO12	0x0
-+			MX6UL_PAD_ENET2_TX_EN__GPIO2_IO13	0x0
-+		>;
++	gpio-keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_snvs_gpiokeys>;
++
++		power {
++			label =3D "Wake-Up";
++			gpios =3D <&gpio5 1 GPIO_ACTIVE_HIGH>;
++			linux,code =3D <KEY_WAKEUP>;
++			debounce-interval =3D <10>;
++			wakeup-source;
++		};
 +	};
 +
- 	pinctrl_ecspi1_cs: ecspi1-cs-grp {
- 		fsl,pins =3D <
- 			MX6UL_PAD_LCD_DATA21__GPIO3_IO26	0x000a0
+ 	/* fixed crystal dedicated to mcp2515 */
+ 	clk16m: clk16m {
+ 		compatible =3D "fixed-clock";
 --=20
 2.23.0
