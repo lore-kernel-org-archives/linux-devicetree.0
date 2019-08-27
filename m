@@ -1,7 +1,7 @@
 From: Gerald BAEZA <gerald.baeza@st.com>
-Subject: [PATCH v3 2/5] dt-bindings: perf: stm32: ddrperfm support
-Date: Tue, 27 Aug 2019 15:08:19 +0000
-Message-ID: <1566918464-23927-3-git-send-email-gerald.baeza@st.com>
+Subject: [PATCH v3 5/5] ARM: dts: stm32: add ddrperfm on stm32mp157c
+Date: Tue, 27 Aug 2019 15:08:21 +0000
+Message-ID: <1566918464-23927-6-git-send-email-gerald.baeza@st.com>
 References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,41 +14,33 @@ To: "will@kernel.org" <will@kernel.org>, "mark.rutland@arm.com" <mark.rutland@ar
 Cc: Gerald BAEZA <gerald.baeza@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1 SOC.
-
-This documentation indicates how to enable stm32-ddr-pmu driver on
-DDRPERFM peripheral, via the device tree.
+The DDRPERFM is the DDR Performance Monitor embedded
+in STM32MP1 SOC.
 
 Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
 ---
- Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt | 16 ++++++++++++=
-++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-pmu.tx=
-t
+ arch/arm/boot/dts/stm32mp157c.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt b/Doc=
-umentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-new file mode 100644
-index 0000000..87ab12e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/stm32-ddr-pmu.txt
-@@ -0,0 +1,16 @@
-+* STM32 DDR Performance Monitor (DDRPERFM)
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp=
+157c.dtsi
+index 0c4e6eb..6ea6933 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1378,6 +1378,14 @@
+ 			};
+ 		};
+=20
++		ddrperfm: perf@5a007000 {
++			compatible =3D "st,stm32-ddr-pmu";
++			reg =3D <0x5a007000 0x400>;
++			clocks =3D <&rcc DDRPERFM>;
++			resets =3D <&rcc DDRPERFM_R>;
++			status =3D "okay";
++		};
 +
-+Required properties:
-+- compatible: must be "st,stm32-ddr-pmu".
-+- reg: physical address and length of the registers set.
-+- clocks: phandle and specifier for DDRPERFM input clock
-+- resets: phandle and specifier for DDRPERFM reset
-+
-+Example:
-+	ddrperfm: perf@5a007000 {
-+		compatible =3D "st,stm32-ddr-pmu";
-+		reg =3D <0x5a007000 0x400>;
-+		clocks =3D <&rcc DDRPERFM>;
-+		resets =3D <&rcc DDRPERFM_R>;
-+	};
-+
+ 		usart1: serial@5c000000 {
+ 			compatible =3D "st,stm32h7-uart";
+ 			reg =3D <0x5c000000 0x400>;
 --=20
 2.7.4
