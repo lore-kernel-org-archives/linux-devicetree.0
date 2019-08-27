@@ -1,124 +1,38 @@
-From: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Subject: [PATCH v3 3/4] watchdog/aspeed: add support for dual boot
-Date: Tue, 27 Aug 2019 19:54:25 +0300
-Message-ID: <20190827165426.17037-4-i.mikhaylov@yadro.com>
-References: <20190827165426.17037-1-i.mikhaylov@yadro.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
+ from  Required properties
+Date: Tue, 27 Aug 2019 11:57:42 -0500
+Message-ID: <20190827165742.GA5083@bogus>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827165426.17037-1-i.mikhaylov@yadro.com>
+Content-Disposition: inline
+In-Reply-To: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
-to clear out boot code source and re-enable access to the primary SPI flash
-chip while booted via wdt2 from the alternate chip.
+On Tue, 20 Aug 2019 07:28:43 +0000, "Z.q. Hou" wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> The num-lanes is not a mandatory property, e.g. on FSL
+> Layerscape SoCs, the PCIe link training is completed
+> automatically base on the selected SerDes protocol, it
+> doesn't need the num-lanes to set-up the link width.
+> 
+> It is previously in both Required and Optional properties,
+> let's remove it from the Required properties.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V2:
+>  - Reworded the change log and subject.
+>  - Fixed a typo in subject.
+> 
+>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
+>  1 file changed, 1 deletion(-)
+> 
 
-AST2400 datasheet says:
-"In the 2nd flash booting mode, all the address mapping to CS0# would be
-re-directed to CS1#. And CS0# is not accessable under this mode. To access
-CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
-register WDT30.bit[1]."
-
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- drivers/watchdog/aspeed_wdt.c | 65 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 64 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index cc71861e033a..d27030d766ed 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -53,6 +53,8 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
- #define   WDT_CTRL_ENABLE		BIT(0)
- #define WDT_TIMEOUT_STATUS	0x10
- #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
-+#define WDT_CLEAR_TIMEOUT_STATUS	0x14
-+#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
- 
- /*
-  * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-@@ -165,6 +167,60 @@ static int aspeed_wdt_restart(struct watchdog_device *wdd,
- 	return 0;
- }
- 
-+/* access_cs0 shows if cs0 is accessible, hence the reverted bit */
-+static ssize_t access_cs0_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-+	uint32_t status = readl(wdt->base + WDT_TIMEOUT_STATUS);
-+
-+	return sprintf(buf, "%u\n",
-+			!(status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY));
-+}
-+
-+static ssize_t access_cs0_store(struct device *dev,
-+				struct device_attribute *attr, const char *buf,
-+				size_t size)
-+{
-+	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-+	unsigned long val;
-+
-+	if (kstrtoul(buf, 10, &val))
-+		return -EINVAL;
-+
-+	if (val)
-+		writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
-+			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
-+
-+	return size;
-+}
-+
-+/*
-+ * This attribute exists only if the system has booted from the alternate
-+ * flash with 'alt-boot' option.
-+ *
-+ * At alternate flash the 'access_cs0' sysfs node provides:
-+ *   ast2400: a way to get access to the primary SPI flash chip at CS0
-+ *            after booting from the alternate chip at CS1.
-+ *   ast2500: a way to restore the normal address mapping from
-+ *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
-+ *
-+ * Clearing the boot code selection and timeout counter also resets to the
-+ * initial state the chip select line mapping. When the SoC is in normal
-+ * mapping state (i.e. booted from CS0), clearing those bits does nothing for
-+ * both versions of the SoC. For alternate boot mode (booted from CS1 due to
-+ * wdt2 expiration) the behavior differs as described above.
-+ *
-+ * This option can be used with wdt2 (watchdog1) only.
-+ */
-+static DEVICE_ATTR_RW(access_cs0);
-+
-+static struct attribute *bswitch_attrs[] = {
-+	&dev_attr_access_cs0.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(bswitch);
-+
- static const struct watchdog_ops aspeed_wdt_ops = {
- 	.start		= aspeed_wdt_start,
- 	.stop		= aspeed_wdt_stop,
-@@ -306,9 +362,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	}
- 
- 	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
--	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
-+	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
- 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
- 
-+		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
-+			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
-+			wdt->wdd.groups = bswitch_groups;
-+	}
-+
-+	dev_set_drvdata(dev, wdt);
-+
- 	return devm_watchdog_register_device(dev, &wdt->wdd);
- }
- 
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
