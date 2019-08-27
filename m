@@ -1,46 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
-Date: Tue, 27 Aug 2019 08:49:13 -0500
-Message-ID: <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
-References: <20190805143911.12185-1-hhhawa@amazon.com> <20190805143911.12185-2-hhhawa@amazon.com>
- <20190821191704.GA32425@bogus> <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] dt-bindings: mmc: aspeed: Update example ranges property
+Date: Tue, 27 Aug 2019 15:49:39 +0200
+Message-ID: <CAPDyKFroS-Z+4QYitmYrCugPV_f4u1MDJiRkDxGWvVjsU=9RgA@mail.gmail.com>
+References: <20190826021620.11915-1-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
+In-Reply-To: <20190826021620.11915-1-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hawa, Hanna" <hhhawa@amazon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, James Morse <james.morse@arm.com>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com, "Krupnik, Ronen" <ronenk@amazon.com>, Talel Shenhar <talel@amazon.com>, Jonathan Chocron <jonnyc@amazon.com>, "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac <linux-edac@vger.kernel.org>
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
+On Mon, 26 Aug 2019 at 04:15, Andrew Jeffery <andrew@aj.id.au> wrote:
 >
+> The example node in the binding uses the AST2500 compatible string for
+> the SD controller with a 64kiB ranges property, but the SD controller is
+> allocated 128kiB of MMIO space according to the AST2500 datasheet. Fix
+> the example to correctly reflect the hardware in the AST2500, however it
+> should be noted that the MMIO region is reduced to 64kiB in the AST2600
+> where a second SD controller block has been introduced into the address
+> space.
 >
+> Also add the IBM copyright header that I left out of the initial patch.
 >
-> On 8/21/2019 10:17 PM, Rob Herring wrote:
-> > Why is this even in DT? AFAICT, this is all just CortexA57 core features
-> > (i.e. nothing Amazon specific). The core type and the ECC capabilities
-> > are discoverable.
+> Suggested-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+
+Applied for next, thanks!
+
+FYI, I took the liberty to amend all aspeed patches, by putting
+"sdhci-of-aspeed" as the prefix of the commit message header.
+
+Kind regards
+Uffe
+
+
+> ---
+> Hi Ulf, this is the follow-up fix as discussed here:
 >
-> Added to the DT in order to easily enable/disable the driver.
-
-That alone is not reason enough to put it in DT. From a DT
-perspective, I have no idea what the whims of a OS maintainer are
-regarding whether they want all this to be 1 driver or 2 drivers.
-(IMO, it should be 1 as this is ECC for an A57. For a core and memory
-controller, then 2 seems appropriate.)
-
-> You are
-> correct that they are CortexA57 core features and nothing Amazon
-> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
-> cortex revisions (e.g. A57) the register bitmap may change. Because of
-> that we added an Amazon compatible which corresponds to the specific
-> core we are using.
-
-'IMPLEMENTATION DEFINED' usually means not defined by the
-architecture. This doesn't seem like something that's going to change
-with A57 revisions. Plus, the A57 is pretty old now, so we know what's
-out there already. In any case, the revision is discoverable too, so
-we could deal with changes between revisions in any case.
-
-Rob
+> http://patchwork.ozlabs.org/patch/1143090/
+>
+>  Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> index 570f8c72662b..200de9396036 100644
+> --- a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-or-later
+> +# Copyright 2019 IBM Corp.
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+> @@ -84,7 +85,7 @@ examples:
+>              reg = <0x1e740000 0x100>;
+>              #address-cells = <1>;
+>              #size-cells = <1>;
+> -            ranges = <0 0x1e740000 0x10000>;
+> +            ranges = <0 0x1e740000 0x20000>;
+>              clocks = <&syscon ASPEED_CLK_GATE_SDCLK>;
+>
+>              sdhci0: sdhci@100 {
+> --
+> 2.20.1
+>
