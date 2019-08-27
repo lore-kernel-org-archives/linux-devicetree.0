@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 01/11] dt-bindings: firmware: imx-scu: new binding to
+Subject: Re: [PATCH V4 02/11] dt-bindings: clock: imx-lpcg: add support to
  parse clocks from device tree
-Date: Tue, 27 Aug 2019 12:04:48 -0500
-Message-ID: <20190827170448.GA15803@bogus>
+Date: Tue, 27 Aug 2019 12:05:07 -0500
+Message-ID: <20190827170507.GA16423@bogus>
 References: <1566299605-15641-1-git-send-email-aisheng.dong@nxp.com>
- <1566299605-15641-2-git-send-email-aisheng.dong@nxp.com>
+ <1566299605-15641-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1566299605-15641-2-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1566299605-15641-3-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,23 +23,16 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Aug 2019 07:13:15 -0400, Dong Aisheng wrote:
-> There's a few limitations on the original one cell clock binding
-> (#clock-cells = <1>) that we have to define some SW clock IDs for device
-> tree to reference. This may cause troubles if we want to use common
-> clock IDs for multi platforms support when the clock of those platforms
-> are mostly the same.
-> e.g. Current clock IDs name are defined with SS prefix.
+On Tue, 20 Aug 2019 07:13:16 -0400, Dong Aisheng wrote:
+> MX8QM and MX8QXP LPCG Clocks are mostly the same except they may reside
+> in different subsystems across CPUs and also vary a bit on the availability.
 > 
-> However the device may reside in different SS across CPUs, that means the
-> SS prefix may not valid anymore for a new SoC. Furthermore, the device
-> availability of those clocks may also vary a bit.
+> Same as SCU clock, we want to move the clock definition into device tree
+> which can fully decouple the dependency of Clock ID definition from device
+> tree and make us be able to write a fully generic lpcg clock driver.
 > 
-> For such situation, we want to eliminate the using of SW Clock IDs and
-> change to use a more close to HW one instead.
-> For SCU clocks usage, only two params required: Resource id + Clock Type.
-> Both parameters are platform independent. So we could use two cells binding
-> to pass those parameters,
+> And we can also use the existence of clock nodes in device tree to address
+> the device and clock availability differences across different SoCs.
 > 
 > Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: Stephen Boyd <sboyd@kernel.org>
@@ -51,23 +44,19 @@ On Tue, 20 Aug 2019 07:13:15 -0400, Dong Aisheng wrote:
 > ---
 > ChangeLog:
 > v3->v4:
->  * add some comments for various clock types
+>  * change bit-offset property to clock-indices
+>  * use constant macro to define clock indinces
+>  * drop hw-autogate property which is still not used by drivers
 > v2->v3:
->  * Changed to two cells binding and register all clocks in driver
->    instead of parse from device tree.
+>  * no changes
 > v1->v2:
->  * changed to one cell binding inspired by arm,scpi.txt
->    Documentation/devicetree/bindings/arm/arm,scpi.txt
->    Resource ID is encoded in 'reg' property.
->    Clock type is encoded in generic clock-indices property.
->    Then we don't have to search all the DT nodes to fetch
->    those two value to construct clocks which is relatively
->    low efficiency.
->  * Add required power-domain property as well.
+>  * Update example
+>  * Add power domain property
 > ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 12 ++++++-----
->  include/dt-bindings/firmware/imx/rsrc.h            | 23 ++++++++++++++++++++++
->  2 files changed, 30 insertions(+), 5 deletions(-)
+>  .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 36 ++++++++++++++++++----
+>  include/dt-bindings/clock/imx8-lpcg.h              | 14 +++++++++
+>  2 files changed, 44 insertions(+), 6 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/imx8-lpcg.h
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
