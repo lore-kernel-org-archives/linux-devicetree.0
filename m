@@ -1,58 +1,63 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v1 1/1] ARM: dts: rockchip: set crypto default disabled on rk3288
-Date: Tue, 27 Aug 2019 16:28:21 +0200
-Message-ID: <4806912.UyKsYhR33o@phil>
-References: <20190827071439.14767-1-zhangzj@rock-chips.com>
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Tue, 27 Aug 2019 17:28:55 +0300
+Message-ID: <20190827142855.GG2680@smile.fi.intel.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827071439.14767-1-zhangzj@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Elon Zhang <zhangzj@rock-chips.com>
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, eswara.kota@linux.intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Aug 26, 2019 at 11:15:48PM +0200, Martin Blumenstingl wrote:
+> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
 
-Am Dienstag, 27. August 2019, 09:14:39 CEST schrieb Elon Zhang:
-> Not every board needs to enable crypto node, so the node should
-> be set default disabled in rk3288.dtsi and enabled in specific
-> board dts file.
-
-Can you give a bit more rationale here? There would need to be a very
-specific reason because of the following:
-
-The crypto module is not wired to some board-specific components,
-so its usability does not depend on the specific board at all.
-Instead every board can just use it out of the box and the devicetree
-is supposed to describe the hardware and is _not_ meant as a space
-for user configuration.
-
-So in fact the status property should probably go away completely from
-the crypto node, as it's usable out of the box in all cases.
-
-
-Heiko
-
-
-
-> Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
+> > SoC Lightning
+> >
+> > Mountain, we are using synopsys controller 5.20/5.50a. We support
+> > Gen2(XRX350/550),
+> >
+> > Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
+> > single lane.
+> >
+> > Some of the above registers are needed to control FTS, link width and
+> > link speed.
+> only now I noticed that I didn't explain why I was asking whether all
+> these registers are needed
+> my understanding of the DWC PCIe controller driver "library" is that:
+> - all functionality which is provided by the DesignWare PCIe core
+> should be added to drivers/pci/controller/dwc/pcie-designware*
+> - functionality which is built on top/around the DWC PCIe core should
+> be added to <vendor specific driver>
 > 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index cc893e154fe5..d509aa24177c 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -984,7 +984,7 @@
->  		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
->  		resets = <&cru SRST_CRYPTO>;
->  		reset-names = "crypto-rst";
-> -		status = "okay";
-> +		status = "disabled";
->  	};
->  
->  	iep_mmu: iommu@ff900800 {
-> 
+> the link width and link speed settings (I don't know about "FTS")
+> don't seem Intel/Lantiq controller specific to me
+> so the register setup for these bits should be moved to
+> drivers/pci/controller/dwc/pcie-designware*
+
+I think it may be done this way. We have already example with stmmac
+(DWC network card IP) driver which split in similar way.
+
+> > We can support up to XRX350/XRX500/PRX300 for MIPS SoC since we still
+> > sell these products.
+> OK, I understand this.
+> switching to regmap will give you two benefits:
+> - big endian registers writes (without additional code) on the MIPS SoCs
+> - you can drop the pcie_app_* helper functions and use
+> regmap_{read,write,update_bits} instead
+
+Actually one more, i.e. dump of the registers by request via debugfs, which
+I found very helpful.
+
+-- 
+With Best Regards,
+Andy Shevchenko
