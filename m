@@ -1,152 +1,46 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Tue, 27 Aug 2019 12:13:56 +0200
-Message-ID: <f8945f1b-aaa7-4f4a-59e5-8e817aeb46ae@gmail.com>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
- <20190820084932.22282-12-bibby.hsieh@mediatek.com>
- <ccd3782e-b1bb-7887-f4a5-d7774183c7b7@gmail.com>
- <1566878368.29523.1.camel@mtksdaap41>
+From: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 31/49] ath11k: add mac.c
+Date: Tue, 27 Aug 2019 16:13:35 +0530
+Message-ID: <14737343f1925a771ddd8dadf0f2b5a3@codeaurora.org>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
+ <8736hvu6e6.fsf@toke.dk> <ac6e7dbbd53e7ba9e82e49baca22b73c@codeaurora.org>
+ <875zmqsudn.fsf@toke.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566878368.29523.1.camel@mtksdaap41>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <875zmqsudn.fsf-LJ9M9ZcSy1A@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 27/08/2019 05:59, Bibby Hsieh wrote:
-> On Fri, 2019-08-23 at 16:21 +0200, Matthias Brugger wrote:
->>
->> On 20/08/2019 10:49, Bibby Hsieh wrote:
->>> GCE cannot know the register base address, this function
->>> can help cmdq client to get the cmdq_client_reg structure.
->>>
->>> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
->>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
->>> ---
->>>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
->>>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
->>>  2 files changed, 50 insertions(+)
->>>
->>> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> index c53f8476c68d..80f75a1075b4 100644
->>> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
->>> @@ -27,6 +27,35 @@ struct cmdq_instruction {
->>>  	u8 op;
->>>  };
->>>  
->>> +int cmdq_dev_get_client_reg(struct device *dev,
->>> +			    struct cmdq_client_reg *client_reg, int idx)
->>> +{
->>
->> Can't we do/call this in cmdq_mbox_create parsing the number of gce-client-reg
->> properties we have and allocating these using a pointer to cmdq_client_reg in
->> cmdq_client?
->> We will have to free the pointer then in cmdq_mbox_destroy.
->>
->> Regards,
->> Matthias
+On 2019-08-21 15:38, Toke Høiland-Jørgensen wrote:
+> Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
 > 
-> I don't think we need to keep the cmdq_client_reg in cmdq_client
-> structure.
-> Because our client will have own data structure, they will copy the
-> client_reg information into their own structure.
+>> On 2019-08-20 22:21, Toke Høiland-Jørgensen wrote:
+>>> [... snip ... ]
+>>> 
+>>>> +static const struct ieee80211_ops ath11k_ops = {
+>>>> +	.tx				= ath11k_mac_op_tx,
+>>> 
+>>> No wake_tx_queue? :(
+>> 
+>> Yes, packet queueing is handled in firmware. This makes sense
+>> especially when we enable 802.11 encap offload support where most of
+>> the data path processing in mac80211 will be skipped and packet is
+>> given to driver/firmware in 802.3 format itself. Then firmware would
+>> take care of all the classification, queueing and encapsulation
+>> operations.
 > 
-> In the design now, we do not allocate the cmdq_client_reg, client pass
-> the cmdq_client_reg pointer into this API.
-> Client will destroy the pointer after they get the information they
-> want.
+> Well, so does ath10k, and yet we still saw a significant improvement by
+> moving queueing back into the host where it can be handled by the
+> FQ-CoDel-enabled queueing structure.
 > 
 
-My point wasn't so much about the lifecycle of the object, but the fact that we
-add another call, which can be already full-filled by a necessary previous call
-to cmdq_mbox_create. So I would prefer to add the information gathering for
-cmdq_client_reg in this call, and let it live there for the time cmdq_client
-lives. In the end we are talking about 40 bits of memory.
+Sure, we could probably try that with ath11k as well at some point when 
+we have a baseline with HE support.
 
-Regards,
-Matthias
-
-> Thanks for the comments so much.
-> 
-> Bibby
-> 
->>
->>> +	struct of_phandle_args spec;
->>> +	int err;
->>> +
->>> +	if (!client_reg)
->>> +		return -ENOENT;
->>> +
->>> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
->>> +					       "mediatek,gce-client-reg",
->>> +					       3, idx, &spec);
->>> +	if (err < 0) {
->>> +		dev_err(dev,
->>> +			"error %d can't parse gce-client-reg property (%d)",
->>> +			err, idx);
->>> +
->>> +		return err;
->>> +	}
->>> +
->>> +	client_reg->subsys = (u8)spec.args[0];
->>> +	client_reg->offset = (u16)spec.args[1];
->>> +	client_reg->size = (u16)spec.args[2];
->>> +	of_node_put(spec.np);
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
->>> +
->>>  static void cmdq_client_timeout(struct timer_list *t)
->>>  {
->>>  	struct cmdq_client *client = from_timer(client, t, timer);
->>> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
->>> index a345870a6d10..02ddd60b212f 100644
->>> --- a/include/linux/soc/mediatek/mtk-cmdq.h
->>> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
->>> @@ -15,6 +15,12 @@
->>>  
->>>  struct cmdq_pkt;
->>>  
->>> +struct cmdq_client_reg {
->>> +	u8 subsys;
->>> +	u16 offset;
->>> +	u16 size;
->>> +};
->>> +
->>>  struct cmdq_client {
->>>  	spinlock_t lock;
->>>  	u32 pkt_cnt;
->>> @@ -24,6 +30,21 @@ struct cmdq_client {
->>>  	u32 timeout_ms; /* in unit of microsecond */
->>>  };
->>>  
->>> +/**
->>> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
->>> + *			       node of CMDQ client
->>> + * @dev:	device of CMDQ mailbox client
->>> + * @client_reg: CMDQ client reg pointer
->>> + * @idx:	the index of desired reg
->>> + *
->>> + * Return: 0 for success; else the error code is returned
->>> + *
->>> + * Help CMDQ client parsing the cmdq client reg
->>> + * from the device node of CMDQ client.
->>> + */
->>> +int cmdq_dev_get_client_reg(struct device *dev,
->>> +			    struct cmdq_client_reg *client_reg, int idx);
->>> +
->>>  /**
->>>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
->>>   * @dev:	device of CMDQ mailbox client
->>>
-> 
-> 
+Vasanth
