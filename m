@@ -1,39 +1,125 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 2/2] EDAC: add EDAC driver for DMC520
-Date: Tue, 27 Aug 2019 09:53:36 +0200
-Message-ID: <20190827075336.GB29752@zn.tnic>
-References: <BN6PR04MB1107CE3C2D666A806E62851B86C10@BN6PR04MB1107.namprd04.prod.outlook.com>
- <20190807144016.GA24328@zn.tnic>
- <BY5PR04MB659914AC91EBB3EAF72977BD86D20@BY5PR04MB6599.namprd04.prod.outlook.com>
- <20190819093147.GE4841@zn.tnic>
- <BY5PR04MB65996BD47D541327F8F1BE4A86A00@BY5PR04MB6599.namprd04.prod.outlook.com>
+From: robin <robin@protonic.nl>
+Subject: Re: [PATCH] input: keyboard: snvs_pwrkey: Send press and release
+ event for i.MX6 S,DL and Q
+Date: Tue, 27 Aug 2019 09:55:18 +0200
+Message-ID: <83c033a20f5f2e3ce15525a1efd072bb@protonic.nl>
+References: <20190823123002.10448-1-robin@protonic.nl>
+ <VE1PR04MB6638754916357F551502102589A00@VE1PR04MB6638.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BY5PR04MB65996BD47D541327F8F1BE4A86A00@BY5PR04MB6599.namprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB6638754916357F551502102589A00@VE1PR04MB6638.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lei Wang <leiwang_git@outlook.com>
-Cc: "james.morse@arm.com" <james.morse@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>, "hangl@microsoft.com" <hangl@microsoft.com>, "lewan@microsoft.com" <lewan@microsoft.com>, "ruizhao@microsoft.com" <ruizhao@microsoft.com>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, "yuqing.shen@broadcom.com" <yuqing.shen@broadcom.com>, "ray.jui@broadcom.com" <ray.jui@broadcom.com>
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2019 at 01:49:29AM +0000, Lei Wang wrote:
-> Yes, this is to help open source developers who potentially might want 
-> to expand this driver, most likely colleagues, and possibly other 
-> developers.
+On 2019-08-27 08:17, Robin Gong wrote:
+> On Fri, Aug 23, 2019 at 02:30:02PM +0200, Robin van der Gracht wrote:>
+>> The older generation i.MX6 processors send a powerdown request 
+>> interrupt
+>> if the powerkey is released before a hard shutdown (5 second press). 
+>> This
+>> should allow software to bring down the SoC safely.
+>> 
+>> For this driver to work as a regular powerkey with the older SoCs, we 
+>> need to
+>> send a keypress AND release when we get the powerdown request 
+>> interrupt.
+> Please clarify here more clearly that because there is NO press
+> interrupt triggered
+> but only release interrupt on elder i.mx6 processors and that HW issue
+> fixed from
+> i.mx6sx.
 
-Then please put that info in the comment at the beginning of the driver
-- not some random single sentences about what can be done, interspersed
-throughout the code. It needs to be visible at a first glance.
+ACK
 
-Also, if you want this to be a longer doc, I wouldn't mind at all having
-it in Documentation/edac/ (which doesn't exist yet) and then point
-people to it from the comment at the beginning of the driver.
+>> 
+>> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+>> ---
+>>  arch/arm/boot/dts/imx6qdl.dtsi       |  2 +-
+>>  arch/arm/boot/dts/imx6sll.dtsi       |  2 +-
+>>  arch/arm/boot/dts/imx6sx.dtsi        |  2 +-
+>>  arch/arm/boot/dts/imx6ul.dtsi        |  2 +-
+>>  arch/arm/boot/dts/imx7s.dtsi         |  2 +-
+> As Shawn talked, please keep the original "fsl,sec-v4.0-pwrkey", just 
+> add
+> 'imx6qdl-snvs-pwrkey' for elder i.mx6 processor i.mx6q/dl/sl, thus no 
+> need
+> to touch other newer processor's dts.
 
-Thx.
+ACK
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+>> 
+>>  static void imx_imx_snvs_check_for_events(struct timer_list *t) @@ 
+>> -67,13
+>> +85,23 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void
+>> *dev_id)  {
+>>  	struct platform_device *pdev = dev_id;
+>>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
+>> +	struct input_dev *input = pdata->input;
+>>  	u32 lp_status;
+>> 
+>> -	pm_wakeup_event(pdata->input->dev.parent, 0);
+>> +	pm_wakeup_event(input->dev.parent, 0);
+>> 
+>>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+>> -	if (lp_status & SNVS_LPSR_SPO)
+>> -		mod_timer(&pdata->check_timer, jiffies +
+>> msecs_to_jiffies(DEBOUNCE_TIME));
+>> +	if (lp_status & SNVS_LPSR_SPO) {
+>> +		if (pdata->hwtype == IMX6QDL_SNVS) {
+>> +			input_report_key(input, pdata->keycode, 1);
+>> +			input_report_key(input, pdata->keycode, 0);
+>> +			input_sync(input);
+>> +			pm_relax(input->dev.parent);
+> Could you move the above input event report steps into
+> imx_imx_snvs_check_for_events()
+> as before? That make code better to understand and less operation in 
+> ISR.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+I placed it here to avoid the unnessesairy debounce delay (since thats 
+already
+implemented in hardware).
+
+I do agree with your arguments so I'll move emitting the events to
+imx_imx_snvs_check_for_events().
+
+Is it ok if I keep the conditional, but instead of emitting the events,
+schedule imx_imx_snvs_check_for_events() immidiatly to avoid the 
+debounce,
+or should I choose clarity over the 30 ms delay?
+
+>> +		} else {
+>> +			mod_timer(&pdata->check_timer,
+>> +				jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
+>> +		}
+>> +	}
+>> 
+>>  	/* clear SPO status */
+>>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO); @@
+>> -88,11 +116,24 @@ static void imx_snvs_pwrkey_act(void *pdata)
+>>  	del_timer_sync(&pd->check_timer);
+>>  }
+>> 
+>> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
+>> +	{
+>> +		.compatible = "fsl,imx6sx-sec-v4.0-pwrkey",
+>> +		.data = &imx_snvs_devtype[IMX6SX_SNVS],
+>> +	}, {
+>> +		.compatible = "fsl,imx6qdl-sec-v4.0-pwrkey",
+>> +		.data = &imx_snvs_devtype[IMX6QDL_SNVS],
+> No ' IMX6QDL_SNVS ' defined in your patch or am I missing?
+
+I added an enum 'imx_snvs_hwtype' that defines both IMX6SX_SNVS and 
+IMX6QDL_SNVS.
+
+>> +	},
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
+>> --
+>> 2.20.1
