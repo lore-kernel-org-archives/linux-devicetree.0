@@ -1,127 +1,106 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 02/20] dt-bindings: arm: Convert Marvell MMP
- board/soc bindings to json-schema
-Date: Tue, 27 Aug 2019 15:23:58 +0200
-Message-ID: <136a57cf3d293e3233f31d5ee660a6418726333a.camel@v3.sk>
-References: <20190822092643.593488-1-lkundrak@v3.sk>
-         <20190822092643.593488-3-lkundrak@v3.sk>
-         <CAL_JsqJ4_h+M=6L-nzK2N+A9TAy-N8SoiFv1SSTk_kCcKt0eXw@mail.gmail.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+ doorbell way
+Date: Tue, 27 Aug 2019 14:25:05 +0100
+Message-ID: <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ4_h+M=6L-nzK2N+A9TAy-N8SoiFv1SSTk_kCcKt0eXw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-08-27 at 06:59 -0500, Rob Herring wrote:
-> On Thu, Aug 22, 2019 at 4:27 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > Convert Marvell MMP SoC bindings to DT schema format using json-schema.
+On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年8月23日 21:58
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+> > doorbell way
 > > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
+> > > The layerscape platform use the doorbell way to trigger MSIX interrupt
+> > > in EP mode.
+> > >
 > > 
-> > ---
-> > Changes since v1:
-> > - Added this patch
+> > I have no problems with this patch, however...
 > > 
-> >  .../devicetree/bindings/arm/mrvl/mrvl.txt     | 14 ---------
-> >  .../devicetree/bindings/arm/mrvl/mrvl.yaml    | 31 +++++++++++++++++++
-> >  2 files changed, 31 insertions(+), 14 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+> > Are you able to add to this message a reason for why you are making this
+> > change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
+> > it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
+> 
+> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
+> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
+> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
+> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
+
+Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
+erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
+would never get used.
+
+Now that we're adding a platform with MSIX support the existing
+dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
+different method.
+
+Given that dw_pcie_ep_raise_msix_irq is used by pcie-designware-plat.c we
+can assume this function at least works for it's use case.
+
+Please update the commit message - It would be helpful to suggest that
+dw_pcie_ep_raise_msix_irq was never called in the exisitng driver because
+msix_capable was always set to false.
+
+Thanks,
+
+Andrew Murray
+
+> 
 > > 
-> > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > deleted file mode 100644
-> > index 951687528efb0..0000000000000
-> > --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > +++ /dev/null
-> > @@ -1,14 +0,0 @@
-> > -Marvell Platforms Device Tree Bindings
-> > -----------------------------------------------------
-> > -
-> > -PXA168 Aspenite Board
-> > -Required root node properties:
-> > -       - compatible = "mrvl,pxa168-aspenite", "mrvl,pxa168";
-> > -
-> > -PXA910 DKB Board
-> > -Required root node properties:
-> > -       - compatible = "mrvl,pxa910-dkb";
-> > -
-> > -MMP2 Brownstone Board
-> > -Required root node properties:
-> > -       - compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
-> > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-> > new file mode 100644
-> > index 0000000000000..dc9de506ac6e3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-> > @@ -0,0 +1,31 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/mrvl/mrvl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell Platforms Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Lubomir Rintel <lkundrak@v3.sk>
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    const: '/'
-> > +  compatible:
-> > +    oneOf:
-> > +      - description: PXA168 Aspenite Board
-> > +        items:
-> > +          - enum:
-> > +              - mrvl,pxa168-aspenite
-> > +          - const: mrvl,pxa168
-> > +      - description: PXA910 DKB Board
-> > +        items:
-> > +          - enum:
-> > +              - mrvl,pxa910-dkb
-> 
-> Doesn't match what's in dts file:
-> 
-> arch/arm/boot/dts/pxa910-dkb.dts:       compatible =
-> "mrvl,pxa910-dkb", "mrvl,pxa910";
-
-It corresponds to the .txt bindings specification this commit is
-converting. I thought it wouldn't be a good idea to do any changes to
-the contents at the time the conversion is done.
-
-I also don't understand why does the dts file specify the board-
-specific compatible string. Surely "mrvl,pxa910" alone would be
-sufficient?
-
-> > +      - description: MMP2 Brownstone Board
-> 
-> If this entry is only for this board...
-> 
-> > +        items:
-> > +          - enum:
-> > +              - mrvl,mmp2-brownstone
-> 
-> ...then this can be a 'const' instead. Same for the others.
-
-Sure, but is it preferable? I've actually done a "git grep -A3 enum
-Documentation/devicetree/bindings/" to see if the single-element is
-typically used and it seems like it is. Perhaps it's a good idea to
-indicate to a human reader that this is a list that's expected to
-eventually be extended with new elements.
-
-In any case, there are more boards with MMP2 currently supported,
-notably the XO-1.75 laptop. I've actually sent out the dts file for
-review some time ago. I haven't added a separate compatible string for
-it because I thought it is not necessary (see above).
-
-> > +          - const: mrvl,mmp2
-> > +...
-> > --
-> > 2.21.0
-
-Thank you
-Lubo
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - No change.
+> > >
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > index 8461f62..7ca5fe8 100644
+> > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > @@ -74,7 +74,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep,
+> > u8 func_no,
+> > >  	case PCI_EPC_IRQ_MSI:
+> > >  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> > >  	case PCI_EPC_IRQ_MSIX:
+> > > -		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
+> > > +		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
+> > > +							  interrupt_num);
+> > >  	default:
+> > >  		dev_err(pci->dev, "UNKNOWN IRQ type\n");
+> > >  		return -EINVAL;
+> > > --
+> > > 2.9.5
+> > >
