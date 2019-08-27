@@ -1,69 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
-Date: Tue, 27 Aug 2019 13:39:24 -0500
-Message-ID: <20190827183924.GA24178@bogus>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
- <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] scripts/dtc: Simplify condition in get_node_by_path
+Date: Tue, 27 Aug 2019 11:46:31 -0700
+Message-ID: <1b896532-006b-b729-35cc-03f5c58748ef@gmail.com>
+References: <20190827145727.16791-1-efremov@linux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <20190827145727.16791-1-efremov@linux.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Shih <sam.shih@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Denis Efremov <efremov@linux.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+Hi Denis,
 
-The subject should indicate this is for Mediatek.
-
+On 8/27/19 7:57 AM, Denis Efremov wrote:
+> The strlen && strprefixeq check in get_node_by_path is
+> excessive, since strlen is checked in strprefixeq macro
+> internally. Thus, 'strlen(child->name) == p-path'
+> conjunct duplicates after macro expansion and could
+> be removed.
 > 
-> This adds a property "num-pwms" in example so that we could
-> specify the number of PWM channels via device tree.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 > ---
-> Changes since v5:
-> - Add an Acked-by tag
-> - This file is original v4 patch 5/10
-> (https://patchwork.kernel.org/patch/11102577/)
+>  scripts/dtc/livetree.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Change-Id: I429048afeffa96f3f14533910efe242f88776043
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
+> index 0c039993953a..032df5878ccc 100644
+> --- a/scripts/dtc/livetree.c
+> +++ b/scripts/dtc/livetree.c
+> @@ -526,8 +526,7 @@ struct node *get_node_by_path(struct node *tree, const char *path)
+>  	p = strchr(path, '/');
+>  
+>  	for_each_child(tree, child) {
+> -		if (p && (strlen(child->name) == p-path) &&
+> -		    strprefixeq(path, p - path, child->name))
+> +		if (p && strprefixeq(path, p - path, child->name))
+>  			return get_node_by_path(child, p+1);
+>  		else if (!p && streq(path, child->name))
+>  			return child;
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> index 991728cb46cb..ea95b490a913 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> @@ -14,12 +14,12 @@ Required properties:
->                  has no clocks
->     - "top": the top clock generator
->     - "main": clock used by the PWM core
-> -   - "pwm1-8": the eight per PWM clocks for mt2712
-> -   - "pwm1-6": the six per PWM clocks for mt7622
-> -   - "pwm1-5": the five per PWM clocks for mt7623
-> +   - "pwm1-N": the PWM clocks for each channel
-> +   where N starting from 1 to the maximum number of PWM channels
 
-Once converted to schema, you are going to be back to listing them out.
+livetree.c is maintained in the upstream dtc project.  We pull changes
+from that project into the Linux kernel source tree.
 
->   - pinctrl-names: Must contain a "default" entry.
->   - pinctrl-0: One property must exist for each entry in pinctrl-names.
->     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> + - num-pwms: the number of PWM channels.
+Info on submitting patches is in the upstream file "Documentation/manual.txt":
 
-You can't add new required properties without breaking compatibility. 
+   1) Sources
 
-You already have to imply the number of channels from the compatible (or 
-number of clocks) and you have to keep doing so to maintain 
-compatibility, so why not just keep doing that for new chips?
+   Source code for the Device Tree Compiler can be found at git.kernel.org.
 
-Rob
+   The upstream repository is here:
+
+       git://git.kernel.org/pub/scm/utils/dtc/dtc.git
+       https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+
+   The gitweb interface for the upstream respository is:
+
+       https://git.kernel.org/cgit/utils/dtc/dtc.git/
+
+   1.1) Submitting Patches
+
+   Patches should be sent to the maintainers:
+           David Gibson <david@gibson.dropbear.id.au>
+           Jon Loeliger <jdl@jdl.com>
+   and CCed to <devicetree-compiler@vger.kernel.org>.
