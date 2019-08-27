@@ -1,227 +1,100 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 06/13] irqchip: Add driver for Loongson-3 HyperTransport
- interrupt controller
-Date: Tue, 27 Aug 2019 13:53:53 +0100
-Message-ID: <f0cd7cbe-ee78-1e7a-0e97-4599ef0cae38@kernel.org>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-7-jiaxun.yang@flygoat.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 3/4] watchdog/aspeed: add support for dual boot
+Date: Tue, 27 Aug 2019 06:06:30 -0700
+Message-ID: <d46685d9-c6d2-46af-67aa-844d2b0296a9@roeck-us.net>
+References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+ <20190826104636.19324-4-i.mikhaylov@yadro.com>
+ <0df27d36-b45f-2059-6ead-a09ceb4b7605@roeck-us.net>
+ <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827085302.5197-7-jiaxun.yang@flygoat.com>
+In-Reply-To: <818746d20661b51914a7802dcbe0081352900b05.camel@yadro.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc: chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
+To: Ivan Mikhaylov <i.mikhaylov@yadro.com>, Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/08/2019 09:52, Jiaxun Yang wrote:
-> This controller appeared on Loongson-3 family of chips to receive interrupts
-> from PCH chip.
+On 8/27/19 2:24 AM, Ivan Mikhaylov wrote:
+> On Mon, 2019-08-26 at 17:14 -0700, Guenter Roeck wrote:
+>>> +/*
+>>> + * At alternate side the 'access_cs0' sysfs node provides:
+>>> + *   ast2400: a way to get access to the primary SPI flash chip at CS0
+>>> + *            after booting from the alternate chip at CS1.
+>>> + *   ast2500: a way to restore the normal address mapping from
+>>> + *            (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
+>>> + *
+>>> + * Clearing the boot code selection and timeout counter also resets to the
+>>> + * initial state the chip select line mapping. When the SoC is in normal
+>>> + * mapping state (i.e. booted from CS0), clearing those bits does nothing
+>>> for
+>>> + * both versions of the SoC. For alternate boot mode (booted from CS1 due
+>>> to
+>>> + * wdt2 expiration) the behavior differs as described above.
+>>> + *
+>> The above needs to be in the sysfs attribute documentation as well.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/irqchip/Kconfig          |   8 ++
->  drivers/irqchip/Makefile         |   1 +
->  drivers/irqchip/irq-ls3-htintc.c | 145 +++++++++++++++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 drivers/irqchip/irq-ls3-htintc.c
-> 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 8d9eac5fd4a7..b3ce0f3e43ae 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -480,6 +480,14 @@ config LS3_IOINTC
->  	help
->  	  Support for the Loongson-3 I/O Interrupt Controller.
->  
-> +config LS3_HTINTC
-> +	bool "Loongson3 HyperTransport Interrupt Controller"
-> +	depends on MACH_LOONGSON64
-> +	default y
-> +	select IRQ_DOMAIN
-> +	select GENERIC_IRQ_CHIP
-> +	help
-> +	  Support for the Loongson-3 HyperTransport Interrupt Controller.
->  endmenu
->  
->  config SIFIVE_PLIC
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 49ecb8d38138..0fda94c319e9 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -103,3 +103,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
->  obj-$(CONFIG_LS3_IOINTC)			+= irq-ls3-iointc.o
-> +obj-$(CONFIG_LS3_HTINTC)			+= irq-ls3-htintc.o
-> diff --git a/drivers/irqchip/irq-ls3-htintc.c b/drivers/irqchip/irq-ls3-htintc.c
-> new file mode 100644
-> index 000000000000..c53bbb0bd78c
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-ls3-htintc.c
-> @@ -0,0 +1,145 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Copyright (C) 2019, Jiaxun Yang <jiaxun.yang@flygoat.com>
-> + *  Loongson-3 HyperTransport IRQ support
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/init.h>
-> +#include <linux/types.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/ioport.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/io.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +
-> +#define HTINTC_NUM_GC  4
-> +#define HTINTC_GC_SIZE  0x4
-> +#define HTINTC_NUM_HANDLER  4
-> +#define HTINTC_HANDLER_SIZE  0x8
-> +#define HTINTC_HANDLER_IRQ  64
-> +
-> +#define HTINTC_VECTOR_OFFSET   0x0
-> +#define HTINTC_EN_OFFSET   0x20
-> +
-> +struct htintc_handler_priv {
-> +	struct irq_domain	*domain;
-> +	void __iomem		*handler_base;
-> +};
-> +
-> +static void htintc_chained_handle_irq(struct irq_desc *desc)
-> +{
-> +	struct htintc_handler_priv *priv = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	int i;
-> +	bool handled;
-> +
-> +	chained_irq_enter(chip, desc);
-> +
-> +	for (i = 0; i < HTINTC_NUM_GC; i++) {
-> +		uint32_t irqs = readl(priv->handler_base + HTINTC_GC_SIZE * i);
-> +
-> +		while (irqs) {
-> +			int bit = __ffs(irqs);
-> +
-> +			generic_handle_irq(irq_find_mapping(priv->domain, bit + 32 * i));
-> +			irqs &= ~BIT(bit);
-> +			handled = true;
-> +		}
-> +	}
-> +
-> +	if (!handled)
-
-Uninitialized variable. I'm pretty sure your compiler warns about that.
-
-> +		spurious_interrupt();
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +int __init ls3_htintc_of_init(struct device_node *node,
-> +					   struct device_node *parent)
-> +{
-> +	struct irq_chip_generic *gc;
-> +	struct irq_chip_type *ct;
-> +	struct htintc_handler_priv *priv;
-> +	struct irq_domain *domain;
-> +	void __iomem *base;
-> +	int parent_irq[HTINTC_NUM_HANDLER], err = 0;
-> +	int i;
-> +
-> +
-
-Spurious empty line.
-
-> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	base = of_iomap(node, 0);
-> +	if (!base) {
-> +		err = -ENODEV;
-> +		goto out_free_priv;
-> +	}
-> +
-> +	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
-> +		parent_irq[i] = irq_of_parse_and_map(node, i);
-> +		if (!parent_irq[i]) {
-> +			pr_err("ls3-htintc: unable to get parent irq %d\n", i);
-> +			err =  -ENODEV;
-> +			goto out_iounmap;
-> +		}
-> +	}
-> +	/* Set up an IRQ domain */
-> +	domain = irq_domain_add_linear(node, 32 * HTINTC_NUM_GC,
-> +		&irq_generic_chip_ops, NULL);
-
-Please align the second line on the opening bracket from the previous line.
-
-> +	if (!domain) {
-> +		pr_err("ls3-htintc: cannot add IRQ domain\n");
-> +		err = -ENOMEM;
-> +		goto out_iounmap;
-> +	}
-> +
-> +	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
-> +		/* Mask all interrupts */
-> +		writeq(0x0, base + HTINTC_EN_OFFSET + HTINTC_HANDLER_SIZE * i);
-> +	}
-> +
-> +	err = irq_alloc_domain_generic_chips(domain, 32, 1,
-> +		node->full_name, handle_fasteoi_irq,
-
-handle_fast_eoi? Where is your irq_eoi callback? That looks wrong given
-that you're using a mask/ack/unmask sequence.
-
-> +		IRQ_NOPROBE, 0, IRQ_GC_INIT_MASK_CACHE);
-> +	if (err) {
-> +		pr_err("ls3-htintc: unable to register IRQ domain\n");
-> +		err = -ENOMEM;
-> +		goto out_free_domain;
-> +	}
-> +
-> +	for (i = 0; i < HTINTC_NUM_GC; i++) {
-> +		gc = irq_get_domain_generic_chip(domain, i * 32);
-> +		gc->reg_base = base + HTINTC_GC_SIZE * i;
-> +		gc->domain = domain;
-> +
-> +		ct = gc->chip_types;
-> +		ct->regs.mask = HTINTC_EN_OFFSET;
-> +		ct->regs.ack = HTINTC_VECTOR_OFFSET;
-> +		ct->chip.irq_unmask = irq_gc_mask_set_bit;
-> +		ct->chip.irq_mask = irq_gc_mask_clr_bit;
-> +		ct->chip.irq_ack = irq_gc_ack_set_bit;
-> +	}
-> +
-> +	priv->domain = domain;
-> +	priv->handler_base = base + HTINTC_VECTOR_OFFSET;
-> +
-> +	for (i = 0; i < HTINTC_NUM_HANDLER; i++) {
-> +		irq_set_chained_handler_and_data(parent_irq[i],
-> +			htintc_chained_handle_irq, priv);
-> +	}
-> +
-> +	return 0;
-> +
-> +out_free_domain:
-> +	irq_domain_remove(domain);
-> +out_iounmap:
-> +	iounmap(base);
-> +out_free_priv:
-> +	kfree(priv);
-> +
-> +	return err;
-> +}
-> +
-> +IRQCHIP_DECLARE(ls3_htintc, "loongson,ls3-htintc", ls3_htintc_of_init);
+> My apologies but I didn't find any suitable, only watchdog parameters with
+> dtbindings file, where should I put it? Documentation/watchdog/aspeed-wdt-
+> sysfs.rst?
 > 
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Documentation/ABI/testing/sysfs-class-watchdog
+
+Guenter
+
+>>> + * This option can be used with wdt2 (watchdog1) only.
+>>
+>> This implies a specific watchdog numbering which is not guaranteed.
+>> Someone might implement a system with some external watchdog.
+>>
+>>> + */
+>>> +static DEVICE_ATTR_RW(access_cs0);
+>>> +
+>>> +static struct attribute *bswitch_attrs[] = {
+>>> +	&dev_attr_access_cs0.attr,
+>>> +	NULL
+>>> +};
+>>> +ATTRIBUTE_GROUPS(bswitch);
+>>> +
+>>>    static const struct watchdog_ops aspeed_wdt_ops = {
+>>>    	.start		= aspeed_wdt_start,
+>>>    	.stop		= aspeed_wdt_stop,
+>>> @@ -306,9 +359,16 @@ static int aspeed_wdt_probe(struct platform_device
+>>> *pdev)
+>>>    	}
+>>>    
+>>>    	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+>>> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
+>>> +	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
+>>>    		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>>>    
+>>> +		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
+>>> +			of_device_is_compatible(np, "aspeed,ast2500-wdt"))
+>>> +			wdt->wdd.groups = bswitch_groups;
+> 
+>> Kind of odd that the attribute only exists if the system booted from the
+>> second flash, but if that is what you want I won't object. Just make sure
+>> that this is explained properly.
+> Perhaps dts configuration option would be better solution for it then? "force-
+> cs0-switch" as example? Also, if it would be an option, dtbindings/wdt file for
+
+You said earlier that this can not be done automatically but _must_ be done
+from user space after the system has booted. Otherwise you could just
+automatically switch to cs0 when the driver probes.
+
+As I said, all I am asking for is proper documentation.
+
+Guenter
+
+> documentation will be the right place for it. Usage of this at side 0 will not
+> get any good/bad results, it just makes user confused, so I decided to put it
+> only at side 1. It works only for ast2400/2500 board unfortunately, for 2600
+> there is big difference in switching mechanism. Any other thoughts how to make
+> it better?
+> 
+> Thanks.
+> 
+> 
