@@ -1,27 +1,164 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: Add optional label property for ina2xx
-Date: Tue, 27 Aug 2019 12:06:39 -0500
-Message-ID: <20190827170639.GA18927@bogus>
-References: <cover.1566310292.git.michal.simek@xilinx.com>
- <3c56deb8cc1842d2915b203e622be1eb442414de.1566310292.git.michal.simek@xilinx.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/49] dt: bindings: net: add qcom,ath11k.txt
+Date: Tue, 27 Aug 2019 12:13:07 -0500
+Message-ID: <20190827171307.GA23128@bogus>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <1566316095-27507-2-git-send-email-kvalo@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3c56deb8cc1842d2915b203e622be1eb442414de.1566310292.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1566316095-27507-2-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Aug 2019 16:11:40 +0200, Michal Simek wrote:
-> Using optional "label" property is adding an option to user to use better
-> name for device identification.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
->  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Tue, Aug 20, 2019 at 06:47:27PM +0300, Kalle Valo wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Missing commit message and Sob (and on the other patches).
+
+> ---
+>  .../bindings/net/wireless/qcom,ath11k.txt          | 127 +++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+
+Please use the DT schema format (YAML). See writing-schema.md.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt
+> new file mode 100644
+> index 000000000000..1824238b4b50
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt
+> @@ -0,0 +1,127 @@
+> +* Qualcomm Technologies ath11k wireless devices
+> +
+> +Required properties:
+> +- compatible: Should be "qcom,ipq8074-wifi"
+> +
+> +AHB based ipq8074 uses most of the properties defined in this doc.
+> +
+> +Optional properties:
+> +- reg: Address and length of the register set for the device.
+> +- interrupts: List of interrupt lines. Must contain an entry
+> +	      for each entry in the interrupt-names property.
+
+Need to be explicit as to how many interrupts and what they are.
+
+> +- interrupt-names: Must include the entries for CE interrupt
+> +		   names ("ce0" to "ce11") and hw srng interrupt
+> +		   names.
+> +- qcom,rproc: DT entry of q6v5-wcss
+> +
+> +Example:
+> +
+> +wifi0: wifi@c000000 {
+> +	compatible = "qcom,ipq8074-wifi";
+> +	reg = <0xc000000 0x2000000>;
+> +	interrupts = <0 320 1>,
+> +		     <0 319 1>,
+> +		     <0 318 1>,
+> +		     <0 317 1>,
+> +		     <0 316 1>,
+> +		     <0 315 1>,
+> +		     <0 314 1>,
+> +		     <0 311 1>,
+> +		     <0 310 1>,
+> +		     <0 411 1>,
+> +		     <0 410 1>,
+> +		     <0 40 1>,
+> +		     <0 39 1>,
+> +		     <0 302 1>,
+> +		     <0 301 1>,
+> +		     <0 37 1>,
+> +		     <0 36 1>,
+> +		     <0 296 1>,
+> +		     <0 295 1>,
+> +		     <0 294 1>,
+> +		     <0 293 1>,
+> +		     <0 292 1>,
+> +		     <0 291 1>,
+> +		     <0 290 1>,
+> +		     <0 289 1>,
+> +		     <0 288 1>,
+> +		     <0 239 1>,
+> +		     <0 236 1>,
+> +		     <0 235 1>,
+> +		     <0 234 1>,
+> +		     <0 233 1>,
+> +		     <0 232 1>,
+> +		     <0 231 1>,
+> +		     <0 230 1>,
+> +		     <0 229 1>,
+> +		     <0 228 1>,
+> +		     <0 224 1>,
+> +		     <0 223 1>,
+> +		     <0 203 1>,
+> +		     <0 183 1>,
+> +		     <0 180 1>,
+> +		     <0 179 1>,
+> +		     <0 178 1>,
+> +		     <0 177 1>,
+> +		     <0 176 1>,
+> +		     <0 163 1>,
+> +		     <0 162 1>,
+> +		     <0 160 1>,
+> +		     <0 159 1>,
+> +		     <0 158 1>,
+> +		     <0 157 1>,
+> +		     <0 156 1>;
+> +	interrupt-names = "misc-pulse1",
+> +			  "misc-latch",
+> +			  "sw-exception",
+> +			  "watchdog",
+> +			  "ce0",
+> +			  "ce1",
+> +			  "ce2",
+> +			  "ce3",
+> +			  "ce4",
+> +			  "ce5",
+> +			  "ce6",
+> +			  "ce7",
+> +			  "ce8",
+> +			  "ce9",
+> +			  "ce10",
+> +			  "ce11",
+> +			  "host2wbm-desc-feed",
+> +			  "host2reo-re-injection",
+> +			  "host2reo-command",
+> +			  "host2rxdma-monitor-ring3",
+> +			  "host2rxdma-monitor-ring2",
+> +			  "host2rxdma-monitor-ring1",
+> +			  "reo2ost-exception",
+> +			  "wbm2host-rx-release",
+> +			  "reo2host-status",
+> +			  "reo2host-destination-ring4",
+> +			  "reo2host-destination-ring3",
+> +			  "reo2host-destination-ring2",
+> +			  "reo2host-destination-ring1",
+> +			  "rxdma2host-monitor-destination-mac3",
+> +			  "rxdma2host-monitor-destination-mac2",
+> +			  "rxdma2host-monitor-destination-mac1",
+> +			  "ppdu-end-interrupts-mac3",
+> +			  "ppdu-end-interrupts-mac2",
+> +			  "ppdu-end-interrupts-mac1",
+> +			  "rxdma2host-monitor-status-ring-mac3",
+> +			  "rxdma2host-monitor-status-ring-mac2",
+> +			  "rxdma2host-monitor-status-ring-mac1",
+> +			  "host2rxdma-host-buf-ring-mac3",
+> +			  "host2rxdma-host-buf-ring-mac2",
+> +			  "host2rxdma-host-buf-ring-mac1",
+> +			  "rxdma2host-destination-ring-mac3",
+> +			  "rxdma2host-destination-ring-mac2",
+> +			  "rxdma2host-destination-ring-mac1",
+> +			  "host2tcl-input-ring4",
+> +			  "host2tcl-input-ring3",
+> +			  "host2tcl-input-ring2",
+> +			  "host2tcl-input-ring1",
+> +			  "wbm2host-tx-completions-ring3",
+> +			  "wbm2host-tx-completions-ring2",
+> +			  "wbm2host-tx-completions-ring1",
+> +			  "tcl2host-status-ring";
+> +	qcom,rproc = <&qcom_q6v5_wcss>;
+> +};
+> 
