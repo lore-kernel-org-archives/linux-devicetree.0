@@ -1,79 +1,85 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-Date: Tue, 27 Aug 2019 22:18:46 +0800
-Message-ID: <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-12-jiaxun.yang@flygoat.com>
- <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCHv6] drivers/amba: add reset control to amba bus probe
+Date: Tue, 27 Aug 2019 16:20:32 +0200
+Message-ID: <1566915632.4102.19.camel@pengutronix.de>
+References: <20190827141153.20254-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190827141153.20254-1-dinguyen@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Paul Burton <paul.burton@mips.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh@kernel.org, linux@armlinux.org.uk, frowand.list@gmail.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com, daniel.thompson@linaro.org, linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2019-08-27 at 09:11 -0500, Dinh Nguyen wrote:
+> The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+> default. Until recently, the DMA controller was brought out of reset by the
+> bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
+> that are not used are held in reset and are left to Linux to bring them
+> out of reset.
+> 
+> Add a mechanism for getting the reset property and de-assert the primecell
+> module from reset if found. This is a not a hard fail if the reset properti
+> is not present in the device tree node, so the driver will continue to
+> probe.
+> 
+> Because there are different variants of the controller that may have
+> multiple reset signals, the code will find all reset(s) specified and
+> de-assert them.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v6: remove the need to reset_control_get_count as
+>     of_reset_control_array_get_optional_shared is already doing that
+> v5: use of_reset_control_array_get_optional_shared()
+> v4: cleaned up indentation in loop
+>     fix up a few checkpatch warnings
+>     add Reviewed-by:
+> v3: add a reset_control_put()
+>     add error handling
+> v2: move reset control to bus code
+>     find all reset properties and de-assert them
+> ---
+>  drivers/amba/bus.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> index 100e798a5c82..f39f075abff9 100644
+> --- a/drivers/amba/bus.c
+> +++ b/drivers/amba/bus.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/limits.h>
+>  #include <linux/clk/clk-conf.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/reset.h>
+>  
+>  #include <asm/irq.h>
+>  
+> @@ -401,6 +402,19 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+>  	ret = amba_get_enable_pclk(dev);
+>  	if (ret == 0) {
+>  		u32 pid, cid;
+> +		struct reset_control *rstc;
+> +
+> +		/*
+> +		 * Find reset control(s) of the amba bus and de-assert them.
+> +		 */
+> +		rstc = of_reset_control_array_get_optional_shared(dev->dev.of_node);
+> +		if (IS_ERR(rstc)) {
+> +			if (PTR_ERR(rstc) != -EPROBE_DEFER)
+> +				dev_err(&dev->dev, "Can't get amba reset!\n");
+> +			return PTR_ERR(rstc);
+> +		}
+> +		reset_control_deassert(rstc);
+> +		reset_control_put(rstc);
+>  
+>  		/*
+>  		 * Read pid and cid based on size of resource
 
-On 2019/8/27 下午8:45, Rob Herring wrote:
-> On Tue, Aug 27, 2019 at 3:55 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> Prepare for later dts.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
->>   .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
->>   .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
->>   2 files changed, 102 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->>   create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->> new file mode 100644
->> index 000000000000..410d896a0078
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->> @@ -0,0 +1,38 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> Dual license for new bindings please:
->
-> (GPL-2.0-only OR BSD-2-Clause)
->
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Loongson CPUs bindings
->> +
->> +maintainers:
->> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
->> +
->> +description: |+
->> +  The device tree allows to describe the layout of CPUs in a system through
->> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
->> +  defining properties for every cpu.
->> +
->> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
->> +
->> +  https://www.devicetree.org/specifications/
->> +
->> +properties:
->> +  reg:
->> +    maxItems: 1
->> +    description: |
->> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-> Is this definition specific to Loongson CPUs or all MIPS?
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Currently it's specific to Loongson CPU only, as other processors may 
-using different method to express CPU map.
-
-Different from Arm, MIPS family of processors seems less uniform and 
-have their own designs.
-
-For this point, we'd better ask Paul's opinion.
-
---
-
-Jiaxun Yang
+regards
+Philipp
