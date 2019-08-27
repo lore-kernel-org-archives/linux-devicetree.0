@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 12/15] arm: dts: msm8974: thermal: Add interrupt support
-Date: Tue, 27 Aug 2019 17:44:08 +0530
-Message-ID: <383f16c449fb5a36d07ef98c5b071d9a50a86eb7.1566907161.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 13/15] arm64: dts: msm8916: thermal: Add interrupt support
+Date: Tue, 27 Aug 2019 17:44:09 +0530
+Message-ID: <e9edaeb7b65f98abd226b94e8487dff24e55b44a.1566907161.git.amit.kucheria@linaro.org>
 References: <cover.1566907161.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1566907161.git.amit.kucheria@linaro.org>
@@ -15,19 +15,18 @@ List-Id: devicetree@vger.kernel.org
 Register upper-lower interrupt for the tsens controller.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Tested-by: Brian Masney <masneyb@onstation.org>
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 36 +++++++++++++++--------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index d32f639505f1b..290f7c3827d45 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -139,8 +139,8 @@
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 8686e101905cc..c0d0492d90ec0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -176,8 +176,8 @@
  
  	thermal-zones {
- 		cpu-thermal0 {
+ 		cpu0_1-thermal {
 -			polling-delay-passive = <250>;
 -			polling-delay = <1000>;
 +			polling-delay-passive = <0>;
@@ -35,54 +34,21 @@ index d32f639505f1b..290f7c3827d45 100644
  
  			thermal-sensors = <&tsens 5>;
  
-@@ -159,8 +159,8 @@
+@@ -206,8 +206,8 @@
  		};
  
- 		cpu-thermal1 {
+ 		cpu2_3-thermal {
 -			polling-delay-passive = <250>;
 -			polling-delay = <1000>;
 +			polling-delay-passive = <0>;
 +			polling-delay = <0>;
  
- 			thermal-sensors = <&tsens 6>;
+ 			thermal-sensors = <&tsens 4>;
  
-@@ -179,8 +179,8 @@
+@@ -236,8 +236,8 @@
  		};
  
- 		cpu-thermal2 {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 7>;
- 
-@@ -199,8 +199,8 @@
- 		};
- 
- 		cpu-thermal3 {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 8>;
- 
-@@ -219,8 +219,8 @@
- 		};
- 
- 		q6-dsp-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 1>;
- 
-@@ -234,8 +234,8 @@
- 		};
- 
- 		modemtx-thermal {
+ 		gpu-thermal {
 -			polling-delay-passive = <250>;
 -			polling-delay = <1000>;
 +			polling-delay-passive = <0>;
@@ -90,41 +56,32 @@ index d32f639505f1b..290f7c3827d45 100644
  
  			thermal-sensors = <&tsens 2>;
  
-@@ -250,7 +250,7 @@
- 
- 		video-thermal {
- 			polling-delay-passive = <0>;
--			polling-delay = <1000>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens 3>;
- 
-@@ -279,8 +279,8 @@
+@@ -256,8 +256,8 @@
  		};
  
- 		gpu-thermal-top {
+ 		camera-thermal {
 -			polling-delay-passive = <250>;
 -			polling-delay = <1000>;
 +			polling-delay-passive = <0>;
 +			polling-delay = <0>;
  
- 			thermal-sensors = <&tsens 9>;
+ 			thermal-sensors = <&tsens 1>;
  
-@@ -294,8 +294,8 @@
+@@ -271,8 +271,8 @@
  		};
  
- 		gpu-thermal-bottom {
+ 		modem-thermal {
 -			polling-delay-passive = <250>;
 -			polling-delay = <1000>;
 +			polling-delay-passive = <0>;
 +			polling-delay = <0>;
  
- 			thermal-sensors = <&tsens 10>;
+ 			thermal-sensors = <&tsens 0>;
  
-@@ -531,6 +531,8 @@
- 			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
- 			nvmem-cell-names = "calib", "calib_backup";
- 			#qcom,sensors = <11>;
+@@ -816,6 +816,8 @@
+ 			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+ 			nvmem-cell-names = "calib", "calib_sel";
+ 			#qcom,sensors = <5>;
 +			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow";
  			#thermal-sensor-cells = <1>;
