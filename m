@@ -1,10 +1,10 @@
-Return-Path: <SRS0=L4yL=WY=xilinx.com=michals@kernel.org>
+Return-Path: <SRS0=vyAp=WX=xilinx.com=michals@kernel.org>
 Subject: Re: [PATCH 1/2] dt-binding: iio: Add optional label property
 References: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
  <1566876924-63608-2-git-send-email-preid@electromag.com.au>
 From: Michal Simek <michal.simek@xilinx.com>
-Message-ID: <a30b6dca-c598-135a-0559-1018dd5f5fde@xilinx.com>
-Date: Wed, 28 Aug 2019 08:09:19 +0200
+Message-ID: <b4b8d01f-67c3-2a6f-e7f6-ead6cbaa6d46@xilinx.com>
+Date: Tue, 27 Aug 2019 08:10:55 +0200
 MIME-Version: 1.0
 In-Reply-To: <1566876924-63608-2-git-send-email-preid@electromag.com.au>
 Content-Type: text/plain; charset=utf-8
@@ -45,9 +45,7 @@ On 27. 08. 19 5:35, Phil Reid wrote:
 >  Example for a configuration with trigger:
 > 
 
-Just for the record. This patch has been created based on initial
-discussion about label property. And Rob had not problem with using
-label in connection to ina226. https://lkml.org/lkml/2019/8/27/1213
+Suggested-by: Michal Simek <michal.simek@xilinx.com>
 
 Thanks,
 Michal
