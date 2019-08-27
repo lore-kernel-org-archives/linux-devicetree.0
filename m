@@ -1,67 +1,46 @@
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune
- dma-direct min mask
-Date: Tue, 27 Aug 2019 09:03:41 +0200
-Message-ID: <20190827090341.2bf6b336@ezekiel.suse.cz>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-        <20190820145821.27214-11-nsaenzjulienne@suse.de>
-        <20190826070633.GB11331@lst.de>
-        <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
+From: Elon Zhang <zhangzj@rock-chips.com>
+Subject: [PATCH v1 1/1] ARM: dts: rockchip: set crypto default disabled on
+ rk3288
+Date: Tue, 27 Aug 2019 15:14:39 +0800
+Message-ID: <20190827071439.14767-1-zhangzj@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/vmjhQR+jY/bQH=VqrrKvOyt"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, f.fainelli@gmail.com, will@kernel.org, eric@anholt.net, marc.zyngier@arm.com, catalin.marinas@arm.com, frowand.list@gmail.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, wahrenst@gmx.net, mbrugger@suse.com, linux-riscv@lists.infradead.org, m.szyprowski@samsung.com, Robin Murphy <robin.murphy@arm.com>, akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org, phill@raspberryi.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: Elon Zhang <zhangzj@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/vmjhQR+jY/bQH=VqrrKvOyt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Not every board needs to enable crypto node, so the node should
+be set default disabled in rk3288.dtsi and enabled in specific
+board dts file.
 
-On Mon, 26 Aug 2019 13:08:50 +0200
-Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
+Signed-off-by: Elon Zhang <zhangzj@rock-chips.com>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Mon, 2019-08-26 at 09:06 +0200, Christoph Hellwig wrote:
-> > On Tue, Aug 20, 2019 at 04:58:18PM +0200, Nicolas Saenz Julienne wrote:=
- =20
-> > > -	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> > > +	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-> > >  		arm64_dma_phys_limit =3D max_zone_dma_phys();
-> > > +		zone_dma_bits =3D ilog2((arm64_dma_phys_limit - 1) &
-> > > GENMASK_ULL(31, 0)) + 1; =20
-> > =20
-> Hi Christoph,
-> thanks for the rewiews.
->=20
-> > This adds a way too long line. =20
->=20
-> I know, I couldn't find a way to split the operation without making it ev=
-en
-> harder to read. I'll find a solution.
-
-If all else fails, move the code to an inline function and call it e.g.
-phys_limit_to_dma_bits().
-
-Just my two cents,
-Petr T
-
---Sig_/vmjhQR+jY/bQH=VqrrKvOyt
-Content-Type: application/pgp-signature
-Content-Description: Digitální podpis OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAl1k1c0ACgkQqlA7ya4P
-R6ffZggAphWovRbYbJElIMDB+201+43NCpSH8dbZwe3UrJ+1DHzEn4OEldBRpcAv
-CuA2/u6GyA8wgnGpCAKj9HNHWSx9VeFoCmf6kPVHFtoC0hnJyJtCCWS1O9B1nqXR
-3h1Dw+6F/4wh14vqUucVvfseO/T1VV1QtfsczxBy2xEvcTZGhBjo7LEKeABa2yRm
-CoPLGyNtTtNkAhXeSeVJUcuquOjdqrcU+RlCH5EIZZagAvXuNLryEsjjUfD4Lx35
-RBeRcO+KmGJvAYuelWr/lqtO5ZUnD4OXoFE6fV7AvvJCD6RIHngLS4EXDIkGAaqd
-kWlLtSieXZDEl0mMBdQBfSVcByyzKA==
-=RDo8
------END PGP SIGNATURE-----
-
---Sig_/vmjhQR+jY/bQH=VqrrKvOyt--
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index cc893e154fe5..d509aa24177c 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -984,7 +984,7 @@
+ 		clock-names = "aclk", "hclk", "sclk", "apb_pclk";
+ 		resets = <&cru SRST_CRYPTO>;
+ 		reset-names = "crypto-rst";
+-		status = "okay";
++		status = "disabled";
+ 	};
+ 
+ 	iep_mmu: iommu@ff900800 {
+-- 
+2.17.1
