@@ -1,62 +1,33 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] hwmon: Add Synaptics AS370 PVT sensor driver
-Date: Mon, 26 Aug 2019 20:51:42 -0700
-Message-ID: <e0bfae1c-07f5-f907-0003-2c2f959e8099@roeck-us.net>
-References: <20190826174942.2b28ff05@xhacker.debian>
- <20190826175029.433632f6@xhacker.debian>
- <35b05950-4a72-9e00-50ab-ecd0a7e759a4@roeck-us.net>
- <20190827105110.0be8d669@xhacker.debian>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Ramuthevar,Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v2 0/3] dt-bindings: mtd: cadence-qspi:add support for Intel lgm-qspi
+Date: Tue, 27 Aug 2019 11:58:24 +0800
+Message-ID: <20190827035827.21024-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827105110.0be8d669@xhacker.debian>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at, jwboyer@gmail.com, boris.brezillon@free-electrons.com, cyrille.pitchen@atmel.com, david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com, tudor.ambarus@gmail.com, vigneshr@ti.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/26/19 8:02 PM, Jisheng Zhang wrote:
-> Hi Guenter,
-> 
-> On Mon, 26 Aug 2019 06:44:34 -0700 Guenter Roeck wrote:
-> 
->>
->>
->> On 8/26/19 3:01 AM, Jisheng Zhang wrote:
->>> Add a new driver for Synaptics AS370 PVT sensors. Currently, only
->>> temperature is supported.
->>>
->>> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
->>> ---
->>>    drivers/hwmon/Kconfig       |  10 +++
->>>    drivers/hwmon/Makefile      |   1 +
->>>    drivers/hwmon/as370-hwmon.c | 158 ++++++++++++++++++++++++++++++++++++
->>>    3 files changed, 169 insertions(+)
->>>    create mode 100644 drivers/hwmon/as370-hwmon.c
->>>
->>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->>> index 650dd71f9724..d31610933faa 100644
->>> --- a/drivers/hwmon/Kconfig
->>> +++ b/drivers/hwmon/Kconfig
->>> @@ -246,6 +246,16 @@ config SENSORS_ADT7475
->>>          This driver can also be built as a module. If so, the module
->>>          will be called adt7475.
->>>
->>> +config SENSORS_AS370
->>> +     tristate "Synaptics AS370 SoC hardware monitoring driver"
->>
->> I think this needs "depends on HAS_IOMEM".
-> 
-> HWMON depends on HAS_IOMEM, so the dependency has been required
-> by the common HWMON, we don't need it here.
-> 
+mtd: spi-nor: cadence-quadspi: disable DMA and DAC for Intel LGM
+mtd: spi-nor: cadence-quadspi: disable the auto-poll for Intel LGM
 
-This is so wrong :-(. As if I2C or SPI based sensor chips would
-require iomem. Oh well, no one complained in 12+ years, so I guess
-we are "fine", at least for the time being.
+changes from V1:
+  - many thanks to Vignesh for review comments.
+  - split 2 patches one for DMA and DAC and other one
+    is disable the auto-poll
+  - removed ahb_phy_addr and used existing trigger_address
+  - trigger_address property used.
+  
+Ramuthevar Vadivel Murugan (3):
+  dt-bindings: mtd: cadence-qspi:add support for Intel lgm-qspi
+  mtd: spi-nor: cadence-quadspi: disable DMA and DAC for Intel LGM
+  mtd: spi-nor: cadence-quadspi: disable the auto-poll for Intel LGM
 
-Thanks for noticing.
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  1 +
+ drivers/mtd/spi-nor/Kconfig                        |  2 +-
+ drivers/mtd/spi-nor/cadence-quadspi.c              | 45 ++++++++++++++++++++--
+ 3 files changed, 44 insertions(+), 4 deletions(-)
 
-Guenter
+-- 
+2.11.0
