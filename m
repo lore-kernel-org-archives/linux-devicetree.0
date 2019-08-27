@@ -1,68 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/6] dt-bindings: soc: qcom: Add RSC power domain
- specifier
-Date: Tue, 27 Aug 2019 17:32:52 -0500
-Message-ID: <20190827223252.GA26039@bogus>
-References: <20190823081703.17325-1-mkshah@codeaurora.org>
- <20190823081703.17325-4-mkshah@codeaurora.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 0/2] Add HwSpinlock nodes for TI K3 SoCs
+Date: Tue, 27 Aug 2019 17:34:28 -0500
+Message-ID: <715d61be-c881-cde8-38f0-451637767909@ti.com>
+References: <20190722190539.27816-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190823081703.17325-4-mkshah@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maulik Shah <mkshah@codeaurora.org>
-Cc: swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722190539.27816-1-s-anna@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 01:47:00PM +0530, Maulik Shah wrote:
-> In addition to transmitting resource state requests to the remote
-> processor, the RSC is responsible for powering off/lowering the
-> requirements from CPUs subsystem for the associated hardware like
-> buses, clocks, and regulators when all CPUs and cluster is powered down.
-> 
-> The power domain is configured to a low power state and when all the
-> CPUs are powered down, the RSC can lower resource state requirements
-> and power down the rails that power the CPUs.
-> 
-> Add PM domain specifier property for RSC controller.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> index 9b86d1eff219..d0ab6e9b6745 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
-> @@ -83,6 +83,13 @@ Properties:
->  	Value type: <string>
->  	Definition: Name for the RSC. The name would be used in trace logs.
->  
-> +- #power-domain-cells:
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: Number of cells in power domain specifier. Optional for
-> +		    controllers that may be in 'solver' state where they can
-> +		    be in autonomous mode executing low power modes.
+Hi Tero,
 
-What's the value? It's always 0?
+On 7/22/19 2:05 PM, Suman Anna wrote:
+> Hi Tero,
+> 
+> The following series adds the HwSpinlock DT nodes for the
+> TI K3 AM65x and J721E SoC families. Patches are based on
+> v5.3-rc1.
 
-> +
->  Drivers that want to use the RSC to communicate with RPMH must specify their
->  bindings as child nodes of the RSC controllers they wish to communicate with.
->  
-> @@ -112,6 +119,7 @@ TCS-OFFSET: 0xD00
->  				  <SLEEP_TCS   3>,
->  				  <WAKE_TCS    3>,
->  				  <CONTROL_TCS 1>;
-> +		#power-domain-cells = <0>;
->  	};
->  
->  Example 2:
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+I am not sure if you have already staged these, but if haven't,
+can you please pick these and the mailbox nodes for 5.4 merge window?
+
+Thanks,
+Suman
+
+> 
+> The bindings and driver support for the same have been
+> merged in v5.3-rc1.
+> 
+> regards
+> Suman
+> 
+> Suman Anna (2):
+>   arm64: dts: ti: k3-am65-main: Add hwspinlock node
+>   arm64: dts: ti: k3-j721e-main: Add hwspinlock node
+> 
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi  | 6 ++++++
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 6 ++++++
+>  2 files changed, 12 insertions(+)
 > 
