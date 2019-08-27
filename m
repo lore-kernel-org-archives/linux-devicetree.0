@@ -1,164 +1,167 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/49] dt: bindings: net: add qcom,ath11k.txt
-Date: Tue, 27 Aug 2019 12:13:07 -0500
-Message-ID: <20190827171307.GA23128@bogus>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
- <1566316095-27507-2-git-send-email-kvalo@codeaurora.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
+Date: Tue, 27 Aug 2019 18:13:34 +0100
+Message-ID: <20190827171333.GQ14582@e119886-lin.cambridge.arm.com>
+References: <20190826073143.4582-1-vidyas@nvidia.com>
+ <20190826073143.4582-7-vidyas@nvidia.com>
+ <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
+ <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566316095-27507-2-git-send-email-kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:47:27PM +0300, Kalle Valo wrote:
+On Tue, Aug 27, 2019 at 09:54:17PM +0530, Vidya Sagar wrote:
+> On 8/27/2019 9:17 PM, Andrew Murray wrote:
+> > On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
+> > > Add support to get regulator information of 3.3V and 12V supplies of a PCIe
+> > > slot from the respective controller's device-tree node and enable those
+> > > supplies. This is required in platforms like p2972-0000 where the supplies
+> > > to x16 slot owned by C5 controller need to be enabled before attempting to
+> > > enumerate the devices.
+> > > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
+> > >   1 file changed, 65 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index 8a27b25893c9..97de2151a738 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+> > >   	u32 aspm_l0s_enter_lat;
+> > >   	struct regulator *pex_ctl_supply;
+> > > +	struct regulator *slot_ctl_3v3;
+> > > +	struct regulator *slot_ctl_12v;
+> > >   	unsigned int phy_count;
+> > >   	struct phy **phys;
+> > > @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+> > >   	}
+> > >   }
+> > > +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+> > > +{
+> > > +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
+> > > +	if (IS_ERR(pcie->slot_ctl_3v3))
+> > > +		pcie->slot_ctl_3v3 = NULL;
+> > > +
+> > > +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
+> > > +	if (IS_ERR(pcie->slot_ctl_12v))
+> > > +		pcie->slot_ctl_12v = NULL;
+> > 
+> > Do these need to take into consideration -EPROBE_DEFER?
+> Since these are devm_* APIs, isn't it taken care of automatically?
 
-Missing commit message and Sob (and on the other patches).
+devm_regulator_get_optional can still return -EPROBE_DEFER - for times when
+"lookup could succeed in the future".
 
-> ---
->  .../bindings/net/wireless/qcom,ath11k.txt          | 127 +++++++++++++++++++++
->  1 file changed, 127 insertions(+)
+It's probably helpful here for your driver to distinguish between there not
+being a regulator specified in the DT, and there being a regulator but there
+is no device for it yet. For the latter case - your driver would probe but
+nothing would enumerate.
 
-Please use the DT schema format (YAML). See writing-schema.md.
+See pcie-rockchip-host.c for an example of where this is handled.
+
+Of course if, for whatever reason it is unlikely you'll ever get -EPROBE_DEFER
+then maybe it's OK as it is.
+
+Thanks,
+
+Andrew Murray
 
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt
-> new file mode 100644
-> index 000000000000..1824238b4b50
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt
-> @@ -0,0 +1,127 @@
-> +* Qualcomm Technologies ath11k wireless devices
-> +
-> +Required properties:
-> +- compatible: Should be "qcom,ipq8074-wifi"
-> +
-> +AHB based ipq8074 uses most of the properties defined in this doc.
-> +
-> +Optional properties:
-> +- reg: Address and length of the register set for the device.
-> +- interrupts: List of interrupt lines. Must contain an entry
-> +	      for each entry in the interrupt-names property.
-
-Need to be explicit as to how many interrupts and what they are.
-
-> +- interrupt-names: Must include the entries for CE interrupt
-> +		   names ("ce0" to "ce11") and hw srng interrupt
-> +		   names.
-> +- qcom,rproc: DT entry of q6v5-wcss
-> +
-> +Example:
-> +
-> +wifi0: wifi@c000000 {
-> +	compatible = "qcom,ipq8074-wifi";
-> +	reg = <0xc000000 0x2000000>;
-> +	interrupts = <0 320 1>,
-> +		     <0 319 1>,
-> +		     <0 318 1>,
-> +		     <0 317 1>,
-> +		     <0 316 1>,
-> +		     <0 315 1>,
-> +		     <0 314 1>,
-> +		     <0 311 1>,
-> +		     <0 310 1>,
-> +		     <0 411 1>,
-> +		     <0 410 1>,
-> +		     <0 40 1>,
-> +		     <0 39 1>,
-> +		     <0 302 1>,
-> +		     <0 301 1>,
-> +		     <0 37 1>,
-> +		     <0 36 1>,
-> +		     <0 296 1>,
-> +		     <0 295 1>,
-> +		     <0 294 1>,
-> +		     <0 293 1>,
-> +		     <0 292 1>,
-> +		     <0 291 1>,
-> +		     <0 290 1>,
-> +		     <0 289 1>,
-> +		     <0 288 1>,
-> +		     <0 239 1>,
-> +		     <0 236 1>,
-> +		     <0 235 1>,
-> +		     <0 234 1>,
-> +		     <0 233 1>,
-> +		     <0 232 1>,
-> +		     <0 231 1>,
-> +		     <0 230 1>,
-> +		     <0 229 1>,
-> +		     <0 228 1>,
-> +		     <0 224 1>,
-> +		     <0 223 1>,
-> +		     <0 203 1>,
-> +		     <0 183 1>,
-> +		     <0 180 1>,
-> +		     <0 179 1>,
-> +		     <0 178 1>,
-> +		     <0 177 1>,
-> +		     <0 176 1>,
-> +		     <0 163 1>,
-> +		     <0 162 1>,
-> +		     <0 160 1>,
-> +		     <0 159 1>,
-> +		     <0 158 1>,
-> +		     <0 157 1>,
-> +		     <0 156 1>;
-> +	interrupt-names = "misc-pulse1",
-> +			  "misc-latch",
-> +			  "sw-exception",
-> +			  "watchdog",
-> +			  "ce0",
-> +			  "ce1",
-> +			  "ce2",
-> +			  "ce3",
-> +			  "ce4",
-> +			  "ce5",
-> +			  "ce6",
-> +			  "ce7",
-> +			  "ce8",
-> +			  "ce9",
-> +			  "ce10",
-> +			  "ce11",
-> +			  "host2wbm-desc-feed",
-> +			  "host2reo-re-injection",
-> +			  "host2reo-command",
-> +			  "host2rxdma-monitor-ring3",
-> +			  "host2rxdma-monitor-ring2",
-> +			  "host2rxdma-monitor-ring1",
-> +			  "reo2ost-exception",
-> +			  "wbm2host-rx-release",
-> +			  "reo2host-status",
-> +			  "reo2host-destination-ring4",
-> +			  "reo2host-destination-ring3",
-> +			  "reo2host-destination-ring2",
-> +			  "reo2host-destination-ring1",
-> +			  "rxdma2host-monitor-destination-mac3",
-> +			  "rxdma2host-monitor-destination-mac2",
-> +			  "rxdma2host-monitor-destination-mac1",
-> +			  "ppdu-end-interrupts-mac3",
-> +			  "ppdu-end-interrupts-mac2",
-> +			  "ppdu-end-interrupts-mac1",
-> +			  "rxdma2host-monitor-status-ring-mac3",
-> +			  "rxdma2host-monitor-status-ring-mac2",
-> +			  "rxdma2host-monitor-status-ring-mac1",
-> +			  "host2rxdma-host-buf-ring-mac3",
-> +			  "host2rxdma-host-buf-ring-mac2",
-> +			  "host2rxdma-host-buf-ring-mac1",
-> +			  "rxdma2host-destination-ring-mac3",
-> +			  "rxdma2host-destination-ring-mac2",
-> +			  "rxdma2host-destination-ring-mac1",
-> +			  "host2tcl-input-ring4",
-> +			  "host2tcl-input-ring3",
-> +			  "host2tcl-input-ring2",
-> +			  "host2tcl-input-ring1",
-> +			  "wbm2host-tx-completions-ring3",
-> +			  "wbm2host-tx-completions-ring2",
-> +			  "wbm2host-tx-completions-ring1",
-> +			  "tcl2host-status-ring";
-> +	qcom,rproc = <&qcom_q6v5_wcss>;
-> +};
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +}
+> > > +
+> > > +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	if (pcie->slot_ctl_3v3) {
+> > > +		ret = regulator_enable(pcie->slot_ctl_3v3);
+> > > +		if (ret < 0) {
+> > > +			dev_err(pcie->dev,
+> > > +				"Failed to enable 3V3 slot supply: %d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (pcie->slot_ctl_12v) {
+> > > +		ret = regulator_enable(pcie->slot_ctl_12v);
+> > > +		if (ret < 0) {
+> > > +			dev_err(pcie->dev,
+> > > +				"Failed to enable 12V slot supply: %d\n", ret);
+> > > +			if (pcie->slot_ctl_3v3)
+> > > +				regulator_disable(pcie->slot_ctl_3v3);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * According to PCI Express Card Electromechanical Specification
+> > > +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+> > > +	 * should be a minimum of 100ms.
+> > > +	 */
+> > > +	msleep(100);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
+> > > +{
+> > > +	if (pcie->slot_ctl_12v)
+> > > +		regulator_disable(pcie->slot_ctl_12v);
+> > > +	if (pcie->slot_ctl_3v3)
+> > > +		regulator_disable(pcie->slot_ctl_3v3);
+> > > +}
+> > > +
+> > >   static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+> > >   					bool en_hw_hot_rst)
+> > >   {
+> > > @@ -1060,6 +1115,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+> > >   		return ret;
+> > >   	}
+> > > +	ret = tegra_pcie_enable_slot_regulators(pcie);
+> > > +	if (ret < 0)
+> > > +		goto fail_slot_reg_en;
+> > > +
+> > >   	ret = regulator_enable(pcie->pex_ctl_supply);
+> > >   	if (ret < 0) {
+> > >   		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+> > > @@ -1142,6 +1201,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+> > >   fail_core_clk:
+> > >   	regulator_disable(pcie->pex_ctl_supply);
+> > >   fail_reg_en:
+> > > +	tegra_pcie_disable_slot_regulators(pcie);
+> > > +fail_slot_reg_en:
+> > >   	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+> > >   	return ret;
+> > > @@ -1174,6 +1235,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
+> > >   		return ret;
+> > >   	}
+> > > +	tegra_pcie_disable_slot_regulators(pcie);
+> > > +
+> > >   	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+> > >   	if (ret) {
+> > >   		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+> > > @@ -1372,6 +1435,8 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+> > >   		return ret;
+> > >   	}
+> > > +	tegra_pcie_get_slot_regulators(pcie);
+> > > +
+> > >   	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+> > >   	if (IS_ERR(pcie->pex_ctl_supply)) {
+> > >   		dev_err(dev, "Failed to get regulator: %ld\n",
+> > > -- 
+> > > 2.17.1
+> > > 
 > 
