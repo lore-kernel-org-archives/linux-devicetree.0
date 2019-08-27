@@ -1,51 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 7/7] ARM: configs: aspeed_g5: Enable AST2600
-Date: Tue, 27 Aug 2019 22:12:33 +0200
-Message-ID: <CAK8P3a1Dgzrw7nuQR_YJYXSF7Owop2Hpd80bAL0OPhzHMHcbPg@mail.gmail.com>
-References: <20190821055530.8720-1-joel@jms.id.au>
- <20190821055530.8720-8-joel@jms.id.au>
- <faf79f9d-baa1-4c8c-a35b-c5d97ad6df8b@www.fastmail.com>
- <CACPK8Xe=mq_Zuw6vsFtb=42ZodbHcizX9QwUoRzY0cDdoWr-Fw@mail.gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: Adding depends-on DT binding to break cyclic dependencies
+Date: Tue, 27 Aug 2019 13:18:43 -0700
+Message-ID: <CAGETcx8FRVN9L3hDag8woYdJ3RszVBTvtAYrG5o-e_w24wYTUg@mail.gmail.com>
+References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACPK8Xe=mq_Zuw6vsFtb=42ZodbHcizX9QwUoRzY0cDdoWr-Fw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Olof Johansson <olof@lixom.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 6:43 AM Joel Stanley <joel@jms.id.au> wrote:
+On Wed, Aug 21, 2019 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> On Thu, 22 Aug 2019 at 02:07, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > +CONFIG_MMC=y
-> > > +CONFIG_MMC_SDHCI=y
-> > > +CONFIG_MMC_SDHCI_PLTFM=y
-> > > +CONFIG_MMC_SDHCI_OF_ASPEED=y
-> >
-> > The patches haven't yet been applied to the MMC tree, maybe we should
-> > add this later?
+> Hi Rob,
 >
-> When enabling drivers in the same merge window as they go into the
-> tree we will always be in this situation.
+> Frank, Greg and I got together during ELC and had an extensive and
+> very productive discussion about my "postboot supplier state cleanup"
+> patch series [1]. The three of us are on the same page now -- the
+> series as it stands is the direction we want to go in, with some minor
+> refactoring, documentation and naming changes.
 >
-> If the driver doesn't make it in this merge window, or first has has
-> changes, the worst that will happen is the kconfig name changes and I
-> need to update it later. I think we're safe to include it as-is.
+> However, one of the things Frank is concerned about (and Greg and I
+> agree) in the current patch series is that the "cyclic dependency
+> breaking" logic has been pushed off to individual drivers using the
+> edit_links() callback.
+>
+> The concern being, there are going to be multiple device specific ad
+> hoc implementations to break a cyclic dependency. Also, if a device
+> can be part of a cyclic dependency, the driver for that device has to
+> check for specific system/products in which the device is part of a
+> cyclic dependency (because it might not always be part of a cycle),
+> and then potentially have cycle/product specific code to break the
+> cycle (since the cycle can be different on each system/product).
+>
+> One way to avoid all of the device/driver specific code and simplify
+> my patch series by a non-trivial amount would be by adding a
+> "depends-on" DT binding that can ONLY be used to break cycles. We can
+> document it as such and reject any attempts to use it for other
+> purposes. When a depends-on property is present in a device node, that
+> specific device's supplier list will be parsed ONLY from the
+> depends-on property and the other properties won't be parsed for
+> deriving dependency information for that device.
+>
+> Frank, Greg and I like this usage model for a new depends-on DT
+> binding. Is this something you'd be willing to accept?
+>
+> Thanks,
+> Saravana
+>
+> [1] - https://lore.kernel.org/lkml/20190731221721.187713-1-saravanak@google.com/
 
-Yes, that's fine.
+Friendly reminder.
 
-Please also enable all the drivers you need in multi_v7_defconfig
-now, preferably as loadable modules.
-
-
-      Arnd
+-Saravana
