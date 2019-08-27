@@ -1,49 +1,34 @@
-From: Sven Eckelmann <sven-KaDOiPu9UxWEi8DpZVb4nw@public.gmane.org>
-Subject: Re: [PATCH 10/49] ath11k: add debug.c
-Date: Tue, 27 Aug 2019 12:49:48 +0200
-Message-ID: <1739552.6LiyvA3Ra0@bentobox>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org> <18655975.RomJW5s5WE@bentobox> <f93b9c98fcfb9a910c3efc04d11d5aa0@codeaurora.org>
+From: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 31/49] ath11k: add mac.c
+Date: Tue, 27 Aug 2019 16:21:40 +0530
+Message-ID: <1da054e86da63423a5e58c22c2c79d79@codeaurora.org>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
+ <c37a9fc4-aa74-a333-a67c-cce66ad78ec0@green-communications.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart41236698.1DgVcCGkzx"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f93b9c98fcfb9a910c3efc04d11d5aa0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <c37a9fc4-aa74-a333-a67c-cce66ad78ec0-HoVSR7jCO9Dxoq/u1CTanTkwo1WHXZZs@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anilkumar Kolli <akolli-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Nicolas Cavallari <Nicolas.Cavallari-HoVSR7jCO9Dxoq/u1CTanTkwo1WHXZZs@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart41236698.1DgVcCGkzx
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+On 2019-08-23 20:32, Nicolas Cavallari wrote:
+> On 20/08/2019 17:47, Kalle Valo wrote:
+>> +	ar->hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+>> +					 BIT(NL80211_IFTYPE_AP) |
+>> +					 BIT(NL80211_IFTYPE_MESH_POINT);
+> 
+> [...]
+> 
+>> +	ar->hw->wiphy->flags |= WIPHY_FLAG_IBSS_RSN;
+> 
+> so IBSS-RSN is supported without IBSS support ?
 
-On Tuesday, 27 August 2019 12:04:27 CEST Anilkumar Kolli wrote:
-> Could you plz try removing below patch?
-> https://source.codeaurora.org/quic/qsdk/oss/system/feeds/wlan-open/tree/mac80211/patches/072-ath11k-print-stats-on-crash.patch?h=win_ap.1.0
+Sure. IBSS-RSN is not relevant when IBSS is not supported, I guess.
+We'll take care of this. Thanks.
 
-It is not applied. At least I can't find any ath11k_core_dump_bp_stats
-
-Kind regards,
-	Sven
---nextPart41236698.1DgVcCGkzx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl1lCswACgkQXYcKB8Em
-e0Yu8Q//UsAcD8O2MzZ8xpv84cQJY2NkB1JsFRc3Ww2QoYBKt2IP/wz5BiMwN1E6
-bol+r3264SViCt3znDKhCy5MTiPYY5eOR0hk7BCa+d6Dsv1aklmTb8sgXEcdEGWD
-O4v18ZAAWaTuUJlR1x1mNekYmqPR21qEB7+J/6RcAU0jPfeHOPS6X93ZWnyghcmI
-YSq/GN+1coZ5xfDTH/4aIZ2fL8LnOwxFKzpmj81drqlrrw/iljN3RA4OrPa9HtNN
-7uDBJPmk0H2+4rht/koJDg0EbUdF+pYHRcU/d2ktM6ho210kOcvNEDjK2T3PL6HZ
-HH5/BVblq9gNLquQZSe/7qTweLzeIbOpARhnflRu1Xct2A8l0ibBwkn+ybxPNC2v
-WJTp/6iOwrwAXs1pRfFnrYdvBDP/9Fw7fk4DnjEvolvmjNdjFIExqFxroYPI58IK
-JMEwnIDGDtXJJ3B0mU9aSmPRDMraxgOR30rEzqvgB6TVfCUAVnmwl623nGfZ+fvW
-nSpT/+q/SPt1YIsS413OanQbbhXkmIip+bzVByEMbObXCH2uK918oUGstalccqN2
-ZjV63AEYOj7q+N7AD3s17KrUcrhu82fjnVxBi36eQlvTojZtk/tuNW3HK29CKVLJ
-iZiZ0nyzAIk/s/qvU74KFVXmIAdqrECntuKOPtJtILoN5kxqDMc=
-=9HJ7
------END PGP SIGNATURE-----
-
---nextPart41236698.1DgVcCGkzx--
+Vasanth
