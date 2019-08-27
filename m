@@ -1,55 +1,109 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RESEND, PATCH v13 09/12] soc: mediatek: cmdq: define the
- instruction struct
-Date: Tue, 27 Aug 2019 12:04:03 +0200
-Message-ID: <c33f6829-b1f4-376f-5e12-38c811c370dd@gmail.com>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
- <20190820084932.22282-10-bibby.hsieh@mediatek.com>
- <486deaa3-d139-d4af-e0cf-e324b3270f3b@gmail.com>
- <1566879121.29523.8.camel@mtksdaap41>
+From: Anilkumar Kolli <akolli-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 10/49] ath11k: add debug.c
+Date: Tue, 27 Aug 2019 15:34:27 +0530
+Message-ID: <f93b9c98fcfb9a910c3efc04d11d5aa0@codeaurora.org>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <4441194.D8eDD6Tzdi@bentobox>
+ <6622b83f754404ec05b9442027757c5e@codeaurora.org>
+ <18655975.RomJW5s5WE@bentobox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566879121.29523.8.camel@mtksdaap41>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <18655975.RomJW5s5WE@bentobox>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sven Eckelmann <sven-KaDOiPu9UxWEi8DpZVb4nw@public.gmane.org>
+Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 27/08/2019 06:12, Bibby Hsieh wrote:
-
->>>  
->>>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->>>  {
->>> -	u32 arg_b;
->>> +	struct cmdq_instruction *inst;
->>>  
->>>  	if (event >= CMDQ_MAX_EVENT)
->>>  		return -EINVAL;
->>>  
->>> -	/*
->>> -	 * WFE arg_b
->>> -	 * bit 0-11: wait value
->>> -	 * bit 15: 1 - wait, 0 - no wait
->>> -	 * bit 16-27: update value
->>> -	 * bit 31: 1 - update, 0 - no update
->>> -	 */
->>
->> I have no strong opinion of CMDQ_WFE_OPTION but if you want to introduce it,
->> then please copy the comment over to include/linux/mailbox/mtk-cmdq-mailbox.h
+On 2019-08-27 15:23, Sven Eckelmann wrote:
+> On Tuesday, 27 August 2019 11:04:23 CEST Anilkumar Kolli wrote:
+> [...]
+>> > Yes, but it shouldn't kill the complete system.
+>> >
+>> This will not kill the whole system, This will crash target and we 
+>> have
+>> mechanism to recover the system.
+>> 
+>> Hope u have generated the crash with below patch,
+>> https://source.codeaurora.org/quic/qsdk/oss/system/feeds/wlan-open/tree/mac80211/patches/019-ath11k-disable-q6-recovery-to-crash-kernel.patch?h=win_ap.1.0
+>> 
+>> Please remove this patch to see the target recover after the crash.
 > 
-> Ok. let's move the descriptions to header.
->>
->> Just one question, why did you call it _OPTION? It's not really expressive for me.
+> John also pointed me to this patch yesterday and I have now removed it.
 > 
-> Actually, _OPTION is come from our hardware design name...
+> But the wifi hardware doesn't recover after issuing an assert. All(?) 
+> firmware
+> request will just timeout:
+> 
+>     [ 1093.114530] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1093.114555] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1093.118903] ath11k c000000.wifi1: Failed to set dtim period for
+> VDEV 0: -11
+>     [ 1096.124532] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1096.124554] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1096.128902] ath11k c000000.wifi1: Failed to set CTS prot for 
+> VDEV: 0
+>     [ 1099.134527] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1099.134547] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1099.138895] ath11k c000000.wifi1: Failed to set preamble for 
+> VDEV: 0
+>     [ 1102.144526] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1102.144546] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1102.148894] ath11k c000000.wifi1: failed to set mgmt tx rate -11
+>     [ 1105.154526] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1105.154547] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1105.158895] ath11k c000000.wifi1: failed to set beacon tx rate 
+> -11
+>     [ 1114.164529] ath11k c000000.wifi1: wmi command 16387 timeout
+>     [ 1114.164553] ath11k c000000.wifi1: failed to send 
+> WMI_PDEV_SET_PARAM cmd
+>     [ 1114.168899] ath11k c000000.wifi1: Failed to set beacon mode for 
+> VDEV: 0
+>     [ 1117.174527] ath11k c000000.wifi1: wmi command 28675 timeout
+>     [ 1117.174550] ath11k c000000.wifi1: failed to send 
+> WMI_BCN_TMPL_CMDID
+>     [ 1117.178899] ath11k c000000.wifi1: failed to submit beacon
+> template command: -11
+>     [ 1117.185231] ath11k c000000.wifi1: failed to update bcn template: 
+> -11
+>     [ 1120.184524] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1120.184545] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1120.188893] ath11k c000000.wifi1: Failed to set dtim period for
+> VDEV 0: -11
+>     [ 1123.194527] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1123.194548] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1123.198895] ath11k c000000.wifi1: Failed to set CTS prot for 
+> VDEV: 0
+>     [ 1126.204526] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1126.204547] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1126.208894] ath11k c000000.wifi1: Failed to set preamble for 
+> VDEV: 0
+>     [ 1129.214527] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1129.214548] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1129.218897] ath11k c000000.wifi1: failed to set mgmt tx rate -11
+>     [ 1132.224525] ath11k c000000.wifi1: wmi command 20488 timeout
+>     [ 1132.224546] ath11k c000000.wifi1: failed to send 
+> WMI_VDEV_SET_PARAM_CMDID
+>     [ 1132.228894] ath11k c000000.wifi1: failed to set beacon tx rate 
+> -11
+> 
+> ath11k must be unloaded + loaded again to fix this problem.
 > 
 
-Ok, then I'll stop bike-shedding. I leave it up to you to rename it or not.
+Could you plz try removing below patch?
+https://source.codeaurora.org/quic/qsdk/oss/system/feeds/wlan-open/tree/mac80211/patches/072-ath11k-print-stats-on-crash.patch?h=win_ap.1.0
 
-Regards,
-Matthias
+-- 
+Thanks
+Anil.
