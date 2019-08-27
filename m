@@ -1,50 +1,41 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH v9 1/8] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Date: Tue, 27 Aug 2019 10:13:36 +0100
-Message-ID: <20190827091336.GI13294@shell.armlinux.org.uk>
-References: <20190712034904.5747-1-chris.packham@alliedtelesis.co.nz>
- <20190712034904.5747-2-chris.packham@alliedtelesis.co.nz>
- <20190823104621.GY13294@shell.armlinux.org.uk>
- <20190823105020.GZ13294@shell.armlinux.org.uk>
- <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
+From: Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Tue, 27 Aug 2019 17:14:11 +0800
+Message-ID: <c0bb5bcf-6ccb-d155-7184-a7174bb36bd8@linux.intel.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <f1cb5ba9-b57a-971a-5a2f-1f13e0cc9507@linux.intel.com>
+ <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <836653f04f526333e8dbd45361329731f8dfe2ea.camel@alliedtelesis.co.nz>
+In-Reply-To: <CAFBinCDojCN0Gxpa0fyh7t8TdvTLc_dwgJgMxC4PoAszK==BKg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jlu@pengutronix.de" <jlu@pengutronix.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "bp@alien8.de" <bp@alien8.de>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@armlinux.org.uk" <patches@armlinux.org.uk>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 12:46:44AM +0000, Chris Packham wrote:
-> Hi Russell,
-> 
-> On Fri, 2019-08-23 at 11:50 +0100, Russell King - ARM Linux admin
-> wrote:
-> > On Fri, Aug 23, 2019 at 11:46:21AM +0100, Russell King - ARM Linux
-> > admin wrote:
-> > > I can't apply this series - this file does not exist in my tree,
-> > > and
-> > > from what git tells me, it never has existed.  Maybe it's in
-> > > someone
-> > > elses tree?
-> > 
-> > I think the file is in my tree, just as arch/arm/mm/cache-aurora-l2.h
-> > which is where it has been since it was originally submitted in 2012.
-> 
-> Sorry there is a missing patch that moves it next to the
-> hardware/cache-*.h. I can send the missing patch or I can re-send the
-> whole series. If I do send the whole series do you want me to rebase it
-> against a particular tag/tree?
 
-Just send the single patch to the patch tracker - having it against
-5.3-rc is fine (I don't think anything has changed for a long time
-with that file.)
+On 8/27/2019 4:14 AM, Martin Blumenstingl wrote:
+> second example: pcie-tegra194 (only in -next, will be part of v5.4)
+>    struct tegra_pcie_dw {
+>      ...
+>      struct dw_pcie pci;
+>      ...
+>    };
+>
+> so some drivers store a pointer pointer to the dw_pcie struct vs.
+> embedding the dw_pcie struct directly.
+> as far as I know the result will be equal, except that you don't have
+> to use a second devm_kzalloc for struct dw_pcie (and thus reducing
+> memory fragmentation).
+Okay, i will change it to "struct dw_pcie pci;"
 
-Thanks.
+Thanks for the feedback.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Regards,
+
+Dilip
