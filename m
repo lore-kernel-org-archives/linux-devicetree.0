@@ -1,36 +1,44 @@
-Return-Path: <SRS0=mJni=WF=vergenet.net=horms@kernel.org>
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2] dt-bindings: usb: renesas_gen3: Rename bindings documentation file to reflect IP block
-Date: Fri,  9 Aug 2019 14:37:10 -0700
-Message-Id: <20190809213710.31783-1-horms+renesas@verge.net.au>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=dUwE=WX=nic.cz=marek.behun@kernel.org>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH mvebu-dt64 2/3] dt-bindings: marvell: document Turris Mox compatible
+Date: Tue, 27 Aug 2019 17:16:43 +0200
+Message-Id: <20190827151644.12532-3-marek.behun@nic.cz>
+In-Reply-To: <20190827151644.12532-1-marek.behun@nic.cz>
+References: <20190827151644.12532-1-marek.behun@nic.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: arm@kernel.org
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-For consistency with the naming of (most) other documentation files for DT
-bindings for Renesas IP blocks rename the Renesas USB3.0 peripheral
-documentation file from renesas,usb3.txt to renesas,usb3-peri.txt
+This adds the documentation for the Turris Mox compatible in armada-37xx
+device-tree binding documentation.
 
-This refines a recent rename from renesas_usb3.txt to renesas-usb3.txt.
-The motivation is to more accurately reflect the IP block documented in
-this file.
-
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-* Based on v5.3-rc1
+ .../devicetree/bindings/arm/marvell/armada-37xx.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-v2
-* Add review tag
-* Correct changelog
----
- .../devicetree/bindings/usb/{renesas,usb3.txt => renesas,usb3-peri.txt}   | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/usb/{renesas,usb3.txt => renesas,usb3-peri.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/usb/renesas,usb3.txt b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/usb/renesas,usb3.txt
-rename to Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+index eddde4faef01..f6d6642d81c0 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+@@ -48,3 +48,11 @@ avs: avs@11500 {
+ 	compatible = "marvell,armada-3700-avs", "syscon";
+ 	reg = <0x11500 0x40>;
+ }
++
++
++CZ.NIC's Turris Mox SOHO router Device Tree Bindings
++----------------------------------------------------
++
++Required root node property:
++
++ - compatible: must contain "cznic,turris-mox"
 -- 
-2.11.0
+2.21.0
