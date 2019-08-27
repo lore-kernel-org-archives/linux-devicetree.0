@@ -1,59 +1,86 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-Date: Tue, 27 Aug 2019 20:41:11 +0000
-Message-ID: <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-12-jiaxun.yang@flygoat.com>
- <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
- <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Tue, 27 Aug 2019 22:51:12 +0200
+Message-ID: <CAFBinCDgpNMfF-DnZSLAd7Ps66OKnUdpDmi7OE2O0bctOwwvCg@mail.gmail.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <e4ddb571-e003-7bb8-a04c-795423ea0e2f@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
-Content-Language: en-US
-Content-ID: <12ECD8C448368C468E9C13D363C21C2D@namprd22.prod.outlook.com>
+In-Reply-To: <e4ddb571-e003-7bb8-a04c-795423ea0e2f@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Dilip Kota <eswara.kota@linux.intel.com>
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgZ3V5cywNCg0KT24gVHVlLCBBdWcgMjcsIDIwMTkgYXQgMTA6MTg6NDZQTSArMDgwMCwgSmlh
-eHVuIFlhbmcgd3JvdGU6DQo+IE9uIDIwMTkvOC8yNyDkuIvljYg4OjQ1LCBSb2IgSGVycmluZyB3
-cm90ZToNCj4gPiBPbiBUdWUsIEF1ZyAyNywgMjAxOSBhdCAzOjU1IEFNIEppYXh1biBZYW5nIDxq
-aWF4dW4ueWFuZ0BmbHlnb2F0LmNvbT4gd3JvdGU6DQo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pcHMvbG9vbmdzb24vY3B1cy55YW1sIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pcHMvbG9vbmdzb24vY3B1cy55YW1sDQo+
-ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi40MTBk
-ODk2YTAwNzgNCj4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9taXBzL2xvb25nc29uL2NwdXMueWFtbA0KPiA+ID4gQEAgLTAs
-MCArMSwzOCBAQA0KPiA+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4g
-PiBEdWFsIGxpY2Vuc2UgZm9yIG5ldyBiaW5kaW5ncyBwbGVhc2U6DQo+ID4gDQo+ID4gKEdQTC0y
-LjAtb25seSBPUiBCU0QtMi1DbGF1c2UpDQo+ID4gDQo+ID4gPiArJVlBTUwgMS4yDQo+ID4gPiAr
-LS0tDQo+ID4gPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9taXBzL2xvb25n
-c29uL2NwdXMueWFtbCMNCj4gPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0
-YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiA+ICsNCj4gPiA+ICt0aXRsZTogTG9vbmdzb24gQ1BV
-cyBiaW5kaW5ncw0KPiA+ID4gKw0KPiA+ID4gK21haW50YWluZXJzOg0KPiA+ID4gKyAgLSBKaWF4
-dW4gWWFuZyA8amlheHVuLnlhbmdAZmx5Z29hdC5jb20+DQo+ID4gPiArDQo+ID4gPiArZGVzY3Jp
-cHRpb246IHwrDQo+ID4gPiArICBUaGUgZGV2aWNlIHRyZWUgYWxsb3dzIHRvIGRlc2NyaWJlIHRo
-ZSBsYXlvdXQgb2YgQ1BVcyBpbiBhIHN5c3RlbSB0aHJvdWdoDQo+ID4gPiArICB0aGUgImNwdXMi
-IG5vZGUsIHdoaWNoIGluIHR1cm4gY29udGFpbnMgYSBudW1iZXIgb2Ygc3Vibm9kZXMgKGllICJj
-cHUiKQ0KPiA+ID4gKyAgZGVmaW5pbmcgcHJvcGVydGllcyBmb3IgZXZlcnkgY3B1Lg0KPiA+ID4g
-Kw0KPiA+ID4gKyAgQmluZGluZ3MgZm9yIENQVSBub2RlcyBmb2xsb3cgdGhlIERldmljZXRyZWUg
-U3BlY2lmaWNhdGlvbiwgYXZhaWxhYmxlIGZyb206DQo+ID4gPiArDQo+ID4gPiArICBodHRwczov
-L3d3dy5kZXZpY2V0cmVlLm9yZy9zcGVjaWZpY2F0aW9ucy8NCj4gPiA+ICsNCj4gPiA+ICtwcm9w
-ZXJ0aWVzOg0KPiA+ID4gKyAgcmVnOg0KPiA+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ID4gKyAg
-ICBkZXNjcmlwdGlvbjogfA0KPiA+ID4gKyAgICAgIFBoeXNpY2FsIElEIG9mIGEgQ1BVLCBDYW4g
-YmUgcmVhZCBmcm9tIENQMCBFQmFzZS5DUFVOdW0uDQo+ID4gSXMgdGhpcyBkZWZpbml0aW9uIHNw
-ZWNpZmljIHRvIExvb25nc29uIENQVXMgb3IgYWxsIE1JUFM/DQo+IA0KPiBDdXJyZW50bHkgaXQn
-cyBzcGVjaWZpYyB0byBMb29uZ3NvbiBDUFUgb25seSwgYXMgb3RoZXIgcHJvY2Vzc29ycyBtYXkg
-dXNpbmcNCj4gZGlmZmVyZW50IG1ldGhvZCB0byBleHByZXNzIENQVSBtYXAuDQo+IA0KPiBEaWZm
-ZXJlbnQgZnJvbSBBcm0sIE1JUFMgZmFtaWx5IG9mIHByb2Nlc3NvcnMgc2VlbXMgbGVzcyB1bmlm
-b3JtIGFuZCBoYXZlDQo+IHRoZWlyIG93biBkZXNpZ25zLg0KPiANCj4gRm9yIHRoaXMgcG9pbnQs
-IHdlJ2QgYmV0dGVyIGFzayBQYXVsJ3Mgb3Bpbmlvbi4NCg0KSW4gZ2VuZXJhbCBvbiBNSVBTIHdl
-IGRldGVjdCBDUFUgcHJvcGVydGllcyBhdCBydW50aW1lIGZyb20gY29wcm9jZXNzb3INCjAgcmVn
-aXN0ZXJzICYgc2ltaWxhciBzb3VyY2VzIG9mIGluZm9ybWF0aW9uLCBzbyB0aGVyZSdzIG5vdCBy
-ZWFsbHkgYQ0KbmVlZCB0byBzcGVjaWZ5IGFueXRoaW5nIGFib3V0IHRoZSBDUFUgaW4gZGV2aWNl
-dHJlZS4gRm9yIGV4YW1wbGUgaGVyZQ0KeW91IHNheSB5b3Vyc2VsZiB0aGF0IHRoZSB2YWx1ZSBm
-b3IgdGhpcyBwcm9wZXJ0eSBjYW4gYmUgcmVhZCBmcm9tDQpFQmFzZS5DUFVOdW0gLSBzbyB3aHkg
-c3BlY2lmeSBpdCBpbiBEVD8NCg0KVGhhbmtzLA0KICAgIFBhdWwNCg==
+Hi Dilip,
+
+On Tue, Aug 27, 2019 at 10:47 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+[...]
+> >
+> >
+> >> now I am wondering:
+> >> - if we don't have to disable the interrupt line (once it is enabled),
+> >> why can't we enable all of these interrupts at initialization time
+> >> (instead of doing it on-demand)?
+> > Good point! we even can remote map_irq patch, directly call
+> >
+> > of_irq_parse_and_map_pci as other drivers do.
+>
+> Irrespective of disabling, imo interrupts(A/B/C/D) should be enabled
+> when they are requested; which happens during map_irq() call.
+with an integrated interrupt controller (which I decided to use in my
+experiment because I could not find a .unmap_irq callback) this would
+be the case:
+- of_irq_parse_and_map_pci finds our APP interrupt
+- this will enable the interrupt in the PCIe controller's APP register first
+- then it will enable the interrupt in the parent interrupt controller
+- when the PCIe card then frees the IRQ line again we will disable
+both interrupts (the APP interrupt as well as the parent interrupt)
+
+I don't see why of_irq_parse_and_map_pci + custom code to enable the
+APP interrupt in .map_irq (without any .unmap_irq callback) is better
+than always enabling it
+
+[...]
+> >>> This is needed. In the old driver, we fixed this by fixup. The original
+> >>> comment as follows,
+> >>>
+> >>> /*
+> >>>    * The root complex has a hardwired class of
+> >>> PCI_CLASS_NETWORK_OTHER or
+> >>>    * PCI_CLASS_BRIDGE_HOST, when it is operating as a root complex this
+> >>>    * needs to be switched to * PCI_CLASS_BRIDGE_PCI
+> >>>    */
+> >> that would be a good comment to add if you really need it
+> >> can you please look at dw_pcie_setup_rc (from
+> >> pcie-designware-host.c), it does:
+> >>    /* Enable write permission for the DBI read-only register */
+> >>    dw_pcie_dbi_ro_wr_en(pci);
+> >>    /* Program correct class for RC */
+> >>    dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+> >>    /* Better disable write permission right after the update */
+> >>    dw_pcie_dbi_ro_wr_dis(pci);
+> >>
+> >> so my understanding is that there is a functional requirement to set
+> >> the class to PCI_CLASS_BRIDGE_PCI
+> >> however, that requirement is already covered by pcie-designware-host.c
+> > I will task Dilip to check if we can use dwc one.
+> dw_pcie_setup_rc () cannot be called here because, it is not doing
+> PCI_CLASS_BRIDGE_PCI set alone, it is configuring many other things.
+I am surprised to see that dw_pcie_setup_rc() is not used at all in your driver
+it sets up BARs, bus numbers, interrupt pins, the command register, etc.
+with my limited knowledge I assumed that these ("many other things")
+are all mandatory so everything works correctly
+
+what problems do you experience when you use dw_pcie_setup_rc()?
+
+also it seems that virtually every PCIe driver based on the DWC
+controller uses it:
+$ grep -R dw_pcie_setup_rc drivers/pci/controller/dwc/ | wc -l
+20
+
+
+Martin
