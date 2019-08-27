@@ -1,51 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: irq: Convert Allwinner NMI
- Controller to a schema
-Date: Tue, 27 Aug 2019 12:24:02 -0500
-Message-ID: <20190827172402.GA13986@bogus>
-References: <20190821082138.11049-1-mripard@kernel.org>
- <20190821082138.11049-2-mripard@kernel.org>
+Subject: Re: [PATCH v3 10/15] dt-bindings: display: Add max-memory-bandwidth
+ property for mxsfb
+Date: Tue, 27 Aug 2019 12:25:04 -0500
+Message-ID: <20190827172504.GA15786@bogus>
+References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+ <1566382555-12102-11-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190821082138.11049-2-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jason@lakedaemon.net, Maxime Ripard <maxime.ripard@bootlin.com>, maz@kernel.org, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, tglx@linutronix.de, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1566382555-12102-11-git-send-email-robert.chiras@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Chiras <robert.chiras@nxp.com>
+Cc: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Aug 2019 10:21:38 +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
+On Wed, 21 Aug 2019 13:15:50 +0300, Robert Chiras wrote:
+> Add new optional property 'max-memory-bandwidth', to limit the maximum
+> bandwidth used by the MXSFB_DRM driver.
 > 
-> The Allwinner SoCs have an interrupt controller called NMI supported in
-> Linux, with a matching Device Tree binding.
-> 
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 > ---
-> 
-> Changes from v1:
->   - Remove the custom select and rely on the deprecated property instead
-> ---
->  .../allwinner,sun7i-a20-sc-nmi.yaml           | 70 +++++++++++++++++++
->  .../allwinner,sunxi-nmi.txt                   | 29 --------
->  2 files changed, 70 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+>  Documentation/devicetree/bindings/display/mxsfb.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
