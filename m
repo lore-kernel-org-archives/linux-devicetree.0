@@ -1,26 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v4 1/2] dt/bindings: display: Add optional property node define
- for Mali DP500
-Date: Tue, 27 Aug 2019 15:07:53 -0500
-Message-ID: <20190827200753.GA5081@bogus>
-References: <20190822021135.10288-1-wen.he_1@nxp.com>
+Subject: Re: [PATCH V4 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
+Date: Tue, 27 Aug 2019 15:08:55 -0500
+Message-ID: <20190827200855.GA5260@bogus>
+References: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190822021135.10288-1-wen.he_1@nxp.com>
+In-Reply-To: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-devel@linux.nxdi.nxp.com, Liviu Dudau <liviu.dudau@arm.com>, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, Wen He <wen.he_1@nxp.com>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: wim@linux-watchdog.org, linux@roeck-us.net, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Aug 2019 10:11:34 +0800, Wen He wrote:
-> Add optional property node 'arm,malidp-arqos-value' for the Mali DP500.
-> This property describe the ARQoS levels of DP500's QoS signaling.
+On Wed, Aug 21, 2019 at 10:37:40PM -0400, Anson Huang wrote:
+> Add the watchdog bindings for Freescale i.MX7ULP.
 > 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/display/arm,malidp.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> No changes.
+> ---
+>  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> new file mode 100644
+> index 0000000..d83fc5c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> @@ -0,0 +1,22 @@
+> +* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx7ulp-wdt"
+> +- reg : Should contain WDT registers location and length
+> +- interrupts : Should contain WDT interrupt
+> +- clocks: Should contain a phandle pointing to the gated peripheral clock.
+> +
+> +Optional properties:
+> +- timeout-sec : Contains the watchdog timeout in seconds
+> +
+> +Examples:
+> +
+> +wdog1: wdog@403d0000 {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+watchdog@...
+
+With that,
+
+Reviewed-by: Rob Herring <rohb@kernel.org>
+
+> +	compatible = "fsl,imx7ulp-wdt";
+> +	reg = <0x403d0000 0x10000>;
+> +	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
+> +	timeout-sec = <40>;
+> +};
+> -- 
+> 2.7.4
+> 
