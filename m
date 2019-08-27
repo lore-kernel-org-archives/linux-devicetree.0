@@ -1,115 +1,40 @@
-Return-Path: <SRS0=qJz7=W2=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v10 02/14] media: v4l2-fwnode: add v4l2_fwnode_connector
-Date: Fri, 30 Aug 2019 12:16:34 +0200
-Message-Id: <20190830101646.6530-3-m.felsch@pengutronix.de>
-In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
-References: <20190830101646.6530-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=dUwE=WX=nic.cz=marek.behun@kernel.org>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH mvebu-dt64 1/3] arm64: dts: marvell: armada-37xx: add SPI CS1 pinctrl
+Date: Tue, 27 Aug 2019 17:16:42 +0200
+Message-Id: <20190827151644.12532-2-marek.behun@nic.cz>
+In-Reply-To: <20190827151644.12532-1-marek.behun@nic.cz>
+References: <20190827151644.12532-1-marek.behun@nic.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+To: arm@kernel.org
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 List-ID: <devicetree@vger.kernel.org>
 
-Currently every driver needs to parse the connector endpoints by it self.
-This is the initial work to make this generic. A generic connector has
-common members and connector specific members. The common members are:
-  - type
-  - label (optional)
-  - links
-  - nr_of_links
+This adds pinctrl node for the GPIO to be used as SPI chip select 1.
 
-The specific members are stored within a union, since only one of them
-can be available at the time. Since this is the initial support the
-patch adds only the analog-connector specific ones.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
-[1] https://patchwork.kernel.org/cover/10794703/
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-v10:
-- drop unused V4L2_CONN_HDMI support
-
-v8:
-- rename CON -> CONN
-- supported_tvnorms_stds -> sdtv_stds and adapt description
-
-v7:
-- fix spelling issues
-- constify label
-- support variable label size
-- replace single remote_port/id members by links member of variable
-  size
-- squash v4l2-connector into v4l2-fwnode
-
-@Jacopo: I dropped your r b tag because I changed the port/id logic.
-
-v6:
-- fix some spelling and style issues
-- rm unnecessary comments
-- drop vga and dvi connector
-- fix misspelt connector
-
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
-
- include/media/v4l2-fwnode.h | 43 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index f6a7bcd13197..65da646b579e 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -123,6 +123,49 @@ struct v4l2_fwnode_link {
- 	unsigned int remote_port;
- };
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index f43c43168b00..10812a556829 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -215,6 +215,11 @@
+ 					function = "spi";
+ 				};
  
-+/**
-+ * enum v4l2_connector_type - connector type
-+ * @V4L2_CONN_UNKNOWN:   unknown connector type, no V4L2 connector configuration
-+ * @V4L2_CONN_COMPOSITE: analog composite connector
-+ * @V4L2_CONN_SVIDEO:    analog svideo connector
-+ */
-+enum v4l2_connector_type {
-+	V4L2_CONN_UNKNOWN,
-+	V4L2_CONN_COMPOSITE,
-+	V4L2_CONN_SVIDEO,
-+};
++				spi_cs1_pins: spi-cs1-pins {
++					groups = "spi_cs1";
++					function = "spi";
++				};
 +
-+/**
-+ * struct v4l2_fwnode_connector_analog - analog connector data structure
-+ * @sdtv_stds: sdtv standards this connector supports, set to V4L2_STD_ALL
-+ *             if no restrictions are specified.
-+ */
-+struct v4l2_fwnode_connector_analog {
-+	v4l2_std_id sdtv_stds;
-+};
-+
-+/**
-+ * struct v4l2_fwnode_connector - the connector data structure
-+ * @label: optional connector label
-+ * @type: connector type
-+ * @links: list of &struct v4l2_fwnode_link links the connector is connected to
-+ * @nr_of_links: total number of links
-+ * @connector: connector configuration
-+ * @connector.analog: analog connector configuration
-+ *                    &struct v4l2_fwnode_connector_analog
-+ */
-+struct v4l2_fwnode_connector {
-+	const char *label;
-+	enum v4l2_connector_type type;
-+	struct v4l2_fwnode_link *links;
-+	unsigned int nr_of_links;
-+
-+	union {
-+		struct v4l2_fwnode_connector_analog analog;
-+		/* future connectors */
-+	} connector;
-+};
-+
- /**
-  * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
-  * @fwnode: pointer to the endpoint's fwnode handle
+ 				i2c1_pins: i2c1-pins {
+ 					groups = "i2c1";
+ 					function = "i2c";
 -- 
-2.20.1
+2.21.0
