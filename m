@@ -1,42 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next v2 3/3] dt-bindings: net: ethernet: Update
- mt7622 docs and dts to reflect the new phylink API
-Date: Tue, 27 Aug 2019 16:51:03 -0500
-Message-ID: <20190827215103.GA9401@bogus>
-References: <20190821144336.9259-1-opensource@vdorst.com>
- <20190821144336.9259-4-opensource@vdorst.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [RESEND PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
+Date: Tue, 27 Aug 2019 14:59:11 -0700
+Message-ID: <7htva2uv68.fsf@baylibre.com>
+References: <20190823070248.25832-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190821144336.9259-4-opensource@vdorst.com>
-Sender: netdev-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>
-Cc: John Crispin <john@phrozen.org>, Sean Wang <sean.wang@mediatek.com>, Nelson Chang <nelson.chang@mediatek.com>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Stefan Roese <sr@denx.de>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190823070248.25832-1-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 04:43:36PM +0200, René van Dorst wrote:
-> This patch the removes the recently added mediatek,physpeed property.
-> Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
-> See mt7622-bananapi-bpi-r64.dts for a working example.
-> 
-> Signed-off-by: René van Dorst <opensource@vdorst.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> --
-> v1->v2:
-> * SGMII port only support BASE-X at 2.5Gbit.
-> ---
->  .../arm/mediatek/mediatek,sgmiisys.txt        |  2 --
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Bindings and dts files should be separate patches.
+> This is the first set of DT fixes following the first YAML bindings conversion
+> at [1], [2] and [3].
+>
+> After this set of fixes, the remaining errors are :
+> meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+> meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+> meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
+> meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+> meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+>
+> These are only cosmetic changes, and should not break drivers implementation
+> following the bindings.
 
+Queued for v5.4,
 
->  .../dts/mediatek/mt7622-bananapi-bpi-r64.dts  | 28 +++++++++++++------
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi      |  1 -
->  3 files changed, 19 insertions(+), 12 deletions(-)
+Thanks,
 
-In any case,
-
-Acked-by: Rob Herring <robh@kernel.org>
+Kevin
