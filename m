@@ -1,46 +1,196 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Date: Tue, 27 Aug 2019 01:51:20 +0000
-Message-ID: <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
- <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+From: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Tue, 27 Aug 2019 10:23:08 +0800
+Message-ID: <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
+References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
+ <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
+ <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com>
+ <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+In-Reply-To: <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Eduardo Valentin <edubezval@gmail.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: eswara.kota@linux.intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gT24gNy8zMC8yMDE5IDU6MzEgQU0sIEFuc29uLkh1YW5nQG54cC5jb20gd3JvdGU6DQo+
-ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4NCj4gPiBTb21l
-IHBsYXRmb3JtcyBsaWtlIGkuTVg4TVEgaGFzIGNsb2NrIGNvbnRyb2wgZm9yIHRoaXMgbW9kdWxl
-LCBuZWVkIHRvDQo+ID4gYWRkIGNsb2NrIG9wZXJhdGlvbnMgdG8gbWFrZSBzdXJlIHRoZSBkcml2
-ZXIgaXMgd29ya2luZyBwcm9wZXJseS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBHdWlkbyBHw7xudGhl
-ciA8YWd4QHNpZ3hjcHUub3JnPg0KPiANCj4gVGhpcyBzZXJpZXMgbG9va3MgZ29vZCwgZG8geW91
-IHRoaW5rIGl0IGNhbiBiZSBtZXJnZWQgaW4gdGltZSBmb3IgdjUuND8NCj4gVG9kYXkgd2FzIHY1
-LjMtcmM2Lg0KDQpJZiB0aGUgcXVlc3Rpb24gaXMgZm9yIG1lLCB0aGVuIEkgYW0gTk9UIHN1cmUs
-IHRoZSB0aGVybWFsIHBhdGNoZXMgYXJlIHBlbmRpbmcNCnRoZXJlIGZvciBhbG1vc3QgaGFsZiB5
-ZWFyIGFuZCBJIGRpZCBOT1QgcmVjZWl2ZSBhbnkgcmVzcG9uc2UsIGxvb2tzIGxpa2Ugbm8gb25l
-DQppcyBtYWludGFpbmluZyB0aGUgdGhlcm1hbCBzdWItc3lzdGVtPw0KDQo+IA0KPiBJbiBhbiBl
-YXJsaWVyIHNlcmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdzIHdhcyByZW1vdmVkIGZyb20g
-dGhlIFRNVQ0KPiBjbG9jayBzbyBpZiB0aGUgdGhlcm1hbCBkcml2ZXIgZG9lc24ndCBleHBsaWNp
-dGx5IGVuYWJsZSBpdCB0aGUgc3lzdGVtIHdpbGwgaGFuZw0KPiBvbiBwcm9iZS4gVGhpcyBpcyB3
-aGF0IGhhcHBlbnMgaW4gbGludXgtbmV4dCByaWdodCBub3chDQoNClRoZSB0aGVybWFsIGRyaXZl
-ciBzaG91bGQgYmUgYnVpbHQgd2l0aCBtb2R1bGUsIHNvIGRlZmF1bHQga2VybmVsIHNob3VsZCBj
-YW4gYm9vdA0KdXAsIGRvIHlvdSBtb2RpZnkgdGhlIHRoZXJtYWwgZHJpdmVyIGFzIGJ1aWx0LWlu
-Pw0KDQo+IA0KPiBVbmxlc3MgdGhpcyBwYXRjaGVzIGlzIG1lcmdlZCBzb29uIHdlJ2xsIGVuZCB1
-cCB3aXRoIGEgNS40LXJjMSB0aGF0IGRvZXNuJ3QNCj4gYm9vdCBvbiBpbXg4bXEuIEFuIGVhc3kg
-Zml4IHdvdWxkIGJlIHRvIGRyb3AvcmV2ZXJ0IGNvbW1pdA0KPiA5NTFjMWFlZjk2OTEgKCJjbGs6
-IGlteDhtcTogUmVtb3ZlIENMS19JU19DUklUSUNBTCBmbGFnIGZvcg0KPiBJTVg4TVFfQ0xLX1RN
-VV9ST09UIikgdW50aWwgdGhlIHRoZXJtYWwgcGF0Y2hlcyBhcmUgYWNjZXB0ZWQuDQoNCklmIHRo
-ZSB0aGVybWFsIGRyaXZlciBpcyBidWlsdCBhcyBtb2R1bGUsIEkgdGhpbmsgbm8gbmVlZCB0byBy
-ZXZlcnQgdGhlIGNvbW1pdCwgYnV0DQppZiBieSBkZWZhdWx0IHRoZXJtYWwgZHJpdmVyIGlzIGJ1
-aWx0LWluIG9yIG1vZCBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFrDQprZXJu
-ZWwgYm9vdCB1cC4NCg0KQW5zb24uDQoNCj4gDQo+IE1lcmdpbmcgcGF0Y2hlcyBvdXQtb2Ytb3Jk
-ZXIgd2hlbiB0aGV5IGhhdmUgaGFyZCAoYm9vdC1icmVha2luZykNCj4gZGVwZW5kZW5jaWVzIGFs
-c28gYnJlYWtzIGJpc2VjdC4NCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IExlb25hcmQNCg==
+Hi Martin,
+
+Please check the reply below.
+
+On 8/27/2019 5:49 AM, Martin Blumenstingl wrote:
+> Hi,
+>
+> On Mon, Aug 26, 2019 at 6:01 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
+>> Hi Martin,
+>>
+>> Thanks for your comment.
+> thank you for the quick reply
+>
+>> On 8/25/2019 5:11 AM, Martin Blumenstingl wrote:
+>>> Hi Dilip,
+>>>
+>>>> Add driver for the reset controller present on Intel
+>>>> Lightening Mountain (LGM) SoC for performing reset
+>>>> management of the devices present on the SoC. Driver also
+>>>> registers a reset handler to peform the entire device reset.
+>>> [...]
+>>>> +static const struct of_device_id intel_reset_match[] = {
+>>>> +    { .compatible = "intel,rcu-lgm" },
+>>>> +    {}
+>>>> +};
+>>> how is this IP block differnet from the one used in many Lantiq SoCs?
+>>> there is already an upstream driver for the RCU IP block on the Lantiq
+>>> SoCs: drivers/reset/reset-lantiq.c
+>>>
+>>> some background:
+>>> Lantiq was started as a spinoff from Infineon in 2009. Intel then
+>>> acquired Lantiq in 2015. source: [0]
+>>> Intel is re-using some of the IP blocks from the MIPS Lantiq SoCs
+>>> (Intel even has some own MIPS SoCs as part of the Lantiq acquisition,
+>>> typically used for PON/GPON/ADSL/VDSL capable network devices).
+>>> Thus I think it is likely that the new "Lightening Mountain" SoCs use
+>>> an updated version of the Lantiq RCU IP.
+>> I would not say there is a fundamental difference since reset is a
+>> really simple
+>> stuff from all reset drivers.  However, it did have some difference
+>> from existing reset-lantiq.c since SoC becomes more and more complex.
+> OK, let me go through your detailed list
+>
+>> 1. reset-lantiq.c use index instead of register offset + bit position.
+>> index reset is good for a small system (< 64). However, it will become very
+>> difficult to use if you have  > 100 reset. So we use register offset +
+>> bit position
+> reset-lantiq uses bit bit positions for specifying the reset line.
+> for example this is from OpenWrt's vr9.dtsi:
+>    reset0: reset-controller@10 {
+>      ...
+>      reg = <0x10 4>, <0x14 4>;
+>      #reset-cells = <2>;
+>    };
+>
+>    gphy0: gphy@20 {
+>      ...
+>      resets = <&reset0 31 30>, <&reset1 7 7>;
+>      reset-names = "gphy", "gphy2";
+>    };
+>
+> in my own words this means:
+> - all reset0 reset bits are at offset 0x10 (parent is RCU)
+> - all reset0 status bits are at offset 0x14 (parent is RCU)
+> - the first reset line uses reset bit 31 and status bit 30
+> - the second reset line uses reset bit 7 and status bit 7
+> - there can be multiple reset-controller instances, each taking the
+> reset and status offsets (OpenWrt's vr9.dtsi specifies the second RCU
+> reset controller "reset1" with reset offset 0x48 and status offset
+> 0x24)
+
+in reset-lantiq.c, we split each reset request /status pair into one 
+reset controller.
+
+Each reset controller handles up to 32 resets. It will create up to 9 
+even more
+
+reset controllers in the new SoCs. In reality, there is only one RCU 
+controller for all
+
+SoCs. These designs worked but did not follow what hardware implemented.
+
+After checking the existing code and referring to other implementation, 
+we decided to
+
+use register offset + bit position method. It can support all SoCs with 
+this methods
+
+without code change(device tree change only).
+
+>
+>> 2. reset-lantiq.c does not support device restart which is part of the
+>> reset in
+>> old lantiq SoC. It moved this part into arch/mips/lantiq directory.
+> it was moved to the .dts instead of the arch code. again from
+> OpenWrt's vr9.dtsi [0]:
+>    reboot {
+>      compatible = "syscon-reboot";
+>      regmap = <&rcu0>;
+>      offset = <0x10>;
+>      mask = <0xe0000000>;
+>    };
+>
+> this sets the reset0 reset bits 31, 30 and 29 at reboot
+ok. but not sure why we need to reset bit 31 and 29. global softwre 
+reset is bit 30.
+>
+>> 3. reset-lantiqc reset callback doesn't implement what hardware implemented
+>> function. In old SoCs, some bits in the same register can be hardware
+>> reset clear.
+>>
+>> It just call assert + assert. For these SoCs, we should only call
+>> assert, hardware will auto deassert.
+> I didn't know that. so to confirm I understand this correctly:
+> - some reset lines must be asserted and de-asserted manually (setting
+> and clearing the bit manually). the _assert and _deassert functions
+> should be used in this case
+
+Yes. We call software managed reset. callers call assert, deassert and delay
+
+duration according to their specific requirement.
+
+> - other reset lines only support reset pulses. the _reset function
+> should be used in this case
+> - the _reset function should only assert the reset line, then wait
+> until the hardware automatically de-asserts it (without any further
+> write)
+Yes, this is called hardware reset. We can't control reset duration.
+> is this the same for all, old and new SoCs?
+
+New SoCs have removed support for hardware reset after software's feedback.
+
+Old SoCs such as VRX200/ARX300 has both software/hardware resets
+
+>
+> only two mainline Lantiq drivers are using reset lines - both are
+> using the _assert and _deassert variants:
+> - drivers/net/dsa/lantiq_gswip.c
+> - drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+It means migration will be very easy:)
+>
+>> 4. Code not optimized and intel internal review not assessed.
+> insights from you (like the issue with the reset callback) are very
+> valuable - this shows that we should focus on having one driver.
+>
+>> Based on the above findings, I would suggest reset-lantiq.c to move to
+>> reset-intel-syscon.c
+> my concern with having two separate drivers is that it will be hard to
+> migrate from reset-lantiq to the "optimized" reset-intel-syscon
+> driver.
+> I don't have access to the datasheets for the any Lantiq/Intel SoC
+> (VRX200 and even older).
+> so debugging issues after switching from one driver to another is
+> tedious because I cannot tell which part of the driver is causing a
+> problem (it's either "all code from driver A" vs "all code from driver
+> B", meaning it's hard to narrow it down).
+> with separate commits/patches that are improving the reset-lantiq
+> driver I can do git bisect to find the cause of a problem on the older
+> SoCs (VRX200 for example)
+
+Our internal version supports XRX350/XRX500/PRX300(MIPS based) and
+
+latest Lighting Mountain(X86 based). Migration to reset-intel-syscon.c
+
+should be straight forward.
+
+>
+>> What is your opinion?
+> I explained why I would like to avoid having two separate drivers
+> (even just for a limited amount of time)
+>
+>
+> Martin
+>
+>
+> [0] https://git.openwrt.org/?p=openwrt/openwrt.git;a=blob;f=target/linux/lantiq/files/arch/mips/boot/dts/vr9.dtsi;h=e8b87dbcc7de2fb928a4e602f1a650030d2f7c35;hb=c3a78955f34a61d402044f357f54f21c75a19ff9#l103
