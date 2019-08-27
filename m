@@ -1,41 +1,67 @@
-From: Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: Re: [PATCH v5 2/4] iio: imu: st_lsm6sdx: move register definitions to
- sensor_settings struct
-Date: Tue, 27 Aug 2019 08:54:57 +0200
-Message-ID: <d3cb1cf5-f17f-38ef-66a2-23c1b7a7d08f@puri.sm>
-References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
- <20190821132520.28225-3-martin.kepplinger@puri.sm>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v2 10/11] arm64: edit zone_dma_bits to fine tune
+ dma-direct min mask
+Date: Tue, 27 Aug 2019 09:03:41 +0200
+Message-ID: <20190827090341.2bf6b336@ezekiel.suse.cz>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+        <20190820145821.27214-11-nsaenzjulienne@suse.de>
+        <20190826070633.GB11331@lst.de>
+        <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/vmjhQR+jY/bQH=VqrrKvOyt"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821132520.28225-3-martin.kepplinger@puri.sm>
-Content-Language: en-US
+In-Reply-To: <4d8d18af22d6dcd122bc9b4d9c2bd49e8443c746.camel@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, f.fainelli@gmail.com, will@kernel.org, eric@anholt.net, marc.zyngier@arm.com, catalin.marinas@arm.com, frowand.list@gmail.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, wahrenst@gmx.net, mbrugger@suse.com, linux-riscv@lists.infradead.org, m.szyprowski@samsung.com, Robin Murphy <robin.murphy@arm.com>, akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org, phill@raspberryi.org
 List-Id: devicetree@vger.kernel.org
 
-On 21.08.19 15:25, Martin Kepplinger wrote:
-> Move some register definitions to the per-device array of struct
-> st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-> devices to the driver.
-> 
-> Also, remove completely unused register definitions.
-> 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
->  2 files changed, 28 insertions(+), 9 deletions(-)
-> 
+--Sig_/vmjhQR+jY/bQH=VqrrKvOyt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I just notices the commit message header typo "st_lsm6sdx" should be
-"st_lsm6dsx" of course. If you can still rebase/force-push to testing,
-would you be able to fix that? If it's too far out there already, so be
-it :) sorry for the typo, and thanks for adding "-imu" yourself where
-applicable.
+On Mon, 26 Aug 2019 13:08:50 +0200
+Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
 
-thanks,
+> On Mon, 2019-08-26 at 09:06 +0200, Christoph Hellwig wrote:
+> > On Tue, Aug 20, 2019 at 04:58:18PM +0200, Nicolas Saenz Julienne wrote:=
+ =20
+> > > -	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> > > +	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+> > >  		arm64_dma_phys_limit =3D max_zone_dma_phys();
+> > > +		zone_dma_bits =3D ilog2((arm64_dma_phys_limit - 1) &
+> > > GENMASK_ULL(31, 0)) + 1; =20
+> > =20
+> Hi Christoph,
+> thanks for the rewiews.
+>=20
+> > This adds a way too long line. =20
+>=20
+> I know, I couldn't find a way to split the operation without making it ev=
+en
+> harder to read. I'll find a solution.
 
-                      martin
+If all else fails, move the code to an inline function and call it e.g.
+phys_limit_to_dma_bits().
+
+Just my two cents,
+Petr T
+
+--Sig_/vmjhQR+jY/bQH=VqrrKvOyt
+Content-Type: application/pgp-signature
+Content-Description: Digitální podpis OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAl1k1c0ACgkQqlA7ya4P
+R6ffZggAphWovRbYbJElIMDB+201+43NCpSH8dbZwe3UrJ+1DHzEn4OEldBRpcAv
+CuA2/u6GyA8wgnGpCAKj9HNHWSx9VeFoCmf6kPVHFtoC0hnJyJtCCWS1O9B1nqXR
+3h1Dw+6F/4wh14vqUucVvfseO/T1VV1QtfsczxBy2xEvcTZGhBjo7LEKeABa2yRm
+CoPLGyNtTtNkAhXeSeVJUcuquOjdqrcU+RlCH5EIZZagAvXuNLryEsjjUfD4Lx35
+RBeRcO+KmGJvAYuelWr/lqtO5ZUnD4OXoFE6fV7AvvJCD6RIHngLS4EXDIkGAaqd
+kWlLtSieXZDEl0mMBdQBfSVcByyzKA==
+=RDo8
+-----END PGP SIGNATURE-----
+
+--Sig_/vmjhQR+jY/bQH=VqrrKvOyt--
