@@ -1,189 +1,89 @@
-Return-Path: <SRS0=mEvB=WS=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v9 01/13] dt-bindings: connector: analog: add sdtv standards property
-Date: Thu, 22 Aug 2019 10:05:44 +0200
-Message-Id: <20190822080556.17109-2-m.felsch@pengutronix.de>
-In-Reply-To: <20190822080556.17109-1-m.felsch@pengutronix.de>
-References: <20190822080556.17109-1-m.felsch@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+Return-Path: <SRS0=Pkj0=WX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from anchovy3.45ru.net.au ([203.30.46.155]:43828 "EHLO
+        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729010AbfH0DxW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 26 Aug 2019 23:53:22 -0400
+From: Phil Reid <preid@electromag.com.au>
+Subject: [PATCH 2/2] iio: core: Add optional symbolic label to device attributes
+Date: Tue, 27 Aug 2019 11:35:24 +0800
+Message-Id: <1566876924-63608-3-git-send-email-preid@electromag.com.au>
+In-Reply-To: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
+References: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
+Sender: devicetree-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, michal.simek@xilinx.com
 List-ID: <devicetree@vger.kernel.org>
 
-Some connectors no matter if in- or output supports only a limited
-range of sdtv standards. It doesn't matter if the hardware behind that
-connector supports more than the listed formats since the users are
-restriced by a label e.g. to plug only a camera into this connector
-which uses the PAL format.
+If a label is defined in the device tree for this device add that
+to the device specific attributes. This is useful for userspace to
+be able to identify an individual device when multiple identical
+chips are present in the system.
 
-This patch adds the capability to describe such limitation within the
-firmware. There are no format restrictions if the property isn't
-present, so it's completely backward compatible.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Phil Reid <preid@electromag.com.au>
 ---
-[1] https://patchwork.kernel.org/cover/10794703/
+ drivers/iio/industrialio-core.c | 17 +++++++++++++++++
+ include/linux/iio/iio.h         |  1 +
+ 2 files changed, 18 insertions(+)
 
-v8:
-Hi Rob,
-
-I dropped your r b tag becuase of the changes I made in this version.
-Please can you have look on it again? Luckily this would be the last
-time ;-)
-
-- move definition to include/dt-bindings/display
-- rename tvnorms.h to sdtv-standards.h
-- TVORMS_* -> SDTV_STD_*
-- add sync comments
-- adapt commit message
-- fix bindings documentation
-
-v7:
-I kept Robs r b tag because I only changed the example and extended
-TVNORM_* macros.
-
-- fix some style issues
-- add TVNORM_NTSC, TVNORM_525_60 and TVNORM_625_50
-
-v6:
-- tvnorms.h: use tabs instead of spaces
-- tvnorms.h: add TVNORM_PAL and TVNORM_SECAM
-- tvnorms.h: drop rarely used TVNORM_ATSC_* norms
-
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
----
- .../display/connector/analog-tv-connector.txt |  6 ++
- include/dt-bindings/display/sdtv-standards.h  | 76 +++++++++++++++++++
- include/uapi/linux/videodev2.h                |  4 +
- 3 files changed, 86 insertions(+)
- create mode 100644 include/dt-bindings/display/sdtv-standards.h
-
-diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-index 0c0970c210ab..883bcb2604c7 100644
---- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-+++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-@@ -6,16 +6,22 @@ Required properties:
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 8303639963d7..2d7fb7629095 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1300,6 +1300,16 @@ static ssize_t iio_show_dev_name(struct device *dev,
  
- Optional properties:
- - label: a symbolic name for the connector
-+- sdtv-standards: limit the supported TV standards on a connector to the given
-+                  ones. If not specified all TV standards are allowed.
-+                  Possible TV standards are defined in
-+                  include/dt-bindings/display/sdtv-standards.h.
+ static DEVICE_ATTR(name, S_IRUGO, iio_show_dev_name, NULL);
  
- Required nodes:
- - Video port for TV input
++static ssize_t iio_show_dev_label(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	return snprintf(buf, PAGE_SIZE, "%s\n", indio_dev->label);
++}
++
++static DEVICE_ATTR(label, S_IRUGO, iio_show_dev_label, NULL);
++
+ static ssize_t iio_show_timestamp_clock(struct device *dev,
+ 					struct device_attribute *attr,
+ 					char *buf)
+@@ -1416,6 +1426,8 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
  
- Example
- -------
-+#include <dt-bindings/display/sdtv-standards.h>
+ 	if (indio_dev->name)
+ 		attrcount++;
++	if (indio_dev->label)
++		attrcount++;
+ 	if (clk)
+ 		attrcount++;
  
- tv: connector {
- 	compatible = "composite-video-connector";
- 	label = "tv";
-+	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
+@@ -1438,6 +1450,8 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
+ 		indio_dev->chan_attr_group.attrs[attrn++] = &p->dev_attr.attr;
+ 	if (indio_dev->name)
+ 		indio_dev->chan_attr_group.attrs[attrn++] = &dev_attr_name.attr;
++	if (indio_dev->label)
++		indio_dev->chan_attr_group.attrs[attrn++] = &dev_attr_label.attr;
+ 	if (clk)
+ 		indio_dev->chan_attr_group.attrs[attrn++] = clk;
  
- 	port {
- 		tv_connector_in: endpoint {
-diff --git a/include/dt-bindings/display/sdtv-standards.h b/include/dt-bindings/display/sdtv-standards.h
-new file mode 100644
-index 000000000000..bb6966505a6c
---- /dev/null
-+++ b/include/dt-bindings/display/sdtv-standards.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0-only or X11 */
-+/*
-+ * Copyright 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+ */
-+
-+#ifndef _DT_BINDINGS_DISPLAY_SDTV_STDS_H
-+#define _DT_BINDINGS_DISPLAY_SDTV_STDS_H
-+
-+/*
-+ * Attention: Keep the TV_STD_* bit definitions in sync with
-+ * include/uapi/linux/videodev2.h V4L2_STD_* bit definitions.
-+ */
-+/* One bit for each standard */
-+#define SDTV_STD_PAL_B		0x00000001
-+#define SDTV_STD_PAL_B1		0x00000002
-+#define SDTV_STD_PAL_G		0x00000004
-+#define SDTV_STD_PAL_H		0x00000008
-+#define SDTV_STD_PAL_I		0x00000010
-+#define SDTV_STD_PAL_D		0x00000020
-+#define SDTV_STD_PAL_D1		0x00000040
-+#define SDTV_STD_PAL_K		0x00000080
-+
-+#define SDTV_STD_PAL		(SDTV_STD_PAL_B		| \
-+				 SDTV_STD_PAL_B1	| \
-+				 SDTV_STD_PAL_G		| \
-+				 SDTV_STD_PAL_H		| \
-+				 SDTV_STD_PAL_I		| \
-+				 SDTV_STD_PAL_D		| \
-+				 SDTV_STD_PAL_D1	| \
-+				 SDTV_STD_PAL_K)
-+
-+#define SDTV_STD_PAL_M		0x00000100
-+#define SDTV_STD_PAL_N		0x00000200
-+#define SDTV_STD_PAL_Nc		0x00000400
-+#define SDTV_STD_PAL_60		0x00000800
-+
-+#define SDTV_STD_NTSC_M		0x00001000	/* BTSC */
-+#define SDTV_STD_NTSC_M_JP	0x00002000	/* EIA-J */
-+#define SDTV_STD_NTSC_443	0x00004000
-+#define SDTV_STD_NTSC_M_KR	0x00008000	/* FM A2 */
-+
-+#define SDTV_STD_NTSC		(SDTV_STD_NTSC_M	| \
-+				 SDTV_STD_NTSC_M_JP	| \
-+				 SDTV_STD_NTSC_M_KR)
-+
-+#define SDTV_STD_SECAM_B	0x00010000
-+#define SDTV_STD_SECAM_D	0x00020000
-+#define SDTV_STD_SECAM_G	0x00040000
-+#define SDTV_STD_SECAM_H	0x00080000
-+#define SDTV_STD_SECAM_K	0x00100000
-+#define SDTV_STD_SECAM_K1	0x00200000
-+#define SDTV_STD_SECAM_L	0x00400000
-+#define SDTV_STD_SECAM_LC	0x00800000
-+
-+#define SDTV_STD_SECAM		(SDTV_STD_SECAM_B	| \
-+				 SDTV_STD_SECAM_D	| \
-+				 SDTV_STD_SECAM_G	| \
-+				 SDTV_STD_SECAM_H	| \
-+				 SDTV_STD_SECAM_K	| \
-+				 SDTV_STD_SECAM_K1	| \
-+				 SDTV_STD_SECAM_L	| \
-+				 SDTV_STD_SECAM_LC)
-+
-+/* Standards for Countries with 60Hz Line frequency */
-+#define SDTV_STD_525_60		(SDTV_STD_PAL_M		| \
-+				 SDTV_STD_PAL_60	| \
-+				 SDTV_STD_NTSC		| \
-+				 SDTV_STD_NTSC_443)
-+
-+/* Standards for Countries with 50Hz Line frequency */
-+#define SDTV_STD_625_50		(SDTV_STD_PAL		| \
-+				 SDTV_STD_PAL_N		| \
-+				 SDTV_STD_PAL_Nc	| \
-+				 SDTV_STD_SECAM)
-+
-+#endif /* _DT_BINDINGS_DISPLAY_SDTV_STDS_H */
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 530638dffd93..c358cc34fc34 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -1208,6 +1208,10 @@ struct v4l2_selection {
+@@ -1709,6 +1723,9 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+ 	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+ 		indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
  
- typedef __u64 v4l2_std_id;
- 
-+/*
-+ * Attention: Keep the V4L2_STD_* bit definitions in sync with
-+ * include/dt-bindings/display/sdtv-standards.h TV_STD_* bit definitions.
-+ */
- /* one bit for each */
- #define V4L2_STD_PAL_B          ((v4l2_std_id)0x00000001)
- #define V4L2_STD_PAL_B1         ((v4l2_std_id)0x00000002)
++	indio_dev->label = of_get_property(indio_dev->dev.of_node, "label",
++					   NULL);
++
+ 	ret = iio_check_unique_scan_index(indio_dev);
+ 	if (ret < 0)
+ 		return ret;
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index a74cb177dc6f..3f89db50d3f6 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -556,6 +556,7 @@ struct iio_dev {
+ 	struct list_head		channel_attr_list;
+ 	struct attribute_group		chan_attr_group;
+ 	const char			*name;
++	const char			*label;
+ 	const struct iio_info		*info;
+ 	clockid_t			clock_id;
+ 	struct mutex			info_exist_lock;
 -- 
-2.20.1
+1.8.3.1
