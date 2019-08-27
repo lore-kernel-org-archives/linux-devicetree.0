@@ -1,174 +1,100 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v4 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Tue, 27 Aug 2019 09:51:55 +0000
-Message-ID: <1566942646-18015-2-git-send-email-peng.fan@nxp.com>
-References: <1566942646-18015-1-git-send-email-peng.fan@nxp.com>
+From: Sven Eckelmann <sven-KaDOiPu9UxWEi8DpZVb4nw@public.gmane.org>
+Subject: Re: [PATCH 10/49] ath11k: add debug.c
+Date: Tue, 27 Aug 2019 11:53:09 +0200
+Message-ID: <18655975.RomJW5s5WE@bentobox>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org> <4441194.D8eDD6Tzdi@bentobox> <6622b83f754404ec05b9442027757c5e@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566942646-18015-1-git-send-email-peng.fan@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Content-Type: multipart/signed; boundary="nextPart5313933.ePln27GtoC"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6622b83f754404ec05b9442027757c5e-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anilkumar Kolli <akolli-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+--nextPart5313933.ePln27GtoC
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-actions in software layers running in the EL2 or EL3 exception levels.
-The term "ARM" here relates to the SMC instruction as part of the ARM
-instruction set, not as a standard endorsed by ARM Ltd.
+On Tuesday, 27 August 2019 11:04:23 CEST Anilkumar Kolli wrote:
+[...]
+> > Yes, but it shouldn't kill the complete system.
+> > 
+> This will not kill the whole system, This will crash target and we have 
+> mechanism to recover the system.
+> 
+> Hope u have generated the crash with below patch,
+> https://source.codeaurora.org/quic/qsdk/oss/system/feeds/wlan-open/tree/mac80211/patches/019-ath11k-disable-q6-recovery-to-crash-kernel.patch?h=win_ap.1.0
+> 
+> Please remove this patch to see the target recover after the crash.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- .../devicetree/bindings/mailbox/arm-smc.yaml       | 126 +++++++++++++++++=
-++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+John also pointed me to this patch yesterday and I have now removed it.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Docum=
-entation/devicetree/bindings/mailbox/arm-smc.yaml
-new file mode 100644
-index 000000000000..ae677e0c0910
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM SMC Mailbox Interface
-+
-+maintainers:
-+  - Peng Fan <peng.fan@nxp.com>
-+
-+description: |
-+  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
-+  call) instruction to trigger a mailbox-connected activity in firmware,
-+  executing on the very same core as the caller. By nature this operation
-+  is synchronous and this mailbox provides no way for asynchronous message=
-s
-+  to be delivered the other way round, from firmware to the OS, but
-+  asynchronous notification could also be supported. However the value of
-+  r0/w0/x0 the firmware returns after the smc call is delivered as a recei=
-ved
-+  message to the mailbox framework, so a synchronous communication can be
-+  established, for a asynchronous notification, no value will be returned.
-+  The exact meaning of both the action the mailbox triggers as well as the
-+  return value is defined by their users and is not subject to this bindin=
-g.
-+
-+  One use case of this mailbox is the SCMI interface, which uses shared me=
-mory
-+  to transfer commands and parameters, and a mailbox to trigger a function
-+  call. This allows SoCs without a separate management processor (or when
-+  such a processor is not available or used) to use this standardized
-+  interface anyway.
-+
-+  This binding describes no hardware, but establishes a firmware interface=
-.
-+  Upon receiving an SMC using one of the described SMC function identifier=
-s,
-+  the firmware is expected to trigger some mailbox connected functionality=
-.
-+  The communication follows the ARM SMC calling convention.
-+  Firmware expects an SMC function identifier in r0 or w0. The supported
-+  identifiers are passed from consumers, or listed in the the arm,func-ids
-+  properties as described below. The firmware can return one value in
-+  the first SMC result register, it is expected to be an error value,
-+  which shall be propagated to the mailbox client.
-+
-+  Any core which supports the SMC or HVC instruction can be used, as long =
-as
-+  a firmware component running in EL3 or EL2 is handling these calls.
-+
-+properties:
-+  compatible:
-+    const: arm,smc-mbox
-+
-+  "#mbox-cells":
-+    const: 1
-+
-+  arm,num-chans:
-+    description: The number of channels supported.
-+    items:
-+     minimum: 1
-+     maximum: 4096 # Should be enough?
-+
-+  method:
-+    items:
-+      - enum:
-+          - smc
-+          - hvc
-+
-+  transports:
-+    items:
-+      - enum:
-+          - mem
-+          - reg
-+
-+  arm,func-ids:
-+    description: |
-+      An array of 32-bit values specifying the function IDs used by each
-+      mailbox channel. Those function IDs follow the ARM SMC calling
-+      convention standard [1].
-+
-+      There is one identifier per channel and the number of supported
-+      channels is determined by the length of this array.
-+    minItems: 0
-+    maxItems: 4096   # Should be enough?
-+
-+required:
-+  - compatible
-+  - "#mbox-cells"
-+  - arm,num-chans
-+  - transports
-+  - method
-+
-+examples:
-+  - |
-+    sram@910000 {
-+      compatible =3D "mmio-sram";
-+      reg =3D <0x0 0x93f000 0x0 0x1000>;
-+      #address-cells =3D <1>;
-+      #size-cells =3D <1>;
-+      ranges =3D <0 0x0 0x93f000 0x1000>;
-+
-+        cpu_scp_lpri: scp-shmem@0 {
-+          compatible =3D "arm,scmi-shmem";
-+          reg =3D <0x0 0x200>;
-+        };
-+
-+        cpu_scp_hpri: scp-shmem@200 {
-+          compatible =3D "arm,scmi-shmem";
-+          reg =3D <0x200 0x200>;
-+        };
-+    };
-+
-+    firmware {
-+      smc_mbox: mailbox {
-+        #mbox-cells =3D <1>;
-+        compatible =3D "arm,smc-mbox";
-+        method =3D "smc";
-+        arm,num-chans =3D <0x2>;
-+        transports =3D "mem";
-+        /* Optional */
-+        arm,func-ids =3D <0xc20000fe>, <0xc20000ff>;
-+      };
-+
-+      scmi {
-+        compatible =3D "arm,scmi";
-+        mboxes =3D <&mailbox 0 &mailbox 1>;
-+        mbox-names =3D "tx", "rx";
-+        shmem =3D <&cpu_scp_lpri &cpu_scp_hpri>;
-+      };
-+    };
-+
-+...
---=20
-2.16.4
+But the wifi hardware doesn't recover after issuing an assert. All(?) firmware 
+request will just timeout:
+
+    [ 1093.114530] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1093.114555] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1093.118903] ath11k c000000.wifi1: Failed to set dtim period for VDEV 0: -11
+    [ 1096.124532] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1096.124554] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1096.128902] ath11k c000000.wifi1: Failed to set CTS prot for VDEV: 0
+    [ 1099.134527] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1099.134547] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1099.138895] ath11k c000000.wifi1: Failed to set preamble for VDEV: 0
+    [ 1102.144526] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1102.144546] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1102.148894] ath11k c000000.wifi1: failed to set mgmt tx rate -11
+    [ 1105.154526] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1105.154547] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1105.158895] ath11k c000000.wifi1: failed to set beacon tx rate -11
+    [ 1114.164529] ath11k c000000.wifi1: wmi command 16387 timeout
+    [ 1114.164553] ath11k c000000.wifi1: failed to send WMI_PDEV_SET_PARAM cmd
+    [ 1114.168899] ath11k c000000.wifi1: Failed to set beacon mode for VDEV: 0
+    [ 1117.174527] ath11k c000000.wifi1: wmi command 28675 timeout
+    [ 1117.174550] ath11k c000000.wifi1: failed to send WMI_BCN_TMPL_CMDID
+    [ 1117.178899] ath11k c000000.wifi1: failed to submit beacon template command: -11
+    [ 1117.185231] ath11k c000000.wifi1: failed to update bcn template: -11
+    [ 1120.184524] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1120.184545] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1120.188893] ath11k c000000.wifi1: Failed to set dtim period for VDEV 0: -11
+    [ 1123.194527] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1123.194548] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1123.198895] ath11k c000000.wifi1: Failed to set CTS prot for VDEV: 0
+    [ 1126.204526] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1126.204547] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1126.208894] ath11k c000000.wifi1: Failed to set preamble for VDEV: 0
+    [ 1129.214527] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1129.214548] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1129.218897] ath11k c000000.wifi1: failed to set mgmt tx rate -11
+    [ 1132.224525] ath11k c000000.wifi1: wmi command 20488 timeout
+    [ 1132.224546] ath11k c000000.wifi1: failed to send WMI_VDEV_SET_PARAM_CMDID
+    [ 1132.228894] ath11k c000000.wifi1: failed to set beacon tx rate -11
+
+ath11k must be unloaded + loaded again to fix this problem.
+
+Kind regards,
+	Sven
+--nextPart5313933.ePln27GtoC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAl1k/YUACgkQXYcKB8Em
+e0beEg/9EoDNNOQpVYO5gzr4xJXJN0DG/oKE6/43GxIJlVXRngszuFFNVQ/pB2iR
+1/TP85ZBy6uHIhuRbioU86zvWJyA7FUXaDYHSgRKmpH/4XXOSZebl/fFNGngdz3Z
+/VtF1MTUqAoAci8dUPISJ8IW0RRTqoswS2zHxsRr57WH5fjESqVkbubIEaHe1FMz
+MwPplu5G81X3H0p9E+IgtE8Wt2+cs+tKZqg3uLSX5tc7MkB4wb/Z8hGI7gtadtDf
+tXnKIVncWIYFKDcaHIcv5HWXisp0zR8YXlPloPJ9HUHw8oVieqO4N8PZMwDgBWdd
+Kt3N8bJivn77c2Zanyw63zW/RA6knTi6ifCghGKR/V+llrEMeM04/ILuZQvyjGag
+2mefYNsv5STHVcOHtswWt/Mvv7hKF8tJZ6fkgHX4AxyGTAlc7JyXbnbnKSX94Jaz
+9pZwLN2v4YiOgdC6s+cKVUy4l6WPXyErED65NFGbBb9v4eTJJz4jfZ5otpjt+BJs
+bPzyrLaiNR4FRjSoDOB/e34Eny/2xx/a9kh6Jkxx86HmZ2UP47cUuhcPXWDyObVD
+Yyc/VxV/gzvzcw6lJmY/PYgNrJvm0bSN5OYaMF192rFCGJLMqbQpGJJ83fe2moU1
+YjnuvEwjumusLqlgcnoJFIHzOfWL5hXHM9q4AKwaLUe/A5HQ4nU=
+=WXO1
+-----END PGP SIGNATURE-----
+
+--nextPart5313933.ePln27GtoC--
