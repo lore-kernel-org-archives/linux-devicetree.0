@@ -1,119 +1,50 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 2/2] clk: mediatek: add pericfg clocks for MT8183
-Date: Wed, 28 Aug 2019 15:47:44 +0800
-Message-ID: <1566978464.7317.19.camel@mhfsdcap03>
-References: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
-         <1566975333.24969.2.camel@mtksdaap41>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v4 4/5] dt-bindings: display: armada: Add more compatible strings
+Date: Wed, 28 Aug 2019 09:59:37 +0200
+Message-ID: <20190828075938.318028-5-lkundrak@v3.sk>
+References: <20190828075938.318028-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566975333.24969.2.camel@mtksdaap41>
+In-Reply-To: <20190828075938.318028-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Weiyi Lu <weiyi.lu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Erin Lo <erin.lo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Weiyi,
+There's a generic compatible string and the driver will work on a MMP2 as
+well, using the same binding.
 
-On Wed, 2019-08-28 at 14:55 +0800, Weiyi Lu wrote:
-> On Wed, 2019-08-28 at 13:55 +0800, Chunfeng Yun wrote:
-> > Add pericfg clocks for MT8183, it's used when support USB
-> > remote wakeup
-> > 
-> > Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  drivers/clk/mediatek/clk-mt8183.c      | 35 ++++++++++++++++++++++++++
-> >  include/dt-bindings/clock/mt8183-clk.h |  4 +++
-> >  2 files changed, 39 insertions(+)
-> > 
-> > diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-> > index 1aa5f4059251..b19221bad0c9 100644
-> > --- a/drivers/clk/mediatek/clk-mt8183.c
-> > +++ b/drivers/clk/mediatek/clk-mt8183.c
-> > @@ -999,6 +999,25 @@ static const struct mtk_gate infra_clks[] = {
-> >  		"msdc50_0_sel", 24),
-> >  };
-> >  
-> > +static const struct mtk_gate_regs peri_cg_regs = {
-> > +	.set_ofs = 0x20c,
-> > +	.clr_ofs = 0x20c,
-> > +	.sta_ofs = 0x20c,
-> > +};
-> > +
-> > +#define GATE_PERI(_id, _name, _parent, _shift) {	\
-> > +	.id = _id,				\
-> > +	.name = _name,				\
-> > +	.parent_name = _parent,			\
-> > +	.regs = &peri_cg_regs,			\
-> > +	.shift = _shift,			\
-> > +	.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
-> > +}
-> 
-> Hi Chunfeng,
-> 
-> I suggest
-> 
-> #define GATE_PERI(_id, _name, _parent, _shift)		\
-> 	GATE_MTK(_id, _name, _parent, &peri_cg_regs, _shift,	\
-> 		&mtk_clk_gate_ops_no_setclr_inv)
-> 
-Good point, thanks
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> > +
-> > +static const struct mtk_gate peri_clks[] = {
-> > +	GATE_PERI(CLK_PERI_AXI, "periaxi", "axi_sel", 31),
-> > +};
-> > +
-> >  static const struct mtk_gate_regs apmixed_cg_regs = {
-> >  	.set_ofs = 0x20,
-> >  	.clr_ofs = 0x20,
-> > @@ -1194,6 +1213,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
-> >  	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> >  }
-> >  
-> > +static int clk_mt8183_peri_probe(struct platform_device *pdev)
-> > +{
-> > +	struct clk_onecell_data *clk_data;
-> > +	struct device_node *node = pdev->dev.of_node;
-> > +
-> > +	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
-> > +
-> > +	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-> > +			       clk_data);
-> > +
-> > +	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-> > +}
-> > +
-> >  static int clk_mt8183_mcu_probe(struct platform_device *pdev)
-> >  {
-> >  	struct clk_onecell_data *clk_data;
-> > @@ -1223,6 +1255,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
-> >  	}, {
-> >  		.compatible = "mediatek,mt8183-infracfg",
-> >  		.data = clk_mt8183_infra_probe,
-> > +	}, {
-> > +		.compatible = "mediatek,mt8183-pericfg",
-> > +		.data = clk_mt8183_peri_probe,
-> >  	}, {
-> >  		.compatible = "mediatek,mt8183-mcucfg",
-> >  		.data = clk_mt8183_mcu_probe,
-> > diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
-> > index 0046506eb24c..a7b470b0ec8a 100644
-> > --- a/include/dt-bindings/clock/mt8183-clk.h
-> > +++ b/include/dt-bindings/clock/mt8183-clk.h
-> > @@ -284,6 +284,10 @@
-> >  #define CLK_INFRA_FBIST2FPC		100
-> >  #define CLK_INFRA_NR_CLK		101
-> >  
-> > +/* PERICFG */
-> > +#define CLK_PERI_AXI			0
-> > +#define CLK_PERI_NR_CLK			1
-> > +
-> >  /* MFGCFG */
-> >  #define CLK_MFG_BG3D			0
-> >  #define CLK_MFG_NR_CLK			1
-> 
-> 
+---
+Changes since v3:
+- Collected Rob's Reviewed-by tag
+
+Changes since v2:
+- Order marvell,armada-lcdc after the model-specific strings.
+
+Changes since v1:
+- Added marvell,armada-lcdc compatible string.
+
+ .../devicetree/bindings/display/marvell,armada-lcdc.txt        | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/display/marvell,armada-lcd=
+c.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
+index 2606a8efc9568..0ea4cbe5a32ee 100644
+--- a/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
++++ b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
+@@ -3,7 +3,8 @@ Marvell Armada LCD controller
+=20
+ Required properties:
+=20
+- - compatible: value should be "marvell,dove-lcd".
++ - compatible: value should be "marvell,dove-lcd" or "marvell,mmp2-lcd",
++   depending on the exact SoC model, along with "marvell,armada-lcdc"
+  - reg: base address and size of the LCD controller
+  - interrupts: single interrupt number for the LCD controller
+=20
+--=20
+2.21.0
