@@ -1,35 +1,102 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V5 3/4] ARM: imx_v6_v7_defconfig: Enable CONFIG_IMX7ULP_WDT by default
-Date: Wed, 28 Aug 2019 09:35:02 -0400
-Message-ID: <1566999303-18795-3-git-send-email-Anson.Huang@nxp.com>
-References: <1566999303-18795-1-git-send-email-Anson.Huang@nxp.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Wed, 28 Aug 2019 09:41:25 +0800
+Message-ID: <9b3a14c0-79ec-88af-c5d8-584e90c19a42@linux.intel.com>
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566999303-18795-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, u.kleine-koenig@pengutronix.de, schnitzeltony@gmail.com, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Select CONFIG_IMX7ULP_WDT by default to support i.MX7ULP watchdog.
+Hi Rob,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no changes.
----
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 27/8/2019 8:39 PM, Rob Herring wrote:
+> On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add a YAML schema to use the host controller driver with the
+>> SDXC PHY on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+>>   1 file changed, 50 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>> new file mode 100644
+>> index 000000000000..be05020880bf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>> @@ -0,0 +1,50 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +description: Binding for SDXC PHY
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-sdxc-phy
+>> +
+>> +  intel,syscon:
+>> +    description: phandle to the sdxc through syscon
+>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    maxItems: 1
+>> +
+>> +  "#phy-cells":
+>> +    const: 0
+>> +
+>> +required:
+>> +  - "#phy-cells"
+>> +  - compatible
+>> +  - intel,syscon
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    sdxc_phy: sdxc_phy {
+>> +        compatible = "intel,lgm-sdxc-phy";
+>> +        intel,syscon = <&sysconf>;
+> Rather than a phandle, can this be a child node of sysconf? You need a
+> binding for sysconf first anyways.
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 9bfffbe..be2a694 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -236,6 +236,7 @@ CONFIG_DA9062_WATCHDOG=y
- CONFIG_DA9063_WATCHDOG=m
- CONFIG_RN5T618_WATCHDOG=y
- CONFIG_IMX2_WDT=y
-+CONFIG_IMX7ULP_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
- CONFIG_MFD_DA9063=y
--- 
-2.7.4
+Thanks a lot! for the review comments, fix it in next submit.
+
+Best Regards
+Vadivel
+>> +        clocks = <&sdxc>;
+>> +        clock-names = "sdxcclk";
+>> +        #phy-cells = <0>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.11.0
+>>
