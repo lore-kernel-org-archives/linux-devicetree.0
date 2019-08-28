@@ -1,151 +1,84 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH V3 03/10] soc: mediatek: add support for the performance state
-Date: Wed, 28 Aug 2019 20:28:41 +0800
-Message-ID: <1566995328-15158-4-git-send-email-henryc.chen@mediatek.com>
+From: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH V3 08/10] dt-bindings: interconnect: add MT8183 interconnect
+ dt-bindings
+Date: Wed, 28 Aug 2019 20:28:46 +0800
+Message-ID: <1566995328-15158-9-git-send-email-henryc.chen@mediatek.com>
 References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>
-Cc: Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1566995328-15158-1-git-send-email-henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ryan Case <ryandcase-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Support power domain performance state, add header file for scp event.
+Add interconnect provider dt-bindings for MT8183.
 
-Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+Signed-off-by: Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-scpsys.c | 58 +++++++++++++++++++++++++++++++++++++++
- drivers/soc/mediatek/mtk-scpsys.h | 22 +++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
+ .../devicetree/bindings/soc/mediatek/dvfsrc.txt        |  9 +++++++++
+ include/dt-bindings/interconnect/mtk,mt8183-emi.h      | 18 ++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 include/dt-bindings/interconnect/mtk,mt8183-emi.h
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index e072810..50bc254 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -10,7 +10,9 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_opp.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
- #include <linux/soc/mediatek/infracfg.h>
- #include <linux/soc/mediatek/scpsys-ext.h>
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+index 7f43499..da98ec9 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+@@ -12,6 +12,11 @@ Required Properties:
+ - clock-names: Must include the following entries:
+ 	"dvfsrc": DVFSRC module clock
+ - clocks: Must contain an entry for each entry in clock-names.
++- #interconnect-cells : should contain 1
++- interconnect : interconnect providers support dram bandwidth requirements.
++	The provider is able to communicate with the DVFSRC and send the dram
++	bandwidth to it. shall contain only one of the following:
++	"mediatek,mt8183-emi"
  
-@@ -21,6 +23,7 @@
- #include <dt-bindings/power/mt7623a-power.h>
- #include <dt-bindings/power/mt8173-power.h>
- #include <dt-bindings/power/mt8183-power.h>
-+#include "mtk-scpsys.h"
+ Example:
  
- #define MTK_POLL_DELAY_US   10
- #define MTK_POLL_TIMEOUT    USEC_PER_SEC
-@@ -187,6 +190,18 @@ struct scp_soc_data {
- 	bool bus_prot_reg_update;
- };
- 
-+static BLOCKING_NOTIFIER_HEAD(scpsys_notifier_list);
-+
-+int register_scpsys_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&scpsys_notifier_list, nb);
-+}
-+
-+int unregister_scpsys_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&scpsys_notifier_list, nb);
-+}
-+
- static int scpsys_domain_is_on(struct scp_domain *scpd)
- {
- 	struct scp *scp = scpd->scp;
-@@ -505,6 +520,41 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
- 		clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
- }
- 
-+static int mtk_pd_set_performance(struct generic_pm_domain *genpd,
-+				  unsigned int state)
-+{
-+	int i;
-+	struct scp_domain *scpd =
-+		container_of(genpd, struct scp_domain, genpd);
-+	struct scp_event_data scpe;
-+	struct scp *scp = scpd->scp;
-+	struct genpd_onecell_data *pd_data = &scp->pd_data;
-+
-+	for (i = 0; i < pd_data->num_domains; i++) {
-+		if (genpd == pd_data->domains[i]) {
-+			dev_dbg(scp->dev, "%d. %s = %d\n",
-+				i, genpd->name, state);
-+			break;
-+		}
-+	}
-+
-+	if (i == pd_data->num_domains)
-+		return 0;
-+
-+	scpe.event_type = MTK_SCPSYS_PSTATE;
-+	scpe.genpd = genpd;
-+	scpe.domain_id = i;
-+	blocking_notifier_call_chain(&scpsys_notifier_list, state, &scpe);
-+
-+	return 0;
-+}
-+
-+static unsigned int mtk_pd_get_performance(struct generic_pm_domain *genpd,
-+					   struct dev_pm_opp *opp)
-+{
-+	return dev_pm_opp_get_level(opp);
-+}
-+
- static struct scp *init_scp(struct platform_device *pdev,
- 			const struct scp_domain_data *scp_domain_data, int num,
- 			const struct scp_ctrl_reg *scp_ctrl_reg,
-@@ -630,6 +680,14 @@ static struct scp *init_scp(struct platform_device *pdev,
- 		genpd->power_on = scpsys_power_on;
- 		if (MTK_SCPD_CAPS(scpd, MTK_SCPD_ACTIVE_WAKEUP))
- 			genpd->flags |= GENPD_FLAG_ACTIVE_WAKEUP;
-+
-+		/* Add opp table check first to avoid OF runtime parse failed */
-+		if (of_count_phandle_with_args(pdev->dev.of_node,
-+		   "operating-points-v2", NULL) > 0) {
-+			genpd->set_performance_state = mtk_pd_set_performance;
-+			genpd->opp_to_performance_state =
-+				mtk_pd_get_performance;
-+		}
- 	}
- 
- 	return scp;
-diff --git a/drivers/soc/mediatek/mtk-scpsys.h b/drivers/soc/mediatek/mtk-scpsys.h
+@@ -20,4 +25,8 @@ Example:
+ 		reg = <0 0x10012000 0 0x1000>;
+ 		clocks = <&infracfg CLK_INFRA_DVFSRC>;
+ 		clock-names = "dvfsrc";
++		ddr_emi: interconnect {
++			compatible = "mediatek,mt8183-emi";
++			#interconnect-cells = <1>;
++		};
+ 	};
+diff --git a/include/dt-bindings/interconnect/mtk,mt8183-emi.h b/include/dt-bindings/interconnect/mtk,mt8183-emi.h
 new file mode 100644
-index 0000000..c1e8325
+index 0000000..2a54856
 --- /dev/null
-+++ b/drivers/soc/mediatek/mtk-scpsys.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (c) 2018 MediaTek Inc.
-+ */
++++ b/include/dt-bindings/interconnect/mtk,mt8183-emi.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
-+#ifndef __MTK_SCPSYS_H__
-+#define __MTK_SCPSYS_H__
++#ifndef __DT_BINDINGS_INTERCONNECT_MTK_MT8183_EMI_H
++#define __DT_BINDINGS_INTERCONNECT_MTK_MT8183_EMI_H
 +
-+struct scp_event_data {
-+	int event_type;
-+	int domain_id;
-+	struct generic_pm_domain *genpd;
-+};
++#define MT8183_SLAVE_DDR_EMI			0
++#define MT8183_MASTER_MCUSYS			1
++#define MT8183_MASTER_GPU			2
++#define MT8183_MASTER_MMSYS			3
++#define MT8183_MASTER_MM_VPU			4
++#define MT8183_MASTER_MM_DISP			5
++#define MT8183_MASTER_MM_VDEC			6
++#define MT8183_MASTER_MM_VENC			7
++#define MT8183_MASTER_MM_CAM			8
++#define MT8183_MASTER_MM_IMG			9
++#define MT8183_MASTER_MM_MDP			10
 +
-+enum scp_event_type {
-+	MTK_SCPSYS_PSTATE,
-+};
-+
-+int register_scpsys_notifier(struct notifier_block *nb);
-+int unregister_scpsys_notifier(struct notifier_block *nb);
-+
-+#endif /* __MTK_SCPSYS_H__ */
++#endif
 -- 
 1.9.1
