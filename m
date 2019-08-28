@@ -1,183 +1,81 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: Re: [RESEND, PATCH v13 11/12] soc: mediatek: cmdq: add
- cmdq_dev_get_client_reg function
-Date: Wed, 28 Aug 2019 16:32:46 +0800
-Message-ID: <1566981166.31833.21.camel@mtksdaap41>
-References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
-         <20190820084932.22282-12-bibby.hsieh@mediatek.com>
-         <ccd3782e-b1bb-7887-f4a5-d7774183c7b7@gmail.com>
-         <1566878368.29523.1.camel@mtksdaap41>
-         <f8945f1b-aaa7-4f4a-59e5-8e817aeb46ae@gmail.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Wed, 28 Aug 2019 16:35:29 +0800
+Message-ID: <afb235bf7390fb6fbd723c34b08feddd771d1f6c.camel@intel.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f8945f1b-aaa7-4f4a-59e5-8e817aeb46ae@gmail.com>
+In-Reply-To: <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
+To: Leonard Crestez <leonard.crestez@nxp.com>, Anson Huang <anson.huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-08-27 at 12:13 +0200, Matthias Brugger wrote:
+On Wed, 2019-08-28 at 16:32 +0800, Zhang Rui wrote:
+> On Tue, 2019-08-27 at 12:41 +0000, Leonard Crestez wrote:
+> > On 27.08.2019 04:51, Anson Huang wrote:
+> > > > In an earlier series the CLK_IS_CRITICAL flags was removed from
+> > > > the TMU
+> > > > clock so if the thermal driver doesn't explicitly enable it the
+> > > > system will hang
+> > > > on probe. This is what happens in linux-next right now!
+> > > 
+> > > The thermal driver should be built with module, so default kernel
+> > > should can boot
+> > > up, do you modify the thermal driver as built-in?
+> > > 
+> > > > Unless this patches is merged soon we'll end up with a 5.4-rc1
+> > > > that doesn't
+> > > > boot on imx8mq. An easy fix would be to drop/revert commit
+> > > > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.
+> > > 
+> > > If the thermal driver is built as module, I think no need to
+> > > revert
+> > > the commit, but
+> > > if by default thermal driver is built-in or mod probed, then yes,
+> > > it should NOT break
+> > > kernel boot up.
+> > 
+> > The qoriq_thermal driver is built as a module in defconfig and
+> > when 
+> > modules are properly installed in rootfs they will be automatically
+> > be 
+> > probed on boot and cause a hang.
+> > 
+> > I usually run nfsroot with modules:
+> > 
+> >      make modules_install INSTALL_MOD_PATH=/srv/nfs/imx8-root
 > 
-> On 27/08/2019 05:59, Bibby Hsieh wrote:
-> > On Fri, 2019-08-23 at 16:21 +0200, Matthias Brugger wrote:
-> >>
-> >> On 20/08/2019 10:49, Bibby Hsieh wrote:
-> >>> GCE cannot know the register base address, this function
-> >>> can help cmdq client to get the cmdq_client_reg structure.
-> >>>
-> >>> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> >>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> >>> ---
-> >>>  drivers/soc/mediatek/mtk-cmdq-helper.c | 29 ++++++++++++++++++++++++++
-> >>>  include/linux/soc/mediatek/mtk-cmdq.h  | 21 +++++++++++++++++++
-> >>>  2 files changed, 50 insertions(+)
-> >>>
-> >>> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> >>> index c53f8476c68d..80f75a1075b4 100644
-> >>> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> >>> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> >>> @@ -27,6 +27,35 @@ struct cmdq_instruction {
-> >>>  	u8 op;
-> >>>  };
-> >>>  
-> >>> +int cmdq_dev_get_client_reg(struct device *dev,
-> >>> +			    struct cmdq_client_reg *client_reg, int idx)
-> >>> +{
-> >>
-> >> Can't we do/call this in cmdq_mbox_create parsing the number of gce-client-reg
-> >> properties we have and allocating these using a pointer to cmdq_client_reg in
-> >> cmdq_client?
-> >> We will have to free the pointer then in cmdq_mbox_destroy.
-> >>
-> >> Regards,
-> >> Matthias
-> > 
-> > I don't think we need to keep the cmdq_client_reg in cmdq_client
-> > structure.
-> > Because our client will have own data structure, they will copy the
-> > client_reg information into their own structure.
-> > 
-> > In the design now, we do not allocate the cmdq_client_reg, client pass
-> > the cmdq_client_reg pointer into this API.
-> > Client will destroy the pointer after they get the information they
-> > want.
-> > 
+> so we need this patch shipped in the beginning of the merge window,
+> right?
+> if there is hard dependency between patches, it's better to send them
+> in one series, and get shipped via either tree.
 > 
-> My point wasn't so much about the lifecycle of the object, but the fact that we
-> add another call, which can be already full-filled by a necessary previous call
-> to cmdq_mbox_create. So I would prefer to add the information gathering for
-> cmdq_client_reg in this call, and let it live there for the time cmdq_client
-> lives. In the end we are talking about 40 bits of memory.
+> BTW, who is maintaining qoriq driver from NXP? If Anson is
+> maintaining
+> and developing this driver, it's better to update this in the driver
+> or
+> the MAINTAINER file, I will take the driver specific patches as long
+> as
+> we have ACK/Reviewed-By from the driver maintainer.
+
+And also, can you provide your feedback for this one?
+https://patchwork.kernel.org/patch/10974147/
+
+thanks,
+rui
 > 
-
-Thanks for the comments. :D
-
-Actually, I'm working for developing the chandes for MTK DRM apply cmdq
-interface.
-For MTK DRM, all the components included in MTK_CRTC use one mailbox
-channel. According to [1], we create mailbox channel by mmsys device
-node after get all the informations (include cmdq_client_reg) about
-every device node of display components respectively. Please refer to
-[2], [3] and [4], I'm going to upstream them recently.
-
-If create mailbox channel and get the cmdq_client_reg in the same device
-node, your suggestion is good for me.
-But from display and mdp's viewpoint now, I don't think it is convenient
-for them.
-
-So I still prefer separate this function out of cmdq_mbox_create.:D
-
-
-[1]
-https://elixir.bootlin.com/linux/latest/source/arch/arm64/boot/dts/mediatek/mt8173.dtsi#907
-[2] get cmdq_client_reg in mtk_ddp_comp_init()
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1746354/12/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c#431
-[3] create mailbox channel in mtk_drm_crtc_create()
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1746354/12/drivers/gpu/drm/mediatek/mtk_drm_crtc.c#814
-[4] After component_bind_all(), the mtk_drm_crtc_create will be called 
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/e15c2dc6ceb4810a2090cd11a512932095866559/drivers/gpu/drm/mediatek/mtk_drm_drv.c#452
-
-Thanks.
-Bibby
-
-> Regards,
-> Matthias
+> thanks,
+> rui
 > 
-> > Thanks for the comments so much.
 > > 
-> > Bibby
-> > 
-> >>
-> >>> +	struct of_phandle_args spec;
-> >>> +	int err;
-> >>> +
-> >>> +	if (!client_reg)
-> >>> +		return -ENOENT;
-> >>> +
-> >>> +	err = of_parse_phandle_with_fixed_args(dev->of_node,
-> >>> +					       "mediatek,gce-client-reg",
-> >>> +					       3, idx, &spec);
-> >>> +	if (err < 0) {
-> >>> +		dev_err(dev,
-> >>> +			"error %d can't parse gce-client-reg property (%d)",
-> >>> +			err, idx);
-> >>> +
-> >>> +		return err;
-> >>> +	}
-> >>> +
-> >>> +	client_reg->subsys = (u8)spec.args[0];
-> >>> +	client_reg->offset = (u16)spec.args[1];
-> >>> +	client_reg->size = (u16)spec.args[2];
-> >>> +	of_node_put(spec.np);
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
-> >>> +
-> >>>  static void cmdq_client_timeout(struct timer_list *t)
-> >>>  {
-> >>>  	struct cmdq_client *client = from_timer(client, t, timer);
-> >>> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> >>> index a345870a6d10..02ddd60b212f 100644
-> >>> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> >>> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> >>> @@ -15,6 +15,12 @@
-> >>>  
-> >>>  struct cmdq_pkt;
-> >>>  
-> >>> +struct cmdq_client_reg {
-> >>> +	u8 subsys;
-> >>> +	u16 offset;
-> >>> +	u16 size;
-> >>> +};
-> >>> +
-> >>>  struct cmdq_client {
-> >>>  	spinlock_t lock;
-> >>>  	u32 pkt_cnt;
-> >>> @@ -24,6 +30,21 @@ struct cmdq_client {
-> >>>  	u32 timeout_ms; /* in unit of microsecond */
-> >>>  };
-> >>>  
-> >>> +/**
-> >>> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device
-> >>> + *			       node of CMDQ client
-> >>> + * @dev:	device of CMDQ mailbox client
-> >>> + * @client_reg: CMDQ client reg pointer
-> >>> + * @idx:	the index of desired reg
-> >>> + *
-> >>> + * Return: 0 for success; else the error code is returned
-> >>> + *
-> >>> + * Help CMDQ client parsing the cmdq client reg
-> >>> + * from the device node of CMDQ client.
-> >>> + */
-> >>> +int cmdq_dev_get_client_reg(struct device *dev,
-> >>> +			    struct cmdq_client_reg *client_reg, int idx);
-> >>> +
-> >>>  /**
-> >>>   * cmdq_mbox_create() - create CMDQ mailbox client and channel
-> >>>   * @dev:	device of CMDQ mailbox client
-> >>>
-> > 
-> > 
+> > --
+> > Regards,
+> > Leonard
