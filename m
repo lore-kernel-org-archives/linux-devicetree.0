@@ -1,494 +1,101 @@
-From: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
-Date: Wed, 28 Aug 2019 10:00:25 +0800
-Message-ID: <1566957625.20680.33.camel@mtksdccf07>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
- <20190802082815.GA203993@chromium.org>
- <1566724680.20680.8.camel@mtksdccf07>
- <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
+ way
+Date: Wed, 28 Aug 2019 02:49:56 +0000
+Message-ID: <VI1PR04MB3310A1C5D6E4B7A35D6AC4D6F5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Po-Yang Huang =?UTF-8?Q?=28=E9=BB=83=E6=9F=8F=E9=99=BD=29?= <po-yang.huang@mediatek.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, zwisler@chromium.or
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
-> Hi Jerry,
-> 
-> On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
-> <Jerry-ch.Chen@mediatek.com> wrote:
-> >
-> > Hi Tomasz,
-> >
-> > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
-> > > Hi Jerry,
-> > >
-> > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
-> > > > From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> > > >
-> > > > This patch adds the driver of Face Detection (FD) unit in
-> > > > Mediatek camera system, providing face detection function.
-> > > >
-> > > > The mtk-isp directory will contain drivers for multiple IP
-> > > > blocks found in Mediatek ISP system. It will include ISP Pass 1
-> > > > driver (CAM), sensor interface driver, DIP driver and face
-> > > > detection driver.
-> > > >
-> > > > Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
-> > > > ---
-> > > >  drivers/media/platform/Makefile               |    2 +
-> > > >  drivers/media/platform/mtk-isp/fd/Makefile    |    5 +
-> > > >  drivers/media/platform/mtk-isp/fd/mtk_fd.h    |  157 +++
-> > > >  drivers/media/platform/mtk-isp/fd/mtk_fd_40.c | 1259 +++++++++++++++++++++++++
-> > > >  include/uapi/linux/v4l2-controls.h            |    4 +
-> > > >  5 files changed, 1427 insertions(+)
-> > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
-> > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
-> > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd_40.c
-> > > >
-> > >
-> > > Thanks for the patch! I finally got a chance to fully review the code. Sorry
-> > > for the delay. Please check my comments inline.
-> > >
-> > I appreciate your comments.
-> > I've fixed most of the comments and verifying them,
-> > Sorry for the delay, here is the reply.
-> >
-> 
-> Thanks for replying to all the comments, it's very helpful. I'll snip
-> the parts that I don't have any further comments.
-> 
-> [snip]
-> 
-> > > > +   if (usercount == 1) {
-> > > > +           pm_runtime_get_sync(&fd_dev->pdev->dev);
-> > > > +           if (mtk_fd_hw_enable(fd_hw)) {
-> > > > +                   pm_runtime_put_sync(&fd_dev->pdev->dev);
-> > > > +                   atomic_dec_return(&fd_hw->fd_user_cnt);
-> > > > +                   mutex_unlock(&fd_hw->fd_hw_lock);
-> > > > +                   return -EINVAL;
-> > > > +           }
-> > > > +   }
-> > >
-> > > This is a simple mem-to-mem device, so there is no reason to keep it active
-> > > all the time it's streaming. Please just get the runtime PM counter when
-> > > queuing a job to the hardware and release it when the job finishes.
-> > >
-> > > I guess we might still want to do the costly operations like rproc_boot()
-> > > when we start streaming, though.
-> > >
-> > Do you mean by moving the pm_runtime_get/put stuff to the job execution
-> > and job finish place?
-> 
-> Yes.
-> 
-> > the rproc_boot() operation will be done here.
-> >
-> 
-> How much time does the rproc_boot() operation take?
-> 
-
-About 0.7~1.3ms, average 0.8ms (14 measurements)
-
-> [snip]
-> 
-> > > > +
-> > > > +           pm_runtime_put_sync(&fd_dev->pdev->dev);
-> > >
-> > > Any reason to use pm_runtime_put_sync() over pm_runtime_put()?
-> > >
-> > No special reason to do so, the pm_runtime_put_sync here will be moved
-> > to the place each job finished.
-> >
-> 
-> If there is no reason, then the _sync() variant shouldn't be used, as
-> it could affect the performance negatively.
-> 
-
-Ok, I will use pm_runtime_put();
-
-> [snip]
-> 
-> > > > +static int mtk_fd_hw_job_exec(struct mtk_fd_hw *fd_hw,
-> > > > +                         struct fd_hw_param *fd_param,
-> > > > +                         void *output_vaddr)
-> > > > +{
-> > > > +   struct fd_user_output *fd_output;
-> > > > +   struct ipi_message fd_ipi_msg;
-> > > > +   int ret;
-> > > > +   u32 num;
-> > > > +
-> > > > +   if (fd_param->user_param.src_img_fmt == FMT_UNKNOWN)
-> > > > +           goto param_err;
-> > >
-> > > Is this possible?
-> > >
-> > Only if user set wrong format, I will remove this.
-> >
-> 
-> It shouldn't be possible to set a wrong format, because TRY_/S_FMT
-> should adjust what the user set to something that is valid.
-> 
-
-Ok, this will be removed.
-
-> > > > +
-> > > > +   mutex_lock(&fd_hw->fd_hw_lock);
-> > > > +   fd_hw->state = FD_ENQ;
-> > >
-> > > What is this state for?
-> > >
-> > It was for checking status, if a job is processing, the state is
-> > FD_ENQ,
-> > then we should wait for the last job to be done when pm_suspend().
-> >
-> 
-> If so, would it be possible to make it a bool and call is_processing?
-> 
-> [snip]
-> 
-> > > > +static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> > > > +                             unsigned int *num_buffers,
-> > > > +                             unsigned int *num_planes,
-> > > > +                             unsigned int sizes[],
-> > > > +                             struct device *alloc_devs[])
-> > > > +{
-> > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > +   struct device *dev = ctx->dev;
-> > > > +   unsigned int size;
-> > > > +
-> > > > +   switch (vq->type) {
-> > > > +   case V4L2_BUF_TYPE_META_CAPTURE:
-> > > > +           size = ctx->dst_fmt.buffersize;
-> > > > +           break;
-> > > > +   case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> > > > +           size = ctx->src_fmt.plane_fmt[0].sizeimage;
-> > > > +           break;
-> > > > +   default:
-> > > > +           dev_err(dev, "invalid queue type: %d\n", vq->type);
-> > >
-> > > We should need to handle this.
-> > >
-> > Do you mean by giving a size instead of return -EINVAL?
-> >
-> 
-> Sorry, typo. I meant we shouldn't need to handle it, because we can't
-> get any other queue type here.
-> 
-
-Ok, I see, I will remove it.
-also, this function will be updated as following due to the 2 plane
-case.
-
-static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-				  unsigned int *num_buffers,
-				  unsigned int *num_planes,
-				  unsigned int sizes[],
-				  struct device *alloc_devs[])
-{
-	struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-	struct device *dev = ctx->dev;
-	unsigned int size[2];
-
-	switch (vq->type) {
-	case V4L2_BUF_TYPE_META_CAPTURE:
-		size[0] = ctx->dst_fmt.buffersize;
-		break;
-	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-		size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
-		if (*num_planes == 2)
-			size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
-		break;
-	}
-
-	if (*num_planes == 1) {
-		if (sizes[0] < size[0])
-			return -EINVAL;
-	} else if (*num_planes == 2) {
-		if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
-			return -EINVAL;
-	} else {
-		*num_planes = 1;
-		sizes[0] = size[0];
-	}
-
-	return 0;
-}
-
-> [snip]
-> 
-> > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> > > > +{
-> > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > +   struct vb2_buffer *vb;
-> > >
-> > > How do we guarantee here that the hardware isn't still accessing the buffers
-> > > removed below?
-> > >
-> > Maybe we can check the driver state flag and aborting the unfinished
-> > jobs?
-> > (fd_hw->state == FD_ENQ)
-> >
-> 
-> Yes, we need to either cancel or wait for the currently processing
-> job. It depends on hardware capabilities, but cancelling is generally
-> preferred for the lower latency.
-> 
-Ok, it the state is ENQ, then we can disable the FD hw by controlling
-the registers.
-
-for example:
-	writel(0x0, fd->fd_base + FD_HW_ENABLE);
-	writel(0x0, fd->fd_base + FD_INT_EN);
-
-> > > > +
-> > > > +   if (V4L2_TYPE_IS_OUTPUT(vq->type))
-> > > > +           vb = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
-> > > > +   else
-> > > > +           vb = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
-> > > > +
-> > > > +   while (vb) {
-> > > > +           v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_ERROR);
-> > > > +           if (V4L2_TYPE_IS_OUTPUT(vq->type))
-> > > > +                   vb = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
-> > > > +           else
-> > > > +                   vb = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
-> > > > +   }
-> > >
-> > > We can use v4l2_m2m_buf_remove(). Also we can move the call into the loop
-> > > condition:
-> > >
-> > > while ((vb == v4l2_m2m_buf_remove(...)))
-> > >       v4l2_m2m_buf_done(...);
-> > >
-> > Ok, I will refine as following:
-> >
-> > while ((vb = v4l2_m2m_buf_remove(V4L2_TYPE_IS_OUTPUT(vq->type)?
-> >   &m2m_ctx->out_q_ctx :
-> >   &m2m_ctx->cap_q_ctx)))
-> > v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
-> 
-> Please move the queue type check before the loop and save the queue
-> context in a local variable.
-> 
-
-Ok, I will refine as following:
-
-	struct v4l2_m2m_queue_ctx *queue_ctx;
-
-	queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
-					&m2m_ctx->out_q_ctx :
-					&m2m_ctx->cap_q_ctx;
-	while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
-		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
-
-> [snip]
-> 
-> > > > +}
-> > > > +
-> > > > +static void mtk_fd_vb2_request_complete(struct vb2_buffer *vb)
-> > > > +{
-> > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
-> > > > +
-> > > > +   v4l2_ctrl_request_complete(vb->req_obj.req, &ctx->hdl);
-> > > > +}
-> > > > +
-> > > > +static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
-> > > > +                             const struct v4l2_pix_format_mplane *sfmt)
-> > > > +{
-> > > > +   dfmt->width = sfmt->width;
-> > > > +   dfmt->height = sfmt->height;
-> > > > +   dfmt->pixelformat = sfmt->pixelformat;
-> > > > +   dfmt->field = sfmt->field;
-> > > > +   dfmt->colorspace = sfmt->colorspace;
-> > > > +   dfmt->num_planes = sfmt->num_planes;
-> > > > +
-> > > > +   /* Use default */
-> > > > +   dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > > > +   dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > > > +   dfmt->xfer_func =
-> > > > +           V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
-> > > > +   dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
-> > > > +   dfmt->plane_fmt[0].sizeimage =
-> > > > +           dfmt->height * dfmt->plane_fmt[0].bytesperline;
-> > > > +   memset(dfmt->reserved, 0, sizeof(dfmt->reserved));
-> > > > +}
-> > >
-> > > Could we unify this function with mtk_fd_m2m_try_fmt_out_mp()? That function
-> > > should be almost directly reusable for the default format initialization +/-
-> > > the arguments passed to it.
-> > >
-> > Ok, I will try to reuse it as following:
-> >
-> > static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
-> >   const struct v4l2_pix_format_mplane *sfmt)
-> > {
-> > dfmt->field = V4L2_FIELD_NONE;
-> > dfmt->colorspace = V4L2_COLORSPACE_BT2020;
-> > dfmt->num_planes = sfmt->num_planes;
-> > dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > dfmt->xfer_func =
-> > V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
-> >
-> > /* Keep user setting as possible */
-> > dfmt->width = clamp(dfmt->width,
-> >     MTK_FD_OUTPUT_MIN_WIDTH,
-> >     MTK_FD_OUTPUT_MAX_WIDTH);
-> > dfmt->height = clamp(dfmt->height,
-> >      MTK_FD_OUTPUT_MIN_HEIGHT,
-> >      MTK_FD_OUTPUT_MAX_HEIGHT);
-> >
-> > if (sfmt->num_planes == 2) {
-> > /* NV16M and NV61M has 1 byte per pixel */
-> > dfmt->plane_fmt[0].bytesperline = dfmt->width;
-> > dfmt->plane_fmt[1].bytesperline = dfmt->width;
-> > } else {
-> > /* 2 bytes per pixel */
-> > dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
-> > }
-> >
-> > dfmt->plane_fmt[0].sizeimage =
-> > dfmt->height * dfmt->plane_fmt[0].bytesperline;
-> > }
-> 
-> How would the implementation of TRY_FMT look in this case?
-> 
-
-It will be looked like:
-
-static int mtk_fd_try_fmt_out_mp(struct file *file,
-				     void *fh,
-				     struct v4l2_format *f)
-{
-	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-	const struct v4l2_pix_format_mplane *fmt;
-
-	fmt = mtk_fd_find_fmt(pix_mp->pixelformat);
-	if (!fmt)
-		fmt = &mtk_fd_img_fmts[0];	/* Get default img fmt */
-
-	mtk_fd_fill_pixfmt_mp(pix_mp, fmt);
-	return 0;
-}
-
-> [snip]
-> 
-> > > > +static int mtk_fd_m2m_enum_fmt_out_mp(struct file *file, void *fh,
-> > > > +                                 struct v4l2_fmtdesc *f)
-> > > > +{
-> > > > +   int i;
-> > > > +
-> > > > +   for (i = 0; i < NUM_FORMATS; ++i) {
-> > > > +           if (i == f->index) {
-> > > > +                   f->pixelformat = in_img_fmts[i].pixelformat;
-> > > > +                   return 0;
-> > > > +           }
-> > > > +   }
-> > >
-> > > Why don't we just check if f->index is within the [0, ARRAY_SIZE()-1] bounds
-> > > and then just use it to index the array directly?
-> > >
-> > I will refine as :
-> >
-> > static int mtk_fd_m2m_enum_fmt_out_mp(struct file *file, void *fh,
-> >       struct v4l2_fmtdesc *f)
-> > {
-> > if ((f->index >= 0) && (f->index < NUM_FORMATS)) {
-> 
-> f->index is unsigned
-> 
-> > f->pixelformat = in_img_fmts[f->index].pixelformat;
-> > return 0;
-> > }
-> >
-> > return -EINVAL;
-> > }
-> 
-> nit: The usual convention is to check for invalid values and return early, i.e.
-> 
-> if (f->index >= NUM_FORMATS)
->     return -EINVAL;
-> 
-> f->pixelformat = in_img_fmts[f->index].pixelformat;
-> return 0;
-> 
-Ok, Done.
-
-> > > > +
-> > > > +   return -EINVAL;
-> > > > +}
-> > > > +
-> > > > +static int mtk_fd_m2m_try_fmt_out_mp(struct file *file,
-> > > > +                                void *fh,
-> > > > +                                struct v4l2_format *f)
-> > >
-> > > I think we could just shorten the function prefixes to "mtk_fd_".
-> > >
-> > Do you mean by replace mtk_fd_m2m_* with mtk_fd_ ?
-> >
-> 
-> Yes.
-> 
-Done.
-
-> [snip]
-> 
-> > > > +static int mtk_fd_request_validate(struct media_request *req)
-> > > > +{
-> > > > +   unsigned int count;
-> > > > +
-> > > > +   count = vb2_request_buffer_cnt(req);
-> > > > +   if (!count)
-> > > > +           return -ENOENT;
-> > >
-> > > Why -ENOENT?
-> > >
-> > Reference the return code in vb2_request_validate()
-> 
-> You're right, -ENOENT seems to be the right error code here.
-> 
-> > I consider refining as following:
-> > static int mtk_fd_request_validate(struct media_request *req)
-> > {
-> > if (vb2_request_buffer_cnt(req) > 1)
-> > return -EINVAL;
-> >
-> > return vb2_request_validate(req);
-> > }
-> > or maybe I don't need to worry the request count greater than 1,
-> > just remove this function and set vb2_request_validate as .req_validate
-> > directly?
-> >
-> 
-> Given that we only have 1 queue handling requests, we should be able
-> to just use vb2_request_validate() indeed.
-> 
-
-Ok, it will be refined as following:
-
-static const struct media_device_ops fd_m2m_media_ops = {
-	.req_validate	= vb2_request_validate,
-	.req_queue	= v4l2_m2m_request_queue,
-};
-
-Thanks and best regards,
-Jerry
-
-> Best regards,
-> Tomasz
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
+YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE55bm0OOaciDI35pelIDIxOjI1DQo+
+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdv
+b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNo
+YXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRp
+LmNvbTsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hA
+bGludXhmb3VuZGF0aW9uLm9yZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+
+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdA
+bnhwLmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBpbWVudGVsQHN5bm9w
+c3lzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhl
+IE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIHdheQ0KPiANCj4gT24gU2F0LCBBdWcgMjQsIDIwMTkg
+YXQgMTI6MDg6NDBBTSArMDAwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEFuZHJldyBNdXJyYXkgPGFu
+ZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ45pyIMjPml6UgMjE6NTgN
+Cj4gPiA+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiA+IENjOiBi
+aGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOw0KPiA+ID4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5j
+b20+OyBraXNob25AdGkuY29tOw0KPiA+ID4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5k
+QGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gTS5oLg0KPiA+ID4gTGlh
+biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29t
+PjsgUm95DQo+ID4gPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamluZ29vaGFuMUBnbWFpbC5j
+b207DQo+ID4gPiBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsgbGludXgtcGNpQHZnZXIu
+a2VybmVsLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiA+ID4gU3ViamVjdDogUmU6
+IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8NCj4g
+PiA+IHRoZSBkb29yYmVsbCB3YXkNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIEF1ZyAyMiwgMjAxOSBh
+dCAwNzoyMjozOVBNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+ID4gVGhlIGxheWVy
+c2NhcGUgcGxhdGZvcm0gdXNlIHRoZSBkb29yYmVsbCB3YXkgdG8gdHJpZ2dlciBNU0lYDQo+ID4g
+PiA+IGludGVycnVwdCBpbiBFUCBtb2RlLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEkgaGF2ZSBu
+byBwcm9ibGVtcyB3aXRoIHRoaXMgcGF0Y2gsIGhvd2V2ZXIuLi4NCj4gPiA+DQo+ID4gPiBBcmUg
+eW91IGFibGUgdG8gYWRkIHRvIHRoaXMgbWVzc2FnZSBhIHJlYXNvbiBmb3Igd2h5IHlvdSBhcmUg
+bWFraW5nDQo+ID4gPiB0aGlzIGNoYW5nZT8gRGlkIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEg
+bm90IHdvcmsgd2hlbiBmdW5jX25vICE9DQo+ID4gPiAwPyBPciBkaWQgaXQgd29yayB5ZXQgZHdf
+cGNpZV9lcF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbCBpcyBtb3JlDQo+IGVmZmljaWVudD8NCj4g
+Pg0KPiA+IFRoZSBmYWN0IGlzIHRoYXQsIHRoaXMgZHJpdmVyIGlzIHZlcmlmaWVkIGluIGxzMTA0
+NmEgcGxhdGZvcm0gb2YgTlhQDQo+ID4gYmVmb3JlLCBhbmQgbHMxMDQ2YSBkb24ndCBzdXBwb3J0
+IE1TSVggZmVhdHVyZSwgc28gSSBzZXQgdGhlDQo+ID4gbXNpeF9jYXBhYmxlIG9mIHBjaV9lcGNf
+ZmVhdHVyZXMgc3RydWN0IGlzIGZhbHNlLCBidXQgaW4gb3RoZXINCj4gPiBwbGF0Zm9ybSwgZS5n
+LiBsczEwODhhLCBpdCBzdXBwb3J0IHRoZSBNU0lYIGZlYXR1cmUsIEkgdmVyaWZpZWQgdGhlIE1T
+SVgNCj4gZmVhdHVyZSBpbiBsczEwODhhLCBpdCBpcyBub3QgT0ssIHNvIEkgY2hhbmdlZCB0byBh
+bm90aGVyIHdheS4gVGhhbmtzLg0KPiANCj4gUmlnaHQsIHNvIHRoZSBleGlzdGluZyBwY2ktbGF5
+ZXJzY2FwZS1lcC5jIGRyaXZlciBuZXZlciBzdXBwb3J0ZWQgTVNJWCB5ZXQgaXQNCj4gZXJyb25l
+b3VzbHkgaGFkIGEgc3dpdGNoIGNhc2Ugc3RhdGVtZW50IHRvIGNhbGwgZHdfcGNpZV9lcF9yYWlz
+ZV9tc2l4X2lycQ0KPiB3aGljaCB3b3VsZCBuZXZlciBnZXQgdXNlZC4NCj4gDQo+IE5vdyB0aGF0
+IHdlJ3JlIGFkZGluZyBhIHBsYXRmb3JtIHdpdGggTVNJWCBzdXBwb3J0IHRoZSBleGlzdGluZw0K
+PiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxIGRvZXNuJ3Qgd29yayAoZm9yIHRoaXMgcGxhdGZv
+cm0pIHNvIHdlIGFyZSBhZGRpbmcNCj4gYSBkaWZmZXJlbnQgbWV0aG9kLg0KPiANCj4gR2l2ZW4g
+dGhhdCBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxIGlzIHVzZWQgYnkgcGNpZS1kZXNpZ253YXJl
+LXBsYXQuYyB3ZQ0KPiBjYW4gYXNzdW1lIHRoaXMgZnVuY3Rpb24gYXQgbGVhc3Qgd29ya3MgZm9y
+IGl0J3MgdXNlIGNhc2UuDQo+IA0KPiBQbGVhc2UgdXBkYXRlIHRoZSBjb21taXQgbWVzc2FnZSAt
+IEl0IHdvdWxkIGJlIGhlbHBmdWwgdG8gc3VnZ2VzdCB0aGF0DQo+IGR3X3BjaWVfZXBfcmFpc2Vf
+bXNpeF9pcnEgd2FzIG5ldmVyIGNhbGxlZCBpbiB0aGUgZXhpc2l0bmcgZHJpdmVyIGJlY2F1c2UN
+Cj4gbXNpeF9jYXBhYmxlIHdhcyBhbHdheXMgc2V0IHRvIGZhbHNlLg0KDQpBZ3JlZSwgdGhpcyBp
+cyBtdWNoIGNsZWFyZXIsIEkgd2lsbCBtb2RpZnkgdGhlIGNvbW1pdCBtZXNzYWdlIGluIHRoZSBu
+ZXh0IHZlcnNpb24gcGF0Y2gsDQp0aGFua3MgYSBsb3QuDQoNCj4gDQo+IFRoYW5rcywNCj4gDQo+
+IEFuZHJldyBNdXJyYXkNCj4gDQo+ID4NCj4gPiA+DQo+ID4gPiBUaGFua3MsDQo+ID4gPg0KPiA+
+ID4gQW5kcmV3IE11cnJheQ0KPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBC
+YW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiB2MjoNCj4gPiA+
+ID4gIC0gTm8gY2hhbmdlLg0KPiA+ID4gPg0KPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyB8IDMgKystDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+
+ID4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0K
+PiA+ID4gPiBpbmRleCA4NDYxZjYyLi43Y2E1ZmU4IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2
+ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+ICsrKyBi
+L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4g
+QEAgLTc0LDcgKzc0LDggQEAgc3RhdGljIGludCBsc19wY2llX2VwX3JhaXNlX2lycShzdHJ1Y3QN
+Cj4gPiA+ID4gZHdfcGNpZV9lcCAqZXAsDQo+ID4gPiB1OCBmdW5jX25vLA0KPiA+ID4gPiAgCWNh
+c2UgUENJX0VQQ19JUlFfTVNJOg0KPiA+ID4gPiAgCQlyZXR1cm4gZHdfcGNpZV9lcF9yYWlzZV9t
+c2lfaXJxKGVwLCBmdW5jX25vLCBpbnRlcnJ1cHRfbnVtKTsNCj4gPiA+ID4gIAljYXNlIFBDSV9F
+UENfSVJRX01TSVg6DQo+ID4gPiA+IC0JCXJldHVybiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJx
+KGVwLCBmdW5jX25vLA0KPiBpbnRlcnJ1cHRfbnVtKTsNCj4gPiA+ID4gKwkJcmV0dXJuIGR3X3Bj
+aWVfZXBfcmFpc2VfbXNpeF9pcnFfZG9vcmJlbGwoZXAsIGZ1bmNfbm8sDQo+ID4gPiA+ICsJCQkJ
+CQkJICBpbnRlcnJ1cHRfbnVtKTsNCj4gPiA+ID4gIAlkZWZhdWx0Og0KPiA+ID4gPiAgCQlkZXZf
+ZXJyKHBjaS0+ZGV2LCAiVU5LTk9XTiBJUlEgdHlwZVxuIik7DQo+ID4gPiA+ICAJCXJldHVybiAt
+RUlOVkFMOw0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjkuNQ0KPiA+ID4gPg0K
