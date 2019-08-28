@@ -1,54 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 02/14] dt-bindings: display, renesas,du: Document cmms
- property
-Date: Wed, 28 Aug 2019 11:28:46 +0300
-Message-ID: <20190828082846.GA27842@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-3-jacopo+renesas@jmondi.org>
- <20190827202945.GA3488@bogus>
- <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Wed, 28 Aug 2019 16:32:00 +0800
+Message-ID: <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
+In-Reply-To: <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Leonard Crestez <leonard.crestez@nxp.com>, Anson Huang <anson.huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 09:32:23AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Aug 27, 2019 at 10:29 PM Rob Herring <robh@kernel.org> wrote:
-> > On Sun, Aug 25, 2019 at 03:51:42PM +0200, Jacopo Mondi wrote:
-> > > Document the newly added 'cmms' property which accepts a list of phandle
-> > > and channel index pairs that point to the CMM units available for each
-> > > Display Unit output video channel.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > index c97dfacad281..c2265e2a1af2 100644
-> > > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > > @@ -45,6 +45,10 @@ Required Properties:
-> > >      instance that serves the DU channel, and the channel index identifies the
-> > >      LIF instance in that VSP.
-> > >
-> > > +  - cmms: A list of phandles to the CMM instances present in the SoC, one
-> > > +    for each available DU channel. The property shall not be specified for
-> > > +    SoCs that do not provide any CMM (such as V3M and V3H).
-> >
-> > renesas,cmms
+On Tue, 2019-08-27 at 12:41 +0000, Leonard Crestez wrote:
+> On 27.08.2019 04:51, Anson Huang wrote:
+> > > In an earlier series the CLK_IS_CRITICAL flags was removed from
+> > > the TMU
+> > > clock so if the thermal driver doesn't explicitly enable it the
+> > > system will hang
+> > > on probe. This is what happens in linux-next right now!
+> > 
+> > The thermal driver should be built with module, so default kernel
+> > should can boot
+> > up, do you modify the thermal driver as built-in?
+> > 
+> > > Unless this patches is merged soon we'll end up with a 5.4-rc1
+> > > that doesn't
+> > > boot on imx8mq. An easy fix would be to drop/revert commit
+> > > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.
+> > 
+> > If the thermal driver is built as module, I think no need to revert
+> > the commit, but
+> > if by default thermal driver is built-in or mod probed, then yes,
+> > it should NOT break
+> > kernel boot up.
 > 
-> So I guess we really wanted to have the prefix for the vsps property, too?
+> The qoriq_thermal driver is built as a module in defconfig and when 
+> modules are properly installed in rootfs they will be automatically
+> be 
+> probed on boot and cause a hang.
+> 
+> I usually run nfsroot with modules:
+> 
+>      make modules_install INSTALL_MOD_PATH=/srv/nfs/imx8-root
 
-Yes, we should have :-( My bad.
+so we need this patch shipped in the beginning of the merge window,
+right?
+if there is hard dependency between patches, it's better to send them
+in one series, and get shipped via either tree.
 
--- 
-Regards,
+BTW, who is maintaining qoriq driver from NXP? If Anson is maintaining
+and developing this driver, it's better to update this in the driver or
+the MAINTAINER file, I will take the driver specific patches as long as
+we have ACK/Reviewed-By from the driver maintainer.
 
-Laurent Pinchart
+thanks,
+rui
+
+> 
+> --
+> Regards,
+> Leonard
