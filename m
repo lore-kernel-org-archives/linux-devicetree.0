@@ -1,123 +1,101 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 6/6] PCI: tegra: Add support to enable slot regulators
-Date: Wed, 28 Aug 2019 10:37:31 +0100
-Message-ID: <20190828093731.GT14582@e119886-lin.cambridge.arm.com>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
- <20190826073143.4582-7-vidyas@nvidia.com>
- <20190827154725.GP14582@e119886-lin.cambridge.arm.com>
- <91f8914a-22a9-8b7c-bc00-c309a21d83db@nvidia.com>
- <20190827171333.GQ14582@e119886-lin.cambridge.arm.com>
- <20190828090757.GA2917@ulmo>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
+Date: Wed, 28 Aug 2019 11:44:12 +0200
+Message-ID: <5271f3041cf16ec06a8266b0072f294384280f54.camel@suse.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+         <20190820145821.27214-2-nsaenzjulienne@suse.de>
+         <20190826070939.GD11331@lst.de>
+         <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-HuE7CYEmA0DlmwKJIinl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190828090757.GA2917@ulmo>
+In-Reply-To: <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Christoph Hellwig <hch@lst.de>
+Cc: catalin.marinas@arm.com, linux-mm@kvack.org, linux-riscv@lists.infradead.org, will@kernel.org, m.szyprowski@samsung.com, linux-arch@vger.kernel.org, f.fainelli@gmail.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com, robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, phill@raspberryi.org, mbrugger@suse.com, eric@anholt.net, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, wahrenst@gmx.net, akpm@linux-foundation.org, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:07:57AM +0200, Thierry Reding wrote:
-> On Tue, Aug 27, 2019 at 06:13:34PM +0100, Andrew Murray wrote:
-> > On Tue, Aug 27, 2019 at 09:54:17PM +0530, Vidya Sagar wrote:
-> > > On 8/27/2019 9:17 PM, Andrew Murray wrote:
-> > > > On Mon, Aug 26, 2019 at 01:01:43PM +0530, Vidya Sagar wrote:
-> > > > > Add support to get regulator information of 3.3V and 12V supplies of a PCIe
-> > > > > slot from the respective controller's device-tree node and enable those
-> > > > > supplies. This is required in platforms like p2972-0000 where the supplies
-> > > > > to x16 slot owned by C5 controller need to be enabled before attempting to
-> > > > > enumerate the devices.
-> > > > > 
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > ---
-> > > > >   drivers/pci/controller/dwc/pcie-tegra194.c | 65 ++++++++++++++++++++++
-> > > > >   1 file changed, 65 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > index 8a27b25893c9..97de2151a738 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
-> > > > >   	u32 aspm_l0s_enter_lat;
-> > > > >   	struct regulator *pex_ctl_supply;
-> > > > > +	struct regulator *slot_ctl_3v3;
-> > > > > +	struct regulator *slot_ctl_12v;
-> > > > >   	unsigned int phy_count;
-> > > > >   	struct phy **phys;
-> > > > > @@ -1047,6 +1049,59 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
-> > > > >   	}
-> > > > >   }
-> > > > > +static void tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
-> > > > > +{
-> > > > > +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> > > > > +	if (IS_ERR(pcie->slot_ctl_3v3))
-> > > > > +		pcie->slot_ctl_3v3 = NULL;
-> > > > > +
-> > > > > +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
-> > > > > +	if (IS_ERR(pcie->slot_ctl_12v))
-> > > > > +		pcie->slot_ctl_12v = NULL;
-> > > > 
-> > > > Do these need to take into consideration -EPROBE_DEFER?
-> > > Since these are devm_* APIs, isn't it taken care of automatically?
-> > 
-> > devm_regulator_get_optional can still return -EPROBE_DEFER - for times when
-> > "lookup could succeed in the future".
-> > 
-> > It's probably helpful here for your driver to distinguish between there not
-> > being a regulator specified in the DT, and there being a regulator but there
-> > is no device for it yet. For the latter case - your driver would probe but
-> > nothing would enumerate.
-> > 
-> > See pcie-rockchip-host.c for an example of where this is handled.
-> > 
-> > Of course if, for whatever reason it is unlikely you'll ever get -EPROBE_DEFER
-> > then maybe it's OK as it is.
-> 
-> Let's not assume that. We've just recently encountered a case where we
-> did not handle -EPROBE_DEFER because we had assumed too much, and that
-> turned into a bit of a hassle to fix.
-> 
-> Vidya, I think what Andrew is saying is that you need to propagate the
-> -EPROBE_DEFER error to the caller (i.e. the ->probe() callback) so that
-> the PCI controller driver can be properly added to the defer queue in
-> case the regulator isn't ready yet.
 
-Indeed.
+--=-HuE7CYEmA0DlmwKJIinl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> I think what we want here is something like:
-> 
-> 	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
-> 	if (IS_ERR(pcie->slot_ctl_3v3)) {
-> 		if (PTR_ERR(pcie->slot_ctl_3v3) != -ENODEV)
-> 			return PTR_ERR(pcie->slot_ctl_3v3);
-> 
-> 		pcie->slot_ctl_3v3 = NULL;
-> 	}
-> 
-> Andrew, I'm not sure the handling in rockchip_pcie_parse_host_dt() is
-> correct. It singles out -EPROBE_DEFER, which I think is the wrong way
-> around. We should be special-casing -ENODEV, because regulator_get()
-> can return a wide array of error cases, not all of which we actually
-> want to consider successes. For example we could be getting -ENOMEM,
-> which, I would argue, is something that we should propagate.
+On Mon, 2019-08-26 at 15:46 +0200, Nicolas Saenz Julienne wrote:
+> On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
+> > On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
+> > > Some architectures have platform specific DMA addressing limitations.
+> > > This will allow for hardware description code to provide the constrai=
+nts
+> > > in a generic manner, so as for arch code to properly setup it's memor=
+y
+> > > zones and DMA mask.
+> >=20
+> > I know this just spreads the arm code, but I still kinda hate it.
+>=20
+> Rob's main concern was finding a way to pass the constraint from HW defin=
+ition
+> to arch without widening fdt's architecture specific function surface. I'=
+d say
+> it's fair to argue that having a generic mechanism makes sense as it'll n=
+ow
+> traverse multiple archs and subsystems.
+>=20
+> I get adding globals like this is not very appealing, yet I went with it =
+as it
+> was the easier to integrate with arm's code. Any alternative suggestions?
+>=20
+> > MAX_DMA_ADDRESS is such an oddly defined concepts.  We have the mm
+> > code that uses it to start allocating after the dma zones, but
+> > I think that would better be done using a function returning
+> > 1 << max(zone_dma_bits, 32) or so.  Then we have about a handful
+> > of drivers using it that all seem rather bogus, and one of which
+> > I think are usable on arm64.
+>=20
+> Is it safe to assume DMA limitations will always be a power of 2? I ask a=
+s
+> RPi4
+> kinda isn't: ZONE_DMA is 0x3c000000 bytes big, I'm approximating the zone=
+ mask
+> to 30 as [0x3c000000 0x3fffffff] isn't defined as memory so it's unlikely=
+ that
+> we=C2=B4ll encounter buffers there. But I don't know how it could affect =
+mm
+> initialization code.
+>=20
+> This also rules out 'zone_dma_bits' as a mechanism to pass ZONE_DMA's siz=
+e
+> from
+> HW definition code to arch's.
 
-Yes I completely agree, given that the regulator is optional: we only want
-to proceed if we find the regulator or if a regulator wasn't specified in the
-DT. We should fail upon any other error, in case a regulator was specified
-but the error prevented it from being returned.
+Hi Christoph,
+I gave it a thought and think this whole MAX_DMA_ADDRESS topic falls out of=
+ the
+scope of the series. I agree it's something that we should get rid of, but
+fixing it isn't going to affect the overall enhancement intended here.  I'd
+rather focus on how are we going to pass the DMA zone data into the arch co=
+de
+and fix MAX_DMA_ADDRESS on another series.
 
-> I think
-> it'd be very confusing to take that as meaning "optional regulator
-> wasn't specified", because in that case the DTS file would've had the
-> regulator hooked up (we have to assume that it is needed in that case)
-> but we won't be enabling it, so it's unlikely that devices will
-> enumerate.
+Regards,
+Nicolas
 
-Thanks,
 
-Andrew Murray
+--=-HuE7CYEmA0DlmwKJIinl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> 
-> Thierry
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1mTOwACgkQlfZmHno8
+x/5rEQf/a0hgCNBuEJW0dF6JOgmq1B1AUgrpu1lR5mCYvRYKaWrIH0GEWk7/DMYN
+5P/0pfK8WcmvSuTsH3kAL9FVcqCF1fm+KHxDUfHg0WM4TbfF/SNx8nzM0thhMSGg
+vcgA6AP1aXP4wkqXKPhjga2uBewFfdD02TKqIvsSKEXAUge69kAkVjSAy/Sz8Rj9
+NUwJ6GbY5Clul7ZkO6eRe39K/bnmICJytZCvmxas+x3YQN5eiml9ooPhHoCa48l1
+tzjKhxg5VSCVPYdvIdauSRDsuHKcYzezXiaX/mX8Rz6h2/4bWbX9/Lt9Y5UZyikO
+2DdZK0hdYuTCw2X0qHF5x4sS1s9Tew==
+=HHcK
+-----END PGP SIGNATURE-----
+
+--=-HuE7CYEmA0DlmwKJIinl--
