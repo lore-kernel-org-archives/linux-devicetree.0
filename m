@@ -1,234 +1,305 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Date: Wed, 28 Aug 2019 11:15:50 +0200
-Message-ID: <20190828091550.pdc57wanu6twew5p@pengutronix.de>
-References: <20190827123216.32728-1-robin@protonic.nl>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH] thermal: mediatek: add suspend/resume callback
+Date: Wed, 28 Aug 2019 17:36:38 +0800
+Message-ID: <36f8f79c1353622bf0bb109296cd6229ac23e648.camel@intel.com>
+References: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190827123216.32728-1-robin@protonic.nl>
+In-Reply-To: <1562058985-27538-1-git-send-email-michael.kao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin van der Gracht <robin@protonic.nl>
-Cc: Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>
+To: michael.kao@mediatek.com, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@chromium.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Louis Yu <louis.yu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
-
-thanks for the patch.
-
-On 19-08-27 14:32, Robin van der Gracht wrote:
-> The first generation i.MX6 processors does not send an interrupt when the
-> power key is pressed. It sends a power down request interrupt if the key is
-> released before a hard shutdown (5 second press). This should allow
-> software to bring down the SoC safely.
+On Tue, 2019-07-02 at 17:16 +0800, michael.kao@mediatek.com wrote:
+> From: Louis Yu <louis.yu@mediatek.com>
 > 
-> For this driver to work as a regular power key with the older SoCs, we need
-> to send a keypress AND release when we get the power down request irq.
+> Add suspend/resume callback to disable/enable Mediatek thermal sensor
+> respectively. Since thermal power domain is off in suspend, thermal
+> driver
+> needs re-initialization during resume.
 > 
-> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+> Signed-off-by: Louis Yu <louis.yu@mediatek.com>
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
 > ---
->  .../devicetree/bindings/crypto/fsl-sec4.txt   | 16 ++++--
->  drivers/input/keyboard/Kconfig                |  2 +-
->  drivers/input/keyboard/snvs_pwrkey.c          | 52 ++++++++++++++++---
-
-Can we split this so the dt-bindings are a standalone patch? IMHO this
-is the usual way because the maintainer can squash them on there needs.
-Also it would be cool to document the changes. A common place for
-changes is after the '---' or on the cover-letter.
-
->  3 files changed, 57 insertions(+), 13 deletions(-)
+> This patch series base on these patches [1][2][3].
 > 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> index 2fe245ca816a..e4fbb9797082 100644
-> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> @@ -420,14 +420,22 @@ EXAMPLE
->  =====================================================================
->  System ON/OFF key driver
->  
-> -  The snvs-pwrkey is designed to enable POWER key function which controlled
-> -  by SNVS ONOFF, the driver can report the status of POWER key and wakeup
-> -  system if pressed after system suspend.
-> +  The snvs-pwrkey is designed to enable POWER key function which is controlled
-> +  by SNVS ONOFF. It can wakeup the system if pressed after system suspend.
-> +
-> +  There are two generations of SVNS pwrkey hardware. The first generation is
-> +  included in i.MX6 Solo, DualLite and Quad processors. The second generation
-> +  is included in i.MX6 SoloX and newer SoCs.
-> +
-> +  Second generation SNVS can detect and report the status of POWER key, but the
-> +  first generation can only detect a key release and so emits an instantaneous
-> +  press and release event when the key is released.
->  
->    - compatible:
->        Usage: required
->        Value type: <string>
-> -      Definition: Mush include "fsl,sec-v4.0-pwrkey".
-> +      Definition: Must include "fsl,sec-v4.0-pwrkey" for i.MX6 SoloX and newer
-> +	   or "fsl,imx6qdl-snvs-pwrkey" for older SoCs.
->  
->    - interrupts:
->        Usage: required
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 7c4f19dab34f..937e58da5ce1 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
->  	depends on OF
->  	help
->  	  This is the snvs powerkey driver for the Freescale i.MX application
-> -	  processors that are newer than i.MX6 SX.
-> +	  processors.
->  
->  	  To compile this driver as a module, choose M here; the
->  	  module will be called snvs_pwrkey.
-> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> index 5342d8d45f81..d71c44733103 100644
-> --- a/drivers/input/keyboard/snvs_pwrkey.c
-> +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> @@ -29,6 +29,11 @@
->  #define DEBOUNCE_TIME 30
->  #define REPEAT_INTERVAL 60
->  
-> +enum imx_snvs_hwtype {
-> +	IMX6SX_SNVS,	/* i.MX6 SoloX and newer */
-> +	IMX6QDL_SNVS,	/* i.MX6 Solo, DualLite and Quad */
-> +};
-> +
->  struct pwrkey_drv_data {
->  	struct regmap *snvs;
->  	int irq;
-> @@ -37,14 +42,41 @@ struct pwrkey_drv_data {
->  	int wakeup;
->  	struct timer_list check_timer;
->  	struct input_dev *input;
-> +	enum imx_snvs_hwtype hwtype;
->  };
->  
-> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
-> +	{
-> +		.compatible = "fsl,sec-v4.0-pwrkey",
-> +		.data = (const void *)IMX6SX_SNVS,
-> +	},
-> +	{
-> +		.compatible = "fsl,imx6qdl-snvs-pwrkey",
-> +		.data = (const void *)IMX6QDL_SNVS,
-> +	},
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
+> [1]thermal: mediatek: mt8183: fix bank number settings (
+> https://patchwork.kernel.org/patch/10938817/)
+> [2]thermal: mediatek: add another get_temp ops for thermal sensors (
+> https://patchwork.kernel.org/patch/10938829/)
+> [3]thermal: mediatek: use spinlock to protect PTPCORESEL (
+> https://patchwork.kernel.org/patch/10938841/)
+> 
+all these patches are not sent to linux-pm mailing list, thus they
+never got chance to get merged. please resend them to linux-pm.
 
-Can we keep this on the original place if you are using ...
+I don't know what the first part of the patch set do, so I'm wondering
+if there is any dependency?
 
+thanks,
+rui
+
+>  drivers/thermal/mtk_thermal.c | 134
+> +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 125 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/thermal/mtk_thermal.c
+> b/drivers/thermal/mtk_thermal.c
+> index 3d01153..61d4114 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/thermal.h>
+>  #include <linux/reset.h>
+>  #include <linux/types.h>
+> +#include <linux/iopoll.h>
+>  
+>  /* AUXADC Registers */
+>  #define AUXADC_CON1_SET_V	0x008
+> @@ -39,6 +40,8 @@
+>  
+>  #define APMIXED_SYS_TS_CON1	0x604
+>  
+> +#define APMIXED_SYS_TS_CON1_BUFFER_OFF	0x30
 > +
->  static void imx_imx_snvs_check_for_events(struct timer_list *t)
+>  /* Thermal Controller Registers */
+>  #define TEMP_MONCTL0		0x000
+>  #define TEMP_MONCTL1		0x004
+> @@ -46,6 +49,7 @@
+>  #define TEMP_MONIDET0		0x014
+>  #define TEMP_MONIDET1		0x018
+>  #define TEMP_MSRCTL0		0x038
+> +#define TEMP_MSRCTL1		0x03c
+>  #define TEMP_AHBPOLL		0x040
+>  #define TEMP_AHBTO		0x044
+>  #define TEMP_ADCPNP0		0x048
+> @@ -95,6 +99,9 @@
+>  #define TEMP_ADCVALIDMASK_VALID_HIGH		BIT(5)
+>  #define TEMP_ADCVALIDMASK_VALID_POS(bit)	(bit)
+>  
+> +#define TEMP_MSRCTL1_BUS_STA	(BIT(0) | BIT(7))
+> +#define TEMP_MSRCTL1_SENSING_POINTS_PAUSE	0x10E
+> +
+>  /* MT8173 thermal sensors */
+>  #define MT8173_TS1	0
+>  #define MT8173_TS2	1
+> @@ -266,6 +273,10 @@ struct mtk_thermal_data {
+>  struct mtk_thermal {
+>  	struct device *dev;
+>  	void __iomem *thermal_base;
+> +	void __iomem *apmixed_base;
+> +	void __iomem *auxadc_base;
+> +	u64 apmixed_phys_base;
+> +	u64 auxadc_phys_base;
+>  
+>  	struct clk *clk_peri_therm;
+>  	struct clk *clk_auxadc;
+> @@ -795,6 +806,42 @@ static void mtk_thermal_init_bank(struct
+> mtk_thermal *mt, int num,
+>  	mtk_thermal_put_bank(bank);
+>  }
+>  
+> +static int mtk_thermal_disable_sensing(struct mtk_thermal *mt, int
+> num)
+> +{
+> +	struct mtk_thermal_bank *bank = &mt->banks[num];
+> +	u32 val;
+> +	unsigned long timeout;
+> +	void __iomem *addr;
+> +	int ret = 0;
+> +
+> +	bank->id = num;
+> +	bank->mt = mt;
+> +
+> +	mtk_thermal_get_bank(bank);
+> +
+> +	val = readl(mt->thermal_base + TEMP_MSRCTL1);
+> +	/* pause periodic temperature measurement for sensing points */
+> +	writel(val | TEMP_MSRCTL1_SENSING_POINTS_PAUSE,
+> +	       mt->thermal_base + TEMP_MSRCTL1);
+> +
+> +	/* wait until temperature measurement bus idle */
+> +	timeout = jiffies + HZ;
+> +	addr = mt->thermal_base + TEMP_MSRCTL1;
+> +
+> +	ret = readl_poll_timeout(addr, val, (val &
+> TEMP_MSRCTL1_BUS_STA) == 0x0,
+> +				 0, timeout);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	/* disable periodic temperature meausrement on sensing points
+> */
+> +	writel(0x0, mt->thermal_base + TEMP_MONCTL0);
+> +
+> +out:
+> +	mtk_thermal_put_bank(bank);
+> +
+> +	return ret;
+> +}
+> +
+>  static u64 of_get_phys_base(struct device_node *np)
 >  {
->  	struct pwrkey_drv_data *pdata = from_timer(pdata, t, check_timer);
->  	struct input_dev *input = pdata->input;
->  	u32 state;
+>  	u64 size64;
+> @@ -917,7 +964,6 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  	struct device_node *auxadc, *apmixedsys, *np = pdev-
+> >dev.of_node;
+>  	struct mtk_thermal *mt;
+>  	struct resource *res;
+> -	u64 auxadc_phys_base, apmixed_phys_base;
+>  	struct thermal_zone_device *tzdev;
+>  	struct mtk_thermal_zone *tz;
 >  
-> +	if (pdata->hwtype == IMX6QDL_SNVS) {
-> +		/*
-> +		 * The first generation i.MX6 SoCs only sends an interrupt on
-> +		 * button release. To mimic power-key usage, we'll prepend a
-> +		 * press event.
-> +		 */
-> +		input_report_key(input, pdata->keycode, 1);
-
-Missing input_sync() here?
-
-> +		input_report_key(input, pdata->keycode, 0);
-> +		input_sync(input);
-> +		pm_relax(input->dev.parent);
-> +		return;
-> +	}
-> +
->  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
->  	state = state & SNVS_HPSR_BTN ? 1 : 0;
->  
-> @@ -67,13 +99,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
->  {
->  	struct platform_device *pdev = dev_id;
->  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-> +	unsigned long expire = jiffies;
->  	u32 lp_status;
->  
->  	pm_wakeup_event(pdata->input->dev.parent, 0);
->  
->  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> -	if (lp_status & SNVS_LPSR_SPO)
-> -		mod_timer(&pdata->check_timer, jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
-> +	if (lp_status & SNVS_LPSR_SPO) {
-> +		if (pdata->hwtype == IMX6SX_SNVS)
-> +			expire += msecs_to_jiffies(DEBOUNCE_TIME);
-> +		mod_timer(&pdata->check_timer, expire);
-
-Is this desired because the timer gets triggered earlier.
-
-> +	}
->  
->  	/* clear SPO status */
->  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> @@ -93,6 +129,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	struct pwrkey_drv_data *pdata = NULL;
->  	struct input_dev *input = NULL;
->  	struct device_node *np;
-> +	const struct of_device_id *match;
->  	int error;
->  
->  	/* Get SNVS register Page */
-> @@ -100,6 +137,10 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	if (!np)
+> @@ -954,11 +1000,11 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
 >  		return -ENODEV;
->  
-> +	match = of_match_node(imx_snvs_pwrkey_ids, np);
-> +	if (!match)
-> +		return -ENODEV;
-
-... of_device_get_match_data() here. While reading the rm it seems that
-the snvs block has a dedicated version register. IMHO this could be a
-better way to apply the change also to existing devices with old
-firmware.
-
-Regards,
-  Marco
-
-
-> +
->  	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->  	if (!pdata)
->  		return -ENOMEM;
-> @@ -115,6 +156,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  		dev_warn(&pdev->dev, "KEY_POWER without setting in dts\n");
 >  	}
 >  
-> +	pdata->hwtype = (enum imx_snvs_hwtype)match->data;
->  	pdata->wakeup = of_property_read_bool(np, "wakeup-source");
+> -	auxadc_phys_base = of_get_phys_base(auxadc);
+> +	mt->auxadc_phys_base = of_get_phys_base(auxadc);
 >  
->  	pdata->irq = platform_get_irq(pdev, 0);
-> @@ -175,12 +217,6 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+>  	of_node_put(auxadc);
+>  
+> -	if (auxadc_phys_base == OF_BAD_ADDR) {
+> +	if (mt->auxadc_phys_base == OF_BAD_ADDR) {
+>  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+>  		return -EINVAL;
+>  	}
+> @@ -969,11 +1015,12 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	apmixed_phys_base = of_get_phys_base(apmixedsys);
+> +	mt->apmixed_phys_base = of_get_phys_base(apmixedsys);
+> +	mt->apmixed_base = of_iomap(apmixedsys, 0);
+>  
+>  	of_node_put(apmixedsys);
+>  
+> -	if (apmixed_phys_base == OF_BAD_ADDR) {
+> +	if (mt->apmixed_phys_base == OF_BAD_ADDR) {
+>  		dev_err(&pdev->dev, "Can't get auxadc phys address\n");
+>  		return -EINVAL;
+>  	}
+> @@ -985,19 +1032,19 @@ static int mtk_thermal_probe(struct
+> platform_device *pdev)
+>  	ret = clk_prepare_enable(mt->clk_auxadc);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n",
+> ret);
+> -		return ret;
+> +		goto err_disable_clk_auxadc;
+>  	}
+>  
+>  	ret = clk_prepare_enable(mt->clk_peri_therm);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Can't enable peri clk: %d\n",
+> ret);
+> -		goto err_disable_clk_auxadc;
+> +		goto err_disable_clk_peri_therm;
+>  	}
+>  
+>  	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ;
+> ctrl_id++)
+>  		for (i = 0; i < mt->conf->num_banks; i++)
+> -			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
+> -					      auxadc_phys_base,
+> ctrl_id);
+> +			mtk_thermal_init_bank(mt, i, mt-
+> >apmixed_phys_base,
+> +					      mt->auxadc_phys_base,
+> ctrl_id);
+>  
+>  	platform_set_drvdata(pdev, mt);
+>  
+> @@ -1041,11 +1088,80 @@ static int mtk_thermal_remove(struct
+> platform_device *pdev)
 >  	return 0;
 >  }
 >  
-> -static const struct of_device_id imx_snvs_pwrkey_ids[] = {
-> -	{ .compatible = "fsl,sec-v4.0-pwrkey" },
-> -	{ /* sentinel */ }
-> -};
-> -MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
-> -
->  static struct platform_driver imx_snvs_pwrkey_driver = {
+> +static int __maybe_unused mtk_thermal_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret;
+> +
+> +	for (i = 0; i < mt->conf->num_banks; i++) {
+> +		ret = mtk_thermal_disable_sensing(mt, i);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	/* disable buffer */
+> +	writel(readl(mt->apmixed_base + APMIXED_SYS_TS_CON1) |
+> +	       APMIXED_SYS_TS_CON1_BUFFER_OFF,
+> +	       mt->apmixed_base + APMIXED_SYS_TS_CON1);
+> +
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return 0;
+> +
+> +out:
+> +	dev_err(&pdev->dev, "Failed to wait until bus idle\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused mtk_thermal_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct mtk_thermal *mt = platform_get_drvdata(pdev);
+> +	int i, ret, ctrl_id;
+> +
+> +	ret = device_reset(&pdev->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(mt->clk_auxadc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable auxadc clk: %d\n",
+> ret);
+> +		goto err_disable_clk_auxadc;
+> +	}
+> +
+> +	ret = clk_prepare_enable(mt->clk_peri_therm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't enable peri clk: %d\n",
+> ret);
+> +		goto err_disable_clk_peri_therm;
+> +	}
+> +
+> +	for (ctrl_id = 0; ctrl_id < mt->conf->num_controller ;
+> ctrl_id++)
+> +		for (i = 0; i < mt->conf->num_banks; i++)
+> +			mtk_thermal_init_bank(mt, i, mt-
+> >apmixed_phys_base,
+> +					      mt->auxadc_phys_base,
+> ctrl_id);
+> +
+> +	return 0;
+> +
+> +err_disable_clk_peri_therm:
+> +	clk_disable_unprepare(mt->clk_peri_therm);
+> +err_disable_clk_auxadc:
+> +	clk_disable_unprepare(mt->clk_auxadc);
+> +
+> +	return ret;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(mtk_thermal_pm_ops,
+> +			 mtk_thermal_suspend, mtk_thermal_resume);
+> +
+>  static struct platform_driver mtk_thermal_driver = {
+>  	.probe = mtk_thermal_probe,
+>  	.remove = mtk_thermal_remove,
 >  	.driver = {
->  		.name = "snvs_pwrkey",
-> -- 
-> 2.20.1
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>  		.name = "mtk-thermal",
+> +		.pm = &mtk_thermal_pm_ops,
+>  		.of_match_table = mtk_thermal_of_match,
+>  	},
+>  };
