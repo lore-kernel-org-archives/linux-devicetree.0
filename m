@@ -1,44 +1,52 @@
-Return-Path: <SRS0=rCaq=WY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36512 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfH1Ha3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 28 Aug 2019 03:30:29 -0400
-MIME-Version: 1.0
-References: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 Aug 2019 09:30:17 +0200
-Message-ID: <CAMuHMdVHtJTmuW0z+LRRFGL4O2bjiNv6odyGTmLi-EqxN1PP8g@mail.gmail.com>
+Return-Path: <SRS0=C2Tf=WY=ti.com=peter.ujfalusi@kernel.org>
 Subject: Re: [PATCH] dt-bindings: dmaengine: dma-common: Revise the
  dma-channel-mask property
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+References: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <eb823985-5cf6-0d83-8613-1baeeaf7d9c8@ti.com>
+Date: Wed, 28 Aug 2019 10:25:19 +0300
+MIME-Version: 1.0
+In-Reply-To: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
 
-I would s/Revise/Fix/ in the subject.
 
-On Wed, Aug 28, 2019 at 8:41 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
+On 28/08/2019 9.39, Yoshihiro Shimoda wrote:
 > The commit b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas
 > for the generic DMA bindings") changed the property from
 > dma-channel-mask to dma-channel-masks. So, this patch revises it.
->
+> 
 > Fixes: b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas for the generic DMA bindings")
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/dma/dma-common.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> index 0141af0..ed0a49a 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> @@ -24,7 +24,7 @@ properties:
+>      description:
+>        Used to provide DMA controller specific information.
+>  
+> -  dma-channel-masks:
+> +  dma-channel-mask:
+>      $ref: /schemas/types.yaml#definitions/uint32
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+How this mask supposed to be used for controllers having more than 32
+channels (64, 300+)?
 
-Gr{oetje,eeting}s,
+>      description:
+>        Bitmask of available DMA channels in ascending order that are
+> 
 
-                        Geert
+- Péter
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
