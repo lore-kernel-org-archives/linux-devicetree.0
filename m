@@ -1,134 +1,38 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Date: Wed, 28 Aug 2019 10:00:37 -0500
-Message-ID: <20190828150037.2640-1-aford173@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+Date: Wed, 28 Aug 2019 08:05:07 -0700
+Message-ID: <7h36hltjoc.fsf@baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com> <7hh862tbt2.fsf@baylibre.com> <1j4l217m4h.fsf@starbuckisacylon.baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1j4l217m4h.fsf@starbuckisacylon.baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: pali.rohar@gmail.com, t-kristo@ti.com, aaro.koskinen@iki.fi, adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The datasheet for the AM3517 shows the RNG is connected to L4.
-It shows the module address for the RNG is 0x480A0000, and it
-matches the omap2.dtsi description.  Since the driver can support
-omap2 and omap4, it seems reasonable to assume the omap3 would
-use the same core for the RNG.
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-This RFC, mimics much of the omap2 hwmods on the OMAP3. It
-also adds the necessary clock for driving the RNG.  Unfortunately,
-it appears non-functional.  If anyone has any suggestions on how
-to finish the hwmod (or port it to the newer l4 device tree
-format), feedback is requested.
+> On Tue 27 Aug 2019 at 16:42, Kevin Hilman <khilman@baylibre.com> wrote:
+>
+>> Jerome Brunet <jbrunet@baylibre.com> writes:
+>>
+>>> This patchset adds the dedicated reset of the tdm formatters which
+>>> have been added on the g12a SoC family. Using these help with the channel
+>>> mapping when the formatter uses more than 1 i2s lane.
+>>
+>> Because I forgot^W waited on this, we did the meson-g12a-common split,
+>> so this no longer applies cleanly.  Could you rebase this on current v5.4/dt64
+>> and I'll queue it for v5.4/dt64.
+>
+> Acutally it was already not applying when I sent this v1 ...
+> .. which is why I sent a v2 [0] ;)
+>
+> [0]: https://lkml.kernel.org/r/20190823154432.16268-1-jbrunet@baylibre.com
 
-Currently the hwmods repond as follows:
+Oops, I saw there was a v2, but I missed that in my `git pw` because v2
+of the series had an "ASoC:" prefix in the cover letter, not an "arm64:
+dts" one, so I skimmed past it.
 
-[    0.245697] omap_hwmod: rng: _wait_target_ready failed: -22
-[    0.245727] omap_hwmod: rng: cannot be enabled for reset (3)
-[    6.780792] omap_hwmod: rng: _wait_target_ready failed: -22
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
-index 945537aee3ca..05891dff7fa1 100644
---- a/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap36xx-omap3430es2plus-clocks.dtsi
-@@ -189,7 +189,7 @@
- 			 <&mcspi2_ick>, <&mcspi1_ick>, <&i2c3_ick>, <&i2c2_ick>,
- 			 <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_ick>,
- 			 <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
--			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>,
-+			 <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&rng_ick>,
- 			 <&ssi_ick>;
- 	};
- };
-diff --git a/arch/arm/mach-omap2/cm-regbits-34xx.h b/arch/arm/mach-omap2/cm-regbits-34xx.h
-index 037529a9e969..82330a66e35c 100644
---- a/arch/arm/mach-omap2/cm-regbits-34xx.h
-+++ b/arch/arm/mach-omap2/cm-regbits-34xx.h
-@@ -17,6 +17,7 @@
- #define OMAP3430_CLKACTIVITY_IVA2_MASK			(1 << 0)
- #define OMAP3430_CLKTRCTRL_MPU_MASK			(0x3 << 0)
- #define OMAP3430_ST_AES2_SHIFT				28
-+#define OMAP34XX_ST_RNG_SHIFT                           2
- #define OMAP3430_ST_SHA12_SHIFT				27
- #define AM35XX_ST_UART4_SHIFT				23
- #define OMAP3430_ST_HDQ_SHIFT				22
-diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-index f52438bdfc14..bae4487383b6 100644
---- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-@@ -1627,6 +1627,42 @@ static struct omap_hwmod omap3xxx_gpmc_hwmod = {
- 	.flags		= HWMOD_NO_IDLEST | DEBUG_OMAP_GPMC_HWMOD_FLAGS,
- };
- 
-+/* RNG */
-+
-+static struct omap_hwmod_class_sysconfig omap3_rng_sysc = {
-+	.rev_offs	= 0x3c,
-+	.sysc_offs	= 0x40,
-+	.syss_offs	= 0x44,
-+	.sysc_flags	= (SYSC_HAS_SOFTRESET | SYSC_HAS_AUTOIDLE |
-+			   SYSS_HAS_RESET_STATUS),
-+	.sysc_fields	= &omap_hwmod_sysc_type1,
-+};
-+
-+static struct omap_hwmod_class omap3_rng_hwmod_class = {
-+	.name		= "rng",
-+	.sysc		= &omap3_rng_sysc,
-+};
-+
-+struct omap_hwmod omap3xxx_rng_hwmod = {
-+	.name		= "rng",
-+	.main_clk	= "rng_ick",
-+	.prcm		= {
-+		.omap2 = {
-+			.module_offs = CORE_MOD,
-+			.idlest_reg_id = 4,
-+			.idlest_idle_bit = OMAP34XX_ST_RNG_SHIFT,
-+		},
-+	},
-+	/*
-+	 * XXX The first read from the SYSSTATUS register of the RNG
-+	 * after the SYSCONFIG SOFTRESET bit is set triggers an
-+	 * imprecise external abort.  It's unclear why this happens.
-+	 * Until this is analyzed, skip the IP block reset.
-+	 */
-+	.flags		= HWMOD_INIT_NO_RESET,
-+	.class		= &omap3_rng_hwmod_class,
-+};
-+
- /*
-  * interfaces
-  */
-@@ -2508,6 +2544,13 @@ static struct omap_hwmod omap3xxx_sham_hwmod = {
- 	.class		= &omap3xxx_sham_class,
- };
- 
-+/* l4_core -> rng */
-+struct omap_hwmod_ocp_if omap3xxx_l4_core__rng = {
-+	.master		= &omap3xxx_l4_core_hwmod,
-+	.slave		= &omap3xxx_rng_hwmod,
-+	.clk		= "rng_ick",
-+	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-+};
- 
- static struct omap_hwmod_ocp_if omap3xxx_l4_core__sham = {
- 	.master		= &omap3xxx_l4_core_hwmod,
-@@ -2769,6 +2812,7 @@ static struct omap_hwmod_ocp_if *omap36xx_hwmod_ocp_ifs[] __initdata = {
- 	&omap3xxx_l4_core__mmu_isp,
- 	&omap3xxx_l3_main__mmu_iva,
- 	&omap3xxx_l4_core__ssi,
-+	&omap3xxx_l4_core__rng,
- 	NULL,
- };
- 
-@@ -2788,6 +2832,7 @@ static struct omap_hwmod_ocp_if *am35xx_hwmod_ocp_ifs[] __initdata = {
- 	&am35xx_l4_core__mdio,
- 	&am35xx_emac__l3,
- 	&am35xx_l4_core__emac,
-+	&omap3xxx_l4_core__rng,
- 	NULL,
- };
- 
--- 
-2.17.1
+Kevin
