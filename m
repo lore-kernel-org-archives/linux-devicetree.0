@@ -1,40 +1,49 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 09/15] arm64: dts: msm8996: thermal: Add interrupt support
-Date: Tue, 27 Aug 2019 17:35:21 -0700
-Message-ID: <5d65cc4a.1c69fb81.376b6.2486@mx.google.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org> <1cb5ab682bce53d32f3a73b5b29cc6c3e800bfcc.1566907161.git.amit.kucheria@linaro.org>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 02/13] MIPS: Loongson64: Sepreate loongson2ef/loongson64
+ code
+Date: Wed, 28 Aug 2019 08:37:34 +0800
+Message-ID: <c03045cd-25df-a3b9-3b3b-cf09b7fdd3fa@flygoat.com>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+ <20190827085302.5197-3-jiaxun.yang@flygoat.com>
+ <20190827220506.GK30291@darkstar.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1cb5ab682bce53d32f3a73b5b29cc6c3e800bfcc.1566907161.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190827220506.GK30291@darkstar.musicnaut.iki.fi>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, agross@kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, marc.w.gonzalez@free.fr, masneyb@onstation.org
-Cc: devicetree@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Amit Kucheria (2019-08-27 05:14:05)
-> Register upper-lower interrupts for each of the two tsens controllers.
->=20
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 60 ++++++++++++++-------------
->  1 file changed, 32 insertions(+), 28 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/=
-qcom/msm8996.dtsi
-> index 96c0a481f454e..bb763b362c162 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -175,8 +175,8 @@
-> =20
->         thermal-zones {
->                 cpu0-thermal {
-> -                       polling-delay-passive =3D <250>;
-> -                       polling-delay =3D <1000>;
-> +                       polling-delay-passive =3D <0>;
-> +                       polling-delay =3D <0>;
 
-Is it really necessary to change the configuration here to be 0 instead
-of some number? Why can't we detect that there's an interrupt and then
-ignore these properties?
+On 2019/8/28 上午6:05, Aaro Koskinen wrote:
+> Hi,
+>
+> On Tue, Aug 27, 2019 at 04:52:51PM +0800, Jiaxun Yang wrote:
+>> As later model of GSx64 family processors including 2-series-soc have
+>> similar design with initial loongson3a while loongson2e/f seems less
+>> identical, we seprate loongson2e/f support code out of mach-loongson64
+>                  ^^^^^^^
+>
+> separate (typo in patch title as well)
+>
+>> to make our life easier.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> [...]
+>
+>> +config MACH_LOONGSON2EF
+Hi Aaro,
+> You need to update lemote2f_defconfig with his patch.
+
+How to generate this config? We should not edit it manually right?
+
+Thanks
+
+--
+
+Jiaxun Yang
+
+> A.
