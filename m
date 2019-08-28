@@ -1,96 +1,74 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194 in
- p2972-0000 platform
-Date: Wed, 28 Aug 2019 11:10:28 +0200
-Message-ID: <20190828091028.GB2917@ulmo>
-References: <20190826073143.4582-1-vidyas@nvidia.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Wed, 28 Aug 2019 09:10:41 +0000
+Message-ID: <DB3PR0402MB39168DA42F69336EB2B231E8F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+         <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <3f268ab0e05b795c04dbb3490f0c93da998e3b2c.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rJwd6BRFiFCcLxzm"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190826073143.4582-1-vidyas@nvidia.com>
+In-Reply-To: <3f268ab0e05b795c04dbb3490f0c93da998e3b2c.camel@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---rJwd6BRFiFCcLxzm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 26, 2019 at 01:01:37PM +0530, Vidya Sagar wrote:
-> This patch series enables Tegra194's C5 controller which owns x16 slot in
-> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configure=
-d as
-> output and bi-directional signals by default and hence they need to be
-> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are control=
-led
-> through GPIOs and hence they need to be enabled through regulator framewo=
-rk.
-> This patch series adds required infrastructural support to address both t=
-he
-> aforementioned requirements.
-> Testing done on p2972-0000 platform
-> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
-> - Enumerated device's functionality verified
-> - Suspend-Resume sequence is verified with device connected to x16 slot
->=20
-> Vidya Sagar (6):
->   dt-bindings: PCI: tegra: Add sideband pins configuration entries
->   arm64: tegra: Add configuration for PCIe C5 sideband signals
->   PCI: tegra: Add support to configure sideband pins
->   dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->   arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
->   PCI: tegra: Add support to enable slot regulators
-
-Hi Vidya,
-
-when you resend with review comments addressed, can you please reorder
-the patches slightly? I think it's more natural to order them like this:
-
-    dt-bindings: PCI: tegra: Add sideband pins configuration entries
-    PCI: tegra: Add support to configure sideband pins
-    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
-    PCI: tegra: Add support to enable slot regulators
-    arm64: tegra: Add configuration for PCIe C5 sideband signals
-    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-
-Or perhaps even like this:
-
-    dt-bindings: PCI: tegra: Add sideband pins configuration entries
-    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
-    PCI: tegra: Add support to configure sideband pins
-    PCI: tegra: Add support to enable slot regulators
-    arm64: tegra: Add configuration for PCIe C5 sideband signals
-    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-
-That makes it more obvious that patches 1-2 need an Acked-by from Rob
-and patches 1-4 need to go through Lorenzo's tree and that I'll pick up
-patches 5-6.
-
-Thierry
-
---rJwd6BRFiFCcLxzm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1mRQQACgkQ3SOs138+
-s6GoKg//c0Y8aNQgON5iL5nm5/UbKfGB8YDwT6hVWpzkOowmnglV2QSXZG73j4mx
-hjXJuiSrXTTDgdhKhDYSv+xxG+SB3sUMCtxG6BkPxjMgElw8PuLo/qfjTzHIGN7P
-4OzB/u3fInyfoO4lrb1bVqR/DysGqpyuX/eoGHtAD99UKvuaCoPq/YuRMuEJB9uM
-P/iNX66JVhfYRag1BTGdkawWxTHhZUujAIXWJRyDvNN43xA30Y401ZZIzrKnvqCg
-BLv7/bCXpx1i9jN5WtvTwjp1MbgjrKrTI5eMe0yrHyI/JuFC7mqWEIW+pNuO7GYB
-taA7C27Yod+pvaGbiacVpzRFZMXaiDxhE3/DuxjQ3wD4decVzPGMh3adHmAhISCM
-LMwHxo0IwTZTZPubNkLRuymqy+r5bGYNd8LkNdy2pVs0awL/JkfkIQTNkMD97/O9
-9giB1qsTILOXPeD2nI/xHlQvYu8nmwldvefoh+c815Ym17IaVRrXCZwqzudVBuvu
-+xUM2rpbLEXtqrIK6g18q8rWdpO4wHFJcqrcjX8fzdaMOPpSDVxD7TESYLt8rQ70
-IwylYJxXWR7yR2YfOAv5x8tLTzbxkju/NU8TXBooVDoqiZGl9wNOFbsjhr2VCxQs
-u97ZCPtSZ3x4a2yFlVMHBStYPz4XZUA451oncHfju3K8tviyaTQ=
-=Y3Mi
------END PGP SIGNATURE-----
-
---rJwd6BRFiFCcLxzm--
+SGksIFJ1aQ0KDQo+IE9uIFdlZCwgMjAxOS0wOC0yOCBhdCAwODo1MSArMDAwMCwgQW5zb24gSHVh
+bmcgd3JvdGU6DQo+ID4gSGksIFJ1aQ0KPiA+DQo+ID4gPiBPbiBUdWUsIDIwMTktMDgtMjcgYXQg
+MTI6NDEgKzAwMDAsIExlb25hcmQgQ3Jlc3RleiB3cm90ZToNCj4gPiA+ID4gT24gMjcuMDguMjAx
+OSAwNDo1MSwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gPiA+ID4gPiBJbiBhbiBlYXJsaWVyIHNl
+cmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdzIHdhcyByZW1vdmVkDQo+ID4gPiA+ID4gPiBm
+cm9tIHRoZSBUTVUgY2xvY2sgc28gaWYgdGhlIHRoZXJtYWwgZHJpdmVyIGRvZXNuJ3QgZXhwbGlj
+aXRseQ0KPiA+ID4gPiA+ID4gZW5hYmxlIGl0IHRoZSBzeXN0ZW0gd2lsbCBoYW5nIG9uIHByb2Jl
+LiBUaGlzIGlzIHdoYXQgaGFwcGVucw0KPiA+ID4gPiA+ID4gaW4gbGludXgtbmV4dCByaWdodCBu
+b3chDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGUgdGhlcm1hbCBkcml2ZXIgc2hvdWxkIGJlIGJ1
+aWx0IHdpdGggbW9kdWxlLCBzbyBkZWZhdWx0DQo+ID4gPiA+ID4ga2VybmVsIHNob3VsZCBjYW4g
+Ym9vdCB1cCwgZG8geW91IG1vZGlmeSB0aGUgdGhlcm1hbCBkcml2ZXIgYXMNCj4gPiA+ID4gPiBi
+dWlsdC0gaW4/DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFVubGVzcyB0aGlzIHBhdGNoZXMgaXMg
+bWVyZ2VkIHNvb24gd2UnbGwgZW5kIHVwIHdpdGggYSA1LjQtDQo+ID4gPiA+ID4gPiByYzENCj4g
+PiA+ID4gPiA+IHRoYXQgZG9lc24ndCBib290IG9uIGlteDhtcS4gQW4gZWFzeSBmaXggd291bGQg
+YmUgdG8NCj4gPiA+ID4gPiA+IGRyb3AvcmV2ZXJ0IGNvbW1pdA0KPiA+ID4gPiA+ID4gOTUxYzFh
+ZWY5NjkxICgiY2xrOiBpbXg4bXE6IFJlbW92ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBmb3INCj4g
+PiA+ID4gPiA+IElNWDhNUV9DTEtfVE1VX1JPT1QiKSB1bnRpbCB0aGUgdGhlcm1hbCBwYXRjaGVz
+IGFyZSBhY2NlcHRlZC4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IElmIHRoZSB0aGVybWFsIGRyaXZl
+ciBpcyBidWlsdCBhcyBtb2R1bGUsIEkgdGhpbmsgbm8gbmVlZCB0bw0KPiA+ID4gPiA+IHJldmVy
+dCB0aGUgY29tbWl0LCBidXQgaWYgYnkgZGVmYXVsdCB0aGVybWFsIGRyaXZlciBpcyBidWlsdC1p
+bg0KPiA+ID4gPiA+IG9yIG1vZCBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFr
+IGtlcm5lbCBib290IHVwLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgcW9yaXFfdGhlcm1hbCBkcml2
+ZXIgaXMgYnVpbHQgYXMgYSBtb2R1bGUgaW4gZGVmY29uZmlnIGFuZA0KPiA+ID4gPiB3aGVuIG1v
+ZHVsZXMgYXJlIHByb3Blcmx5IGluc3RhbGxlZCBpbiByb290ZnMgdGhleSB3aWxsIGJlDQo+ID4g
+PiA+IGF1dG9tYXRpY2FsbHkgYmUgcHJvYmVkIG9uIGJvb3QgYW5kIGNhdXNlIGEgaGFuZy4NCj4g
+PiA+ID4NCj4gPiA+ID4gSSB1c3VhbGx5IHJ1biBuZnNyb290IHdpdGggbW9kdWxlczoNCj4gPiA+
+ID4NCj4gPiA+ID4gICAgICBtYWtlIG1vZHVsZXNfaW5zdGFsbCBJTlNUQUxMX01PRF9QQVRIPS9z
+cnYvbmZzL2lteDgtcm9vdA0KPiA+ID4NCj4gPiA+IHNvIHdlIG5lZWQgdGhpcyBwYXRjaCBzaGlw
+cGVkIGluIHRoZSBiZWdpbm5pbmcgb2YgdGhlIG1lcmdlIHdpbmRvdywNCj4gPiA+IHJpZ2h0Pw0K
+PiA+ID4gaWYgdGhlcmUgaXMgaGFyZCBkZXBlbmRlbmN5IGJldHdlZW4gcGF0Y2hlcywgaXQncyBi
+ZXR0ZXIgdG8gc2VuZA0KPiA+ID4gdGhlbSBpbiBvbmUgc2VyaWVzLCBhbmQgZ2V0IHNoaXBwZWQg
+dmlhIGVpdGhlciB0cmVlLg0KPiA+DQo+ID4gVGhlcmUgaXMgbm8gaGFyZCBkZXBlbmRlbmN5IGlu
+IHRoaXMgcGF0Y2ggc2VyaWVzLiBQcmV2aW91cyBmb3IgdGhlIFRNVQ0KPiA+IGNsb2NrIGRpc2Fi
+bGVkIHBhdGNoLCBzaW5jZSB0aGVybWFsIGRyaXZlciBpcyBidWlsdCBhcyBtb2R1bGUgc28gSSBk
+aWQNCj4gPiBOT1QgZm91bmQgdGhlIGlzc3VlLiBUaGUgcGF0Y2ggc2VyaWVzIGlzIHRoZSBjb3Jy
+ZWN0IGZpeC4NCj4gPg0KPiBHb3QgaXQuDQo+IHRoZSBjbG9jayBwYXRjaCBpcyBhbHNvIHF1ZXVl
+ZCBmb3IgNS40LXJjMSwgcmlnaHQ/DQo+IEkgd2lsbCBhcHBseSB0aGlzIHNlcmllcyBhbmQgdHJ5
+IHRvIHB1c2ggaXQgYXMgZWFybHkgYXMgcG9zc2libGUgZHVyaW5nIHRoZSBtZXJnZQ0KPiB3aW5k
+b3cuDQoNClRoZSBjbG9jayBwYXRjaCBpcyBhcyBiZWxvdyBpbiBMaW51eC1uZXh0IHRyZWUsIHdo
+aWxlIEkgZGlkIE5PVCBzZWUgaXQgaW4gdjUuMy1yYzYsDQpzbyBpdCBzaG91bGQgYmUgcXVldWVk
+IGZvciA1LjQtcmMxLCByaWdodD8NClRoYW5rcyBmb3IgdGFraW5nIHRoZSBwYXRjaCBzZXJpZXMh
+DQoNCg0KY29tbWl0IDk1MWMxYWVmOTY5MTQ5MWRkZjRkZDVhYWI3NmYyNjY1ZDU2YmQ1ZDMNCkF1
+dGhvcjogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQpEYXRlOiAgIEZyaSBKdWwg
+NSAxMjo1NjoxMSAyMDE5ICswODAwDQoNCiAgICBjbGs6IGlteDhtcTogUmVtb3ZlIENMS19JU19D
+UklUSUNBTCBmbGFnIGZvciBJTVg4TVFfQ0xLX1RNVV9ST09UDQoNCiAgICBJTVg4TVFfQ0xLX1RN
+VV9ST09UIGlzIE9OTFkgdXNlZCBmb3IgdGhlcm1hbCBtb2R1bGUsIHRoZSBkcml2ZXINCiAgICBz
+aG91bGQgbWFuYWdlIHRoaXMgY2xvY2ssIHNvIG5vIG5lZWQgdG8gaGF2ZSBDTEtfSVNfQ1JJVElD
+QUwgZmxhZw0KICAgIHNldC4NCg0KICAgIFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNv
+bi5IdWFuZ0BueHAuY29tPg0KICAgIFJldmlld2VkLWJ5OiBBYmVsIFZlc2EgPGFiZWwudmVzYUBu
+eHAuY29tPg0KICAgIEFja2VkLWJ5OiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+DQog
+ICAgU2lnbmVkLW9mZi1ieTogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KDQpkcml2
+ZXJzL2Nsay9pbXgvY2xrLWlteDhtcS5jDQoNCg0KVGhhbmtzLA0KQW5zb24NCg==
