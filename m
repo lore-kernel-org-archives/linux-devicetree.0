@@ -1,70 +1,53 @@
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Subject: Re: [PATCH 2/2] dt-bindings: imx6q-pcie: add
- "fsl,pcie-phy-refclk-internal" for i.MX7D
-Date: Wed, 28 Aug 2019 09:17:07 +0100
-Message-ID: <bc6247cdd51d7a7b28c52a186d4975ecbeaa602d.camel@andred.net>
-References: <20190813103759.38358-1-git@andred.net>
-         <20190813103759.38358-2-git@andred.net> <20190827155626.GA29948@bogus>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas
+ for the generic watchdog bindings
+Date: Wed, 28 Aug 2019 10:18:19 +0200
+Message-ID: <20190828081819.qqztieg7cgdvpkxv@flea>
+References: <20190821143835.7294-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i6iaeebbwmfsnvrm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827155626.GA29948@bogus>
+Content-Disposition: inline
+In-Reply-To: <20190821143835.7294-1-mripard@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: linux@roeck-us.net, wim@linux-watchdog.org
+Cc: linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Tue, 2019-08-27 at 10:56 -0500, Rob Herring wrote:
-> On Tue, Aug 13, 2019 at 11:37:59AM +0100, André Draszik wrote:
-> > The i.MX7D variant of the IP can use either an external
-> > crystal oscillator input or an internal clock input as
-> > a reference clock input for the PCIe PHY.
-> > 
-> > Document the optional property 'fsl,pcie-phy-refclk-internal'
-> > 
-> > Signed-off-by: André Draszik <git@andred.net>
-> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> > Cc: Fabio Estevam <festevam@gmail.com>
-> > Cc: NXP Linux Team <linux-imx@nxp.com>
-> > Cc: linux-pci@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > index a7f5f5afa0e6..985d7083df9f 100644
-> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > @@ -56,6 +56,11 @@ Additional required properties for imx7d-pcie and imx8mq-pcie:
-> >  	       - "turnoff"
-> >  - fsl,imx7d-pcie-phy: A phandle to an fsl,imx7d-pcie-phy node.
-> 
-> Not sure how this got in, but why is the phy binding not used here?
-> 
-> >  
-> > +Additional optional properties for imx7d-pcie:
-> > +- fsl,pcie-phy-refclk-internal: If present then an internal PLL input is used
-> > +  as PCIe PHY reference clock source. By default an external ocsillator input
-> > +  is used.
-> 
-> Can't the clock binding and maybe 'assigned-clocks' be used here? 
-> 
-> Also, this is a property of the PHY, so it belongs in the PHY's node.
+--i6iaeebbwmfsnvrm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for pointing this out. I'll have a look.
+On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>
+> The watchdogs have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Andre'
+Ping?
+
+Maxime
+
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--i6iaeebbwmfsnvrm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWY4ywAKCRDj7w1vZxhR
+xSrsAP9Wm4uqadS7xrVp8WfRQCHb46bRTlF+qGXNnJAoK7xrlwEAnhNhZ4zOZeDd
+sjEXxaKnIq1SiINnOpEsBy21a+L8eAY=
+=fuF4
+-----END PGP SIGNATURE-----
+
+--i6iaeebbwmfsnvrm--
