@@ -1,77 +1,31 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH V2 3/6] PCI: tegra: Add support to configure sideband pins
-Date: Wed, 28 Aug 2019 21:46:26 +0530
-Message-ID: <015280f6-cf13-9a36-6ae7-77476d089af4@nvidia.com>
-References: <20190828131505.28475-1-vidyas@nvidia.com>
- <20190828131505.28475-4-vidyas@nvidia.com>
- <20190828150739.GX14582@e119886-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Oliver Graute <oliver.graute@gmail.com>
+Subject: [PATCHv5 0/2] Variscite DART-6UL SoM support
+Date: Wed, 28 Aug 2019 18:19:16 +0200
+Message-ID: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828150739.GX14582@e119886-lin.cambridge.arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: shawnguo@kernel.org
+Cc: oliver.graute@gmail.com, narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/28/2019 8:37 PM, Andrew Murray wrote:
-> On Wed, Aug 28, 2019 at 06:45:02PM +0530, Vidya Sagar wrote:
->> Add support to configure sideband signal pins when information is present
->> in respective controller's device-tree node.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> V2:
->> * Addressed review comment from Andrew Murray
->> * Handled failure case of pinctrl_pm_select_default_state() cleanly
->>
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index fc0dbeb31d78..057ba4f9fbcd 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -1304,8 +1304,13 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->>   	if (ret < 0) {
->>   		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
->>   			ret);
->> -		pm_runtime_disable(dev);
->> -		return ret;
->> +		goto fail_pm_get_sync;
->> +	}
->> +
->> +	ret = pinctrl_pm_select_default_state(pcie->dev);
-> 
-> This patch looks OK, though you're still using pcie->dev here instead of dev.
-I'll take care of this.
-Thanks for the thorough review.
+Need feedback to the following patches which adds support for a DART-6UL Board
 
-- Vidya Sagar
+Need feedback howto document propertys and compatible the right way
 
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
->> +		goto fail_pinctrl;
->>   	}
->>   
->>   	tegra_pcie_init_controller(pcie);
->> @@ -1332,7 +1337,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->>   
->>   fail_host_init:
->>   	tegra_pcie_deinit_controller(pcie);
->> +fail_pinctrl:
->>   	pm_runtime_put_sync(dev);
->> +fail_pm_get_sync:
->>   	pm_runtime_disable(dev);
->>   	return ret;
->>   }
->> -- 
->> 2.17.1
->>
+Need feedback why ethernet RX is deaf
+
+Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
+
+Oliver Graute (2):
+  ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
+  ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
+
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 445 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts    | 196 +++++++++
+ 3 files changed, 642 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+
+-- 
+2.7.4
