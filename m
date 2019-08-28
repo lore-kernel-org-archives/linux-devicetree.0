@@ -1,55 +1,40 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v4 5/5] dt-bindings: display: armada: Document bus-width property
-Date: Wed, 28 Aug 2019 09:59:38 +0200
-Message-ID: <20190828075938.318028-6-lkundrak@v3.sk>
-References: <20190828075938.318028-1-lkundrak@v3.sk>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+Date: Wed, 28 Aug 2019 10:03:10 +0200
+Message-ID: <1j4l217m4h.fsf@starbuckisacylon.baylibre.com>
+References: <20190820121551.18398-1-jbrunet@baylibre.com> <7hh862tbt2.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828075938.318028-1-lkundrak@v3.sk>
+In-Reply-To: <7hh862tbt2.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@armlinux.org.uk>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This makes it possible to choose a different pixel format for the
-endpoint. Modelled after what other LCD controllers use, including
-marvell,pxa2xx-lcdc and atmel,hlcdc-display-controller and perhaps more.
+On Tue 27 Aug 2019 at 16:42, Kevin Hilman <khilman@baylibre.com> wrote:
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+>
+>> This patchset adds the dedicated reset of the tdm formatters which
+>> have been added on the g12a SoC family. Using these help with the channel
+>> mapping when the formatter uses more than 1 i2s lane.
+>
+> Because I forgot^W waited on this, we did the meson-g12a-common split,
+> so this no longer applies cleanly.  Could you rebase this on current v5.4/dt64
+> and I'll queue it for v5.4/dt64.
 
----
-Changes since v2:
-- Collected the Reviewed-by tag
+Acutally it was already not applying when I sent this v1 ...
+.. which is why I sent a v2 [0] ;)
 
- .../devicetree/bindings/display/marvell,armada-lcdc.txt     | 6 ++++++
- 1 file changed, 6 insertions(+)
+[0]: https://lkml.kernel.org/r/20190823154432.16268-1-jbrunet@baylibre.com
 
-diff --git a/Documentation/devicetree/bindings/display/marvell,armada-lcd=
-c.txt b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-index 0ea4cbe5a32ee..d1dadaaeee734 100644
---- a/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-+++ b/Documentation/devicetree/bindings/display/marvell,armada-lcdc.txt
-@@ -25,6 +25,11 @@ Required child nodes:
-=20
- - port: video output port with endpoints, as described by
-   Documentation/devicetree/bindings/graph.txt
-+  The endpoints can optionally specify the following property:
-+
-+  - bus-width: recognized values are <12>, <16>, <18> and <24>, that
-+    select "rgb444", "rgb565", "rgb666" or "rgb888" pixel format
-+    respectively. Defaults to <24> if unspecified.
-=20
- Example:
-=20
-@@ -37,6 +42,7 @@ Example:
-=20
- 		lcd0_port: port {
- 			lcd0_rgb_out: endpoint {
-+				bus-width =3D <24>;
- 				remote-endpoint =3D <&encoder_rgb_in>;
- 			};
- 		};
---=20
-2.21.0
+>
+>> Kevin, please note that to build, this patchset depends on the new reset
+>> bindings of the audio clock controller. I've prepared a tag for you [0]
+>>
+>> [0]: git://github.com/BayLibre/clk-meson.git - clk-meson-dt-v5.4-2
+>
+> Thanks for the tag.  This is now included in v5.4/dt64.
+>
+> Kevin
