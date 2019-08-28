@@ -1,111 +1,125 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
-Date: Wed, 28 Aug 2019 19:36:34 +0100
-Message-ID: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v3 2/8] dt-bindings: display: Add idk-2121wr binding
+Date: Wed, 28 Aug 2019 19:36:36 +0100
+Message-ID: <1567017402-5895-3-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear All,
+Add binding for the idk-2121wr LVDS panel from Advantech.
 
-this series adds support for dual-LVDS panel IDK-2121WR
-from Advantech:
+Some panel-specific documentation can be found here:
 https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
 
-V3 approaches the problem in a completely different way, we now
-have two new properties to mark the ports in the DT as receiving
-even pixels and odd pixels: dual-lvds-even-pixels and dual-lvds-odd-pixels,
-which means device drivers should not use bridge specific or panel
-specific dual_link flags. Also, in this case the DT describes the
-connection fully.
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-In order for the solution to be generic, I have exported a new helper
-(drm_of_lvds_get_dual_link_configuration) to walk the device tree,
-and figure out if the connection is dual-LVDS. The same helper gives
-information about the configuration of the connection. If Px is connected
-to a port expecting even pixels and Py is connected to a port expecting
-odd pixels, then the helper returns DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS
-(like in the example below), otherwise it returns
-DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS.
-
-
- --------            dual-lvds-even-pixels  --------
-|        |----                         ----|        |
-|        | Px |---------------------->| Pn |        |
-|        |----                         ----|        |
-| SOURCE |           dual-lvds-odd-pixels  |  SINK  |
-|        |----                         ----|        |
-|        | Py |---------------------->| Pm |        |
-|        |----                         ----|        |
- --------                                   --------
-
-The device driver for the encoder then will work out if with the current
-wiring the pixels need swapping or not.
-
-The same solution works for both panels and bridges.
-
-Since the DT describes the connection fully, driver
-drivers/gpu/drm/panel/panel-lvds.c works out-of-the-box, no changes
-required, however, this implementation opens up a problem with the
-dt-bindings.
-Driver drivers/gpu/drm/panel/panel-lvds.c can still be pleased by
-a port node, but also by a ports node.
-I have created Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-with the idea of including it from panels and bridges dt-bindings
-supporting dual-LVDS (and of course the dt-bindings for the specific
-devices should say which port should be marked as what), but file
-Documentation/devicetree/bindings/display/panel/lvds.yaml formally
-requires property "port", while with this implementation it should require
-OneOf "port" and "ports", and unfortunately I can't seem to find a neat way
-aroud that, other than creating a new compatible string
-(e.g. "panel-dual-lvds"), a new dt-binding document for it, and of course adding
-support for the new compatible string to drivers/gpu/drm/panel/panel-lvds.c.
-As a result, this series is missing (at least) a patch necessary to fully
-document the new implementation within
-Documentation/devicetree/bindings/display/panel/lvds.yaml
-
-Rob, do you have any suggestions? Do you think this idea works ok from a
-documentation point of view? By the way, I don't really know what I am doing
-with the yaml dt-bindings, I hope you won't be horrified by this series :-P
-
-I hope I was able to deliver the concept clearly, if not please just ask.
-
-Comments are very much appreciated.
-
-Thanks,
-Fab
-
-Fabrizio Castro (8):
-  dt-bindings: display: Add bindings for LVDS bus-timings
-  dt-bindings: display: Add idk-2121wr binding
-  drm: Add bus timings helper
-  drm: rcar-du: lvds: Add dual-LVDS panels support
-  drm: bridge: thc63: Do not report input bus mode through bridge
-    timings
-  arm64: dts: renesas: Add EK874 board with idk-2121wr display support
-  [HACK] arm64: dts: renesas: draak: Enable LVDS
-  [HACK] arm64: dts: renesas: draak: Enable LVDS dual-link operation
-
- .../bindings/display/bus-timings/lvds.yaml         |  38 +++++++
- .../display/panel/advantech,idk-2121wr.yaml        |  90 ++++++++++++++++
- arch/arm64/boot/dts/renesas/Makefile               |   3 +-
- .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts     |  21 +++-
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts     |  26 +++--
- drivers/gpu/drm/Makefile                           |   3 +-
- drivers/gpu/drm/bridge/thc63lvd1024.c              |   9 +-
- drivers/gpu/drm/drm_bus_timings.c                  |  97 +++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_lvds.c                | 110 +++++++++++--------
- include/drm/drm_bridge.h                           |   8 --
- include/drm/drm_bus_timings.h                      |  21 ++++
- 12 files changed, 473 insertions(+), 69 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+---
+v2->v3:
+* new patch
+---
+ .../display/panel/advantech,idk-2121wr.yaml        | 90 ++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
- create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
- create mode 100644 drivers/gpu/drm/drm_bus_timings.c
- create mode 100644 include/drm/drm_bus_timings.h
 
+diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+new file mode 100644
+index 0000000..b2ccdc8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
++
++maintainers:
++  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++description: |
++  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
++
++  The panels expects odd pixels from the first port, and even pixels from
++  the second port, therefore the ports must be marked accordingly.
++
++allOf:
++  - $ref: lvds.yaml#
++  - $ref: ../bus-timings/lvds.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: advantech,idk-2121wr
++      - {} # panel-lvds, but not listed here to avoid false select
++
++  data-mapping:
++    const: vesa-24
++
++  width-mm:
++    const: 476
++
++  height-mm:
++    const: 268
++
++  panel-timing: true
++  ports: true
++
++additionalProperties: false
++
++required:
++  - compatible
++
++examples:
++  - |+
++    panel-lvds {
++      compatible = "advantech,idk-2121wr", "panel-lvds";
++
++      width-mm = <476>;
++      height-mm = <268>;
++
++      data-mapping = "vesa-24";
++
++      panel-timing {
++        clock-frequency = <148500000>;
++        hactive = <1920>;
++        vactive = <1080>;
++        hsync-len = <44>;
++        hfront-porch = <88>;
++        hback-porch = <148>;
++        vfront-porch = <4>;
++        vback-porch = <36>;
++        vsync-len = <5>;
++      };
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port@0 {
++          reg = <0>;
++          dual-lvds-odd-pixels;
++          panel_in0: endpoint {
++            remote-endpoint = <&lvds0_out>;
++          };
++        };
++
++        port@1 {
++          reg = <1>;
++          dual-lvds-even-pixels;
++          panel_in1: endpoint {
++            remote-endpoint = <&lvds1_out>;
++          };
++        };
++      };
++    };
++
++...
 -- 
 2.7.4
