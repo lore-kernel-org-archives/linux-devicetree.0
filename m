@@ -1,11 +1,14 @@
 From: Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v5 0/2] mailbox: arm: introduce smc triggered mailbox
-Date: Wed, 28 Aug 2019 03:02:54 +0000
-Message-ID: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 28 Aug 2019 03:02:58 +0000
+Message-ID: <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
@@ -14,93 +17,157 @@ List-Id: devicetree@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-V5:
-yaml fix
+The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+actions in software layers running in the EL2 or EL3 exception levels.
+The term "ARM" here relates to the SMC instruction as part of the ARM
+instruction set, not as a standard endorsed by ARM Ltd.
 
-V4:
-yaml fix for num-chans in patch 1/2.
-https://patchwork.kernel.org/cover/11116521/
-
-V3:
-Drop interrupt
-Introduce transports for mem/reg usage
-Add chan-id for mem usage
-Convert to yaml format
-https://patchwork.kernel.org/cover/11043541/
-=20
-V2:
-This is a modified version from Andre Przywara's patch series
-https://lore.kernel.org/patchwork/cover/812997/.
-The modification are mostly:
-Introduce arm,num-chans
-Introduce arm_smccc_mbox_cmd
-txdone_poll and txdone_irq are both set to false
-arm,func-ids are kept, but as an optional property.
-Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
-Introduce interrupts notification.
-
-[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
-use smc as mailbox, power/clk is included, but only part of clk has been
-implemented to work with hardware, power domain only supports get name
-for now.
-
-The traditional Linux mailbox mechanism uses some kind of dedicated hardwar=
-e
-IP to signal a condition to some other processing unit, typically a dedicat=
-ed
-management processor.
-This mailbox feature is used for instance by the SCMI protocol to signal a
-request for some action to be taken by the management processor.
-However some SoCs does not have a dedicated management core to provide
-those services. In order to service TEE and to avoid linux shutdown
-power and clock that used by TEE, need let firmware to handle power
-and clock, the firmware here is ARM Trusted Firmware that could also
-run SCMI service.
-
-The existing SCMI implementation uses a rather flexible shared memory
-region to communicate commands and their parameters, it still requires a
-mailbox to actually trigger the action.
-
-This patch series provides a Linux mailbox compatible service which uses
-smc calls to invoke firmware code, for instance taking care of SCMI request=
-s.
-The actual requests are still communicated using the standard SCMI way of
-shared memory regions, but a dedicated mailbox hardware IP can be replaced =
-via
-this new driver.
-
-This simple driver uses the architected SMC calling convention to trigger
-firmware services, also allows for using "HVC" calls to call into hyperviso=
-rs
-or firmware layers running in the EL2 exception level.
-
-Patch 1 contains the device tree binding documentation, patch 2 introduces
-the actual mailbox driver.
-
-Please note that this driver just provides a generic mailbox mechanism,
-It could support synchronous TX/RX, or synchronous TX with asynchronous
-RX. And while providing SCMI services was the reason for this exercise,
-this driver is in no way bound to this use case, but can be used genericall=
-y
-where the OS wants to signal a mailbox condition to firmware or a
-hypervisor.
-Also the driver is in no way meant to replace any existing firmware
-interface, but actually to complement existing interfaces.
-
-[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
-
-Peng Fan (2):
-  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
-  mailbox: introduce ARM SMC based mailbox
-
- .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 ++++++++++++
- drivers/mailbox/Kconfig                            |   7 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/arm-smc-mailbox.c                  | 215 +++++++++++++++++=
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++=
 ++++
- 4 files changed, 349 insertions(+)
+ 1 file changed, 125 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
- create mode 100644 drivers/mailbox/arm-smc-mailbox.c
 
+diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Docum=
+entation/devicetree/bindings/mailbox/arm-smc.yaml
+new file mode 100644
+index 000000000000..f8eb28d5e307
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+@@ -0,0 +1,125 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM SMC Mailbox Interface
++
++maintainers:
++  - Peng Fan <peng.fan@nxp.com>
++
++description: |
++  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
++  call) instruction to trigger a mailbox-connected activity in firmware,
++  executing on the very same core as the caller. By nature this operation
++  is synchronous and this mailbox provides no way for asynchronous message=
+s
++  to be delivered the other way round, from firmware to the OS, but
++  asynchronous notification could also be supported. However the value of
++  r0/w0/x0 the firmware returns after the smc call is delivered as a recei=
+ved
++  message to the mailbox framework, so a synchronous communication can be
++  established, for a asynchronous notification, no value will be returned.
++  The exact meaning of both the action the mailbox triggers as well as the
++  return value is defined by their users and is not subject to this bindin=
+g.
++
++  One use case of this mailbox is the SCMI interface, which uses shared me=
+mory
++  to transfer commands and parameters, and a mailbox to trigger a function
++  call. This allows SoCs without a separate management processor (or when
++  such a processor is not available or used) to use this standardized
++  interface anyway.
++
++  This binding describes no hardware, but establishes a firmware interface=
+.
++  Upon receiving an SMC using one of the described SMC function identifier=
+s,
++  the firmware is expected to trigger some mailbox connected functionality=
+.
++  The communication follows the ARM SMC calling convention.
++  Firmware expects an SMC function identifier in r0 or w0. The supported
++  identifiers are passed from consumers, or listed in the the arm,func-ids
++  properties as described below. The firmware can return one value in
++  the first SMC result register, it is expected to be an error value,
++  which shall be propagated to the mailbox client.
++
++  Any core which supports the SMC or HVC instruction can be used, as long =
+as
++  a firmware component running in EL3 or EL2 is handling these calls.
++
++properties:
++  compatible:
++    const: arm,smc-mbox
++
++  "#mbox-cells":
++    const: 1
++
++  arm,num-chans:
++    description: The number of channels supported.
++    items:
++      minimum: 1
++      maximum: 4096 # Should be enough?
++
++  method:
++    - enum:
++        - smc
++        - hvc
++
++  transports:
++    - enum:
++        - mem
++        - reg
++
++  arm,func-ids:
++    description: |
++      An array of 32-bit values specifying the function IDs used by each
++      mailbox channel. Those function IDs follow the ARM SMC calling
++      convention standard [1].
++
++      There is one identifier per channel and the number of supported
++      channels is determined by the length of this array.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 0
++    maxItems: 4096   # Should be enough?
++
++required:
++  - compatible
++  - "#mbox-cells"
++  - arm,num-chans
++  - transports
++  - method
++
++examples:
++  - |
++    sram@910000 {
++      compatible =3D "mmio-sram";
++      reg =3D <0x0 0x93f000 0x0 0x1000>;
++      #address-cells =3D <1>;
++      #size-cells =3D <1>;
++      ranges =3D <0 0x0 0x93f000 0x1000>;
++
++      cpu_scp_lpri: scp-shmem@0 {
++        compatible =3D "arm,scmi-shmem";
++        reg =3D <0x0 0x200>;
++      };
++
++      cpu_scp_hpri: scp-shmem@200 {
++        compatible =3D "arm,scmi-shmem";
++        reg =3D <0x200 0x200>;
++      };
++    };
++
++    firmware {
++      smc_mbox: mailbox {
++        #mbox-cells =3D <1>;
++        compatible =3D "arm,smc-mbox";
++        method =3D "smc";
++        arm,num-chans =3D <0x2>;
++        transports =3D "mem";
++        /* Optional */
++        arm,func-ids =3D <0xc20000fe>, <0xc20000ff>;
++      };
++
++      scmi {
++        compatible =3D "arm,scmi";
++        mboxes =3D <&smc_mbox 0>, <&smc_mbox 1>;
++        mbox-names =3D "tx", "rx";
++        shmem =3D <&cpu_scp_lpri>, <&cpu_scp_hpri>;
++      };
++    };
++
++...
 --=20
 2.16.4
