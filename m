@@ -1,7 +1,7 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v3 7/8] [HACK] arm64: dts: renesas: draak: Enable LVDS
-Date: Wed, 28 Aug 2019 19:36:41 +0100
-Message-ID: <1567017402-5895-8-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v3 8/8] [HACK] arm64: dts: renesas: draak: Enable LVDS dual-link operation
+Date: Wed, 28 Aug 2019 19:36:42 +0100
+Message-ID: <1567017402-5895-9-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -31,14 +31,14 @@ Thanks,
 Fab
 
 ---
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index b38f9d4..38b9c5a 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-@@ -87,11 +87,20 @@
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+index 67634cb..b4b8cde 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+@@ -77,11 +77,20 @@
  
  			port@0 {
  				reg = <0>;
@@ -60,7 +60,7 @@ index b38f9d4..38b9c5a 100644
  			port@2 {
  				reg = <2>;
  				thc63lvd1024_out: endpoint {
-@@ -489,7 +498,7 @@
+@@ -368,24 +377,27 @@
  	ports {
  		port@1 {
  			lvds0_out: endpoint {
@@ -69,8 +69,18 @@ index b38f9d4..38b9c5a 100644
  			};
  		};
  	};
-@@ -507,6 +516,14 @@
- 		 <&x13_clk>,
+ };
+ 
+ &lvds1 {
+-	/*
+-	 * Even though the LVDS1 output is not connected, the encoder must be
+-	 * enabled to supply a pixel clock to the DU for the DPAD output when
+-	 * LVDS0 is in use.
+-	 */
+ 	status = "okay";
+ 
+ 	clocks = <&cpg CPG_MOD 727>,
+ 		 <&x12_clk>,
  		 <&extal_clk>;
  	clock-names = "fck", "dclkin.0", "extal";
 +
