@@ -1,85 +1,116 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 6/6] arm64: dts: Change PCIe INTx mapping for NS2
-Date: Wed, 28 Aug 2019 14:24:48 +0530
-Message-ID: <1566982488-9673-7-git-send-email-srinath.mannam@broadcom.com>
-References: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Wed, 28 Aug 2019 17:01:17 +0800
+Message-ID: <48e367965797001409b66f1f65d7bc4df2e927a5.camel@intel.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+         <afb235bf7390fb6fbd723c34b08feddd771d1f6c.camel@intel.com>
+         <DB3PR0402MB3916045AFDDF4EFA9AD50842F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <DB3PR0402MB3916045AFDDF4EFA9AD50842F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>
+To: Anson Huang <anson.huang@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ray Jui <ray.jui@broadcom.com>
+On Wed, 2019-08-28 at 08:49 +0000, Anson Huang wrote:
+> Hi, Rui
+> 
+> > On Wed, 2019-08-28 at 16:32 +0800, Zhang Rui wrote:
+> > > On Tue, 2019-08-27 at 12:41 +0000, Leonard Crestez wrote:
+> > > > On 27.08.2019 04:51, Anson Huang wrote:
+> > > > > > In an earlier series the CLK_IS_CRITICAL flags was removed
+> > > > > > from
+> > > > > > the TMU clock so if the thermal driver doesn't explicitly
+> > > > > > enable
+> > > > > > it the system will hang on probe. This is what happens in
+> > > > > > linux-next right now!
+> > > > > 
+> > > > > The thermal driver should be built with module, so default
+> > > > > kernel
+> > > > > should can boot up, do you modify the thermal driver as
+> > > > > built-in?
+> > > > > 
+> > > > > > Unless this patches is merged soon we'll end up with a 5.4-
+> > > > > > rc1
+> > > > > > that doesn't boot on imx8mq. An easy fix would be to
+> > > > > > drop/revert
+> > > > > > commit
+> > > > > > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > > > > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are
+> > > > > > accepted.
+> > > > > 
+> > > > > If the thermal driver is built as module, I think no need to
+> > > > > revert the commit, but if by default thermal driver is built-
+> > > > > in or
+> > > > > mod probed, then yes, it should NOT break kernel boot up.
+> > > > 
+> > > > The qoriq_thermal driver is built as a module in defconfig and
+> > > > when
+> > > > modules are properly installed in rootfs they will be
+> > > > automatically
+> > > > be probed on boot and cause a hang.
+> > > > 
+> > > > I usually run nfsroot with modules:
+> > > > 
+> > > >      make modules_install INSTALL_MOD_PATH=/srv/nfs/imx8-root
+> > > 
+> > > so we need this patch shipped in the beginning of the merge
+> > > window,
+> > > right?
+> > > if there is hard dependency between patches, it's better to send
+> > > them
+> > > in one series, and get shipped via either tree.
+> > > 
+> > > BTW, who is maintaining qoriq driver from NXP? If Anson is
+> > > maintaining
+> > > and developing this driver, it's better to update this in the
+> > > driver
+> > > or the MAINTAINER file, I will take the driver specific patches
+> > > as
+> > > long as we have ACK/Reviewed-By from the driver maintainer.
+> 
+> I am NOT sure who is the qoriq driver from NXP, some of our i.MX SoCs
+> use
+> qoriq thermal IP, so I have to add support for them.  The first
+> maintainer for
+> this driver is hongtao.jia@nxp.com, but I can NOT find it from NXP's
+> mail system,
+> NOT sure if he is still in NXP. The MAINTAINER file does NOT have
+> info for this
+> Driver's maintainer, so how to update it? Just change the name in
+> driver? Or leave
+> it as what it is?
+> 
+>  MODULE_AUTHOR("Jia Hongtao <hongtao.jia@nxp.com>");
+>  MODULE_DESCRIPTION("QorIQ Thermal Monitoring Unit driver");
+>  MODULE_LICENSE("GPL v2");
+> 
+I see several people are actively working on this driver from NXP.
+If you're okay, I'd like to get your comments on all the patches for
+this driver before I take them, and I can update the MAINTAINER file
+later so that you're CCed for all the qoriq thermal driver changes. 
 
-Change the PCIe INTx mapping to model the 4 INTx interrupts in the
-IRQ domain of the iProc PCIe controller itself
+> > 
+> > And also, can you provide your feedback for this one?
+> > 
+https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatch
+> > work.kernel.org%2Fpatch%2F10974147%2F&amp;data=02%7C01%7Canson.h
+> > uang%40nxp.com%7C887e7c90f7c943ff0d9b08d72b92aea1%7C686ea1d3bc2
+> > b4c6fa92cd99c5c301635%7C0%7C0%7C637025781325203384&amp;sdata=Xg
+> > tX6mPdA50Nbb%2FmnS2om2bJNepTd1th6HmfwGuU9Hw%3D&amp;reserve
+> > d=0
+> 
+> I can take a look at it later.
+> 
+thanks!
 
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi | 28 ++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 15f7b0e..d639928 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -117,8 +117,11 @@
- 		dma-coherent;
- 
- 		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie0_intc 1>,
-+				<0 0 0 2 &pcie0_intc 2>,
-+				<0 0 0 3 &pcie0_intc 3>,
-+				<0 0 0 4 &pcie0_intc 4>;
- 
- 		linux,pci-domain = <0>;
- 
-@@ -140,6 +143,13 @@
- 		phy-names = "pcie-phy";
- 
- 		msi-parent = <&v2m0>;
-+		pcie0_intc: interrupt-controller {
-+			compatible = "brcm,iproc-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	pcie4: pcie@50020000 {
-@@ -148,8 +158,11 @@
- 		dma-coherent;
- 
- 		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie4_intc 1>,
-+				<0 0 0 2 &pcie4_intc 2>,
-+				<0 0 0 3 &pcie4_intc 3>,
-+				<0 0 0 4 &pcie4_intc 4>;
- 
- 		linux,pci-domain = <4>;
- 
-@@ -171,6 +184,13 @@
- 		phy-names = "pcie-phy";
- 
- 		msi-parent = <&v2m0>;
-+		pcie4_intc: interrupt-controller {
-+			compatible = "brcm,iproc-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
- 
- 	pcie8: pcie@60c00000 {
--- 
-2.7.4
+-rui
+> Thanks,
+> Anson
