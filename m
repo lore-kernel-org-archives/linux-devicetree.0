@@ -1,229 +1,335 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for ls1088a
- and ls2088a
-Date: Wed, 28 Aug 2019 03:25:43 +0000
-Message-ID: <VI1PR04MB3310B025388E76FE3AC6A128F5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-8-xiaowei.bao@nxp.com>
- <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB32990473D4AD65354B5B2235F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <89c90732-5e42-f87e-73b1-8d615355afc4@c-s.fr>
- <AM5PR04MB3299EBADE7BC04C3465B7DB7F5A60@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827144830.GN14582@e119886-lin.cambridge.arm.com>
+From: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Wed, 28 Aug 2019 11:35:01 +0800
+Message-ID: <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com>
+ <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com>
+ <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827144830.GN14582@e119886-lin.cambridge.arm.com>
+In-Reply-To: <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: christophe leroy <christophe.leroy@c-s.fr>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.c>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: eswara.kota@linux.intel.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE55bm0OOaciDI35pelIDIyOjQ5DQo+
-IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGNocmlzdG9waGUg
-bGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZyPjsgbWFyay5ydXRsYW5kQGFybS5jb207IFJv
-eQ0KPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBh
-cm5kQGFybmRiLmRlOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgZ3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC1w
-Y2lAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBraXNo
-b25AdGkuY29tOyBNLmguIExpYW4NCj4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IHJvYmgrZHRA
-a2VybmVsLm9yZzsNCj4gZ3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb207IGppbmdvb2hhbjFA
-Z21haWwuY29tOw0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhw
-LmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhw
-LmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIIHYyIDA4LzEwXSBQQ0k6IGxheWVyc2NhcGU6IEFkZCBFUCBtb2RlIHN1cHBvcnQg
-Zm9yDQo+IGxzMTA4OGEgYW5kIGxzMjA4OGENCj4gDQo+IE9uIFN1biwgQXVnIDI1LCAyMDE5IGF0
-IDAzOjA3OjMyQU0gKzAwMDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+DQo+ID4NCj4gPiA+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBjaHJpc3RvcGhlIGxlcm95IDxj
-aHJpc3RvcGhlLmxlcm95QGMtcy5mcj4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ45pyIMjTml6UgMTQ6
-NDUNCj4gPiA+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47IEFuZHJldyBN
-dXJyYXkNCj4gPiA+IDxhbmRyZXcubXVycmF5QGFybS5jb20+DQo+ID4gPiBDYzogbWFyay5ydXRs
-YW5kQGFybS5jb207IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsNCj4gPiA+IGxvcmVuem8u
-cGllcmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7DQo+ID4gPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgbGludXhwcGMtZGV2QGxpc3Rz
-Lm96bGFicy5vcmc7DQo+ID4gPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOyBraXNob25AdGkuY29tOw0KPiBNLmguDQo+ID4gPiBMaWFuIDxt
-aW5naHVhbi5saWFuQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gPiBndXN0YXZv
-LnBpbWVudGVsQHN5bm9wc3lzLmNvbTsgamluZ29vaGFuMUBnbWFpbC5jb207DQo+ID4gPiBiaGVs
-Z2Fhc0Bnb29nbGUuY29tOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47DQo+ID4gPiBzaGF3
-bmd1b0BrZXJuZWwub3JnOyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+Ow0KPiA+ID4g
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4gPiBTdWJqZWN0OiBSZTog
-W1BBVENIIHYyIDA4LzEwXSBQQ0k6IGxheWVyc2NhcGU6IEFkZCBFUCBtb2RlIHN1cHBvcnQNCj4g
-PiA+IGZvciBsczEwODhhIGFuZCBsczIwODhhDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiBM
-ZSAyNC8wOC8yMDE5IMOgIDAyOjE4LCBYaWFvd2VpIEJhbyBhIMOpY3JpdMKgOg0KPiA+ID4gPg0K
-PiA+ID4gPg0KPiA+ID4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4+IEZy
-b206IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPiA+ID4+IFNlbnQ6
-IDIwMTnlubQ45pyIMjPml6UgMjI6MjgNCj4gPiA+ID4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dl
-aS5iYW9AbnhwLmNvbT4NCj4gPiA+ID4+IENjOiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0
-QGtlcm5lbC5vcmc7DQo+ID4gPiA+PiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2Vy
-bmVsLm9yZzsgTGVvIExpDQo+ID4gPiA+PiA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRp
-LmNvbTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOw0KPiA+ID4gPj4gYXJuZEBhcm5kYi5kZTsg
-Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+ID4gPiBNLmguDQo+ID4gPiA+PiBMaWFuIDxt
-aW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+Ow0K
-PiA+ID4gPj4gUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBqaW5nb29oYW4xQGdtYWlsLmNv
-bTsNCj4gPiA+ID4+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOw0KPiA+ID4gPj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiA+PiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7DQo+ID4gPiA+PiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0K
-PiA+ID4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwOC8xMF0gUENJOiBsYXllcnNjYXBlOiBB
-ZGQgRVAgbW9kZQ0KPiA+ID4gPj4gc3VwcG9ydCBmb3IgbHMxMDg4YSBhbmQgbHMyMDg4YQ0KPiA+
-ID4gPj4NCj4gPiA+ID4+IE9uIFRodSwgQXVnIDIyLCAyMDE5IGF0IDA3OjIyOjQwUE0gKzA4MDAs
-IFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+ID4gPj4+IEFkZCBQQ0llIEVQIG1vZGUgc3VwcG9ydCBm
-b3IgbHMxMDg4YSBhbmQgbHMyMDg4YSwgdGhlcmUgYXJlIHNvbWUNCj4gPiA+ID4+PiBkaWZmZXJl
-bmNlIGJldHdlZW4gTFMxIGFuZCBMUzIgcGxhdGZvcm0sIHNvIHJlZmFjdG9yIHRoZSBjb2RlIG9m
-DQo+ID4gPiA+Pj4gdGhlIEVQIGRyaXZlci4NCj4gPiA+ID4+Pg0KPiA+ID4gPj4+IFNpZ25lZC1v
-ZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+ID4gPj4+IC0tLQ0K
-PiA+ID4gPj4+IHYyOg0KPiA+ID4gPj4+ICAgLSBOZXcgbWVjaGFuaXNtIGZvciBsYXllcnNjYXBl
-IEVQIGRyaXZlci4NCj4gPiA+ID4+DQo+ID4gPiA+PiBXYXMgdGhlcmUgYSB2MSBvZiB0aGlzIHBh
-dGNoPw0KPiA+ID4gPg0KPiA+ID4gPiBZZXMsIGJ1dCBJIGRvbid0IGtub3cgaG93IHRvIGNvbW1l
-bnRzLCBeX14NCj4gPiA+DQo+ID4gPiBBcyBmYXIgYXMgSSBjYW4gc2VlLCBpbiB0aGUgcHJldmlv
-dXMgdmVyc2lvbiBvZiB0aGUgc2VyaWVzDQo+ID4gPiAoaHR0cHM6Ly9wYXRjaA0KPiA+ID4NCj4g
-d29yay5vemxhYnMub3JnJTJGcHJvamVjdCUyRmxpbnV4cHBjLWRldiUyRmxpc3QlMkYlM0ZzZXJp
-ZXMlM0QxMjUzMTUNCj4gPiA+ICUyNnN0YXRlJTNEKiZhbXA7ZGF0YT0wMiU3QzAxJTdDeGlhb3dl
-aS5iYW8lNDBueHAuY29tJTdDMWINCj4gZWZlOQ0KPiA+ID4NCj4gYTY3YzgwNDZmOTUzNWUwOGQ3
-Mjg1ZWFhYjYlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSUNCj4gPiA+DQo+IDdD
-MCU3QzAlN0M2MzcwMjIyNTkzODcxMzkwMjAmYW1wO3NkYXRhPXA0d2J5Y2QwNFo3cVJVZkFvWnR3
-Yw0KPiA+ID4gVVA3cFIlMkZ1QTMlMkZqVmNXTXo2WXlRVlElM0QmYW1wO3Jlc2VydmVkPTApLA0K
-PiA+ID4gdGhlIDgvMTAgd2FzIHNvbWV0aGluZyBjb21wbGV0ZWx5IGRpZmZlcmVudCwgYW5kIEkg
-Y2FuJ3QgZmluZCBhbnkNCj4gPiA+IG90aGVyIHBhdGNoIGluIHRoZSBzZXJpZXMgdGhhdCBjb3Vs
-ZCBoYXZlIGJlZW4gdGhlIHYxIG9mIHRoaXMgcGF0Y2guDQo+ID4NCj4gPiBUaGFua3MsIEkgd2ls
-bCBjb3JyZWN0IGl0IHRvIHYxIGluIG5leHQgdmVyc2lvbiBwYXRjaC4NCj4gDQo+IEkgdGhpbmsg
-eW91IG51bWJlcmVkIGl0IGNvcnJlY3RseSAoc28gcGxlYXNlIGxlYXZlIGl0IGFzIHYyLCByZWZl
-cnJpbmcgdG8gdGhlDQo+IHBhdGNoIHNlcmllcyByZXZpc2lvbikgLSBJIGdvdCBjb25mdXNlZCB0
-cnlpbmcgdG8gZmluZCBhIHByZXZpb3VzIHZlcnNpb24gb2YgdGhpcw0KPiBwYXRjaC4NCj4gDQo+
-IFBlcmhhcHMgaW4gdGhlIGZ1dHVyZSB3aGVuIG5ldyBwYXRjaGVzIGFyZSBpbnRyb2R1Y2VkIGlu
-IGEgc2VyaWVzIHlvdSBjYW4NCj4gaW5kaWNhdGUgdGhhdCBpbiB0aGUgZGVzY3JpcHRpb24gcGF0
-Y2ggcmV2aXNpb24gaGlzdG9yeSAoZS5nLiBpbnRyb2R1Y2VkIGluIHYyKS4NCg0KT0ssIHRoYW5r
-cyBmb3IgeW91ciBoZWxwLCBJIHdpbGwgdXBkYXRlIGl0IGluIHRoZSBuZXh0IHZlcnNpb24gcGF0
-Y2guDQoNClRoYW5rcyANClhpYW93ZWkNCg0KPiANCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3IE11
-cnJheQ0KPiANCj4gPg0KPiA+ID4NCj4gPiA+IENocmlzdG9waGUNCj4gPiA+DQo+ID4gPiA+DQo+
-ID4gPiA+Pg0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
-Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jIHwgNzYNCj4gPiA+ID4+PiArKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLQ0KPiA+ID4gPj4+ICAgMSBmaWxlIGNoYW5nZWQsIDU4IGluc2VydGlvbnMoKyksIDE4
-IGRlbGV0aW9ucygtKQ0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4+PiBiL2RyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4+PiBpbmRl
-eCA3Y2E1ZmU4Li4yYTY2ZjA3IDEwMDY0NA0KPiA+ID4gPj4+IC0tLSBhL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4+PiArKysgYi9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+Pj4gQEAgLTIw
-LDI3ICsyMCwyOSBAQA0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gICAjZGVmaW5lIFBDSUVfREJJMl9P
-RkZTRVQJCTB4MTAwMAkvKiBEQkkyIGJhc2UgYWRkcmVzcyovDQo+ID4gPiA+Pj4NCj4gPiA+ID4+
-PiAtc3RydWN0IGxzX3BjaWVfZXAgew0KPiA+ID4gPj4+IC0Jc3RydWN0IGR3X3BjaWUJCSpwY2k7
-DQo+ID4gPiA+Pj4gLQlzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcwkqbHNfZXBjOw0KPiA+ID4gPj4+
-ICsjZGVmaW5lIHRvX2xzX3BjaWVfZXAoeCkJZGV2X2dldF9kcnZkYXRhKCh4KS0+ZGV2KQ0KPiA+
-ID4gPj4+ICsNCj4gPiA+ID4+PiArc3RydWN0IGxzX3BjaWVfZXBfZHJ2ZGF0YSB7DQo+ID4gPiA+
-Pj4gKwl1MzIJCQkJZnVuY19vZmZzZXQ7DQo+ID4gPiA+Pj4gKwljb25zdCBzdHJ1Y3QgZHdfcGNp
-ZV9lcF9vcHMJKm9wczsNCj4gPiA+ID4+PiArCWNvbnN0IHN0cnVjdCBkd19wY2llX29wcwkqZHdf
-cGNpZV9vcHM7DQo+ID4gPiA+Pj4gICB9Ow0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gLSNkZWZpbmUg
-dG9fbHNfcGNpZV9lcCh4KQlkZXZfZ2V0X2RydmRhdGEoKHgpLT5kZXYpDQo+ID4gPiA+Pj4gK3N0
-cnVjdCBsc19wY2llX2VwIHsNCj4gPiA+ID4+PiArCXN0cnVjdCBkd19wY2llCQkJKnBjaTsNCj4g
-PiA+ID4+PiArCXN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzCQkqbHNfZXBjOw0KPiA+ID4gPj4+ICsJ
-Y29uc3Qgc3RydWN0IGxzX3BjaWVfZXBfZHJ2ZGF0YSAqZHJ2ZGF0YTsgfTsNCj4gPiA+ID4+Pg0K
-PiA+ID4gPj4+ICAgc3RhdGljIGludCBsc19wY2llX2VzdGFibGlzaF9saW5rKHN0cnVjdCBkd19w
-Y2llICpwY2kpICB7DQo+ID4gPiA+Pj4gICAJcmV0dXJuIDA7DQo+ID4gPiA+Pj4gICB9DQo+ID4g
-PiA+Pj4NCj4gPiA+ID4+PiAtc3RhdGljIGNvbnN0IHN0cnVjdCBkd19wY2llX29wcyBsc19wY2ll
-X2VwX29wcyA9IHsNCj4gPiA+ID4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkd19wY2llX29wcyBk
-d19sc19wY2llX2VwX29wcyA9IHsNCj4gPiA+ID4+PiAgIAkuc3RhcnRfbGluayA9IGxzX3BjaWVf
-ZXN0YWJsaXNoX2xpbmssICB9Ow0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gLXN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIGxzX3BjaWVfZXBfb2ZfbWF0Y2hbXSA9IHsNCj4gPiA+ID4+PiAt
-CXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzLXBjaWUtZXAiLH0sDQo+ID4gPiA+Pj4gLQl7IH0sDQo+
-ID4gPiA+Pj4gLX07DQo+ID4gPiA+Pj4gLQ0KPiA+ID4gPj4+ICAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBwY2lfZXBjX2ZlYXR1cmVzKg0KPiA+ID4gPj4+IGxzX3BjaWVfZXBfZ2V0X2ZlYXR1cmVzKHN0
-cnVjdCBkd19wY2llX2VwICplcCkgIHsgQEAgLTgyLDEwDQo+ID4gPiA+Pj4gKzg0LDQ0IEBAIHN0
-YXRpYyBpbnQgbHNfcGNpZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1OA0K
-PiBmdW5jX25vLA0KPiA+ID4gPj4+ICAgCX0NCj4gPiA+ID4+PiAgIH0NCj4gPiA+ID4+Pg0KPiA+
-ID4gPj4+IC1zdGF0aWMgY29uc3Qgc3RydWN0IGR3X3BjaWVfZXBfb3BzIHBjaWVfZXBfb3BzID0g
-ew0KPiA+ID4gPj4+ICtzdGF0aWMgdW5zaWduZWQgaW50IGxzX3BjaWVfZXBfZnVuY19jb25mX3Nl
-bGVjdChzdHJ1Y3QgZHdfcGNpZV9lcA0KPiAqZXAsDQo+ID4gPiA+Pj4gKwkJCQkJCXU4IGZ1bmNf
-bm8pDQo+ID4gPiA+Pj4gK3sNCj4gPiA+ID4+PiArCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19k
-d19wY2llX2Zyb21fZXAoZXApOw0KPiA+ID4gPj4+ICsJc3RydWN0IGxzX3BjaWVfZXAgKnBjaWUg
-PSB0b19sc19wY2llX2VwKHBjaSk7DQo+ID4gPiA+Pj4gKwl1OCBoZWFkZXJfdHlwZTsNCj4gPiA+
-ID4+PiArDQo+ID4gPiA+Pj4gKwloZWFkZXJfdHlwZSA9IGlvcmVhZDgocGNpLT5kYmlfYmFzZSAr
-IFBDSV9IRUFERVJfVFlQRSk7DQo+ID4gPiA+Pj4gKw0KPiA+ID4gPj4+ICsJaWYgKGhlYWRlcl90
-eXBlICYgKDEgPDwgNykpDQo+ID4gPiA+Pj4gKwkJcmV0dXJuIHBjaWUtPmRydmRhdGEtPmZ1bmNf
-b2Zmc2V0ICogZnVuY19ubzsNCj4gPiA+ID4+PiArCWVsc2UNCj4gPiA+ID4+PiArCQlyZXR1cm4g
-MDsNCj4gPiA+ID4+DQo+ID4gPiA+PiBJdCBsb29rcyBsaWtlIHRoZXJlIGlzbid0IGEgUENJIGRl
-ZmluZSBmb3IgbXVsdGkgZnVuY3Rpb24sIHRoZQ0KPiA+ID4gPj4gbmVhcmVzdCBJIGNvdWxkIGZp
-bmQgd2FzIFBDSV9IRUFERVJfVFlQRV9NVUxUSURFVklDRSBpbg0KPiA+ID4gPj4gaG90cGx1Zy9p
-Ym1waHAuaC4gQSBjb21tZW50IGFib3ZlIHRoZSB0ZXN0IG1pZ2h0IGJlIGhlbHBmdWwgdG8NCj4g
-PiA+ID4+IGV4cGxhaW4NCj4gPiA+IHRoZSB0ZXN0Lg0KPiA+ID4gPg0KPiA+ID4gPiBZZXMsIEkg
-aGF2ZSBub3QgZmluZCB0aGUgUENJX0hFQURFUl9UWVBFX01VTFRJREVWSUNFIGRlZmluZS4gT0ss
-IEkNCj4gPiA+ID4gd2lsbCBhZGQgVGhlIGNvbW1lbnRzIGluIG5leHQgdmVyc2lvbiBwYXRjaC4N
-Cj4gPiA+ID4NCj4gPiA+ID4+DQo+ID4gPiA+PiBBcyB0aGUgbHNfcGNpZV9lcF9kcnZkYXRhIHN0
-cnVjdHVyZXMgYXJlIHN0YXRpYywgdGhlIHVuc2V0DQo+ID4gPiA+PiAuZnVuY19vZmZzZXQgd2ls
-bCBiZSBpbml0aWFsaXNlZCB0byAwLCBzbyB5b3UgY291bGQganVzdCBkcm9wIHRoZSB0ZXN0DQo+
-IGFib3ZlLg0KPiA+ID4gPg0KPiA+ID4gPiBPSywgdGhhbmtzDQo+ID4gPiA+DQo+ID4gPiA+Pg0K
-PiA+ID4gPj4gSG93ZXZlciBzb21ldGhpbmcgdG8gdGhlIGVmZmVjdCBvZiB0aGUgZm9sbG93aW5n
-IG1heSBoZWxwIHNwb3QNCj4gPiA+ID4+IG1pc2NvbmZpZ3VyYXRpb246DQo+ID4gPiA+Pg0KPiA+
-ID4gPj4gV0FSTl9PTihmdW5jX25vICYmICFwY2llLT5kcnZkYXRhLT5mdW5jX29mZnNldCk7IHJl
-dHVybg0KPiA+ID4gPj4gcGNpZS0+ZHJ2ZGF0YS0+ZnVuY19vZmZzZXQgKiBmdW5jX25vOw0KPiA+
-ID4gPg0KPiA+ID4gPiBUaGFua3MgYSBsb3QsIHRoaXMgbG9va3MgYmV0dGVyLg0KPiA+ID4gPg0K
-PiA+ID4gPj4NCj4gPiA+ID4+IFRoZSBXQVJOIGlzIHByb2JhYmx5IHF1aXRlIHVzZWZ1bCBhcyBp
-ZiB5b3UgYXJlIGF0dGVtcHRpbmcgdG8gdXNlDQo+ID4gPiA+PiBub24temVybyBmdW5jdGlvbnMg
-YW5kIGZ1bmNfb2Zmc2V0IGlzbid0IHNldCAtIHRoZW4gdGhpbmdzIG1heQ0KPiA+ID4gPj4gYXBw
-ZWFyIHRvIHdvcmsgbm9ybWFsbHkgYnV0IGFjdHVhbGx5IHdpbGwgYnJlYWsgaG9ycmlibHkuDQo+
-ID4gPiA+DQo+ID4gPiA+IGdvdCBpdCwgdGhhbmtzLg0KPiA+ID4gPg0KPiA+ID4gPj4NCj4gPiA+
-ID4+IFRoYW5rcywNCj4gPiA+ID4+DQo+ID4gPiA+PiBBbmRyZXcgTXVycmF5DQo+ID4gPiA+Pg0K
-PiA+ID4gPj4+ICt9DQo+ID4gPiA+Pj4gKw0KPiA+ID4gPj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0
-IGR3X3BjaWVfZXBfb3BzIGxzX3BjaWVfZXBfb3BzID0gew0KPiA+ID4gPj4+ICAgCS5lcF9pbml0
-ID0gbHNfcGNpZV9lcF9pbml0LA0KPiA+ID4gPj4+ICAgCS5yYWlzZV9pcnEgPSBsc19wY2llX2Vw
-X3JhaXNlX2lycSwNCj4gPiA+ID4+PiAgIAkuZ2V0X2ZlYXR1cmVzID0gbHNfcGNpZV9lcF9nZXRf
-ZmVhdHVyZXMsDQo+ID4gPiA+Pj4gKwkuZnVuY19jb25mX3NlbGVjdCA9IGxzX3BjaWVfZXBfZnVu
-Y19jb25mX3NlbGVjdCwgfTsNCj4gPiA+ID4+PiArDQo+ID4gPiA+Pj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgbHNfcGNpZV9lcF9kcnZkYXRhIGxzMV9lcF9kcnZkYXRhID0gew0KPiA+ID4gPj4+ICsJ
-Lm9wcyA9ICZsc19wY2llX2VwX29wcywNCj4gPiA+ID4+PiArCS5kd19wY2llX29wcyA9ICZkd19s
-c19wY2llX2VwX29wcywgfTsNCj4gPiA+ID4+PiArDQo+ID4gPiA+Pj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgbHNfcGNpZV9lcF9kcnZkYXRhIGxzMl9lcF9kcnZkYXRhID0gew0KPiA+ID4gPj4+ICsJ
-LmZ1bmNfb2Zmc2V0ID0gMHgyMDAwMCwNCj4gPiA+ID4+PiArCS5vcHMgPSAmbHNfcGNpZV9lcF9v
-cHMsDQo+ID4gPiA+Pj4gKwkuZHdfcGNpZV9vcHMgPSAmZHdfbHNfcGNpZV9lcF9vcHMsIH07DQo+
-ID4gPiA+Pj4gKw0KPiA+ID4gPj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBs
-c19wY2llX2VwX29mX21hdGNoW10gPSB7DQo+ID4gPiA+Pj4gKwl7IC5jb21wYXRpYmxlID0gImZz
-bCxsczEwNDZhLXBjaWUtZXAiLCAuZGF0YSA9ICZsczFfZXBfZHJ2ZGF0YSB9LA0KPiA+ID4gPj4+
-ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1wY2llLWVwIiwgLmRhdGEgPSAmbHMyX2Vw
-X2RydmRhdGEgfSwNCj4gPiA+ID4+PiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMjA4OGEtcGNp
-ZS1lcCIsIC5kYXRhID0gJmxzMl9lcF9kcnZkYXRhIH0sDQo+ID4gPiA+Pj4gKwl7IH0sDQo+ID4g
-PiA+Pj4gICB9Ow0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gICBzdGF0aWMgaW50IF9faW5pdCBsc19h
-ZGRfcGNpZV9lcChzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSwgQEANCj4gPiA+ID4+PiAtOTgsNw0K
-PiA+ID4gPj4+ICsxMzQsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19hZGRfcGNpZV9lcChzdHJ1
-Y3QgbHNfcGNpZV9lcA0KPiA+ID4gPj4+ICsqcGNpZSwNCj4gPiA+ID4+PiAgIAlpbnQgcmV0Ow0K
-PiA+ID4gPj4+DQo+ID4gPiA+Pj4gICAJZXAgPSAmcGNpLT5lcDsNCj4gPiA+ID4+PiAtCWVwLT5v
-cHMgPSAmcGNpZV9lcF9vcHM7DQo+ID4gPiA+Pj4gKwllcC0+b3BzID0gcGNpZS0+ZHJ2ZGF0YS0+
-b3BzOw0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gICAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNl
-X2J5bmFtZShwZGV2LA0KPiBJT1JFU09VUkNFX01FTSwNCj4gPiA+ID4+ICJhZGRyX3NwYWNlIik7
-DQo+ID4gPiA+Pj4gICAJaWYgKCFyZXMpDQo+ID4gPiA+Pj4gQEAgLTEzNywxNCArMTczLDExIEBA
-IHN0YXRpYyBpbnQgX19pbml0IGxzX3BjaWVfZXBfcHJvYmUoc3RydWN0DQo+ID4gPiA+PiBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gPiA+Pj4gICAJaWYgKCFsc19lcGMpDQo+ID4gPiA+Pj4g
-ICAJCXJldHVybiAtRU5PTUVNOw0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gLQlkYmlfYmFzZSA9IHBs
-YXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwNCj4gPiA+IElPUkVTT1VSQ0VfTUVNLA0K
-PiA+ID4gPj4gInJlZ3MiKTsNCj4gPiA+ID4+PiAtCXBjaS0+ZGJpX2Jhc2UgPSBkZXZtX3BjaV9y
-ZW1hcF9jZmdfcmVzb3VyY2UoZGV2LCBkYmlfYmFzZSk7DQo+ID4gPiA+Pj4gLQlpZiAoSVNfRVJS
-KHBjaS0+ZGJpX2Jhc2UpKQ0KPiA+ID4gPj4+IC0JCXJldHVybiBQVFJfRVJSKHBjaS0+ZGJpX2Jh
-c2UpOw0KPiA+ID4gPj4+ICsJcGNpZS0+ZHJ2ZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0
-YShkZXYpOw0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gLQlwY2ktPmRiaV9iYXNlMiA9IHBjaS0+ZGJp
-X2Jhc2UgKyBQQ0lFX0RCSTJfT0ZGU0VUOw0KPiA+ID4gPj4+ICAgCXBjaS0+ZGV2ID0gZGV2Ow0K
-PiA+ID4gPj4+IC0JcGNpLT5vcHMgPSAmbHNfcGNpZV9lcF9vcHM7DQo+ID4gPiA+Pj4gKwlwY2kt
-Pm9wcyA9IHBjaWUtPmRydmRhdGEtPmR3X3BjaWVfb3BzOw0KPiA+ID4gPj4+ICsNCj4gPiA+ID4+
-PiAgIAlwY2llLT5wY2kgPSBwY2k7DQo+ID4gPiA+Pj4NCj4gPiA+ID4+PiAgIAlsc19lcGMtPmxp
-bmt1cF9ub3RpZmllciA9IGZhbHNlLCBAQCAtMTUyLDYgKzE4NSwxMyBAQCBzdGF0aWMNCj4gPiA+
-ID4+PiBpbnQgX19pbml0IGxzX3BjaWVfZXBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikNCj4gPiA+ID4+Pg0KPiA+ID4gPj4+ICAgCXBjaWUtPmxzX2VwYyA9IGxzX2VwYzsNCj4g
-PiA+ID4+Pg0KPiA+ID4gPj4+ICsJZGJpX2Jhc2UgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2VfYnlu
-YW1lKHBkZXYsDQo+ID4gPiBJT1JFU09VUkNFX01FTSwNCj4gPiA+ID4+ICJyZWdzIik7DQo+ID4g
-PiA+Pj4gKwlwY2ktPmRiaV9iYXNlID0gZGV2bV9wY2lfcmVtYXBfY2ZnX3Jlc291cmNlKGRldiwg
-ZGJpX2Jhc2UpOw0KPiA+ID4gPj4+ICsJaWYgKElTX0VSUihwY2ktPmRiaV9iYXNlKSkNCj4gPiA+
-ID4+PiArCQlyZXR1cm4gUFRSX0VSUihwY2ktPmRiaV9iYXNlKTsNCj4gPiA+ID4+PiArDQo+ID4g
-PiA+Pj4gKwlwY2ktPmRiaV9iYXNlMiA9IHBjaS0+ZGJpX2Jhc2UgKyBQQ0lFX0RCSTJfT0ZGU0VU
-Ow0KPiA+ID4gPj4+ICsNCj4gPiA+ID4+PiAgIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBw
-Y2llKTsNCj4gPiA+ID4+Pg0KPiA+ID4gPj4+ICAgCXJldCA9IGxzX2FkZF9wY2llX2VwKHBjaWUs
-IHBkZXYpOw0KPiA+ID4gPj4+IC0tDQo+ID4gPiA+Pj4gMi45LjUNCj4gPiA+ID4+Pg0KPiA+ID4N
-Cj4gPiA+IC0tLQ0KPiA+ID4gTCdhYnNlbmNlIGRlIHZpcnVzIGRhbnMgY2UgY291cnJpZXIgw6ls
-ZWN0cm9uaXF1ZSBhIMOpdMOpIHbDqXJpZmnDqWUgcGFyDQo+ID4gPiBsZSBsb2dpY2llbCBhbnRp
-dmlydXMgQXZhc3QuDQo+ID4gPiBodHRwczovL3d3dy4NCj4gPiA+DQo+IGF2YXN0LmNvbSUyRmFu
-dGl2aXJ1cyZhbXA7ZGF0YT0wMiU3QzAxJTdDeGlhb3dlaS5iYW8lNDBueHAuY29tJTcNCj4gPiA+
-DQo+IEMxYmVmZTlhNjdjODA0NmY5NTM1ZTA4ZDcyODVlYWFiNiU3QzY4NmVhMWQzYmMyYjRjNmZh
-OTJjZDk5YzVjMw0KPiA+ID4NCj4gMDE2MzUlN0MwJTdDMCU3QzYzNzAyMjI1OTM4NzEzOTAyMCZh
-bXA7c2RhdGE9SkFZZHM3WCUyRkhWeGd0cmcNCj4gPiA+IGUlMkYlMkZ2blA4NHpkYjJ5UmVYY2N0
-UVVpU0xDMTFJJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4NCg==
+Hi Martin,
+
+Thanks for your comment.
+
+On 8/28/2019 4:38 AM, Martin Blumenstingl wrote:
+> Hello,
+>
+> On Tue, Aug 27, 2019 at 5:09 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
+>> Hi Martin,
+>>
+>> Thanks for your feedback. Please check the comments below.
+>>
+>> On 8/27/2019 5:15 AM, Martin Blumenstingl wrote:
+>>> Hello,
+>>>
+>>> On Mon, Aug 26, 2019 at 5:31 AM Chuan Hua, Lei
+>>> <chuanhua.lei@linux.intel.com> wrote:
+>>>> Hi Martin,
+>>>>
+>>>> Thanks for your valuable comments. I reply some of them as below.
+>>> you're welcome
+>>>
+>>> [...]
+>>>>>> +config PCIE_INTEL_AXI
+>>>>>> +        bool "Intel AHB/AXI PCIe host controller support"
+>>>>> I believe that this is mostly the same IP block as it's used in Lantiq
+>>>>> (xDSL) VRX200 SoCs (with MIPS cores) which was introduced in 2010
+>>>>> (before Intel acquired Lantiq).
+>>>>> This is why I would have personally called the driver PCIE_LANTIQ
+>>>> VRX200 SoC(internally called VR9) was the first PCIe SoC product which
+>>>> was using synopsys
+>>>>
+>>>> controller v3.30a. It only supports PCIe Gen1.1/1.0. The phy is internal
+>>>> phy from infineon.
+>>> thank you for these details
+>>> I wasn't aware that the PCIe PHY on these SoCs was developed by
+>>> Infineon nor is the DWC version documented anywhere
+>> VRX200/ARX300 PHY is internal value. There are a lot of hardcode which was
+>> from hardware people. From XRX500, we switch to synopsis PHY. However, later
+>> comboPHY is coming to the picture. Even though we have one same controller
+>> with different versions, we most likely will have three different phy
+>> drivers.
+> that is a good argument for using a separate PHY driver and
+> integrating that using the PHY subsystem (which is already the case in
+> this patch revision)
+Right. CombonPHY(PRX300/Lighting Mountain) and SlimPHY 
+driver(XRX350/550) are in the way to upstream.
+>
+>>> [...]
+>>>>>> +#define PCIE_CCRID                          0x8
+>>>>>> +
+>>>>>> +#define PCIE_LCAP                           0x7C
+>>>>>> +#define PCIE_LCAP_MAX_LINK_SPEED            GENMASK(3, 0)
+>>>>>> +#define PCIE_LCAP_MAX_LENGTH_WIDTH          GENMASK(9, 4)
+>>>>>> +
+>>>>>> +/* Link Control and Status Register */
+>>>>>> +#define PCIE_LCTLSTS                                0x80
+>>>>>> +#define PCIE_LCTLSTS_ASPM_ENABLE            GENMASK(1, 0)
+>>>>>> +#define PCIE_LCTLSTS_RCB128                 BIT(3)
+>>>>>> +#define PCIE_LCTLSTS_LINK_DISABLE           BIT(4)
+>>>>>> +#define PCIE_LCTLSTS_COM_CLK_CFG            BIT(6)
+>>>>>> +#define PCIE_LCTLSTS_HW_AW_DIS                      BIT(9)
+>>>>>> +#define PCIE_LCTLSTS_LINK_SPEED                     GENMASK(19, 16)
+>>>>>> +#define PCIE_LCTLSTS_NEGOTIATED_LINK_WIDTH  GENMASK(25, 20)
+>>>>>> +#define PCIE_LCTLSTS_SLOT_CLK_CFG           BIT(28)
+>>>>>> +
+>>>>>> +#define PCIE_LCTLSTS2                               0xA0
+>>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED                GENMASK(3, 0)
+>>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_25GT   0x1
+>>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_5GT    0x2
+>>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_8GT    0x3
+>>>>>> +#define PCIE_LCTLSTS2_TGT_LINK_SPEED_16GT   0x4
+>>>>>> +#define PCIE_LCTLSTS2_HW_AUTO_DIS           BIT(5)
+>>>>>> +
+>>>>>> +/* Ack Frequency Register */
+>>>>>> +#define PCIE_AFR                            0x70C
+>>>>>> +#define PCIE_AFR_FTS_NUM                    GENMASK(15, 8)
+>>>>>> +#define PCIE_AFR_COM_FTS_NUM                        GENMASK(23, 16)
+>>>>>> +#define PCIE_AFR_GEN12_FTS_NUM_DFT          (SZ_128 - 1)
+>>>>>> +#define PCIE_AFR_GEN3_FTS_NUM_DFT           180
+>>>>>> +#define PCIE_AFR_GEN4_FTS_NUM_DFT           196
+>>>>>> +
+>>>>>> +#define PCIE_PLCR_DLL_LINK_EN                       BIT(5)
+>>>>>> +#define PCIE_PORT_LOGIC_FTS                 GENMASK(7, 0)
+>>>>>> +#define PCIE_PORT_LOGIC_DFT_FTS_NUM         (SZ_128 - 1)
+>>>>>> +
+>>>>>> +#define PCIE_MISC_CTRL                              0x8BC
+>>>>>> +#define PCIE_MISC_CTRL_DBI_RO_WR_EN         BIT(0)
+>>>>>> +
+>>>>>> +#define PCIE_MULTI_LANE_CTRL                        0x8C0
+>>>>>> +#define PCIE_UPCONFIG_SUPPORT                       BIT(7)
+>>>>>> +#define PCIE_DIRECT_LINK_WIDTH_CHANGE               BIT(6)
+>>>>>> +#define PCIE_TARGET_LINK_WIDTH                      GENMASK(5, 0)
+>>>>>> +
+>>>>>> +#define PCIE_IOP_CTRL                               0x8C4
+>>>>>> +#define PCIE_IOP_RX_STANDBY_CTRL            GENMASK(6, 0)
+>>>> no need for IOP
+>>> with "are you sure that you need any of the registers above?" I really
+>>> meant all registers above (including, but not limited to IOP)
+>>>
+>>> [...]
+>>>> As I mentioned, VRX200 was a very old PCIe Gen1.1 product. In our latest
+>>>> SoC Lightning
+>>>>
+>>>> Mountain, we are using synopsys controller 5.20/5.50a. We support
+>>>> Gen2(XRX350/550),
+>>>>
+>>>> Gen3(PRX300) and GEN4(X86 based SoC). We also supported dual lane and
+>>>> single lane.
+>>>>
+>>>> Some of the above registers are needed to control FTS, link width and
+>>>> link speed.
+>>> only now I noticed that I didn't explain why I was asking whether all
+>>> these registers are needed
+>>> my understanding of the DWC PCIe controller driver "library" is that:
+>>> - all functionality which is provided by the DesignWare PCIe core
+>>> should be added to drivers/pci/controller/dwc/pcie-designware*
+>>> - functionality which is built on top/around the DWC PCIe core should
+>>> be added to <vendor specific driver>
+>>>
+>>> the link width and link speed settings (I don't know about "FTS")
+>>> don't seem Intel/Lantiq controller specific to me
+>>> so the register setup for these bits should be moved to
+>>> drivers/pci/controller/dwc/pcie-designware*
+>> FTS means fast training sequence. Different generations will have
+>> different FTS. Common DWC drivers have default number for all generations
+>> which are not optimized.
+> I am not a DWC PCIe driver expert, but it seems to me that this is
+> exactly the reason why struct dw_pcie has a "version" field (which
+> you're also filling).
+> same as below: I'm interested in the DWC PCIe maintainer's opinion
+>
+>> DWC driver handles link speed and link width during the initialization.
+>> Then left link speed change and link width to device (EP) according to
+>> PCIe spec. Not sure if other vendors or customers have this kind of
+>> requirement. We implemented this due to customer's requirement.
+>>
+>> We can check with DWC maintainer about this.
+> thank you for the explanation.
+> I am also interested in hearing the DWC PCIe maintainer's opinion on this topic
+>
+> [...]
+>>> now I am wondering:
+>>> - if we don't have to disable the interrupt line (once it is enabled),
+>>> why can't we enable all of these interrupts at initialization time
+>>> (instead of doing it on-demand)?
+>> Good point! we even can remote map_irq patch, directly call
+>> of_irq_parse_and_map_pci as other drivers do.
+>>
+>>> - if the interrupts do have to be disabled again (that is what I
+>>> assumed so far) then where is this supposed to happen? (my solution
+>>> for this was to implement a simple interrupt controller within the
+>>> PCIe driver which only supports enable/disable. disclaimer: I didn't
+>>> ask the PCI or interrupt maintainers for feedback on this yet)
+>>>
+>>> [...]
+>> We can implement one interrupt controller, but personally, it has too
+>> much overhead. If we follow this way, almost all modules of all old
+>> lantiq SoCs can implement one interrupt controller. Maybe you can check
+>> with PCI maintainer for their comments.
+> if we can enable the PCI_INTA/B/C/D interrupts unconditionally then
+> you can switch to the standard of_irq_parse_and_map_pci implementation
+> (as you already noted above).
+> in that case the extra interrupt controller won't be needed.
+>
+> I have no idea how to test whether unconditionally enabling these
+> interrupts (in the APP registers that is) causes any problems though.
+> that's why I went the interrupt-controller route in my experiment.
+> if the hardware works with a simplified version then I'm more than
+> happy to use that
+We will enable these interrupts. simple is more easy to handle.
+>
+> [...]
+>>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+>>>>>> +{
+>>>>>> +    struct device *dev = lpp->pci->dev;
+>>>>>> +    int ret = 0;
+>>>>>> +
+>>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
+>>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
+>>>>>> +            if (ret != -EPROBE_DEFER)
+>>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+>>>>>> +            return ret;
+>>>>>> +    }
+>>>>>> +    /* Make initial reset last for 100ms */
+>>>>>> +    msleep(100);
+>>>>> why is there lpp->rst_interval when you hardcode 100ms here?
+>>>> There are different purpose. rst_interval is purely for asserted reset
+>>>> pulse.
+>>>>
+>>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
+>>>> can reset.
+>>> my interpretation is that it totally depends on the board design or
+>>> the bootloader setup.
+>> Partially, you are right. However, we should not add some dependency
+>> here from
+>> bootloader and board. rst_interval is just to make sure the pulse (low
+>> active or high active)
+>> lasts the specified the time.
+> +Cc Kishon
+>
+> he recently added support for a GPIO reset line to the
+> pcie-cadence-host.c [0] and I believe he's also maintaining
+> pci-keystone.c which are both using a 100uS delay (instead of 100ms).
+> I don't know the PCIe spec so maybe Kishon can comment on the values
+> that should be used according to the spec.
+> if there's then a reason why values other than the ones from the spec
+> are needed then there should be a comment explaining why different
+> values are needed (what problem does it solve).
+
+spec doesn't guide this part. It is a board or SoC specific setting. 
+100us also should work. spec only requirs reset duration should last 
+100ms. The idea is that before reset assert and deassert, make sure the 
+default deassert status keeps some time. We take this value from 
+hardware suggestion long time back. We can reduce this value to 100us, 
+but we need to test on the board.
+
+>
+>>> on a board where the bootloader initializes the GPIO to logical "0"
+>>> the devm_gpiod_get() call will not change the GPIO output.
+>>> in this case a 100ms delay may be OK (based on your description)
+>>>
+>>> however, if the GPIO was a logical "1" (for example if the bootloader
+>>> set it to that value - and considering the GPIOD_OUT_LOW flag) then it
+>>> will be set to "0" with the devm_gpiod_get() call above.
+>>> now there is a transition from "deasserted" to "asserted" which does
+>>> not honor lpp->rst_interval
+>>>
+>>> I'm not sure if this is a problem or not - all I know is that I don't
+>>> fully understand the problem yet
+>>>>> [...]
+>>>>>> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
+>>>>>> +{
+>>>>>> +    struct device *dev = lpp->pci->dev;
+>>>>>> +    struct platform_device *pdev;
+>>>>>> +    char *irq_name;
+>>>>>> +    int irq, ret;
+>>>>>> +
+>>>>>> +    pdev = to_platform_device(dev);
+>>>>>> +    irq = platform_get_irq(pdev, 0);
+>>>>>> +    if (irq < 0) {
+>>>>>> +            dev_err(dev, "missing sys integrated irq resource\n");
+>>>>>> +            return irq;
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
+>>>>>> +    if (!irq_name) {
+>>>>>> +            dev_err(dev, "failed to alloc irq name\n");
+>>>>>> +            return -ENOMEM;
+>>>>> you are only requesting one IRQ line for the whole driver. personally
+>>>>> I would drop the custom irq_name and pass NULL to devm_request_irq
+>>>>> because that will then fall-back to auto-generating an IRQ name based
+>>>>> on the devicetree node. I assume it's the same for ACPI but I haven't
+>>>>> tried that yet.
+>>>> Not sure I understand what you mean.  As you know from the code, we have
+>>>> lpp->id which means
+>>>>
+>>>> we have multiple instances of Root Complex(1,2,3,4,8), so we need this
+>>>> for identification.
+>>> sorry, I was wrong with my original statement, the name cannot be NULL
+>>>
+>>> I checked the other drivers (meson-gx-mmc and meson-saradc) I had in
+>>> mind and they use dev_name(&pdev->dev);
+>>> that will give a unique interrupt name (derived from the devicetree)
+>>> in /proc/interrupts, for example: c1108680.adc, d0070000.mmc,
+>>> d0072000.mmc, ...
+>>>
+>>> [...]
+>> Right. We also use dev_name in our code. However, some people like numbering
+>> the interface which is easier for them to remember and discuss. I link id to
+>> domain so that we can easily know what is wrong once we have issues. When we
+>> tell the address to hardware people and support staff, they are totally
+>> lost.
+> ah, this also explains why linux,pci-domain is a mandatory property
+> (while it's optional for any other PCIe controller driver that I have
+> seen so far)
+Right. Imagine if you have 8 RCs on the board, how should we communicate 
+with hardware /support people:)
+>
+>> Again, it is ok to switch to dev_name.
+> both ways will work, I just wanted to point out that you can achieve a
+> similar goal with less code.
+> if the current solution works best for your support team then I'm fine
+> with that as well
+>
+> [...]
+>>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+>>>>>> +{
+>>>>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+>>>>>> +                        0, PCI_COMMAND);
+>>>>> I expect logic like this to be part of the PCI subsystem in Linux.
+>>>>> why is this needed?
+>>>>>
+>>>>> [...]
+>>>> bind/unbind case we use this. For extreme cases, we use unbind and bind
+>>>> to reset
+>>>> PCI instead of rebooting.
+>>> OK, but this does not seem Intel/Lantiq specific at all
+>>> why isn't this managed by either pcie-designware-host.c or the generic
+>>> PCI/PCIe subsystem in Linux?
+>> I doubt if other RC driver will support bind/unbind. We do have this
+>> requirement due to power management from WiFi devices.
+> pcie-designware-host.c will gain .remove() support in Linux 5.4
+> I don't understand how .remove() and then .probe() again is different
+> from .unbind() followed by a .bind()
+Good. If this is the case, bind/unbind eventually goes to probe/remove, 
+so we can remove this.
+>
+>
+> Martin
+>
+> [0] https://lkml.org/lkml/2019/6/4/626
