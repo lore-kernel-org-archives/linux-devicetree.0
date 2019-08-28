@@ -1,68 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/8] regulator: add support for SY8824C regulator
-Date: Wed, 28 Aug 2019 11:13:34 +0100
-Message-ID: <20190828101334.GB4298@sirena.co.uk>
-References: <20190827163252.4982af95@xhacker.debian>
- <20190827163418.1a32fc48@xhacker.debian>
- <20190827194437.GO23391@sirena.co.uk>
- <20190828112705.5e683693@xhacker.debian>
+From: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Subject: [PATCH v4 0/4] add dual-boot support
+Date: Wed, 28 Aug 2019 13:23:58 +0300
+Message-ID: <20190828102402.13155-1-i.mikhaylov@yadro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190828112705.5e683693@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ivan Mikhaylov <i.mikhaylov@yadro.com>
 List-Id: devicetree@vger.kernel.org
 
+ASPEED SoCs support dual-boot feature for SPI Flash.
+When strapped appropriately, the SoC starts wdt2 (/dev/watchdog1)
+and if within a minute it is not disabled, it goes off and reboots
+the SoC from an alternate SPI Flash chip by changing CS0 controls
+to actually drive CS1 line.
 
---IiVenqGWf+H9Y6IX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When booted from alternate chip, in order to access the main chip
+at CS0, the user must reset the appropriate bit in the watchdog
+hardware. There is no interface that would allow to do that from
+an embedded firmware startup script.
 
-On Wed, Aug 28, 2019 at 03:38:29AM +0000, Jisheng Zhang wrote:
-> On Tue, 27 Aug 2019 20:44:37 +0100 Mark Brown wrote:
+This commit implements support for that feature:
 
-> >=20
-> > Please send a patch which updates the entire comment block to be
-> > C++ style so it looks consistent.
+* Enable 'alt-boot' option for wdt2
 
-> Do you mean update the following style
+* Enable secondary SPI flash chip
 
-> A:
->=20
-> // SPDX-License-Identifier: GPL-2.0
-> /*
->  * SY8824C regulator driver
->  * ...
+* Make it possible to get access to the primary SPI flash chip at CS0
+  after booting from the alternate chip at CS1. A sysfs interface is added
+  to provide an easy way for embedded firmware startup scripts to clear
+  the chip select bit to gain access to the primary flash chip in order
+  to allow for recovery of its contents.
 
-> as B:
+Ivan Mikhaylov (4):
+  vesnin: add wdt2 section with alt-boot option
+  vesnin: add secondary SPI flash chip
+  watchdog/aspeed: add support for dual boot
+  aspeed/watchdog: Add access_cs0 option for alt-boot
 
-> // SPDX-License-Identifier: GPL-2.0
-> // SY8824C regulator driver
-> // ...
+ .../ABI/testing/sysfs-class-watchdog          | 34 ++++++++++
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts   | 12 ++++
+ drivers/watchdog/aspeed_wdt.c                 | 65 ++++++++++++++++++-
+ 3 files changed, 110 insertions(+), 1 deletion(-)
 
-> I'm not sure which style is correct. But I see B is commonly used
-> in lots .c source files in other dirs, such as kernel/ mm/ etc.
-
-Yes, please - update to style B.
-
---IiVenqGWf+H9Y6IX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1mU80ACgkQJNaLcl1U
-h9DQbAf9Etbge3YinPdjAxIYYWtuPv6r2hsxMHOm1iKbI1gItlt6aNtFLLilT4kk
-pv2lx+YEFNZXPP/cuwzsgtKEfMkPEM4KDsz85mY+3v8y350N+RiVIX1nUirnDEYs
-mWaLoK6D+DrKAPgDgH23zcNH6KoTKNYIPpUfdVQT/jiSXUWXRFDQnsko0e/zb2sw
-cJjadPq1V8qjMFaR+xAOh/sT+LLKseWgIYgxWBXgKSj/in8Bbpk09Fy+rONS6/D7
-5QRfNaUshg+L7SPK+TRfIs39VNnpuGQI3FqzHyzoht4uApVVmbozKx3KOy7SBks1
-72cq7+eqDXUZFMnI5nToM26kFj/K9w==
-=/Kyl
------END PGP SIGNATURE-----
-
---IiVenqGWf+H9Y6IX--
+-- 
+2.20.1
