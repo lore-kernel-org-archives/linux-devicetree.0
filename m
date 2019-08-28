@@ -1,59 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 02/14] dt-bindings: display, renesas,
- du: Document cmms property
-Date: Wed, 28 Aug 2019 09:32:23 +0200
-Message-ID: <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-3-jacopo+renesas@jmondi.org>
- <20190827202945.GA3488@bogus>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 2/7] dt-bindings: usb: mtk-xhci: support USB wakeup for
+ MT8183
+Date: Wed, 28 Aug 2019 15:34:26 +0800
+Message-ID: <1566977671-22191-3-git-send-email-chunfeng.yun@mediatek.com>
+References: <1566977671-22191-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190827202945.GA3488@bogus>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: muroya@ksk.co.jp, Ulrich Hecht <uli@fpond.eu>, Simon Horman <horms@verge.net.au>, VenkataRajesh.Kalakodima@in.bosch.com, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Harsha.ManjulaMallikarjun@in.bosch.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1566977671-22191-1-git-send-email-chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMjcsIDIwMTkgYXQgMTA6MjkgUE0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4gT24gU3VuLCBBdWcgMjUsIDIwMTkgYXQgMDM6NTE6NDJQTSArMDIwMCwg
-SmFjb3BvIE1vbmRpIHdyb3RlOgo+ID4gRG9jdW1lbnQgdGhlIG5ld2x5IGFkZGVkICdjbW1zJyBw
-cm9wZXJ0eSB3aGljaCBhY2NlcHRzIGEgbGlzdCBvZiBwaGFuZGxlCj4gPiBhbmQgY2hhbm5lbCBp
-bmRleCBwYWlycyB0aGF0IHBvaW50IHRvIHRoZSBDTU0gdW5pdHMgYXZhaWxhYmxlIGZvciBlYWNo
-Cj4gPiBEaXNwbGF5IFVuaXQgb3V0cHV0IHZpZGVvIGNoYW5uZWwuCj4gPgo+ID4gU2lnbmVkLW9m
-Zi1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+ID4gUmV2aWV3
-ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNv
-bT4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3JlbmVzYXMsZHUudHh0IHwgNSArKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlv
-bnMoKykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ID4gaW5kZXggYzk3ZGZhY2FkMjgxLi5jMjI2
-NWUyYTFhZjIgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiA+IEBAIC00NSw2ICs0NSwxMCBA
-QCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ID4gICAgICBpbnN0YW5jZSB0aGF0IHNlcnZlcyB0aGUg
-RFUgY2hhbm5lbCwgYW5kIHRoZSBjaGFubmVsIGluZGV4IGlkZW50aWZpZXMgdGhlCj4gPiAgICAg
-IExJRiBpbnN0YW5jZSBpbiB0aGF0IFZTUC4KPiA+Cj4gPiArICAtIGNtbXM6IEEgbGlzdCBvZiBw
-aGFuZGxlcyB0byB0aGUgQ01NIGluc3RhbmNlcyBwcmVzZW50IGluIHRoZSBTb0MsIG9uZQo+ID4g
-KyAgICBmb3IgZWFjaCBhdmFpbGFibGUgRFUgY2hhbm5lbC4gVGhlIHByb3BlcnR5IHNoYWxsIG5v
-dCBiZSBzcGVjaWZpZWQgZm9yCj4gPiArICAgIFNvQ3MgdGhhdCBkbyBub3QgcHJvdmlkZSBhbnkg
-Q01NIChzdWNoIGFzIFYzTSBhbmQgVjNIKS4KPgo+IHJlbmVzYXMsY21tcwoKU28gSSBndWVzcyB3
-ZSByZWFsbHkgd2FudGVkIHRvIGhhdmUgdGhlIHByZWZpeCBmb3IgdGhlIHZzcHMgcHJvcGVydHks
-IHRvbz8KCkdye29ldGplLGVldGluZ31zLAoKICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQK
-Ci0tIApHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBp
-YTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
-dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdt
-IHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRo
-aW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBU
-b3J2YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Support USB wakeup by ip-sleep mode for MT8183
+
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+v2: no changes
+---
+ Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+index 266c2d917a28..9a0a9eb0456f 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+@@ -41,6 +41,7 @@ Optional properties:
+ 	"wakeup-source", and has two arguments:
+ 	- the first one : register base address of the glue layer in syscon;
+ 	- the second one : hardware version of the glue layer
++		- 0 : used by mt8183 etc
+ 		- 1 : used by mt8173 etc
+ 		- 2 : used by mt2712 etc
+  - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
+-- 
+2.23.0
