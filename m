@@ -1,45 +1,103 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
- from  Required properties
-Date: Wed, 28 Aug 2019 03:43:11 +0000
-Message-ID: <DB8PR04MB674721E7EE7491BCFBBC890C84A30@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
- <20190820073022.24217-2-Zhiqiang.Hou@nxp.com> <20190827165742.GA5083@bogus>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Wed, 28 Aug 2019 11:47:54 +0800
+Message-ID: <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827165742.GA5083@bogus>
+In-Reply-To: <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3IQ0KDQpUaGFua3MsDQpaaGlx
-aWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnE6jjUwjI4yNUgMDo1OA0KPiBUbzogWi5x
-LiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgtcGNpQHZnZXIua2VybmVs
-Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiBqaW5nb29oYW4xQGdt
-YWlsLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5n
-LmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiBhbmRyZXcubXVycmF5
-QGFybS5jb207IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWi5xLiBIb3UNCj4g
-PHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjIgMS80XSBkdC1i
-aW5kaW5nczogUENJOiBkZXNpZ253YXJlOiBSZW1vdmUgdGhlDQo+IG51bS1sYW5lcyBmcm9tIFJl
-cXVpcmVkIHByb3BlcnRpZXMNCj4gDQo+IE9uIFR1ZSwgMjAgQXVnIDIwMTkgMDc6Mjg6NDMgKzAw
-MDAsICJaLnEuIEhvdSIgd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5I
-b3VAbnhwLmNvbT4NCj4gPg0KPiA+IFRoZSBudW0tbGFuZXMgaXMgbm90IGEgbWFuZGF0b3J5IHBy
-b3BlcnR5LCBlLmcuIG9uIEZTTCBMYXllcnNjYXBlDQo+ID4gU29DcywgdGhlIFBDSWUgbGluayB0
-cmFpbmluZyBpcyBjb21wbGV0ZWQgYXV0b21hdGljYWxseSBiYXNlIG9uIHRoZQ0KPiA+IHNlbGVj
-dGVkIFNlckRlcyBwcm90b2NvbCwgaXQgZG9lc24ndCBuZWVkIHRoZSBudW0tbGFuZXMgdG8gc2V0
-LXVwIHRoZQ0KPiA+IGxpbmsgd2lkdGguDQo+ID4NCj4gPiBJdCBpcyBwcmV2aW91c2x5IGluIGJv
-dGggUmVxdWlyZWQgYW5kIE9wdGlvbmFsIHByb3BlcnRpZXMsIGxldCdzDQo+ID4gcmVtb3ZlIGl0
-IGZyb20gdGhlIFJlcXVpcmVkIHByb3BlcnRpZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBI
-b3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IFYyOg0KPiA+
-ICAtIFJld29yZGVkIHRoZSBjaGFuZ2UgbG9nIGFuZCBzdWJqZWN0Lg0KPiA+ICAtIEZpeGVkIGEg
-dHlwbyBpbiBzdWJqZWN0Lg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wY2kvZGVzaWdud2FyZS1wY2llLnR4dCB8IDEgLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBkZWxldGlvbigtKQ0KPiA+DQo+IA0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4NCg==
+Hi Rob,
+
+On 27/8/2019 8:39 PM, Rob Herring wrote:
+> On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add a YAML schema to use the host controller driver with the
+>> SDXC PHY on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+>>   1 file changed, 50 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>> new file mode 100644
+>> index 000000000000..be05020880bf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>> @@ -0,0 +1,50 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +description: Binding for SDXC PHY
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-sdxc-phy
+>> +
+>> +  intel,syscon:
+>> +    description: phandle to the sdxc through syscon
+>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    maxItems: 1
+>> +
+>> +  "#phy-cells":
+>> +    const: 0
+>> +
+>> +required:
+>> +  - "#phy-cells"
+>> +  - compatible
+>> +  - intel,syscon
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    sdxc_phy: sdxc_phy {
+>> +        compatible = "intel,lgm-sdxc-phy";
+>> +        intel,syscon = <&sysconf>;
+> Rather than a phandle, can this be a child node of sysconf? You need a
+> binding for sysconf first anyways.
+intel,syscon is phandle, emmc_phy is not child node of sysconf, access 
+emmc_phy
+register over sysconf so made as reference here.
+
+Best Regards
+Vadivel
+>> +        clocks = <&sdxc>;
+>> +        clock-names = "sdxcclk";
+>> +        #phy-cells = <0>;
+>> +    };
+>> +
+>> +...
+>> --
+>> 2.11.0
+>>
