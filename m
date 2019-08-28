@@ -1,74 +1,81 @@
-Return-Path: <SRS0=nYoP=WY=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] dt-bindings: dmaengine: dma-common: Revise the
+Return-Path: <SRS0=C2Tf=WY=ti.com=peter.ujfalusi@kernel.org>
+Subject: Re: [PATCH] dt-bindings: dmaengine: dma-common: Revise the
  dma-channel-mask property
-Date: Wed, 28 Aug 2019 10:00:30 +0000
-Message-ID: 
- <TYAPR01MB45449A32980BD5A48D0FC2C0D8A30@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: 
- <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <eb823985-5cf6-0d83-8613-1baeeaf7d9c8@ti.com>
  <TYAPR01MB454400436713332F1075D424D8A30@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <3b06567c-8cfe-bfec-3973-c3e7cf71a18b@ti.com>
-In-Reply-To: <3b06567c-8cfe-bfec-3973-c3e7cf71a18b@ti.com>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <3b06567c-8cfe-bfec-3973-c3e7cf71a18b@ti.com>
+Date: Wed, 28 Aug 2019 12:38:46 +0300
 MIME-Version: 1.0
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+In-Reply-To: <TYAPR01MB454400436713332F1075D424D8A30@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "vkoul@kernel.org" <vkoul@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgUGV0ZXItc2FuLA0KDQo+IEZyb206IFBldGVyIFVqZmFsdXNpLCBTZW50OiBXZWRuZXNkYXks
-IEF1Z3VzdCAyOCwgMjAxOSA2OjM5IFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IE9u
-IDI4LzA4LzIwMTkgMTEuNTUsIFlvc2hpaGlybyBTaGltb2RhIHdyb3RlOg0KPiA+IEhpIFBldGVy
-LA0KPiA+DQo+ID4+IEZyb206IFBldGVyIFVqZmFsdXNpLCBTZW50OiBXZWRuZXNkYXksIEF1Z3Vz
-dCAyOCwgMjAxOSA0OjI1IFBNDQo+ID4+DQo+ID4+IE9uIDI4LzA4LzIwMTkgOS4zOSwgWW9zaGlo
-aXJvIFNoaW1vZGEgd3JvdGU6DQo+ID4+PiBUaGUgY29tbWl0IGIzN2UzNTM0YWM0MiAoImR0LWJp
-bmRpbmdzOiBkbWFlbmdpbmU6IEFkZCBZQU1MIHNjaGVtYXMNCj4gPj4+IGZvciB0aGUgZ2VuZXJp
-YyBETUEgYmluZGluZ3MiKSBjaGFuZ2VkIHRoZSBwcm9wZXJ0eSBmcm9tDQo+ID4+PiBkbWEtY2hh
-bm5lbC1tYXNrIHRvIGRtYS1jaGFubmVsLW1hc2tzLiBTbywgdGhpcyBwYXRjaCByZXZpc2VzIGl0
-Lg0KPiA+Pj4NCj4gPj4+IEZpeGVzOiBiMzdlMzUzNGFjNDIgKCJkdC1iaW5kaW5nczogZG1hZW5n
-aW5lOiBBZGQgWUFNTCBzY2hlbWFzIGZvciB0aGUgZ2VuZXJpYyBETUEgYmluZGluZ3MiKQ0KPiA+
-Pj4gU2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVo
-QHJlbmVzYXMuY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2RtYS9kbWEtY29tbW9uLnlhbWwgfCAyICstDQo+ID4+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZG1hLWNvbW1vbi55YW1s
-DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9kbWEtY29tbW9u
-LnlhbWwNCj4gPj4+IGluZGV4IDAxNDFhZjAuLmVkMGE0OWEgMTAwNjQ0DQo+ID4+PiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL2RtYS1jb21tb24ueWFtbA0KPiA+
-Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9kbWEtY29tbW9u
-LnlhbWwNCj4gPj4+IEBAIC0yNCw3ICsyNCw3IEBAIHByb3BlcnRpZXM6DQo+ID4+PiAgICAgIGRl
-c2NyaXB0aW9uOg0KPiA+Pj4gICAgICAgIFVzZWQgdG8gcHJvdmlkZSBETUEgY29udHJvbGxlciBz
-cGVjaWZpYyBpbmZvcm1hdGlvbi4NCj4gPj4+DQo+ID4+PiAtICBkbWEtY2hhbm5lbC1tYXNrczoN
-Cj4gPj4+ICsgIGRtYS1jaGFubmVsLW1hc2s6DQo+ID4+PiAgICAgICRyZWY6IC9zY2hlbWFzL3R5
-cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWludDMyDQo+ID4+DQo+ID4+IEhvdyB0aGlzIG1hc2sgc3Vw
-cG9zZWQgdG8gYmUgdXNlZCBmb3IgY29udHJvbGxlcnMgaGF2aW5nIG1vcmUgdGhhbiAzMg0KPiA+
-PiBjaGFubmVscyAoNjQsIDMwMCspPw0KPiA+DQo+ID4gSSBmb3VuZCAiZG1hLWNoYW5uZWxzIiBw
-cm9wZXJ0eSBhcyA0MCBpbiBhcmNoL2FybS9ib290L2R0cy9zdGUtdTMwMC5kdHMuDQo+ID4gSG93
-ZXZlciwgc2luY2UgYXJjaC9hcm02NC9ib290L2R0cy9oaXNpbGljb24vaGkzNjYwLmR0c2kgYWxy
-ZWFkeSBoYXMNCj4gPiB0aGUgZG1hLWNoYW5uZWwtbWFzayBwcm9wZXJ0eSwgSSB0aGluayB3ZSBz
-aG91bGQgbm90IGNoYW5nZSB0aGUgcHJvcGVydHkgbmFtZS4NCj4gDQo+IEknbSBub3QgYXNraW5n
-IGl0IHRvIGJlIGNoYW5nZWQsIEkganVzdCB3b25kZXJlZCBob3cgSSBjb3VsZCB1c2UgdGhpcw0K
-PiBnZW5lcmljIHByb3BlcnR5IGZvciBETUEgY29udHJvbGxlcnMgaGF2aW5nIG1vcmUgY2hhbm5l
-bHMgdGhhbiB1MzINCj4gYml0ZmllbGQgY291bGQgZGVzY3JpYmUuIEFuIGFycmF5IG9mIG11bHRp
-cGxlIHUzMiB0byBjb3ZlciB0aGUgbnVtYmVyIG9mDQo+IGNoYW5uZWxzIHdvdWxkIHByb2JhYmx5
-IHNvbWV0aGluZyB3aGljaCBjYW4gYmUgZG9uZSwgYnV0IGl0IHdvdWxkIG5lZWQNCj4gdXBkYXRl
-IGZvciB0aGUgZG9jdW1lbnRhdGlvbiB0byBtYWtlIHN1cmUgdGhhdCBpdCBpcyB1c2VkIGNvbnNp
-c3RlbnRseS4NCj4gDQo+IEknbSBhc2tpbmcgdGhpcyBiZWNhdXNlIG9mOiBodHRwczovL3BhdGNo
-d29yay5rZXJuZWwub3JnL3BhdGNoLzExMTExNjE5Lw0KDQpPb3BzLCBJJ20gc29ycnkgZm9yIG1p
-c3VuZGVyc3RhbmRpbmcgeW91ciBxdWVzdGlvbi4NCg0KQXMgeW91IHNhaWQsIEkgYWxzbyB0aGlu
-ayB0aGF0IHlvdSBjYW4gdXNlIHRoaXMgZ2VuZXJpYyBwcm9wZXJ0eSBpZiB3ZSB1cGRhdGUNCnRo
-ZSBkb2N1bWVudCBmcm9tIHVpbnQzMiB0byB1aW50MzItYXJyYXkgbGlrZSBiZWxvdzoNCg0KLSAg
-ICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWludDMyDQorICAgICAg
-JHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9ucy91aW50MzItYXJyYXkNCg0KQmVz
-dCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1vZGENCg0KPiA+DQo+ID4gQmVzdCByZWdhcmRzLA0K
-PiA+IFlvc2hpaGlybyBTaGltb2RhDQo+ID4NCj4gPj4+ICAgICAgZGVzY3JpcHRpb246DQo+ID4+
-PiAgICAgICAgQml0bWFzayBvZiBhdmFpbGFibGUgRE1BIGNoYW5uZWxzIGluIGFzY2VuZGluZyBv
-cmRlciB0aGF0IGFyZQ0KPiA+Pj4NCj4gPj4NCj4gPj4gLSBQw6l0ZXINCj4gPj4NCj4gPj4gVGV4
-YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
-a2kuDQo+ID4+IFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9t
-aWNpbGU6IEhlbHNpbmtpDQo+IA0KPiAtIFDDqXRlcg0KPiANCj4gVGV4YXMgSW5zdHJ1bWVudHMg
-RmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuDQo+IFktdHVubnVz
-L0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpDQo=
+Hi Shimoda-san,
+
+On 28/08/2019 11.55, Yoshihiro Shimoda wrote:
+> Hi Peter,
+> 
+>> From: Peter Ujfalusi, Sent: Wednesday, August 28, 2019 4:25 PM
+>>
+>> On 28/08/2019 9.39, Yoshihiro Shimoda wrote:
+>>> The commit b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas
+>>> for the generic DMA bindings") changed the property from
+>>> dma-channel-mask to dma-channel-masks. So, this patch revises it.
+>>>
+>>> Fixes: b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas for the generic DMA bindings")
+>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/dma/dma-common.yaml | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml
+>> b/Documentation/devicetree/bindings/dma/dma-common.yaml
+>>> index 0141af0..ed0a49a 100644
+>>> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+>>> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+>>> @@ -24,7 +24,7 @@ properties:
+>>>      description:
+>>>        Used to provide DMA controller specific information.
+>>>
+>>> -  dma-channel-masks:
+>>> +  dma-channel-mask:
+>>>      $ref: /schemas/types.yaml#definitions/uint32
+>>
+>> How this mask supposed to be used for controllers having more than 32
+>> channels (64, 300+)?
+> 
+> I found "dma-channels" property as 40 in arch/arm/boot/dts/ste-u300.dts.
+> However, since arch/arm64/boot/dts/hisilicon/hi3660.dtsi already has
+> the dma-channel-mask property, I think we should not change the property name.
+
+I'm not asking it to be changed, I just wondered how I could use this
+generic property for DMA controllers having more channels than u32
+bitfield could describe. An array of multiple u32 to cover the number of
+channels would probably something which can be done, but it would need
+update for the documentation to make sure that it is used consistently.
+
+I'm asking this because of: https://patchwork.kernel.org/patch/11111619/
+
+> 
+> Best regards,
+> Yoshihiro Shimoda
+> 
+>>>      description:
+>>>        Bitmask of available DMA channels in ascending order that are
+>>>
+>>
+>> - Péter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
