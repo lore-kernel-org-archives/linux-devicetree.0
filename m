@@ -1,49 +1,72 @@
-From: "Langer, Thomas" <thomas.langer@intel.com>
-Subject: RE: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML
- schema for LGM SDXC PHY
-Date: Wed, 28 Aug 2019 15:37:17 +0000
-Message-ID: <0DAF21CFE1B20740AE23D6AF6E54843F1FDDE99F@IRSMSX108.ger.corp.intel.com>
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 04/13] irqchip: Add driver for Loongson-3 I/O interrupt
+ controller
+Date: Wed, 28 Aug 2019 17:02:17 +0100
+Message-ID: <45615c1a-7af8-3496-5369-4b2f174a76e7@kernel.org>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+ <20190827085302.5197-5-jiaxun.yang@flygoat.com>
+ <e6a5862f-0f6c-cab0-9f4a-51b7889d38e7@kernel.org>
+ <82c4b9ed-7270-74ce-6e10-165182e540dd@flygoat.com>
+ <20190828075940.549e1983@why>
+ <619b1d35-7bc2-999f-5a51-fb2efdc63f60@flygoat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <619b1d35-7bc2-999f-5a51-fb2efdc63f60@flygoat.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>, "kishon@ti.com" <kishon@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Kim, Cheol Yong" <cheol.yong.kim@intel.com>, "Wu, Qiming" <qi-ming.wu@intel.com>, "Liem, Peter Harliman" <peter.harliman.liem@intel.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmFkaXZlbCwNCg0KPiArLi4uDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGh5L2ludGVsLHN5c2Nvbi55YW1sDQo+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9pbnRlbCxzeXNjb24ueWFtbA0KPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmQwYjc4ODA1ZTQ5Zg0KPiAtLS0gL2Rldi9u
-dWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvaW50ZWws
-c3lzY29uLnlhbWwNCj4gQEAgLTAsMCArMSwzMyBAQA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRp
-ZmllcjogR1BMLTIuMA0KPiArJVlBTUwgMS4yDQo+ICstLS0NCj4gKyRpZDogaHR0cDovL2Rldmlj
-ZXRyZWUub3JnL3NjaGVtYXMvcGh5L2ludGVsLHN5c2Nvbi55YW1sIw0KPiArJHNjaGVtYTogaHR0
-cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ICsNCj4gK3RpdGxl
-OiBTeXNjb24gZm9yIGVNTUMvU0RYQyBQSFkgRGV2aWNlIFRyZWUgQmluZGluZ3MNCg0KVGhpcyBz
-YXlzIHRoZSBiaW5kaW5nIGlzIGZvciBlTU1DL1NEWEMNCg0KPiArDQo+ICttYWludGFpbmVyczoN
-Cj4gKyAgLSBSYW11dGhldmFyIFZhZGl2ZWwgTXVydWdhbg0KPiA8dmFkaXZlbC5tdXJ1Z2FueC5y
-YW11dGhldmFyQGxpbnV4LmludGVsLmNvbT4NCj4gKw0KPiArcHJvcGVydGllczoNCj4gKyAgY29t
-cGF0aWJsZToNCj4gKyAgICBjb25zdDogaW50ZWwsc3lzY29uDQoNCmJ1dCB0aGlzIGlzIGEgZ2Vu
-ZXJpYyBzeXNjb24sIGJlaGluZCB3aGljaCBhcmUgbWFueSByZWdpc3RlcnMsIG5vdCBvbmx5IGZv
-cg0KZU1NQy9TRFhDLiBBbHNvLCB0aGUgcmVnaXN0ZXJzIHdpbGwgYmUgZGlmZmVyZW50IGZvciBl
-YWNoIFNvQyBhbmQgbmVlZGVkIGZvcg0KbWFueSBkaWZmZXJlbnQgZHJpdmVycywgdGhhdCBpcyB3
-aHkgaW4geW91ciBleGFtcGxlIGl0IGlzIGNhbGxlZCAiY2hpcHRvcCINCi0+IHRvcGxldmVsIHJl
-Z2lzdGVycyBub3QgYmVsb25naW5nIHRvIGEgc3BlY2lmaWMgSFcgbW9kdWxlLg0KDQpSb2I6IERv
-IHlvdSBhbHNvIHRoaW5rIHRoaXMgImludGVsLHN5c2NvbiIgaXMgdG9vIGdlbmVyaWM/DQogICAg
-IEFuZCB0aGUgYmluZGluZyBzaG91bGQgYmUgb3V0c2lkZSB0aGUgInBoeSIgZm9sZGVyPw0KDQpX
-aGF0IGlzIHRoZSB3YXkgdG8gc3VwcG9ydCBkaWZmZXJlbnQgU29DcyB3aXRoIHRoaXM/IA0KTXVz
-dCB0aGUgZHJpdmVyIHJlZmVyZW5jaW5nIHRoaXMgc3lzY29uIGJlIGF3YXJlIG9mIHRoZXNlIGRp
-ZmZlcmVuY2VzPw0KDQo+ICsNCj4gKyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4g
-KyAgIiNyZXNldC1jZWxscyI6DQo+ICsgICBjb25zdDogMQ0KPiArDQo+ICtyZXF1aXJlZDoNCj4g
-KyAgLSBjb21wYXRpYmxlDQo+ICsgIC0gcmVnDQo+ICsgIC0gIiNyZXNldC1jZWxscyINCj4gKw0K
-PiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgIHN5c2NvbmY6IGNoaXB0b3BAZTAwMjAwMDAg
-ew0KPiArICAgICAgIGNvbXBhdGlibGUgPSAiaW50ZWwsc3lzY29uIiwgInN5c2NvbiI7DQo+ICsg
-ICAgICAgcmVnID0gPDB4ZTAwMjAwMDAgMHgxMDA+Ow0KPiArICAgICAgICNyZXNldC1jZWxscyA9
-IDwxPjsNCj4gKyAgICB9Ow0KPiAtLQ0KPiAyLjExLjANCg0KQmVzdCByZWdhcmRzLA0KVGhvbWFz
-DQo=
+On 28/08/2019 16:31, Jiaxun Yang wrote:
+> 
+> On 2019/8/28 下午2:59, Marc Zyngier wrote:
+>> On Wed, 28 Aug 2019 08:27:05 +0800
+>> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>>
+>>> On 2019/8/28 上午12:45, Marc Zyngier wrote:
+>>>> On 27/08/2019 09:52, Jiaxun Yang wrote:
+>>>>> +	chained_irq_enter(chip, desc);
+>>>>> +
+>>>>> +	pending = readl(priv->intc_base + LS3_REG_INTC_EN_STATUS) &
+>>>>> +		readl(priv->intc_base + LS3_REG_INTC_STATUS);
+>>>> Reading the enabled status from the HW on each interrupt? I'm sure
+>>>> that's pretty cheap...
+>>> Seems expensive but to deal with a buggy hardware... That's worthy.
+>> How broken is it? You very much seem to rely on the HW being correct
+>> here, since you trust it exclusively. I'd expect the enable mask to be
+>> a SW construct if you didn't blindly trust it
+> Hi Marc
+> 
+> Thanks for your answering.
+> 
+> The vendor code did this and said there is a HW issue. I just don't have 
+> the guts to remove this check.
+> Seems like sometimes masked interrupt may get ISR set wrongly.
+
+And that would just as well avoided by a SW managed mask.
+
+>> And if this is truly the right way to do it, please document the
+>> various problems with the controller so that we don't break it at a
+>> later time.
+> Thanks, will do.
+>>
+>> Then how comes this comes from the irqchip's DT node? This should be
+>> part of the endpoint's interrupt specifier.
+> 
+> In theory it should be, However if we set different interrupt 
+> lines/cores on that controller, interrupts may get lost. It means we can 
+> only have single parent core/interrupt.
+> 
+> So I'd prefer just set them uniformly by controller's dt-binding to 
+> prevent confusing.
+
+And I disagree. You can document the restriction, and even maybe enforce
+it by validating the DT one way or another. But we're not putting what
+ends up being a routing table in the irqchip binding.
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
