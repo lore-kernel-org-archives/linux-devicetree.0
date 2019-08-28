@@ -1,63 +1,111 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
-Date: Wed, 28 Aug 2019 06:49:44 +0000
-Message-ID: <1566974984.3209.113.camel@nxp.com>
-References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
- <20190826120548.GA14316@bogon.m.sigxcpu.org>
- <3bd35686e046048d35cd4987567a13cf@agner.ch>
- <VI1PR04MB70233374E91F85119FD21FD5EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+From: Weiyi Lu <weiyi.lu@mediatek.com>
+Subject: Re: [PATCH 2/2] clk: mediatek: add pericfg clocks for MT8183
+Date: Wed, 28 Aug 2019 14:55:33 +0800
+Message-ID: <1566975333.24969.2.camel@mtksdaap41>
+References: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB70233374E91F85119FD21FD5EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Content-ID: <E488AAC1DAC36A4C8BD7B8F69517A21B@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "airlied@linux.ie" <airlied@linux.ie>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Erin Lo <erin.lo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVvbmFyZCwNCg0KT24gTHUsIDIwMTktMDgtMjYgYXQgMTk6MTkgKzAwMDAsIExlb25hcmQg
-Q3Jlc3RleiB3cm90ZToNCj4gT24gMjYuMDguMjAxOSAxNzozNSwgU3RlZmFuIEFnbmVyIHdyb3Rl
-Og0KPiA+IA0KPiA+IE9uIDIwMTktMDgtMjYgMTQ6MDUsIEd1aWRvIEfDvG50aGVyIHdyb3RlOg0K
-PiA+ID4gDQo+ID4gPiBIaSwNCj4gPiA+IE9uIFdlZCwgQXVnIDIxLCAyMDE5IGF0IDAxOjE1OjQw
-UE0gKzAzMDAsIFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiBUaGlzIHBh
-dGNoLXNldCBpbXByb3ZlcyB0aGUgdXNlIG9mIGVMQ0RJRiBibG9jayBvbiBpTVggOCBTb0NzDQo+
-ID4gPiA+IChsaWtlIDhNUSwgOE1NDQo+ID4gPiA+IGFuZCA4UVhQKS4gRm9sbG93aW5nLCBhcmUg
-dGhlIG5ldyBmZWF0dXJlcyBhZGRlZCBhbmQgZml4ZXMgZnJvbQ0KPiA+ID4gPiB0aGlzDQo+ID4g
-PiA+IHBhdGNoLXNldDoNCj4gPiA+IEkndmUgYXBwbGllZCB0aGlzIHdob2xlIHNlcmllcyBvbiB0
-b3Agb2YgbXkgTldMIHdvcmsgYW5kIGl0IGxvb2tzDQo+ID4gPiBnb29kDQo+ID4gPiB3aXRoIGEg
-RFNJIHBhbmVsLiBBcHBseWluZyB0aGUgd2hvbGUgc2VyaWVzIGFsc28gZml4ZXMgYW4gaXNzdWUN
-Cj4gPiA+IHdoZXJlDQo+ID4gPiBhZnRlciB1bmJsYW5rIHRoZSBvdXRwdXQgd2FzIHNvbWV0aW1l
-cyBzaGlmdGVkIGFib3V0IGhhbGYgYQ0KPiA+ID4gc2NyZWVuIHdpZHRoDQo+ID4gPiB0byB0aGUg
-cmlnaHQgKHdoaWNoIGRpZG4ndCBoYXBwZW4gd2l0aCBEQ1NTKS4gU28gYXQgbGVhc3QgZnJvbQ0K
-PiA+ID4gdGhlIHBhcnRzDQo+ID4gPiBJIGNvdWxkIHRlc3Q6DQo+ID4gPiANCj4gPiA+IMKgwqDC
-oFRlc3RlZC1ieTogR3VpZG8gR8O8bnRoZXIgPGFneEBzaWd4Y3B1Lm9yZz4NCj4gPiA+IA0KPiA+
-ID4gZm9yIHRoZSB3aG9sZSB0aGluZy4NCj4gPiBUaGFua3MgZm9yIHRlc3RpbmchIFdoYXQgU29D
-IGRpZCB5b3UgdXNlPyBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QNCj4gPiB0bw0KPiA+IGFsc28g
-Z2l2ZSB0aGlzIGEgdHJ5IG9uIGkuTVggNyBvciBpLk1YIDZVTEwgYmVmb3JlIG1lcmdpbmcuDQo+
-IEkgZGlkIGEgcXVpY2sgdGVzdCBvbiBpbXg2c3gtc2RiIGFuZCBpdCBzZWVtcyB0aGF0IFtQQVRD
-SCAwNy8xNV3CoA0KPiAiZHJtL214c2ZiOiBGaXggdGhlIHZibGFuayBldmVudHMiIGNhdXNlcyBh
-IGhhbmcgb24gYm9vdCwgZXZlbg0KPiB3aXRob3V0IGHCoA0KPiBwYW5lbC4NCj4gDQo+IElmIEkg
-cmV2ZXJ0IHRoYXQgcGFydGljdWxhciBwYXRjaCBpdCBzZWVtcyB0byBiZSBmaW5lOiB0aGUgbmV3
-IHBpeGVswqANCj4gZm9ybWF0cyBzZWVtIHRvIHdvcmsgaW4gbW9kZXRlc3QgKGNoZWNrZWQgd2l0
-aCBzaWksNDN3dmYxZyBwYW5lbCkuDQpUaGFua3MgZm9yIGZlZWRiYWNrLiBJIHRlc3RlZCB0aGlz
-IGFuZCwgaW5kZWVkIHRoZXJlIGFyZSBpc3N1ZXMgb24gNlNYDQp3aXRoIHRoaXMgcGFydGljdWxh
-ciBwYXRjaC4gSXQgc2VlbXMgdGhhdCB0aGVyZSBpcyBhIHJhY2UtY29uZGl0aW9uDQpjYXVzZWQg
-YnkgdGhlIHZibGFua19vbiBjYWxsIGluIGVuYWJsZSBhbmQgSVJRIHJvdXRpbmUuIFNpbmNlIHRo
-aXMgaXMNCm5vdCBoYXBwZW5pbmcgb24gYW55IG9mIGkuTVg4IFNvQywgSSBzdXNwZWN0IHRoZSBh
-eGkgY2xvY2sgdXNhZ2UuDQpJIHRoaW5rIEkgd2lsbCBqdXN0IHJlbW92ZSB0aGlzIHBhdGNoIGZy
-b20gdGhlIHBhdGNoLXNldCBhbmQgaGFuZGxlDQp0aGlzIGNhc2Ugc2VwYXJhdGVseS4NCj4gDQo+
-IC0tDQo+IFJlZ2FyZHMsDQo+IExlb25hcmQNCg0KUmVnYXJkcywNClJvYmVydApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, 2019-08-28 at 13:55 +0800, Chunfeng Yun wrote:
+> Add pericfg clocks for MT8183, it's used when support USB
+> remote wakeup
+> 
+> Cc: Weiyi Lu <weiyi.lu@mediatek.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  drivers/clk/mediatek/clk-mt8183.c      | 35 ++++++++++++++++++++++++++
+>  include/dt-bindings/clock/mt8183-clk.h |  4 +++
+>  2 files changed, 39 insertions(+)
+> 
+> diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
+> index 1aa5f4059251..b19221bad0c9 100644
+> --- a/drivers/clk/mediatek/clk-mt8183.c
+> +++ b/drivers/clk/mediatek/clk-mt8183.c
+> @@ -999,6 +999,25 @@ static const struct mtk_gate infra_clks[] = {
+>  		"msdc50_0_sel", 24),
+>  };
+>  
+> +static const struct mtk_gate_regs peri_cg_regs = {
+> +	.set_ofs = 0x20c,
+> +	.clr_ofs = 0x20c,
+> +	.sta_ofs = 0x20c,
+> +};
+> +
+> +#define GATE_PERI(_id, _name, _parent, _shift) {	\
+> +	.id = _id,				\
+> +	.name = _name,				\
+> +	.parent_name = _parent,			\
+> +	.regs = &peri_cg_regs,			\
+> +	.shift = _shift,			\
+> +	.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
+> +}
+
+Hi Chunfeng,
+
+I suggest
+
+#define GATE_PERI(_id, _name, _parent, _shift)		\
+	GATE_MTK(_id, _name, _parent, &peri_cg_regs, _shift,	\
+		&mtk_clk_gate_ops_no_setclr_inv)
+
+> +
+> +static const struct mtk_gate peri_clks[] = {
+> +	GATE_PERI(CLK_PERI_AXI, "periaxi", "axi_sel", 31),
+> +};
+> +
+>  static const struct mtk_gate_regs apmixed_cg_regs = {
+>  	.set_ofs = 0x20,
+>  	.clr_ofs = 0x20,
+> @@ -1194,6 +1213,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
+>  	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+>  }
+>  
+> +static int clk_mt8183_peri_probe(struct platform_device *pdev)
+> +{
+> +	struct clk_onecell_data *clk_data;
+> +	struct device_node *node = pdev->dev.of_node;
+> +
+> +	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
+> +
+> +	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
+> +			       clk_data);
+> +
+> +	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +}
+> +
+>  static int clk_mt8183_mcu_probe(struct platform_device *pdev)
+>  {
+>  	struct clk_onecell_data *clk_data;
+> @@ -1223,6 +1255,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
+>  	}, {
+>  		.compatible = "mediatek,mt8183-infracfg",
+>  		.data = clk_mt8183_infra_probe,
+> +	}, {
+> +		.compatible = "mediatek,mt8183-pericfg",
+> +		.data = clk_mt8183_peri_probe,
+>  	}, {
+>  		.compatible = "mediatek,mt8183-mcucfg",
+>  		.data = clk_mt8183_mcu_probe,
+> diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
+> index 0046506eb24c..a7b470b0ec8a 100644
+> --- a/include/dt-bindings/clock/mt8183-clk.h
+> +++ b/include/dt-bindings/clock/mt8183-clk.h
+> @@ -284,6 +284,10 @@
+>  #define CLK_INFRA_FBIST2FPC		100
+>  #define CLK_INFRA_NR_CLK		101
+>  
+> +/* PERICFG */
+> +#define CLK_PERI_AXI			0
+> +#define CLK_PERI_NR_CLK			1
+> +
+>  /* MFGCFG */
+>  #define CLK_MFG_BG3D			0
+>  #define CLK_MFG_NR_CLK			1
