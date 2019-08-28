@@ -1,138 +1,100 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 2/3] scsi: ufs-qcom: Implement device_reset vops
-Date: Wed, 28 Aug 2019 12:17:55 -0700
-Message-ID: <20190828191756.24312-3-bjorn.andersson@linaro.org>
-References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Wed, 28 Aug 2019 21:36:38 +0200
+Message-ID: <CAFBinCBa9G+E+vjmQCGBx=zRG80ad1am_1TrNbAMvqKCQU38gw@mail.gmail.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+ <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828191756.24312-1-bjorn.andersson@linaro.org>
+In-Reply-To: <7c0fd56f-ecc5-40c2-c435-3805ca1f97c7@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Andy Gross <agross@kernel.org>, Bean Huo <beanhuo@micron.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+To: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Cc: eswara.kota@linux.intel.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
-through the GPIO framework. Acquire the device-reset GPIO and use this
-to implement the device_reset vops, to allow resetting the attached
-memory.
+On Wed, Aug 28, 2019 at 5:35 AM Chuan Hua, Lei
+<chuanhua.lei@linux.intel.com> wrote:
+[...]
+> >>>>>> +static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+> >>>>>> +{
+> >>>>>> +    struct device *dev = lpp->pci->dev;
+> >>>>>> +    int ret = 0;
+> >>>>>> +
+> >>>>>> +    lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> >>>>>> +    if (IS_ERR(lpp->reset_gpio)) {
+> >>>>>> +            ret = PTR_ERR(lpp->reset_gpio);
+> >>>>>> +            if (ret != -EPROBE_DEFER)
+> >>>>>> +                    dev_err(dev, "failed to request PCIe GPIO: %d\n", ret);
+> >>>>>> +            return ret;
+> >>>>>> +    }
+> >>>>>> +    /* Make initial reset last for 100ms */
+> >>>>>> +    msleep(100);
+> >>>>> why is there lpp->rst_interval when you hardcode 100ms here?
+> >>>> There are different purpose. rst_interval is purely for asserted reset
+> >>>> pulse.
+> >>>>
+> >>>> Here 100ms is to make sure the initial state keeps at least 100ms, then we
+> >>>> can reset.
+> >>> my interpretation is that it totally depends on the board design or
+> >>> the bootloader setup.
+> >> Partially, you are right. However, we should not add some dependency
+> >> here from
+> >> bootloader and board. rst_interval is just to make sure the pulse (low
+> >> active or high active)
+> >> lasts the specified the time.
+> > +Cc Kishon
+> >
+> > he recently added support for a GPIO reset line to the
+> > pcie-cadence-host.c [0] and I believe he's also maintaining
+> > pci-keystone.c which are both using a 100uS delay (instead of 100ms).
+> > I don't know the PCIe spec so maybe Kishon can comment on the values
+> > that should be used according to the spec.
+> > if there's then a reason why values other than the ones from the spec
+> > are needed then there should be a comment explaining why different
+> > values are needed (what problem does it solve).
+>
+> spec doesn't guide this part. It is a board or SoC specific setting.
+> 100us also should work. spec only requirs reset duration should last
+> 100ms. The idea is that before reset assert and deassert, make sure the
+> default deassert status keeps some time. We take this value from
+> hardware suggestion long time back. We can reduce this value to 100us,
+> but we need to test on the board.
+OK. I don't know how other PCI controller drivers manage this. if the
+PCI maintainers are happy with this then I am as well
+maybe it's worth changing the comment to indicate that this delay was
+suggested by the hardware team (so it's clear that this is not coming
+from the PCI spec)
 
-Based on downstream support implemented by Subhash Jadavani
-<subhashj@codeaurora.org>.
+[...]
+> >>>>>> +static void __intel_pcie_remove(struct intel_pcie_port *lpp)
+> >>>>>> +{
+> >>>>>> +    pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
+> >>>>>> +                        0, PCI_COMMAND);
+> >>>>> I expect logic like this to be part of the PCI subsystem in Linux.
+> >>>>> why is this needed?
+> >>>>>
+> >>>>> [...]
+> >>>> bind/unbind case we use this. For extreme cases, we use unbind and bind
+> >>>> to reset
+> >>>> PCI instead of rebooting.
+> >>> OK, but this does not seem Intel/Lantiq specific at all
+> >>> why isn't this managed by either pcie-designware-host.c or the generic
+> >>> PCI/PCIe subsystem in Linux?
+> >> I doubt if other RC driver will support bind/unbind. We do have this
+> >> requirement due to power management from WiFi devices.
+> > pcie-designware-host.c will gain .remove() support in Linux 5.4
+> > I don't understand how .remove() and then .probe() again is different
+> > from .unbind() followed by a .bind()
+> Good. If this is the case, bind/unbind eventually goes to probe/remove,
+> so we can remove this.
+OK. as far as I understand you need to call dw_pcie_host_deinit from
+the .remove() callback (which is missing in this version)
+(I'm using drivers/pci/controller/dwc/pcie-tegra194.c as an example,
+this driver is in linux-next and thus will appear in Linux 5.4)
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
 
-Changes since v3:
-- Renamed device-reset-gpios to just reset-gpios.
-- Explicitly bail on !host->device_reset, to not rely on passing NULL to
-  gpiod_set_value_cansleep()
-
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 ++
- drivers/scsi/ufs/ufs-qcom.c                   | 36 +++++++++++++++++++
- drivers/scsi/ufs/ufs-qcom.h                   |  4 +++
- 3 files changed, 42 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index a74720486ee2..d78ef63935f9 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -54,6 +54,8 @@ Optional properties:
- 			  PHY reset from the UFS controller.
- - resets            : reset node register
- - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
-+- reset-gpios       : A phandle and gpio specifier denoting the GPIO connected
-+		      to the RESET pin of the UFS memory device.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 4473f339cbc0..2200c8434ef3 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -8,6 +8,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/reset-controller.h>
- 
- #include "ufshcd.h"
-@@ -1140,6 +1141,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
- 		}
- 	}
- 
-+	host->device_reset = devm_gpiod_get_optional(dev, "reset",
-+						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(host->device_reset)) {
-+		err = PTR_ERR(host->device_reset);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev, "failed to acquire reset gpio: %d\n", err);
-+		goto out_variant_clear;
-+	}
-+
- 	err = ufs_qcom_bus_register(host);
- 	if (err)
- 		goto out_variant_clear;
-@@ -1545,6 +1555,31 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
- 	usleep_range(1000, 1100);
- }
- 
-+/**
-+ * ufs_qcom_device_reset() - toggle the (optional) device reset line
-+ * @hba: per-adapter instance
-+ *
-+ * Toggles the (optional) reset line to reset the attached device.
-+ */
-+static void ufs_qcom_device_reset(struct ufs_hba *hba)
-+{
-+	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-+
-+	/* reset gpio is optional */
-+	if (!host->device_reset)
-+		return;
-+
-+	/*
-+	 * The UFS device shall detect reset pulses of 1us, sleep for 10us to
-+	 * be on the safe side.
-+	 */
-+	gpiod_set_value_cansleep(host->device_reset, 1);
-+	usleep_range(10, 15);
-+
-+	gpiod_set_value_cansleep(host->device_reset, 0);
-+	usleep_range(10, 15);
-+}
-+
- /**
-  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
-  *
-@@ -1565,6 +1600,7 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
- 	.suspend		= ufs_qcom_suspend,
- 	.resume			= ufs_qcom_resume,
- 	.dbg_register_dump	= ufs_qcom_dump_dbg_regs,
-+	.device_reset		= ufs_qcom_device_reset,
- };
- 
- /**
-diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
-index 001915d1e0e4..d401f174bb70 100644
---- a/drivers/scsi/ufs/ufs-qcom.h
-+++ b/drivers/scsi/ufs/ufs-qcom.h
-@@ -195,6 +195,8 @@ struct ufs_qcom_testbus {
- 	u8 select_minor;
- };
- 
-+struct gpio_desc;
-+
- struct ufs_qcom_host {
- 	/*
- 	 * Set this capability if host controller supports the QUniPro mode
-@@ -232,6 +234,8 @@ struct ufs_qcom_host {
- 	struct ufs_qcom_testbus testbus;
- 
- 	struct reset_controller_dev rcdev;
-+
-+	struct gpio_desc *device_reset;
- };
- 
- static inline u32
--- 
-2.18.0
+Martin
