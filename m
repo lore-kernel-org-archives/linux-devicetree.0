@@ -1,118 +1,75 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-Date: Wed, 28 Aug 2019 20:07:42 +0800
-Message-ID: <7d076a6f-b761-4968-2280-837630db309d@linux.intel.com>
-References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
- <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
- <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: [PATCH V3 01/10] dt-bindings: soc: Add dvfsrc driver bindings
+Date: Wed, 28 Aug 2019 20:28:39 +0800
+Message-ID: <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
+References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>
+Cc: Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi  Rob,
+Document the binding for enabling dvfsrc on MediaTek SoC.
 
-Thank you for the review comments.
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+---
+ .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 23 ++++++++++++++++++++++
+ include/dt-bindings/soc/mtk,dvfsrc.h               | 14 +++++++++++++
+ 2 files changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+ create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
 
-On 28/8/2019 7:39 PM, Rob Herring wrote:
-> On Tue, Aug 27, 2019 at 10:47 PM Ramuthevar, Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->> Hi Rob,
->>
->> On 27/8/2019 8:39 PM, Rob Herring wrote:
->>> On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>>
->>>> Add a YAML schema to use the host controller driver with the
->>>> SDXC PHY on Intel's Lightning Mountain SoC.
->>>>
->>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> ---
->>>>    .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
->>>>    1 file changed, 50 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->>>> new file mode 100644
->>>> index 000000000000..be05020880bf
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->>>> @@ -0,0 +1,50 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
->>>> +
->>>> +maintainers:
->>>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> +
->>>> +description: Binding for SDXC PHY
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: intel,lgm-sdxc-phy
->>>> +
->>>> +  intel,syscon:
->>>> +    description: phandle to the sdxc through syscon
->>>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
->>>> +
->>>> +  clocks:
->>>> +    maxItems: 1
->>>> +
->>>> +  clock-names:
->>>> +    maxItems: 1
->>>> +
->>>> +  "#phy-cells":
->>>> +    const: 0
->>>> +
->>>> +required:
->>>> +  - "#phy-cells"
->>>> +  - compatible
->>>> +  - intel,syscon
->>>> +  - clocks
->>>> +  - clock-names
->>>> +
->>>> +additionalProperties: false
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    sdxc_phy: sdxc_phy {
->>>> +        compatible = "intel,lgm-sdxc-phy";
->>>> +        intel,syscon = <&sysconf>;
->>> Rather than a phandle, can this be a child node of sysconf? You need a
->>> binding for sysconf first anyways.
->> intel,syscon is phandle, emmc_phy is not child node of sysconf, access
->> emmc_phy
->> register over sysconf so made as reference here.
-> How do you access the emmc_phy registers? They are part of the sysconf
-> address space or the sysconf provides some sort of indirect register
-> access? In case of the former, then emmc_phy should be a child node.
-> That's actually fairly common.
-
-Agreed!, you are correct. I have created two files one for syscon and 
-other one is for emmc-phy
-
-Documentation/devicetree/bindings/phy/intel,syscon.yaml
-Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-
-As you said earlier mail, first syscon bindings to be there, sending the 
-patch as well.
-
-Regards
-Vadivel
-> Rob
->
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+new file mode 100644
+index 0000000..7f43499
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+@@ -0,0 +1,23 @@
++MediaTek DVFSRC
++
++The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
++HW module which is used to collect all the requests from both software and
++hardware and turn into the decision of minimum operating voltage and minimum
++DRAM frequency to fulfill those requests.
++
++Required Properties:
++- compatible: Should be one of the following
++	- "mediatek,mt8183-dvfsrc": For MT8183 SoC
++- reg: Address range of the DVFSRC unit
++- clock-names: Must include the following entries:
++	"dvfsrc": DVFSRC module clock
++- clocks: Must contain an entry for each entry in clock-names.
++
++Example:
++
++	dvfsrc@10012000 {
++		compatible = "mediatek,mt8183-dvfsrc";
++		reg = <0 0x10012000 0 0x1000>;
++		clocks = <&infracfg CLK_INFRA_DVFSRC>;
++		clock-names = "dvfsrc";
++	};
+diff --git a/include/dt-bindings/soc/mtk,dvfsrc.h b/include/dt-bindings/soc/mtk,dvfsrc.h
+new file mode 100644
+index 0000000..a522488
+--- /dev/null
++++ b/include/dt-bindings/soc/mtk,dvfsrc.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (c) 2018 MediaTek Inc.
++ */
++
++#ifndef _DT_BINDINGS_POWER_MTK_DVFSRC_H
++#define _DT_BINDINGS_POWER_MTK_DVFSRC_H
++
++#define MT8183_DVFSRC_LEVEL_1	1
++#define MT8183_DVFSRC_LEVEL_2	2
++#define MT8183_DVFSRC_LEVEL_3	3
++#define MT8183_DVFSRC_LEVEL_4	4
++
++#endif /* _DT_BINDINGS_POWER_MTK_DVFSRC_H */
+-- 
+1.9.1
