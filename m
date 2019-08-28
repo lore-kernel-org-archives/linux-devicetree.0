@@ -1,99 +1,54 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 2/2] clk: mediatek: add pericfg clocks for MT8183
-Date: Wed, 28 Aug 2019 16:22:13 +0800
-Message-ID: <1566980533-28282-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 02/14] dt-bindings: display, renesas,du: Document cmms
+ property
+Date: Wed, 28 Aug 2019 11:28:46 +0300
+Message-ID: <20190828082846.GA27842@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-3-jacopo+renesas@jmondi.org>
+ <20190827202945.GA3488@bogus>
+ <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUP1kZF4z=NkAb5LCV74dyCMw9pZACMYjOTFE=r2vvR3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pericfg clocks for MT8183, it's used when support USB
-remote wakeup
+On Wed, Aug 28, 2019 at 09:32:23AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Aug 27, 2019 at 10:29 PM Rob Herring <robh@kernel.org> wrote:
+> > On Sun, Aug 25, 2019 at 03:51:42PM +0200, Jacopo Mondi wrote:
+> > > Document the newly added 'cmms' property which accepts a list of phandle
+> > > and channel index pairs that point to the CMM units available for each
+> > > Display Unit output video channel.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > > index c97dfacad281..c2265e2a1af2 100644
+> > > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > > @@ -45,6 +45,10 @@ Required Properties:
+> > >      instance that serves the DU channel, and the channel index identifies the
+> > >      LIF instance in that VSP.
+> > >
+> > > +  - cmms: A list of phandles to the CMM instances present in the SoC, one
+> > > +    for each available DU channel. The property shall not be specified for
+> > > +    SoCs that do not provide any CMM (such as V3M and V3H).
+> >
+> > renesas,cmms
+> 
+> So I guess we really wanted to have the prefix for the vsps property, too?
 
-Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2:
-   use GATE_MTK to define GATE_PERI suggested by Weiyi
----
- drivers/clk/mediatek/clk-mt8183.c      | 30 ++++++++++++++++++++++++++
- include/dt-bindings/clock/mt8183-clk.h |  4 ++++
- 2 files changed, 34 insertions(+)
+Yes, we should have :-( My bad.
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 1aa5f4059251..f3765bbdbe85 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -999,6 +999,20 @@ static const struct mtk_gate infra_clks[] = {
- 		"msdc50_0_sel", 24),
- };
- 
-+static const struct mtk_gate_regs peri_cg_regs = {
-+	.set_ofs = 0x20c,
-+	.clr_ofs = 0x20c,
-+	.sta_ofs = 0x20c,
-+};
-+
-+#define GATE_PERI(_id, _name, _parent, _shift)			\
-+	GATE_MTK(_id, _name, _parent, &peri_cg_regs, _shift,	\
-+		&mtk_clk_gate_ops_no_setclr_inv)
-+
-+static const struct mtk_gate peri_clks[] = {
-+	GATE_PERI(CLK_PERI_AXI, "peri_axi", "axi_sel", 31),
-+};
-+
- static const struct mtk_gate_regs apmixed_cg_regs = {
- 	.set_ofs = 0x20,
- 	.clr_ofs = 0x20,
-@@ -1194,6 +1208,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
- 
-+static int clk_mt8183_peri_probe(struct platform_device *pdev)
-+{
-+	struct clk_onecell_data *clk_data;
-+	struct device_node *node = pdev->dev.of_node;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
-+
-+	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-+			       clk_data);
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+
- static int clk_mt8183_mcu_probe(struct platform_device *pdev)
- {
- 	struct clk_onecell_data *clk_data;
-@@ -1223,6 +1250,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
- 	}, {
- 		.compatible = "mediatek,mt8183-infracfg",
- 		.data = clk_mt8183_infra_probe,
-+	}, {
-+		.compatible = "mediatek,mt8183-pericfg",
-+		.data = clk_mt8183_peri_probe,
- 	}, {
- 		.compatible = "mediatek,mt8183-mcucfg",
- 		.data = clk_mt8183_mcu_probe,
-diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
-index 0046506eb24c..a7b470b0ec8a 100644
---- a/include/dt-bindings/clock/mt8183-clk.h
-+++ b/include/dt-bindings/clock/mt8183-clk.h
-@@ -284,6 +284,10 @@
- #define CLK_INFRA_FBIST2FPC		100
- #define CLK_INFRA_NR_CLK		101
- 
-+/* PERICFG */
-+#define CLK_PERI_AXI			0
-+#define CLK_PERI_NR_CLK			1
-+
- /* MFGCFG */
- #define CLK_MFG_BG3D			0
- #define CLK_MFG_NR_CLK			1
 -- 
-2.23.0
+Regards,
+
+Laurent Pinchart
