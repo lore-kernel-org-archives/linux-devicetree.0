@@ -1,55 +1,42 @@
-From: Ashish Kumar <ashish.kumar@nxp.com>
-Subject: RE: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Date: Wed, 28 Aug 2019 06:20:33 +0000
-Message-ID: <VI1PR04MB401588B866A00A4507CC8C5795A30@VI1PR04MB4015.eurprd04.prod.outlook.com>
-References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
- <20190821110640.GC5128@sirena.co.uk>
- <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
- <20190822190507.GI23391@sirena.co.uk>
- <DB7PR04MB4011C9785D8D9CDFE9BC62DD95A10@DB7PR04MB4011.eurprd04.prod.outlook.com>
- <20190827180320.GE23391@sirena.co.uk>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 0/6] add support USB for MT8183
+Date: Wed, 28 Aug 2019 14:20:55 +0800
+Message-ID: <1566973261-21677-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827180320.GE23391@sirena.co.uk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This series support USB DRD controller and enable it's remote
+wakeup functoin for MT8183, they depend on the following
+series patches:
 
+1. this series add support MT6358 PMIC
+  [v5,01/10] mfd: mt6397: clean up code
+  https://patchwork.kernel.org/patch/11110487/
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Tuesday, August 27, 2019 11:33 PM
-> To: Ashish Kumar <ashish.kumar@nxp.com>
-> Cc: shawnguo@kernel.org; linux-kernel@vger.kernel.org; linux-
-> spi@vger.kernel.org; devicetree@vger.kernel.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; linux-next@vger.kernel.org; Kuldeep Singh
-> <kuldeep.singh@nxp.com>
-> Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add=
- ls2080a
-> compatibility string to bindings
->=20
-> On Mon, Aug 26, 2019 at 06:19:53AM +0000, Ashish Kumar wrote:
->=20
-> > For Patch-2, I intended to use this in arm64/boot/dts/freescale/fsl-
-> ls1088a.dtsi (please see below), since both ls1088 and ls2080 has same QS=
-PI
-> controller.
-> > So I had introduced new compatible
-> > +                "fsl,ls1012a-qspi" followed by "fsl,ls1021a-qspi"
-> > +                "fsl,ls1088a-qspi" followed by "fsl,ls2080a-qspi"
->=20
-> Even if the compatible is supposed to be used in conjunction with other
-> fallbacks it should still explicitly be there in case someone forgets or =
-decides
-> not to do that for some reason.
-Thanks Mark, I will update the spi-fsl-qspi.c to include ls1088, ls1012 in =
-driver data.
+2. this series add support pericfg syscon
+  [1/2] dt-bindings: clock: mediatek: add pericfg for MT8183
+  https://patchwork.kernel.org/patch/11117799/
 
-Regards
-Ashish=20
+Chunfeng Yun (6):
+  dt-bindings: usb: mtu3: support USB wakeup for MT8183
+  dt-bindings: usb: mtk-xhci: support USB wakeup for MT8183
+  usb: mtu3: support ip-sleep wakeup for MT8183
+  usb: mtk-xhci: support ip-sleep wakeup for MT8183
+  arm64: dts: mt8183: add usb and phy nodes
+  arm64: dts: mt8183: enable USB remote wakeup
+
+ .../bindings/usb/mediatek,mtk-xhci.txt        |  1 +
+ .../devicetree/bindings/usb/mediatek,mtu3.txt |  1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 23 +++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 63 +++++++++++++++++++
+ drivers/usb/host/xhci-mtk.c                   | 14 ++++-
+ drivers/usb/mtu3/mtu3_host.c                  | 14 ++++-
+ 6 files changed, 114 insertions(+), 2 deletions(-)
+
+-- 
+2.23.0
