@@ -1,7 +1,7 @@
 From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH V3 01/10] dt-bindings: soc: Add dvfsrc driver bindings
-Date: Wed, 28 Aug 2019 20:28:39 +0800
-Message-ID: <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
+Subject: [PATCH V3 04/10] arm64: dts: mt8183: add performance state support of scpsys
+Date: Wed, 28 Aug 2019 20:28:42 +0800
+Message-ID: <1566995328-15158-5-git-send-email-henryc.chen@mediatek.com>
 References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,64 +12,51 @@ To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the binding for enabling dvfsrc on MediaTek SoC.
+Add support for performance state of scpsys on mt8183 platform.
 
 Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
 ---
- .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 23 ++++++++++++++++++++++
- include/dt-bindings/soc/mtk,dvfsrc.h               | 14 +++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
- create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-new file mode 100644
-index 0000000..7f43499
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-@@ -0,0 +1,23 @@
-+MediaTek DVFSRC
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 66aaa07..a58999f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/power/mt8183-power.h>
+ #include "mt8183-pinfunc.h"
++#include <dt-bindings/soc/mtk,dvfsrc.h>
+ 
+ / {
+ 	compatible = "mediatek,mt8183";
+@@ -293,6 +294,26 @@
+ 				      "vpu-3", "vpu-4", "vpu-5";
+ 			infracfg = <&infracfg>;
+ 			smi_comm = <&smi_common>;
++			operating-points-v2 = <&dvfsrc_opp_table>;
++			dvfsrc_opp_table: opp-table {
++				compatible = "operating-points-v2-level";
 +
-+The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
-+HW module which is used to collect all the requests from both software and
-+hardware and turn into the decision of minimum operating voltage and minimum
-+DRAM frequency to fulfill those requests.
++				dvfsrc_vol_min: opp1 {
++					opp,level = <MT8183_DVFSRC_LEVEL_1>;
++				};
 +
-+Required Properties:
-+- compatible: Should be one of the following
-+	- "mediatek,mt8183-dvfsrc": For MT8183 SoC
-+- reg: Address range of the DVFSRC unit
-+- clock-names: Must include the following entries:
-+	"dvfsrc": DVFSRC module clock
-+- clocks: Must contain an entry for each entry in clock-names.
++				dvfsrc_freq_medium: opp2 {
++					opp,level = <MT8183_DVFSRC_LEVEL_2>;
++				};
 +
-+Example:
++				dvfsrc_freq_max: opp3 {
++					opp,level = <MT8183_DVFSRC_LEVEL_3>;
++				};
 +
-+	dvfsrc@10012000 {
-+		compatible = "mediatek,mt8183-dvfsrc";
-+		reg = <0 0x10012000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_DVFSRC>;
-+		clock-names = "dvfsrc";
-+	};
-diff --git a/include/dt-bindings/soc/mtk,dvfsrc.h b/include/dt-bindings/soc/mtk,dvfsrc.h
-new file mode 100644
-index 0000000..a522488
---- /dev/null
-+++ b/include/dt-bindings/soc/mtk,dvfsrc.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (c) 2018 MediaTek Inc.
-+ */
-+
-+#ifndef _DT_BINDINGS_POWER_MTK_DVFSRC_H
-+#define _DT_BINDINGS_POWER_MTK_DVFSRC_H
-+
-+#define MT8183_DVFSRC_LEVEL_1	1
-+#define MT8183_DVFSRC_LEVEL_2	2
-+#define MT8183_DVFSRC_LEVEL_3	3
-+#define MT8183_DVFSRC_LEVEL_4	4
-+
-+#endif /* _DT_BINDINGS_POWER_MTK_DVFSRC_H */
++				dvfsrc_vol_max: opp4 {
++					opp,level = <MT8183_DVFSRC_LEVEL_4>;
++				};
++			};
+ 		};
+ 
+ 		apmixedsys: syscon@1000c000 {
 -- 
 1.9.1
