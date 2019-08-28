@@ -1,89 +1,118 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Wed, 28 Aug 2019 13:51:09 +0200
-Message-ID: <e44e1160-619d-989d-fbe7-2552b1e3bf88@baylibre.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com>
- <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
- <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
- <CAAObsKBt1tPw9RKGi_Xey=1zy9Tu3N+A=1te2R8=NuJ5tDBqVg@mail.gmail.com>
- <dc3872a4-8cd9-462b-9f73-0d69a810d985@arm.com>
- <92e9b697-ea0d-9b13-5512-b0a16a39df20@baylibre.com>
- <8433455c-3b74-c176-49a1-388b3f085e9e@arm.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Wed, 28 Aug 2019 20:07:42 +0800
+Message-ID: <7d076a6f-b761-4968-2280-837630db309d@linux.intel.com>
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+ <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
+ <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8433455c-3b74-c176-49a1-388b3f085e9e@arm.com>
+In-Reply-To: <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/08/2019 13:49, Robin Murphy wrote:
-> Hi Neil,
-> 
-> On 28/08/2019 12:28, Neil Armstrong wrote:
->> Hi Robin,
+Hi  Rob,
+
+Thank you for the review comments.
+
+On 28/8/2019 7:39 PM, Rob Herring wrote:
+> On Tue, Aug 27, 2019 at 10:47 PM Ramuthevar, Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> Hi Rob,
 >>
-
-[...]
->>>
->>> OK - with the 32-bit hack pointed to up-thread, a quick kmscube test gave me the impression that T720 works fine, but on closer inspection some parts of glmark2 do seem to go a bit wonky (although I suspect at least some of it is just down to the FPGA setup being both very slow and lacking in memory bandwidth), and the "nv12-1img" mode of kmscube turns out to render in some delightfully wrong colours.
->>>
->>> I'll try to get a 'proper' version of the io-pgtable patch posted soon.
->>
->> I'm trying to collect all the fixes needed to make T820 work again, and
->> I was wondering if you finally have a proper patch for this and "cfg->ias > 48"
->> hack ? Or one I can test ?
-> 
-> I do have a handful of io-pgtable patches written up and ready to go, I'm just treading carefully and waiting for the internal approval box to be ticked before I share anything :(
-
-Great !
-
-No problem, it can totally wait until approval,
-
-Thanks,
-Neil
-
-> 
-> Robin.
-> 
->>
->> Thanks,
->> Neil
->>
->>>
->>> Thanks,
->>> Robin.
->>>
+>> On 27/8/2019 8:39 PM, Rob Herring wrote:
+>>> On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 >>>>
->>>> Cheers,
+>>>> Add a YAML schema to use the host controller driver with the
+>>>> SDXC PHY on Intel's Lightning Mountain SoC.
 >>>>
->>>> Tomeu
+>>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>> ---
+>>>>    .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+>>>>    1 file changed, 50 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
 >>>>
->>>>> Robin.
->>>>>
->>>>>
->>>>> ----->8-----
->>>>> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
->>>>> index 546968d8a349..f29da6e8dc08 100644
->>>>> --- a/drivers/iommu/io-pgtable-arm.c
->>>>> +++ b/drivers/iommu/io-pgtable-arm.c
->>>>> @@ -1023,12 +1023,14 @@ arm_mali_lpae_alloc_pgtable(struct
->>>>> io_pgtable_cfg *cfg, void *cookie)
->>>>>           iop = arm_64_lpae_alloc_pgtable_s1(cfg, cookie);
->>>>>           if (iop) {
->>>>>                   u64 mair, ttbr;
->>>>> +               struct arm_lpae_io_pgtable *data = io_pgtable_ops_to_data(&iop->ops);
->>>>>
->>>>> +               data->levels = 4;
->>>>>                   /* Copy values as union fields overlap */
->>>>>                   mair = cfg->arm_lpae_s1_cfg.mair[0];
->>>>>                   ttbr = cfg->arm_lpae_s1_cfg.ttbr[0];
->>>>>
->>>>> _______________________________________________
->>>>> dri-devel mailing list
->>>>> dri-devel@lists.freedesktop.org
->>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..be05020880bf
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>>> @@ -0,0 +1,50 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+>>>> +
+>>>> +maintainers:
+>>>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>> +
+>>>> +description: Binding for SDXC PHY
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: intel,lgm-sdxc-phy
+>>>> +
+>>>> +  intel,syscon:
+>>>> +    description: phandle to the sdxc through syscon
+>>>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+>>>> +
+>>>> +  clocks:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  clock-names:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  "#phy-cells":
+>>>> +    const: 0
+>>>> +
+>>>> +required:
+>>>> +  - "#phy-cells"
+>>>> +  - compatible
+>>>> +  - intel,syscon
+>>>> +  - clocks
+>>>> +  - clock-names
+>>>> +
+>>>> +additionalProperties: false
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    sdxc_phy: sdxc_phy {
+>>>> +        compatible = "intel,lgm-sdxc-phy";
+>>>> +        intel,syscon = <&sysconf>;
+>>> Rather than a phandle, can this be a child node of sysconf? You need a
+>>> binding for sysconf first anyways.
+>> intel,syscon is phandle, emmc_phy is not child node of sysconf, access
+>> emmc_phy
+>> register over sysconf so made as reference here.
+> How do you access the emmc_phy registers? They are part of the sysconf
+> address space or the sysconf provides some sort of indirect register
+> access? In case of the former, then emmc_phy should be a child node.
+> That's actually fairly common.
+
+Agreed!, you are correct. I have created two files one for syscon and 
+other one is for emmc-phy
+
+Documentation/devicetree/bindings/phy/intel,syscon.yaml
+Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+
+As you said earlier mail, first syscon bindings to be there, sending the 
+patch as well.
+
+Regards
+Vadivel
+> Rob
+>
