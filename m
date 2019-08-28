@@ -1,990 +1,199 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Date: Thu, 29 Aug 2019 22:34:15 +0530
-Message-ID: <20190829170415.GA4427@mani>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-3-manivannan.sadhasivam@linaro.org>
- <20190813105920.GH835@valkosipuli.retiisi.org.uk>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v7 6/7] drm/msm/gpu: add ocmem init/cleanup
+ functions
+Date: Wed, 28 Aug 2019 09:12:28 -0600
+Message-ID: <20190828151227.GA32634@jcrouse1-lnx.qualcomm.com>
+References: <20190823121637.5861-1-masneyb@onstation.org>
+ <20190823121637.5861-7-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190813105920.GH835@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+In-Reply-To: <20190823121637.5861-7-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-Thanks for the review!
-
-On Tue, Aug 13, 2019 at 01:59:20PM +0300, Sakari Ailus wrote:
-> Hi Manivannan,
-> 
-> On Tue, Aug 06, 2019 at 06:39:37PM +0530, Manivannan Sadhasivam wrote:
-> > Add driver for Sony IMX290 CMOS image sensor driver. The driver only
-> > supports I2C interface for programming and MIPI CSI-2 for sensor output.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/media/i2c/Kconfig  |  11 +
-> >  drivers/media/i2c/Makefile |   1 +
-> >  drivers/media/i2c/imx290.c | 845 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 857 insertions(+)
-> >  create mode 100644 drivers/media/i2c/imx290.c
-> > 
-> > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > index cb8db944aa41..256edd289abe 100644
-> > --- a/drivers/media/i2c/Kconfig
-> > +++ b/drivers/media/i2c/Kconfig
-> > @@ -594,6 +594,17 @@ config VIDEO_IMX274
-> >  	  This is a V4L2 sensor driver for the Sony IMX274
-> >  	  CMOS image sensor.
-> >  
-> > +config VIDEO_IMX290
-> > +	tristate "Sony IMX290 sensor support"
-> > +	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > +	depends on MEDIA_CAMERA_SUPPORT
-> > +	help
-> > +	  This is a Video4Linux2 sensor driver for the Sony
-> > +	  IMX290 camera sensor.
-> > +
-> > +	  To compile this driver as a module, choose M here: the
-> > +	  module will be called imx290.
-> > +
-> >  config VIDEO_IMX319
-> >  	tristate "Sony IMX319 sensor support"
-> >  	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> > index d8ad9dad495d..490e59070407 100644
-> > --- a/drivers/media/i2c/Makefile
-> > +++ b/drivers/media/i2c/Makefile
-> > @@ -111,6 +111,7 @@ obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
-> >  obj-$(CONFIG_VIDEO_IMX214)	+= imx214.o
-> >  obj-$(CONFIG_VIDEO_IMX258)	+= imx258.o
-> >  obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
-> > +obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
-> >  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
-> >  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
-> >  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
-> > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > new file mode 100644
-> > index 000000000000..8c50fbd51ca5
-> > --- /dev/null
-> > +++ b/drivers/media/i2c/imx290.c
-> > @@ -0,0 +1,845 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Sony IMX290 CMOS Image Sensor Driver
-> > + *
-> > + * Copyright (C) 2019 FRAMOS GmbH.
-> > + *
-> > + * Copyright (C) 2019 Linaro Ltd.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/module.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <media/media-entity.h>
-> > +#include <media/v4l2-ctrls.h>
-> > +#include <media/v4l2-device.h>
-> > +#include <media/v4l2-fwnode.h>
-> > +#include <media/v4l2-subdev.h>
-> > +
-> > +#define IMX290_STANDBY 0x3000
-> > +#define IMX290_REGHOLD 0x3001
-> > +#define IMX290_XMSTA 0x3002
-> > +#define IMX290_GAIN 0x3014
-> > +
-> > +static const char * const imx290_supply_name[] = {
-> > +	"vdda",
-> > +	"vddd",
-> > +	"vdddo",
-> > +};
-> > +
-> > +#define IMX290_NUM_SUPPLIES ARRAY_SIZE(imx290_supply_name)
-> > +
-> > +struct imx290_regval {
-> > +	u16 reg;
-> > +	u8 val;
-> > +};
-> > +
-> > +struct imx290_mode {
-> > +	u32 width;
-> > +	u32 height;
-> > +	u32 pixel_rate;
-> > +	u32 link_freq_index;
-> > +
-> > +	const struct imx290_regval *data;
-> > +	u32 data_size;
-> > +};
-> > +
-> > +struct imx290 {
-> > +	struct device *dev;
-> > +	struct clk *xclk;
-> > +	struct regmap *regmap;
-> > +
-> > +	struct v4l2_subdev sd;
-> > +	struct v4l2_fwnode_endpoint ep;
-> > +	struct media_pad pad;
-> > +	struct v4l2_mbus_framefmt current_format;
-> > +	const struct imx290_mode *current_mode;
-> > +
-> > +	struct regulator_bulk_data supplies[IMX290_NUM_SUPPLIES];
-> > +	struct gpio_desc *rst_gpio;
-> > +
-> > +	struct v4l2_ctrl_handler ctrls;
-> > +	struct v4l2_ctrl *link_freq;
-> > +	struct v4l2_ctrl *pixel_rate;
-> > +
-> > +	struct mutex lock;
-> > +};
-> > +
-> > +struct imx290_pixfmt {
-> > +	u32 code;
-> > +	u32 colorspace;
-> > +};
-> > +
-> > +static const struct imx290_pixfmt imx290_formats[] = {
-> > +	{ MEDIA_BUS_FMT_SRGGB10_1X10, V4L2_COLORSPACE_SRGB, },
-> 
-> I bet you won't use other colorspaces in this driver. Therefore there's
-> there's no need to put it in an array.
-> 
-
-Ack.
-
-> > +};
-> > +
-> > +static struct regmap_config imx290_regmap_config = {
-> > +	.reg_bits = 16,
-> > +	.val_bits = 8,
-> > +	.cache_type = REGCACHE_RBTREE,
-> > +};
-> > +
-> > +static const struct imx290_regval imx290_global_init_settings[] = {
-> > +	{ 0x3007, 0x00 },
-> > +	{ 0x3009, 0x00 },
-> > +	{ 0x3018, 0x65 },
-> > +	{ 0x3019, 0x04 },
-> > +	{ 0x301a, 0x00 },
-> > +	{ 0x3443, 0x03 },
-> > +	{ 0x3444, 0x20 },
-> > +	{ 0x3445, 0x25 },
-> > +	{ 0x3407, 0x03 },
-> > +	{ 0x303a, 0x0c },
-> > +	{ 0x3040, 0x00 },
-> > +	{ 0x3041, 0x00 },
-> > +	{ 0x303c, 0x00 },
-> > +	{ 0x303d, 0x00 },
-> > +	{ 0x3042, 0x9c },
-> > +	{ 0x3043, 0x07 },
-> > +	{ 0x303e, 0x49 },
-> > +	{ 0x303f, 0x04 },
-> > +	{ 0x304b, 0x0a },
-> > +	{ 0x300f, 0x00 },
-> > +	{ 0x3010, 0x21 },
-> > +	{ 0x3012, 0x64 },
-> > +	{ 0x3016, 0x09 },
-> > +	{ 0x3070, 0x02 },
-> > +	{ 0x3071, 0x11 },
-> > +	{ 0x309b, 0x10 },
-> > +	{ 0x309c, 0x22 },
-> > +	{ 0x30a2, 0x02 },
-> > +	{ 0x30a6, 0x20 },
-> > +	{ 0x30a8, 0x20 },
-> > +	{ 0x30aa, 0x20 },
-> > +	{ 0x30ac, 0x20 },
-> > +	{ 0x30b0, 0x43 },
-> > +	{ 0x3119, 0x9e },
-> > +	{ 0x311c, 0x1e },
-> > +	{ 0x311e, 0x08 },
-> > +	{ 0x3128, 0x05 },
-> > +	{ 0x313d, 0x83 },
-> > +	{ 0x3150, 0x03 },
-> > +	{ 0x317e, 0x00 },
-> > +	{ 0x32b8, 0x50 },
-> > +	{ 0x32b9, 0x10 },
-> > +	{ 0x32ba, 0x00 },
-> > +	{ 0x32bb, 0x04 },
-> > +	{ 0x32c8, 0x50 },
-> > +	{ 0x32c9, 0x10 },
-> > +	{ 0x32ca, 0x00 },
-> > +	{ 0x32cb, 0x04 },
-> > +	{ 0x332c, 0xd3 },
-> > +	{ 0x332d, 0x10 },
-> > +	{ 0x332e, 0x0d },
-> > +	{ 0x3358, 0x06 },
-> > +	{ 0x3359, 0xe1 },
-> > +	{ 0x335a, 0x11 },
-> > +	{ 0x3360, 0x1e },
-> > +	{ 0x3361, 0x61 },
-> > +	{ 0x3362, 0x10 },
-> > +	{ 0x33b0, 0x50 },
-> > +	{ 0x33b2, 0x1a },
-> > +	{ 0x33b3, 0x04 },
-> > +};
-> > +
-> > +static const struct imx290_regval imx290_1080p_settings[] = {
-> > +	/* mode settings */
-> > +	{ 0x3007, 0x00 },
-> > +	{ 0x303a, 0x0c },
-> > +	{ 0x3414, 0x0a },
-> > +	{ 0x3472, 0x80 },
-> > +	{ 0x3473, 0x07 },
-> > +	{ 0x3418, 0x38 },
-> > +	{ 0x3419, 0x04 },
-> > +	{ 0x3012, 0x64 },
-> > +	{ 0x3013, 0x00 },
-> > +	{ 0x305c, 0x18 },
-> > +	{ 0x305d, 0x03 },
-> > +	{ 0x305e, 0x20 },
-> > +	{ 0x305f, 0x01 },
-> > +	{ 0x315e, 0x1a },
-> > +	{ 0x3164, 0x1a },
-> > +	{ 0x3480, 0x49 },
-> > +	/* data rate settings */
-> > +	{ 0x3009, 0x01 },
-> > +	{ 0x3405, 0x10 },
-> > +	{ 0x3446, 0x57 },
-> > +	{ 0x3447, 0x00 },
-> > +	{ 0x3448, 0x37 },
-> > +	{ 0x3449, 0x00 },
-> > +	{ 0x344a, 0x1f },
-> > +	{ 0x344b, 0x00 },
-> > +	{ 0x344c, 0x1f },
-> > +	{ 0x344d, 0x00 },
-> > +	{ 0x344e, 0x1f },
-> > +	{ 0x344f, 0x00 },
-> > +	{ 0x3450, 0x77 },
-> > +	{ 0x3451, 0x00 },
-> > +	{ 0x3452, 0x1f },
-> > +	{ 0x3453, 0x00 },
-> > +	{ 0x3454, 0x17 },
-> > +	{ 0x3455, 0x00 },
-> > +	{ 0x301c, 0x98 },
-> > +	{ 0x301d, 0x08 },
-> > +};
-> > +
-> > +static const struct imx290_regval imx290_720p_settings[] = {
-> > +	/* mode settings */
-> > +	{ 0x3007, 0x10 },
-> > +	{ 0x303a, 0x06 },
-> > +	{ 0x3414, 0x04 },
-> > +	{ 0x3472, 0x00 },
-> > +	{ 0x3473, 0x05 },
-> > +	{ 0x3418, 0xd0 },
-> > +	{ 0x3419, 0x02 },
-> > +	{ 0x3012, 0x64 },
-> > +	{ 0x3013, 0x00 },
-> > +	{ 0x305c, 0x20 },
-> > +	{ 0x305d, 0x00 },
-> > +	{ 0x305e, 0x20 },
-> > +	{ 0x305f, 0x01 },
-> > +	{ 0x315e, 0x1a },
-> > +	{ 0x3164, 0x1a },
-> > +	{ 0x3480, 0x49 },
-> > +	/* data rate settings */
-> > +	{ 0x3009, 0x01 },
-> > +	{ 0x3405, 0x10 },
-> > +	{ 0x3446, 0x4f },
-> > +	{ 0x3447, 0x00 },
-> > +	{ 0x3448, 0x2f },
-> > +	{ 0x3449, 0x00 },
-> > +	{ 0x344a, 0x17 },
-> > +	{ 0x344b, 0x00 },
-> > +	{ 0x344c, 0x17 },
-> > +	{ 0x344d, 0x00 },
-> > +	{ 0x344e, 0x17 },
-> > +	{ 0x344f, 0x00 },
-> > +	{ 0x3450, 0x57 },
-> > +	{ 0x3451, 0x00 },
-> > +	{ 0x3452, 0x17 },
-> > +	{ 0x3453, 0x00 },
-> > +	{ 0x3454, 0x17 },
-> > +	{ 0x3455, 0x00 },
-> > +	{ 0x301c, 0xe4 },
-> > +	{ 0x301d, 0x0c },
-> > +};
-> > +
-> > +static const struct imx290_regval imx290_10bit_settings[] = {
-> > +	{ 0x3005, 0x00},
-> > +	{ 0x3046, 0x00},
-> > +	{ 0x3129, 0x1d},
-> > +	{ 0x317c, 0x12},
-> > +	{ 0x31ec, 0x37},
-> > +	{ 0x3441, 0x0a},
-> > +	{ 0x3442, 0x0a},
-> > +	{ 0x300a, 0x3c},
-> > +	{ 0x300b, 0x00},
-> > +};
-> > +
-> > +/* supported link frequencies */
-> > +static const s64 imx290_link_freq[] = {
-> > +	445500000,
-> > +};
-> > +
-> > +/* Mode configs */
-> > +static const struct imx290_mode imx290_modes[] = {
-> > +	{
-> > +		.width = 1920,
-> > +		.height = 1080,
-> > +		.data = imx290_1080p_settings,
-> > +		.data_size = ARRAY_SIZE(imx290_1080p_settings),
-> > +		.pixel_rate = 178200000,
-> > +		.link_freq_index = 0,
-> > +	},
-> > +	{
-> > +		.width = 1280,
-> > +		.height = 720,
-> > +		.data = imx290_720p_settings,
-> > +		.data_size = ARRAY_SIZE(imx290_720p_settings),
-> > +		.pixel_rate = 178200000,
-> > +		.link_freq_index = 0,
-> > +	},
-> > +};
-> > +
-> > +static inline struct imx290 *to_imx290(struct v4l2_subdev *_sd)
-> > +{
-> > +	return container_of(_sd, struct imx290, sd);
-> > +}
-> > +
-> > +static inline int imx290_read_reg(struct imx290 *imx290, u16 addr, u8 *value)
-> > +{
-> > +	u32 regval;
-> > +	int ret;
-> > +
-> > +	ret = regmap_read(imx290->regmap, addr, &regval);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "I2C read failed for addr: %x\n", addr);
-> > +		return ret;
-> > +	}
-> > +
-> > +	*value = regval & 0xFF;
-> 
-> Lower case hexadecimals are preferred.
-> 
-
-Ack.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx290_write_reg(struct imx290 *imx290, u16 addr, u8 value)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = regmap_write(imx290->regmap, addr, value);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "I2C write failed for addr: %x\n", addr);
-> > +		return ret;
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int imx290_set_register_array(struct imx290 *imx290,
-> > +				     const struct imx290_regval *settings,
-> > +				     unsigned int num_settings)
-> > +{
-> > +	unsigned int i;
-> > +	int ret;
-> > +
-> > +	for (i = 0; i < num_settings; ++i, ++settings) {
-> > +		ret = imx290_write_reg(imx290, settings->reg, settings->val);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		/* Settle time is 10ms for all registers */
-> > +		msleep(10);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx290_write_buffered_reg(struct imx290 *imx290, u16 address_low,
-> > +				     u8 nr_regs, u32 value)
-> > +{
-> > +	int ret, i;
-> 
-> unsigned int i
-> 
-
-okay.
-
-> > +	u8 val = 0;
-> > +
-> > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x01);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	for (i = 0; i < nr_regs; i++) {
-> > +		imx290_read_reg(imx290, address_low + i, &val);
-> 
-> What's the purpose of reading back val, and doing the same again below?
-> 
-> You could do this in a much more simple way in a single write, see e.g.
-> ov5670_write_reg().
-> 
-
-Right, this came from the vendor driver but looks like we don't need to read
-before and after. Will remove the read calls.
-
-> > +		ret = imx290_write_reg(imx290, address_low + i,
-> > +				       (u8)(value >> (i * 8)));
-> > +		if (ret) {
-> > +			dev_err(imx290->dev, "Error writing buffered registers\n");
-> > +			return ret;
-> > +		}
-> > +		imx290_read_reg(imx290, address_low + i, &val);
-> > +	}
-> > +
-> > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x00);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int imx290_set_gain(struct imx290 *imx290, u32 value)
-> > +{
-> > +	int ret;
-> > +
-> > +	u32 adjusted_value = (value * 10) / 3;
-> > +
-> > +	ret = imx290_write_buffered_reg(imx290, IMX290_GAIN, 1, adjusted_value);
-> > +	if (ret)
-> > +		dev_err(imx290->dev, "Unable to write gain\n");
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int imx290_set_power_on(struct imx290 *imx290)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = clk_prepare_enable(imx290->xclk);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "Failed to enable clock\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = regulator_bulk_enable(IMX290_NUM_SUPPLIES,
-> > +				    imx290->supplies);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "Failed to enable regulators\n");
-> > +		goto xclk_off;
-> > +	}
-> > +
-> > +	usleep_range(1, 2);
-> > +	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
-> > +	usleep_range(30000, 31000);
-> > +
-> > +	return 0;
-> > +
-> > +xclk_off:
-> > +	clk_disable_unprepare(imx290->xclk);
-> > +	return ret;
-> > +}
-> > +
-> > +/* Stop streaming */
-> > +static int imx290_stop_streaming(struct imx290 *imx290)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = imx290_write_reg(imx290, IMX290_STANDBY, 0x01);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	msleep(30);
-> > +
-> > +	return imx290_write_reg(imx290, IMX290_XMSTA, 0x01);
-> > +}
-> > +
-> > +static void imx290_set_power_off(struct imx290 *imx290)
-> > +{
-> > +	clk_disable_unprepare(imx290->xclk);
-> > +	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
-> > +	regulator_bulk_disable(IMX290_NUM_SUPPLIES, imx290->supplies);
-> > +}
-> > +
-> > +static int imx290_s_power(struct v4l2_subdev *sd, int on)
-> > +{
-> > +	struct imx290 *imx290 = to_imx290(sd);
-> > +	int ret = 0;
-> > +
-> > +	mutex_lock(&imx290->lock);
-> > +
-> > +	if (on) {
-> > +		ret = imx290_set_power_on(imx290);
-> > +		if (ret < 0)
-> > +			goto exit;
-> > +
-> > +		ret = imx290_set_register_array(imx290,
-> > +				imx290_global_init_settings,
-> > +				ARRAY_SIZE(imx290_global_init_settings));
-> > +		if (ret < 0) {
-> > +			dev_err(imx290->dev,
-> > +				"Could not set init registers\n");
-> > +			imx290_set_power_off(imx290);
-> > +			goto exit;
-> > +		}
-> > +
-> > +		imx290_stop_streaming(imx290);
-> > +	} else {
-> > +		imx290_set_power_off(imx290);
-> > +	}
-> > +
-> > +exit:
-> > +	mutex_unlock(&imx290->lock);
-> > +
-> > +	return ret;
-> 
-> Please use runtime PM instead. It simplifies the driver. See e.g.
-> drivers/media/i2c/ov5670.c or drivers/media/i2c/ov5695.c .
-> 
-
-Ack.
-
-> > +}
-> > +
-> > +static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
-> > +{
-> > +	struct imx290 *imx290 = container_of(ctrl->handler,
-> > +					     struct imx290, ctrls);
-> > +	int ret = 0;
-> > +
-> > +	mutex_lock(&imx290->lock);
-> > +
-> > +	switch (ctrl->id) {
-> > +	case V4L2_CID_GAIN:
-> > +		ret = imx290_set_gain(imx290, ctrl->val);
-> > +		break;
-> > +	default:
-> > +		dev_info(imx290->dev, "ctrl(id:0x%x,val:0x%x) is not handled",
-> > +			 ctrl->id, ctrl->val);
-> 
-> Please return an error; I'd do it instead of printing that.
-> 
-
-Okay.
-
-> > +		break;
-> > +	}
-> > +
-> > +	mutex_unlock(&imx290->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct v4l2_ctrl_ops imx290_ctrl_ops = {
-> > +	.s_ctrl = imx290_set_ctrl,
-> > +};
-> > +
-> > +static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
-> > +				 struct v4l2_subdev_pad_config *cfg,
-> > +				 struct v4l2_subdev_mbus_code_enum *code)
-> > +{
-> > +	if (code->index >= ARRAY_SIZE(imx290_formats))
-> > +		return -EINVAL;
-> > +
-> > +	code->code = imx290_formats[code->index].code;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx290_get_fmt(struct v4l2_subdev *sd,
-> > +			  struct v4l2_subdev_pad_config *cfg,
-> > +			  struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct imx290 *imx290 = to_imx290(sd);
-> > +	struct v4l2_mbus_framefmt *framefmt;
-> > +
-> > +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
-> > +		framefmt = v4l2_subdev_get_try_format(&imx290->sd, cfg,
-> > +						      fmt->pad);
-> > +	else
-> > +		framefmt = &imx290->current_format;
-> > +
-> > +	fmt->format = *framefmt;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx290_set_fmt(struct v4l2_subdev *sd,
-> > +			  struct v4l2_subdev_pad_config *cfg,
-> > +		      struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct imx290 *imx290 = to_imx290(sd);
-> > +	const struct imx290_mode *mode;
-> > +	struct v4l2_mbus_framefmt *format;
-> > +	int i, ret = 0;
-> 
-> Note that sub-device drivers need to serialise access through the uAPI to
-> their own data.
-> 
-
-You mean guarding with mutex?
-
-> > +
-> > +	mode = v4l2_find_nearest_size(imx290_modes,
-> > +				      ARRAY_SIZE(imx290_modes),
-> > +				      width, height,
-> > +				      fmt->format.width, fmt->format.height);
-> > +
-> > +	fmt->format.width = mode->width;
-> > +	fmt->format.height = mode->height;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(imx290_formats); i++)
-> > +		if (imx290_formats[i].code == fmt->format.code)
-> > +			break;
-> > +
-> > +	if (i >= ARRAY_SIZE(imx290_formats))
-> > +		i = 0;
-> > +
-> > +	fmt->format.code = imx290_formats[i].code;
-> > +	fmt->format.colorspace = imx290_formats[i].colorspace;
-> > +	fmt->format.field = V4L2_FIELD_NONE;
-> > +
-> > +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> > +		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
-> > +	} else {
-> > +		format = &imx290->current_format;
-> > +		__v4l2_ctrl_s_ctrl(imx290->link_freq, mode->link_freq_index);
-> > +		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate, mode->pixel_rate);
-> > +
-> > +		imx290->current_mode = mode;
-> > +	}
-> > +
-> > +	*format = fmt->format;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
-> > +				  struct v4l2_subdev_pad_config *cfg)
-> > +{
-> > +	struct v4l2_subdev_format fmt = { 0 };
-> > +
-> > +	fmt.which = cfg ? V4L2_SUBDEV_FORMAT_TRY : V4L2_SUBDEV_FORMAT_ACTIVE;
-> > +	fmt.format.width = 1920;
-> > +	fmt.format.height = 1080;
-> > +
-> > +	imx290_set_fmt(subdev, cfg, &fmt);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx290_write_current_format(struct imx290 *imx290,
-> > +				       struct v4l2_mbus_framefmt *format)
-> > +{
-> > +	int ret;
-> > +
-> > +	switch (format->code) {
-> > +	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> > +		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-> > +					ARRAY_SIZE(imx290_10bit_settings));
-> > +		if (ret < 0) {
-> > +			dev_err(imx290->dev, "Could not set format registers\n");
-> > +			return ret;
-> > +		}
-> > +		break;
-> > +	default:
-> > +		dev_err(imx290->dev, "Unknown pixel format\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/* Start streaming */
-> > +static int imx290_start_streaming(struct imx290 *imx290)
-> > +{
-> > +	int ret;
-> > +
-> > +	/* Set current frame format */
-> > +	ret = imx290_write_current_format(imx290, &imx290->current_format);
-> > +	if (ret < 0) {
-> > +		dev_err(imx290->dev, "Could not set frame format\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Apply default values of current mode */
-> > +	ret = imx290_set_register_array(imx290, imx290->current_mode->data,
-> > +					imx290->current_mode->data_size);
-> > +	if (ret < 0) {
-> > +		dev_err(imx290->dev, "Could not set current mode\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Apply customized values from user */
-> > +	ret = v4l2_ctrl_handler_setup(imx290->sd.ctrl_handler);
-> > +	if (ret) {
-> > +		dev_err(imx290->dev, "Could not sync v4l2 controls\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = imx290_write_reg(imx290, IMX290_STANDBY, 0x00);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	msleep(30);
-> > +
-> > +	/* Start streaming */
-> > +	return imx290_write_reg(imx290, IMX290_XMSTA, 0x00);
-> > +}
-> > +
-> > +static int imx290_set_stream(struct v4l2_subdev *sd, int enable)
-> > +{
-> > +	struct imx290 *imx290 = to_imx290(sd);
-> > +	int ret = 0;
-> > +
-> > +	if (enable)
-> > +		ret = imx290_start_streaming(imx290);
-> > +	else
-> > +		imx290_stop_streaming(imx290);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < IMX290_NUM_SUPPLIES; i++)
-> > +		imx290->supplies[i].supply = imx290_supply_name[i];
-> > +
-> > +	return devm_regulator_bulk_get(dev, IMX290_NUM_SUPPLIES,
-> > +				       imx290->supplies);
-> > +}
-> > +
-> > +static const struct v4l2_subdev_core_ops imx290_subdev_core_ops = {
-> > +	.s_power = imx290_s_power,
-> > +};
-> > +
-> > +static const struct v4l2_subdev_video_ops imx290_video_ops = {
-> > +	.s_stream = imx290_set_stream,
-> > +};
-> > +
-> > +static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
-> > +	.init_cfg = imx290_entity_init_cfg,
-> > +	.enum_mbus_code = imx290_enum_mbus_code,
-> > +	.get_fmt = imx290_get_fmt,
-> > +	.set_fmt = imx290_set_fmt,
-> > +};
-> > +
-> > +static const struct v4l2_subdev_ops imx290_subdev_ops = {
-> > +	.core = &imx290_subdev_core_ops,
-> > +	.video = &imx290_video_ops,
-> > +	.pad = &imx290_pad_ops,
-> > +};
-> > +
-> > +static const struct media_entity_operations imx290_subdev_entity_ops = {
-> > +	.link_validate = v4l2_subdev_link_validate,
-> > +};
-> > +
-> > +static int imx290_probe(struct i2c_client *client,
-> > +			const struct i2c_device_id *id)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct fwnode_handle *endpoint;
-> > +	struct imx290 *imx290;
-> > +	u32 xclk_freq;
-> > +	int ret;
-> > +
-> > +	imx290 = devm_kzalloc(dev, sizeof(*imx290), GFP_KERNEL);
-> > +	if (!imx290)
-> > +		return -ENOMEM;
-> > +
-> > +	imx290->dev = dev;
-> > +	imx290->regmap = devm_regmap_init_i2c(client, &imx290_regmap_config);
-> > +	if (IS_ERR(imx290->regmap)) {
-> > +		dev_err(dev, "Unable to initialize I2C\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(dev), NULL);
-> > +	if (!endpoint) {
-> > +		dev_err(dev, "Endpoint node not found\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &imx290->ep);
-> > +	fwnode_handle_put(endpoint);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Parsing endpoint node failed\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Only CSI2 is supported for now */
-> > +	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
-> > +		dev_err(dev, "Unsupported bus type, should be CSI2\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Set default mode to max resolution */
-> > +	imx290->current_mode = &imx290_modes[0];
-> > +
-> > +	/* get system clock (xclk) */
-> > +	imx290->xclk = devm_clk_get(dev, "xclk");
-> > +	if (IS_ERR(imx290->xclk)) {
-> > +		dev_err(dev, "Could not get xclk");
-> > +		return PTR_ERR(imx290->xclk);
-> > +	}
-> > +
-> > +	ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
-> > +	if (ret) {
-> > +		dev_err(dev, "Could not get xclk frequency\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* external clock must be 37.125 MHz */
-> > +	if (xclk_freq != 37125000) {
-> > +		dev_err(dev, "External clock frequency %u is not supported\n",
-> > +			xclk_freq);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = clk_set_rate(imx290->xclk, xclk_freq);
-> > +	if (ret) {
-> > +		dev_err(dev, "Could not set xclk frequency\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = imx290_get_regulators(dev, imx290);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Cannot get regulators\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-> > +	if (IS_ERR(imx290->rst_gpio)) {
-> > +		dev_err(dev, "Cannot get reset gpio\n");
-> 
-> Remember to put the regulators from now on. Or grab them later.
-> 
-
-Shouldn't that happen by default with devm_regulator* APIs?
-
-> > +		return PTR_ERR(imx290->rst_gpio);
-> > +	}
-> > +
-> > +	mutex_init(&imx290->lock);
-> > +
-> > +	v4l2_ctrl_handler_init(&imx290->ctrls, 3);
-> > +
-> > +	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
-> > +			  V4L2_CID_GAIN, 0, 72, 1, 0);
-> > +	imx290->link_freq = v4l2_ctrl_new_int_menu(&imx290->ctrls,
-> > +					&imx290_ctrl_ops,
-> > +					V4L2_CID_LINK_FREQ,
-> > +					ARRAY_SIZE(imx290_link_freq) - 1,
-> > +					0, imx290_link_freq);
-> > +	if (imx290->link_freq)
-> > +		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> > +
-> > +	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
-> > +					       V4L2_CID_PIXEL_RATE, 1,
-> > +					       INT_MAX, 1,
-> > +					       imx290_modes[0].pixel_rate);
-> > +
-> > +	imx290->sd.ctrl_handler = &imx290->ctrls;
-> > +
-> > +	if (imx290->ctrls.error) {
-> > +		dev_err(dev, "Control initialization error %d\n",
-> > +			imx290->ctrls.error);
-> > +		ret = imx290->ctrls.error;
-> > +		goto free_ctrl;
-> > +	}
-> > +
-> > +	v4l2_i2c_subdev_init(&imx290->sd, client, &imx290_subdev_ops);
-> > +	imx290->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> > +	imx290->sd.dev = &client->dev;
-> > +	imx290->sd.entity.ops = &imx290_subdev_entity_ops;
-> > +	imx290->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> > +
-> > +	imx290->pad.flags = MEDIA_PAD_FL_SOURCE;
-> > +	ret = media_entity_pads_init(&imx290->sd.entity, 1, &imx290->pad);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Could not register media entity\n");
-> > +		goto free_ctrl;
-> > +	}
-> > +
-> > +	ret = v4l2_async_register_subdev(&imx290->sd);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Could not register v4l2 device\n");
-> > +		goto free_entity;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +free_entity:
-> > +	media_entity_cleanup(&imx290->sd.entity);
-> > +free_ctrl:
-> > +	v4l2_ctrl_handler_free(&imx290->ctrls);
-> > +	mutex_destroy(&imx290->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int imx290_remove(struct i2c_client *client)
-> > +{
-> > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> > +	struct imx290 *imx290 = to_imx290(sd);
-> > +
-> > +	v4l2_async_unregister_subdev(sd);
-> > +	media_entity_cleanup(&sd->entity);
-> > +	v4l2_ctrl_handler_free(sd->ctrl_handler);
-> > +
-> > +	imx290_set_power_off(imx290);
-> > +	mutex_destroy(&imx290->lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id imx290_of_match[] = {
-> > +	{ .compatible = "sony,imx290" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, imx290_of_match);
-> > +
-> > +static struct i2c_driver imx290_i2c_driver = {
-> > +	.probe  = imx290_probe,
-> 
-> Please use probe_new instead.
-> 
-
-Ack.
-
-Thanks,
-Mani
-
-> > +	.remove = imx290_remove,
-> > +	.driver = {
-> > +		.name  = "imx290",
-> > +		.of_match_table = of_match_ptr(imx290_of_match),
-> > +	},
-> > +};
-> > +
-> > +module_i2c_driver(imx290_i2c_driver);
-> > +
-> > +MODULE_DESCRIPTION("Sony IMX290 CMOS Image Sensor Driver");
-> > +MODULE_AUTHOR("FRAMOS GmbH");
-> > +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-> > +MODULE_LICENSE("GPL v2");
-> 
-> -- 
-> Kind regards,
-> 
-> Sakari Ailus
+T24gRnJpLCBBdWcgMjMsIDIwMTkgYXQgMDU6MTY6MzZBTSAtMDcwMCwgQnJpYW4gTWFzbmV5IHdy
+b3RlOgo+IFRoZSBmaWxlcyBhM3h4X2dwdS5jIGFuZCBhNHh4X2dwdS5jIGhhdmUgaWZkZWZzIGZv
+ciB0aGUgT0NNRU0gc3VwcG9ydAo+IHRoYXQgd2FzIG1pc3NpbmcgdXBzdHJlYW0uIEFkZCB0d28g
+bmV3IGZ1bmN0aW9ucyAoYWRyZW5vX2dwdV9vY21lbV9pbml0Cj4gYW5kIGFkcmVub19ncHVfb2Nt
+ZW1fY2xlYW51cCkgdGhhdCByZW1vdmVzIHNvbWUgZHVwbGljYXRlZCBjb2RlLgoKUmV2aWV3ZWQt
+Ynk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+Cgo+IFNpZ25lZC1vZmYt
+Ynk6IEJyaWFuIE1hc25leSA8bWFzbmV5YkBvbnN0YXRpb24ub3JnPgo+IC0tLQo+IENoYW5nZXMg
+c2luY2UgdjY6Cj4gLSBOb25lCj4gCj4gQ2hhbmdlcyBzaW5jZSB2NToKPiAtIE5vbmUKPiAKPiBD
+aGFuZ2VzIHNpbmNlIHY0Ogo+IC0gTm9uZQo+IAo+IENoYW5nZXMgc2luY2UgdjM6Cj4gLSBOb25l
+Cj4gCj4gQ2hhbmdlcyBzaW5jZSB2MjoKPiAtIENoZWNrIGZvciAtRU5PREVWIGVycm9yIG9mX2dl
+dF9vY21lbSgpCj4gLSByZW1vdmUgZmFpbF9jbGVhbnVwX29jbWVtIGxhYmVsIGluIGFbMzRdeHhf
+Z3B1X2luaXQKPiAKPiBDaGFuZ2VzIHNpbmNlIHYxOgo+IC0gcmVtb3ZlIENPTkZJR19RQ09NX09D
+TUVNICNpZmRlZnMKPiAtIHVzZSB1bnNpZ25lZCBsb25nIGZvciBtZW1vcnkgYWRkcmVzc2VzIGlu
+c3RlYWQgb2YgdWludDMyX3QKPiAtIGFkZCAnZGVwZW5kcyBvbiBRQ09NX09DTUVNIHx8IFFDT01f
+T0NNRU09bicgdG8gS2NvbmZpZwo+IAo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL0tjb25maWcgICAg
+ICAgICAgICAgfCAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2EzeHhfZ3B1LmMg
+ICB8IDI4ICsrKysrLS0tLS0tLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2Ez
+eHhfZ3B1LmggICB8ICAzICstCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2E0eHhfZ3B1
+LmMgICB8IDI1ICsrKystLS0tLS0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8v
+YTR4eF9ncHUuaCAgIHwgIDMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5v
+X2dwdS5jIHwgNDAgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0v
+bXNtL2FkcmVuby9hZHJlbm9fZ3B1LmggfCAxMCArKysrKysrCj4gIDcgZmlsZXMgY2hhbmdlZCwg
+NjYgaW5zZXJ0aW9ucygrKSwgNDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9tc20vS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vS2NvbmZpZwo+IGlu
+ZGV4IDljMzdlNGRlNTg5Ni4uYjNkM2IyMTcyNjU5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9tc20vS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vS2NvbmZpZwo+IEBA
+IC03LDYgKzcsNyBAQCBjb25maWcgRFJNX01TTQo+ICAJZGVwZW5kcyBvbiBPRiAmJiBDT01NT05f
+Q0xLCj4gIAlkZXBlbmRzIG9uIE1NVQo+ICAJZGVwZW5kcyBvbiBJTlRFUkNPTk5FQ1QgfHwgIUlO
+VEVSQ09OTkVDVAo+ICsJZGVwZW5kcyBvbiBRQ09NX09DTUVNIHx8IFFDT01fT0NNRU09bgo+ICAJ
+c2VsZWN0IFFDT01fTURUX0xPQURFUiBpZiBBUkNIX1FDT00KPiAgCXNlbGVjdCBSRUdVTEFUT1IK
+PiAgCXNlbGVjdCBEUk1fS01TX0hFTFBFUgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+bXNtL2FkcmVuby9hM3h4X2dwdS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTN4eF9n
+cHUuYwo+IGluZGV4IDVmN2U5ODAyOGVhZi4uN2FkMTQ5MzdmY2RmIDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2EzeHhfZ3B1LmMKPiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vbXNtL2FkcmVuby9hM3h4X2dwdS5jCj4gQEAgLTYsMTAgKzYsNiBAQAo+ICAgKiBDb3B5cmln
+aHQgKGMpIDIwMTQgVGhlIExpbnV4IEZvdW5kYXRpb24uIEFsbCByaWdodHMgcmVzZXJ2ZWQuCj4g
+ICAqLwo+ICAKPiAtI2lmZGVmIENPTkZJR19NU01fT0NNRU0KPiAtIyAgaW5jbHVkZSA8bWFjaC9v
+Y21lbS5oPgo+IC0jZW5kaWYKPiAtCj4gICNpbmNsdWRlICJhM3h4X2dwdS5oIgo+ICAKPiAgI2Rl
+ZmluZSBBM1hYX0lOVDBfTUFTSyBcCj4gQEAgLTE5NSw5ICsxOTEsOSBAQCBzdGF0aWMgaW50IGEz
+eHhfaHdfaW5pdChzdHJ1Y3QgbXNtX2dwdSAqZ3B1KQo+ICAJCWdwdV93cml0ZShncHUsIFJFR19B
+M1hYX1JCQk1fR1BSMF9DVEwsIDB4MDAwMDAwMDApOwo+ICAKPiAgCS8qIFNldCB0aGUgT0NNRU0g
+YmFzZSBhZGRyZXNzIGZvciBBMzMwLCBldGMgKi8KPiAtCWlmIChhM3h4X2dwdS0+b2NtZW1faGRs
+KSB7Cj4gKwlpZiAoYTN4eF9ncHUtPm9jbWVtLmhkbCkgewo+ICAJCWdwdV93cml0ZShncHUsIFJF
+R19BM1hYX1JCX0dNRU1fQkFTRV9BRERSLAo+IC0JCQkodW5zaWduZWQgaW50KShhM3h4X2dwdS0+
+b2NtZW1fYmFzZSA+PiAxNCkpOwo+ICsJCQkodW5zaWduZWQgaW50KShhM3h4X2dwdS0+b2NtZW0u
+YmFzZSA+PiAxNCkpOwo+ICAJfQo+ICAKPiAgCS8qIFR1cm4gb24gcGVyZm9ybWFuY2UgY291bnRl
+cnM6ICovCj4gQEAgLTMxOCwxMCArMzE0LDcgQEAgc3RhdGljIHZvaWQgYTN4eF9kZXN0cm95KHN0
+cnVjdCBtc21fZ3B1ICpncHUpCj4gIAo+ICAJYWRyZW5vX2dwdV9jbGVhbnVwKGFkcmVub19ncHUp
+Owo+ICAKPiAtI2lmZGVmIENPTkZJR19NU01fT0NNRU0KPiAtCWlmIChhM3h4X2dwdS0+b2NtZW1f
+YmFzZSkKPiAtCQlvY21lbV9mcmVlKE9DTUVNX0dSQVBISUNTLCBhM3h4X2dwdS0+b2NtZW1faGRs
+KTsKPiAtI2VuZGlmCj4gKwlhZHJlbm9fZ3B1X29jbWVtX2NsZWFudXAoJmEzeHhfZ3B1LT5vY21l
+bSk7Cj4gIAo+ICAJa2ZyZWUoYTN4eF9ncHUpOwo+ICB9Cj4gQEAgLTQ5NCwxNyArNDg3LDEwIEBA
+IHN0cnVjdCBtc21fZ3B1ICphM3h4X2dwdV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4g
+IAo+ICAJLyogaWYgbmVlZGVkLCBhbGxvY2F0ZSBnbWVtOiAqLwo+ICAJaWYgKGFkcmVub19pc19h
+MzMwKGFkcmVub19ncHUpKSB7Cj4gLSNpZmRlZiBDT05GSUdfTVNNX09DTUVNCj4gLQkJLyogVE9E
+TyB0aGlzIGlzIGRpZmZlcmVudC9taXNzaW5nIHVwc3RyZWFtOiAqLwo+IC0JCXN0cnVjdCBvY21l
+bV9idWYgKm9jbWVtX2hkbCA9Cj4gLQkJCQlvY21lbV9hbGxvY2F0ZShPQ01FTV9HUkFQSElDUywg
+YWRyZW5vX2dwdS0+Z21lbSk7Cj4gLQo+IC0JCWEzeHhfZ3B1LT5vY21lbV9oZGwgPSBvY21lbV9o
+ZGw7Cj4gLQkJYTN4eF9ncHUtPm9jbWVtX2Jhc2UgPSBvY21lbV9oZGwtPmFkZHI7Cj4gLQkJYWRy
+ZW5vX2dwdS0+Z21lbSA9IG9jbWVtX2hkbC0+bGVuOwo+IC0JCURCRygidXNpbmcgJWRLIG9mIE9D
+TUVNIGF0IDB4JTA4eCIsIGFkcmVub19ncHUtPmdtZW0gLyAxMDI0LAo+IC0JCQkJYTN4eF9ncHUt
+Pm9jbWVtX2Jhc2UpOwo+IC0jZW5kaWYKPiArCQlyZXQgPSBhZHJlbm9fZ3B1X29jbWVtX2luaXQo
+JmFkcmVub19ncHUtPmJhc2UucGRldi0+ZGV2LAo+ICsJCQkJCSAgICBhZHJlbm9fZ3B1LCAmYTN4
+eF9ncHUtPm9jbWVtKTsKPiArCQlpZiAocmV0KQo+ICsJCQlnb3RvIGZhaWw7Cj4gIAl9Cj4gIAo+
+ICAJaWYgKCFncHUtPmFzcGFjZSkgewo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNt
+L2FkcmVuby9hM3h4X2dwdS5oIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTN4eF9ncHUu
+aAo+IGluZGV4IDVkYzMzZTVlYTUzYi4uYzU1NWZiMTNlMGQ3IDEwMDY0NAo+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9tc20vYWRyZW5vL2EzeHhfZ3B1LmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+bXNtL2FkcmVuby9hM3h4X2dwdS5oCj4gQEAgLTE5LDggKzE5LDcgQEAgc3RydWN0IGEzeHhfZ3B1
+IHsKPiAgCXN0cnVjdCBhZHJlbm9fZ3B1IGJhc2U7Cj4gIAo+ICAJLyogaWYgT0NNRU0gaXMgdXNl
+ZCBmb3IgR01FTTogKi8KPiAtCXVpbnQzMl90IG9jbWVtX2Jhc2U7Cj4gLQl2b2lkICpvY21lbV9o
+ZGw7Cj4gKwlzdHJ1Y3QgYWRyZW5vX29jbWVtIG9jbWVtOwo+ICB9Owo+ICAjZGVmaW5lIHRvX2Ez
+eHhfZ3B1KHgpIGNvbnRhaW5lcl9vZih4LCBzdHJ1Y3QgYTN4eF9ncHUsIGJhc2UpCj4gIAo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNHh4X2dwdS5jIGIvZHJpdmVy
+cy9ncHUvZHJtL21zbS9hZHJlbm8vYTR4eF9ncHUuYwo+IGluZGV4IGFiMmI3NTI1NjZkOC4uYjAx
+Mzg4YTllODllIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2E0eHhf
+Z3B1LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNHh4X2dwdS5jCj4gQEAg
+LTIsOSArMiw2IEBACj4gIC8qIENvcHlyaWdodCAoYykgMjAxNCBUaGUgTGludXggRm91bmRhdGlv
+bi4gQWxsIHJpZ2h0cyByZXNlcnZlZC4KPiAgICovCj4gICNpbmNsdWRlICJhNHh4X2dwdS5oIgo+
+IC0jaWZkZWYgQ09ORklHX01TTV9PQ01FTQo+IC0jICBpbmNsdWRlIDxzb2MvcWNvbS9vY21lbS5o
+Pgo+IC0jZW5kaWYKPiAgCj4gICNkZWZpbmUgQTRYWF9JTlQwX01BU0sgXAo+ICAJKEE0WFhfSU5U
+MF9SQkJNX0FIQl9FUlJPUiB8ICAgICAgICBcCj4gQEAgLTE4OCw3ICsxODUsNyBAQCBzdGF0aWMg
+aW50IGE0eHhfaHdfaW5pdChzdHJ1Y3QgbXNtX2dwdSAqZ3B1KQo+ICAJCQkoMSA8PCAzMCkgfCAw
+eEZGRkYpOwo+ICAKPiAgCWdwdV93cml0ZShncHUsIFJFR19BNFhYX1JCX0dNRU1fQkFTRV9BRERS
+LAo+IC0JCQkodW5zaWduZWQgaW50KShhNHh4X2dwdS0+b2NtZW1fYmFzZSA+PiAxNCkpOwo+ICsJ
+CQkodW5zaWduZWQgaW50KShhNHh4X2dwdS0+b2NtZW0uYmFzZSA+PiAxNCkpOwo+ICAKPiAgCS8q
+IFR1cm4gb24gcGVyZm9ybWFuY2UgY291bnRlcnM6ICovCj4gIAlncHVfd3JpdGUoZ3B1LCBSRUdf
+QTRYWF9SQkJNX1BFUkZDVFJfQ1RMLCAweDAxKTsKPiBAQCAtMzE4LDEwICszMTUsNyBAQCBzdGF0
+aWMgdm9pZCBhNHh4X2Rlc3Ryb3koc3RydWN0IG1zbV9ncHUgKmdwdSkKPiAgCj4gIAlhZHJlbm9f
+Z3B1X2NsZWFudXAoYWRyZW5vX2dwdSk7Cj4gIAo+IC0jaWZkZWYgQ09ORklHX01TTV9PQ01FTQo+
+IC0JaWYgKGE0eHhfZ3B1LT5vY21lbV9iYXNlKQo+IC0JCW9jbWVtX2ZyZWUoT0NNRU1fR1JBUEhJ
+Q1MsIGE0eHhfZ3B1LT5vY21lbV9oZGwpOwo+IC0jZW5kaWYKPiArCWFkcmVub19ncHVfb2NtZW1f
+Y2xlYW51cCgmYTR4eF9ncHUtPm9jbWVtKTsKPiAgCj4gIAlrZnJlZShhNHh4X2dwdSk7Cj4gIH0K
+PiBAQCAtNTc4LDE3ICs1NzIsMTAgQEAgc3RydWN0IG1zbV9ncHUgKmE0eHhfZ3B1X2luaXQoc3Ry
+dWN0IGRybV9kZXZpY2UgKmRldikKPiAgCj4gIAkvKiBpZiBuZWVkZWQsIGFsbG9jYXRlIGdtZW06
+ICovCj4gIAlpZiAoYWRyZW5vX2lzX2E0eHgoYWRyZW5vX2dwdSkpIHsKPiAtI2lmZGVmIENPTkZJ
+R19NU01fT0NNRU0KPiAtCQkvKiBUT0RPIHRoaXMgaXMgZGlmZmVyZW50L21pc3NpbmcgdXBzdHJl
+YW06ICovCj4gLQkJc3RydWN0IG9jbWVtX2J1ZiAqb2NtZW1faGRsID0KPiAtCQkJCW9jbWVtX2Fs
+bG9jYXRlKE9DTUVNX0dSQVBISUNTLCBhZHJlbm9fZ3B1LT5nbWVtKTsKPiAtCj4gLQkJYTR4eF9n
+cHUtPm9jbWVtX2hkbCA9IG9jbWVtX2hkbDsKPiAtCQlhNHh4X2dwdS0+b2NtZW1fYmFzZSA9IG9j
+bWVtX2hkbC0+YWRkcjsKPiAtCQlhZHJlbm9fZ3B1LT5nbWVtID0gb2NtZW1faGRsLT5sZW47Cj4g
+LQkJREJHKCJ1c2luZyAlZEsgb2YgT0NNRU0gYXQgMHglMDh4IiwgYWRyZW5vX2dwdS0+Z21lbSAv
+IDEwMjQsCj4gLQkJCQlhNHh4X2dwdS0+b2NtZW1fYmFzZSk7Cj4gLSNlbmRpZgo+ICsJCXJldCA9
+IGFkcmVub19ncHVfb2NtZW1faW5pdChkZXYtPmRldiwgYWRyZW5vX2dwdSwKPiArCQkJCQkgICAg
+JmE0eHhfZ3B1LT5vY21lbSk7Cj4gKwkJaWYgKHJldCkKPiArCQkJZ290byBmYWlsOwo+ICAJfQo+
+ICAKPiAgCWlmICghZ3B1LT5hc3BhY2UpIHsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L21zbS9hZHJlbm8vYTR4eF9ncHUuaCBiL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2E0eHhf
+Z3B1LmgKPiBpbmRleCBkNTA2MzExZWUyNDAuLmEwMTQ0OGNiYTJlYSAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hNHh4X2dwdS5oCj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL21zbS9hZHJlbm8vYTR4eF9ncHUuaAo+IEBAIC0xNiw4ICsxNiw3IEBAIHN0cnVjdCBhNHh4
+X2dwdSB7Cj4gIAlzdHJ1Y3QgYWRyZW5vX2dwdSBiYXNlOwo+ICAKPiAgCS8qIGlmIE9DTUVNIGlz
+IHVzZWQgZm9yIEdNRU06ICovCj4gLQl1aW50MzJfdCBvY21lbV9iYXNlOwo+IC0Jdm9pZCAqb2Nt
+ZW1faGRsOwo+ICsJc3RydWN0IGFkcmVub19vY21lbSBvY21lbTsKPiAgfTsKPiAgI2RlZmluZSB0
+b19hNHh4X2dwdSh4KSBjb250YWluZXJfb2YoeCwgc3RydWN0IGE0eHhfZ3B1LCBiYXNlKQo+ICAK
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dwdS5jIGIv
+ZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dwdS5jCj4gaW5kZXggMDQ4YzhiZTQy
+NmYzLi4wNzgzZTRiNTQ4NmEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJl
+bm8vYWRyZW5vX2dwdS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5v
+X2dwdS5jCj4gQEAgLTE0LDYgKzE0LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L3BtX29wcC5oPgo+
+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+ICAjaW5jbHVkZSA8bGludXgvc29jL3Fjb20vbWR0
+X2xvYWRlci5oPgo+ICsjaW5jbHVkZSA8c29jL3Fjb20vb2NtZW0uaD4KPiAgI2luY2x1ZGUgImFk
+cmVub19ncHUuaCIKPiAgI2luY2x1ZGUgIm1zbV9nZW0uaCIKPiAgI2luY2x1ZGUgIm1zbV9tbXUu
+aCIKPiBAQCAtODkzLDYgKzg5NCw0NSBAQCBzdGF0aWMgaW50IGFkcmVub19nZXRfcHdybGV2ZWxz
+KHN0cnVjdCBkZXZpY2UgKmRldiwKPiAgCXJldHVybiAwOwo+ICB9Cj4gIAo+ICtpbnQgYWRyZW5v
+X2dwdV9vY21lbV9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGFkcmVub19ncHUgKmFk
+cmVub19ncHUsCj4gKwkJCSAgc3RydWN0IGFkcmVub19vY21lbSAqYWRyZW5vX29jbWVtKQo+ICt7
+Cj4gKwlzdHJ1Y3Qgb2NtZW1fYnVmICpvY21lbV9oZGw7Cj4gKwlzdHJ1Y3Qgb2NtZW0gKm9jbWVt
+Owo+ICsKPiArCW9jbWVtID0gb2ZfZ2V0X29jbWVtKGRldik7Cj4gKwlpZiAoSVNfRVJSKG9jbWVt
+KSkgewo+ICsJCWlmIChQVFJfRVJSKG9jbWVtKSA9PSAtRU5PREVWKSB7Cj4gKwkJCS8qCj4gKwkJ
+CSAqIFJldHVybiBzdWNjZXNzIHNpbmNlIGVpdGhlciB0aGUgb2NtZW0gcHJvcGVydHkgd2FzCj4g
+KwkJCSAqIG5vdCBzcGVjaWZpZWQgaW4gZGV2aWNlIHRyZWUsIG9yIG9jbWVtIHN1cHBvcnQgaXMK
+PiArCQkJICogbm90IGNvbXBpbGVkIGludG8gdGhlIGtlcm5lbC4KPiArCQkJICovCj4gKwkJCXJl
+dHVybiAwOwo+ICsJCX0KPiArCj4gKwkJcmV0dXJuIFBUUl9FUlIob2NtZW0pOwo+ICsJfQo+ICsK
+PiArCW9jbWVtX2hkbCA9IG9jbWVtX2FsbG9jYXRlKG9jbWVtLCBPQ01FTV9HUkFQSElDUywgYWRy
+ZW5vX2dwdS0+Z21lbSk7Cj4gKwlpZiAoSVNfRVJSKG9jbWVtX2hkbCkpCj4gKwkJcmV0dXJuIFBU
+Ul9FUlIob2NtZW1faGRsKTsKPiArCj4gKwlhZHJlbm9fb2NtZW0tPm9jbWVtID0gb2NtZW07Cj4g
+KwlhZHJlbm9fb2NtZW0tPmJhc2UgPSBvY21lbV9oZGwtPmFkZHI7Cj4gKwlhZHJlbm9fb2NtZW0t
+PmhkbCA9IG9jbWVtX2hkbDsKPiArCWFkcmVub19ncHUtPmdtZW0gPSBvY21lbV9oZGwtPmxlbjsK
+PiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArdm9pZCBhZHJlbm9fZ3B1X29jbWVtX2NsZWFu
+dXAoc3RydWN0IGFkcmVub19vY21lbSAqYWRyZW5vX29jbWVtKQo+ICt7Cj4gKwlpZiAoYWRyZW5v
+X29jbWVtICYmIGFkcmVub19vY21lbS0+YmFzZSkKPiArCQlvY21lbV9mcmVlKGFkcmVub19vY21l
+bS0+b2NtZW0sIE9DTUVNX0dSQVBISUNTLAo+ICsJCQkgICBhZHJlbm9fb2NtZW0tPmhkbCk7Cj4g
+K30KPiArCj4gIGludCBhZHJlbm9fZ3B1X2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSwgc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAgCQlzdHJ1Y3QgYWRyZW5vX2dwdSAqYWRyZW5v
+X2dwdSwKPiAgCQljb25zdCBzdHJ1Y3QgYWRyZW5vX2dwdV9mdW5jcyAqZnVuY3MsIGludCBucl9y
+aW5ncykKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dw
+dS5oIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2dwdS5oCj4gaW5kZXggYzc0
+NDFmYjgzMTNlLi5kMjI1YThhOTJlNTggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21z
+bS9hZHJlbm8vYWRyZW5vX2dwdS5oCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8v
+YWRyZW5vX2dwdS5oCj4gQEAgLTEyNiw2ICsxMjYsMTIgQEAgc3RydWN0IGFkcmVub19ncHUgewo+
+ICB9Owo+ICAjZGVmaW5lIHRvX2FkcmVub19ncHUoeCkgY29udGFpbmVyX29mKHgsIHN0cnVjdCBh
+ZHJlbm9fZ3B1LCBiYXNlKQo+ICAKPiArc3RydWN0IGFkcmVub19vY21lbSB7Cj4gKwlzdHJ1Y3Qg
+b2NtZW0gKm9jbWVtOwo+ICsJdW5zaWduZWQgbG9uZyBiYXNlOwo+ICsJdm9pZCAqaGRsOwo+ICt9
+Owo+ICsKPiAgLyogcGxhdGZvcm0gY29uZmlnIGRhdGEgKGllLiBmcm9tIERULCBvciBwZGF0YSkg
+Ki8KPiAgc3RydWN0IGFkcmVub19wbGF0Zm9ybV9jb25maWcgewo+ICAJc3RydWN0IGFkcmVub19y
+ZXYgcmV2Owo+IEBAIC0yMzYsNiArMjQyLDEwIEBAIHZvaWQgYWRyZW5vX2R1bXAoc3RydWN0IG1z
+bV9ncHUgKmdwdSk7Cj4gIHZvaWQgYWRyZW5vX3dhaXRfcmluZyhzdHJ1Y3QgbXNtX3JpbmdidWZm
+ZXIgKnJpbmcsIHVpbnQzMl90IG5kd29yZHMpOwo+ICBzdHJ1Y3QgbXNtX3JpbmdidWZmZXIgKmFk
+cmVub19hY3RpdmVfcmluZyhzdHJ1Y3QgbXNtX2dwdSAqZ3B1KTsKPiAgCj4gK2ludCBhZHJlbm9f
+Z3B1X29jbWVtX2luaXQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgYWRyZW5vX2dwdSAqYWRy
+ZW5vX2dwdSwKPiArCQkJICBzdHJ1Y3QgYWRyZW5vX29jbWVtICpvY21lbSk7Cj4gK3ZvaWQgYWRy
+ZW5vX2dwdV9vY21lbV9jbGVhbnVwKHN0cnVjdCBhZHJlbm9fb2NtZW0gKm9jbWVtKTsKPiArCj4g
+IGludCBhZHJlbm9fZ3B1X2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSwgc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldiwKPiAgCQlzdHJ1Y3QgYWRyZW5vX2dwdSAqZ3B1LCBjb25zdCBzdHJ1
+Y3QgYWRyZW5vX2dwdV9mdW5jcyAqZnVuY3MsCj4gIAkJaW50IG5yX3JpbmdzKTsKPiAtLSAKPiAy
+LjIxLjAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Xwo+IEZyZWVkcmVubyBtYWlsaW5nIGxpc3QKPiBGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
+ZHJlbm8KCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1i
+ZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZl
+IFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+RnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
