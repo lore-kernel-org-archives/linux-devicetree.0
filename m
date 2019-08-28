@@ -1,315 +1,63 @@
-From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH net-next v2 2/3] dt-bindings: net: dsa: mt7530: Add
- support for port 5
-Date: Wed, 28 Aug 2019 06:35:20 +0000
-Message-ID: <20190828063520.Horde.4_ak7mcmFhVJlxZWWy2wo3V@www.vdorst.com>
-References: <20190821144547.15113-1-opensource@vdorst.com>
- <20190821144547.15113-3-opensource@vdorst.com>
- <20190827222251.GA30507@bogus>
+From: Robert Chiras <robert.chiras@nxp.com>
+Subject: Re: [PATCH v3 00/15] Improvements and fixes for mxsfb DRM driver
+Date: Wed, 28 Aug 2019 06:49:44 +0000
+Message-ID: <1566974984.3209.113.camel@nxp.com>
+References: <1566382555-12102-1-git-send-email-robert.chiras@nxp.com>
+ <20190826120548.GA14316@bogon.m.sigxcpu.org>
+ <3bd35686e046048d35cd4987567a13cf@agner.ch>
+ <VI1PR04MB70233374E91F85119FD21FD5EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190827222251.GA30507@bogus>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB70233374E91F85119FD21FD5EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-ID: <E488AAC1DAC36A4C8BD7B8F69517A21B@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "stefan@agner.ch" <stefan@agner.ch>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: "marex@denx.de" <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "airlied@linux.ie" <airlied@linux.ie>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "festevam@gmail.com" <festevam@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Quoting Rob Herring <robh@kernel.org>:
-
-> On Wed, Aug 21, 2019 at 04:45:46PM +0200, René van Dorst wrote:
->> MT7530 port 5 has many modes/configurations.
->> Update the documentation how to use port 5.
->>
->> Signed-off-by: René van Dorst <opensource@vdorst.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: Rob Herring <robh@kernel.org>
->
->> v1->v2:
->> * Adding extra note about RGMII2 and gpio use.
->> rfc->v1:
->> * No change
->
-> The changelog goes below the '---'
->
-
-Thanks for the review,
-I shall fix that.
-
->> ---
->>  .../devicetree/bindings/net/dsa/mt7530.txt    | 218 ++++++++++++++++++
->>  1 file changed, 218 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt  
->> b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
->> index 47aa205ee0bd..43993aae3f9c 100644
->> --- a/Documentation/devicetree/bindings/net/dsa/mt7530.txt
->> +++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
->> @@ -35,6 +35,42 @@ Required properties for the child nodes within  
->> ports container:
->>  - phy-mode: String, must be either "trgmii" or "rgmii" for port labeled
->>  	 "cpu".
->>
->> +Port 5 of the switch is muxed between:
->> +1. GMAC5: GMAC5 can interface with another external MAC or PHY.
->> +2. PHY of port 0 or port 4: PHY interfaces with an external MAC  
->> like 2nd GMAC
->> +   of the SOC. Used in many setups where port 0/4 becomes the WAN port.
->> +   Note: On a MT7621 SOC with integrated switch: 2nd GMAC can only  
->> connected to
->> +	 GMAC5 when the gpios for RGMII2 (GPIO 22-33) are not used and not
->> +	 connected to external component!
->> +
->> +Port 5 modes/configurations:
->> +1. Port 5 is disabled and isolated: An external phy can interface  
->> to the 2nd
->> +   GMAC of the SOC.
->> +   In the case of a build-in MT7530 switch, port 5 shares the  
->> RGMII bus with 2nd
->> +   GMAC and an optional external phy. Mind the GPIO/pinctl  
->> settings of the SOC!
->> +2. Port 5 is muxed to PHY of port 0/4: Port 0/4 interfaces with 2nd GMAC.
->> +   It is a simple MAC to PHY interface, port 5 needs to be setup  
->> for xMII mode
->> +   and RGMII delay.
->> +3. Port 5 is muxed to GMAC5 and can interface to an external phy.
->> +   Port 5 becomes an extra switch port.
->> +   Only works on platform where external phy TX<->RX lines are swapped.
->> +   Like in the Ubiquiti ER-X-SFP.
->> +4. Port 5 is muxed to GMAC5 and interfaces with the 2nd GAMC as  
->> 2nd CPU port.
->> +   Currently a 2nd CPU port is not supported by DSA code.
->> +
->> +Depending on how the external PHY is wired:
->> +1. normal: The PHY can only connect to 2nd GMAC but not to the switch
->> +2. swapped: RGMII TX, RX are swapped; external phy interface with  
->> the switch as
->> +   a ethernet port. But can't interface to the 2nd GMAC.
->> +
->> +Based on the DT the port 5 mode is configured.
->> +
->> +Driver tries to lookup the phy-handle of the 2nd GMAC of the master device.
->> +When phy-handle matches PHY of port 0 or 4 then port 5 set-up as mode 2.
->> +phy-mode must be set, see also example 2 below!
->> + * mt7621: phy-mode = "rgmii-txid";
->> + * mt7623: phy-mode = "rgmii";
->> +
->>  See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list  
->> of additional
->>  required, optional properties and how the integrated switch subnodes must
->>  be specified.
->> @@ -94,3 +130,185 @@ Example:
->>  			};
->>  		};
->>  	};
->> +
->> +Example 2: MT7621: Port 4 is WAN port: 2nd GMAC -> Port 5 -> PHY port 4.
->> +
->> +&eth {
->> +	status = "okay";
->
-> Don't show status in examples.
-
-OK.
-
-> This should show the complete node.
->
-
-To be clear, I should take ethernet node from the mt7621.dtsi [0] or  
-mt7623.dtsi
-[1] and insert the example below?, right?
-
-Greats,
-
-René
-
-[0]:  
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/drivers/staging/mt7621-dts/mt7621.dtsi#n397
-[1]:  
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/arch/arm/boot/dts/mt7623.dtsi#n1023
-
->> +
->> +	gmac0: mac@0 {
->> +		compatible = "mediatek,eth-mac";
->> +		reg = <0>;
->> +		phy-mode = "rgmii";
->> +
->> +		fixed-link {
->> +			speed = <1000>;
->> +			full-duplex;
->> +			pause;
->> +		};
->> +	};
->> +
->> +	gmac1: mac@1 {
->> +		compatible = "mediatek,eth-mac";
->> +		reg = <1>;
->> +		phy-mode = "rgmii-txid";
->> +		phy-handle = <&phy4>;
->> +	};
->> +
->> +	mdio: mdio-bus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		/* Internal phy */
->> +		phy4: ethernet-phy@4 {
->> +			reg = <4>;
->> +		};
->> +
->> +		mt7530: switch@1f {
->> +			compatible = "mediatek,mt7621";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0x1f>;
->> +			pinctrl-names = "default";
->> +			mediatek,mcm;
->> +
->> +			resets = <&rstctrl 2>;
->> +			reset-names = "mcm";
->> +
->> +			ports {
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				port@0 {
->> +					reg = <0>;
->> +					label = "lan0";
->> +				};
->> +
->> +				port@1 {
->> +					reg = <1>;
->> +					label = "lan1";
->> +				};
->> +
->> +				port@2 {
->> +					reg = <2>;
->> +					label = "lan2";
->> +				};
->> +
->> +				port@3 {
->> +					reg = <3>;
->> +					label = "lan3";
->> +				};
->> +
->> +/* Commented out. Port 4 is handled by 2nd GMAC.
->> +				port@4 {
->> +					reg = <4>;
->> +					label = "lan4";
->> +				};
->> +*/
->> +
->> +				cpu_port0: port@6 {
->> +					reg = <6>;
->> +					label = "cpu";
->> +					ethernet = <&gmac0>;
->> +					phy-mode = "rgmii";
->> +
->> +					fixed-link {
->> +						speed = <1000>;
->> +						full-duplex;
->> +						pause;
->> +					};
->> +				};
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +Example 3: MT7621: Port 5 is connected to external PHY: Port 5 ->  
->> external PHY.
->> +
->> +&eth {
->> +	status = "okay";
->> +
->> +	gmac0: mac@0 {
->> +		compatible = "mediatek,eth-mac";
->> +		reg = <0>;
->> +		phy-mode = "rgmii";
->> +
->> +		fixed-link {
->> +			speed = <1000>;
->> +			full-duplex;
->> +			pause;
->> +		};
->> +	};
->> +
->> +	mdio: mdio-bus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		/* External phy */
->> +		ephy5: ethernet-phy@7 {
->> +			reg = <7>;
->> +		};
->> +
->> +		mt7530: switch@1f {
->> +			compatible = "mediatek,mt7621";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <0x1f>;
->> +			pinctrl-names = "default";
->> +			mediatek,mcm;
->> +
->> +			resets = <&rstctrl 2>;
->> +			reset-names = "mcm";
->> +
->> +			ports {
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				port@0 {
->> +					reg = <0>;
->> +					label = "lan0";
->> +				};
->> +
->> +				port@1 {
->> +					reg = <1>;
->> +					label = "lan1";
->> +				};
->> +
->> +				port@2 {
->> +					reg = <2>;
->> +					label = "lan2";
->> +				};
->> +
->> +				port@3 {
->> +					reg = <3>;
->> +					label = "lan3";
->> +				};
->> +
->> +				port@4 {
->> +					reg = <4>;
->> +					label = "lan4";
->> +				};
->> +
->> +				port@5 {
->> +					reg = <5>;
->> +					label = "lan5";
->> +					phy-mode = "rgmii";
->> +					phy-handle = <&ephy5>;
->> +				};
->> +
->> +				cpu_port0: port@6 {
->> +					reg = <6>;
->> +					label = "cpu";
->> +					ethernet = <&gmac0>;
->> +					phy-mode = "rgmii";
->> +
->> +					fixed-link {
->> +						speed = <1000>;
->> +						full-duplex;
->> +						pause;
->> +					};
->> +				};
->> +			};
->> +		};
->> +	};
->> +};
->> --
->> 2.20.1
->>
+SGkgTGVvbmFyZCwNCg0KT24gTHUsIDIwMTktMDgtMjYgYXQgMTk6MTkgKzAwMDAsIExlb25hcmQg
+Q3Jlc3RleiB3cm90ZToNCj4gT24gMjYuMDguMjAxOSAxNzozNSwgU3RlZmFuIEFnbmVyIHdyb3Rl
+Og0KPiA+IA0KPiA+IE9uIDIwMTktMDgtMjYgMTQ6MDUsIEd1aWRvIEfDvG50aGVyIHdyb3RlOg0K
+PiA+ID4gDQo+ID4gPiBIaSwNCj4gPiA+IE9uIFdlZCwgQXVnIDIxLCAyMDE5IGF0IDAxOjE1OjQw
+UE0gKzAzMDAsIFJvYmVydCBDaGlyYXMgd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiBUaGlzIHBh
+dGNoLXNldCBpbXByb3ZlcyB0aGUgdXNlIG9mIGVMQ0RJRiBibG9jayBvbiBpTVggOCBTb0NzDQo+
+ID4gPiA+IChsaWtlIDhNUSwgOE1NDQo+ID4gPiA+IGFuZCA4UVhQKS4gRm9sbG93aW5nLCBhcmUg
+dGhlIG5ldyBmZWF0dXJlcyBhZGRlZCBhbmQgZml4ZXMgZnJvbQ0KPiA+ID4gPiB0aGlzDQo+ID4g
+PiA+IHBhdGNoLXNldDoNCj4gPiA+IEkndmUgYXBwbGllZCB0aGlzIHdob2xlIHNlcmllcyBvbiB0
+b3Agb2YgbXkgTldMIHdvcmsgYW5kIGl0IGxvb2tzDQo+ID4gPiBnb29kDQo+ID4gPiB3aXRoIGEg
+RFNJIHBhbmVsLiBBcHBseWluZyB0aGUgd2hvbGUgc2VyaWVzIGFsc28gZml4ZXMgYW4gaXNzdWUN
+Cj4gPiA+IHdoZXJlDQo+ID4gPiBhZnRlciB1bmJsYW5rIHRoZSBvdXRwdXQgd2FzIHNvbWV0aW1l
+cyBzaGlmdGVkIGFib3V0IGhhbGYgYQ0KPiA+ID4gc2NyZWVuIHdpZHRoDQo+ID4gPiB0byB0aGUg
+cmlnaHQgKHdoaWNoIGRpZG4ndCBoYXBwZW4gd2l0aCBEQ1NTKS4gU28gYXQgbGVhc3QgZnJvbQ0K
+PiA+ID4gdGhlIHBhcnRzDQo+ID4gPiBJIGNvdWxkIHRlc3Q6DQo+ID4gPiANCj4gPiA+IMKgwqDC
+oFRlc3RlZC1ieTogR3VpZG8gR8O8bnRoZXIgPGFneEBzaWd4Y3B1Lm9yZz4NCj4gPiA+IA0KPiA+
+ID4gZm9yIHRoZSB3aG9sZSB0aGluZy4NCj4gPiBUaGFua3MgZm9yIHRlc3RpbmchIFdoYXQgU29D
+IGRpZCB5b3UgdXNlPyBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QNCj4gPiB0bw0KPiA+IGFsc28g
+Z2l2ZSB0aGlzIGEgdHJ5IG9uIGkuTVggNyBvciBpLk1YIDZVTEwgYmVmb3JlIG1lcmdpbmcuDQo+
+IEkgZGlkIGEgcXVpY2sgdGVzdCBvbiBpbXg2c3gtc2RiIGFuZCBpdCBzZWVtcyB0aGF0IFtQQVRD
+SCAwNy8xNV3CoA0KPiAiZHJtL214c2ZiOiBGaXggdGhlIHZibGFuayBldmVudHMiIGNhdXNlcyBh
+IGhhbmcgb24gYm9vdCwgZXZlbg0KPiB3aXRob3V0IGHCoA0KPiBwYW5lbC4NCj4gDQo+IElmIEkg
+cmV2ZXJ0IHRoYXQgcGFydGljdWxhciBwYXRjaCBpdCBzZWVtcyB0byBiZSBmaW5lOiB0aGUgbmV3
+IHBpeGVswqANCj4gZm9ybWF0cyBzZWVtIHRvIHdvcmsgaW4gbW9kZXRlc3QgKGNoZWNrZWQgd2l0
+aCBzaWksNDN3dmYxZyBwYW5lbCkuDQpUaGFua3MgZm9yIGZlZWRiYWNrLiBJIHRlc3RlZCB0aGlz
+IGFuZCwgaW5kZWVkIHRoZXJlIGFyZSBpc3N1ZXMgb24gNlNYDQp3aXRoIHRoaXMgcGFydGljdWxh
+ciBwYXRjaC4gSXQgc2VlbXMgdGhhdCB0aGVyZSBpcyBhIHJhY2UtY29uZGl0aW9uDQpjYXVzZWQg
+YnkgdGhlIHZibGFua19vbiBjYWxsIGluIGVuYWJsZSBhbmQgSVJRIHJvdXRpbmUuIFNpbmNlIHRo
+aXMgaXMNCm5vdCBoYXBwZW5pbmcgb24gYW55IG9mIGkuTVg4IFNvQywgSSBzdXNwZWN0IHRoZSBh
+eGkgY2xvY2sgdXNhZ2UuDQpJIHRoaW5rIEkgd2lsbCBqdXN0IHJlbW92ZSB0aGlzIHBhdGNoIGZy
+b20gdGhlIHBhdGNoLXNldCBhbmQgaGFuZGxlDQp0aGlzIGNhc2Ugc2VwYXJhdGVseS4NCj4gDQo+
+IC0tDQo+IFJlZ2FyZHMsDQo+IExlb25hcmQNCg0KUmVnYXJkcywNClJvYmVydApfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
