@@ -1,110 +1,98 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v6 0/6] Allwinner H6 Mali GPU support
-Date: Wed, 28 Aug 2019 13:28:04 +0200
-Message-ID: <92e9b697-ea0d-9b13-5512-b0a16a39df20@baylibre.com>
-References: <20190521161102.29620-1-peron.clem@gmail.com>
- <CAAObsKD8bij1ANLqX6y11Y6mDEXiymNjrDkmHmvGWiFLKWu_FA@mail.gmail.com>
- <4ff02295-6c34-791b-49f4-6558a92ad7a3@arm.com>
- <CAAObsKBt1tPw9RKGi_Xey=1zy9Tu3N+A=1te2R8=NuJ5tDBqVg@mail.gmail.com>
- <dc3872a4-8cd9-462b-9f73-0d69a810d985@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Wed, 28 Aug 2019 06:39:32 -0500
+Message-ID: <CAL_JsqLSXCK9u0fC99mv=7Lwmiqg2Qtu7Kf_xFG0WHE3v3wE6w@mail.gmail.com>
+References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com> <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <dc3872a4-8cd9-462b-9f73-0d69a810d985@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robin Murphy <robin.murphy@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2a915595-be5f-83f4-34e8-34d667875cc2@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9ieW4sCgpPbiAzMS8wNS8yMDE5IDE1OjQ3LCBSb2JpbiBNdXJwaHkgd3JvdGU6Cj4gT24g
-MzEvMDUvMjAxOSAxMzowNCwgVG9tZXUgVml6b3NvIHdyb3RlOgo+PiBPbiBXZWQsIDI5IE1heSAy
-MDE5IGF0IDE5OjM4LCBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPiB3cm90ZToK
-Pj4+Cj4+PiBPbiAyOS8wNS8yMDE5IDE2OjA5LCBUb21ldSBWaXpvc28gd3JvdGU6Cj4+Pj4gT24g
-VHVlLCAyMSBNYXkgMjAxOSBhdCAxODoxMSwgQ2zDqW1lbnQgUMOpcm9uIDxwZXJvbi5jbGVtQGdt
-YWlsLmNvbT4gd3JvdGU6Cj4+Pj4+Cj4+Pj4gW3NuaXBdCj4+Pj4+IFvCoCAzNDUuMjA0ODEzXSBw
-YW5mcm9zdCAxODAwMDAwLmdwdTogbW11IGlycSBzdGF0dXM9MQo+Pj4+PiBbwqAgMzQ1LjIwOTYx
-N10gcGFuZnJvc3QgMTgwMDAwMC5ncHU6IFVuaGFuZGxlZCBQYWdlIGZhdWx0IGluIEFTMCBhdCBW
-QQo+Pj4+PiAweDAwMDAwMDAwMDI0MDA0MDAKPj4+Pgo+Pj4+IMKgIEZyb20gd2hhdCBJIGNhbiBz
-ZWUgaGVyZSwgMHgwMDAwMDAwMDAyNDAwNDAwIHBvaW50cyB0byB0aGUgZmlyc3QgYnl0ZQo+Pj4+
-IG9mIHRoZSBmaXJzdCBzdWJtaXR0ZWQgam9iIGRlc2NyaXB0b3IuCj4+Pj4KPj4+PiBTbyBtYXBw
-aW5nIGJ1ZmZlcnMgZm9yIHRoZSBHUFUgZG9lc24ndCBzZWVtIHRvIGJlIHdvcmtpbmcgYXQgYWxs
-IG9uCj4+Pj4gNjQtYml0IFQtNzYwLgo+Pj4+Cj4+Pj4gU3RldmVuLCBSb2JpbiwgZG8geW91IGhh
-dmUgYW55IGlkZWEgb2Ygd2h5IHRoaXMgY291bGQgYmU/Cj4+Pgo+Pj4gSSB0cmllZCByb2xsaW5n
-IGJhY2sgdG8gdGhlIG9sZCBwYW5mcm9zdC9ub25kcm0gc2hpbSwgYW5kIGl0IHdvcmtzIGZpbmUK
-Pj4+IHdpdGgga2Jhc2UsIGFuZCBJIGFsc28gZm91bmQgdGhhdCBULTgyMCBmYWxscyBvdmVyIGlu
-IHRoZSBleGFjdCBzYW1lCj4+PiBtYW5uZXIsIHNvIHRoZSBmYWN0IHRoYXQgaXQgc2VlbWVkIHRv
-IGJlIGNvbW1vbiB0byB0aGUgc21hbGxlciAzMy1iaXQKPj4+IGRlc2lnbnMgcmF0aGVyIHRoYW4g
-YW55dGhpbmcgdG8gZG8gd2l0aCB0aGUgb3RoZXIKPj4+IGpvYl9kZXNjcmlwdG9yX3NpemUvdjQv
-djUgY29tcGxpY2F0aW9uIHR1cm5lZCBvdXQgdG8gYmUgdGVsbGluZy4KPj4KPj4gSXMgdGhpcyBj
-b21wbGljYXRpb24gc29tZXRoaW5nIHlvdSBjYW4gZXhwbGFpbj8gSSBkb24ndCBrbm93IHdoYXQg
-djQKPj4gYW5kIHY1IGFyZSBtZWFudCBoZXJlLgo+IAo+IEkgd2FzIGFsbHVkaW5nIHRvIEJBU0Vf
-SFdfRkVBVFVSRV9WNCwgd2hpY2ggSSBiZWxpZXZlIHJlZmVycyB0byB0aGUgTWlkZ2FyZCBhcmNo
-aXRlY3R1cmUgdmVyc2lvbiAtIHRoZSBvbGRlciB2ZXJzaW9ucyBpbXBsZW1lbnRlZCBieSBUNnh4
-IGFuZCBUNzIwIHNlZW0gdG8gYmUgY29sbGVjdGl2ZWx5IHRyZWF0ZWQgYXMgInY0Iiwgd2hpbGUg
-VDc2MCBhbmQgVDh4eCB3b3VsZCBlZmZlY3RpdmVseSBiZSAidjUiLgo+IAo+Pj4gWyBhcyBhbiBh
-c2lkZSwgYXJlIDY0LWJpdCBqb2JzIGFjdHVhbGx5IGtub3duIG5vdCB0byB3b3JrIG9uIHY0IEdQ
-VXMsIG9yCj4+PiBpcyBpdCBqdXN0IHRoYXQgbm9ib2R5J3MgeWV0IG9ic2VydmVkIGEgNjQtYml0
-IGJsb2IgZHJpdmluZyBvbmU/IF0KPj4KPj4gSSdtIGxvb2tpbmcgcmlnaHQgbm93IGF0IGdldHRp
-bmcgUGFuZnJvc3Qgd29ya2luZyBvbiBUNzIwIHdpdGggNjQtYml0Cj4+IGRlc2NyaXB0b3JzLCB3
-aXRoIHRoZSB1bHRpbWF0ZSBnb2FsIG9mIG1ha2luZyBQYW5mcm9zdAo+PiA2NC1iaXQtZGVzY3Jp
-cHRvciBvbmx5IHNvIHdlIGNhbiBoYXZlIGEgc2luZ2xlIGJ1aWxkIG9mIE1lc2EgaW4KPj4gZGlz
-dHJvcy4KPiAKPiBDb29sLCBJJ2xsIGtlZXAgYW4gZXllIG91dCwgYW5kIGhvcGUgdGhhdCBpdCBt
-aWdodCBiZSBlbm91Z2ggZm9yIFQ2MjAgb24gSnVubywgdG9vIDopCj4gCj4+PiBMb25nIHN0b3J5
-IHNob3J0LCBpdCBhcHBlYXJzIHRoYXQgJ01hbGkgTFBBRScgaXMgYWxzbyBsYWNraW5nIHRoZSBz
-dGFydAo+Pj4gbGV2ZWwgbm90aW9uIG9mIFZNU0EsIGFuZCBleHBlY3RzIGEgZnVsbCA0LWxldmVs
-IHRhYmxlIGV2ZW4gZm9yIDw0MCBiaXRzCj4+PiB3aGVuIGxldmVsIDAgZWZmZWN0aXZlbHkgcmVk
-dW5kYW50LiBUaHVzIHdhbGtpbmcgdGhlIDMtbGV2ZWwgdGFibGUgdGhhdAo+Pj4gaW8tcGd0YWJs
-ZSBjb21lcyBiYWNrIHdpdGggZW5kcyB1cCBnb2luZyB3aWxkbHkgd3JvbmcuIFRoZSBoYWNrIGJl
-bG93Cj4+PiBzZWVtcyB0byBkbyB0aGUgam9iIGZvciBtZTsgaWYgQ2zDqW1lbnQgY2FuIGNvbmZp
-cm0gKG9uIFQtNzIwIHlvdSdsbAo+Pj4gc3RpbGwgbmVlZCB0aGUgdXNlcnNwYWNlIGhhY2sgdG8g
-Zm9yY2UgMzItYml0IGpvYnMgYXMgd2VsbCkgdGhlbiBJIHRoaW5rCj4+PiBJJ2xsIGNvb2sgdXAg
-YSBwcm9wZXIgcmVmYWN0b3Jpbmcgb2YgdGhlIGFsbG9jYXRvciB0byBwdXQgdGhpbmdzIHJpZ2h0
-Lgo+Pgo+PiBNbWFwcyBzZWVtIHRvIHdvcmsgd2l0aCB0aGlzIHBhdGNoLCB0aGFua3MuCj4+Cj4+
-IFRoZSBtYWluIGNvbXBsaWNhdGlvbiBJJ20gZmFjaW5nIHJpZ2h0IG5vdyBzZWVtcyB0byBiZSB0
-aGF0IHRoZSBTRkJECj4+IGRlc2NyaXB0b3Igb24gVDcyMCBzZWVtcyB0byBiZSBkaWZmZXJlbnQg
-ZnJvbSB0aGUgb25lIHdlIGFscmVhZHkgaGFkCj4+ICh0ZXN0ZWQgb24gVDZ4eD8pLgo+IAo+IE9L
-IC0gd2l0aCB0aGUgMzItYml0IGhhY2sgcG9pbnRlZCB0byB1cC10aHJlYWQsIGEgcXVpY2sga21z
-Y3ViZSB0ZXN0IGdhdmUgbWUgdGhlIGltcHJlc3Npb24gdGhhdCBUNzIwIHdvcmtzIGZpbmUsIGJ1
-dCBvbiBjbG9zZXIgaW5zcGVjdGlvbiBzb21lIHBhcnRzIG9mIGdsbWFyazIgZG8gc2VlbSB0byBn
-byBhIGJpdCB3b25reSAoYWx0aG91Z2ggSSBzdXNwZWN0IGF0IGxlYXN0IHNvbWUgb2YgaXQgaXMg
-anVzdCBkb3duIHRvIHRoZSBGUEdBIHNldHVwIGJlaW5nIGJvdGggdmVyeSBzbG93IGFuZCBsYWNr
-aW5nIGluIG1lbW9yeSBiYW5kd2lkdGgpLCBhbmQgdGhlICJudjEyLTFpbWciIG1vZGUgb2Yga21z
-Y3ViZSB0dXJucyBvdXQgdG8gcmVuZGVyIGluIHNvbWUgZGVsaWdodGZ1bGx5IHdyb25nIGNvbG91
-cnMuCj4gCj4gSSdsbCB0cnkgdG8gZ2V0IGEgJ3Byb3BlcicgdmVyc2lvbiBvZiB0aGUgaW8tcGd0
-YWJsZSBwYXRjaCBwb3N0ZWQgc29vbi4KCkknbSB0cnlpbmcgdG8gY29sbGVjdCBhbGwgdGhlIGZp
-eGVzIG5lZWRlZCB0byBtYWtlIFQ4MjAgd29yayBhZ2FpbiwgYW5kCkkgd2FzIHdvbmRlcmluZyBp
-ZiB5b3UgZmluYWxseSBoYXZlIGEgcHJvcGVyIHBhdGNoIGZvciB0aGlzIGFuZCAiY2ZnLT5pYXMg
-PiA0OCIKaGFjayA/IE9yIG9uZSBJIGNhbiB0ZXN0ID8KClRoYW5rcywKTmVpbAoKPiAKPiBUaGFu
-a3MsCj4gUm9iaW4uCj4gCj4+Cj4+IENoZWVycywKPj4KPj4gVG9tZXUKPj4KPj4+IFJvYmluLgo+
-Pj4KPj4+Cj4+PiAtLS0tLT44LS0tLS0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2lv
-LXBndGFibGUtYXJtLmMgYi9kcml2ZXJzL2lvbW11L2lvLXBndGFibGUtYXJtLmMKPj4+IGluZGV4
-IDU0Njk2OGQ4YTM0OS4uZjI5ZGE2ZThkYzA4IDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVycy9pb21t
-dS9pby1wZ3RhYmxlLWFybS5jCj4+PiArKysgYi9kcml2ZXJzL2lvbW11L2lvLXBndGFibGUtYXJt
-LmMKPj4+IEBAIC0xMDIzLDEyICsxMDIzLDE0IEBAIGFybV9tYWxpX2xwYWVfYWxsb2NfcGd0YWJs
-ZShzdHJ1Y3QKPj4+IGlvX3BndGFibGVfY2ZnICpjZmcsIHZvaWQgKmNvb2tpZSkKPj4+IMKgwqDC
-oMKgwqDCoMKgwqAgaW9wID0gYXJtXzY0X2xwYWVfYWxsb2NfcGd0YWJsZV9zMShjZmcsIGNvb2tp
-ZSk7Cj4+PiDCoMKgwqDCoMKgwqDCoMKgIGlmIChpb3ApIHsKPj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHU2NCBtYWlyLCB0dGJyOwo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgc3RydWN0IGFybV9scGFlX2lvX3BndGFibGUgKmRhdGEgPSBpb19wZ3RhYmxlX29w
-c190b19kYXRhKCZpb3AtPm9wcyk7Cj4+Pgo+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgZGF0YS0+bGV2ZWxzID0gNDsKPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IC8qIENvcHkgdmFsdWVzIGFzIHVuaW9uIGZpZWxkcyBvdmVybGFwICovCj4+PiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtYWlyID0gY2ZnLT5hcm1fbHBhZV9zMV9jZmcubWFpclsw
-XTsKPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHR0YnIgPSBjZmctPmFybV9s
-cGFlX3MxX2NmZy50dGJyWzBdOwo+Pj4KPj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCj4+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+PiBkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVs
+On Tue, Aug 27, 2019 at 10:47 PM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+> On 27/8/2019 8:39 PM, Rob Herring wrote:
+> > On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>
+> >> Add a YAML schema to use the host controller driver with the
+> >> SDXC PHY on Intel's Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> ---
+> >>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
+> >>   1 file changed, 50 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >> new file mode 100644
+> >> index 000000000000..be05020880bf
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >> @@ -0,0 +1,50 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> +
+> >> +description: Binding for SDXC PHY
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: intel,lgm-sdxc-phy
+> >> +
+> >> +  intel,syscon:
+> >> +    description: phandle to the sdxc through syscon
+> >> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    maxItems: 1
+> >> +
+> >> +  "#phy-cells":
+> >> +    const: 0
+> >> +
+> >> +required:
+> >> +  - "#phy-cells"
+> >> +  - compatible
+> >> +  - intel,syscon
+> >> +  - clocks
+> >> +  - clock-names
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    sdxc_phy: sdxc_phy {
+> >> +        compatible = "intel,lgm-sdxc-phy";
+> >> +        intel,syscon = <&sysconf>;
+> > Rather than a phandle, can this be a child node of sysconf? You need a
+> > binding for sysconf first anyways.
+> intel,syscon is phandle, emmc_phy is not child node of sysconf, access
+> emmc_phy
+> register over sysconf so made as reference here.
+
+How do you access the emmc_phy registers? They are part of the sysconf
+address space or the sysconf provides some sort of indirect register
+access? In case of the former, then emmc_phy should be a child node.
+That's actually fairly common.
+
+Rob
