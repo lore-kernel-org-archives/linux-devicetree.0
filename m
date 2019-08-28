@@ -1,239 +1,216 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: [PATCHv5 2/2] ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
-Date: Wed, 28 Aug 2019 18:19:18 +0200
-Message-ID: <1567009160-21965-3-git-send-email-oliver.graute@gmail.com>
-References: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2 4/6] PCI: tegra: Add support to enable slot regulators
+Date: Wed, 28 Aug 2019 18:24:20 +0200
+Message-ID: <20190828162420.GB10422@ulmo>
+References: <20190828131505.28475-1-vidyas@nvidia.com>
+ <20190828131505.28475-5-vidyas@nvidia.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190828131505.28475-5-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: oliver.graute@gmail.com, narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
 
-Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 196 ++++++++++++++++++++++++
- 2 files changed, 197 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+--7iMSBzlTiPOCCT2k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a24a6a1..a2a69e4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-6ulcustomboard.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-new file mode 100644
-index 00000000..1861b34
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Support for Variscite DART-6UL Module
-+ *
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-+ * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "imx6ul-imx6ull-var-dart-common.dtsi"
-+
-+/ {
-+	model = "Variscite i.MX6 UltraLite Carrier-board";
-+	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 20000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		user {
-+			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		d16-led {
-+			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8731audio";
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Line", "Line Jack",
-+			"Microphone", "Mic Jack";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"LLINEIN", "Line Jack",
-+			"RLINEIN", "Line Jack",
-+			"MICIN", "Mic Bias",
-+			"Mic Bias", "Mic Jack";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_master>;
-+		simple-audio-card,frame-master = <&sound_master>;
-+
-+		sound_master: simple-audio-card,cpu {
-+				sound-dai = <&sai2>;
-+		};
-+	};
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+};
-+
-+&fec2 {
-+	phy-mode = "rgmii";
-+	phy-reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&ethphy1>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	wm8731: audio-codec@1a {
-+		#sound-dai-cells = <0>;
-+		compatible = "wlf,wm8731";
-+		reg = <0x1a>;
-+		clocks = <&clks IMX6UL_CLK_SAI2>;
-+		clock-names = "mclk";
-+	};
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <4 0>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+		wakeup-source;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display0 {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency =<35000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <40>;
-+				hback-porch = <40>;
-+				hsync-len = <48>;
-+				vback-porch = <29>;
-+				vfront-porch = <13>;
-+				vsync-len = <3>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_rtc: rtcgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+		>;
-+	};
-+};
--- 
-2.7.4
+On Wed, Aug 28, 2019 at 06:45:03PM +0530, Vidya Sagar wrote:
+> Add support to get regulator information of 3.3V and 12V supplies of a PC=
+Ie
+> slot from the respective controller's device-tree node and enable those
+> supplies. This is required in platforms like p2972-0000 where the supplies
+> to x16 slot owned by C5 controller need to be enabled before attempting to
+> enumerate the devices.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Addressed review comments from Thierry Reding and Andrew Murray
+> * Handled failure case of devm_regulator_get_optional() for -ENODEV clean=
+ly
+>=20
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
+troller/dwc/pcie-tegra194.c
+> index 057ba4f9fbcd..6a66101ec83d 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+>  	u32 aspm_l0s_enter_lat;
+> =20
+>  	struct regulator *pex_ctl_supply;
+> +	struct regulator *slot_ctl_3v3;
+> +	struct regulator *slot_ctl_12v;
+> =20
+>  	unsigned int phy_count;
+>  	struct phy **phys;
+> @@ -1047,6 +1049,72 @@ static void tegra_pcie_downstream_dev_to_D0(struct=
+ tegra_pcie_dw *pcie)
+>  	}
+>  }
+> =20
+> +static int tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	pcie->slot_ctl_3v3 =3D devm_regulator_get_optional(pcie->dev, "vpcie3v3=
+");
+> +	if (IS_ERR(pcie->slot_ctl_3v3)) {
+> +		if (PTR_ERR(pcie->slot_ctl_3v3) !=3D -ENODEV)
+> +			return PTR_ERR(pcie->slot_ctl_3v3);
+> +
+> +		pcie->slot_ctl_3v3 =3D NULL;
+> +	}
+> +
+> +	pcie->slot_ctl_12v =3D devm_regulator_get_optional(pcie->dev, "vpcie12v=
+");
+> +	if (IS_ERR(pcie->slot_ctl_12v)) {
+> +		if (PTR_ERR(pcie->slot_ctl_12v) !=3D -ENODEV)
+> +			return PTR_ERR(pcie->slot_ctl_12v);
+> +
+> +		pcie->slot_ctl_12v =3D NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	int ret;
+> +
+> +	if (pcie->slot_ctl_3v3) {
+> +		ret =3D regulator_enable(pcie->slot_ctl_3v3);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 3V3 slot supply: %d\n", ret);
+
+Nit: perhaps make this error message "Failed to enable 3.3V slot
+supply"? Seems somewhat more user-friendly than 3V3.
+
+
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (pcie->slot_ctl_12v) {
+> +		ret =3D regulator_enable(pcie->slot_ctl_12v);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 12V slot supply: %d\n", ret);
+> +			goto fail_12v_enable;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * According to PCI Express Card Electromechanical Specification
+> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+> +	 * should be a minimum of 100ms.
+> +	 */
+> +	msleep(100);
+
+Do you perhaps want to guard this with something like:
+
+	if (pcie->slot_ctl_3v3 || pcie->slot_ctl_12v)
+
+? Doesn't seem useful to me to sleep 100 ms here if there are no
+regulators being enabled to begin with.
+
+Thierry
+
+> +
+> +	return 0;
+> +
+> +fail_12v_enable:
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +	return ret;
+> +}
+> +
+> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pci=
+e)
+> +{
+> +	if (pcie->slot_ctl_12v)
+> +		regulator_disable(pcie->slot_ctl_12v);
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +}
+> +
+>  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  					bool en_hw_hot_rst)
+>  {
+> @@ -1060,6 +1128,10 @@ static int tegra_pcie_config_controller(struct teg=
+ra_pcie_dw *pcie,
+>  		return ret;
+>  	}
+> =20
+> +	ret =3D tegra_pcie_enable_slot_regulators(pcie);
+> +	if (ret < 0)
+> +		goto fail_slot_reg_en;
+> +
+>  	ret =3D regulator_enable(pcie->pex_ctl_supply);
+>  	if (ret < 0) {
+>  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+> @@ -1142,6 +1214,8 @@ static int tegra_pcie_config_controller(struct tegr=
+a_pcie_dw *pcie,
+>  fail_core_clk:
+>  	regulator_disable(pcie->pex_ctl_supply);
+>  fail_reg_en:
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +fail_slot_reg_en:
+>  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+> =20
+>  	return ret;
+> @@ -1174,6 +1248,8 @@ static int __deinit_controller(struct tegra_pcie_dw=
+ *pcie)
+>  		return ret;
+>  	}
+> =20
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +
+>  	ret =3D tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  	if (ret) {
+>  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+> @@ -1373,6 +1449,10 @@ static int tegra_pcie_dw_probe(struct platform_dev=
+ice *pdev)
+>  		return ret;
+>  	}
+> =20
+> +	ret =3D tegra_pcie_get_slot_regulators(pcie);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	pcie->pex_ctl_supply =3D devm_regulator_get(dev, "vddio-pex-ctl");
+>  	if (IS_ERR(pcie->pex_ctl_supply)) {
+>  		dev_err(dev, "Failed to get regulator: %ld\n",
+> --=20
+> 2.17.1
+>=20
+
+--7iMSBzlTiPOCCT2k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1mqrEACgkQ3SOs138+
+s6HMTA/7BaNM/Xj4xK9AjEBIMHXA4666EmcrXLkTloR4XlbAVgHAqLNRt8NJbLug
+RnvbDhe8AlKWkF190aWD93lwSDhH6EL/h4Wk7oGQV5NoSdb80ItInJMmBnlhwKSC
+XkBG0g7I5Fhym8C10Ai7v9lfaK/BrHBiFYxWyWZg1o90zyImCt6yGAZDMbZH/iM9
+ZeVfkljnOMhua/vd06aklh5h4GJ5FJAzKrxbEc4oPv+gQyvvU6rby7bH/NDytDrO
+ECPmdSYGq12+kXo9N2DFbCzJi5kZwYbFnEU7UUnlctuZbhJ9tKUZVDkvxOXo5AOo
+jbTCN6qVzrfQopNNwwMuMluaH7B6iM8L7bZXeCUpVTAbrAeoXTBBBkInvA64/wTb
+Sr9rJCKh/Z+NX1jNPmZVNW0A9QZn2JToK3yg6h3LrRlJPSfLC2+OENfIbZJJ4AsO
+NIe8BK/cY4ZyrdMEag/eJCGoqr8fgKeeZR2kDfnCOw5ueXSKIuPp4JS6qZupa24V
+GZIXy99oKJk3jCC42I6kkmkralvWwzWuF6IWFxboDgK28lwmYsweowkcvwZZ4KFR
+gIREfskCmyFHKJg5Nuw7m1VlC6qvBqqAVcVICisCr69GHWfFa/ltNdVg0bnxIxcG
+h8mS+uuYoCyVGjmm4BsFdgjQbqe5vdj1sa8OgZmx5X6DWuCjraM=
+=zyeB
+-----END PGP SIGNATURE-----
+
+--7iMSBzlTiPOCCT2k--
