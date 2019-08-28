@@ -1,103 +1,43 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57660 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfHNNO2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:14:28 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4/6] ARM: dts: Configure sgx for omap5
-Date: Wed, 14 Aug 2019 06:14:06 -0700
-Message-Id: <20190814131408.57162-5-tony@atomide.com>
-In-Reply-To: <20190814131408.57162-1-tony@atomide.com>
-References: <20190814131408.57162-1-tony@atomide.com>
+Return-Path: <SRS0=hqGg=WY=nic.cz=marek.behun@kernel.org>
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v2 mvebu-dt64 2/3] dt-bindings: marvell: document Turris Mox compatible
+Date: Wed, 28 Aug 2019 17:12:42 +0200
+Message-Id: <20190828151243.23542-3-marek.behun@nic.cz>
+In-Reply-To: <20190828151243.23542-1-marek.behun@nic.cz>
+References: <20190828151243.23542-1-marek.behun@nic.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org
+To: arm@kernel.org
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-I've tested that the interconnect target module enables and idles
-just fine when probed with ti-sysc with PM runtime control via sys:
+This adds the documentation for the Turris Mox compatible in armada-37xx
+device-tree binding documentation.
 
-# echo on > $(find /sys -name control | grep \/5600)
-# rwmem 0x5600fe00	# OCP Revision
-0x5600fe00 = 0x40000000
-# echo auto > $(find /sys -name control | grep \/5600)
-# rwmem 0x5600fe10
-# rwmem 0x56000024
-
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: moaz korena <moaz@korena.xyz>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Philipp Rossak <embed3d@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/arm/boot/dts/omap5.dtsi           | 23 +++++++++++++++++++++++
- arch/arm/boot/dts/omap54xx-clocks.dtsi | 14 ++++++++++++++
- 2 files changed, 37 insertions(+)
+ .../devicetree/bindings/arm/marvell/armada-37xx.txt       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -257,6 +257,29 @@
- 			ports-implemented = <0x1>;
- 		};
- 
-+		target-module@56000000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x5600fe00 0x4>,
-+			      <0x5600fe10 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x56000000 0x2000000>;
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+index eddde4faef01..f6d6642d81c0 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+@@ -48,3 +48,11 @@ avs: avs@11500 {
+ 	compatible = "marvell,armada-3700-avs", "syscon";
+ 	reg = <0x11500 0x40>;
+ }
 +
-+			/*
-+			 * Closed source PowerVR driver, no child device
-+			 * binding or driver in mainline
-+			 */
-+		};
 +
- 		dss: dss@58000000 {
- 			compatible = "ti,omap5-dss";
- 			reg = <0x58000000 0x80>;
-diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
---- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-@@ -1146,6 +1146,20 @@
- 		};
- 	};
- 
-+	gpu_cm: gpu_cm@1500 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x1500 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x1500 0x100>;
++CZ.NIC's Turris Mox SOHO router Device Tree Bindings
++----------------------------------------------------
 +
-+		gpu_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
++Required root node property:
 +
- 	l3init_cm: l3init_cm@1600 {
- 		compatible = "ti,omap4-cm";
- 		reg = <0x1600 0x100>;
++ - compatible: must contain "cznic,turris-mox"
 -- 
 2.21.0
