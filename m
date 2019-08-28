@@ -1,101 +1,41 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 2/2] clk: mediatek: add pericfg clocks for MT8183
-Date: Wed, 28 Aug 2019 13:55:55 +0800
-Message-ID: <1566971755-21217-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH v2 0/8] regulator: support Silergy SY8824C/SY8824E etc.
+Date: Wed, 28 Aug 2019 06:08:09 +0000
+Message-ID: <20190828135646.52457ac3@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566971755-21217-1-git-send-email-chunfeng.yun@mediatek.com>
+Content-Language: en-US
+Content-ID: <60EC053632AE7C439CA40447EB6F4990@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pericfg clocks for MT8183, it's used when support USB
-remote wakeup
+Add support for Silergy SY8824C/SY8824E/SY20276/SY20278 regulator.
 
-Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/clk/mediatek/clk-mt8183.c      | 35 ++++++++++++++++++++++++++
- include/dt-bindings/clock/mt8183-clk.h |  4 +++
- 2 files changed, 39 insertions(+)
+Changes since v1:
+  - use c++ comment style for SPDX header
+  - add prefix for BUCK_EN and MODE
 
-diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
-index 1aa5f4059251..b19221bad0c9 100644
---- a/drivers/clk/mediatek/clk-mt8183.c
-+++ b/drivers/clk/mediatek/clk-mt8183.c
-@@ -999,6 +999,25 @@ static const struct mtk_gate infra_clks[] = {
- 		"msdc50_0_sel", 24),
- };
- 
-+static const struct mtk_gate_regs peri_cg_regs = {
-+	.set_ofs = 0x20c,
-+	.clr_ofs = 0x20c,
-+	.sta_ofs = 0x20c,
-+};
-+
-+#define GATE_PERI(_id, _name, _parent, _shift) {	\
-+	.id = _id,				\
-+	.name = _name,				\
-+	.parent_name = _parent,			\
-+	.regs = &peri_cg_regs,			\
-+	.shift = _shift,			\
-+	.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
-+}
-+
-+static const struct mtk_gate peri_clks[] = {
-+	GATE_PERI(CLK_PERI_AXI, "periaxi", "axi_sel", 31),
-+};
-+
- static const struct mtk_gate_regs apmixed_cg_regs = {
- 	.set_ofs = 0x20,
- 	.clr_ofs = 0x20,
-@@ -1194,6 +1213,19 @@ static int clk_mt8183_infra_probe(struct platform_device *pdev)
- 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
- }
- 
-+static int clk_mt8183_peri_probe(struct platform_device *pdev)
-+{
-+	struct clk_onecell_data *clk_data;
-+	struct device_node *node = pdev->dev.of_node;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_PERI_NR_CLK);
-+
-+	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-+			       clk_data);
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+
- static int clk_mt8183_mcu_probe(struct platform_device *pdev)
- {
- 	struct clk_onecell_data *clk_data;
-@@ -1223,6 +1255,9 @@ static const struct of_device_id of_match_clk_mt8183[] = {
- 	}, {
- 		.compatible = "mediatek,mt8183-infracfg",
- 		.data = clk_mt8183_infra_probe,
-+	}, {
-+		.compatible = "mediatek,mt8183-pericfg",
-+		.data = clk_mt8183_peri_probe,
- 	}, {
- 		.compatible = "mediatek,mt8183-mcucfg",
- 		.data = clk_mt8183_mcu_probe,
-diff --git a/include/dt-bindings/clock/mt8183-clk.h b/include/dt-bindings/clock/mt8183-clk.h
-index 0046506eb24c..a7b470b0ec8a 100644
---- a/include/dt-bindings/clock/mt8183-clk.h
-+++ b/include/dt-bindings/clock/mt8183-clk.h
-@@ -284,6 +284,10 @@
- #define CLK_INFRA_FBIST2FPC		100
- #define CLK_INFRA_NR_CLK		101
- 
-+/* PERICFG */
-+#define CLK_PERI_AXI			0
-+#define CLK_PERI_NR_CLK			1
-+
- /* MFGCFG */
- #define CLK_MFG_BG3D			0
- #define CLK_MFG_NR_CLK			1
--- 
-2.23.0
+Jisheng Zhang (8):
+  regulator: add binding for the SY8824C voltage regulator
+  regulator: add support for SY8824C regulator
+  dt-bindings: sy8824x: Document SY8824E support
+  regulator: sy8824x: add SY8824E support
+  dt-bindings: sy8824x: Document SY20276 support
+  regulator: sy8824x: add SY20276 support
+  dt-bindings: sy8824x: Document SY20278 support
+  regulator: sy8824x: add SY20278 support
+
+ .../devicetree/bindings/regulator/sy8824x.txt |  24 ++
+ drivers/regulator/Kconfig                     |   7 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/sy8824x.c                   | 231 ++++++++++++++++++
+ 4 files changed, 263 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/sy8824x.txt
+ create mode 100644 drivers/regulator/sy8824x.c
+
+--=20
+2.23.0.rc1
