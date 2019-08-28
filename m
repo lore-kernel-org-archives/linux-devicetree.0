@@ -1,146 +1,106 @@
-From: Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
- Reset controller
-Date: Wed, 28 Aug 2019 10:59:33 +0800
-Message-ID: <3e49f596-99d8-3ef4-8d35-32dd4dc978f3@linux.intel.com>
-References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
- <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
- <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
- <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
- <c052e984-1144-6dc1-651a-8d9c924a1da9@linux.intel.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH v5 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Wed, 28 Aug 2019 03:02:54 +0000
+Message-ID: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c052e984-1144-6dc1-651a-8d9c924a1da9@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Peng Fan <peng.fan@nxp.com>
 
-On 8/27/2019 10:04 PM, Dilip Kota wrote:
-> Hi Rob,
->
-> On 8/26/2019 7:23 PM, Rob Herring wrote:
->> On Mon, Aug 26, 2019 at 4:52 AM Dilip Kota 
->> <eswara.kota@linux.intel.com> wrote:
->>> Hi Rob,
->>>
->>> On 8/23/2019 8:25 PM, Rob Herring wrote:
->>>> On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota 
->>>> <eswara.kota@linux.intel.com> wrote:
->>>>> Add YAML schemas for the reset controller on Intel
->>>>> Lightening Mountain (LGM) SoC.
->>>>>
->>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>>>> ---
->>>>> Changes on v2:
->>>>>       Address review comments
->>>>>         Update the compatible property definition
->>>>>         Add description for reset-cells
->>>>>         Add 'additionalProperties: false' property
->>>>>
->>>>>    .../bindings/reset/intel,syscon-reset.yaml         | 53 
->>>>> ++++++++++++++++++++++
->>>>>    1 file changed, 53 insertions(+)
->>>>>    create mode 100644 
->>>>> Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->>>>>
->>>>> diff --git 
->>>>> a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml 
->>>>> b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..3403a967190a
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->>>>> @@ -0,0 +1,53 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: Intel Lightening Mountain SoC System Reset Controller
->>>>> +
->>>>> +maintainers:
->>>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    items:
->>>>> +      - const: intel,rcu-lgm
->>>>> +      - const: syscon
->>>>> +
->>>>> +  reg:
->>>>> +    description: Reset controller register base address and size
->>>>> +
->>>>> +  intel,global-reset:
->>>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->>>>> +    description: Global reset register offset and bit offset.
->>>>> +
->>>>> +  "#reset-cells":
->>>>> +    const: 2
->>>>> +    description: |
->>>>> +      The 1st cell is the register offset.
->>>>> +      The 2nd cell is the bit offset in the register.
->>>>> +
->>>>> +required:
->>>>> +  - compatible
->>>>> +  - reg
->>>>> +  - intel,global-reset
->>>>> +  - "#reset-cells"
->>>>> +
->>>>> +additionalProperties: false
->>>>> +
->>>>> +examples:
->>>>> +  - |
->>>>> +    rcu0: reset-controller@00000000 {
->>>>> +        compatible = "intel,rcu-lgm", "syscon";
->>>>> +        reg = <0x000000 0x80000>;
->>>>> +        intel,global-reset = <0x10 30>;
->>>>> +        #reset-cells = <2>;
->>>>> +    };
->>>>> +
->>>>> +    pcie_phy0: pciephy@... {
->>>>> +        ...
->>>> You need to run 'make dt_binding_check' and fix the warnings. The
->>>> example has to be buildable and it is not.
->>> Sure, i  will correct this pcie_phy0 node. But i didn't get any 
->>> warnings
->>> for make dt_binding_check
->>>
->>>     CHKDT 
->>> Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
->>> DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
->>> FATAL ERROR: Unknown output format "yaml"
->>>
->>> Will DTC report about the example node errors? But, DTC is failing with
->>> FATAL_ERROR.
->>> I tried it even after installing libyaml and headers in my local
->>> directory and export the path, but no luck.(ref:
->>> https://lkml.org/lkml/2018/12/3/951)
->>> Could you please let me know if i miss anything and help me to proceed
->>> further.
->> See Documentation/devicetree/writing-schema.md
->
-> I have followed all the steps mentioned in the document before keeping 
-> the mail itself.
-> Does the dtc script looks for libyaml and its header files at any 
-> default or specific location?
-DTC is working for me now.
-It is working for me after updating the libyaml and header paths in 
-scripts/dtc/Makefile and yamltree.c (since i have installed libyaml and 
-header files in my local directories)
+V5:
+yaml fix
 
-I have fixed all the warnings and DTC checks are successful. I will push 
-the changes in the next patch version.
-   DTC 
-Documentation/devicetree/bindings/reset/intel,syscon-reset.example.dt.yaml
-   CHECK 
-Documentation/devicetree/bindings/reset/intel,syscon-reset.example.dt.yaml
+V4:
+yaml fix for num-chans in patch 1/2.
+https://patchwork.kernel.org/cover/11116521/
 
-Regards,
-Dilip
+V3:
+Drop interrupt
+Introduce transports for mem/reg usage
+Add chan-id for mem usage
+Convert to yaml format
+https://patchwork.kernel.org/cover/11043541/
+=20
+V2:
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
+
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
+
+The traditional Linux mailbox mechanism uses some kind of dedicated hardwar=
+e
+IP to signal a condition to some other processing unit, typically a dedicat=
+ed
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
+
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
+
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI request=
+s.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced =
+via
+this new driver.
+
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hyperviso=
+rs
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
+
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used genericall=
+y
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+
+Peng Fan (2):
+  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+  mailbox: introduce ARM SMC based mailbox
+
+ .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 ++++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 215 +++++++++++++++++=
+++++
+ 4 files changed, 349 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+
+--=20
+2.16.4
