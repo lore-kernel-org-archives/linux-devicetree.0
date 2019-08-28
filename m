@@ -1,80 +1,126 @@
-Return-Path: <SRS0=BPCO=WJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:43908 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbfHMNKE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2019 09:10:04 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [v2 1/2] dt-bindings: clock: qcom: Add QCOM Q6SSTOP clock controller bindings
-Date: Tue, 13 Aug 2019 18:39:45 +0530
-Message-Id: <20190813130946.16448-2-govinds@codeaurora.org>
-In-Reply-To: <20190813130946.16448-1-govinds@codeaurora.org>
-References: <20190813130946.16448-1-govinds@codeaurora.org>
+Return-Path: <SRS0=rCaq=WY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.nic.cz ([217.31.204.67]:32950 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbfH1PCG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Aug 2019 11:02:06 -0400
+Date: Wed, 28 Aug 2019 17:02:04 +0200
+From: Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Subject: Re: [PATCH mvebu-dt64 3/3] arm64: dts: marvell: add DTS for Turris
+ Mox
+Message-ID: <20190828170204.15340299@dellmb.labs.office.nic.cz>
+In-Reply-To: <20190828121909.GB32178@lunn.ch>
+References: <20190827151644.12532-1-marek.behun@nic.cz>
+        <20190827151644.12532-4-marek.behun@nic.cz>
+        <8736hlziv3.fsf@FE-laptop>
+        <20190828121909.GB32178@lunn.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: sboyd@kernel.org
-Cc: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, andy.gross@linaro.org, linux-remoteproc@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, arm@kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add devicetree binding for the Q6SSTOP clock controller found in QCS404.
+On Wed, 28 Aug 2019 14:19:09 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- .../bindings/clock/qcom,q6sstopcc.yaml        | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
+> > > +	leds {
+> > > +		compatible = "gpio-leds";
+> > > +		red {
+> > > +			gpios = <&gpiosb 21 GPIO_ACTIVE_LOW>;
+> > > +			linux,default-trigger = "default-on";
+> > > +		};  
+> 
+> I think there would normally be a label here, so the LED has a
+> name. There is a convention to follow, which is in the documentation.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml b/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
-new file mode 100644
-index 000000000000..861e9ba97ca3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Q6SSTOP clock Controller
-+
-+maintainers:
-+  - Govind Singh <govinds@codeaurora.org>
-+
-+description:
-+   Q6SSTOP clock controller is used by WCSS remoteproc driver
-+   to bring WDSP out of reset.
-+
-+properties:
-+  compatible:
-+    const: "qcom,qcs404-q6sstopcc"
-+
-+  reg:
-+    maxItems: 2
-+    description: Q6SSTOP clocks register region
-+    description: Q6SSTOP_TCSR register region
-+
-+  clocks:
-+    items:
-+      - description: ahb clock for the q6sstopCC
-+
-+  '#clock-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+
-+examples:
-+  - |
-+    q6sstopcc: clock-controller@7500000 {
-+      compatible = "qcom,qcs404-q6sstopcc";
-+      reg = <0x07500000 0x4e000>, <0x07550000 0x10000>;
-+      clocks = <&gcc GCC_WCSS_Q6_AHB_CLK>;
-+      #clock-cells = <1>;
-+    };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I shall rename it to "mox:red:activity" according to convetion.
+
+> > > +	};
+> > > +
+> > > +	gpio-keys {
+> > > +		compatible = "gpio-keys";
+> > > +
+> > > +		reset {
+> > > +			label = "reset";
+> > > +			linux,code = <BTN_MISC>;  
+> 
+> I'm pretty sure there is a linux,code for reset.
+
+KEY_RESTART
+
+> 
+> > > +			gpios = <&gpiosb 20 GPIO_ACTIVE_LOW>;
+> > > +			debounce-interval = <60>;
+> > > +		};
+> > > +	};  
+> 
+> > > +
+> > > +	sfp: sfp {
+> > > +		compatible = "sff,sfp+";
+> > > +		i2c-bus = <&i2c0>;  
+> 
+> The standard for SFPs sets the maximum bus speed is 100Khz. I'm sure
+> some can do 400Khz, but if you want to support all SFPs, you should
+> use the lower speed. I don't see anywhere in this file where you set
+> the maximum speed. Maybe the bus defaults to 100K so you don't need
+> anything?
+
+Ill add it to i2c0
+
+> > > +
+> > > +&i2c0 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&i2c1_pins>;  
+> 
+> The node is called i2c0, but here you have i2c1_pins?
+
+That is how this is defined in armada-37xx.dtsi. First i2c has
+phandle pointer called i2c0, second i2c1. But the pinctrl drivers uses
+i2c1 and i2c2. All device trees need to be changed for this. This can
+be done later in a separate commit for all device trees using
+armada-37xx.dtsi
+
+> > > +	status = "okay";
+> > > +
+> > > +	rtc@6f {
+> > > +		compatible = "microchip,mcp7940x";
+> > > +		reg = <0x6f>;
+> > > +	};
+> > > +};
+> > > +
+> > > +&pcie_reset_pins {
+> > > +	function = "gpio";
+> > > +};  
+> 
+> Should there be something to indicate which GPIO?
+
+No. The thing here is that the function here should remain "pcie"
+ideally. When that pin is configured in pcie mode, modifying specific
+pcie register should control the pin. But for some reason on our SOC it
+does not. I suspect it does not work for Miquel Raynal either, since he
+sent patches for aardvark that use reset-gpio as well (see
+https://lkml.org/lkml/2018/12/12/242 ).
+So we configure it in gpio mode and than in the pcie node we have
+  reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+
+> > +		ports {  
+> 
+> > > +			switch0port10: port@a {
+> > > +				reg = <0xa>;
+> > > +				label = "dsa";
+> > > +				phy-mode = "2500base-x";
+> > > +				managed = "in-band-status";
+> > > +				link = <&switch1port9
+> > > &switch2port9>;  
+> 
+> Does u-boot also modify this, if switch2 does not exist? I don't know
+> if it actually matters, but if the switch does not exist, but the
+> routing entry exists, this switch might still send it frames and use
+> up some of your bandwidth?
+
+That port has status = "disabled" by default. U-Boot enables that node
+if second switch is present. U-Boot removes all disabled nodes before
+boot. Even if it did not, kernel ignores disabled nodes here.
+
+Marek
