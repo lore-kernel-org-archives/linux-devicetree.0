@@ -1,7 +1,7 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2 5/6] arm: dts: Change PCIe INTx mapping for HR2
-Date: Wed, 28 Aug 2019 14:24:47 +0530
-Message-ID: <1566982488-9673-6-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v2 6/6] arm64: dts: Change PCIe INTx mapping for NS2
+Date: Wed, 28 Aug 2019 14:24:48 +0530
+Message-ID: <1566982488-9673-7-git-send-email-srinath.mannam@broadcom.com>
 References: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
@@ -18,19 +18,19 @@ IRQ domain of the iProc PCIe controller itself
 Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- arch/arm/boot/dts/bcm-hr2.dtsi | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi | 28 ++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
-index e4d4973..eb449d0 100644
---- a/arch/arm/boot/dts/bcm-hr2.dtsi
-+++ b/arch/arm/boot/dts/bcm-hr2.dtsi
-@@ -299,8 +299,11 @@
- 		reg = <0x18012000 0x1000>;
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+index 15f7b0e..d639928 100644
+--- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+@@ -117,8 +117,11 @@
+ 		dma-coherent;
  
  		#interrupt-cells = <1>;
 -		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-map-mask = <0 0 0 7>;
 +		interrupt-map = <0 0 0 1 &pcie0_intc 1>,
 +				<0 0 0 2 &pcie0_intc 2>,
@@ -39,48 +39,47 @@ index e4d4973..eb449d0 100644
  
  		linux,pci-domain = <0>;
  
-@@ -328,6 +331,14 @@
- 				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>;
- 			brcm,pcie-msi-inten;
- 		};
-+
+@@ -140,6 +143,13 @@
+ 		phy-names = "pcie-phy";
+ 
+ 		msi-parent = <&v2m0>;
 +		pcie0_intc: interrupt-controller {
 +			compatible = "brcm,iproc-intc";
 +			interrupt-controller;
 +			#interrupt-cells = <1>;
 +			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>;
 +		};
  	};
  
- 	pcie1: pcie@18013000 {
-@@ -335,8 +346,11 @@
- 		reg = <0x18013000 0x1000>;
+ 	pcie4: pcie@50020000 {
+@@ -148,8 +158,11 @@
+ 		dma-coherent;
  
  		#interrupt-cells = <1>;
 -		interrupt-map-mask = <0 0 0 0>;
--		interrupt-map = <0 0 0 0 &gic GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie1_intc 1>,
-+				<0 0 0 2 &pcie1_intc 2>,
-+				<0 0 0 3 &pcie1_intc 3>,
-+				<0 0 0 4 &pcie1_intc 4>;
++		interrupt-map = <0 0 0 1 &pcie4_intc 1>,
++				<0 0 0 2 &pcie4_intc 2>,
++				<0 0 0 3 &pcie4_intc 3>,
++				<0 0 0 4 &pcie4_intc 4>;
  
- 		linux,pci-domain = <1>;
+ 		linux,pci-domain = <4>;
  
-@@ -364,5 +378,13 @@
- 				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
- 			brcm,pcie-msi-inten;
- 		};
-+
-+		pcie1_intc: interrupt-controller {
+@@ -171,6 +184,13 @@
+ 		phy-names = "pcie-phy";
+ 
+ 		msi-parent = <&v2m0>;
++		pcie4_intc: interrupt-controller {
 +			compatible = "brcm,iproc-intc";
 +			interrupt-controller;
 +			#interrupt-cells = <1>;
 +			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
 +		};
  	};
- };
+ 
+ 	pcie8: pcie@60c00000 {
 -- 
 2.7.4
