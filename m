@@ -1,58 +1,44 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Date: Wed, 28 Aug 2019 08:51:51 +0000
-Message-ID: <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v2 0/6] PAXB INTx support with proper model
+Date: Wed, 28 Aug 2019 14:24:42 +0530
+Message-ID: <1566982488-9673-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJ1aQ0KDQo+IE9uIFR1ZSwgMjAxOS0wOC0yNyBhdCAxMjo0MSArMDAwMCwgTGVvbmFyZCBD
-cmVzdGV6IHdyb3RlOg0KPiA+IE9uIDI3LjA4LjIwMTkgMDQ6NTEsIEFuc29uIEh1YW5nIHdyb3Rl
-Og0KPiA+ID4gPiBJbiBhbiBlYXJsaWVyIHNlcmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdz
-IHdhcyByZW1vdmVkIGZyb20NCj4gPiA+ID4gdGhlIFRNVSBjbG9jayBzbyBpZiB0aGUgdGhlcm1h
-bCBkcml2ZXIgZG9lc24ndCBleHBsaWNpdGx5IGVuYWJsZQ0KPiA+ID4gPiBpdCB0aGUgc3lzdGVt
-IHdpbGwgaGFuZyBvbiBwcm9iZS4gVGhpcyBpcyB3aGF0IGhhcHBlbnMgaW4NCj4gPiA+ID4gbGlu
-dXgtbmV4dCByaWdodCBub3chDQo+ID4gPg0KPiA+ID4gVGhlIHRoZXJtYWwgZHJpdmVyIHNob3Vs
-ZCBiZSBidWlsdCB3aXRoIG1vZHVsZSwgc28gZGVmYXVsdCBrZXJuZWwNCj4gPiA+IHNob3VsZCBj
-YW4gYm9vdCB1cCwgZG8geW91IG1vZGlmeSB0aGUgdGhlcm1hbCBkcml2ZXIgYXMgYnVpbHQtaW4/
-DQo+ID4gPg0KPiA+ID4gPiBVbmxlc3MgdGhpcyBwYXRjaGVzIGlzIG1lcmdlZCBzb29uIHdlJ2xs
-IGVuZCB1cCB3aXRoIGEgNS40LXJjMQ0KPiA+ID4gPiB0aGF0IGRvZXNuJ3QgYm9vdCBvbiBpbXg4
-bXEuIEFuIGVhc3kgZml4IHdvdWxkIGJlIHRvIGRyb3AvcmV2ZXJ0DQo+ID4gPiA+IGNvbW1pdA0K
-PiA+ID4gPiA5NTFjMWFlZjk2OTEgKCJjbGs6IGlteDhtcTogUmVtb3ZlIENMS19JU19DUklUSUNB
-TCBmbGFnIGZvcg0KPiA+ID4gPiBJTVg4TVFfQ0xLX1RNVV9ST09UIikgdW50aWwgdGhlIHRoZXJt
-YWwgcGF0Y2hlcyBhcmUgYWNjZXB0ZWQuDQo+ID4gPg0KPiA+ID4gSWYgdGhlIHRoZXJtYWwgZHJp
-dmVyIGlzIGJ1aWx0IGFzIG1vZHVsZSwgSSB0aGluayBubyBuZWVkIHRvIHJldmVydA0KPiA+ID4g
-dGhlIGNvbW1pdCwgYnV0IGlmIGJ5IGRlZmF1bHQgdGhlcm1hbCBkcml2ZXIgaXMgYnVpbHQtaW4g
-b3IgbW9kDQo+ID4gPiBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFrIGtlcm5l
-bCBib290IHVwLg0KPiA+DQo+ID4gVGhlIHFvcmlxX3RoZXJtYWwgZHJpdmVyIGlzIGJ1aWx0IGFz
-IGEgbW9kdWxlIGluIGRlZmNvbmZpZyBhbmQgd2hlbg0KPiA+IG1vZHVsZXMgYXJlIHByb3Blcmx5
-IGluc3RhbGxlZCBpbiByb290ZnMgdGhleSB3aWxsIGJlIGF1dG9tYXRpY2FsbHkgYmUNCj4gPiBw
-cm9iZWQgb24gYm9vdCBhbmQgY2F1c2UgYSBoYW5nLg0KPiA+DQo+ID4gSSB1c3VhbGx5IHJ1biBu
-ZnNyb290IHdpdGggbW9kdWxlczoNCj4gPg0KPiA+ICAgICAgbWFrZSBtb2R1bGVzX2luc3RhbGwg
-SU5TVEFMTF9NT0RfUEFUSD0vc3J2L25mcy9pbXg4LXJvb3QNCj4gDQo+IHNvIHdlIG5lZWQgdGhp
-cyBwYXRjaCBzaGlwcGVkIGluIHRoZSBiZWdpbm5pbmcgb2YgdGhlIG1lcmdlIHdpbmRvdywgcmln
-aHQ/DQo+IGlmIHRoZXJlIGlzIGhhcmQgZGVwZW5kZW5jeSBiZXR3ZWVuIHBhdGNoZXMsIGl0J3Mg
-YmV0dGVyIHRvIHNlbmQgdGhlbSBpbiBvbmUNCj4gc2VyaWVzLCBhbmQgZ2V0IHNoaXBwZWQgdmlh
-IGVpdGhlciB0cmVlLg0KDQpUaGVyZSBpcyBubyBoYXJkIGRlcGVuZGVuY3kgaW4gdGhpcyBwYXRj
-aCBzZXJpZXMuIFByZXZpb3VzIGZvciB0aGUgVE1VIGNsb2NrIGRpc2FibGVkDQpwYXRjaCwgc2lu
-Y2UgdGhlcm1hbCBkcml2ZXIgaXMgYnVpbHQgYXMgbW9kdWxlIHNvIEkgZGlkIE5PVCBmb3VuZCB0
-aGUgaXNzdWUuIFRoZSBwYXRjaA0Kc2VyaWVzIGlzIHRoZSBjb3JyZWN0IGZpeC4NCg0KVGhhbmtz
-LA0KQW5zb24gDQoNCj4gDQo+IEJUVywgd2hvIGlzIG1haW50YWluaW5nIHFvcmlxIGRyaXZlciBm
-cm9tIE5YUD8gSWYgQW5zb24gaXMgbWFpbnRhaW5pbmcgYW5kDQo+IGRldmVsb3BpbmcgdGhpcyBk
-cml2ZXIsIGl0J3MgYmV0dGVyIHRvIHVwZGF0ZSB0aGlzIGluIHRoZSBkcml2ZXIgb3IgdGhlDQo+
-IE1BSU5UQUlORVIgZmlsZSwgSSB3aWxsIHRha2UgdGhlIGRyaXZlciBzcGVjaWZpYyBwYXRjaGVz
-IGFzIGxvbmcgYXMgd2UgaGF2ZQ0KPiBBQ0svUmV2aWV3ZWQtQnkgZnJvbSB0aGUgZHJpdmVyIG1h
-aW50YWluZXIuDQo+IA0KPiB0aGFua3MsDQo+IHJ1aQ0KPiANCj4gPg0KPiA+IC0tDQo+ID4gUmVn
-YXJkcywNCj4gPiBMZW9uYXJkDQoNCg==
+This patch series adds PCIe legacy interrupt (INTx) support to the iProc
+PCIe driver by modeling it with its own IRQ domain. All 4 interrupts INTA,
+INTB, INTC, INTD share the same interrupt line connected to the GIC
+in the system. This is now modeled by using its own IRQ domain.
+
+Also update all relevant devicetree files to adapt to the new model.
+
+This patch set is based on Linux-5.2-rc4.
+
+Changes from v1:
+  - Addressed Rob, Lorenzo, Arnd's comments
+    - Used child node for interrupt controller.
+  - Addressed Andy Shevchenko's comments
+    - Replaced while loop with do-while.
+
+Ray Jui (6):
+  dt-bindings: pci: Update iProc PCI binding for INTx support
+  PCI: iproc: Add INTx support with better modeling
+  arm: dts: Change PCIe INTx mapping for Cygnus
+  arm: dts: Change PCIe INTx mapping for NSP
+  arm: dts: Change PCIe INTx mapping for HR2
+  arm64: dts: Change PCIe INTx mapping for NS2
+
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |  48 ++++++++--
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  30 ++++++-
+ arch/arm/boot/dts/bcm-hr2.dtsi                     |  30 ++++++-
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  45 ++++++++--
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  28 +++++-
+ drivers/pci/controller/pcie-iproc.c                | 100 ++++++++++++++++++++-
+ drivers/pci/controller/pcie-iproc.h                |   6 ++
+ 7 files changed, 260 insertions(+), 27 deletions(-)
+
+-- 
+2.7.4
