@@ -1,39 +1,36 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv1 3/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI supply
-Date: Wed, 28 Aug 2019 20:27:23 +0000
-Message-ID: <20190828202723.1145-4-linux.amoon@gmail.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/2] Update ethernet compatible string for SiFive
+ FU540
+Date: Wed, 28 Aug 2019 14:06:44 -0700 (PDT)
+Message-ID: <20190828.140644.534529249197568915.davem@davemloft.net>
+References: <1566882364-23891-1-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828202723.1145-1-linux.amoon@gmail.com>
+In-Reply-To: <1566882364-23891-1-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: yash.shah@sifive.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, palmer@sifive.com, paul.walmsley@sifive.com, ynezz@true.cz, sachin.ghadi@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-As per shematics HDMI_P5V0 is supplied by P5V0 so add missing link.
+From: Yash Shah <yash.shah@sifive.com>
+Date: Tue, 27 Aug 2019 10:36:02 +0530
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 ++
- 1 file changed, 2 insertions(+)
+> This patch series renames the compatible property to a more appropriate
+> string. The patchset is based on Linux-5.3-rc6 and tested on SiFive
+> Unleashed board
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index a078a1ee5004..47789fd50415 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -213,6 +213,8 @@
- 	status = "okay";
- 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
- 	pinctrl-names = "default";
-+	/* AP2331SA-7 */
-+	hdmi-supply = <&p5v0>;
- };
- 
- &hdmi_tx_tmds_port {
--- 
-2.23.0
+You should always base changes off of "net" or "net-next" and be explicitly
+in your Subject lines which of those two trees your changes are for f.e.:
+
+	Subject: [PATCH v2 net-next N/M] ...
+
+> 
+> Change history:
+> Since v1:
+> - Dropped PATCH3 because it's already merged
+> - Change the reference url in the patch descriptions to point to a
+>   'lore.kernel.org' link instead of 'lkml.org'
+
+Series applied to 'net'.
