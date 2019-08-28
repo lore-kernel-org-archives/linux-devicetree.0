@@ -1,8 +1,7 @@
 From: Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Wed, 28 Aug 2019 03:02:58 +0000
-Message-ID: <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH v5 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Wed, 28 Aug 2019 03:03:02 +0000
+Message-ID: <1567004515-3567-3-git-send-email-peng.fan@nxp.com>
 References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -17,157 +16,281 @@ List-Id: devicetree@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-actions in software layers running in the EL2 or EL3 exception levels.
-The term "ARM" here relates to the SMC instruction as part of the ARM
-instruction set, not as a standard endorsed by ARM Ltd.
+This mailbox driver implements a mailbox which signals transmitted data
+via an ARM smc (secure monitor call) instruction. The mailbox receiver
+is implemented in firmware and can synchronously return data when it
+returns execution to the non-secure world again.
+An asynchronous receive path is not implemented.
+This allows the usage of a mailbox to trigger firmware actions on SoCs
+which either don't have a separate management processor or on which such
+a core is not available. A user of this mailbox could be the SCP
+interface.
 
+Modified from Andre Przywara's v2 patch
+https://lore.kernel.org/patchwork/patch/812999/
+
+Cc: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++=
+ drivers/mailbox/Kconfig           |   7 ++
+ drivers/mailbox/Makefile          |   2 +
+ drivers/mailbox/arm-smc-mailbox.c | 215 ++++++++++++++++++++++++++++++++++=
 ++++
- 1 file changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ 3 files changed, 224 insertions(+)
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
 
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Docum=
-entation/devicetree/bindings/mailbox/arm-smc.yaml
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index ab4eb750bbdd..7707ee26251a 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -16,6 +16,13 @@ config ARM_MHU
+ 	  The controller has 3 mailbox channels, the last of which can be
+ 	  used in Secure mode only.
+=20
++config ARM_SMC_MBOX
++	tristate "Generic ARM smc mailbox"
++	depends on OF && HAVE_ARM_SMCCC
++	help
++	  Generic mailbox driver which uses ARM smc calls to call into
++	  firmware for triggering mailboxes.
++
+ config IMX_MBOX
+ 	tristate "i.MX Mailbox"
+ 	depends on ARCH_MXC || COMPILE_TEST
+diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+index c22fad6f696b..93918a84c91b 100644
+--- a/drivers/mailbox/Makefile
++++ b/drivers/mailbox/Makefile
+@@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+=3D mailbox-test.o
+=20
+ obj-$(CONFIG_ARM_MHU)	+=3D arm_mhu.o
+=20
++obj-$(CONFIG_ARM_SMC_MBOX)	+=3D arm-smc-mailbox.o
++
+ obj-$(CONFIG_IMX_MBOX)	+=3D imx-mailbox.o
+=20
+ obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=3D armada-37xx-rwtm-mailbox.o
+diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-ma=
+ilbox.c
 new file mode 100644
-index 000000000000..f8eb28d5e307
+index 000000000000..76a2ae11ee4d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-@@ -0,0 +1,125 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/mailbox/arm-smc-mailbox.c
+@@ -0,0 +1,215 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2016,2017 ARM Ltd.
++ * Copyright 2019 NXP
++ */
 +
-+title: ARM SMC Mailbox Interface
++#include <linux/arm-smccc.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/interrupt.h>
++#include <linux/mailbox_controller.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +
-+maintainers:
-+  - Peng Fan <peng.fan@nxp.com>
++#define ARM_SMC_MBOX_MEM_TRANS	BIT(0)
 +
-+description: |
-+  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
-+  call) instruction to trigger a mailbox-connected activity in firmware,
-+  executing on the very same core as the caller. By nature this operation
-+  is synchronous and this mailbox provides no way for asynchronous message=
-s
-+  to be delivered the other way round, from firmware to the OS, but
-+  asynchronous notification could also be supported. However the value of
-+  r0/w0/x0 the firmware returns after the smc call is delivered as a recei=
-ved
-+  message to the mailbox framework, so a synchronous communication can be
-+  established, for a asynchronous notification, no value will be returned.
-+  The exact meaning of both the action the mailbox triggers as well as the
-+  return value is defined by their users and is not subject to this bindin=
-g.
++struct arm_smc_chan_data {
++	u32 function_id;
++	u32 chan_id;
++	u32 flags;
++};
 +
-+  One use case of this mailbox is the SCMI interface, which uses shared me=
-mory
-+  to transfer commands and parameters, and a mailbox to trigger a function
-+  call. This allows SoCs without a separate management processor (or when
-+  such a processor is not available or used) to use this standardized
-+  interface anyway.
++struct arm_smccc_mbox_cmd {
++	unsigned long a0, a1, a2, a3, a4, a5, a6, a7;
++};
 +
-+  This binding describes no hardware, but establishes a firmware interface=
-.
-+  Upon receiving an SMC using one of the described SMC function identifier=
-s,
-+  the firmware is expected to trigger some mailbox connected functionality=
-.
-+  The communication follows the ARM SMC calling convention.
-+  Firmware expects an SMC function identifier in r0 or w0. The supported
-+  identifiers are passed from consumers, or listed in the the arm,func-ids
-+  properties as described below. The firmware can return one value in
-+  the first SMC result register, it is expected to be an error value,
-+  which shall be propagated to the mailbox client.
++typedef unsigned long (smc_mbox_fn)(unsigned long, unsigned long,
++				    unsigned long, unsigned long,
++				    unsigned long, unsigned long,
++				    unsigned long, unsigned long);
++static smc_mbox_fn *invoke_smc_mbox_fn;
 +
-+  Any core which supports the SMC or HVC instruction can be used, as long =
-as
-+  a firmware component running in EL3 or EL2 is handling these calls.
++static int arm_smc_send_data(struct mbox_chan *link, void *data)
++{
++	struct arm_smc_chan_data *chan_data =3D link->con_priv;
++	struct arm_smccc_mbox_cmd *cmd =3D data;
++	unsigned long ret;
++	u32 function_id;
++	u32 chan_id;
 +
-+properties:
-+  compatible:
-+    const: arm,smc-mbox
++	if (chan_data->flags & ARM_SMC_MBOX_MEM_TRANS) {
++		if (chan_data->function_id !=3D UINT_MAX)
++			function_id =3D chan_data->function_id;
++		else
++			function_id =3D cmd->a0;
++		chan_id =3D chan_data->chan_id;
++		ret =3D invoke_smc_mbox_fn(function_id, chan_id, 0, 0, 0, 0,
++					 0, 0);
++	} else {
++		ret =3D invoke_smc_mbox_fn(cmd->a0, cmd->a1, cmd->a2, cmd->a3,
++					 cmd->a4, cmd->a5, cmd->a6, cmd->a7);
++	}
 +
-+  "#mbox-cells":
-+    const: 1
++	mbox_chan_received_data(link, (void *)ret);
 +
-+  arm,num-chans:
-+    description: The number of channels supported.
-+    items:
-+      minimum: 1
-+      maximum: 4096 # Should be enough?
++	return 0;
++}
 +
-+  method:
-+    - enum:
-+        - smc
-+        - hvc
++static unsigned long __invoke_fn_hvc(unsigned long function_id,
++				     unsigned long arg0, unsigned long arg1,
++				     unsigned long arg2, unsigned long arg3,
++				     unsigned long arg4, unsigned long arg5,
++				     unsigned long arg6)
++{
++	struct arm_smccc_res res;
 +
-+  transports:
-+    - enum:
-+        - mem
-+        - reg
++	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
++		      arg5, arg6, &res);
++	return res.a0;
++}
 +
-+  arm,func-ids:
-+    description: |
-+      An array of 32-bit values specifying the function IDs used by each
-+      mailbox channel. Those function IDs follow the ARM SMC calling
-+      convention standard [1].
++static unsigned long __invoke_fn_smc(unsigned long function_id,
++				     unsigned long arg0, unsigned long arg1,
++				     unsigned long arg2, unsigned long arg3,
++				     unsigned long arg4, unsigned long arg5,
++				     unsigned long arg6)
++{
++	struct arm_smccc_res res;
 +
-+      There is one identifier per channel and the number of supported
-+      channels is determined by the length of this array.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 0
-+    maxItems: 4096   # Should be enough?
++	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
++		      arg5, arg6, &res);
++	return res.a0;
++}
 +
-+required:
-+  - compatible
-+  - "#mbox-cells"
-+  - arm,num-chans
-+  - transports
-+  - method
++static const struct mbox_chan_ops arm_smc_mbox_chan_ops =3D {
++	.send_data	=3D arm_smc_send_data,
++};
 +
-+examples:
-+  - |
-+    sram@910000 {
-+      compatible =3D "mmio-sram";
-+      reg =3D <0x0 0x93f000 0x0 0x1000>;
-+      #address-cells =3D <1>;
-+      #size-cells =3D <1>;
-+      ranges =3D <0 0x0 0x93f000 0x1000>;
++static int arm_smc_mbox_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct mbox_controller *mbox;
++	struct arm_smc_chan_data *chan_data;
++	const char *method;
++	bool mem_trans =3D false;
++	int ret, i;
++	u32 val;
 +
-+      cpu_scp_lpri: scp-shmem@0 {
-+        compatible =3D "arm,scmi-shmem";
-+        reg =3D <0x0 0x200>;
-+      };
++	if (!of_property_read_u32(dev->of_node, "arm,num-chans", &val)) {
++		if (!val) {
++			dev_err(dev, "invalid arm,num-chans value %u\n", val);
++			return -EINVAL;
++		}
++	} else {
++		return -EINVAL;
++	}
 +
-+      cpu_scp_hpri: scp-shmem@200 {
-+        compatible =3D "arm,scmi-shmem";
-+        reg =3D <0x200 0x200>;
-+      };
-+    };
++	if (!of_property_read_string(dev->of_node, "transports", &method)) {
++		if (!strcmp("mem", method)) {
++			mem_trans =3D true;
++		} else if (!strcmp("reg", method)) {
++			mem_trans =3D false;
++		} else {
++			dev_warn(dev, "invalid \"transports\" property: %s\n",
++				 method);
 +
-+    firmware {
-+      smc_mbox: mailbox {
-+        #mbox-cells =3D <1>;
-+        compatible =3D "arm,smc-mbox";
-+        method =3D "smc";
-+        arm,num-chans =3D <0x2>;
-+        transports =3D "mem";
-+        /* Optional */
-+        arm,func-ids =3D <0xc20000fe>, <0xc20000ff>;
-+      };
++			return -EINVAL;
++		}
++	} else {
++		return -EINVAL;
++	}
 +
-+      scmi {
-+        compatible =3D "arm,scmi";
-+        mboxes =3D <&smc_mbox 0>, <&smc_mbox 1>;
-+        mbox-names =3D "tx", "rx";
-+        shmem =3D <&cpu_scp_lpri>, <&cpu_scp_hpri>;
-+      };
-+    };
++	if (!of_property_read_string(dev->of_node, "method", &method)) {
++		if (!strcmp("hvc", method)) {
++			invoke_smc_mbox_fn =3D __invoke_fn_hvc;
++		} else if (!strcmp("smc", method)) {
++			invoke_smc_mbox_fn =3D __invoke_fn_smc;
++		} else {
++			dev_warn(dev, "invalid \"method\" property: %s\n",
++				 method);
 +
-+...
++			return -EINVAL;
++		}
++	} else {
++		return -EINVAL;
++	}
++
++	mbox =3D devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
++	if (!mbox)
++		return -ENOMEM;
++
++	mbox->num_chans =3D val;
++	mbox->chans =3D devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
++				   GFP_KERNEL);
++	if (!mbox->chans)
++		return -ENOMEM;
++
++	chan_data =3D devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
++				 GFP_KERNEL);
++	if (!chan_data)
++		return -ENOMEM;
++
++	for (i =3D 0; i < mbox->num_chans; i++) {
++		u32 function_id;
++
++		ret =3D of_property_read_u32_index(dev->of_node,
++						 "arm,func-ids", i,
++						 &function_id);
++		if (ret)
++			chan_data[i].function_id =3D UINT_MAX;
++
++		else
++			chan_data[i].function_id =3D function_id;
++
++		chan_data[i].chan_id =3D i;
++
++		if (mem_trans)
++			chan_data[i].flags |=3D ARM_SMC_MBOX_MEM_TRANS;
++		mbox->chans[i].con_priv =3D &chan_data[i];
++	}
++
++	mbox->txdone_poll =3D false;
++	mbox->txdone_irq =3D false;
++	mbox->ops =3D &arm_smc_mbox_chan_ops;
++	mbox->dev =3D dev;
++
++	platform_set_drvdata(pdev, mbox);
++
++	ret =3D devm_mbox_controller_register(dev, mbox);
++	if (ret)
++		return ret;
++
++	dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
++		 mbox->num_chans, mbox->num_chans =3D=3D 1 ? "" : "s");
++
++	return ret;
++}
++
++static int arm_smc_mbox_remove(struct platform_device *pdev)
++{
++	struct mbox_controller *mbox =3D platform_get_drvdata(pdev);
++
++	mbox_controller_unregister(mbox);
++	return 0;
++}
++
++static const struct of_device_id arm_smc_mbox_of_match[] =3D {
++	{ .compatible =3D "arm,smc-mbox", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
++
++static struct platform_driver arm_smc_mbox_driver =3D {
++	.driver =3D {
++		.name =3D "arm-smc-mbox",
++		.of_match_table =3D arm_smc_mbox_of_match,
++	},
++	.probe		=3D arm_smc_mbox_probe,
++	.remove		=3D arm_smc_mbox_remove,
++};
++module_platform_driver(arm_smc_mbox_driver);
++
++MODULE_AUTHOR("Andre Przywara <andre.przywara@arm.com>");
++MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
++MODULE_LICENSE("GPL v2");
 --=20
 2.16.4
