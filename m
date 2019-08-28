@@ -1,55 +1,138 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 3/3] arm64: dts: qcom: sdm845: Specify UFS device-reset GPIO
-Date: Wed, 28 Aug 2019 12:17:56 -0700
-Message-ID: <20190828191756.24312-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v4 2/3] scsi: ufs-qcom: Implement device_reset vops
+Date: Wed, 28 Aug 2019 12:17:55 -0700
+Message-ID: <20190828191756.24312-3-bjorn.andersson@linaro.org>
 References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190828191756.24312-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Bean Huo <beanhuo@micron.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Andy Gross <agross@kernel.org>, Bean Huo <beanhuo@micron.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Specify the UFS device-reset gpio for db845c and mtp, so that the
-controller will issue a reset of the UFS device.
+The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
+through the GPIO framework. Acquire the device-reset GPIO and use this
+to implement the device_reset vops, to allow resetting the attached
+memory.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Based on downstream support implemented by Subhash Jadavani
+<subhashj@codeaurora.org>.
+
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v3:
-- Renamed property
-- Added property to db845c
+- Renamed device-reset-gpios to just reset-gpios.
+- Explicitly bail on !host->device_reset, to not rely on passing NULL to
+  gpiod_set_value_cansleep()
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts    | 2 ++
- 2 files changed, 4 insertions(+)
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 ++
+ drivers/scsi/ufs/ufs-qcom.c                   | 36 +++++++++++++++++++
+ drivers/scsi/ufs/ufs-qcom.h                   |  4 +++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 71bd717a4251..f5a85caff1a3 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -497,6 +497,8 @@
- &ufs_mem_hc {
- 	status = "okay";
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index a74720486ee2..d78ef63935f9 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -54,6 +54,8 @@ Optional properties:
+ 			  PHY reset from the UFS controller.
+ - resets            : reset node register
+ - reset-names       : describe reset node register, the "rst" corresponds to reset the whole UFS IP.
++- reset-gpios       : A phandle and gpio specifier denoting the GPIO connected
++		      to the RESET pin of the UFS memory device.
  
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <800000>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 2e78638eb73b..c57548b7b250 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -388,6 +388,8 @@
- &ufs_mem_hc {
- 	status = "okay";
+ Note: If above properties are not defined it can be assumed that the supply
+ regulators or clocks are always on.
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 4473f339cbc0..2200c8434ef3 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -8,6 +8,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/reset-controller.h>
  
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+ #include "ufshcd.h"
+@@ -1140,6 +1141,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+ 		}
+ 	}
+ 
++	host->device_reset = devm_gpiod_get_optional(dev, "reset",
++						     GPIOD_OUT_HIGH);
++	if (IS_ERR(host->device_reset)) {
++		err = PTR_ERR(host->device_reset);
++		if (err != -EPROBE_DEFER)
++			dev_err(dev, "failed to acquire reset gpio: %d\n", err);
++		goto out_variant_clear;
++	}
 +
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <600000>;
+ 	err = ufs_qcom_bus_register(host);
+ 	if (err)
+ 		goto out_variant_clear;
+@@ -1545,6 +1555,31 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+ 	usleep_range(1000, 1100);
+ }
+ 
++/**
++ * ufs_qcom_device_reset() - toggle the (optional) device reset line
++ * @hba: per-adapter instance
++ *
++ * Toggles the (optional) reset line to reset the attached device.
++ */
++static void ufs_qcom_device_reset(struct ufs_hba *hba)
++{
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
++	/* reset gpio is optional */
++	if (!host->device_reset)
++		return;
++
++	/*
++	 * The UFS device shall detect reset pulses of 1us, sleep for 10us to
++	 * be on the safe side.
++	 */
++	gpiod_set_value_cansleep(host->device_reset, 1);
++	usleep_range(10, 15);
++
++	gpiod_set_value_cansleep(host->device_reset, 0);
++	usleep_range(10, 15);
++}
++
+ /**
+  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
+  *
+@@ -1565,6 +1600,7 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+ 	.suspend		= ufs_qcom_suspend,
+ 	.resume			= ufs_qcom_resume,
+ 	.dbg_register_dump	= ufs_qcom_dump_dbg_regs,
++	.device_reset		= ufs_qcom_device_reset,
  };
+ 
+ /**
+diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
+index 001915d1e0e4..d401f174bb70 100644
+--- a/drivers/scsi/ufs/ufs-qcom.h
++++ b/drivers/scsi/ufs/ufs-qcom.h
+@@ -195,6 +195,8 @@ struct ufs_qcom_testbus {
+ 	u8 select_minor;
+ };
+ 
++struct gpio_desc;
++
+ struct ufs_qcom_host {
+ 	/*
+ 	 * Set this capability if host controller supports the QUniPro mode
+@@ -232,6 +234,8 @@ struct ufs_qcom_host {
+ 	struct ufs_qcom_testbus testbus;
+ 
+ 	struct reset_controller_dev rcdev;
++
++	struct gpio_desc *device_reset;
+ };
+ 
+ static inline u32
 -- 
 2.18.0
