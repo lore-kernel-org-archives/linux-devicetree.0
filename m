@@ -1,101 +1,84 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
-Date: Wed, 28 Aug 2019 11:44:12 +0200
-Message-ID: <5271f3041cf16ec06a8266b0072f294384280f54.camel@suse.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-         <20190820145821.27214-2-nsaenzjulienne@suse.de>
-         <20190826070939.GD11331@lst.de>
-         <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194 in
+ p2972-0000 platform
+Date: Wed, 28 Aug 2019 15:34:02 +0530
+Message-ID: <57b55bde-0f59-27ef-8bd3-13408d6d4493@nvidia.com>
+References: <20190826073143.4582-1-vidyas@nvidia.com>
+ <20190828091028.GB2917@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-HuE7CYEmA0DlmwKJIinl"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+In-Reply-To: <20190828091028.GB2917@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: catalin.marinas@arm.com, linux-mm@kvack.org, linux-riscv@lists.infradead.org, will@kernel.org, m.szyprowski@samsung.com, linux-arch@vger.kernel.org, f.fainelli@gmail.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com, robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, phill@raspberryi.org, mbrugger@suse.com, eric@anholt.net, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, wahrenst@gmx.net, akpm@linux-foundation.org, Robin Murphy <robin.murphy@arm.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 8/28/2019 2:40 PM, Thierry Reding wrote:
+> On Mon, Aug 26, 2019 at 01:01:37PM +0530, Vidya Sagar wrote:
+>> This patch series enables Tegra194's C5 controller which owns x16 slot in
+>> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+>> output and bi-directional signals by default and hence they need to be
+>> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+>> through GPIOs and hence they need to be enabled through regulator framework.
+>> This patch series adds required infrastructural support to address both the
+>> aforementioned requirements.
+>> Testing done on p2972-0000 platform
+>> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
+>> - Enumerated device's functionality verified
+>> - Suspend-Resume sequence is verified with device connected to x16 slot
+>>
+>> Vidya Sagar (6):
+>>    dt-bindings: PCI: tegra: Add sideband pins configuration entries
+>>    arm64: tegra: Add configuration for PCIe C5 sideband signals
+>>    PCI: tegra: Add support to configure sideband pins
+>>    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+>>    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+>>    PCI: tegra: Add support to enable slot regulators
+> 
+> Hi Vidya,
+> 
+> when you resend with review comments addressed, can you please reorder
+> the patches slightly? I think it's more natural to order them like this:
+> 
+>      dt-bindings: PCI: tegra: Add sideband pins configuration entries
+>      PCI: tegra: Add support to configure sideband pins
+>      dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+>      PCI: tegra: Add support to enable slot regulators
+>      arm64: tegra: Add configuration for PCIe C5 sideband signals
+>      arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+> 
+> Or perhaps even like this:
+> 
+>      dt-bindings: PCI: tegra: Add sideband pins configuration entries
+>      dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+>      PCI: tegra: Add support to configure sideband pins
+>      PCI: tegra: Add support to enable slot regulators
+>      arm64: tegra: Add configuration for PCIe C5 sideband signals
+>      arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+> 
+> That makes it more obvious that patches 1-2 need an Acked-by from Rob
+> and patches 1-4 need to go through Lorenzo's tree and that I'll pick up
+> patches 5-6.Sure.
+I'll do that.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+	t=1566986650; bh=fKSn9tEu0u/7kvehjleUQGVzZJJHx0MojZ9eQ2aJqWM=;
+	h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+	 X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+	 Content-Transfer-Encoding;
+	b=aSDWQiNYeJefaP3hT1F2Kc9CSOb6AJPVC1NOPnn4rLtaj7EOJb+j70r/h4+I3bKEk
+	 N6siO4F51Zz49OC3S0601fPefcag3AJZZQEdvrpk3pIhqGZ+62QMXTeG4f7t/ETsLY
+	 TPYf5ksG6Kb8vxeUEAY6ATiHOIhjJhbLjRn/uJ/Oat+8ZRv3VgTOtujSHpzsKf1rTz
+	 gJZbRa8GsOlGBEvMoc7xxgRDx1/GzUqaHw8T8GqLV/JDOW9qNy44TVpHkk4Exc7g5+
+	 bM5zCyghflgpfG+ZMzbwZEkd1b4gDyPfxYL2J+AzEjgQyVsBSU6+nXSjJg65VfzSd6
+	 bM8cWEfkmyeMA==
 
---=-HuE7CYEmA0DlmwKJIinl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Vidya Sagar
 
-On Mon, 2019-08-26 at 15:46 +0200, Nicolas Saenz Julienne wrote:
-> On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
-> > On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrote:
-> > > Some architectures have platform specific DMA addressing limitations.
-> > > This will allow for hardware description code to provide the constrai=
-nts
-> > > in a generic manner, so as for arch code to properly setup it's memor=
-y
-> > > zones and DMA mask.
-> >=20
-> > I know this just spreads the arm code, but I still kinda hate it.
->=20
-> Rob's main concern was finding a way to pass the constraint from HW defin=
-ition
-> to arch without widening fdt's architecture specific function surface. I'=
-d say
-> it's fair to argue that having a generic mechanism makes sense as it'll n=
-ow
-> traverse multiple archs and subsystems.
->=20
-> I get adding globals like this is not very appealing, yet I went with it =
-as it
-> was the easier to integrate with arm's code. Any alternative suggestions?
->=20
-> > MAX_DMA_ADDRESS is such an oddly defined concepts.  We have the mm
-> > code that uses it to start allocating after the dma zones, but
-> > I think that would better be done using a function returning
-> > 1 << max(zone_dma_bits, 32) or so.  Then we have about a handful
-> > of drivers using it that all seem rather bogus, and one of which
-> > I think are usable on arm64.
->=20
-> Is it safe to assume DMA limitations will always be a power of 2? I ask a=
-s
-> RPi4
-> kinda isn't: ZONE_DMA is 0x3c000000 bytes big, I'm approximating the zone=
- mask
-> to 30 as [0x3c000000 0x3fffffff] isn't defined as memory so it's unlikely=
- that
-> we=C2=B4ll encounter buffers there. But I don't know how it could affect =
-mm
-> initialization code.
->=20
-> This also rules out 'zone_dma_bits' as a mechanism to pass ZONE_DMA's siz=
-e
-> from
-> HW definition code to arch's.
-
-Hi Christoph,
-I gave it a thought and think this whole MAX_DMA_ADDRESS topic falls out of=
- the
-scope of the series. I agree it's something that we should get rid of, but
-fixing it isn't going to affect the overall enhancement intended here.  I'd
-rather focus on how are we going to pass the DMA zone data into the arch co=
-de
-and fix MAX_DMA_ADDRESS on another series.
-
-Regards,
-Nicolas
-
-
---=-HuE7CYEmA0DlmwKJIinl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1mTOwACgkQlfZmHno8
-x/5rEQf/a0hgCNBuEJW0dF6JOgmq1B1AUgrpu1lR5mCYvRYKaWrIH0GEWk7/DMYN
-5P/0pfK8WcmvSuTsH3kAL9FVcqCF1fm+KHxDUfHg0WM4TbfF/SNx8nzM0thhMSGg
-vcgA6AP1aXP4wkqXKPhjga2uBewFfdD02TKqIvsSKEXAUge69kAkVjSAy/Sz8Rj9
-NUwJ6GbY5Clul7ZkO6eRe39K/bnmICJytZCvmxas+x3YQN5eiml9ooPhHoCa48l1
-tzjKhxg5VSCVPYdvIdauSRDsuHKcYzezXiaX/mX8Rz6h2/4bWbX9/Lt9Y5UZyikO
-2DdZK0hdYuTCw2X0qHF5x4sS1s9Tew==
-=HHcK
------END PGP SIGNATURE-----
-
---=-HuE7CYEmA0DlmwKJIinl--
+> 
+> Thierry
+> 
