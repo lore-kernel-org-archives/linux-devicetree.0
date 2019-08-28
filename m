@@ -1,125 +1,182 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v3 2/8] dt-bindings: display: Add idk-2121wr binding
-Date: Wed, 28 Aug 2019 19:36:36 +0100
-Message-ID: <1567017402-5895-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v3 6/8] arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+Date: Wed, 28 Aug 2019 19:36:40 +0100
+Message-ID: <1567017402-5895-7-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, sam@ravnborg.org, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
 List-Id: devicetree@vger.kernel.org
 
-Add binding for the idk-2121wr LVDS panel from Advantech.
-
-Some panel-specific documentation can be found here:
-https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+The EK874 is advertised as compatible with panel IDK-2121WR from
+Advantech, however the panel isn't sold alongside the board.
+A new dts, adding everything that's required to get the panel to
+to work with the EK874, is the most convenient way to support the
+EK874 when it's connected to the IDK-2121WR.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 ---
-v2->v3:
-* new patch
----
- .../display/panel/advantech,idk-2121wr.yaml        | 90 ++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+v1->v2:
+* Added comment for lvds-connector-en-gpio
+* Renamed &lvds0_panel_in to panel_in0
+* Renamed &lvds1_panel_in to panel_in1
 
-diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+v2->v3:
+* removed renesas,swap-data property
+* added dual-lvds-odd-pixels and dual-lvds-even-pixels properties
+
+Geert,
+
+no need to review this patch unless they like the idea behind this
+series.
+
+Thanks,
+Fab
+
+---
+ arch/arm64/boot/dts/renesas/Makefile               |   3 +-
+ .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++++++++++
+ 2 files changed, 118 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 42b74c2..ce48478 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
+-dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb
++dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
++			       r8a774c0-ek874-idk-2121wr.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-h3ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
 new file mode 100644
-index 0000000..b2ccdc8
+index 0000000..a7b27d0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Silicon Linux RZ/G2E evaluation kit (EK874),
++ * connected to an Advantech IDK-2121WR 21.5" LVDS panel
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
 +
-+title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
++#include "r8a774c0-ek874.dts"
 +
-+maintainers:
-+  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-+  - Thierry Reding <thierry.reding@gmail.com>
++/ {
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm5 0 50000>;
 +
-+description: |
-+  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
 +
-+  The panels expects odd pixels from the first port, and even pixels from
-+  the second port, therefore the ports must be marked accordingly.
++		power-supply = <&reg_12p0v>;
++		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
++	};
 +
-+allOf:
-+  - $ref: lvds.yaml#
-+  - $ref: ../bus-timings/lvds.yaml#
++	panel-lvds {
++		compatible = "advantech,idk-2121wr", "panel-lvds";
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: advantech,idk-2121wr
-+      - {} # panel-lvds, but not listed here to avoid false select
++		width-mm = <476>;
++		height-mm = <268>;
 +
-+  data-mapping:
-+    const: vesa-24
++		data-mapping = "vesa-24";
 +
-+  width-mm:
-+    const: 476
++		panel-timing {
++			clock-frequency = <148500000>;
++			hactive = <1920>;
++			vactive = <1080>;
++			hsync-len = <44>;
++			hfront-porch = <88>;
++			hback-porch = <148>;
++			vfront-porch = <4>;
++			vback-porch = <36>;
++			vsync-len = <5>;
++		};
 +
-+  height-mm:
-+    const: 268
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+  panel-timing: true
-+  ports: true
++			port@0 {
++				reg = <0>;
++				dual-lvds-odd-pixels;
++				panel_in0: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
 +
-+additionalProperties: false
++			port@1 {
++				reg = <1>;
++				dual-lvds-even-pixels;
++				panel_in1: endpoint {
++					remote-endpoint = <&lvds1_out>;
++				};
++			};
++		};
++	};
++};
 +
-+required:
-+  - compatible
++&gpio0 {
++	/*
++	 * When GP0_17 is low LVDS[01] are connected to the LVDS connector
++	 * When GP0_17 is high LVDS[01] are connected to the LT8918L
++	 */
++	lvds-connector-en-gpio{
++		gpio-hog;
++		gpios = <17 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "lvds-connector-en-gpio";
++	};
++};
 +
-+examples:
-+  - |+
-+    panel-lvds {
-+      compatible = "advantech,idk-2121wr", "panel-lvds";
++&lvds0 {
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in0>;
++			};
++		};
++	};
++};
 +
-+      width-mm = <476>;
-+      height-mm = <268>;
++&lvds1 {
++	status = "okay";
 +
-+      data-mapping = "vesa-24";
++	clocks = <&cpg CPG_MOD 727>, <&x13_clk>, <&extal_clk>;
++	clock-names = "fck", "dclkin.0", "extal";
 +
-+      panel-timing {
-+        clock-frequency = <148500000>;
-+        hactive = <1920>;
-+        vactive = <1080>;
-+        hsync-len = <44>;
-+        hfront-porch = <88>;
-+        hback-porch = <148>;
-+        vfront-porch = <4>;
-+        vback-porch = <36>;
-+        vsync-len = <5>;
-+      };
++	ports {
++		port@1 {
++			lvds1_out: endpoint {
++				remote-endpoint = <&panel_in1>;
++			};
++		};
++	};
++};
 +
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++&pfc {
++	pwm5_pins: pwm5 {
++		groups = "pwm5_a";
++		function = "pwm5";
++	};
++};
 +
-+        port@0 {
-+          reg = <0>;
-+          dual-lvds-odd-pixels;
-+          panel_in0: endpoint {
-+            remote-endpoint = <&lvds0_out>;
-+          };
-+        };
++&pwm5 {
++	pinctrl-0 = <&pwm5_pins>;
++	pinctrl-names = "default";
 +
-+        port@1 {
-+          reg = <1>;
-+          dual-lvds-even-pixels;
-+          panel_in1: endpoint {
-+            remote-endpoint = <&lvds1_out>;
-+          };
-+        };
-+      };
-+    };
-+
-+...
++	status = "okay";
++};
 -- 
 2.7.4
