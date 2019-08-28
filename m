@@ -1,101 +1,146 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-Date: Wed, 28 Aug 2019 02:49:56 +0000
-Message-ID: <VI1PR04MB3310A1C5D6E4B7A35D6AC4D6F5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+From: Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add YAML schemas for the Intel
+ Reset controller
+Date: Wed, 28 Aug 2019 10:59:33 +0800
+Message-ID: <3e49f596-99d8-3ef4-8d35-32dd4dc978f3@linux.intel.com>
+References: <42039170811f798b8edc66bf85166aefe7dbc903.1566531960.git.eswara.kota@linux.intel.com>
+ <CAL_JsqJxh5TzDb8kOFm+F5Gs4WXF6BP5uaNPLcyx+srtaDisMw@mail.gmail.com>
+ <746ed130-a1ae-0cc2-5060-70de95cdf2fe@linux.intel.com>
+ <CAL_JsqLSU6+5umYeVmh1NYTcpUcpJKMt7d4d+5E+Ni5rqKJvxQ@mail.gmail.com>
+ <c052e984-1144-6dc1-651a-8d9c924a1da9@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+In-Reply-To: <c052e984-1144-6dc1-651a-8d9c924a1da9@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE55bm0OOaciDI35pelIDIxOjI1DQo+
-IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdv
-b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IHNo
-YXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRp
-LmNvbTsNCj4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hA
-bGludXhmb3VuZGF0aW9uLm9yZzsgTS5oLg0KPiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+
-OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kNCj4gWmFuZyA8cm95LnphbmdA
-bnhwLmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBpbWVudGVsQHN5bm9w
-c3lzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4g
-U3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhl
-IE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIHdheQ0KPiANCj4gT24gU2F0LCBBdWcgMjQsIDIwMTkg
-YXQgMTI6MDg6NDBBTSArMDAwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEFuZHJldyBNdXJyYXkgPGFu
-ZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ45pyIMjPml6UgMjE6NTgN
-Cj4gPiA+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiA+IENjOiBi
-aGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOw0KPiA+ID4gc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5j
-b20+OyBraXNob25AdGkuY29tOw0KPiA+ID4gbG9yZW56by5waWVyYWxpc2lAYXJtLmNvOyBhcm5k
-QGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gTS5oLg0KPiA+ID4gTGlh
-biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29t
-PjsgUm95DQo+ID4gPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamluZ29vaGFuMUBnbWFpbC5j
-b207DQo+ID4gPiBndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbTsgbGludXgtcGNpQHZnZXIu
-a2VybmVsLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJu
-ZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZw0KPiA+ID4gU3ViamVjdDogUmU6
-IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8NCj4g
-PiA+IHRoZSBkb29yYmVsbCB3YXkNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIEF1ZyAyMiwgMjAxOSBh
-dCAwNzoyMjozOVBNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+ID4gVGhlIGxheWVy
-c2NhcGUgcGxhdGZvcm0gdXNlIHRoZSBkb29yYmVsbCB3YXkgdG8gdHJpZ2dlciBNU0lYDQo+ID4g
-PiA+IGludGVycnVwdCBpbiBFUCBtb2RlLg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEkgaGF2ZSBu
-byBwcm9ibGVtcyB3aXRoIHRoaXMgcGF0Y2gsIGhvd2V2ZXIuLi4NCj4gPiA+DQo+ID4gPiBBcmUg
-eW91IGFibGUgdG8gYWRkIHRvIHRoaXMgbWVzc2FnZSBhIHJlYXNvbiBmb3Igd2h5IHlvdSBhcmUg
-bWFraW5nDQo+ID4gPiB0aGlzIGNoYW5nZT8gRGlkIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEg
-bm90IHdvcmsgd2hlbiBmdW5jX25vICE9DQo+ID4gPiAwPyBPciBkaWQgaXQgd29yayB5ZXQgZHdf
-cGNpZV9lcF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbCBpcyBtb3JlDQo+IGVmZmljaWVudD8NCj4g
-Pg0KPiA+IFRoZSBmYWN0IGlzIHRoYXQsIHRoaXMgZHJpdmVyIGlzIHZlcmlmaWVkIGluIGxzMTA0
-NmEgcGxhdGZvcm0gb2YgTlhQDQo+ID4gYmVmb3JlLCBhbmQgbHMxMDQ2YSBkb24ndCBzdXBwb3J0
-IE1TSVggZmVhdHVyZSwgc28gSSBzZXQgdGhlDQo+ID4gbXNpeF9jYXBhYmxlIG9mIHBjaV9lcGNf
-ZmVhdHVyZXMgc3RydWN0IGlzIGZhbHNlLCBidXQgaW4gb3RoZXINCj4gPiBwbGF0Zm9ybSwgZS5n
-LiBsczEwODhhLCBpdCBzdXBwb3J0IHRoZSBNU0lYIGZlYXR1cmUsIEkgdmVyaWZpZWQgdGhlIE1T
-SVgNCj4gZmVhdHVyZSBpbiBsczEwODhhLCBpdCBpcyBub3QgT0ssIHNvIEkgY2hhbmdlZCB0byBh
-bm90aGVyIHdheS4gVGhhbmtzLg0KPiANCj4gUmlnaHQsIHNvIHRoZSBleGlzdGluZyBwY2ktbGF5
-ZXJzY2FwZS1lcC5jIGRyaXZlciBuZXZlciBzdXBwb3J0ZWQgTVNJWCB5ZXQgaXQNCj4gZXJyb25l
-b3VzbHkgaGFkIGEgc3dpdGNoIGNhc2Ugc3RhdGVtZW50IHRvIGNhbGwgZHdfcGNpZV9lcF9yYWlz
-ZV9tc2l4X2lycQ0KPiB3aGljaCB3b3VsZCBuZXZlciBnZXQgdXNlZC4NCj4gDQo+IE5vdyB0aGF0
-IHdlJ3JlIGFkZGluZyBhIHBsYXRmb3JtIHdpdGggTVNJWCBzdXBwb3J0IHRoZSBleGlzdGluZw0K
-PiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxIGRvZXNuJ3Qgd29yayAoZm9yIHRoaXMgcGxhdGZv
-cm0pIHNvIHdlIGFyZSBhZGRpbmcNCj4gYSBkaWZmZXJlbnQgbWV0aG9kLg0KPiANCj4gR2l2ZW4g
-dGhhdCBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJxIGlzIHVzZWQgYnkgcGNpZS1kZXNpZ253YXJl
-LXBsYXQuYyB3ZQ0KPiBjYW4gYXNzdW1lIHRoaXMgZnVuY3Rpb24gYXQgbGVhc3Qgd29ya3MgZm9y
-IGl0J3MgdXNlIGNhc2UuDQo+IA0KPiBQbGVhc2UgdXBkYXRlIHRoZSBjb21taXQgbWVzc2FnZSAt
-IEl0IHdvdWxkIGJlIGhlbHBmdWwgdG8gc3VnZ2VzdCB0aGF0DQo+IGR3X3BjaWVfZXBfcmFpc2Vf
-bXNpeF9pcnEgd2FzIG5ldmVyIGNhbGxlZCBpbiB0aGUgZXhpc2l0bmcgZHJpdmVyIGJlY2F1c2UN
-Cj4gbXNpeF9jYXBhYmxlIHdhcyBhbHdheXMgc2V0IHRvIGZhbHNlLg0KDQpBZ3JlZSwgdGhpcyBp
-cyBtdWNoIGNsZWFyZXIsIEkgd2lsbCBtb2RpZnkgdGhlIGNvbW1pdCBtZXNzYWdlIGluIHRoZSBu
-ZXh0IHZlcnNpb24gcGF0Y2gsDQp0aGFua3MgYSBsb3QuDQoNCj4gDQo+IFRoYW5rcywNCj4gDQo+
-IEFuZHJldyBNdXJyYXkNCj4gDQo+ID4NCj4gPiA+DQo+ID4gPiBUaGFua3MsDQo+ID4gPg0KPiA+
-ID4gQW5kcmV3IE11cnJheQ0KPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBC
-YW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiB2MjoNCj4gPiA+
-ID4gIC0gTm8gY2hhbmdlLg0KPiA+ID4gPg0KPiA+ID4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyB8IDMgKystDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+
-ID4gPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0K
-PiA+ID4gPiBpbmRleCA4NDYxZjYyLi43Y2E1ZmU4IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiA+ICsrKyBi
-L2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiA+ID4g
-QEAgLTc0LDcgKzc0LDggQEAgc3RhdGljIGludCBsc19wY2llX2VwX3JhaXNlX2lycShzdHJ1Y3QN
-Cj4gPiA+ID4gZHdfcGNpZV9lcCAqZXAsDQo+ID4gPiB1OCBmdW5jX25vLA0KPiA+ID4gPiAgCWNh
-c2UgUENJX0VQQ19JUlFfTVNJOg0KPiA+ID4gPiAgCQlyZXR1cm4gZHdfcGNpZV9lcF9yYWlzZV9t
-c2lfaXJxKGVwLCBmdW5jX25vLCBpbnRlcnJ1cHRfbnVtKTsNCj4gPiA+ID4gIAljYXNlIFBDSV9F
-UENfSVJRX01TSVg6DQo+ID4gPiA+IC0JCXJldHVybiBkd19wY2llX2VwX3JhaXNlX21zaXhfaXJx
-KGVwLCBmdW5jX25vLA0KPiBpbnRlcnJ1cHRfbnVtKTsNCj4gPiA+ID4gKwkJcmV0dXJuIGR3X3Bj
-aWVfZXBfcmFpc2VfbXNpeF9pcnFfZG9vcmJlbGwoZXAsIGZ1bmNfbm8sDQo+ID4gPiA+ICsJCQkJ
-CQkJICBpbnRlcnJ1cHRfbnVtKTsNCj4gPiA+ID4gIAlkZWZhdWx0Og0KPiA+ID4gPiAgCQlkZXZf
-ZXJyKHBjaS0+ZGV2LCAiVU5LTk9XTiBJUlEgdHlwZVxuIik7DQo+ID4gPiA+ICAJCXJldHVybiAt
-RUlOVkFMOw0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjkuNQ0KPiA+ID4gPg0K
+Hi Rob,
+
+On 8/27/2019 10:04 PM, Dilip Kota wrote:
+> Hi Rob,
+>
+> On 8/26/2019 7:23 PM, Rob Herring wrote:
+>> On Mon, Aug 26, 2019 at 4:52 AM Dilip Kota 
+>> <eswara.kota@linux.intel.com> wrote:
+>>> Hi Rob,
+>>>
+>>> On 8/23/2019 8:25 PM, Rob Herring wrote:
+>>>> On Fri, Aug 23, 2019 at 12:28 AM Dilip Kota 
+>>>> <eswara.kota@linux.intel.com> wrote:
+>>>>> Add YAML schemas for the reset controller on Intel
+>>>>> Lightening Mountain (LGM) SoC.
+>>>>>
+>>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>>>> ---
+>>>>> Changes on v2:
+>>>>>       Address review comments
+>>>>>         Update the compatible property definition
+>>>>>         Add description for reset-cells
+>>>>>         Add 'additionalProperties: false' property
+>>>>>
+>>>>>    .../bindings/reset/intel,syscon-reset.yaml         | 53 
+>>>>> ++++++++++++++++++++++
+>>>>>    1 file changed, 53 insertions(+)
+>>>>>    create mode 100644 
+>>>>> Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>>>>
+>>>>> diff --git 
+>>>>> a/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml 
+>>>>> b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..3403a967190a
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>>>> @@ -0,0 +1,53 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: http://devicetree.org/schemas/reset/intel,syscon-reset.yaml#
+>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>> +
+>>>>> +title: Intel Lightening Mountain SoC System Reset Controller
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    items:
+>>>>> +      - const: intel,rcu-lgm
+>>>>> +      - const: syscon
+>>>>> +
+>>>>> +  reg:
+>>>>> +    description: Reset controller register base address and size
+>>>>> +
+>>>>> +  intel,global-reset:
+>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>>> +    description: Global reset register offset and bit offset.
+>>>>> +
+>>>>> +  "#reset-cells":
+>>>>> +    const: 2
+>>>>> +    description: |
+>>>>> +      The 1st cell is the register offset.
+>>>>> +      The 2nd cell is the bit offset in the register.
+>>>>> +
+>>>>> +required:
+>>>>> +  - compatible
+>>>>> +  - reg
+>>>>> +  - intel,global-reset
+>>>>> +  - "#reset-cells"
+>>>>> +
+>>>>> +additionalProperties: false
+>>>>> +
+>>>>> +examples:
+>>>>> +  - |
+>>>>> +    rcu0: reset-controller@00000000 {
+>>>>> +        compatible = "intel,rcu-lgm", "syscon";
+>>>>> +        reg = <0x000000 0x80000>;
+>>>>> +        intel,global-reset = <0x10 30>;
+>>>>> +        #reset-cells = <2>;
+>>>>> +    };
+>>>>> +
+>>>>> +    pcie_phy0: pciephy@... {
+>>>>> +        ...
+>>>> You need to run 'make dt_binding_check' and fix the warnings. The
+>>>> example has to be buildable and it is not.
+>>> Sure, i  will correct this pcie_phy0 node. But i didn't get any 
+>>> warnings
+>>> for make dt_binding_check
+>>>
+>>>     CHKDT 
+>>> Documentation/devicetree/bindings/reset/intel,syscon-reset.yaml
+>>> DTC Documentation/devicetree/bindings/arm/renesas.example.dt.yaml
+>>> FATAL ERROR: Unknown output format "yaml"
+>>>
+>>> Will DTC report about the example node errors? But, DTC is failing with
+>>> FATAL_ERROR.
+>>> I tried it even after installing libyaml and headers in my local
+>>> directory and export the path, but no luck.(ref:
+>>> https://lkml.org/lkml/2018/12/3/951)
+>>> Could you please let me know if i miss anything and help me to proceed
+>>> further.
+>> See Documentation/devicetree/writing-schema.md
+>
+> I have followed all the steps mentioned in the document before keeping 
+> the mail itself.
+> Does the dtc script looks for libyaml and its header files at any 
+> default or specific location?
+DTC is working for me now.
+It is working for me after updating the libyaml and header paths in 
+scripts/dtc/Makefile and yamltree.c (since i have installed libyaml and 
+header files in my local directories)
+
+I have fixed all the warnings and DTC checks are successful. I will push 
+the changes in the next patch version.
+   DTC 
+Documentation/devicetree/bindings/reset/intel,syscon-reset.example.dt.yaml
+   CHECK 
+Documentation/devicetree/bindings/reset/intel,syscon-reset.example.dt.yaml
+
+Regards,
+Dilip
