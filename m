@@ -1,58 +1,55 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH v2 8/8] regulator: sy8824x: add SY20278 support
-Date: Wed, 28 Aug 2019 06:13:49 +0000
-Message-ID: <20190828140225.3875b868@xhacker.debian>
-References: <20190828135646.52457ac3@xhacker.debian>
+From: Ashish Kumar <ashish.kumar@nxp.com>
+Subject: RE: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
+ ls2080a compatibility string to bindings
+Date: Wed, 28 Aug 2019 06:20:33 +0000
+Message-ID: <VI1PR04MB401588B866A00A4507CC8C5795A30@VI1PR04MB4015.eurprd04.prod.outlook.com>
+References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
+ <20190821110640.GC5128@sirena.co.uk>
+ <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
+ <20190822190507.GI23391@sirena.co.uk>
+ <DB7PR04MB4011C9785D8D9CDFE9BC62DD95A10@DB7PR04MB4011.eurprd04.prod.outlook.com>
+ <20190827180320.GE23391@sirena.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828135646.52457ac3@xhacker.debian>
+In-Reply-To: <20190827180320.GE23391@sirena.co.uk>
 Content-Language: en-US
-Content-ID: <70E73BCDEEC9A14EB36EEBCE74780CC3@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Kuldeep Singh <kuldeep.singh@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The differences between SY8824C and SY20278 are different regs
-for mode/enable.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/regulator/sy8824x.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/regulator/sy8824x.c b/drivers/regulator/sy8824x.c
-index 10d9180a0d77..f74ee7f36d74 100644
---- a/drivers/regulator/sy8824x.c
-+++ b/drivers/regulator/sy8824x.c
-@@ -180,6 +180,15 @@ static const struct sy8824_config sy20276_cfg =3D {
- 	.vsel_count =3D 128,
- };
-=20
-+static const struct sy8824_config sy20278_cfg =3D {
-+	.vol_reg =3D 0x00,
-+	.mode_reg =3D 0x01,
-+	.enable_reg =3D 0x01,
-+	.vsel_min =3D 762500,
-+	.vsel_step =3D 12500,
-+	.vsel_count =3D 64,
-+};
-+
- static const struct of_device_id sy8824_dt_ids[] =3D {
- 	{
- 		.compatible =3D "silergy,sy8824c",
-@@ -193,6 +202,10 @@ static const struct of_device_id sy8824_dt_ids[] =3D {
- 		.compatible =3D "silergy,sy20276",
- 		.data =3D &sy20276_cfg
- 	},
-+	{
-+		.compatible =3D "silergy,sy20278",
-+		.data =3D &sy20278_cfg
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sy8824_dt_ids);
---=20
-2.23.0.rc1
+> -----Original Message-----
+> From: Mark Brown <broonie@kernel.org>
+> Sent: Tuesday, August 27, 2019 11:33 PM
+> To: Ashish Kumar <ashish.kumar@nxp.com>
+> Cc: shawnguo@kernel.org; linux-kernel@vger.kernel.org; linux-
+> spi@vger.kernel.org; devicetree@vger.kernel.org; robh+dt@kernel.org;
+> mark.rutland@arm.com; linux-next@vger.kernel.org; Kuldeep Singh
+> <kuldeep.singh@nxp.com>
+> Subject: Re: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add=
+ ls2080a
+> compatibility string to bindings
+>=20
+> On Mon, Aug 26, 2019 at 06:19:53AM +0000, Ashish Kumar wrote:
+>=20
+> > For Patch-2, I intended to use this in arm64/boot/dts/freescale/fsl-
+> ls1088a.dtsi (please see below), since both ls1088 and ls2080 has same QS=
+PI
+> controller.
+> > So I had introduced new compatible
+> > +                "fsl,ls1012a-qspi" followed by "fsl,ls1021a-qspi"
+> > +                "fsl,ls1088a-qspi" followed by "fsl,ls2080a-qspi"
+>=20
+> Even if the compatible is supposed to be used in conjunction with other
+> fallbacks it should still explicitly be there in case someone forgets or =
+decides
+> not to do that for some reason.
+Thanks Mark, I will update the spi-fsl-qspi.c to include ls1088, ls1012 in =
+driver data.
+
+Regards
+Ashish=20
