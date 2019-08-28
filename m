@@ -1,102 +1,141 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-Date: Wed, 28 Aug 2019 09:41:25 +0800
-Message-ID: <9b3a14c0-79ec-88af-c5d8-584e90c19a42@linux.intel.com>
-References: <20190827082652.43840-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190827082652.43840-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH v4 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 28 Aug 2019 01:51:54 +0000
+Message-ID: <AM0PR04MB44813D2F6CCC3211F9AAE56788A30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1566942646-18015-1-git-send-email-peng.fan@nxp.com>
+ <1566942646-18015-2-git-send-email-peng.fan@nxp.com>
+ <CAL_JsqK7xPTYFzSXt52m+Z0LRcFy2TUfa45XzY1YGH0-JRA-WQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJsTDNR7FsdFouLetzhsRhmr3fVT_xzzhKbR7KuTwepuQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqK7xPTYFzSXt52m+Z0LRcFy2TUfa45XzY1YGH0-JRA-WQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 27/8/2019 8:39 PM, Rob Herring wrote:
-> On Tue, Aug 27, 2019 at 3:27 AM Ramuthevar,Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add a YAML schema to use the host controller driver with the
->> SDXC PHY on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 50 ++++++++++++++++++++++
->>   1 file changed, 50 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->> new file mode 100644
->> index 000000000000..be05020880bf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->> @@ -0,0 +1,50 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +description: Binding for SDXC PHY
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-sdxc-phy
->> +
->> +  intel,syscon:
->> +    description: phandle to the sdxc through syscon
->> +    $ref: '/schemas/types.yaml#/definitions/phandle'
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    maxItems: 1
->> +
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - intel,syscon
->> +  - clocks
->> +  - clock-names
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    sdxc_phy: sdxc_phy {
->> +        compatible = "intel,lgm-sdxc-phy";
->> +        intel,syscon = <&sysconf>;
-> Rather than a phandle, can this be a child node of sysconf? You need a
-> binding for sysconf first anyways.
-
-Thanks a lot! for the review comments, fix it in next submit.
-
-Best Regards
-Vadivel
->> +        clocks = <&sdxc>;
->> +        clock-names = "sdxcclk";
->> +        #phy-cells = <0>;
->> +    };
->> +
->> +...
->> --
->> 2.11.0
->>
+SGkgUm9iLA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMS8yXSBkdC1iaW5kaW5nczogbWFp
+bGJveDogYWRkIGJpbmRpbmcgZG9jIGZvciB0aGUgQVJNDQo+IFNNQy9IVkMgbWFpbGJveA0KPiAN
+Cj4gT24gVHVlLCBBdWcgMjcsIDIwMTkgYXQgNDo1MSBBTSBQZW5nIEZhbiA8cGVuZy5mYW5Abnhw
+LmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4N
+Cj4gPg0KPiA+IFRoZSBBUk0gU01DL0hWQyBtYWlsYm94IGJpbmRpbmcgZGVzY3JpYmVzIGEgZmly
+bXdhcmUgaW50ZXJmYWNlIHRvDQo+ID4gdHJpZ2dlciBhY3Rpb25zIGluIHNvZnR3YXJlIGxheWVy
+cyBydW5uaW5nIGluIHRoZSBFTDIgb3IgRUwzIGV4Y2VwdGlvbiBsZXZlbHMuDQo+ID4gVGhlIHRl
+cm0gIkFSTSIgaGVyZSByZWxhdGVzIHRvIHRoZSBTTUMgaW5zdHJ1Y3Rpb24gYXMgcGFydCBvZiB0
+aGUgQVJNDQo+ID4gaW5zdHJ1Y3Rpb24gc2V0LCBub3QgYXMgYSBzdGFuZGFyZCBlbmRvcnNlZCBi
+eSBBUk0gTHRkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54
+cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJt
+LXNtYy55YW1sICAgICAgIHwgMTI2DQo+ICsrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMTI2IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+
+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLXNtYy55YW1s
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21haWxib3gvYXJtLXNtYy55YW1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWFpbGJveC9hcm0tc21jLnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uYWU2NzdlMGMwOTEwDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybS1zbWMu
+eWFtbA0KPiA+IEBAIC0wLDAgKzEsMTI2IEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZp
+ZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkgJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICsk
+aWQ6DQo+ID4gK2h0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20v
+P3VybD1odHRwJTNBJTJGJTJGZGV2aQ0KPiA+DQo+ICtjZXRyZWUub3JnJTJGc2NoZW1hcyUyRm1h
+aWxib3glMkZhcm0tc21jLnlhbWwlMjMmYW1wO2RhdGE9MDIlNw0KPiBDMDElN0NwDQo+ID4NCj4g
+K2VuZy5mYW4lNDBueHAuY29tJTdDMGU5MDVmM2ZlODliNGRjOWVlMDYwOGQ3MmFmMDZlMzAlN0M2
+ODZlYTFkDQo+IDNiYzJiNGMNCj4gPg0KPiArNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2
+MzcwMjUwODQ0NTg5NjQ3NjEmYW1wO3NkYXRhPXA4DQo+IEVlRmtVNXBXMw0KPiA+ICtEOGJ6cFp1
+OUlIQ29GRCUyRjJaQmNTcjZXeUNzSUs5THFVJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4gKyRzY2hl
+bWE6DQo+ID4gK2h0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20v
+P3VybD1odHRwJTNBJTJGJTJGZGV2aQ0KPiA+DQo+ICtjZXRyZWUub3JnJTJGbWV0YS1zY2hlbWFz
+JTJGY29yZS55YW1sJTIzJmFtcDtkYXRhPTAyJTdDMDElN0NwZQ0KPiBuZy5mYW4lDQo+ID4NCj4g
+KzQwbnhwLmNvbSU3QzBlOTA1ZjNmZTg5YjRkYzllZTA2MDhkNzJhZjA2ZTMwJTdDNjg2ZWExZDNi
+YzJiNGM2DQo+IGZhOTJjZDkNCj4gPg0KPiArOWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM3MDI1MDg0
+NDU4OTY0NzYxJmFtcDtzZGF0YT1KRmh6N21lRnlHDQo+IG96TUxudDRKYg0KPiA+ICtSR25lWXR5
+NmNCU0NLeXhIcGwyNlRBc0klM0QmYW1wO3Jlc2VydmVkPTANCj4gPiArDQo+ID4gK3RpdGxlOiBB
+Uk0gU01DIE1haWxib3ggSW50ZXJmYWNlDQo+ID4gKw0KPiA+ICttYWludGFpbmVyczoNCj4gPiAr
+ICAtIFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246
+IHwNCj4gPiArICBUaGlzIG1haWxib3ggdXNlcyB0aGUgQVJNIHNtYyAoc2VjdXJlIG1vbml0b3Ig
+Y2FsbCkgYW5kIGh2Yw0KPiA+ICsoaHlwZXJ2aXNvcg0KPiA+ICsgIGNhbGwpIGluc3RydWN0aW9u
+IHRvIHRyaWdnZXIgYSBtYWlsYm94LWNvbm5lY3RlZCBhY3Rpdml0eSBpbg0KPiA+ICtmaXJtd2Fy
+ZSwNCj4gPiArICBleGVjdXRpbmcgb24gdGhlIHZlcnkgc2FtZSBjb3JlIGFzIHRoZSBjYWxsZXIu
+IEJ5IG5hdHVyZSB0aGlzDQo+ID4gK29wZXJhdGlvbg0KPiA+ICsgIGlzIHN5bmNocm9ub3VzIGFu
+ZCB0aGlzIG1haWxib3ggcHJvdmlkZXMgbm8gd2F5IGZvciBhc3luY2hyb25vdXMNCj4gPiArbWVz
+c2FnZXMNCj4gPiArICB0byBiZSBkZWxpdmVyZWQgdGhlIG90aGVyIHdheSByb3VuZCwgZnJvbSBm
+aXJtd2FyZSB0byB0aGUgT1MsIGJ1dA0KPiA+ICsgIGFzeW5jaHJvbm91cyBub3RpZmljYXRpb24g
+Y291bGQgYWxzbyBiZSBzdXBwb3J0ZWQuIEhvd2V2ZXIgdGhlDQo+ID4gK3ZhbHVlIG9mDQo+ID4g
+KyAgcjAvdzAveDAgdGhlIGZpcm13YXJlIHJldHVybnMgYWZ0ZXIgdGhlIHNtYyBjYWxsIGlzIGRl
+bGl2ZXJlZCBhcyBhDQo+ID4gK3JlY2VpdmVkDQo+ID4gKyAgbWVzc2FnZSB0byB0aGUgbWFpbGJv
+eCBmcmFtZXdvcmssIHNvIGEgc3luY2hyb25vdXMgY29tbXVuaWNhdGlvbg0KPiA+ICtjYW4gYmUN
+Cj4gPiArICBlc3RhYmxpc2hlZCwgZm9yIGEgYXN5bmNocm9ub3VzIG5vdGlmaWNhdGlvbiwgbm8g
+dmFsdWUgd2lsbCBiZSByZXR1cm5lZC4NCj4gPiArICBUaGUgZXhhY3QgbWVhbmluZyBvZiBib3Ro
+IHRoZSBhY3Rpb24gdGhlIG1haWxib3ggdHJpZ2dlcnMgYXMgd2VsbA0KPiA+ICthcyB0aGUNCj4g
+PiArICByZXR1cm4gdmFsdWUgaXMgZGVmaW5lZCBieSB0aGVpciB1c2VycyBhbmQgaXMgbm90IHN1
+YmplY3QgdG8gdGhpcyBiaW5kaW5nLg0KPiA+ICsNCj4gPiArICBPbmUgdXNlIGNhc2Ugb2YgdGhp
+cyBtYWlsYm94IGlzIHRoZSBTQ01JIGludGVyZmFjZSwgd2hpY2ggdXNlcw0KPiA+ICsgc2hhcmVk
+IG1lbW9yeSAgdG8gdHJhbnNmZXIgY29tbWFuZHMgYW5kIHBhcmFtZXRlcnMsIGFuZCBhIG1haWxi
+b3gNCj4gdG8NCj4gPiArIHRyaWdnZXIgYSBmdW5jdGlvbiAgY2FsbC4gVGhpcyBhbGxvd3MgU29D
+cyB3aXRob3V0IGEgc2VwYXJhdGUNCj4gPiArIG1hbmFnZW1lbnQgcHJvY2Vzc29yIChvciB3aGVu
+ICBzdWNoIGEgcHJvY2Vzc29yIGlzIG5vdCBhdmFpbGFibGUgb3INCj4gPiArIHVzZWQpIHRvIHVz
+ZSB0aGlzIHN0YW5kYXJkaXplZCAgaW50ZXJmYWNlIGFueXdheS4NCj4gPiArDQo+ID4gKyAgVGhp
+cyBiaW5kaW5nIGRlc2NyaWJlcyBubyBoYXJkd2FyZSwgYnV0IGVzdGFibGlzaGVzIGEgZmlybXdh
+cmUNCj4gaW50ZXJmYWNlLg0KPiA+ICsgIFVwb24gcmVjZWl2aW5nIGFuIFNNQyB1c2luZyBvbmUg
+b2YgdGhlIGRlc2NyaWJlZCBTTUMgZnVuY3Rpb24NCj4gPiArIGlkZW50aWZpZXJzLCAgdGhlIGZp
+cm13YXJlIGlzIGV4cGVjdGVkIHRvIHRyaWdnZXIgc29tZSBtYWlsYm94IGNvbm5lY3RlZA0KPiBm
+dW5jdGlvbmFsaXR5Lg0KPiA+ICsgIFRoZSBjb21tdW5pY2F0aW9uIGZvbGxvd3MgdGhlIEFSTSBT
+TUMgY2FsbGluZyBjb252ZW50aW9uLg0KPiA+ICsgIEZpcm13YXJlIGV4cGVjdHMgYW4gU01DIGZ1
+bmN0aW9uIGlkZW50aWZpZXIgaW4gcjAgb3IgdzAuIFRoZQ0KPiA+ICsgc3VwcG9ydGVkICBpZGVu
+dGlmaWVycyBhcmUgcGFzc2VkIGZyb20gY29uc3VtZXJzLCBvciBsaXN0ZWQgaW4gdGhlDQo+ID4g
+KyB0aGUgYXJtLGZ1bmMtaWRzICBwcm9wZXJ0aWVzIGFzIGRlc2NyaWJlZCBiZWxvdy4gVGhlIGZp
+cm13YXJlIGNhbg0KPiA+ICsgcmV0dXJuIG9uZSB2YWx1ZSBpbiAgdGhlIGZpcnN0IFNNQyByZXN1
+bHQgcmVnaXN0ZXIsIGl0IGlzIGV4cGVjdGVkDQo+ID4gKyB0byBiZSBhbiBlcnJvciB2YWx1ZSwg
+IHdoaWNoIHNoYWxsIGJlIHByb3BhZ2F0ZWQgdG8gdGhlIG1haWxib3ggY2xpZW50Lg0KPiA+ICsN
+Cj4gPiArICBBbnkgY29yZSB3aGljaCBzdXBwb3J0cyB0aGUgU01DIG9yIEhWQyBpbnN0cnVjdGlv
+biBjYW4gYmUgdXNlZCwgYXMNCj4gPiArIGxvbmcgYXMgIGEgZmlybXdhcmUgY29tcG9uZW50IHJ1
+bm5pbmcgaW4gRUwzIG9yIEVMMiBpcyBoYW5kbGluZyB0aGVzZQ0KPiBjYWxscy4NCj4gPiArDQo+
+ID4gK3Byb3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiArICAgIGNvbnN0OiBhcm0s
+c21jLW1ib3gNCj4gPiArDQo+ID4gKyAgIiNtYm94LWNlbGxzIjoNCj4gPiArICAgIGNvbnN0OiAx
+DQo+ID4gKw0KPiA+ICsgIGFybSxudW0tY2hhbnM6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjogVGhl
+IG51bWJlciBvZiBjaGFubmVscyBzdXBwb3J0ZWQuDQo+ID4gKyAgICBpdGVtczoNCj4gPiArICAg
+ICBtaW5pbXVtOiAxDQo+ID4gKyAgICAgbWF4aW11bTogNDA5NiAjIFNob3VsZCBiZSBlbm91Z2g/
+DQo+ID4gKw0KPiA+ICsgIG1ldGhvZDoNCj4gPiArICAgIGl0ZW1zOg0KPiANCj4gWW91IGNhbiBk
+cm9wICdpdGVtcycgYXMgdGhpcyBpcyBhIHNpbmdsZSBlbnRyeS4NCg0KV2lsbCBmaXggaW4gdjUu
+DQoNCj4gDQo+ID4gKyAgICAgIC0gZW51bToNCj4gPiArICAgICAgICAgIC0gc21jDQo+ID4gKyAg
+ICAgICAgICAtIGh2Yw0KPiA+ICsNCj4gPiArICB0cmFuc3BvcnRzOg0KPiA+ICsgICAgaXRlbXM6
+DQo+IA0KPiBzYW1lIGhlcmUNCg0KRml4IGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgICAtIGVudW06
+DQo+ID4gKyAgICAgICAgICAtIG1lbQ0KPiA+ICsgICAgICAgICAgLSByZWcNCj4gPiArDQo+ID4g
+KyAgYXJtLGZ1bmMtaWRzOg0KPiANCj4gTmVlZHMgYSAkcmVmIHRvIGEgdHlwZSAodWludDMyLWFy
+cmF5KS4NCg0KRml4IGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiAr
+ICAgICAgQW4gYXJyYXkgb2YgMzItYml0IHZhbHVlcyBzcGVjaWZ5aW5nIHRoZSBmdW5jdGlvbiBJ
+RHMgdXNlZCBieSBlYWNoDQo+ID4gKyAgICAgIG1haWxib3ggY2hhbm5lbC4gVGhvc2UgZnVuY3Rp
+b24gSURzIGZvbGxvdyB0aGUgQVJNIFNNQyBjYWxsaW5nDQo+ID4gKyAgICAgIGNvbnZlbnRpb24g
+c3RhbmRhcmQgWzFdLg0KPiA+ICsNCj4gPiArICAgICAgVGhlcmUgaXMgb25lIGlkZW50aWZpZXIg
+cGVyIGNoYW5uZWwgYW5kIHRoZSBudW1iZXIgb2Ygc3VwcG9ydGVkDQo+ID4gKyAgICAgIGNoYW5u
+ZWxzIGlzIGRldGVybWluZWQgYnkgdGhlIGxlbmd0aCBvZiB0aGlzIGFycmF5Lg0KPiA+ICsgICAg
+bWluSXRlbXM6IDANCj4gPiArICAgIG1heEl0ZW1zOiA0MDk2ICAgIyBTaG91bGQgYmUgZW5vdWdo
+Pw0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBjb21wYXRpYmxlDQo+ID4gKyAgLSAi
+I21ib3gtY2VsbHMiDQo+ID4gKyAgLSBhcm0sbnVtLWNoYW5zDQo+ID4gKyAgLSB0cmFuc3BvcnRz
+DQo+ID4gKyAgLSBtZXRob2QNCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+
+ICsgICAgc3JhbUA5MTAwMDAgew0KPiA+ICsgICAgICBjb21wYXRpYmxlID0gIm1taW8tc3JhbSI7
+DQo+ID4gKyAgICAgIHJlZyA9IDwweDAgMHg5M2YwMDAgMHgwIDB4MTAwMD47DQo+ID4gKyAgICAg
+ICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsNCj4g
+PiArICAgICAgcmFuZ2VzID0gPDAgMHgwIDB4OTNmMDAwIDB4MTAwMD47DQo+ID4gKw0KPiA+ICsg
+ICAgICAgIGNwdV9zY3BfbHByaTogc2NwLXNobWVtQDAgew0KPiANCj4gTG9va3MgbGlrZSBzb21l
+IGluZGVudGF0aW9uIHByb2JsZW0uLi4NCg0KRml4IGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJhcm0sc2NtaS1zaG1lbSI7DQo+ID4gKyAgICAgICAgICByZWcgPSA8
+MHgwIDB4MjAwPjsNCj4gPiArICAgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICBjcHVfc2Nw
+X2hwcmk6IHNjcC1zaG1lbUAyMDAgew0KPiA+ICsgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0s
+c2NtaS1zaG1lbSI7DQo+ID4gKyAgICAgICAgICByZWcgPSA8MHgyMDAgMHgyMDA+Ow0KPiA+ICsg
+ICAgICAgIH07DQo+ID4gKyAgICB9Ow0KPiA+ICsNCj4gPiArICAgIGZpcm13YXJlIHsNCj4gPiAr
+ICAgICAgc21jX21ib3g6IG1haWxib3ggew0KPiA+ICsgICAgICAgICNtYm94LWNlbGxzID0gPDE+
+Ow0KPiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNtYy1tYm94IjsNCj4gPiArICAgICAg
+ICBtZXRob2QgPSAic21jIjsNCj4gPiArICAgICAgICBhcm0sbnVtLWNoYW5zID0gPDB4Mj47DQo+
+ID4gKyAgICAgICAgdHJhbnNwb3J0cyA9ICJtZW0iOw0KPiA+ICsgICAgICAgIC8qIE9wdGlvbmFs
+ICovDQo+ID4gKyAgICAgICAgYXJtLGZ1bmMtaWRzID0gPDB4YzIwMDAwZmU+LCA8MHhjMjAwMDBm
+Zj47DQo+ID4gKyAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICBzY21pIHsNCj4gPiArICAgICAg
+ICBjb21wYXRpYmxlID0gImFybSxzY21pIjsNCj4gPiArICAgICAgICBtYm94ZXMgPSA8Jm1haWxi
+b3ggMCAmbWFpbGJveCAxPjsNCj4gDQo+ICZzbWNfbWJveCBhbmQgPD4gZWFjaCBlbnRyeS4NCg0K
+Rml4IGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgICAgIG1ib3gtbmFtZXMgPSAidHgiLCAicngiOw0K
+PiA+ICsgICAgICAgIHNobWVtID0gPCZjcHVfc2NwX2xwcmkgJmNwdV9zY3BfaHByaT47DQo+IA0K
+PiA8PiBlYWNoIGVudHJ5DQoNCkZpeCBpbiB2NS4NCg0KVGhhbmtzLA0KUGVuZy4NCg0KPiANCj4g
+PiArICAgICAgfTsNCj4gPiArICAgIH07DQo+ID4gKw0KPiA+ICsuLi4NCj4gPiAtLQ0KPiA+IDIu
+MTYuNA0KPiA+DQo=
