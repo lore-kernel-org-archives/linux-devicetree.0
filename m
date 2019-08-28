@@ -1,69 +1,45 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH 2/8] regulator: add support for SY8824C regulator
-Date: Wed, 28 Aug 2019 03:38:29 +0000
-Message-ID: <20190828112705.5e683693@xhacker.debian>
-References: <20190827163252.4982af95@xhacker.debian>
-        <20190827163418.1a32fc48@xhacker.debian>
-        <20190827194437.GO23391@sirena.co.uk>
+From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
+ from  Required properties
+Date: Wed, 28 Aug 2019 03:43:11 +0000
+Message-ID: <DB8PR04MB674721E7EE7491BCFBBC890C84A30@DB8PR04MB6747.eurprd04.prod.outlook.com>
+References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+ <20190820073022.24217-2-Zhiqiang.Hou@nxp.com> <20190827165742.GA5083@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827194437.GO23391@sirena.co.uk>
+In-Reply-To: <20190827165742.GA5083@bogus>
 Content-Language: en-US
-Content-ID: <E9DFA9C38EA3734C8B469BDB78ED2444@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "andrew.murray@arm.com" <andrew.murray@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Tue, 27 Aug 2019 20:44:37 +0100 Mark Brown wrote:
-
-> On Tue, Aug 27, 2019 at 08:45:33AM +0000, Jisheng Zhang wrote:
->=20
-> This looks mostly good and I'll apply it, a couple of small
-> things though:
->=20
-> > @@ -0,0 +1,192 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * SY8824C regulator driver
-> > + * =20
->=20
-> Please send a patch which updates the entire comment block to be
-> C++ style so it looks consistent.
-
-Do you mean update the following style
-
-A:
-
-// SPDX-License-Identifier: GPL-2.0
-/*
- * SY8824C regulator driver
- * ...
-
-
-as B:
-
-// SPDX-License-Identifier: GPL-2.0
-// SY8824C regulator driver
-// ...
-
-I'm not sure which style is correct. But I see B is commonly used
-in lots .c source files in other dirs, such as kernel/ mm/ etc.
-
-Could you please clarify?
-
-Thanks
-
->=20
-> > +#define BUCK_EN		(1 << 7)
-> > +#define MODE		(1 << 6)
-> > + =20
->=20
-> Please also add prefixes to these to namespace them, especially
-> MODE is likely to collide with something later.
-
-good idea. Will do in newer version
+SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3IQ0KDQpUaGFua3MsDQpaaGlx
+aWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTnE6jjUwjI4yNUgMDo1OA0KPiBUbzogWi5x
+LiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbGludXgtcGNpQHZnZXIua2VybmVs
+Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiBqaW5nb29oYW4xQGdt
+YWlsLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJr
+LnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5n
+LmxpQG54cC5jb20+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiBhbmRyZXcubXVycmF5
+QGFybS5jb207IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgWi5xLiBIb3UNCj4g
+PHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjIgMS80XSBkdC1i
+aW5kaW5nczogUENJOiBkZXNpZ253YXJlOiBSZW1vdmUgdGhlDQo+IG51bS1sYW5lcyBmcm9tIFJl
+cXVpcmVkIHByb3BlcnRpZXMNCj4gDQo+IE9uIFR1ZSwgMjAgQXVnIDIwMTkgMDc6Mjg6NDMgKzAw
+MDAsICJaLnEuIEhvdSIgd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5I
+b3VAbnhwLmNvbT4NCj4gPg0KPiA+IFRoZSBudW0tbGFuZXMgaXMgbm90IGEgbWFuZGF0b3J5IHBy
+b3BlcnR5LCBlLmcuIG9uIEZTTCBMYXllcnNjYXBlDQo+ID4gU29DcywgdGhlIFBDSWUgbGluayB0
+cmFpbmluZyBpcyBjb21wbGV0ZWQgYXV0b21hdGljYWxseSBiYXNlIG9uIHRoZQ0KPiA+IHNlbGVj
+dGVkIFNlckRlcyBwcm90b2NvbCwgaXQgZG9lc24ndCBuZWVkIHRoZSBudW0tbGFuZXMgdG8gc2V0
+LXVwIHRoZQ0KPiA+IGxpbmsgd2lkdGguDQo+ID4NCj4gPiBJdCBpcyBwcmV2aW91c2x5IGluIGJv
+dGggUmVxdWlyZWQgYW5kIE9wdGlvbmFsIHByb3BlcnRpZXMsIGxldCdzDQo+ID4gcmVtb3ZlIGl0
+IGZyb20gdGhlIFJlcXVpcmVkIHByb3BlcnRpZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBI
+b3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IFYyOg0KPiA+
+ICAtIFJld29yZGVkIHRoZSBjaGFuZ2UgbG9nIGFuZCBzdWJqZWN0Lg0KPiA+ICAtIEZpeGVkIGEg
+dHlwbyBpbiBzdWJqZWN0Lg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9wY2kvZGVzaWdud2FyZS1wY2llLnR4dCB8IDEgLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+MSBkZWxldGlvbigtKQ0KPiA+DQo+IA0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
+a2VybmVsLm9yZz4NCg==
