@@ -1,50 +1,70 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [PATCH V3 05/10] soc: mediatek: add header for mediatek SIP interface
-Date: Wed, 28 Aug 2019 20:28:43 +0800
-Message-ID: <1566995328-15158-6-git-send-email-henryc.chen@mediatek.com>
-References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v5 03/18] thermal: fix indentation in makefile
+Date: Wed, 28 Aug 2019 20:40:33 +0800
+Message-ID: <63b8753a2a58688e75f6e03c46c84a064a123d85.camel@intel.com>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+         <20190810052829.6032-4-tiny.windzz@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
+In-Reply-To: <20190810052829.6032-4-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>
-Cc: Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
+To: Yangtao Li <tiny.windzz@gmail.com>, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a header to collect SIPs and add one SIP call to initialize power
-management hardware for the SIP interface defined to access the SPM
-handling vcore voltage and ddr rate changes on mt8183 (and most likely
-later socs).
+On Sat, 2019-08-10 at 05:28 +0000, Yangtao Li wrote:
+> To unify code style.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
----
- include/soc/mediatek/mtk_sip.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 include/soc/mediatek/mtk_sip.h
+the later patches in this series does not change Makefile.
+So this seems to be a cleanup patch independent of this patch set.
+It's better to remove this patch from this patch series.
 
-diff --git a/include/soc/mediatek/mtk_sip.h b/include/soc/mediatek/mtk_sip.h
-new file mode 100644
-index 0000000..945fc72
---- /dev/null
-+++ b/include/soc/mediatek/mtk_sip.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (c) 2018 MediaTek Inc.
-+ */
-+#ifndef __SOC_MTK_SIP_H
-+#define __SOC_MTK_SIP_H
-+
-+#ifdef CONFIG_ARM64
-+#define MTK_SIP_SMC_AARCH_BIT		0x40000000
-+#else
-+#define MTK_SIP_SMC_AARCH_BIT		0x00000000
-+#endif
-+
-+#define MTK_SIP_SPM			(0x82000506 | MTK_SIP_SMC_AARCH_BIT)
-+#define MTK_SIP_SPM_DVFSRC_INIT		0x00
-+
-+#endif
--- 
-1.9.1
+thanks,
+rui
+> ---
+>  drivers/thermal/Makefile | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index fa6f8b206281..d7eafb5ef8ef 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -5,7 +5,7 @@
+>  
+>  obj-$(CONFIG_THERMAL)		+= thermal_sys.o
+>  thermal_sys-y			+= thermal_core.o
+> thermal_sysfs.o \
+> -					thermal_helpers.o
+> +				   thermal_helpers.o
+>  
+>  # interface to/from other layers providing sensors
+>  thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
+> @@ -25,11 +25,11 @@ thermal_sys-$(CONFIG_CPU_THERMAL)	+=
+> cpu_cooling.o
+>  thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+>  
+>  # devfreq cooling
+> -thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+> +thermal_sys-$(CONFIG_DEVFREQ_THERMAL) 	+= devfreq_cooling.o
+>  
+>  # platform thermal drivers
+>  obj-y				+= broadcom/
+> -obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
+> +obj-$(CONFIG_THERMAL_MMIO)	+= thermal_mmio.o
+>  obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
+>  obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
+>  obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
+> @@ -50,7 +50,7 @@ obj-$(CONFIG_TI_SOC_THERMAL)	+= ti-soc-
+> thermal/
+>  obj-y				+= st/
+>  obj-$(CONFIG_QCOM_TSENS)	+= qcom/
+>  obj-y				+= tegra/
+> -obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+> +obj-$(CONFIG_HISI_THERMAL)     	+= hisi_thermal.o
+>  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
+>  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
+>  obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
