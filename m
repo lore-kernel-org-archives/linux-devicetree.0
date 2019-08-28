@@ -1,98 +1,86 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v3 8/8] [HACK] arm64: dts: renesas: draak: Enable LVDS dual-link operation
-Date: Wed, 28 Aug 2019 19:36:42 +0100
-Message-ID: <1567017402-5895-9-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v4 1/3] scsi: ufs: Introduce vops for resetting device
+Date: Wed, 28 Aug 2019 12:17:54 -0700
+Message-ID: <20190828191756.24312-2-bjorn.andersson@linaro.org>
+References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190828191756.24312-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, sam@ravnborg.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, Bean Huo <beanhuo@micron.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable and connect the second LVDS encoder to the second LVDS input of
-the THC63LVD1024 for dual-link LVDS operation. This requires changing
-the default settings of SW45 and SW47 to OFF and ON respectively.
+Some UFS memory devices needs their reset line toggled in order to get
+them into a good state for initialization. Provide a new vops to allow
+the platform driver to implement this operation.
 
-This patch is based on Laurent's dual-LVDS work:
-https://patchwork.kernel.org/patch/10965045/
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-v2->v3:
-* new patch
 
-Geert,
+Changes since v3:
+- None
 
-no need to review this patch unless they like the idea behind this
-series.
+ drivers/scsi/ufs/ufshcd.c | 6 ++++++
+ drivers/scsi/ufs/ufshcd.h | 8 ++++++++
+ 2 files changed, 14 insertions(+)
 
-Thanks,
-Fab
-
----
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 67634cb..b4b8cde 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -77,11 +77,20 @@
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 219c435d69a7..0fb4bfdd7943 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6235,6 +6235,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+ 	int retries = MAX_HOST_RESET_RETRIES;
  
- 			port@0 {
- 				reg = <0>;
--				thc63lvd1024_in: endpoint {
-+				dual-lvds-even-pixels;
-+				thc63lvd1024_in0: endpoint {
- 					remote-endpoint = <&lvds0_out>;
- 				};
- 			};
- 
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-odd-pixels;
-+				thc63lvd1024_in1: endpoint {
-+					remote-endpoint = <&lvds1_out>;
-+				};
-+			};
+ 	do {
++		/* Reset the attached device */
++		ufshcd_vops_device_reset(hba);
 +
- 			port@2 {
- 				reg = <2>;
- 				thc63lvd1024_out: endpoint {
-@@ -368,24 +377,27 @@
- 	ports {
- 		port@1 {
- 			lvds0_out: endpoint {
--				remote-endpoint = <&thc63lvd1024_in>;
-+				remote-endpoint = <&thc63lvd1024_in0>;
- 			};
- 		};
- 	};
+ 		err = ufshcd_host_reset_and_restore(hba);
+ 	} while (err && --retries);
+ 
+@@ -8371,6 +8374,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 		goto exit_gating;
+ 	}
+ 
++	/* Reset the attached device */
++	ufshcd_vops_device_reset(hba);
++
+ 	/* Host controller enable */
+ 	err = ufshcd_hba_enable(hba);
+ 	if (err) {
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 9f61550abc7f..c94cfda52829 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -298,6 +298,7 @@ struct ufs_pwr_mode_info {
+  * @resume: called during host controller PM callback
+  * @dbg_register_dump: used to dump controller debug information
+  * @phy_initialization: used to initialize phys
++ * @device_reset: called to issue a reset pulse on the UFS device
+  */
+ struct ufs_hba_variant_ops {
+ 	const char *name;
+@@ -326,6 +327,7 @@ struct ufs_hba_variant_ops {
+ 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+ 	void	(*dbg_register_dump)(struct ufs_hba *hba);
+ 	int	(*phy_initialization)(struct ufs_hba *);
++	void	(*device_reset)(struct ufs_hba *hba);
  };
  
- &lvds1 {
--	/*
--	 * Even though the LVDS1 output is not connected, the encoder must be
--	 * enabled to supply a pixel clock to the DU for the DPAD output when
--	 * LVDS0 is in use.
--	 */
- 	status = "okay";
+ /* clock gating state  */
+@@ -1070,6 +1072,12 @@ static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
+ 		hba->vops->dbg_register_dump(hba);
+ }
  
- 	clocks = <&cpg CPG_MOD 727>,
- 		 <&x12_clk>,
- 		 <&extal_clk>;
- 	clock-names = "fck", "dclkin.0", "extal";
++static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
++{
++	if (hba->vops && hba->vops->device_reset)
++		hba->vops->device_reset(hba);
++}
 +
-+	ports {
-+		port@1 {
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&thc63lvd1024_in1>;
-+			};
-+		};
-+	};
- };
+ extern struct ufs_pm_lvl_states ufs_pm_lvl_states[];
  
- &ohci0 {
+ /*
 -- 
-2.7.4
+2.18.0
