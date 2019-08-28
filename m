@@ -1,375 +1,100 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
- ls1088a and ls2088a
-Date: Wed, 28 Aug 2019 10:01:08 +0100
-Message-ID: <20190828090105.GR14582@e119886-lin.cambridge.arm.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-8-xiaowei.bao@nxp.com>
- <20190823142756.GI14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299B100D1029E90945CF7DDF5A10@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827133429.GM14582@e119886-lin.cambridge.arm.com>
- <VI1PR04MB3310F78C86F775BB1F5B7E0CF5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH V3 1/5] thermal: qoriq: Add clock operations
+Date: Wed, 28 Aug 2019 17:03:43 +0800
+Message-ID: <3f268ab0e05b795c04dbb3490f0c93da998e3b2c.camel@intel.com>
+References: <20190730022126.17883-1-Anson.Huang@nxp.com>
+         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
+         <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB3310F78C86F775BB1F5B7E0CF5A30@VI1PR04MB3310.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 04:29:32AM +0000, Xiaowei Bao wrote:
+On Wed, 2019-08-28 at 08:51 +0000, Anson Huang wrote:
+> Hi, Rui
 > 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年8月27日 21:34
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
-> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for
-> > ls1088a and ls2088a
+> > On Tue, 2019-08-27 at 12:41 +0000, Leonard Crestez wrote:
+> > > On 27.08.2019 04:51, Anson Huang wrote:
+> > > > > In an earlier series the CLK_IS_CRITICAL flags was removed
+> > > > > from
+> > > > > the TMU clock so if the thermal driver doesn't explicitly
+> > > > > enable
+> > > > > it the system will hang on probe. This is what happens in
+> > > > > linux-next right now!
+> > > > 
+> > > > The thermal driver should be built with module, so default
+> > > > kernel
+> > > > should can boot up, do you modify the thermal driver as built-
+> > > > in?
+> > > > 
+> > > > > Unless this patches is merged soon we'll end up with a 5.4-
+> > > > > rc1
+> > > > > that doesn't boot on imx8mq. An easy fix would be to
+> > > > > drop/revert
+> > > > > commit
+> > > > > 951c1aef9691 ("clk: imx8mq: Remove CLK_IS_CRITICAL flag for
+> > > > > IMX8MQ_CLK_TMU_ROOT") until the thermal patches are accepted.
+> > > > 
+> > > > If the thermal driver is built as module, I think no need to
+> > > > revert
+> > > > the commit, but if by default thermal driver is built-in or mod
+> > > > probed, then yes, it should NOT break kernel boot up.
+> > > 
+> > > The qoriq_thermal driver is built as a module in defconfig and
+> > > when
+> > > modules are properly installed in rootfs they will be
+> > > automatically be
+> > > probed on boot and cause a hang.
+> > > 
+> > > I usually run nfsroot with modules:
+> > > 
+> > >      make modules_install INSTALL_MOD_PATH=/srv/nfs/imx8-root
 > > 
-> > On Mon, Aug 26, 2019 at 09:49:35AM +0000, Xiaowei Bao wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Andrew Murray <andrew.murray@arm.com>
-> > > > Sent: 2019年8月23日 22:28
-> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > > > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
-> > > > lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org;
-> > M.h.
-> > > > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > > > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > > > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
-> > > > Subject: Re: [PATCH v2 08/10] PCI: layerscape: Add EP mode support
-> > > > for ls1088a and ls2088a
-> > > >
-> > > > On Thu, Aug 22, 2019 at 07:22:40PM +0800, Xiaowei Bao wrote:
-> > > > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
-> > > > > difference between LS1 and LS2 platform, so refactor the code of
-> > > > > the EP driver.
-> > > > >
-> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > > ---
-> > > > > v2:
-> > > > >  - New mechanism for layerscape EP driver.
-> > > >
-> > > > Was there a v1 of this patch?
-> > > >
-> > > > >
-> > > > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 76
-> > > > > ++++++++++++++++++++------
-> > > > >  1 file changed, 58 insertions(+), 18 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > index 7ca5fe8..2a66f07 100644
-> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > @@ -20,27 +20,29 @@
-> > > > >
-> > > > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
-> > > > >
-> > > > > -struct ls_pcie_ep {
-> > > > > -	struct dw_pcie		*pci;
-> > > > > -	struct pci_epc_features	*ls_epc;
-> > > > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +
-> > > > > +struct ls_pcie_ep_drvdata {
-> > > > > +	u32				func_offset;
-> > > > > +	const struct dw_pcie_ep_ops	*ops;
-> > > > > +	const struct dw_pcie_ops	*dw_pcie_ops;
-> > > > >  };
-> > > > >
-> > > > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +struct ls_pcie_ep {
-> > > > > +	struct dw_pcie			*pci;
-> > > > > +	struct pci_epc_features		*ls_epc;
-> > > > > +	const struct ls_pcie_ep_drvdata *drvdata; };
-> > > > >
-> > > > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
-> > > > >  	return 0;
-> > > > >  }
-> > > > >
-> > > > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
-> > > > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
-> > > > >  	.start_link = ls_pcie_establish_link,  };
-> > > > >
-> > > > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > > > > -	{ .compatible = "fsl,ls-pcie-ep",},
-> > > > > -	{ },
-> > > > > -};
-> > > > > -
-> > > > >  static const struct pci_epc_features*
-> > > > > ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -82,10 +84,44
-> > > > > @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > > > >  	}
-> > > > >  }
-> > > > >
-> > > > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
-> > > > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep
-> > *ep,
-> > > > > +						u8 func_no)
-> > > > > +{
-> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> > > > > +	u8 header_type;
-> > > > > +
-> > > > > +	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
-> > > > > +
-> > > > > +	if (header_type & (1 << 7))
-> > > > > +		return pcie->drvdata->func_offset * func_no;
-> > > > > +	else
-> > > > > +		return 0;
-> > > >
-> > > > It looks like there isn't a PCI define for multi function, the
-> > > > nearest I could find was PCI_HEADER_TYPE_MULTIDEVICE in
-> > > > hotplug/ibmphp.h. A comment above the test might be helpful to explain
-> > the test.
-> > >
-> > > OK, I will add a comment above this code.
-> > >
-> > > >
-> > > > As the ls_pcie_ep_drvdata structures are static, the unset
-> > > > .func_offset will be initialised to 0, so you could just drop the test above.
-> > >
-> > > Due to the different PCIe controller have different property, e.g.
-> > > PCIe controller1 support multiple function feature, but PCIe
-> > > controller2 don't support this feature, so I need to check which
-> > > controller support it and return the correct offset value, but each board only
-> > have one ls_pcie_ep_drvdata, ^_^.
-> > 
-> > Yes but if they don't support the feature then func_offset will be 0.
-> > 
-> > >
-> > > >
-> > > > However something to the effect of the following may help spot
-> > > > misconfiguration:
-> > > >
-> > > > WARN_ON(func_no && !pcie->drvdata->func_offset); return
-> > > > pcie->drvdata->func_offset * func_no;
-> > > >
-> > > > The WARN is probably quite useful as if you are attempting to use
-> > > > non-zero functions and func_offset isn't set - then things may
-> > > > appear to work normally but actually will break horribly.
-> > >
-> > > As discussion before, I think the func_offset should not depends on
-> > > the function number, even if other platforms of NXP may be use write
-> > > registers way to access the different function config space.
-> > 
-> > I agree that func_offset is an optional parameter. But if you are attempting to
-> > determine the offset of a function and you are given a non-zero function
-> > number - then something has gone wrong if func_offset is 0.
+> > so we need this patch shipped in the beginning of the merge window,
+> > right?
+> > if there is hard dependency between patches, it's better to send
+> > them in one
+> > series, and get shipped via either tree.
 > 
-> I have understood you means, maybe I need to set a flag in the driver_data struct,
-> because I may add other platform of NXP, these platform use the write register 
-> method to access different function, e.g. 
-> write func_num to register, then we can access this func_num config space.
+> There is no hard dependency in this patch series. Previous for the
+> TMU clock disabled
+> patch, since thermal driver is built as module so I did NOT found the
+> issue. The patch
+> series is the correct fix.
 > 
-> I will modify the code like this? Do you have better advice?
-> Case1:
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index 004a7e8..8a0d6df 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -23,6 +23,7 @@
->  #define to_ls_pcie_ep(x)       dev_get_drvdata((x)->dev)
-> 
->  struct ls_pcie_ep_drvdata {
-> +       u8                              func_config_flag;
->         u32                             func_offset;
->         const struct dw_pcie_ep_ops     *ops;
->         const struct dw_pcie_ops        *dw_pcie_ops;
-> @@ -97,8 +98,14 @@ static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
->          * Read the Header Type register of config space to check
->          * whether this PCI device support the multiple function.
->          */
-> -       if (header_type & (1 << 7))
-> -               return pcie->drvdata->func_offset * func_no;
-> +       if (header_type & (1 << 7)) {
-> +               if (pcie->drvdata->func_config_flag) {
-> +                       iowrite32((func_num << n), pci->dbi_base + PCI_XXXX_XXX);
-> +               } else {
-> +                       WARN_ON(func_no && !pcie->drvdata->func_offset);
-> +                       return pcie->drvdata->func_offset * func_no;
-> +               }
-> +       }
-> 
->         return 0;
->  }
-> 
-> Of course, I don't need to set the flag this time, because I don't use the second method(write
-> register method), so the code like this:
-> case2:
-> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
->                                                u8 func_no) {
->        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->        struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
->        u8 header_type;
-> 
-> 	   of course, this code is not requied, due to the 
-> 	   pcie->drvdata->func_offset is 0, but I think this is more clear
-> 	   if use this code.
->        header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
-> 
->        /*
->         * Read the Header Type register of config space to check
->         * whether this PCI device support the multiple function.
->         */
->        if (header_type & (1 << 7)) {
-> 			   WARN_ON(func_no && !pcie->drvdata->func_offset);
->                return pcie->drvdata->func_offset * func_no; 
-> 		}
-> 		
->        return 0;
-> }
-> 
-> Or like this:
-> Case3:
-> +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
->                                                u8 func_no) {
->        struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->        struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> 
-> 	   WARN_ON(func_no && !pcie->drvdata->func_offset);
->        return pcie->drvdata->func_offset * func_no;
+Got it.
+the clock patch is also queued for 5.4-rc1, right?
+I will apply this series and try to push it as early as possible during
+the merge window.
 
-This is better. Given there is only currently one method of calculating
-an offset for layerscape, I'd recommend you add additional methods when
-the need arises.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> }
-> Of course, we can return a -1 by adjuring the (func_no && !pcie->drvdata->func_offset) 
-> Valu in case1
-> 
-> Thanks 
-> Xiaowei
+thanks,
+rui
+> Thanks,
+> Anson 
 > 
 > > 
-> > Thanks,
+> > BTW, who is maintaining qoriq driver from NXP? If Anson is
+> > maintaining and
+> > developing this driver, it's better to update this in the driver or
+> > the
+> > MAINTAINER file, I will take the driver specific patches as long as
+> > we have
+> > ACK/Reviewed-By from the driver maintainer.
 > > 
-> > Andrew Murray
+> > thanks,
+> > rui
 > > 
-> > >
-> > > I have added the comments above the code, as follow, do you have any
-> > advice?
-> > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
-> > > +                                               u8 func_no) {
-> > > +       struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +       struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> > > +       u8 header_type;
-> > > +
-> > > +       header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
-> > > +
-> > > +       /*
-> > > +        * Read the Header Type register of config space to check
-> > > +        * whether this PCI device support the multiple function.
-> > > +        */
-> > > +       if (header_type & (1 << 7))
-> > > +               return pcie->drvdata->func_offset * func_no;
-> > > +
-> > > +       return 0;
-> > > +}
-> > >
-> > > Thanks a lot for your detail comments.
-> > >
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Andrew Murray
-> > > >
-> > > > > +}
-> > > > > +
-> > > > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
-> > > > >  	.ep_init = ls_pcie_ep_init,
-> > > > >  	.raise_irq = ls_pcie_ep_raise_irq,
-> > > > >  	.get_features = ls_pcie_ep_get_features,
-> > > > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
-> > > > > +
-> > > > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
-> > > > > +	.ops = &ls_pcie_ep_ops,
-> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
-> > > > > +
-> > > > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
-> > > > > +	.func_offset = 0x20000,
-> > > > > +	.ops = &ls_pcie_ep_ops,
-> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
-> > > > > +
-> > > > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > > > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
-> > > > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > > > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > > > > +	{ },
-> > > > >  };
-> > > > >
-> > > > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@
-> > > > > -98,7
-> > > > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep
-> > > > > +*pcie,
-> > > > >  	int ret;
-> > > > >
-> > > > >  	ep = &pci->ep;
-> > > > > -	ep->ops = &pcie_ep_ops;
-> > > > > +	ep->ops = pcie->drvdata->ops;
-> > > > >
-> > > > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > "addr_space");
-> > > > >  	if (!res)
-> > > > > @@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct
-> > > > platform_device *pdev)
-> > > > >  	if (!ls_epc)
-> > > > >  		return -ENOMEM;
-> > > > >
-> > > > > -	dbi_base = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM,
-> > > > "regs");
-> > > > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > > > > -	if (IS_ERR(pci->dbi_base))
-> > > > > -		return PTR_ERR(pci->dbi_base);
-> > > > > +	pcie->drvdata = of_device_get_match_data(dev);
-> > > > >
-> > > > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > > > >  	pci->dev = dev;
-> > > > > -	pci->ops = &ls_pcie_ep_ops;
-> > > > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
-> > > > > +
-> > > > >  	pcie->pci = pci;
-> > > > >
-> > > > >  	ls_epc->linkup_notifier = false, @@ -152,6 +185,13 @@ static int
-> > > > > __init ls_pcie_ep_probe(struct platform_device *pdev)
-> > > > >
-> > > > >  	pcie->ls_epc = ls_epc;
-> > > > >
-> > > > > +	dbi_base = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM,
-> > > > "regs");
-> > > > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > > > > +	if (IS_ERR(pci->dbi_base))
-> > > > > +		return PTR_ERR(pci->dbi_base);
-> > > > > +
-> > > > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > > > > +
-> > > > >  	platform_set_drvdata(pdev, pcie);
-> > > > >
-> > > > >  	ret = ls_add_pcie_ep(pcie, pdev);
-> > > > > --
-> > > > > 2.9.5
-> > > > >
+> > > 
+> > > --
+> > > Regards,
+> > > Leonard
+> 
+> 
