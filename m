@@ -1,61 +1,50 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v4 2/6] thermal: amlogic: Add thermal driver to support
- G12 SoCs
-Date: Thu, 29 Aug 2019 11:11:23 -0700
-Message-ID: <7hy2zbrgdw.fsf@baylibre.com>
-References: <20190821222421.30242-1-glaroque@baylibre.com>
- <20190821222421.30242-3-glaroque@baylibre.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
+Date: Fri, 30 Aug 2019 00:05:37 +0530
+Message-ID: <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
+References: <20190828202723.1145-1-linux.amoon@gmail.com> <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190821222421.30242-3-glaroque@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Guillaume La Roque <glaroque@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello thermal maintainers,
+Hi Neil,
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
-
-> Amlogic G12A and G12B SoCs integrate two thermal sensors
-> with the same design.
-> One is located close to the DDR controller and the other one is
-> located close to the PLLs (between the CPU and GPU).
+On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >
-> The calibration data for each of the thermal sensors instance is
-> stored in a different location within the AO region.
+> On 28/08/2019 22:27, Anand Moon wrote:
+> > Below small changes help re-configure or fix missing inter linking
+> > of regulator node.
+> >
+> > Changes based top on my prevoius series.
 >
-> Implement reading the temperature from each thermal sensor.
+> For the serie:
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 >
-> The IP block has more functionality, which may be added to this driver
-> in the future:
-> - chip reset when the temperature exceeds a configurable threshold
-> - up to four interrupts when the temperature has risen above a
-> configurable threshold
-> - up to four interrupts when the temperature has fallen below a
-> configurable threshold
+
+Thanks for your review.
+
+> >
+> > [0] https://patchwork.kernel.org/cover/11113091/
+> >
+> > TOOD: Add support for DVFS GXBB odroid board in next series.
 >
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> I'm curious how you will do this !
 
-Could we get a review/merge of this driver ( and hopefully queued up for
-v5.4 ?)
+I was just studying you previous series on how you have implemented
+this feature for C1, N2 and VIM3 boards.
 
-This has been reviewed and tested by users on this platform and it's
-working well.
+[0] https://patchwork.kernel.org/cover/11114125/
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+I started gathering key inputs needed for this ie *clk / pwm*
+like VDDCPU and VDDE clk changes.
 
-Thanks,
+But it looks like of the complex clk framework needed, so I leave this to the
+expert like your team of developers to do this much quick and efficiently.
 
-Kevin
+Best Regards,
+-Anand
