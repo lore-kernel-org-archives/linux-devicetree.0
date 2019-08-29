@@ -1,51 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/4] dt-bindings/watchdog: Add access_cs0 option for
- alt-boot
-Date: Thu, 29 Aug 2019 17:56:02 -0500
-Message-ID: <20190829225602.GA15783@bogus>
-References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
- <20190826104636.19324-5-i.mikhaylov@yadro.com>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: stm32: add wakeup-source
+Date: Thu, 29 Aug 2019 17:57:19 -0500
+Message-ID: <20190829225719.GA21954@bogus>
+References: <1566833923-16718-1-git-send-email-fabien.dessenne@st.com>
+ <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190826104636.19324-5-i.mikhaylov@yadro.com>
+In-Reply-To: <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 01:46:36PM +0300, Ivan Mikhaylov wrote:
-> The option for the ast2400/2500 to get access to CS0 at runtime.
+On Mon, 26 Aug 2019 17:38:42 +0200, Fabien Dessenne wrote:
+> Add the "wakeup-source" property: if the optional wdg interrupt is
+> defined, then this property may be defined too.
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 > ---
->  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> index c5077a1f5cb3..023a9b578df6 100644
-> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> @@ -34,6 +34,13 @@ Optional properties:
->                  engine is responsible for this.
->  
->   - aspeed,alt-boot:    If property is present then boot from alternate block.
-> +                       At alternate side 'access_cs0' sysfs file provides:
 
-What's sysfs?
-
-Don't put Linux stuff in bindings.
-
-> +                       ast2400: a way to get access to the primary SPI flash
-> +                                chip at CS0 after booting from the alternate
-> +                                chip at CS1.
-> +                       ast2500: a way to restore the normal address mapping from
-> +                                (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
-> +
->   - aspeed,external-signal: If property is present then signal is sent to
->  			external reset counter (only WDT1 and WDT2). If not
->  			specified no external signal is sent.
-> -- 
-> 2.20.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
