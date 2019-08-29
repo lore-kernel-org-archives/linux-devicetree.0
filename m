@@ -1,7 +1,8 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v10 4/7] of/platform: Pause/resume sync state during init and of_platform_populate()
-Date: Thu, 29 Aug 2019 00:46:00 -0700
-Message-ID: <20190829074603.70424-5-saravanak@google.com>
+Subject: [PATCH v10 5/7] of: property: Create device links for all
+ child-supplier depencencies
+Date: Thu, 29 Aug 2019 00:46:01 -0700
+Message-ID: <20190829074603.70424-6-saravanak@google.com>
 References: <20190829074603.70424-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,67 +13,81 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg 
 Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-When all the top level devices are populated from DT during kernel
-init, the supplier devices could be added and probed before the
-consumer devices are added and linked to the suppliers. To avoid the
-sync_state() callback from being called prematurely, pause the
-sync_state() callbacks before populating the devices and resume them
-at late_initcall_sync().
+A parent device can have child devices that it adds when it probes. But
+this probing of the parent device can happen way after kernel init is done
+-- for example, when the parent device's driver is loaded as a module.
 
-Similarly, when children devices are populated from a module using
-of_platform_populate(), there could be supplier-consumer dependencies
-between the children devices that are populated. To avoid the same
-problem with sync_state() being called prematurely, pause and resume
-sync_state() callbacks across of_platform_populate().
+In such cases, if the child devices depend on a supplier in the system, we
+need to make sure the supplier gets the sync_state() callback only after
+these child devices are added and probed.
+
+To achieve this, when creating device links for a device by looking at its
+DT node, don't just look at DT references at the top node level. Look at DT
+references in all the descendant nodes too and create device links from the
+ancestor device to all these supplier devices.
+
+This way, when the parent device probes and adds child devices, the child
+devices can then create their own device links to the suppliers and further
+delay the supplier's sync_state() callback to after the child devices are
+probed.
+
+Example:
+In this illustration, -> denotes DT references and indentation
+represents child status.
+
+Device node A
+	Device node B -> D
+	Device node C -> B, D
+
+Device node D
+
+Assume all these devices have their drivers loaded as modules.
+
+Without this patch, this is the sequence of events:
+1. D is added.
+2. A is added.
+3. Device D probes.
+4. Device D gets its sync_state() callback.
+5. Device B and C might malfunction because their resources got
+   altered/turned off before they can make active requests for them.
+
+With this patch, this is the sequence of events:
+1. D is added.
+2. A is added and creates device links to D.
+3. Device link from A to B is not added because A is a parent of B.
+4. Device D probes.
+5. Device D does not get it's sync_state() callback because consumer A
+   hasn't probed yet.
+5. Device A probes.
+5. a. Devices B and C are added.
+5. b. Device links from B and C to D are added.
+5. c. Device A's probe completes.
+6. Device D does not get it's sync_state() callback because consumer A
+   has probed but consumers B and C haven't probed yet.
+7. Device B and C probe.
+8. Device D gets it's sync_state() callback because all its consumers
+   have probed.
+9. None of the devices malfunction.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/of/platform.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/of/property.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b47a2292fe8e..d93891a05f60 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -480,6 +480,7 @@ int of_platform_populate(struct device_node *root,
- 	pr_debug("%s()\n", __func__);
- 	pr_debug(" starting at: %pOF\n", root);
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 82052172f508..420c2d428184 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1207,6 +1207,10 @@ static int __of_link_to_suppliers(struct device *dev,
+ 		if (of_link_property(dev, con_np, p->name))
+ 			ret = -EAGAIN;
  
-+	device_links_supplier_sync_state_pause();
- 	for_each_child_of_node(root, child) {
- 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
- 		if (rc) {
-@@ -487,6 +488,8 @@ int of_platform_populate(struct device_node *root,
- 			break;
- 		}
- 	}
-+	device_links_supplier_sync_state_resume();
++	for_each_child_of_node(con_np, child)
++		if (__of_link_to_suppliers(dev, child))
++			ret = -EAGAIN;
 +
- 	of_node_set_flag(root, OF_POPULATED_BUS);
- 
- 	of_node_put(root);
-@@ -518,6 +521,7 @@ static int __init of_platform_default_populate_init(void)
- 	if (!of_have_populated_dt())
- 		return -ENODEV;
- 
-+	device_links_supplier_sync_state_pause();
- 	/*
- 	 * Handle certain compatibles explicitly, since we don't want to create
- 	 * platform_devices for every node in /reserved-memory with a
-@@ -538,6 +542,14 @@ static int __init of_platform_default_populate_init(void)
- 	return 0;
+ 	return ret;
  }
- arch_initcall_sync(of_platform_default_populate_init);
-+
-+static int __init of_platform_sync_state_init(void)
-+{
-+	if (of_have_populated_dt())
-+		device_links_supplier_sync_state_resume();
-+	return 0;
-+}
-+late_initcall_sync(of_platform_sync_state_init);
- #endif
  
- int of_platform_device_destroy(struct device *dev, void *data)
 -- 
 2.23.0.187.g17f5b7556c-goog
