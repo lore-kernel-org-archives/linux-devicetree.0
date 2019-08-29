@@ -1,111 +1,157 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
- i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
-Date: Thu, 29 Aug 2019 18:37:21 +0200
-Message-ID: <20190829183721.33a4664d@collabora.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829163918.571fd0d8@collabora.com>
-        <20190829163941.45380b19@collabora.com>
-        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829172441.3a76385e@collabora.com>
-        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829181520.0b33b642@collabora.com>
-        <SN6PR12MB26550ABF84AD52C52DE801CFAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
+ regulator entries
+Date: Thu, 29 Aug 2019 18:41:15 +0200
+Message-ID: <20190829164115.GD19842@ulmo>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-3-vidyas@nvidia.com>
+ <20190829120329.GC13187@ulmo>
+ <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DiL7RhKs8rK9YGuF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN6PR12MB26550ABF84AD52C52DE801CFAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <cd106d64-e06c-e7a2-d807-f5f080625363@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 16:33:43 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Thu, Aug 29, 2019 at 17:15:20
-> 
-> > On Thu, 29 Aug 2019 15:57:32 +0000
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > -----Original Message-----
-> > > From: Boris Brezillon 
-> > > <boris.brezillon@collabora.com> 
-> > > Sent: Thursday, August 29, 2019 4:25 
-> > > PM
-> > > To: Vitor Soares <Vitor.Soares@synopsys.com>
-> > > Cc: 
-> > > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; 
-> > > linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.org; 
-> > > mark.rutland@arm.com; Joao.Pinto@synopsys.com
-> > > Subject: Re: [PATCH 2/4] 
-> > > i3c: master: Check if devices have i3c_dev_boardinfo on 
-> > > i3c_master_add_i3c_dev_locked()
-> > > 
-> > > On Thu, 29 Aug 2019 15:07:08 +0000
-> > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > >   
-> > > > From: Boris Brezillon     
-> > > <boris.brezillon@collabora.com>  
-> > > > Date: Thu, Aug 29, 2019 at 15:39:41
-> > > >     
-> > >   
-> > > > > On Thu, 29 Aug 2019 16:39:18 +0200
-> > > > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > > > >       
-> > > > > > On Thu, 29 Aug 2019 14:00:44 +0000
-> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > > >       
-> > > > > > > Hi Boris,
-> > > > > > > 
-> > > > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > > > > Date: Thu, Aug 29, 2019 at 11:44:57
-> > > > > > >         
-> > > > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
-> > > > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > > > > >           
-> > > > > > > > > The I3C devices described in DT might not be attached to the master which
-> > > > > > > > > doesn't allow to assign a specific dynamic address.          
-> > > > > > > > 
-> > > > > > > > I remember testing this when developing the framework, so, unless
-> > > > > > > > another patch regressed it, it should already work. I suspect patch 1
-> > > > > > > > is actually the regressing this use case.          
-> > > > > > > 
-> > > > > > > For today it doesn't address the case where the device is described with 
-> > > > > > > static address = 0, which isn't attached to the controller.        
-> > > > > > 
-> > > > > > Hm, I'm pretty sure I had designed the code to support that case (see
-> > > > > > [1]). It might be buggy, but nothing we can't fix I guess.
-> > > > > >       
-> > > > > 
-> > > > > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=       
-> > > > 
-> > > > That is only valid if you have olddev which will only exist if static 
-> > > > address != 0.    
-> > > 
-> > > Hm, if you revert patch 1 (and assuming the device is properly defined
-> > > in the DT), you should have olddev != NULL when reaching that point. If
-> > > that's not the case there's a bug somewhere that should be fixed.
-> > > 
-> > > No, because the device is not attached.  
-> > 
-> > Oh, my bad, I see what you mean now. This is definitely a bug and should
-> > have the Fixes tags. I mean, even if we don't care about dynamic
-> > address assignment, I3C drivers might care about the ->of_node that's
-> > attached to the device.  
-> 
-> I didn't consider a bug because in dt-bindings says to not use 'assigned 
-> address' if SA = 0.
+--DiL7RhKs8rK9YGuF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The fact that we don't try to assign a predefined dynamic address
-when !SA is indeed not a bug, but failing to propagate the ->of_node
-info to the i3c_device is one.
+On Thu, Aug 29, 2019 at 08:48:39PM +0530, Vidya Sagar wrote:
+> On 8/29/2019 5:33 PM, Thierry Reding wrote:
+> > On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
+> > > Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to desc=
+ribe
+> > > regulators of a PCIe slot's supplies 3.3V and 12V provided the platfo=
+rm
+> > > is designed to have regulator controlled slot supplies.
+> > >=20
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > ---
+> > > V3:
+> > > * None
+> > >=20
+> > > V2:
+> > > * None
+> > >=20
+> > >   .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 +++++=
++++
+> > >   1 file changed, 8 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pc=
+ie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> > > index 0ac1b867ac24..b739f92da58e 100644
+> > > --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> > > +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> > > @@ -104,6 +104,12 @@ Optional properties:
+> > >      specified in microseconds
+> > >   - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to=
+ be
+> > >      specified in microseconds
+> > > +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3=
+V to the slot
+> > > +  if the platform has one such slot. (Ex:- x16 slot owned by C5 cont=
+roller
+> > > +  in p2972-0000 platform).
+> > > +- vpcie12v-supply: A phandle to the regulator node that supplies 12V=
+ to the slot
+> > > +  if the platform has one such slot. (Ex:- x16 slot owned by C5 cont=
+roller
+> > > +  in p2972-0000 platform).
+> >=20
+> > There's an ongoing discussion regarding the use of optional power
+> > supplies and I'm wondering if we're not abusing this here. Why exactly
+> > are these regulators optional?
+> I made them optional because, the number and type of supplies typically d=
+epend on the
+> kind of slot the controller is owning. If it is a CEM slot, then, it need=
+s 3.3V & 12V
+> supplies and if it is an M.2 Key-E/M slot, it needs only 3.3V supply. Als=
+o, if there are
+> on-board PCIe endpoint devices, supplies may vary again from vendor to ve=
+ndor.
+> Considering all these, I made them optional instead of mandatory.
+> Also, I agree that regulator framework supplies a dummy regulator if we m=
+ake them mandatory
+> but doesn't supply one, but it does so with a warning print in the log wh=
+ich I feel is
+> an unwanted alert and to avoid that one has to supply dummy/fixed regulat=
+ors which again
+> seems an overkill when all of this can be addressed by making slot regula=
+tors optional.
 
-> Do you think there is a better way to solve it?
+Okay. That sounds like a good reason to make these optional indeed.
+There is no way for the PCI controller to know exactly which regulators
+will be needed. The only case where it is known is that of the regular
+PCIe slot where the 3.3 V and 12 V are mandatory. But since it isn't
+always a standard PCIe slot that the controller drives, I think optional
+is okay in this case.
 
-Your patch is correct, I just proposed a few adjustments.
+Thierry
+
+> > The distinction is somewhat subtle, but the other way to look at
+> > modelling this in DT is that the supplies are in fact required, but may
+> > be connected to an always-on regulator with a fixed voltage. Or in some
+> > cases they may also be shorted to ground. In both cases the PCI
+> > controller, or rather the slot that the controller connects to, actually
+> > "requires" the supplies, it's just that we can get away without
+> > describing them because they can't be controlled anyway.
+> >=20
+> > Looking at the PCI connector pinout for PCI Express, I do see a bunch of
+> > +3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
+> > supplies are indeed required for PCI slots. I'm not sure about devices
+> > that are directly connected to the PCI controller, though. I'll need to
+> > go look at some schematics to get a better understanding of these.
+> >=20
+> > Bottom line: I'm wondering if we shouldn't really make these supplies
+> > mandatory and in case where we don't care either just leave them away
+> > (the regulator framework will supply a dummy regulator in that case) or
+> > hook them up to a fixed regulator if that matches the hardware design.
+> >=20
+> > Any thoughts?
+> >=20
+> > Thierry
+> >=20
+> > >   Examples:
+> > >   =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > @@ -156,6 +162,8 @@ Tegra194:
+> > >   			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /=
+* prefetchable memory (16GB) */
+> > >   		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
+> > > +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
+> > > +		vpcie12v-supply =3D <&vdd_12v_pcie>;
+> > >   		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
+> > >   		       <&p2u_hsio_5>;
+> > > --=20
+> > > 2.17.1
+> > >=20
+>=20
+
+--DiL7RhKs8rK9YGuF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1oACkACgkQ3SOs138+
+s6EGvw//aC8g/p1/uH6bQaFYayqHbvSXJkcs+qLM1pXP6sQs+Y78dkyd0bFY5d3I
+eWq7JMsg5syZh6vKYm8rYUQoOvmhKvgGJ2ICfXTe5Jj9F3pS2pK6PCcF3OpZIopk
+N9rsnpwUm/N5966NBkZyikA9iQat2EPJXSJA917kV8bAhs2uu4/xxBO2joG9GLPb
+hWD6EtgywvtYlRhpJ7irFlVjJ8VOj5j3zUi6ZpedMrtU8Bx/llbz+1bnrvyVlMjY
+HtcN2ndkRacf4nwu8/nB5GIzucOAE6jiKmwjpfv0PwV1GHkj8QggDZ6U8YEK98i3
+cYBL2iGlQw+k3dJgPl5poUrHmyHxvphHt3eEnrbOqXwe3jFtC/z4cKtc0d2h0omo
+5OQzeXZ9DNP26b2NvCkz/JCQlSGzlCp6M/MiJQu4Iu53DTAR9S2T650QG4s/hMVF
+cBujoyFuAc9rXwB+uxrkHHcHZZFNXDTawC8LQJgWIAfa5v8bhgfWKdaHbjhb0Bee
+R7fHHclqVSU2J1K6cRJ1d1daqme8VloCxg+eClg72UxXXnEPqRPP/PJS7tyX9Dzp
+uJMC4JfgRu+xShFywcXH9oif3ufSqHBnfIUiWNnKefLu5w6Y3Fg10nj5Shj0k0UL
+Jjk6JzRLE/h8QkgmNs49r3r7NkjzFfm4GZ5xBC0n/VAeVRxxW/8=
+=RTQ7
+-----END PGP SIGNATURE-----
+
+--DiL7RhKs8rK9YGuF--
