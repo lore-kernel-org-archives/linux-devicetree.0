@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 10/14] drm/mxsfb: Update mxsfb to support LCD reset
-Date: Thu, 29 Aug 2019 14:30:11 +0300
-Message-ID: <1567078215-31601-11-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v4 09/14] dt-bindings: display: Add max-memory-bandwidth property for mxsfb
+Date: Thu, 29 Aug 2019 14:30:10 +0300
+Message-ID: <1567078215-31601-10-git-send-email-robert.chiras@nxp.com>
 References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,65 +13,31 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The eLCDIF controller has control pin for the external LCD reset pin.
-Add support for it and assert this pin in enable and de-assert it in
-disable.
+Add new optional property 'max-memory-bandwidth', to limit the maximum
+bandwidth used by the MXSFB_DRM driver.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 Tested-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 14 ++++++++++----
- drivers/gpu/drm/mxsfb/mxsfb_regs.h |  2 ++
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/display/mxsfb.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index 1be29f5..a4ba368 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -224,9 +224,12 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
- 		clk_prepare_enable(mxsfb->clk_disp_axi);
- 	clk_prepare_enable(mxsfb->clk);
+diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
+index 472e1ea..c8dca50 100644
+--- a/Documentation/devicetree/bindings/display/mxsfb.txt
++++ b/Documentation/devicetree/bindings/display/mxsfb.txt
+@@ -14,6 +14,11 @@ Required properties:
+     - "pix" for the LCDIF block clock
+     - (MX6SX-only) "axi", "disp_axi" for the bus interface clock
  
--	if (mxsfb->devdata->ipversion >= 4)
-+	if (mxsfb->devdata->ipversion >= 4) {
- 		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
- 		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-+		/* Assert LCD Reset bit */
-+		writel(CTRL2_LCD_RESET, mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-+	}
- 
- 	/* If it was disabled, re-enable the mode again */
- 	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
-@@ -244,11 +247,14 @@ static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
- {
- 	u32 reg;
- 
--	if (mxsfb->devdata->ipversion >= 4)
-+	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
++Optional properties:
++- max-memory-bandwidth: maximum bandwidth in bytes per second that the
++	controller can handle; if not present, the memory
++	interface is fast enough to handle all possible video modes
 +
-+	if (mxsfb->devdata->ipversion >= 4) {
- 		writel(CTRL2_OUTSTANDING_REQS(0x7),
- 		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
--
--	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
-+		/* De-assert LCD Reset bit */
-+		writel(CTRL2_LCD_RESET, mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
-+	}
+ Required sub-nodes:
+   - port: The connection to an encoder chip.
  
- 	/*
- 	 * Even if we disable the controller here, it will still continue
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-index dc4daa0..0f63ba1 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
-@@ -108,6 +108,8 @@
- #define CTRL2_LINE_PATTERN_BGR	5
- #define CTRL2_LINE_PATTERN_CLR	7
- 
-+#define CTRL2_LCD_RESET			BIT(0)
-+
- #define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
- #define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
- #define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
 -- 
 2.7.4
