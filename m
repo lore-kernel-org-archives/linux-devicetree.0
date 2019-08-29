@@ -1,136 +1,141 @@
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: Re: [PATCH v4, 23/33] drm/mediatek: add ovl0/ovl_2l0 usecase
-Date: Thu, 29 Aug 2019 21:15:08 +0800
-Message-ID: <1567084508.30648.4.camel@mhfsdcap03>
-References: <1562625253-29254-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1562625253-29254-24-git-send-email-yongqiang.niu@mediatek.com>
-         <1563346064.29169.24.camel@mtksdaap41>
-Reply-To: <yongqiang.niu@mediatek.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCHv2 05/11] soc: ti: omap-prm: sync func clock status with
+ resets
+Date: Thu, 29 Aug 2019 15:25:14 +0200
+Message-ID: <1567085114.5345.12.camel@pengutronix.de>
+References: <20190828071941.32378-1-t-kristo@ti.com>
+ <20190828071941.32378-6-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1563346064.29169.24.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190828071941.32378-6-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, robh+dt@kernel.org
+Cc: tony@atomide.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-07-17 at 14:47 +0800, CK Hu wrote:
-> Hi, Yongqiang:
+On Wed, 2019-08-28 at 10:19 +0300, Tero Kristo wrote:
+> Hardware reset signals are tightly coupled with associated clocks, and
+> basically de-asserting a reset won't succeed properly if the clock is
+> not enabled, and vice-versa. Also, disabling a clock won't fully succeed
+> if the associated hardware resets are not asserted. Add status sync
+> functionality between these two for TI drivers so that the situations
+> can be handled properly without generating any timeouts.
 > 
-> On Tue, 2019-07-09 at 06:34 +0800, yongqiang.niu@mediatek.com wrote:
-> > From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > 
-> > This patch add ovl0/ovl_2l0 usecase
-> > in ovl->ovl_2l0 direct link usecase:
-> > 1. the crtc support layer number will 4+2
-> > 2. ovl_2l0 background color input select ovl0 when crtc init
-> > and disable it when crtc finish
-> > 3. config ovl_2l0 layer, if crtc config layer number is
-> > bigger than ovl0 support layers(max is 4)
-> > 
-> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
-> >  1 file changed, 36 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > index 5eac376..9ee9ce2 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > @@ -282,6 +282,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
-> >  
-> >  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
-> >  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-> > +		enum mtk_ddp_comp_id prev;
-> > +
-> > +		if (i > 0)
-> > +			prev = mtk_crtc->ddp_comp[i - 1]->id;
-> > +		else
-> > +			prev = DDP_COMPONENT_ID_MAX;
-> > +
-> > +		if (prev == DDP_COMPONENT_OVL0)
-> > +			mtk_ddp_comp_bgclr_in_on(comp);
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/soc/ti/omap_prm.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> I does not like to use a specific component id to check, that is not
-> general. For now, you could simply call mtk_ddp_comp_bgclr_in_on(comp);
-> for all component because only ovl_2l has implemented it.
-> 
-> Regards,
-> CK
-> 
+> diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+> index 38998ce19c71..e876bad8f8d5 100644
+> --- a/drivers/soc/ti/omap_prm.c
+> +++ b/drivers/soc/ti/omap_prm.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/reset-controller.h>
+>  #include <linux/delay.h>
+> +#include <linux/clk.h>
+> +#include <linux/clk/ti.h>
+>  
+>  #include <linux/platform_data/ti-prm.h>
+>  
+> @@ -42,7 +44,9 @@ struct omap_reset_data {
+>  	struct reset_controller_dev rcdev;
+>  	struct omap_prm *prm;
+>  	struct clockdomain *clkdm;
+> +	struct clk *clk;
+>  	struct device *dev;
+> +	u32 mask;
+>  };
+>  
+>  #define to_omap_reset_data(p) container_of((p), struct omap_reset_data, rcdev)
+> @@ -102,6 +106,8 @@ static int omap_reset_assert(struct reset_controller_dev *rcdev,
+>  	v |= 1 << id;
+>  	writel_relaxed(v, reset->prm->base + reset->prm->data->rstctrl);
+>  
+> +	ti_clk_notify_resets(reset->clk, v == reset->mask);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -163,9 +169,19 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
+>  	v &= ~(1 << id);
+>  	writel_relaxed(v, reset->prm->base + reset->prm->data->rstctrl);
+>  
+> +	ti_clk_notify_resets(reset->clk, v == reset->mask);
+> +
+>  	if (!has_rstst)
+>  		goto exit;
+>  
+> +	/* If associated clock is disabled, we can't poll completion status */
+> +	if (reset->clk) {
+> +		struct clk_hw *hw = __clk_get_hw(reset->clk);
+> +
+> +		if (!clk_hw_is_enabled(hw))
+> +			return ret;
+> +	}
+> +
+>  	/* wait for the status to be set */
+>  	while (1) {
+>  		v = readl_relaxed(reset->prm->base + reset->prm->data->rstst);
+> @@ -199,8 +215,10 @@ static int omap_prm_reset_init(struct platform_device *pdev,
+>  			       struct omap_prm *prm)
+>  {
+>  	struct omap_reset_data *reset;
+> +	const struct omap_rst_map *map;
+>  	struct ti_prm_platform_data *pdata = dev_get_platdata(&pdev->dev);
+>  	char buf[32];
+> +	u32 v;
+>  
+>  	/*
+>  	 * Check if we have controllable resets. If either rstctrl is non-zero
+> @@ -215,6 +233,10 @@ static int omap_prm_reset_init(struct platform_device *pdev,
+>  	    !pdata->clkdm_allow_idle)
+>  		return -EINVAL;
+>  
+> +	map = prm->data->rstmap;
+> +	if (!map)
+> +		return -EINVAL;
 
-both OVL0 and OVL_2L0 has the function mtk_ddp_comp_bgclr_in_on
+Can this actually happen?
 
-> >  
-> >  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
-> >  		mtk_ddp_comp_start(comp);
-> > @@ -291,9 +300,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
-> >  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
-> >  		struct drm_plane *plane = &mtk_crtc->planes[i];
-> >  		struct mtk_plane_state *plane_state;
-> > +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> > +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> > +		unsigned int local_layer;
-> >  
-> >  		plane_state = to_mtk_plane_state(plane->state);
-> > -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
-> > +
-> > +		if (i >= comp_layer_nr) {
-> > +			comp = mtk_crtc->ddp_comp[1];
-> > +			local_layer = i - comp_layer_nr;
-> > +		} else
-> > +			local_layer = i;
-> > +		mtk_ddp_comp_layer_config(comp , local_layer,
-> >  					  plane_state);
-> >  	}
-> >  
-> > @@ -319,6 +337,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
-> >  					   mtk_crtc->ddp_comp[i]->id);
-> >  	mtk_disp_mutex_disable(mtk_crtc->mutex);
-> >  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> > +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
-> >  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
-> >  					      mtk_crtc->mmsys_reg_data,
-> >  					      mtk_crtc->ddp_comp[i]->id,
-> > @@ -339,6 +358,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
-> >  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
-> >  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> >  	unsigned int i;
-> > +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> > +	unsigned int local_layer;
-> >  
-> >  	/*
-> >  	 * TODO: instead of updating the registers here, we should prepare
-> > @@ -361,7 +382,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
-> >  			plane_state = to_mtk_plane_state(plane->state);
-> >  
-> >  			if (plane_state->pending.config) {
-> > -				mtk_ddp_comp_layer_config(comp, i, plane_state);
-> > +				if (i >= comp_layer_nr) {
-> > +					comp = mtk_crtc->ddp_comp[1];
-> > +					local_layer = i - comp_layer_nr;
-> > +				} else
-> > +					local_layer = i;
-> > +
-> > +				mtk_ddp_comp_layer_config(comp, local_layer,
-> > +							  plane_state);
-> >  				plane_state->pending.config = false;
-> >  			}
-> >  		}
-> > @@ -592,6 +620,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
-> >  	}
-> >  
-> >  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-> > +	if (mtk_crtc->ddp_comp_nr > 1) {
-> > +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
-> > +
-> > +		if (comp->funcs->bgclr_in_on)
-> > +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-> > +	}
-> >  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
-> >  					sizeof(struct drm_plane),
-> >  					GFP_KERNEL);
-> 
-> 
+> +
+>  	reset = devm_kzalloc(&pdev->dev, sizeof(*reset), GFP_KERNEL);
+>  	if (!reset)
+>  		return -ENOMEM;
+> @@ -224,6 +246,10 @@ static int omap_prm_reset_init(struct platform_device *pdev,
+>  	reset->rcdev.of_node = pdev->dev.of_node;
+>  	reset->rcdev.nr_resets = OMAP_MAX_RESETS;
+>  	reset->dev = &pdev->dev;
+> +	reset->clk = of_clk_get(pdev->dev.of_node, 0);
+> +
+> +	if (IS_ERR(reset->clk))
+> +		reset->clk = NULL;
+
+Maybe only ignore -ENOENT?
+
+>  	reset->prm = prm;
+>  
+> @@ -234,6 +260,16 @@ static int omap_prm_reset_init(struct platform_device *pdev,
+>  	if (!reset->clkdm)
+>  		return -EINVAL;
+>  
+> +	while (map->rst >= 0) {
+> +		reset->mask |= BIT(map->rst);
+> +		map++;
+> +	}
+
+With this, you could use reset->mask to simplify _is_valid_reset.
+
+regards
+Philipp
