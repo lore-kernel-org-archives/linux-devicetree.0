@@ -1,248 +1,291 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v10 3/7] driver core: Add sync_state driver/bus callback
-Date: Thu, 29 Aug 2019 00:45:59 -0700
-Message-ID: <20190829074603.70424-4-saravanak@google.com>
-References: <20190829074603.70424-1-saravanak@google.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCHv5 2/2] ARM: dts: Add support for i.MX6 UltraLite DART
+ Variscite Customboard
+Date: Thu, 29 Aug 2019 09:54:05 +0200
+Message-ID: <20190829075405.j7av4aojvzddlfz3@pengutronix.de>
+References: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
+ <1567009160-21965-3-git-send-email-oliver.graute@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829074603.70424-1-saravanak@google.com>
+Content-Disposition: inline
+In-Reply-To: <1567009160-21965-3-git-send-email-oliver.graute@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com, David Collins <collinsd@codeaurora.org>, kernel-team@android.com, kbuild test robot <lkp@intel.com>
+To: Oliver Graute <oliver.graute@gmail.com>
+Cc: shawnguo@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, narmstrong@baylibre.com, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This sync_state driver/bus callback is called once all the consumers
-of a supplier have probed successfully.
+Hi Oliver,
 
-This allows the supplier device's driver/bus to sync the supplier
-device's state to the software state with the guarantee that all the
-consumers are actively managing the resources provided by the supplier
-device.
+On 19-08-28 18:19, Oliver Graute wrote:
+> This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
+> 
+> Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm/boot/dts/Makefile                      |   1 +
+>  arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 196 ++++++++++++++++++++++++
+>  2 files changed, 197 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index a24a6a1..a2a69e4 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+>  	imx6ul-tx6ul-0010.dtb \
+>  	imx6ul-tx6ul-0011.dtb \
+>  	imx6ul-tx6ul-mainboard.dtb \
+> +	imx6ul-var-6ulcustomboard.dtb \
+>  	imx6ull-14x14-evk.dtb \
+>  	imx6ull-colibri-eval-v3.dtb \
+>  	imx6ull-colibri-wifi-eval-v3.dtb \
+> diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> new file mode 100644
+> index 00000000..1861b34
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> @@ -0,0 +1,196 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+> +/*
+> + * Support for Variscite DART-6UL Module
+> + *
+> + * Copyright (C) 2015 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
+> + * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include "imx6ul-imx6ull-var-dart-common.dtsi"
+> +
+> +/ {
+> +	model = "Variscite i.MX6 UltraLite Carrier-board";
+> +	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm1 0 20000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		user {
+> +			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
 
-To maintain backwards compatibility and ease transition from existing
-frameworks and resource cleanup schemes, late_initcall_sync is the
-earliest when the sync_state callback might be called.
+Please mux the gpios where you need them. In this case mux it within the
+gpio-keys node.
 
-There is no upper bound on the time by which the sync_state callback
-has to be called. This is because if a consumer device never probes,
-the supplier has to maintain its resources in the state left by the
-bootloader. For example, if the bootloader leaves the display
-backlight at a fixed voltage and the backlight driver is never probed,
-you don't want the backlight to ever be turned off after boot up.
+> +			linux,code = <KEY_BACK>;
+> +			gpio-key,wakeup;
+> +		};
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +
+> +		d16-led {
+> +			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
 
-Also, when multiple devices are added after kernel init, some
-suppliers could be added before their consumer devices get added. In
-these instances, the supplier devices could get their sync_state
-callback called right after they probe because the consumers devices
-haven't had a chance to create device links to the suppliers.
+The same applies here.
 
-To handle this correctly, this change also provides APIs to
-pause/resume sync state callbacks so that when multiple devices are
-added, their sync_state callback evaluation can be postponed to happen
-after all of them are added.
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +
+> +	sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,name = "wm8731audio";
+> +		simple-audio-card,widgets =
+> +			"Headphone", "Headphone Jack",
+> +			"Line", "Line Jack",
+> +			"Microphone", "Mic Jack";
+> +		simple-audio-card,routing =
+> +			"Headphone Jack", "RHPOUT",
+> +			"Headphone Jack", "LHPOUT",
+> +			"LLINEIN", "Line Jack",
+> +			"RLINEIN", "Line Jack",
+> +			"MICIN", "Mic Bias",
+> +			"Mic Bias", "Mic Jack";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,bitclock-master = <&sound_master>;
+> +		simple-audio-card,frame-master = <&sound_master>;
+> +
+> +		sound_master: simple-audio-card,cpu {
+> +				sound-dai = <&sai2>;
+> +		};
 
-kbuild test robot reported missing documentation for device.state_synced
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/base/core.c    | 65 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/device.h | 24 ++++++++++++++++
- 2 files changed, 89 insertions(+)
+Where is the codec node?
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 39633bb75f0f..5e79d5820e79 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -46,6 +46,8 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
- /* Device links support. */
- static LIST_HEAD(wait_for_suppliers);
- static DEFINE_MUTEX(wfs_lock);
-+static LIST_HEAD(deferred_sync);
-+static unsigned int supplier_sync_state_disabled;
- 
- #ifdef CONFIG_SRCU
- static DEFINE_MUTEX(device_links_lock);
-@@ -648,6 +650,62 @@ int device_links_check_suppliers(struct device *dev)
- 	return ret;
- }
- 
-+static void __device_links_supplier_sync_state(struct device *dev)
-+{
-+	struct device_link *link;
-+
-+	if (dev->state_synced)
-+		return;
-+
-+	list_for_each_entry(link, &dev->links.consumers, s_node) {
-+		if (!(link->flags & DL_FLAG_MANAGED))
-+			continue;
-+		if (link->status != DL_STATE_ACTIVE)
-+			return;
-+	}
-+
-+	if (dev->bus->sync_state)
-+		dev->bus->sync_state(dev);
-+	else if (dev->driver && dev->driver->sync_state)
-+		dev->driver->sync_state(dev);
-+
-+	dev->state_synced = true;
-+}
-+
-+void device_links_supplier_sync_state_pause(void)
-+{
-+	device_links_write_lock();
-+	supplier_sync_state_disabled++;
-+	device_links_write_unlock();
-+}
-+
-+void device_links_supplier_sync_state_resume(void)
-+{
-+	struct device *dev, *tmp;
-+
-+	device_links_write_lock();
-+	if (!supplier_sync_state_disabled) {
-+		WARN(true, "Unmatched sync_state pause/resume!");
-+		goto out;
-+	}
-+	supplier_sync_state_disabled--;
-+	if (supplier_sync_state_disabled)
-+		goto out;
-+
-+	list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
-+		__device_links_supplier_sync_state(dev);
-+		list_del_init(&dev->links.defer_sync);
-+	}
-+out:
-+	device_links_write_unlock();
-+}
-+
-+static void __device_links_supplier_defer_sync(struct device *sup)
-+{
-+	if (list_empty(&sup->links.defer_sync))
-+		list_add_tail(&sup->links.defer_sync, &deferred_sync);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -692,6 +750,11 @@ void device_links_driver_bound(struct device *dev)
- 
- 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
- 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+
-+		if (supplier_sync_state_disabled)
-+			__device_links_supplier_defer_sync(link->supplier);
-+		else
-+			__device_links_supplier_sync_state(link->supplier);
- 	}
- 
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -808,6 +871,7 @@ void device_links_driver_cleanup(struct device *dev)
- 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
- 	}
- 
-+	list_del_init(&dev->links.defer_sync);
- 	__device_links_no_driver(dev);
- 
- 	device_links_write_unlock();
-@@ -1782,6 +1846,7 @@ void device_initialize(struct device *dev)
- 	INIT_LIST_HEAD(&dev->links.consumers);
- 	INIT_LIST_HEAD(&dev->links.suppliers);
- 	INIT_LIST_HEAD(&dev->links.needs_suppliers);
-+	INIT_LIST_HEAD(&dev->links.defer_sync);
- 	dev->links.status = DL_DEV_NO_DRIVER;
- }
- EXPORT_SYMBOL_GPL(device_initialize);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 76458cfbb267..7ab29bb3eb8c 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -80,6 +80,13 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
-  *		that generate uevents to add the environment variables.
-  * @probe:	Called when a new device or driver add to this bus, and callback
-  *		the specific driver's probe to initial the matched device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when a device removed from this bus.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-  *
-@@ -123,6 +130,7 @@ struct bus_type {
- 	int (*match)(struct device *dev, struct device_driver *drv);
- 	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
- 	int (*probe)(struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove)(struct device *dev);
- 	void (*shutdown)(struct device *dev);
- 
-@@ -340,6 +348,13 @@ enum probe_type {
-  * @probe:	Called to query the existence of a specific device,
-  *		whether this driver can work with it, and bind the driver
-  *		to a specific device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-  * @remove:	Called when the device is removed from the system to
-  *		unbind a device from this driver.
-  * @shutdown:	Called at shut-down time to quiesce the device.
-@@ -379,6 +394,7 @@ struct device_driver {
- 	const struct acpi_device_id	*acpi_match_table;
- 
- 	int (*probe) (struct device *dev);
-+	void (*sync_state)(struct device *dev);
- 	int (*remove) (struct device *dev);
- 	void (*shutdown) (struct device *dev);
- 	int (*suspend) (struct device *dev, pm_message_t state);
-@@ -1132,12 +1148,14 @@ enum dl_dev_state {
-  * @suppliers: List of links to supplier devices.
-  * @consumers: List of links to consumer devices.
-  * @needs_suppliers: Hook to global list of devices waiting for suppliers.
-+ * @defer_sync: Hook to global list of devices that have deferred sync_state.
-  * @status: Driver status information.
-  */
- struct dev_links_info {
- 	struct list_head suppliers;
- 	struct list_head consumers;
- 	struct list_head needs_suppliers;
-+	struct list_head defer_sync;
- 	enum dl_dev_state status;
- };
- 
-@@ -1213,6 +1231,9 @@ struct dev_links_info {
-  * @offline:	Set after successful invocation of bus type's .offline().
-  * @of_node_reused: Set if the device-tree node is shared with an ancestor
-  *              device.
-+ * @state_synced: The hardware state of this device has been synced to match
-+ *		  the software state of this device by calling the driver/bus
-+ *		  sync_state() callback.
-  * @dma_coherent: this particular device is dma coherent, even if the
-  *		architecture supports non-coherent devices.
-  *
-@@ -1309,6 +1330,7 @@ struct device {
- 	bool			offline_disabled:1;
- 	bool			offline:1;
- 	bool			of_node_reused:1;
-+	bool			state_synced:1;
- #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
-     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-@@ -1651,6 +1673,8 @@ struct device_link *device_link_add(struct device *consumer,
- 				    struct device *supplier, u32 flags);
- void device_link_del(struct device_link *link);
- void device_link_remove(void *consumer, struct device *supplier);
-+void device_links_supplier_sync_state_pause(void);
-+void device_links_supplier_sync_state_resume(void);
- 
- #ifndef dev_fmt
- #define dev_fmt(fmt) fmt
+> +	};
+> +};
+> +
+> +&can1 {
+> +	status = "okay";
+
+We need to move the complete muxing from the SoM dtsi to the baseboard
+for all baseboard related nodes.. I tought that the Dart 6UL layout
+follows a specific standard but that isn't the case.
+
+> +};
+> +
+> +&can2 {
+> +	status = "okay";
+> +};
+> +
+> +&fec1 {
+> +	phy-mode = "rgmii";
+
+This avoid such re-assigning here too. Also the imx6ul only support
+10/100 Mbit/s. So rgmii makes no sense here.
+
+> +	phy-reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+> +	phy-handle = <&ethphy0>;
+> +	status = "okay";
+> +};
+> +
+> +&fec2 {
+> +	phy-mode = "rgmii";
+> +	phy-reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+> +	phy-handle = <&ethphy1>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	clock_frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +
+> +	wm8731: audio-codec@1a {
+> +		#sound-dai-cells = <0>;
+
+Please move #sound-dai-cells below compatible and reg property.
+
+> +		compatible = "wlf,wm8731";
+> +		reg = <0x1a>;
+> +		clocks = <&clks IMX6UL_CLK_SAI2>;
+> +		clock-names = "mclk";
+> +	};
+> +
+> +	touchscreen@38 {
+> +		compatible = "edt,edt-ft5x06";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio3>;
+> +		interrupts = <4 0>;
+
+Make use of IRQ_TYPE_*
+
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <480>;
+> +		touchscreen-inverted-x;
+> +		touchscreen-inverted-y;
+> +		wakeup-source;
+> +	};
+> +
+> +	rtc@68 {
+> +		compatible = "dallas,ds1337";
+> +		reg = <0x68>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_rtc>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> +};
+> +
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif>;
+> +	display = <&display0>;
+> +	status = "okay";
+> +
+> +	display0: display0 {
+> +		bits-per-pixel = <16>;
+> +		bus-width = <24>;
+> +
+> +		display-timings {
+> +			native-mode = <&timing0>;
+> +			timing0: timing0 {
+> +				clock-frequency =<35000000>;
+> +				hactive = <800>;
+> +				vactive = <480>;
+> +				hfront-porch = <40>;
+> +				hback-porch = <40>;
+> +				hsync-len = <48>;
+> +				vback-porch = <29>;
+> +				vfront-porch = <13>;
+> +				vsync-len = <3>;
+> +				hsync-active = <0>;
+> +				vsync-active = <0>;
+> +				de-active = <1>;
+> +				pixelclk-active = <0>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&pwm1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usbotg2 {
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_rtc: rtcgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
+> +		>;
+> +	};
+
+As I said above, move the complete muxing pwm/usb/i2c/lcd/... from the
+som dtsi to the baseboard dts because it is only valid for this
+baseboard. Another baseboard using this som can have a complete
+different mux option.
+
+Regards,
+  Marco
+
+
+> +};
+> -- 
+> 2.7.4
+> 
+> 
+> 
+
 -- 
-2.23.0.187.g17f5b7556c-goog
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
