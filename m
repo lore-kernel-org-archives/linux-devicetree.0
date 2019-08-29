@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 01/10] software node: Get reference to parent swnode in get_parent op
-Date: Thu, 29 Aug 2019 13:10:34 +0300
-Message-ID: <20190829101043.24963-2-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 10/10] lib/test_printf: Add tests for %pfw printk modifier
+Date: Thu, 29 Aug 2019 13:10:43 +0300
+Message-ID: <20190829101043.24963-11-sakari.ailus@linux.intel.com>
 References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,32 +12,74 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The software_node_get_parent() returned a pointer to the parent swnode,
-but did not take a reference to it, leading the caller to put a reference
-that was not taken. Take that reference now.
+Add a test for the %pfw printk modifier using software nodes.
 
-Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the
-		      firmware node framework")
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/base/swnode.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index e7b3aa3bd55ad..a7cb41812cfda 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f38625..9c6d716979fb1 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -22,6 +22,8 @@
+ #include <linux/gfp.h>
+ #include <linux/mm.h>
  
--	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
-+	if (!swnode || !swnode->parent)
-+		return NULL;
++#include <linux/property.h>
 +
-+	return fwnode_handle_get(&swnode->parent->fwnode);
+ #include "../tools/testing/selftests/kselftest_module.h"
+ 
+ #define BUF_SIZE 256
+@@ -588,6 +590,40 @@ flags(void)
+ 	kfree(cmp_buffer);
  }
  
- static struct fwnode_handle *
++static void __init fwnode_pointer(void)
++{
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{ NULL /* Guardian */ },
++	};
++	const char * const full_name = "/second/third";
++	const char * const full_name_second = "/second";
++	const char * const second_name = "second";
++	const char * const third_name = "third";
++	int rval;
++
++	rval = software_node_register_nodes(softnodes);
++	if (rval) {
++		pr_warn("cannot register softnodes; rval %d\n", rval);
++		return;
++	}
++
++	test(full_name_second, "%pfw",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
++	test(full_name, "%pfw",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++	test(full_name, "%pfwf",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++	test(second_name, "%pfwP",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
++	test(third_name, "%pfwP",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++
++	software_node_unregister_nodes(softnodes);
++}
++
+ static void __init
+ test_pointer(void)
+ {
+@@ -610,6 +646,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	fwnode_pointer();
+ }
+ 
+ static void __init selftest(void)
 -- 
 2.20.1
