@@ -1,50 +1,49 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
-Date: Fri, 30 Aug 2019 00:05:37 +0530
-Message-ID: <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com> <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH RFC 04/14] of: irq: document properties for wakeup interrupt parent
+Date: Thu, 29 Aug 2019 12:11:53 -0600
+Message-ID: <20190829181203.2660-5-ilina@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
+In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com, linus.walleij@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Some interrupt controllers in a SoC, are always powered on and have a
+select interrupts routed to them, so that they can wakeup the SoC from
+suspend. Add wakeup-parent DT property to refer to these interrupt
+controllers.
 
-On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 28/08/2019 22:27, Anand Moon wrote:
-> > Below small changes help re-configure or fix missing inter linking
-> > of regulator node.
-> >
-> > Changes based top on my prevoius series.
->
-> For the serie:
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../bindings/interrupt-controller/interrupts.txt    | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Thanks for your review.
-
-> >
-> > [0] https://patchwork.kernel.org/cover/11113091/
-> >
-> > TOOD: Add support for DVFS GXBB odroid board in next series.
->
-> I'm curious how you will do this !
-
-I was just studying you previous series on how you have implemented
-this feature for C1, N2 and VIM3 boards.
-
-[0] https://patchwork.kernel.org/cover/11114125/
-
-I started gathering key inputs needed for this ie *clk / pwm*
-like VDDCPU and VDDE clk changes.
-
-But it looks like of the complex clk framework needed, so I leave this to the
-expert like your team of developers to do this much quick and efficiently.
-
-Best Regards,
--Anand
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+index 8a3c40829899..c10e31050dd2 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+@@ -108,3 +108,16 @@ commonly used:
+ 			sensitivity = <7>;
+ 		};
+ 	};
++
++3) Interrupt wakeup parent
++--------------------------
++
++Some interrupt controllers in a SoC, are always powered on and have a select
++interrupts routed to them, so that they can wakeup the SoC from suspend. These
++interrupt controllers do not fall into the category of a parent interrupt
++controller and can be specified by the "wakeup-parent" property and contain a
++single phandle referring to the wakeup capable interrupt controller.
++
++   Example:
++	wakeup-parent = <&pdc_intc>;
++
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
