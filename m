@@ -1,30 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 02/10] dt-bindings: soc: Add opp table on scpsys
- bindings
-Date: Thu, 29 Aug 2019 14:16:40 -0500
-Message-ID: <20190829191640.GB15714@bogus>
-References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
- <1566995328-15158-3-git-send-email-henryc.chen@mediatek.com>
+Subject: Re: [PATCH v6 10/11] dt-bindings: pwm: update bindings for MT7629 SoC
+Date: Thu, 29 Aug 2019 14:17:38 -0500
+Message-ID: <20190829191738.GA17395@bogus>
+References: <1567057160-552-1-git-send-email-sam.shih@mediatek.com>
+ <1567057160-552-11-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566995328-15158-3-git-send-email-henryc.chen@mediatek.com>
+In-Reply-To: <1567057160-552-11-git-send-email-sam.shih@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>, Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
+To: Sam Shih <sam.shih@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Aug 2019 20:28:40 +0800, Henry Chen wrote:
-> Add opp table on scpsys dt-bindings for Mediatek SoC.
+On Thu, Aug 29, 2019 at 01:39:19PM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
 > 
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> This updates bindings for MT7629 pwm controller.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 > ---
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
+> Changes since v1:
+> - add a Reviewed-by tag
+
+I believe you missed mine.
+
 > 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> index ea95b490a913..c7bd5633d1eb 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>     - "mediatek,mt7622-pwm": found on mt7622 SoC.
+>     - "mediatek,mt7623-pwm": found on mt7623 SoC.
+>     - "mediatek,mt7628-pwm": found on mt7628 SoC.
+> +   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+>   - reg: physical base address and length of the controller's registers.
+>   - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+>     the cell format.
+> -- 
+> 2.17.1
+> 
