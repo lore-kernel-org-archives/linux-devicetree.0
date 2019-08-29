@@ -1,26 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: stm32: add wakeup-source
-Date: Thu, 29 Aug 2019 17:57:19 -0500
-Message-ID: <20190829225719.GA21954@bogus>
-References: <1566833923-16718-1-git-send-email-fabien.dessenne@st.com>
- <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
+Subject: Re: [PATCH] dt-bindings: Clarify interrupts-extended usage
+Date: Thu, 29 Aug 2019 17:57:40 -0500
+Message-ID: <20190829225740.GA22740@bogus>
+References: <20190827025511.22166-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566833923-16718-2-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <20190827025511.22166-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Aug 2019 17:38:42 +0200, Fabien Dessenne wrote:
-> Add the "wakeup-source" property: if the optional wdg interrupt is
-> defined, then this property may be defined too.
+On Mon, 26 Aug 2019 19:55:11 -0700, Stephen Boyd wrote:
+> Reading the description about when to use interrupts-extended leads some
+> developers to think that it shouldn't be used unless a device has
+> interrupts from more than one interrupt controller. This isn't true. We
+> should encourage devicetree writers to use this property in situations
+> where it isn't the inherited interrupt-parent so that we have less
+> properties in a DT node by virtue of not having to specify an
+> interrupt-parent and an interrupts property.
 > 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> Reported-by: Alexandru M Stan <amstan@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/interrupt-controller/interrupts.txt          | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
