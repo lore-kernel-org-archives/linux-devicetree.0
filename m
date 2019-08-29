@@ -1,41 +1,32 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: Re: [PATCH v2 01/15] arm64: dts: imx8qxp: add fallback compatible
- string for scu pd
-Date: Thu, 29 Aug 2019 12:20:09 +0200
-Message-ID: <20190829102009.GA22728@optiplex>
-References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
- <1563290089-11085-2-git-send-email-aisheng.dong@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1563290089-11085-2-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/2] Add LVDS panel support to HiHope RZ/G2M
+Date: Thu, 29 Aug 2019 11:21:45 +0100
+Message-ID: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
 List-Id: devicetree@vger.kernel.org
 
-On 16/07/19, Dong Aisheng wrote:
-> According to binding doc, add the fallback compatible string for
-> scu pd.
+Dear All,
 
-This Patch series (v2) is running fine for some weeks on my iMX8QM Board.
+the HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
+Advantech, but the panel doesn't come with the board, it has to purchased
+separatey, therefore this series adds panel support to a new DT.
 
-So feel free to use my Tag:
-Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
+Thanks,
+Fab
 
-Will there be an updated version of this Patch series which apply on
-latest linux next?
+Fabrizio Castro (2):
+  dt-bindings: display: Add idk-1110wr binding
+  arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
 
-Best Regards,
+ .../display/panel/advantech,idk-1110wr.yaml        | 69 +++++++++++++++++
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 86 ++++++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
-Oliver
+-- 
+2.7.4
