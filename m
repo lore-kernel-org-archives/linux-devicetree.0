@@ -1,94 +1,101 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS bus-timings
-Date: Thu, 29 Aug 2019 09:03:10 -0500
-Message-ID: <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com> <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: RE: [PATCH 3/4] dt-bindings: i3c: Make 'assigned-address' valid if
+ static address != 0
+Date: Thu, 29 Aug 2019 14:06:00 +0000
+Message-ID: <SN6PR12MB2655528456BB8E6661A5F962AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <9d69c83c7193e377bbc77bea7f1812fc17dafaee.1567071213.git.vitor.soares@synopsys.com>
+ <20190829125138.4b36b8f6@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190829125138.4b36b8f6@collabora.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
+To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->
-> Dual-LVDS connections need markers in the DT, this patch adds
-> some common documentation to be referenced by both panels and
-> bridges.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> ---
-> v2->v3:
-> * new patch
-> ---
->  .../bindings/display/bus-timings/lvds.yaml         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> new file mode 100644
-> index 0000000..f35b55a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Hi Boris,
 
-(GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Date: Thu, Aug 29, 2019 at 11:51:38
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bus-timings/lvds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common Properties for bus timings of LVDS interfaces
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> +
-> +description: |
-> +  This document defines device tree properties common to LVDS and dual-LVDS
-> +  interfaces, where a dual-LVDS interface is a dual-link connection with even
-> +  pixels traveling on one connection, and with odd pixels traveling on the other
-> +  connection.
-> +  This document doesn't constitue a device tree binding specification by itself
+> On Thu, 29 Aug 2019 12:19:34 +0200
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+>=20
+> > The I3C devices without a static address can require a specific dynamic
+> > address for priority reasons.
+> >=20
+> > Let's update the binding document to make the 'assigned-address' proper=
+ty
+> > valid if static address !=3D 0 and add an example with this use case.
+>=20
+>            ^ you mean static address =3D=3D 0, right?
 
-typo: constitute
+Indeed.
 
-> +  but is meant to be referenced by device tree bindings.
-> +  When referenced from panel or bridge device tree bindings, the properties
-> +  defined in this document are defined as follows. The panel and bridge device
-> +  tree bindings are responsible for defining whether each property is required
-> +  or optional.
-> +
-> +properties:
-> +  dual-lvds-even-pixels:
-> +    type: boolean
-> +    description:
-> +      This property is specific to an input port of a sink device. When
+>=20
+> Yes, it makes sense to support that case and do our best to assign the
+> requested address after DAA has taken place by explicitly executing
+> SETDA.
+>=20
+> >=20
+> > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > ---
+> >  Documentation/devicetree/bindings/i3c/i3c.txt | 13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentat=
+ion/devicetree/bindings/i3c/i3c.txt
+> > index ab729a0..c851e75 100644
+> > --- a/Documentation/devicetree/bindings/i3c/i3c.txt
+> > +++ b/Documentation/devicetree/bindings/i3c/i3c.txt
+> > @@ -98,9 +98,7 @@ Required properties
+> > =20
+> >  Optional properties
+> >  -------------------
+> > -- assigned-address: dynamic address to be assigned to this device. Thi=
+s
+> > -		    property is only valid if the I3C device has a static
+> > -		    address (first cell of the reg property !=3D 0).
+> > +- assigned-address: dynamic address to be assigned to this device.
+>=20
+> We should probably mention that we don't provide strong guarantees
+> here. We will try to assign this dynamic address to the device, but if
+> something fails (like another device owning the address and refusing to
+> give it up), the actual dynamic address will be different.
+> This clarification can be done in a separate patch.
 
-The schema should define what nodes these go in. The description seems
-to indicate in 'port' nodes (or endpoint?), but your use in the panel
-binding puts them in the parent.
+So, another patch on top of this one explaining that, right?
 
-> +      specified, it marks the port as recipient of even-pixels.
-> +
-> +  dual-lvds-odd-pixels:
-> +    type: boolean
-> +    description:
-> +      This property is specific to an input port of a sink device. When
-> +      specified, it marks the port as recipient of odd-pixels.
+I would suggest to use a dynamic address, like 0x40 (mid priority), on=20
+ENTDAA so lowers addresses (High Priority) can be used in DT or another=20
+method.
 
-However, I don't think you even need these. A panel's port numbers are
-fixed can imply even or odd. For example port@0 can be even and port@1
-can be odd. The port numbering is typically panel specific, but we may
-be able to define the numbering generically if we don't already have
-panels with multiple ports.
+What do you think about this?=20
 
-Also, aren't there dual link DSI panels?
+>=20
+> > =20
+> > =20
+> >  Example:
+> > @@ -129,6 +127,15 @@ Example:
+> > =20
+> >  		/*
+> >  		 * I3C device without a static I2C address but requiring
+> > +		 * specific dynamic address.
+> > +		 */
+> > +		sensor@0,39200154004 {
+> > +			reg =3D <0x0 0x6072 0x303904d2>;
+> > +			assigned-address =3D <0xb>;
+> > +		};
+> > +
+> > +		/*
+> > +		 * I3C device without a static I2C address but requiring
+> >  		 * resources described in the DT.
+> >  		 */
+> >  		sensor@0,39200154004 {
 
-Rob
+Best regards,
+Vitor Soares
