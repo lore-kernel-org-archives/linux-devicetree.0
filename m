@@ -1,16 +1,16 @@
 From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: RE: [PATCH 3/4] dt-bindings: i3c: Make 'assigned-address' valid if
- static address != 0
-Date: Thu, 29 Aug 2019 14:06:00 +0000
-Message-ID: <SN6PR12MB2655528456BB8E6661A5F962AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+Subject: RE: [PATCH 4/4] i3c: master: dw: reattach device on first available
+ location of address table
+Date: Thu, 29 Aug 2019 14:09:08 +0000
+Message-ID: <SN6PR12MB265539D98E3B4571C1705799AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <9d69c83c7193e377bbc77bea7f1812fc17dafaee.1567071213.git.vitor.soares@synopsys.com>
- <20190829125138.4b36b8f6@collabora.com>
+        <e03fb41054a8431b27cc84c3d83ada9464172ef7.1567071213.git.vitor.soares@synopsys.com>
+ <20190829131519.3f420c64@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829125138.4b36b8f6@collabora.com>
+In-Reply-To: <20190829131519.3f420c64@collabora.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
@@ -20,82 +20,63 @@ List-Id: devicetree@vger.kernel.org
 Hi Boris,
 
 From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Thu, Aug 29, 2019 at 11:51:38
+Date: Thu, Aug 29, 2019 at 12:15:19
 
-> On Thu, 29 Aug 2019 12:19:34 +0200
+> On Thu, 29 Aug 2019 12:19:35 +0200
 > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 >=20
-> > The I3C devices without a static address can require a specific dynamic
-> > address for priority reasons.
+> > For today the reattach function only update the device address on the
+> > controller.
 > >=20
-> > Let's update the binding document to make the 'assigned-address' proper=
-ty
-> > valid if static address !=3D 0 and add an example with this use case.
+> > Update the location to the first available too, will optimize the
+> > enumeration process avoiding additional checks to keep the available
+> > positions on address table consecutive.
 >=20
->            ^ you mean static address =3D=3D 0, right?
+> Given the number of available slots I honestly don't think it makes a
+> difference, but I also don't mind this change, so
 
-Indeed.
+The slots are HW dependent. The point is, I need to guarantee the=20
+available slot are consecutives.
+If you have any suggestion I appreciate.
 
 >=20
-> Yes, it makes sense to support that case and do our best to assign the
-> requested address after DAA has taken place by explicitly executing
-> SETDA.
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 >=20
 > >=20
 > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 > > ---
-> >  Documentation/devicetree/bindings/i3c/i3c.txt | 13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> >  drivers/i3c/master/dw-i3c-master.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
 > >=20
-> > diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentat=
-ion/devicetree/bindings/i3c/i3c.txt
-> > index ab729a0..c851e75 100644
-> > --- a/Documentation/devicetree/bindings/i3c/i3c.txt
-> > +++ b/Documentation/devicetree/bindings/i3c/i3c.txt
-> > @@ -98,9 +98,7 @@ Required properties
-> > =20
-> >  Optional properties
-> >  -------------------
-> > -- assigned-address: dynamic address to be assigned to this device. Thi=
-s
-> > -		    property is only valid if the I3C device has a static
-> > -		    address (first cell of the reg property !=3D 0).
-> > +- assigned-address: dynamic address to be assigned to this device.
->=20
-> We should probably mention that we don't provide strong guarantees
-> here. We will try to assign this dynamic address to the device, but if
-> something fails (like another device owning the address and refusing to
-> give it up), the actual dynamic address will be different.
-> This clarification can be done in a separate patch.
-
-So, another patch on top of this one explaining that, right?
-
-I would suggest to use a dynamic address, like 0x40 (mid priority), on=20
-ENTDAA so lowers addresses (High Priority) can be used in DT or another=20
-method.
-
-What do you think about this?=20
-
->=20
-> > =20
-> > =20
-> >  Example:
-> > @@ -129,6 +127,15 @@ Example:
-> > =20
-> >  		/*
-> >  		 * I3C device without a static I2C address but requiring
-> > +		 * specific dynamic address.
-> > +		 */
-> > +		sensor@0,39200154004 {
-> > +			reg =3D <0x0 0x6072 0x303904d2>;
-> > +			assigned-address =3D <0xb>;
-> > +		};
+> > diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw=
+-i3c-master.c
+> > index 1d83c97..62261ac 100644
+> > --- a/drivers/i3c/master/dw-i3c-master.c
+> > +++ b/drivers/i3c/master/dw-i3c-master.c
+> > @@ -898,6 +898,22 @@ static int dw_i3c_master_reattach_i3c_dev(struct i=
+3c_dev_desc *dev,
+> >  	struct dw_i3c_i2c_dev_data *data =3D i3c_dev_get_master_data(dev);
+> >  	struct i3c_master_controller *m =3D i3c_dev_get_master(dev);
+> >  	struct dw_i3c_master *master =3D to_dw_i3c_master(m);
+> > +	int pos;
 > > +
-> > +		/*
-> > +		 * I3C device without a static I2C address but requiring
-> >  		 * resources described in the DT.
-> >  		 */
-> >  		sensor@0,39200154004 {
+> > +	pos =3D dw_i3c_master_get_free_pos(master);
+> > +
+> > +	if (data->index > pos && pos > 0) {
+> > +		writel(0,
+> > +		       master->regs +
+> > +		       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
+> > +
+> > +		master->addrs[data->index] =3D 0;
+> > +		master->free_pos |=3D BIT(data->index);
+> > +
+> > +		data->index =3D pos;
+> > +		master->addrs[pos] =3D dev->info.dyn_addr;
+> > +		master->free_pos &=3D ~BIT(pos);
+> > +	}
+> > =20
+> >  	writel(DEV_ADDR_TABLE_DYNAMIC_ADDR(dev->info.dyn_addr),
+> >  	       master->regs +
 
 Best regards,
 Vitor Soares
