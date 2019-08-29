@@ -1,240 +1,307 @@
-Return-Path: <SRS0=ECyj=W2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55625 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728029AbfH3KRA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Aug 2019 06:17:00 -0400
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v10 08/14] media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-Date: Fri, 30 Aug 2019 12:16:40 +0200
-Message-Id: <20190830101646.6530-9-m.felsch@pengutronix.de>
-In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
-References: <20190830101646.6530-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=/PsR=WZ=mediatek.com=sam.shih@kernel.org>
+From: Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v6 05/11] pwm: mediatek: use pwm_mediatek as common prefix
+Date: Thu, 29 Aug 2019 13:39:14 +0800
+Message-ID: <1567057160-552-6-git-send-email-sam.shih@mediatek.com>
+In-Reply-To: <1567057160-552-1-git-send-email-sam.shih@mediatek.com>
+References: <1567057160-552-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sam Shih <sam.shih@mediatek.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Since commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
-the 'which' field for set/get_selection must be FORMAT_ACTIVE. There is
-no way to try different selections. The patch adds a helper function to
-select the correct selection memory space (sub-device file handle or
-driver state) which will be set/returned.
+Use pwm_mediatek as common prefix to match the filename.
+No functional change intended.
 
-The selection rectangle is updated if the format is FORMAT_ACTIVE and
-the rectangle position and/or size differs from the current set
-rectangle.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
-Changelog:
+Changes since v6:
+Add an Acked-by tag
 
-v10:
-- __tvp5150_get_pad_crop: drop confusing fall-through
-- set_selection: fix FORMAT_TRY handling if CONFIG_VIDEO_V4L2_SUBDEV_API
-                 is disabled. Adapt sel->r and return 0.
-v8:
-- adapt commit message
-- remove wrong FORMAT_TRY handling for tvp5150_fill_fmt() handling
-- return 0 during set_selection if FORMAT_TRY was requested and
-  CONFIG_VIDEO_V4L2_SUBDEV_API is disabled
-- return -EINVAL during get_selection if FORMAT_TRY was requested and
-  CONFIG_VIDEO_V4L2_SUBDEV_API is disabled
-v7:
-- __tvp5150_get_pad_crop(): return error on default case
-- simplify __tvp5150_get_pad_crop() error handling
-- tvp5150_set_selection() squash __tvp5150_set_selection() execution
-  conditions
-v6:
-nothing
-v5:
- - handle stub for v4l2_subdev_get_try_crop() internal since commit
-   ("media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*")
-   isn't anymore part of this series.
- - add error handling of __tvp5150_get_pad_crop()
-v4:
- - fix merge conflict due to rebase on top of media-tree/master
- - __tvp5150_get_pad_crop(): cosmetic alignment fixes
+Changes since v5:
+- Follow reviewers's comments
+The license stuff is a separate change
 
- drivers/media/i2c/tvp5150.c | 113 ++++++++++++++++++++++++++----------
- 1 file changed, 81 insertions(+), 32 deletions(-)
+---
+ drivers/pwm/pwm-mediatek.c | 116 +++++++++++++++++++------------------
+ 1 file changed, 59 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index c1542a89e8c8..636e8737ac44 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -19,6 +19,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-mc.h>
-+#include <media/v4l2-rect.h>
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 71bfab7e2e19..11f9cc446f14 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -34,14 +34,13 @@
+ #define PWM45THRES_FIXUP	0x34
  
- #include "tvp5150_reg.h"
+ #define PWM_CLK_DIV_MAX		7
+-
+-struct mtk_pwm_platform_data {
++struct pwm_mediatek_of_data {
+ 	unsigned int fallback_npwms;
+ 	bool pwm45_fixup;
+ };
  
-@@ -995,6 +996,25 @@ static void tvp5150_set_default(v4l2_std_id std, struct v4l2_rect *crop)
- 		crop->height = TVP5150_V_MAX_OTHERS;
+ /**
+- * struct mtk_pwm_chip - struct representing PWM chip
++ * struct pwm_mediatek_chip - struct representing PWM chip
+  * @chip: linux PWM chip representation
+  * @regs: base address of PWM chip
+  * @clk_top: the top clock generator
+@@ -49,27 +48,29 @@ struct mtk_pwm_platform_data {
+  * @clk_pwms: the clock used by each PWM channel
+  * @clk_freq: the fix clock frequency of legacy MIPS SoC
+  */
+-struct mtk_pwm_chip {
++struct pwm_mediatek_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *regs;
+ 	struct clk *clk_top;
+ 	struct clk *clk_main;
+ 	struct clk **clk_pwms;
+-	const struct mtk_pwm_platform_data *soc;
++	const struct pwm_mediatek_of_data *soc;
+ };
+ 
+-static const unsigned int mtk_pwm_reg_offset[] = {
++static const unsigned int pwm_mediatek_reg_offset[] = {
+ 	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
+ };
+ 
+-static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
++static inline struct pwm_mediatek_chip *
++to_pwm_mediatek_chip(struct pwm_chip *chip)
+ {
+-	return container_of(chip, struct mtk_pwm_chip, chip);
++	return container_of(chip, struct pwm_mediatek_chip, chip);
  }
  
-+static struct v4l2_rect *
-+__tvp5150_get_pad_crop(struct tvp5150 *decoder,
-+		       struct v4l2_subdev_pad_config *cfg, unsigned int pad,
-+		       enum v4l2_subdev_format_whence which)
-+{
-+	switch (which) {
-+	case V4L2_SUBDEV_FORMAT_ACTIVE:
-+		return &decoder->rect;
-+	case V4L2_SUBDEV_FORMAT_TRY:
-+#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
-+		return v4l2_subdev_get_try_crop(&decoder->sd, cfg, pad);
-+#else
-+		return ERR_PTR(-EINVAL);
-+#endif
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
+-static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++static int pwm_mediatek_clk_enable(struct pwm_chip *chip,
++				   struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	int ret;
+ 
+ 	ret = clk_prepare_enable(pc->clk_top);
+@@ -94,45 +95,46 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	return ret;
+ }
+ 
+-static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++static void pwm_mediatek_clk_disable(struct pwm_chip *chip,
++				     struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 
+ 	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
+ 	clk_disable_unprepare(pc->clk_main);
+ 	clk_disable_unprepare(pc->clk_top);
+ }
+ 
+-static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
+-				unsigned int offset)
++static inline u32 pwm_mediatek_readl(struct pwm_mediatek_chip *chip,
++				     unsigned int num, unsigned int offset)
+ {
+-	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
++	return readl(chip->regs + pwm_mediatek_reg_offset[num] + offset);
+ }
+ 
+-static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
+-				  unsigned int num, unsigned int offset,
+-				  u32 value)
++static inline void pwm_mediatek_writel(struct pwm_mediatek_chip *chip,
++				       unsigned int num, unsigned int offset,
++				       u32 value)
+ {
+-	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
++	writel(value, chip->regs + pwm_mediatek_reg_offset[num] + offset);
+ }
+ 
+-static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+-			  int duty_ns, int period_ns)
++static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			       int duty_ns, int period_ns)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
+-	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
+ 	    reg_thres = PWMTHRES;
+ 	u64 resolution;
+ 	int ret;
+ 
+-	ret = mtk_pwm_clk_enable(chip, pwm);
++	ret = pwm_mediatek_clk_enable(chip, pwm);
 +
- static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
- 			    struct v4l2_subdev_pad_config *cfg,
- 			    struct v4l2_subdev_format *format)
-@@ -1019,17 +1039,51 @@ static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
+ 	if (ret < 0)
+ 		return ret;
+ 
+ 	/* Using resolution in picosecond gets accuracy higher */
+ 	resolution = (u64)NSEC_PER_SEC * 1000;
+-	do_div(resolution, clk_get_rate(clk));
++	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
+ 
+ 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
+ 	while (cnt_period > 8191) {
+@@ -143,7 +145,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	if (clkdiv > PWM_CLK_DIV_MAX) {
+-		mtk_pwm_clk_disable(chip, pwm);
++		pwm_mediatek_clk_disable(chip, pwm);
+ 		dev_err(chip->dev, "period %d not supported\n", period_ns);
+ 		return -EINVAL;
+ 	}
+@@ -158,22 +160,22 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	cnt_duty = DIV_ROUND_CLOSEST_ULL((u64)duty_ns * 1000, resolution);
+-	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
+-	mtk_pwm_writel(pc, pwm->hwpwm, reg_width, cnt_period);
+-	mtk_pwm_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
++	pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
++	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
++	pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
+ 
+-	mtk_pwm_clk_disable(chip, pwm);
++	pwm_mediatek_clk_disable(chip, pwm);
+ 
  	return 0;
  }
  
-+unsigned int tvp5150_get_hmax(struct v4l2_subdev *sd)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	v4l2_std_id std;
-+
-+	/* Calculate height based on current standard */
-+	if (decoder->norm == V4L2_STD_ALL)
-+		std = tvp5150_read_std(sd);
-+	else
-+		std = decoder->norm;
-+
-+	return (std & V4L2_STD_525_60) ?
-+		TVP5150_V_MAX_525_60 : TVP5150_V_MAX_OTHERS;
-+}
-+
-+static inline void
-+__tvp5150_set_selection(struct v4l2_subdev *sd, struct v4l2_rect *rect)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int hmax = tvp5150_get_hmax(sd);
-+
-+	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect->top);
-+	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
-+		     rect->top + rect->height - hmax);
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
-+		     rect->left >> TVP5150_CROP_SHIFT);
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
-+		     rect->left | (1 << TVP5150_CROP_SHIFT));
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
-+		     (rect->left + rect->width - TVP5150_MAX_CROP_LEFT) >>
-+		     TVP5150_CROP_SHIFT);
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
-+		     rect->left + rect->width - TVP5150_MAX_CROP_LEFT);
-+}
-+
- static int tvp5150_set_selection(struct v4l2_subdev *sd,
- 				 struct v4l2_subdev_pad_config *cfg,
- 				 struct v4l2_subdev_selection *sel)
+-static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++static int pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
  {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
- 	struct v4l2_rect *rect = &sel->r;
--	v4l2_std_id std;
--	int hmax;
-+	struct v4l2_rect *crop;
-+	unsigned int hmax;
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	u32 value;
+ 	int ret;
  
--	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
--	    sel->target != V4L2_SEL_TGT_CROP)
-+	if (sel->target != V4L2_SEL_TGT_CROP)
- 		return -EINVAL;
+-	ret = mtk_pwm_clk_enable(chip, pwm);
++	ret = pwm_mediatek_clk_enable(chip, pwm);
+ 	if (ret < 0)
+ 		return ret;
  
- 	dev_dbg_lvl(sd->dev, 1, debug, "%s left=%d, top=%d, width=%d, height=%d\n",
-@@ -1038,17 +1092,7 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
- 	/* tvp5150 has some special limits */
- 	rect->left = clamp(rect->left, 0, TVP5150_MAX_CROP_LEFT);
- 	rect->top = clamp(rect->top, 0, TVP5150_MAX_CROP_TOP);
--
--	/* Calculate height based on current standard */
--	if (decoder->norm == V4L2_STD_ALL)
--		std = tvp5150_read_std(sd);
--	else
--		std = decoder->norm;
--
--	if (std & V4L2_STD_525_60)
--		hmax = TVP5150_V_MAX_525_60;
--	else
--		hmax = TVP5150_V_MAX_OTHERS;
-+	hmax = tvp5150_get_hmax(sd);
- 
- 	/*
- 	 * alignments:
-@@ -1061,20 +1105,23 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
- 			      hmax - TVP5150_MAX_CROP_TOP - rect->top,
- 			      hmax - rect->top, 0, 0);
- 
--	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect->top);
--	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
--		     rect->top + rect->height - hmax);
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
--		     rect->left >> TVP5150_CROP_SHIFT);
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
--		     rect->left | (1 << TVP5150_CROP_SHIFT));
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
--		     (rect->left + rect->width - TVP5150_MAX_CROP_LEFT) >>
--		     TVP5150_CROP_SHIFT);
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
--		     rect->left + rect->width - TVP5150_MAX_CROP_LEFT);
-+	if (!IS_ENABLED(CONFIG_VIDEO_V4L2_SUBDEV_API) &&
-+	    sel->which == V4L2_SUBDEV_FORMAT_TRY)
-+		return 0;
-+
-+	crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad, sel->which);
-+	if (IS_ERR(crop))
-+		return PTR_ERR(crop);
-+
-+	/*
-+	 * Update output image size if the selection (crop) rectangle size or
-+	 * position has been modified.
-+	 */
-+	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE &&
-+	    !v4l2_rect_equal(rect, crop))
-+		__tvp5150_set_selection(sd, rect);
- 
--	decoder->rect = *rect;
-+	*crop = *rect;
- 
+@@ -184,29 +186,29 @@ static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
  	return 0;
  }
-@@ -1084,11 +1131,9 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
- 				 struct v4l2_subdev_selection *sel)
- {
- 	struct tvp5150 *decoder = container_of(sd, struct tvp5150, sd);
-+	struct v4l2_rect *crop;
- 	v4l2_std_id std;
  
--	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--		return -EINVAL;
--
- 	switch (sel->target) {
- 	case V4L2_SEL_TGT_CROP_BOUNDS:
- 		sel->r.left = 0;
-@@ -1106,7 +1151,11 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
- 			sel->r.height = TVP5150_V_MAX_OTHERS;
- 		return 0;
- 	case V4L2_SEL_TGT_CROP:
--		sel->r = decoder->rect;
-+		crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad,
-+						sel->which);
-+		if (IS_ERR(crop))
-+			return PTR_ERR(crop);
-+		sel->r = *crop;
- 		return 0;
- 	default:
- 		return -EINVAL;
+-static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
++static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
++	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+ 	u32 value;
+ 
+ 	value = readl(pc->regs);
+ 	value &= ~BIT(pwm->hwpwm);
+ 	writel(value, pc->regs);
+ 
+-	mtk_pwm_clk_disable(chip, pwm);
++	pwm_mediatek_clk_disable(chip, pwm);
+ }
+ 
+-static const struct pwm_ops mtk_pwm_ops = {
+-	.config = mtk_pwm_config,
+-	.enable = mtk_pwm_enable,
+-	.disable = mtk_pwm_disable,
++static const struct pwm_ops pwm_mediatek_ops = {
++	.config = pwm_mediatek_config,
++	.enable = pwm_mediatek_enable,
++	.disable = pwm_mediatek_disable,
+ 	.owner = THIS_MODULE,
+ };
+ 
+-static int mtk_pwm_probe(struct platform_device *pdev)
++static int pwm_mediatek_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct mtk_pwm_chip *pc;
++	struct pwm_mediatek_chip *pc;
+ 	struct resource *res;
+ 	unsigned int npwms;
+ 	int ret;
+@@ -269,7 +271,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pc);
+ 
+ 	pc->chip.dev = &pdev->dev;
+-	pc->chip.ops = &mtk_pwm_ops;
++	pc->chip.ops = &pwm_mediatek_ops;
+ 	pc->chip.base = -1;
+ 	pc->chip.npwm = npwms;
+ 
+@@ -282,51 +284,51 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int mtk_pwm_remove(struct platform_device *pdev)
++static int pwm_mediatek_remove(struct platform_device *pdev)
+ {
+-	struct mtk_pwm_chip *pc = platform_get_drvdata(pdev);
++	struct pwm_mediatek_chip *pc = platform_get_drvdata(pdev);
+ 
+ 	return pwmchip_remove(&pc->chip);
+ }
+ 
+-static const struct mtk_pwm_platform_data mt2712_pwm_data = {
++static const struct pwm_mediatek_of_data mt2712_pwm_data = {
+ 	.fallback_npwms = 8,
+ 	.pwm45_fixup = false,
+ };
+ 
+-static const struct mtk_pwm_platform_data mt7622_pwm_data = {
++static const struct pwm_mediatek_of_data mt7622_pwm_data = {
+ 	.fallback_npwms = 6,
+ 	.pwm45_fixup = false,
+ };
+ 
+-static const struct mtk_pwm_platform_data mt7623_pwm_data = {
++static const struct pwm_mediatek_of_data mt7623_pwm_data = {
+ 	.fallback_npwms = 5,
+ 	.pwm45_fixup = true,
+ };
+ 
+-static const struct mtk_pwm_platform_data mt7628_pwm_data = {
++static const struct pwm_mediatek_of_data mt7628_pwm_data = {
+ 	.fallback_npwms = 4,
+ 	.pwm45_fixup = true,
+ };
+ 
+-static const struct of_device_id mtk_pwm_of_match[] = {
++static const struct of_device_id pwm_mediatek_of_match[] = {
+ 	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
+ 	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
+ 	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
+ 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
+ 	{ },
+ };
+-MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
++MODULE_DEVICE_TABLE(of, pwm_mediatek_of_match);
+ 
+-static struct platform_driver mtk_pwm_driver = {
++static struct platform_driver pwm_mediatek_driver = {
+ 	.driver = {
+-		.name = "mtk-pwm",
+-		.of_match_table = mtk_pwm_of_match,
++		.name = "pwm-mediatek",
++		.of_match_table = pwm_mediatek_of_match,
+ 	},
+-	.probe = mtk_pwm_probe,
+-	.remove = mtk_pwm_remove,
++	.probe = pwm_mediatek_probe,
++	.remove = pwm_mediatek_remove,
+ };
+-module_platform_driver(mtk_pwm_driver);
++module_platform_driver(pwm_mediatek_driver);
+ 
+ MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
+ MODULE_LICENSE("GPL");
 -- 
-2.20.1
+2.17.1
