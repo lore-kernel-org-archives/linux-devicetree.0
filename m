@@ -1,65 +1,88 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 08/10] lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-Date: Thu, 29 Aug 2019 13:10:41 +0300
-Message-ID: <20190829101043.24963-9-sakari.ailus@linux.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 00/10] Device property improvements, add %pfw format specifier
+Date: Thu, 29 Aug 2019 13:10:33 +0300
+Message-ID: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Factor out static kobject_string() function that simply calls
-device_node_string(), and thus remove references to kobjects (as these are
-struct device_node).
+Hi all,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- lib/vsprintf.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+This set adds functionality into the device property API (counting a
+node's parents as well as obtaining its name) in order to support printing
+fwnode names using a new conversion specifier "%pfw". The names that are
+produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+two supported modifiers ("f" and "P").
 
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index a04a2167101ef..19f9b3f30623e 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1905,7 +1905,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
- 	struct printf_spec str_spec = spec;
- 	str_spec.field_width = -1;
- 
--	if (!IS_ENABLED(CONFIG_OF))
-+	if (!IS_ENABLED(CONFIG_OF) || fmt[0] != 'F')
- 		return error_string(buf, end, "(%pOF?)", spec);
- 
- 	if (check_pointer(&buf, end, dn, spec))
-@@ -1978,17 +1978,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
- 	return widen_string(buf, buf - buf_start, end, spec);
- }
- 
--static char *kobject_string(char *buf, char *end, void *ptr,
--			    struct printf_spec spec, const char *fmt)
--{
--	switch (fmt[1]) {
--	case 'F':
--		return device_node_string(buf, end, ptr, spec, fmt + 1);
--	}
--
--	return error_string(buf, end, "(%pO?)", spec);
--}
--
- /*
-  * Show a '%p' thing.  A kernel extension is that the '%p' is followed
-  * by an extra set of alphanumeric characters that are extended format
-@@ -2167,7 +2156,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 	case 'G':
- 		return flags_string(buf, end, ptr, spec, fmt);
- 	case 'O':
--		return kobject_string(buf, end, ptr, spec, fmt);
-+		return device_node_string(buf, end, ptr, spec, fmt + 1);
- 	case 'x':
- 		return pointer_string(buf, end, ptr, spec);
- 	}
+Printing a node's name is something that's been available on OF for a long
+time and if something is converted to device property API (such as the
+V4L2 fwnode framework) it always got removed of a nice feature that was
+sometimes essential in debugging. With this set, that no longer is the
+case.
+
+since v2:
+
+- Better comments in acpi_fwnode_get_name_prefix().
+
+- Added swnode implementation.
+
+- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
+  parent swnode in get_parent op")
+
+- Make argument to to_software_node() const (a new patch)
+
+- Factored out confusingly named kobject_string() that had a single
+  caller.
+
+- Cleaner fwnode_count_parents() implementation (as discussed in review).
+
+- Made fwnode_count_parents() argument const.
+
+- Added tests (last patch in the set).
+
+since v1:
+
+- Add patch to remove support for %pf and %pF (depends on another patch
+  removing all use of %pf and %pF) (now 4th patch)
+
+- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
+
+- Align kerneldoc style with the rest of drivers/base/property.c (no extra
+  newline after function name)
+
+- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
+
+- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
+  by "w")
+
+Sakari Ailus (10):
+  software node: Get reference to parent swnode in get_parent op
+  software node: Make argument to to_software_node const
+  device property: Add functions for accessing node's parents
+  device property: Add fwnode_get_name for returning the name of a node
+  device property: Add a function to obtain a node's prefix
+  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+  lib/vsprintf: Make use of fwnode API to obtain node names and
+    separators
+  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
+  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+  lib/test_printf: Add tests for %pfw printk modifier
+
+ Documentation/core-api/printk-formats.rst | 34 ++++++---
+ drivers/acpi/property.c                   | 48 +++++++++++++
+ drivers/base/property.c                   | 83 +++++++++++++++++++--
+ drivers/base/swnode.c                     | 55 +++++++++++++-
+ drivers/of/property.c                     | 16 +++++
+ include/linux/fwnode.h                    |  4 ++
+ include/linux/property.h                  |  8 ++-
+ lib/test_printf.c                         | 37 ++++++++++
+ lib/vsprintf.c                            | 88 +++++++++++++----------
+ scripts/checkpatch.pl                     |  4 +-
+ 10 files changed, 318 insertions(+), 59 deletions(-)
+
 -- 
 2.20.1
