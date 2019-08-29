@@ -1,64 +1,82 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
- i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
-Date: Thu, 29 Aug 2019 17:24:41 +0200
-Message-ID: <20190829172441.3a76385e@collabora.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829163918.571fd0d8@collabora.com>
-        <20190829163941.45380b19@collabora.com>
-        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
+Date: Thu, 29 Aug 2019 10:26:43 -0500
+Message-ID: <CAL_Jsq+5FMHK4W4UQU24g+rm3CLjnhRcB29skygRB++GaJyM0A@mail.gmail.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Andrzej Hajda <a.hajda@samsung.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:MEDIA DRIVERS FOR RENESAS - FCP
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 15:07:08 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+>
+> Dear All,
+>
+> this series adds support for dual-LVDS panel IDK-2121WR
+> from Advantech:
+> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+>
+> V3 approaches the problem in a completely different way, we now
+> have two new properties to mark the ports in the DT as receiving
+> even pixels and odd pixels: dual-lvds-even-pixels and dual-lvds-odd-pixels,
+> which means device drivers should not use bridge specific or panel
+> specific dual_link flags. Also, in this case the DT describes the
+> connection fully.
+>
+> In order for the solution to be generic, I have exported a new helper
+> (drm_of_lvds_get_dual_link_configuration) to walk the device tree,
+> and figure out if the connection is dual-LVDS. The same helper gives
+> information about the configuration of the connection. If Px is connected
+> to a port expecting even pixels and Py is connected to a port expecting
+> odd pixels, then the helper returns DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS
+> (like in the example below), otherwise it returns
+> DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS.
+>
+>
+>  --------            dual-lvds-even-pixels  --------
+> |        |----                         ----|        |
+> |        | Px |---------------------->| Pn |        |
+> |        |----                         ----|        |
+> | SOURCE |           dual-lvds-odd-pixels  |  SINK  |
+> |        |----                         ----|        |
+> |        | Py |---------------------->| Pm |        |
+> |        |----                         ----|        |
+>  --------                                   --------
+>
+> The device driver for the encoder then will work out if with the current
+> wiring the pixels need swapping or not.
+>
+> The same solution works for both panels and bridges.
+>
+> Since the DT describes the connection fully, driver
+> drivers/gpu/drm/panel/panel-lvds.c works out-of-the-box, no changes
+> required, however, this implementation opens up a problem with the
+> dt-bindings.
+> Driver drivers/gpu/drm/panel/panel-lvds.c can still be pleased by
+> a port node, but also by a ports node.
+> I have created Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
+> with the idea of including it from panels and bridges dt-bindings
+> supporting dual-LVDS (and of course the dt-bindings for the specific
+> devices should say which port should be marked as what), but file
+> Documentation/devicetree/bindings/display/panel/lvds.yaml formally
+> requires property "port", while with this implementation it should require
+> OneOf "port" and "ports", and unfortunately I can't seem to find a neat way
+> aroud that, other than creating a new compatible string
 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Thu, Aug 29, 2019 at 15:39:41
-> 
-> > On Thu, 29 Aug 2019 16:39:18 +0200
-> > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> >   
-> > > On Thu, 29 Aug 2019 14:00:44 +0000
-> > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > >   
-> > > > Hi Boris,
-> > > > 
-> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > Date: Thu, Aug 29, 2019 at 11:44:57
-> > > >     
-> > > > > On Thu, 29 Aug 2019 12:19:33 +0200
-> > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > >       
-> > > > > > The I3C devices described in DT might not be attached to the master which
-> > > > > > doesn't allow to assign a specific dynamic address.      
-> > > > > 
-> > > > > I remember testing this when developing the framework, so, unless
-> > > > > another patch regressed it, it should already work. I suspect patch 1
-> > > > > is actually the regressing this use case.      
-> > > > 
-> > > > For today it doesn't address the case where the device is described with 
-> > > > static address = 0, which isn't attached to the controller.    
-> > > 
-> > > Hm, I'm pretty sure I had designed the code to support that case (see
-> > > [1]). It might be buggy, but nothing we can't fix I guess.
-> > >   
-> > 
-> > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=   
-> 
-> That is only valid if you have olddev which will only exist if static 
-> address != 0.
+Just add 'ports' and drop 'port' from being required in the common
+binding. Then it is up to the panel specific bindings to define which
+one is required. Or we just leave it to allow either form which the
+graph code can handle.
 
-Hm, if you revert patch 1 (and assuming the device is properly defined
-in the DT), you should have olddev != NULL when reaching that point. If
-that's not the case there's a bug somewhere that should be fixed.
+We could have this in the common binding:
+
+oneOf:
+ - required: [ports]
+ - required: [port]
+
+Rob
