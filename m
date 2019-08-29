@@ -1,58 +1,32 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-Date: Thu, 29 Aug 2019 12:11:54 -0600
-Message-ID: <20190829181203.2660-6-ilina@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 01/10] dt-bindings: soc: Add dvfsrc driver bindings
+Date: Thu, 29 Aug 2019 14:16:31 -0500
+Message-ID: <20190829191631.GA15714@bogus>
+References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
+ <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829181203.2660-1-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com, linus.walleij@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>, Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-In addition to configuring the PDC, additional registers that interface
-the GIC have to be configured to match the GPIO type. The registers on
-some QCOM SoCs are access restricted, while on other SoCs are not. They
-SoCs with access restriction to these SPI registers need to be written
-from the firmware using the SCM interface. Add a flag to indicate if the
-register is to be written using SCM interface.
+On Wed, 28 Aug 2019 20:28:39 +0800, Henry Chen wrote:
+> Document the binding for enabling dvfsrc on MediaTek SoC.
+> 
+> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> ---
+>  .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 23 ++++++++++++++++++++++
+>  include/dt-bindings/soc/mtk,dvfsrc.h               | 14 +++++++++++++
+>  2 files changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
+>  create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
+> 
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-index 8e0797cb1487..852fcba98ea6 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -50,15 +50,22 @@ Properties:
- 		    The second element is the GIC hwirq number for the PDC port.
- 		    The third element is the number of interrupts in sequence.
- 
-+- qcom,scm-spi-cfg:
-+	Usage: optional
-+	Value type: <bool>
-+	Definition: Specifies if the SPI configuration registers have to be
-+		    written from the firmware.
-+
- Example:
- 
- 	pdc: interrupt-controller@b220000 {
- 		compatible = "qcom,sdm845-pdc";
--		reg = <0xb220000 0x30000>;
-+		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
- 		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
- 		#interrupt-cells = <2>;
- 		interrupt-parent = <&intc>;
- 		interrupt-controller;
-+		qcom,scm-spi-cfg;
- 	};
- 
- DT binding of a device that wants to use the GIC SPI 514 as a wakeup
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+If a tag was not added on purpose, please state why and what changed.
