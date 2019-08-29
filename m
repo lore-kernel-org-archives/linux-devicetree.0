@@ -1,204 +1,64 @@
-From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: RE: [PATCH 1/4] i3c: master: detach and free device if
- pre_assign_dyn_addr() fails
-Date: Thu, 29 Aug 2019 15:23:30 +0000
-Message-ID: <SN6PR12MB2655E9E544D7E96323BAC796AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
+ i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
+Date: Thu, 29 Aug 2019 17:24:41 +0200
+Message-ID: <20190829172441.3a76385e@collabora.com>
 References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124115.482cd8ec@collabora.com>
-        <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
- <20190829163520.126d42d6@collabora.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124457.3a750932@collabora.com>
+        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163918.571fd0d8@collabora.com>
+        <20190829163941.45380b19@collabora.com>
+        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829163520.126d42d6@collabora.com>
-Content-Language: en-US
+In-Reply-To: <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Przemyslaw Gaj <pgaj@cadence.com>
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Thu, Aug 29, 2019 at 15:35:20
+On Thu, 29 Aug 2019 15:07:08 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-> On Thu, 29 Aug 2019 13:53:24 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->=20
-> > Hi Boris,
-> >=20
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > Date: Thu, Aug 29, 2019 at 11:41:15
-> >=20
-> > > +Przemek
-> > >=20
-> > > Please try to Cc active I3C contributors so they get a chance to
-> > > comment on your patches. =20
-> >=20
-> > I can do that next time.
-> >=20
-> > >=20
-> > > On Thu, 29 Aug 2019 12:19:32 +0200
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Aug 29, 2019 at 15:39:41
+> 
+> > On Thu, 29 Aug 2019 16:39:18 +0200
+> > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> >   
+> > > On Thu, 29 Aug 2019 14:00:44 +0000
 > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > >  =20
-> > > > On pre_assing_dyn_addr() the devices that fail:
-> > > >   i3c_master_setdasa_locked()
-> > > >   i3c_master_reattach_i3c_dev()
-> > > >   i3c_master_retrieve_dev_info()
-> > > >=20
-> > > > are kept in memory and master->bus.devs list. This makes the i3c de=
-vices
-> > > > without a dynamic address are sent on DEFSLVS CCC command. Fix this=
- by
-> > > > detaching and freeing the devices that fail on pre_assign_dyn_addr(=
-). =20
-> > >=20
-> > > I don't think removing those entries is a good strategy, as one might
-> > > want to try to use a different dynamic address if the requested one
-> > > is not available. =20
-> >=20
-> > Do you mean same 'assigned-address' attribute in DT?
->=20
-> Yes, or say it's another device that got the address we want and this
-> device doesn't want to release the address (I'm assuming the !SA case).
->=20
-> >=20
-> > If so, it is checked here:
-> >=20
-> > static int i3c_master_bus_init(struct i3c_master_controller *master)
-> > ...
-> > 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
-> > 		struct i3c_device_info info =3D {
-> > 			.static_addr =3D i3cboardinfo->static_addr,
-> > 		};
-> >=20
-> > 		if (i3cboardinfo->init_dyn_addr) {
-> > 			status =3D i3c_bus_get_addr_slot_status(&master->bus,
-> > 			^
-> > 						i3cboardinfo->init_dyn_addr);
-> > 			if (status !=3D I3C_ADDR_SLOT_FREE) {
-> > 				ret =3D -EBUSY;
-> > 				goto err_detach_devs;
-> > 			}
-> > 		}
-> >=20
-> > 		i3cdev =3D i3c_master_alloc_i3c_dev(master, &info);
-> > 		if (IS_ERR(i3cdev)) {
-> > 			ret =3D PTR_ERR(i3cdev);
-> > 			goto err_detach_devs;
-> > 		}
-> >=20
-> > 		i3cdev->boardinfo =3D i3cboardinfo;
-> >=20
-> > 		ret =3D i3c_master_attach_i3c_dev(master, i3cdev);
-> > 		if (ret) {
-> > 			i3c_master_free_i3c_dev(i3cdev);
-> > 			goto err_detach_devs;
-> > 		}
-> > 	}
-> > ...
-> >=20
-> > and later if it fails i3c_master_pre_assign_dyn_addr(), the device can=
-=20
-> > participate in Enter Dynamic Address Assignment process.
-> > I may need to check the boardinfo->init_dyn_addr status on=20
-> > i3c_master_add_i3c_dev_locked before i3c_master_setnewda_locked().
->=20
-> I need to double check but I thought we were already handling that case
-> properly.
+> > >   
+> > > > Hi Boris,
+> > > > 
+> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > Date: Thu, Aug 29, 2019 at 11:44:57
+> > > >     
+> > > > > On Thu, 29 Aug 2019 12:19:33 +0200
+> > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > >       
+> > > > > > The I3C devices described in DT might not be attached to the master which
+> > > > > > doesn't allow to assign a specific dynamic address.      
+> > > > > 
+> > > > > I remember testing this when developing the framework, so, unless
+> > > > > another patch regressed it, it should already work. I suspect patch 1
+> > > > > is actually the regressing this use case.      
+> > > > 
+> > > > For today it doesn't address the case where the device is described with 
+> > > > static address = 0, which isn't attached to the controller.    
+> > > 
+> > > Hm, I'm pretty sure I had designed the code to support that case (see
+> > > [1]). It might be buggy, but nothing we can't fix I guess.
+> > >   
+> > 
+> > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=   
+> 
+> That is only valid if you have olddev which will only exist if static 
+> address != 0.
 
-Yes, it is handled in the code above.
-
->=20
-> >=20
-> > > Why not simply skipping entries that have ->dyn_addr
-> > > set to 0 when preparing a DEFSLVS frame =20
-> >=20
-> > I considered that solution too but if the device isn't enumerated why=20
-> > should it be attached and kept in memory?
->=20
-> Might be a device that supports HJ, and in that case we might want the
-> controller to reserve a slot in its device table for that device.
-> Anyway, it doesn't hurt to have it around as long as we don't pass the
-> device through DEFSLVS if it doesn't have a dynamic address. I really
-> prefer to keep the logic unchanged and fix it if it needs to be fixed.
-
-Well, we aren't reserving a slot because we need another one to attach=20
-the device when it is enumerated and hence a device may be using 2 slots=20
-in the controller.
-It may cause problems in HC with reduced slots and it is another reason=20
-why I think we should detach device without dynamic address after the=20
-enumeration phase.
-
->=20
-> > Anyway we have i3c_boardinfo=20
-> > with DT information.
-> >=20
-> > >  =20
-> > > >=20
-> > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > > ---
-> > > >  drivers/i3c/master.c | 11 ++++++++---
-> > > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> > > > index 5f4bd52..4d29e1f 100644
-> > > > --- a/drivers/i3c/master.c
-> > > > +++ b/drivers/i3c/master.c
-> > > > @@ -1438,7 +1438,7 @@ static void i3c_master_pre_assign_dyn_addr(st=
-ruct i3c_dev_desc *dev)
-> > > >  	ret =3D i3c_master_setdasa_locked(master, dev->info.static_addr,
-> > > >  					dev->boardinfo->init_dyn_addr);
-> > > >  	if (ret)
-> > > > -		return;
-> > > > +		goto err_detach_dev;
-> > > > =20
-> > > >  	dev->info.dyn_addr =3D dev->boardinfo->init_dyn_addr;
-> > > >  	ret =3D i3c_master_reattach_i3c_dev(dev, 0);
-> > > > @@ -1453,6 +1453,10 @@ static void i3c_master_pre_assign_dyn_addr(s=
-truct i3c_dev_desc *dev)
-> > > > =20
-> > > >  err_rstdaa:
-> > > >  	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
-> > > > +
-> > > > +err_detach_dev:
-> > > > +	i3c_master_detach_i3c_dev(dev);
-> > > > +	i3c_master_free_i3c_dev(dev); =20
-> > >=20
-> > > We certainly shouldn't detach/free the i3c_dev_desc from here. If it
-> > > has to be done somewhere (which I'd like to avoid), it should be done
-> > > in i3c_master_bus_init() (i3c_master_pre_assign_dyn_addr() should be
-> > > converted to return an int in that case). =20
-> >=20
-> > I can change it to return an error.=20
-> >=20
-> > >  =20
-> > > >  }
-> > > > =20
-> > > >  static void
-> > > > @@ -1647,7 +1651,7 @@ static int i3c_master_bus_init(struct i3c_mas=
-ter_controller *master)
-> > > >  	enum i3c_addr_slot_status status;
-> > > >  	struct i2c_dev_boardinfo *i2cboardinfo;
-> > > >  	struct i3c_dev_boardinfo *i3cboardinfo;
-> > > > -	struct i3c_dev_desc *i3cdev;
-> > > > +	struct i3c_dev_desc *i3cdev, *i3ctmp;
-> > > >  	struct i2c_dev_desc *i2cdev;
-> > > >  	int ret;
-> > > > =20
-> > > > @@ -1746,7 +1750,8 @@ static int i3c_master_bus_init(struct i3c_mas=
-ter_controller *master)
-> > > >  	 * Pre-assign dynamic address and retrieve device information if
-> > > >  	 * needed.
-> > > >  	 */
-> > > > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
-> > > > +	list_for_each_entry_safe(i3cdev, i3ctmp, &master->bus.devs.i3c,
-> > > > +				 common.node)
-> > > >  		i3c_master_pre_assign_dyn_addr(i3cdev);
-> > > > =20
-> > > >  	ret =3D i3c_master_do_daa(master); =20
-> >=20
-> > Thank for your feedback.
-> >=20
-> > Best regards,
-> > Vitor Soares
+Hm, if you revert patch 1 (and assuming the device is properly defined
+in the DT), you should have olddev != NULL when reaching that point. If
+that's not the case there's a bug somewhere that should be fixed.
