@@ -1,44 +1,163 @@
-From: Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Subject: Re: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related
- code from core driver
-Date: Thu, 29 Aug 2019 14:24:36 +0800
-Message-ID: <1567059876.15320.3.camel@mtksdaap41>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
-         <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
-         <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
-         <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
-         <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Date: Thu, 29 Aug 2019 09:03:48 +0200
+Message-ID: <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Richard Fontana <rfontana@redhat.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, "=?ISO-8859-1?Q?=22Ren=E9?= van Dorst\"" <opensource@vdorst.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, Kate Stewart <kstewart@linuxfoundation.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190223165218.GB572@tuxbook-pro>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: mark.rutland@arm.com, robh@kernel.org, jackp@codeaurora.org, kishon@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, khasim.mohammed@linaro.org, linux-kernel@vger.kernel.org, swboyd@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank/Matthias,
+On 2/23/19 17:52, Bjorn Andersson wrote:
+> On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
+> 
+>> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
+>> controller embedded in QCS404.
+>>
+>> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+>> definitions.
+>>
+>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>> ---
+>>  .../bindings/phy/qcom,snps-usb-ssphy.txt      | 79 +++++++++++++++++++
+>>  1 file changed, 79 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt b/Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
+>> new file mode 100644
+>> index 000000000000..354e6f9cef62
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/qcom,snps-usb-ssphy.txt
+>> @@ -0,0 +1,79 @@
+>> +Qualcomm Synopsys 1.0.0 SS phy controller
+>> +===========================================
+>> +
+>> +Qualcomm 1.0.0 SS phy controller supports SuperSpeed USB connectivity on
+>> +some Qualcomm platforms.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible:
+>> +    Value type: <string>
+>> +    Definition: Should contain "qcom,snps-usb-ssphy".
+> 
+> Per Rob's request make this:
+> 
+> Should contain "qcom,qcs404-snps-usb-ssphy" and "qcom,snps-usb-ssphy"
 
-On Fri, 2019-08-23 at 19:16 +0200, Frank Wunderlich wrote:
-> > Gesendet: Freitag, 23. August 2019 um 17:42 Uhr
-> > Von: "Matthias Brugger" <matthias.bgg@gmail.com>
+ok
+
 > 
-> > I suppose that's because 3/10 has code that should be in 2/10 and for some
-> > reason 3/10 was not pushed for linux-next inclusion. Although it has the same
-> > Acked-for-mfd-by tag.
-> >
-> > @Frank, can you test if adding 3/10 to your code base fixes the issue?
+> You can then leave the driver matching on qcom,snps-usb-ssphy for now
+> and if we ever find this to be incompatible with other platforms we can
+> make the driver match on the platform-specific compatible.
+
+ok
+
 > 
-> adding part 3 [1] seems to fix the issue too
+>> +
+>> +- reg:
+>> +    Value type: <prop-encoded-array>
+>> +    Definition: USB PHY base address and length of the register map.
+>> +
+>> +- #phy-cells:
+>> +    Value type: <u32>
+>> +    Definition: Should be 0. See phy/phy-bindings.txt for details.
+>> +
+>> +- clocks:
+>> +    Value type: <prop-encoded-array>
+>> +    Definition: See clock-bindings.txt section "consumers". List of
+>> +		 three clock specifiers for reference, phy core and
+>> +		 pipe clocks.
+>> +
+>> +- clock-names:
+>> +    Value type: <string>
+>> +    Definition: Names of the clocks in 1-1 correspondence with the "clocks"
+>> +		 property. Must contain "ref", "phy" and "pipe".
+>> +
+>> +- vdd-supply:
+>> +    Value type: <phandle>
+>> +    Definition: phandle to the regulator VDD supply node.
+>> +
+>> +- vdda1p8-supply:
+>> +    Value type: <phandle>
+>> +    Definition: phandle to the regulator 1.8V supply node.
+>> +
+>> +Optional properties:
+>> +
+>> +- resets:
+>> +    Value type: <prop-encoded-array>
+>> +    Definition: See reset.txt section "consumers". Specifiers for COM and
+>> +		 PHY resets.
+>> +
+>> +- reset-names:
+>> +    Value type: <string>
+>> +    Definition: Names of the resets in 1-1 correspondence with the "resets"
+>> +		 property. Must contain "com" and "phy" if the property is
+>> +		 specified.
+>> +
+>> +Required child nodes:
+>> +
+>> +- usb connector node as defined in bindings/connector/usb-connector.txt
+>> +  containing the property vbus-supply.
+>> +
+>> +Example:
+>> +
+>> +usb3_phy: usb3-phy@78000 {
+>> +	compatible = "qcom,snps-usb-ssphy";
+>> +	reg = <0x78000 0x400>;
+>> +	#phy-cells = <0>;
+>> +	clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+>> +		 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+>> +		 <&gcc GCC_USB3_PHY_PIPE_CLK>;
+>> +	clock-names = "ref", "phy", "pipe";
+>> +	resets = <&gcc GCC_USB3_PHY_BCR>,
+>> +		 <&gcc GCC_USB3PHY_PHY_BCR>;
+>> +	reset-names = "com", "phy";
+>> +	vdd-supply = <&vreg_l3_1p05>;
+>> +	vdda1p8-supply = <&vreg_l5_1p8>;
+>> +	usb3_c_connector: usb3-c-connector {
 > 
-> [    4.960051] mt6323-regulator mt6323-regulator: Chip ID = 0x2023
+> The USB-C connector is attached both to the HS and SS PHYs, so I think
+> you should represent this external to this node and use of_graph to
+> query it.
+
+but AFAICS we wont be able to retrieve the vbux-supply from an external
+node (that interface does not exist).
+
+rob, do you have a suggestion?
+
 > 
-> thanks
+> So the connector should look similar to example 2 in
+> connector/usb-connector.txt.
 > 
-> [1] https://patchwork.kernel.org/patch/11110509/
-Thanks for your comments.
-The root cause seems I didn't split the code well.
-I will fix it in the next version.
+> Regards,
+> Bjorn
+> 
+>> +		compatible = "usb-c-connector";
+>> +		label = "USB-C";
+>> +		type = "micro";
+>> +		vbus-supply = <&usb3_vbus_reg>;
+>> +	};
+>> +};
+>> -- 
+>> 2.20.1
+>>
+> 
