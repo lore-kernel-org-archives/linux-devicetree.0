@@ -1,79 +1,64 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Date: Thu, 29 Aug 2019 23:17:01 +0300
-Message-ID: <20190829201701.GA3568@valkosipuli.retiisi.org.uk>
-References: <20190806130938.19916-1-manivannan.sadhasivam@linaro.org>
- <20190806130938.19916-3-manivannan.sadhasivam@linaro.org>
- <20190813105920.GH835@valkosipuli.retiisi.org.uk>
- <20190829170415.GA4427@mani>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 0/9] i2c: add support for filters
+Date: Thu, 29 Aug 2019 22:28:17 +0200
+Message-ID: <20190829202817.GT3740@ninjato>
+References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+ <20190712082044.6eteunzehyptsibk@M43218.corp.atmel.com>
+ <867070c3-02c8-da1b-04d9-0a1b628577de@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="MET8MpPxp2u2c48q"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190829170415.GA4427@mani>
+In-Reply-To: <867070c3-02c8-da1b-04d9-0a1b628577de@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+To: Eugen.Hristev@microchip.com
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, peda@axentia.se, mark.rutland@arm.com, Nicolas.Ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
 
-On Thu, Aug 29, 2019 at 10:34:15PM +0530, Manivannan Sadhasivam wrote:
+--MET8MpPxp2u2c48q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
 
-> > > +static int imx290_set_fmt(struct v4l2_subdev *sd,
-> > > +			  struct v4l2_subdev_pad_config *cfg,
-> > > +		      struct v4l2_subdev_format *fmt)
-> > > +{
-> > > +	struct imx290 *imx290 = to_imx290(sd);
-> > > +	const struct imx290_mode *mode;
-> > > +	struct v4l2_mbus_framefmt *format;
-> > > +	int i, ret = 0;
-> > 
-> > Note that sub-device drivers need to serialise access through the uAPI to
-> > their own data.
-> > 
-> 
-> You mean guarding with mutex?
+> > I don't know if it will fit other vendors need concerning the binding
+> > but for Microchip it sounds good.
+> >=20
+> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > for the whole serie.
+> >=20
+> > Regards
+> >=20
+> > Ludovic
+> >=20
+>=20
+> Hello Wolfram,
+>=20
+> What is the plan for this patch series?
 
-Yes, please.
+I hope to review it this weekend and my hope it is good to go for 5.4.
 
-...
 
-> > > +static int imx290_get_regulators(struct device *dev, struct imx290 *imx290)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i = 0; i < IMX290_NUM_SUPPLIES; i++)
-> > > +		imx290->supplies[i].supply = imx290_supply_name[i];
-> > > +
-> > > +	return devm_regulator_bulk_get(dev, IMX290_NUM_SUPPLIES,
-> > > +				       imx290->supplies);
-> > > +}
-> > > +
+--MET8MpPxp2u2c48q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-...
+-----BEGIN PGP SIGNATURE-----
 
-> > > +	ret = imx290_get_regulators(dev, imx290);
-> > > +	if (ret < 0) {
-> > > +		dev_err(dev, "Cannot get regulators\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-> > > +	if (IS_ERR(imx290->rst_gpio)) {
-> > > +		dev_err(dev, "Cannot get reset gpio\n");
-> > 
-> > Remember to put the regulators from now on. Or grab them later.
-> > 
-> 
-> Shouldn't that happen by default with devm_regulator* APIs?
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1oNWAACgkQFA3kzBSg
+KbZrWw/9HqjOXK/IH1rLw2tSA9GN1022F4IumHkzV+65mZFNq21FwtEAjTScq2uv
+nIRFzhRtjtBlov0w3t5prkUAuSKqKXiGgue/cDannWVLvdk/pcrTCERvQsBc5rIe
+Jlhya4MgSnE3teHqrJy4XtKn3m1LUJ6I/XtTGzDl50KHsepFWGuITBXKIKpS+R1q
+XVG1reJyxec3oWGHh1V1L+klLIb1HHWickcmYM2djZXrpharb7D0fIsdQB+1jSNR
+qhOpL15ye5Gc/01JA/rkNsSz/TI7AQBekZrsVaSgehnvN24yG9JzP6jLhaNU+9Xw
+lR5YY2FY8ubdAtcfDLYa+pJYBBxAtPuNfCMpVqaT/9woLF0gsCX4S8ggGAzne/MN
+KfatKAkosRZhO2rnXfFDnnBpL/wCGFA4/xiECAjYv1kalCopR8dUeYCdWIMcI1g5
+7MRqq9c1HE95e3Sh2mEPR3BHgDD83YmEjsYU6TOyYFoa0FS/A7WaQ1iqX7FmqZbm
+WRLtrtD3aVGxUncuYxfjLpNRSmOGnowjcIVLrURVCSYMvYsU5ltn0t9xTDp9h6yf
+D+rfsiFxcKnoasaeLaPauHCXVrgbbDG28tI+GoNTJkLjTZmWHkH/hPdcam3N6Qcc
+hHQImfyLvBDp9ePMb8U8ombH/SLyT2cqdOXgSHTLflZuCazJWZo=
+=S1+3
+-----END PGP SIGNATURE-----
 
-Ah, I missed you were using the devm variant. Please ignore the comment
-then.
-
--- 
-Regards,
-
-Sakari Ailus
+--MET8MpPxp2u2c48q--
