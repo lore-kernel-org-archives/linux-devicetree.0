@@ -1,59 +1,89 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: RE: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Date: Thu, 29 Aug 2019 09:11:41 +0000
-Message-ID: <VE1PR04MB6638A54664EE3FFE16BD419189A20@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190827123216.32728-1-robin@protonic.nl>
- <20190828091550.pdc57wanu6twew5p@pengutronix.de>
- <6d353af709ea545cc34abca5c40674e3@protonic.nl>
- <20190829081712.timamprawezzbesn@pengutronix.de>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS
+ bus-timings
+Date: Thu, 29 Aug 2019 09:14:37 +0000
+Message-ID: <OSBPR01MB176683A6508892FBF1159FEDC0A20@OSBPR01MB1766.jpnprd01.prod.outlook.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVPsT=1R7DAnmui+iaWcnoy52Xrr47zLWbgmUumBZ2sdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829081712.timamprawezzbesn@pengutronix.de>
+In-Reply-To: <CAMuHMdVPsT=1R7DAnmui+iaWcnoy52Xrr47zLWbgmUumBZ2sdw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>, robin <robin@protonic.nl>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DRI Development <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2019-08-29 16:17, Marco Felsch wrote:
-> > > While reading the rm it seems that
-> > > the snvs block has a dedicated version register. IMHO this could be
-> > > a better way to apply the change also to existing devices with old
-> > > firmware.
-> >
-> > I thought the same thing, and fully agree with you. However I do not
-> > have a way to determine which versions are out there. Since I couldn't
-> > find any documentation on this, and I only have i.MX6 S/DL, D/Q and UL
-> laying around.
->=20
-> @NXP Kernel Team
-> Can we get some more information here?
-Go ahead, please. That snvs version register SNVS_HPVIDR1 should work as ex=
-pect.
-MINOR_REV checking is enough, none-zero means for soc after i.mx6sx, but
-Zero means i.mx6q/dl/sl elder soc.
->=20
-> Regards,
->   Marco
->=20
-> > Regards,
-> > Robin van der Gracht
-> >
->=20
-> --
-> Pengutronix e.K.                           |
-> |
-> Industrial Linux Solutions                 |
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.p
-> engutronix.de%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7C8d4e1
-> 0cd77bd4652f3eb08d72c594e76%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
-> C0%7C0%7C637026634390359345&amp;sdata=3DmhXlUxmLWg8qtwhPQfkJZm
-> VAn4QQ3YybLOSh83uf27E%3D&amp;reserved=3D0  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:
-> +49-5121-206917-5555 |
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBsaW51
+eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1rZXJuZWwtb3duZXJAdmdlci5r
+ZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgR2VlcnQgVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IDI5IEF1
+Z3VzdCAyMDE5IDA4OjU4DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMS84XSBkdC1iaW5kaW5n
+czogZGlzcGxheTogQWRkIGJpbmRpbmdzIGZvciBMVkRTIGJ1cy10aW1pbmdzDQo+IA0KPiBIaSBG
+YWJyaXppbywNCj4gDQo+IE9uIFdlZCwgQXVnIDI4LCAyMDE5IGF0IDg6MzYgUE0gRmFicml6aW8g
+Q2FzdHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IER1
+YWwtTFZEUyBjb25uZWN0aW9ucyBuZWVkIG1hcmtlcnMgaW4gdGhlIERULCB0aGlzIHBhdGNoIGFk
+ZHMNCj4gPiBzb21lIGNvbW1vbiBkb2N1bWVudGF0aW9uIHRvIGJlIHJlZmVyZW5jZWQgYnkgYm90
+aCBwYW5lbHMgYW5kDQo+ID4gYnJpZGdlcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJp
+emlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPiANCj4gVGhhbmtz
+IGZvciB5b3VyIHBhdGNoIQ0KPiANCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnVzLXRpbWluZ3MvbHZkcy55YW1s
+DQo+ID4gQEAgLTAsMCArMSwzOCBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
+UEwtMi4wDQo+ID4gKyVZQU1MIDEuMg0KPiA+ICstLS0NCj4gPiArJGlkOiBodHRwOi8vZGV2aWNl
+dHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L2J1cy10aW1pbmdzL2x2ZHMueWFtbCMNCj4gPiArJHNj
+aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4g
+Kw0KPiA+ICt0aXRsZTogQ29tbW9uIFByb3BlcnRpZXMgZm9yIGJ1cyB0aW1pbmdzIG9mIExWRFMg
+aW50ZXJmYWNlcw0KPiA+ICsNCj4gPiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBUaGllcnJ5IFJl
+ZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPg0KPiA+ICsgIC0gRmFicml6aW8gQ2FzdHJv
+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlv
+bjogfA0KPiA+ICsgIFRoaXMgZG9jdW1lbnQgZGVmaW5lcyBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVz
+IGNvbW1vbiB0byBMVkRTIGFuZCBkdWFsLUxWRFMNCj4gPiArICBpbnRlcmZhY2VzLCB3aGVyZSBh
+IGR1YWwtTFZEUyBpbnRlcmZhY2UgaXMgYSBkdWFsLWxpbmsgY29ubmVjdGlvbiB3aXRoIGV2ZW4N
+Cj4gPiArICBwaXhlbHMgdHJhdmVsaW5nIG9uIG9uZSBjb25uZWN0aW9uLCBhbmQgd2l0aCBvZGQg
+cGl4ZWxzIHRyYXZlbGluZyBvbiB0aGUgb3RoZXINCj4gPiArICBjb25uZWN0aW9uLg0KPiA+ICsg
+IFRoaXMgZG9jdW1lbnQgZG9lc24ndCBjb25zdGl0dWUgYSBkZXZpY2UgdHJlZSBiaW5kaW5nIHNw
+ZWNpZmljYXRpb24gYnkgaXRzZWxmDQo+ID4gKyAgYnV0IGlzIG1lYW50IHRvIGJlIHJlZmVyZW5j
+ZWQgYnkgZGV2aWNlIHRyZWUgYmluZGluZ3MuDQo+ID4gKyAgV2hlbiByZWZlcmVuY2VkIGZyb20g
+cGFuZWwgb3IgYnJpZGdlIGRldmljZSB0cmVlIGJpbmRpbmdzLCB0aGUgcHJvcGVydGllcw0KPiA+
+ICsgIGRlZmluZWQgaW4gdGhpcyBkb2N1bWVudCBhcmUgZGVmaW5lZCBhcyBmb2xsb3dzLiBUaGUg
+cGFuZWwgYW5kIGJyaWRnZSBkZXZpY2UNCj4gPiArICB0cmVlIGJpbmRpbmdzIGFyZSByZXNwb25z
+aWJsZSBmb3IgZGVmaW5pbmcgd2hldGhlciBlYWNoIHByb3BlcnR5IGlzIHJlcXVpcmVkDQo+ID4g
+KyAgb3Igb3B0aW9uYWwuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGR1YWwtbHZk
+cy1ldmVuLXBpeGVsczoNCj4gPiArICAgIHR5cGU6IGJvb2xlYW4NCj4gPiArICAgIGRlc2NyaXB0
+aW9uOg0KPiA+ICsgICAgICBUaGlzIHByb3BlcnR5IGlzIHNwZWNpZmljIHRvIGFuIGlucHV0IHBv
+cnQgb2YgYSBzaW5rIGRldmljZS4gV2hlbg0KPiA+ICsgICAgICBzcGVjaWZpZWQsIGl0IG1hcmtz
+IHRoZSBwb3J0IGFzIHJlY2lwaWVudCBvZiBldmVuLXBpeGVscy4NCj4gPiArDQo+ID4gKyAgZHVh
+bC1sdmRzLW9kZC1waXhlbHM6DQo+ID4gKyAgICB0eXBlOiBib29sZWFuDQo+ID4gKyAgICBkZXNj
+cmlwdGlvbjoNCj4gPiArICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzcGVjaWZpYyB0byBhbiBpbnB1
+dCBwb3J0IG9mIGEgc2luayBkZXZpY2UuIFdoZW4NCj4gPiArICAgICAgc3BlY2lmaWVkLCBpdCBt
+YXJrcyB0aGUgcG9ydCBhcyByZWNpcGllbnQgb2Ygb2RkLXBpeGVscy4NCj4gDQo+IERvIHlvdSBu
+ZWVkIHRoZSAiZHVhbC0iIHByZWZpeD8gSXNuJ3QgdGhhdCBpbXBsaWVkIGJ5IGV2ZW4vb2RkPw0K
+PiBPciBpcyBpdCBiZXR0ZXIgdG8ga2VlcCBpdCwgZm9yIHJlYWRhYmlsaXR5Pw0KDQpJIGRlY2lk
+ZWQgdG8gZ28gd2l0aCAiZHVhbC1sdmRzLWV2ZW4tcGl4ZWxzIiBhbmQgImR1YWwtbHZkcy1vZGQt
+cGl4ZWxzIg0KYmVjYXVzZSB0aGUgImR1YWwtbHZkcyIgcHJlZml4IHVuaXF1ZWx5IGlkZW50aWZp
+ZXMgdGhlIHR5cGUgb2YgYnVzLCBhbmQgSQ0KZGVjaWRlZCB0byBnbyB3aXRoIHRoZSAicGl4ZWxz
+IiBzdWZmaXggYmVjYXVzZSAiZHVhbC1sdmRzLW9kZCIganVzdCBkb2Vzbid0DQpzb3VuZCByaWdo
+dC4gSSBndWVzcyAiZHVhbC1sdmRzLWV2ZW4tcGl4ZWxzIiBhbmQgImR1YWwtbHZkcy1vZGQtcGl4
+ZWxzIg0KYXJlIHRoZSBtb3N0IHJlYWRhYmxlIGFuZCBmdXR1cmUgcHJvb2YgbGFiZWxzIEkgY291
+bGQgdGhpbmsgb2YsIGJ1dCBtYXliZQ0KdGhlcmUgaXMgc29tZXRoaW5nIGJldHRlciB3ZSBjYW4g
+ZG8/IExhdXJlbnQ/DQoNCj4gDQo+IEknbSBhbHNvIHRoaW5raW5nIGFib3V0IGEgcG9zc2libGUg
+ZnV0dXJlIGV4dGVuc2lvbiB0byB0cmlwbGUgb3IgcXVhZCBMVkRTLg0KPiBBcyBJJ20gbm90IGF3
+YXJlIG9mIEVuZ2xpc2ggd29yZCBlcXVpdmFsZW50cyBvZiBldmVuL29kZCBmb3IgdHJpcGxlL3F1
+YWQsDQo+IHBlcmhhcHMgdGhpcyBzaG91bGQgYmUgc3BlY2lmaWVkIHVzaW5nIGEgbnVtZXJpY2Fs
+IHZhbHVlIGluc3RlYWQ/DQoNCkkgd291bGQgaGF2ZSB0byBzZWUgYSB1c2UgY2FzZSBmb3Igb3Ro
+ZXIgTFZEUyBjb25maWd1cmF0aW9ucyBmb3IgcHJvdmlkaW5nDQphIHByb3BlciBhbnN3ZXIgdG8g
+dGhpcyBxdWVzdGlvbiwgYnV0IHBlcmhhcHMgd2UgY291bGQgYWNjZXB0IHRoYXQgb3RoZXINCmNv
+bmZpZ3VyYXRpb25zIGZvciBMVkRTIGNvbm5lY3Rpb25zIG1heSBjb21lIHdpdGggbGFiZWxzIHRo
+YXQgYXJlIHRhaWxvcmVkDQp0byBoZWxwIHVuaXF1ZWx5IGlkZW50aWZ5aW5nIHRoZSBwb3J0cyB3
+aGlsZSBiZWluZyByZWFkYWJsZT8gUGVyaGFwcyBudW1lcmljYWwNCnZhbHVlcyB3b3VsZCB3b3Jr
+IGJldHRlciBpbiBvdGhlciBjYXNlcz8gTGF1cmVudD8NCg0KPiANCj4gSWYgSSBnbyB0b28gZmFy
+LCBwbGVhc2UganVzdCBzYXkgc28gOy0pDQoNCkRlZmluaXRlbHkgd29ydGggZGlzY3Vzc2luZyEN
+Cg0KVGhhbmtzLA0KRmFiDQoNCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAt
+LSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5v
+cmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxl
+LCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3Vy
+bmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0K
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
