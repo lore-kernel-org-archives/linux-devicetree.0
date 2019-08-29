@@ -1,276 +1,569 @@
-From: robin <robin@protonic.nl>
-Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Date: Thu, 29 Aug 2019 09:24:12 +0200
-Message-ID: <6d353af709ea545cc34abca5c40674e3@protonic.nl>
-References: <20190827123216.32728-1-robin@protonic.nl>
- <20190828091550.pdc57wanu6twew5p@pengutronix.de>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCHv5 1/2] ARM: dts: imx6ul: Add Variscite DART-6UL SoM
+ support
+Date: Thu, 29 Aug 2019 09:28:46 +0200
+Message-ID: <20190829072846.5d3nj63yleamhhdb@pengutronix.de>
+References: <1567009160-21965-1-git-send-email-oliver.graute@gmail.com>
+ <1567009160-21965-2-git-send-email-oliver.graute@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828091550.pdc57wanu6twew5p@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <1567009160-21965-2-git-send-email-oliver.graute@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>
+To: Oliver Graute <oliver.graute@gmail.com>
+Cc: shawnguo@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, narmstrong@baylibre.com, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marco,
+Hi Oliver,
 
-On 2019-08-28 11:15, Marco Felsch wrote:
-> Hi Robin,
+thanks for the patch.
+
+On 19-08-28 18:19, Oliver Graute wrote:
+> This patch adds support for the i.MX6UL variant of the Variscite DART-6UL
+> SoM Carrier-Board
 > 
-> thanks for the patch.
+> Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 445 +++++++++++++++++++++
+
+Is it a imx6ul or a imx6ull? Also can you add a changelog the next time?
+
+>  1 file changed, 445 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
 > 
-> On 19-08-27 14:32, Robin van der Gracht wrote:
->> The first generation i.MX6 processors does not send an interrupt when 
->> the
->> power key is pressed. It sends a power down request interrupt if the 
->> key is
->> released before a hard shutdown (5 second press). This should allow
->> software to bring down the SoC safely.
->> 
->> For this driver to work as a regular power key with the older SoCs, we 
->> need
->> to send a keypress AND release when we get the power down request irq.
->> 
->> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
->> ---
->>  .../devicetree/bindings/crypto/fsl-sec4.txt   | 16 ++++--
->>  drivers/input/keyboard/Kconfig                |  2 +-
->>  drivers/input/keyboard/snvs_pwrkey.c          | 52 
->> ++++++++++++++++---
+> diff --git a/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi b/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+> new file mode 100644
+> index 00000000..f345d69
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+> @@ -0,0 +1,445 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+> +/dts-v1/;
+> +
+> +#include "imx6ul.dtsi"
+> +/ {
+> +	chosen {
+> +		stdout-path = &uart1;
+
+You specify uart1 here and disable the node below... That seems wrong to
+me.
+
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x20000000>;
+> +	};
+> +
+> +	touch_3v3_regulator: regulator-touch-3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "touch_3v3_supply";
+> +		regulator-always-on;
+
+Why is it always-on?
+
+> +	};
+
+Please name the phandle reg_touch_3v3 and specify the
+regulator-min-microvolt/regulator-max-microvolt properties.
+
+> +
+> +	reg_sd1_vmmc: regulator-sd1-vmmc {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VSD_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	reg_gpio_dvfs: regulator-gpio {
+> +		compatible = "regulator-gpio";
+> +		regulator-min-microvolt = <1300000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-name = "gpio_dvfs";
+> +		regulator-type = "voltage";
+> +		gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		states = <1300000 0x1 1400000 0x0>;
+> +	};
+> +
+> +	rmii_ref_clk: clock-rmii-ref {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +		clock-output-names = "rmii-ref";
+> +	};
+
+Alphabetical ordering please and please rename the phandle to
+clk_rmii_ref or something.
+
+> +
+> +};
+> +
+> +&adc1 {
+> +	vref-supply = <&touch_3v3_regulator>;
+> +	status = "okay";
+> +};
+> +
+> +&can1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan1>;
+> +	status = "disabled";
+
+No need to disable it here, it is disabled in the SoC DT.
+
+> +};
+> +
+> +&can2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_flexcan2>;
+> +	status = "disabled";
+
+Here too.
+
+> +};
+> +
+> +&cpu0 {
+> +	arm-supply = <&reg_arm>;
+> +	soc-supply = <&reg_soc>;
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	phy-mode = "rmii";
+> +	status = "disabled";
+
+And here.
+
+> +};
+> +
+> +&fec2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet2>;
+> +	phy-mode = "rmii";
+> +	status = "disabled";
+
+And here.
+
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@1 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			micrel,rmii-reference-clock-select-25-mhz;
+> +			clocks = <&rmii_ref_clk>;
+> +			clock-names = "rmii-ref";
+
+Do we need to specify the clock-names?
+
+> +			reg = <1>;
+> +		};
+> +
+> +		ethphy1: ethernet-phy@3 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			micrel,rmii-reference-clock-select-25-mhz;
+> +			clocks = <&rmii_ref_clk>;
+> +			clock-names = "rmii-ref";
+> +			reg = <3>;
+> +		};
+> +	};
+> +};
+> +
+> +&gpmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
+> +	status = "okay";
+> +
+> +	partition@0 {
+> +		label = "spl";
+> +		reg = <0x00000000 0x00200000>;
+> +	};
+> +
+> +	partition@200000 {
+> +		label = "uboot";
+> +		reg = <0x00200000 0x00200000>;
+> +	};
+> +
+> +	partition@400000 {
+> +		label = "uboot-env";
+> +		reg = <0x00400000 0x00200000>;
+> +	};
+> +
+> +	partition@600000 {
+> +		label = "kernel";
+> +		reg = <0x00600000 0x00800000>;
+> +	};
+> +
+> +	partition@e00000 {
+> +		label = "rootfs";
+> +		reg = <0x00e00000 0x3f200000>;
+> +	};
+
+Nope, partitions must be within a subnode. Please check
+Documentation/devicetree/bindings/mtd/partition.txt.
+
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "disabled";
+
+Drop the status line.
+
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "disabled";
+Drop the status line.
+> +};
+> +
+> +&pwm1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm1>;
+> +	status = "disabled";
+Drop the status line.
+> +};
+> +
+> +&sai2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_sai2>;
+> +	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
+> +			  <&clks IMX6UL_CLK_SAI2>;
+> +	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+> +	assigned-clock-rates = <0>, <12288000>;
+> +	fsl,sai-mclk-direction-output;
+> +	status = "okay";
+> +};
+> +
+> +&snvs_poweroff {
+> +	status = "okay";
+> +};
+> +
+> +&snvs_rtc {
+> +	status = "disabled";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "disabled";
+
+No need.
+
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	uart-has-rtscts;
+> +	status = "disabled";
+
+No need.
+
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart3>;
+> +	uart-has-rtscts;
+> +	status = "disabled";
+
+No need.
+
+> +};
+> +
+> +&usbotg1 {
+> +	disable-over-current;
+> +	status = "disabled";
+
+No need.
+
+> +};
+> +
+> +&usbotg2 {
+> +	disable-over-current;
+> +	status = "disabled";
+
+No need.
+
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+> +	no-1-8-v;
+> +	keep-power-in-suspend;
+> +	vmmc-supply = <&reg_sd1_vmmc>;
+
+I tought the highspeed modes using 1.8V signal levels.
+
+> +	non-removable;
+
+Please specify the bus-with too. BTW. is it a SD-Card or an eMMC?
+
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	status = "disabled";
+> +};
+
+Remove the whole node.
+
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog>;
+> +	fsl,ext-reset-output;
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2: enet2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_ER__ENET2_RX_ER	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET2_TX_CLK__ENET2_REF_CLK2	0x4001b031
+> +			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
+> +			MX6UL_PAD_JTAG_MOD__GPIO1_IO10		0x1b0b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan1: flexcan1grp{
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA09__FLEXCAN1_RX	0x1b020
+> +			MX6UL_PAD_LCD_DATA08__FLEXCAN1_TX	0x1b020
+> +		>;
+> +	};
+> +
+> +	pinctrl_flexcan2: flexcan2grp{
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
+> +			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
+> +		>;
+> +	};
+> +
+> +	pinctrl_gpio_leds: gpioledsgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_HSYNC__GPIO4_IO20		0x1b0b0
+> +			MX6UL_PAD_GPIO1_IO00__GPIO1_IO00	0x17059
+> +		>;
+> +	};
+
+You didn't reference that node.
+
+> +
+> +	pinctrl_gpmi_nand: gpminandgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_NAND_CLE__RAWNAND_CLE		0xb0b1
+> +			MX6UL_PAD_NAND_ALE__RAWNAND_ALE		0xb0b1
+> +			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B	0xb0b1
+> +			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B	0xb000
+> +			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B	0xb0b1
+> +			MX6UL_PAD_NAND_CE1_B__RAWNAND_CE1_B	0xb0b1
+> +			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B	0xb0b1
+> +			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B	0xb0b1
+> +			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00	0xb0b1
+> +			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01	0xb0b1
+> +			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02	0xb0b1
+> +			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03	0xb0b1
+> +			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04	0xb0b1
+> +			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05	0xb0b1
+> +			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06	0xb0b1
+> +			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07	0xb0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_hog: hoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO03__OSC32K_32K_OUT    0x03029
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL	0x4001b8b0
+> +			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA	0x4001b8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART5_TX_DATA__I2C2_SCL	0x4001b8b0
+> +			MX6UL_PAD_UART5_RX_DATA__I2C2_SDA	0x4001b8b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_lcdif: lcdif {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02	0x79
+> +			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03	0x79
+> +			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04	0x79
+> +			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05	0x79
+> +			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06	0x79
+> +			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07	0x79
+> +			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10	0x79
+> +			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11	0x79
+> +			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12	0x79
+> +			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13	0x79
+> +			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14	0x79
+> +			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15	0x79
+> +			MX6UL_PAD_LCD_DATA18__LCDIF_DATA18	0x79
+> +			MX6UL_PAD_LCD_DATA19__LCDIF_DATA19	0x79
+> +			MX6UL_PAD_LCD_DATA20__LCDIF_DATA20	0x79
+> +			MX6UL_PAD_LCD_DATA21__LCDIF_DATA21	0x79
+> +			MX6UL_PAD_LCD_DATA22__LCDIF_DATA22	0x79
+> +			MX6UL_PAD_LCD_DATA23__LCDIF_DATA23	0x79
+> +			MX6UL_PAD_LCD_CLK__LCDIF_CLK		0x79
+> +			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE	0x79
+> +		>;
+> +	};
+
+You didn't reference that.
+
+> +
+> +	pinctrl_pwm1: pwm1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_LCD_DATA00__PWM1_OUT		0x110b0
+> +		>;
+> +	};
+> +
+> +	pinctrl_sai1: sai1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_DATA05__SAI1_TX_BCLK	0x11088
+> +			MX6UL_PAD_CSI_DATA04__SAI1_TX_SYNC	0x17088
+> +			MX6UL_PAD_CSI_DATA06__SAI1_RX_DATA	0x11088
+> +			MX6UL_PAD_CSI_DATA07__SAI1_TX_DATA	0x11088
+> +		>;
+> +	};
+
+You didn't reference that.
+
+> +	pinctrl_sai2: sai2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK	0x17088
+> +			MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC	0x17088
+> +			MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA	0x11088
+> +			MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA	0x11088
+> +			MX6UL_PAD_JTAG_TMS__SAI2_MCLK		0x17088
+> +		>;
+> +	};
+> +
+> +	pinctrl_tsc: tscgrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
+> +			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
+> +			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
+> +			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
+> +		>;
+> +	};
+
+You didn't reference that.
+
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart2: uart2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_UART2_CTS_B__UART2_DCE_CTS	0x1b0b1
+> +			MX6UL_PAD_UART2_RTS_B__UART2_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart3: uart3grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_UART3_TX_DATA__UART3_DCE_TX	0x1b0b1
+> +			MX6UL_PAD_UART3_RX_DATA__UART3_DCE_RX	0x1b0b1
+> +			MX6UL_PAD_UART3_CTS_B__UART3_DCE_CTS	0x1b0b1
+> +			MX6UL_PAD_UART3_RTS_B__UART3_DCE_RTS	0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x17059
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170b9
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100b9
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170b9
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170b9
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170b9
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170b9
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +		fsl,pins = <
+> +			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x170f9
+> +			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x100f9
+> +			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x170f9
+> +			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x170f9
+> +			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x170f9
+> +			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x170f9
+> +			MX6UL_PAD_CSI_VSYNC__GPIO4_IO19		0x1b0b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_wdog: wdoggrp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_GPIO1_IO08__WDOG1_WDOG_B	0x78b0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.7.4
 > 
-> Can we split this so the dt-bindings are a standalone patch? IMHO this
-> is the usual way because the maintainer can squash them on there needs.
-
-Not sure what you mean, do you want me to make a separate patch for the
-devicetree binding documentation here?
-
-> Also it would be cool to document the changes. A common place for
-> changes is after the '---' or on the cover-letter.
-
-Agreed!
-
-v1 -> v2:
-  - Nolonger altering the existing compatible string, just add a second 
-one.
-  - Moved the event emiting work out of the irq handler to the timer 
-handler.
-  - Assign hwtype directly to of_device_id->data instead of a struct
-    platform_device_id entry which has it's .driver_data set to hwtype.
-  - Document the new device tree binding.
-  - Update commit message to make more clear why we want to make this 
-change.
-
 > 
->>  3 files changed, 57 insertions(+), 13 deletions(-)
->> 
->> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt 
->> b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
->> index 2fe245ca816a..e4fbb9797082 100644
->> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
->> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
->> @@ -420,14 +420,22 @@ EXAMPLE
->>  =====================================================================
->>  System ON/OFF key driver
->> 
->> -  The snvs-pwrkey is designed to enable POWER key function which 
->> controlled
->> -  by SNVS ONOFF, the driver can report the status of POWER key and 
->> wakeup
->> -  system if pressed after system suspend.
->> +  The snvs-pwrkey is designed to enable POWER key function which is 
->> controlled
->> +  by SNVS ONOFF. It can wakeup the system if pressed after system 
->> suspend.
->> +
->> +  There are two generations of SVNS pwrkey hardware. The first 
->> generation is
->> +  included in i.MX6 Solo, DualLite and Quad processors. The second 
->> generation
->> +  is included in i.MX6 SoloX and newer SoCs.
->> +
->> +  Second generation SNVS can detect and report the status of POWER 
->> key, but the
->> +  first generation can only detect a key release and so emits an 
->> instantaneous
->> +  press and release event when the key is released.
->> 
->>    - compatible:
->>        Usage: required
->>        Value type: <string>
->> -      Definition: Mush include "fsl,sec-v4.0-pwrkey".
->> +      Definition: Must include "fsl,sec-v4.0-pwrkey" for i.MX6 SoloX 
->> and newer
->> +	   or "fsl,imx6qdl-snvs-pwrkey" for older SoCs.
->> 
->>    - interrupts:
->>        Usage: required
->> diff --git a/drivers/input/keyboard/Kconfig 
->> b/drivers/input/keyboard/Kconfig
->> index 7c4f19dab34f..937e58da5ce1 100644
->> --- a/drivers/input/keyboard/Kconfig
->> +++ b/drivers/input/keyboard/Kconfig
->> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
->>  	depends on OF
->>  	help
->>  	  This is the snvs powerkey driver for the Freescale i.MX 
->> application
->> -	  processors that are newer than i.MX6 SX.
->> +	  processors.
->> 
->>  	  To compile this driver as a module, choose M here; the
->>  	  module will be called snvs_pwrkey.
->> diff --git a/drivers/input/keyboard/snvs_pwrkey.c 
->> b/drivers/input/keyboard/snvs_pwrkey.c
->> index 5342d8d45f81..d71c44733103 100644
->> --- a/drivers/input/keyboard/snvs_pwrkey.c
->> +++ b/drivers/input/keyboard/snvs_pwrkey.c
->> @@ -29,6 +29,11 @@
->>  #define DEBOUNCE_TIME 30
->>  #define REPEAT_INTERVAL 60
->> 
->> +enum imx_snvs_hwtype {
->> +	IMX6SX_SNVS,	/* i.MX6 SoloX and newer */
->> +	IMX6QDL_SNVS,	/* i.MX6 Solo, DualLite and Quad */
->> +};
->> +
->>  struct pwrkey_drv_data {
->>  	struct regmap *snvs;
->>  	int irq;
->> @@ -37,14 +42,41 @@ struct pwrkey_drv_data {
->>  	int wakeup;
->>  	struct timer_list check_timer;
->>  	struct input_dev *input;
->> +	enum imx_snvs_hwtype hwtype;
->>  };
->> 
->> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
->> +	{
->> +		.compatible = "fsl,sec-v4.0-pwrkey",
->> +		.data = (const void *)IMX6SX_SNVS,
->> +	},
->> +	{
->> +		.compatible = "fsl,imx6qdl-snvs-pwrkey",
->> +		.data = (const void *)IMX6QDL_SNVS,
->> +	},
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
 > 
-> Can we keep this on the original place if you are using ...
-> 
->> +
->>  static void imx_imx_snvs_check_for_events(struct timer_list *t)
->>  {
->>  	struct pwrkey_drv_data *pdata = from_timer(pdata, t, check_timer);
->>  	struct input_dev *input = pdata->input;
->>  	u32 state;
->> 
->> +	if (pdata->hwtype == IMX6QDL_SNVS) {
->> +		/*
->> +		 * The first generation i.MX6 SoCs only sends an interrupt on
->> +		 * button release. To mimic power-key usage, we'll prepend a
->> +		 * press event.
->> +		 */
->> +		input_report_key(input, pdata->keycode, 1);
-> 
-> Missing input_sync() here?
 
-Yes you are right. Odd that systemd powerkey handling didn't complain.
-
-> 
->> +		input_report_key(input, pdata->keycode, 0);
->> +		input_sync(input);
->> +		pm_relax(input->dev.parent);
->> +		return;
->> +	}
->> +
->>  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
->>  	state = state & SNVS_HPSR_BTN ? 1 : 0;
->> 
->> @@ -67,13 +99,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int 
->> irq, void *dev_id)
->>  {
->>  	struct platform_device *pdev = dev_id;
->>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
->> +	unsigned long expire = jiffies;
->>  	u32 lp_status;
->> 
->>  	pm_wakeup_event(pdata->input->dev.parent, 0);
->> 
->>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
->> -	if (lp_status & SNVS_LPSR_SPO)
->> -		mod_timer(&pdata->check_timer, jiffies + 
->> msecs_to_jiffies(DEBOUNCE_TIME));
->> +	if (lp_status & SNVS_LPSR_SPO) {
->> +		if (pdata->hwtype == IMX6SX_SNVS)
->> +			expire += msecs_to_jiffies(DEBOUNCE_TIME);
->> +		mod_timer(&pdata->check_timer, expire);
-> 
-> Is this desired because the timer gets triggered earlier.
-
-Yes, since the first generation has debounce implemented in hardware,
-we dont need to add another one.
-
-Now looking at it, maybe I should change the conditional to:
-
-if (pdata->hwtype != IMX6QDL_SNVS)
-         expire += msecs_to_jiffies(DEBOUNCE_TIME);
-
-to make this more clear.
-
-> 
->> +	}
->> 
->>  	/* clear SPO status */
->>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
->> @@ -93,6 +129,7 @@ static int imx_snvs_pwrkey_probe(struct 
->> platform_device *pdev)
->>  	struct pwrkey_drv_data *pdata = NULL;
->>  	struct input_dev *input = NULL;
->>  	struct device_node *np;
->> +	const struct of_device_id *match;
->>  	int error;
->> 
->>  	/* Get SNVS register Page */
->> @@ -100,6 +137,10 @@ static int imx_snvs_pwrkey_probe(struct 
->> platform_device *pdev)
->>  	if (!np)
->>  		return -ENODEV;
->> 
->> +	match = of_match_node(imx_snvs_pwrkey_ids, np);
->> +	if (!match)
->> +		return -ENODEV;
-> 
-> ... of_device_get_match_data() here.
-
-of_device_get_match_data() returns NULL on error. In this case, because 
-I
-assigned integer values to the .data pointers, casting NULL back to an
-integer will result in a valid hwtype.
-
-I could declare a special struct with a 'quirks' field like they did in 
-the
-flexcan diver: 'drivers/net/can/flexcan.c'.
-
-Use of_device_get_match_data() to get it, and define a quirk like:
-SNVS_QUIRK_NO_BTN_PRESS_IRQ. This might also improve readability.
-
-
-> While reading the rm it seems that
-> the snvs block has a dedicated version register. IMHO this could be a
-> better way to apply the change also to existing devices with old
-> firmware.
-
-I thought the same thing, and fully agree with you. However I do not 
-have
-a way to determine which versions are out there. Since I couldn't find 
-any
-documentation on this, and I only have i.MX6 S/DL, D/Q and UL laying 
-around.
-
-Regards,
-Robin van der Gracht
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
