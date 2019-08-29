@@ -1,14 +1,14 @@
 From: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH AUTOSEL 4.19 17/29] arm64: dts: rockchip: enable usb-host
+Subject: [PATCH AUTOSEL 4.14 09/14] arm64: dts: rockchip: enable usb-host
  regulators at boot on rk3328-rock64
-Date: Thu, 29 Aug 2019 06:49:57 -0400
-Message-ID: <20190829105009.2265-17-sashal@kernel.org>
-References: <20190829105009.2265-1-sashal@kernel.org>
+Date: Thu, 29 Aug 2019 06:50:38 -0400
+Message-ID: <20190829105043.2508-9-sashal@kernel.org>
+References: <20190829105043.2508-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190829105009.2265-1-sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20190829105043.2508-1-sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -39,10 +39,10 @@ Signed-off-by: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index c142169a58fc5..e9147e35b7396 100644
+index e720f40bbd5d7..3f8f528099a80 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -40,6 +40,7 @@
+@@ -77,6 +77,7 @@
  		pinctrl-0 = <&usb30_host_drv>;
  		regulator-name = "vcc_host_5v";
  		regulator-always-on;
@@ -50,7 +50,7 @@ index c142169a58fc5..e9147e35b7396 100644
  		vin-supply = <&vcc_sys>;
  	};
  
-@@ -50,6 +51,7 @@
+@@ -87,6 +88,7 @@
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
  		regulator-always-on;
